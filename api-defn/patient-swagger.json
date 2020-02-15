@@ -105,7 +105,25 @@
         ],
         "responses": {
           "200": {
-            "description": "Graph data received"
+            "description": "Graph data received",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "type": "integer",
+                "description": "Request limit per hour."
+              },
+              "X-RateLimit-Remaining": {
+                "type": "integer",
+                "description": "The number of requests left for the time window."
+              },
+              "X-RateLimit-Reset": {
+                "type": "string",
+                "format": "date-time",
+                "description": "The UTC date/time at which the current rate limit window resets."
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/Graphs"
+            }
           },
           "400": {
             "description": "Invalid number supplied"
@@ -177,13 +195,31 @@
         ],
         "responses": {
           "200": {
-            "description": "Patient Record Updated"
+            "description": "Patients for Clinician->Provider retrived",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "type": "integer",
+                "description": "Request limit per hour."
+              },
+              "X-RateLimit-Remaining": {
+                "type": "integer",
+                "description": "The number of requests left for the time window."
+              },
+              "X-RateLimit-Reset": {
+                "type": "string",
+                "format": "date-time",
+                "description": "The UTC date/time at which the current rate limit window resets."
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/Patients"
+            }
           },
           "400": {
             "description": "Invalid ID supplied"
           },
           "404": {
-            "description": "Patient not found"
+            "description": "No records found"
           },
           "405": {
             "description": "Validation exception"
@@ -578,6 +614,27 @@
       },
       "xml": {
         "name": "Patient"
+      }
+    },
+    "Patients": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "allOf": [
+            {
+              "type": "array"
+            },
+            {
+              "$ref": "#/definitions/Patient"
+            }
+          ]
+        }
+      },
+      "minItems": 0,
+      "maxItems": 10,
+      "xml": {
+        "name": "Patients"
       }
     },
     "ApiResponse": {
