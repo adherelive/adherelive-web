@@ -1,0 +1,1251 @@
+{
+	"info": {
+		"_postman_id": "a20be8a2-59b4-4273-b315-884fa815522a",
+		"name": "AdhereLive API",
+		"description": "# Description \n This API offers a collection of operations for the provision of Health related information from the database and is designed to support intelligent workflow solutions.\n ## Common Status Codes \n |**Response Status Code**       | **Description**                                                  | \n |------------------------       | ---------------                                                  | \n |**200 OK**                     | Standard status code for successful HTTP requests.               | \n |**201 Created**                | A new resource has been created successfully.                    | \n |**400 Bad Request**            | Request is invalid due to syntax, validation errors, etc.        | \n |**401 Unauthorized**           | An authentication error occurred.                                | \n |**403 Forbidden**              | Access to resource is forbidden.                                 | \n |**404 Not Found**              | The requested resource could not be found.                       | \n |**405 Method Not Allowed**     | The method used is not supported for the requested resource.     | \n |**415 Unsupported Media Type** | Content-Type header with an unsupported media type was provided. | \n |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | \n |**500 Internal Server Error**  | An unexpected internal error occurred.                           | \n |**503 Service Unavailable**    | The service is temporarily unavailable.                          | \n \n\nContact Support:\n Email: development@adhere.live",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "dashboards",
+			"item": [
+				{
+					"name": "Fetch all the values for the graphs/analytics to be displayed on the main page",
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Client-Id",
+								"value": "<string>",
+								"description": "Client ID"
+							},
+							{
+								"key": "Content-Type",
+								"value": "<string>",
+								"description": "Content type - always application/json."
+							},
+							{
+								"key": "X-Party-Id",
+								"value": "<string>",
+								"description": "Party ID of the service client (optional)."
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dashboards",
+								"graphs",
+								":number",
+								":ClinicianID",
+								":ProviderID"
+							],
+							"variable": [
+								{
+									"id": "b85d3fd9-e66e-4bc5-894f-7d4bf256be4b",
+									"key": "number",
+									"value": "<integer>",
+									"type": "string",
+									"description": {
+										"content": "The total number of graphs to be shown on the main dashboard page",
+										"type": "text/plain"
+									}
+								},
+								{
+									"id": "5f1be9f8-7203-424f-81c7-e1fd3a208bd9",
+									"key": "ClinicianID",
+									"value": "<string>",
+									"type": "string",
+									"description": {
+										"content": "The logged in User ID for the Clinician",
+										"type": "text/plain"
+									}
+								},
+								{
+									"id": "13b4a220-b095-43dd-88db-f62574084b59",
+									"key": "ProviderID",
+									"value": "<string>",
+									"type": "string",
+									"description": {
+										"content": "THe logged in ID of the Provider for which the Clinician belongs to",
+										"type": "text/plain"
+									}
+								}
+							]
+						},
+						"description": "The top graphs to be shown on the dashboard page. The number is the total graphs that will be fetched and displayed on the dashboard page."
+					},
+					"response": [
+						{
+							"name": "Graph not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"graphs",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Graph data received",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"graphs",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Validation exception",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"graphs",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Invalid number supplied",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"graphs",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Fetch all the patients for a particular Clinician and Provider",
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Client-Id",
+								"value": "<string>",
+								"description": "Client ID"
+							},
+							{
+								"key": "Content-Type",
+								"value": "<string>",
+								"description": "Content type - always application/json."
+							},
+							{
+								"key": "X-Party-Id",
+								"value": "<string>",
+								"description": "Party ID of the service client (optional)."
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dashboards",
+								"patients",
+								":number",
+								":ClinicianID",
+								":ProviderID"
+							],
+							"variable": [
+								{
+									"id": "ff448a0a-f1e3-478c-941b-b334637f1eab",
+									"key": "number",
+									"value": "<string>",
+									"type": "string",
+									"description": {
+										"content": "Multiple patients object that need to be retrieved for the Clinician and Provider ID's. This defines how many can be on a single dashboard page",
+										"type": "text/plain"
+									}
+								},
+								{
+									"id": "97d751a6-eb15-4299-9d71-6cd99e08cd72",
+									"key": "ClinicianID",
+									"value": "<string>",
+									"type": "string",
+									"description": {
+										"content": "The logged in User ID for the Clinician",
+										"type": "text/plain"
+									}
+								},
+								{
+									"id": "f1997f56-f70f-4491-a72c-dd953c9cd4dc",
+									"key": "ProviderID",
+									"value": "<string>",
+									"type": "string",
+									"description": {
+										"content": "THe logged in ID of the Provider for which the Clinician belongs to",
+										"type": "text/plain"
+									}
+								}
+							]
+						},
+						"description": "We shall be displaying only a set of 5 patients at one time. The additional patients shall be fetched when the user clicks on the NEXT button in pagination."
+					},
+					"response": [
+						{
+							"name": "Invalid ID supplied",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"patients",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Validation exception",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"patients",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Patient not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"patients",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Patient Record Updated",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"patients",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "patient",
+			"item": [
+				{
+					"name": "Add a new patient",
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Client-Id",
+								"value": "<string>",
+								"description": "Client ID"
+							},
+							{
+								"key": "Content-Type",
+								"value": "<string>",
+								"description": "Content type - always application/json."
+							},
+							{
+								"key": "X-Party-Id",
+								"value": "<string>",
+								"description": "Party ID of the service client (optional)."
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"<string>\",\n    \"middle-name\": \"<string>\",\n    \"last-name\": \"<string>\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/patient",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"patient"
+							]
+						},
+						"description": "Create a New Patient in the Database"
+					},
+					"response": [
+						{
+							"name": "Invalid input",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/patient",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient"
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Patient Record Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/patient",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Update an existing patient",
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Client-Id",
+								"value": "<string>",
+								"description": "Client ID"
+							},
+							{
+								"key": "Content-Type",
+								"value": "<string>",
+								"description": "Content type - always application/json."
+							},
+							{
+								"key": "X-Party-Id",
+								"value": "<string>",
+								"description": "Party ID of the service client (optional)."
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"<string>\",\n    \"middle-name\": \"<string>\",\n    \"last-name\": \"<string>\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/patient",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"patient"
+							]
+						},
+						"description": "Update the existing Patient record in Database for a Clinician"
+					},
+					"response": [
+						{
+							"name": "Patient Record Updated",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/patient",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Patient not found",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/patient",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Invalid ID supplied",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/patient",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Validation exception",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/patient",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient"
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Retrive information about an existing patient",
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Client-Id",
+								"value": "<string>",
+								"description": "Client ID"
+							},
+							{
+								"key": "Content-Type",
+								"value": "<string>",
+								"description": "Content type - always application/json."
+							},
+							{
+								"key": "X-Party-Id",
+								"value": "<string>",
+								"description": "Party ID of the service client (optional)."
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/patient/:patientId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"patient",
+								":patientId"
+							],
+							"variable": [
+								{
+									"id": "fda9387b-2835-41ba-b93a-786bada2d89e",
+									"key": "patientId",
+									"value": "<integer>",
+									"type": "string",
+									"description": {
+										"content": "Patient object that needs to be retrieved for the Clinician and the Provider",
+										"type": "text/plain"
+									}
+								}
+							]
+						},
+						"description": "Get the information for a Patient from the Database, this will be a multiple patient ID record?"
+					},
+					"response": [
+						{
+							"name": "Validation exception",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/patient/:patientId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient",
+										":patientId"
+									],
+									"variable": [
+										{
+											"key": "patientId"
+										}
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Patient not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/patient/:patientId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient",
+										":patientId"
+									],
+									"variable": [
+										{
+											"key": "patientId"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Invalid ID supplied",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/patient/:patientId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient",
+										":patientId"
+									],
+									"variable": [
+										{
+											"key": "patientId"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Patient Record Retrived successfully",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/patient/:patientId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient",
+										":patientId"
+									],
+									"variable": [
+										{
+											"key": "patientId"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"variable": [
+		{
+			"id": "baseUrl",
+			"key": "baseUrl",
+			"value": "https://api.adhere.live/api/v0.1",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
