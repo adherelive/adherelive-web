@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2ec9b520-b166-4e1d-a73d-9efef73bf427",
+		"_postman_id": "f5aebdee-b7dd-4d6d-923c-934c79bd15d2",
 		"name": "AdhereLive API",
 		"description": "# Description \n This API offers a collection of operations for the provision of Health related information from the database and is designed to support intelligent workflow solutions.\n ## Common Status Codes \n |**Response Status Code**       | **Description**                                                  | \n |------------------------       | ---------------                                                  | \n |**200 OK**                     | Standard status code for successful HTTP requests.               | \n |**201 Created**                | A new resource has been created successfully.                    | \n |**400 Bad Request**            | Request is invalid due to syntax, validation errors, etc.        | \n |**401 Unauthorized**           | An authentication error occurred.                                | \n |**403 Forbidden**              | Access to resource is forbidden.                                 | \n |**404 Not Found**              | The requested resource could not be found.                       | \n |**405 Method Not Allowed**     | The method used is not supported for the requested resource.     | \n |**415 Unsupported Media Type** | Content-Type header with an unsupported media type was provided. | \n |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | \n |**500 Internal Server Error**  | An unexpected internal error occurred.                           | \n |**503 Service Unavailable**    | The service is temporarily unavailable.                          | \n \n\nContact Support:\n Email: development@adhere.live",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -47,7 +47,7 @@
 							],
 							"variable": [
 								{
-									"id": "6ef0745d-fc07-4d1e-8068-b426002553d6",
+									"id": "ba136b8a-090e-43c7-9576-dd71ee5ec876",
 									"key": "number",
 									"value": "<integer>",
 									"type": "string",
@@ -57,7 +57,7 @@
 									}
 								},
 								{
-									"id": "00062114-9908-40bb-a3d2-5015681f680b",
+									"id": "e9d32db7-f8fe-4831-9f97-95675a4cad2c",
 									"key": "ClinicianID",
 									"value": "<string>",
 									"type": "string",
@@ -67,7 +67,7 @@
 									}
 								},
 								{
-									"id": "55b8feb0-14c2-4ee8-ae3c-e4a7a9ecae62",
+									"id": "dff0fecd-18b0-4a3d-b6b2-dd57238a8c67",
 									"key": "ProviderID",
 									"value": "<string>",
 									"type": "string",
@@ -81,63 +81,6 @@
 						"description": "The top graphs to be shown on the dashboard page. The number is the total graphs that will be fetched and displayed on the dashboard page."
 					},
 					"response": [
-						{
-							"name": "Graph data received",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"dashboards",
-										"graphs",
-										":number",
-										":ClinicianID",
-										":ProviderID"
-									],
-									"variable": [
-										{
-											"key": "number"
-										},
-										{
-											"key": "ClinicianID"
-										},
-										{
-											"key": "ProviderID"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "<integer>",
-									"description": "Request limit per hour."
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "<integer>",
-									"description": "The number of requests left for the time window."
-								},
-								{
-									"key": "X-RateLimit-Reset",
-									"value": "<dateTime>",
-									"description": "The UTC date/time at which the current rate limit window resets."
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n \"totalGraphs\": \"<int>\",\n \"graphId1\": \"<long>\",\n \"graphId2\": \"<long>\",\n \"graphId3\": \"<long>\",\n \"graphId4\": \"<long>\"\n}"
-						},
 						{
 							"name": "Invalid number supplied",
 							"originalRequest": {
@@ -221,6 +164,63 @@
 							],
 							"cookie": [],
 							"body": ""
+						},
+						{
+							"name": "Graph data received",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/graphs/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"graphs",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "<integer>",
+									"description": "Request limit per hour."
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "<integer>",
+									"description": "The number of requests left for the time window."
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "<dateTime>",
+									"description": "The UTC date/time at which the current rate limit window resets."
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"totalGraphs\": \"<int>\",\n \"graphId1\": \"<long>\",\n \"graphId2\": \"<long>\",\n \"graphId3\": \"<long>\",\n \"graphId4\": \"<long>\"\n}"
 						},
 						{
 							"name": "Validation exception",
@@ -365,7 +365,7 @@
 							],
 							"variable": [
 								{
-									"id": "6696c023-bb89-4a79-aab1-466a2a8957ba",
+									"id": "ae6a8247-16d4-4729-bf8e-0b46f575cb77",
 									"key": "number",
 									"value": "<string>",
 									"type": "string",
@@ -375,7 +375,7 @@
 									}
 								},
 								{
-									"id": "484a25da-5085-41a9-9407-e63111239a36",
+									"id": "38a4745d-f074-493e-b041-236515e2d87e",
 									"key": "ClinicianID",
 									"value": "<string>",
 									"type": "string",
@@ -385,7 +385,7 @@
 									}
 								},
 								{
-									"id": "0f65b121-b116-4f98-b606-51a666b2e092",
+									"id": "c84d3017-db41-4a4a-9733-2aa8f9d2b0d3",
 									"key": "ProviderID",
 									"value": "<string>",
 									"type": "string",
@@ -431,48 +431,6 @@
 							},
 							"status": "Bad Request",
 							"code": 400,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"body": ""
-						},
-						{
-							"name": "No records found",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"dashboards",
-										"patients",
-										":number",
-										":ClinicianID",
-										":ProviderID"
-									],
-									"variable": [
-										{
-											"key": "number"
-										},
-										{
-											"key": "ClinicianID"
-										},
-										{
-											"key": "ProviderID"
-										}
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
 							"_postman_previewlanguage": "text",
 							"header": [
 								{
@@ -576,6 +534,48 @@
 							},
 							"status": "Method Not Allowed",
 							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "No records found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboards/patients/:number/:ClinicianID/:ProviderID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboards",
+										"patients",
+										":number",
+										":ClinicianID",
+										":ProviderID"
+									],
+									"variable": [
+										{
+											"key": "number"
+										},
+										{
+											"key": "ClinicianID"
+										},
+										{
+											"key": "ProviderID"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
 							"_postman_previewlanguage": "text",
 							"header": [
 								{
@@ -835,6 +835,129 @@
 					},
 					"response": [
 						{
+							"name": "Validation exception",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									},
+									{
+										"key": "X-Client-Id",
+										"value": "<string>",
+										"description": "Client ID"
+									},
+									{
+										"key": "Content-Type",
+										"value": "<string>",
+										"description": "Content type - always application/json."
+									},
+									{
+										"key": "X-Party-Id",
+										"value": "<string>",
+										"description": "Party ID of the service client (optional)."
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/patient",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient"
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Patient not found",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/patient",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
 							"name": "Invalid ID supplied",
 							"originalRequest": {
 								"method": "PUT",
@@ -895,129 +1018,6 @@
 							],
 							"cookie": [],
 							"body": ""
-						},
-						{
-							"name": "Validation exception",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "X-Client-Id",
-										"value": "<string>",
-										"description": "Client ID"
-									},
-									{
-										"key": "Content-Type",
-										"value": "<string>",
-										"description": "Content type - always application/json."
-									},
-									{
-										"key": "X-Party-Id",
-										"value": "<string>",
-										"description": "Party ID of the service client (optional)."
-									},
-									{
-										"key": "X-Client-Id",
-										"value": "<string>",
-										"description": "Client ID"
-									},
-									{
-										"key": "Content-Type",
-										"value": "<string>",
-										"description": "Content type - always application/json."
-									},
-									{
-										"key": "X-Party-Id",
-										"value": "<string>",
-										"description": "Party ID of the service client (optional)."
-									},
-									{
-										"key": "X-Client-Id",
-										"value": "<string>",
-										"description": "Client ID"
-									},
-									{
-										"key": "Content-Type",
-										"value": "<string>",
-										"description": "Content type - always application/json."
-									},
-									{
-										"key": "X-Party-Id",
-										"value": "<string>",
-										"description": "Party ID of the service client (optional)."
-									},
-									{
-										"key": "X-Client-Id",
-										"value": "<string>",
-										"description": "Client ID"
-									},
-									{
-										"key": "Content-Type",
-										"value": "<string>",
-										"description": "Content type - always application/json."
-									},
-									{
-										"key": "X-Party-Id",
-										"value": "<string>",
-										"description": "Party ID of the service client (optional)."
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/patient",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"patient"
-									]
-								}
-							},
-							"status": "Method Not Allowed",
-							"code": 405,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"body": ""
-						},
-						{
-							"name": "Patient not found",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"createdDate\": \"<date>\",\n    \"status\": \"<string>\",\n    \"id\": \"<long>\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"first-name\": \"ABC\",\n    \"middle-name\": \"ABC\",\n    \"last-name\": \"ABC\",\n    \"password\": \"<string>\",\n    \"phone-number\": \"<string>\",\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ]\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/patient",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"patient"
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"body": ""
 						}
 					]
 				},
@@ -1056,7 +1056,7 @@
 							],
 							"variable": [
 								{
-									"id": "23aba95c-cd5a-4b5a-bae0-23416280c3b1",
+									"id": "278b5339-68ed-4acf-8ed8-6a2e42c91484",
 									"key": "patientId",
 									"value": "<integer>",
 									"type": "string",
@@ -1071,7 +1071,7 @@
 					},
 					"response": [
 						{
-							"name": "Patient not found",
+							"name": "Invalid ID supplied",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -1091,8 +1091,8 @@
 									]
 								}
 							},
-							"status": "Not Found",
-							"code": 404,
+							"status": "Bad Request",
+							"code": 400,
 							"_postman_previewlanguage": "text",
 							"header": [
 								{
@@ -1126,48 +1126,30 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": "text",
+							"_postman_previewlanguage": "json",
 							"header": [
 								{
+									"key": "X-RateLimit-Limit",
+									"value": "<integer>",
+									"description": "Request limit per hour."
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "<integer>",
+									"description": "The number of requests left for the time window."
+								},
+								{
+									"key": "X-RateLimit-Reset",
+									"value": "<dateTime>",
+									"description": "The UTC date/time at which the current rate limit window resets."
+								},
+								{
 									"key": "Content-Type",
-									"value": "text/plain"
+									"value": "application/json"
 								}
 							],
 							"cookie": [],
-							"body": ""
-						},
-						{
-							"name": "Invalid ID supplied",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/patient/:patientId",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"patient",
-										":patientId"
-									],
-									"variable": [
-										{
-											"key": "patientId"
-										}
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "text/plain"
-								}
-							],
-							"cookie": [],
-							"body": ""
+							"body": "{\n \"createdDate\": \"<date>\",\n \"status\": \"<string>\",\n \"id\": \"<long>\",\n \"category\": {\n  \"id\": \"<long>\",\n  \"name\": \"<string>\"\n },\n \"first-name\": \"ABC\",\n \"middle-name\": \"ABC\",\n \"last-name\": \"ABC\",\n \"password\": \"<string>\",\n \"phone-number\": \"<string>\",\n \"tags\": [\n  {\n   \"id\": \"<long>\",\n   \"name\": \"<string>\"\n  },\n  {\n   \"id\": \"<long>\",\n   \"name\": \"<string>\"\n  }\n ]\n}"
 						},
 						{
 							"name": "Validation exception",
@@ -1253,6 +1235,39 @@
 							},
 							"status": "Method Not Allowed",
 							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Patient not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/patient/:patientId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"patient",
+										":patientId"
+									],
+									"variable": [
+										{
+											"key": "patientId"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
 							"_postman_previewlanguage": "text",
 							"header": [
 								{

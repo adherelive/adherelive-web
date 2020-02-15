@@ -383,7 +383,25 @@
         ],
         "responses": {
           "200": {
-            "description": "Patient Record Retrived successfully"
+            "description": "Patient Record Retrived successfully",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "type": "integer",
+                "description": "Request limit per hour."
+              },
+              "X-RateLimit-Remaining": {
+                "type": "integer",
+                "description": "The number of requests left for the time window."
+              },
+              "X-RateLimit-Reset": {
+                "type": "string",
+                "format": "date-time",
+                "description": "The UTC date/time at which the current rate limit window resets."
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/Patient"
+            }
           },
           "400": {
             "description": "Invalid ID supplied"
