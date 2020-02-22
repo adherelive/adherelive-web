@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>React App</title>
+    <% if(process.config.APP_ENV != "development"){ %>
+    <link href="/static/css/1.e2e1a8a4.chunk.css" rel="stylesheet" />
+    <link href="/static/css/main.e76e5979.chunk.css" rel="stylesheet" />
+    <% } %>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <% if(process.config.APP_ENV == "development"){ %>
+    <script src="http://localhost:3000/static/js/bundle.js"></script>
+    <script src="http://localhost:3000/static/js/main.chunk.js"></script>
+    <script src="http://localhost:3000/static/js/1.chunk.js"></script>
+    <% }else{ %>
+    <script src="/static/js/1.9c788278.chunk.js"></script>
+    <script src="/static/js/main.959ae149.chunk.js"></script>
+    <% } %>
+  </body>
+</html>

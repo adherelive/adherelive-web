@@ -1,0 +1,39 @@
+{
+  "Afghanistan": {
+    "cities": [
+      "Herat",
+      "Kabul",
+      "Kandahar",
+      "Molah",
+      "Rana",
+      "Shar",
+      "Sharif",
+      "Wazir Akbar Khan"
+    ],
+    "pharmacies": [
+      "Afghan-Pharmacy-1",
+      "Afghan-Pharmacy-2",
+      "Afghan-Pharmacy-3"
+    ]
+  },
+  "United Arab Emirates": {
+    "cities": [
+      "Abu Dhabi",
+      "Al Ain",
+      "Al Khan",
+      "Ar Ruways",
+      "As Satwah",
+      "Dayrah",
+      "Dubai",
+      "Fujairah",
+      "Ras al-Khaimah",
+      "Sharjah"
+    ],
+    "pharmacies": [
+      "UAE-Pharmacy-1",
+      "UAE-Pharmacy-2",
+      "UAE-Pharmacy-3",
+      "UAE-Pharmacy-4"
+    ]
+  }
+}

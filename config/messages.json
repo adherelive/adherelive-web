@@ -1,0 +1,99 @@
+{
+  "errMessages": {
+    "UNAUTHORIZED_ACCESS": {
+      "status": "UNAUTHORIZED_ACCESS",
+      "message": "No access token found."
+    },
+    "INTERNAL_SERVER_ERROR": {
+      "status": "INTERNAL_SERVER_ERROR",
+      "message": "Something went wrong. Please try again."
+    },
+    "FORBIDDEN": {
+      "status": "FORBIDDEN",
+      "message": "Can't sync your calendar. Please signup and try again"
+    },
+    "PROGRAM_ADDITION_NOT_PERMISSIBLE": {
+      "status": "PROGRAM_ADDITION_NOT_PERMISSIBLE",
+      "message": "You are not authorized to add a program."
+    },
+    "ADDITION_TO_PROGRAM_NOT_PERMISSIBLE": {
+      "status": "ADDITION_TO_PROGRAM_NOT_PERMISSIBLE",
+      "message": "You are not authorized to add to this program."
+    },
+    "EXISTING_USER": {
+      "status": "EXISTING_USER",
+      "message": "This user is already enrolled."
+    },
+    "EXISTING_PHONE_NO": {
+      "status": "EXISTING_PHONE_NO",
+      "message": "Provided mobile number is already registered."
+    },
+    "EXISTING_EMAIL_ID": {
+      "status": "EXISTING_EMAIL_ID",
+      "message": "Provided email id is already registered."
+    },
+    "EVENT_EXPIRED": {
+      "status": "EVENT_EXPIRED",
+      "message": "Your invite link has expired."
+    },
+    "LINK_ALREADY_USED": {
+      "status": "LINK_ALREADY_USED",
+      "message": "Your link has been used. Same link can't be used twice."
+    },
+    "EVENT_WAS_CANCELLED": {
+      "status": "EVENT_WAS_CANCELLED",
+      "message": "You have cancelled your invite previously, so it no longer exists. You may ask for a new invite."
+    },
+    "INVALID_LINK": {
+      "status": "INVALID_LINK",
+      "message": "Your link is invalid."
+    },
+    "COOKIES_NOT_SET": {
+      "status": "COOKIES_NOT_SET",
+      "message": "Can't process your request, cookies are not set. Please sign in again."
+    },
+    "CONTACT_ALREADY_EXISTS": {
+      "status": "CONTACT_ALREADY_EXISTS",
+      "message": "Please try another number. As this number already exists in our systems"
+    },
+    "CAN_NOT_AUTHORIZE": {
+      "status": "CAN_NOT_AUTHORIZE",
+      "message": "Either Email or Password is not correct."
+    },
+    "PASSWORD_MISMATCH_ERROR": {
+      "status": "PASSWORD_MISMATCH_ERROR",
+      "message": "Passwords do not match. Please try again."
+    },
+    "INVITE_NOT_PERMISSIBLE": {
+      "status": "INVITE_NOT_PERMISSIBLE",
+      "message": "You can't send this invite."
+    },
+    "OTP_MISMATCH": {
+      "status": "OTP_MISMATCH",
+      "message": "Given otp is wrong."
+    },
+    "IMAGE_NOT_SAVED": {
+      "status": "IMAGE_NOT_SAVED",
+      "message": "There was some problem in saving your picture. Please try again."
+    },
+    "INCORRECT_PASSWORD": {
+      "status": "INCORRECT_PASSWORD",
+      "message": "Wrong current password. Please try again with correct password."
+    },
+    "NUMBER_CANNOT_BE_BLANK": {
+      "status": "NUMBER_CANNOT_BE_BLANK",
+      "message": "Number cannot be blank. Please try again with a valid phone number."
+    },
+    "UNAUTHORIZED_ACCESS_TO_ARTICLE": {
+      "status": "UNAUTHORIZED_ACCESS_TO_ARTICLE",
+      "message": "Unauthorized access to article."
+    }
+  },
+  "userCategories": {
+    "doctor": "Doctor",
+    "programAdmin": "Program Admin",
+    "superAdmin": "Super Admin",
+    "careCoach": "Care Coach",
+    "patient": "Patient"
+  }
+}

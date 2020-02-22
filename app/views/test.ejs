@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head> </head>
+
+  <body>
+    <h1>testing socket!</h1>
+    <div id="future"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script>
+      var socket = io.connect("http://localhost:4000");
+      socket.on("connect", function(data) {
+        socket.emit("join", "Hello World from client");
+      });
+      socket.on("BookingStatusSubmittedUser", function(data) {
+        
+      });
+
+      // var exampleSocket = new WebSocket("ws://localhost:8080");
+
+      // exampleSocket.onopen = function (event) {
+      //     exampleSocket.send("Here's some text that the server is urgently awaiting!");
+      // };
+
+      // exampleSocket.onmessage = function (event) {
+      //     
+      // }
+    </script>
+  </body>
+</html>
