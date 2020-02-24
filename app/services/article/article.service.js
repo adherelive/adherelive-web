@@ -2,6 +2,7 @@ const articleModel = require("../../models/article");
 
 class ArticleService {
   constructor() {}
+
   async createArticle(articleData) {
     try {
       let article = await articleModel.create(articleData);
@@ -10,6 +11,7 @@ class ArticleService {
       throw error;
     }
   }
+
   async getArticles(userId) {
     try {
       const query = { [`participants.${userId}`]: { $exists: true } };
@@ -86,6 +88,7 @@ class ArticleService {
       throw error;
     }
   }
+
   async hasViewed(articleId, participantId) {
     try {
       let updatedArticle;

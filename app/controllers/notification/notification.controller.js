@@ -4,6 +4,7 @@ const Log = require("../../../libs/log")("NotificationController");
 
 class NotificationController {
   constructor() {}
+
   async fetchNotification(req, res) {
     try {
       const { activities } = req.body;
@@ -93,4 +94,5 @@ class NotificationController {
     }
   }
 }
+
 module.exports = new NotificationController();

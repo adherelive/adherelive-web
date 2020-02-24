@@ -10,6 +10,7 @@ class CityCountryService {
       throw err;
     }
   }
+
   async getCityByCountries(id) {
     try {
       let results = await cityCountryModel.find(
@@ -29,6 +30,7 @@ class CityCountryService {
       throw err;
     }
   }
+
   async getCountryById(id) {
     try {
       let response = await cityCountryModel.find({ _id: id });
@@ -61,6 +63,7 @@ class CityCountryService {
       throw err;
     }
   }
+
   async getCityCountryByIds(ids = []) {
     try {
       const results = await cityCountryModel.find({

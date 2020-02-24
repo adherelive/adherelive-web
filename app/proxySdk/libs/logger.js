@@ -1,6 +1,7 @@
 const emailLoggerModel = require("../../models/emailLogger");
 const smsLoggerModel = require("../../models/smsLogger");
 const eventErrorLoggerModel = require("../../models/eventErrorLogger");
+
 class Logger {
   constructor(type, payload) {
     switch (type) {

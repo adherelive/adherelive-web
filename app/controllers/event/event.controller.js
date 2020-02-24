@@ -8,6 +8,7 @@ const medicationService = require("../../services/medication/medication.service"
 const medicalConditionService = require("../../services/medicalCondition/medicalCondition.service");
 const { addUserInProgramOnSignUp } = require("../user/userControllerHelper");
 import scheduleService from "../../services/scheduler/scheduler.service";
+
 const { validationResult } = require("express-validator/check");
 const uuid = require("uuid/v4");
 const Response = require("../../helper/responseFormat");
@@ -360,15 +361,7 @@ class EventController {
         let program = await programService.getProgram({
           _id: programId
         });
-        templateData.mainBodyText = `${
-          userCategories[inviterCategory]
-        } Ms. Jasmin has invited you to collaborate on a program for <strong>${
-          program.pharmaCo
-        }</strong> titled <strong>${
-          program.name
-        }</strong> to observe the <strong>${
-          program.targetLocation.city
-        }</strong> region patients`;
+        templateData.mainBodyText = `${userCategories[inviterCategory]} Ms. Jasmin has invited you to collaborate on a program for <strong>${program.pharmaCo}</strong> titled <strong>${program.name}</strong> to observe the <strong>${program.targetLocation.city}</strong> region patients`;
 
         templateData.subBodyText = `The Program commences from <strong>${new Date(
           program.activeFrom
@@ -378,9 +371,7 @@ class EventController {
 
         templateData.buttonText = "Join the Program";
       } else {
-        templateData.mainBodyText = `${
-          userCategories[inviterCategory]
-        } Ms. Jasmin has invited you to come onboard to collaborate on programs for mutliple Pharma companies primarily to observe patients of different regions.`;
+        templateData.mainBodyText = `${userCategories[inviterCategory]} Ms. Jasmin has invited you to come onboard to collaborate on programs for mutliple Pharma companies primarily to observe patients of different regions.`;
 
         templateData.subBodyText = `The Program commencement date will be mailed soon.`;
         templateData.buttonText = "Accept the Invitation";
@@ -465,6 +456,7 @@ class EventController {
       return res.status(payload.code).json(response.getResponse());
     }
   }
+
   /**
    * @api {POST} /validate Validates provided link
    * @apiName validateLink
@@ -651,6 +643,7 @@ class EventController {
   }
 
   async confirmEvent(req, res) {}
+
   async cancelEvent(req, res) {
     const { eventId } = req.params;
     const { recurr, scheduleEventId } = req.body;
@@ -661,7 +654,9 @@ class EventController {
       //delete one this schedule event
     }
   }
+
   async completeEvent(req, res) {}
+
   async deleteEvent(req, res) {
     const { eventId } = req.params;
     const { recurr, scheduleEventId } = req.body;

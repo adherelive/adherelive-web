@@ -1,5 +1,6 @@
 import { PARTICIPANTS_SURVEY_STATUS } from "../../../constant";
 import { ObjectId } from "mongodb";
+
 const _ = require("lodash");
 const path = require("path");
 const survey = require("../schema/survey");
@@ -11,6 +12,7 @@ const surveyQuestions = require("./surveyQuestions");
 const isEqual = require("lodash/isEqual");
 
 const INPROGRESS = "INPROGRESS";
+
 class Survey {
   constructor(surveyData = {}) {
     this.surveyData = surveyData;
@@ -43,9 +45,7 @@ class Survey {
 
             if (!_.has(templateData.programs, value.program)) {
               throw new Error(
-                `specified program ${
-                  value.program
-                } not linked with current survey template`
+                `specified program ${value.program} not linked with current survey template`
               );
             }
             value.template = templateData;
@@ -374,6 +374,7 @@ class Survey {
       throw error;
     }
   }
+
   async updateParticipantsAndDate(participants, date) {
     try {
       let validSurveyData = await survey
@@ -662,6 +663,7 @@ class Survey {
       throw err;
     }
   }
+
   async getParticipantDataforSurvey() {
     try {
       if (

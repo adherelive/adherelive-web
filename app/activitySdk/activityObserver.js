@@ -4,6 +4,7 @@ import MaterialDeliveryActivity from "./materialDelivery";
 import AdverseEventActivity from "./adverseEvent";
 import ReminderActivity from "./reminder";
 import MedicationReminderActivity from "./medicationReminder";
+
 const Log = require("../../libs/log")("activitySdk:ActivityObserver");
 
 class ActivityObserver {

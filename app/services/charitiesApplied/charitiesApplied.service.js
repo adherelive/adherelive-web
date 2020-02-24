@@ -156,6 +156,7 @@ class CharityAppliedService {
       throw error;
     }
   }
+
   async ReUploadDoc(requestData) {
     try {
       const { docs, docId, requestId } = requestData;

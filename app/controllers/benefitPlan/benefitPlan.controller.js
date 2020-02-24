@@ -200,6 +200,7 @@ class BenefitPlanController {
       return res.status(payload.code).json(response.getResponse());
     }
   }
+
   async uploadDoc(req, res) {
     let response;
     try {

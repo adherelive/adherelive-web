@@ -14,6 +14,7 @@ const PASSED = "passed";
 
 class SchedulerService {
   constructor() {}
+
   async addNewJob(data) {
     try {
       const scheduleJob = await schedulerModel.create(data);
@@ -291,6 +292,7 @@ class SchedulerService {
       throw err;
     }
   }
+
   async getBookedSlot({ eventIds, days }) {
     try {
       const eventList = eventIds.map(id => ObjectId(id));

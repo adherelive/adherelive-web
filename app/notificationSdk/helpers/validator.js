@@ -2,6 +2,7 @@ const { isEmpty } = require("lodash");
 const eventServices = require("../../services/event/event.service");
 import schedulerService from "../../services/scheduler/scheduler.service";
 import { USER_CATEGORY } from "../../../constant";
+
 const userServices = require("../../services/user/user.service");
 const articleService = require("../../services/article/article.service");
 const medicalConditionService = require("../../services/medicalCondition/medicalCondition.service");
@@ -359,6 +360,7 @@ class Validator {
       throw err;
     }
   }
+
   async isValidAppointementData() {
     try {
       let appointmentData = {};

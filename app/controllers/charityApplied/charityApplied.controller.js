@@ -652,6 +652,7 @@ class CharityAppliedController {
       return res.status(500).json(response.getResponse());
     }
   }
+
   async uploadPOAndApproveRequest(req, res) {
     try {
       let error = validationResult(req);
@@ -951,6 +952,7 @@ class CharityAppliedController {
       return res.status(500).json(response.getResponse());
     }
   }
+
   async addInvoiceToContributionRequest(req, res) {
     try {
       const { invoiceData } = req.body;
@@ -978,6 +980,7 @@ class CharityAppliedController {
       return res.status(500).json(response.getResponse());
     }
   }
+
   async reuploadDocsOfContributionRequest(req, res) {
     try {
       const { docs, docId } = req.body;

@@ -1,4 +1,5 @@
 import { USER_CATEGORY } from "../../../constant";
+
 const userModel = require("../../models/user");
 const programModel = require("../../models/program");
 const path = require("path");
@@ -7,6 +8,7 @@ const ProgramService = require("../program/program.service");
 const CityCountryService = require("../cityCountry/cityCountry.service");
 const HospitalService = require("../hospital/hospital.service");
 const { getDecryptedValue, formatUserData } = require("../user/helper");
+
 class SearchService {
   constructor() {}
 
@@ -108,6 +110,7 @@ class SearchService {
 
     return { result };
   }
+
   async getPrograms(id, query) {
     const result = await programModel
       .find({
@@ -118,6 +121,7 @@ class SearchService {
 
     return result === null ? [] : result;
   }
+
   async getExtraInfo(user) {
     // const {
     //   category,
@@ -218,4 +222,5 @@ class SearchService {
     return doctorPatients;
   }
 }
+
 module.exports = new SearchService();

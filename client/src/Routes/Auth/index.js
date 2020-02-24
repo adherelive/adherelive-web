@@ -1,10 +1,21 @@
 import React, { lazy, Component, Fragment } from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from "react-router-dom";
 
 import BlankState from "../../Containers/BlankState";
-import {PATH} from "../../constant";
+import { PATH } from "../../constant";
 
-const Patients = lazy(() => import(/* webpackChunkName: "Patients" */"../Patients"));
+const Patients = lazy(() =>
+  import(/* webpackChunkName: "Patients" */ "../Patients")
+);
+
+const Dashboard = lazy(() =>
+  import(/* webpackChunkName: "Dashboard" */ "../../Containers/Dashboard")
+);
 
 export default class Authenticated extends Component {
     constructor(props) {

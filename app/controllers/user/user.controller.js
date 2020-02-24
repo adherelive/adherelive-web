@@ -379,6 +379,7 @@ const USER_FIELDS = {
 
 class UserController {
   constructor() {}
+
   /**
    * @api {POST} /sign-up Sign-up
    * @apiName signUp
@@ -584,6 +585,7 @@ class UserController {
       }
     }
   }
+
   /**
    * @api {POST} /sign-in Sign-in
    * @apiName signIn

@@ -381,4 +381,5 @@ class PayloadBuilder {
     }
   }
 }
+
 module.exports = data => new PayloadBuilder(data);

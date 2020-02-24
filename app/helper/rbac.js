@@ -31,7 +31,12 @@ const rbac = new RBAC({
       "invite_programAdmins",
       "invite_superAdmins"
     ],
-    careCoach: ["invite_patients", "invite_doctors", "addNew_patients", "addNew_doctors"]
+    careCoach: [
+      "invite_patients",
+      "invite_doctors",
+      "addNew_patients",
+      "addNew_doctors"
+    ]
   }
 });
 

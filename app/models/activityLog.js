@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const collectionName = "activityLog";
 
 const activityLogSchema = new mongoose.Schema(

@@ -15,6 +15,7 @@ class CronofyService {
       Authorization: "Bearer " + accessToken
     };
   }
+
   getHeadersContentOnly() {
     return {
       "Content-Type": "application/json"
@@ -275,4 +276,5 @@ class CronofyService {
     }
   }
 }
+
 module.exports = new CronofyService();

@@ -150,6 +150,7 @@ class ReminderController {
       return res.status(payload.code).json(response.getResponse());
     }
   }
+
   async cancel(req, res) {
     try {
       const { id, all } = req.query;

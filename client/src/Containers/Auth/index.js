@@ -11,10 +11,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-    return {};
+  return {};
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AuthRoute);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthRoute);

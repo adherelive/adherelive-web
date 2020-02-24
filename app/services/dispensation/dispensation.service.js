@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 
 class DispensationService {
   constructor() {}
+
   async createdispensation(dispensationData, contribution = {}) {
     try {
       let dispensation = {};
@@ -44,6 +45,7 @@ class DispensationService {
       throw error;
     }
   }
+
   async getdispensationForBenefitIds(benefitIds) {
     try {
       let dispensation = await dispensationModel
@@ -169,6 +171,7 @@ class DispensationService {
       throw error;
     }
   }
+
   async markDispensationAsCompleted(dispensationId) {
     try {
       const date = moment.now();

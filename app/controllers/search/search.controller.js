@@ -1,4 +1,5 @@
 import { USER_CATEGORY } from "../../../constant";
+
 const searchService = require("../../services/search/search.service");
 const userService = require("../../services/user/user.service");
 const Response = require("../../helper/responseFormat");
@@ -7,6 +8,7 @@ const ObjectId = require("mongodb").ObjectID;
 
 class SearchController {
   constructor() {}
+
   async doSearch(req, res) {
     try {
       const {
@@ -74,4 +76,5 @@ class SearchController {
     }
   }
 }
+
 module.exports = new SearchController();

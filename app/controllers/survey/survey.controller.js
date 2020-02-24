@@ -1502,6 +1502,7 @@ class SurveyController {
       return res.status(payload.code).json(response.getResponse());
     }
   }
+
   async getCareCoachSurvey(req, res) {
     try {
       let response;

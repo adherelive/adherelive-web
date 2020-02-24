@@ -6,6 +6,7 @@ const emailPayloadBuilder = require("./emailPayloadBuilder");
 const Log = require("../../../libs/log")("communications --> emailManger");
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-sendgrid-transport");
+
 class EmailManger {
   constructor() {
     // AWS.config.update({

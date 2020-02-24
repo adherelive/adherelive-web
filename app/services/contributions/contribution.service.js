@@ -1,4 +1,5 @@
 import { CONTRIBUTION_TYPE } from "../../../constant";
+
 const contributionsModel = require("../../models/contributions");
 
 class ContributionService {

@@ -4,11 +4,7 @@ const Log = require("../libs/log")("mongo");
 class Mongo {
   constructor(configUrl) {
     if (!configUrl) {
-      this.configUrl = `${process.config.db.connection}://${
-        process.config.db.username
-      }:${process.config.db.password}@${process.config.db.host}:${
-        process.config.db.port
-      }/${process.config.db.database}`;
+      this.configUrl = `${process.config.db.connection}://${process.config.db.username}:${process.config.db.password}@${process.config.db.host}:${process.config.db.port}/${process.config.db.database}`;
     } else {
       this.configUrl = configUrl;
     }

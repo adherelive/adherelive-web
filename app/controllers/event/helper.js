@@ -1,4 +1,5 @@
 import dateFns from "date-fns";
+
 const eventService = require("../../services/event/event.service");
 const { Proxy_Sdk, EVENTS } = require("../../proxySdk");
 import scheduleService from "../../services/scheduler/scheduler.service";

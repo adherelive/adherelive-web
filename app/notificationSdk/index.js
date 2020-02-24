@@ -1,6 +1,7 @@
 import { EventEmitter } from "events";
 import { NOTIFY_WITH } from "./notificationType";
 import { json } from "body-parser";
+
 const userService = require("../services/user/user.service");
 const log = require("../../libs/log")("NOTIFICATION_SDK");
 

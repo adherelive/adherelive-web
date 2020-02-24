@@ -1,6 +1,7 @@
 import { VITALFIELD, FIELD_TYPE } from "../../../constant";
 import moment from "moment";
 import forIn from "lodash/forIn";
+
 const medicalConditionService = require("../../services/medicalCondition/medicalCondition.service");
 
 const getFieldValueToShow = (field, value) => {
