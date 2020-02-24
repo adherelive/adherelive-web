@@ -2,6 +2,7 @@ const productModel = require("../../models/product");
 
 class ProductService {
   constructor() {}
+
   async addProduct(data) {
     try {
       let product = await productModel.create(data);

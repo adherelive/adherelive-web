@@ -2,19 +2,12 @@ import Routes from "../../Routes/index";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-    const {  } = state;
-    return {
-
-    };
+  const {} = state;
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {
-    return {
-
-    };
+  return {};
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Routes);
+export default connect(mapStateToProps, mapDispatchToProps)(Routes);

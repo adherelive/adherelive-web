@@ -7,6 +7,7 @@ import { USER_CATEGORY, NOTIFICATION_VERB, EVENT_IS } from "../../../constant";
 
 class MedicalConditionController {
   constructor() {}
+
   async editBasicCondition(req, res) {
     try {
       let response = new Response(true, 200);
@@ -334,4 +335,5 @@ class MedicalConditionController {
     }
   }
 }
+
 module.exports = new MedicalConditionController();

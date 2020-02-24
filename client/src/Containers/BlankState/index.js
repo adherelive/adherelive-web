@@ -4,21 +4,14 @@ import { connect } from "react-redux";
 // import { resetUnauthorizedError } from "../../modules/auth";
 
 const mapStateToProps = state => {
-    const {  } = state;
-    return {
-
-    };
+  const {} = state;
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {
-    return {
-
-    };
+  return {};
 };
 
 export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(BlankState)
+  connect(mapStateToProps, mapDispatchToProps)(BlankState)
 );

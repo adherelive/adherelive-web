@@ -51,6 +51,7 @@ class HospitalService {
       throw err;
     }
   }
+
   async getDoctorHospitals(doctorId) {
     try {
       let data = {};
@@ -124,6 +125,7 @@ class HospitalService {
       throw err;
     }
   }
+
   async getHospitalDetails(data) {
     try {
       let hospitalData = await hospitalModel.find(data);

@@ -2,6 +2,7 @@ import { NOTIFY_WITH } from "../notificationType";
 import { differenceInMinutes } from "date-fns";
 import { EVENT_IS } from "../../../constant";
 import SmsSender from "../../communications/sms/smsSender";
+
 const payloadBuilder = require("../helpers/messageBuilder");
 
 const { NotificationSdk } = require("../");

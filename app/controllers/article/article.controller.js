@@ -54,9 +54,7 @@ class ArticleController {
       let response = new Response(true, 200);
       response.setData({});
       response.setMessage(
-        `Article created & shared with ${
-          participantIds.length
-        } users successfully`
+        `Article created & shared with ${participantIds.length} users successfully`
       );
       if (participantIds.length > 0) {
         /* Send mail to participants */

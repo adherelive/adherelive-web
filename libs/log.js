@@ -113,9 +113,9 @@ class Log {
     throw new Error(errLog);
   }
 
-  err(errorCode, methodName, description){
+  err(errorCode, methodName, description) {
     var serverName = require("os").hostname(),
-    logDate = this.getLogDate();
+      logDate = this.getLogDate();
     var errLog = "\n\n";
     errLog += "\x1b[34m" + logDate + "\x1b[0m" + "\n";
     errLog += "\x1b[34m" + "errorCode= " + "\x1b[0m" + errorCode + "\n";

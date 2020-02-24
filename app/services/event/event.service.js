@@ -20,6 +20,7 @@ class EventService {
       throw err;
     }
   }
+
   async searchByField(searchField) {
     try {
       const response = await eventModel.find(searchField);
@@ -28,6 +29,7 @@ class EventService {
       throw err;
     }
   }
+
   async updateEvent(searchField, updateField) {
     try {
       const response = await eventModel.update(searchField, {

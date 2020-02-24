@@ -502,6 +502,7 @@ class PayloadBuilder {
         return null;
     }
   }
+
   getMRLGenerationPayload() {
     let payload = !isEmpty(arguments)
       ? { ...{}, ...arguments[0] }
@@ -567,4 +568,5 @@ class PayloadBuilder {
     }
   }
 }
+
 module.exports = data => new PayloadBuilder(data);

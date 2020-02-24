@@ -90,7 +90,7 @@ export const getUserProgramDetails = async data => {
         doctorData.length != null &&
         doctorData.length > 0
       ) {
-        console.log("!!!! doctorData ---> ",doctorData);
+        console.log("!!!! doctorData ---> ", doctorData);
         let patients = doctorData[0].doctors[0].patients;
         forEach(patients, function(patient) {
           if (JSON.stringify(patient._id) == JSON.stringify(userId)) {
@@ -98,10 +98,15 @@ export const getUserProgramDetails = async data => {
           }
         });
       }
-      console.log("careCoachData ? careCoachData.careCoaches[0].id --> ", careCoachData, careCoachData.careCoaches);
+      console.log(
+        "careCoachData ? careCoachData.careCoaches[0].id --> ",
+        careCoachData,
+        careCoachData.careCoaches
+      );
       let programDetail = {
         id: programs,
-        careCoach: careCoachData.length > 0 ? careCoachData.careCoaches[0].id : null,
+        careCoach:
+          careCoachData.length > 0 ? careCoachData.careCoaches[0].id : null,
         doctor:
           doctorData != null &&
           doctorData.length != null &&

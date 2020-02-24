@@ -12,6 +12,7 @@ const DISCHARGED = "Discharged";
 
 class UserService {
   constructor() {}
+
   async addUser(data) {
     try {
       let user = await userModel.create(data);

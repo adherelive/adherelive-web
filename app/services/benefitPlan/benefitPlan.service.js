@@ -3,6 +3,7 @@ import { BENEFITPLAN_STATUS } from "../../../constant";
 
 class BenefitPlanService {
   constructor() {}
+
   async createBenefitPlan(benefitPlanData) {
     try {
       let benefitPlan = await benefitPlanModel.create(benefitPlanData);
@@ -11,6 +12,7 @@ class BenefitPlanService {
       throw error;
     }
   }
+
   async getBenefitPlanById(id) {
     try {
       let benefitPlan = await benefitPlanModel.findOne({ _id: id }).lean();
@@ -19,6 +21,7 @@ class BenefitPlanService {
       throw error;
     }
   }
+
   async getBenefitPlanOfUser(userId) {
     try {
       let benefitPlan = await benefitPlanModel.find({ userId: userId }).lean();
@@ -27,6 +30,7 @@ class BenefitPlanService {
       throw error;
     }
   }
+
   async updateBenefitDoc({ benefitId, docId, data, allDocsVerified }) {
     try {
       const query = `benefitDocs.${[docId]}`;
@@ -44,6 +48,7 @@ class BenefitPlanService {
       throw error;
     }
   }
+
   async verifyBenefitDoc({ benefitId, docId, allDocsVerified }) {
     try {
       const query = `benefitDocs.${[docId]}.isVerified`;
@@ -90,6 +95,7 @@ class BenefitPlanService {
       throw error;
     }
   }
+
   async markPlanAsComplete(benefitId) {
     try {
       let benefitPlan = await benefitPlanModel

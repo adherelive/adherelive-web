@@ -8,6 +8,7 @@ import {
   REPEAT_TYPE
 } from "../../../constant";
 import { preparePatientSurveyMailData } from "../../helper/getSurveyEmailTemplateDate";
+
 const { NotificationSdk } = require("../");
 const { Proxy_Sdk, EVENTS } = require("../../proxySdk");
 const log = require("../../../libs/log")("NOTIFICATION_SDK");
@@ -354,9 +355,7 @@ class EmailNotification {
           templateData = await preparePatientSurveyMailData(payloadData);
           emailPayload = {
             toAddress: user.email,
-            title: `Your Care Coach sent you a survey: ${
-              templateData.surveyTitle
-            }`,
+            title: `Your Care Coach sent you a survey: ${templateData.surveyTitle}`,
             templateData: templateData,
             templateName: "surveyInvite"
           };

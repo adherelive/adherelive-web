@@ -2,6 +2,7 @@ const insuranceModel = require("../../models/insuranceProvider");
 
 class InsuranceProviderService {
   constructor() {}
+
   async addInsuranceProvider(data) {
     try {
       let insuranceProvider = await insuranceModel.create(data);
@@ -39,6 +40,7 @@ class InsuranceProviderService {
       throw err;
     }
   }
+
   async getInsuranceProvidersById(ids) {
     try {
       let insuranceProviders = await insuranceModel.find(

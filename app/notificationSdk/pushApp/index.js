@@ -4,6 +4,7 @@ import { NOTIFY_WITH } from "../notificationType";
 import { NotificationSdk } from "../";
 import Notifier from "../../communications/appNotification";
 import { EVENT_IS } from "../../../constant";
+
 const OneSignalNotification = require("../onesignal-notification");
 const notificationLogger = require("../../communications/appNotification/helpers/notificationLogger");
 const validator = require("../helpers/validator");
