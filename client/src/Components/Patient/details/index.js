@@ -1,15 +1,18 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 
 class PatientDetails extends Component {
-    render() {
-        const {id = 0} = this.props;
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-        return (
-          <div>{id}</div>
-          
-        );
-    }
+  componentDidMount() {}
+
+  render() {
+    const { id = 0 } = this.props;
+    return <div>{id}</div>;
+  }
 }
 
 export default injectIntl(PatientDetails);
