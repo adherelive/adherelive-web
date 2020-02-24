@@ -7,12 +7,7 @@ class AppWrapper extends Component {
     render() {
         return (
             <Router>
-                <Fragment>
                     <Routes/>
-                    <Fragment>
-
-                    </Fragment>
-                </Fragment>
             </Router>
         );
     }

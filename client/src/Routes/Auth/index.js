@@ -15,23 +15,12 @@ export default class Authenticated extends Component {
     }
     render() {
         return (
-            <Fragment>
-                {/*<MedicationReminder />*/}
                 <Router>
                     <Switch>
-                        {/*{this.state.redirecting && this.state.redirecting.length > 0 && (*/}
-                        {/*    <Redirect to={this.state.redirecting} />*/}
-                        {/*)}*/}
-                        {/*{this.props.unauthorizedError && (*/}
-                        {/*    <Route path="" component={BlankState} />*/}
-                        {/*)}*/}
                         <Route path={PATH.PATIENT.ROOT} component={Patients} />
-
-
                         <Route path="" component={BlankState} />
                     </Switch>
                 </Router>
-            </Fragment>
         );
     }
 }

@@ -28,3 +28,13 @@ export const RESET_ERROR = "RESET_ERROR";
 export const RESET_UNAUTHORIZED_ERROR = "RESET_UNAUTHORIZED_ERROR";
 
 export const RESET_PASSWORD_LINK_COMPLETED = "RESET_PASSWORD_LINK_COMPLETED";
+
+const intial_state = {};
+
+export default (state=intial_state,action) => {
+    const {type} = action;
+    switch(type){
+        default : 
+        return state;
+    }
+};
