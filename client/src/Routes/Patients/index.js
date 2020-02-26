@@ -20,14 +20,21 @@ export default class Patients extends Component {
     this.state = {};
   }
 
-
-    render() {
-        return (
-                <Router>
-                    <Switch>
-                        <Route exact path={PATH.PATIENT.DETAILS} component={PatientDetailsComp}/>
-                    </Switch>
-                </Router>
-        );
-    }
+  render() {
+    return (
+      <Fragment>
+        {/*<MedicationReminder />*/}
+        <Router>
+          <Switch>
+            <Route exact path={PATH.PATIENT.PA} component={Patient} />
+            <Route
+              exact
+              path={PATH.PATIENT.DETAILS}
+              component={PatientDetailsComp}
+            />
+          </Switch>
+        </Router>
+      </Fragment>
+    );
+  }
 }

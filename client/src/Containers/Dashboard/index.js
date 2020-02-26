@@ -3,7 +3,8 @@ import { withRouter } from "react-router-dom";
 import Dashboard from "../../Components/Dashboard";
 
 const mapStateToProps = state => {
-  return {};
+  const { graphs } = state;
+  return { graphs };
 };
 
 const mapDispatchToProps = dispatch => {

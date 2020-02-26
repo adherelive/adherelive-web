@@ -1,6 +1,16 @@
 @import "~antd/dist/antd.less";
+<<<<<<< HEAD
+=======
+//@import "./antd/custom.less";
+>>>>>>> 137ad1c8b06e0c64e5950edd45fc6f1de2e85eb9
 @import "./common/index.less";
 @import "./variables/index.less";
+<<<<<<< HEAD
+=======
+@import "./component/index.less";
+@import "./override.less";
+//override antd styles
+>>>>>>> 137ad1c8b06e0c64e5950edd45fc6f1de2e85eb9
 
 @import "./components/patientDetails.less";
 @font-face {
@@ -50,4 +60,9 @@ body {
   min-height: 100%;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.container {
+  margin-left: @86px;
+  width: calc(100vw - 86px);
 }
