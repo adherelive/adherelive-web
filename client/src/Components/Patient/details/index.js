@@ -266,6 +266,8 @@ class PatientDetails extends Component {
       }={}
     } = this.props;
 
+    console.log("2323 ", this.props.user_details);
+
     const {
       treatment_details:{
         treatment_name,

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const intial_state = {
     "23":{
         first_name:"John",
@@ -33,15 +32,3 @@ export default (state=intial_state,action) => {
         return state;
     }
 };
-=======
-import { USER_INITIAL_STATE } from "../../data";
-
-export default (state = USER_INITIAL_STATE, action) => {
-  const { data, type } = action;
-
-  switch (type) {
-    default:
-      return state;
-  }
-};
->>>>>>> 137ad1c8b06e0c64e5950edd45fc6f1de2e85eb9

@@ -29,21 +29,10 @@ export const RESET_UNAUTHORIZED_ERROR = "RESET_UNAUTHORIZED_ERROR";
 
 export const RESET_PASSWORD_LINK_COMPLETED = "RESET_PASSWORD_LINK_COMPLETED";
 
-<<<<<<< HEAD
-const intial_state = {};
-
-export default (state=intial_state,action) => {
-    const {type} = action;
-    switch(type){
-        default : 
-        return state;
-    }
-=======
 export default (state = AUTH_INITIAL_STATE, action) => {
   const { type, data } = action;
   switch (type) {
     default:
       return state;
   }
->>>>>>> 137ad1c8b06e0c64e5950edd45fc6f1de2e85eb9
 };

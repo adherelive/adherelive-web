@@ -33,7 +33,7 @@ export default class Authenticated extends Component {
           <div className="container">
             <Router>
               <Switch>
-                <Route exact path={PATH.PATIENT.PA} component={Patients} />
+                <Route path={PATH.PATIENT.PA} component={Patients} />
 
                 <Route path={PATH.LANDING_PAGE} component={Dashboard} />
                 <Route path="" component={BlankState} />

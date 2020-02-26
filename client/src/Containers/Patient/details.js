@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state,ownprops) => {
-  const {users={}} = state;
+  const {user={}} = state;
   const {id} = ownprops;
-  const user_details = users[id];
+  const user_details = user[id];
 
-  console.log("usee:::",user_details,state);
+  console.log("usee:::",user_details, state, user, user[id]);
   return {
     user_details
   };
