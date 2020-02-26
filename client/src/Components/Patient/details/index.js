@@ -196,6 +196,31 @@ const PatientTreatmentCard = ({
           );
 }
 
+const PatientAlertCard = ({
+  formatMessage,
+  count,
+  new_symptoms_string,
+  missed_appointment
+}) => {
+  return (
+    <div className="patient-alerts pl16 pr16">
+      <h3>{formatMessage(message.alerts_last_visit)}<span className="alerts-count"> ({count})</span></h3>
+      <div className="new-symptoms flex mt10">
+        <div className="new-symptoms-header w40">
+          <div className="symptoms-side mb4"></div>{formatMessage(message.new_symptoms_header)}
+        </div>
+        <div className="new-symptoms-text w60 tdh">{new_symptoms_string}</div>
+      </div>
+      <div className="missed-appointment flex mt10">
+        <div className="missed-appointment-header w40">
+          <div className="missed-appointment-side mb4"></div>{formatMessage(message.missed_appointment_header)}
+        </div>
+        <div className="missed-appointment-text w60 tdh">{missed_appointment}</div>
+      </div>
+    </div>
+  );
+}
+
 class PatientDetails extends Component {
   constructor(props) {
     super(props);
@@ -301,36 +326,27 @@ class PatientDetails extends Component {
                     />
                   </div>
                   <div className="flex-grow-1 pt20 pr24 pb20 pl24">
-                    <div className="patient-alerts pl16 pr16">
-                      <h3>{formatMessage(message.alerts_last_visit)}<span className="alerts-count"> ({count})</span></h3>
-                      <div className="new-symptoms flex mt10">
-                        <div className="new-symptoms-header w40">
-                          <div className="symptoms-side mb4"></div>{formatMessage(message.new_symptoms_header)}
-                        </div>
-                        <div className="new-symptoms-text w60 tdh">{new_symptoms_string}</div>
-                      </div>
-                      <div className="missed-appointment flex mt10">
-                        <div className="missed-appointment-header w40">
-                          <div className="missed-appointment-side mb4"></div>{formatMessage(message.missed_appointment_header)}
-                        </div>
-                        <div className="missed-appointment-text w60 tdh">{missed_appointment}</div>
-                      </div>
-                    </div>
+                    <PatientAlertCard 
+                      formatMessage={formatMessage}
+                      count={count}
+                      new_symptoms_string={new_symptoms_string}
+                      missed_appointment={missed_appointment}
+                    />
                     <div className="patient-tab mt20">
-                    <Tabs defaultActiveKey="1" onChange={callback}>
-                      <TabPane tab="Symptoms" key="1">
-                        <Table columns={columns_symptoms} dataSource={data_symptoms} />
-                      </TabPane>
-                      <TabPane tab="Medication" key="2">
-                        <Table columns={columns_medication} dataSource={data_medication} />
-                      </TabPane>
-                      <TabPane tab="Appointments" key="3">
-                        Content of Appointments Tab
-                      </TabPane>
-                      <TabPane tab="Actions" key="4">
-                        Content of Actions Tab
-                      </TabPane>
-                    </Tabs>
+                      <Tabs defaultActiveKey="1" onChange={callback}>
+                        <TabPane tab="Symptoms" key="1">
+                          <Table columns={columns_symptoms} dataSource={data_symptoms} />
+                        </TabPane>
+                        <TabPane tab="Medication" key="2">
+                          <Table columns={columns_medication} dataSource={data_medication} />
+                        </TabPane>
+                        <TabPane tab="Appointments" key="3">
+                          Content of Appointments Tab
+                        </TabPane>
+                        <TabPane tab="Actions" key="4">
+                          Content of Actions Tab
+                        </TabPane>
+                      </Tabs>
                     </div>
                   </div>
                 </div>
