@@ -2,7 +2,7 @@ export const TABLE_COLUMN = {
   PID: {
     key: "PID",
     dataIndex: "PID",
-    width: 300,
+    width: 200,
     fixed: "left"
   },
   CONDITION: {
@@ -37,4 +37,27 @@ export const TABLE_COLUMN = {
     key: "NEW_SYMPTOMS",
     dataIndex: "NEW_SYMPTOMS"
   }
+};
+
+export const formatPatientTableData = data => {
+  const { id, patients, doctors, providers, treatments } = data || {};
+
+  const patientData = patients[id] || {};
+
+  console.log("18723 patientData --> ", patientData, patients);
+  const {
+    treatment: { treatment_id },
+    doctor_id,
+    provider_id
+  } = patientData || {};
+
+  const treatmentData = treatments[treatment_id] || {};
+  const doctorData = doctors[doctor_id] || {};
+  const providerData = providers[provider_id] || {};
+  return {
+    patientData,
+    doctorData,
+    providerData,
+    treatmentData
+  };
 };

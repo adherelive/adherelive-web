@@ -26,21 +26,25 @@ export default class Authenticated extends Component {
   }
 
   render() {
+    console.log(
+      "19273 here --> main route",
+      PATH.LANDING_PAGE,
+      PATH.PATIENT.PA
+    );
     return (
       <Fragment>
-        <div className="App flex" style={{ overflow: "hidden" }}>
-          <SideMenu {...this.props} />
-          <div className="container">
-            <Router>
+        <Router>
+          <div className="App flex" style={{ overflow: "hidden" }}>
+            <SideMenu {...this.props} />
+            <div className="container">
               <Switch>
+                <Route exact path="/" component={Dashboard} />
                 <Route path={PATH.PATIENT.PA} component={Patients} />
-
-                <Route path={PATH.LANDING_PAGE} component={Dashboard} />
                 <Route path="" component={BlankState} />
               </Switch>
-            </Router>
+            </div>
           </div>
-        </div>
+        </Router>
       </Fragment>
     );
   }

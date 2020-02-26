@@ -21,6 +21,7 @@ export default class Patients extends Component {
   }
 
   render() {
+    console.log("19273 here --> patients route");
     return (
       <Fragment>
         {/*<MedicationReminder />*/}

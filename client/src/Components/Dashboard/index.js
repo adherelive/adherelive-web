@@ -71,6 +71,7 @@ class Dashboard extends Component {
   };
 
   render() {
+    console.log("19273 here --> dashboard");
     const { graphs } = this.props;
     const { formatMessage, renderChartTabs } = this;
 

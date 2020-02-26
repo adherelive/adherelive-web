@@ -1,41 +1,41 @@
-import { TABLE_COLUMN as COLUMN, formatWorkOrderData } from "../helper";
+import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 
 export default data => {
   const { id } = data;
-  const formattedData = formatWorkOrderData(data);
-  const {
-    ticketData,
-    companyData,
-    //auditData,
-    //clientData,
-    ownerData,
-    facilityData,
-    managerData,
-    workers
-  } = formattedData;
+  const formattedData = formatPatientTableData(data);
+  console.log("1923134 ", formattedData);
+  const { patientData, treatmentData, doctorData, providerData } =
+    formattedData || {};
   return {
     key: id,
-    [COLUMN.GENERATE_REPORT.dataIndex]: {
-      ticketData,
-      companyData,
-      facilityData,
-      managerData
+    [TABLE_COLUMN.PID.dataIndex]: {
+      patientData
     },
-    [COLUMN.TITLE.dataIndex]: {
-      ticketData,
-      companyData,
-      facilityData,
-      managerData
+    [TABLE_COLUMN.CONDITION.dataIndex]: {
+      patientData
     },
-    [COLUMN.PRIORITY.dataIndex]: ticketData,
-    [COLUMN.STATUS.dataIndex]: ticketData,
-    [COLUMN.CREATED_AT.dataIndex]: ticketData,
-    [COLUMN.DUE_DATE.dataIndex]: ticketData,
-    [COLUMN.SCHEDULED_DATE.dataIndex]: ticketData,
-    [COLUMN.ASSIGNED_TO.dataIndex]: {
-      ticketData,
-      workers
+    [TABLE_COLUMN.TREATMENT.dataIndex]: {
+      treatmentData
     },
-    [COLUMN.OWNER.dataIndex]: { ownerData }
+    [TABLE_COLUMN.SEVERITY.dataIndex]: {
+      treatmentData
+    },
+    [TABLE_COLUMN.AGE.dataIndex]: {
+      patientData
+    },
+    [TABLE_COLUMN.START_DATE.dataIndex]: {
+      treatmentData
+    },
+    [TABLE_COLUMN.DOCTOR.dataIndex]: {
+      patientData,
+      doctorData
+    },
+    [TABLE_COLUMN.PROVIDER.dataIndex]: {
+      patientData,
+      providerData
+    },
+    [TABLE_COLUMN.NEW_SYMPTOMS.dataIndex]: {
+      patientData
+    }
   };
 };

@@ -9,6 +9,7 @@ import { withRouter } from "react-router-dom";
 
 const { Item: MenuItem } = Menu || {};
 
+const LOGO = "logo";
 const DASHBOARD = "dashboard";
 const PROFILE = "profile";
 
@@ -24,8 +25,10 @@ class SideMenu extends Component {
     const { history, logout } = this.props;
     console.log(selectedKeys);
     switch (selectedKeys[0]) {
+      case LOGO:
       case DASHBOARD:
         history.push(PATH.LANDING_PAGE);
+        break;
       default:
         history.push(PATH.LANDING_PAGE);
         break;
@@ -44,7 +47,7 @@ class SideMenu extends Component {
       >
         <MenuItem
           className="flex direction-column justify-center align-center p0"
-          key={"1"}
+          key={LOGO}
         >
           <img src={Logo} alt="Adherence logo" />
         </MenuItem>

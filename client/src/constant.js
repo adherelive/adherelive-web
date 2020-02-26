@@ -11,24 +11,22 @@ export const PATH = {
   }
 };
 
-
-
 export const SEVERITY_STATUS = {
-  0:{
-      text:'Critical',
-      color:'red'
+  0: {
+    text: "Critical",
+    color: "red"
   },
-  1:{
-    text:'Low',
-    color:'orange'
+  1: {
+    text: "Low",
+    color: "orange"
   },
-  2:{
-    text:'High',
-    color:'yellow'
+  2: {
+    text: "High",
+    color: "yellow"
   },
-  3:{
-    text:'Medium',
-    color:'black'
+  3: {
+    text: "Medium",
+    color: "black"
   }
 };
 export const NO_ADHERENCE = "no_adherence";
@@ -77,3 +75,5 @@ export const GRAPH_COLORS = {
     }
   }
 };
+
+export const TABLE_DEFAULT_BLANK_FIELD = "--";
