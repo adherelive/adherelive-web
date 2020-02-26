@@ -1,8 +1,10 @@
-//@import "~antd/dist/antd.less";
+@import "~antd/dist/antd.less";
 //@import "./antd/custom.less";
 @import "./common/index.less";
 //@import "./devices/devices.less";
 @import "./variables/index.less";
+@import "./component/index.less";
+@import "./override.less";
 //override antd styles
 
 @font-face {
@@ -52,4 +54,9 @@ body {
   min-height: 100%;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.container {
+  margin-left: @86px;
+  width: calc(100vw - 86px);
 }

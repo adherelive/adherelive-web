@@ -1,6 +1,13 @@
 import { combineReducers } from "redux";
+import graphs from "./graphs";
+import user from "./user";
+import auth from "./auth";
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  auth,
+  user,
+  graphs
+});
 
 export default (state, action) => {
   if (action.type === "SIGNING_OUT_COMPLETED") {

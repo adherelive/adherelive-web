@@ -1,3 +1,5 @@
+import { AUTH_INITIAL_STATE } from "../../data";
+
 export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
 export const SIGNING_COMPLETED_WITH_ERROR = "SIGNING_COMPLETED_WITH_ERROR";
@@ -26,3 +28,11 @@ export const RESET_ERROR = "RESET_ERROR";
 export const RESET_UNAUTHORIZED_ERROR = "RESET_UNAUTHORIZED_ERROR";
 
 export const RESET_PASSWORD_LINK_COMPLETED = "RESET_PASSWORD_LINK_COMPLETED";
+
+export default (state = AUTH_INITIAL_STATE, action) => {
+  const { type, data } = action;
+  switch (type) {
+    default:
+      return state;
+  }
+};

@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^3.26.12",
     "babel-plugin-import": "^1.11.0",
+    "chart.js": "^2.9.3",
     "less": "3.9.0",
     "less-loader": "^4.1.0",
     "lodash-es": "^4.17.15",

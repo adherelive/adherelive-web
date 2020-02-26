@@ -5,7 +5,7 @@ import {
   Switch,
   Redirect
 } from "react-router-dom";
-
+import SideMenu from "../../Components/Sidebar";
 import BlankState from "../../Containers/BlankState";
 import { PATH } from "../../constant";
 
@@ -28,22 +28,19 @@ export default class Authenticated extends Component {
   render() {
     return (
       <Fragment>
-        {/*<MedicationReminder />*/}
-        {/*<SideMenu {...this.props} />*/}
-        <Router>
-          <Switch>
-            {/*{this.state.redirecting && this.state.redirecting.length > 0 && (*/}
-            {/*    <Redirect to={this.state.redirecting} />*/}
-            {/*)}*/}
-            {/*{this.props.unauthorizedError && (*/}
-            {/*    <Route path="" component={BlankState} />*/}
-            {/*)}*/}
-            <Route exact path={PATH.PATIENT.ROOT} component={Patients} />
+        <div className="App flex" style={{ overflow: "hidden" }}>
+          <SideMenu {...this.props} />
+          <div className="container">
+            <Router>
+              <Switch>
+                <Route exact path={PATH.PATIENT.PA} component={Patients} />
 
-            <Route path={PATH.ROOT} component={Dashboard} />
-            <Route path="" component={BlankState} />
-          </Switch>
-        </Router>
+                <Route path={PATH.LANDING_PAGE} component={Dashboard} />
+                <Route path="" component={BlankState} />
+              </Switch>
+            </Router>
+          </div>
+        </div>
       </Fragment>
     );
   }
