@@ -1,25 +1,159 @@
 
-.patientCard {
-    width: 282px;
-    height: 323px;
-    left: 119px;
-    top: 106px;
+.patient-card {
+    position: relative;
+    width: @282px;
+    height: @323px;
     background: rgba(0, 0, 0, 0.04);
     border-radius: 10px;
 }
 
-.patientDp {
-    // display: flex;
-    background-color: white;
-    width: 6rem;
-    height: 6rem;
+.patient-dp {
+    width: @110px;
+    height: @110px;
     border-radius: 50%;
 }
 
-.patientName {
-    font-family: Roboto;
+.patient-name {
+    font-family: @DemiMediumFont;
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
     line-height: 23px;
+    color: #232425;
+
+}
+.patient-id {
+    font-family: @RegularFont;
+    font-style: normal;
+    font-weight: normal;
+    font-size: @14px;
+    line-height: @16px;
+    color: #000000;
+}
+
+.patient-contact-number ,.patient-email-id{
+    font-family: @RegularFont;
+    font-style: normal;
+    font-weight: normal;
+    font-size: @14px;
+    line-height: @16px;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.action-buttons {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.09);
+}
+
+.edit-button ,.chat-button {
+    width:100%;
+    cursor: pointer;
+    font-family: @DemiMediumFont;
+    font-style: normal;
+    font-weight: 500;
+    font-size: @14px;
+    line-height: @16px;
+
+    color: #1890FF;
+}
+
+.edit-button:hover ,.chat-button:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.edit-button {
+    border-right: 0.25px solid rgba(0, 0, 0, 0.09);
+}
+
+.chat-button {
+    border-left:0.25px solid rgba(0, 0, 0, 0.09);
+}
+
+.chat-button >span ,.editbutton > span {
+    position: relative;
+    bottom: @3px;
+}
+
+.chat-button > img ,.edit-button > img {
+    margin-right: @5px;
+}
+.chat-button >span,.chat-button >span {
+    top: @1px;
+}
+.treatment {
+    position: relative;
+    width: @282px;
+    min-height: @280px;
+    // left: @119px;
+    // top: @125px;
+
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: @10px;
+}
+
+.treatment > h3,.patient-alerts > h3{
+    margin: 0;
+    padding: @15px;
+    border-bottom:0.5px solid rgba(0, 0, 0, 0.09);
+}
+.patient-profile-header > h3 {
+    margin: 0;
+    font-family: @DemiMediumFont;
+}
+.tdh {
+    font-family: @DemiMediumFont;
+}
+.severity-label {
+    width: @10px;
+    height: @10px;
+    border-radius: 54px;
+    display: inline-block;
+}
+
+.patient-alerts {
+    min-height: @150px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: @10px;
+}
+// .add-button {
+// }
+.patient-tab {
+    min-height: @150px;
+}
+
+.symptoms-side {
+    display: inline-block;
+    width: 17px;
+    height: 0px;
+    border: 2px solid #4ED8DA;
+    transform: rotate(90deg);
+}
+
+.missed-appointment-side {
+    display: inline-block;
+    width: 17px;
+    height: 0px;
+    border: 2px solid #FA8C16;
+    transform: rotate(90deg);
+}
+
+.alerts-count {
+    color: #979797;
+    font-size: @18px;
+    line-height: @21px;
+}
+
+.edit-medication-icon {
+    height: 15px;
+    width: 15px;
+}
+.edit-medication {
+    cursor: pointer;
+}
+
+.page-loader {
+    position: relative;
+    margin:auto;
 }

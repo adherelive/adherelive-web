@@ -11,3 +11,24 @@ export const PATH = {
     DETAILS: "/patients/:id"
   }
 };
+
+
+
+export const SEVERITY_STATUS = {
+  0:{
+      text:'Critical',
+      color:'red'
+  },
+  1:{
+    text:'Low',
+    color:'orange'
+  },
+  2:{
+    text:'High',
+    color:'yellow'
+  },
+  3:{
+    text:'Medium',
+    color:'black'
+  }
+};
