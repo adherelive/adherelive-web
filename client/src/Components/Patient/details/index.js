@@ -5,6 +5,7 @@ import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
 import {SEVERITY_STATUS} from "../../../constant";
 import { Tabs,Table, Divider, Tag, Button, Menu, Dropdown,Spin } from 'antd';
+import {AddMedicationReminderModal} from '../../modal/event/add/medicationsReminder'
 
 const { TabPane } = Tabs;
 
@@ -335,6 +336,7 @@ class PatientDetails extends Component {
                       missed_appointment={missed_appointment}
                     />
                     <div className="patient-tab mt20">
+                      <AddMedicationReminderModal/>
                       <Tabs defaultActiveKey="1" onChange={callback}>
                         <TabPane tab="Symptoms" key="1">
                           <Table columns={columns_symptoms} dataSource={data_symptoms} />

@@ -11,6 +11,87 @@ export const PATH = {
   }
 };
 
+export const USER_CATEGORY = {
+  DOCTOR: "doctor",
+  PATIENT: "patient",
+  PROGRAM_ADMIN: "programAdmin",
+  CARE_COACH: "careCoach",
+  CHARITY_ADMIN: "charityAdmin",
+  PHARMACY_ADMIN: "pharmacyAdmin"
+};
+
+export const ACTIVITY_TYPE = {
+  VISIT: "visit",
+  CALL: "call",
+  CHAT: "chat"
+};
+
+export const APPOINTMENT_TYPE = {
+  FOLLOWUP: "followup",
+  MEDICATION: "medication",
+  MATERIAL_DELIVERY: "material_delivery"
+};
+
+export const USER_STATUS = {
+  ENROLLED: "ENROLLED",
+  DISCHARGED: "DISCHARGED",
+  INACTIVE: "INACTIVE",
+  DROPPED: "DROPPED"
+};
+
+export const REPEAT_TYPE = {
+  NONE: "none",
+  DAILY: "daily",
+  WEEKLY: "weekly",
+  MONTHLY: "monthly",
+  YEARLY: "yearly"
+};
+
+export const REPEAT_OPTION = [
+  { label: "Does not repeat", key: REPEAT_TYPE.NONE },
+  { label: "Repeats Daily", key: REPEAT_TYPE.DAILY },
+  { label: "Repeats Weekly", key: REPEAT_TYPE.WEEKLY },
+  { label: "Repeats Monthly", key: REPEAT_TYPE.MONTHLY },
+  { label: "Repeats Yearly", key: REPEAT_TYPE.YEARLY }
+];
+
+export const EVENT_ACTION = {
+  EDIT_NOTES: "EDIT_NOTES",
+  RESCHEDULE: "RESCHEDULE",
+  EDIT_REMINDER: "EDIT_REMINDER",
+  ADD_NOTES: "ADD_NOTES",
+  DELETE_REMINDER: "DELETE_REMINDER",
+  ADD_PRODUCT: "ADD_PRODUCT",
+  EDIT_PRODUCT: "EDIT_PRODUCT"
+};
+
+export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+export const HOST = "/api";
+
+export const EVENT_TYPE = {
+  INVITATION: "invitation",
+  APPOINTMENT: "appointment",
+  FORGOT_PASSWORD: "forgotPassword",
+  REMINDER: "reminder",
+  ADVERSE_EVENT: "adverse",
+  SURVEY: "survey",
+  ARTICLE: "article",
+  MEDICATION_REMINDER: "medication-reminder",
+  BENEFIT_DOCS_VERIFIED: "BENEFIT_DOCS_VERIFIED",
+  CHARITY_APPROVAL: "CHARITY_APPROVAL",
+  MRL_GENERATION: "MRL_GENERATION",
+  CHARITY_APPLIED: "CHARITY_APPLIED"
+};
+
+
+//request type
+export const REQUEST_TYPE = {
+  POST: "post",
+  GET: "get",
+  PUT: "put",
+  DELETE: "delete"
+};
 
 
 export const SEVERITY_STATUS = {
