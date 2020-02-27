@@ -40,16 +40,30 @@ export const TABLE_COLUMN = {
 };
 
 export const formatPatientTableData = data => {
-  const { id, patients, doctors, providers, treatments } = data || {};
+  const { id, patients, doctors, providers, treatments, chats, chat_ids } =
+    data || {};
 
   const patientData = patients[id] || {};
 
-  console.log("18723 patientData --> ", patientData, patients);
-  const {
-    treatment: { treatment_id },
-    doctor_id,
-    provider_id
-  } = patientData || {};
+  console.log("2363645 patientData --> ", patientData);
+  const { treatment_id, doctor_id, provider_id, chats: patientChatIds = [] } =
+    patientData || {};
+
+  let chatData = {};
+
+  console.log(
+    "293423 chats, chat_ids, patientChatIds --> ",
+    chats,
+    chat_ids,
+    patientChatIds
+  );
+
+  chat_ids.forEach(id => {
+    const { doctor_id: chatDoctorId } = chats[id] || {};
+    if (doctor_id === chatDoctorId) {
+      chatData = { ...chats[id] };
+    }
+  });
 
   const treatmentData = treatments[treatment_id] || {};
   const doctorData = doctors[doctor_id] || {};
@@ -58,6 +72,7 @@ export const formatPatientTableData = data => {
     patientData,
     doctorData,
     providerData,
-    treatmentData
+    treatmentData,
+    chatData
   };
 };

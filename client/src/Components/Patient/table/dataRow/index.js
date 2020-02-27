@@ -3,13 +3,13 @@ import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 export default data => {
   const { id } = data;
   const formattedData = formatPatientTableData(data);
-  console.log("1923134 ", formattedData);
-  const { patientData, treatmentData, doctorData, providerData } =
+  const { patientData, treatmentData, doctorData, providerData, chatData } =
     formattedData || {};
   return {
     key: id,
     [TABLE_COLUMN.PID.dataIndex]: {
-      patientData
+      patientData,
+      chatData
     },
     [TABLE_COLUMN.CONDITION.dataIndex]: {
       patientData

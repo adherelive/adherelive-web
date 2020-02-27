@@ -44,7 +44,7 @@ const messages = defineMessages({
   new_symptoms: {
     id: "app.patient.table.new.symptoms",
     description: "",
-    defaultMessage: "New Symptoms"
+    defaultMessage: "New Symptom"
   }
 });
 

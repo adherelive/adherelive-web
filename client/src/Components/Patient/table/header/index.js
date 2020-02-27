@@ -19,7 +19,10 @@ export default props => {
     {
       title: formatMessage(messages.pid),
       ...TABLE_COLUMN.PID,
-      render: patientData => <PID {...patientData} />
+      render: data => {
+        const { patientData, chatData } = data || {};
+        return <PID patientData={patientData} chatData={chatData} />;
+      }
     },
     {
       title: formatMessage(messages.condition),
@@ -39,17 +42,17 @@ export default props => {
     {
       title: formatMessage(messages.severity),
       ...TABLE_COLUMN.SEVERITY,
-      render: treatmentData => <Severity treatmentData={treatmentData} />
+      render: treatmentData => <Severity {...treatmentData} />
     },
     {
       title: formatMessage(messages.age),
       ...TABLE_COLUMN.AGE,
-      render: patientData => <Age patientData={patientData} />
+      render: patientData => <Age {...patientData} />
     },
     {
       title: formatMessage(messages.start_date),
       ...TABLE_COLUMN.START_DATE,
-      render: patientData => <StartDate patientData={patientData} />
+      render: treatmentData => <StartDate {...treatmentData} />
     },
     {
       title: formatMessage(messages.doctor),
@@ -72,7 +75,7 @@ export default props => {
     {
       title: formatMessage(messages.new_symptoms),
       ...TABLE_COLUMN.NEW_SYMPTOMS,
-      render: patientData => <NewSymptoms patientData={patientData} />
+      render: patientData => <NewSymptoms {...patientData} />
     }
   ];
 };

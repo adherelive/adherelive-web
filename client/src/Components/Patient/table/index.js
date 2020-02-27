@@ -38,10 +38,12 @@ class PatientTable extends Component {
   getDataSource = () => {
     const {
       patient_ids,
+      chat_ids,
       patients,
       doctors,
       providers,
-      treatments
+      treatments,
+      chats
     } = this.props;
 
     console.log("192837 this.props ----> ", this.props);
@@ -52,7 +54,9 @@ class PatientTable extends Component {
         patients,
         doctors,
         providers,
-        treatments
+        treatments,
+        chats,
+        chat_ids
       });
     });
   };
@@ -74,8 +78,7 @@ class PatientTable extends Component {
 
     return (
       <Table
-        onRow={onRow}
-        rowSelection={rowSelection}
+        // onRow={onRow}
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({

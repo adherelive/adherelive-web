@@ -6,6 +6,7 @@ import patients from "./patients";
 import doctors from "./doctors";
 import providers from "./providers";
 import treatments from "./treatments";
+import chats from "./chat";
 import pages from "./pages";
 
 const rootReducer = combineReducers({
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   doctors,
   providers,
   treatments,
-  pages
+  pages,
+  chats
 });
 
 export default (state, action) => {

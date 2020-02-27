@@ -11,24 +11,30 @@ export const PATH = {
   }
 };
 
+export const CRITICAL = "1";
+export const HIGH = "2";
+export const MEDIUM = "3";
+export const LOW = "4";
+
 export const SEVERITY_STATUS = {
-  0: {
+  [CRITICAL]: {
     text: "Critical",
+    color: "dark-red"
+  },
+  [LOW]: {
+    text: "Low",
+    color: "green"
+  },
+  [HIGH]: {
+    text: "High",
     color: "red"
   },
-  1: {
-    text: "Low",
-    color: "orange"
-  },
-  2: {
-    text: "High",
-    color: "yellow"
-  },
-  3: {
+  [MEDIUM]: {
     text: "Medium",
     color: "black"
   }
 };
+
 export const NO_ADHERENCE = "no_adherence";
 export const NO_MEDICATION = "no_medication";
 export const NO_APPOINTMENT = "no_appointment";
@@ -73,6 +79,19 @@ export const GRAPH_COLORS = {
       dark: "bg-dark-blue",
       light: "bg-light-blue"
     }
+  }
+};
+
+export const SYMPTOM = {
+  NEW: "Yes",
+  OLD: "--"
+};
+
+export const TRAUMA = "1";
+
+export const CONDITIONS = {
+  [TRAUMA]: {
+    value: "Trauma"
   }
 };
 

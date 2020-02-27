@@ -8,16 +8,18 @@ const mapStateToProps = state => {
     doctors = {},
     providers = {},
     treatments = {},
-    pages: { patient_ids = [] } = {}
+    pages: { patient_ids = [], chat_ids = [] } = {},
+    chats = {}
   } = state;
 
-  console.log("92837 --> ", patients, patient_ids);
   return {
     patient_ids,
+    chat_ids,
     patients,
     doctors,
     providers,
-    treatments
+    treatments,
+    chats
   };
 };
 
