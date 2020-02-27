@@ -16,6 +16,44 @@ export const HIGH = "2";
 export const MEDIUM = "3";
 export const LOW = "4";
 
+export const MALE = "1";
+export const FEMALE = "2";
+
+export const GENDER = {
+  [MALE]: {
+    value: "male",
+    view: "M"
+  },
+  [FEMALE]: {
+    value: "female",
+    view: "F"
+  }
+};
+
+export const SYMPTOMS = "1";
+export const MISSED_MEDICATION = "2";
+export const MISSED_APPOINTMENTS = "3";
+export const MISSED_ACTIONS = "4";
+
+export const PATIENT_BOX_CONTENT = {
+  [SYMPTOMS]: {
+    background_color: "light-aqua",
+    border_color: "dark-aqua"
+  },
+  [MISSED_MEDICATION]: {
+    background_color: "light-purple",
+    border_color: "dark-purple"
+  },
+  [MISSED_APPOINTMENTS]: {
+    background_color: "light-orange",
+    border_color: "dark-orange"
+  },
+  [MISSED_ACTIONS]: {
+    background_color: "light-blue",
+    border_color: "dark-blue"
+  }
+};
+
 export const USER_CATEGORY = {
   DOCTOR: "doctor",
   PATIENT: "patient",

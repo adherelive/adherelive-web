@@ -41,7 +41,8 @@ export const PATIENT_INITIAL_STATE = {
   "1": {
     basic_info: {
       name: "test 1",
-      age: "25"
+      age: "25",
+      gender: "1"
     },
     chats: ["1"],
     condition: "1",
@@ -53,7 +54,8 @@ export const PATIENT_INITIAL_STATE = {
   "23": {
     basic_info: {
       name: "test 3",
-      age: "35"
+      age: "35",
+      gender: "2"
     },
     chats: ["2"],
     condition: "1",

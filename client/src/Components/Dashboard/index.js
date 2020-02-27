@@ -7,6 +7,7 @@ import { formatMessage } from "react-intl/src/format";
 import { CHART_TITLE, GRAPH_COLORS } from "../../constant";
 import { Tabs } from "antd";
 import Patients from "../../Containers/Patient/table";
+import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 
 const { TabPane } = Tabs;
 
@@ -80,33 +81,39 @@ class Dashboard extends Component {
     }
 
     return (
-      <div className="dashboard p20">
-        <div className="flex direction-row justify-space-between">
-          <div className="fs40 fw700">{formatMessage(messages.report)}</div>
-          <div>{"search here"}</div>
-        </div>
+      <Fragment>
+        <div className="dashboard p20">
+          <div className="flex direction-row justify-space-between">
+            <div className="fs40 fw700">{formatMessage(messages.report)}</div>
+            <div>{"search here"}</div>
+          </div>
 
-        <div className="mt10 flex justify-space-between align-center">
-          {renderChartTabs()}
-        </div>
+          <div className="mt10 flex justify-space-between align-center">
+            {renderChartTabs()}
+          </div>
 
-        <div className="mt20 fs20 fw700">
-          {formatMessage(messages.patients)}
-        </div>
+          <div className="mt20 fs20 fw700">
+            {formatMessage(messages.patients)}
+          </div>
 
-        <Tabs tabPosition="top">
-          <TabPane tab={<span className="fs16 fw600">{SUMMARY}</span>} key="1">
-            <Patients />
-          </TabPane>
-          <TabPane
-            tab={<span className="fs16 fw600">{WATCHLIST}</span>}
-            key="2"
-          >
-            <Patients />
-            {/*add watchlist table here*/}
-          </TabPane>
-        </Tabs>
-      </div>
+          <Tabs tabPosition="top">
+            <TabPane
+              tab={<span className="fs16 fw600">{SUMMARY}</span>}
+              key="1"
+            >
+              <Patients />
+            </TabPane>
+            <TabPane
+              tab={<span className="fs16 fw600">{WATCHLIST}</span>}
+              key="2"
+            >
+              <Patients />
+              {/*add watchlist table here*/}
+            </TabPane>
+          </Tabs>
+        </div>
+        <PatientDetailsDrawer />
+      </Fragment>
     );
   }
 }
