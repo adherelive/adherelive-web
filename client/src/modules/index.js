@@ -2,11 +2,13 @@ import { combineReducers } from "redux";
 import graphs from "./graphs";
 import user from "./user";
 import auth from "./auth";
+import drawer from "./drawer";
 
 const rootReducer = combineReducers({
   auth,
   user,
-  graphs
+  graphs,
+  drawer
 });
 
 export default (state, action) => {

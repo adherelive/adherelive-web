@@ -1,6 +1,8 @@
 import PatientDetails from "../../Components/Patient/details";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import {open} from "../../modules/drawer";
+import {DRAWER} from "../../constant";
 
 const mapStateToProps = (state,ownprops) => {
   const {user={}} = state;
@@ -14,7 +16,12 @@ const mapStateToProps = (state,ownprops) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    openAppointmentDrawer: () => {
+      console.log("12312 being called container");
+      return dispatch(open({type: DRAWER.ADD_MEDICATION_REMINDER}))
+    }
+  };
 };
 
 export default withRouter(

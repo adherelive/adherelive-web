@@ -11,6 +11,10 @@ export const PATH = {
   }
 };
 
+export const DRAWER = {
+  ADD_MEDICATION_REMINDER: "ADD_MEDICATION_REMINDER"
+};
+
 export const USER_CATEGORY = {
   DOCTOR: "doctor",
   PATIENT: "patient",

@@ -5,33 +5,35 @@ import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
 import {SEVERITY_STATUS} from "../../../constant";
 import { Tabs,Table, Divider, Tag, Button, Menu, Dropdown,Spin } from 'antd';
-import {AddMedicationReminderModal} from '../../modal/event/add/medicationsReminder'
+import AddMedicationReminder from "../../../Containers/drawer/addMedicationReminder";
 
 const { TabPane } = Tabs;
+
+const APPOINTMENT = "appointment";
 
 function callback(key) {
   console.log(key);
 }
 
-const menu = (
-  <Menu>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
-        Medication
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
-        Appointments
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
-        Actions
-      </a>
-    </Menu.Item>
-  </Menu>
-);
+// const menu = (
+//   <Menu>
+//     <Menu.Item>
+//       <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
+//         Medication
+//       </a>
+//     </Menu.Item>
+//     <Menu.Item>
+//       <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
+//         Appointments
+//       </a>
+//     </Menu.Item>
+//     <Menu.Item>
+//       <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
+//         Actions
+//       </a>
+//     </Menu.Item>
+//   </Menu>
+// );
 
 const columns_symptoms = [
   {
@@ -107,14 +109,14 @@ const data_medication = [
   }
 ];
 
-const PatientProfileHeader = ({formatMessage}) => {
+const PatientProfileHeader = ({formatMessage, getMenu}) => {
   return (
     <div className="flex pt20 pr24 pb20 pl24">
       <div className="patient-profile-header flex-grow-0">
         <h3>{formatMessage(message.patient_profile_header)}</h3>
       </div>
       <div className="flex-grow-1 tar">
-        <Dropdown overlay={menu} placement="bottomRight">
+        <Dropdown overlay={getMenu()} placement="bottomRight">
           <Button type="primary">Add</Button>
         </Dropdown>
       </div>
@@ -235,16 +237,50 @@ class PatientDetails extends Component {
       this.getData();
   }
 
+  handleItemSelect = ({ selectedKeys }) => {
+    const { history, logout, openAppointmentDrawer} = this.props;
+    console.log("12312 handleItemSelect --> ");
+    console.log(selectedKeys);
+    switch (selectedKeys[0]) {
+      case APPOINTMENT:
+        console.log("12312 here component");
+        openAppointmentDrawer();
+      default:
+        openAppointmentDrawer();
+        break;
+    }
+    this.setState({ selectedKeys: selectedKeys[0] });
+  };
+
   async getData(){
       setTimeout(()=>this.setState({loading:false}),2000);
   }
 
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
+  getMenu = () => {
+    const {handleItemSelect} = this;
+    const {openAppointmentDrawer} = this.props;
+    console.log("12312 getMenu");
+    return (
+      <Menu>
+          <Menu.Item>
+            <div onClick={openAppointmentDrawer}>Medication</div>
+          </Menu.Item>
+          <Menu.Item>
+              <div >Appointments</div>
+          </Menu.Item>
+          <Menu.Item>
+              <div >Actions</div>
+          </Menu.Item>
+        </Menu>
+    );
+  }
+
   
   render() {
 
-    const {formatMessage} = this;
+    const {formatMessage, getMenu} = this;
 
     
     const {loading} = this.state;
@@ -300,7 +336,7 @@ class PatientDetails extends Component {
     console.log("formatMessage",formatMessage);
     return  ( 
               <div className="pt10 pr10 pb10 pl10">
-                <PatientProfileHeader formatMessage={formatMessage}/>
+                <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu}/>
                 <div className="flex">
                   <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
                   
@@ -336,7 +372,6 @@ class PatientDetails extends Component {
                       missed_appointment={missed_appointment}
                     />
                     <div className="patient-tab mt20">
-                      <AddMedicationReminderModal/>
                       <Tabs defaultActiveKey="1" onChange={callback}>
                         <TabPane tab="Symptoms" key="1">
                           <Table columns={columns_symptoms} dataSource={data_symptoms} />
@@ -354,6 +389,7 @@ class PatientDetails extends Component {
                     </div>
                   </div>
                 </div>
+                <AddMedicationReminder />
               </div>
             );
     
