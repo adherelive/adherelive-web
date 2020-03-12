@@ -59,20 +59,17 @@ class MedicineQuantity extends Component {
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
-          <div className="flex">
             <label
               for="quantity"
-              className="ant-form-item-required label-color mb8"
+              className="form-label flex-grow-1"
               title="Quantity"
-              style={{ fontSize: "12px" }}
             >
               {formatMessage(messages.quantity)}
             </label>
             {/* <div className="label-color fontsize12 mb8">
               
             </div> */}
-          </div>
-          <div className="tab-radio-button">
+            <div className="flex-grow-0">
             <RadioGroup
               size="small"
               onChange={onRadioChange}
@@ -80,9 +77,9 @@ class MedicineQuantity extends Component {
             >
               <RadioButton value={0.25}>+0.25</RadioButton>
               <RadioButton value={0.5}>+0.5</RadioButton>
-              <RadioButton value={1.0}>+1.0</RadioButton>
             </RadioGroup>
           </div>
+          
         </div>
         <FormItem
           className="flex-1 align-self-end"

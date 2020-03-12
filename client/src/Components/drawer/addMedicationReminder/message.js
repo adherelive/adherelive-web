@@ -34,7 +34,7 @@ export default defineMessages({
   addMedicationReminder: {
     id: "app.event.addMedicationReminder",
     description: "",
-    defaultMessage: "Add Medication Reminder"
+    defaultMessage: "Add"
   },
   editAppointment: {
     id: "app.event.EditAppointment",
@@ -289,6 +289,6 @@ export default defineMessages({
   title: {
     id: "medication_reminder.modal.title",
     description: "",
-    defaultMessage: "Title"
+    defaultMessage: "New Medication"
   }
 });

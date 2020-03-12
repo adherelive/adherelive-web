@@ -4,7 +4,7 @@ import { DatePicker, Form } from "antd";
 import moment from "moment";
 
 import messages from "../message";
-import calendar from "../../../../Assets/images/button-select-date.svg";
+import calendar from "../../../../Assets/images/calendar1.svg";
 import repeatIntervalField from "./repeatInterval";
 import repeatField from "./repeatType";
 import startDateField from "./startDate";
@@ -97,8 +97,9 @@ class EndDate extends Component {
 
     return (
       <div className="flex flex-grow-1 row align-items-center iqvia-date-picker">
-        <div className="full-width ">
-          <FormItem label={formatMessage(messages.till)}>
+        <div className="full-width pl8">
+        <span className="form-label">To</span>
+          <FormItem>
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(
@@ -117,7 +118,7 @@ class EndDate extends Component {
             )}
             <img
               alt=""
-              className="calendar clickable"
+              className="calendar clickable new-calendar"
               onClick={openCalendar}
               src={calendar}
             />

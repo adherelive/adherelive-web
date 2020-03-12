@@ -46,7 +46,6 @@ class MedicationStrength extends Component {
     return (
       <Fragment>
         <FormItem
-          label="Strength"
           className="flex-1 align-self-end"
           validateStatus={error ? "error" : ""}
           help={error ? error[0] : ""}
@@ -63,7 +62,7 @@ class MedicationStrength extends Component {
               }
             ],
             initialValue: getInitialValue()
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber  min={1} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );

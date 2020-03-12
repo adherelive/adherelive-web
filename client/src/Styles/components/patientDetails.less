@@ -1,4 +1,8 @@
 
+@import (reference) "../variables/index.less";
+
+
+
 .patient-card {
     position: relative;
     width: @282px;
@@ -156,4 +160,170 @@
 .page-loader {
     position: relative;
     margin:auto;
+}
+
+.ant-select-arrow-icon {
+    display:none!important;
+}
+.ant-select-arrow{
+  background:url(../../Assets/images/arrow-down-angle.svg)!important;
+  height: @12px;
+  width: @14px;
+}
+.ant-drawer-close{
+  left:0;
+}
+.ant-drawer-title{
+  text-align: center;
+  font-weight: 600;
+}
+.ant-drawer-header{
+  border:none;
+}
+.ant-drawer-body{
+  border-bottom: 1px solid #e8e8e8;
+}
+.form-label{
+  font-style: normal;
+  font-weight: normal;
+  font-size: @12px!important;
+  line-height: @22px;
+  color: #979797;
+}
+.ant-drawer-body{
+  
+  #medication_stage,#timing{
+    .ant-select-selection--single{
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid #979797;
+      box-sizing: border-box;
+      border-radius: @4px;
+      width: @394px;
+      height: @52px;
+      line-height: @52px;
+    }
+    .ant-select-selection__placeholder,.ant-select-selection__rendered{
+      // margin-top:0;
+      color: #979797;
+      font-size: @16px;
+      line-height: @52px;
+    }
+    .ant-select-selection__placeholder, .ant-select-search__field__placeholder{
+      height: 52px;
+      top:0;
+      margin-top:0;
+    }
+  }
+  .ant-input-number{
+    background: rgba(0, 0, 0, 0.02);
+    border: @1px solid #979797;
+    box-sizing: border-box;
+    border-radius: @4px 0 0 @4px;
+    width: @298px!important;
+    height: @52px;
+    line-height: @52px;
+  }
+  #unit{
+    
+    .ant-select-selection{
+      &.ant-select-selection--single{
+        background: rgba(0, 0, 0, 0.02);
+        border: @1px solid #979797;
+        box-sizing: border-box;
+        border-radius: 0 @4px @4px 0;
+        width: @96px;
+        height: @52px;
+      }
+    }
+    .ant-select-selection__rendered{
+      line-height: @52px;
+    }
+  }
+  #quantity{
+    .ant-input-number{
+      background: rgba(0, 0, 0, 0.02);
+      border: @1px solid #979797;
+      box-sizing: border-box;
+      border-radius: @4px;
+      width: @396px!important;
+      height: @52px;
+      line-height: @52px;
+    }
+    .ant-radio-button-wrapper{
+      border:none;
+      font-weight: 600;
+      color: #000000;
+      font-size: @12px;
+    }
+    .ant-radio-button-wrapper:not(:first-child)::before{
+      width: 0;
+    }
+  }
+  #repeats {
+    .select-days{
+      background: rgba(0, 0, 0, 0.02);
+      border: @1px solid #979797;
+      box-sizing: border-box;
+      border-radius: @4px;
+      width: @396px!important;
+      height: @52px;
+      line-height: @52px;
+    }
+    .ant-tag{
+      margin: 0;
+      font-size:@18px;
+      padding:@10px;
+      line-height: @30px;
+      border:none;
+      border-radius: 0;
+      cursor: pointer;
+      border-right: @1px solid transparent;
+    }
+    .ant-tag:hover{
+      color:black;
+    }
+    .ant-tag-checkable-checked{
+      background-color: black;
+      border-right: @1px solid #979797;
+    }
+    .ant-tag-checkable-checked:hover{
+      color:white;
+    }
+    .ant-tag:after {
+      background-color: transparent;
+      transition: 0.5s;
+    }
+    
+
+  }
+  #startDate,#endDate{
+    .ant-calendar-picker-icon,.ant-calendar-picker-clear{
+      display:none;
+    }
+    .ant-calendar-picker-input{
+      background: rgba(0, 0, 0, 0.02);
+      border: @1px solid #979797;
+      box-sizing: border-box;
+      border-radius: @4px;
+      width: @190px!important;
+      height: @52px;
+      line-height: @52px;
+    }
+  }
+  .new-calendar{
+    position: relative;
+    top:-48px;
+    left: 160px;
+    cursor: pointer;
+  }
+  .footer{
+    button{
+      margin-top:@46px;
+    }
+  }
+  .ant-select:focus {
+    outline: none;
+  }
+  
+
 }

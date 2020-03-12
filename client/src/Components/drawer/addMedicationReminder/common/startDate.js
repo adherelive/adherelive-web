@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { DatePicker, Form } from "antd";
 import messages from "../message";
-import calendar from "../../../../Assets/images/button-select-date.svg";
+import calendar from "../../../../Assets/images/calendar1.svg";
 import moment from "moment";
 
 import repeatTypeField from "./repeatType";
@@ -60,14 +60,9 @@ class StartDate extends Component {
 
     return (
       <div className="flex flex-grow-1 row align-items-center iqvia-date-picker">
-        <div className="full-width ">
-          <FormItem
-            label={
-              repeat === REPEAT_TYPE.NONE
-                ? formatMessage(messages.on)
-                : formatMessage(messages.from)
-            }
-          >
+        <div className="full-width pr8">
+        <span className="form-label">From</span>
+          <FormItem>
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(
@@ -85,7 +80,7 @@ class StartDate extends Component {
             )}
             <img
               alt=""
-              className="calendar clickable"
+              className="calendar clickable new-calendar"
               onClick={openCalendar}
               src={calendar}
             />

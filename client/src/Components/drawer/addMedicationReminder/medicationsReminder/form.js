@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
-import { Form, Button } from "antd";
+import { Form, Button, Input} from "antd"; 
 import moment from "moment";
-
 import participantsField from "../common/participants";
 import startTimeField from "../common/startTime";
 import notesField from "../common/notes";
@@ -24,7 +23,7 @@ import CalendarTimeSelection from "../calendarTimeSelection";
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
 import { REPEAT_TYPE, USER_CATEGORY } from "../../../../constant";
-
+const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
 
 class AddMedicationReminderForm extends Component {
@@ -36,13 +35,16 @@ class AddMedicationReminderForm extends Component {
   componentDidMount() {
     const {
       form: { validateFields },
-      currentUser: {
-        basicInfo: { _id, category },
-        programId = []
-      },
+      // currentUser: {
+      //   basicInfo: { _id, category },
+      //   programId = []
+      // },
       fetchMedicationStages,
       fetchProgramProducts
     } = this.props;
+    const{programId}=[];
+    const {_id}='23';
+    const {category}="PATIENT";
     validateFields();
 
     if (category === USER_CATEGORY.PATIENT) {
@@ -349,13 +351,10 @@ class AddMedicationReminderForm extends Component {
 
     return (
       <div className="footer">
-        <div className="flex align-items-center justify-content-end h100 mr24">
-          <Button className="iqvia-btn cancel mr16" onClick={handleCancel}>
-            {formatMessage(messages.cancel)}
-          </Button>
+        <div className="flex fr h100">
           <FormItem className="m0">
             <Button
-              className="iqvia-btn"
+              className="ant-btn ant-btn-primary pr30 pl30 mt46"
               type="primary"
               htmlType="submit"
               loading={requesting}
@@ -403,7 +402,7 @@ class AddMedicationReminderForm extends Component {
     return (
       <Fragment>
         <Form className="event-form" onSubmit={addMedicationReminder}>
-          {participantsField.render({
+          {/* {participantsField.render({
             ...this.props,
             otherUser,
             onPatientChange
@@ -412,24 +411,28 @@ class AddMedicationReminderForm extends Component {
           {medicationReminderStageField.render({
             ...this.props,
             ...this.state
-          })}
-
+          })} */}
+          
           {chooseMedicationField.render({ ...this.props, otherUser })}
 
-          <div className="flex column ">
-            <div className="flex align-items-center">
-              <div className="wp50  flex-1 mr8">
-                {medicineStrengthField.render(this.props)}
-              </div>
-              <div className="wp50 flex-1 ml8 align-self-end">
-                {medicineStrengthUnitField.render(this.props)}
-              </div>
-            </div>
+          <span className="form-label">Dose</span>
+          <InputGroup compact>
+              {medicineStrengthField.render(this.props)}
+              {medicineStrengthUnitField.render(this.props)}
+            
+          </InputGroup>
+          
+
+          
+          
+          <div id="quantity">
+          {medicineQuantityField.render(this.props)}
           </div>
 
-          {medicineQuantityField.render(this.props)}
-
+          <span className="form-label">Timing</span>
+          <div id="timing">
           {whenToTakeMedicineField.render(this.props)}
+          </div>
 
           <RepeatFields
             {...this.props}
@@ -439,27 +442,11 @@ class AddMedicationReminderForm extends Component {
             adjustEndDate={adjustEndDate}
           />
 
-          <div className="flex align-items-center justify-content-space-between">
-            {startTimeField.render({ ...this.props, onChangeEventStartTime })}
-          </div>
-
-          {notesField.render(this.props)}
-
+          
+          
           {getFooter()}
         </Form>
-        <CalendarTimeSelection
-          className="calendar-section"
-          eventEndTime={endTime}
-          eventStartTime={startTime}
-          onEventDurationChange={onEventDurationChange}
-          startDate={startDate}
-          onStartDateChange={onStartDateChange}
-          disabledStartDate={disabledStartDate}
-          onPrev={onPrev}
-          onNext={onNext}
-          bookedEvents={[]}
-          otherUser={otherUser}
-        />
+        
       </Fragment>
     );
   }

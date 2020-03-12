@@ -218,7 +218,7 @@ class Participants extends Component {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError },
       currentUser: { basicInfo: { category }, programIds = [] } = {},
-      eventMode,
+      eventMode='appointment',
       purpose,
       setParticipantTwo
     } = this.props;
@@ -235,24 +235,24 @@ class Participants extends Component {
 
     const { careCoach, doctor } = programIds[0] || {};
 
-    if (
-      eventMode === EVENT_TYPE.REMINDER &&
-      category === USER_CATEGORY.PATIENT
-    ) {
-      return <RemindMyCareCoach {...this.props} />;
-    }
+    // if (
+    //   eventMode === EVENT_TYPE.REMINDER &&
+    //   category === USER_CATEGORY.PATIENT
+    // ) {
+    //   return <RemindMyCareCoach {...this.props} />;
+    // }
 
-    if (
-      eventMode === EVENT_TYPE.MEDICATION_REMINDER &&
-      category === USER_CATEGORY.PATIENT
-    ) {
-      return null;
-    }
+    // if (
+    //   eventMode === EVENT_TYPE.MEDICATION_REMINDER &&
+    //   category === USER_CATEGORY.PATIENT
+    // ) {
+    //   return null;
+    // }
 
     return (
       <Fragment>
         <div>
-          {(USER_CATEGORY.CARE_COACH === category ||
+          {(USER_CATEGORY.CARE_COACH === "PATIENT" ||
             USER_CATEGORY.DOCTOR === category) && (
             <FormItem
               label={`${

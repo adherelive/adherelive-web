@@ -106,11 +106,11 @@ class AddMedicationReminder extends Component {
 
     return (
       <Drawer 
-        width={355}
+        width={456}
         onClose={this.onClose}
         visible={visible}
         destroyOnClose={true}
-        className="cmms-drawer"
+        className="ant-drawer"
         title={formatMessage(messages.title)}
       >
         <FormWrapper
@@ -118,14 +118,7 @@ class AddMedicationReminder extends Component {
           {...this.props}
           members={members}
         />
-        {/* <Footer
-          onSubmit={onSubmit}
-          onClose={onClose}
-          cancelText={formatMessage(messages.cancel)}
-          cancelComponent={null}
-          submitText={formatMessage(messages.save)}
-          submitButtonProps={submitButtonProps}
-        /> */}
+
       </Drawer>
     );
   }

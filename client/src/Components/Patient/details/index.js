@@ -264,8 +264,8 @@ class PatientDetails extends Component {
     console.log("12312 getMenu");
     return (
       <Menu>
-          <Menu.Item>
-            <div onClick={openAppointmentDrawer}>Medication</div>
+          <Menu.Item onClick={openAppointmentDrawer}>
+            <div>Medication</div>
           </Menu.Item>
           <Menu.Item>
               <div >Appointments</div>

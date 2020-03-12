@@ -80,6 +80,7 @@ class WhenToTakeMedication extends Component {
             ],
             initialValue: getInitialValue()
           })(
+            
             <Select
               className="full-width"
               placeholder=""

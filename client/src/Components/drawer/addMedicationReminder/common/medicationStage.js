@@ -54,15 +54,14 @@ class MedicationStage extends Component {
 
     const { getStagesOption, getInitialValue, getParentNode } = this;
 
-    if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
-      return null;
-    }
+    // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
+    //   return null;
+    // }
 
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (
       <FormItem
-        label="Medication stages"
         validateStatus={error ? "error" : ""}
         help={error || ""}
       >
@@ -70,14 +69,14 @@ class MedicationStage extends Component {
           rules: [
             {
               required: true,
-              message: "Please Select a Medication Stage"
+              message: "Choose Medicine"
             }
           ],
           initialValue: getInitialValue()
         })(
           <Select
-            className="full-width"
-            placeholder="Choose Medication Stage"
+            className=""
+            placeholder="Choose Medicine"
             disabled={!!purpose}
             showSearch
             autoComplete="off"

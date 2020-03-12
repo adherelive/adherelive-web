@@ -58,18 +58,9 @@ class SelectedDays extends Component {
     return (
       <div className="mb20">
         <div className="mb8">
-          <span className="warning-color">* </span>
-          <span className="fontsize12 label-color">
-            {formatMessage(messages.repeatsOn)}
+          <span className="form-label">
+            Repeats
           </span>
-          <span className="fontsize12 dark">{` ${selectedDays.join(
-            ", "
-          )}`}</span>
-          {selectedDays && selectedDays.length === 0 && (
-            <span className="fontsize12 warning-color ml8">
-              select repeating days
-            </span>
-          )}
         </div>
         <FormItem style={{ display: "none" }}>
           {getFieldDecorator(FIELD_NAME, {
@@ -84,7 +75,7 @@ class SelectedDays extends Component {
         <div className="flex select-days">
           {DAYS.map(tag => (
             <CheckableTag
-              className="select-days flex-1"
+              className="flex-1"
               key={tag}
               checked={selectedDays.indexOf(tag) > -1}
               onChange={checked => handleCheckDays(tag, checked)}
