@@ -8,6 +8,7 @@ import providers from "./providers";
 import treatments from "./treatments";
 import chats from "./chat";
 import pages from "./pages";
+import drawer from "./drawer";
 
 const rootReducer = combineReducers({
   auth,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   providers,
   treatments,
   pages,
-  chats
+  chats,
+  drawer
 });
 
 export default (state, action) => {
