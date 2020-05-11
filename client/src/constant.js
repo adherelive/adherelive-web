@@ -30,25 +30,29 @@ export const GENDER = {
   }
 };
 
-export const SYMPTOMS = "1";
-export const MISSED_MEDICATION = "2";
-export const MISSED_APPOINTMENTS = "3";
-export const MISSED_ACTIONS = "4";
+export const SYMPTOMS = "symptoms";
+export const MISSED_MEDICATION = "no_medication";
+export const MISSED_APPOINTMENTS = "no_appointment";
+export const MISSED_ACTIONS = "no_action";
 
 export const PATIENT_BOX_CONTENT = {
   [SYMPTOMS]: {
+    text: "Symptoms",
     background_color: "light-aqua",
     border_color: "dark-aqua"
   },
   [MISSED_MEDICATION]: {
+    text: "Missed Medication",
     background_color: "light-purple",
     border_color: "dark-purple"
   },
   [MISSED_APPOINTMENTS]: {
+    text: "Missed Appointments",
     background_color: "light-orange",
     border_color: "dark-orange"
   },
   [MISSED_ACTIONS]: {
+    text: "Missed Actions",
     background_color: "light-blue",
     border_color: "dark-blue"
   }

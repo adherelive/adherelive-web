@@ -49,7 +49,26 @@ export const PATIENT_INITIAL_STATE = {
     treatment_id: "1",
     doctor_id: "1",
     provider_id: "1",
-    new_symptom: true
+    new_symptom: true,
+    medications: ["1", "2"],
+    reports: {
+      symptoms: {
+        total: 2,
+        critical: 1
+      },
+      no_medication: {
+        total: 3,
+        critical: 1
+      },
+      no_appointment: {
+        total: 2,
+        critical: 0
+      },
+      no_action: {
+        total: 2,
+        critical: 2
+      }
+    }
   },
   "23": {
     basic_info: {
@@ -62,7 +81,26 @@ export const PATIENT_INITIAL_STATE = {
     treatment_id: "2",
     doctor_id: "2",
     provider_id: "2",
-    new_symptom: false
+    new_symptom: false,
+    medications: ["1"],
+    reports: {
+      symptoms: {
+        total: 2,
+        critical: 1
+      },
+      no_medication: {
+        total: 3,
+        critical: 1
+      },
+      no_appointment: {
+        total: 2,
+        critical: 0
+      },
+      no_action: {
+        total: 2,
+        critical: 2
+      }
+    }
   }
 };
 
@@ -132,6 +170,41 @@ export const CHAT_INITIAL_STATE = {
   }
 };
 
+export const MEDICATION_INITIAL_STATE = {
+  "1": {
+    basic_info: {
+      medicine_name: "Amoxill 2mg"
+    },
+    schedule: {
+      repeat_type: "DAILY",
+      doses: "ONCE"
+    },
+    start_date: "3rd February, 2020",
+    end_date: "3rd March, 2020"
+  },
+  "2": {
+    basic_info: {
+      medicine_name: "Crocin 4mg"
+    },
+    schedule: {
+      repeat_type: "CERTAIN_DAYS",
+      doses: "SPECIFIC",
+      date: [
+        {
+          day: "Mon",
+          time: "10:00 AM" // moment object here
+        },
+        {
+          day: "Wed",
+          time: "02:00 PM" // moment object here
+        }
+      ]
+    },
+    start_date: "3rd February, 2020", // moment object here
+    end_date: "3rd March, 2020" // moment object here
+  }
+};
+
 export const PAGE_INITIAL = {
   PATIENT_IDS: ["1", "23"],
   TREATMENT_IDS: ["1", "2"],
@@ -141,3 +214,14 @@ export const PAGE_INITIAL = {
 };
 
 export const USER_INITIAL_STATE = {};
+
+const medication = {
+  basic_info: {
+    medicine_name: "Amoxill 2mg"
+    // other data
+  },
+  repeat_type: "", //twice, weekly, once, monthly, certain days
+  repeat_time: [{}, {}], // only for certain days, moment object for specific days
+  start_date: "",
+  end_date: ""
+};

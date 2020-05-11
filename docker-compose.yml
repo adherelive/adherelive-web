@@ -11,26 +11,40 @@ services:
       - ./:/usr/src/app
       - ./.node_env:/usr/src/app/.env
     links:
-      - mongodb
+      - mysql
       - minio1
       - minio2
       - minio3
       - minio4
 
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27019:27017"
-    command: mongod --auth
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USER}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD}"
+#  mongodb:
+#    image: mongo:latest
+#    ports:
+#      - "27019:27017"
+#    command: mongod --auth
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: "${MONGO_ROOT_USER}"
+#      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_ROOT_PASSWORD}"
   ## minio stacks
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=adhere
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
 
   minio1:
     image: minio/minio
     volumes:
-      - rpm_storage_stack1:/export
+      - adhere_storage_stack1:/export
     ports:
       - "9001:9000"
     environment:
@@ -41,7 +55,7 @@ services:
   minio2:
     image: minio/minio
     volumes:
-      - rpm_storage_stack2:/export
+      - adhere_storage_stack2:/export
     ports:
       - "9002:9000"
     environment:
@@ -52,7 +66,7 @@ services:
   minio3:
     image: minio/minio
     volumes:
-      - rpm_storage_stack3:/export
+      - adhere_storage_stack3:/export
     ports:
       - "9003:9000"
     environment:
@@ -63,7 +77,7 @@ services:
   minio4:
     image: minio/minio
     volumes:
-      - rpm_storage_stack4:/export
+      - adhere_storage_stack4:/export
     ports:
       - "9004:9000"
     environment:
@@ -74,7 +88,9 @@ services:
 ## By default this config uses default local driver,
 ## For custom volumes replace with volume driver configuration.
 volumes:
-  rpm_storage_stack1:
-  rpm_storage_stack2:
-  rpm_storage_stack3:
-  rpm_storage_stack4:
+  mysql:
+    driver: local
+  adhere_storage_stack1:
+  adhere_storage_stack2:
+  adhere_storage_stack3:
+  adhere_storage_stack4:

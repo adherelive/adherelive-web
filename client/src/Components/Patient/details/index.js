@@ -306,8 +306,7 @@ class PatientDetails extends Component {
   };
 
   render() {
-    const { formatMessage } = this;
-
+    const { loading } = this.state;
     const { formatMessage, getMenu } = this;
 
     if (loading) {

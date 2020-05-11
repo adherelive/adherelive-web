@@ -7,6 +7,7 @@ const express = require("express");
 // global.IO = SocketServer.getIO();
 //
 Config();
+
 //
 // const cookieSession = require("cookie-session");
 // const path = require("path");
@@ -210,4 +211,7 @@ const app = express();
 //   res.render("error");
 // });
 //
+
+app.use("/user", UserRouter);
+
 module.exports = app;
