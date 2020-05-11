@@ -1,5 +1,5 @@
 // const createError = require("http-errors");
-const Config = require("../config/config");
+const Config = require("../config/config-prev");
 const express = require("express");
 // const socketServer = require("../libs/socketServer");
 // const SocketServer = new socketServer(8000);
@@ -211,7 +211,5 @@ const app = express();
 //   res.render("error");
 // });
 //
-
-app.use("/user", UserRouter);
 
 module.exports = app;
