@@ -17,6 +17,7 @@
     "react-app-rewire-react-intl": "^2.4.0",
     "react-app-rewired": "1.6.2",
     "react-dom": "^16.11.0",
+    "react-google-login": "^5.1.14",
     "react-intl": "^2.7.2",
     "react-redux": "^7.2.0",
     "react-router-dom": "^4.3.1",

@@ -19,16 +19,18 @@ export default class Routes extends Component {
     //     return <div>Loading</div>;
     // }
 
+      console.log("authenticated ============= ", authenticated);
+      
     return (
       <Fragment>
-        {/*{authenticated === true ? (*/}
+            {authenticated === true ? (
         <Auth
           unauthorizedError={unauthorizedError}
           authRedirection={this.props.authRedirection}
         />
-        {/*) : (*/}
-        {/*    <Global />*/}
-        {/*)}*/}
+        ) : (
+            <Global />
+        )}
       </Fragment>
     );
   }
