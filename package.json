@@ -1,0 +1,62 @@
+{
+  "name": "adhere",
+  "version": "1.0.0",
+  "description": "---",
+  "main": "constant.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "start": "nodemon --exec babel-node ./server/bin/www",
+    "build": "npm run build --prefix client",
+    "client": "npm run start --prefix client",
+    "server": "nodemon --exec babel-node ./server/bin/www",
+    "postinstall": "cd client && npm install",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "nodemonConfig": {
+    "watch": [
+      "app/*",
+      "server/*",
+      "routes/*",
+      "helper/*",
+      "libs/*"
+    ],
+    "delay": "2500"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,less,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-arrow-functions": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "css-loader": "^3.4.2",
+    "husky": "^4.2.3",
+    "less": "^3.11.1",
+    "less-loader": "^5.0.0",
+    "lint-staged": "^10.0.7",
+    "nodemon": "^2.0.2",
+    "prettier": "^1.19.1",
+    "react-intl-translations-manager": "^5.0.3",
+    "style-loader": "^1.1.3"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "concurrently": "^5.1.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.7",
+    "sequelize-cli": "^5.5.1"
+  }
+}
