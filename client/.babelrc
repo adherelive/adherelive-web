@@ -1,0 +1,14 @@
+{
+  "presets": [
+    "react-app"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-arrow-functions",
+    [
+      "react-intl",
+      {
+        "messagesDir": "build/messages"
+      }
+    ]
+  ]
+}
