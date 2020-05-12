@@ -12,26 +12,22 @@ module.exports = {
       user_name: {
         type: Sequelize.STRING
       },
-      category: {
-        type: Sequelize.ENUM(
-          "patient",
-          "care_taker",
-          "doctor",
-          "provider",
-          "admin"
-        ),
-        allowNull: false
-      },
       email: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      sign_in_type: {
-        type: Sequelize.ENUM("basic", "google", "facebook"),
-        allowNull: false
-      },
       password: {
         type: Sequelize.STRING(1000),
+        allowNull: false
+      },
+      sign_in_type: {
+        type: Sequelize.ENUM,
+        values: ["basic", "google", "facebook"],
+        allowNull: false
+      },
+      category: {
+        type: Sequelize.ENUM,
+        values: ["patient", "care_taker", "doctor", "provider", "admin"],
         allowNull: false
       },
       activated_on: {

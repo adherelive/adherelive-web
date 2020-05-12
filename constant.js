@@ -66,9 +66,9 @@ export const SEVERITY = {
 export const USER_CATEGORY = {
   DOCTOR: "doctor",
   PATIENT: "patient",
-  PROGRAM_ADMIN: "programAdmin",
-  CARE_COACH: "careCoach",
-  CHARITY_ADMIN: "charityAdmin"
+  PROVIDER: "provider",
+  ADMIN: "admin",
+  CARE_TAKER: "care_taker"
 };
 
 export const REQUEST_TYPE = {
@@ -300,4 +300,14 @@ export const FIELD_TYPE = {
   INPUT: "input",
   RADIO: "radio",
   DATE: "date"
+};
+
+export const DB_TABLES = {
+  USERS: "users"
+};
+
+export const SIGN_IN_CATEGORY = {
+  BASIC: "basic",
+  GOOGLE: "google",
+  FACEBOOK: "facebook"
 };
