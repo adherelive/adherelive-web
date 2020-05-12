@@ -1,0 +1,24 @@
+// @import "./antd/custom.less";
+@import "./color/index.less";
+@import "./size/size.less";
+
+@DemiMediumFont: "AvenirNext-DemiBold";
+@MediumFont: "AvenirNext-Medium";
+@RegularFont: "AvenirNext-Regular";
+@DemiBold: "AvenirNext-Bold";
+
+.debug(@var) {
+  &:after {
+    content: "@{var}";
+    font-size: 20px;
+    background-color: #fff;
+    border: 1px solid red;
+    padding: 10px;
+    border-radius: 5px;
+    color: red;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+}
