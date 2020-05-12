@@ -1,8 +1,10 @@
 "use strict";
 
+import { DB_TABLES } from "../constant";
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("users", {
+    return queryInterface.createTable(DB_TABLES.USERS, {
       id: {
         allowNull: false,
         autoIncrement: true,

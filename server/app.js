@@ -1,6 +1,4 @@
 // const createError = require("http-errors");
-import { database } from "../libs/mysql";
-import Sequelize from "sequelize";
 
 const Config = require("../config/config");
 const express = require("express");
