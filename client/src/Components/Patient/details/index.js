@@ -5,7 +5,7 @@ import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
 import { SEVERITY_STATUS } from "../../../constant";
 import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin } from "antd";
-import AddMedicationReminder from "../../../Containers/drawer/addMedicationReminder";
+import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 
 const { TabPane } = Tabs;
 
