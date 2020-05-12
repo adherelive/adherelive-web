@@ -171,7 +171,7 @@ class PatientDetailsDrawer extends Component {
           placement="right"
           closable={false}
           onClose={onClose}
-          visible={true}
+          visible={false} // todo: change as per state, -- WIP --
           width={550}
         >
           {getPatientDetailContent()}
