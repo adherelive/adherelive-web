@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import AddMedicationReminder from "../../Components/drawer/addMedicationReminder/medicationsReminder";
+import AddMedicationReminder from "../../Components/Drawer/addMedicationReminder/medicationsReminder";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database

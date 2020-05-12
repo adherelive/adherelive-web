@@ -1,5 +1,4 @@
 // const createError = require("http-errors");
-import Users from "../app/models/users";
 import { database } from "../libs/mysql";
 import Sequelize from "sequelize";
 
@@ -11,14 +10,6 @@ const express = require("express");
 // global.IO = SocketServer.getIO();
 //
 Config();
-
-const getUser = () => {
-  // const users = new Users();
-  console.log("09230912 users --> ", Users);
-  // return users;
-};
-
-console.log("jhgyuggvh ", Users.findAll());
 //
 // const cookieSession = require("cookie-session");
 // const path = require("path");

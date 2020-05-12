@@ -87,6 +87,10 @@
     "UNAUTHORIZED_ACCESS_TO_ARTICLE": {
       "status": "UNAUTHORIZED_ACCESS_TO_ARTICLE",
       "message": "Unauthorized access to article."
+    },
+    "CLIENT_ERROR": {
+      "status": "CLIENT_ERROR",
+      "message": "Invalid parameter"
     }
   },
   "userCategories": {
