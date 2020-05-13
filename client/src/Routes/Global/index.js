@@ -5,8 +5,8 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import Identify from "../Components/forgotPassword/Identify";
 // import ForgotPassword from "../Containers/ForgotPassword";
 // import ResetPassword from "../Containers/ResetPassword";
-// import SignIn from "../Containers/SignIn";
-import SignIn from "../../Components/SignIn";
+import SignIn from "../../Containers/SignIn";
+//import SignIn from "../../Components/SignIn";
 // import BlankState from "../Containers/BlankState";
 import { PATH } from "../../constant";
 

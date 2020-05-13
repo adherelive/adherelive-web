@@ -1,8 +1,15 @@
-import { AUTH_INITIAL_STATE } from "../../data";
-
+//import { AUTH_INITIAL_STATE } from "../../data";
+import {Auth} from "../../Helper/urls";
+import { REQUEST_TYPE } from "../../constant";
+import { doRequest } from "../../Helper/network";
 export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
 export const SIGNING_COMPLETED_WITH_ERROR = "SIGNING_COMPLETED_WITH_ERROR";
+
+export const GOOGLE_SIGNING = "GOOGLE_SIGNING";
+export const GOOGLE_SIGNING_COMPLETED = "GOOGLE_SIGNING_COMPLETED";
+export const GOOGLE_SIGNING_COMPLETED_WITH_ERROR = "GOOGLE_SIGNING_COMPLETED_WITH_ERROR";
+
 
 export const SIGNING_UP = "SIGNING_UP";
 export const SIGNING_UP_COMPLETED = "SIGNING_UP_COMPLETED";
@@ -29,9 +36,69 @@ export const RESET_UNAUTHORIZED_ERROR = "RESET_UNAUTHORIZED_ERROR";
 
 export const RESET_PASSWORD_LINK_COMPLETED = "RESET_PASSWORD_LINK_COMPLETED";
 
-export default (state = AUTH_INITIAL_STATE, action) => {
-  const { type, data } = action;
-  switch (type) {
+export const AUTH_INITIAL_STATE = {
+     authenticated: true
+};
+
+
+export const googleSignIn = (data) => {
+    return async (dispatch, getState) => {
+	try{
+	    const { auth = {} } = getState();
+	    dispatch({type: GOOGLE_SIGNING});
+	    const response = await doRequest({
+		method: REQUEST_TYPE.POST,
+		data: data,
+		url: Auth.googleSignInUrl()
+	    });
+
+	    if (response.status === false) {
+		dispatch({
+		    type: GOOGLE_SIGNING_COMPLETED_WITH_ERROR,
+		    payload: { error: response.payload.error }
+		});
+	    }else if (response.status === true) {
+		const { lastUrl = false } = data;
+		const { _id, users } = response.payload.data;
+		let authRedirection = '/';
+		// if (authRedirection.length === 0) {
+		//     if (lastUrl && auth.unauthorizedError !== undefined) {
+		// 	authRedirection = lastUrl;
+		//     } else {
+		// 	authRedirection = "/";
+		//     }
+		// }
+		dispatch({
+		    type: GOOGLE_SIGNING_COMPLETED,
+		    payload: {
+			users: response.payload.data.users,
+			authenticatedUser: _id,
+			authRedirection
+		    }
+		});
+	    }
+	}
+	catch(err){
+	    console.log(err);
+	    throw err;
+	}
+    };
+};
+
+export default (state = AUTH_INITIAL_STATE, action={}) => {
+  const { type, payload } = action;
+    switch (type) {
+    case GOOGLE_SIGNING_COMPLETED:
+	return {
+            authenticated: true,
+            authenticated_user: payload.authenticatedUser,
+            authRedirection: payload.authRedirection
+	};
+    case GOOGLE_SIGNING_COMPLETED_WITH_ERROR:
+	return {
+            authenticated: false,
+            error: payload.error
+	};
     default:
       return state;
   }

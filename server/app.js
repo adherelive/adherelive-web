@@ -20,17 +20,17 @@ const getUser = () => {
 
 console.log("jhgyuggvh ", Users.findAll());
 //
-// const cookieSession = require("cookie-session");
-// const path = require("path");
-// const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
+const path = require("path");
+const cookieParser = require("cookie-parser");
 // const logger = require("morgan");
-// const cors = require("cors");
-// const helmet = require("helmet");
+const cors = require("cors");
+const helmet = require("helmet");
 // const Mongo = require("../libs/mongo");
 // const countryCityRouter = require("../Routes/api/cityCountry/index");
 // const eventRouter = require("../Routes/api/event/index");
 // const programRouter = require("../Routes/api/program/index");
-// const userRouter = require("../Routes/api/user/userIndex");
+const userRouter = require("../routes/api/user");
 // const calendarRouter = require("../Routes/api/user/calendarIndex");
 // const medicationRouter = require("../Routes/api/medication");
 // const insuranceRouter = require("../Routes/api/insurance");
@@ -107,7 +107,7 @@ const app = express();
 // app.use(express.static(path.join(__dirname, "../public")));
 //
 // app.use(helmet());
-// app.use(cors());
+app.use(cors());
 // app.use(
 //   cookieSession({
 //     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -169,7 +169,7 @@ const app = express();
 // app.use("/api", eventRouter);
 // app.use("/api", hospitalRouter);
 // app.use("/api", programRouter);
-// app.use("/api", userRouter);
+app.use("/api", userRouter);
 // app.use("/api", calendarRouter);
 // app.use("/api", insuranceRouter);
 // app.use("/api", proxySdkRouter);

@@ -5027,6 +5027,12 @@ class UserController {
   async test(req, res) {
     return res.status(response.getStatusCode()).send(200);
   }
+
+    async signInGoogle(req, res){
+	console.log(req);
+	console.log(res);
+	return res.send("Succesfulll");
+    }
 }
 
 module.exports = new UserController();

@@ -10,6 +10,9 @@ class SignIn extends Component{
     }
 
     render(){
+
+	const {googleSignIn} = this.props;
+	
 	return(
 		<div className="sign-in">
 		<span className="bolder block">Log In</span>
@@ -22,7 +25,7 @@ class SignIn extends Component{
 		<br />
 		<Button type="primary" block>Log In</Button>
 		</div>
-		<LoginByGoogle />
+		<LoginByGoogle  googleSignIn={googleSignIn}/>
 	    </div>
 	);
     }

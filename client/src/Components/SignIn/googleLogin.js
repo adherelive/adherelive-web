@@ -10,8 +10,11 @@ class LoginByGoogle extends Component{
     responseGoogle = (response) => {
       console.log(response);
       var res = response.profileObj;
-      console.log(res);
-      //this.signup(response);
+      const tokenId = response.tokenId;
+	let data = {
+	    tokenId: tokenId 
+	};
+	this.props.googleSignIn(data);
     }
 
     render(){
