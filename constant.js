@@ -303,11 +303,19 @@ export const FIELD_TYPE = {
 };
 
 export const DB_TABLES = {
-  USERS: "users"
+  USERS: "users",
+  DOCTORS: "doctors",
+  PATIENTS: "patients"
 };
 
 export const SIGN_IN_CATEGORY = {
   BASIC: "basic",
   GOOGLE: "google",
   FACEBOOK: "facebook"
+};
+
+export const GENDER = {
+  MALE: "m",
+  FEMALE: "f",
+  TRANS: "t"
 };

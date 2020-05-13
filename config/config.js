@@ -5,6 +5,7 @@ module.exports = () => {
   process.config = {
     db: {
       connection: process.env.DB_CONNECTION,
+      name: process.env.DB_DATABASE_NAME,
       database: process.env.DB_DATABASE,
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,

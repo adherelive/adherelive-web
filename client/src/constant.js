@@ -1,3 +1,5 @@
+export const HOST = "/api";
+
 export const PATH = {
   LANDING_PAGE: "/",
   SIGN_IN: "/sign-in",
@@ -117,8 +119,6 @@ export const EVENT_ACTION = {
 };
 
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-export const HOST = "/api";
 
 export const EVENT_TYPE = {
   INVITATION: "invitation",

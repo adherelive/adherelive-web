@@ -1,7 +1,4 @@
 // const createError = require("http-errors");
-import Users from "../app/models/users";
-import { database } from "../libs/mysql";
-import Sequelize from "sequelize";
 
 const Config = require("../config/config");
 const express = require("express");
@@ -11,21 +8,13 @@ const express = require("express");
 // global.IO = SocketServer.getIO();
 //
 Config();
-
-const getUser = () => {
-  // const users = new Users();
-  console.log("09230912 users --> ", Users);
-  // return users;
-};
-
-console.log("jhgyuggvh ", Users.findAll());
 //
-const cookieSession = require("cookie-session");
-const path = require("path");
-const cookieParser = require("cookie-parser");
+//const cookieSession = require("cookie-session");
+//const path = require("path");
+//const cookieParser = require("cookie-parser");
 // const logger = require("morgan");
-const cors = require("cors");
-const helmet = require("helmet");
+//const cors = require("cors");
+//const helmet = require("helmet");
 // const Mongo = require("../libs/mongo");
 // const countryCityRouter = require("../Routes/api/cityCountry/index");
 // const eventRouter = require("../Routes/api/event/index");
@@ -95,19 +84,19 @@ const app = express();
 // app.set("view engine", "ejs");
 //
 // app.use(logger("dev"));
-// app.use(express.json({ limit: "50mb" }));
-// app.use(
-//   express.urlencoded({
-//     extended: false,
-//     limit: "50mb"
-//   })
-// );
+app.use(express.json({ limit: "50mb" }));
+app.use(
+  express.urlencoded({
+    extended: false,
+    limit: "50mb"
+  })
+);
 // app.use(cookieParser());
 // // app.use(express.static(path.join(__dirname, "public")));
 // app.use(express.static(path.join(__dirname, "../public")));
 //
 // app.use(helmet());
-app.use(cors());
+// app.use(cors());
 // app.use(
 //   cookieSession({
 //     maxAge: 30 * 24 * 60 * 60 * 1000,
