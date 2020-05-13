@@ -29,7 +29,10 @@ class LoginByGoogle extends Component{
 	    )}
             buttonText="Login with Google"
             onSuccess={this.responseGoogle}
-            onFailure={this.responseGoogle} >
+            onFailure={this.responseGoogle}
+	    //responseType="code"
+            //prompt="consent"
+		>
 	    </GoogleLogin>
 	);
     }

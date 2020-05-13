@@ -1,4 +1,5 @@
 const {OAuth2Client} = require('google-auth-library');
+const moment = require('moment');
 // import generateUniversalLink from "../../../helper/universal_link";
 // import programWrapper from "../../services/program/programHelper";
 // import userWrapper from "../../services/user/userHelper";
@@ -5030,9 +5031,10 @@ class UserController {
   // }
 
     async signInGoogle(req, res){
-	console.log(req.body);
+	
 	const token=req.body.tokenId;
 	const CLIENT_ID = "398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com";
+	console.log("token =========== ", token);
 	try{
 	    const client = new OAuth2Client(CLIENT_ID);
 	    const ticket = await client.verifyIdToken({
@@ -5041,8 +5043,11 @@ class UserController {
 	    });
 	    
 	    const payload = ticket.getPayload();
-	    console.log("payload ======= ", payload);
-
+	    const tokenIssuedate= moment.unix(payload.iat).format("YYYY-MM-DD HH:mm");
+	    const tokenExpdate = moment.unix(payload.exp).format("YYYY-MM-DD HH:mm");
+	    console.log(payload);
+	    console.log("token issue date==== ", tokenIssuedate);
+	    console.log("token expired time =====", tokenExpdate);
 	    return res.send("Succesfulll");
 	}
 
