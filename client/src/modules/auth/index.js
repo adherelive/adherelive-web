@@ -10,6 +10,9 @@ export const GOOGLE_SIGNING = "GOOGLE_SIGNING";
 export const GOOGLE_SIGNING_COMPLETED = "GOOGLE_SIGNING_COMPLETED";
 export const GOOGLE_SIGNING_COMPLETED_WITH_ERROR = "GOOGLE_SIGNING_COMPLETED_WITH_ERROR";
 
+export const FACEBOOK_SIGNING = "FACEBOOK_SIGNING";
+export const FACEBOOK_SIGNING_COMPLETED = "FACEBOOK_SIGNING_COMPLETED";
+export const FACEBOOK_SIGNING_COMPLETED_WITH_ERROR = "FACEBOOK_SIGNING_COMPLETED_WITH_ERROR";
 
 export const SIGNING_UP = "SIGNING_UP";
 export const SIGNING_UP_COMPLETED = "SIGNING_UP_COMPLETED";
@@ -74,13 +77,6 @@ export const googleSignIn = (data) => {
 		const { lastUrl = false } = data;
 		const { _id, users } = response.payload.data;
 		let authRedirection = '/';
-		// if (authRedirection.length === 0) {
-		//     if (lastUrl && auth.unauthorizedError !== undefined) {
-		// 	authRedirection = lastUrl;
-		//     } else {
-		// 	authRedirection = "/";
-		//     }
-		// }
 		dispatch({
 		    type: GOOGLE_SIGNING_COMPLETED,
 		    payload: {
@@ -98,6 +94,46 @@ export const googleSignIn = (data) => {
     };
 };
 
+
+export const facebookSignIn = (data) =>{
+    return async(dispatch)=>{
+	try{
+	    dispatch({type:FACEBOOK_SIGNING});
+
+	    const response = await doRequest({
+		method: REQUEST_TYPE.POST,
+		data: data,
+		url: Auth.facebookSignInUrl()
+	    });
+
+	    if (response.status === false) {
+		dispatch({
+		    type: FACEBOOK_SIGNING_COMPLETED_WITH_ERROR,
+		    payload: { error: response.payload.error }
+		});
+	    }else if (response.status === true) {
+		const { lastUrl = false } = data;
+		const { _id, users } = response.payload.data;
+		let authRedirection = '/';
+		dispatch({
+		    type: FACEBOOK_SIGNING_COMPLETED,
+		    payload: {
+			users: response.payload.data.users,
+			authenticatedUser: _id,
+			authRedirection
+		    }
+		});
+	    }
+	}
+	catch(err){
+	    console.log(err);
+	    throw err;
+	}
+	
+	
+    };
+};
+
 export default (state = AUTH_INITIAL_STATE, action={}) => {
     const { type, payload } = action;
     switch (type) {
@@ -112,6 +148,18 @@ export default (state = AUTH_INITIAL_STATE, action={}) => {
             authenticated: false,
             error: payload.error
 	};
+    case FACEBOOK_SIGNING_COMPLETED:
+	return {
+            authenticated: true,
+            authenticated_user: payload.authenticatedUser,
+            authRedirection: payload.authRedirection
+	};
+    case FACEBOOK_SIGNING_COMPLETED_WITH_ERROR:
+	return {
+            authenticated: false,
+            error: payload.error
+	};
+	
     case GOOGLE_SIGNOUT:
 	return{
 	    authenticated:false

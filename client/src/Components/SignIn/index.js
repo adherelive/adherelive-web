@@ -12,7 +12,7 @@ class SignIn extends Component{
 
     render(){
 
-	const {googleSignIn} = this.props;
+	const {googleSignIn, facebookSignIn} = this.props;
 	
 	return(
 		<div className="sign-in">
@@ -27,7 +27,7 @@ class SignIn extends Component{
 		<Button type="primary" block>Log In</Button>
 		</div>
 		<LoginByGoogle  googleSignIn={googleSignIn}/>
-		<LoginByFacebook />
+		<LoginByFacebook facebookSignIn={facebookSignIn} />
 	    </div>
 	);
     }

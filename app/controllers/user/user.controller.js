@@ -1,6 +1,7 @@
 const {OAuth2Client} = require('google-auth-library');
 const moment = require('moment');
 const jwt = require("jsonwebtoken");
+const request = require('request');
 const Response = require("../helper/responseFormat");
 
 class UserController {
@@ -31,33 +32,6 @@ class UserController {
 	    
 	    const payload = ticket.getPayload();
 	    console.log(payload);
-	    // const tokenIssuedate= moment.unix(payload.iat).format("YYYY-MM-DD HH:mm");
-	    // const tokenExpdate = moment.unix(payload.exp).format("YYYY-MM-DD HH:mm");
-
-
-
-	    // console.log(payload);
-	    // console.log("token issue date==== ", tokenIssuedate);
-	    // console.log("token expired time =====", tokenExpdate);
-	    // const email = payload.email;
-	    // // save user into database;
-
-	    
-	    // const expiresIn = process.config.TOKEN_EXPIRE_TIME;
-            // const secret = process.config.TOKEN_SECRET_KEY;
-	    // const accessTokencookie = await jwt.sign(
-	    // 	{
-	    // 	    accessToken: accessToken
-	    // 	},
-	    // 	secret,
-	    // 	{
-	    // 	    expiresIn
-	    // 	}
-            // );
-	    // console.log("accessToken ccokie ====". accessTokencookie);
-	    // res.cookie("accessToken", accessTokencookie, {
-	    // 	httpOnly: true
-            // });
 	    let response = new Response(true, 200);
 	    response.setMessage("Sign in successful!");
 	     return res
@@ -74,6 +48,23 @@ class UserController {
 		.status(response.getStatusCode())
 		.send(response.getResponse());
 	}
+    }
+
+
+    async signInFacebook(req, res){
+	const {accessToken} = req.body;
+
+	request(`https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=3007643415948147&client_secret=60d7c3e6dc4aae01cd9096c2749fc5c1&fb_exchange_token=${accessToken}`, { json: true }, (err, res, body) => {
+	    if (err) { return console.log(err); }
+	    console.log("body ======== ",res.body.access_token);
+	    console.log(res.body.access_token);
+	});
+	
+	let response = new Response(true, 200);
+	response.setMessage("Sign in successful!");
+	return res
+	    .status(response.getStatusCode())
+	    .send(response.getResponse());
     }
 
 }

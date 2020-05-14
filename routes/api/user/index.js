@@ -7,4 +7,9 @@ router.post(
     userController.signInGoogle
 );
 
+router.post(
+    "/facebookSignIn",
+    userController.signInFacebook
+);
+
 module.exports = router;
