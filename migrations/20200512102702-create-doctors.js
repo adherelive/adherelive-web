@@ -13,21 +13,39 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: {
+            tableName: DB_TABLES.USERS,
+          },
+          key: 'id'
+        }
       },
       gender: {
         type: Sequelize.ENUM,
         values: [GENDER.MALE, GENDER.FEMALE, GENDER.TRANS],
         allowNull: true
-      }
-      // first_name: {
-      //
-      // },
-      // middle_name: {},
-      // last_name: {},
-      // address: {},
-      // qualifications: {},
-      // activated_on: {},
+      },
+      first_name: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      middle_name: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+      },
+      last_name: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      address: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      qualifications: {
+        type: Sequelize.JSON,
+      },
+      activated_on: {},
     });
   },
 

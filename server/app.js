@@ -1,9 +1,7 @@
 // const createError = require("http-errors");
 
-const Config = require("../config/config-prev");
+const Config = require("../config/config");
 const express = require("express");
-
-Config();
 
 const app = express();
 
