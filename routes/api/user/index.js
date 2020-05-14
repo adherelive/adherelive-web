@@ -7,5 +7,4 @@ router.post(
     userController.signInGoogle
 );
 
-
 module.exports = router;

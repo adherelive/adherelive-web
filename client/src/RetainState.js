@@ -2,6 +2,8 @@ import { SIGNING } from "./modules/auth";
 import { SIGNING_COMPLETED } from "./modules/auth";
 import { SIGNING_COMPLETED_WITH_ERROR } from "./modules/auth";
 
+import { GOOGLE_SIGNING_COMPLETED, GOOGLE_SIGNING_COMPLETED_WITH_ERROR } from "./modules/auth";
+
 import { SIGNING_UP } from "./modules/auth";
 import { SIGNING_UP_COMPLETED } from "./modules/auth";
 import { SIGNING_UP_COMPLETED_WITH_ERROR } from "./modules/auth";
@@ -31,7 +33,8 @@ import { RESET_PASSWORD_LINK_COMPLETED } from "./modules/auth";
 
 const retainState = store => next => action => {
   const storeInstance = store.getState();
-  const { auth: { authenticated = false } = {} } = storeInstance;
+    const { auth: { authenticated = false } = {} } = storeInstance;
+    console.log(authenticated);
   if (authenticated) {
     next(action);
   } else {
@@ -49,7 +52,9 @@ const retainState = store => next => action => {
       case GETTING_INITIAL_DATA_COMPLETED:
       case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       case RESET_ERROR:
-      case RESET_PASSWORD_LINK_COMPLETED:
+    case RESET_PASSWORD_LINK_COMPLETED:
+    case GOOGLE_SIGNING_COMPLETED:
+    case GOOGLE_SIGNING_COMPLETED_WITH_ERROR:
         // case FETCHING_ALL_SPECIALITY_DATA:
         // case FETCHING_ALL_SPECIALITY_DATA_COMPLETED:
         // case FETCHING_ALL_SPECIALITY_DATA_COMPLETED_WITH_ERROR:

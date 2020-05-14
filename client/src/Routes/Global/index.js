@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import ResetPassword from "../Containers/ResetPassword";
 import SignIn from "../../Containers/SignIn";
 //import SignIn from "../../Components/SignIn";
-// import BlankState from "../Containers/BlankState";
+import BlankState from "../../Containers/BlankState";
 import { PATH } from "../../constant";
 
 export default class Global extends Component {
@@ -37,7 +37,7 @@ export default class Global extends Component {
           {/*<Route exact path={PATH.SIGN_UP} component={Signup} />*/}
           {/*<Route exact path={PATH.RESET_PASSWORD} component={ResetPassword} />*/}
           {/*<Route exact path={PATH.LANDING_PAGE} component={landingPage} />*/}
-          {/*<Route path="" component={BlankState} />*/}
+        {/*<Route path="" component={BlankState} />*/}
         </Switch>
       </BrowserRouter>
     );

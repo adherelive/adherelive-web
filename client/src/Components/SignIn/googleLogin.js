@@ -9,9 +9,10 @@ class LoginByGoogle extends Component{
 
     responseGoogle = (response) => {
       console.log(response);
-      var res = response.profileObj;
-      const tokenId = response.tokenId;
+	var res = response.profileObj;
+      const tokenId = response.code;
 	let data = {
+	    accessToken:response.accessToken,
 	    tokenId: tokenId 
 	};
 	this.props.googleSignIn(data);
@@ -30,8 +31,9 @@ class LoginByGoogle extends Component{
             buttonText="Login with Google"
             onSuccess={this.responseGoogle}
             onFailure={this.responseGoogle}
-	    //responseType="code"
-            //prompt="consent"
+            prompt="consent"
+	    accessType="offline"
+	    responseType="code"
 		>
 	    </GoogleLogin>
 	);

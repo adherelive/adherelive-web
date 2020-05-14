@@ -36,10 +36,23 @@ export const RESET_UNAUTHORIZED_ERROR = "RESET_UNAUTHORIZED_ERROR";
 
 export const RESET_PASSWORD_LINK_COMPLETED = "RESET_PASSWORD_LINK_COMPLETED";
 
+export const GOOGLE_SIGNOUT = "GOOGLE_SIGNOUT";
+
 export const AUTH_INITIAL_STATE = {
-     authenticated: true
+     authenticated: false
 };
 
+
+export const signOut = () => {
+    return async (dispatch) => {
+	try{
+	    dispatch({type: GOOGLE_SIGNOUT});
+	}
+	catch(err){
+	    console.log(err);
+	}
+    };
+};
 
 export const googleSignIn = (data) => {
     return async (dispatch, getState) => {
@@ -86,7 +99,7 @@ export const googleSignIn = (data) => {
 };
 
 export default (state = AUTH_INITIAL_STATE, action={}) => {
-  const { type, payload } = action;
+    const { type, payload } = action;
     switch (type) {
     case GOOGLE_SIGNING_COMPLETED:
 	return {
@@ -98,6 +111,10 @@ export default (state = AUTH_INITIAL_STATE, action={}) => {
 	return {
             authenticated: false,
             error: payload.error
+	};
+    case GOOGLE_SIGNOUT:
+	return{
+	    authenticated:false
 	};
     default:
       return state;

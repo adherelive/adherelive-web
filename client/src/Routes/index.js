@@ -9,7 +9,7 @@ const Auth = lazy(() =>
 
 export default class Routes extends Component {
   constructor(props) {
-    super(props);
+      super(props);
     this.state = {};
   }
 
@@ -18,8 +18,6 @@ export default class Routes extends Component {
     // if (authenticated !== true && authenticated !== false) {
     //     return <div>Loading</div>;
     // }
-
-      console.log("authenticated ============= ", authenticated);
       
     return (
       <Fragment>
@@ -30,7 +28,7 @@ export default class Routes extends Component {
         />
         ) : (
             <Global />
-        )}
+             )}
       </Fragment>
     );
   }
