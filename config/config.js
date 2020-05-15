@@ -76,6 +76,12 @@ module.exports = () => {
     branch_io: {
       key: process.env.BRANCH_IO_KEY,
       base_url: process.env.BRANCH_IO_BASE_URL
-    }
+    },
+      GOOGLE_KEYS:{
+	  CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+	  CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+	  REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
+	  
+      }
   };
 };

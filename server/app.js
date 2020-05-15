@@ -9,11 +9,11 @@ const express = require("express");
 //
 Config();
 //
-//const cookieSession = require("cookie-session");
+const cookieSession = require("cookie-session");
 //const path = require("path");
-//const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 // const logger = require("morgan");
-//const cors = require("cors");
+const cors = require("cors");
 //const helmet = require("helmet");
 // const Mongo = require("../libs/mongo");
 // const countryCityRouter = require("../Routes/api/cityCountry/index");
@@ -43,8 +43,8 @@ const userRouter = require("../routes/api/user");
 // const dispensationRouter = require("../Routes/api/dispensation");
 // const charityRouter = require("../Routes/api/charity");
 // const userDeviceRouter = require("../Routes/api/userDevices/userDeviceRouter");
-// const jwt = require("jsonwebtoken");
-// const userService = require("../app/services/user/user.service");
+const jwt = require("jsonwebtoken");
+const userService = require("../app/services/user/user.service");
 // const userController = require("../app/controllers/user/user.controller");
 // const EventObserver = require("../app/proxySdk/eventObserver");
 // let { Proxy_Sdk, EVENTS } = require("../app/proxySdk");
@@ -91,65 +91,64 @@ app.use(
     limit: "50mb"
   })
 );
-// app.use(cookieParser());
+app.use(cookieParser());
 // // app.use(express.static(path.join(__dirname, "public")));
 // app.use(express.static(path.join(__dirname, "../public")));
 //
 // app.use(helmet());
-// app.use(cors());
-// app.use(
-//   cookieSession({
-//     maxAge: 30 * 24 * 60 * 60 * 1000,
-//     keys: JSON.parse(process.config.cookieKey)
-//   })
-// );
+app.use(cors());
+app.use(
+    cookieSession({
+     maxAge: 30 * 24 * 60 * 60 * 1000,
+     keys: JSON.parse(process.config.cookieKey)
+   })
+ );
 //
-// app.use(async function(req, res, next) {
-//   try {
-//     const { query: { m } = {} } = req;
-//     // let accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDM0MzQzMDMwMzAzMDMwMzAzMDMwMzAiLCJpYXQiOjE1NzExMTk5MzQsImV4cCI6MTU3MTIwNjMzNH0.c0fSmeWgFbGcqMLAhQkpPoJH1rCt2hvFqr_nN1gxVPE';
-//     let accessToken;
-//     if (m) {
-//       const { authorization = "" } = req.headers || {};
-//       const bearer = authorization.split(" ");
-//       if (bearer.length === 2) {
-//         accessToken = bearer[1];
-//       }
-//     } else {
-//       const { cookies = {} } = req;
-//       if (cookies.accessToken) {
-//         accessToken = cookies.accessToken;
-//       }
-//     }
-//
-//     if (accessToken) {
-//       const secret = process.config.TOKEN_SECRET_KEY;
-//       const decodedAccessToken = await jwt.verify(accessToken, secret);
-//       let user = await userService.getUser({ _id: decodedAccessToken.userId });
-//       if (user) {
-//         req.userDetails = {
-//           exists: true,
-//           userId: decodedAccessToken.userId,
-//           userData: user
-//         };
-//       } else {
-//         req.userDetails = {
-//           exists: false
-//         };
-//       }
-//     } else {
-//       req.userDetails = {
-//         exists: false
-//       };
-//     }
-//     next();
-//   } catch (err) {
-//     req.userDetails = {
-//       exists: false
-//     };
-//     next();
-//   }
-// });
+app.use(async function(req, res, next) {
+  try {
+    const { query: { m } = {} } = req;
+    let accessToken;
+    if (m) {
+      const { authorization = "" } = req.headers || {};
+      const bearer = authorization.split(" ");
+      if (bearer.length === 2) {
+        accessToken = bearer[1];
+      }
+    } else {
+      const { cookies = {} } = req;
+      if (cookies.accessToken) {
+        accessToken = cookies.accessToken;
+      }
+    }
+
+    if (accessToken) {
+      const secret = process.config.TOKEN_SECRET_KEY;
+      const decodedAccessToken = await jwt.verify(accessToken, secret);
+      let user = await userService.getUser({ _id: decodedAccessToken.userId });
+      if (user) {
+        req.userDetails = {
+          exists: true,
+          userId: decodedAccessToken.userId,
+          userData: user
+        };
+      } else {
+        req.userDetails = {
+          exists: false
+        };
+      }
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+    }
+    next();
+  } catch (err) {
+    req.userDetails = {
+      exists: false
+    };
+    next();
+  }
+});
 //
 // app.get("/accept-invite/:link", userController.acceptInvite);
 // app.use("/api", countryCityRouter);
