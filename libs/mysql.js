@@ -5,6 +5,8 @@ import Sequelize from "sequelize";
 //   dialect: "mysql"
 // });
 
+console.log(process.config.db);
+
 export const database = new Sequelize(
   process.config.db.name,
   process.config.db.username,
