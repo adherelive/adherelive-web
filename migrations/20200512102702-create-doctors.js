@@ -45,7 +45,21 @@ module.exports = {
       qualifications: {
         type: Sequelize.JSON,
       },
-      activated_on: {},
+      activated_on: {
+        type: Sequelize.DATE
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      deleted_at: {
+        allowNull: true,
+        type: Sequelize.DATE
+      }
     });
   },
 
