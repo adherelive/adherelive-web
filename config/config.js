@@ -1,8 +1,7 @@
 const dotenv = require("dotenv");
 
-const config =  () => {
+module.exports =  () => {
     dotenv.config();
-    console.log("||--||");
     process.config = {
         db: {
             connection: process.env.DB_CONNECTION,
@@ -36,4 +35,4 @@ const config =  () => {
     };
 };
 
-config();
+// config();

@@ -1,5 +1,5 @@
 import express from "express";
-import Config from "../config/config";
+
 import mysql from "../libs/mysql";
 
 const app = express();
@@ -16,6 +16,8 @@ app.use(
     })
 );
 
-app.listen(process.config.PORT, () => {
-    console.log(`Server listening on port ${process.config.PORT}`);
-});
+module.exports = app;
+
+// app.listen(process.config.PORT, () => {
+//     console.log(`Server listening on port ${process.config.PORT}`);
+// });

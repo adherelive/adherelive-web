@@ -304,7 +304,16 @@ export const DB_TABLES = {
     DOCTORS: "doctors",
     PATIENTS: "patients",
     APPOINTMENTS: "appointments",
-    SCHEDULE_EVENTS:"schedule_events",
+    SCHEDULE_EVENTS: "schedule_events",
+    PATIENT_CARE_TAKERS: "patient_care_takers",
+    CARE_PLAN_TEMPLATE: "care_plan_template",
+    CONSENTS: "consents",
+    CONDITIONS: "conditions",
+    REGIONS: "regions",
+    PROVIDERS: "providers",
+    REGION_FEATURES: "region_features",
+    FEATURES: "features",
+    MEDICINES: "medicines",
 };
 
 export const SIGN_IN_CATEGORY = {
@@ -320,9 +329,9 @@ export const GENDER = {
 };
 
 export const EVENT_STATUS = {
-  SCHEDULED: "scheduled",
+    SCHEDULED: "scheduled",
     PENDING: "pending",
-    COMPLETED:"completed",
-    EXPIRED:"expired",
-    CANCELLED:"cancelled"
+    COMPLETED: "completed",
+    EXPIRED: "expired",
+    CANCELLED: "cancelled"
 };

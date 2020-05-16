@@ -3,7 +3,8 @@
 /**
  * Module dependencies.
  */
-
+var Config = require("../../config/config");
+Config();
 var app = require("../app");
 var debug = require("debug")("econsulting-rest:server");
 var http = require("http");
