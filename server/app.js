@@ -2,7 +2,6 @@ import express from "express";
 import Config from "../config/config";
 import mysql from "../libs/mysql";
 
-
 const app = express();
 
 mysql();
