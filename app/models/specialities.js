@@ -3,8 +3,8 @@ import Sequelize from "sequelize";
 import { database } from "../../libs/mysql";
 import { DB_TABLES } from "../../constant";
 
-const Conditions = database.define(
-    DB_TABLES.CONDITIONS,
+const Specialities = database.define(
+    DB_TABLES.SPECIALITIES,
     {
         id: {
             allowNull: false,
@@ -16,6 +16,10 @@ const Conditions = database.define(
             type: Sequelize.STRING,
             allowNull: false,
         },
+        description: {
+            type: Sequelize.STRING(1000),
+            allowNull: false,
+        }
     },
     {
         underscored: true,
@@ -25,10 +29,11 @@ const Conditions = database.define(
                 return {
                     id: this.id,
                     name:this.name,
+                    description:this.description,
                 };
             }
         }
     }
 );
 
-export default Conditions;
+export default Specialities;

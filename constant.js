@@ -1,6 +1,8 @@
-export const ACTIVITY_TYPE = {
+export const ACTION_TYPE = {
     FOLLOWUP: "followup",
     MEDICATION: "medication",
+    EXERCISE: "exercise",
+    DIET: "diet",
     MATERIAL_DELIVERY: "material_delivery"
 };
 
@@ -314,6 +316,36 @@ export const DB_TABLES = {
     REGION_FEATURES: "region_features",
     FEATURES: "features",
     MEDICINES: "medicines",
+    MEDICATION_REMINDERS: "medication_reminders",
+    ARTICLES: "articles",
+    CARE_PLANS: "care_plans",
+    CLINICS: "clinics",
+    REGION_PROVIDERS: "region_providers",
+    PROVIDER_MEMBERS: "provider_members",
+    REMINDERS: "reminders",
+    MEMBER_SPECIALITIES: "member_specialities",
+    SPECIALITIES: "specialities",
+    PLATFORM_EVENTS: "platform_events",
+    PRODUCT_PLANS: "product_plans",
+    SUBSCRIPTIONS: "subscriptions",
+    ACTIONS: "actions",
+    ACTION_DETAILS: "action_details",
+    EXERCISE: "exercise",
+    DIET: "diet",
+    ADHERENCE: "adherence",
+    DISEASE: "disease"
+};
+
+export const ARTICLE_TYPE = {
+    VIDEO: "video",
+    IMAGE: "image",
+    PDF: "pdf"
+};
+
+export const CURRENCY = {
+    INR: "INR",
+    AUD: "AUD",
+    USD: "USD"
 };
 
 export const SIGN_IN_CATEGORY = {

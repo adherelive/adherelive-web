@@ -1,10 +1,10 @@
 "use strict";
 import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
+import {database} from "../../libs/mysql";
+import {DB_TABLES} from "../../constant";
 
-const Conditions = database.define(
-    DB_TABLES.CONDITIONS,
+const Disease = database.define(
+    DB_TABLES.DISEASE,
     {
         id: {
             allowNull: false,
@@ -12,8 +12,8 @@ const Conditions = database.define(
             primaryKey: true,
             type: Sequelize.INTEGER
         },
-        name: {
-            type: Sequelize.STRING,
+        description: {
+            type: Sequelize.STRING(1000),
             allowNull: false,
         },
     },
@@ -24,11 +24,11 @@ const Conditions = database.define(
             getBasicInfo() {
                 return {
                     id: this.id,
-                    name:this.name,
+                    description: this.description,
                 };
             }
         }
     }
 );
 
-export default Conditions;
+export default Disease;
