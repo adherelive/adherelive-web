@@ -4,7 +4,7 @@ import {database} from "../../libs/mysql";
 import {DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY, GENDER, EVENT_TYPE, EVENT_STATUS} from "../../constant";
 import Users from "./users";
 
-const ScheduleEvents = database.define(
+const ScheduleEvent = database.define(
     DB_TABLES.SCHEDULE_EVENTS,
     {
         id: {
@@ -59,4 +59,4 @@ const ScheduleEvents = database.define(
     }
 );
 
-export default ScheduleEvents;
+export default ScheduleEvent;

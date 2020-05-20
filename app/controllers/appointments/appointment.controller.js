@@ -1,5 +1,7 @@
 import Controller from "../index";
 import appointmentService from "../../services/appointment/appointment.service";
+import scheduleService from "../../services/events/event.service";
+import {EVENT_STATUS, EVENT_TYPE} from "../../../constant";
 
 class AppointmentController extends Controller {
     constructor() {
@@ -14,7 +16,9 @@ class AppointmentController extends Controller {
                 description,
                 start_date,
                 end_date,
-                organizer
+                organizer,
+                start_time,
+                end_time,
                 // participant_one_type = "",
                 // participant_one_id = "",
             } = body;
@@ -36,8 +40,19 @@ class AppointmentController extends Controller {
             const appointment = await appointmentService.addAppointment(appointment_data);
             console.log("[ APPOINTMENTS ] appointments ", appointment);
 
-            // TODO: schedule event and notifications here
+            const eventScheduleData = {
+                event_type: EVENT_TYPE.APPOINTMENT,
+                event_id: appointment.id,
+                details: {},
+                status: EVENT_STATUS.PENDING,
+                start_time,
+                end_time
+            };
 
+            const scheduleEvent = await scheduleService.addEvent(eventScheduleData);
+            console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+
+            // TODO: schedule event and notifications here
 
             // response
             return this.raiseSuccess(res, 200, appointment, "appointment created successfully");
