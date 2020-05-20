@@ -59,7 +59,7 @@ const Users = database.define(
       getBasicInfo() {
         return {
           user_id: this.id,
-          username: this.username,
+          user_name: this.user_name,
           email: this.email,
           sign_in_type: this.sign_in_type,
           category: this.category,

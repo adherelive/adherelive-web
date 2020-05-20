@@ -136,7 +136,7 @@ class CalendarTimeSelecton extends Component {
       startDate.isValid() &&
       _id
     ) {
-      //fetching current startDate's booked events.
+      //fetching current startDate's booked appointments.
       const response = await doRequest({
         url: getBookedSlotsURL(),
         params: {
@@ -148,7 +148,7 @@ class CalendarTimeSelecton extends Component {
       const { status, payload = {} } = response;
       if (status) {
         const { data: { bookedSlots } = [] } = payload;
-        //for more events option got to https://fullcalendar.io/docs/event-parsing
+        //for more appointments option got to https://fullcalendar.io/docs/event-parsing
         const bookedEvents = bookedSlots.map(event => {
           const { start, end } = event;
           return {

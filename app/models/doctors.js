@@ -1,73 +1,80 @@
 "use strict";
 import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
+import {database} from "../../libs/mysql";
+import {DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY, GENDER} from "../../constant";
+import Users from "./users";
 
 const Doctors = database.define(
-  DB_TABLES.DOCTORS,
-  {
-    id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+    DB_TABLES.DOCTORS,
+    {
+        id: {
+            allowNull: false,
+            autoIncrement: true,
+            primaryKey: true,
+            type: Sequelize.INTEGER
+        },
+        user_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: {
+                    tableName: DB_TABLES.USERS,
+                },
+                key: 'id'
+            }
+        },
+        gender: {
+            type: Sequelize.ENUM,
+            values: [GENDER.MALE, GENDER.FEMALE, GENDER.TRANS],
+            allowNull: true
+        },
+        first_name: {
+            type: Sequelize.STRING(100),
+            allowNull: false,
+        },
+        middle_name: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+        },
+        last_name: {
+            type: Sequelize.STRING(100),
+            allowNull: false,
+        },
+        address: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        qualifications: {
+            type: Sequelize.JSON,
+        },
+        activated_on: {
+            type: Sequelize.DATE
+        },
     },
-    user_name: {
-      type: Sequelize.STRING(100),
-      unique: true,
-      allowNull: true
-    },
-    email: {
-      type: Sequelize.STRING,
-      required: true,
-      unique: true,
-      set(val) {
-        this.setDataValue("email", val.toLowerCase());
-      }
-    },
-    password: {
-      type: Sequelize.STRING(1000),
-      required: true
-    },
-    sign_in_type: {
-      type: Sequelize.ENUM,
-      values: [
-        SIGN_IN_CATEGORY.BASIC,
-        SIGN_IN_CATEGORY.GOOGLE,
-        SIGN_IN_CATEGORY.FACEBOOK
-      ],
-      required: true
-    },
-    category: {
-      type: Sequelize.ENUM,
-      values: [
-        USER_CATEGORY.DOCTOR,
-        USER_CATEGORY.PATIENT,
-        USER_CATEGORY.CARE_TAKER,
-        USER_CATEGORY.PROVIDER,
-        USER_CATEGORY.ADMIN
-      ],
-      required: true
-    },
-    activated_on: {
-      type: Sequelize.DATE
+    {
+        underscored: true,
+        paranoid: true,
+        getterMethods: {
+            getBasicInfo() {
+                return {
+                    id: this.id,
+                    user_id: this.user_id,
+                    gender: this.gender,
+                    first_name: this.first_name,
+                    middle_name: this.middle_name,
+                    last_name: this.last_name,
+                    address: this.address,
+                    qualifications: this.qualifications,
+                    activated_on: this.activated_on
+                };
+            }
+        }
     }
-  },
-  {
-    underscored: true,
-    paranoid: true,
-    getterMethods: {
-      getBasicInfo() {
-        return {
-          user_id: this.id,
-          username: this.username,
-          email: this.email,
-          sign_in_type: this.sign_in_type,
-          category: this.category,
-          activated_on: this.activated_on
-        };
-      }
-    }
-  }
 );
+
+Doctors.belongsTo(Users, {
+   foreignKey:"user_id",
+    targetKey:"id"
+});
 
 export default Doctors;
