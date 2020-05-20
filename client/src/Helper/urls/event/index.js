@@ -55,7 +55,7 @@ export const getFetchAdverseEvent = userId => {
 };
 
 export const getLastEditedEvent = () => {
-  return "/events/lastEdited";
+  return "/appointments/lastEdited";
 };
 
 export const getEventUsers = eventId => {

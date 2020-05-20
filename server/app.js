@@ -1,10 +1,28 @@
-// const createError = require("http-errors");
+import express from "express";
+import mysql from "../libs/mysql";
 
-const Config = require("../config/config-prev");
-const express = require("express");
-
-Config();
+import eventRouter from "../routes/api/events";
+import twilioRouter from "../routes/api/twilio";
 
 const app = express();
 
+mysql();
+
+app.set("view engine", "ejs");
+
+app.use(express.json({ limit: "50mb" }));
+app.use(
+    express.urlencoded({
+        extended: false,
+        limit: "50mb"
+    })
+);
+
+app.use('/api', eventRouter);
+app.use("/api", twilioRouter);
+
 module.exports = app;
+
+// app.listen(process.config.PORT, () => {
+//     console.log(`Server listening on port ${process.config.PORT}`);
+// });
