@@ -1,8 +1,8 @@
-import Controller from "../index";
-import appointmentService from "../../services/appointment/appointment.service";
-import scheduleService from "../../services/events/event.service";
-import {Proxy_Sdk, EVENTS} from "../../proxySdk";
-import {EVENT_STATUS, EVENT_TYPE} from "../../../constant";
+import Controller from "../../index";
+import appointmentService from "../../../services/appointment/appointment.service";
+import scheduleService from "../../../services/events/event.service";
+import {Proxy_Sdk, EVENTS} from "../../../proxySdk";
+import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 
 class AppointmentController extends Controller {
     constructor() {
@@ -20,19 +20,21 @@ class AppointmentController extends Controller {
                 organizer,
                 start_time,
                 end_time,
+                participant_one = {}
                 // participant_one_type = "",
                 // participant_one_id = "",
             } = body;
             const {userId = "10", user : {category = "patient"} = {}} = userDetails || {};
+            const {id: participant_one_id, category : participant_one_type} = participant_one || {};
             const {id: participant_two_id, category : participant_two_type} = participant_two || {};
 
             const appointment_data = {
-                participant_one_type: category,
-                participant_one_id: userId,
+                participant_one_type: participant_one_type ? participant_one_type : category,
+                participant_one_id: participant_one_id ? participant_one_id : userId,
                 participant_two_type,
                 participant_two_id,
-                organizer_type: Object.keys(organizer).length > 0 ? organizer.category : category,
-                organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+                organizer_type: category,
+                organizer_id: userId,
                 description,
                 start_date,
                 end_date,
@@ -44,7 +46,9 @@ class AppointmentController extends Controller {
             const eventScheduleData = {
                 event_type: EVENT_TYPE.APPOINTMENT,
                 event_id: appointment.id,
-                details: {},
+                details: {
+                    appointment
+                },
                 status: EVENT_STATUS.PENDING,
                 start_time,
                 end_time
