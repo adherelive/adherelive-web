@@ -1,4 +1,3 @@
-import React, { lazy, Component, Fragment } from "react";
 // import Footer from "../Containers/Footer";
 
 const Global = lazy(() => import(/* webpackChunkName: "Global"*/ "./Global"));
@@ -9,7 +8,7 @@ const Auth = lazy(() =>
 
 export default class Routes extends Component {
   constructor(props) {
-    super(props);
+      super(props);
     this.state = {};
   }
 
@@ -18,17 +17,17 @@ export default class Routes extends Component {
     // if (authenticated !== true && authenticated !== false) {
     //     return <div>Loading</div>;
     // }
-
+      
     return (
       <Fragment>
-        {/*{authenticated === true ? (*/}
+            {authenticated === true ? (
         <Auth
           unauthorizedError={unauthorizedError}
           authRedirection={this.props.authRedirection}
         />
-        {/*) : (*/}
-        {/*    <Global />*/}
-        {/*)}*/}
+        ) : (
+            <Global />
+             )}
       </Fragment>
     );
   }

@@ -1,4 +1,15 @@
 module.exports = {
+  MANAGER_BOOKING_REQUEST_APPROVED: 1,
+  MANAGER_BOOKING_REQUEST_REJECTED: 2,
+  BOOKING_SLOTS: {
+    "9": { status: "pending" },
+    "10": { status: "pending" },
+    "11": { status: "pending" },
+    "12": { status: "pending" },
+    "14": { status: "pending" },
+    "15": { status: "pending" },
+    "16": { status: "pending" }
+  },
   UNAUTHORIZED_ACCESS: "UNAUTHORIZED_ACCESS",
   INTERNAL_SERVER_ERROR: "INTERNAL_SERVER_ERROR",
   FORBIDDEN: "FORBIDDEN",

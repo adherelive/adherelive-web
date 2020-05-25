@@ -1,5 +1,12 @@
 import Sequelize from "sequelize";
 
+// export const database = new Sequelize("adhere", "user", "password", {
+//   host: "mysql",
+//   dialect: "mysql"
+// });
+
+// console.log(process.config.db);
+
 export const database = new Sequelize(
   process.config.db.name,
   process.config.db.username,
