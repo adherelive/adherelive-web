@@ -8,6 +8,7 @@ import { CHART_TITLE, GRAPH_COLORS } from "../../constant";
 import { Tabs } from "antd";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
+import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
 
 const { TabPane } = Tabs;
 
@@ -113,6 +114,7 @@ class Dashboard extends Component {
           </Tabs>
         </div>
         <PatientDetailsDrawer />
+        <AddAppointmentDrawer />
       </Fragment>
     );
   }

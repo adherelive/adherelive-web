@@ -63,7 +63,6 @@ class AppointmentController extends Controller {
             return this.raiseServerError(res, 500, error, error.getMessage());
         }
     }
-
 }
 
 export default new AppointmentController();
