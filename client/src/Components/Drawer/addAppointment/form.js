@@ -29,12 +29,12 @@ class AddAppointmentForm extends Component {
     };
 
     getPatientOptions = () => {
-        const {patients} = this.props;
+        const {patients = []} = this.props;
 
         const patientOptions = patients.map(patient => {
             const {first_name, last_name, id} = patient || {};
             return (
-                <Option key={`p-${id}`} value={id} name={}>
+                <Option key={`p-${id}`} value={id} name={`${id}`}>
                     {`${first_name} ${last_name}`}
                 </Option>
             );

@@ -1,5 +1,5 @@
 import SignIn from "../../Components/SignIn";
-import {googleSignIn, facebookSignIn} from "../../modules/auth";
+import {googleSignIn, facebookSignIn, getInitialData} from "../../modules/auth";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
@@ -11,7 +11,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
 	googleSignIn: (data) => dispatch(googleSignIn(data)),
-	facebookSignIn: (data) => dispatch(facebookSignIn(data))
+	facebookSignIn: (data) => dispatch(facebookSignIn(data)),
     };
 };
 

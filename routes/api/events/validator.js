@@ -1,7 +1,7 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
 import {USER_CATEGORY} from "../../../constant";
-import {raiseClientError} from "../helper";
+import {raiseClientError} from "../../helper";
 
 const appointmentFormSchema = Joi.object().keys({
     participant_two: Joi.object().keys({

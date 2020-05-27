@@ -1,3 +1,4 @@
+import React, {Component, Fragment} from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import * as Chart from "chart.js";
@@ -21,10 +22,12 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const { graphs } = this.props;
+    const { graphs, getInitialData } = this.props;
     setTimeout(() => {
       drawChart(graphs);
     }, 500);
+
+    getInitialData();
   }
 
   formatMessage = data => this.props.intl.formatMessage(data);

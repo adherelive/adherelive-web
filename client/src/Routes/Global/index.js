@@ -1,3 +1,4 @@
+import React, {Component} from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import landingPage from "../Components/landingPage";
 // import Signup from "../Containers/Invite";

@@ -13,6 +13,24 @@ module.exports =  () => {
             password: process.env.DB_PASSWORD,
             dialect: process.env.DB_DIALECT
         },
+        aws: {
+            access_key: process.env.AWS_ACCESS_KEY,
+            access_key_id: process.env.AWS_ACCESS_KEY_ID,
+            region: process.env.AWS_REGION,
+            platform_arn: process.env.AWS_PLATFORM_ARN,
+            topic_arn: process.env.AWS_TOPIC_ARN,
+            aws_provider_bucket: process.env.AWS_PROVIDER_BUCKET,
+            aws_booking_request_bucket: process.env.AWS_BOOKING_REQUEST_BUCKET,
+            aws_prescription_bucket: process.env.AWS_PRESCRIPTION_BUCKET,
+            device_token: process.env.device_token
+        },
+        twilio: {
+            TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
+            TWILIO_API_KEY: process.env.TWILIO_API_KEY,
+            TWILIO_API_SECRET: process.env.TWILIO_API_SECRET,
+            TWILIO_CHAT_SERVICE_SID: process.env.TWILIO_CHAT_SERVICE_SID,
+            TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN
+        },
         saltRounds: process.env.SALT_ROUNDS,
         minio: {
             MINIO_ACCESS_KEY: process.env.MINIO_ACCESS_KEY,
@@ -22,6 +40,15 @@ module.exports =  () => {
             MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
             MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME
         },
+        GOOGLE_KEYS: {
+            CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+            CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+            REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI
+        },
+        FACEBOOK_KEYS: {
+          APP_TOKEN: process.env.FACEBOOK_APP_TOKEN,
+        },
+        cookieKey: process.env.COOKIE_KEY,
         PORT:process.env.WEB_SERVER_PORT,
         APP_URL: process.env.APP_URL,
         WEB_URL: process.env.WEB_URL,
@@ -32,6 +59,9 @@ module.exports =  () => {
         S3_BUCKET_URL: process.env.S3_BUCKET_URL,
         UTC_OFFSET_STR: process.env.UTC_OFFSET_STR,
         DB_ENCRYPTION_KEY: process.env.DB_ENCRYPTION_KEY,
+        TOKEN_EXPIRE_TIME: process.env.TOKEN_EXPIRE_TIME,
+        TOKEN_SECRET_KEY: process.env.TOKEN_SECRET_KEY,
+        INVITE_EXPIRE_TIME: process.env.INVITE_EXPIRE_TIME,
     };
 };
 

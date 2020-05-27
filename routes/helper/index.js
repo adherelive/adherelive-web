@@ -1,4 +1,4 @@
-import Response from "../../../app/helper/responseFormat";
+import Response from "../../app/helper/responseFormat";
 
 export const raiseSuccess = (res, code = 200, data = {}, message) => {
     const response = new Response(true, code);
@@ -29,5 +29,3 @@ export const raiseClientError = (res, code = 422, error, message) => {
     response.setMessage(message);
     return res.status(payload.code).json(response.getResponse());
 };
-
-export default {};

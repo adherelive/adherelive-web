@@ -1,4 +1,4 @@
-import schedulerModule from "../../models/scheduler";
+import schedulerModule from "../../models/scheduleEvents";
 import moment from "moment";
 
 class Scheduler {

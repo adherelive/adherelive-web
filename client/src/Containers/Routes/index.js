@@ -1,4 +1,6 @@
 import { connect } from "react-redux";
+import Routes from "../../Routes";
+import {getInitialData} from "../../modules/auth";
 
 const mapStateToProps = state => {
     const {auth} = state;
@@ -8,7 +10,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+      getInitialData: () => dispatch(getInitialData())
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Routes);

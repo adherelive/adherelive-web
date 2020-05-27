@@ -1,4 +1,4 @@
-import scheduleService from "../services/scheduler/scheduler.service";
+import scheduleService from "../services/events/event.service";
 import moment from "moment";
 import { EVENT_TYPE } from "../../constant";
 
@@ -6,7 +6,7 @@ const getAllOccurrence = require("./scheduler/helper");
 const { EventEmitter } = require("events");
 const EVENTS = require("./proxyEvents");
 const scheduler = require("./scheduler");
-const { NotificationSdk } = require("../notificationSdk");
+// const { NotificationSdk } = require("../notificationSdk");
 const log = require("../../libs/log")("PROXY_SDK");
 const { ActivitySdk, STAGES } = require("../activitySdk");
 const schedule = require("node-schedule");

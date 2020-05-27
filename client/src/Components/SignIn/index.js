@@ -10,7 +10,11 @@ class SignIn extends Component{
 	this.state={};
     }
 
-    render(){
+    componentDidMount() {
+
+	}
+
+	render(){
 
 	const {googleSignIn, facebookSignIn} = this.props;
 	
