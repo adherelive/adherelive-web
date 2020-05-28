@@ -8,11 +8,14 @@ const appointmentFormSchema = Joi.object().keys({
         id: Joi.number().required(),
         category: Joi.string().required(),
     }).required(),
-    start_date: Joi.date().options({ convert: true }).required(),
-    end_date: Joi.date(),
+    date: Joi.date().required(),
     start_time: Joi.date().required(),
     end_time: Joi.date().required(),
     description: Joi.string().optional().allow(""),
+    organizer: Joi.object().keys({
+        id: Joi.number().required(),
+        category: Joi.string().required(),
+    }).optional()
     // TODO: rr_rule here?
 });
 
