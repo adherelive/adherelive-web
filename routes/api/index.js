@@ -8,7 +8,6 @@ import jwt from "jsonwebtoken";
 
 router.use(async function(req, res, next) {
     try {
-        console.log("111 ----> ", req.headers);
         const { query: { m } = {} } = req;
         let accessToken;
         if (m) {
@@ -27,6 +26,7 @@ router.use(async function(req, res, next) {
         if (accessToken) {
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
+
             let user = await userService.getUser(decodedAccessToken.userId);
             console.log("user --> 11 ", user);
             if (user) {
