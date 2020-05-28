@@ -109,15 +109,14 @@ class Dashboard extends Component {
             <TabPane
               tab={<span className="fs16 fw600">{WATCHLIST}</span>}
               key="2"
-            >    console.log("containers ===== ", authenticated, authRedirection);
-
+            >
               <Patients />
               {/*add watchlist table here*/}
             </TabPane>
           </Tabs>
         </div>
         <PatientDetailsDrawer />
-        <AddAppointmentDrawer />
+        {/* <AddAppointmentDrawer /> */}
       </Fragment>
     );
   }

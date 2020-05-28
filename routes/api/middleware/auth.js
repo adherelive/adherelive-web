@@ -25,7 +25,7 @@ export default async (req, res, next) => {
         if (accessToken) {
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
-            console.log(decodedAccessToken);
+            console.log("decodecd ------>  ", decodedAccessToken);
             const access_token = decodedAccessToken.accessToken;
 
             // we will extract the type of signIn from db, user details and accordingly verify token.
@@ -52,7 +52,7 @@ export default async (req, res, next) => {
                 json:true
             });
 
-            console.log(res);
+            console.log("test --->>> ", res);
 
 
             //now get user details

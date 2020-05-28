@@ -56,6 +56,10 @@ class AppointmentController extends Controller {
 
             // TODO: schedule event and notifications here
             await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
+            const scheduleEvent = await scheduleService.addEvent(eventScheduleData);
+            console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+
+            // TODO: schedule event and notifications here
 
             // response
             return this.raiseSuccess(res, 200, appointment, "appointment created successfully");

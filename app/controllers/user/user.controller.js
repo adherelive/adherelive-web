@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
 import Controller from "../";
+import constants from "../../../config/constants";
 
 class UserController extends Controller {
     constructor() {
@@ -84,7 +85,7 @@ class UserController extends Controller {
             // create jwt token for cookie
             const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 1 day
             const secret = process.config.TOKEN_SECRET_KEY;
-            const userId = 123456;
+            const userId = 3;
             const accessTokenCombined = await jwt.sign(
                 {
                     userId: userId,
@@ -171,7 +172,8 @@ class UserController extends Controller {
                 //     .status(response.getStatusCode())
                 //     .send(response.getResponse());
             } else {
-                throw new Error(constants.COOKIES_NOT_SET);
+                console.log("userExists --->>> ", req.userDetails.exists);
+                // throw new Error(constants.COOKIES_NOT_SET);
             }
         } catch (err) {
             console.log("|| --> ", err);

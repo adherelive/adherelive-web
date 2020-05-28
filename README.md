@@ -107,3 +107,5 @@ If you're running the project first time. Run the following command
 1. `docker-compose run node npm install`
 2. `docker-compose run node npm run postinstall`
 3. `docker-compose run node npm run build`
+4. `docker-compose run node npm run migrate`
+5. `docker-compose run node npm run seed`
