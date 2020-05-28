@@ -6,14 +6,13 @@ class UserService {
     constructor() {
     }
 
-    async getUser(data) {
+    async getUser(id) {
         try {
-            const id = data._id;
-            const user = await database.query('SELECT * from users WHERE id=:userId', {
-                replacements: {userId: id},
-                type: Sequelize.QueryTypes.SELECT
+            const user = await userModel.findOne({
+                where: {
+                    id
+                }
             });
-
             return user;
         } catch (err) {
             console.log(err);

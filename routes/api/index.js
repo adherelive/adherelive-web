@@ -3,9 +3,12 @@ const router = express.Router();
 import userRouter from "./user";
 import eventRouter from "./events";
 import twilioRouter from "./twilio";
+import userService from "../../app/services/user/user.service";
+import jwt from "jsonwebtoken";
 
 router.use(async function(req, res, next) {
     try {
+        console.log("111 ----> ");
         const { query: { m } = {} } = req;
         let accessToken;
         if (m) {
@@ -24,7 +27,12 @@ router.use(async function(req, res, next) {
         if (accessToken) {
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
+<<<<<<< HEAD
+            let user = await userService.getUser(decodedAccessToken.userId);
+            console.log("user --> 11 ", user);
+=======
             let user = await userService.getUser({ _id: decodedAccessToken.userId });
+>>>>>>> 3264432e44cb48c5c7c718d3ed3c868e8fe7cab3
             if (user) {
                 req.userDetails = {
                     exists: true,
