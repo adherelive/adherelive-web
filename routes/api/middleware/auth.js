@@ -6,7 +6,7 @@ const Response = require("../../../app/controllers/helper/responseFormat");
 import doRequest from "../../../app/controllers/helper/doRequest";
 
 export default async (req, res, next) => {
-    try{
+    try {
         const { query: { m } = {} } = req;
         let accessToken;
         if (m) {
@@ -16,6 +16,7 @@ export default async (req, res, next) => {
                 accessToken = bearer[1];
             }
         } else {
+            console.log("req cookies --> ", req.cookies.accessToken);
             const { cookies = {} } = req;
             if (cookies.accessToken) {
                 accessToken = cookies.accessToken;
@@ -26,7 +27,12 @@ export default async (req, res, next) => {
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
             console.log("decodecd ------>  ", decodedAccessToken);
-            const access_token = decodedAccessToken.accessToken;
+            // const access_token = decodedAccessToken.accessToken;
+
+            const {userId = "", accessToken : access_token = ""} = decodedAccessToken || {};
+            if(userId) {
+                next();
+            }
 
             // we will extract the type of signIn from db, user details and accordingly verify token.
             // for now we are commenting other for testing purpose.
@@ -58,7 +64,7 @@ export default async (req, res, next) => {
             //now get user details
             // const user = await userService.getUser({
             // 	_id: decodedAccessToken.userId
-            // });
+            // });{
             // if (user) {
             // 	req.userDetails = {
             // 	    exists: true,
