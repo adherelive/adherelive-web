@@ -9,9 +9,8 @@ let password = "";
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        password
         /*
-          Add altering commands here.
+          Add altering commands here.google
           Return a promise to correctly handle asynchronicity.
 
           Example:
@@ -40,7 +39,17 @@ module.exports = {
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
-            }
+            },
+            {
+                user_name: "doctorTwo",
+                email: "test-doctor-two@mail.com",
+                password: await bcrypt.hash("Password@123", 5),
+                sign_in_type: "google",
+                category: "doctor",
+                activated_on: new Date(),
+                created_at: new Date(),
+                updated_at: new Date()
+            },
         ]);
     },
 

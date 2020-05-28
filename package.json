@@ -13,7 +13,8 @@
     "postinstall": "cd client && npm install",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
-    "seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all"
+    "seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
+    "undoSeed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:undo:all"
   },
   "nodemonConfig": {
     "watch": [

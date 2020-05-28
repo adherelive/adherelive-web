@@ -27,11 +27,11 @@ module.exports = {
       },
       registration_start_date: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       registration_expiry_date: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       gender: {
         type: Sequelize.ENUM,

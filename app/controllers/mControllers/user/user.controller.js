@@ -85,7 +85,7 @@ class UserController extends Controller {
             // create jwt token for cookie
             const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 1 day
             const secret = process.config.TOKEN_SECRET_KEY;
-            const userId = 123456;
+            const userId = 3;
             const accessTokenCombined = await jwt.sign(
                 {
                     userId: userId,
