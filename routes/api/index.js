@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 
 router.use(async function(req, res, next) {
     try {
-        console.log("111 ----> ");
+        console.log("111 ----> ", req.headers);
         const { query: { m } = {} } = req;
         let accessToken;
         if (m) {
