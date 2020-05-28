@@ -80,7 +80,14 @@ This will start the project along with Mysql and Minio stacks.
 
 Compare .node_env with .node_env.example and .env with .env.example. If any key-value pair is missing in .node_env, copy it in from the .node_env.example.
 
-## 4. Running seeders
+## 4. Running migrations
+
+To run migrations for setup,
+
+1. `docker-compose exec node bash`
+2. `npm run migrate`
+
+## 5. Running seeders
 
 Now for testing, seeders are needed to be run.
 
@@ -88,7 +95,7 @@ Now for testing, seeders are needed to be run.
 
 Now,
 
-1. `docker exec -it <conatainerId> bash`
+1. `docker-compose exec node bash`
 2. `npm run seeder`
 
 ---

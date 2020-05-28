@@ -3,9 +3,9 @@ const moment = require('moment');
 const jwt = require("jsonwebtoken");
 const request = require('request');
 import bcrypt from "bcrypt";
-const Response = require("../helper/responseFormat");
-import userService from "../../services/user/user.service";
-import Controller from "../";
+const Response = require("../../helper/responseFormat");
+import userService from "../../../services/user/user.service";
+import Controller from "../../";
 
 class UserController extends Controller {
     constructor() {
@@ -140,7 +140,7 @@ class UserController extends Controller {
         }
     }
 
-     onAppStart = async (req, res, next) => {
+    onAppStart = async (req, res, next) => {
         let response;
         try {
             if (req.userDetails.exists) {

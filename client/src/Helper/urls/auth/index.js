@@ -9,3 +9,7 @@ export const facebookSignInUrl = () => {
 export const getInitialData = () => {
     return `/get-basic-info`;
 };
+
+export const signInUrl = () => {
+  return `/sign-in`;
+};

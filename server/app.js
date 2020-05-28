@@ -6,9 +6,10 @@ import Activity from "../app/activitySdk/activityObserver";
 // import NotificationObserver from "../app/notificationSdk/notificationObeserver";
 
 import eventRouter from "../routes/api/events";
-import appEventRouter from "../routes/m-api/events";
+import mEventRouter from "../routes/m-api/events";
 import twilioRouter from "../routes/api/twilio";
 import userRouter from "../routes/api/user";
+import mUserRouter from "../routes/m-api/user";
 
 const Config = require("../config/config");
 //
@@ -114,7 +115,8 @@ app.use("/api", twilioRouter);
 
 // -------------------- APP APIs -----------------------
 
-app.use("/m-api", appEventRouter);
+app.use("/m-api", mEventRouter);
+app.use("/m-api", mUserRouter);
 
 module.exports = app;
 

@@ -45,6 +45,47 @@ export const AUTH_INITIAL_STATE = {
     authenticated: false
 };
 
+export const signIn = payload => {
+    let response = {};
+    return async dispatch => {
+        try {
+            dispatch({type: GETTING_INITIAL_DATA});
+
+            response = await doRequest({
+                method: REQUEST_TYPE.POST,
+                url: Auth.signInUrl(),
+                data: payload
+            });
+
+            console.log("SIGN IN response --> ", response);
+
+            const {status, payload: {error = "", data = {}} = {}} = response || {};
+
+            if (status === false) {
+                dispatch({
+                    type: GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR,
+                    payload: {error}
+                });
+            } else if (status === true) {
+                const {_id, users} = data;
+                let authRedirection = '/';
+                dispatch({
+                    type: GETTING_INITIAL_DATA_COMPLETED,
+                    payload: {
+                        authenticatedUser: _id,
+                        authRedirection
+                    }
+                });
+            }
+        } catch (err) {
+            console.log("err signin", err);
+            throw err;
+        }
+
+        return response;
+    };
+};
+
 
 export const signOut = () => {
     return async (dispatch) => {
@@ -155,7 +196,7 @@ export const getInitialData = () => {
                 dispatch({
                     type: GETTING_INITIAL_DATA_COMPLETED,
                     payload: {
-                        users: response.payload.data.users,
+                        user: response.payload.data.user,
                         authenticatedUser: _id,
                         authRedirection
                     }

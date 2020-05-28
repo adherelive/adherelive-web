@@ -12,7 +12,8 @@
     "server": "nodemon --exec babel-node ./server/bin/www",
     "postinstall": "cd client && npm install",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate"
+    "migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
+    "seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all"
   },
   "nodemonConfig": {
     "watch": [
@@ -56,6 +57,7 @@
     "@hapi/joi": "^17.1.1",
     "aws-sdk": "^2.683.0",
     "axios": "^0.19.2",
+    "bcrypt": "^4.0.1",
     "concurrently": "^5.1.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",

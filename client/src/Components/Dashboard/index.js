@@ -22,12 +22,10 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const { graphs, getInitialData } = this.props;
+    const { graphs } = this.props;
     setTimeout(() => {
       drawChart(graphs);
     }, 500);
-
-    getInitialData();
   }
 
   formatMessage = data => this.props.intl.formatMessage(data);
@@ -89,7 +87,7 @@ class Dashboard extends Component {
           <div className="flex direction-row justify-space-between">
             <div className="fs40 fw700">{formatMessage(messages.report)}</div>
             {/*<div>{"search here"}</div>*/}
-	    <div><Button onClick={this.props.signOut}>LogOut</Button></div>
+	    {/*<div><Button onClick={this.props.signOut}>LogOut</Button></div>*/}
 	
           </div>
 
@@ -111,7 +109,8 @@ class Dashboard extends Component {
             <TabPane
               tab={<span className="fs16 fw600">{WATCHLIST}</span>}
               key="2"
-            >
+            >    console.log("containers ===== ", authenticated, authRedirection);
+
               <Patients />
               {/*add watchlist table here*/}
             </TabPane>

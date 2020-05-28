@@ -21,9 +21,27 @@ class UserService {
         }
     }
 
+    async getUserByEmail(data) {
+        try {
+            const {email} = data;
+            const user = await userModel.findOne({
+                where: {
+                    email
+                }
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     getUserById = async id => {
         try {
-            const user = await userModel.findOne({_id: id}, {password: 0});
+            const user = await userModel.findOne({
+                where: {
+                    id
+                }
+            });
             return user;
         } catch (err) {
             throw err;

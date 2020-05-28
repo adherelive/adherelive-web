@@ -10,9 +10,12 @@ const Auth = lazy(() =>
 export default class Routes extends Component {
     constructor(props) {
         super(props);
-        const {getInitialData} = props;
-        getInitialData();
         this.state = {};
+    }
+
+    componentDidMount() {
+        const {getInitialData} = this.props;
+        getInitialData();
     }
 
     render() {
