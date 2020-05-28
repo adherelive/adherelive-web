@@ -96,7 +96,7 @@ Now for testing, seeders are needed to be run.
 Now,
 
 1. `docker-compose exec node bash`
-2. `npm run seeder`
+2. `npm run seed`
 
 ---
 
