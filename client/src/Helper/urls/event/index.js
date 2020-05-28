@@ -86,3 +86,7 @@ export const getUpdateMedicationReminderStatusURL = (
 export const getUpdateMedicationReminderURL = scheduleEventId => {
   return `medication-reminders/${scheduleEventId}`;
 };
+
+export const getScheduleEventsUrl = () => {
+  return `/schedule-events`;
+};
