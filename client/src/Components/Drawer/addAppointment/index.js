@@ -4,12 +4,19 @@ import {injectIntl} from "react-intl";
 
 import message from "./message";
 import AddAppointmentForm from "./form";
+import Footer from "../footer";
 
 class AddAppointment extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+
+        };
+
         this.FormWrapper = Form.create({})(AddAppointmentForm);
     }
+
+    handleSubmit = () => {};
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
@@ -27,20 +34,32 @@ class AddAppointment extends Component {
 
     render() {
         const {visible = true} = this.props;
-        const {onClose, formatMessage, setFormRef, FormWrapper} = this;
+        const {onClose, formatMessage, setFormRef, handleSubmit, FormWrapper} = this;
         return (
             <Fragment>
                 <Drawer
                     placement="right"
-                    closable={false}
+                    // closable={false}
                     onClose={onClose}
-                    visible={visible} // todo: change as per prop -> "visible", -- WIP --
+                    visible={true} // todo: change as per prop -> "visible", -- WIP --
                     width={600}
                     title={formatMessage(message.add_appointment)}
+                    // headerStyle={{
+                    //     display:"flex",
+                    //     justifyContent:"space-between",
+                    //     alignItems:"center"
+                    // }}
                 >
                     <FormWrapper
                         wrappedComponentRef={setFormRef}
                         {...this.props}
+                    />
+                    <Footer
+                        onSubmit={handleSubmit}
+                        onClose={onClose}
+                        submitText={formatMessage(message.submit_text)}
+                        submitButtonProps={{}}
+                        cancelComponent={null}
                     />
                 </Drawer>
             </Fragment>
