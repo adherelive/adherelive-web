@@ -47,6 +47,10 @@ const Patients = database.define(
         activated_on: {
             type: Sequelize.DATE
         },
+        uid: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
     },
     {
         underscored: true,

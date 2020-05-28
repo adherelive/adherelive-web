@@ -1,13 +1,14 @@
-import React, { Component, Fragment } from "react";
+import React, {Component, Fragment} from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import * as Chart from "chart.js";
 import drawChart from "../../Helper/drawChart";
 import { formatMessage } from "react-intl/src/format";
 import { CHART_TITLE, GRAPH_COLORS } from "../../constant";
-import { Tabs } from "antd";
+import { Tabs, Button } from "antd";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
+import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
 
 const { TabPane } = Tabs;
 
@@ -85,7 +86,9 @@ class Dashboard extends Component {
         <div className="dashboard p20">
           <div className="flex direction-row justify-space-between">
             <div className="fs40 fw700">{formatMessage(messages.report)}</div>
-            <div>{"search here"}</div>
+            {/*<div>{"search here"}</div>*/}
+	    {/*<div><Button onClick={this.props.signOut}>LogOut</Button></div>*/}
+	
           </div>
 
           <div className="mt10 flex justify-space-between align-center">
@@ -113,6 +116,7 @@ class Dashboard extends Component {
           </Tabs>
         </div>
         <PatientDetailsDrawer />
+        {/* <AddAppointmentDrawer /> */}
       </Fragment>
     );
   }
