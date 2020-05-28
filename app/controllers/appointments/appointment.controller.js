@@ -1,6 +1,7 @@
 import Controller from "../index";
 import appointmentService from "../../services/appointment/appointment.service";
 import scheduleService from "../../services/events/event.service";
+import {Proxy_Sdk, EVENTS} from "../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../constant";
 
 class AppointmentController extends Controller {
@@ -39,16 +40,22 @@ class AppointmentController extends Controller {
 
             const appointment = await appointmentService.addAppointment(appointment_data);
             console.log("[ APPOINTMENTS ] appointments ", appointment);
+            const value = appointment.toObject();
 
             const eventScheduleData = {
                 event_type: EVENT_TYPE.APPOINTMENT,
                 event_id: appointment.id,
-                details: {},
+                details: value,
                 status: EVENT_STATUS.PENDING,
                 start_time,
                 end_time
             };
 
+            // const scheduleEvent = await scheduleService.addEvent(eventScheduleData);
+            // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+
+            // TODO: schedule event and notifications here
+            await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
             const scheduleEvent = await scheduleService.addEvent(eventScheduleData);
             console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
 
@@ -61,7 +68,6 @@ class AppointmentController extends Controller {
             return this.raiseServerError(res, 500, error, error.getMessage());
         }
     }
-
 }
 
 export default new AppointmentController();

@@ -23,6 +23,18 @@ const Doctors = database.define(
                 key: 'id'
             }
         },
+        registration_number: {
+            type: Sequelize.STRING(1000),
+            allowNull: false,
+        },
+        registration_start_date: {
+            type: Sequelize.DATE,
+            allowNull: true,
+        },
+        registration_expiry_date: {
+            type: Sequelize.DATE,
+            allowNull: true,
+        },
         gender: {
             type: Sequelize.ENUM,
             values: [GENDER.MALE, GENDER.FEMALE, GENDER.TRANS],

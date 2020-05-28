@@ -45,6 +45,10 @@ module.exports = {
           activated_on: {
               type: Sequelize.DATE
           },
+          uid: {
+             type: Sequelize.STRING,
+             allowNull: false
+          },
           created_at: {
               allowNull: false,
               type: Sequelize.DATE
