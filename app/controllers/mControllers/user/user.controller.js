@@ -3,6 +3,7 @@ const moment = require('moment');
 const jwt = require("jsonwebtoken");
 const request = require('request');
 import bcrypt from "bcrypt";
+
 const Response = require("../../helper/responseFormat");
 import userService from "../../../services/user/user.service";
 import Controller from "../../";
@@ -14,20 +15,20 @@ class UserController extends Controller {
 
     signIn = async (req, res) => {
         try {
-            const { email, password } = req.body;
+            const {email, password} = req.body;
             const user = await userService.getUserByEmail({
                 email
             });
 
             // const userDetails = user[0];
             // console.log("userDetails --> ", userDetails);
-            if(!user) {
+            if (!user) {
                 return this.raiseClientError(res, 422, user, "user does not exists");
             }
 
             // TODO: UNCOMMENT below code after signup done for password check or seeder
             const passwordMatch = await bcrypt.compare(password, user.get("password"));
-            if(passwordMatch) {
+            if (passwordMatch) {
                 const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
                 const secret = process.config.TOKEN_SECRET_KEY;
@@ -41,13 +42,13 @@ class UserController extends Controller {
                     }
                 );
 
-                res.cookie("accessToken", accessToken);
-
-                return this.raiseSuccess(res, 200, {}, "initial data retrieved successfully");
+                return this.raiseSuccess(res, 200, {
+                    accessToken
+                }, "initial data retrieved successfully");
             } else {
                 return this.raiseClientError(res, 422, {}, "password not matching")
             }
-        } catch(error) {
+        } catch (error) {
             console.log("error sign in  --> ", error);
             return this.raiseServerError(res, 500, error, error.getMessage());
         }
@@ -98,11 +99,14 @@ class UserController extends Controller {
 
             console.log("access token combines --> ", accessTokenCombined);
 
-            res.cookie("accessToken", accessTokenCombined);
+            // res.cookie("accessToken", accessTokenCombined);
 
 
             let response = new Response(true, 200);
             response.setMessage("Sign in successful!");
+            response.setData({
+                accessToken: accessTokenCombined
+            })
             return res
                 .status(response.getStatusCode())
                 .send(response.getResponse());
@@ -131,11 +135,15 @@ class UserController extends Controller {
             });
             let response = new Response(true, 200);
             response.setMessage("Sign in successful!");
+            response.setData({
+                accessToken
+            });
             return res
                 .status(response.getStatusCode())
                 .send(response.getResponse());
         } catch (err) {
-            console.log(err);useruser
+            console.log(err);
+            useruser
             throw err;
         }
     }
@@ -167,7 +175,7 @@ class UserController extends Controller {
                 //     }
                 // });userDetails
                 // response.setMessage("Basic info");
-                // return res
+                // return resaccessToken
                 //     .status(response.getStatusCode())
                 //     .send(response.getResponse());
             } else {

@@ -5,8 +5,8 @@ import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
 // import NotificationObserver from "../app/notificationSdk/notificationObeserver";
 
-import eventRouter from "../routes/api/events";
-import mEventRouter from "../routes/m-api/events";
+import ApiRouter from "../routes/api";
+import mApiRouter from "../routes/m-api";
 import twilioRouter from "../routes/api/twilio";
 import userRouter from "../routes/api/user";
 import mUserRouter from "../routes/m-api/user";
@@ -45,52 +45,52 @@ app.use(
  );
 
 //
-app.use(async function(req, res, next) {
-  try {
-    const { query: { m } = {} } = req;
-    let accessToken;
-    if (m) {
-      const { authorization = "" } = req.headers || {};
-      const bearer = authorization.split(" ");
-      if (bearer.length === 2) {
-        accessToken = bearer[1];
-      }
-    } else {
-      const { cookies = {} } = req;
-      if (cookies.accessToken) {
-        accessToken = cookies.accessToken;
-      }
-    }
-
-    if (accessToken) {
-      const secret = process.config.TOKEN_SECRET_KEY;
-      const decodedAccessToken = await jwt.verify(accessToken, secret);
-      let user = await userService.getUser({ _id: decodedAccessToken.userId });
-      if (user) {
-        req.userDetails = {
-          exists: true,
-          userId: decodedAccessToken.userId,
-          userData: user
-        };
-      } else {
-        req.userDetails = {
-          exists: false
-        };
-      }
-    } else {
-      req.userDetails = {
-        exists: false
-      };
-    }
-    next();
-  } catch (err) {
-    req.userDetails = {
-      exists: false
-    };
-    next();
-  }
-});
+// app.use(async function(req, res, next) {
+//   try {
+//     const { query: { m } = {} } = req;
+//     let accessToken;
+//     if (m) {
+//       const { authorization = "" } = req.headers || {};
+//       const bearer = authorization.split(" ");
+//       if (bearer.length === 2) {
+//         accessToken = bearer[1];
+//       }
+//     } else {
+//       const { cookies = {} } = req;
+//       if (cookies.accessToken) {
+//         accessToken = cookies.accessToken;
+//       }
+//     }
 //
+//     if (accessToken) {
+//       const secret = process.config.TOKEN_SECRET_KEY;
+//       const decodedAccessToken = await jwt.verify(accessToken, secret);
+//       let user = await userService.getUser({ _id: decodedAccessToken.userId });
+//       if (user) {
+//         req.userDetails = {
+//           exists: true,
+//           userId: decodedAccessToken.userId,
+//           userData: user
+//         };
+//       } else {
+//         req.userDetails = {
+//           exists: false
+//         };
+//       }
+//     } else {
+//       req.userDetails = {
+//         exists: false
+//       };
+//     }
+//     next();
+//   } catch (err) {
+//     req.userDetails = {
+//       exists: false
+//     };
+//     next();
+//   }
+// });
+// //
 
 mysql();
 
@@ -109,14 +109,17 @@ Activity.runObservers();
 // );
 
 // -------------------- WEB APIs -----------------------
-app.use("/api", userRouter);
-app.use('/api', eventRouter);
-app.use("/api", twilioRouter);
+
+app.use("/api", ApiRouter);
+app.use("/m-api", mApiRouter);
+// app.use("/api", userRouter);
+// app.use('/api', eventRouter);
+// app.use("/api", twilioRouter);
 
 // -------------------- APP APIs -----------------------
 
-app.use("/m-api", mEventRouter);
-app.use("/m-api", mUserRouter);
+// app.use("/m-api", mEventRouter);
+// app.use("/m-api", mUserRouter);
 
 module.exports = app;
 

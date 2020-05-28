@@ -6,24 +6,24 @@ import Authenticate from "../middleware/auth";
 
 router.post(
     "/sign-in",
-    userController.signIn,
+    mUserController.signIn,
 
 );
 
 router.get(
     "/get-basic-info",
     Authenticate,
-    userController.onAppStart,
+    mUserController.onAppStart,
 );
 
 router.post(
     "/googleSignIn",
-    userController.signInGoogle
+    mUserController.signInGoogle
 );
 
 router.post(
     "/facebookSignIn",
-    userController.signInFacebook
+    mUserController.signInFacebook
 );
 
 module.exports = router;

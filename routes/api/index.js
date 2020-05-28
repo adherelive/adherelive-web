@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-import mUserRouter from "./user";
-import mEventRouter from "./events";
-// import twilioRouter from "./twilio";
+import userRouter from "./user";
+import eventRouter from "./events";
+import twilioRouter from "./twilio";
 
 router.use(async function(req, res, next) {
     try {
@@ -15,9 +15,9 @@ router.use(async function(req, res, next) {
                 accessToken = bearer[1];
             }
         } else {
-            const { accessToken : receivedAccessToken = {} } = req.body;
-            if(receivedAccessToken) {
-                accessToken = receivedAccessToken;
+            const { cookies = {} } = req;
+            if (cookies.accessToken) {
+                accessToken = cookies.accessToken;
             }
         }
 
@@ -50,7 +50,8 @@ router.use(async function(req, res, next) {
     }
 });
 
-router.use(mUserRouter);
-router.use(mEventRouter);
+router.use(userRouter);
+router.use(eventRouter);
+router.use(twilioRouter);
 
 module.exports = router;
