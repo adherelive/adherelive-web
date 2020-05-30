@@ -9,13 +9,18 @@ import SideMenu from "../../Components/Sidebar";
 import BlankState from "../../Containers/BlankState";
 import {PATH} from "../../constant";
 
-const Patients = lazy(() =>
-    import(/* webpackChunkName: "Patients" */ "../Patients")
+const PatientDetails = lazy(() =>
+    import(/* webpackChunkName: "PatientDetails" */ "../../Containers/Patient/details")
 );
 
 const Dashboard = lazy(() =>
     import(/* webpackChunkName: "Dashboard" */ "../../Containers/Dashboard")
 );
+
+const PatientDetailsComp = props => {
+    const { match: { params: { id } = {} } = {} } = props;
+    return <PatientDetails id={id} />;
+};
 
 export default class Authenticated extends Component {
     constructor(props) {
@@ -34,6 +39,8 @@ export default class Authenticated extends Component {
     }
 
     render() {
+
+        console.log("redirecting --> ", this.state.redirecting);
         return (
             <Fragment>
                 <Router>
@@ -41,9 +48,9 @@ export default class Authenticated extends Component {
                         <SideMenu {...this.props} />
                         <div className="container">
                             <Switch>
-                                {this.state.redirecting && <Redirect to={this.state.redirecting}/>}
-                                <Route exact path="/" component={Dashboard}/>
-                                <Route path={PATH.PATIENT.PA} component={Patients}/>
+                                {/*{this.state.redirecting && <Redirect to={this.state.redirecting}/>}*/}
+                                <Route exact path={PATH.PATIENT.DETAILS} component={PatientDetailsComp}/>
+                                <Route path="" component={Dashboard}/>
                                 {/*<Route path="" component={Dashboard} />*/}
                             </Switch>
                         </div>

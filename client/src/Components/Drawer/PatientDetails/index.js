@@ -70,7 +70,7 @@ class PatientDetailsDrawer extends Component {
       providers[provider_id] || {};
     return (
       <Fragment>
-        <img src={CloseIcon} alt="close icon" />
+        {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
 
         {/*header*/}
 
@@ -163,7 +163,13 @@ class PatientDetailsDrawer extends Component {
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
+  onClose = () => {
+    const {close} = this.props;
+    close();
+  };
+
   render() {
+    const {visible} = this.props;
     const { onClose, getPatientDetailContent } = this;
     return (
       <Fragment>
@@ -171,7 +177,7 @@ class PatientDetailsDrawer extends Component {
           placement="right"
           closable={false}
           onClose={onClose}
-          visible={false} // todo: change as per state, -- WIP --
+          visible={visible} // todo: change as per state, -- WIP --
           width={550}
         >
           {getPatientDetailContent()}

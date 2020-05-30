@@ -18,6 +18,8 @@ export const addAppointment = payload => {
                 data: payload
             });
 
+            console.log("728136182 response --> ", response);
+
             const {status, payload: {data = {}, error = {}} = {}} = response || {};
             if (status === true) {
                 dispatch({
@@ -38,7 +40,7 @@ export const addAppointment = payload => {
 };
 
 function appointmentReducer(state, data) {
-    const {appointments = {}} = data = {};
+    const {appointments = {}} = data || {};
     if (Object.keys(appointments).length > 0) {
         return {
             ...state,

@@ -23,16 +23,25 @@ router.use(async function(req, res, next) {
             }
         }
 
+        //  ----- FOR API TEST POSTMAN ------
+
+        console.log("------------ ACCESS TOKEN ---------> ", req.headers);
+        const {accesstoken : aT = ""} = req.headers || {};
+        if(aT) {
+            accessToken = aT;
+        }
+
+
         if (accessToken) {
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
             let user = await userService.getUser(decodedAccessToken.userId);
-            console.log("user --> 11 ", user);
+            // console.log("user --> 11 ", user.getBasicInfo);
             if (user) {
                 req.userDetails = {
                     exists: true,
                     userId: decodedAccessToken.userId,
-                    userData: user
+                    userData: user.getBasicInfo
                 };
             } else {
                 req.userDetails = {

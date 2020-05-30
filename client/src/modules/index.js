@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import graphs from "./graphs";
-import user from "./user";
+import users from "./user";
 import auth from "./auth";
 import patients from "./patients";
 import doctors from "./doctors";
@@ -10,10 +10,11 @@ import medications from "./medications";
 import chats from "./chat";
 import pages from "./pages";
 import drawer from "./drawer";
+import appointments from "./appointments";
 
 const rootReducer = combineReducers({
   auth,
-  user,
+  users,
   graphs,
   patients,
   doctors,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   medications,
   pages,
   chats,
-  drawer
+  drawer,
+  appointments
 });
 
 export default (state, action) => {

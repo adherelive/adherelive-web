@@ -4,11 +4,12 @@ import {Form, Spin, Select, DatePicker, TimePicker} from "antd";
 import message from "./message";
 import {doRequest} from "../../../Helper/network";
 import seperator from "../../../Assets/images/seperator.svg";
+import moment from "moment";
 
 const {Item: FormItem} = Form;
 const {Option} = Select;
 const PATIENT = "patient";
-const START_DATE = "start_date";
+const DATE = "date";
 const START_TIME = "start_time";
 const END_TIME = "end_time";
 
@@ -32,7 +33,8 @@ class AddAppointmentForm extends Component {
 
     getInitialValue = () => {
         const {payload} = this.props;
-        // TODO: payload -> patient details
+        const {patients : {id, first_name, last_name} = {}} = payload || {};
+        return `${first_name} ${last_name}`;
     };
 
     getPatientOptions = () => {
@@ -41,7 +43,7 @@ class AddAppointmentForm extends Component {
         const patientOptions = patients.map(patient => {
             const {first_name, last_name, id} = patient || {};
             return (
-                <Option key={`p-${id}`} value={id} name={`${id}`}>
+                <Option key={`p-${id}`} value={id} name={id}>
                     {`${first_name} ${last_name}`}
                 </Option>
             );
@@ -82,8 +84,8 @@ class AddAppointmentForm extends Component {
                 </FormItem>
 
                 <FormItem label={formatMessage(message.start_date)}>
-                    {getFieldDecorator(START_DATE, {
-                        initialValue: getInitialValue()
+                    {getFieldDecorator(DATE, {
+                        initialValue: moment()
                     })(
                         <DatePicker className="wp100"/>
                     )}
@@ -92,7 +94,7 @@ class AddAppointmentForm extends Component {
                 <div className="wp100 flex justify-space-evenly align-center flex-1">
                     <FormItem label={formatMessage(message.start_time)} className="wp100">
                         {getFieldDecorator(START_TIME, {
-                            initialValue: getInitialValue()
+                            initialValue: moment()
                         })(
                             <TimePicker use12Hours format="h:mm a" className="wp100"/>
                         )}
@@ -104,7 +106,7 @@ class AddAppointmentForm extends Component {
 
                     <FormItem label={formatMessage(message.end_time)} className="wp100">
                         {getFieldDecorator(END_TIME, {
-                            initialValue: getInitialValue()
+                            initialValue: moment().add(1, 'h')
                         })(
                             <TimePicker use12Hours format="h:mm a" className="wp100"/>
                         )}

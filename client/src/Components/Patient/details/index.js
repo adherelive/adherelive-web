@@ -5,7 +5,9 @@ import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
 import { SEVERITY_STATUS } from "../../../constant";
 import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin } from "antd";
+import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
+import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
 
 const { TabPane } = Tabs;
 
@@ -77,6 +79,39 @@ const columns_medication = [
       <div className="edit-medication">
         <img src={edit_image} className="edit-medication-icon" />
       </div>
+    )
+  }
+];
+
+const columns_appointments = [
+  {
+    title: "Organizer",
+    dataIndex: "organizer",
+    key: "organizer"
+  },
+  {
+    title: "Date",
+    dataIndex: "date",
+    key: "date"
+  },
+  {
+    title: "Timing",
+    dataIndex: "time",
+    key: "time"
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description"
+  },
+  {
+    title: "",
+    dataIndex: "edit",
+    key: "edit",
+    render: () => (
+        <div className="edit-medication">
+          <img src={edit_image} className="edit-medication-icon" />
+        </div>
     )
   }
 ];
@@ -227,6 +262,7 @@ const PatientAlertCard = ({
   new_symptoms_string,
   missed_appointment
 }) => {
+  console.log("9838123 ", count, new_symptoms_string, missed_appointment);
   return (
     <div className="patient-alerts pl16 pr16">
       <h3>
@@ -265,6 +301,26 @@ class PatientDetails extends Component {
     this.getData();
   }
 
+  getAppointmentsData = () => {
+      const {appointments, users = {}, doctors = {}, patients = {}} = this.props;
+      return Object.keys(appointments).map(id => {
+        // todo: changes based on care-plan || appointment-repeat-type,  etc.,
+        const {
+        basic_info : {
+          organizer_id, organizer_type = "doctor", start_date, start_time, end_time, description
+        } = {}} = appointments[id] || {};
+        const {basic_info: {user_name = "--"} = {}} = users[organizer_id] || {};
+        return {
+          // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
+          key: id,
+          organizer:user_name,
+          date: `${moment().format("DD MM YYYY")}`,
+          time: `${moment().format("LT")} - ${moment().add(1, "hour").format("LT")}`,
+          description: description ? description : "--"
+        }
+      });
+  };
+
   handleItemSelect = ({ selectedKeys }) => {
     const { history, logout, openAppointmentDrawer } = this.props;
     console.log("12312 handleItemSelect --> ");
@@ -287,15 +343,14 @@ class PatientDetails extends Component {
   formatMessage = data => this.props.intl.formatMessage(data);
 
   getMenu = () => {
-    const { handleItemSelect } = this;
-    const { openAppointmentDrawer } = this.props;
+    const { handleAppointment } = this;
     console.log("12312 getMenu");
     return (
       <Menu>
-        <Menu.Item onClick={openAppointmentDrawer}>
+        <Menu.Item>
           <div>Medication</div>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item onClick={handleAppointment}>
           <div>Appointments</div>
         </Menu.Item>
         <Menu.Item>
@@ -305,9 +360,21 @@ class PatientDetails extends Component {
     );
   };
 
+  handleAppointment = e => {
+    // e.preventDefault();
+    const {openAppointmentDrawer} = this.props;
+    openAppointmentDrawer({
+      patients: {
+        id: "2",
+        first_name: "test",
+        last_name: "patient",
+      }
+    });
+  };
+
   render() {
     const { loading } = this.state;
-    const { formatMessage, getMenu } = this;
+    const { formatMessage, getMenu, getAppointmentsData } = this;
 
     if (loading) {
       return (
@@ -317,8 +384,14 @@ class PatientDetails extends Component {
       );
     }
 
+    console.log("here 21111 ", this.props);
+
+
     const {
       user_details: {
+        basic_info: {
+
+        },
         first_name: patient_first_name,
         middle_name: patient_middle_name,
         last_name: patient_last_name,
@@ -331,12 +404,14 @@ class PatientDetails extends Component {
       } = {}
     } = this.props;
 
-    console.log("2323 ", this.props.user_details);
+
+
+
 
     const {
       treatment_details: {
         treatment_name,
-        treatment_severity: treatment_severity_status,
+        treatment_severity: treatment_severity_status = "1",
         treatment_start_date,
         treatment_doctor,
         treatment_provider,
@@ -344,13 +419,15 @@ class PatientDetails extends Component {
       } = {}
     } = this.props.user_details;
 
+    console.log("2323 ", this.props.user_details);
+
     const {
-      alerts: { count, new_symptoms, missed_appointment }
-    } = this.props.user_details;
+      alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {}
+    } = this.props.user_details || {};
 
-    const new_symptoms_string = new_symptoms.map(e => e).join(", ");
+    const new_symptoms_string = new_symptoms.length > 0 ? new_symptoms.map(e => e).join(", ") : "";
 
-    console.log("user", this.props.user_details.treatment_details);
+    console.log("user", count);
 
     // const patientName="John Doe";
 
@@ -406,7 +483,10 @@ class PatientDetails extends Component {
                   />
                 </TabPane>
                 <TabPane tab="Appointments" key="3">
-                  Content of Appointments Tab
+                  <Table
+                      columns={columns_appointments}
+                      dataSource={getAppointmentsData()}
+                  />
                 </TabPane>
                 <TabPane tab="Actions" key="4">
                   Content of Actions Tab
@@ -416,6 +496,7 @@ class PatientDetails extends Component {
           </div>
         </div>
         <AddMedicationReminder />
+        <AddAppointmentDrawer />
       </div>
     );
   }

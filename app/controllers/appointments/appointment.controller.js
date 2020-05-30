@@ -15,21 +15,23 @@ class AppointmentController extends Controller {
             const {body, userDetails} = req;
             const {
                 participant_two,
-                description,
+                description = "",
                 date,
-                organizer,
+                organizer = {},
                 start_time,
                 end_time,
                 // participant_one_type = "",
                 // participant_one_id = "",
             } = body;
             console.log("====================> ", userDetails);
-            const {userId, user: {category} = {}} = userDetails || {};
+            const {userId, userData: {category} = {}} = userDetails || {};
             const {id: participant_two_id, category: participant_two_type} = participant_two || {};
 
+            console.log("1111111111111");
+
             const appointment_data = {
-                participant_one_type: "doctor",
-                participant_one_id: "1",
+                participant_one_type: category,
+                participant_one_id: userId,
                 participant_two_type,
                 participant_two_id,
                 organizer_type: Object.keys(organizer).length > 0 ? organizer.category : category,
@@ -58,19 +60,20 @@ class AppointmentController extends Controller {
             // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
 
             // response
-            console.log("000------------- ", appointment[0]);
             return this.raiseSuccess(res, 200,
                 {
-                    [appointment.id]: {
-                        basic_info: {
-                            ...appointment.getBasicInfo
+                    appointments: {
+                        [appointment.id]: {
+                            basic_info: {
+                                ...appointment.getBasicInfo
+                            }
                         }
                     }
                 },
                 "appointment created successfully");
         } catch (error) {
             console.log("[ APPOINTMENTS ] create error ---> ", error);
-            return this.raiseServerError(res, 500, error, error.getMessage());
+            return this.raiseServerError(res, 500, error, error.message());
         }
     }
 }

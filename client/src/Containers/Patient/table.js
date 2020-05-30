@@ -1,6 +1,8 @@
 import { connect } from "react-redux";
 import PatientTable from "../../Components/Patient/table";
 import { withRouter } from "react-router-dom";
+import {open} from "../../modules/drawer";
+import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
   const {
@@ -24,7 +26,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    openPatientDetailsDrawer: (payload) => dispatch(open({type: DRAWER.PATIENT_DETAILS, payload}))
+  };
 };
 
 export default withRouter(
