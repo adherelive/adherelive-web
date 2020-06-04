@@ -4,6 +4,7 @@ export const PATH = {
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
   SIGN_UP: "/sign-up/:link",
+  REGISTER:'/register/:link',
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",

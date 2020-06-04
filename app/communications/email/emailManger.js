@@ -21,8 +21,9 @@ class EmailManger {
     this.smtpTransporter = nodemailer.createTransport(
       smtpTransport({
         auth: {
-          api_user: process.config.SMTP_USER,
-          api_key: process.config.SMTP_KEY
+          api_user: 'nishchay-1',
+          api_key: 'tripock@123'
+          
         }
       })
     );
@@ -32,7 +33,7 @@ class EmailManger {
     let filepath = path.join(__dirname, "/../../views/emailTemplates/");
     return new Promise((resolve, reject) => {
       ejs.renderFile(
-        filepath + name + "Email.ejs",
+        filepath + name + ".ejs",
         data,
         options,
         (err, str) => {
@@ -46,6 +47,7 @@ class EmailManger {
   }
 
   emailPayloadValidator(emailPayload) {
+    console.log("Email Payloader Validator -------------------->   ", emailPayload);
     if (!emailPayload.toAddress)
       return {
         error: 1,
@@ -78,6 +80,7 @@ class EmailManger {
 
   async emailPayloadTransformer(payload) {
     try {
+      console.log("Email Payloader Transformet =================>    ", payload);
       let payloadBuilder = new emailPayloadBuilder(payload);
       let templateString = "";
       switch (payload.templateName) {
@@ -88,6 +91,14 @@ class EmailManger {
             {}
           );
           break;
+          case "welcome":
+            templateString = await this.genrateEmailTemplateString(
+              "welcome",
+              payload.templateData,
+              {}
+            );
+            break;
+          
         case "BookingStatusSubmittedUser":
           templateString = await this.genrateEmailTemplateString(
             "general",
@@ -239,6 +250,7 @@ class EmailManger {
         .createSourceAddress("patientEngagement@iqvia.com")
         .createReplyToAddress(process.config.REPLY_TO_ADDRESS)
         .build();
+      console.log("Transformer Returning ====================>    ", content);
       return content;
     } catch (err) {
       console.log("in payload transform", err);
@@ -247,12 +259,13 @@ class EmailManger {
 
   async sendEmail(emailPayload) {
     try {
-      Log.info("validting email payload!!");
+      let payload = await this.emailPayloadTransformer(emailPayload);
+      Log.info("validting email payload!! ========>     ",process.config.SMTP_USER,
+  process.config.SMTP_KEY);
       let isValid = this.emailPayloadValidator(emailPayload);
       if (isValid && isValid.error == 1) return isValid;
       Log.success("email payload is valid!!");
       Log.info("Transforming email payload to aws payload!!");
-      let payload = await this.emailPayloadTransformer(emailPayload);
       console.log("payload ===>", payload.error);
       if (payload.error && payload.error == 1) return payload;
 
@@ -268,9 +281,9 @@ class EmailManger {
       //     }
       //   })
       //   .promise();
-      delete payload.Message;
-      delete payload.Destination;
-      delete payload.ReplyToAddresses;
+      // delete payload.Message;
+      // delete payload.Destination;
+      // delete payload.ReplyToAddresses;
       //
       const publishResponse = await this.smtpTransporter.sendMail(payload);
 

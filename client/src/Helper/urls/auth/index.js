@@ -13,3 +13,7 @@ export const getInitialData = () => {
 export const signInUrl = () => {
   return `/sign-in`;
 };
+
+export const signUpUrl = () => {
+    return `/sign-up`;
+  };

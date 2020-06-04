@@ -1,0 +1,51 @@
+@import "../_settings.scss";
+// Body Styles
+
+.body-drip {
+  border-top: 8px solid #663399;
+}
+
+.container.header {
+  background-color: $body-background;
+}
+
+.mintpad_logo {
+  height: 80px !important;
+  width: 80px !important;
+}
+
+// Full Width Headers
+
+.header .columns {
+  padding-bottom: 0;
+}
+
+.header p {
+  color: #fff;
+  padding-top: 15px;
+}
+
+.header .wrapper-inner {
+  padding: 20px;
+}
+
+.header .container {
+  background: transparent;
+}
+
+.wrapper.secondary {
+  background: #f3f3f3;
+}
+
+hr.subdued {
+}
+
+
+table.button.radius.ghost-button table td {
+  background: white;
+  border: 1px solid #32b9d1;
+  
+  // &:hover {
+  // background: #4354AB;
+  // }
+  }

@@ -6,6 +6,8 @@ export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
 export const SIGNING_COMPLETED_WITH_ERROR = "SIGNING_COMPLETED_WITH_ERROR";
 
+
+
 export const GOOGLE_SIGNING = "GOOGLE_SIGNING";
 export const GOOGLE_SIGNING_COMPLETED = "GOOGLE_SIGNING_COMPLETED";
 export const GOOGLE_SIGNING_COMPLETED_WITH_ERROR = "GOOGLE_SIGNING_COMPLETED_WITH_ERROR";
@@ -79,6 +81,43 @@ export const signIn = payload => {
             }
         } catch (err) {
             console.log("err signin", err);
+            throw err;
+        }
+
+        return response;
+    };
+};
+
+export const signUp = payload => {
+    let response = {};
+    return async dispatch => {
+        try {
+            dispatch({type: SIGNING_UP});
+
+            response = await doRequest({
+                method: REQUEST_TYPE.POST,
+                url: Auth.signUpUrl(),
+                data: payload
+            });
+
+            console.log("SIGN UP response --> ", response);
+
+            const {status, payload: {error = "", data = {}} = {}} = response || {};
+
+            if (status === false) {
+                dispatch({
+                    type: SIGNING_UP_COMPLETED_WITH_ERROR,
+                    payload: {error}
+                });
+            } else if (status === true) {
+                const {_id, users} = data;
+                dispatch({
+                    type: SIGNING_UP_COMPLETED,
+                    payload: {}
+                });
+            }
+        } catch (err) {
+            console.log("err signup", err);
             throw err;
         }
 

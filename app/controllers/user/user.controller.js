@@ -5,13 +5,106 @@ const request = require('request');
 import bcrypt from "bcrypt";
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
+import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
+import { v4 as uuidv4 } from 'uuid';
 import constants from "../../../config/constants";
+import {EMAIL_TEMPLATE_NAME} from '../../../constant'
+import  {Proxy_Sdk, EVENTS} from "../../proxySdk";
+// import  EVENTS from "../../proxySdk/proxyEvents";
+const errMessage = require("../../../config/messages.json").errMessages;
 
 class UserController extends Controller {
     constructor() {
         super();
     }
+
+    async signUp(req, res) {
+        // const errors = validationResult(req);
+    
+        // if (!errors.isEmpty()) {
+        //   let response = new Response(false, 422);
+        //   response.setError(
+        //     Object.assign(errors.mapped(), {
+        //       message: "Invalid value"
+        //     })
+        //   );
+        //   return res.status(422).json(response.getResponse());
+        // }
+    
+        try {
+          const { password, email } = req.body;
+          const userExits = await userService.getUserByEmail({ email });
+    
+          console.log('CREDENTIALSSSSSSSSSSSSSS',password, email);
+          if (userExits !== null) {
+            const userExitsError = new Error();
+            userExitsError.code = 11000;
+            throw userExitsError;
+          }
+    
+          let response;
+          const link = uuidv4();
+          const status = "pending";
+          const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+          const hash = await bcrypt.hash(password, salt);
+        //   const eventData = {
+        //     eventCategory,
+        //     details: { email, password: hash },
+        //     link,
+        //     status
+        //   };
+    
+        
+        let user = await userService.addUser({email,password,sign_in_type:'basic',category:'doctor'});
+
+        const userInfo = await userService.getUserByEmail({ email });
+
+       const userVerification= UserVerificationServices.addRequest({user_id:userInfo.get('id'),request_id:link,status:'pending'})
+
+
+
+        console.log('CREDENTIALSSSSSSSSSSSSSS111111111111','      1234567890          ',userInfo.get('id'));
+          const emailPayload = {
+            title: "Verification mail",
+            toAddress: email,
+            templateName: EMAIL_TEMPLATE_NAME.WELCOME,
+            templateData: {
+              title: "Doctor",
+              link: process.config.app.invite_link + link,
+              inviteCard: "",
+              mainBodyText: "We are really happy that you chose us.",
+              subBodyText: "Please verify your account",
+              buttonText: "Verify",
+              host: process.config.WEB_URL,
+              contactTo:'nishchay.chaudhary@tripock.com'
+            }
+          };
+    
+          
+          
+          Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+    
+          response = new Response(true, 200);
+          response.setMessage("Sign Up Successfully!");
+          return res.status(response.getStatusCode()).send(response.getResponse());
+        } catch (err) {
+          console.log("signup err,", err);
+          if (err.code && err.code == 11000) {
+            let response = new Response(false, 400);
+            console.log(
+              "Sign ka hai -----------> , ",
+              errMessage.EMAIL_ALREADY_EXISTS
+            );
+            response.setError(errMessage.EMAIL_ALREADY_EXISTS);
+            return res.status(400).json(response.getResponse());
+          } else {
+            let response = new Response(false, 500);
+            response.setError(errMessage.INTERNAL_SERVER_ERROR);
+            return res.status(500).json(response.getResponse());
+          }
+        }
+      }
 
     signIn = async (req, res) => {
         try {

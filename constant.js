@@ -333,7 +333,9 @@ export const DB_TABLES = {
     EXERCISE: "exercise",
     DIET: "diet",
     ADHERENCE: "adherence",
-    DISEASE: "disease"
+    DISEASE: "disease",
+    USER_VERIFICATIONS:"user_verifications",
+    EMAIL_LOGGER:'email_logger'
 };
 
 export const ARTICLE_TYPE = {
@@ -367,3 +369,8 @@ export const EVENT_STATUS = {
     EXPIRED: "expired",
     CANCELLED: "cancelled"
 };
+
+export const EMAIL_TEMPLATE_NAME = {
+    WELCOME: "welcome",
+    FORGOT_PASSWORD: "forgot_password"
+  };

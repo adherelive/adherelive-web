@@ -3,6 +3,10 @@ const dotenv = require("dotenv");
 module.exports =  () => {
     dotenv.config();
     process.config = {
+        app: {
+            invite_link: process.env.INVITE_LINK,
+            env: process.env.APP_ENV
+        },
         db: {
             connection: process.env.DB_CONNECTION,
             name: process.env.DB_DATABASE_NAME,
@@ -48,6 +52,12 @@ module.exports =  () => {
         FACEBOOK_KEYS: {
           APP_TOKEN: process.env.FACEBOOK_APP_TOKEN,
         },
+        smtp: {
+            source_address: process.env.SOURCE_ADDRESS,
+            reply_to_address: process.env.REPLY_TO_ADDRESS,
+            user: process.env.SMTP_USER,
+            secret_key: process.env.SMTP_KEY
+          },
         cookieKey: process.env.COOKIE_KEY,
         PORT:process.env.WEB_SERVER_PORT,
         APP_URL: process.env.APP_URL,

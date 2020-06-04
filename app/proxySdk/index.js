@@ -72,6 +72,7 @@ class ProxySdk extends EventEmitter {
   }
   scheduledJobIscheduledJobIdd;
   execute(eventName, ...args) {
+    console.log('INSIDEEEE EXECUTEEEEEEEEEEEEEE=>>>>>>>>>>>>>>',eventName,'   7896976858674654786877e65587 ', args);
     this.emit(eventName, ...args);
   }
 

@@ -9,6 +9,11 @@ router.post(
     userController.signIn,
 );
 
+router.post(
+    "/sign-up",
+    userController.signUp,
+);
+
 router.get(
     "/get-basic-info",
     Authenticate,

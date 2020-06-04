@@ -46,6 +46,14 @@ class UserService {
             throw err;
         }
     };
+    async addUser(data) {
+        try {
+            const response = await userModel.create(data);
+            return response;
+        } catch (err) {
+            throw err;
+        }
+    }
 
 }
 

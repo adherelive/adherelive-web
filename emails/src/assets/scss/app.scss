@@ -1,0 +1,91 @@
+@import "settings";
+@import "foundation-emails";
+
+@import "template/template";
+
+.block {
+  display: block;
+}
+
+.margin-auto {
+  margin: 0 auto;
+}
+
+.br4 {
+  border-radius: 4px;
+}
+
+.subdued {
+  color: #7f888d;
+}
+
+.light-grey {
+  color: #aab0b3;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.mb0 {
+  margin-bottom: 0;
+}
+.mt24 {
+  margin-top: 24px;
+}
+.ml16 {
+  margin-left: 16px;
+}
+.mr16 {
+  margin-right: 16px;
+}
+.turquoise-blue{
+  color: #32b9d1;
+}
+.fontsize14{
+  font-size: 14px;
+}
+.fontsize16{
+  font-size: 16px;
+}
+.fontsize18{
+  font-size: 18px;
+}
+.fontsize22{
+  font-size: 22px;
+}
+.body .container.appointment-card{
+  width: 464px;
+}
+
+.appointment-card {
+  border: solid 1px #d4d7d9;
+
+.card-body {
+  padding:24px;
+}
+.w464 {
+  width: 464px;
+}
+.status{
+  width: 79px;
+  padding: 5px;
+  border-radius: 12px;
+  background-color: #e3f3df;
+}
+.basic-info th.completed.columns  {
+  padding-bottom: 0;
+  max-height: 24px;
+}
+.basic-info th.completed.status.columns {
+  width: 10%;
+}
+.basic-info th.completed.columns {
+padding-bottom: 0
+}
+
+.basic-info .completed.timings {
+  padding-bottom: 0;
+  padding-top: 5px;
+}
+}
