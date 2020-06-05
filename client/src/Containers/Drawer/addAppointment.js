@@ -3,6 +3,7 @@ import {withRouter} from "react-router-dom";
 import AddAppointmentDrawer from "../../Components/Drawer/addAppointment";
 import { close } from "../../modules/drawer";
 import {DRAWER} from "../../constant";
+import {addAppointment} from "../../modules/appointments";
 
 const mapStateToProps = state => {
     const {
@@ -18,6 +19,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
+        addAppointment: data => dispatch(addAppointment(data)),
     };
 };
 

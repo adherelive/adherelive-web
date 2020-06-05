@@ -41,7 +41,7 @@ class Dashboard extends Component {
             const {className} = GRAPH_COLORS[id] || {};
             return (
                 <Fragment>
-                    <div className="w350 h300 br5 chart-box-shadow mb10 flex direction-column align-center relative">
+                    <div className="w350 h300 br5 chart-box-shadow mb10 mr20 flex direction-column align-center relative">
                         <div className="wp100">
                             <div className="ml10 mt20 fs20 fw600">{CHART_TITLE[id]}</div>
                         </div>
@@ -90,7 +90,7 @@ class Dashboard extends Component {
                         {/*<div><Button onClick={this.props.signOut}>LogOut</Button></div>*/}
                     </div>
 
-                    <div className="mt10 flex justify-space-between align-center">
+                    <div className="mt10 flex align-center">
                         {renderChartTabs()}
                     </div>
 
@@ -114,8 +114,8 @@ class Dashboard extends Component {
                         </TabPane>
                     </Tabs>
                 </div>
-                <PatientDetailsDrawer/>
-                {/*<AddAppointmentDrawer />*/}
+                <PatientDetailsDrawer />
+                <AddAppointmentDrawer />
             </Fragment>
         );
     }

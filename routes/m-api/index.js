@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 import mUserRouter from "./user";
 import mEventRouter from "./events";
+import mPatientRouter from "./patients";
 // import twilioRouter from "./twilio";
 
 router.use(async function(req, res, next) {
@@ -52,5 +53,6 @@ router.use(async function(req, res, next) {
 
 router.use(mUserRouter);
 router.use(mEventRouter);
+router.use(mPatientRouter);
 
 module.exports = router;

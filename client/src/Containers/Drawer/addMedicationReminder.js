@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import AddMedicationReminder from "../../Components/Drawer/addMedicationReminder/medicationsReminder";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
+import {addMedicationReminder} from "../../modules/medications";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
@@ -24,7 +25,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    close: () => dispatch(close())
+    close: () => dispatch(close()),
+    addMedicationReminder: data => dispatch(addMedicationReminder(data))
   };
 };
 

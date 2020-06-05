@@ -126,7 +126,7 @@ class Participants extends Component {
       const years = dob && moment().diff(dob, "years", false);
       userOptions.push(
         <Option key={_id} value={_id} name={name}>
-          <div className="flex justify-content-start align-items-center iqvia-user-snippet">
+          <div className="flex justify-content-start align-items-center">
             <img alt={"user"} src={profilePicLink} />
             <div className="deep-sea-blue fontsize12 mr8">{`${name}${
               years ? ` (${years} ${gender})` : ""

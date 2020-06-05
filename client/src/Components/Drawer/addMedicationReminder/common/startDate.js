@@ -10,7 +10,7 @@ import repeatTypeField from "./repeatType";
 import { REPEAT_TYPE, EVENT_ACTION } from "../../../../constant";
 
 const { Item: FormItem } = Form;
-const FIELD_NAME = "startDate";
+const FIELD_NAME = "start_date";
 
 class StartDate extends Component {
   openCalendar = e => {
@@ -59,15 +59,15 @@ class StartDate extends Component {
     const value = getFieldValue(FIELD_NAME);
 
     return (
-      <div className="flex flex-grow-1 row align-items-center iqvia-date-picker">
-        <div className="full-width pr8">
+      <div className="flex flex-grow-1 row align-items-center">
+        <div className="pr8">
           <span className="form-label">From</span>
           <FormItem>
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME}`}
+                className={`full-width ${FIELD_NAME} ant-date-custom`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}

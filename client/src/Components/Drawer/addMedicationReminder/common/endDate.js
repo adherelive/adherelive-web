@@ -12,7 +12,7 @@ import startDateField from "./startDate";
 import { REPEAT_TYPE } from "../../../../constant";
 import { isNumber } from "../../../../Helper/validation";
 
-const FIELD_NAME = "endDate";
+const FIELD_NAME = "end_date";
 const { Item: FormItem } = Form;
 
 class EndDate extends Component {
@@ -96,15 +96,15 @@ class EndDate extends Component {
     const { formatMessage, openCalendar, getInitialValue } = this;
 
     return (
-      <div className="flex flex-grow-1 row align-items-center iqvia-date-picker">
-        <div className="full-width pl8">
+      <div className="flex flex-grow-1 row align-items-center">
+        <div className="pl8">
           <span className="form-label">To</span>
           <FormItem>
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME}`}
+                className={`full-width ${FIELD_NAME} ant-date-custom`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 suffixIcon={null}

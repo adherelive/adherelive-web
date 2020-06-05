@@ -14,13 +14,13 @@ export default props => {
 
   return (
     <Fragment>
-      <div className="flex align-items-center justify-content-space-between">
-        <div id="repeats">{selectedDays.render(props)}</div>
+      <div className="select-days-wrapper flex align-items-center justify-content-space-between wp100">
+        <div className="repeats wp100">{selectedDays.render(props)}</div>
       </div>
       <div className="flex align-items-center justify-content-space-between">
-        <div>{startDate.render(props)}</div>
+        {startDate.render(props)}
 
-        <div>{endDate.render(props)}</div>
+        {endDate.render(props)}
       </div>
     </Fragment>
   );

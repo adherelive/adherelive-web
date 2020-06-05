@@ -13,12 +13,6 @@ class Activity extends EventEmitter {
       case ACTIVITY_TYPE.FOLLOWUP:
         this.emit(ACTIVITIES.FOLLOW_UP[stage], data);
         break;
-      case ACTIVITY_TYPE.MATERIAL_DELIVERY:
-        this.emit(ACTIVITIES.MATERIAL_DELIVERY[stage], data);
-        break;
-      case ACTIVITY_TYPE.MEDICATION:
-        this.emit(ACTIVITIES.MEDICATION[stage], data);
-        break;
       default:
         log.warn(`invalid activity Type: ${activityType}`);
     }
@@ -32,9 +26,6 @@ class Activity extends EventEmitter {
     switch (eventType) {
       case EVENT_TYPE.APPOINTMENT:
         this.executeAppointment({ activityType, stage, data });
-        break;
-      case EVENT_TYPE.ADVERSE_EVENT:
-        this.emit(ACTIVITIES.ADVERSE_EVENT[stage], data);
         break;
       case EVENT_TYPE.REMINDER:
         this.emit(ACTIVITIES.REMINDER[stage], data);

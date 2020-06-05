@@ -56,6 +56,10 @@
       "status": "CONTACT_ALREADY_EXISTS",
       "message": "Please try another number. As this number already exists in our systems"
     },
+    "EMAIL_ALREADY_EXISTS": {
+      "status": "EMAIL_ALREADY_EXISTS",
+      "message": "Please try another email. As this email already exists in our systems"
+    },
     "CAN_NOT_AUTHORIZE": {
       "status": "CAN_NOT_AUTHORIZE",
       "message": "Either Email or Password is not correct."

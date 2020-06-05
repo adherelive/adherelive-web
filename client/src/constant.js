@@ -4,6 +4,7 @@ export const PATH = {
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
   SIGN_UP: "/sign-up/:link",
+  REGISTER:'/register/:link',
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",
@@ -61,13 +62,14 @@ export const PATIENT_BOX_CONTENT = {
 export const DRAWER = {
   ADD_MEDICATION_REMINDER: "ADD_MEDICATION_REMINDER",
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
+  PATIENT_DETAILS: "PATIENT_DETAILS",
 };
 
 export const USER_CATEGORY = {
   DOCTOR: "doctor",
   PATIENT: "patient",
   PROGRAM_ADMIN: "programAdmin",
-  CARE_COACH: "careCoach",
+  CARE_TAKER: "care_taker",
   CHARITY_ADMIN: "charityAdmin",
   PHARMACY_ADMIN: "pharmacyAdmin"
 };

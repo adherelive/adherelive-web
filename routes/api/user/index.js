@@ -7,7 +7,11 @@ import Authenticate from "../middleware/auth";
 router.post(
     "/sign-in",
     userController.signIn,
+);
 
+router.post(
+    "/sign-up",
+    userController.signUp,
 );
 
 router.get(
