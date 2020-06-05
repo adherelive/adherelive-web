@@ -97,31 +97,32 @@ class EndDate extends Component {
 
     return (
       <div className="flex flex-grow-1 row align-items-center">
-        <div className="pl8">
+        <div className="pl8 wp100">
           <span className="form-label">To</span>
-          <FormItem>
+          <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME} ant-date-custom`}
+                className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 suffixIcon={null}
                 disabled={
                   getFieldError(repeatIntervalField.field_name) !== undefined
                 }
+                allowClear={false}
                 disabledDate={disabledEndDate}
                 getCalendarContainer={this.getParentNode}
                 popupStyle={{ left: 0 }}
               />
             )}
-            <img
-              alt=""
-              className="calendar clickable new-calendar"
-              onClick={openCalendar}
-              src={calendar}
-            />
+            {/*<img*/}
+            {/*  alt=""*/}
+            {/*  className="calendar clickable new-calendar"*/}
+            {/*  onClick={openCalendar}*/}
+            {/*  src={calendar}*/}
+            {/*/>*/}
           </FormItem>
         </div>
       </div>
