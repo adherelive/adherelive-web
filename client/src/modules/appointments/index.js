@@ -18,8 +18,6 @@ export const addAppointment = payload => {
                 data: payload
             });
 
-            console.log("728136182 response --> ", response);
-
             const {status, payload: {data = {}, error = {}} = {}} = response || {};
             if (status === true) {
                 dispatch({
