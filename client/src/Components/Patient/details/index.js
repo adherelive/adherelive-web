@@ -8,6 +8,7 @@ import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin } from "antd";
 import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
+import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 
 const { TabPane } = Tabs;
 
@@ -164,13 +165,13 @@ const PatientProfileHeader = ({ formatMessage, getMenu }) => {
 };
 
 const PatientCard = ({
-  patient_display_picture,
-  patient_first_name,
+  patient_display_picture=userDp,
+  patient_first_name = "Patient one",
   patient_middle_name,
   patient_last_name,
-  gender,
-  patient_age,
-  patient_id,
+  gender="M",
+  patient_age="44",
+  patient_id="8qy13",
   patient_phone_number,
   patient_email_id,
   formatMessage
@@ -409,7 +410,7 @@ class PatientDetails extends Component {
 
     if (loading) {
       return (
-        <div className="page-loader">
+        <div className="page-loader hp100 wp100 flex align-center justify-center ">
           <Spin size="large"></Spin>
         </div>
       );

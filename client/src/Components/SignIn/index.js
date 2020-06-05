@@ -195,7 +195,7 @@ class SignIn extends Component {
 
                     <div className="flex direction-column justify-space-between align-center">
                         {/* <LoginByGoogle googleSignIn={googleSignIn}/> */}
-                        <LoginByFacebook facebookSignIn={facebookSignIn}/>
+                        {/* <LoginByFacebook facebookSignIn={facebookSignIn}/> */}
                     
                     </div>
 
