@@ -73,6 +73,7 @@ class StartDate extends Component {
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}
                 disabledDate={disabledStartDate}
                 suffixIcon={null}
+                allowClear={false}
                 onBlur={this.onBlur(value)}
                 getCalendarContainer={this.getParentNode}
                 popupStyle={{ left: 0, backgroundColor: "black" }}

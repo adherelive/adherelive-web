@@ -111,6 +111,7 @@ class EndDate extends Component {
                 disabled={
                   getFieldError(repeatIntervalField.field_name) !== undefined
                 }
+                allowClear={false}
                 disabledDate={disabledEndDate}
                 getCalendarContainer={this.getParentNode}
                 popupStyle={{ left: 0 }}
