@@ -1,5 +1,6 @@
 import AuthRoute from "../../Routes/Auth";
 import { connect } from "react-redux";
+import {signOut} from "../../modules/auth";
 
 
 const mapStateToProps = state => {
@@ -11,7 +12,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+      logOut: () => dispatch(signOut()),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthRoute);

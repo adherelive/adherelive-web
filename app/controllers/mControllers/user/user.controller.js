@@ -194,6 +194,15 @@ class UserController extends Controller {
         }
     }
 
+    signOut = async (req, res) => {
+        try {
+
+        } catch (error) {
+            console.log("MOBILE SIGN OUT CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    };
+
 }
 
 module.exports = new UserController();
