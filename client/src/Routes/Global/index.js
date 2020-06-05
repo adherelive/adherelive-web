@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import Identify from "../Components/forgotPassword/Identify";
 // import ForgotPassword from "../Containers/ForgotPassword";
 // import ResetPassword from "../Containers/ResetPassword";
+import Register from "../../Containers/Register";
 import SignIn from "../../Containers/SignIn";
 //import SignIn from "../../Components/SignIn";
 import BlankState from "../../Containers/BlankState";
@@ -26,12 +27,41 @@ export default class Global extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    const {authRedirection} = this.props;
+    const {redirecting} = this.state;
+    const {authRedirection : prevAuthRedirection} = prevProps || {};
+    if (!(prevAuthRedirection === authRedirection)) {
+      this.setState((prevState, prevProps) => {
+        return {
+          redirecting: authRedirection
+        };
+      });
+    } else {
+      if (redirecting) {
+        this.setState((prevState, prevProps) => {
+          return {
+            redirecting: false
+          };
+        });
+      }
+    }
+  }
+
   render() {
+    const {authRedirection} = this.props;
+    const {redirecting} = this.state;
+    console.log("179236 redirecting -> ", redirecting);
     return (
       <BrowserRouter>
         <Switch>
-          {this.state.redirecting && <Redirect to={this.state.redirecting} />}
-          <Route exact path={PATH.SIGN_IN} component={SignIn} />
+          {redirecting && <Redirect to={authRedirection} />}
+          {/* {this.state.redirecting && <Redirect to={this.state.redirecting} />} */}
+          {/* <Route exact path={PATH.SIGN_IN} component={SignIn} /> */}
+          {/*<Route exact path={PATH.REGISTER} component={Register} />*/}
+           <Route exact path={PATH.SIGN_IN} component={SignIn} />
+          <Route path="" component={SignIn} />
+          {/* <Route exact path={''} component={Register} /> */}
           {/*<Route exact path={PATH.FORGOT_PASSWORD} component={ForgotPassword} />*/}
           {/*<Route exact path={PATH.IDENTIFY} component={Identify} />*/}
           {/*<Route exact path={PATH.SIGN_UP} component={Signup} />*/}

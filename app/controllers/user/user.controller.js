@@ -1,34 +1,133 @@
+
 const {OAuth2Client} = require('google-auth-library');
 const moment = require('moment');
 const jwt = require("jsonwebtoken");
 const request = require('request');
+const chalk = require("chalk");
 import bcrypt from "bcrypt";
+
+import Log from "../../../libs/log";
+
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
+import userWrapper from "../../ApiWrapper/user";
+import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
+import { v4 as uuidv4 } from 'uuid';
 import constants from "../../../config/constants";
+import {EMAIL_TEMPLATE_NAME} from '../../../constant'
+import  {Proxy_Sdk, EVENTS} from "../../proxySdk";
+// import  EVENTS from "../../proxySdk/proxyEvents";
+const errMessage = require("../../../config/messages.json").errMessages;
 
 class UserController extends Controller {
     constructor() {
         super();
     }
 
+    async signUp(req, res) {
+        // const errors = validationResult(req);
+    
+        // if (!errors.isEmpty()) {
+        //   let response = new Response(false, 422);
+        //   response.setError(
+        //     Object.assign(errors.mapped(), {
+        //       message: "Invalid value"
+        //     })
+        //   );
+        //   return res.status(422).json(response.getResponse());
+        // }
+    
+        try {
+          const { password, email } = req.body;
+          const userExits = await userService.getUserByEmail({ email });
+    
+          console.log('CREDENTIALSSSSSSSSSSSSSS',password, email);
+          if (userExits !== null) {
+            const userExitsError = new Error();
+            userExitsError.code = 11000;
+            throw userExitsError;
+          }
+    
+          let response;
+          const link = uuidv4();
+          const status = "pending";
+          const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+          const hash = await bcrypt.hash(password, salt);
+        //   const eventData = {
+        //     eventCategory,
+        //     details: { email, password: hash },
+        //     link,
+        //     status
+        //   };
+    
+        
+        let user = await userService.addUser({email,password,sign_in_type:'basic',category:'doctor'});
+
+        const userInfo = await userService.getUserByEmail({ email });
+
+       const userVerification= UserVerificationServices.addRequest({user_id:userInfo.get('id'),request_id:link,status:'pending'})
+
+
+
+        console.log('CREDENTIALSSSSSSSSSSSSSS111111111111','      1234567890          ',userInfo.get('id'));
+          const emailPayload = {
+            title: "Verification mail",
+            toAddress: email,
+            templateName: EMAIL_TEMPLATE_NAME.WELCOME,
+            templateData: {
+              title: "Doctor",
+              link: process.config.app.invite_link + link,
+              inviteCard: "",
+              mainBodyText: "We are really happy that you chose us.",
+              subBodyText: "Please verify your account",
+              buttonText: "Verify",
+              host: process.config.WEB_URL,
+              contactTo:'nishchay.chaudhary@tripock.com'
+            }
+          };
+    
+          
+          
+          Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+    
+          response = new Response(true, 200);
+          response.setMessage("Sign Up Successfully!");
+          return res.status(response.getStatusCode()).send(response.getResponse());
+        } catch (err) {
+          console.log("signup err,", err);
+          if (err.code && err.code == 11000) {
+            let response = new Response(false, 400);
+            console.log(
+              "Sign ka hai -----------> , ",
+              errMessage.EMAIL_ALREADY_EXISTS
+            );
+            response.setError(errMessage.EMAIL_ALREADY_EXISTS);
+            return res.status(400).json(response.getResponse());
+          } else {
+            let response = new Response(false, 500);
+            response.setError(errMessage.INTERNAL_SERVER_ERROR);
+            return res.status(500).json(response.getResponse());
+          }
+        }
+      }
+
     signIn = async (req, res) => {
         try {
-            const { email, password } = req.body;
+            const {email, password} = req.body;
             const user = await userService.getUserByEmail({
                 email
             });
 
             // const userDetails = user[0];
             // console.log("userDetails --> ", userDetails);
-            if(!user) {
+            if (!user) {
                 return this.raiseClientError(res, 422, user, "user does not exists");
             }
 
             // TODO: UNCOMMENT below code after signup done for password check or seeder
             const passwordMatch = await bcrypt.compare(password, user.get("password"));
-            if(passwordMatch) {
+            if (passwordMatch) {
                 const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
                 const secret = process.config.TOKEN_SECRET_KEY;
@@ -42,20 +141,24 @@ class UserController extends Controller {
                     }
                 );
 
-                res.cookie("accessToken", accessToken);
+                res.cookie("accessToken", accessToken, {
+                    expires: new Date(
+                        Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+                    ),
+                    httpOnly: true
+                });
 
                 return this.raiseSuccess(res, 200, {}, "initial data retrieved successfully");
             } else {
                 return this.raiseClientError(res, 422, {}, "password not matching")
             }
-        } catch(error) {
+        } catch (error) {
             console.log("error sign in  --> ", error);
             return this.raiseServerError(res, 500, error, error.getMessage());
         }
     }
 
     async signInGoogle(req, res) {
-
         const authCode = req.body.tokenId;
         const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
         const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;
@@ -99,7 +202,12 @@ class UserController extends Controller {
 
             console.log("access token combines --> ", accessTokenCombined);
 
-            res.cookie("accessToken", accessTokenCombined);
+            res.cookie("accessToken", accessTokenCombined, {
+                // expires: new Date(
+                //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+                // ),
+                httpOnly: true
+            });
 
 
             let response = new Response(true, 200);
@@ -121,27 +229,64 @@ class UserController extends Controller {
 
     async signInFacebook(req, res) {
         const {accessToken} = req.body;
-
+        console.log("111--> ", accessToken);
         try {
-            request(`https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=3007643415948147&client_secret=60d7c3e6dc4aae01cd9096c2749fc5c1&fb_exchange_token=${accessToken}`, {json: true}, (err, res, body) => {
+            request(`https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.config.FACEBOOK_KEYS.APP_TOKEN}&client_secret=${process.config.FACEBOOK_KEYS.SECRET_TOKEN}&fb_exchange_token=${accessToken}`, {json: true}, async (err, response, body) => {
                 if (err) {
                     return console.log(err);
                 }
-                console.log("body ======== ", res.body.access_token);
-                console.log(res.body.access_token);
+                const {access_token = "", expires_in} = body || {};
+
+                const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 1 day
+                const secret = process.config.TOKEN_SECRET_KEY;
+                const userId = "4"; // todo: seeder for facebook sign-in doctor
+
+                if (access_token) {
+
+                    const accessTokenCombined = await jwt.sign(
+                        {
+                            userId: userId,
+                            accessToken: accessToken
+                        },
+                        secret,
+                        {
+                            expiresIn
+                        }
+                    );
+
+                    res.cookie("accessToken", accessTokenCombined, {
+                        // expires: new Date(
+                        //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+                        // ),
+                        httpOnly: true
+                    });
+
+                    let resp = new Response(true, 200);
+                    resp.setData({
+                       users: {
+
+                       }
+                    });
+                    resp.setMessage("Sign in successful!");
+                    return res
+                        .status(resp.getStatusCode())
+                        .send(resp.getResponse());
+                }
+
             });
-            let response = new Response(true, 200);
-            response.setMessage("Sign in successful!");
-            return res
-                .status(response.getStatusCode())
-                .send(response.getResponse());
+
+            // let response = new Response(true, 200);
+            // response.setMessage("Sign in successful!");
+            // return res
+            //     .status(response.getStatusCode())
+            //     .send(response.getResponse());
         } catch (err) {
-            console.log(err);useruser
+            console.log("", err);
             throw err;
         }
     }
 
-     onAppStart = async (req, res, next) => {
+    onAppStart = async (req, res, next) => {
         let response;
         try {
             if (req.userDetails.exists) {
@@ -150,36 +295,25 @@ class UserController extends Controller {
 
                 // const userDetails = user[0];
 
+                const x = new userWrapper(user);
+                x.getBasicInfo();
+
                 const dataToSend = {
+                    // user: user.get,
                     [userId]: {
                         basic_info: user.getBasicInfo
                     }
                 }
 
                 return this.raiseSuccess(res, 200, {user: dataToSend}, "basic info");
-
-                // response = new Response(true, 200);
-                // response.setData({
-                //     _id: userId,
-                //     users: {
-                //         [userId]: {
-                //             basicInfo,
-                //         }
-                //     }
-                // });userDetails
-                // response.setMessage("Basic info");
-                // return res
-                //     .status(response.getStatusCode())
-                //     .send(response.getResponse());
             } else {
                 console.log("userExists --->>> ", req.userDetails.exists);
                 // throw new Error(constants.COOKIES_NOT_SET);
             }
         } catch (err) {
-            console.log("|| --> ", err);
-
+            console.log("ON APP START CATCH ERROR ", err);
             response = new Response(false, 500);
-            response.setError(err.getMessage());
+            response.setError(err.message);
             return res.status(500).json(response.getResponse());
         }
     }

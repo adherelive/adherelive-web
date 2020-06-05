@@ -12,20 +12,22 @@ class AppointmentController extends Controller {
 
     create = async (req, res) => {
         try {
-            const { body, userDetails } = req;
+            const {body, userDetails} = req;
             const {
                 participant_two,
-                description,
+                description = "",
                 date,
-                organizer,
+                organizer = {},
                 start_time,
                 end_time,
                 // participant_one_type = "",
                 // participant_one_id = "",
             } = body;
             console.log("====================> ", userDetails);
-            const {userId, user : {category} = {}} = userDetails || {};
-            const {id: participant_two_id, category : participant_two_type} = participant_two || {};
+            const {userId, userData: {category} = {}} = userDetails || {};
+            const {id: participant_two_id, category: participant_two_type} = participant_two || {};
+
+            console.log("1111111111111");
 
             const appointment_data = {
                 participant_one_type: category,
@@ -37,6 +39,10 @@ class AppointmentController extends Controller {
                 description,
                 start_date: moment(date),
                 end_date: moment(date),
+                details: JSON.stringify({
+                   start_time,
+                   end_time
+                }),
             };
 
             const appointment = await appointmentService.addAppointment(appointment_data);
@@ -51,17 +57,27 @@ class AppointmentController extends Controller {
                 end_time
             };
 
-            // const scheduleEvent = await scheduleService.addEvent(eventScheduleData);
+            // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
             // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
 
             // TODO: schedule event and notifications here
             await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
 
             // response
-            return this.raiseSuccess(res, 200, appointment, "appointment created successfully");
-        } catch(error) {
+            return this.raiseSuccess(res, 200,
+                {
+                    appointments: {
+                        [appointment.id]: {
+                            basic_info: {
+                                ...appointment.getBasicInfo
+                            }
+                        }
+                    }
+                },
+                "appointment created successfully");
+        } catch (error) {
             console.log("[ APPOINTMENTS ] create error ---> ", error);
-            return this.raiseServerError(res, 500, error, error.getMessage());
+            return this.raiseServerError(res, 500, error, error.message);
         }
     }
 }

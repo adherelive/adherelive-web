@@ -1,7 +1,9 @@
 import React, {Component, lazy, Fragment} from "react";
 // import Footer from "../Containers/Footer";
 
-const Global = lazy(() => import(/* webpackChunkName: "Global"*/ "./Global"));
+const Global = lazy(() =>
+    import(/* webpackChunkName: "Global"*/ "./Global")
+);
 
 const Auth = lazy(() =>
     import(/* webpackChunkName: "Auth"*/ "../Containers/Auth")

@@ -77,19 +77,7 @@ export default async (req, res, next) => {
     catch(err){
         console.log("errr ===== ", err);
         let payload = {};
-        if(err.data.is_valid===false){
-            payload = {
-                code:400,
-                error: "Access Token Expired"
-            };
-        }
-        else if (err.response &&  err.response.data.error==="invalid_token"){
-            payload = {
-                code: 400,
-                error: "Access Token Expired"
-            };
-        }
-        else if (err.name === "TokenExpiredError") {
+        if (err.name === "TokenExpiredError") {
             payload = {
                 code: 401,
                 error: "session expired"

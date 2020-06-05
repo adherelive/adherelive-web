@@ -4,6 +4,7 @@ import { Drawer, Icon } from "antd";
 import ChatComponent from "../../../Containers/Chat";
 import { GENDER, PATIENT_BOX_CONTENT } from "../../../constant";
 import messages from "./message";
+import moment from "moment";
 
 import CloseIcon from "../../../Assets/images/close.svg";
 import ChatIcon from "../../../Assets/images/chat.svg";
@@ -26,22 +27,24 @@ class PatientDetailsDrawer extends Component {
   };
 
   getMedicationList = () => {
-    const { patients, id = "1", medications } = this.props;
+    const { patients, id = "1", medications = {} } = this.props;
     const { getFormattedDays } = this;
-    const { medications: medication_ids = [] } = patients[id] || {};
-    const medicationList = medication_ids.map(id => {
-      const { basic_info: { medicine_name } = {}, schedule, end_date } =
-        medications[id] || {};
-      const { repeat_type, doses, date = [] } = schedule || {};
+    // const { medications: medication_ids = [] } = patients[id] || {};
+    const medicationList = Object.keys(medications).map(id => {
+      const {
+        basic_info: {
+          end_date,
+          quantity,
+          details: { medicine: medicine_name, repeat_days } = {}
+        } = {}
+      } = medications[id] || {};
+      // const { repeat_type, doses, date = [] } = schedule || {};
       return (
         <div className="flex justify-space-between align-center mb10">
           <div className="pointer tab-color fw600 flex-1">{medicine_name}</div>
-          {date.length === 0 ? (
-            <div className="flex-2">{`${doses}, ${repeat_type}`}</div>
-          ) : (
-            <div className="flex-2">{getFormattedDays(date)}</div>
-          )}
-          <div className="flex-1">{end_date}</div>
+          <div className="flex-2">{`${repeat_days.join(", ")}`}</div>
+
+          <div className="flex-1">{moment(end_date).format("DD MMM")}</div>
         </div>
       );
     });
@@ -51,9 +54,19 @@ class PatientDetailsDrawer extends Component {
     return medicationList;
   };
 
+  handlePatientDetailsRedirect = e => {
+    e.preventDefault();
+    const { history, id = "1" } = this.props;
+    history.push(`/patients/${id}`);
+  };
+
   getPatientDetailContent = () => {
     const { treatments, doctors, providers, patients, id = "1" } = this.props;
-    const { formatMessage, getMedicationList } = this;
+    const {
+      formatMessage,
+      getMedicationList,
+      handlePatientDetailsRedirect
+    } = this;
     const {
       basic_info: { name, age, gender } = {},
       reports = [],
@@ -70,7 +83,7 @@ class PatientDetailsDrawer extends Component {
       providers[provider_id] || {};
     return (
       <Fragment>
-        <img src={CloseIcon} alt="close icon" />
+        {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
 
         {/*header*/}
 
@@ -80,7 +93,12 @@ class PatientDetailsDrawer extends Component {
             <div className="pr10 fs20 fw500">{`(${GENDER[gender]["view"]} ${age})`}</div>
             <Icon type="wechat" width={20} />
           </div>
-          <img src={ClipIcon} alt="clip icon" className="pointer" />
+          <img
+            src={ClipIcon}
+            alt="clip icon"
+            className="pointer"
+            onClick={handlePatientDetailsRedirect}
+          />
         </div>
 
         {/*boxes*/}
@@ -163,7 +181,13 @@ class PatientDetailsDrawer extends Component {
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
+  onClose = () => {
+    const { close } = this.props;
+    close();
+  };
+
   render() {
+    const { visible } = this.props;
     const { onClose, getPatientDetailContent } = this;
     return (
       <Fragment>
@@ -171,7 +195,7 @@ class PatientDetailsDrawer extends Component {
           placement="right"
           closable={false}
           onClose={onClose}
-          visible={false} // todo: change as per state, -- WIP --
+          visible={visible} // todo: change as per state, -- WIP --
           width={550}
         >
           {getPatientDetailContent()}

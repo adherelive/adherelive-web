@@ -8,7 +8,7 @@ import { EVENT_TYPE, EVENT_ACTION } from "../../../../constant";
 
 const { Item: FormItem } = Form;
 
-const FIELD_NAME = "startTime";
+const FIELD_NAME = "start_time";
 
 class StartTime extends Component {
   getParentNode = t => t.parentNode;

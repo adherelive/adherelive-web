@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Form, Button, Input } from "antd";
+import { Form, Button, Input, message } from "antd";
 import moment from "moment";
 import participantsField from "../common/participants";
 import startTimeField from "../common/startTime";
@@ -261,10 +261,12 @@ class AddMedicationReminderForm extends Component {
     e.preventDefault();
     const {
       form: { validateFields },
-      addMedicationReminder
+      addMedicationReminder,
+        payload: {patient_id = "2"} = {}
     } = this.props;
-    validateFields((err, values) => {
+    validateFields(async (err, values) => {
       if (!err) {
+        console.log("9127619237 values ---> ", values);
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
@@ -272,6 +274,10 @@ class AddMedicationReminderForm extends Component {
         const repeatDays = values[repeatDaysField.field_name];
         data_to_submit = {
           ...values,
+          id: patient_id,
+
+          repeat: "weekly",
+
           [startTimeField.field_name]:
             startTime && startTime !== null
               ? startTime.startOf("minute").toISOString()
@@ -297,9 +303,19 @@ class AddMedicationReminderForm extends Component {
             ...data_to_submit,
             [repeatDaysField.field_name]: repeatDays.split(",")
           };
-        }
 
-        addMedicationReminder(data_to_submit);
+        }
+        try {
+         const response = await addMedicationReminder(data_to_submit);
+         const {status, payload: {message: msg} = {}} = response;
+         if(status === true) {
+           message.success(msg);
+         } else {
+           message.error(msg);
+         }
+        } catch (error) {
+          console.log("add medication reminder ui error -----> ", error);
+        }
       }
     });
   };

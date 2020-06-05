@@ -1,4 +1,4 @@
-export const EVENTS = {
+let eventList = {
   SEND_EMAIL: "sendEmail",
   SEND_SMS: "sendSms",
   SEND_NOTIFICATION: "sendNotification",
@@ -6,3 +6,5 @@ export const EVENTS = {
   SMS_ERROR: "smsError",
   NOTIFICATION_ERROR: "notificationError"
 };
+
+module.exports = eventList;

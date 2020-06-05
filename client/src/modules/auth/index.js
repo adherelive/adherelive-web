@@ -6,6 +6,8 @@ export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
 export const SIGNING_COMPLETED_WITH_ERROR = "SIGNING_COMPLETED_WITH_ERROR";
 
+
+
 export const GOOGLE_SIGNING = "GOOGLE_SIGNING";
 export const GOOGLE_SIGNING_COMPLETED = "GOOGLE_SIGNING_COMPLETED";
 export const GOOGLE_SIGNING_COMPLETED_WITH_ERROR = "GOOGLE_SIGNING_COMPLETED_WITH_ERROR";
@@ -86,6 +88,43 @@ export const signIn = payload => {
     };
 };
 
+export const signUp = payload => {
+    let response = {};
+    return async dispatch => {
+        try {
+            dispatch({type: SIGNING_UP});
+
+            response = await doRequest({
+                method: REQUEST_TYPE.POST,
+                url: Auth.signUpUrl(),
+                data: payload
+            });
+
+            console.log("SIGN UP response --> ", response);
+
+            const {status, payload: {error = "", data = {}} = {}} = response || {};
+
+            if (status === false) {
+                dispatch({
+                    type: SIGNING_UP_COMPLETED_WITH_ERROR,
+                    payload: {error}
+                });
+            } else if (status === true) {
+                const {_id, users} = data;
+                dispatch({
+                    type: SIGNING_UP_COMPLETED,
+                    payload: {}
+                });
+            }
+        } catch (err) {
+            console.log("err signup", err);
+            throw err;
+        }
+
+        return response;
+    };
+};
+
 
 export const signOut = () => {
     return async (dispatch) => {
@@ -151,20 +190,21 @@ export const facebookSignIn = (data) => {
                     payload: {error: response.payload.error}
                 });
             } else if (response.status === true) {
-                const {lastUrl = false} = data;
-                const {_id, users} = response.payload.data;
+                const {lastUrl = false} = data || {};
+                const {_id, users = {}} = response.payload.data || {};
                 let authRedirection = '/';
+                console.log("10939032  ----->");
                 dispatch({
                     type: FACEBOOK_SIGNING_COMPLETED,
                     payload: {
-                        users: response.payload.data.users,
+                        users,
                         authenticatedUser: _id,
                         authRedirection
                     }
                 });
             }
         } catch (err) {
-            console.log(err);
+            console.log("37861823 FACEBBOK ",err);
             throw err;
         }
 
@@ -213,6 +253,7 @@ export const getInitialData = () => {
 
 export default (state = AUTH_INITIAL_STATE, action = {}) => {
     const {type, payload} = action;
+    console.log("10939032 type, payload ---> ", type, payload);
     switch (type) {
         case GETTING_INITIAL_DATA_COMPLETED:
             return {

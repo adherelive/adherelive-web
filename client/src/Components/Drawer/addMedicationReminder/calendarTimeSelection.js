@@ -267,7 +267,7 @@ class CalendarTimeSelecton extends Component {
                 }
               >
                 {name && (
-                  <div className="flex justify-content-start align-items-center iqvia-user-snippet bg-transparent">
+                  <div className="flex justify-content-start align-items-center bg-transparent">
                     <img alt={"u"} src={profilePicLink} />
                     <div className="deep-sea-blue fontsize12 medium mr8">{`${name}'s Calendar`}</div>
                   </div>
