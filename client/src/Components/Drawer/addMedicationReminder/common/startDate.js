@@ -60,14 +60,14 @@ class StartDate extends Component {
 
     return (
       <div className="flex flex-grow-1 row align-items-center">
-        <div className="pr8">
+        <div className="pr8 wp100">
           <span className="form-label">From</span>
-          <FormItem>
+          <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME} ant-date-custom`}
+                className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}
@@ -79,12 +79,12 @@ class StartDate extends Component {
                 popupStyle={{ left: 0, backgroundColor: "black" }}
               />
             )}
-            <img
-              alt=""
-              className="calendar clickable new-calendar"
-              onClick={openCalendar}
-              src={calendar}
-            />
+            {/*<img*/}
+            {/*  alt=""*/}
+            {/*  className="calendar clickable new-calendar"*/}
+            {/*  onClick={openCalendar}*/}
+            {/*  src={calendar}*/}
+            {/*/>*/}
           </FormItem>
         </div>
       </div>

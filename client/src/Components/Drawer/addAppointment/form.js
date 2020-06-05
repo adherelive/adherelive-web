@@ -49,7 +49,11 @@ class AddAppointmentForm extends Component {
   getInitialValue = () => {
     const { payload } = this.props;
     const { patients: { id, first_name, last_name } = {} } = payload || {};
-    return `${first_name} ${last_name}`;
+    if(first_name && last_name) {
+      return `${first_name} ${last_name}`;
+    } else {
+      return null;
+    }
   };
 
   getPatientOptions = () => {
@@ -93,6 +97,7 @@ class AddAppointmentForm extends Component {
               placeholder={formatMessage(message.select_patient)}
               notFoundContent={fetchingPatients ? <Spin size="small" /> : null}
               showSearch={true}
+              disabled={getInitialValue() ? true : false}
               filterOption={false}
               suffixIcon={null}
               removeIcon={null}
