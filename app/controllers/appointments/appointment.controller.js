@@ -26,9 +26,6 @@ class AppointmentController extends Controller {
             console.log("====================> ", userDetails);
             const {userId, userData: {category} = {}} = userDetails || {};
             const {id: participant_two_id, category: participant_two_type} = participant_two || {};
-
-            console.log("1111111111111");
-
             const appointment_data = {
                 participant_one_type: category,
                 participant_one_id: userId,
