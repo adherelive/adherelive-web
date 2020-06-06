@@ -16,7 +16,7 @@ class UserService {
         }
     }
 
-    async getUser(id) {
+    getUser = async (id) => {
         try {
             const user = await userModel.findOne({
                 where: {
@@ -82,4 +82,4 @@ class UserService {
 
 }
 
-module.exports = new UserService();
+export default new UserService();

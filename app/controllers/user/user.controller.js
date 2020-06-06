@@ -305,7 +305,7 @@ class UserController extends Controller {
 
         // const userDetails = user[0];
 
-        const x = new userWrapper(user);
+        const x = new userWrapper(userId);
         x.getBasicInfo();
 
         let userCategoryData = {};
