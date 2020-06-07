@@ -15,6 +15,9 @@ export default class User {
     }
 
     getUser = async () => {
+        if(this._data) {
+            return this.getExistingData();
+        }
         const user = await userService.getUser(this._userId);
         return user.get();
     };

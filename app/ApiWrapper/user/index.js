@@ -6,12 +6,12 @@ import { OBJECT_NAME } from "../../../constant";
 class UserWrapper extends BaseUser {
   constructor(userId, data) {
     super(userId, data);
-    this.userDetails = data ? this.getExistingData() : this.getUser();
     this.objectName = OBJECT_NAME.USER;
   }
 
-  getBasicInfo = () => {
-    const { objectName, userDetails, userId } = this;
+  getBasicInfo = async () => {
+    const { objectName, _userId, getUser } = this;
+    const userDetails = await getUser();
     const {
       id,
       user_name,
@@ -23,7 +23,7 @@ class UserWrapper extends BaseUser {
     } = userDetails || {};
     return {
       [objectName]: {
-        [userId]: {
+        [_userId]: {
           basic_info: {
             id,
             user_name,

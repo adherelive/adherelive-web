@@ -305,8 +305,9 @@ class UserController extends Controller {
 
         // const userDetails = user[0];
 
-        const x = new userWrapper(userId);
-        x.getBasicInfo();
+        console.log("userId ---> ", userId);
+
+        const apiUserDetails = new userWrapper(userId);
 
         let userCategoryData = {};
 
@@ -318,17 +319,7 @@ class UserController extends Controller {
         // }
 
         const dataToSend = {
-          // user: user.get,
-          user: {
-            [userId]: {
-              basic_info: user.getBasicInfo
-            }
-          },
-          // patients: {
-          //   [userCategoryData.getId]: {
-          //     ...userCategoryData.getBasicInfo
-          //   }
-          // }
+          ...await apiUserDetails.getBasicInfo()
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
