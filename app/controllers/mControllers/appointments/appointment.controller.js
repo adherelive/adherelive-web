@@ -54,8 +54,8 @@ class AppointmentController extends Controller {
                 end_time
             };
 
-            const scheduleEvent = await scheduleService.addEvent(eventScheduleData);
-            console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+            const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
+            console.log("[ SCHEDULE EVENT ] scheduleEvent ", scheduleEvent);
 
             // TODO: schedule event and notifications here
             await Proxy_Sdk.scheduleEvent({data: eventScheduleData});

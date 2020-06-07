@@ -52,9 +52,9 @@ const ActionDetails = database.define(
     }
 );
 
-ActionDetails.belongsTo(Actions, {
-    foreignKey: "action_id",
-    targetKey: "id"
-});
+// ActionDetails.belongsTo(Actions, {
+//     foreignKey: "action_id",
+//     targetKey: "id"
+// });
 
 export default ActionDetails;

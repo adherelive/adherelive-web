@@ -12,7 +12,7 @@ import startDateField from "./startDate";
 import { REPEAT_TYPE } from "../../../../constant";
 import { isNumber } from "../../../../Helper/validation";
 
-const FIELD_NAME = "endDate";
+const FIELD_NAME = "end_date";
 const { Item: FormItem } = Form;
 
 class EndDate extends Component {
@@ -88,40 +88,49 @@ class EndDate extends Component {
     return initialValue;
   };
 
+  calendarComp = () => {
+    return (
+      <div className="flex justify-center align-center">
+        <img src={calendar} alt="calender icon" className="w20" />
+      </div>
+    );
+  };
+
   render() {
     const {
       form: { getFieldDecorator, getFieldError },
       disabledEndDate
     } = this.props;
-    const { formatMessage, openCalendar, getInitialValue } = this;
+    const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
     return (
-      <div className="flex flex-grow-1 row align-items-center iqvia-date-picker">
-        <div className="full-width pl8">
+      <div className="flex flex-grow-1 row align-items-center">
+        <div className="pl8 wp100">
           <span className="form-label">To</span>
-          <FormItem>
+          <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME}`}
+                className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
-                suffixIcon={null}
+                suffixIcon={calendarComp()}
                 disabled={
                   getFieldError(repeatIntervalField.field_name) !== undefined
                 }
+                allowClear={false}
                 disabledDate={disabledEndDate}
                 getCalendarContainer={this.getParentNode}
                 popupStyle={{ left: 0 }}
               />
             )}
-            <img
-              alt=""
-              className="calendar clickable new-calendar"
-              onClick={openCalendar}
-              src={calendar}
-            />
+            {/*<img*/}
+            {/*  alt=""*/}
+            {/*  className="calendar clickable new-calendar"*/}
+            {/*  onClick={openCalendar}*/}
+            {/*  src={calendar}*/}
+            {/*/>*/}
           </FormItem>
         </div>
       </div>

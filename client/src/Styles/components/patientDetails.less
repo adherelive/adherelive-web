@@ -121,7 +121,7 @@
 
 .patient-alerts {
   min-height: @150px;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(242, 99, 123, 0.1);
   border-radius: @10px;
 }
 // .add-button {
@@ -169,7 +169,7 @@
   left: 0;
 }
 .ant-drawer-title {
-  //text-align: center;
+  text-align: center;
   font-weight: 600;
 }
 .ant-drawer-header {
@@ -178,22 +178,21 @@
 .ant-drawer-body {
   //border-bottom: 1px solid #e8e8e8;
 }
-.form-label {
-  font-style: normal;
-  font-weight: normal;
-  font-size: @12px!important;
-  line-height: @22px;
-  color: #979797;
-}
+
 .ant-drawer-body {
-  #medication_stage,
-  #timing {
+  //#medication_stage,
+  //#timing {
+  //  .ant-select {
+  //    .ant-input-group {
+  //      width: 100%;
+  //    }
+  //  }
     .ant-select-selection--single {
       background: rgba(0, 0, 0, 0.02);
       border: 1px solid #979797;
       box-sizing: border-box;
       border-radius: @4px;
-      width: @394px;
+      width: 100%;
       height: @52px;
       line-height: @52px;
     }
@@ -210,24 +209,25 @@
       top: 0;
       margin-top: 0;
     }
-  }
+  //}
   .ant-input-number {
     background: rgba(0, 0, 0, 0.02);
     border: @1px solid #979797;
     box-sizing: border-box;
     border-radius: @4px 0 0 @4px;
-    width: @298px!important;
+    width: 100% !important;
     height: @52px;
     line-height: @52px;
   }
   #unit {
+    width: 100%;
     .ant-select-selection {
       &.ant-select-selection--single {
         background: rgba(0, 0, 0, 0.02);
         border: @1px solid #979797;
         box-sizing: border-box;
         border-radius: 0 @4px @4px 0;
-        width: @96px;
+        //width: 100%;
         height: @52px;
       }
     }
@@ -235,13 +235,13 @@
       line-height: @52px;
     }
   }
-  #quantity {
+  //#quantity {
     .ant-input-number {
       background: rgba(0, 0, 0, 0.02);
       border: @1px solid #979797;
       box-sizing: border-box;
       border-radius: @4px;
-      width: @396px!important;
+      width: 100%!important;
       height: @52px;
       line-height: @52px;
     }
@@ -254,64 +254,64 @@
     .ant-radio-button-wrapper:not(:first-child)::before {
       width: 0;
     }
-  }
-  #repeats {
-    .select-days {
-      background: rgba(0, 0, 0, 0.02);
-      border: @1px solid #979797;
-      box-sizing: border-box;
-      border-radius: @4px;
-      width: @396px!important;
-      height: @52px;
-      line-height: @52px;
-    }
-    .ant-tag {
-      margin: 0;
-      font-size: @18px;
-      padding: @10px;
-      line-height: @30px;
-      border: none;
-      border-radius: 0;
-      cursor: pointer;
-      border-right: @1px solid transparent;
-    }
-    .ant-tag:hover {
-      color: black;
-    }
-    .ant-tag-checkable-checked {
-      background-color: black;
-      border-right: @1px solid #979797;
-    }
-    .ant-tag-checkable-checked:hover {
-      color: white;
-    }
-    .ant-tag:after {
-      background-color: transparent;
-      transition: 0.5s;
-    }
-  }
-  #startDate,
-  #endDate {
-    .ant-calendar-picker-icon,
-    .ant-calendar-picker-clear {
-      display: none;
-    }
-    .ant-calendar-picker-input {
-      background: rgba(0, 0, 0, 0.02);
-      border: @1px solid #979797;
-      box-sizing: border-box;
-      border-radius: @4px;
-      width: @190px!important;
-      height: @52px;
-      line-height: @52px;
-    }
-  }
-  .new-calendar {
-    position: relative;
-    top: -48px;
-    left: 160px;
-    cursor: pointer;
-  }
+  //}
+  //#repeats {
+  //  .select-days {
+  //    background: rgba(0, 0, 0, 0.02);
+  //    border: @1px solid #979797;
+  //    box-sizing: border-box;
+  //    border-radius: @4px;
+  //    width: 100%!important;
+  //    height: @52px;
+  //    line-height: @52px;
+  //  }
+  //  .ant-tag {
+  //    margin: 0;
+  //    font-size: @18px;
+  //    padding: @10px;
+  //    line-height: @30px;
+  //    border: none;
+  //    border-radius: 0;
+  //    cursor: pointer;
+  //    border-right: @1px solid transparent;
+  //  }
+  //  .ant-tag:hover {
+  //    color: black;
+  //  }
+  //  .ant-tag-checkable-checked {
+  //    background-color: black;
+  //    border-right: @1px solid #979797;
+  //  }
+  //  .ant-tag-checkable-checked:hover {
+  //    color: white;
+  //  }
+  //  .ant-tag:after {
+  //    background-color: transparent;
+  //    transition: 0.5s;
+  //  }
+  //}
+  //#startDate,
+  //#endDate {
+  //  .ant-calendar-picker-icon,
+  //  .ant-calendar-picker-clear {
+  //    display: none;
+  //  }
+  //  .ant-calendar-picker-input {
+  //    background: rgba(0, 0, 0, 0.02);
+  //    border: @1px solid #979797;
+  //    box-sizing: border-box;
+  //    border-radius: @4px;
+  //    width: @190px!important;
+  //    height: @52px;
+  //    line-height: @52px;
+  //  }
+  //}
+  //.new-calendar {
+  //  position: relative;
+  //  top: -48px;
+  //  left: 160px;
+  //  cursor: pointer;
+  //}
   .footer {
     button {
       margin-top: @46px;

@@ -9,12 +9,16 @@ const Scheduler = require("./scheduler");
 class EventExecutor {
   async sendMail(mailData, scheduledJobId) {
     try {
-      let isValid = await validateMailData(mailData);
+
+      console.log('INSIDEEEE SEND MAILLLLLLL ');
+      // let isValid = await validateMailData(mailData);
       let response = await EmailManager.sendEmail(mailData);
       Object.assign(
         mailData,
         response ? { status: "SENT" } : { status: "FAILED" }
       );
+
+      console.log('INSIDEEEE SEND MAILLLLLLL 111111122223333         ',mailData,response);
       let logger = new Logger("email", mailData);
       logger.log();
       // if (scheduledJobId && response) {
@@ -23,7 +27,8 @@ class EventExecutor {
       //   });
       // }
     } catch (err) {
-      Proxy_Sdk.execute(EVENTS.EMAIL_ERROR, err, "mail_error");
+      console.log('INSIDEEEE SEND MAILLLLLLL ERROR       ', err);
+     // Proxy_Sdk.execute(EVENTS.EMAIL_ERROR, err, "mail_error");
     }
   }
 

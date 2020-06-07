@@ -65,7 +65,7 @@ class MedicationStrengthUnit extends Component {
     return (
       <Fragment>
         <FormItem
-          className="flex-1"
+          className="flex-1 wp20"
           validateStatus={error ? "error" : ""}
           help={error || ""}
         >
@@ -79,12 +79,12 @@ class MedicationStrengthUnit extends Component {
             initialValue: getInitialValue()
           })(
             <Select
-              className="full-width"
+              className="wp100"
               placeholder=""
               showSearch
               autoComplete="off"
               optionFilterProp="children"
-              suffixIcon={DropDownIcon}
+              // suffixIcon={DropDownIcon}
               filterOption={(input, option) =>
                 option.props.children
                   .toLowerCase()

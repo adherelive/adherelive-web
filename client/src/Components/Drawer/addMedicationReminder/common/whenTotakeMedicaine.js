@@ -15,7 +15,7 @@ const when = [
 ];
 const { Option } = Select;
 
-const FIELD_NAME = "whenToTake";
+const FIELD_NAME = "when_to_take";
 
 class WhenToTakeMedication extends Component {
   componentDidMount() {

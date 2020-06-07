@@ -20,7 +20,17 @@ const messages = defineMessages({
     id: "app.dashboard.graph.non.critical",
     description: "",
     defaultMessage: "Non Critical"
-  }
+  },
+  compliant_text: {
+    id: "app.dashboard.graph.compliant",
+    description: "",
+    defaultMessage: "Compliant"
+  },
+  non_compliant_text: {
+    id: "app.dashboard.graph.non.compliant",
+    description: "",
+    defaultMessage: "Non Compliant"
+  },
 });
 
 export default messages;

@@ -38,7 +38,7 @@ export const addAppointment = payload => {
 };
 
 function appointmentReducer(state, data) {
-    const {appointments = {}} = data = {};
+    const {appointments = {}} = data || {};
     if (Object.keys(appointments).length > 0) {
         return {
             ...state,

@@ -1,6 +1,7 @@
 'use strict';
 
 import {DB_TABLES, GENDER} from "../constant";
+import Sequelize from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -40,7 +41,6 @@ module.exports = {
           },
           address: {
               type: Sequelize.STRING,
-              allowNull: false
           },
           activated_on: {
               type: Sequelize.DATE
@@ -48,6 +48,9 @@ module.exports = {
           uid: {
              type: Sequelize.STRING,
              allowNull: false
+          },
+          details: {
+              type: Sequelize.JSON,
           },
           created_at: {
               allowNull: false,

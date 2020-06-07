@@ -3,6 +3,10 @@ const dotenv = require("dotenv");
 module.exports =  () => {
     dotenv.config();
     process.config = {
+        app: {
+            invite_link: process.env.INVITE_LINK,
+            env: process.env.APP_ENV
+        },
         db: {
             connection: process.env.DB_CONNECTION,
             name: process.env.DB_DATABASE_NAME,
@@ -38,7 +42,8 @@ module.exports =  () => {
             MINIO_VOLUME_NAME: process.env.MINIO_VOLUME_NAME,
             MINIO_REGION: process.env.MINIO_REGION,
             MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
-            MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME
+            MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
+            MINIO_S3_HOST: process.env.S3_HOST,
         },
         GOOGLE_KEYS: {
             CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -47,7 +52,14 @@ module.exports =  () => {
         },
         FACEBOOK_KEYS: {
           APP_TOKEN: process.env.FACEBOOK_APP_TOKEN,
+            SECRET_TOKEN: process.env.FACEBOOK_SECRET_TOKEN,
         },
+        smtp: {
+            source_address: process.env.SOURCE_ADDRESS,
+            reply_to_address: process.env.REPLY_TO_ADDRESS,
+            user: process.env.SMTP_USER,
+            secret_key: process.env.SMTP_KEY
+          },
         cookieKey: process.env.COOKIE_KEY,
         PORT:process.env.WEB_SERVER_PORT,
         APP_URL: process.env.APP_URL,
