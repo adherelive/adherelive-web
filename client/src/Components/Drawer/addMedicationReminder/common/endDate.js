@@ -88,12 +88,20 @@ class EndDate extends Component {
     return initialValue;
   };
 
+  calendarComp = () => {
+    return (
+      <div className="flex justify-center align-center">
+        <img src={calendar} alt="calender icon" className="w20" />
+      </div>
+    );
+  };
+
   render() {
     const {
       form: { getFieldDecorator, getFieldError },
       disabledEndDate
     } = this.props;
-    const { formatMessage, openCalendar, getInitialValue } = this;
+    const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
     return (
       <div className="flex flex-grow-1 row align-items-center">
@@ -107,7 +115,7 @@ class EndDate extends Component {
                 className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
-                suffixIcon={null}
+                suffixIcon={calendarComp()}
                 disabled={
                   getFieldError(repeatIntervalField.field_name) !== undefined
                 }

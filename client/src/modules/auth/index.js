@@ -44,19 +44,19 @@ export const RESET_PASSWORD_LINK_COMPLETED = "RESET_PASSWORD_LINK_COMPLETED";
 export const GOOGLE_SIGNOUT = "GOOGLE_SIGNOUT";
 
 export const AUTH_INITIAL_STATE = {
-  authenticated: false
+  authenticated: false,
 };
 
-export const signIn = payload => {
+export const signIn = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
-      dispatch({ type: GETTING_INITIAL_DATA });
+      dispatch({ type: SIGNING });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.signInUrl(),
-        data: payload
+        data: payload,
       });
 
       console.log("SIGN IN response --> ", response);
@@ -66,18 +66,18 @@ export const signIn = payload => {
 
       if (status === false) {
         dispatch({
-          type: GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR,
-          payload: { error }
+          type: SIGNING_COMPLETED_WITH_ERROR,
+          payload: { error },
         });
       } else if (status === true) {
         const { _id, users } = data;
         let authRedirection = "/";
         dispatch({
-          type: GETTING_INITIAL_DATA_COMPLETED,
+          type: SIGNING_COMPLETED,
           payload: {
             authenticatedUser: _id,
-            authRedirection
-          }
+            authRedirection,
+          },
         });
       }
     } catch (err) {
@@ -89,16 +89,16 @@ export const signIn = payload => {
   };
 };
 
-export const signUp = payload => {
+export const signUp = (payload) => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SIGNING_UP });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Auth.signUpUrl(),
-        data: payload
+        data: payload,
       });
 
       console.log("SIGN UP response --> ", response);
@@ -109,13 +109,13 @@ export const signUp = payload => {
       if (status === false) {
         dispatch({
           type: SIGNING_UP_COMPLETED_WITH_ERROR,
-          payload: { error }
+          payload: { error },
         });
       } else if (status === true) {
         const { _id, users } = data;
         dispatch({
           type: SIGNING_UP_COMPLETED,
-          payload: {}
+          payload: {},
         });
       }
     } catch (err) {
@@ -129,38 +129,38 @@ export const signUp = payload => {
 
 export const signOut = () => {
   let response = {};
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: SIGNING_OUT });
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Auth.signOutUrl()
+        url: Auth.signOutUrl(),
       });
 
       const { status, payload: { error } = {} } = response || {};
       if (status === true) {
         dispatch({
-          type: SIGNING_OUT_COMPLETED
+          type: SIGNING_OUT_COMPLETED,
         });
       } else {
         dispatch({
           type: SIGNING_OUT_COMPLETED_WITH_ERROR,
-          message: error.message
+          message: error.message,
         });
       }
     } catch (err) {
       console.log("", err);
       dispatch({
         type: SIGNING_COMPLETED_WITH_ERROR,
-        message: err.message
+        message: err.message,
       });
     }
     return response;
   };
 };
 
-export const googleSignIn = data => {
+export const googleSignIn = (data) => {
   return async (dispatch, getState) => {
     try {
       const { auth = {} } = getState();
@@ -168,13 +168,13 @@ export const googleSignIn = data => {
       const response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: data,
-        url: Auth.googleSignInUrl()
+        url: Auth.googleSignInUrl(),
       });
 
       if (response.status === false) {
         dispatch({
           type: GOOGLE_SIGNING_COMPLETED_WITH_ERROR,
-          payload: { error: response.payload.error }
+          payload: { error: response.payload.error },
         });
       } else if (response.status === true) {
         const { lastUrl = false } = data;
@@ -185,8 +185,8 @@ export const googleSignIn = data => {
           payload: {
             users: response.payload.data.users,
             authenticatedUser: _id,
-            authRedirection
-          }
+            authRedirection,
+          },
         });
       }
     } catch (err) {
@@ -196,21 +196,21 @@ export const googleSignIn = data => {
   };
 };
 
-export const facebookSignIn = data => {
-  return async dispatch => {
+export const facebookSignIn = (data) => {
+  return async (dispatch) => {
     try {
       dispatch({ type: FACEBOOK_SIGNING });
 
       const response = await doRequest({
         method: REQUEST_TYPE.POST,
         data: data,
-        url: Auth.facebookSignInUrl()
+        url: Auth.facebookSignInUrl(),
       });
 
       if (response.status === false) {
         dispatch({
           type: FACEBOOK_SIGNING_COMPLETED_WITH_ERROR,
-          payload: { error: response.payload.error }
+          payload: { error: response.payload.error },
         });
       } else if (response.status === true) {
         const { lastUrl = false } = data || {};
@@ -222,8 +222,8 @@ export const facebookSignIn = data => {
           payload: {
             users,
             authenticatedUser: _id,
-            authRedirection
-          }
+            authRedirection,
+          },
         });
       }
     } catch (err) {
@@ -234,13 +234,13 @@ export const facebookSignIn = data => {
 };
 
 export const getInitialData = () => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch({ type: GETTING_INITIAL_DATA });
 
       const response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Auth.getInitialData()
+        url: Auth.getInitialData(),
       });
 
       console.log("GET INITIAL DATA response --> ", response);
@@ -248,7 +248,7 @@ export const getInitialData = () => {
       if (response.status === false) {
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR,
-          payload: { error: response.payload.error }
+          payload: { error: response.payload.error },
         });
       } else if (response.status === true) {
         // const {lastUrl = false} = data;
@@ -259,8 +259,8 @@ export const getInitialData = () => {
           payload: {
             user: response.payload.data.user,
             authenticatedUser: _id,
-            authRedirection
-          }
+            authRedirection,
+          },
         });
       }
     } catch (err) {
@@ -284,40 +284,44 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
       return {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
-        authRedirection: payload.authRedirection
       };
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
-        authRedirection: "/sign-in"
+        authRedirection: "/sign-in",
       };
     case GOOGLE_SIGNING_COMPLETED:
       return {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
-        authRedirection: payload.authRedirection
+        authRedirection: payload.authRedirection,
       };
     case GOOGLE_SIGNING_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
-        error: payload.error
+        error: payload.error,
       };
     case FACEBOOK_SIGNING_COMPLETED:
       return {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
-        authRedirection: payload.authRedirection
+        authRedirection: payload.authRedirection,
       };
     case FACEBOOK_SIGNING_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
-        error: payload.error
+        error: payload.error,
       };
 
     case SIGNING_OUT_COMPLETED:
       return {
         authenticated: false,
-        authRedirection: "/sign-in"
+        authRedirection: "/sign-in",
+      };
+    case SIGNING_COMPLETED:
+      return {
+        authenticated: true,
+        authRedirection: payload.authRedirection,
       };
     default:
       return state;
