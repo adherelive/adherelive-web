@@ -12,6 +12,7 @@ const { ActivitySdk, STAGES } = require("../activitySdk");
 const schedule = require("node-schedule");
 
 function checkEventHaveToStart(startTime) {
+  console.log("AAAAAAAAAAAAAAAAAAAAA");
   const at00 = moment()
     .minutes(0)
     .seconds(0)
@@ -51,7 +52,7 @@ function checkEventHaveToStart(startTime) {
   if (startTime < listOfScheduler[x]) {
     status = true;
   }
-
+  console.log("BBBBBBBBBBBBBBBBBBBBB", status);
   return status;
 }
 
@@ -71,6 +72,7 @@ class ProxySdk extends EventEmitter {
   }
   scheduledJobIscheduledJobIdd;
   execute(eventName, ...args) {
+    console.log('INSIDEEEE EXECUTEEEEEEEEEEEEEE=>>>>>>>>>>>>>>',eventName,'   7896976858674654786877e65587 ', args);
     this.emit(eventName, ...args);
   }
 
@@ -90,10 +92,11 @@ class ProxySdk extends EventEmitter {
   };
 
   scheduleEvent = async ({ data }) => {
+    console.log("\n HERE \n");
     try {
       const {
         _id,
-        eventCategory,
+        event_type,
         startDate,
         endDate,
         participantOne,
@@ -120,7 +123,7 @@ class ProxySdk extends EventEmitter {
 
       let scheduler_extra_data = {};
 
-      switch (eventCategory) {
+      switch (event_type) {
         case EVENT_TYPE.MEDICATION_REMINDER:
           scheduler_extra_data = {
             repeat: repeat,
@@ -154,7 +157,7 @@ class ProxySdk extends EventEmitter {
           };
           break;
         default:
-          throw new Error(`${eventCategory} not a valid event for scheduling`);
+          throw new Error(`${event_type} not a valid event for scheduling`);
       }
 
       const start = new moment.utc(startDate);
@@ -181,7 +184,7 @@ class ProxySdk extends EventEmitter {
         const { startTime: startOn, endTime: endOn } = nextEventOn;
         const data_to_save = {
           eventId: _id,
-          eventType: eventCategory,
+          eventType: event_type,
           startTime: startOn,
           endTime: endOn,
           data: scheduler_extra_data

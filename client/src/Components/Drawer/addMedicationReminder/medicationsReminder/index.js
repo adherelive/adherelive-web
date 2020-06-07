@@ -106,7 +106,7 @@ class AddMedicationReminder extends Component {
 
     return (
       <Drawer
-        width={456}
+        width={'35%'}
         onClose={this.onClose}
         visible={visible}
         destroyOnClose={true}

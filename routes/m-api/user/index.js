@@ -26,4 +26,6 @@ router.post(
     mUserController.signInFacebook
 );
 
+router.post("/sign-out", Authenticate, mUserController.signOut);
+
 module.exports = router;

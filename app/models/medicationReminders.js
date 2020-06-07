@@ -36,6 +36,9 @@ const MedicationReminders = database.define(
         rr_rule: {
             type: Sequelize.STRING(1000)
         },
+        details: {
+            type: Sequelize.JSON,
+        }
     },
     {
         underscored: true,
@@ -50,8 +53,12 @@ const MedicationReminders = database.define(
                     description: this.description,
                     start_date: this.start_date,
                     end_date: this.end_date,
-                    rr_rule: this.rr_rule
+                    rr_rule: this.rr_rule,
+                    details: this.details,
                 };
+            },
+            getId() {
+                return this.id;
             }
         }
     }

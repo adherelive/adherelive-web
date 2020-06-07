@@ -12,8 +12,10 @@ class PatientTable extends Component {
   }
 
   onRowClick = key => event => {
-    const { history } = this.props;
-    history.push(getPatientDetailsUrl(key));
+    const { openPatientDetailsDrawer } = this.props;
+    console.log("!!! ---> ", key);
+    openPatientDetailsDrawer();
+    // history.push(getPatientDetailsUrl(key));
   };
 
   onRow = (record, rowIndex) => {
@@ -78,7 +80,7 @@ class PatientTable extends Component {
 
     return (
       <Table
-        // onRow={onRow}
+        onRow={onRow}
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({

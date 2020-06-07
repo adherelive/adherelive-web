@@ -1,8 +1,11 @@
+import * as constants from "../../../../config/constants";
+
 const {OAuth2Client} = require('google-auth-library');
 const moment = require('moment');
 const jwt = require("jsonwebtoken");
 const request = require('request');
 import bcrypt from "bcrypt";
+import chalk from "chalk";
 
 const Response = require("../../helper/responseFormat");
 import userService from "../../../services/user/user.service";
@@ -136,7 +139,7 @@ class UserController extends Controller {
             let response = new Response(true, 200);
             response.setMessage("Sign in successful!");
             response.setData({
-                accessToken
+                accessToken: res.body.access_token
             });
             return res
                 .status(response.getStatusCode())
@@ -149,6 +152,7 @@ class UserController extends Controller {
     }
 
     onAppStart = async (req, res, next) => {
+        console.log("--------------------CHALK-------------------", chalk.blue("hello vineet"));
         let response;
         try {
             if (req.userDetails.exists) {
@@ -189,6 +193,15 @@ class UserController extends Controller {
             return res.status(500).json(response.getResponse());
         }
     }
+
+    signOut = async (req, res) => {
+        try {
+
+        } catch (error) {
+            console.log("MOBILE SIGN OUT CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    };
 
 }
 

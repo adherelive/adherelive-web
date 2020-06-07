@@ -37,6 +37,11 @@ const message = defineMessages({
         description: "",
         defaultMessage: "Submit"
     },
+    add_appointment_success: {
+        id: "app.drawer.add.appointment.success.message",
+        description: "",
+        defaultMessage: "Appointment created successfully"
+    },
 });
 
 export default message;

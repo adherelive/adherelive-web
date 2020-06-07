@@ -1,0 +1,15 @@
+import multer from "multer";
+
+const express = require("express");
+const router = express.Router();
+import Authenticated from "../middleware/auth";
+import PatientController from "../../../app/controllers/mControllers/patients/patients.controller";
+var storage = multer.memoryStorage();
+var upload = multer({ dest: "../app/public/", storage: storage });
+
+router.post('/patient',
+    // upload.single("profile_pic"),
+    PatientController.mUpdatePatient
+);
+
+module.exports = router;

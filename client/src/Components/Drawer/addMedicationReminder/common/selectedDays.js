@@ -7,7 +7,7 @@ import { DAYS } from "../../../../constant";
 const { Item: FormItem } = Form;
 const { CheckableTag } = Tag;
 
-const FIELD_NAME = "repeatDays";
+const FIELD_NAME = "repeat_days";
 
 class SelectedDays extends Component {
   constructor(props) {
@@ -56,7 +56,7 @@ class SelectedDays extends Component {
     const { handleCheckDays, formatMessage } = this;
 
     return (
-      <div className="mb20">
+      <div className="mb20 select-days-form-content">
         <div className="mb8">
           <span className="form-label">Repeats</span>
         </div>

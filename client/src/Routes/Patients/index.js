@@ -27,12 +27,12 @@ export default class Patients extends Component {
         {/*<MedicationReminder />*/}
         <Router>
           <Switch>
-            <Route exact path={PATH.PATIENT.PA} component={Patient} />
             <Route
-              exact
-              path={PATH.PATIENT.DETAILS}
-              component={PatientDetailsComp}
+                exact
+                path={PATH.PATIENT.DETAILS}
+                component={PatientDetailsComp}
             />
+            {/*<Route exact path={PATH.PATIENT.PA} component={Patient} />*/}
           </Switch>
         </Router>
       </Fragment>

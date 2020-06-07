@@ -11,7 +11,7 @@ const Patients = database.define(
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
         },
         user_id: {
             type: Sequelize.INTEGER,
@@ -42,7 +42,6 @@ const Patients = database.define(
         },
         address: {
             type: Sequelize.STRING,
-            allowNull: false
         },
         activated_on: {
             type: Sequelize.DATE
@@ -51,6 +50,9 @@ const Patients = database.define(
             type: Sequelize.STRING,
             allowNull: false
         },
+        details: {
+            type: Sequelize.JSON,
+        }
     },
     {
         underscored: true,
@@ -58,15 +60,21 @@ const Patients = database.define(
         getterMethods: {
             getBasicInfo() {
                 return {
-                    id: this.id,
-                    user_id: this.user_id,
-                    gender: this.gender,
-                    first_name: this.first_name,
-                    middle_name: this.middle_name,
-                    last_name: this.last_name,
-                    address: this.address,
-                    activated_on: this.activated_on
+                    basic_info: {
+                        id: this.id,
+                        user_id: this.user_id,
+                        gender: this.gender,
+                        first_name: this.first_name,
+                        middle_name: this.middle_name,
+                        last_name: this.last_name,
+                        address: this.address,
+                        activated_on: this.activated_on,
+                        details: this.details
+                    }
                 };
+            },
+            getId() {
+                return this.id;
             }
         }
     }
