@@ -379,3 +379,7 @@ export const EMAIL_TEMPLATE_NAME = {
     WELCOME: "welcome",
     FORGOT_PASSWORD: "forgot_password"
   };
+
+export const OBJECT_NAME = {
+    USER: "user",
+}

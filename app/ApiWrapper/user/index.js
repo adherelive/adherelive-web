@@ -1,43 +1,47 @@
-import apiWrapper from "../index";
+import BaseUser from "../../services/user";
+
 import userService from "../../services/user/user.service";
+import { OBJECT_NAME } from "../../../constant";
 
+class UserWrapper extends BaseUser {
+  constructor(userId, data) {
+    super(userId, data);
+    this.objectName = OBJECT_NAME.USER;
+  }
 
-export default class userWrapper extends apiWrapper {
-    constructor(data) {
-        super(data);
-        this.userDetails = this.getData();
-    }
-
-    getId() {
-        const {id} = this.userDetails || {};
-        return id;
-    }
-
-
-    getDataStructure(data) {
-        const {id, user_name, email, mobile_number, sign_in_type, category, activated_on} = this.userDetails || {};
-        return {
-            basic_info: {
-                id,
-                user_name,
-                email,
-                mobile_number
-            },
-            sign_in_type,
-            category,
-            activated_on
-        }
-    }
-
-    getBasicInfo() {
-        return {
-            users: {
-                [this.getId()]: this.getDataStructure()
-            }
-        }
-    }
-
-    async getBulkBasicInfo() {
-        const allUsers = await userService.getAll();
-    }
+  getBasicInfo = async () => {
+    const { objectName, _userId, getUser } = this;
+    const userDetails = await getUser();
+    const {
+      id,
+      user_name,
+      email,
+      mobile_number,
+      sign_in_type,
+      category,
+      activated_on,
+    } = userDetails || {};
+    return {
+      [objectName]: {
+        [_userId]: {
+          basic_info: {
+            id,
+            user_name,
+            email,
+            mobile_number,
+          },
+          sign_in_type,
+          category,
+          activated_on,
+        },
+      },
+    };
+  };
 }
+
+export default (userId, data = null) => {
+  if (data) {
+    return new UserWrapper(userId, data);
+  }
+  return new UserWrapper(userId, null);
+};
