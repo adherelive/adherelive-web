@@ -3,6 +3,8 @@ const router = express.Router();
 import mUserRouter from "./user";
 import mEventRouter from "./events";
 import mPatientRouter from "./patients";
+import userService from "../../app/services/user/user.service";
+import jwt from "jsonwebtoken";
 // import twilioRouter from "./twilio";
 
 router.use(async function(req, res, next) {
@@ -22,10 +24,15 @@ router.use(async function(req, res, next) {
             }
         }
 
+        console.log("ACCESS TOKEN -----------------> ", accessToken);
+
         if (accessToken) {
+            console.log("2 ACCESS TOKEN -----------------> ", accessToken);
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
-            let user = await userService.getUser({ _id: decodedAccessToken.userId });
+            console.log("3 decodedAccessToken -----------------> ", accessToken);
+            let user = await userService.getUser(decodedAccessToken.userId);
+            console.log("USER M-API ROUTE START ------> ", user);
             if (user) {
                 req.userDetails = {
                     exists: true,

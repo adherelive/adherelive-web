@@ -15,7 +15,7 @@ class PatientsService {
 
     getPatientByUserId = async user_id => {
         try {
-            const patient = await patientModel.find({
+            const patient = await patientModel.findOne({
                 where: {
                     user_id
                 }
