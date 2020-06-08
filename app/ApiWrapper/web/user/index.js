@@ -1,7 +1,7 @@
-import BaseUser from "../../services/user";
+import BaseUser from "../../../services/user";
 
-import userService from "../../services/user/user.service";
-import { OBJECT_NAME } from "../../../constant";
+import userService from "../../../services/user/user.service";
+import { OBJECT_NAME } from "../../../../constant";
 
 class UserWrapper extends BaseUser {
   constructor(userId, data) {

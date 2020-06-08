@@ -382,4 +382,5 @@ export const EMAIL_TEMPLATE_NAME = {
 
 export const OBJECT_NAME = {
     USER: "user",
+    APPOINTMENT: "appointments",
 }

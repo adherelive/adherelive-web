@@ -1,6 +1,7 @@
 import Controller from "../index";
 import appointmentService from "../../services/appointment/appointment.service";
 import scheduleService from "../../services/events/event.service";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import {Proxy_Sdk, EVENTS} from "../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../constant";
 import moment from "moment";
@@ -36,19 +37,21 @@ class AppointmentController extends Controller {
                 description,
                 start_date: moment(date),
                 end_date: moment(date),
-                details: JSON.stringify({
+                details: {
                    start_time,
                    end_time
-                }),
+                },
             };
 
             const appointment = await appointmentService.addAppointment(appointment_data);
             console.log("[ APPOINTMENTS ] appointments ", appointment.getBasicInfo);
 
+            const appointmentApiData = await new AppointmentWrapper(appointment.get("id"), appointment.get());
+
             const eventScheduleData = {
                 event_type: EVENT_TYPE.APPOINTMENT,
-                event_id: appointment.id,
-                details: appointment,
+                event_id: appointmentApiData.getAppointmentId(),
+                details: appointmentApiData.getExistingData(),
                 status: EVENT_STATUS.PENDING,
                 start_time,
                 end_time
@@ -63,13 +66,7 @@ class AppointmentController extends Controller {
             // response
             return this.raiseSuccess(res, 200,
                 {
-                    appointments: {
-                        [appointment.id]: {
-                            basic_info: {
-                                ...appointment.getBasicInfo
-                            }
-                        }
-                    }
+                    ...appointmentApiData.getBasicInfo()
                 },
                 "appointment created successfully");
         } catch (error) {

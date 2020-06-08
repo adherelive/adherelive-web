@@ -67,7 +67,7 @@ const Appointments = database.define(
                     start_date: this.start_date,
                     end_date: this.end_date,
                     rr_rule: this.rr_rule,
-                    details: JSON.parse(this.details),
+                    details: this.details,
                 };
             }
         }

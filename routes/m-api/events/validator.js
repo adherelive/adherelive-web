@@ -8,8 +8,14 @@ const appointmentFormSchema = Joi.object().keys({
         id: Joi.number().required(),
         category: Joi.string().required(),
     }).required(),
-    start_date: Joi.date().options({ convert: true }).required(),
-    end_date: Joi.date(),
+    organizer_type: Joi.string().optional(),
+    // organizer_id: Joi.with('organizer_type', USER_CATEGORY.CARE_TAKER).number(),
+    organizer_id: Joi.when('organizer_type', {
+        is: USER_CATEGORY.CARE_TAKER,
+        then: Joi.number().required(),
+        otherwise: Joi.number().optional()
+    }),
+    date: Joi.date().options({ convert: true }).required(),
     start_time: Joi.date().required(),
     end_time: Joi.date().required(),
     description: Joi.string().optional().allow(""),

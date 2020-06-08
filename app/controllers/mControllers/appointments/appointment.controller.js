@@ -3,6 +3,7 @@ import appointmentService from "../../../services/appointment/appointment.servic
 import scheduleService from "../../../services/events/event.service";
 import {Proxy_Sdk, EVENTS} from "../../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
+import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 
 class AppointmentController extends Controller {
     constructor() {
@@ -43,6 +44,9 @@ class AppointmentController extends Controller {
             const appointment = await appointmentService.addAppointment(appointment_data);
             console.log("[ APPOINTMENTS ] appointments ", appointment);
 
+            const appointmentMApiData = await new MAppointmentWrapper(appointment.get("id"), appointment.get());
+
+            // todo: after proxysdk setup
             const eventScheduleData = {
                 event_type: EVENT_TYPE.APPOINTMENT,
                 event_id: appointment.id,
@@ -61,7 +65,7 @@ class AppointmentController extends Controller {
             await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
 
             // response
-            return this.raiseSuccess(res, 200, appointment, "appointment created successfully");
+            return this.raiseSuccess(res, 200, {...appointmentMApiData.getBasicInfo()}, "appointment created successfully");
         } catch(error) {
             console.log("[ APPOINTMENTS ] create error ---> ", error);
             return this.raiseServerError(res, 500, error, error.getMessage());

@@ -9,7 +9,7 @@ import Log from "../../../libs/log";
 
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
-import userWrapper from "../../ApiWrapper/user";
+import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
 import { v4 as uuidv4 } from "uuid";
