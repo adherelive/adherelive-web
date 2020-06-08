@@ -25,7 +25,7 @@ module.exports = {
       },
       organizer_type: {
         type: Sequelize.ENUM,
-        values: [USER_CATEGORY.DOCTOR]
+        values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.CARE_TAKER]
       },
       organizer_id: {
         type: Sequelize.INTEGER,

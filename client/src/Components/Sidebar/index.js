@@ -64,7 +64,7 @@ class SideMenu extends Component {
     return (
       <Menu
         selectedKeys={[selectedKeys]}
-        className="side-bar-menu p0"
+        className="side-bar-menu p0 bg-dark-grey"
         onSelect={handleItemSelect}
       >
         <MenuItem
@@ -88,7 +88,7 @@ class SideMenu extends Component {
             key={LOG_OUT}
         >
           <Tooltip placement="right" title={"Log Out"}>
-            <UserOutlined className="sidebar-bottom-custom"/>
+            <UserOutlined className="sidebar-bottom-custom icon-white"/>
           </Tooltip>
         </MenuItem>
       </Menu>

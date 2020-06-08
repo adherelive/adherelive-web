@@ -5,7 +5,7 @@ import {Proxy_Sdk, EVENTS} from "../../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 
-class AppointmentController extends Controller {
+class MobileAppointmentController extends Controller {
     constructor() {
         super();
     }
@@ -74,4 +74,4 @@ class AppointmentController extends Controller {
 
 }
 
-export default new AppointmentController();
+export default new MobileAppointmentController();

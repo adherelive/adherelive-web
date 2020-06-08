@@ -1,14 +1,23 @@
+
 const express = require("express");
 const router = express.Router();
 import Authenticate from "../middleware/auth";
-import Appointment from "../../../app/controllers/appointments/appointment.controller";
+import MobileAppointment from "../../../app/controllers/mControllers/appointments/appointment.controller";
+import MobileMedicationReminder from "../../../app/controllers/mControllers/medicationReminder/mReminder.controller";
 import * as validator from "./validator";
 
 router.post(
     "/appointments",
     Authenticate,
     validator.validateAppointmentFormData,
-    Appointment.create
+    MobileAppointment.create
+);
+
+router.post(
+    "/medication/:patient_id",
+    Authenticate,
+    validator.validateMedicationReminderData,
+    MobileMedicationReminder.create
 );
 
 module.exports = router;

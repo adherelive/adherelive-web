@@ -4,6 +4,8 @@ export default (state = PATIENT_INITIAL_STATE, action) => {
   const { data, type } = action;
   switch (type) {
     default:
-      return state;
+      return {
+        ...PATIENT_INITIAL_STATE
+      };
   }
 };

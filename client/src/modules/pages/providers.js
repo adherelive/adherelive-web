@@ -4,6 +4,8 @@ export default (state = PAGE_INITIAL.PROVIDER_IDS, action) => {
   const { type, data } = action;
   switch (type) {
     default:
-      return state;
+      return [
+        ...PAGE_INITIAL.PROVIDER_IDS
+      ];
   }
 };
