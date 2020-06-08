@@ -1,6 +1,6 @@
 import {withRouter} from "react-router-dom";
 import Dashboard from "../../Components/Dashboard";
-import {signOut} from "../../modules/auth";
+import {signOut, getInitialData} from "../../modules/auth";
 import {connect} from "react-redux";
 
 const mapStateToProps = state => {
@@ -11,6 +11,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         signOut: () => dispatch(signOut()),
+        getInitialData: () => dispatch(getInitialData()),
     };
 };
 

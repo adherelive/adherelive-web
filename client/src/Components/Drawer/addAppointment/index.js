@@ -86,7 +86,7 @@ class AddAppointment extends Component {
                     // closable={false}
                     onClose={onClose}
                     visible={visible} // todo: change as per prop -> "visible", -- WIP --
-                    width={600}
+                    width={'35%'}
                     title={formatMessage(messages.add_appointment)}
                     // headerStyle={{
                     //     display:"flex",

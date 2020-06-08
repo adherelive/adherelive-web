@@ -3,67 +3,70 @@ const router = express.Router();
 import userRouter from "./user";
 import eventRouter from "./events";
 import twilioRouter from "./twilio";
+import patientRouter from "./patients";
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
+import Log from "../../libs/log";
 
 router.use(async function(req, res, next) {
-    try {
-        const { query: { m } = {} } = req;
-        let accessToken;
-        if (m) {
-            const { authorization = "" } = req.headers || {};
-            const bearer = authorization.split(" ");
-            if (bearer.length === 2) {
-                accessToken = bearer[1];
-            }
-        } else {
-            const { cookies = {} } = req;
-            if (cookies.accessToken) {
-                accessToken = cookies.accessToken;
-            }
-        }
-
-        //  ----- FOR API TEST POSTMAN ------
-
-        console.log("------------ ACCESS TOKEN ---------> ", req.headers);
-        const {accesstoken : aT = ""} = req.headers || {};
-        if(aT) {
-            accessToken = aT;
-        }
-
-
-        if (accessToken) {
-            const secret = process.config.TOKEN_SECRET_KEY;
-            const decodedAccessToken = await jwt.verify(accessToken, secret);
-            let user = await userService.getUser(decodedAccessToken.userId);
-            // console.log("user --> 11 ", user.getBasicInfo);
-            if (user) {
-                req.userDetails = {
-                    exists: true,
-                    userId: decodedAccessToken.userId,
-                    userData: user.getBasicInfo
-                };
-            } else {
-                req.userDetails = {
-                    exists: false.use()
-                };
-            }
-        } else {
-            req.userDetails = {
-                exists: false
-            };
-        }
-        next();
-    } catch (err) {
-        req.userDetails = {
-            exists: false
-        };
-        next();
+  try {
+    const { query: { m } = {} } = req;
+    let accessToken;
+    if (m) {
+      const { authorization = "" } = req.headers || {};
+      const bearer = authorization.split(" ");
+      if (bearer.length === 2) {
+        accessToken = bearer[1];
+      }
+    } else {
+      const { cookies = {} } = req;
+      if (cookies.accessToken) {
+        accessToken = cookies.accessToken;
+      }
     }
+
+    //  ----- FOR API TEST POSTMAN ------
+
+    console.log("------------ ACCESS TOKEN ---------> ", req.headers);
+    const { accesstoken: aT = "" } = req.headers || {};
+    if (aT) {
+      accessToken = aT;
+    }
+
+    if (accessToken) {
+      const secret = process.config.TOKEN_SECRET_KEY;
+      const decodedAccessToken = await jwt.verify(accessToken, secret);
+      const {userId = null} = decodedAccessToken || {};
+      let user = await userService.getUser(userId);
+      if (user) {
+        req.userDetails = {
+          exists: true,
+          userId: userId,
+          userData: user.getBasicInfo
+        };
+      } else {
+        req.userDetails = {
+          exists: false.use()
+        };
+      }
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+    }
+    next();
+  } catch (err) {
+    console.log("API INDEX CATCH ERROR ", err);
+    req.userDetails = {
+      exists: false
+    };
+    next();
+  }
 });
 
 router.use(userRouter);
 router.use(eventRouter);
 router.use(twilioRouter);
+router.use(patientRouter);
 
 module.exports = router;

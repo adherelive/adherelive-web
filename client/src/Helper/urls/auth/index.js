@@ -17,3 +17,7 @@ export const signInUrl = () => {
 export const signUpUrl = () => {
     return `/sign-up`;
   };
+
+export const signOutUrl = () => {
+  return `/sign-out`;
+};

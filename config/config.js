@@ -42,7 +42,8 @@ module.exports =  () => {
             MINIO_VOLUME_NAME: process.env.MINIO_VOLUME_NAME,
             MINIO_REGION: process.env.MINIO_REGION,
             MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
-            MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME
+            MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
+            MINIO_S3_HOST: process.env.S3_HOST,
         },
         GOOGLE_KEYS: {
             CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -51,6 +52,7 @@ module.exports =  () => {
         },
         FACEBOOK_KEYS: {
           APP_TOKEN: process.env.FACEBOOK_APP_TOKEN,
+            SECRET_TOKEN: process.env.FACEBOOK_SECRET_TOKEN,
         },
         smtp: {
             source_address: process.env.SOURCE_ADDRESS,

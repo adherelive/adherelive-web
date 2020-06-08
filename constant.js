@@ -6,6 +6,11 @@ export const ACTION_TYPE = {
     MATERIAL_DELIVERY: "material_delivery"
 };
 
+export const ACTIVITY_TYPE = {
+    FOLLOWUP: "followup",
+    MEDICATION: "medication",
+};
+
 export const EVENT_TYPE = {
     APPOINTMENT: "appointment",
     REMINDER: "reminder",
@@ -374,3 +379,7 @@ export const EMAIL_TEMPLATE_NAME = {
     WELCOME: "welcome",
     FORGOT_PASSWORD: "forgot_password"
   };
+
+export const OBJECT_NAME = {
+    USER: "user",
+}

@@ -2,7 +2,8 @@ import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 // import messages from "./message";
 // import {formatMessage} from "react-intl/src/format";
-
+import { DeleteTwoTone } from "@ant-design/icons";
+import uuid from 'react-uuid';
 import {Tabs, Button,Steps,Col,Select,Input,Upload, Modal } from "antd";
 import SideMenu from "./sidebar";
 
@@ -15,7 +16,7 @@ const WATCHLIST = "Watch list";
 const UploadSteps = ({ current, className }) => {
     const { Step } = Steps;
     return (
-        <Steps className={`ml64 mr64 wa ${className}`} current={current} direction="vertical">
+        <Steps className={`ml64 mr64 wa ${className}`}  current={current} direction="vertical">
             <Step title={"Profile"} />
             <Step title={"Qualifications"} />
             <Step title={"Clinics"} />
@@ -27,6 +28,9 @@ class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            previewVisible: false,
+            previewImage: '',
+            previewTitle: '',
             name:"",
             email:"",
             phone_no:'',
@@ -40,18 +44,35 @@ class Register extends Component {
             registrationCouncil:'',
             registrationYear:'',
             loading:false,
+            education:{},
+            educationKeys:[],
             step:0
         };
     }
 
     componentDidMount() {
     
+        let key=uuid();
+        
+        let education={};
+        education[key]= {degree:"",college:"",year:"",photo:[]};
+        let educationKeys = [key];
+        this.setState({education,educationKeys});
     }
 
     getBase64=(img, callback)=> {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(img);
+      }
+
+      getBase64file=(file)=> {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+        });
       }
 
       beforeUpload=(file) =>{
@@ -64,6 +85,28 @@ class Register extends Component {
         //   message.error('Image must smaller than 2MB!');
         }
         return isJpgOrPng && isLt2M;
+      }
+
+      addEducation=()=>{
+        let key=uuid();
+        let{education={},educationKeys=[]}=this.state;
+        let newEducation=education;
+        let newEducationKeys=educationKeys;
+        newEducation[key] = {degree:"",college:"",year:"",photo:[]};
+        newEducationKeys.push(key);
+        console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
+        this.setState({education:newEducation,educationKeys:newEducationKeys});
+      }
+
+      handleCancel = () => this.setState({ previewVisible: false });
+
+      deleteEducation=(key)=>()=>{
+          let{education={},educationKeys=[]}=this.state;
+          let newEducation=education;
+          let newEducationKeys=educationKeys;
+          delete newEducation[key];
+          newEducationKeys.splice(newEducationKeys.indexOf(key),1);
+          this.setState({education:newEducation,educationKeys:newEducationKeys});
       }
 
 
@@ -82,6 +125,15 @@ class Register extends Component {
           );
         }
       };
+
+      handleChangeList = key=> ({fileList}) =>{
+          console.log('FILE LISTTTTTTTT',fileList,key);
+
+          let{education={}}=this.state;
+          let newEducation=education;
+          newEducation[key].photo=fileList;
+        this.setState({ education:newEducation });
+        };
 
      
     setName = e => {
@@ -123,6 +175,25 @@ class Register extends Component {
     setPrefix = value => {
         this.setState({ prefix: value });
     };
+
+    setDegree = (key,e)=>{
+        let{education={}}=this.state;
+        let newEducation=education;
+        newEducation[key].degree=e.target.value;
+        this.setState({education:newEducation});
+    }
+    setCollege = (key,e)=>{
+        let{education={}}=this.state;
+        let newEducation=education;
+        newEducation[key].college = e.target.value;
+        this.setState({education:newEducation});
+    }
+    setYear = (key,e)=>{
+        let{education={}}=this.state;
+        let newEducation=education;
+        newEducation[key].year = e.target.value;
+        this.setState({education:newEducation});
+    }
 
     onBackClick = ()=>{
         let{step=0}=this.state;
@@ -264,6 +335,125 @@ class Register extends Component {
         return options;
     };
 
+    handlePreview = async file => {
+        if (!file.url && !file.preview) {
+          file.preview = await this.getBase64file(file.originFileObj);
+        }
+    
+        this.setState({
+          previewImage: file.url || file.preview,
+          previewVisible: true,
+          previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
+        });
+      };
+
+
+      onUploadComplete = ({ files = [] }) => {
+        const { handleComplete} = this.props;
+       
+        const { docs } = this.state;
+        this.setState({ docs: [...docs, ...files] }, () => {
+          const { docs, fileList } = this.state;
+          if (docs.length === fileList.length) {
+            this.setState({
+              fileList: [],
+              docs: []
+            });
+            handleComplete(docs);
+          }
+        });
+      };
+
+      customRequest = ({ file, filename, onError, onProgress, onSuccess }) => {
+        const { onUploadComplete } = this;
+    
+        let data = new FormData();
+        data.append("files", file, file.name);
+    
+        doRequest({
+          onUploadProgress: onUploadProgress,
+          method: REQUEST_TYPE.POST,
+          data: data,
+          url: Common.getUploadURL()
+        }).then(response => {
+          onUploadComplete(response.payload.data);
+        });
+    
+        return {
+          abort() {}
+        };
+      };
+
+   
+    renderEducation=()=>{
+        console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
+        let{education={},educationKeys=[],fileList=[]}=this.state;
+        console.log(" 23829823  ------------------>  ", JSON.stringify(education, null, 4));
+        console.log(" 23829823 Keys  ------------------>  ", educationKeys);
+
+        const uploadButton = (
+            <div>
+              Upload
+            </div>
+          );
+        return(
+            <div className='flex direction-column'>
+           {educationKeys.map(key=>{
+            let{photo=[]}=education[key];
+                return(
+                    
+                    <div key={key}>
+                       {educationKeys.indexOf(key)>0 ? (
+                       <div className='wp100 flex justify-end'>
+                       <DeleteTwoTone
+                                className={"pointer align-self-end"}
+                                onClick={this.deleteEducation(key)}
+                                twoToneColor="#cc0000"
+                            />
+                       </div>
+                            ):null}
+              <div className='form-headings'>Degree</div>
+                    <Input
+                       placeholder="Degree"
+                       className={"form-inputs"}
+                       onChange={e=>this.setDegree(key,e)}
+                    />
+              <div className='form-headings'>College</div>
+                 <Input
+                    placeholder="College"
+                    className={"form-inputs"}
+                    onChange={e=>this.setCollege(key,e)}
+                 />
+              <div className='form-headings'>Year</div>
+                 <Input
+                    placeholder="Year"
+                    className={"form-inputs"}
+                    onChange={e=>this.setYear(key,e)}
+                 />
+                  <div className='form-headings'>Photo</div>
+                  <div className='qualification-photo-uploads'>
+                  <Upload
+                //   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  multiple={true}
+                     listType="picture-card"
+                     className="avatar-uploader"
+                     showUploadList={false}
+                     fileList={photo}
+                     customRequest={customRequest}
+                     onChange={this.handleChangeList(key,fileList)}
+                       >
+                  {uploadButton}
+                </Upload>
+                </div>
+                </div>
+                );
+            })
+        }
+            </div>
+        );
+
+    }
+
     renderQualificationForm=()=>{
         return(
             <div className='form-block'>
@@ -278,7 +468,9 @@ class Register extends Component {
                             {this.getGenderOptions()}
                         </Select>
             
-
+            <div className='form-category-headings'>Education</div>
+            <div className='pointer align-self-end wp60 fs16 medium tar' onClick={this.addEducation}>Add Education</div>
+            {this.renderEducation()}
              <div className='form-category-headings'>Registration details</div>
              <div className='form-headings'>Registration number</div>
                  <Input
@@ -345,7 +537,7 @@ class Register extends Component {
     
 
     render() {
-        console.log("19273 here --> dashboard",this.state);
+        // console.log("19273 here --> dashboard",this.state);
         const {graphs} = this.props;
         // const {formatMessage, renderChartTabs} = this;
          const{step}=this.state;
@@ -364,8 +556,8 @@ class Register extends Component {
                   </div>
                     </div>
                   <div className='footer'>
-                  <div className={step>0?'footer-text-active':'footer-text-inactive'} onClick={step!=0?this.onBackClick:null}>BACK</div> 
-                  <div className={step<2?'footer-text-active':'footer-text-inactive'} onClick={step<2?this.onNextClick:null}>NEXT</div></div>  
+                  <div className={step>0?'footer-text-active':'footer-text-inactive'} onClick={step!=0?this.onBackClick:null}>Back</div> 
+                  <div className={step<2?'footer-text-active':'footer-text-inactive'} onClick={step<2?this.onNextClick:null}>Next</div></div>  
                     </div>
             </Fragment>
         );

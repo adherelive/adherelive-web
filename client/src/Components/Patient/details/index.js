@@ -8,6 +8,7 @@ import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin } from "antd";
 import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
+import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 
 const { TabPane } = Tabs;
 
@@ -155,7 +156,7 @@ const PatientProfileHeader = ({ formatMessage, getMenu }) => {
         <h3>{formatMessage(message.patient_profile_header)}</h3>
       </div>
       <div className="flex-grow-1 tar">
-        <Dropdown overlay={getMenu()} placement="bottomRight">
+        <Dropdown overlay={getMenu()} trigger={['click']} placement="bottomRight">
           <Button type="primary">Add</Button>
         </Dropdown>
       </div>
@@ -164,13 +165,13 @@ const PatientProfileHeader = ({ formatMessage, getMenu }) => {
 };
 
 const PatientCard = ({
-  patient_display_picture,
-  patient_first_name,
+  patient_display_picture=userDp,
+  patient_first_name = "Patient one",
   patient_middle_name,
   patient_last_name,
-  gender,
-  patient_age,
-  patient_id,
+  gender="M",
+  patient_age="44",
+  patient_id="8qy13",
   patient_phone_number,
   patient_email_id,
   formatMessage
@@ -307,18 +308,41 @@ class PatientDetails extends Component {
         // todo: changes based on care-plan || appointment-repeat-type,  etc.,
         const {
         basic_info : {
-          organizer_id, organizer_type = "doctor", start_date, start_time, end_time, description
+          organizer_id, organizer_type = "doctor", start_date, description,
+            details: {start_time, end_time} = {}
         } = {}} = appointments[id] || {};
         const {basic_info: {user_name = "--"} = {}} = users[organizer_id] || {};
         return {
           // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
           key: id,
           organizer:user_name,
-          date: `${moment().format("DD MM YYYY")}`,
-          time: `${moment().format("LT")} - ${moment().add(1, "hour").format("LT")}`,
+          date: `${moment(start_date).format("DD MM YYYY")}`,
+          time: `${moment(start_time).format("LT")} - ${moment(end_time).add(1, "hour").format("LT")}`,
           description: description ? description : "--"
         }
       });
+  };
+
+  getMedicationData = () => {
+    const {medications = {}, users = {}, doctors = {}, patients = {}} = this.props;
+    console.log("92834792 ", medications);
+    const medicationRows = Object.keys(medications).map(id => {
+      // todo: changes based on care-plan || appointment-repeat-type,  etc.,
+      const {
+        basic_info : {
+          organizer_id, organizer_type = "doctor", end_date, details : {medicine, repeat_days, start_time} = {},
+        } = {}} = medications[id] || {};
+      const {basic_info: {user_name = "--"} = {}} = users[organizer_id] || {};
+      return {
+        // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
+        key: id,
+        medicine,
+        in_take: `${repeat_days.join(', ')}`,
+        duration: `Till ${moment(end_date).format("DD MMMM")}`,
+      }
+    });
+
+    return medicationRows;
   };
 
   handleItemSelect = ({ selectedKeys }) => {
@@ -343,11 +367,11 @@ class PatientDetails extends Component {
   formatMessage = data => this.props.intl.formatMessage(data);
 
   getMenu = () => {
-    const { handleAppointment } = this;
+    const { handleAppointment, handleMedicationReminder } = this;
     console.log("12312 getMenu");
     return (
       <Menu>
-        <Menu.Item>
+        <Menu.Item onClick={handleMedicationReminder}>
           <div>Medication</div>
         </Menu.Item>
         <Menu.Item onClick={handleAppointment}>
@@ -372,13 +396,20 @@ class PatientDetails extends Component {
     });
   };
 
+  handleMedicationReminder = e => {
+    const {openMReminderDrawer, id} = this.props;
+    openMReminderDrawer({
+      patient_id: id
+    });
+  };
+
   render() {
     const { loading } = this.state;
-    const { formatMessage, getMenu, getAppointmentsData } = this;
+    const { formatMessage, getMenu, getAppointmentsData, getMedicationData } = this;
 
     if (loading) {
       return (
-        <div className="page-loader">
+        <div className="page-loader hp100 wp100 flex align-center justify-center ">
           <Spin size="large"></Spin>
         </div>
       );
@@ -479,7 +510,7 @@ class PatientDetails extends Component {
                 <TabPane tab="Medication" key="2">
                   <Table
                     columns={columns_medication}
-                    dataSource={data_medication}
+                    dataSource={getMedicationData()}
                   />
                 </TabPane>
                 <TabPane tab="Appointments" key="3">

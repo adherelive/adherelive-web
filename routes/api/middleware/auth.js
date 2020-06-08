@@ -23,6 +23,11 @@ export default async (req, res, next) => {
             }
         }
 
+        const {accesstoken : aT = ""} = req.headers || {};
+        if(aT) {
+            accessToken = aT;
+        }
+
         if (accessToken) {
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
@@ -30,9 +35,11 @@ export default async (req, res, next) => {
             // const access_token = decodedAccessToken.accessToken;
 
             const {userId = "", accessToken : access_token = ""} = decodedAccessToken || {};
+            console.log("55555555555555555555555 ", userId);
             if(userId) {
                 next();
             }
+            console.log("66666666666666666666666 ", userId);
 
             // we will extract the type of signIn from db, user details and accordingly verify token.
             // for now we are commenting other for testing purpose.
@@ -81,21 +88,9 @@ export default async (req, res, next) => {
         next();
     }
     catch(err){
-        console.log("errr ===== ", err);
+        console.log("errr ===== ", err.name);
         let payload = {};
-        if(err.data.is_valid===false){
-            payload = {
-                code:400,
-                error: "Access Token Expired"
-            };
-        }
-        else if (err.response &&  err.response.data.error==="invalid_token"){
-            payload = {
-                code: 400,
-                error: "Access Token Expired"
-            };
-        }
-        else if (err.name === "TokenExpiredError") {
+        if (err.name === "TokenExpiredError") {
             payload = {
                 code: 401,
                 error: "session expired"

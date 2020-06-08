@@ -92,6 +92,7 @@ class ProxySdk extends EventEmitter {
   };
 
   scheduleEvent = async ({ data }) => {
+    console.log("\n HERE \n");
     try {
       const {
         _id,

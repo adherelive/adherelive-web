@@ -10,10 +10,10 @@ import repeatTypeField from "./repeatType";
 import { REPEAT_TYPE, EVENT_ACTION } from "../../../../constant";
 
 const { Item: FormItem } = Form;
-const FIELD_NAME = "startDate";
+const FIELD_NAME = "start_date";
 
 class StartDate extends Component {
-  openCalendar = e => {
+  openCalendar = (e) => {
     e.preventDefault();
     const datePicker = window.document.getElementsByClassName(FIELD_NAME)[0];
 
@@ -28,9 +28,9 @@ class StartDate extends Component {
     }
   };
 
-  getParentNode = t => t.parentNode;
+  getParentNode = (t) => t.parentNode;
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialValue = () => {
     const { purpose, event = {} } = this.props;
@@ -43,47 +43,56 @@ class StartDate extends Component {
     return initialValue;
   };
 
-  onBlur = date => () => {
+  onBlur = (date) => () => {
     this.props.adjustEventOnStartDateChange(date);
+  };
+
+  calendarComp = () => {
+    return (
+      <div className="flex justify-center align-center">
+        <img src={calendar} alt="calender icon" className="w20" />
+      </div>
+    );
   };
 
   render() {
     const {
       form: { getFieldDecorator, getFieldValue },
       disabledStartDate,
-      purpose
+      purpose,
     } = this.props;
-    const { formatMessage, openCalendar, getInitialValue } = this;
+    const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
     const repeat = getFieldValue(repeatTypeField.field_name);
 
     const value = getFieldValue(FIELD_NAME);
 
     return (
-      <div className="flex flex-grow-1 row align-items-center iqvia-date-picker">
-        <div className="full-width pr8">
+      <div className="flex flex-grow-1 row align-items-center">
+        <div className="pr8 wp100">
           <span className="form-label">From</span>
-          <FormItem>
+          <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
-              initialValue: getInitialValue()
+              initialValue: getInitialValue(),
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME}`}
+                className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}
                 disabledDate={disabledStartDate}
-                suffixIcon={null}
+                suffixIcon={calendarComp()}
+                allowClear={false}
                 onBlur={this.onBlur(value)}
                 getCalendarContainer={this.getParentNode}
                 popupStyle={{ left: 0, backgroundColor: "black" }}
               />
             )}
-            <img
-              alt=""
-              className="calendar clickable new-calendar"
-              onClick={openCalendar}
-              src={calendar}
-            />
+            {/*<img*/}
+            {/*  alt=""*/}
+            {/*  className="calendar clickable new-calendar"*/}
+            {/*  onClick={openCalendar}*/}
+            {/*  src={calendar}*/}
+            {/*/>*/}
           </FormItem>
         </div>
       </div>
@@ -95,5 +104,5 @@ const Field = injectIntl(StartDate);
 
 export default {
   field_name: FIELD_NAME,
-  render: props => <Field {...props} />
+  render: (props) => <Field {...props} />,
 };

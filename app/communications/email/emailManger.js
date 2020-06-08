@@ -247,7 +247,7 @@ class EmailManger {
         .createEmailBodyTemplate()
         .createEmailTitle()
         .createEmailBodyTemplate(templateString)
-        .createSourceAddress("patientEngagement@iqvia.com")
+        .createSourceAddress("patientEngagement@adhere.com")
         .createReplyToAddress(process.config.REPLY_TO_ADDRESS)
         .build();
       console.log("Transformer Returning ====================>    ", content);

@@ -1,6 +1,9 @@
-import {DRAWER} from "../../constant";
-import {ADD_APPOINTMENT_COMPLETE, ADD_APPOINTMENT_FAILED} from "../appointments";
-
+import { DRAWER } from "../../constant";
+import {
+  ADD_APPOINTMENT_COMPLETE,
+  ADD_APPOINTMENT_FAILED
+} from "../appointments";
+import { ADD_MEDICATION_REMINDER_COMPLETE } from "../medications";
 
 const OPEN_DRAWER = "OPEN_DRAWER";
 const CLOSE_DRAWER = "CLOSE_DRAWER";
@@ -46,19 +49,20 @@ export const close = () => {
 };
 
 export default (state = intial_state, action) => {
-    const {type, data} = action;
-    switch (type) {
-        case OPEN_DRAWER:
-            return {
-                visible: true,
-                data
-            };
-        case ADD_APPOINTMENT_COMPLETE:
-        case CLOSE_DRAWER:
-            return {
-                visible: false
-            };
-        default:
-            return state;
-    }
+  const { type, data } = action;
+  switch (type) {
+    case OPEN_DRAWER:
+      return {
+        visible: true,
+        data
+      };
+    case ADD_APPOINTMENT_COMPLETE:
+    case ADD_MEDICATION_REMINDER_COMPLETE:
+    case CLOSE_DRAWER:
+      return {
+        visible: false
+      };
+    default:
+      return state;
+  }
 };

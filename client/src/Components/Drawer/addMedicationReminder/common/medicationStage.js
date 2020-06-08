@@ -78,7 +78,7 @@ class MedicationStage extends Component {
             showSearch
             autoComplete="off"
             optionFilterProp="children"
-            suffixIcon={DropDownIcon}
+            // suffixIcon={DropDownIcon}
             filterOption={(input, option) =>
               option.props.children
                 .toLowerCase()

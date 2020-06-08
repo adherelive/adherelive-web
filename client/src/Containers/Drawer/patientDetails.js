@@ -33,7 +33,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-      close: dispatch(close()),
+      close: () => dispatch(close()),
   };
 };
 

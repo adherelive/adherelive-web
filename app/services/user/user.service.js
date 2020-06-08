@@ -6,7 +6,17 @@ class UserService {
     constructor() {
     }
 
-    async getUser(id) {
+    async getAll() {
+        try {
+            const user = await userModel.findAll();
+            return user;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+
+    getUser = async (id) => {
         try {
             const user = await userModel.findOne({
                 where: {
@@ -55,6 +65,21 @@ class UserService {
         }
     }
 
+    updateEmail = async (email, id) => {
+        try {
+            const user = await userModel.update({
+               email,
+            }, {
+                where: {
+                    id
+                }
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    };
+
 }
 
-module.exports = new UserService();
+export default new UserService();

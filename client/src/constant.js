@@ -69,7 +69,7 @@ export const USER_CATEGORY = {
   DOCTOR: "doctor",
   PATIENT: "patient",
   PROGRAM_ADMIN: "programAdmin",
-  CARE_COACH: "careCoach",
+  CARE_TAKER: "care_taker",
   CHARITY_ADMIN: "charityAdmin",
   PHARMACY_ADMIN: "pharmacyAdmin"
 };
