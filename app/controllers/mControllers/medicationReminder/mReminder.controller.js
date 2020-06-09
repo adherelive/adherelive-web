@@ -6,7 +6,7 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   REPEAT_TYPE,
-  DAYS,
+  DAYS_MOBILE,
   MEDICATION_TIMING,
   DOSE_AMOUNT,
   DOSE_UNIT,
@@ -24,7 +24,7 @@ const KEY_CUSTOM_REPEAT_OPTIONS = "custom_repeat_options";
 
 const medicationReminderDetails = {
   [KEY_REPEAT_TYPE]: REPEAT_TYPE,
-  [KEY_DAYS]: DAYS,
+  [KEY_DAYS]: DAYS_MOBILE,
   [KEY_TIMING]: MEDICATION_TIMING,
   [KEY_DOSE]: DOSE_AMOUNT,
   [KEY_UNIT]: DOSE_UNIT,
@@ -57,6 +57,7 @@ class MobileMReminderController extends Controller {
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
+      const {text: doseUnit} = DOSE_UNIT[unit] || {};
       const {text, time} = MEDICATION_TIMING[when_to_take] || {};
       const whenToTake = `${text}(${time})`;
 
@@ -79,12 +80,12 @@ class MobileMReminderController extends Controller {
           medicine,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
-          repeat,
+          repeat: REPEAT_TYPE[repeat] || "weekly",
           repeat_days,
           repeat_interval,
           quantity,
           strength,
-          unit,
+          unit: doseUnit,
           when_to_take: whenToTake,
           medication_stage
         }

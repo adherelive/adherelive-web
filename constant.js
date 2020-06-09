@@ -51,7 +51,16 @@ export const THU = "Thu";
 export const FRI = "Fri";
 export const SAT = "Sat";
 
+export const SUNDAY = "Sunday";
+export const MONDAY = "Monday";
+export const TUESDAY = "Tuesday";
+export const WEDNESDAY = "Wednesday";
+export const THURSDAY = "Thursday";
+export const FRIDAY = "Friday";
+export const SATURDAY = "Saturday";
+
 export const DAYS = [SUN, MON, TUE, WED, THU, FRI, SAT];
+export const DAYS_MOBILE = [SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY];
 export const USER_STATUS = {
   ENROLLED: "ENROLLED",
   DISCHARGED: "DISCHARGED",
@@ -393,10 +402,17 @@ export const CUSTOM_REPEAT_OPTIONS = {
 
 export const DOSE_AMOUNT = ["2","8","100","200","500"];
 
-export const MG = "mg";
-export const IU = "IU";
+export const MG = "1";
+export const IU = "2";
 
-export const DOSE_UNIT = [MG, IU];
+export const DOSE_UNIT = {
+    [MG]: {
+        text: "mg"
+    },
+    [IU]: {
+        text:"IU"
+    }
+};
 
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
