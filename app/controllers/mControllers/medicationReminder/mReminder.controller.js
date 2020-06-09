@@ -48,7 +48,7 @@ class MobileMReminderController extends Controller {
         start_date,
         end_date,
         repeat,
-        repeat_days,
+        repeat_days = [],
         repeat_interval = 0,
         medicine_id,
         quantity,
@@ -65,6 +65,8 @@ class MobileMReminderController extends Controller {
       const {text, time} = MEDICATION_TIMING[when_to_take] || {};
       const whenToTake = `${text}(${time})`;
 
+      const repeatDays = repeat_days.map(day => day.substring(0,3));
+
       // const medicineDetails = await medicineService.getMedicineById();
       const medicine = "test medicine";
 
@@ -80,7 +82,7 @@ class MobileMReminderController extends Controller {
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat: REPEAT_TYPE[repeat] || "weekly",
-          repeat_days,
+          repeat_days: repeatDays,
           repeat_interval,
           quantity,
           strength,
