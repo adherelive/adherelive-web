@@ -4,14 +4,18 @@ import {injectIntl} from "react-intl";
 // import {formatMessage} from "react-intl/src/format";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import {Tabs, Button,Steps,Col,Select,Input,Upload, Modal } from "antd";
+import {Tabs, Button,Steps,Col,Select,Input,Upload, Modal,TimePicker,Icon,message } from "antd";
 import SideMenu from "./sidebar";
+import {REQUEST_TYPE} from '../../constant';
+import {getUploadURL} from '../../Helper/urls/user';
+import {doRequest} from '../../Helper/network';
+import plus from '../../Assets/images/plus.png';
+
+// const { RangePicker } = TimePicker;
 
 const { Step } = Steps;
 
 const { Option } = Select;
-const SUMMARY = "Summary";
-const WATCHLIST = "Watch list";
 
 const UploadSteps = ({ current, className }) => {
     const { Step } = Steps;
@@ -46,6 +50,10 @@ class Register extends Component {
             loading:false,
             education:{},
             educationKeys:[],
+            clinics:{},
+            clinicsKeys:[],
+            docs:[],
+            fileList:[],
             step:0
         };
     }
@@ -53,11 +61,17 @@ class Register extends Component {
     componentDidMount() {
     
         let key=uuid();
+        let key1=uuid();
         
         let education={};
         education[key]= {degree:"",college:"",year:"",photo:[]};
         let educationKeys = [key];
         this.setState({education,educationKeys});
+
+        let clinics={};
+        clinics[key1]= {name:"",location:"",startTime:{},endTime:{}};
+        let clinicsKeys = [key1];
+        this.setState({clinics,clinicsKeys});
     }
 
     getBase64=(img, callback)=> {
@@ -66,23 +80,15 @@ class Register extends Component {
         reader.readAsDataURL(img);
       }
 
-      getBase64file=(file)=> {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = error => reject(error);
-        });
-      }
 
       beforeUpload=(file) =>{
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
-        //   message.error('You can only upload JPG/PNG file!');
+          message.error('You can only upload JPG/PNG file!');
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-        //   message.error('Image must smaller than 2MB!');
+          message.error('Image must smaller than 2MB!');
         }
         return isJpgOrPng && isLt2M;
       }
@@ -94,8 +100,28 @@ class Register extends Component {
         let newEducationKeys=educationKeys;
         newEducation[key] = {degree:"",college:"",year:"",photo:[]};
         newEducationKeys.push(key);
-        console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
+        // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
         this.setState({education:newEducation,educationKeys:newEducationKeys});
+      }
+
+      addClinic=()=>{
+        let key=uuid();
+        let{clinics={},clinicsKeys=[]}=this.state;
+        let newClinics=clinics;
+        let newclinicsKeys=clinicsKeys;
+        newClinics[key] = {name:"",location:"",startTime:"",endTime:''};
+        newclinicsKeys.push(key);
+        // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newClinics[key],newclinicsKeys);
+        this.setState({clinics:newClinics,clinicsKeys:newclinicsKeys});
+      }
+
+      deleteClinic=(key)=>()=>{
+        let{clinics={},clinicsKeys=[]}=this.state;
+        let newClinics=clinics;
+        let newclinicsKeys=clinicsKeys;
+        delete newClinics[key];
+        newclinicsKeys.splice(newclinicsKeys.indexOf(key),1);
+        this.setState({clinics:newClinics,clinicsKeys:newclinicsKeys});
       }
 
       handleCancel = () => this.setState({ previewVisible: false });
@@ -111,11 +137,12 @@ class Register extends Component {
 
 
     handleChange = info => {
-        if (info.file.status === 'uploading') {
-          this.setState({ loading: true });
-          return;
-        }
-        if (info.file.status === 'done') {
+        console.log('HANDLE CHANGE CALLED',info);
+        // if (info.file.status === 'uploading') {
+        //   this.setState({ loading: true });
+        //   return;
+        // }
+        // if (info.file.status === 'done') {
           // Get this url from response in real world.
           this.getBase64(info.file.originFileObj, imageUrl =>
             this.setState({
@@ -123,17 +150,10 @@ class Register extends Component {
               loading: false,
             }),
           );
-        }
-      };
-
-      handleChangeList = key=> ({fileList}) =>{
-          console.log('FILE LISTTTTTTTT',fileList,key);
-
-          let{education={}}=this.state;
-          let newEducation=education;
-          newEducation[key].photo=fileList;
-        this.setState({ education:newEducation });
         };
+    //   };
+
+     
 
      
     setName = e => {
@@ -195,6 +215,38 @@ class Register extends Component {
         this.setState({education:newEducation});
     }
 
+
+    setClinicName = (key,e)=>{
+        let{clinics={}}=this.state;
+        let newClinics=clinics;
+        newClinics[key].name = e.target.value;
+        this.setState({clinics:newClinics});
+    }
+
+    setClinicLocation = (key,e)=>{
+        let{clinics={}}=this.state;
+        let newClinics=clinics;
+        newClinics[key].location = e.target.value;
+        this.setState({clinics:newClinics});
+    }
+
+    setClinicStartTime = key=>(time, timeString)=>{
+        console.log('TIMEEEEEEEEEEEEEEEEEEE',key,time,timeString)
+        let{clinics={}}=this.state;
+        let newClinics=clinics;
+        newClinics[key].startTime = time;
+        this.setState({clinics:newClinics});
+    }
+
+    setClinicEndTime = key=>(time, timeString)=>{
+        console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD',key,time,timeString)
+        let{clinics={}}=this.state;
+        let newClinics=clinics;
+        console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD22222',clinics,newClinics[key]);
+        newClinics[key].endTime = time;
+        this.setState({clinics:newClinics});
+    }
+
     onBackClick = ()=>{
         let{step=0}=this.state;
         step--;
@@ -225,95 +277,7 @@ class Register extends Component {
         return options;
     };
 
-    renderProfileForm=()=>{
-        const prefixSelector  =(
-          
-            <Select className="flex align-center h50"
-            onChange={this.setPrefix}>
-                {/* india */}
-                <Option value="91">+91</Option>
-                {/* us */}
-                <Option value="1">+1</Option>
-                {/* uk */}
-                <Option value="44">+44</Option>
-                {/* china */}
-                <Option value="86">+86</Option>
-                {/* japan */}
-                <Option value="81">+81</Option>
-                {/* germany */}
-                <Option value="49">+49</Option>
-                {/* france */}
-                <Option value="33">+33</Option>
-                {/* switzerland */}
-                <Option value="41">+41</Option>
-                {/* australia */}
-                <Option value="61">+61</Option>
-                {/* russia */}
-                <Option value="7">+7</Option>
-                {/* south africa */}
-                <Option value="27">+27</Option>
-                {/* pakistan */}
-                <Option value="9, 2">+92</Option>
-                {/* bangladesh */}
-                <Option value="880">+880</Option>
-            </Select>
-        );
-        const uploadButton = (
-            <div>
-              Upload
-            </div>
-          );
-          const { imageUrl } = this.state;
-        return(
-            <div className='form-block'>
-             <div className='form-headings'>Profile Type</div>
-                <Select className='form-inputs' onChange={this.setCategory}>
-                            {this.getCategoryOptions()}
-                        </Select>
-             <div className='form-headings'>Profile Picture</div>
-                <Upload
-                     name="avatar"
-                     listType="picture-card"
-                     className="avatar-uploader"
-                     showUploadList={false}
-                     action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                     beforeUpload={this.beforeUpload}
-                     onChange={this.handleChange}
-                       >
-                  {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-                </Upload>
-             <div className='form-headings'>Name</div>
-               <Input
-                    placeholder="Name"
-                    className={"form-inputs"}
-                    onChange={this.setName}
-                 />
-
-                        <div className='form-headings'>Phone number</div>
-                        <Input
-                            addonBefore={prefixSelector}
-                            placeholder="Phone number"
-                            className={"form-inputs"}
-                            onChange={this.setNumber}
-                        />
-
-             <div className='form-headings'>Email</div>
-                 <Input
-                    placeholder="email"
-                    className={"form-inputs"}
-                    onChange={this.email}
-                 />
-
-            <div className='form-headings'>City</div>
-                <Input
-                    placeholder="city"
-                    className={"form-inputs"}
-                    onChange={this.setCity}
-                 />
-
-            </div>
-        );
-    }
+  
 
 
     getGenderOptions = () => {
@@ -335,9 +299,113 @@ class Register extends Component {
         return options;
     };
 
-    handlePreview = async file => {
+  
+
+
+      onUploadComplete = ({ files = [] },key) => {
+        
+    
+
+    const { docs } = this.state;
+    this.setState({ docs: [...docs, ...files] }, () => {
+      const { docs, fileList,education } = this.state;
+      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE',docs.length,education[key].photo.length,education[key].photos);
+      if (docs.length === education[key].photo.length || docs.length+education[key].photos?education[key].photos.length:0=== education[key].photo.length) {
+        let newEducation=education;
+        newEducation[key].photos=docs;
+        // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE1111111',newEducation);
+        education[key].photo.forEach((item,index)=>{
+            item.status='done'
+        })
+        this.setState({
+          fileList:[],
+          docs: [],
+          education:newEducation
+        });
+        
+      }
+    });
+      };
+
+      customRequest = key=>({ file, filename, onError, onProgress, onSuccess }) => {
+        // const { onUploadComplete } = this;
+
+        console.log('FILEEE IN CUSTOM REQUESTTTT',file);
+        const { docs, fileList,education } = this.state;
+        setTimeout(() => {
+            education[key].photo.forEach((item,index)=>{
+                item.status='done'
+            })
+        },100);
+       
+        // let data = new FormData();
+        // data.append("files", file, file.name);
+        // doRequest({
+        
+        //   method: REQUEST_TYPE.POST,
+        //   data: data,
+        //   url: getUploadURL()
+        // }).then(response => {
+        //     console.log('FILEEEEEEEEEE',response,'             ',response.payload.data);
+        //   onUploadComplete(response.payload.data,key);
+        // });
+    
+        return {
+          abort() {}
+        };
+      };
+
+      handleChangeList = key=>info =>{
+          
+        const fileList = info.fileList;
+        let{education={}}=this.state;
+        let newEducation=education;
+        console.log('FILE LISTTTTTTTT',newEducation[key].photo,fileList);
+        fileList.forEach((item,index)=>{
+            let uid=item.uid;
+            let push= true;
+            newEducation[key].photo.forEach((pic,picindex)=>{
+                if(pic.uid===uid){
+                  push=false;
+                }
+            })
+            if(push){
+              newEducation[key].photo.push(item);
+            }
+        })
+      
+      this.setState({ education:newEducation});
+      };
+
+      handleRemoveList = key=>file =>{
+        
+        let{education={}}=this.state;
+        let newEducation=education;
+        let deleteIndex=-1;
+        console.log('FILE REMOVEEEEEEEEE',key,file);
+        newEducation[key].photo.forEach((pic,index)=>{
+            if(pic.uid==file.uid){
+                deleteIndex=index;
+            }
+        })
+       if(deleteIndex>-1){
+        newEducation[key].photo.splice(deleteIndex,1);
+       }
+       this.setState({education:newEducation});
+      };
+
+      getBase64File=(file)=> {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+        });
+      }
+
+      handlePreview = async file => {
         if (!file.url && !file.preview) {
-          file.preview = await this.getBase64file(file.originFileObj);
+          file.preview = await this.getBase64File(file.originFileObj);
         }
     
         this.setState({
@@ -347,59 +415,22 @@ class Register extends Component {
         });
       };
 
-
-      onUploadComplete = ({ files = [] }) => {
-        const { handleComplete} = this.props;
-       
-        const { docs } = this.state;
-        this.setState({ docs: [...docs, ...files] }, () => {
-          const { docs, fileList } = this.state;
-          if (docs.length === fileList.length) {
-            this.setState({
-              fileList: [],
-              docs: []
-            });
-            handleComplete(docs);
-          }
-        });
-      };
-
-      customRequest = ({ file, filename, onError, onProgress, onSuccess }) => {
-        const { onUploadComplete } = this;
-    
-        let data = new FormData();
-        data.append("files", file, file.name);
-    
-        doRequest({
-          onUploadProgress: onUploadProgress,
-          method: REQUEST_TYPE.POST,
-          data: data,
-          url: Common.getUploadURL()
-        }).then(response => {
-          onUploadComplete(response.payload.data);
-        });
-    
-        return {
-          abort() {}
-        };
-      };
-
-   
     renderEducation=()=>{
-        console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
-        let{education={},educationKeys=[],fileList=[]}=this.state;
-        console.log(" 23829823  ------------------>  ", JSON.stringify(education, null, 4));
-        console.log(" 23829823 Keys  ------------------>  ", educationKeys);
+        // console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
+        let{education={},educationKeys=[],fileList=[],previewImage='',previewTitle='',previewVisible=false}=this.state;
+        // console.log(" 23829823  ------------------>  ", JSON.stringify(education, null, 4));
+        // console.log(" 23829823 Keys  ------------------>  ", educationKeys);
 
         const uploadButton = (
             <div>
-              Upload
+              <img src= {plus} className={"w22 h22"}/>
             </div>
           );
         return(
             <div className='flex direction-column'>
            {educationKeys.map(key=>{
             let{photo=[]}=education[key];
+            console.log('PHOTOOOOOOOOOOOOOOO',photo);
                 return(
                     
                     <div key={key}>
@@ -433,17 +464,28 @@ class Register extends Component {
                   <div className='form-headings'>Photo</div>
                   <div className='qualification-photo-uploads'>
                   <Upload
-                //   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  multiple={true}
-                     listType="picture-card"
-                     className="avatar-uploader"
-                     showUploadList={false}
+                        multiple={true}
+                        className="avatar-uploader"
+                //      showUploadList={false}
                      fileList={photo}
-                     customRequest={customRequest}
+                     customRequest={this.customRequest(key)}
                      onChange={this.handleChangeList(key,fileList)}
+                     onRemove={this.handleRemoveList(key)}
+                listType="picture-card"
+                // fileList={fileList}
+                onPreview={this.handlePreview}
+                
                        >
                   {uploadButton}
                 </Upload>
+                <Modal
+          visible={previewVisible}
+          title={previewTitle}
+          footer={null}
+          onCancel={this.handleCancel}
+        >
+          <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        </Modal>
                 </div>
                 </div>
                 );
@@ -454,6 +496,172 @@ class Register extends Component {
 
     }
 
+    renderClinics=()=>{
+        console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
+        let{clinics={},clinicsKeys=[]}=this.state;
+        console.log(" 23829823  ------------------>  ", JSON.stringify(clinics, null, 4));
+        console.log(" 23829823 Keys  ------------------>  ", clinicsKeys);
+
+        const uploadButton = (
+            <div>
+              Upload
+            </div>
+          );
+        return(
+            <div className='flex direction-column'>
+           {clinicsKeys.map(key=>{
+                return(
+                    
+                    <div key={key}>
+                       {clinicsKeys.indexOf(key)>0 ? (
+                       <div className='wp100 flex justify-end'>
+                       <DeleteTwoTone
+                                className={"pointer align-self-end"}
+                                onClick={this.deleteClinic(key)}
+                                twoToneColor="#cc0000"
+                            />
+                       </div>
+                            ):null}
+              <div className='form-headings'>Name</div>
+                    <Input
+                       placeholder="Clinic name"
+                       className={"form-inputs"}
+                       onChange={e=>this.setClinicName(key,e)}
+                    />
+              <div className='form-headings'>Location</div>
+                 <Input
+                    placeholder="Location"
+                    className={"form-inputs"}
+                    onChange={e=>this.setClinicLocation(key,e)}
+                 />
+                 <div className='flex justify-space-between mb10'>
+                 <div className='flex direction-column'>
+              <div className='form-headings'>Start Time</div>
+              <TimePicker onChange={this.setClinicStartTime(key)}/>
+              </div>
+              <div className='flex direction-column'>
+              <div className='form-headings'>End Time</div>
+              <TimePicker onChange={this.setClinicEndTime(key)}/>
+              </div>
+              </div>
+                  </div>
+                );
+            })
+        }
+            </div>
+        );
+
+    }
+
+    uploadDp = file => {
+        
+
+        console.log('FILEEE IN CUSTOM REQUESTTTT',file);
+        // file.status='done';
+        // return file;
+        const { imageUrl } = this.state;
+        // setTimeout(() => {
+            
+        //     imageUrl.status='done'
+            
+        // },100);
+       
+    
+        return {
+          abort() {}
+        };
+      };
+
+    renderProfileForm=()=>{
+        const prefixSelector  =(
+          
+            <Select className="flex align-center h50 w70"
+            onChange={this.setPrefix}>
+                {/* australia */}
+                <Option value="61"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+61</div></div></Option>
+                {/* india */}
+                <Option value="91"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+91</div></div></Option>
+                {/* us */}
+                <Option value="1"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+1</div></div></Option>
+                {/* uk */}
+                <Option value="44"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+44</div></div></Option>
+                {/* china */}
+                <Option value="86"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+86</div></div></Option>
+                {/* japan */}
+                <Option value="81"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+81</div></div></Option>
+                {/* germany */}
+                <Option value="49"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+49</div></div></Option>
+                {/* france */}
+                <Option value="33"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+33</div></div></Option>
+                {/* switzerland */}
+                <Option value="41"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+41</div></div></Option>
+                
+                {/* russia */}
+                <Option value="7"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+7</div></div></Option>
+                {/* south africa */}
+                <Option value="27"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+27</div></div></Option>
+                {/* pakistan */}
+                <Option value="92"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+92</div></div></Option>
+                {/* bangladesh */}
+                <Option value="880"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+880</div></div></Option>
+            </Select>
+        );
+        const uploadButton = (
+            <div>
+              <img src= {plus} className={"w22 h22"}/>
+            </div>
+          );
+          const { imageUrl } = this.state;
+        return(
+            <div className='form-block'>
+             <div className='form-headings'>Profile Type</div>
+                <Select className='form-inputs' onChange={this.setCategory}>
+                            {this.getCategoryOptions()}
+                        </Select>
+             <div className='form-headings'>Profile Picture</div>
+             <Upload
+                 name="avatar"
+                 listType="picture-card"
+                 className="avatar-uploader"
+                 showUploadList={false}
+                 action={this.uploadDp}
+                 beforeUpload={this.beforeUpload}
+                 onChange={this.handleChange}
+                  >
+        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+      </Upload>
+             <div className='form-headings'>Name</div>
+               <Input
+                    placeholder="Name"
+                    className={"form-inputs"}
+                    onChange={this.setName}
+                 />
+
+                        <div className='form-headings'>Phone number</div>
+                        <Input
+                            addonBefore={prefixSelector}
+                            placeholder="Phone number"
+                            className={"form-inputs"}
+                            onChange={this.setNumber}
+                        />
+
+             <div className='form-headings'>Email</div>
+                 <Input
+                    placeholder="email"
+                    className={"form-inputs"}
+                    onChange={this.email}
+                 />
+
+            <div className='form-headings'>City</div>
+                <Input
+                    placeholder="city"
+                    className={"form-inputs"}
+                    onChange={this.setCity}
+                 />
+
+            </div>
+        );
+    }
     renderQualificationForm=()=>{
         return(
             <div className='form-block'>
@@ -469,7 +677,7 @@ class Register extends Component {
                         </Select>
             
             <div className='form-category-headings'>Education</div>
-            <div className='pointer align-self-end wp60 fs16 medium tar' onClick={this.addEducation}>Add Education</div>
+            <div className='pointer align-self-end wp60 fs16 medium tar' onClick={this.addEducation}>Add More</div>
             {this.renderEducation()}
              <div className='form-category-headings'>Registration details</div>
              <div className='form-headings'>Registration number</div>
@@ -500,33 +708,9 @@ class Register extends Component {
     renderClinicForm=()=>{
         return(
             <div className='form-block'>
-
-            <div className='form-headings'>Speciality</div>
-               <Input
-                    placeholder="Speciality"
-                    className={"form-inputs"}
-                    onChange={this.setSpeciality}
-                 />
-             <div className='form-headings'>Gender</div>
-             <Select className=".form-inputs" onChange={this.setGender}>
-                            {this.getGenderOptions()}
-                        </Select>
-             
-
-             <div className='form-headings'>Email</div>
-                 <Input
-                    placeholder="email"
-                    className={"form-inputs"}
-                    onChange={this.email}
-                 />
-
-            <div className='form-headings'>City</div>
-                <Input
-                    placeholder="city"
-                    className={"form-inputs"}
-                    onChange={this.setCity}
-                 />
-
+             <div className='form-category-headings'>Clinic</div>
+            <div className='pointer align-self-end wp60 fs16 medium tar' onClick={this.addClinic}>Add More</div>
+            {this.renderClinics()}
             </div>
         );
     }
@@ -537,7 +721,7 @@ class Register extends Component {
     
 
     render() {
-        // console.log("19273 here --> dashboard",this.state);
+        console.log("19273 here --> dashboard",this.state);
         const {graphs} = this.props;
         // const {formatMessage, renderChartTabs} = this;
          const{step}=this.state;

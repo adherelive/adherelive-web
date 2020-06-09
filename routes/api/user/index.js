@@ -3,7 +3,9 @@ const router = express.Router();
 // const userController = require("../../../app/controllers/user/user.controller");
 import Authenticate from "../middleware/auth";
 import userController from "../../../app/controllers/user/user.controller";
-
+const multer = require("multer");
+var storage = multer.memoryStorage();
+var upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.post(
     "/sign-in",
@@ -33,6 +35,7 @@ router.post(
 
 router.post(
     "/upload",
+    upload.single("files"),
     userController.uploadImage
 );
 

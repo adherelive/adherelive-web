@@ -8,6 +8,7 @@ import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
 import Log from "../../libs/log";
 
+
 router.use(async function(req, res, next) {
   try {
     const { query: { m } = {} } = req;

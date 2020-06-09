@@ -6,7 +6,7 @@ const chalk = require("chalk");
 import bcrypt from "bcrypt";
 
 import Log from "../../../libs/log";
-
+import fs from "fs";
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
 import userWrapper from "../../ApiWrapper/user";
@@ -19,6 +19,7 @@ import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
 import minioService from "../../../app/services/minio/minio.service";
+import md5 from "js-md5";
 
 class UserController extends Controller {
   constructor() {
@@ -355,28 +356,46 @@ class UserController extends Controller {
   };
 
   uploadImage = async (req, res) => {
+    const {userDetails, body} = req;
+      const {userId = "3"} = userDetails || {};
+      console.log('BODYYYYYYYYYYYYYYYY',req.file);
+      const file=req.file;
+      const fileExt= file.originalname.replace(/\s+/g, '');
     try {
+      
       await minioService.createBucket();
-      const fileStream = fs.createReadStream(profile_pic);
+      // const fileStream = fs.createReadStream(req.file);
+
+      const imageName = md5(`${userId}-education-pics`);
+      // const fileExt = "";
+      
       let hash = md5.create();
       hash.update(userId);
       hash.hex();
       hash = String(hash);
-      const folder = "doctors";
-      const file_name = hash.substring(4) + "-Report." + fileExt;
+      const folder = "adhere";
+      // const file_name = hash.substring(4) + "_Education_"+fileExt;
+      const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
       const metaData = {
         "Content-Type":
             "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     };
-    const fileUrl = folder + "/" + file_name;
-    await minioService.saveBufferObject(fileStream, fileUrl, metaData);
+    const fileUrl = folder+ "/" +file_name;
+    await minioService.saveBufferObject(file.buffer, file_name, metaData);
 
-    console.log("file urlll: ", process.config.minio.MINI);
-    let files = [fileUrl];
-    return files;
+    // console.log("file urlll: ", process.config.minio.MINI);
+    const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
+    let files = [file_link];
+    console.log("Uplaoded File Url ---------------------->  ", file_link);
+    console.log("User Controllers =------------------->   ", files);
+    //const resume_link = process.config.BASE_DOC_URL + files[0]
+    //
+    return this.raiseSuccess(res, 200, {
+      files:files
+  }, "files uploaded successfully"); 
 
     } catch (error) {
-      console.log("SIGN OUT CATCH ERROR ", error);
+      console.log("FILE UPLOAD CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
