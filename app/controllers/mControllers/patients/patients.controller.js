@@ -67,6 +67,8 @@ class MPatientController extends Controller {
             const file_name = hash.substring(4) + "/" + imageName + "." + extension;
             // const fileUrl = "/" + file_name;
 
+            console.log("9139210 FILE ----=====---> ", file);
+
             await minioService.saveBufferObject(file, file_name);
             profilePic = file_name;
           }

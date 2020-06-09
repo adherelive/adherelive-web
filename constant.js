@@ -1,46 +1,46 @@
 export const ACTION_TYPE = {
-    FOLLOWUP: "followup",
-    MEDICATION: "medication",
-    EXERCISE: "exercise",
-    DIET: "diet",
-    MATERIAL_DELIVERY: "material_delivery"
+  FOLLOWUP: "followup",
+  MEDICATION: "medication",
+  EXERCISE: "exercise",
+  DIET: "diet",
+  MATERIAL_DELIVERY: "material_delivery"
 };
 
 export const ACTIVITY_TYPE = {
-    FOLLOWUP: "followup",
-    MEDICATION: "medication",
+  FOLLOWUP: "followup",
+  MEDICATION: "medication"
 };
 
 export const EVENT_TYPE = {
-    APPOINTMENT: "appointment",
-    REMINDER: "reminder",
-    ADVERSE_EVENT: "adverse",
-    ARTICLE: "article",
-    MEDICATION_REMINDER: "medication-reminder"
+  APPOINTMENT: "appointment",
+  REMINDER: "reminder",
+  ADVERSE_EVENT: "adverse",
+  ARTICLE: "article",
+  MEDICATION_REMINDER: "medication-reminder"
 };
 
 export const VITALFIELD = {
-    TEMPERATURE_UNIT: "temperatureUnit",
-    TEMPERATURE: "temperature",
-    RESPIRATION_RATE: "respirationRate",
-    PULSE: "pulse",
-    BLOOD_PRESSURE: "bloodPressure",
-    TEMPERATURE_UNIT_C: "c",
-    TEMPERATURE_UNIT_F: "f"
+  TEMPERATURE_UNIT: "temperatureUnit",
+  TEMPERATURE: "temperature",
+  RESPIRATION_RATE: "respirationRate",
+  PULSE: "pulse",
+  BLOOD_PRESSURE: "bloodPressure",
+  TEMPERATURE_UNIT_C: "c",
+  TEMPERATURE_UNIT_F: "f"
 };
 
 export const ACTIVITY_MODE = {
-    CALL: "call",
-    VISIT: "visit",
-    CHAT: "chat"
+  CALL: "call",
+  VISIT: "visit",
+  CHAT: "chat"
 };
 
 export const REPEAT_TYPE = {
-    NONE: "none",
-    DAILY: "daily",
-    WEEKLY: "weekly",
-    MONTHLY: "monthly",
-    YEARLY: "yearly"
+  NONE: "none",
+  DAILY: "daily",
+  WEEKLY: "weekly",
+  MONTHLY: "monthly",
+  YEARLY: "yearly"
 };
 
 export const SUN = "Sun";
@@ -53,334 +53,405 @@ export const SAT = "Sat";
 
 export const DAYS = [SUN, MON, TUE, WED, THU, FRI, SAT];
 export const USER_STATUS = {
-    ENROLLED: "ENROLLED",
-    DISCHARGED: "DISCHARGED",
-    INACTIVE: "INACTIVE",
-    DROPPED: "DROPPED"
+  ENROLLED: "ENROLLED",
+  DISCHARGED: "DISCHARGED",
+  INACTIVE: "INACTIVE",
+  DROPPED: "DROPPED"
 };
 
 export const SEVERITY = {
-    MILD: "MILD",
-    MODERATE: "MODERATE",
-    SEVERE: "SEVERE",
-    VERY_SEVERE: "VERY_SEVERE",
-    FATAL: "FATAL"
+  MILD: "MILD",
+  MODERATE: "MODERATE",
+  SEVERE: "SEVERE",
+  VERY_SEVERE: "VERY_SEVERE",
+  FATAL: "FATAL"
 };
 
 export const USER_CATEGORY = {
-    DOCTOR: "doctor",
-    PATIENT: "patient",
-    PROVIDER: "provider",
-    ADMIN: "admin",
-    CARE_TAKER: "care_taker"
+  DOCTOR: "doctor",
+  PATIENT: "patient",
+  PROVIDER: "provider",
+  ADMIN: "admin",
+  CARE_TAKER: "care_taker"
 };
 
 export const REQUEST_TYPE = {
-    POST: "post",
-    GET: "get",
-    PUT: "put",
-    DELETE: "delete"
+  POST: "post",
+  GET: "get",
+  PUT: "put",
+  DELETE: "delete"
 };
 
 export const EVENT_IS = {
-    CREATED: "CREATED",
-    CANCEL: "CANCEL",
-    CANCEL_ALL: "CANCEL_ALL",
-    RESCHEDULED: "RESCHEDULED",
-    PRIOR: "PRIOR",
-    START: "START",
-    PASSED: "PASSED",
-    COMPLETE: "COMPLETE",
-    MARKINCOMPLETE: "MARKINCOMPLETE",
-    UPDATED: "UPDATED",
-    SHARE: "SHARE",
-    DELETE: "DELETE",
-    APPROVED: "APPROVED"
+  CREATED: "CREATED",
+  CANCEL: "CANCEL",
+  CANCEL_ALL: "CANCEL_ALL",
+  RESCHEDULED: "RESCHEDULED",
+  PRIOR: "PRIOR",
+  START: "START",
+  PASSED: "PASSED",
+  COMPLETE: "COMPLETE",
+  MARKINCOMPLETE: "MARKINCOMPLETE",
+  UPDATED: "UPDATED",
+  SHARE: "SHARE",
+  DELETE: "DELETE",
+  APPROVED: "APPROVED"
 };
 
 export const ACTIVITY_LOG_STATUS = {
-    PENDING: "pending",
-    CANCELLED: "cancelled",
-    COMPLETED: "completed",
-    EXPIRED: "expired"
+  PENDING: "pending",
+  CANCELLED: "cancelled",
+  COMPLETED: "completed",
+  EXPIRED: "expired"
 };
 
 export const DEFAULT = "default";
 
 export const PARTICIPANTS_SURVEY_STATUS = {
-    COMPLETED: "COMPLETED"
+  COMPLETED: "COMPLETED"
 };
 
 export const RESOURCE = {
-    DOCTORS: "doctors",
-    PATIENTS: "patients",
-    CARE_COACHS: "careCoachs",
-    PROGRAM_ADMINS: "programAdmins",
-    EVENTS: "events",
-    PROGRAMS: "programs",
-    SURVEYS: "surveyS"
+  DOCTORS: "doctors",
+  PATIENTS: "patients",
+  CARE_COACHS: "careCoachs",
+  PROGRAM_ADMINS: "programAdmins",
+  EVENTS: "events",
+  PROGRAMS: "programs",
+  SURVEYS: "surveyS"
 };
 
 export const PERMISSIONS = {
-    CREATE: "create",
-    UPDATE: "update",
-    VIEW: "view",
-    INVITE: "invite",
-    CANCEL: "cancel",
-    VERIFY: "verify",
-    SEND: "send",
-    END: "end",
-    DISCHARGE: "discharge"
+  CREATE: "create",
+  UPDATE: "update",
+  VIEW: "view",
+  INVITE: "invite",
+  CANCEL: "cancel",
+  VERIFY: "verify",
+  SEND: "send",
+  END: "end",
+  DISCHARGE: "discharge"
 };
 
 export const GRANTS = {
-    PROGRAM: {
-        CREATE: "create_programs",
-        UPDATE: "update_programs",
-        VIEW: "view_programs",
-        INVITE: "invite_programs"
-    },
-    EVENT: {
-        CREATE: "create_events",
-        UPDATE: "update_events",
-        VIEW: "view_events",
-        CANCEL: "cancel_events"
-    },
-    PASSWORD: {
-        UPDATE: "update_passwords"
-        //VIEW: "view_password",
-    },
-    USERS: {
-        VIEW_PATIENT: "view_patients",
-        UPDATE_PATIENT: "update_patients",
-        VIEW_DOCTOR: "view_doctors",
-        UPDATE_DOCTOR: "update_doctors",
-        UPDATE_CARE_COACH: "update_careCoaches",
-        VERIFY_PATIENT: "verify_patients",
-        DISCHARGE_PATIENT: "discharge_patients"
-    },
-    MEDICATION: {
-        CREATE: "create_medications",
-        UPDATE: "update_medications",
-        VIEW: "view_medications"
-    },
-    ADVERSE_EVENT: {
-        CREATE: "create_adverseEvents",
-        VIEW: "view_adverseEvents"
-    },
-    PRODUCT: {
-        CREATE: "create_products",
-        UPDATE: "update_products",
-        VIEW: "view_products"
-    },
-    INSURANCE_PROVIDER: {
-        VIEW: "view_insuranceProviders",
-        UPDATE: "update_insuranceProviders"
-    },
-    HOSPITAL: {
-        VIEW: "view_hospitals",
-        UPDATE: "update_hospitals"
-    },
-    TWILIO: {
-        CREATE: "create_twilios", //Create API gives us token no need for View Permission
-        UPDATE: "update_twilios"
-    },
-    SURVEY: {
-        CREATE: "create_surveys",
-        UPDATE: "update_surveys",
-        VIEW: "view_surveys",
-        END: "end_surveys"
-    },
-    OTP: {
-        SEND: "send_otps",
-        VERIFY: "verify_otps"
-    }
+  PROGRAM: {
+    CREATE: "create_programs",
+    UPDATE: "update_programs",
+    VIEW: "view_programs",
+    INVITE: "invite_programs"
+  },
+  EVENT: {
+    CREATE: "create_events",
+    UPDATE: "update_events",
+    VIEW: "view_events",
+    CANCEL: "cancel_events"
+  },
+  PASSWORD: {
+    UPDATE: "update_passwords"
+    //VIEW: "view_password",
+  },
+  USERS: {
+    VIEW_PATIENT: "view_patients",
+    UPDATE_PATIENT: "update_patients",
+    VIEW_DOCTOR: "view_doctors",
+    UPDATE_DOCTOR: "update_doctors",
+    UPDATE_CARE_COACH: "update_careCoaches",
+    VERIFY_PATIENT: "verify_patients",
+    DISCHARGE_PATIENT: "discharge_patients"
+  },
+  MEDICATION: {
+    CREATE: "create_medications",
+    UPDATE: "update_medications",
+    VIEW: "view_medications"
+  },
+  ADVERSE_EVENT: {
+    CREATE: "create_adverseEvents",
+    VIEW: "view_adverseEvents"
+  },
+  PRODUCT: {
+    CREATE: "create_products",
+    UPDATE: "update_products",
+    VIEW: "view_products"
+  },
+  INSURANCE_PROVIDER: {
+    VIEW: "view_insuranceProviders",
+    UPDATE: "update_insuranceProviders"
+  },
+  HOSPITAL: {
+    VIEW: "view_hospitals",
+    UPDATE: "update_hospitals"
+  },
+  TWILIO: {
+    CREATE: "create_twilios", //Create API gives us token no need for View Permission
+    UPDATE: "update_twilios"
+  },
+  SURVEY: {
+    CREATE: "create_surveys",
+    UPDATE: "update_surveys",
+    VIEW: "view_surveys",
+    END: "end_surveys"
+  },
+  OTP: {
+    SEND: "send_otps",
+    VERIFY: "verify_otps"
+  }
 };
 
 export const NOTIFICATION_VERB = {
-    APPOINTMENT: "appointment",
-    APPOINTMENT_CREATE: "APPOINTMENT_CREATE",
-    APPOINTMENT_UPDATE: "APPOINTMENT_UPDATE",
-    APPOINTMENT_EDIT_NOTES: "APPOINTMENT_EDIT_NOTES",
-    APPOINTMENT_START: "APPOINTMENT_START",
-    APPOINTMENT_PRIOR: "APPOINTMENT_PRIOR",
-    APPOINTMENT_DELETE: "APPOINTMENT_DELETE",
-    APPOINTMENT_DELETE_ALL: "APPOINTMENT_DELETE_ALL",
-    REMINDER: "reminder",
-    REMINDER_CREATE: "REMINDER_CREATE",
-    REMINDER_UPDATE: "REMINDER_UPDATE",
-    REMINDER_START: "REMINDER_START",
-    REMINDER_DELETE: "REMINDER_DELETE",
-    REMINDER_DELETE_ALL: "REMINDER_DELETE_ALL",
-    REMINDER_EDIT_NOTES: "REMINDER_EDIT_NOTES",
-    MEDICATION_REMINDER: "medication-reminder",
-    MEDICATION_REMINDER_CREATE: "MEDICATION_REMINDER_CREATE",
-    MEDICATION_REMINDER_UPDATE: "MEDICATION_REMINDER_UPDATE",
-    MEDICATION_REMINDER_START: "MEDICATION_REMINDER_START",
-    MEDICATION_REMINDER_DELETE: "MEDICATION_REMINDER_DELETE",
-    MEDICATION_REMINDER_DELETE_ALL: "MEDICATION_REMINDER_DELETE_ALL",
-    MEDICATION_REMINDER_EDIT_NOTES: "MEDICATION_REMINDER_EDIT_NOTES",
-    SURVEY: "survey",
-    SURVEY_CREATE: "SURVEY_CREATE",
-    SURVEY_UPDATE: "survey update",
-    ADVERSE_EVENT: "adverse",
-    ADVERSE_EVENT_CREATE: "ADVERSE_EVENT_CREATE",
-    VITALS: "vitals",
-    VITALS_UPDATE: "VITALS_UPDATE",
-    BASIC: "basic",
-    BASIC_UPDATE: "BASIC_UPDATE",
-    CLINICAL_READING: "clinical_reading",
-    CLINICAL_READING_UPDATE: "CLINICAL_READING_UPDATE",
-    CLINICAL_READING_DELETE: "CLINICAL_READING_DELETE",
-    CLINICAL_READING_CREATE: "CLINICAL_READING_CREATE",
-    MEDICATION: "medication",
-    MEDICATION_UPDATE: "MEDICATION_UPDATE",
-    MEDICATION_CREATE: "MEDICATION_CREATE",
-    MEDICATION_DELETE: "MEDICATION_DELETE",
-    ARTICLE: "article",
-    ARTICLE_SHARE: "ARTICLE_SHARE",
-    ARTICLE_UPDATE: "article update",
-    PRESCRIPTION: "prescription",
-    PRESCRIPTION_CREATE: "prescription create",
-    PRESCRIPTION_UPDATE: "prescription update",
-    PROGRAM: "program",
-    PROGRAM_CREATE: "program create",
-    PROGRAM_UPDATE: "program update",
-    HOSPITALISATION: "hospitalisation",
-    HOSPITALISATION_CREATE: "HOSPITALISATION_CREATE",
-    BENEFIT_DOCS_VERIFIED: "BENEFIT_DOCS_VERIFIED",
-    CHARITY_APPROVAL: "CHARITY_APPROVAL",
-    MRL_GENERATION: "MRL_GENERATION"
+  APPOINTMENT: "appointment",
+  APPOINTMENT_CREATE: "APPOINTMENT_CREATE",
+  APPOINTMENT_UPDATE: "APPOINTMENT_UPDATE",
+  APPOINTMENT_EDIT_NOTES: "APPOINTMENT_EDIT_NOTES",
+  APPOINTMENT_START: "APPOINTMENT_START",
+  APPOINTMENT_PRIOR: "APPOINTMENT_PRIOR",
+  APPOINTMENT_DELETE: "APPOINTMENT_DELETE",
+  APPOINTMENT_DELETE_ALL: "APPOINTMENT_DELETE_ALL",
+  REMINDER: "reminder",
+  REMINDER_CREATE: "REMINDER_CREATE",
+  REMINDER_UPDATE: "REMINDER_UPDATE",
+  REMINDER_START: "REMINDER_START",
+  REMINDER_DELETE: "REMINDER_DELETE",
+  REMINDER_DELETE_ALL: "REMINDER_DELETE_ALL",
+  REMINDER_EDIT_NOTES: "REMINDER_EDIT_NOTES",
+  MEDICATION_REMINDER: "medication-reminder",
+  MEDICATION_REMINDER_CREATE: "MEDICATION_REMINDER_CREATE",
+  MEDICATION_REMINDER_UPDATE: "MEDICATION_REMINDER_UPDATE",
+  MEDICATION_REMINDER_START: "MEDICATION_REMINDER_START",
+  MEDICATION_REMINDER_DELETE: "MEDICATION_REMINDER_DELETE",
+  MEDICATION_REMINDER_DELETE_ALL: "MEDICATION_REMINDER_DELETE_ALL",
+  MEDICATION_REMINDER_EDIT_NOTES: "MEDICATION_REMINDER_EDIT_NOTES",
+  SURVEY: "survey",
+  SURVEY_CREATE: "SURVEY_CREATE",
+  SURVEY_UPDATE: "survey update",
+  ADVERSE_EVENT: "adverse",
+  ADVERSE_EVENT_CREATE: "ADVERSE_EVENT_CREATE",
+  VITALS: "vitals",
+  VITALS_UPDATE: "VITALS_UPDATE",
+  BASIC: "basic",
+  BASIC_UPDATE: "BASIC_UPDATE",
+  CLINICAL_READING: "clinical_reading",
+  CLINICAL_READING_UPDATE: "CLINICAL_READING_UPDATE",
+  CLINICAL_READING_DELETE: "CLINICAL_READING_DELETE",
+  CLINICAL_READING_CREATE: "CLINICAL_READING_CREATE",
+  MEDICATION: "medication",
+  MEDICATION_UPDATE: "MEDICATION_UPDATE",
+  MEDICATION_CREATE: "MEDICATION_CREATE",
+  MEDICATION_DELETE: "MEDICATION_DELETE",
+  ARTICLE: "article",
+  ARTICLE_SHARE: "ARTICLE_SHARE",
+  ARTICLE_UPDATE: "article update",
+  PRESCRIPTION: "prescription",
+  PRESCRIPTION_CREATE: "prescription create",
+  PRESCRIPTION_UPDATE: "prescription update",
+  PROGRAM: "program",
+  PROGRAM_CREATE: "program create",
+  PROGRAM_UPDATE: "program update",
+  HOSPITALISATION: "hospitalisation",
+  HOSPITALISATION_CREATE: "HOSPITALISATION_CREATE",
+  BENEFIT_DOCS_VERIFIED: "BENEFIT_DOCS_VERIFIED",
+  CHARITY_APPROVAL: "CHARITY_APPROVAL",
+  MRL_GENERATION: "MRL_GENERATION"
 };
 
 export const NOTIFICATION_STAGES = {
-    CREATE: "Create",
-    START: "Start",
-    RESCHEDULED: "Rescheduled",
-    UPDATE: "Update",
-    PRIOR: "Prior",
-    DELETE: "Delete",
-    SHARE: "Share",
-    EDIT_NOTES: "Edit_Notes",
-    APPROVED: "Approve"
-};
-
-export const CONTRIBUTION_TYPE = {
-    OOP: "OOP",
-    COPAY: "Copay",
-    INSURANCE: "Insurance",
-    CHARITY: "CharityApplied"
-};
-
-export const BENEFITPLAN_STATUS = {
-    PENDING: "Pending",
-    COMPLETED: "Completed",
-    APPROVED: "Approved",
-    REJECTED: "Rejected"
+  CREATE: "Create",
+  START: "Start",
+  RESCHEDULED: "Rescheduled",
+  UPDATE: "Update",
+  PRIOR: "Prior",
+  DELETE: "Delete",
+  SHARE: "Share",
+  EDIT_NOTES: "Edit_Notes",
+  APPROVED: "Approve"
 };
 
 export const NOTIFICATION_URLS = {
-    EVENTS: "/event",
-    BASIC: "/basic",
-    VITAL: "/vital",
-    CLINICAL_READING: "/clinical-reading",
-    MEDICATION: "/medication",
-    ADVERSE_EVENT: "/adverse-event",
-    HOSPITALIZATION: "/hospitalization",
-    SURVEY: "/survey",
-    ARTICLE: "/article",
-    SIGN_UP: "sign-up",
-    FORGOT_PASSWORD: "forgot-password"
+  EVENTS: "/event",
+  BASIC: "/basic",
+  VITAL: "/vital",
+  CLINICAL_READING: "/clinical-reading",
+  MEDICATION: "/medication",
+  ADVERSE_EVENT: "/adverse-event",
+  HOSPITALIZATION: "/hospitalization",
+  SURVEY: "/survey",
+  ARTICLE: "/article",
+  SIGN_UP: "sign-up",
+  FORGOT_PASSWORD: "forgot-password"
 };
 
 export const OPTION_TYPE = {
-    TEXT: "TEXT",
-    STAR: "STAR",
-    RADIO: "RADIO",
-    CHECKBOX: "CHECKBOX"
+  TEXT: "TEXT",
+  STAR: "STAR",
+  RADIO: "RADIO",
+  CHECKBOX: "CHECKBOX"
 };
 
 export const FIELD_TYPE = {
-    INPUT: "input",
-    RADIO: "radio",
-    DATE: "date"
+  INPUT: "input",
+  RADIO: "radio",
+  DATE: "date"
 };
 
 export const DB_TABLES = {
-    USERS: "users",
-    DOCTORS: "doctors",
-    PATIENTS: "patients",
-    APPOINTMENTS: "appointments",
-    SCHEDULE_EVENTS: "schedule_events",
-    PATIENT_CARE_TAKERS: "patient_care_takers",
-    CARE_PLAN_TEMPLATE: "care_plan_template",
-    CONSENTS: "consents",
-    CONDITIONS: "conditions",
-    REGIONS: "regions",
-    PROVIDERS: "providers",
-    REGION_FEATURES: "region_features",
-    FEATURES: "features",
-    MEDICINES: "medicines",
-    MEDICATION_REMINDERS: "medication_reminders",
-    ARTICLES: "articles",
-    CARE_PLANS: "care_plans",
-    CLINICS: "clinics",
-    REGION_PROVIDERS: "region_providers",
-    PROVIDER_MEMBERS: "provider_members",
-    REMINDERS: "reminders",
-    MEMBER_SPECIALITIES: "member_specialities",
-    SPECIALITIES: "specialities",
-    PLATFORM_EVENTS: "platform_events",
-    PRODUCT_PLANS: "product_plans",
-    SUBSCRIPTIONS: "subscriptions",
-    ACTIONS: "actions",
-    ACTION_DETAILS: "action_details",
-    EXERCISE: "exercise",
-    DIET: "diet",
-    ADHERENCE: "adherence",
-    DISEASE: "disease",
-    USER_VERIFICATIONS:"user_verifications",
-    EMAIL_LOGGER:'email_logger'
+  USERS: "users",
+  DOCTORS: "doctors",
+  PATIENTS: "patients",
+  APPOINTMENTS: "appointments",
+  SCHEDULE_EVENTS: "schedule_events",
+  PATIENT_CARE_TAKERS: "patient_care_takers",
+  CARE_PLAN_TEMPLATE: "care_plan_template",
+  CONSENTS: "consents",
+  CONDITIONS: "conditions",
+  REGIONS: "regions",
+  PROVIDERS: "providers",
+  REGION_FEATURES: "region_features",
+  FEATURES: "features",
+  MEDICINES: "medicines",
+  MEDICATION_REMINDERS: "medication_reminders",
+  ARTICLES: "articles",
+  CARE_PLANS: "care_plans",
+  CLINICS: "clinics",
+  REGION_PROVIDERS: "region_providers",
+  PROVIDER_MEMBERS: "provider_members",
+  REMINDERS: "reminders",
+  MEMBER_SPECIALITIES: "member_specialities",
+  SPECIALITIES: "specialities",
+  PLATFORM_EVENTS: "platform_events",
+  PRODUCT_PLANS: "product_plans",
+  SUBSCRIPTIONS: "subscriptions",
+  ACTIONS: "actions",
+  ACTION_DETAILS: "action_details",
+  EXERCISE: "exercise",
+  DIET: "diet",
+  ADHERENCE: "adherence",
+  DISEASE: "disease",
+  USER_VERIFICATIONS: "user_verifications",
+  EMAIL_LOGGER: "email_logger"
 };
 
 export const ARTICLE_TYPE = {
-    VIDEO: "video",
-    IMAGE: "image",
-    PDF: "pdf"
+  VIDEO: "video",
+  IMAGE: "image",
+  PDF: "pdf"
 };
 
 export const CURRENCY = {
-    INR: "INR",
-    AUD: "AUD",
-    USD: "USD"
+  INR: "INR",
+  AUD: "AUD",
+  USD: "USD"
 };
 
 export const SIGN_IN_CATEGORY = {
-    BASIC: "basic",
-    GOOGLE: "google",
-    FACEBOOK: "facebook"
+  BASIC: "basic",
+  GOOGLE: "google",
+  FACEBOOK: "facebook"
 };
 
 export const GENDER = {
-    MALE: "m",
-    FEMALE: "f",
-    TRANS: "t"
+  MALE: "m",
+  FEMALE: "f",
+  TRANS: "t"
 };
 
 export const EVENT_STATUS = {
-    SCHEDULED: "scheduled",
-    PENDING: "pending",
-    COMPLETED: "completed",
-    EXPIRED: "expired",
-    CANCELLED: "cancelled"
+  SCHEDULED: "scheduled",
+  PENDING: "pending",
+  COMPLETED: "completed",
+  EXPIRED: "expired",
+  CANCELLED: "cancelled"
 };
 
 export const EMAIL_TEMPLATE_NAME = {
-    WELCOME: "welcome",
-    FORGOT_PASSWORD: "forgot_password"
-  };
+  WELCOME: "welcome",
+  FORGOT_PASSWORD: "forgot_password"
+};
 
 export const OBJECT_NAME = {
-    USER: "user",
-    APPOINTMENT: "appointments",
-}
+  USER: "user",
+  APPOINTMENT: "appointments",
+  MEDICATION: "medications"
+};
+
+export const EVERYDAY = "1";
+export const ALTERNATE_START_TODAY = "2";
+export const ALTERNATE_START_TOMORROW = "3";
+
+export const CUSTOM_REPEAT_OPTIONS = {
+    [EVERYDAY]: {
+        key: "everyday",
+        text: "Everyday",
+    },
+    [ALTERNATE_START_TODAY]: {
+        key: "alternate_today",
+        text: "Alternate start today"
+    },
+    [ALTERNATE_START_TOMORROW]: {
+        key: "alternate_tomorrow",
+        text: "Alternate start tomorrow"
+    }
+};
+
+export const DOSE_AMOUNT = ["2","8","100","200","500"];
+
+export const MG = "mg";
+export const IU = "IU";
+
+export const DOSE_UNIT = [MG, IU];
+
+export const TEXT_KEY = "text";
+export const TIME_KEY = "time";
+
+export const BEFORE_BREAKFAST = "1";
+export const AFTER_BREAKFAST = "2";
+export const NOON = "3";
+export const BEFORE_LUNCH = "4";
+export const AFTER_LUNCH = "5";
+export const BEFORE_EVENING_SNACK = "6";
+export const AFTER_EVENING_SNACK = "7";
+export const BEFORE_DINNER = "8";
+export const AFTER_DINNER = "9";
+export const BEFORE_SLEEP = "10";
+
+export const MEDICATION_TIMING = {
+  [BEFORE_BREAKFAST]: {
+    [TEXT_KEY]: "Before Breakfast",
+        [TIME_KEY]: "8am"
+},
+    [AFTER_BREAKFAST]:
+  {
+    [TEXT_KEY]: "After Breakfast",
+    [TIME_KEY]: "9am"
+  },
+  [NOON] : {
+    [TEXT_KEY]: "Noon",
+    [TIME_KEY]: "12pm"
+  },
+  [BEFORE_LUNCH]: {
+    [TEXT_KEY]: "Before Lunch",
+    [TIME_KEY]: "12:30pm"
+  },
+  [AFTER_LUNCH]: {
+    [TEXT_KEY]: "After Lunch",
+    [TIME_KEY]: "1:30pm"
+  },
+  [BEFORE_EVENING_SNACK]: {
+    [TEXT_KEY]: "Before Evening Snack",
+    [TIME_KEY]: "5:30pm"
+  },
+  [AFTER_EVENING_SNACK]: {
+    [TEXT_KEY]: "After Evening Snack",
+    [TIME_KEY]: "6pm"
+  },
+  [BEFORE_DINNER]: {
+    [TEXT_KEY]: "Before Dinner",
+    [TIME_KEY]: "7:30pm"
+  },
+  [AFTER_DINNER]: {
+    [TEXT_KEY]: "After Dinner",
+    [TIME_KEY]: "8:30pm"
+  },
+  [BEFORE_SLEEP]: {
+    [TEXT_KEY]: "Before Sleeping",
+    [TIME_KEY]: "10:30pm"
+  }
+};

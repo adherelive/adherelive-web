@@ -290,5 +290,10 @@ export default defineMessages({
     id: "medication_reminder.modal.title",
     description: "",
     defaultMessage: "New Medication"
+  },
+  add_button_text: {
+    id: "medication_reminder.drawer.add.buttom.text",
+    description: "",
+    defaultMessage: "Add"
   }
 });

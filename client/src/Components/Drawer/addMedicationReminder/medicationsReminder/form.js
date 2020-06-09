@@ -450,7 +450,7 @@ class AddMedicationReminderForm extends Component {
             adjustEndDate={adjustEndDate}
           />
 
-          {getFooter()}
+          {/*{getFooter()}*/}
         </Form>
       </Fragment>
     );

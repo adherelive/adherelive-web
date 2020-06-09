@@ -27,10 +27,12 @@ class MedicineQuantity extends Component {
   formatMessage = data => this.props.intl.formatMessage(data);
 
   onRadioChange = e => {
+    e.preventDefault();
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue, getFieldValue }
     } = this.props;
-    setFieldsValue({ [FIELD_NAME]: e.target.value });
+    const currentValue = getFieldValue(FIELD_NAME) || 0.0;
+    setFieldsValue({ [FIELD_NAME]: (parseFloat(currentValue) + parseFloat(e.target.value)) });
   };
 
   getInitialValue = () => {
@@ -72,11 +74,10 @@ class MedicineQuantity extends Component {
           <div className="flex-grow-0">
             <RadioGroup
               size="small"
-              onChange={onRadioChange}
               className="flex justify-content-end"
             >
-              <RadioButton value={0.25}>+0.25</RadioButton>
-              <RadioButton value={0.5}>+0.5</RadioButton>
+              <RadioButton value={0.25} onClick={onRadioChange}>+0.25</RadioButton>
+              <RadioButton value={0.5} onClick={onRadioChange}>+0.5</RadioButton>
             </RadioGroup>
           </div>
         </div>

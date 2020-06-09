@@ -13,6 +13,14 @@ router.post(
     MobileAppointment.create
 );
 
+// ----------- MEDICATION -----------
+
+router.get(
+    "/medication-details",
+    Authenticate,
+    MobileMedicationReminder.getMedicationDetails
+);
+
 router.post(
     "/medication/:patient_id",
     Authenticate,

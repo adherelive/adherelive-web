@@ -9,6 +9,17 @@ class MReminderService {
             throw err;
         }
     }
+
+    getMedication = async (data) => {
+        try {
+            const medication = await MedicationReminder.findOne({
+                where: data
+            });
+            return medication;
+        } catch (err) {
+            throw err;
+        }
+    };
 }
 
 export default new MReminderService();

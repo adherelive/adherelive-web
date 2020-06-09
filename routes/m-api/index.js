@@ -59,7 +59,7 @@ router.use(async function(req, res, next) {
 });
 
 router.use(mUserRouter);
-router.use(mEventRouter);
+router.use("/events", mEventRouter);
 router.use(mPatientRouter);
 
 module.exports = router;
