@@ -12,8 +12,12 @@ import {
   DOSE_UNIT,
   CUSTOM_REPEAT_OPTIONS
 } from "../../../../constant";
+import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
 // import medicineService from "../../services/medicines/medicine.service";
+
+const MOBILE_MEDICATION_REMINDER_CONTROLLER = "MOBILE - MEDICATION REMINDER CONTROLLER";
+const Logger = new Log(MOBILE_MEDICATION_REMINDER_CONTROLLER);
 
 const KEY_REPEAT_TYPE = "repeat_type";
 const KEY_DAYS = "days";
@@ -63,11 +67,6 @@ class MobileMReminderController extends Controller {
 
       // const medicineDetails = await medicineService.getMedicineById();
       const medicine = "test medicine";
-
-      console.log(
-        "222222222333333333333 patient_id     ->>>>>>>>>>>\n",
-        category
-      );
 
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
@@ -133,6 +132,7 @@ class MobileMReminderController extends Controller {
   getMedicationDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
+      Logger.debug("test", medicationReminderDetails);
       return raiseSuccess(
         res,
         200,
