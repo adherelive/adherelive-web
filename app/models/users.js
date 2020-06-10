@@ -24,6 +24,10 @@ const Users = database.define(
                 this.setDataValue("email", val.toLowerCase());
             }
         },
+        prefix: {
+            type: Sequelize.STRING,
+            allowNull: true
+          },
         mobile_number: {
             type: Sequelize.STRING,
             unique: true,
@@ -55,7 +59,10 @@ const Users = database.define(
         },
         activated_on: {
             type: Sequelize.DATE
-        }
+        },
+        onboarded: {
+            type: Sequelize.BOOLEAN
+          },
     },
     {
         underscored: true,
@@ -68,7 +75,8 @@ const Users = database.define(
                     email: this.email,
                     sign_in_type: this.sign_in_type,
                     category: this.category,
-                    activated_on: this.activated_on
+                    activated_on: this.activated_on,
+                    onboarded:this.onboarded
                 };
             }
         }

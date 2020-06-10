@@ -25,7 +25,7 @@ const Doctors = database.define(
         },
         registration_number: {
             type: Sequelize.STRING(1000),
-            allowNull: false,
+            allowNull: true,
         },
         registration_start_date: {
             type: Sequelize.DATE,
@@ -35,11 +35,31 @@ const Doctors = database.define(
             type: Sequelize.DATE,
             allowNull: true,
         },
+        registration_council: {
+            type: Sequelize.STRING(200),
+            allowNull: true,
+          },
+          registration_year: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+          },
+           city: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+          },
+          speciality: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+          },
         gender: {
             type: Sequelize.ENUM,
             values: [GENDER.MALE, GENDER.FEMALE, GENDER.TRANS],
             allowNull: true
         },
+        profile_pic: {
+            type: Sequelize.STRING,
+            allowNull: true
+          },
         first_name: {
             type: Sequelize.STRING(100),
             allowNull: false,
@@ -50,14 +70,11 @@ const Doctors = database.define(
         },
         last_name: {
             type: Sequelize.STRING(100),
-            allowNull: false,
+            allowNull: true
         },
         address: {
             type: Sequelize.STRING,
             allowNull: false
-        },
-        qualifications: {
-            type: Sequelize.JSON,
         },
         activated_on: {
             type: Sequelize.DATE
@@ -72,6 +89,7 @@ const Doctors = database.define(
                     id: this.id,
                     user_id: this.user_id,
                     gender: this.gender,
+                    profile_pic:this.profile_pic,
                     first_name: this.first_name,
                     middle_name: this.middle_name,
                     last_name: this.last_name,

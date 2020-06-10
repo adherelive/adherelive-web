@@ -72,7 +72,11 @@ class Register extends Component {
         clinics[key1]= {name:"",location:"",startTime:{},endTime:{}};
         let clinicsKeys = [key1];
         this.setState({clinics,clinicsKeys});
+        // window.addEventListener('popstate', this.onBackButtonEvent);
     }
+
+    // onBackButtonEvent=
+
 
     getBase64=(img, callback)=> {
         const reader = new FileReader();
@@ -192,6 +196,10 @@ class Register extends Component {
         this.setState({ city: e.target.value });
     };
 
+    setEmail = e => {
+      this.setState({ email: e.target.value });
+  };
+
     setPrefix = value => {
         this.setState({ prefix: value });
     };
@@ -309,11 +317,13 @@ class Register extends Component {
     const { docs } = this.state;
     this.setState({ docs: [...docs, ...files] }, () => {
       const { docs, fileList,education } = this.state;
-      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE',docs.length,education[key].photo.length,education[key].photos);
-      if (docs.length === education[key].photo.length || docs.length+education[key].photos?education[key].photos.length:0=== education[key].photo.length) {
+      let{photos=[]}=education[key] || {};
+
+      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE',docs.length,education[key].photo.length,photos,docs.length === education[key].photo.length);
+      if (docs.length === education[key].photo.length || docs.length+photos.length=== education[key].photo.length) {
         let newEducation=education;
-        newEducation[key].photos=docs;
-        // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE1111111',newEducation);
+        newEducation[key].photos=[...photos,...docs];
+        console.log('KEYS AND FILES IN ON UPLOAD COMPLETE1111111',newEducation);
         education[key].photo.forEach((item,index)=>{
             item.status='done'
         })
@@ -328,27 +338,27 @@ class Register extends Component {
       };
 
       customRequest = key=>({ file, filename, onError, onProgress, onSuccess }) => {
-        // const { onUploadComplete } = this;
+        const { onUploadComplete } = this;
 
         console.log('FILEEE IN CUSTOM REQUESTTTT',file);
         const { docs, fileList,education } = this.state;
-        setTimeout(() => {
-            education[key].photo.forEach((item,index)=>{
-                item.status='done'
-            })
-        },100);
+        // setTimeout(() => {
+        //     education[key].photo.forEach((item,index)=>{
+        //         item.status='done'
+        //     })
+        // },100);
        
-        // let data = new FormData();
-        // data.append("files", file, file.name);
-        // doRequest({
+        let data = new FormData();
+        data.append("files", file, file.name);
+        doRequest({
         
-        //   method: REQUEST_TYPE.POST,
-        //   data: data,
-        //   url: getUploadURL()
-        // }).then(response => {
-        //     console.log('FILEEEEEEEEEE',response,'             ',response.payload.data);
-        //   onUploadComplete(response.payload.data,key);
-        // });
+          method: REQUEST_TYPE.POST,
+          data: data,
+          url: getUploadURL()
+        }).then(response => {
+            console.log('FILEEEEEEEEEE',response,'             ',response.payload.data);
+          onUploadComplete(response.payload.data,key);
+        });
     
         return {
           abort() {}
@@ -382,14 +392,25 @@ class Register extends Component {
         let{education={}}=this.state;
         let newEducation=education;
         let deleteIndex=-1;
+        let deleteIndexOfUrls=-1;
+        let fileName=file.name.replace(/\s+/g, '');
         console.log('FILE REMOVEEEEEEEEE',key,file);
         newEducation[key].photo.forEach((pic,index)=>{
             if(pic.uid==file.uid){
                 deleteIndex=index;
             }
         })
+
+        newEducation[key].photos.forEach((pic,index)=>{
+          if(pic.includes(fileName)){
+            deleteIndexOfUrls=index;
+          }
+      })
        if(deleteIndex>-1){
         newEducation[key].photo.splice(deleteIndex,1);
+       }
+       if(deleteIndexOfUrls >-1){
+        newEducation[key].photos.splice(deleteIndexOfUrls,1);
        }
        this.setState({education:newEducation});
       };
@@ -647,14 +668,14 @@ class Register extends Component {
 
              <div className='form-headings'>Email</div>
                  <Input
-                    placeholder="email"
+                    placeholder="Email"
                     className={"form-inputs"}
-                    onChange={this.email}
+                    onChange={this.setEmail}
                  />
 
             <div className='form-headings'>City</div>
                 <Input
-                    placeholder="city"
+                    placeholder="City"
                     className={"form-inputs"}
                     onChange={this.setCity}
                  />

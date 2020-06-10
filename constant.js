@@ -340,7 +340,10 @@ export const DB_TABLES = {
     ADHERENCE: "adherence",
     DISEASE: "disease",
     USER_VERIFICATIONS:"user_verifications",
-    EMAIL_LOGGER:'email_logger'
+    EMAIL_LOGGER:'email_logger',
+    DOCTOR_QUALIFICATIONS: 'doctor_qualifications',
+    DOCTOR_CLINICS: 'doctor_clinics',
+    UPLOAD_DOCUMENTS:'upload_documents'
 };
 
 export const ARTICLE_TYPE = {

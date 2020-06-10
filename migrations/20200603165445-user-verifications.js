@@ -29,7 +29,7 @@ module.exports = {
       }
     },
     request_id: {
-      type: Sequelize.UUID,
+      type: Sequelize.STRING,
       allowNull: false,
     },
     status: {

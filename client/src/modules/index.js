@@ -12,6 +12,7 @@ import pages from "./pages";
 import drawer from "./drawer";
 import appointments from "./appointments";
 import medication_reminders from "./medicationReminder";
+import onBoarding from "./onBoarding";
 
 const rootReducer = combineReducers({
   auth,
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
   chats,
   drawer,
   appointments,
-  medication_reminders
+  medication_reminders,
+  onBoarding
 });
 
 export default (state, action) => {

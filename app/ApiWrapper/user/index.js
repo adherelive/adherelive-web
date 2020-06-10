@@ -19,6 +19,7 @@ class UserWrapper extends BaseUser {
       mobile_number,
       sign_in_type,
       category,
+      onboarded,
       activated_on,
     } = userDetails || {};
     return {
@@ -31,6 +32,7 @@ class UserWrapper extends BaseUser {
             mobile_number,
           },
           sign_in_type,
+          onboarded,
           category,
           activated_on,
         },

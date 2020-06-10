@@ -2,7 +2,7 @@
 import Sequelize from "sequelize";
 import {database} from "../../libs/mysql";
 import {DB_TABLES} from "../../constant";
-
+import Users from "./users";
 
 const UserVerifications = database.define(
     DB_TABLES.USER_VERIFICATIONS,
@@ -24,7 +24,7 @@ const UserVerifications = database.define(
             }
           },
           request_id: {
-            type: Sequelize.UUID,
+            type: Sequelize.STRING,
             allowNull: false,
           },
           status: {
@@ -47,5 +47,9 @@ const UserVerifications = database.define(
     }
 );
 
+UserVerifications.belongsTo(Users, {
+  foreignKey:"user_id",
+   targetKey:"id"
+});
 
 export default UserVerifications;

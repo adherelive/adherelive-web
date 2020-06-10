@@ -5,7 +5,7 @@ import {signOut} from "../../modules/auth";
 
 const mapStateToProps = state => {
     const { auth, users } = state;
-
+        console.log('AUTH IN AUTH CONTAINERRR',auth);
     return {
         // user_data: getUser(users, auth.authenticated_user)
     };

@@ -36,7 +36,7 @@ export const doRequest = async requestdata => {
     xsrfHeaderName,
     onUploadProgress
   };
-
+console.log("REQUEST CONFIGGGGGGG",requestConfig);
   try {
     const response = await axios(requestConfig);
     return response.data;

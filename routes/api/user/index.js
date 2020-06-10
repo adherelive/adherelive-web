@@ -7,6 +7,12 @@ const multer = require("multer");
 var storage = multer.memoryStorage();
 var upload = multer({ dest: "../../../app/public/", storage: storage });
 
+router.get(
+    "/register/:link",
+    userController.verifyDoctor,
+);
+
+
 router.post(
     "/sign-in",
     userController.signIn,
@@ -39,6 +45,20 @@ router.post(
     userController.uploadImage
 );
 
+router.post(
+    "/doctor-profile-registration",
+    userController.doctorProfileRegister
+);
+
+router.post(
+    "/doctor-qualification-registration",
+    userController.doctorQualificationRegister
+);
+
+router.post(
+    "/doctor-clinic-registration",
+    userController.doctorClinicRegister
+);
 router.post("/sign-out", Authenticate, userController.signOut);
 
 module.exports = router;

@@ -80,6 +80,19 @@ class UserService {
         }
     };
 
+    updateUser = async (data, id) => {
+        try {
+            const user = await userModel.update(data, {
+                where: {
+                    id
+                }
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    };
+
 }
 
 export default new UserService();

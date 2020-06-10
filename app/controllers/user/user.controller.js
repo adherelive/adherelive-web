@@ -9,6 +9,10 @@ import Log from "../../../libs/log";
 import fs from "fs";
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
+import doctorService from "../../services/doctors/doctors.service";
+import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
+import clinicService from "../../services/doctorClinics/doctorClinics.service";
+import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 import userWrapper from "../../ApiWrapper/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
@@ -20,6 +24,7 @@ import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 const errMessage = require("../../../config/messages.json").errMessages;
 import minioService from "../../../app/services/minio/minio.service";
 import md5 from "js-md5";
+import UserVerifications from "../../models/userVerifications";
 
 class UserController extends Controller {
   constructor() {
@@ -55,18 +60,14 @@ class UserController extends Controller {
       const status = "pending";
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
-      //   const eventData = {
-      //     eventCategory,
-      //     details: { email, password: hash },
-      //     link,
-      //     status
-      //   };
+     
 
       let user = await userService.addUser({
         email,
-        password,
+        password:hash,
         sign_in_type: "basic",
-        category: "doctor"
+        category: "doctor",
+        onboarded:false
       });
 
       const userInfo = await userService.getUserByEmail({ email });
@@ -76,6 +77,7 @@ class UserController extends Controller {
         request_id: link,
         status: "pending"
       });
+      let uId=userInfo.get("id");
 
       console.log(
         "CREDENTIALSSSSSSSSSSSSSS111111111111",
@@ -88,13 +90,13 @@ class UserController extends Controller {
         templateName: EMAIL_TEMPLATE_NAME.WELCOME,
         templateData: {
           title: "Doctor",
-          link: process.config.app.invite_link + link,
+          link: process.config.app.invite_link+link,
           inviteCard: "",
           mainBodyText: "We are really happy that you chose us.",
           subBodyText: "Please verify your account",
           buttonText: "Verify",
           host: process.config.WEB_URL,
-          contactTo: "nishchay.chaudhary@tripock.com"
+          contactTo: "patientEngagement@adhere.com"
         }
       };
 
@@ -120,6 +122,29 @@ class UserController extends Controller {
       }
     }
   }
+
+  verifyDoctor = async (req, res) => {
+    try {
+
+      
+      let{link}=req.params;
+     
+      let updateVerification =await UserVerificationServices.updateVerification({status:'verified'},link);
+      let verifications =await UserVerificationServices.getRequestByLink(link);
+      let userId = verifications.get('user_id');
+       let activated_on=moment();
+      let user = await userService.updateUser({activated_on},userId);
+        
+      console.log(" Verify User --------------->  ", link,' 6uuu ',userId, ' 90990',user,'            ',updateVerification,verifications);
+
+
+      return res.redirect("/sign-in");
+    } catch (error) {
+      console.log("error sign in  --> ", error);
+      res.redirect("/sign-in");
+      return this.raiseServerError(res, 500, error, error.getMessage());
+    }
+  };
 
   signIn = async (req, res) => {
     try {
@@ -399,6 +424,110 @@ class UserController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
+
+  doctorProfileRegister = async (req,res) =>{
+    let{user_id,name,city,category,mobile_number,prefix,profile_pic}=req.body;
+    let doctorName=name.split(' ');
+    try{
+
+      let user=userService.getUserById(user_id);
+      let user_data_to_update={category,mobile_number,prefix};
+      let updatedUser= await userService.updateUser(user_data_to_update,user_id);
+      let doctor={};
+      console.log("USERRRRRRRR",updatedUser);
+      let doctorExist=await doctorService.getDoctorByUserId(user_id);
+      // console.log('DOCTORRRRR EXISTTT',doctorExist.get('id'),doctorExist.getBasicInfo);
+      let first_name=doctorName[0];
+        let middle_name=doctorName.length==3?doctorName[1]:'';
+        let last_name=doctorName.length==3?doctorName[2]:doctorName.length==2?doctorName[1]:"";
+      if(doctorExist){
+        
+        let doctor_data={city,profile_pic,first_name,middle_name,last_name,address:city};
+        let doctor_id=doctorExist.get('id');
+        doctor= await doctorService.updateDoctor(doctor_data,doctor_id);
+        console.log('DOCTORRRRRIFFFFFF',doctor,doctor.getBasicInfo);
+      }else{
+      let doctor_data={user_id,city,profile_pic,first_name,middle_name,last_name,address:city};
+      doctor= await doctorService.addDoctor(doctor_data);
+      console.log('DOCTORRRRRELSEEEEE',doctor,doctor.getBasicInfo);
+      }
+
+      return this.raiseSuccess(res, 200, {
+        doctor
+    }, "doctor profile updated successfully"); 
+    
+    }catch (error) {
+      console.log("DOCTOR REGISTER CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  }
+
+  doctorQualificationRegister = async (req,res) =>{
+    let{user_id='',speciality='',gender='', registration_number='',registration_council='',registration_year='',qualification_details=[]}=req.body;
+    
+    try{
+
+      
+      let user=userService.getUserById(user_id);
+      let doctor=await doctorService.getDoctorByUserId(user_id);
+      let doctor_id=doctor.get('id');
+      let doctor_data={gender,registration_number,registration_council,registration_year,speciality};
+      let updatedDoctor= await doctorService.updateDoctor(doctor_data,doctor_id);
+
+   
+
+      qualification_details.forEach(async (item) => {
+       
+       let{degree='',year='',college='',photos=[]}= item;
+       let qualification = await qualificationService.addQualification({doctor_id,degree,year,college});
+        let qualification_id=qualification.get('id');
+    
+        photos.forEach(async (photo)=>{
+         
+          let document_data={parent_type:'doctor_qualification',parent_id:qualification_id,document:photo};
+          
+          let document=documentService.addDocument(document_data);
+        })
+      });
+
+      return this.raiseSuccess(res, 200, {
+        // doctor
+    }, "qualifications updated successfully"); 
+    
+    }catch (error) {
+      console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  }
+
+  doctorClinicRegister = async (req,res) =>{
+    let{user_id='',clinics=[]}=req.body;
+    
+    try{
+
+      
+      let user=userService.getUserById(user_id);
+      let doctor=await doctorService.getDoctorByUserId(user_id);
+      let doctor_id=doctor.get('id');
+
+   
+
+      clinics.forEach(async (item) => {
+       
+       let{name='',location='',start_time='',end_time=''}= item;
+       let clinic = await clinicService.addClinic({doctor_id,name,location,start_time,end_time});
+      
+      });
+
+      return this.raiseSuccess(res, 200, {
+        // doctor
+    }, "clinics added successfully"); 
+    
+    }catch (error) {
+      console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  }
 }
 
 export default new UserController();
