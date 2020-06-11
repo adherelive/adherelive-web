@@ -378,7 +378,8 @@ export const EMAIL_TEMPLATE_NAME = {
 export const OBJECT_NAME = {
   USER: "user",
   APPOINTMENT: "appointments",
-  MEDICATION: "medications"
+  MEDICATION: "medications",
+  MEDICINE: "medicines",
 };
 
 export const EVERYDAY = "1";
@@ -470,4 +471,10 @@ export const MEDICATION_TIMING = {
     [TEXT_KEY]: "Before Sleeping",
     [TIME_KEY]: "10:30pm"
   }
+};
+
+
+export const MEDICINE_TYPE = {
+  TABLET: "tablet",
+  INJECTION: "injection",
 };
