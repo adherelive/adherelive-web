@@ -3,10 +3,12 @@ import AddMedicationReminder from "../../Components/Drawer/addMedicationReminder
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import {addMedicationReminder} from "../../modules/medications";
+import {getMedicationDetails} from "../../modules/otherDetails";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
-    drawer: { visible, loading, data: { type, payload = {} } = {} }
+    drawer: { visible, loading, data: { type, payload = {} } = {} },
+    other_details: {medication_details = {}} = {}
   } = state;
 
   console.log(
@@ -19,14 +21,16 @@ const mapStateToProps = state => {
   return {
     visible: visible && type === DRAWER.ADD_MEDICATION_REMINDER,
     loading,
-    payload
+    payload,
+    medication_details
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     close: () => dispatch(close()),
-    addMedicationReminder: data => dispatch(addMedicationReminder(data))
+    addMedicationReminder: data => dispatch(addMedicationReminder(data)),
+    getMedicationDetails: () => dispatch(getMedicationDetails()),
   };
 };
 

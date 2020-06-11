@@ -58,8 +58,8 @@ router.use(async function(req, res, next) {
     }
 });
 
-router.use(mUserRouter);
+router.use("/auth", mUserRouter);
 router.use("/events", mEventRouter);
-router.use(mPatientRouter);
+router.use("/patients", mPatientRouter);
 
 module.exports = router;

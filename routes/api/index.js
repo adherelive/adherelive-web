@@ -64,9 +64,9 @@ router.use(async function(req, res, next) {
   }
 });
 
-router.use(userRouter);
-router.use(eventRouter);
-router.use(twilioRouter);
-router.use(patientRouter);
+router.use("/auth", userRouter);
+router.use("/events", eventRouter);
+router.use("/twilio", twilioRouter);
+router.use("/patients", patientRouter);
 
 module.exports = router;

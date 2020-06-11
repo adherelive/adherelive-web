@@ -1,3 +1,3 @@
 export const getAddMedicationReminderURL = (id) => {
-    return `/medication-reminder/${id}`;
+    return `/events/medication-reminder/${id}`;
 }

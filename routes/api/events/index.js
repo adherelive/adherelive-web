@@ -1,3 +1,5 @@
+import MobileMedicationReminder from "../../../app/controllers/mControllers/medicationReminder/mReminder.controller";
+
 const express = require("express");
 const router = express.Router();
 
@@ -18,6 +20,12 @@ router.post(
     Authenticate,
     validator.validateMedicationReminderData,
     MedicationReminder.create
+);
+
+router.get(
+    "/medication-details",
+    Authenticate,
+    MedicationReminder.getMedicationDetails
 );
 
 module.exports = router;

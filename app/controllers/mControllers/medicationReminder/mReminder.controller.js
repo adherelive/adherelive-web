@@ -16,8 +16,8 @@ import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
 // import medicineService from "../../services/medicines/medicine.service";
 
-const MOBILE_MEDICATION_REMINDER_CONTROLLER = "MOBILE - MEDICATION REMINDER CONTROLLER";
-const Logger = new Log(MOBILE_MEDICATION_REMINDER_CONTROLLER);
+const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
+const Logger = new Log(FILE_NAME);
 
 const KEY_REPEAT_TYPE = "repeat_type";
 const KEY_DAYS = "days";

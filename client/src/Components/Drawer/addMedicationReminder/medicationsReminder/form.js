@@ -417,7 +417,7 @@ class AddMedicationReminderForm extends Component {
 
     return (
       <Fragment>
-        <Form className="event-form" onSubmit={addMedicationReminder}>
+        <Form className="event-form pb80" onSubmit={addMedicationReminder}>
           {/* {participantsField.render({
             ...this.props,
             otherUser,
@@ -439,7 +439,6 @@ class AddMedicationReminderForm extends Component {
 
           <div id="quantity">{medicineQuantityField.render(this.props)}</div>
 
-          <span className="form-label">Timing</span>
           <div id="timing">{whenToTakeMedicineField.render(this.props)}</div>
 
           <RepeatFields
