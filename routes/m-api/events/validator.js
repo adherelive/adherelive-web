@@ -27,7 +27,7 @@ const medicationReminderFormSchema = Joi.object().keys({
     strength: Joi.number().required(),
     unit: Joi.string().required(),
     quantity: Joi.number().required(),
-    when_to_take: Joi.string().optional(),
+    when_to_take: Joi.array().optional(),
     repeat: Joi.string().required(),
     repeat_days: Joi.array(),
     repeat_interval: Joi.number().optional(),
