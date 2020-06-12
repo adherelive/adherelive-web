@@ -122,7 +122,7 @@ class Dashboard extends Component {
                     </Tabs>
                 </div>
                 <PatientDetailsDrawer />
-                <AddAppointmentDrawer />
+                {/* <AddAppointmentDrawer /> */}
             </Fragment>
         );
     }
