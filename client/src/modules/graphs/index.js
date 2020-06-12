@@ -4,6 +4,8 @@ export default (state = GRAPH_INITIAL_STATE, action) => {
   const { data, type } = action;
   switch (type) {
     default:
-      return state;
+      return {
+        ...GRAPH_INITIAL_STATE
+      };
   }
 };

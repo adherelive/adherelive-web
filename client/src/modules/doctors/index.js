@@ -13,6 +13,9 @@ export default (state = DOCTOR_INITIAL_STATE, action) => {
   const { type, data } = action;
   switch (type) {
     default:
-      return state;
+      return {
+        ...state,
+        ...DOCTOR_INITIAL_STATE
+      };
   }
 };
