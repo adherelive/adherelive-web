@@ -153,7 +153,7 @@ class QualificationRegister extends Component {
           if (docs.length === education[key].photo.length || docs.length+photos.length=== education[key].photo.length) {
             let newEducation=education;
             newEducation[key].photos=[...photos,...docs];
-            console.log('KEYS AND FILES IN ON UPLOAD COMPLETE1111111',newEducation);
+          console.log('KEYS AND FILES IN ON UPLOAD COMPLETE1111111',newEducation);
             education[key].photo.forEach((item,index)=>{
                 item.status='done'
             })

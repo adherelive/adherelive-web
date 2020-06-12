@@ -475,6 +475,7 @@ class UserController extends Controller {
     }
   }
 
+
   getDoctorProfileRegisterData = async (req,res) =>{
     // let{user_id,name,city,category,mobile_number,prefix,profile_pic}=req.body;
     let{userId}=req.params;
@@ -563,6 +564,7 @@ class UserController extends Controller {
     }
   }
 
+
   getDoctorQualificationRegisterData = async (req,res) =>{
     
     let{userId}=req.params;
@@ -576,6 +578,33 @@ class UserController extends Controller {
     
     }catch (error) {
       console.log("DOCTOR QUALIFICATION REGISTER CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  }
+
+  registerQualification = async (req,res) =>{
+    let{user_id='',speciality='',gender='', registration_number='',registration_council='',registration_year='',qualification=[]}=req.body;
+    
+    try{
+
+      
+      let user=userService.getUserById(user_id);
+      let doctor=await doctorService.getDoctorByUserId(user_id);
+      let doctor_id=doctor.get('id');
+      let doctor_data={gender,registration_number,registration_council,registration_year,speciality};
+      let updatedDoctor= await doctorService.updateDoctor(doctor_data,doctor_id);
+
+       let{degree='',year='',college='',photos=[]}= item;
+       let qualification = await qualificationService.addQualification({doctor_id,degree,year,college});
+        let qualification_id=qualification.get('id');
+      
+
+      return this.raiseSuccess(res, 200, {
+        qualification_id
+    }, "qualifications updated successfully"); 
+    
+    }catch (error) {
+      console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   }
