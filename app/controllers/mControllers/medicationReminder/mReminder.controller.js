@@ -62,9 +62,9 @@ class MobileMReminderController extends Controller {
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
-      const {text: doseUnit} = DOSE_UNIT[unit] || {};
-      const {text, time} = MEDICATION_TIMING[when_to_take] || {};
-      const whenToTake = `${text}(${time})`;
+      // const {text: doseUnit} = DOSE_UNIT[unit] || {};
+      // const {text, time} = MEDICATION_TIMING[when_to_take] || {};
+      // const whenToTake = `${text}(${time})`;
 
       const repeatDays = repeat_days.map(day => day.substring(0,3));
 
@@ -89,8 +89,8 @@ class MobileMReminderController extends Controller {
           repeat_interval,
           quantity,
           strength,
-          unit: doseUnit,
-          when_to_take: whenToTake,
+          unit,
+          when_to_take,
           medication_stage
         }
       };
