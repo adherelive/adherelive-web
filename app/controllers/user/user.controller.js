@@ -16,9 +16,10 @@ import documentService from "../../services/uploadDocuments/uploadDocuments.serv
 import userWrapper from "../../ApiWrapper/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
+import {doctorQualificationData,uploadImageS3} from './userHelper';
 import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
-import { EMAIL_TEMPLATE_NAME, USER_CATEGORY } from "../../../constant";
+import { EMAIL_TEMPLATE_NAME, USER_CATEGORY,DOCUMENT_PARENT_TYPE } from "../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
@@ -178,6 +179,13 @@ class UserController extends Controller {
           }
         );
 
+
+        const apiUserDetails = new userWrapper(user.get("id"));
+        
+        const dataToSend = {
+          ...await apiUserDetails.getBasicInfo()
+        };
+
         res.cookie("accessToken", accessToken, {
           expires: new Date(
             Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
@@ -188,7 +196,7 @@ class UserController extends Controller {
         return this.raiseSuccess(
           res,
           200,
-          {},
+          {...dataToSend},
           "initial data retrieved successfully"
         );
       } else {
@@ -385,36 +393,37 @@ class UserController extends Controller {
       const {userId = "3"} = userDetails || {};
       console.log('BODYYYYYYYYYYYYYYYY',req.file);
       const file=req.file;
-      const fileExt= file.originalname.replace(/\s+/g, '');
+      // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
       
-      await minioService.createBucket();
-      // const fileStream = fs.createReadStream(req.file);
-
-      const imageName = md5(`${userId}-education-pics`);
-      // const fileExt = "";
+    //   await minioService.createBucket();
+  
+     
+    //   const imageName = md5(`${userId}-education-pics`);
+     
+    //   let hash = md5.create();
       
-      let hash = md5.create();
-      hash.update(userId);
-      hash.hex();
-      hash = String(hash);
-      const folder = "adhere";
-      // const file_name = hash.substring(4) + "_Education_"+fileExt;
-      const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
-      const metaData = {
-        "Content-Type":
-            "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    };
-    const fileUrl = folder+ "/" +file_name;
-    await minioService.saveBufferObject(file.buffer, file_name, metaData);
+    //   hash.hex();
+    //   hash = String(hash);
+    
+    //   const folder = "adhere";
+    //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
+    //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
+      
+    //   const metaData = {
+    //     "Content-Type":
+    //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    // };
+    // const fileUrl = folder+ "/" +file_name;
+    // await minioService.saveBufferObject(file.buffer, file_name, metaData);
 
-    // console.log("file urlll: ", process.config.minio.MINI);
-    const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
-    let files = [file_link];
-    console.log("Uplaoded File Url ---------------------->  ", file_link);
-    console.log("User Controllers =------------------->   ", files);
+    // // console.log("file urlll: ", process.config.minio.MINI);
+    // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
+    // let files = [file_link];
+    // console.log("Uplaoded File Url ---------------------->  ", file_link);
+    // console.log("User Controllers =------------------->   ", files);
     //const resume_link = process.config.BASE_DOC_URL + files[0]
-    //
+    let files= await uploadImageS3(userId,file);
     return this.raiseSuccess(res, 200, {
       files:files
   }, "files uploaded successfully"); 
@@ -430,8 +439,12 @@ class UserController extends Controller {
     let doctorName=name.split(' ');
     try{
 
-      let user=userService.getUserById(user_id);
+
+      
+      let user= await userService.getUserById(user_id);
       let user_data_to_update={category,mobile_number,prefix};
+      console.log("USERRRRRRRR1111111",user_data_to_update);
+      console.log("REQUESTTTTTTTT BODYYYYYY",req.body);
       let updatedUser= await userService.updateUser(user_data_to_update,user_id);
       let doctor={};
       console.log("USERRRRRRRR",updatedUser);
@@ -462,6 +475,56 @@ class UserController extends Controller {
     }
   }
 
+  getDoctorProfileRegisterData = async (req,res) =>{
+    // let{user_id,name,city,category,mobile_number,prefix,profile_pic}=req.body;
+    let{userId}=req.params;
+    try{
+       let name='';
+       let email='';
+       let city='';
+       let category='';
+       let prefix = '';
+       let mobile_number='';
+       let profile_pic='';
+
+      
+      let user= await userService.getUserById(userId);
+      // console.log("GET PROFILE DATA USERRRRRRR",user.getBasicInfo);
+      let userInfo=user.getBasicInfo;
+      const{email:eMail='',category:docCategory='',mobile_number:mobNo='',prefix:pre=''}=userInfo;
+
+      email=eMail;
+      category=docCategory;
+      prefix=pre;
+      mobile_number=mobNo;
+
+      let doctor=await doctorService.getDoctorByUserId(userId);
+      // console.log('GET PROFILE DATA USERRRRRRR',doctor.get('id'),doctor.getBasicInfo);
+     
+      if(doctor){
+        
+      let docInfo = doctor.getBasicInfo;
+      const{first_name='',middle_name='',last_name='',city:docCity='',profile_pic:docPic=''}=docInfo || {};
+      name=first_name+" "+`${middle_name && middle_name+" "}`+last_name;
+      
+      city=docCity;
+      profile_pic=docPic;
+      }
+
+      const profileData={name,city,category,mobile_number,prefix,profile_pic,email};
+
+      // console.log('FINAL+++================>',profileData);
+
+      return this.raiseSuccess(res, 200, {
+        profileData
+    }, " get doctor profile successfull"); 
+    
+    }catch (error) {
+      console.log("DOCTOR REGISTER CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  }
+
   doctorQualificationRegister = async (req,res) =>{
     let{user_id='',speciality='',gender='', registration_number='',registration_council='',registration_year='',qualification_details=[]}=req.body;
     
@@ -484,7 +547,7 @@ class UserController extends Controller {
     
         photos.forEach(async (photo)=>{
          
-          let document_data={parent_type:'doctor_qualification',parent_id:qualification_id,document:photo};
+          let document_data={parent_type:DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,parent_id:qualification_id,document:photo};
           
           let document=documentService.addDocument(document_data);
         })
@@ -500,24 +563,48 @@ class UserController extends Controller {
     }
   }
 
+  getDoctorQualificationRegisterData = async (req,res) =>{
+    
+    let{userId}=req.params;
+   try{
+    const qualificationData = await doctorQualificationData(userId);
+      console.log('FINAL+++================>',qualificationData);
+
+      return this.raiseSuccess(res, 200, {
+        qualificationData
+    }, " get doctor qualification successfull"); 
+    
+    }catch (error) {
+      console.log("DOCTOR QUALIFICATION REGISTER CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  }
+
   doctorClinicRegister = async (req,res) =>{
     let{user_id='',clinics=[]}=req.body;
     
     try{
 
       
-      let user=userService.getUserById(user_id);
+      // let user= await userService.getUserById(user_id);
       let doctor=await doctorService.getDoctorByUserId(user_id);
       let doctor_id=doctor.get('id');
+
+      console.log('DOCTORRRR UUSER',doctor_id,'    HDJDH 9088      ','    DEJIDJ*(*)    ',doctor);
 
    
 
       clinics.forEach(async (item) => {
        
        let{name='',location='',start_time='',end_time=''}= item;
-       let clinic = await clinicService.addClinic({doctor_id,name,location,start_time,end_time});
+       let start = moment(start_time);
+       let end  = moment(end_time)
+       console.log('ITEMMMMMMMMMM OF CKININIC',name,location,start,end,doctor_id);
+       let clinic = await clinicService.addClinic({doctor_id,name,location,start,end});
       
       });
+
+      let updateUser = await userService.updateUser({onboarded:true},user_id);
 
       return this.raiseSuccess(res, 200, {
         // doctor

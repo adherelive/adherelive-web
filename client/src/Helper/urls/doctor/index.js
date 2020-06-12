@@ -9,3 +9,11 @@ export const getdoctorProfileRegisterUrl = () => {
   export const getdoctorClinicRegisterUrl = () => {
     return `/doctor-clinic-registration`;
   };
+
+  export const getdoctorProfileRegisterDataUrl = (userId) => {
+    return `/doctor-profile-registration/${userId}`;
+  };
+
+  export const getdoctorQualificationRegisterDataUrl = (userId) => {
+    return `/doctor-qualification-registration/${userId}`;
+  };

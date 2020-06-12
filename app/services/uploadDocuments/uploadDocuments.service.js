@@ -13,6 +13,21 @@ class UploadDocumentService {
       }
     };
 
+    getDoctorQualificationDocuments = async (parent_type,parent_id) => {
+        try {
+            const documents = await uploadDocumentsModel.findAll({
+                where: {
+                    parent_type,
+                    parent_id,
+                    deleted_at:null
+                }
+            });
+            return documents;
+        } catch(error) {
+            throw error;
+        }
+    };
+
    
 }
 

@@ -4,12 +4,13 @@ import {injectIntl} from "react-intl";
 // import {formatMessage} from "react-intl/src/format";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import {Tabs, Button,Steps,Col,Select,Input,Upload, Modal,TimePicker,Icon,message } from "antd";
+import {Tabs, Button,Steps,Col,Select,Input,InputNumber,Upload, Modal,TimePicker,Icon,message } from "antd";
 import SideMenu from "./sidebar";
-import {REQUEST_TYPE} from '../../constant';
+import {REQUEST_TYPE,PATH} from '../../constant';
 import {getUploadURL} from '../../Helper/urls/user';
 import {doRequest} from '../../Helper/network';
 import plus from '../../Assets/images/plus.png';
+import { withRouter } from "react-router-dom";
 
 
 
@@ -42,6 +43,22 @@ class Profileregister extends Component {
         };
     }
 
+    componentDidMount =async()=>{
+   
+       this.fetchData();
+    }
+
+    fetchData = async() => {
+        const{authenticated_user={},getDoctorProfileRegisterData}=this.props;
+
+        const{basic_info:{id=1}={}}=authenticated_user;
+
+        await getDoctorProfileRegisterData(id);
+
+        const{onBoarding={}}=this.props;
+        const{profileData:{  name="",email="",mobile_number='',category='',city='',prefix='',profile_pic='' }={}}=onBoarding||{};
+        this.setState({name,email,mobile_number,category,city,prefix,profile_pic_url_saved:profile_pic });
+    }
 
     setName = e => {
         this.setState({ name: e.target.value });
@@ -91,14 +108,17 @@ class Profileregister extends Component {
         let data = new FormData();
         data.append("files", file, file.name);
         doRequest({
-        
           method: REQUEST_TYPE.POST,
           data: data,
           url: getUploadURL()
         }).then(response => {
-            console.log('RESPONSEEEEEEEEEEE!@!@!@!@!@!@!@!@',response,'             ',response.payload.data.files[0]);
-            let{files=[]}=response.payload.data;
+            console.log('RESPONSEEEEEEEEEEE!@!@!@!@!@!@!@!@',response);
+            if(response.status){          
+                  let{files=[]}=response.payload.data;
             this.setState({profile_pic_url:files[0]})
+            }else{
+                message.error('Something went wrong.')
+            }
         });
         // file.status='done';
         // return file;
@@ -151,12 +171,12 @@ class Profileregister extends Component {
             return re.test(String(email).toLowerCase());
         }
     validateData=()=>{
-        let{  name='',email='',mobile_number='',category='',city='',prefix='',profile_pic_url=''}=this.state;
+        let{  name='',email='',mobile_number='',category='',city='',prefix='',profile_pic_url='',profile_pic_url_saved=''}=this.state;
        
         if(!category){
             message.error('Please select a Profile type.')
             return false;
-        }else if(!profile_pic_url){
+        }else if(!profile_pic_url && !profile_pic_url_saved){
             message.error('Please select a Profile picture.')
             return false;
         }else  if(!name){
@@ -179,13 +199,22 @@ class Profileregister extends Component {
     }    
 
     onNextClick = () =>{
-        console.log('ONCLICKKKKKK');
+        const{history,authenticated_user}=this.props;
+        const{basic_info:{id=1}={}} =authenticated_user||{};
+        console.log('ONCLICKKKKKK',authenticated_user);
         const validate=this.validateData();
         if(validate){
-            const{  name='',email='',mobile_number='',category='',city='',prefix='',profile_pic_url=''}=this.state;
-                const data = { user_id:4, name,email,mobile_number,category,city,prefix,profile_pic:profile_pic_url};
+            const{  name='',email='',mobile_number='',category='',city='',prefix='',profile_pic_url='',profile_pic_url_saved=''}=this.state;
+                const data = { user_id:id, name,email,mobile_number,category,city,prefix,profile_pic:profile_pic_url?profile_pic_url:profile_pic_url_saved};
                 const{doctorProfileRegister}=this.props;
-                doctorProfileRegister(data);
+                doctorProfileRegister(data).then(response=>{
+                    const{status}=response;
+                    if(status){
+                        history.replace(PATH.REGISTER_QUALIFICATIONS);
+                    }else{
+                        message.error('Something went wrong');
+                    }
+                });
         }
         }
 
@@ -196,14 +225,17 @@ class Profileregister extends Component {
           }
 
     renderProfileForm=()=>{
+
+        let{name='',email='',mobile_number='',category='',city='',prefix='',profile_pic_url_saved=''}=this.state;
         const prefixSelector  =(
           
             <Select className="flex align-center h50 w70"
+            value={prefix}
             onChange={this.setPrefix}>
+                 {/* india */}
+                 <Option value="91"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+91</div></div></Option>
                 {/* australia */}
                 <Option value="61"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+61</div></div></Option>
-                {/* india */}
-                <Option value="91"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+91</div></div></Option>
                 {/* us */}
                 <Option value="1"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+1</div></div></Option>
                 {/* uk */}
@@ -238,7 +270,7 @@ class Profileregister extends Component {
         return(
             <div className='form-block'>
              <div className='form-headings'>Profile Type</div>
-                <Select className='form-inputs' onChange={this.setCategory}>
+                <Select className='form-inputs' onChange={this.setCategory} value={category} disabled={true}>
                             {this.getCategoryOptions()}
                         </Select>
              <div className='form-headings'>Profile Picture</div>
@@ -251,11 +283,12 @@ class Profileregister extends Component {
                  beforeUpload={this.beforeUpload}
                  onChange={this.handleChange}
                   >
-        {profile_pic ? <img src={profile_pic} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+        {profile_pic ? <img src={profile_pic} alt="avatar" style={{ width: '100%' }} /> :profile_pic_url_saved? <img src={profile_pic_url_saved} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
       </Upload>
              <div className='form-headings'>Name</div>
                <Input
                     placeholder="Name"
+                    value={name}
                     className={"form-inputs"}
                     onChange={this.setName}
                  />
@@ -265,6 +298,7 @@ class Profileregister extends Component {
                             addonBefore={prefixSelector}
                             placeholder="Phone number"
                             maxLength={10}
+                            value={mobile_number}
                             className={"form-inputs"}
                             onChange={this.setNumber}
                         />
@@ -272,6 +306,8 @@ class Profileregister extends Component {
              <div className='form-headings'>Email</div>
                  <Input
                     placeholder="Email"
+                    value={email}
+                    disabled={true}
                     className={"form-inputs"}
                     onChange={this.setEmail}
                  />
@@ -279,6 +315,7 @@ class Profileregister extends Component {
             <div className='form-headings'>City</div>
                 <Input
                     placeholder="City"
+                    value={city}
                     className={"form-inputs"}
                     onChange={this.setCity}
                  />
@@ -291,7 +328,7 @@ class Profileregister extends Component {
         console.log("STATEEEEEEEEEEE",this.state);
               return (
             <Fragment>
-                <SideMenu {...this.props} />
+                {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
                 <div className='header'>Create your Profile</div>
                 <div className= 'registration-body'>
@@ -304,12 +341,13 @@ class Profileregister extends Component {
                     </div>
                   <div className='footer'>
                   <div className={'footer-text-inactive'} >
-                      {/* Back */}
-                      </div> 
+                      Back
+                      </div>
+                       
                   <div className={'footer-text-active'} onClick={this.onNextClick}>Next</div></div>  
                     </div>
             </Fragment>
         );
     }
 }
-export default injectIntl(Profileregister);
+export default withRouter(injectIntl(Profileregister));

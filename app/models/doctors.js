@@ -94,7 +94,11 @@ const Doctors = database.define(
                     middle_name: this.middle_name,
                     last_name: this.last_name,
                     address: this.address,
-                    qualifications: this.qualifications,
+                    city: this.city,
+                    speciality: this.speciality,
+                    registration_council: this.registration_council,
+                    registration_year: this.registration_year,
+                    registration_number: this.registration_number,
                     activated_on: this.activated_on
                 };
             }

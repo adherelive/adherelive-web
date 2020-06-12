@@ -9,6 +9,9 @@ import {Tabs, Button} from "antd";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
+import Loading from "../Common/Loading"
+import { withRouter } from "react-router-dom";
+
 
 const {TabPane} = Tabs;
 
@@ -24,6 +27,7 @@ class Dashboard extends Component {
     componentDidMount() {
         const {graphs, getInitialData} = this.props;
         getInitialData();
+        console.log("DashBoard Did MOunt DOCTORRRRR ROUTERRR ----------------->   ")
         setTimeout(() => {
             drawChart(graphs);
         }, 500);
@@ -74,14 +78,16 @@ class Dashboard extends Component {
     };
 
     render() {
-        console.log("19273 here --> dashboard");
+        console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard",this.props);
         const {graphs} = this.props;
         const {formatMessage, renderChartTabs} = this;
 
         if (Object.keys(graphs).length === 0) {
-            return null;
+            return (
+                <Loading className={"wp100 mt20"} />
+            );
         }
-
+            
         return (
             <Fragment>
                 <div className="dashboard p20">
@@ -122,4 +128,4 @@ class Dashboard extends Component {
     }
 }
 
-export default injectIntl(Dashboard);
+export default withRouter(injectIntl(Dashboard));

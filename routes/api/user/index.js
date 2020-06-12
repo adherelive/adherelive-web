@@ -29,6 +29,8 @@ router.get(
     userController.onAppStart,
 );
 
+
+
 router.post(
     "/googleSignIn",
     userController.signInGoogle
@@ -50,9 +52,19 @@ router.post(
     userController.doctorProfileRegister
 );
 
+router.get(
+    "/doctor-profile-registration/:userId",
+    userController.getDoctorProfileRegisterData,
+);
+
 router.post(
     "/doctor-qualification-registration",
     userController.doctorQualificationRegister
+);
+
+router.get(
+    "/doctor-qualification-registration/:userId",
+    userController.getDoctorQualificationRegisterData,
 );
 
 router.post(

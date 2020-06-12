@@ -5,8 +5,9 @@ import {doctorClinicRegister} from "../../modules/onBoarding";
 import {connect} from "react-redux";
 
 const mapStateToProps = state => {
-    const {graphs} = state;
-    return {graphs};
+    const {auth,users} = state;
+    let{authenticated_user={}}=auth;
+    return {authenticated_user,users};
 };
 
 const mapDispatchToProps = dispatch => {

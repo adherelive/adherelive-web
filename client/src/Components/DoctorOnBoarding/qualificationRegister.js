@@ -4,13 +4,13 @@ import {injectIntl} from "react-intl";
 // import {formatMessage} from "react-intl/src/format";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import {Tabs, Button,Steps,Col,Select,Input,Upload, Modal,TimePicker,Icon,message } from "antd";
+import {Tabs, Button,Steps,Col,Select,Input,InputNumber,Upload, Modal,TimePicker,Icon,message } from "antd";
 import SideMenu from "./sidebar";
-import {REQUEST_TYPE} from '../../constant';
+import {REQUEST_TYPE,PATH} from '../../constant';
 import {getUploadURL} from '../../Helper/urls/user';
 import {doRequest} from '../../Helper/network';
 import plus from '../../Assets/images/plus.png';
-
+import { withRouter } from "react-router-dom";
 
 
 const { Option } = Select;
@@ -47,15 +47,38 @@ class QualificationRegister extends Component {
 
 
     componentDidMount() {
-    
-        let key=uuid();
-        
-        
-        let education={};
-        education[key]= {degree:"",college:"",year:"",photo:[]};
-        let educationKeys = [key];
-        this.setState({education,educationKeys});
+    this.fetchData();   
     }
+
+    fetchData = async() => {
+      const{authenticated_user={},getDoctorQualificationRegisterData}=this.props;
+
+      const{basic_info:{id=1}={}}=authenticated_user;
+
+      await getDoctorQualificationRegisterData(id);
+
+      const{onBoarding={}}=this.props;
+      let{qualificationData:{ speciality='',gender='',registration_number='',registration_council='',registration_year='',qualification_details=[] }={}}=onBoarding||{};
+      let educationKeys=[]; 
+      let education={}; 
+      
+      if(qualification_details.length){
+         for(let qualification of qualification_details){
+          let key=uuid();
+          qualification.photo=[];
+          education[key]=qualification;
+          educationKeys.push(key);
+         }
+        
+          }else{
+            let key=uuid();
+            education[key]= {degree:"",college:"",year:"",photo:[],photos:[]};
+            educationKeys = [key];
+          }
+
+       console.log(onBoarding.qualificationData,speciality,gender,registration_number,registration_council,registration_year,education,educationKeys);
+      this.setState({speciality,gender,registration_number,registration_council,registration_year,education,educationKeys });
+  }
 
     setSpeciality = e => {
         this.setState({ speciality: e.target.value });
@@ -181,11 +204,13 @@ class QualificationRegister extends Component {
             fileList.forEach((item,index)=>{
                 let uid=item.uid;
                 let push= true;
+                if(newEducation[key].photo && newEducation[key].photo.length){
                 newEducation[key].photo.forEach((pic,picindex)=>{
                     if(pic.uid===uid){
                       push=false;
                     }
                 })
+              }
                 if(push){
                   newEducation[key].photo.push(item);
                 }
@@ -279,7 +304,7 @@ class QualificationRegister extends Component {
         return(
             <div className='flex direction-column'>
            {educationKeys.map(key=>{
-            let{photo=[]}=education[key];
+            let{photo=[],degree,college,year,photos=[]}=education[key];
             console.log('PHOTOOOOOOOOOOOOOOO',photo);
                 return(
                     
@@ -296,12 +321,14 @@ class QualificationRegister extends Component {
               <div className='form-headings'>Degree</div>
                     <Input
                        placeholder="Degree"
+                       value={degree}
                        className={"form-inputs"}
                        onChange={e=>this.setDegree(key,e)}
                     />
               <div className='form-headings'>College</div>
                  <Input
                     placeholder="College"
+                    value={college}
                     className={"form-inputs"}
                     onChange={e=>this.setCollege(key,e)}
                  />
@@ -309,14 +336,21 @@ class QualificationRegister extends Component {
                  <Input
                     placeholder="Year"
                     className={"form-inputs"}
+                    value={year}
                     onChange={e=>this.setYear(key,e)}
                  />
                   <div className='form-headings'>Photo</div>
                   <div className='qualification-photo-uploads'>
+                  {photos.map(pic=>{
+                    return(
+                      <div className={"qualification-avatar-uploader"}><img src={pic} className='wp100 hp100'/></div>
+                    );
+                  })}
                   <Upload
                         multiple={true}
                         className="avatar-uploader"
-                //      showUploadList={false}
+                     showUploadList={false}
+                    disabled={!(degree && college && year)}
                      fileList={photo}
                      customRequest={this.customRequest(key)}
                      onChange={this.handleChangeList(key,fileList)}
@@ -328,14 +362,14 @@ class QualificationRegister extends Component {
                        >
                   {uploadButton}
                 </Upload>
-                <Modal
+                {/* <Modal
           visible={previewVisible}
           title={previewTitle}
           footer={null}
           onCancel={this.handleCancel}
         >
           <img alt="example" style={{ width: '100%' }} src={previewImage} />
-        </Modal>
+        </Modal> */}
                 </div>
                 </div>
                 );
@@ -347,34 +381,49 @@ class QualificationRegister extends Component {
     }
 
     onNextClick = () =>{
-      
+      const{history,authenticated_user}=this.props;
       // const validate=this.validateData();
       // if(validate){
+        const{basic_info:{id=1}={}} =authenticated_user||{};
           const{  speciality='',gender='', registration_number='',registration_council='',registration_year='',education={} }=this.state;
           let newEducation=Object.values(education);
           newEducation.forEach((edu,index)=>{
             delete edu.photo;
           })
           console.log('ONCLICKKKKKK8797897',newEducation);
-              const data = { user_id:4, speciality,gender,registration_number,registration_council,registration_year,qualification_details:newEducation};
+              const data = { user_id:id, speciality,gender,registration_number,registration_council,registration_year,qualification_details:newEducation};
               const{doctorQualificationRegister}=this.props;
-              doctorQualificationRegister(data);
+              doctorQualificationRegister(data).then(response=>{
+                const{status}=response;
+                if(status){
+                    history.replace(PATH.REGISTER_CLINICS);
+                }else{
+                    message.error('Something went wrong');
+                }
+            });;
       // }
+      }
+
+      onBackClick = () =>{
+        const{history}=this.props;
+        history.replace(PATH.REGISTER_PROFILE);
       }
 
    
 
     renderQualificationForm=()=>{
+      const{speciality='',gender='',registration_number='',registration_council='',registration_year=''}=this.state
         return(
             <div className='form-block'>
                  <div className='form-headings'>Speciality</div>
                <Input
                     placeholder="Speciality"
                     className={"form-inputs"}
+                    value={speciality}
                     onChange={this.setSpeciality}
                  />
              <div className='form-headings'>Gender</div>
-             <Select className=".form-inputs" onChange={this.setGender}>
+             <Select className=".form-inputs" value={gender} onChange={this.setGender}>
                             {this.getGenderOptions()}
                         </Select>
             
@@ -385,6 +434,7 @@ class QualificationRegister extends Component {
              <div className='form-headings'>Registration number</div>
                  <Input
                     placeholder="Registration number"
+                    value={registration_number}
                     className={"form-inputs"}
                     onChange={this.setRegNo}
                  />
@@ -392,6 +442,7 @@ class QualificationRegister extends Component {
              <div className='form-headings'>Registration council</div>
                  <Input
                     placeholder="Registration council"
+                    value={registration_council}
                     className={"form-inputs"}
                     onChange={this.setRegCouncil}
                  />
@@ -399,6 +450,7 @@ class QualificationRegister extends Component {
             <div className='form-headings'>Registration year</div>
                  <Input
                     placeholder="Registration year"
+                    value={registration_year}
                     className={"form-inputs"}
                     onChange={this.setRegYear}
                  />
@@ -413,7 +465,7 @@ class QualificationRegister extends Component {
         console.log("STATEEEEEEEEEEE",this.state);
               return (
             <Fragment>
-                <SideMenu {...this.props} />
+                {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
                 <div className='header'>Create your Profile</div>
                 <div className= 'registration-body'>
@@ -425,8 +477,8 @@ class QualificationRegister extends Component {
                   </div>
                     </div>
                   <div className='footer'>
-                  <div className={'footer-text-inactive'} >
-                      {/* Back */}
+                  <div className={'footer-text-active'} onClick={this.onBackClick}>
+                      Back
                       </div> 
                   <div className={'footer-text-active'} onClick={this.onNextClick}>Next</div></div>  
                     </div>
@@ -434,4 +486,4 @@ class QualificationRegister extends Component {
         );
     }
 }
-export default injectIntl(QualificationRegister);
+export default withRouter(injectIntl(QualificationRegister));

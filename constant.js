@@ -358,6 +358,10 @@ export const CURRENCY = {
     USD: "USD"
 };
 
+export const DOCUMENT_PARENT_TYPE = {
+    DOCTOR_QUALIFICATION:'doctor_qualification'
+};
+
 export const SIGN_IN_CATEGORY = {
     BASIC: "basic",
     GOOGLE: "google",

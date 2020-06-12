@@ -6,10 +6,11 @@ import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
 import {Tabs, Button,Steps,Col,Select,Input,Upload, Modal,TimePicker,Icon,message } from "antd";
 import SideMenu from "./sidebar";
-import {REQUEST_TYPE} from '../../constant';
+import {REQUEST_TYPE,PATH} from '../../constant';
 import {getUploadURL} from '../../Helper/urls/user';
 import {doRequest} from '../../Helper/network';
 import plus from '../../Assets/images/plus.png';
+import { withRouter } from "react-router-dom";
 
 
 
@@ -169,40 +170,54 @@ class ClinicRegister extends Component {
 
 
         onNextClick = () =>{
+            const{history,authenticated_user}=this.props;
             console.log('ONCLICKKKKKK');
             // const validate=this.validateData();
             // if(validate){
+                const{basic_info:{id=1}={}} =authenticated_user||{};
                 const{ clinics={}}=this.state;
                 let newClinics=Object.values(clinics);
-                    const data = { user_id:4,clinics:newClinics };
+                    const data = { user_id:id,clinics:newClinics };
                     const{doctorClinicRegister}=this.props;
-                    doctorClinicRegister(data);
+                    doctorClinicRegister(data).then(response=>{
+                        const{status}=response;
+                        if(status){
+                            history.replace(PATH.DASHBOARD);
+                        }else{
+                            message.error('Something went wrong');
+                        };
+                    });
             // }
             }
+
+            onBackClick = () =>{
+                const{history}=this.props;
+                history.replace(PATH.REGISTER_QUALIFICATIONS);
+              }
 
     render(){
         console.log("STATEEEEEEEEEEE",this.state);
               return (
             <Fragment>
-                <SideMenu {...this.props} />
+                {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
                 <div className='header'>Create your Profile</div>
                 <div className= 'registration-body'>
              <div className='flex'>
-                        <UploadSteps className="mt24" current={0} />
+                        <UploadSteps className="mt24" current={2} />
                     </div>
                   <div className='flex'>
                  {this.renderClinicForm()}
                   </div>
                     </div>
                   <div className='footer'>
-                  <div className={'footer-text-inactive'} >
-                      {/* Back */}
+                  <div className={'footer-text-active'} onClick={this.onBackClick}>
+                      Back
                       </div> 
-                  <div className={'footer-text-active'} onClick={this.onNextClick}>Next</div></div>  
+                  <div className={'footer-text-active'} onClick={this.onNextClick}>Finish</div></div>  
                     </div>
             </Fragment>
         );
     }
 }
-export default injectIntl(ClinicRegister);
+export default withRouter(injectIntl(ClinicRegister));

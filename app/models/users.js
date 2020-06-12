@@ -76,7 +76,10 @@ const Users = database.define(
                     sign_in_type: this.sign_in_type,
                     category: this.category,
                     activated_on: this.activated_on,
-                    onboarded:this.onboarded
+                    onboarded:this.onboarded,
+                    mobile_number:this.mobile_number,
+                    prefix:this.prefix
+                    
                 };
             }
         }
