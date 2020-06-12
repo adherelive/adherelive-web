@@ -20,6 +20,17 @@ class MedicineService {
       throw error;
     }
   };
+
+  getMedicineByData = async (data) => {
+    try {
+      const medicine = await Medicine.findOne({
+        where: data
+      });
+      return medicine;
+    } catch(error) {
+      throw error;
+    }
+  };
 }
 
 export default new MedicineService();

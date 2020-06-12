@@ -2,6 +2,7 @@ import Controller from "../../index";
 import moment from "moment";
 import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
 import MobileMReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
+import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import {
   EVENT_STATUS,
   EVENT_TYPE,
@@ -14,7 +15,7 @@ import {
 } from "../../../../constant";
 import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
-// import medicineService from "../../services/medicines/medicine.service";
+import medicineService from "../../../services/medicine/medicine.service";;
 
 const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -67,8 +68,10 @@ class MobileMReminderController extends Controller {
 
       const repeatDays = repeat_days.map(day => day.substring(0,3));
 
-      // const medicineDetails = await medicineService.getMedicineById();
-      const medicine = "test medicine";
+      // const medicineDetails = await medicineService.getMedicineByData({id: medicine_id});
+
+      // const medicineWrapper = new MedicineApiWrapper(medicineDetails);
+      // const medicine = "test medicine";
 
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
@@ -78,7 +81,7 @@ class MobileMReminderController extends Controller {
         start_date,
         end_date,
         details: {
-          medicine,
+          medicine_id,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat: REPEAT_TYPE[repeat] || "weekly",
