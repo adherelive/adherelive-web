@@ -114,7 +114,7 @@
       height: @52px;
       line-height: 52px;
     }
-    
+
     textarea {
       background: rgba(0, 0, 0, 0.02);
       border: 1px solid #979797;
@@ -137,6 +137,18 @@
   //   height: 52px;
   //   line-height: 52px;
   // }
+}
+
+// .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+//   background-color: @deep-sea-blue !important;
+// }
+
+.ant-menu {
+  &.side-bar-menu {
+    .ant-menu-item-selected {
+      background-color: @deep-sea-blue !important;
+    }
+  }
 }
 
 // .ant-form-item-control {
