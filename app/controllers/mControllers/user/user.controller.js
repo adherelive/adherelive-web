@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 const request = require("request");
 import bcrypt from "bcrypt";
 import chalk from "chalk";
-import {USER_CATEGORY} from "../../../../constant";
 
 import Log from "../../../../libs/log";
 
