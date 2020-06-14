@@ -29,6 +29,8 @@ class AppointmentWrapper extends BaseAppointment {
       start_date,
       end_date,
       rr_rule = "",
+      start_time,
+      end_time,
     } = _data || {};
     return {
       basic_info: {
@@ -37,6 +39,8 @@ class AppointmentWrapper extends BaseAppointment {
         details,
         start_date,
         end_date,
+        start_time,
+        end_time,
       },
       participant_one: {
         id: participant_one_id,

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { hasErrors } from "../../../Helper/validation";
+import moment from "moment";
 
 import Drawer from "antd/es/drawer";
 import Form from "antd/es/form";
@@ -72,13 +73,24 @@ class AddAppointment extends Component {
 
         try {
           const response = await addAppointment(data);
-          const { status } = response || {};
+          const {
+            status,
+            statusCode: code,
+            payload: { message: errorMessage = "", error, error: {error_type = ""} = {} },
+          } = response || {};
 
-          if (status === true) {
+          if (code === 422) {
+            if(error_type === "slot_present") {
+              message.warn(
+                `${errorMessage} range: ${moment(start_time).format(
+                  "LT"
+                )} - ${moment(end_time).format("LT")}`
+              );
+            }
+          } else if(status === true) {
             message.success(formatMessage(messages.add_appointment_success));
           } else {
-            // TODO: add error message from response here
-            // message.error(formatMessage(message.add_appointment_error))
+            message.warn(errorMessage);
           }
 
           console.log("add appointment response -----> ", response);
@@ -114,12 +126,11 @@ class AddAppointment extends Component {
       FormWrapper,
     } = this;
 
-    console.log("1897123 disabledSubmit ---> ", disabledSubmit);
-
     const submitButtonProps = {
       disabled: disabledSubmit,
       // loading: loading && !deleteLoading
     };
+
     return (
       <Fragment>
         <Drawer
@@ -127,7 +138,7 @@ class AddAppointment extends Component {
           // closable={false}
           onClose={onClose}
           visible={visible} // todo: change as per prop -> "visible", -- WIP --
-          width={800}
+          width={`45%`}
           title={formatMessage(messages.add_appointment)}
           // headerStyle={{
           //     display:"flex",
@@ -135,12 +146,12 @@ class AddAppointment extends Component {
           //     alignItems:"center"
           // }}
         >
-          <div className="flex direction-row justify-space-between">
-            <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
-            <CalendarTimeSelecton 
+          {/* <div className="flex direction-row justify-space-between"> */}
+          <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
+          {/* <CalendarTimeSelecton 
                 className="calendar-section wp60"
-            />
-          </div>
+            /> */}
+          {/* </div> */}
 
           <Footer
             onSubmit={handleSubmit}

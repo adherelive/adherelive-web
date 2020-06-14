@@ -6,7 +6,7 @@ import Appointment from "../../../app/controllers/appointments/appointment.contr
 import * as validator from "./validator";
 
 router.get(
-    "/patients/:patient_id",
+    "/:id",
     Authenticate,
     Appointment.getAppointmentForPatient
 );

@@ -20,8 +20,8 @@ const Dashboard = lazy(() =>
 );
 
 const PatientDetailsComp = props => {
-  const { match: { params: { id } = {} } = {} } = props;
-  return <PatientDetails id={id} />;
+  const { match: { params: { patient_id } = {} } = {} } = props;
+  return <PatientDetails patient_id={patient_id} />;
 };
 
 export default class Authenticated extends Component {

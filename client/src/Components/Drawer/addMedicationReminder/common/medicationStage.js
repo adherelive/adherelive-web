@@ -114,7 +114,7 @@ class MedicationStage extends Component {
           rules: [
             {
               required: true,
-              message: "Choose Medicine"
+              message: "Search Medicine"
             }
           ],
           initialValue: getInitialValue()
@@ -126,6 +126,7 @@ class MedicationStage extends Component {
             onSearch={handleMedicineSearch}
             notFoundContent={fetchingMedicines ? <Spin size="small" /> : null}
             showSearch
+            onFocus={() => handleMedicineSearch("")}
             autoComplete="off"
             optionFilterProp="children"
             // suffixIcon={DropDownIcon}

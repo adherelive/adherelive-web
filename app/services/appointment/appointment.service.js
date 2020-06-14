@@ -41,6 +41,30 @@ class AppointmentService {
       throw error;
     }
   };
+
+  checkTimeSlot = async (start_time, end_time) => {
+    try {
+      const appointments = await Appointments.findAll({
+        where: {
+          [Op.or]: [
+            {
+              start_time: {
+                [Op.between]: [start_time,end_time]
+              }
+            },
+            {
+              end_time: {
+                [Op.between]: [start_time,end_time]
+              }
+            }
+          ]
+        },
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default new AppointmentService();

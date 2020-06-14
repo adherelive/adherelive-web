@@ -1,8 +1,6 @@
 export default class MedicationReminder {
     constructor(data) {
-        this._data = data.get();
-        this._medicationReminderId = data.get("id");
-        console.log("this._medicationReminderId  constructor  --> ", this._medicationReminderId);
+        this._data = data;
     }
 
     getExistingData = () => {
@@ -10,6 +8,6 @@ export default class MedicationReminder {
     }
 
     getMReminderId = () => {
-        return this._medicationReminderId;
+        return this._data.get("id");
     }
 }

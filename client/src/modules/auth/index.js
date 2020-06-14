@@ -287,6 +287,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
       return {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
+        // authRedirection: payload.authRedirection
       };
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {

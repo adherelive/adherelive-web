@@ -118,7 +118,7 @@ class AddAppointmentForm extends Component {
 
     console.log("appointment form props --> ", this.props);
     return (
-      <Form className="wp40 fw700">
+      <Form className="fw700">
         <FormItem label={formatMessage(message.patient)}>
           {getFieldDecorator(PATIENT, {
             initialValue: getInitialValue(),

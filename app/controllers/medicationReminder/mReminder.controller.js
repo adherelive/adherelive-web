@@ -2,6 +2,8 @@ import Controller from "../index";
 import moment from "moment";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import medicineService from "../../services/medicine/medicine.service";
+
+import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../ApiWrapper/web/medicine";
 import {
   CUSTOM_REPEAT_OPTIONS,
@@ -143,6 +145,38 @@ class MReminderController extends Controller {
     } catch (error) {
       console.log("Get m-reminder details error ----> ", error);
       return raiseServerError(res, 500, error.message, "something went wrong");
+    }
+  };
+
+  getMedicationForId = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const {params: {id} = {}} = req;
+
+      const medicationDetails = await medicationReminderService.getMedicationsForParticipant({participant_id : id});
+
+      // console.log("712367132 medicationDetails --> ", medicationDetails);
+      Logger.debug("medication details", medicationDetails);
+
+      let medicationApiData = {};
+
+      await medicationDetails.forEach(async medication => {
+        const medicationWrapper = await MedicationWrapper(medication);
+        medicationApiData[medicationWrapper.getMReminderId()] = medicationWrapper.getBasicInfo();
+      });
+      
+      return raiseSuccess(
+        res,
+        200,
+        {
+          medications: {
+            ...medicationApiData
+          }
+        },
+        "medications fetched successfully"
+      );
+    } catch(error) {
+      return raiseServerError(res);
     }
   };
 }

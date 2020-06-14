@@ -101,7 +101,7 @@ class AddMedicationReminder extends Component {
     const {
       // form: { validateFields },
       addMedicationReminder,
-      payload: {patient_id = "2"} = {}
+      payload: {patient_id} = {}
     } = this.props;
 
     const { formRef = {}, formatMessage } = this;

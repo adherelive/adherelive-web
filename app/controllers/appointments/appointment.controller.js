@@ -7,6 +7,7 @@ import { EVENT_STATUS, EVENT_TYPE } from "../../../constant";
 import moment from "moment";
 
 import Log from "../../../libs/log";
+import { raiseClientError } from "../../../routes/helper";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -18,6 +19,7 @@ class AppointmentController extends Controller {
   }
 
   create = async (req, res) => {
+    const { raiseClientError } = this;
     try {
       const { body, userDetails } = req;
       const {
@@ -35,6 +37,25 @@ class AppointmentController extends Controller {
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
+
+      const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
+        start_time,
+        end_time
+      );
+
+      Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
+
+      if (getAppointmentForTimeSlot.length > 0) {
+        return raiseClientError(
+          res,
+          422,
+          {
+            error_type: "slot_present",
+          },
+          `Appointment Slot already present between`
+        );
+      }
+
       const appointment_data = {
         participant_one_type: category,
         participant_one_id: userId,
@@ -46,9 +67,9 @@ class AppointmentController extends Controller {
         description,
         start_date: moment(date),
         end_date: moment(date),
+        start_time,
+        end_time,
         details: {
-          start_time,
-          end_time,
           treatment,
         },
       };
@@ -97,35 +118,35 @@ class AppointmentController extends Controller {
   getAppointmentForPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+      const { params: { id } = {}, userDetails: { userId } = {} } = req;
 
       const appointmentList = await appointmentService.getAppointmentForPatient(
-        patient_id
+        id
       );
       Logger.debug("appointmentList", appointmentList);
 
-      if (appointmentList.length > 0) {
-        let appointmentApiData = {};
+      // if (appointmentList.length > 0) {
+      let appointmentApiData = {};
 
-        await appointmentList.forEach(async (appointment) => {
-          const appointmentWrapper = await new AppointmentWrapper(appointment);
-          appointmentApiData[
-            appointmentWrapper.getAppointmentId()
-          ] = appointmentWrapper.getBasicInfo();
-        });
+      await appointmentList.forEach(async (appointment) => {
+        const appointmentWrapper = await new AppointmentWrapper(appointment);
+        appointmentApiData[
+          appointmentWrapper.getAppointmentId()
+        ] = appointmentWrapper.getBasicInfo();
+      });
 
-        return raiseSuccess(
-          res,
-          200,
-          {
-            appointments: {
-              ...appointmentApiData,
-            },
+      return raiseSuccess(
+        res,
+        200,
+        {
+          appointments: {
+            ...appointmentApiData,
           },
-          `appointment data for patient: ${patient_id} fetched successfully`
-        );
-      } else {
-      }
+        },
+        `appointment data for patient: ${id} fetched successfully`
+      );
+      // } else {
+      // }
     } catch (error) {
       Logger.debug("500 error", error);
       return raiseServerError(res);

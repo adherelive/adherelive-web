@@ -3,12 +3,15 @@ import { injectIntl, FormattedMessage } from "react-intl";
 import message from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { SEVERITY_STATUS } from "../../../constant";
+import { SEVERITY_STATUS, MEDICINE_TYPE } from "../../../constant";
 import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin } from "antd";
 import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
+
+import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
+import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 
 const { TabPane } = Tabs;
 
@@ -171,7 +174,7 @@ const PatientCard = ({
   patient_last_name,
   gender="M",
   patient_age="44",
-  patient_id="8qy13",
+  patient_id="123456",
   patient_phone_number,
   patient_email_id,
   formatMessage
@@ -213,7 +216,7 @@ const PatientTreatmentCard = ({
   treatment_doctor,
   treatment_start_date,
   treatment_provider,
-  treatment_severity_status
+  treatment_severity_status = "1"
 }) => {
   return (
     <div className="treatment mt20">
@@ -299,7 +302,11 @@ class PatientDetails extends Component {
   }
 
   componentDidMount() {
+    const {getMedications, getAppointments, searchMedicine, patient_id} = this.props;
     this.getData();
+    getMedications(patient_id);
+    getAppointments(patient_id);
+    searchMedicine("");
   }
 
   getAppointmentsData = () => {
@@ -309,9 +316,10 @@ class PatientDetails extends Component {
         // todo: changes based on care-plan || appointment-repeat-type,  etc.,
         const {
         basic_info : {
-          organizer_id, organizer_type = "doctor", start_date, description,
-            details: {start_time, end_time} = {}
-        } = {}} = appointments[id] || {};
+          organizer_type = "doctor", start_date, description, start_time, end_time
+        } = {},
+        organizer: {id: organizer_id} = {}
+      } = appointments[id] || {};
         const {basic_info: {user_name = "--"} = {}} = users[organizer_id] || {};
         return {
           // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
@@ -339,11 +347,12 @@ class PatientDetails extends Component {
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
-        medicine: name ? (
-          <div>
-            <p>{`${name}`}</p>
+        medicine: (
+          <div className="flex direction-row justify-space-around align-center">
+            <img className="w20 mr10" src={type === MEDICINE_TYPE.TABLET ? TabletIcon : InjectionIcon} alt="medicine icon" />
+            <p className="mb0">{name ? `${name}` : "--"}</p>
           </div>
-        ) : "Amoxil 2mg",
+        ),
         in_take: `${repeat_days.join(', ')}`,
         duration: `Till ${moment(end_date).format("DD MMMM")}`,
       }
@@ -393,10 +402,10 @@ class PatientDetails extends Component {
 
   handleAppointment = e => {
     // e.preventDefault();
-    const {openAppointmentDrawer} = this.props;
+    const {openAppointmentDrawer, patient_id} = this.props;
     openAppointmentDrawer({
       patients: {
-        id: "2",
+        id: patient_id,
         first_name: "test",
         last_name: "patient",
       }
@@ -404,13 +413,14 @@ class PatientDetails extends Component {
   };
 
   handleMedicationReminder = e => {
-    const {openMReminderDrawer, id} = this.props;
+    const {openMReminderDrawer, patient_id} = this.props;
     openMReminderDrawer({
-      patient_id: id
+      patient_id
     });
   };
 
   render() {
+    const {patients, patient_id} = this.props;
     const { loading } = this.state;
     const { formatMessage, getMenu, getAppointmentsData, getMedicationData } = this;
 
@@ -422,18 +432,22 @@ class PatientDetails extends Component {
       );
     }
 
-    console.log("here 21111 ", this.props);
+    const {
+      basic_info: {
+        first_name,
+        middle_name,
+        last_name
+      }
+    } = patients[patient_id] || {};
+
+    console.log("192387123762 ", patients[patient_id]);
 
 
     const {
       user_details: {
-        first_name: patient_first_name,
-        middle_name: patient_middle_name,
-        last_name: patient_last_name,
         gender,
         age: patient_age,
         phone_number: patient_phone_number,
-        patient_id,
         email_id: patient_email_id,
         profile_picture: patient_display_picture
       } = {}
@@ -476,24 +490,23 @@ class PatientDetails extends Component {
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
             <PatientCard
               patient_display_picture={patient_display_picture}
-              patient_first_name={patient_first_name}
-              patient_middle_name={patient_middle_name}
-              patient_last_name={patient_last_name}
+              patient_first_name={first_name}
+              patient_middle_name={middle_name}
+              patient_last_name={last_name}
               gender={gender}
               patient_age={patient_age}
-              patient_id={patient_id}
               patient_phone_number={patient_phone_number}
               patient_email_id={patient_email_id}
               formatMessage={formatMessage}
             />
             <PatientTreatmentCard
               formatMessage={formatMessage}
-              treatment_name={treatment_name}
-              treatment_condition={treatment_condition}
-              treatment_doctor={treatment_doctor}
-              treatment_start_date={treatment_start_date}
-              treatment_provider={treatment_provider}
-              treatment_severity_status={treatment_severity_status}
+              treatment_name={treatment_name ? treatment_name : "--"}
+              treatment_condition={treatment_condition ? treatment_condition : "--"}
+              treatment_doctor={treatment_doctor ? treatment_doctor : "--"}
+              treatment_start_date={treatment_start_date ? treatment_start_date : "--"}
+              treatment_provider={treatment_provider ? treatment_provider : "--"}
+              treatment_severity_status={treatment_severity_status ? treatment_severity_status : "1"}
             />
           </div>
           <div className="flex-grow-1 pt20 pr24 pb20 pl24">

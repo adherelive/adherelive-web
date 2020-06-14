@@ -8,7 +8,7 @@ export const PATH = {
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",
-    DETAILS: "/patients/:id"
+    DETAILS: "/patients/:patient_id"
   }
 };
 
@@ -207,7 +207,7 @@ export const REQUEST_TYPE = {
 export const SEVERITY_STATUS = {
   [CRITICAL]: {
     text: "Critical",
-    color: "dark-red"
+    color: "red"
   },
   [LOW]: {
     text: "Low",
@@ -284,3 +284,8 @@ export const CONDITIONS = {
 };
 
 export const TABLE_DEFAULT_BLANK_FIELD = "--";
+
+export const MEDICINE_TYPE = {
+  TABLET: "tablet",
+  INJECTION: "injection"
+}

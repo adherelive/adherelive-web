@@ -6,7 +6,7 @@ export const SEARCH_MEDICINE_START = "SEARCH_MEDICINE_START";
 export const SEARCH_MEDICINE_COMPLETED = "SEARCH_MEDICINE_COMPLETED";
 export const SEARCH_MEDICINE_FAILED = "SEARCH_MEDICINE_FAILED";
 
-export const searhMedicine = value => {
+export const searchMedicine = value => {
     let response = {};
     return async dispatch => {
         try {
@@ -48,7 +48,7 @@ function medicineReducer(state, data) {
     }
 }
 
-export default (state, payload) => {
+export default (state = {}, payload) => {
   const { type, data } = payload || {};
   switch (type) {
     case SEARCH_MEDICINE_COMPLETED:

@@ -43,6 +43,12 @@ const Appointments = database.define(
         end_date: {
             type: Sequelize.DATE
         },
+        start_time: {
+            type: Sequelize.DATE
+        },
+        end_time: {
+            type: Sequelize.DATE
+        },
         rr_rule: {
             type: Sequelize.STRING(1000)
         },
@@ -67,6 +73,8 @@ const Appointments = database.define(
                     start_date: this.start_date,
                     end_date: this.end_date,
                     rr_rule: this.rr_rule,
+                    start_time: this.start_time,
+                    end_time: this.end_time,
                     details: this.details,
                 };
             }
