@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         signOut: () => dispatch(signOut()),
-        doctorProfileRegister: (data) => dispatch(doctorProfileRegister(data)),
+        doctorProfileRegister: (data,userId) => dispatch(doctorProfileRegister(data,userId)),
         getDoctorProfileRegisterData: (userId) => dispatch(getDoctorProfileRegisterData(userId))
     };
 };

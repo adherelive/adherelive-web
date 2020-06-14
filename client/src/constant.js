@@ -15,6 +15,12 @@ export const PATH = {
   }
 };
 
+export const ONBOARDING_STATUS = {
+  PROFILE_REGISTERED:'profile_registered',
+  QUALIFICATION_REGISTERED:'qualification_registered',
+  CLINIC_REGISTERED:'CLINIC_registered',
+};
+
 export const CRITICAL = "1";
 export const HIGH = "2";
 export const MEDIUM = "3";

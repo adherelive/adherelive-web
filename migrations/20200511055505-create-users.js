@@ -46,6 +46,10 @@ module.exports = {
       onboarded: {
         type: Sequelize.BOOLEAN
       },
+      onboarding_status: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

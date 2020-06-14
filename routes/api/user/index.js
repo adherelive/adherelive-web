@@ -48,7 +48,7 @@ router.post(
 );
 
 router.post(
-    "/doctor-profile-registration",
+    "/doctor-profile-registration/:userId",
     userController.doctorProfileRegister
 );
 
@@ -58,7 +58,7 @@ router.get(
 );
 
 router.post(
-    "/doctor-qualification-registration",
+    "/doctor-qualification-registration/:userId",
     userController.doctorQualificationRegister
 );
 
@@ -68,7 +68,23 @@ router.get(
 );
 
 router.post(
-    "/doctor-clinic-registration",
+    "/delete-qualification-document/:qualificationId",
+    userController.deleteDoctorQualificationDocument,
+);
+
+router.post(
+    "/register-qualification/:userId",
+    userController.registerQualification
+);
+
+router.post(
+    "/upload-qualification-document/:userId/:qualificationId",
+    upload.single("files"),
+    userController.uploadDoctorQualificationDocument
+);
+
+router.post(
+    "/doctor-clinic-registration/:userId",
     userController.doctorClinicRegister
 );
 router.post("/sign-out", Authenticate, userController.signOut);

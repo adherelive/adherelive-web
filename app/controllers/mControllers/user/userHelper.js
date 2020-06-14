@@ -1,14 +1,12 @@
+import doctorService from "../../../services/doctors/doctors.service";
+import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
+import clinicService from "../../../services/doctorClinics/doctorClinics.service";
+import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 
-import doctorService from "../../services/doctors/doctors.service";
-import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
-import clinicService from "../../services/doctorClinics/doctorClinics.service";
-import documentService from "../../services/uploadDocuments/uploadDocuments.service";
-
-// import  EVENTS from "../../proxySdk/proxyEvents";
-import minioService from "../../../app/services/minio/minio.service";
+import minioService from "../../../../app/services/minio/minio.service";
 import md5 from "js-md5";
-import UserVerifications from "../../models/userVerifications";
-import { EMAIL_TEMPLATE_NAME, USER_CATEGORY, DOCUMENT_PARENT_TYPE,ONBOARDING_STATUS } from "../../../constant";
+import UserVerifications from "../../../models/userVerifications";
+import { EMAIL_TEMPLATE_NAME, USER_CATEGORY, DOCUMENT_PARENT_TYPE,ONBOARDING_STATUS } from "../../../../constant";
 
 
 export const doctorQualificationData =async(userId)=>{
@@ -69,6 +67,7 @@ export const doctorQualificationData =async(userId)=>{
         console.log(" GET DOCTOR QUALIFICATION CATCH ERROR ", error);
     }
 }
+
 
 export const uploadImageS3= async(userId ,file)=>{
 

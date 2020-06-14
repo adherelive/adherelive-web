@@ -7,6 +7,7 @@ import uuid from 'react-uuid';
 import {Tabs, Button,Steps,Col,Select,Input,InputNumber,Upload, Modal,TimePicker,Icon,message } from "antd";
 import SideMenu from "./sidebar";
 import {REQUEST_TYPE,PATH} from '../../constant';
+import UploadSteps from './steps';
 import {getUploadURL} from '../../Helper/urls/user';
 import {doRequest} from '../../Helper/network';
 import plus from '../../Assets/images/plus.png';
@@ -16,16 +17,6 @@ import { withRouter } from "react-router-dom";
 
 const { Option } = Select;
 
-const UploadSteps = ({ current, className }) => {
-    const { Step } = Steps;
-    return (
-        <Steps className={`ml64 mr64 wa ${className}`}  current={current} direction="vertical">
-            <Step title={"Profile"} />
-            <Step title={"Qualifications"} />
-            <Step title={"Clinics"} />
-        </Steps>
-    );
-};
 
 class Profileregister extends Component {
     constructor(props) {
@@ -205,9 +196,9 @@ class Profileregister extends Component {
         const validate=this.validateData();
         if(validate){
             const{  name='',email='',mobile_number='',category='',city='',prefix='',profile_pic_url='',profile_pic_url_saved=''}=this.state;
-                const data = { user_id:id, name,email,mobile_number,category,city,prefix,profile_pic:profile_pic_url?profile_pic_url:profile_pic_url_saved};
+                const data = { name,email,mobile_number,category,city,prefix,profile_pic:profile_pic_url?profile_pic_url:profile_pic_url_saved};
                 const{doctorProfileRegister}=this.props;
-                doctorProfileRegister(data).then(response=>{
+                doctorProfileRegister(data,id).then(response=>{
                     const{status}=response;
                     if(status){
                         history.replace(PATH.REGISTER_QUALIFICATIONS);
@@ -296,10 +287,10 @@ class Profileregister extends Component {
                         <div className='form-headings'>Phone number</div>
                         <Input
                             addonBefore={prefixSelector}
+                            className={"form-inputs"}
                             placeholder="Phone number"
                             maxLength={10}
                             value={mobile_number}
-                            className={"form-inputs"}
                             onChange={this.setNumber}
                         />
 

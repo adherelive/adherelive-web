@@ -63,6 +63,10 @@ const Users = database.define(
         onboarded: {
             type: Sequelize.BOOLEAN
           },
+          onboarding_status: {
+            type: Sequelize.STRING,
+            allowNull: true
+          },
     },
     {
         underscored: true,
@@ -77,6 +81,7 @@ const Users = database.define(
                     category: this.category,
                     activated_on: this.activated_on,
                     onboarded:this.onboarded,
+                    onboarding_status:this.onboarding_status,
                     mobile_number:this.mobile_number,
                     prefix:this.prefix
                     

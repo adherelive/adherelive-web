@@ -1,6 +1,6 @@
 import * as constants from "../../../../config/constants";
 
-const {OAuth2Client} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 const moment = require('moment');
 const jwt = require("jsonwebtoken");
 const request = require('request');
@@ -10,6 +10,23 @@ import chalk from "chalk";
 const Response = require("../../helper/responseFormat");
 import userService from "../../../services/user/user.service";
 import Controller from "../../";
+import doctorService from "../../../services/doctors/doctors.service";
+import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
+import clinicService from "../../../services/doctorClinics/doctorClinics.service";
+import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
+
+import { doctorQualificationData, uploadImageS3 } from './userHelper';
+import { v4 as uuidv4 } from "uuid";
+import { EMAIL_TEMPLATE_NAME, USER_CATEGORY, DOCUMENT_PARENT_TYPE, ONBOARDING_STATUS } from "../../../../constant";
+import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
+// import  EVENTS from "../../proxySdk/proxyEvents";
+const errMessage = require("../../../../config/messages.json").errMessages;
+import minioService from "../../../../app/services/minio/minio.service";
+import md5 from "js-md5";
+import UserVerifications from "../../../models/userVerifications";
+
+
 
 class UserController extends Controller {
     constructor() {
@@ -18,7 +35,7 @@ class UserController extends Controller {
 
     signIn = async (req, res) => {
         try {
-            const {email, password} = req.body;
+            const { email, password } = req.body;
             const user = await userService.getUserByEmail({
                 email
             });
@@ -126,10 +143,10 @@ class UserController extends Controller {
 
 
     async signInFacebook(req, res) {
-        const {accessToken} = req.body;
+        const { accessToken } = req.body;
 
         try {
-            request(`https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=3007643415948147&client_secret=60d7c3e6dc4aae01cd9096c2749fc5c1&fb_exchange_token=${accessToken}`, {json: true}, (err, res, body) => {
+            request(`https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=3007643415948147&client_secret=60d7c3e6dc4aae01cd9096c2749fc5c1&fb_exchange_token=${accessToken}`, { json: true }, (err, res, body) => {
                 if (err) {
                     return console.log(err);
                 }
@@ -156,7 +173,7 @@ class UserController extends Controller {
         let response;
         try {
             if (req.userDetails.exists) {
-                const {userId} = req.userDetails;
+                const { userId } = req.userDetails;
                 const user = await userService.getUserById(userId);
 
                 // const userDetails = user[0];
@@ -167,7 +184,7 @@ class UserController extends Controller {
                     }
                 }
 
-                return this.raiseSuccess(res, 200, {user: dataToSend}, "basic info");
+                return this.raiseSuccess(res, 200, { user: dataToSend }, "basic info");
 
                 // response = new Response(true, 200);
                 // response.setData({
@@ -202,6 +219,356 @@ class UserController extends Controller {
             return this.raiseServerError(res, 500, {}, `${error.message}`);
         }
     };
+
+
+
+    uploadImage = async (req, res) => {
+        const { userDetails, body } = req;
+        const { userId = "3" } = userDetails || {};
+        console.log('BODYYYYYYYYYYYYYYYY', req.file);
+        const file = req.file;
+        // const fileExt= file.originalname.replace(/\s+/g, '');
+        try {
+
+            //   await minioService.createBucket();
+
+
+            //   const imageName = md5(`${userId}-education-pics`);
+
+            //   let hash = md5.create();
+
+            //   hash.hex();
+            //   hash = String(hash);
+
+            //   const folder = "adhere";
+            //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
+            //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
+
+            //   const metaData = {
+            //     "Content-Type":
+            //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            // };
+            // const fileUrl = folder+ "/" +file_name;
+            // await minioService.saveBufferObject(file.buffer, file_name, metaData);
+
+            // // console.log("file urlll: ", process.config.minio.MINI);
+            // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
+            // let files = [file_link];
+            // console.log("Uplaoded File Url ---------------------->  ", file_link);
+            // console.log("User Controllers =------------------->   ", files);
+            //const resume_link = process.config.BASE_DOC_URL + files[0]
+            let files = await uploadImageS3(userId, file);
+            return this.raiseSuccess(res, 200, {
+                files: files
+            }, "files uploaded successfully");
+
+        } catch (error) {
+            console.log("FILE UPLOAD CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    };
+
+    doctorProfileRegister = async (req, res) => {
+        let { name, city, category, mobile_number, prefix, profile_pic } = req.body;
+        let doctorName = name.split(' ');
+
+        const { userId: user_id } = req.params;
+        try {
+
+
+
+            let user = await userService.getUserById(user_id);
+            let user_data_to_update = { category, mobile_number, prefix, onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED };
+            console.log("USERRRRRRRR1111111", user_data_to_update);
+            console.log("REQUESTTTTTTTT BODYYYYYY", req.body);
+
+            let doctor = {};
+            console.log("USERRRRRRRR", updatedUser);
+            let doctorExist = await doctorService.getDoctorByUserId(user_id);
+            // console.log('DOCTORRRRR EXISTTT',doctorExist.get('id'),doctorExist.getBasicInfo);
+            let first_name = doctorName[0];
+            let middle_name = doctorName.length == 3 ? doctorName[1] : '';
+            let last_name = doctorName.length == 3 ? doctorName[2] : doctorName.length == 2 ? doctorName[1] : "";
+            if (doctorExist) {
+
+                let doctor_data = { city, profile_pic, first_name, middle_name, last_name, address: city };
+                let doctor_id = doctorExist.get('id');
+                doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
+                console.log('DOCTORRRRRIFFFFFF', doctor, doctor.getBasicInfo);
+            } else {
+                let doctor_data = { user_id, city, profile_pic, first_name, middle_name, last_name, address: city };
+                doctor = await doctorService.addDoctor(doctor_data);
+                console.log('DOCTORRRRRELSEEEEE', doctor, doctor.getBasicInfo);
+            }
+            let updatedUser = await userService.updateUser(user_data_to_update, user_id);
+            return this.raiseSuccess(res, 200, {
+                doctor
+            }, "doctor profile updated successfully");
+
+        } catch (error) {
+            console.log("DOCTOR REGISTER CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    }
+
+
+    getDoctorProfileRegisterData = async (req, res) => {
+        // let{user_id,name,city,category,mobile_number,prefix,profile_pic}=req.body;
+        let { userId } = req.params;
+        try {
+            let name = '';
+            let email = '';
+            let city = '';
+            let category = '';
+            let prefix = '';
+            let mobile_number = '';
+            let profile_pic = '';
+
+
+            let user = await userService.getUserById(userId);
+            // console.log("GET PROFILE DATA USERRRRRRR",user.getBasicInfo);
+            let userInfo = user.getBasicInfo;
+            const { email: eMail = '', category: docCategory = '', mobile_number: mobNo = '', prefix: pre = '' } = userInfo;
+
+            email = eMail;
+            category = docCategory;
+            prefix = pre;
+            mobile_number = mobNo;
+
+            let doctor = await doctorService.getDoctorByUserId(userId);
+            // console.log('GET PROFILE DATA USERRRRRRR',doctor.get('id'),doctor.getBasicInfo);
+
+            if (doctor) {
+
+                let docInfo = doctor.getBasicInfo;
+                const { first_name = '', middle_name = '', last_name = '', city: docCity = '', profile_pic: docPic = '' } = docInfo || {};
+                name = first_name + " " + `${middle_name && middle_name + " "}` + last_name;
+
+                city = docCity;
+                profile_pic = docPic;
+            }
+
+            const profileData = { name, city, category, mobile_number, prefix, profile_pic, email };
+
+            // console.log('FINAL+++================>',profileData);
+
+            return this.raiseSuccess(res, 200, {
+                profileData
+            }, " get doctor profile successfull");
+
+        } catch (error) {
+            console.log("DOCTOR REGISTER CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    }
+
+    doctorQualificationRegister = async (req, res) => {
+        let { speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = '', qualification_details = [] } = req.body;
+
+        const { userId: user_id } = req.params;
+        try {
+            let user = userService.getUserById(user_id);
+            let user_data_to_update = { onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED };
+            let doctor = await doctorService.getDoctorByUserId(user_id);
+            let doctor_id = doctor.get('id');
+            let doctor_data = { gender, registration_number, registration_council, registration_year, speciality };
+            let updatedDoctor = await doctorService.updateDoctor(doctor_data, doctor_id);
+            let qualificationsOfDoctor = await qualificationService.getQualificationsByDoctorId(doctor_id);
+
+            let newQualifications = [];
+            for (let item of qualification_details) {
+
+                let { degree = '', year = '', college = '', photos = [], id = 0 } = item;
+                console.log('QUALIFICATIONS ITEMMMMMMMMMMMMMMMM', item, id);
+                if (id && id != '0') {
+                    let qualification = await qualificationService.updateQualification({ doctor_id, degree, year, college }, id);
+                    newQualifications.push(parseInt(id));
+                } else {
+                    let qualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
+                    console.log('QUALIFICATIONS ITEMMMMMMMMMMMMMMMM', qualification);
+                }
+            }
+
+            console.log('QUALIFICATIONS NEWWWWWWWWWWWW', newQualifications);
+
+
+            for (let qualification of qualificationsOfDoctor) {
+                let qId = qualification.get('id');
+                if (newQualifications.includes(qId)) {
+                    console.log('QUALIFICATIONS IFFFF', newQualifications);
+                    continue
+                } else {
+                    console.log('QUALIFICATIONS ELSEEEE', newQualifications);
+                    let deleteDocs = await documentService.deleteDocumentsOfQualification(DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, qId);
+                    let quali = await qualificationService.getQualificationById(qId);
+                    quali.destroy();
+                }
+            }
+            let updatedUser = await userService.updateUser(user_data_to_update, user_id);
+            return this.raiseSuccess(res, 200, {
+                // doctor
+            }, "qualifications updated successfully");
+
+        } catch (error) {
+            console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    }
+
+    getDoctorQualificationRegisterData = async (req, res) => {
+
+        let { userId } = req.params;
+        try {
+            const qualificationData = await doctorQualificationData(userId);
+            console.log('FINAL+++================>', qualificationData);
+
+            return this.raiseSuccess(res, 200, {
+                qualificationData
+            }, " get doctor qualification successfull");
+
+        } catch (error) {
+            console.log("DOCTOR QUALIFICATION REGISTER CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    }
+
+    uploadDoctorQualificationDocument = async (req, res) => {
+
+
+        console.log('FILEEEEEEEEEEEEEEEE=================>', req.file);
+
+        const file = req.file;
+        const { userId = 1 } = req.params;
+        let { qualification = {} } = req.body;
+        console.log('BODYYYYYYYYYYYYYYYY=================>', qualification, typeof (qualification));
+        try {
+            let files = await uploadImageS3(userId, file);
+            let qualification_id = 0;
+            let doctor = await doctorService.getDoctorByUserId(userId);
+            let doctor_id = doctor.get('id');
+            // let{ degree = '', year = '', college = '' } =JSON.parse(qualification);
+            // console.log('BODYYYYYYYYYYYYYYYY1111111=================>', degree, year, college);
+            // let qualificationOfDoctor = await qualificationService.getQualificationByData(doctor_id,degree,year,college);
+            // console.log(' QUALIFICATIONNNN OF DOCTORRRR',qualificationOfDoctor);
+            // // let qualificationOfDoctorExist=qualificationOfDoctor?qualificationOfDoctor.length:false;
+            // if (!qualification_id && !qualificationOfDoctor) {
+            //   let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
+            //  console.log('DOCTORRRR QUALIFICATIONNNN',docQualification);
+            //   qualification_id = docQualification.get('id');
+            //   let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
+            // } else if(!qualification_id) {
+            //   qualification_id = qualificationOfDoctor.get('id');
+            //   let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
+            // }else{
+            // qualification_id=qualificationId;
+            // let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
+            // }
+            return this.raiseSuccess(res, 200, {
+                files: files, qualification_id
+            }, "doctor qualification updated successfully");
+
+        } catch (error) {
+            console.log("doctor qualification upload CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    };
+
+    deleteDoctorQualificationDocument = async (req, res) => {
+
+        const { qualificationId = 1 } = req.params;
+        let { document = '' } = req.body;
+        try {
+            console.log('DOCUMNENTTTTTTTTTT', req.body, document);
+            let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
+            let parent_id = qualificationId;
+            let documentToDelete = await documentService.getDocumentByData(parent_type, parent_id, document);
+
+            console.log('DOCUMNENTTTTTTTTTT1111111', req.body, document, documentToDelete);
+            await documentToDelete.destroy();
+            return this.raiseSuccess(res, 200, {
+
+            }, "doctor qualification doc deleted successfully");
+
+        } catch (error) {
+            console.log("doctor qualification upload CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    };
+
+    registerQualification = async (req, res) => {
+        let { gender = '', speciality = '', qualification = {} } = req.body;
+        const { userId = 1 } = req.params;
+        try {
+            console.log("REGISTER QUALIFICATIONNNNNNNNN", userId, gender, speciality, qualification, req.body);
+
+            let user = userService.getUserById(userId);
+            let doctor = await doctorService.getDoctorByUserId(userId);
+            let doctor_id = doctor.get('id');
+
+            if (gender && speciality) {
+                let doctor_data = { gender, speciality };
+                let updatedDoctor = await doctorService.updateDoctor(doctor_data, doctor_id);
+            }
+            let { degree = '', year = '', college = '', id = 0, photos = [] } = qualification || {};
+            let qualification_id = id;
+            if (!qualification_id) {
+                let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
+                qualification_id = docQualification.get('id');
+                for (let photo of photos) {
+                    let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+                };
+            } else {
+                for (let photo of photos) {
+                    let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+                }
+            }
+
+            console.log("QUALIFICATIONNNNNNNNN IDDDDDDDD", qualification_id);
+            return this.raiseSuccess(res, 200, {
+                qualification_id
+            }, "qualifications updated successfully");
+
+        } catch (error) {
+            console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    }
+
+    doctorClinicRegister = async (req, res) => {
+        let {  clinics = [] } = req.body;
+        
+        const{userId:user_id}=req.params;
+        try {
+
+
+            // let user= await userService.getUserById(user_id);
+            let doctor = await doctorService.getDoctorByUserId(user_id);
+            let doctor_id = doctor.get('id');
+
+            console.log('DOCTORRRR UUSER', doctor_id, '    HDJDH 9088      ', '    DEJIDJ*(*)    ', doctor);
+
+
+
+            clinics.forEach(async (item) => {
+
+                let { name = '', location = '', start_time = '', end_time = '' } = item;
+                let start = moment(start_time);
+                let end = moment(end_time)
+                console.log('ITEMMMMMMMMMM OF CKININIC', name, location, start, end, doctor_id);
+                let clinic = await clinicService.addClinic({ doctor_id, name, location, start, end });
+
+            });
+
+            let updateUser = await userService.updateUser({ onboarded: true, onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED }, user_id);
+
+            return this.raiseSuccess(res, 200, {
+            }, "clinics added successfully");
+
+        } catch (error) {
+            console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
+            return this.raiseServerError(res, 500, {}, `${error.message}`);
+        }
+    }
 
 }
 

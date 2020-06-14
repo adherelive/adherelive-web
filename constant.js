@@ -362,6 +362,12 @@ export const DOCUMENT_PARENT_TYPE = {
     DOCTOR_QUALIFICATION:'doctor_qualification'
 };
 
+export const ONBOARDING_STATUS = {
+    PROFILE_REGISTERED:'profile_registered',
+    QUALIFICATION_REGISTERED:'qualification_registered',
+    CLINIC_REGISTERED:'CLINIC_registered',
+};
+
 export const SIGN_IN_CATEGORY = {
     BASIC: "basic",
     GOOGLE: "google",

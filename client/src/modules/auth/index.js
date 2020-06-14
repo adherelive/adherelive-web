@@ -1,4 +1,4 @@
-import { REQUEST_TYPE,USER_CATEGORY,PATH } from "../../constant";
+import { REQUEST_TYPE,USER_CATEGORY,PATH ,ONBOARDING_STATUS} from "../../constant";
 import { doRequest } from "../../Helper/network";
 import { Auth } from "../../Helper/urls";
 
@@ -53,11 +53,17 @@ function setAuthRedirect(user){
    
    let userData=Object.values(user).length?Object.values(user)[0]:[];
    
-  const{onboarded=true, category=USER_CATEGORY.DOCTOR}=userData;
+  const{onboarded=true,onboarding_status='', category=USER_CATEGORY.DOCTOR}=userData;
   console.log("USERRRRR IN SET AUUTTTHHHHH",!onboarded && category==USER_CATEGORY.DOCTOR,onboarded,category,userData);
   let authRedirect='/';
   if(!onboarded && category==USER_CATEGORY.DOCTOR){
-    authRedirect=PATH.REGISTER_PROFILE;
+    if(onboarding_status==ONBOARDING_STATUS.PROFILE_REGISTERED){
+      authRedirect=PATH.REGISTER_QUALIFICATIONS;
+    }else if(onboarding_status==ONBOARDING_STATUS.QUALIFICATION_REGISTERED){
+      authRedirect=PATH.REGISTER_CLINICS;
+    }else{
+      authRedirect=PATH.REGISTER_PROFILE;
+    }
   }
   return authRedirect;
 }
