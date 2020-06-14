@@ -1,10 +1,13 @@
 export const PATH = {
   LANDING_PAGE: "/",
+  DASHBOARD: "/dashboard",
   SIGN_IN: "/sign-in",
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
   SIGN_UP: "/sign-up/:link",
-  REGISTER:'/register/:link',
+  REGISTER_PROFILE:'/register-profile',
+  REGISTER_QUALIFICATIONS:'/register-qualifications',
+  REGISTER_CLINICS:'/register-clinics',
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",
@@ -68,6 +71,12 @@ export const MEDICATION_TIMING = {
     [TEXT_KEY]: "Before Sleeping",
     [TIME_KEY]: "10:30pm"
   }
+};
+
+export const ONBOARDING_STATUS = {
+  PROFILE_REGISTERED:'profile_registered',
+  QUALIFICATION_REGISTERED:'qualification_registered',
+  CLINIC_REGISTERED:'CLINIC_registered',
 };
 
 export const CRITICAL = "1";

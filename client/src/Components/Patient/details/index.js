@@ -304,7 +304,6 @@ class PatientDetails extends Component {
 
   getAppointmentsData = () => {
       const {appointments, users = {}, doctors = {}, patients = {}} = this.props;
-      console.log("92834792 ", appointments);
       return Object.keys(appointments).map(id => {
         // todo: changes based on care-plan || appointment-repeat-type,  etc.,
         const {
@@ -427,6 +426,9 @@ class PatientDetails extends Component {
 
     const {
       user_details: {
+        basic_info: {
+
+        },
         first_name: patient_first_name,
         middle_name: patient_middle_name,
         last_name: patient_last_name,

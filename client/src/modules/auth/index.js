@@ -1,10 +1,12 @@
-import { REQUEST_TYPE } from "../../constant";
+import { REQUEST_TYPE,USER_CATEGORY,PATH ,ONBOARDING_STATUS} from "../../constant";
 import { doRequest } from "../../Helper/network";
 import { Auth } from "../../Helper/urls";
 
 export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
 export const SIGNING_COMPLETED_WITH_ERROR = "SIGNING_COMPLETED_WITH_ERROR";
+
+
 
 export const GOOGLE_SIGNING = "GOOGLE_SIGNING";
 export const GOOGLE_SIGNING_COMPLETED = "GOOGLE_SIGNING_COMPLETED";
@@ -47,6 +49,25 @@ export const AUTH_INITIAL_STATE = {
   authenticated: false,
 };
 
+function setAuthRedirect(user){
+   
+   let userData=Object.values(user).length?Object.values(user)[0]:[];
+   
+  const{onboarded=true,onboarding_status='', category=USER_CATEGORY.DOCTOR}=userData;
+  console.log("USERRRRR IN SET AUUTTTHHHHH",!onboarded && category==USER_CATEGORY.DOCTOR,onboarded,category,userData);
+  let authRedirect='/';
+  if(!onboarded && category==USER_CATEGORY.DOCTOR){
+    if(onboarding_status==ONBOARDING_STATUS.PROFILE_REGISTERED){
+      authRedirect=PATH.REGISTER_QUALIFICATIONS;
+    }else if(onboarding_status==ONBOARDING_STATUS.QUALIFICATION_REGISTERED){
+      authRedirect=PATH.REGISTER_CLINICS;
+    }else{
+      authRedirect=PATH.REGISTER_PROFILE;
+    }
+  }
+  return authRedirect;
+}
+
 export const signIn = (payload) => {
   let response = {};
   return async (dispatch) => {
@@ -70,12 +91,14 @@ export const signIn = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { _id, users } = data;
-        let authRedirection = "/";
+        const { user={} } = data;
+        let authUser=Object.values(user).length?Object.values(user)[0]:{};
+        let authRedirection = setAuthRedirect(user);
+        console.log(' ID IN 898978 SIGNUPPPP',authRedirection,authUser,response.payload.data.user)
         dispatch({
           type: SIGNING_COMPLETED,
           payload: {
-            authenticatedUser: _id,
+            authenticatedUser: authUser,
             authRedirection,
           },
         });
@@ -254,13 +277,19 @@ export const getInitialData = () => {
         });
       } else if (status === true) {
         // const {lastUrl = false} = data;
-        const { id = "", users } = data;
-        let authRedirection = "/";
+        // const {  users } = response.payload.data;
+       
+        let {user={}}=response.payload.data;
+        let authUser=Object.values(user).length?Object.values(user)[0]:{};
+      
+        let authRedirection = setAuthRedirect(user);
+
+        console.log(' ID IN 898978 GET INITIAL DATAA',authRedirection,authUser,response.payload.data.user);
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED,
           payload: {
-            users: response.payload.data.users,
-            authenticatedUser: `${id}`,
+            user: response.payload.data.user,
+            authenticatedUser: authUser,
             authRedirection,
           },
           data
@@ -287,6 +316,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
       return {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
+        authRedirection: payload.authRedirection
       };
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
@@ -324,6 +354,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
     case SIGNING_COMPLETED:
       return {
         authenticated: true,
+        authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
       };
     default:
