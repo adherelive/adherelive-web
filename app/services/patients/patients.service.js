@@ -1,7 +1,16 @@
-import patientModel from "../../models/patients";
+import Patient from "../../models/patients";
 
 class PatientsService {
     constructor() {}
+
+    getAll = async () => {
+        try {
+            const patients = await Patient.findAll();
+            return patients;
+        } catch(error) {
+            throw error;
+        }
+    };
 
     updatePatient = async (modelInstance, data) => {
       try {
@@ -13,9 +22,20 @@ class PatientsService {
       }
     };
 
+    getPatientByData = async (data) => {
+        try {
+            const patient = await Patient.findOne({
+                where: data
+            });
+            return patient;
+        } catch(error) {
+            throw error;
+        }
+    }
+
     getPatientByUserId = async user_id => {
         try {
-            const patient = await patientModel.findOne({
+            const patient = await Patient.findOne({
                 where: {
                     user_id
                 }

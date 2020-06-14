@@ -120,9 +120,9 @@ class AddMedicationReminder extends Component {
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const {medication_stage, quantity, strength, unit} = values || {};
+        const {medicine_id, quantity, strength, unit} = values || {};
         data_to_submit = {
-          medication_stage,
+          medicine_id,
           quantity,
           strength,
           unit,

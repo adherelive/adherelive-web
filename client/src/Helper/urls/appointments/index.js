@@ -1,3 +1,3 @@
 export const addAppointmentUrl = () => {
-  return `/events/appointments`;
+  return `/appointments`;
 };

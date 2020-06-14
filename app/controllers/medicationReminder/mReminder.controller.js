@@ -1,6 +1,8 @@
 import Controller from "../index";
 import moment from "moment";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
+import medicineService from "../../services/medicine/medicine.service";
+import MedicineWrapper from "../../ApiWrapper/web/medicine";
 import {
   CUSTOM_REPEAT_OPTIONS,
   DAYS,
@@ -60,8 +62,9 @@ class MReminderController extends Controller {
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
-      // const medicineDetails = await medicineService.getMedicineById();
-      const medicine = "test medicine";
+      const medicineDetails = await medicineService.getMedicineByData({id: medicine_id});
+
+      const medicineApiWrapper = await new MedicineWrapper(medicineDetails);
 
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
@@ -71,7 +74,7 @@ class MReminderController extends Controller {
         start_date,
         end_date,
         details: {
-          medicine,
+          medicine_id,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat,
@@ -107,6 +110,11 @@ class MReminderController extends Controller {
               basic_info: {
                 ...mReminderDetails.getBasicInfo
               }
+            }
+          },
+          medicines: {
+            [medicineApiWrapper.getMedicineId()]: {
+              ...medicineApiWrapper.getBasicInfo()
             }
           }
         },

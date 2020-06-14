@@ -1,14 +1,11 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import messages from "./message";
-import * as Chart from "chart.js";
 import drawChart from "../../Helper/drawChart";
-import {formatMessage} from "react-intl/src/format";
 import {CHART_TITLE, GRAPH_COLORS} from "../../constant";
-import {Tabs, Button} from "antd";
+import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
-import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
 
 const {TabPane} = Tabs;
 
@@ -116,7 +113,6 @@ class Dashboard extends Component {
                     </Tabs>
                 </div>
                 <PatientDetailsDrawer />
-                {/*<AddAppointmentDrawer />*/}
             </Fragment>
         );
     }

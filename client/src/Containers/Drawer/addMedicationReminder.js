@@ -4,6 +4,7 @@ import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import {addMedicationReminder} from "../../modules/medications";
 import {getMedicationDetails} from "../../modules/otherDetails";
+import {searhMedicine} from "../../modules/medicines";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
@@ -31,6 +32,7 @@ const mapDispatchToProps = dispatch => {
     close: () => dispatch(close()),
     addMedicationReminder: data => dispatch(addMedicationReminder(data)),
     getMedicationDetails: () => dispatch(getMedicationDetails()),
+    searchMedicine: data => dispatch(searhMedicine(data)),
   };
 };
 

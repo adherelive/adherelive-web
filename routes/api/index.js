@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 import userRouter from "./user";
+import appointmentRouter from "./appointments";
 import eventRouter from "./events";
 import twilioRouter from "./twilio";
 import patientRouter from "./patients";
+import medicineRouter from "./medicines";
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
 import Log from "../../libs/log";
@@ -65,8 +67,10 @@ router.use(async function(req, res, next) {
 });
 
 router.use("/auth", userRouter);
+router.use("/appointments", appointmentRouter);
 router.use("/events", eventRouter);
 router.use("/twilio", twilioRouter);
 router.use("/patients", patientRouter);
+router.use("/medicines", medicineRouter);
 
 module.exports = router;

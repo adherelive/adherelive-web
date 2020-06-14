@@ -5,7 +5,7 @@ import {open} from "../../modules/drawer";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = (state, ownprops) => {
-    const {users = {}, appointments, medications} = state;
+    const {users = {}, appointments, medications, medicines = {}, patients = {}} = state;
     // const { id } = ownprops;
     const user_details = users["3"] || {};
     console.log("usee:::", user_details, state, users, users["3"]);
@@ -13,7 +13,9 @@ const mapStateToProps = (state, ownprops) => {
         user_details,
         appointments,
         users,
-        medications
+        medications,
+        medicines,
+        patients,
     };
 };
 

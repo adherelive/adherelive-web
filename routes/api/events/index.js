@@ -1,5 +1,3 @@
-import MobileMedicationReminder from "../../../app/controllers/mControllers/medicationReminder/mReminder.controller";
-
 const express = require("express");
 const router = express.Router();
 
@@ -8,12 +6,12 @@ import Appointment from "../../../app/controllers/appointments/appointment.contr
 import MedicationReminder from "../../../app/controllers/medicationReminder/mReminder.controller";
 import * as validator from "./validator";
 
-router.post(
-    "/appointments",
-    Authenticate,
-    validator.validateAppointmentFormData,
-    Appointment.create
-);
+// router.post(
+//     "/appointments",
+//     Authenticate,
+//     validator.validateAppointmentFormData,
+//     Appointment.create
+// );
 
 router.post(
     "/medication-reminder/:patient_id",

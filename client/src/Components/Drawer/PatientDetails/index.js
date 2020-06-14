@@ -81,6 +81,8 @@ class PatientDetailsDrawer extends Component {
     const { basic_info: { name: doctorName } = {} } = doctors[doctor_id] || {};
     const { basic_info: { name: providerName } = {} } =
       providers[provider_id] || {};
+
+      console.log("3912739 gender --> ", patients);
     return (
       <Fragment>
         {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
@@ -90,7 +92,7 @@ class PatientDetailsDrawer extends Component {
         <div className="wp100 flex justify-space-between align-center mt20">
           <div className="flex justify-space-around align-center">
             <div className="pr10 fs24 fw600">{name}</div>
-            <div className="pr10 fs20 fw500">{`(${GENDER[gender]["view"]} ${age})`}</div>
+            <div className="pr10 fs20 fw500">{`(${GENDER[gender].view} ${age})`}</div>
             <Icon type="wechat" width={20} />
           </div>
           <img

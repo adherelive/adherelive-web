@@ -8,10 +8,18 @@ import bcrypt from "bcrypt";
 import chalk from "chalk";
 import {USER_CATEGORY} from "../../../../constant";
 
+import Log from "../../../../libs/log";
+
 const Response = require("../../helper/responseFormat");
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
+
+import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
+import MUserWrapper from "../../../ApiWrapper/mobile/user";
+
 import Controller from "../../";
+
+const Logger = new Log("MOBILE USER CONTROLLER");
 
 class UserController extends Controller {
   constructor() {
@@ -161,28 +169,35 @@ class UserController extends Controller {
     let response;
     try {
       if (req.userDetails.exists) {
-        const { userId, userData: { category } = {} } = req.userDetails;
+        const { userId, userData, userData: { category } = {} } = req.userDetails;
         const user = await userService.getUserById(userId);
 
-        // const userDetails = user[0];
+        const userApiWrapper = await MUserWrapper(userData);
 
+        // const userDetails = user[0];
         let userCategoryData = {};
+        let userCategoryApiData = null;
+        let userCategoryId = "";
         switch (category) {
           case USER_CATEGORY.PATIENT:
-            userCategoryData = await patientService.getPatientByUserId(userId);
+            userCategoryData = await patientService.getPatientByData({user_id: userId});
+            userCategoryApiData = await MPatientWrapper(userCategoryData);
+            userCategoryId = userCategoryApiData.getPatientId();
           default:
-            userCategoryData = await patientService.getPatientByUserId(userId);
+            userCategoryData = await patientService.getPatientByData({user_id: userId});
+            userCategoryApiData = await MPatientWrapper(userCategoryData);
+            userCategoryId = userCategoryApiData.getPatientId();
         }
 
         const dataToSend = {
           user: {
             [userId]: {
-                basic_info: user.getBasicInfo,
+                ...userApiWrapper.getBasicInfo(),
               },
           },
           patients: {
-              [userCategoryData.getId]: {
-                  basic_info: userCategoryData.getBasicInfo
+              [userCategoryId]: {
+                  ...userCategoryApiData.getBasicInfo()
               }
           }
         };
@@ -206,10 +221,10 @@ class UserController extends Controller {
         throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
-      console.log("|| --> ", err);
+      console.log("ON APP START API ERROR ", err);
 
       response = new Response(false, 500);
-      response.setError(err.getMessage());
+      response.setError(err.getMessage);
       return res.status(500).json(response.getResponse());
     }
   };

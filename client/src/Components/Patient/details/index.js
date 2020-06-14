@@ -325,19 +325,25 @@ class PatientDetails extends Component {
   };
 
   getMedicationData = () => {
-    const {medications = {}, users = {}, doctors = {}, patients = {}} = this.props;
+    const {medications = {}, users = {}, doctors = {}, patients = {}, medicines = {}} = this.props;
     console.log("92834792 ", medications);
     const medicationRows = Object.keys(medications).map(id => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
         basic_info : {
-          organizer_id, organizer_type = "doctor", end_date, details : {medicine, repeat_days, start_time} = {},
+          organizer_id, organizer_type = "doctor", end_date, details : {medicine_id, repeat_days, start_time} = {},
         } = {}} = medications[id] || {};
       const {basic_info: {user_name = "--"} = {}} = users[organizer_id] || {};
+
+      const {basic_info: {name, type} = {}} = medicines[medicine_id] || {};
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
-        medicine,
+        medicine: name ? (
+          <div>
+            <p>{`${name}`}</p>
+          </div>
+        ) : "Amoxil 2mg",
         in_take: `${repeat_days.join(', ')}`,
         duration: `Till ${moment(end_date).format("DD MMMM")}`,
       }

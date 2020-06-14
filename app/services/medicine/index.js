@@ -1,9 +1,9 @@
 import medicineService from "./medicine.service";
 
 export default class Medicine {
-    constructor(arrData) {
-        this._arrData = arrData.length > 0 ? arrData : [];
-        this._data = arrData.length > 0 ? {} : arrData;
+    constructor(data) {
+        // this._arrData = arrData.length > 0 ? arrData : [];
+        this._data = data;
     }
 
     setCurrentData = (data) => {

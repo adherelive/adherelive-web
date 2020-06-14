@@ -11,6 +11,7 @@ import chats from "./chat";
 import pages from "./pages";
 import drawer from "./drawer";
 import appointments from "./appointments";
+import medicines from "./medicines";
 import other_details from "./otherDetails";
 
 const rootReducer = combineReducers({
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   chats,
   drawer,
   appointments,
+  medicines,
   other_details,
 });
 

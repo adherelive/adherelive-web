@@ -21,7 +21,8 @@ export const doRequest = async requestdata => {
     baseURL = HOST,
     params = {},
     data = {},
-    onUploadProgress
+    onUploadProgress,
+    query = {},
   } = requestdata;
 
   //create request config according to data
@@ -34,7 +35,7 @@ export const doRequest = async requestdata => {
     data,
     xsrfCookieName,
     xsrfHeaderName,
-    onUploadProgress
+    onUploadProgress,
   };
 
   try {

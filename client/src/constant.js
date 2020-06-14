@@ -75,8 +75,8 @@ export const HIGH = "2";
 export const MEDIUM = "3";
 export const LOW = "4";
 
-export const MALE = "1";
-export const FEMALE = "2";
+export const MALE = "m";
+export const FEMALE = "f";
 
 export const GENDER = {
   [MALE]: {

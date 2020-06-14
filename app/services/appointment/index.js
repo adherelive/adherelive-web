@@ -1,14 +1,13 @@
 export default class Appointment {
-    constructor(id, data) {
+    constructor(data) {
         this._data = data;
-        this._appointmentId = id;
     }
 
     getExistingData = () => {
         return this._data;
     }
 
-    getAppointmentId = () => {
-        return this._appointmentId;
+    getAppointmentId() {
+        return this._data.get("id");
     }
 }

@@ -245,22 +245,25 @@ export const getInitialData = () => {
 
       console.log("GET INITIAL DATA response --> ", response);
 
-      if (response.status === false) {
+      const {status, payload: {error, data} = {}} = response || {};
+
+      if (status === false) {
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR,
-          payload: { error: response.payload.error },
+          payload: { error },
         });
-      } else if (response.status === true) {
+      } else if (status === true) {
         // const {lastUrl = false} = data;
-        const { _id, users } = response.payload.data;
+        const { id = "", users } = data;
         let authRedirection = "/";
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED,
           payload: {
-            user: response.payload.data.user,
-            authenticatedUser: _id,
+            users: response.payload.data.users,
+            authenticatedUser: `${id}`,
             authRedirection,
           },
+          data
         });
       }
     } catch (err) {

@@ -5,13 +5,17 @@ import appointmentService from "../../../services/appointment/appointment.servic
 import { OBJECT_NAME } from "../../../../constant";
 
 class AppointmentWrapper extends BaseAppointment {
-  constructor(id, data) {
-    super(id, data);
+  constructor(data) {
+    super(data);
     this._objectName = OBJECT_NAME.APPOINTMENT;
   }
 
+  getObjectName = () => {
+    return this._objectName;
+  };
+
   getBasicInfo = () => {
-    const { _objectName, _appointmentId, _data } = this;
+    const { _data } = this;
     const {
       id,
       participant_one_id,
@@ -24,41 +28,37 @@ class AppointmentWrapper extends BaseAppointment {
       details,
       start_date,
       end_date,
-      rr_rule = ""
+      rr_rule = "",
     } = _data || {};
     return {
-      [_objectName]: {
-        [_appointmentId]: {
-          basic_info: {
-            id,
-            description,
-            details,
-            start_date,
-            end_date
-          },
-          participant_one: {
-            id: participant_one_id,
-            category: participant_one_type
-          },
-          participant_two: {
-            id: participant_two_id,
-            category: participant_two_type
-          },
-          organizer: {
-            id: organizer_id,
-            category: organizer_type
-          },
-          rr_rule
-        }
-      }
+      basic_info: {
+        id,
+        description,
+        details,
+        start_date,
+        end_date,
+      },
+      participant_one: {
+        id: participant_one_id,
+        category: participant_one_type,
+      },
+      participant_two: {
+        id: participant_two_id,
+        category: participant_two_type,
+      },
+      organizer: {
+        id: organizer_id,
+        category: organizer_type,
+      },
+      rr_rule,
     };
   };
 }
 
-export default async (id, data = null) => {
+export default async (data = null, id = null) => {
   if (data !== null) {
-    return new AppointmentWrapper(id, data);
+    return new AppointmentWrapper(data);
   }
   const appointment = await appointmentService.getAppointment({ id });
-  return new AppointmentWrapper(appointment.get("id"), appointment.get());
+  return new AppointmentWrapper(appointment.get());
 };
