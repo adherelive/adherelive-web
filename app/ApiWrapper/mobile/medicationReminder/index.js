@@ -11,7 +11,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
   }
 
   getBasicInfo = () => {
-    const { _objectName, _medicationReminderId, _data } = this;
+    const { _data } = this;
     const {
       id,
       participant_id,

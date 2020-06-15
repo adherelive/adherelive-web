@@ -131,6 +131,10 @@ class AddAppointment extends Component {
       // loading: loading && !deleteLoading
     };
 
+    if(visible !== true) {
+      return null;
+    }
+
     return (
       <Fragment>
         <Drawer

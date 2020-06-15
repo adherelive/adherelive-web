@@ -73,7 +73,8 @@ export const PATIENT_INITIAL_STATE = {
   },
   "101": {
     basic_info: {
-      name: "test 3",
+      first_name: "test",
+      last_name: "3",
       age: "35",
       gender: "f"
     },
