@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 import mUserRouter from "./user";
+import mAppointmentRouter from "./appointments";
 import mEventRouter from "./events";
 import mPatientRouter from "./patients";
 import mMedicineRouter from "./medicine";
+import mMedicationRouter from "./medications";
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
 // import twilioRouter from "./twilio";
@@ -60,6 +62,8 @@ router.use(async function(req, res, next) {
 });
 
 router.use("/auth", mUserRouter);
+router.use("/appointments", mAppointmentRouter);
+router.use("/medications", mMedicationRouter);
 router.use("/events", mEventRouter);
 router.use("/patients", mPatientRouter);
 router.use("/medicines", mMedicineRouter);

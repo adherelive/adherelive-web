@@ -129,7 +129,7 @@ class AppointmentController extends Controller {
       let appointmentApiData = {};
 
       await appointmentList.forEach(async (appointment) => {
-        const appointmentWrapper = await new AppointmentWrapper(appointment);
+        const appointmentWrapper = await AppointmentWrapper(appointment);
         appointmentApiData[
           appointmentWrapper.getAppointmentId()
         ] = appointmentWrapper.getBasicInfo();

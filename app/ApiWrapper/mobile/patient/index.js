@@ -20,6 +20,13 @@ class MPatientWrapper extends BasePatient {
             activated_on,
             details
         } = _data || {};
+        const {profile_pic} = details || {};
+
+        const updatedDetails =  {
+            ...details,
+            profile_pic: `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profile_pic}`
+        };
+
         return {
             basic_info: {
                 id,
@@ -31,7 +38,7 @@ class MPatientWrapper extends BasePatient {
                 address
             },
             activated_on,
-            details
+            details: updatedDetails
         };
     };
 }

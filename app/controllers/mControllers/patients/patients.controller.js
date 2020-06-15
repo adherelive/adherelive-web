@@ -2,6 +2,9 @@ import Controller from "../../";
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
 import minioService from "../../../services/minio/minio.service";
+
+import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+
 import { randomString } from "../../../../libs/helper";
 import { saveFileIntoUserBucket } from "../../helper/user";
 
@@ -83,7 +86,8 @@ class MPatientController extends Controller {
         }
       }
 
-      const profilePicUrl = `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profilePic}`;
+      // const profilePicUrl = `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profilePic}`;
+      const profilePicUrl = `${profilePic}`;
 
       // todo minio configure here
 
@@ -101,13 +105,15 @@ class MPatientController extends Controller {
 
       const updatedpatientDetails = await patientService.updatePatient(patientDetails, patientData);
 
+      const patientApiWrapper = await PatientWrapper(updatedpatientDetails);
+
       return this.raiseSuccess(
         res,
         200,
         {
           patients: {
-            [updatedpatientDetails.getId]: {
-              ...updatedpatientDetails.getBasicInfo,
+            [patientApiWrapper.getPatientId()]: {
+              ...patientApiWrapper.getBasicInfo(),
             },
           },
         },

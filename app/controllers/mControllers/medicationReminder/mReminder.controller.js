@@ -151,6 +151,38 @@ class MobileMReminderController extends Controller {
       return raiseServerError(res, 500, error.message, "something went wrong");
     }
   };
+
+  getMedicationForId = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const {params: {id} = {}} = req;
+
+      const medicationDetails = await medicationReminderService.getMedicationsForParticipant({participant_id : id});
+
+      // console.log("712367132 medicationDetails --> ", medicationDetails);
+      Logger.debug("medication details", medicationDetails);
+
+      let medicationApiData = {};
+
+      await medicationDetails.forEach(async medication => {
+        const medicationWrapper = await MobileMReminderWrapper(medication);
+        medicationApiData[medicationWrapper.getMReminderId()] = medicationWrapper.getBasicInfo();
+      });
+      
+      return raiseSuccess(
+        res,
+        200,
+        {
+          medications: {
+            ...medicationApiData
+          }
+        },
+        "medications fetched successfully"
+      );
+    } catch(error) {
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new MobileMReminderController();
