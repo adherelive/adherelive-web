@@ -365,7 +365,7 @@ class UserController extends Controller {
 
         console.log("userId ---> ", userId);
 
-        const apiUserDetails = await UserWrapper(user);
+        const apiUserDetails = await UserWrapper(userData);
 
         let userCategoryData = {};
         let userCategoryApiWrapper = null;
@@ -400,7 +400,7 @@ class UserController extends Controller {
               ...apiUserDetails.getBasicInfo()
             }
           },
-          [category]: {
+          [`${category}s`]: {
             [userCategoryId]: {
               ...userCategoryApiWrapper.getBasicInfo()
             }
