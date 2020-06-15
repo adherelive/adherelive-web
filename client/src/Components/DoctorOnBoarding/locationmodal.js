@@ -24,12 +24,14 @@ class ClinicRegister extends Component {
         this.state = {
             address: '',
             pincode: '',
-            addressManual: ''
+            addressManual: '',
+            landmark: ''
         };
+        this.myRef = React.createRef();
     }
 
     componentDidMount() {
-
+        this.setState({ address: '', pincode: '', addressManual: '' })
     }
 
     setManualAddress = e => {
@@ -40,16 +42,29 @@ class ClinicRegister extends Component {
         this.setState({ pincode: e.target.value });
     };
 
+    setManualLandMark = e => {
+        this.setState({ landmark: e.target.value });
+    };
+
+    
+
     handleSave = () => {
-        let { address = '', pincode = '', addressManual = '' } = this.state;
+        let { address = '', pincode = '', addressManual = '', landmark = '' } = this.state;
         let { handleOk } = this.props;
-        let locationToSave = address ? address : addressManual + ',' + pincode;
+        let manual = addressManual + (pincode ? `,${pincode}` : '') + (landmark ? `,${landmark}` : '');
+
+        let locationToSave = address ? address.description : manual;
+        // this.GooglePlacesRef.setAddressText("");
+        handleOk(locationToSave);
+        this.myRef.current && this.clearInput();
         this.setState({
             address: '',
             pincode: '',
-            addressManual: ''
+            addressManual: '',
+            landmark: ''
         });
-        handleOk(locationToSave);
+
+
     }
 
     handleChange = address => {
@@ -57,38 +72,38 @@ class ClinicRegister extends Component {
     };
 
     handleClose = () => {
+
+        const { handleCancel } = this.props;
+
+        handleCancel();
+        this.myRef.current && this.clearInput();
         this.setState({
             address: '',
             pincode: '',
-            addressManual: ''
+            addressManual: '',
+            landmark: ''
         });
-        const { handleCancel } = this.props;
-        this.handleClose();
+
     }
 
-
-
-    handleSelect = address => {
-        geocodeByAddress(address)
-            .then(results => getLatLng(results[0]))
-            .then(latLng => console.log('Success', latLng))
-            .catch(error => console.error('Error', error));
-    };
+    clearInput = () => {
+       this.myRef.current.value = "";
+    }
 
 
     render() {
         console.log("STATEEEEEEEEEEE OF MODAL", this.state);
-        const { } = this.state;
+        const { address = '', addressManual = '', pincode = '', landmark = '' } = this.state;
 
-        const { visible, handleCancel, handleOk } = this.props;
+        const { visible, handleCancel, handleOk, location } = this.props;
         return (
             <Modal
                 visible={visible}
                 title={'Location'}
-                onCancel={handleCancel}
+                onCancel={this.handleClose}
                 onOk={this.handleSave}
                 footer={[
-                    <Button key="back" onClick={handleCancel}>
+                    <Button key="back" onClick={this.handleClose}>
                         Return
                     </Button>,
                     <Button key="submit" type="primary" onClick={this.handleSave}>
@@ -99,65 +114,50 @@ class ClinicRegister extends Component {
                 <div className='location-container'>
                     <div className='form-category-headings'>Google</div>
                     <GooglePlacesAutocomplete
-               inputClassName={'form-inputs-google'}
-                    //    inputStyle={{height:50,width:261,border:1,borderColor:'#d7d7d7'}}
-                      placeholder={'Search Address'}
-                    onSelect={this.handleChange}
-                    apiKey='AIzaSyAph8LyvVYPjM1x48m5gxpj6nt19QrhBv'
-                    />
-                    {/* <PlacesAutocomplete
-                        value={this.state.address}
-                        onChange={this.handleChange}
-                        onSelect={this.handleSelect}
-                    >
-                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                            <div>
-                                <Input
-                                    {...getInputProps({
-                                        placeholder: 'Search Places ...',
-                                        className: 'form-inputs',
-                                    })}
-                                />
-                                <div className="autocomplete-dropdown-container">
-                                    {loading && <div>Loading...</div>}
-                                    {suggestions.map(suggestion => {
-                                        const className = suggestion.active
-                                            ? 'suggestion-item--active'
-                                            : 'suggestion-item';
-                                        const style = suggestion.active
-                                            ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                            : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                                        return (
-                                            <div
-                                                {...getSuggestionItemProps(suggestion, {
-                                                    className,
-                                                    style,
-                                                })}
-                                            >
-                                                <span>{suggestion.description}</span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
+                        inputClassName={'form-inputs-google'}
+                        // ref={(instance) => { this.GooglePlacesRef = instance }}
+                        renderInput={(props) => (
+                            <Input
+                            ref={this.myRef}
+                                className="form-inputs"
+                                value={address ? address.description : location ? location : ''}
+                                // Custom properties
+                                {...props}
+                            />
                         )}
-                    </PlacesAutocomplete> */}
+                        //    inputStyle={{height:50,width:261,border:1,borderColor:'#d7d7d7'}}
+
+
+                        placeholder={'Search Address...'}
+                        onSelect={this.handleChange}
+                    />
+
 
 
                     <div className='form-category-headings'>Or add manually</div>
                     <div className='form-headings'>Address</div>
                     <Input
                         placeholder="Address"
-                        value={this.state.addressManual}
+                        disabled={address ? true : false}
+                        value={addressManual}
                         className={"form-inputs"}
                         onChange={this.setManualAddress}
                     />
                     <div className='form-headings'>Pincode</div>
                     <Input
                         placeholder="Pincode"
-                        value={this.state.pincode}
+                        disabled={address ? true : false}
+                        value={pincode}
                         className={"form-inputs"}
                         onChange={this.setManualPincode}
+                    />
+                    <div className='form-headings'>Landmark</div>
+                    <Input
+                        placeholder="Landmark"
+                        disabled={address ? true : false}
+                        value={landmark}
+                        className={"form-inputs"}
+                        onChange={this.setManualLandMark}
                     />
 
                 </div>

@@ -72,14 +72,12 @@ class SignIn extends Component {
                     console.log("email, password --> ", email, password);
 
                     const response = await signIn({ email, password });
-                    const { status = false,payload:{error='',data={}}={} } = response;
-                    if (status){
+                    const { status = false } = response;
+                    if (status) {
                         message.success("LoggedIn successfully", 4);
                     } else {
-                       console.log('SIGNIN ERRORRRRR',error,data);
                         this.setState({ loading: false });
                         message.error("Username or Password incorrect", 4);
-                       
                     }
                 } catch (err) {
                     console.log("298293 err ----> ", err);
@@ -167,13 +165,13 @@ class SignIn extends Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: "Please enter email or mobile number"
+                                        message: "Please enter email"
                                     }
                                 ]
                             })(
                                 <Input
                                     type="text"
-                                    placeholder="Mobile number or Email"
+                                    placeholder="Email"
                                     className="h40"
                                 />
                             )}
@@ -247,13 +245,13 @@ class SignIn extends Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: "Please enter email or mobile number"
+                                        message: "Please enter email"
                                     }
                                 ]
                             })(
                                 <Input
                                     type="text"
-                                    placeholder="Mobile number or Email"
+                                    placeholder="Email"
                                     className="h40"
                                 />
                             )}
@@ -302,4 +300,4 @@ class SignIn extends Component {
     }
 }
 
-export default Form.create({name: "login_form"})(SignIn);
+export default Form.create()(SignIn);
