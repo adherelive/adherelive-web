@@ -479,12 +479,12 @@ class PatientDetails extends Component {
       );
     }
 
+    console.log("192387123762 ", patients, patient_id);
+
+
     const {
       basic_info: { first_name, middle_name, last_name, user_id },
     } = patients[patient_id] || {};
-
-    console.log("192387123762 ", patients[patient_id]);
-
     const {
       user_details: {
         gender,
