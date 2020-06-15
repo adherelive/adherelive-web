@@ -91,64 +91,171 @@ class UserController extends Controller {
       console.log("error sign in  --> ", error);
       return this.raiseServerError(res, 500, error, error.getMessage());
     }
-  };
+};
 
-  async signInGoogle(req, res) {
-    const authCode = req.body.tokenId;
-    const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
-    const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;
-    const REDIRECT_URI = process.config.GOOGLE_KEYS.REDIRECT_URI;
-    try {
-      const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+ signUp=async(req, res)=> {
 
-      const tokens = await client.getToken(authCode);
 
-      const idToken = tokens.tokens.id_token;
-      const ticket = await client.verifyIdToken({
-        idToken: idToken,
-        audience: CLIENT_ID,
-      });
+        try {
+            const { password, email } = req.body;
+            const userExits = await userService.getUserByEmail({ email });
 
-      const accessToken = tokens.tokens.access_token;
-      console.log("acess token ==== ", accessToken);
+            console.log("CREDENTIALSSSSSSSSSSSSSS", password, email);
+            if (userExits !== null) {
+                const userExitsError = new Error();
+                userExitsError.code = 11000;
+                throw userExitsError;
+            }
 
-      const payload = ticket.getPayload();
-      // console.log(payload);
+            let response;
+            const link = uuidv4();
+            const status = "verified";   //make it pending completing flow with verify permission
+            const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+            const hash = await bcrypt.hash(password, salt);
+            const verified = true;
 
-      // create user in Db  if does not exist
 
-      // create jwt token for cookie
-      const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 1 day
-      const secret = process.config.TOKEN_SECRET_KEY;
-      const userId = 3;
-      const accessTokenCombined = await jwt.sign(
-        {
-          userId: userId,
-          accessToken: accessToken,
-        },
-        secret,
-        {
-          expiresIn,
+            let user = await userService.addUser({
+                email,
+                password: hash,
+                sign_in_type: "basic",
+                category: "doctor",
+                onboarded: false,
+                verified,
+                activated_on: moment()
+            });
+
+            const userInfo = await userService.getUserByEmail({ email });
+
+            const userVerification = UserVerificationServices.addRequest({
+                user_id: userInfo.get("id"),
+                request_id: link,
+                status: "pending"
+            });
+            let uId = userInfo.get("id");
+
+            console.log(
+                "CREDENTIALSSSSSSSSSSSSSS111111111111",
+                "      1234567890          ",
+                userInfo.get("id")
+            );
+            const emailPayload = {
+                title: "Verification mail",
+                toAddress: email,
+                templateName: EMAIL_TEMPLATE_NAME.WELCOME,
+                templateData: {
+                    title: "Doctor",
+                    link: process.config.app.invite_link + link,
+                    inviteCard: "",
+                    mainBodyText: "We are really happy that you chose us.",
+                    subBodyText: "Please verify your account",
+                    buttonText: "Verify",
+                    host: process.config.WEB_URL,
+                    contactTo: "patientEngagement@adhere.com"
+                }
+            };
+
+            Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+
+            const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+            const secret = process.config.TOKEN_SECRET_KEY;
+            const accessToken = await jwt.sign(
+                {
+                    userId: user.get("id"),
+                },
+                secret,
+                {
+                    expiresIn
+                }
+            );
+
+
+         return this.raiseSuccess(res, 200, {
+                    accessToken
+                }, "Sign up successfull");
+        } catch (err) {
+            console.log("signup err,", err);
+            if (err.code && err.code == 11000) {
+                let response = new Response(false, 400);
+                console.log(
+                    "Sign ka hai -----------> , ",
+                    errMessage.EMAIL_ALREADY_EXISTS
+                );
+                response.setError(errMessage.EMAIL_ALREADY_EXISTS);
+                return res.status(400).json(response.getResponse());
+            } else {
+                let response = new Response(false, 500);
+                response.setError(errMessage.INTERNAL_SERVER_ERROR);
+                return res.status(500).json(response.getResponse());
+            }
         }
-      );
-
-      console.log("access token combines --> ", accessTokenCombined);
-
-      // res.cookie("accessToken", accessTokenCombined);
-
-      let response = new Response(true, 200);
-      response.setMessage("Sign in successful!");
-      response.setData({
-        accessToken: accessTokenCombined,
-      });
-      return res.status(response.getStatusCode()).send(response.getResponse());
-    } catch (err) {
-      console.log("error ======== ", err);
-      //throw err;
-      let response = new Response(false, 500);
-      response.setMessage("Sign in Unsuccessful!");
-      return res.status(response.getStatusCode()).send(response.getResponse());
     }
+
+    signIn = async (req, res) => {
+        try {
+            const { email, password } = req.body;
+            const user = await userService.getUserByEmail({
+                email
+            });
+
+            // const userDetails = user[0];
+            // console.log("userDetails --> ", userDetails);
+            if (!user) {
+                return this.raiseClientError(res, 422, user, "user does not exists");
+            }
+
+            let verified = user.get('verified');
+
+            if (!verified) {
+                return this.raiseClientError(res, 401, "user account not verified");
+            }
+
+            // TODO: UNCOMMENT below code after signup done for password check or seeder
+            const passwordMatch = await bcrypt.compare(password, user.get("password"));
+            if (passwordMatch) {
+                const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+                const secret = process.config.TOKEN_SECRET_KEY;
+                const accessToken = await jwt.sign(
+                    {
+                        userId: user.get("id"),
+                    },
+                    secret,
+                    {
+                        expiresIn
+                    }
+                );
+
+                return this.raiseSuccess(res, 200, {
+                    accessToken
+                }, "initial data retrieved successfully");
+            } else {
+                return this.raiseClientError(res, 422, {}, "password not matching")
+            }
+        } catch (error) {
+            console.log("error sign in  --> ", error);
+            return this.raiseServerError(res, 500, error, error.getMessage());
+        }
+    //   );
+
+    //   console.log("access token combines --> ", accessTokenCombined);
+
+    //   // res.cookie("accessToken", accessTokenCombined);
+
+    //   let response = new Response(true, 200);
+    //   response.setMessage("Sign in successful!");
+    //   response.setData({
+    //     accessToken: accessTokenCombined,
+    //   });
+    //   return res.status(response.getStatusCode()).send(response.getResponse());
+    // } catch (err) {
+    //   console.log("error ======== ", err);
+    //   //throw err;
+    //   let response = new Response(false, 500);
+    //   response.setMessage("Sign in Unsuccessful!");
+    //   return res.status(response.getStatusCode()).send(response.getResponse());
+    // }
   }
 
   async signInFacebook(req, res) {
@@ -542,7 +649,7 @@ class UserController extends Controller {
         let { gender = '', speciality = '', qualification = {} } = req.body;
         const { userId = 1 } = req.params;
         try {
-            console.log("REGISTER QUALIFICATIONNNNNNNNN", userId, gender, speciality, qualification, req.body);
+            console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
 
             let user = userService.getUserById(userId);
             let doctor = await doctorService.getDoctorByUserId(userId);
@@ -554,19 +661,37 @@ class UserController extends Controller {
             }
             let { degree = '', year = '', college = '', id = 0, photos = [] } = qualification || {};
             let qualification_id = id;
+            let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
+            let parent_id = qualification_id;
+            // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
             if (!qualification_id) {
                 let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
                 qualification_id = docQualification.get('id');
+
+
                 for (let photo of photos) {
-                    let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+                    let document = photo;
+                    let docExist = await documentService.getDocumentByData(parent_type, parent_id, document);
+
+                    // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
+                    if (!docExist) {
+                        let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+                    }
                 };
             } else {
                 for (let photo of photos) {
-                    let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+                    let document = photo;
+                    let docExist = await documentService.getDocumentByData(parent_type, parent_id, document);
+
+                    console.log("DOCUMENT EXISTTTTTTTTTTTT", id, qualification_id, docExist);
+                    if (!docExist) {
+                        let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+                    }
+                    // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
                 }
             }
 
-            console.log("QUALIFICATIONNNNNNNNN IDDDDDDDD", qualification_id);
+            // console.log("QUALIFICATIONNNNNNNNN IDDDDDDDD", qualification_id);
             return this.raiseSuccess(res, 200, {
                 qualification_id
             }, "qualifications updated successfully");
@@ -577,10 +702,11 @@ class UserController extends Controller {
         }
     }
 
+
     doctorClinicRegister = async (req, res) => {
-        let {  clinics = [] } = req.body;
-        
-        const{userId:user_id}=req.params;
+        let { clinics = [] } = req.body;
+
+        const { userId: user_id } = req.params;
         try {
 
 

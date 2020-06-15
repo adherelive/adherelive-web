@@ -162,12 +162,39 @@ class ClinicRegister extends Component {
         );
     }
 
+    validateClinics=newClinics=>{
+           for(let edu of newClinics){
+
+       console.log('NEW CLINICSSSS============>222222',edu);
+        let{name='',location='',startTime={},endTime={}}=edu;
+
+       console.log('NEW CLINICSSSS============>3333333',name,location,startTime,endTime);
+        if(!name || !location || !Object.values(startTime?startTime:{}).length || !Object.values(endTime?endTime:{}).length){
+          return false;
+        }
+     }
+     return true;
+    }
+
+    validateData = () => {
+        let { clinics={}} = this.state;
+         let newClinics=Object.values(clinics);
+       console.log('NEW CLINICSSSS============>1111111',newClinics);
+        if(!newClinics.length){
+          message.error('Please enter your Clinic details.')
+          return false;
+        }else if(!this.validateClinics(newClinics)){
+            message.error('Please enter all Clinic details.')
+            return false;
+        }
+        return true;
+      }
 
     onNextClick = () => {
         const { history, authenticated_user } = this.props;
         console.log('ONCLICKKKKKK');
-        // const validate=this.validateData();
-        // if(validate){
+        const validate=this.validateData();
+        if(validate){
         const { basic_info: { id = 1 } = {} } = authenticated_user || {};
         const { clinics = {} } = this.state;
         let newClinics = Object.values(clinics);
@@ -181,7 +208,7 @@ class ClinicRegister extends Component {
                 message.error('Something went wrong');
             };
         });
-        // }
+        }
     }
 
     onBackClick = () => {

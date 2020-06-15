@@ -26,7 +26,7 @@ import Controller from "../";
 import { doctorQualificationData, uploadImageS3 } from './userHelper';
 import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
-import { EMAIL_TEMPLATE_NAME, USER_CATEGORY, DOCUMENT_PARENT_TYPE,ONBOARDING_STATUS } from "../../../constant";
+import { EMAIL_TEMPLATE_NAME, USER_CATEGORY, DOCUMENT_PARENT_TYPE, ONBOARDING_STATUS } from "../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
@@ -143,7 +143,10 @@ class UserController extends Controller {
       let verifications = await UserVerificationServices.getRequestByLink(link);
       let userId = verifications.get('user_id');
       let activated_on = moment();
-      let user = await userService.updateUser({ activated_on }, userId);
+      let verified = true;
+      let dataToUpdate={activated_on,verified};
+      console.log('DATA TO UPDATEEEE',dataToUpdate);
+      let user = await userService.updateUser(dataToUpdate, userId);
 
       console.log(" Verify User --------------->  ", link, ' 6uuu ', userId, ' 90990', user, '            ', updateVerification, verifications);
 
@@ -162,11 +165,18 @@ class UserController extends Controller {
       const user = await userService.getUserByEmail({
         email,
       });
-
+ 
+      console.log('MOMENT===========>',moment(),user.get('verified'));
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
         return this.raiseClientError(res, 422, user, "user does not exists");
+      }
+
+      let verified=user.get('verified');
+
+      if(!verified){
+        return this.raiseClientError(res, 401, "user account not verified");
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
@@ -479,18 +489,18 @@ class UserController extends Controller {
   };
 
   doctorProfileRegister = async (req, res) => {
-    let {  name, city, category, mobile_number, prefix, profile_pic } = req.body;
+    let { name, city, category, mobile_number, prefix, profile_pic } = req.body;
     let doctorName = name.split(' ');
-    const{userId:user_id}=req.params;
+    const { userId: user_id } = req.params;
     try {
 
 
 
       let user = await userService.getUserById(user_id);
-      let user_data_to_update = { category, mobile_number, prefix,onboarding_status:ONBOARDING_STATUS.PROFILE_REGISTERED };
+      let user_data_to_update = { category, mobile_number, prefix, onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED };
       console.log("USERRRRRRRR1111111", user_data_to_update);
       console.log("REQUESTTTTTTTT BODYYYYYY", req.body);
-      
+
       let doctor = {};
       console.log("USERRRRRRRR", updatedUser);
       let doctorExist = await doctorService.getDoctorByUserId(user_id);
@@ -572,12 +582,12 @@ class UserController extends Controller {
   }
 
   doctorQualificationRegister = async (req, res) => {
-    let {  speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = '', qualification_details = [] } = req.body;
-   
-    const{userId:user_id}=req.params;
+    let { speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = '', qualification_details = [] } = req.body;
+
+    const { userId: user_id } = req.params;
     try {
       let user = userService.getUserById(user_id);
-      let user_data_to_update ={onboarding_status:ONBOARDING_STATUS.QUALIFICATION_REGISTERED };
+      let user_data_to_update = { onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED };
       let doctor = await doctorService.getDoctorByUserId(user_id);
       let doctor_id = doctor.get('id');
       let doctor_data = { gender, registration_number, registration_council, registration_year, speciality };
@@ -647,7 +657,7 @@ class UserController extends Controller {
     console.log('FILEEEEEEEEEEEEEEEE=================>', req.file);
 
     const file = req.file;
-    const { userId = 1, qualificationId = 0 } = req.params;
+    const { userId = 1 } = req.params;
     let { qualification = {} } = req.body;
     console.log('BODYYYYYYYYYYYYYYYY=================>', qualification, typeof (qualification));
     try {
@@ -673,7 +683,7 @@ class UserController extends Controller {
       // let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
       // }
       return this.raiseSuccess(res, 200, {
-        files: files, qualification_id
+        files: files
       }, "doctor qualification updated successfully");
 
     } catch (error) {
@@ -708,7 +718,7 @@ class UserController extends Controller {
     let { gender = '', speciality = '', qualification = {} } = req.body;
     const { userId = 1 } = req.params;
     try {
-      console.log("REGISTER QUALIFICATIONNNNNNNNN", userId, gender, speciality, qualification, req.body);
+      console.log("REGISTER QUALIFICATIONNNNNNNNN",  qualification);
 
       let user = userService.getUserById(userId);
       let doctor = await doctorService.getDoctorByUserId(userId);
@@ -720,19 +730,37 @@ class UserController extends Controller {
       }
       let { degree = '', year = '', college = '', id = 0, photos = [] } = qualification || {};
       let qualification_id = id;
+      let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
+      let parent_id = qualification_id;
+      // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
       if (!qualification_id) {
         let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
         qualification_id = docQualification.get('id');
-        for(let photo of photos ){
-          let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+
+
+        for (let photo of photos) {
+          let document = photo;
+          let docExist = await documentService.getDocumentByData(parent_type, parent_id, document);
+
+          // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
+          if (!docExist) {
+            let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+          }
         };
-      }else{
-        for(let photo of photos ){
-        let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+      } else {
+        for (let photo of photos) {
+          let document = photo;
+          let docExist = await documentService.getDocumentByData(parent_type, parent_id, document);
+
+          console.log("DOCUMENT EXISTTTTTTTTTTTT", id, qualification_id, docExist);
+          if (!docExist) {
+            let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+          }
+          // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
         }
       }
 
-      console.log("QUALIFICATIONNNNNNNNN IDDDDDDDD", qualification_id);
+      // console.log("QUALIFICATIONNNNNNNNN IDDDDDDDD", qualification_id);
       return this.raiseSuccess(res, 200, {
         qualification_id
       }, "qualifications updated successfully");
@@ -745,8 +773,8 @@ class UserController extends Controller {
 
   doctorClinicRegister = async (req, res) => {
     let { clinics = [] } = req.body;
-     
-    const{userId:user_id}=req.params;
+
+    const { userId: user_id } = req.params;
     try {
 
 
@@ -768,7 +796,7 @@ class UserController extends Controller {
 
       });
 
-      let updateUser = await userService.updateUser({ onboarded: true,onboarding_status:ONBOARDING_STATUS.CLINIC_REGISTERED }, user_id);
+      let updateUser = await userService.updateUser({ onboarded: true, onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED }, user_id);
 
       return this.raiseSuccess(res, 200, {
       }, "clinics added successfully");

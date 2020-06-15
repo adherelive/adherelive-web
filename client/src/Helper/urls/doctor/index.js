@@ -21,8 +21,8 @@ export const getdoctorProfileRegisterUrl = (userId) => {
     return `/register-qualification/${userId}`;
   };
 
-  export const getUploadQualificationDocumentUrl = (userId,qualificationId) => {
-    return `/upload-qualification-document/${userId}/${qualificationId}`;
+  export const getUploadQualificationDocumentUrl = (userId) => {
+    return `/upload-qualification-document/${userId}`;
   };
 
   export const getDeleteQualificationDocumentUrl = (qualificationId) => {

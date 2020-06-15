@@ -72,12 +72,14 @@ class SignIn extends Component {
                     console.log("email, password --> ", email, password);
 
                     const response = await signIn({ email, password });
-                    const { status = false } = response;
-                    if (status) {
+                    const { status = false,payload:{error='',data={}}={} } = response;
+                    if (status){
                         message.success("LoggedIn successfully", 4);
                     } else {
+                       console.log('SIGNIN ERRORRRRR',error,data);
                         this.setState({ loading: false });
                         message.error("Username or Password incorrect", 4);
+                       
                     }
                 } catch (err) {
                     console.log("298293 err ----> ", err);

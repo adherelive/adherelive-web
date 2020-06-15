@@ -48,7 +48,11 @@ module.exports = {
       },
       onboarding_status: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull:true
+      },
+      verified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue:false
       },
       created_at: {
         allowNull: false,
@@ -69,6 +73,3 @@ module.exports = {
   }
 };
 
-// exports.down = function(db, callback) {
-//   db.dropTable(DB_TABLES.USERS, callback);
-// };

@@ -1,7 +1,7 @@
 "use strict";
 import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY} from "../../constant";
+import { database } from "../../libs/mysql";
+import { DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
 const Users = database.define(
     DB_TABLES.USERS,
@@ -27,7 +27,7 @@ const Users = database.define(
         prefix: {
             type: Sequelize.STRING,
             allowNull: true
-          },
+        },
         mobile_number: {
             type: Sequelize.STRING,
             unique: true,
@@ -62,11 +62,15 @@ const Users = database.define(
         },
         onboarded: {
             type: Sequelize.BOOLEAN
-          },
-          onboarding_status: {
+        },
+        onboarding_status: {
             type: Sequelize.STRING,
             allowNull: true
-          },
+        },
+        verified: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
+        },
     },
     {
         underscored: true,
@@ -81,11 +85,12 @@ const Users = database.define(
                     sign_in_type: this.sign_in_type,
                     category: this.category,
                     activated_on: this.activated_on,
-                    onboarded:this.onboarded,
-                    onboarding_status:this.onboarding_status,
-                    mobile_number:this.mobile_number,
-                    prefix:this.prefix
-                    
+                    onboarded: this.onboarded,
+                    onboarding_status: this.onboarding_status,
+                    mobile_number: this.mobile_number,
+                    prefix: this.prefix,
+                    verified:this.verified
+
                 };
             }
         }

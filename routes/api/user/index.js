@@ -78,7 +78,7 @@ router.post(
 );
 
 router.post(
-    "/upload-qualification-document/:userId/:qualificationId",
+    "/upload-qualification-document/:userId",
     upload.single("files"),
     userController.uploadDoctorQualificationDocument
 );
