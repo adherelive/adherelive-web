@@ -12,7 +12,7 @@ import userService from "../../services/user/user.service";
 // import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
 
-// import UserWrapper from "../../ApiWrapper/web/user";
+import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 
@@ -20,7 +20,7 @@ import doctorService from "../../services/doctors/doctors.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
-import userWrapper from "../../ApiWrapper/user";
+// import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
 import { doctorQualificationData, uploadImageS3 } from './userHelper';
@@ -152,7 +152,7 @@ class UserController extends Controller {
     } catch (error) {
       console.log("error sign in  --> ", error);
       res.redirect("/sign-in");
-      return this.raiseServerError(res, 500, error, error.getMessage());
+      return this.raiseServerError(res, 500, error, error.message);
     }
   };
 
@@ -189,10 +189,12 @@ class UserController extends Controller {
         );
 
 
-        const apiUserDetails = new userWrapper(user.get("id"));
+        const apiUserDetails = await UserWrapper(user);
 
         const dataToSend = {
-          ...await apiUserDetails.getBasicInfo()
+          [apiUserDetails.getUserId]: {
+            ...apiUserDetails.getBasicInfo()
+          }
         };
 
         res.cookie("accessToken", accessToken, {
@@ -213,7 +215,7 @@ class UserController extends Controller {
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.getMessage());
+      return this.raiseServerError(res, 500, error, error.message);
     }
   };
 
@@ -353,7 +355,7 @@ class UserController extends Controller {
 
         console.log("userId ---> ", userId);
 
-        const apiUserDetails = new userWrapper(userId);
+        const apiUserDetails = await UserWrapper(user);
 
         let userCategoryData = {};
         let userCategoryApiWrapper = null;

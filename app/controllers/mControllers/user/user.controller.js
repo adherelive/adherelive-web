@@ -12,7 +12,7 @@ import Log from "../../../../libs/log";
 const Response = require("../../helper/responseFormat");
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
-import doctorService from "../../../services/doctor/doctor.service";
+// import doctorService from "../../../services/doctor/doctor.service";
 
 import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MUserWrapper from "../../../ApiWrapper/mobile/user";
