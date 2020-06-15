@@ -13,9 +13,11 @@ import Log from "../../../../libs/log";
 const Response = require("../../helper/responseFormat");
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
+import doctorService from "../../../services/doctor/doctor.service";
 
 import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MUserWrapper from "../../../ApiWrapper/mobile/user";
+import MDoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 
 import Controller from "../../";
 
@@ -175,6 +177,7 @@ class UserController extends Controller {
         const userApiWrapper = await MUserWrapper(userData);
 
         // const userDetails = user[0];
+        Logger.debug("category", category);
         let userCategoryData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
@@ -183,6 +186,12 @@ class UserController extends Controller {
             userCategoryData = await patientService.getPatientByData({user_id: userId});
             userCategoryApiData = await MPatientWrapper(userCategoryData);
             userCategoryId = userCategoryApiData.getPatientId();
+            break;
+          case USER_CATEGORY.DOCTOR:
+            userCategoryData = await doctorService.getDoctorByData({user_id: userId});
+            userCategoryApiData = await MDoctorWrapper(userCategoryData);
+            userCategoryId = userCategoryApiData.getDoctorId();
+            break;
           default:
             userCategoryData = await patientService.getPatientByData({user_id: userId});
             userCategoryApiData = await MPatientWrapper(userCategoryData);
@@ -195,7 +204,7 @@ class UserController extends Controller {
                 ...userApiWrapper.getBasicInfo(),
               },
           },
-          patients: {
+          [`${category}s`]: {
               [userCategoryId]: {
                   ...userCategoryApiData.getBasicInfo()
               }

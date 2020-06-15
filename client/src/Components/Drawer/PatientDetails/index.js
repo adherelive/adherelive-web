@@ -8,7 +8,7 @@ import moment from "moment";
 
 import CloseIcon from "../../../Assets/images/close.svg";
 import ChatIcon from "../../../Assets/images/chat.svg";
-import ClipIcon from "../../../Assets/images/clip.svg";
+import ShareIcon from "../../../Assets/images/redirect3x.png";
 
 class PatientDetailsDrawer extends Component {
   constructor(props) {
@@ -119,9 +119,9 @@ class PatientDetailsDrawer extends Component {
               {/* <Icon type="wechat" width={20} /> */}
             </div>
             <img
-              src={ClipIcon}
-              alt="clip icon"
-              className="pointer"
+              src={ShareIcon}
+              alt="share icon"
+              className="pointer w25"
               onClick={handlePatientDetailsRedirect}
             />
           </div>
@@ -134,7 +134,7 @@ class PatientDetailsDrawer extends Component {
               const { total = "1", critical = "0" } = reports[id] || {};
               return (
                 <div
-                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS  ? "ml10" : ""} w235 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex direction-column justify-space-between`}
+                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS  ? "ml20" : ""} w235 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex direction-column justify-space-between`}
                 >
                   <div className="ml10 mt10 fs16 fw600">
                     {PATIENT_BOX_CONTENT[id]["text"]}
