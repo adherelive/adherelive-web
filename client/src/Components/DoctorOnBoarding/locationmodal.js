@@ -98,13 +98,14 @@ class ClinicRegister extends Component {
             >
                 <div className='location-container'>
                     <div className='form-category-headings'>Google</div>
-                    {/* <GooglePlacesAutocomplete
+                    <GooglePlacesAutocomplete
                inputClassName={'form-inputs-google'}
                     //    inputStyle={{height:50,width:261,border:1,borderColor:'#d7d7d7'}}
                       placeholder={'Search Address'}
                     onSelect={this.handleChange}
-                    /> */}
-                    <PlacesAutocomplete
+                    apiKey='AIzaSyAph8LyvVYPjM1x48m5gxpj6nt19QrhBv'
+                    />
+                    {/* <PlacesAutocomplete
                         value={this.state.address}
                         onChange={this.handleChange}
                         onSelect={this.handleSelect}
@@ -140,7 +141,7 @@ class ClinicRegister extends Component {
                                 </div>
                             </div>
                         )}
-                    </PlacesAutocomplete>
+                    </PlacesAutocomplete> */}
 
 
                     <div className='form-category-headings'>Or add manually</div>

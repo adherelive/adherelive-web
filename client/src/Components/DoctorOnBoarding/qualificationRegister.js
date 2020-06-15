@@ -4,7 +4,7 @@ import { injectIntl } from "react-intl";
 // import {formatMessage} from "react-intl/src/format";
 import { DeleteTwoTone, DeleteOutlined } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import { Tabs, Button, Steps, Col, Select, Input, InputNumber, Upload, Modal, TimePicker, Icon, message } from "antd";
+import { Tabs, Button, Steps, Col, Select, Input, InputNumber,DatePicker, Upload, Modal, TimePicker, Icon, message } from "antd";
 import SideMenu from "./sidebar";
 import { REQUEST_TYPE, PATH } from '../../constant';
 import { getUploadURL } from '../../Helper/urls/user';
@@ -12,8 +12,11 @@ import { getUploadQualificationDocumentUrl } from '../../Helper/urls/doctor';
 import { doRequest } from '../../Helper/network';
 import UploadSteps from './steps';
 import plus from '../../Assets/images/plus.png';
-import YearPicker from "react-year-picker";
+// import YearPicker from "react-year-picker";
+import moment from 'moment';
 import { withRouter } from "react-router-dom";
+
+const{YearPicker}=DatePicker;
 
 
 const { Option } = Select;
@@ -37,6 +40,7 @@ class QualificationRegister extends Component {
       previewVisible: false,
       previewImage: '',
       previewTitle: '',
+  
     };
   }
 
@@ -88,6 +92,18 @@ class QualificationRegister extends Component {
     this.setState({ speciality: e.target.value });
   };
 
+  getYearOptions =()=>{
+    let currYear=moment().format("YYYY");
+    let curryearNum=parseInt(currYear);
+    let years=[];
+    for(let year=curryearNum-100;year<=curryearNum;year++){
+     years.push( <Option key={year} value={year} name={year}>
+      {year}
+    </Option>)
+    }
+    return years;
+  }
+
   setGender = value => {
     this.setState({ gender: value });
   };
@@ -100,8 +116,8 @@ class QualificationRegister extends Component {
     this.setState({ registration_council: e.target.value });
   };
 
-  setRegYear = e => {
-    this.setState({ registration_year: e.target.value });
+  setRegYear = value => {
+    this.setState({ registration_year: value });
   };
 
   getGenderOptions = () => {
@@ -137,11 +153,12 @@ class QualificationRegister extends Component {
     newEducation[key].college = e.target.value;
     this.setState({ education: newEducation });
   }
-  setYear = (key) => (date) => {
+  setYear = key=>(value) => {
     let { education = {} } = this.state;
     let newEducation = education;
-    // newEducation[key].year = e.target.value;
-    newEducation[key].year = date;
+    console.log('DATEEEEEEEEEEEEEEEEEE',value);
+    newEducation[key].year = value;
+    // newEducation[key].year = dateString;
     this.setState({ education: newEducation });
   }
 
@@ -245,21 +262,37 @@ class QualificationRegister extends Component {
     const fileList = info.fileList;
     let { education = {} } = this.state;
     let newEducation = education;
-    // console.log('FILE LISTTTTTTTT', newEducation[key].photo, fileList);
-    fileList.forEach((item, index) => {
+    let {photos=[]}=newEducation[key];
+    console.log('FILE LISTTTTTTTT', newEducation[key].photo, fileList);
+    for(let item of fileList){
+    
       let uid = item.uid;
       let push = true;
+      console.log('Please do not add duplicate files FILE LISTTTTTTTT',item,fileList,typeof(item)=='object');
+      if(typeof(item)=='object'){
+      for (let photo of photos) {
+
+        // console.log('BEFOREUPLOAD CALLEDDDDDDDDDD RETURN FALSEEE');
+        let{name=''}=item;
+        let fileName = name;
+        let newFileName = fileName.replace(/\s/g, '');
+        if (photo.includes(newFileName)) {
+          push = false;
+        }
+      }
+    }
       if (newEducation[key].photo && newEducation[key].photo.length) {
-        newEducation[key].photo.forEach((pic, picindex) => {
-          if (pic.uid === uid) {
+        for( let pic of newEducation[key].photo){
+          // console.log('UIDS BEFOREUPLOADDDDD=========>',pic.uid && pic.uid === uid ,pic.status,pic,item);
+          if (pic.uid === uid  ) {
             push = false;
           }
-        })
+        }
       }
       if (push) {
         newEducation[key].photo.push(item);
       }
-    })
+    };
 
     this.setState({ education: newEducation });
   };
@@ -377,17 +410,19 @@ class QualificationRegister extends Component {
   handleBeforeUpload = key => (file, fileList) => {
     let { education = {}, speciality = '', gender = '' } = this.state;
     let { degree = '', college = '', year = '', id = 0, photos = [] } = education[key];
-    console.log('BEFORE UPDATE CALLEDDDDDDDDDD')
+    console.log('BEFOREUPLOAD CALLEDDDDDDDDDD')
     for (let photo of photos) {
       let fileName = file.name
       let newFileName = fileName.replace(/\s/g, '');
       if (photo.includes(newFileName)) {
         message.error('Please do not add duplicate files');
-        setTimeout(() => { this.popLast(key) }, 500);
+        // setTimeout(() => { this.popLast(key) }, 500);
+        console.log('BEFOREUPLOAD CALLEDDDDDDDDDD RETURN FALSEEE');
         return false;
       }
-      return true
     }
+    console.log('BEFOREUPLOAD CALLEDDDDDDDDDD RETURN TRUE');
+    return true
     // console.log('IN BEFOREUPLOAD',file);
     // if (id) {
     //   return true;
@@ -420,7 +455,7 @@ class QualificationRegister extends Component {
 
   renderEducation = () => {
     // console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
-    let { education = {}, educationKeys = [], fileList = [], previewImage = '', previewTitle = '', previewVisible = false } = this.state;
+    let { education = {}, educationKeys = [], fileList = [], previewImage = '', previewTitle = '', previewVisible = false ,isopen,time} = this.state;
     // console.log(" 23829823  ------------------>  ", JSON.stringify(education, null, 4));
     // console.log(" 23829823 Keys  ------------------>  ", educationKeys);
 
@@ -467,7 +502,11 @@ class QualificationRegister extends Component {
                 value={year}
                 onChange={e => this.setYear(key, e)}
               /> */}
-              <YearPicker placeholder={year?year:'Select'} className={"form-inputs"} onChange={this.setYear(key, year)} />
+              <Select className="form-inputs" placeholder="Select Year" defaultValue={parseInt(moment().format('YYYY'))} value={year?year:parseInt(moment().format('YYYY'))} onChange={this.setYear(key)}>
+             {this.getYearOptions()}
+              </Select>
+ 
+              {/* <DatePicker mode="year" value={moment(year,'YYYY')} format={'YYYY'} placeholder={'Select Year'} onChange={this.setYear}/> */}
               <div className='form-headings'>Photo</div>
               <div className='qualification-photo-uploads'>
                 {photos.map(pic => {
@@ -486,7 +525,7 @@ class QualificationRegister extends Component {
                 <Upload
                   multiple={true}
                   style={{ width: 128, height: 128, margin: 6 }}
-                  // beforeUpload={this.handleBeforeUpload(key)}
+                  beforeUpload={this.handleBeforeUpload(key)}
                   showUploadList={false}
                   disabled={!(degree && college && year)}
                   fileList={photo}
@@ -541,13 +580,13 @@ class QualificationRegister extends Component {
     else if (!registration_council) {
       message.error('Please enter Registration council.')
       return false;
-    } else if (!registration_year) {
+    } else if (!parseInt(registration_year)) {
       message.error('Please enter your Registration year.')
       return false;
     }else{
       for(let edu of newEducation){
          let{degree='',college='',year='',photos=[]}=edu;
-         if(!degree || !college || !year || !photos.length){
+         if(!degree || !college || !parseInt(year) || !photos.length){
 
       message.error('Please enter all Education details.')
            return false;
@@ -602,7 +641,7 @@ class QualificationRegister extends Component {
           onChange={this.setSpeciality}
         />
         <div className='form-headings'>Gender</div>
-        <Select className=".form-inputs" value={gender} onChange={this.setGender}>
+        <Select className="form-inputs" placeholder="Select Gender" value={gender} onChange={this.setGender}>
           {this.getGenderOptions()}
         </Select>
 
@@ -627,13 +666,9 @@ class QualificationRegister extends Component {
         />
 
         <div className='form-headings'>Registration year</div>
-        <Input
-          placeholder="Registration year"
-          value={registration_year}
-          className={"form-inputs"}
-          onChange={this.setRegYear}
-        />
-
+        <Select className="form-inputs" placeholder="Select Registration Year" defaultValue={parseInt(moment().format('YYYY'))} value={registration_year?registration_year:parseInt(moment().format('YYYY'))} placeholder={'Select Registration Year'} onChange={this.setRegYear}>
+             {this.getYearOptions()}
+        </Select>
       </div>
     );
   }
@@ -641,7 +676,7 @@ class QualificationRegister extends Component {
 
 
   render() {
-    console.log("STATEEEEEEEEEEE", this.state);
+    console.log("STATEEEEEEEEEEE BEFOREUPLOAD", this.state);
     return (
       <Fragment>
         {/* <SideMenu {...this.props} /> */}

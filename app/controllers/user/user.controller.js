@@ -134,7 +134,10 @@ class UserController extends Controller {
       let verifications = await UserVerificationServices.getRequestByLink(link);
       let userId = verifications.get('user_id');
       let activated_on = moment();
-      let user = await userService.updateUser({ activated_on }, userId);
+      let verified = true;
+      let dataToUpdate={activated_on,verified};
+      console.log('DATA TO UPDATEEEE',dataToUpdate);
+      let user = await userService.updateUser(dataToUpdate, userId);
 
       console.log(" Verify User --------------->  ", link, ' 6uuu ', userId, ' 90990', user, '            ', updateVerification, verifications);
 
@@ -153,11 +156,18 @@ class UserController extends Controller {
       const user = await userService.getUserByEmail({
         email
       });
-
+ 
+      console.log('MOMENT===========>',moment(),user.get('verified'));
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
         return this.raiseClientError(res, 422, user, "user does not exists");
+      }
+
+      let verified=user.get('verified');
+
+      if(!verified){
+        return this.raiseClientError(res, 401, "user account not verified");
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
