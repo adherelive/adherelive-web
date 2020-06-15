@@ -36,7 +36,23 @@ class SignIn extends Component {
     
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            signUp(values);
+            signUp(values).then(response=>{
+                
+                const{status}=response;
+                if(status){
+                 let{payload={}}=response;
+                   message.success('Please go to your email to verify your account.')
+                }else{
+                    let{payload:{error={}}={}}=response;
+                
+                    console.log('RESPONSE OF SIGNUP REQUESTTT',error);
+                    if(error.status=='EMAIL_ALREADY_EXISTS'){
+                        message.error('Email already exists.');
+                    }else{
+                        message.error('Something went wrong.');
+                    }
+                }
+            });
           }
         });
       };

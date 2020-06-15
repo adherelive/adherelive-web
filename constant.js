@@ -302,40 +302,43 @@ export const FIELD_TYPE = {
 };
 
 export const DB_TABLES = {
-  USERS: "users",
-  DOCTORS: "doctors",
-  PATIENTS: "patients",
-  APPOINTMENTS: "appointments",
-  SCHEDULE_EVENTS: "schedule_events",
-  PATIENT_CARE_TAKERS: "patient_care_takers",
-  CARE_PLAN_TEMPLATE: "care_plan_template",
-  CONSENTS: "consents",
-  CONDITIONS: "conditions",
-  REGIONS: "regions",
-  PROVIDERS: "providers",
-  REGION_FEATURES: "region_features",
-  FEATURES: "features",
-  MEDICINES: "medicines",
-  MEDICATION_REMINDERS: "medication_reminders",
-  ARTICLES: "articles",
-  CARE_PLANS: "care_plans",
-  CLINICS: "clinics",
-  REGION_PROVIDERS: "region_providers",
-  PROVIDER_MEMBERS: "provider_members",
-  REMINDERS: "reminders",
-  MEMBER_SPECIALITIES: "member_specialities",
-  SPECIALITIES: "specialities",
-  PLATFORM_EVENTS: "platform_events",
-  PRODUCT_PLANS: "product_plans",
-  SUBSCRIPTIONS: "subscriptions",
-  ACTIONS: "actions",
-  ACTION_DETAILS: "action_details",
-  EXERCISE: "exercise",
-  DIET: "diet",
-  ADHERENCE: "adherence",
-  DISEASE: "disease",
-  USER_VERIFICATIONS: "user_verifications",
-  EMAIL_LOGGER: "email_logger"
+    USERS: "users",
+    DOCTORS: "doctors",
+    PATIENTS: "patients",
+    APPOINTMENTS: "appointments",
+    SCHEDULE_EVENTS: "schedule_events",
+    PATIENT_CARE_TAKERS: "patient_care_takers",
+    CARE_PLAN_TEMPLATE: "care_plan_template",
+    CONSENTS: "consents",
+    CONDITIONS: "conditions",
+    REGIONS: "regions",
+    PROVIDERS: "providers",
+    REGION_FEATURES: "region_features",
+    FEATURES: "features",
+    MEDICINES: "medicines",
+    MEDICATION_REMINDERS: "medication_reminders",
+    ARTICLES: "articles",
+    CARE_PLANS: "care_plans",
+    CLINICS: "clinics",
+    REGION_PROVIDERS: "region_providers",
+    PROVIDER_MEMBERS: "provider_members",
+    REMINDERS: "reminders",
+    MEMBER_SPECIALITIES: "member_specialities",
+    SPECIALITIES: "specialities",
+    PLATFORM_EVENTS: "platform_events",
+    PRODUCT_PLANS: "product_plans",
+    SUBSCRIPTIONS: "subscriptions",
+    ACTIONS: "actions",
+    ACTION_DETAILS: "action_details",
+    EXERCISE: "exercise",
+    DIET: "diet",
+    ADHERENCE: "adherence",
+    DISEASE: "disease",
+    USER_VERIFICATIONS:"user_verifications",
+    EMAIL_LOGGER:'email_logger',
+    DOCTOR_QUALIFICATIONS: 'doctor_qualifications',
+    DOCTOR_CLINICS: 'doctor_clinics',
+    UPLOAD_DOCUMENTS:'upload_documents'
 };
 
 export const ARTICLE_TYPE = {
@@ -348,6 +351,16 @@ export const CURRENCY = {
   INR: "INR",
   AUD: "AUD",
   USD: "USD"
+};
+
+export const DOCUMENT_PARENT_TYPE = {
+    DOCTOR_QUALIFICATION:'doctor_qualification'
+};
+
+export const ONBOARDING_STATUS = {
+    PROFILE_REGISTERED:'profile_registered',
+    QUALIFICATION_REGISTERED:'qualification_registered',
+    CLINIC_REGISTERED:'CLINIC_registered',
 };
 
 export const SIGN_IN_CATEGORY = {

@@ -32,6 +32,7 @@ class PatientController extends Controller {
                 await minioService.createBucket();
                 // var file = path.join(__dirname, "../../../report.xlsx");
                 const fileStream = fs.createReadStream(profile_pic);
+                // console.log("FIleStreammmmmmmmmmmmmHHH",fileStream);
                 let hash = md5.create();
                 hash.update(userId);
                 hash.hex();

@@ -134,3 +134,7 @@ export const addNewCareCoach = () => {
 export const changePhysician = () => {
   return "/change-physician";
 };
+
+export const getUploadURL = () => {
+  return `/upload`;
+};

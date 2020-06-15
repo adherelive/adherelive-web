@@ -13,6 +13,7 @@ import drawer from "./drawer";
 import appointments from "./appointments";
 import medicines from "./medicines";
 import other_details from "./otherDetails";
+import onBoarding from "./onBoarding";
 
 const rootReducer = combineReducers({
   auth,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   appointments,
   medicines,
   other_details,
+  onBoarding
 });
 
 export default (state, action) => {
