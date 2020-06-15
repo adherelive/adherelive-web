@@ -499,40 +499,59 @@ class UserController extends Controller {
         let { gender = '', speciality = '', qualification = {} } = req.body;
         const { userId = 1 } = req.params;
         try {
-            console.log("REGISTER QUALIFICATIONNNNNNNNN", userId, gender, speciality, qualification, req.body);
-
-            let user = userService.getUserById(userId);
-            let doctor = await doctorService.getDoctorByUserId(userId);
-            let doctor_id = doctor.get('id');
-
-            if (gender && speciality) {
-                let doctor_data = { gender, speciality };
-                let updatedDoctor = await doctorService.updateDoctor(doctor_data, doctor_id);
+          console.log("REGISTER QUALIFICATIONNNNNNNNN",  qualification);
+    
+          let user = userService.getUserById(userId);
+          let doctor = await doctorService.getDoctorByUserId(userId);
+          let doctor_id = doctor.get('id');
+    
+          if (gender && speciality) {
+            let doctor_data = { gender, speciality };
+            let updatedDoctor = await doctorService.updateDoctor(doctor_data, doctor_id);
+          }
+          let { degree = '', year = '', college = '', id = 0, photos = [] } = qualification || {};
+          let qualification_id = id;
+          let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
+          let parent_id = qualification_id;
+          // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
+          if (!qualification_id) {
+            let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
+            qualification_id = docQualification.get('id');
+    
+    
+            for (let photo of photos) {
+              let document = photo;
+              let docExist = await documentService.getDocumentByData(parent_type, parent_id, document);
+    
+              // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
+              if (!docExist) {
+                let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+              }
+            };
+          } else {
+            for (let photo of photos) {
+              let document = photo;
+              let docExist = await documentService.getDocumentByData(parent_type, parent_id, document);
+    
+              console.log("DOCUMENT EXISTTTTTTTTTTTT", id, qualification_id, docExist);
+              if (!docExist) {
+                let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+              }
+              // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
             }
-            let { degree = '', year = '', college = '', id = 0, photos = [] } = qualification || {};
-            let qualification_id = id;
-            if (!qualification_id) {
-                let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
-                qualification_id = docQualification.get('id');
-                for (let photo of photos) {
-                    let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
-                };
-            } else {
-                for (let photo of photos) {
-                    let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
-                }
-            }
-
-            console.log("QUALIFICATIONNNNNNNNN IDDDDDDDD", qualification_id);
-            return this.raiseSuccess(res, 200, {
-                qualification_id
-            }, "qualifications updated successfully");
-
+          }
+    
+          // console.log("QUALIFICATIONNNNNNNNN IDDDDDDDD", qualification_id);
+          return this.raiseSuccess(res, 200, {
+            qualification_id
+          }, "qualifications updated successfully");
+    
         } catch (error) {
-            console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
-            return this.raiseServerError(res, 500, {}, `${error.message}`);
+          console.log("DOCTOR QUALIFICATION CATCH ERROR ", error);
+          return this.raiseServerError(res, 500, {}, `${error.message}`);
         }
-    }
+      }
+      
 
     doctorClinicRegister = async (req, res) => {
         let {  clinics = [] } = req.body;
