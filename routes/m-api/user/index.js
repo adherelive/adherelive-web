@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const mUserController = require("../../../app/controllers/mControllers/user/user.controller");
+import mUserController from "../../../app/controllers/mControllers/user/user.controller";
 import Authenticate from "../middleware/auth";
 const multer = require("multer");
 var storage = multer.memoryStorage();
@@ -23,10 +23,10 @@ router.get(
     mUserController.onAppStart,
 );
 
-router.post(
-    "/googleSignIn",
-    mUserController.signInGoogle
-);
+// router.post(
+//     "/googleSignIn",
+//     mUserController.signInGoogle
+// );
 
 router.post(
     "/facebookSignIn",
