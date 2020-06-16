@@ -53,6 +53,7 @@ class MinioService {
       this.bucket = process.config.minio.MINIO_BUCKET_NAME;
       return result;
     } catch (err) {
+      // console.log("u19281011 err --> ", err);
       throw err;
     }
   }

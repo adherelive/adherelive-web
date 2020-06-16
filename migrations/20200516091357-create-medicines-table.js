@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-import {DB_TABLES} from "../constant";
+import { DB_TABLES, MEDICINE_TYPE } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -16,10 +16,15 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       name: {
         type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      type: {
+        type: Sequelize.ENUM,
+        values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
         allowNull: false,
       },
       description: {
@@ -27,16 +32,16 @@ module.exports = {
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       deleted_at: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
 
@@ -49,5 +54,5 @@ module.exports = {
       return queryInterface.dropTable('users');
     */
     return queryInterface.dropTable(DB_TABLES.MEDICINES);
-  }
+  },
 };

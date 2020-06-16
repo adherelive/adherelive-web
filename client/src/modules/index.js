@@ -11,7 +11,8 @@ import chats from "./chat";
 import pages from "./pages";
 import drawer from "./drawer";
 import appointments from "./appointments";
-import medication_reminders from "./medicationReminder";
+import medicines from "./medicines";
+import other_details from "./otherDetails";
 import onBoarding from "./onBoarding";
 
 const rootReducer = combineReducers({
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   chats,
   drawer,
   appointments,
-  medication_reminders,
+  medicines,
+  other_details,
   onBoarding
 });
 

@@ -9,11 +9,18 @@ import Log from "../../../libs/log";
 import fs from "fs";
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
+// import doctorService from "../../services/doctor/doctor.service";
+import patientService from "../../services/patients/patients.service";
+
+import UserWrapper from "../../ApiWrapper/web/user";
+import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import PatientWrapper from "../../ApiWrapper/web/patient";
+
 import doctorService from "../../services/doctors/doctors.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
-import userWrapper from "../../ApiWrapper/user";
+// import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
 import { doctorQualificationData, uploadImageS3 } from './userHelper';
@@ -26,6 +33,8 @@ const errMessage = require("../../../config/messages.json").errMessages;
 import minioService from "../../../app/services/minio/minio.service";
 import md5 from "js-md5";
 import UserVerifications from "../../models/userVerifications";
+
+const Logger = new Log("WEB USER CONTROLLER");
 
 class UserController extends Controller {
   constructor() {
@@ -76,7 +85,7 @@ class UserController extends Controller {
       const userVerification = UserVerificationServices.addRequest({
         user_id: userInfo.get("id"),
         request_id: link,
-        status: "pending"
+        status: "pending",
       });
       let uId = userInfo.get("id");
 
@@ -146,7 +155,7 @@ class UserController extends Controller {
     } catch (error) {
       console.log("error sign in  --> ", error);
       res.redirect("/sign-in");
-      return this.raiseServerError(res, 500, error, error.getMessage());
+      return this.raiseServerError(res, 500, error, error.message);
     }
   };
 
@@ -154,7 +163,7 @@ class UserController extends Controller {
     try {
       const { email, password } = req.body;
       const user = await userService.getUserByEmail({
-        email
+        email,
       });
  
       console.log('MOMENT===========>',moment(),user.get('verified'));
@@ -181,26 +190,28 @@ class UserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: user.get("id")
+            userId: user.get("id"),
           },
           secret,
           {
-            expiresIn
+            expiresIn,
           }
         );
 
 
-        const apiUserDetails = new userWrapper(user.get("id"));
+        const apiUserDetails = await UserWrapper(user);
 
         const dataToSend = {
-          ...await apiUserDetails.getBasicInfo()
+          [apiUserDetails.getUserId]: {
+            ...apiUserDetails.getBasicInfo()
+          }
         };
 
         res.cookie("accessToken", accessToken, {
           expires: new Date(
             Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
           ),
-          httpOnly: true
+          httpOnly: true,
         });
 
         return this.raiseSuccess(
@@ -214,7 +225,7 @@ class UserController extends Controller {
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.getMessage());
+      return this.raiseServerError(res, 500, error, error.message);
     }
   };
 
@@ -231,7 +242,7 @@ class UserController extends Controller {
       const idToken = tokens.tokens.id_token;
       const ticket = await client.verifyIdToken({
         idToken: idToken,
-        audience: CLIENT_ID
+        audience: CLIENT_ID,
       });
 
       const accessToken = tokens.tokens.access_token;
@@ -249,11 +260,11 @@ class UserController extends Controller {
       const accessTokenCombined = await jwt.sign(
         {
           userId: userId,
-          accessToken: accessToken
+          accessToken: accessToken,
         },
         secret,
         {
-          expiresIn
+          expiresIn,
         }
       );
 
@@ -263,7 +274,7 @@ class UserController extends Controller {
         // expires: new Date(
         //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
         // ),
-        httpOnly: true
+        httpOnly: true,
       });
 
       let response = new Response(true, 200);
@@ -299,11 +310,11 @@ class UserController extends Controller {
             const accessTokenCombined = await jwt.sign(
               {
                 userId: userId,
-                accessToken: accessToken
+                accessToken: accessToken,
               },
               secret,
               {
-                expiresIn
+                expiresIn,
               }
             );
 
@@ -311,12 +322,12 @@ class UserController extends Controller {
               // expires: new Date(
               //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
               // ),
-              httpOnly: true
+              httpOnly: true,
             });
 
             let resp = new Response(true, 200);
             resp.setData({
-              users: {}
+              users: {},
             });
             resp.setMessage("Sign in successful!");
             return res.status(resp.getStatusCode()).send(resp.getResponse());
@@ -339,7 +350,7 @@ class UserController extends Controller {
     let response;
     try {
       if (req.userDetails.exists) {
-        const { userId, userData: { category } = {} } = req.userDetails;
+        const { userId, userData, userData: { category } = {} } = req.userDetails;
         const user = await userService.getUserById(userId);
 
         console.log(
@@ -348,23 +359,56 @@ class UserController extends Controller {
           req.userDetails
         );
 
+        Logger.debug("user data in request", userData);
+
         // const userDetails = user[0];
 
         console.log("userId ---> ", userId);
 
-        const apiUserDetails = new userWrapper(userId);
+        const apiUserDetails = await UserWrapper(userData);
 
         let userCategoryData = {};
+        let userCategoryApiWrapper = null;
+        let userCategoryId = null;
 
-        // switch (category) {
-        //   case USER_CATEGORY.PATIENT:
-        //     userCategoryData = await patientService.getPatientByUserId(userId);
-        //   default:
-        //     userCategoryData = await patientService.getPatientByUserId(userId);
-        // }
+        switch (category) {
+          case USER_CATEGORY.PATIENT:
+            userCategoryData = await patientService.getPatientByUserId(userId);
+          case USER_CATEGORY.DOCTOR:
+            userCategoryData = await doctorService.getDoctorByData({user_id: userId});
+            userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
+            userCategoryId = userCategoryApiWrapper.getDoctorId();
+          default:
+            userCategoryData = await doctorService.getDoctorByData({user_id: userId});
+        }
+
+        // todo: as of now, get all patients
+        const patientsData = await patientService.getAll();
+
+        let patientApiDetails = {};
+        
+        await patientsData.forEach(async patient => {
+          const patientWrapper = await PatientWrapper(patient);
+          patientApiDetails[patientWrapper.getPatientId()] = patientWrapper.getBasicInfo();
+        });
+
+        /**** API wrapper for DOCTOR ****/
 
         const dataToSend = {
-          ...await apiUserDetails.getBasicInfo()
+          users: {
+            [apiUserDetails.getUserId()]: {
+              ...apiUserDetails.getBasicInfo()
+            }
+          },
+          [`${category}s`]: {
+            [userCategoryId]: {
+              ...userCategoryApiWrapper.getBasicInfo()
+            }
+          },
+          patients: {
+            ...patientApiDetails,
+          },
+          id: userId
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");

@@ -1,11 +1,9 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import messages from "./message";
-import * as Chart from "chart.js";
 import drawChart from "../../Helper/drawChart";
-import {formatMessage} from "react-intl/src/format";
 import {CHART_TITLE, GRAPH_COLORS} from "../../constant";
-import {Tabs, Button} from "antd";
+import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
@@ -25,8 +23,9 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        const {graphs, getInitialData} = this.props;
+        const {graphs, getInitialData, searchMedicine} = this.props;
         getInitialData();
+        searchMedicine("");
         console.log("DashBoard Did MOunt DOCTORRRRR ROUTERRR ----------------->   ")
         setTimeout(() => {
             drawChart(graphs);
@@ -122,7 +121,6 @@ class Dashboard extends Component {
                     </Tabs>
                 </div>
                 <PatientDetailsDrawer />
-                {/* <AddAppointmentDrawer /> */}
             </Fragment>
         );
     }

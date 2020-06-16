@@ -81,6 +81,7 @@ const Users = database.define(
                     user_id: this.id,
                     user_name: this.user_name,
                     email: this.email,
+                    mobile_number: this.mobile_number,
                     sign_in_type: this.sign_in_type,
                     category: this.category,
                     activated_on: this.activated_on,

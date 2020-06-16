@@ -1,53 +1,30 @@
-const chalk = require("chalk");
+import chalk from "chalk";
+import moment from "moment";
 
 class Log {
   constructor(filename) {
     this.source = filename;
+    this._dashString =
+      "------------------------------------------------------------------------------------------------------";
   }
 
   getLogDate() {
-    var currentTime = new Date(),
-      month = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ],
-      date =
-        currentTime.getDate() +
-        " " +
-        month[currentTime.getMonth()] +
-        " " +
-        currentTime.getFullYear(),
-      suffix = "AM",
-      hours = currentTime.getHours(),
-      minutes = currentTime.getMinutes();
-
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    if (hours >= 12) {
-      suffix = "PM";
-      hours = hours - 12;
-    }
-    if (hours === 0) {
-      hours = 12;
-    }
-    return date + " @ " + hours + ":" + minutes + " " + suffix;
+    return moment().format(`D MMMM YYYY @ hh:mm A`);
   }
 
-  debug(msg) {
+  debug(msg, code) {
+    // console.log(
+    //   `\n ${chalk.yellow(this.getLogDate())}  ${chalk.yellow(
+    //     "( " + this.source + " )"
+    //   )} : ${msg} \n`
+    // );
     console.log(
-      `\n ${chalk.yellow(this.getLogDate())}  ${chalk.yellow(
-        "( " + this.source + " )"
-      )} : ${msg} \n`
+      `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
+        this.source
+      )}] \n\nMESSAGE: ${msg}\n\n`,
+      code
     );
+    console.log(`\n${this._dashString}\n`);
   }
 
   warn(msg) {
@@ -113,9 +90,9 @@ class Log {
     throw new Error(errLog);
   }
 
-  err(errorCode, methodName, description){
+  err(errorCode, methodName, description) {
     var serverName = require("os").hostname(),
-    logDate = this.getLogDate();
+      logDate = this.getLogDate();
     var errLog = "\n\n";
     errLog += "\x1b[34m" + logDate + "\x1b[0m" + "\n";
     errLog += "\x1b[34m" + "errorCode= " + "\x1b[0m" + errorCode + "\n";

@@ -23,7 +23,6 @@ const Dashboard = lazy(() =>
 );
 
 
-
 export default class Authenticated extends Component {
   constructor(props) {
     super(props);

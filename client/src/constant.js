@@ -11,7 +11,65 @@ export const PATH = {
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",
-    DETAILS: "/patients/:id"
+    DETAILS: "/patients/:patient_id"
+  }
+};
+
+export const TEXT_KEY = "text";
+export const TIME_KEY = "time";
+
+export const BEFORE_BREAKFAST = "1";
+export const AFTER_BREAKFAST = "2";
+export const NOON = "3";
+export const BEFORE_LUNCH = "4";
+export const AFTER_LUNCH = "5";
+export const BEFORE_EVENING_SNACK = "6";
+export const AFTER_EVENING_SNACK = "7";
+export const BEFORE_DINNER = "8";
+export const AFTER_DINNER = "9";
+export const BEFORE_SLEEP = "10";
+
+export const MEDICATION_TIMING = {
+  [BEFORE_BREAKFAST]: {
+    [TEXT_KEY]: "Before Breakfast",
+        [TIME_KEY]: "8am"
+},
+    [AFTER_BREAKFAST]:
+  {
+    [TEXT_KEY]: "After Breakfast",
+    [TIME_KEY]: "9am"
+  },
+  [NOON] : {
+    [TEXT_KEY]: "Noon",
+    [TIME_KEY]: "12pm"
+  },
+  [BEFORE_LUNCH]: {
+    [TEXT_KEY]: "Before Lunch",
+    [TIME_KEY]: "12:30pm"
+  },
+  [AFTER_LUNCH]: {
+    [TEXT_KEY]: "After Lunch",
+    [TIME_KEY]: "1:30pm"
+  },
+  [BEFORE_EVENING_SNACK]: {
+    [TEXT_KEY]: "Before Evening Snack",
+    [TIME_KEY]: "5:30pm"
+  },
+  [AFTER_EVENING_SNACK]: {
+    [TEXT_KEY]: "After Evening Snack",
+    [TIME_KEY]: "6pm"
+  },
+  [BEFORE_DINNER]: {
+    [TEXT_KEY]: "Before Dinner",
+    [TIME_KEY]: "7:30pm"
+  },
+  [AFTER_DINNER]: {
+    [TEXT_KEY]: "After Dinner",
+    [TIME_KEY]: "8:30pm"
+  },
+  [BEFORE_SLEEP]: {
+    [TEXT_KEY]: "Before Sleeping",
+    [TIME_KEY]: "10:30pm"
   }
 };
 
@@ -26,8 +84,8 @@ export const HIGH = "2";
 export const MEDIUM = "3";
 export const LOW = "4";
 
-export const MALE = "1";
-export const FEMALE = "2";
+export const MALE = "m";
+export const FEMALE = "f";
 
 export const GENDER = {
   [MALE]: {
@@ -158,7 +216,7 @@ export const REQUEST_TYPE = {
 export const SEVERITY_STATUS = {
   [CRITICAL]: {
     text: "Critical",
-    color: "dark-red"
+    color: "red"
   },
   [LOW]: {
     text: "Low",
@@ -235,3 +293,8 @@ export const CONDITIONS = {
 };
 
 export const TABLE_DEFAULT_BLANK_FIELD = "--";
+
+export const MEDICINE_TYPE = {
+  TABLET: "tablet",
+  INJECTION: "injection"
+}

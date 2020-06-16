@@ -30,13 +30,13 @@ const medicationReminderFormSchema = Joi.object().keys({
   strength: Joi.number().required(),
   unit: Joi.string().required(),
   quantity: Joi.number().required(),
-  when_to_take: Joi.string().optional(),
+  when_to_take: Joi.array().required(),
   repeat: Joi.string().required(),
   repeat_days: Joi.array(),
   repeat_interval: Joi.number().optional(),
   start_date: Joi.date().required(),
-  end_date: Joi.date().required(),
-  medication_stage: Joi.string().optional()
+  end_date: Joi.date().optional(),
+  medicine_id: Joi.number().optional()
 });
 
 const validateStartTime = startTime => {

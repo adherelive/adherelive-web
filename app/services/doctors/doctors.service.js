@@ -38,6 +38,17 @@ class DoctorsService {
             throw error;
         }
     };
+
+    getDoctorByData = async (data) => {
+        try {
+            const doctor = await doctorModel.findOne({
+                where: data
+            });
+            return doctor;
+        } catch(error) {
+            throw error;
+        }
+    }
 }
 
 export default new DoctorsService();

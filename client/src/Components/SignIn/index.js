@@ -4,7 +4,7 @@ import {Button, Input, Form, Row, Col, message} from "antd";
 import { Spring } from 'react-spring/renderprops'
 import LoginByGoogle from "./googleLogin";
 import LoginByFacebook from "./facebookLogin";
-import rightArrow from '../../Assets/images/next.png'
+import rightArrow from '../../Assets/images/next.png';
 
 const {Item: FormItem} = Form;
 const {Password} = Input;
