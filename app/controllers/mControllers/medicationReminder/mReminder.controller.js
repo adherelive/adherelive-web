@@ -188,9 +188,7 @@ class MobileMReminderController extends Controller {
           medications: {
             ...medicationApiData
           },
-          medicines: {
-            ...medicineWrapper.getBasicInfoBulk()
-          }
+          ...medicineWrapper.getBasicInfoBulk(),
         },
         "medications fetched successfully"
       );
