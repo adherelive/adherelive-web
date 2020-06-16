@@ -32,7 +32,7 @@ export default props => {
     );
 
     return (
-        <div className={`adhere-drawer-footer  ${className}`}>
+        <div className={`adhere-drawer-footer  ${className} z1`}>
             {cancelComponent === null
                 ? null
                 : cancelComponent

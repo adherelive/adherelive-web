@@ -1,9 +1,9 @@
 export const getAddAppointmentURL = () => {
-  return "/appointments";
+  return "/events/appointments";
 };
 
 export const getAddReminderURL = () => {
-  return "/reminders";
+  return "/events/reminders";
 };
 
 export const getAppointments = (userId, startDate, endDate) => {

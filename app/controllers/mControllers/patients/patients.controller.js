@@ -2,6 +2,9 @@ import Controller from "../../";
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
 import minioService from "../../../services/minio/minio.service";
+
+import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+
 import { randomString } from "../../../../libs/helper";
 import { saveFileIntoUserBucket } from "../../helper/user";
 
@@ -21,11 +24,11 @@ class MPatientController extends Controller {
       const { pid, profile_pic, name, email } = body || {};
       const { userId = "3" } = userDetails || {};
 
-      console.log("\n\n PROFILE PIC \n", req.file);
-
       if (email) {
         const updateUserDetails = await userService.updateEmail(email, userId);
       }
+
+      const patientDetails = await patientService.getPatientByUserId(userId);
 
       const splitName = name.split(" ");
 
@@ -51,20 +54,22 @@ class MPatientController extends Controller {
         const file_path = imgSync(profile_pic, "/tmp", file_name);
         const file = fs.readFileSync(file_path);
 
-        console.log("file ------> ",file);
+        console.log("file ------> ", file);
 
         if (userId) {
           if (profile_pic) {
             await minioService.createBucket();
 
             let hash = md5.create();
-            hash.update(userId);
+
+            hash.update(`${userId}`);
             hash.hex();
             hash = String(hash);
 
             const imageName = md5(`${userId}-profile-pic`);
             // const fileExt = "";
-            const file_name = hash.substring(4) + "/" + imageName + "." + extension;
+            const file_name =
+              hash.substring(4) + "/" + imageName + "." + extension;
             // const fileUrl = "/" + file_name;
 
             await minioService.saveBufferObject(file, file_name);
@@ -81,33 +86,8 @@ class MPatientController extends Controller {
         }
       }
 
-      // if (profile_pic) {
-      //   await minioService.createBucket();
-      //   // var file = path.join(__dirname, "../../../report.xlsx");
-      //   // const fileStream = fs.createReadStream(req.file.buffer);
-      //   const file_name = randomString(7);
-      //   const file_path = imgSync(image, "/tmp/", file_name);
-      //   const file = fs.readFileSync(file_path);
-      //
-      //   // let hash = md5.create();
-      //   // hash.update(userId);
-      //   // hash.hex();
-      //   // hash = String(hash);
-      //   // const folder = "patients";
-      //   // // const fileExt = "";
-      //   // const file_name =
-      //   //   hash.substring(4) + fieldname + "." + mimetype.split("/")[1];
-      //   // const fileUrl = folder + "/" + file_name;
-      //   await minioService.saveBufferObject(file, fileUrl);
-      //
-      //   console.log(
-      //     "qqqqqqqqqqqqqqq ---> ",
-      //     `${process.config.MINIO_S3_HOST}/adhere/${fileUrl}`
-      //   );
-      //   profilePic = `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${fileUrl}`;
-      // }
-
-      const profilePicUrl = `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profilePic}`;
+      // const profilePicUrl = `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profilePic}`;
+      const profilePicUrl = `${profilePic}`;
 
       // todo minio configure here
 
@@ -118,30 +98,30 @@ class MPatientController extends Controller {
         last_name: splitName.length > 1 ? splitName[1] : null,
         details: {
           // todo: profile_pic
-          profile_pic: profilePicUrl
+          profile_pic: profilePicUrl,
         },
-        uid: pid
+        uid: pid,
       };
-      // add patient for userId
-      const patientDetails = await patientService.updatePatientDetails(
-        patientData
-      );
+
+      const updatedpatientDetails = await patientService.updatePatient(patientDetails, patientData);
+
+      const patientApiWrapper = await PatientWrapper(updatedpatientDetails);
 
       return this.raiseSuccess(
         res,
         200,
         {
           patients: {
-            [patientDetails.getId]: {
-              ...patientDetails.getBasicInfo
-            }
-          }
+            [patientApiWrapper.getPatientId()]: {
+              ...patientApiWrapper.getBasicInfo(),
+            },
+          },
         },
         "patient details updated successfully"
       );
     } catch (error) {
       console.log("UPDATE PATIENT ERROR --> ", error);
-      return this.raiseServerError(res, 500, error, error.getMessage());
+      return this.raiseServerError(res, 500, error, error.message);
     }
   };
 }

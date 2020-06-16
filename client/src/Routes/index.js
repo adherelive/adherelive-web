@@ -22,7 +22,7 @@ export default class Routes extends Component {
 
     render() {
         const {authenticated, unauthorizedError} = this.props;
-        console.log("39182312 ", this.props);
+        console.log("39182312  DOCTORRRRR ROUTERRR ", this.props);
         // if (authenticated !== true && authenticated !== false) {
         //     return <div>Loading</div>;
         // }

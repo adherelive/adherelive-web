@@ -38,11 +38,12 @@ export const GRAPH_INITIAL_STATE = {
 };
 
 export const PATIENT_INITIAL_STATE = {
-  "1": {
+  "100": {
     basic_info: {
-      name: "test 1",
+      first_name: "test",
+      last_name: "1",
       age: "25",
-      gender: "1"
+      gender: "m"
     },
     chats: ["1"],
     condition: "1",
@@ -70,11 +71,12 @@ export const PATIENT_INITIAL_STATE = {
       }
     }
   },
-  "23": {
+  "101": {
     basic_info: {
-      name: "test 3",
+      first_name: "test",
+      last_name: "3",
       age: "35",
-      gender: "2"
+      gender: "f"
     },
     chats: ["2"],
     condition: "1",

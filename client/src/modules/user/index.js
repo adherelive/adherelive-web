@@ -26,11 +26,11 @@ const intial_state = {
 };
 
 function userReducer(state, data) {
-    const {user = {}} = data || {};
-    if (Object.keys(user).length > 0) {
+    const {users = {}} = data || {};
+    if (Object.keys(users).length > 0) {
         return {
             ...state,
-            ...user
+            ...users
         };
     } else {
         return {

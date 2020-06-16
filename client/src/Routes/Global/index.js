@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import Identify from "../Components/forgotPassword/Identify";
 // import ForgotPassword from "../Containers/ForgotPassword";
 // import ResetPassword from "../Containers/ResetPassword";
-import Register from "../../Containers/Register";
+// import Register from "../../Containers/DoctorOnBoarding/clinicRegister";
 import SignIn from "../../Containers/SignIn";
 //import SignIn from "../../Components/SignIn";
 import BlankState from "../../Containers/BlankState";
@@ -51,14 +51,14 @@ export default class Global extends Component {
   render() {
     const {authRedirection} = this.props;
     const {redirecting} = this.state;
-    console.log("179236 redirecting -> ", redirecting);
+    console.log("179236 redirecting -> DOCTORRRRR ROUTERRR ", redirecting);
     return (
       <BrowserRouter>
         <Switch>
           {redirecting && <Redirect to={authRedirection} />}
           {/* {this.state.redirecting && <Redirect to={this.state.redirecting} />} */}
           {/* <Route exact path={PATH.SIGN_IN} component={SignIn} /> */}
-          {/*<Route exact path={PATH.REGISTER} component={Register} />*/}
+          {/* <Route exact path={PATH.REGISTER} component={Register} /> */}
            <Route exact path={PATH.SIGN_IN} component={SignIn} />
           <Route path="" component={SignIn} />
           {/* <Route exact path={''} component={Register} /> */}

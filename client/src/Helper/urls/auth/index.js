@@ -1,23 +1,23 @@
 export const googleSignInUrl = () => {
-    return "/googleSignIn";
+    return "/auth/googleSignIn";
 };
 
 export const facebookSignInUrl = () => {
-    return "/facebookSignIn";
+    return "/auth/facebookSignIn";
 };
 
 export const getInitialData = () => {
-    return `/get-basic-info`;
+    return `/auth/get-basic-info`;
 };
 
 export const signInUrl = () => {
-  return `/sign-in`;
+  return `/auth/sign-in`;
 };
 
 export const signUpUrl = () => {
-    return `/sign-up`;
+    return `/auth/sign-up`;
   };
 
 export const signOutUrl = () => {
-  return `/sign-out`;
+  return `/auth/sign-out`;
 };

@@ -1,14 +1,15 @@
 import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import messages from "./message";
-import * as Chart from "chart.js";
 import drawChart from "../../Helper/drawChart";
-import {formatMessage} from "react-intl/src/format";
 import {CHART_TITLE, GRAPH_COLORS} from "../../constant";
-import {Tabs, Button} from "antd";
+import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
+import Loading from "../Common/Loading"
+import { withRouter } from "react-router-dom";
+
 
 const {TabPane} = Tabs;
 
@@ -22,8 +23,10 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        const {graphs, getInitialData} = this.props;
+        const {graphs, getInitialData, searchMedicine} = this.props;
         getInitialData();
+        searchMedicine("");
+        console.log("DashBoard Did MOunt DOCTORRRRR ROUTERRR ----------------->   ")
         setTimeout(() => {
             drawChart(graphs);
         }, 500);
@@ -74,14 +77,16 @@ class Dashboard extends Component {
     };
 
     render() {
-        console.log("19273 here --> dashboard");
+        console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard",this.props);
         const {graphs} = this.props;
         const {formatMessage, renderChartTabs} = this;
 
         if (Object.keys(graphs).length === 0) {
-            return null;
+            return (
+                <Loading className={"wp100 mt20"} />
+            );
         }
-
+            
         return (
             <Fragment>
                 <div className="dashboard p20">
@@ -116,10 +121,9 @@ class Dashboard extends Component {
                     </Tabs>
                 </div>
                 <PatientDetailsDrawer />
-                <AddAppointmentDrawer />
             </Fragment>
         );
     }
 }
 
-export default injectIntl(Dashboard);
+export default withRouter(injectIntl(Dashboard));

@@ -3,8 +3,13 @@ import appointmentService from "../../../services/appointment/appointment.servic
 import scheduleService from "../../../services/events/event.service";
 import {Proxy_Sdk, EVENTS} from "../../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
+import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 
-class AppointmentController extends Controller {
+import Log from "../../../../libs/log";
+
+const Logger = new Log("MOBILE APPOINTMENT CONTROLLLER");
+
+class MobileAppointmentController extends Controller {
     constructor() {
         super();
     }
@@ -43,6 +48,9 @@ class AppointmentController extends Controller {
             const appointment = await appointmentService.addAppointment(appointment_data);
             console.log("[ APPOINTMENTS ] appointments ", appointment);
 
+            const appointmentMApiData = await MAppointmentWrapper(appointment);
+
+            // todo: after proxysdk setup
             const eventScheduleData = {
                 event_type: EVENT_TYPE.APPOINTMENT,
                 event_id: appointment.id,
@@ -61,13 +69,51 @@ class AppointmentController extends Controller {
             await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
 
             // response
-            return this.raiseSuccess(res, 200, appointment, "appointment created successfully");
+            return this.raiseSuccess(res, 200, {...appointmentMApiData.getBasicInfo()}, "appointment created successfully");
         } catch(error) {
             console.log("[ APPOINTMENTS ] create error ---> ", error);
             return this.raiseServerError(res, 500, error, error.getMessage());
         }
-    }
+    };
+
+    getAppointmentForPatient = async (req, res) => {
+        const { raiseSuccess, raiseServerError } = this;
+        try {
+          const { params: { id } = {}, userDetails: { userId } = {} } = req;
+    
+          const appointmentList = await appointmentService.getAppointmentForPatient(
+            id
+          );
+          Logger.debug("appointmentList", appointmentList);
+    
+          // if (appointmentList.length > 0) {
+          let appointmentApiData = {};
+    
+          await appointmentList.forEach(async (appointment) => {
+            const appointmentWrapper = await MAppointmentWrapper(appointment);
+            appointmentApiData[
+              appointmentWrapper.getAppointmentId()
+            ] = appointmentWrapper.getBasicInfo();
+          });
+    
+          return raiseSuccess(
+            res,
+            200,
+            {
+              appointments: {
+                ...appointmentApiData,
+              },
+            },
+            `appointment data for patient: ${id} fetched successfully`
+          );
+          // } else {
+          // }
+        } catch (error) {
+          Logger.debug("500 error", error);
+          return raiseServerError(res);
+        }
+      };
 
 }
 
-export default new AppointmentController();
+export default new MobileAppointmentController();

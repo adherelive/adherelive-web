@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import { Menu, Tooltip, message } from "antd";
 import { PATH } from "../../constant";
 
-import Logo from "../../Assets/images/logo.svg";
+import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
 
@@ -64,14 +64,14 @@ class SideMenu extends Component {
     return (
       <Menu
         selectedKeys={[selectedKeys]}
-        className="side-bar-menu p0"
+        className="side-bar-menu p0 bg-dark-grey"
         onSelect={handleItemSelect}
       >
         <MenuItem
           className="flex direction-column justify-center align-center p0"
           key={LOGO}
         >
-          <img src={Logo} alt="Adherence logo" />
+          <img className="w45" src={Logo} alt="Adherence logo" />
         </MenuItem>
 
         <MenuItem
@@ -88,7 +88,7 @@ class SideMenu extends Component {
             key={LOG_OUT}
         >
           <Tooltip placement="right" title={"Log Out"}>
-            <UserOutlined className="sidebar-bottom-custom"/>
+            <UserOutlined className="sidebar-bottom-custom text-white"/>
           </Tooltip>
         </MenuItem>
       </Menu>

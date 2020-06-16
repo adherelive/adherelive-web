@@ -11,7 +11,7 @@ class Controller {
     return res.status(code).json(response.getResponse());
   }
 
-  raiseServerError(res, code = 500, error, message) {
+  raiseServerError(res, code = 500, error = {}, message = "") {
     const payload = {
       code: code,
       error: errMessage.INTERNAL_SERVER_ERROR
