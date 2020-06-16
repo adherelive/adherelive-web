@@ -481,7 +481,7 @@ class QualificationRegister extends Component {
                 value={year}
                 onChange={e => this.setYear(key, e)}
               /> */}
-              <Select className="form-inputs" placeholder="Select Year" defaultValue={parseInt(moment().format('YYYY'))} value={year ? year : parseInt(moment().format('YYYY'))} onChange={this.setYear(key)}>
+              <Select className="form-inputs" placeholder="Select Year" value={year ? year : null} onChange={this.setYear(key)}>
                 {this.getYearOptions()}
               </Select>
 
@@ -647,7 +647,7 @@ class QualificationRegister extends Component {
         />
 
         <div className='form-headings'>Registration year</div>
-        <Select className="form-inputs" placeholder="Select Registration Year" defaultValue={parseInt(moment().format('YYYY'))} value={registration_year ? registration_year : parseInt(moment().format('YYYY'))} placeholder={'Select Registration Year'} onChange={this.setRegYear}>
+        <Select className="form-inputs" placeholder="Select Registration Year" value={registration_year ? registration_year : null} placeholder={'Select Registration Year'} onChange={this.setRegYear}>
           {this.getYearOptions()}
         </Select>
       </div>

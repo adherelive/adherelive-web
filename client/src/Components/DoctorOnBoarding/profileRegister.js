@@ -68,10 +68,6 @@ class Profileregister extends Component {
         this.setState({ email: e.target.value });
     };
 
-    setNumber = e => {
-        this.setState({ mobile_number: e.target.value });
-    };
-
     setCity = address => {
         this.setState({ city:address.definition });
     };
@@ -211,6 +207,27 @@ class Profileregister extends Component {
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(img);
     }
+
+    setNumber = e => {
+        const { value } = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+            this.setState({ mobile_number: e.target.value });
+        }
+      };
+    
+      // '.' at the end or only '-' in the input box.
+      onBlur = () => {
+        const { value, onBlur, onChange } = this.props;
+        let valueTemp = value;
+        if (value.charAt(value.length - 1) === '.' || value === '-') {
+          valueTemp = value.slice(0, -1);
+        }
+        onChange(valueTemp.replace(/0*(\d+)/, '$1'));
+        if (onBlur) {
+          onBlur();
+        }
+      };
 
     renderProfileForm = () => {
 
