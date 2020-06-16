@@ -56,6 +56,18 @@ class UserService {
             throw err;
         }
     };
+
+    getUserByData = async data => {
+        try {
+            const user = await userModel.findAll({
+                where: data
+            });
+            return user;
+        } catch (err) {
+            throw err;
+        }
+    };
+
     async addUser(data) {
         try {
             const response = await userModel.create(data);
@@ -70,6 +82,19 @@ class UserService {
             const user = await userModel.update({
                email,
             }, {
+                where: {
+                    id
+                }
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    updateUser = async (data, id) => {
+        try {
+            const user = await userModel.update(data, {
                 where: {
                     id
                 }

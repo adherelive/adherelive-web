@@ -18,6 +18,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      prefix: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       mobile_number: {
         type: Sequelize.STRING,
         allowNull: true
@@ -39,6 +43,17 @@ module.exports = {
       activated_on: {
         type: Sequelize.DATE
       },
+      onboarded: {
+        type: Sequelize.BOOLEAN
+      },
+      onboarding_status: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      verified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue:false
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -58,6 +73,3 @@ module.exports = {
   }
 };
 
-// exports.down = function(db, callback) {
-//   db.dropTable(DB_TABLES.USERS, callback);
-// };

@@ -21,26 +21,26 @@ module.exports = {
       name: {
         type: Sequelize.STRING(1000)
       },
-      condition_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: {
-            tableName: DB_TABLES.CONDITIONS,
-          },
-          key: 'id'
-        }
-      },
-      consent_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: {
-            tableName: DB_TABLES.CONSENTS,
-          },
-          key: 'id'
-        }
-      },
+      // condition_id: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false,
+      //   references: {
+      //     model: {
+      //       tableName: DB_TABLES.CONDITIONS,
+      //     },
+      //     key: 'id'
+      //   }
+      // },
+      // consent_id: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false,
+      //   references: {
+      //     model: {
+      //       tableName: DB_TABLES.CONSENTS,
+      //     },
+      //     key: 'id'
+      //   }
+      // },
       doctor_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

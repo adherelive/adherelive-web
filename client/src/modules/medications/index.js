@@ -1,11 +1,11 @@
 import { MEDICATION_INITIAL_STATE } from "../../data";
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getAddMedicationReminderURL} from "../../Helper/urls/mReminders";
+import {getAddMedicationReminderURL, getMedicationForParticipantUrl} from "../../Helper/urls/mReminders";
 import moment from "moment";
 
 const INITIAL_STATE = {
-  "1": {
+  "100": {
     basic_info: {
       id: "1",
       participant_id: "2", // seed test-patient
@@ -15,7 +15,7 @@ const INITIAL_STATE = {
       start_date:moment(),
       end_date: moment().add(2, 'w'),
       details: {
-        medicine: "test medicine 1",
+        medicine_id: "1",
         start_time: moment(),
         end_time: moment(),
         repeat_days: ["Mon","Fri"],
@@ -26,7 +26,7 @@ const INITIAL_STATE = {
       }
     }
   },
-  "2": {
+  "101": {
     basic_info: {
       id: "2",
       participant_id: "2", // seed test-patient
@@ -36,7 +36,7 @@ const INITIAL_STATE = {
       start_date:moment(),
       end_date: moment().add(2, 'm'),
       details: {
-        medicine: "test medicine 2",
+        medicine_id: "3",
         start_time: moment(),
         end_time: moment(),
         repeat_days: ["Tue","Wed", "Thu"],
@@ -54,6 +54,9 @@ export const ADD_MEDICATION_REMINDER_COMPLETE =
     "ADD_MEDICATION_REMINDER_COMPLETE";
 export const ADD_MEDICATION_REMINDER_FAILED = "ADD_MEDICATION_REMINDER_FAILED";
 
+export const GET_MEDICATION_START = "GET_MEDICATION_START";
+export const GET_MEDICATION_COMPLETE = "GET_MEDICATION_COMPLETE";
+export const GET_MEDICATION_FAILED = "GET_MEDICATION_FAILED";
 
 export const addMedicationReminder = payload => {
   let response = {};
@@ -83,6 +86,34 @@ export const addMedicationReminder = payload => {
   };
 };
 
+export const getMedications = id => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({type: GET_MEDICATION_START});
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getMedicationForParticipantUrl(id)
+      });
+
+      const {status, payload: {data, error = {}} = {}} = response || {};
+      if(status === true) {
+        dispatch({
+          type: GET_MEDICATION_COMPLETE,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: GET_MEDICATION_FAILED,
+          error
+        });
+      }
+    } catch(error) {
+      console.log("GET MEDICATION ERROR ", error);
+    }
+  };
+};
+
 function medicationReducer(state, payload) {
   const { medications = {} } = payload || {};
   if (Object.keys(medications).length > 0) {
@@ -97,7 +128,7 @@ function medicationReducer(state, payload) {
   }
 }
 
-export default (state = INITIAL_STATE, action) => {
+export default (state = {}, action) => {
   const { type, payload } = action;
   switch (type) {
     default:

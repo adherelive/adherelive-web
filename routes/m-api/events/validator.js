@@ -8,12 +8,33 @@ const appointmentFormSchema = Joi.object().keys({
         id: Joi.number().required(),
         category: Joi.string().required(),
     }).required(),
-    start_date: Joi.date().options({ convert: true }).required(),
-    end_date: Joi.date(),
+    organizer_type: Joi.string().optional(),
+    // organizer_id: Joi.with('organizer_type', USER_CATEGORY.CARE_TAKER).number(),
+    organizer_id: Joi.when('organizer_type', {
+        is: USER_CATEGORY.CARE_TAKER,
+        then: Joi.number().required(),
+        otherwise: Joi.number().optional()
+    }),
+    date: Joi.date().options({ convert: true }).required(),
     start_time: Joi.date().required(),
     end_time: Joi.date().required(),
     description: Joi.string().optional().allow(""),
     // TODO: rr_rule here?
+});
+
+const medicationReminderFormSchema = Joi.object().keys({
+    // medicine_id: Joi.number().required(),
+    strength: Joi.number().required(),
+    unit: Joi.string().required(),
+    quantity: Joi.number().required(),
+    when_to_take: Joi.array().optional(),
+    repeat: Joi.string().required(),
+    repeat_days: Joi.array(),
+    repeat_interval: Joi.number().optional(),
+    start_date: Joi.date().required(),
+    end_date: Joi.date().required(),
+    medication_stage: Joi.string().optional(),
+    medicine_id: Joi.number().required()
 });
 
 const validateStartTime = startTime => {
@@ -36,19 +57,29 @@ export const validateAppointmentFormData = (req, res, next) => {
         // response.setError(isValid.error);
         // return res.status(422).json(response.getResponse());
     }
-    // if (!validateStartTime(startTime)) {
-    //     return raiseClientError(res, 422, "you can't create Appointment on passed time.", "");
-    //     // const response = new Response(false, 422);
-    //     // response.setError({
-    //     //     error: "you can't create Appointment on passed time."
-    //     // });
-    //     // return res.status(422).json(response.getResponse());
-    // }
-    // if (!validateTimeInterval(startTime, endTime)) {
-    //     return raiseClientError(res, 422, "start time should be less than end time", "");
-    //     // const response = new Response(false, 422);
-    //     // response.setError({ error: "start time should be less than end time" });
-    //     // return res.status(422).json(response.getResponse());
-    // }
+    if (!validateStartTime(startTime)) {
+        return raiseClientError(res, 422, "you can't create Appointment on passed time.", "");
+        // const response = new Response(false, 422);
+        // response.setError({
+        //     error: "you can't create Appointment on passed time."
+        // });
+        // return res.status(422).json(response.getResponse());
+    }
+    if (!validateTimeInterval(startTime, endTime)) {
+        return raiseClientError(res, 422, "start time should be less than end time", "");
+        // const response = new Response(false, 422);
+        // response.setError({ error: "start time should be less than end time" });
+        // return res.status(422).json(response.getResponse());
+    }
+    next();
+};
+
+export const validateMedicationReminderData = (req, res, next) => {
+    const { body: data = {} } = req;
+    const { startTime, endTime } = data;
+    const isValid = medicationReminderFormSchema.validate(data);
+    if (isValid && isValid.error != null) {
+        return raiseClientError(res, 422, isValid.error, "");
+    }
     next();
 };

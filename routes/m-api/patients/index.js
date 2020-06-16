@@ -7,7 +7,7 @@ import PatientController from "../../../app/controllers/mControllers/patients/pa
 var storage = multer.memoryStorage();
 var upload = multer({ dest: "../app/public/", storage: storage });
 
-router.post('/patient',
+router.post('',
     // upload.single("profile_pic"),
     PatientController.mUpdatePatient
 );

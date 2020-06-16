@@ -21,7 +21,8 @@ export const doRequest = async requestdata => {
     baseURL = HOST,
     params = {},
     data = {},
-    onUploadProgress
+    onUploadProgress,
+    query = {},
   } = requestdata;
 
   //create request config according to data
@@ -34,9 +35,9 @@ export const doRequest = async requestdata => {
     data,
     xsrfCookieName,
     xsrfHeaderName,
-    onUploadProgress
+    onUploadProgress,
   };
-
+console.log("REQUEST CONFIGGGGGGG",requestConfig);
   try {
     const response = await axios(requestConfig);
     return response.data;

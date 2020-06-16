@@ -4,7 +4,8 @@ import {Button, Input, Form, Row, Col, message} from "antd";
 import { Spring } from 'react-spring/renderprops'
 import LoginByGoogle from "./googleLogin";
 import LoginByFacebook from "./facebookLogin";
-import rightArrow from '../../Assets/images/next.png'
+import rightArrow from '../../Assets/images/next.png';
+import CompanyIcon from '../../Assets/images/logo3x.png'
 
 const {Item: FormItem} = Form;
 const {Password} = Input;
@@ -36,7 +37,23 @@ class SignIn extends Component {
     
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            signUp(values);
+            signUp(values).then(response=>{
+                
+                const{status}=response;
+                if(status){
+                 let{payload={}}=response;
+                   message.success('Please go to your email to verify your account.')
+                }else{
+                    let{payload:{error={}}={}}=response;
+                
+                    console.log('RESPONSE OF SIGNUP REQUESTTT',error);
+                    if(error.status=='EMAIL_ALREADY_EXISTS'){
+                        message.error('Email already exists.');
+                    }else{
+                        message.error('Something went wrong.');
+                    }
+                }
+            });
           }
         });
       };
@@ -85,8 +102,11 @@ class SignIn extends Component {
           
                 <div className='hp100 wp75'>
                           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
-                        {/* <img alt="" src={CompanyIcon} className="w200 pt80"/> */}
+                       
+                        <div className="flex direction-row align-center">
+                        <img alt="" src={CompanyIcon}  className='company-logo'/>
                         <div className='text-white fs28 medium italic'>Adhere.Live</div>
+                        </div>
                         
                         <div className="flex direction-row align-center">
                         <div className='text-white fs16 mr16 '>{login?'New to Adhere?':'Already a user?'}</div>
@@ -149,13 +169,13 @@ class SignIn extends Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: "Please enter email or mobile number"
+                                        message: "Please enter email"
                                     }
                                 ]
                             })(
                                 <Input
                                     type="text"
-                                    placeholder="Mobile number or Email"
+                                    placeholder="Email"
                                     className="h40"
                                 />
                             )}
@@ -229,13 +249,13 @@ class SignIn extends Component {
                                 rules: [
                                     {
                                         required: true,
-                                        message: "Please enter email or mobile number"
+                                        message: "Please enter email"
                                     }
                                 ]
                             })(
                                 <Input
                                     type="text"
-                                    placeholder="Mobile number or Email"
+                                    placeholder="Email"
                                     className="h40"
                                 />
                             )}
@@ -284,4 +304,4 @@ class SignIn extends Component {
     }
 }
 
-export default Form.create({name: "login_form"})(SignIn);
+export default Form.create()(SignIn);

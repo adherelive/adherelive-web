@@ -1,7 +1,7 @@
 "use strict";
 import Sequelize from "sequelize";
 import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
+import { DB_TABLES, MEDICINE_TYPE } from "../../constant";
 
 const Medicines = database.define(
     DB_TABLES.MEDICINES,
@@ -15,6 +15,10 @@ const Medicines = database.define(
         name: {
             type: Sequelize.STRING(100),
             allowNull: false,
+        },
+        type: {
+            type: Sequelize.ENUM,
+            values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION]
         },
         description: {
             type: Sequelize.STRING(1000),

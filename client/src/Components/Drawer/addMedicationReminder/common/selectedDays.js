@@ -70,10 +70,9 @@ class SelectedDays extends Component {
             initialValue: selectedDays.join(",")
           })(<Input />)}
         </FormItem>
-        <div className="flex select-days">
+        <div className="flex-shrink-1 flex justify-space-evenly select-days">
           {DAYS.map(tag => (
             <CheckableTag
-              className="flex-1"
               key={tag}
               checked={selectedDays.indexOf(tag) > -1}
               onChange={checked => handleCheckDays(tag, checked)}

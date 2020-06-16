@@ -4,12 +4,11 @@ import {database} from "../../libs/mysql";
 import {DB_TABLES} from "../../constant";
 import Doctors from "./doctors";
 import Patients from "./patients";
-import Condition from "less/lib/less/tree/condition";
 import Conditions from "./conditions";
 import Consents from "./consents";
 
 const CarePlan = database.define(
-    DB_TABLES.CONSENTS,
+    DB_TABLES.CARE_PLANS,
     {
         id: {
             allowNull: false,
@@ -21,26 +20,26 @@ const CarePlan = database.define(
             type: Sequelize.STRING(1000),
             allowNull: false,
         },
-        condition_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.CONDITIONS,
-                },
-                key: 'id'
-            }
-        },
-        consent_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.CONSENTS,
-                },
-                key: 'id'
-            }
-        },
+        // condition_id: {
+        //     type: Sequelize.INTEGER,
+        //     allowNull: false,
+        //     references: {
+        //         model: {
+        //             tableName: DB_TABLES.CONDITIONS,
+        //         },
+        //         key: 'id'
+        //     }
+        // },
+        // consent_id: {
+        //     type: Sequelize.INTEGER,
+        //     allowNull: false,
+        //     references: {
+        //         model: {
+        //             tableName: DB_TABLES.CONSENTS,
+        //         },
+        //         key: 'id'
+        //     }
+        // },
         doctor_id: {
             type: Sequelize.INTEGER,
             allowNull: false,
@@ -97,24 +96,24 @@ const CarePlan = database.define(
     }
 );
 
-CarePlan.hasOne(Conditions, {
-    foreignKey: "condition_id",
-    targetKey: "id"
-});
+// CarePlan.hasOne(Conditions, {
+//     foreignKey: "condition_id",
+//     targetKey: "id"
+// });
 
-CarePlan.hasOne(Consents, {
-    foreignKey: "consent_id",
-    targetKey: "id"
-});
+// CarePlan.hasOne(Consents, {
+//     foreignKey: "consent_id",
+//     targetKey: "id"
+// });
 
 CarePlan.hasOne(Patients, {
-    foreignKey: "patient_id",
-    targetKey: "id"
+    foreignKey: "id",
+    targetKey: "patient_id"
 });
 
 CarePlan.hasOne(Doctors, {
-    foreignKey: "doctor_id",
-    targetKey: "id"
+    foreignKey: "id",
+    targetKey: "doctor_id"
 });
 
 export default CarePlan;

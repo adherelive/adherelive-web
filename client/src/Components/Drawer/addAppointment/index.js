@@ -1,114 +1,173 @@
-import React, {Component, Fragment} from "react";
-import {Drawer, Form, message} from "antd";
-import {injectIntl} from "react-intl";
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { hasErrors } from "../../../Helper/validation";
+import moment from "moment";
+
+import Drawer from "antd/es/drawer";
+import Form from "antd/es/form";
+import message from "antd/es/message";
 
 import messages from "./message";
 import AddAppointmentForm from "./form";
 import Footer from "../footer";
+import CalendarTimeSelecton from "./calender";
 
 class AddAppointment extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            visible: true
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: true,
+      disabledSubmit: true,
+    };
+
+    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
+      AddAppointmentForm
+    );
+  }
+
+  onFormFieldChanges = (props, allvalues) => {
+    const {
+      form: { getFieldsError, isFieldsTouched },
+    } = props;
+    const isError = hasErrors(getFieldsError());
+    const { disabledSubmit } = this.state;
+    if (disabledSubmit !== isError && isFieldsTouched()) {
+      this.setState({ disabledSubmit: isError });
+    }
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { addAppointment } = this.props;
+    const { formRef = {}, formatMessage } = this;
+    const {
+      props: {
+        form: { validateFields },
+      },
+    } = formRef;
+
+    validateFields(async (err, values) => {
+      if (!err) {
+        console.log("VALUES --> ", values);
+        const {
+          patient = {},
+          date,
+          start_time,
+          end_time,
+          description = "",
+          treatment = "",
+        } = values;
+
+        const data = {
+          // todo: change participant one with patient from store
+          participant_two: {
+            id: "2",
+            category: "patient",
+          },
+          date,
+          start_time,
+          end_time,
+          description,
+          treatment,
         };
 
-        this.FormWrapper = Form.create({})(AddAppointmentForm);
-    }
+        try {
+          const response = await addAppointment(data);
+          const {
+            status,
+            statusCode: code,
+            payload: { message: errorMessage = "", error, error: {error_type = ""} = {} },
+          } = response || {};
 
-    handleSubmit = e => {
-        e.preventDefault();
-        const { addAppointment } = this.props;
-        const { formRef = {}, formatMessage } = this;
-        const {
-            props: {
-                form: { validateFields }
+          if (code === 422) {
+            if(error_type === "slot_present") {
+              message.warn(
+                `${errorMessage} range: ${moment(start_time).format(
+                  "LT"
+                )} - ${moment(end_time).format("LT")}`
+              );
             }
-        } = formRef;
+          } else if(status === true) {
+            message.success(formatMessage(messages.add_appointment_success));
+          } else {
+            message.warn(errorMessage);
+          }
 
-        validateFields(async (err, values) => {
-            if (!err) {
-                console.log("VALUES --> ", values);
-                const {patient = {}, date, start_time, end_time, description = ""} = values;
-
-                const data = {
-                    // todo: change participant one with patient from store
-                    participant_two: {
-                        id: "2",
-                        category:"patient"
-                    },
-                    date,
-                    start_time,
-                    end_time,
-                };
-
-                try {
-                    const response = await addAppointment(data);
-                    const {status} = response || {};
-
-                    if(status === true) {
-                        message.success(formatMessage(messages.add_appointment_success));
-                    } else {
-                        // TODO: add error message from response here
-                        // message.error(formatMessage(message.add_appointment_error))
-                    }
-
-
-                    console.log("add appointment response -----> ", response);
-                } catch(error) {
-                    console.log("ADD APPOINTMENT UI ERROR ---> ", error);
-                }
-            }
-        });
-    };
-
-    formatMessage = data => this.props.intl.formatMessage(data);
-
-    onClose = () => {
-        const {close} = this.props;
-        close();
-    };
-
-    setFormRef = formRef => {
-        this.formRef = formRef;
-        if (formRef) {
-            this.setState({ formRef: true });
+          console.log("add appointment response -----> ", response);
+        } catch (error) {
+          console.log("ADD APPOINTMENT UI ERROR ---> ", error);
         }
+      }
+    });
+  };
+
+  formatMessage = (data) => this.props.intl.formatMessage(data);
+
+  onClose = () => {
+    const { close } = this.props;
+    close();
+  };
+
+  setFormRef = (formRef) => {
+    this.formRef = formRef;
+    if (formRef) {
+      this.setState({ formRef: true });
+    }
+  };
+
+  render() {
+    const { visible = true } = this.props;
+    const { disabledSubmit } = this.state;
+    const {
+      onClose,
+      formatMessage,
+      setFormRef,
+      handleSubmit,
+      FormWrapper,
+    } = this;
+
+    const submitButtonProps = {
+      disabled: disabledSubmit,
+      // loading: loading && !deleteLoading
     };
 
-    render() {
-        const {visible = true} = this.props;
-        const {onClose, formatMessage, setFormRef, handleSubmit, FormWrapper} = this;
-        return (
-            <Fragment>
-                <Drawer
-                    placement="right"
-                    // closable={false}
-                    onClose={onClose}
-                    visible={visible} // todo: change as per prop -> "visible", -- WIP --
-                    width={'35%'}
-                    title={formatMessage(messages.add_appointment)}
-                    // headerStyle={{
-                    //     display:"flex",
-                    //     justifyContent:"space-between",
-                    //     alignItems:"center"
-                    // }}
-                >
-                    <FormWrapper
-                        wrappedComponentRef={setFormRef}
-                        {...this.props}
-                    />
-                    <Footer
-                        onSubmit={handleSubmit}
-                        onClose={onClose}
-                        submitText={formatMessage(messages.submit_text)}
-                        submitButtonProps={{}}
-                        cancelComponent={null}
-                    />
-                </Drawer>
-            </Fragment>
-        );
+    if(visible !== true) {
+      return null;
     }
+
+    return (
+      <Fragment>
+        <Drawer
+          placement="right"
+          // closable={false}
+          onClose={onClose}
+          visible={visible} // todo: change as per prop -> "visible", -- WIP --
+          width={`45%`}
+          title={formatMessage(messages.add_appointment)}
+          // headerStyle={{
+          //     display:"flex",
+          //     justifyContent:"space-between",
+          //     alignItems:"center"
+          // }}
+        >
+          {/* <div className="flex direction-row justify-space-between"> */}
+          <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
+          {/* <CalendarTimeSelecton 
+                className="calendar-section wp60"
+            /> */}
+          {/* </div> */}
+
+          <Footer
+            onSubmit={handleSubmit}
+            onClose={onClose}
+            submitText={formatMessage(messages.submit_text)}
+            submitButtonProps={submitButtonProps}
+            cancelComponent={null}
+          />
+        </Drawer>
+      </Fragment>
+    );
+  }
 }
 
 export default injectIntl(AddAppointment);

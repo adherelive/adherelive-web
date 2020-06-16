@@ -26,6 +26,8 @@ module.exports = {
                 password: await bcrypt.hash("Password@123", 5),
                 sign_in_type: "basic",
                 category: "doctor",
+                verified:1,
+                onboarded:1,
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
@@ -36,6 +38,8 @@ module.exports = {
                 password: await bcrypt.hash("Password@123", 5),
                 sign_in_type: "basic",
                 category: "patient",
+                verified:1,
+                onboarded:1,
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
@@ -46,6 +50,8 @@ module.exports = {
                 password: await bcrypt.hash("Password@123", 5),
                 sign_in_type: "google",
                 category: "doctor",
+                verified:1,
+                onboarded:1,
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
