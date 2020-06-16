@@ -305,7 +305,7 @@ class Profileregister extends Component {
                     // ref={(instance) => { this.GooglePlacesRef = instance }}
                     renderInput={(props) => (
                         <Input
-                            className="form-inputs"
+                        className="form-input-google"
                             value={city}
                             // Custom properties
                             {...props}

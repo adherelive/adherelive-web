@@ -136,5 +136,5 @@ export const changePhysician = () => {
 };
 
 export const getUploadURL = () => {
-  return `/upload`;
+  return `/auth/upload`;
 };

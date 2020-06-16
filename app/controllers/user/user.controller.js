@@ -166,7 +166,7 @@ class UserController extends Controller {
         email,
       });
  
-      console.log('MOMENT===========>',moment(),user.get('verified'));
+      console.log('MOMENT===========>',user.getBasicInfo);
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
@@ -198,12 +198,14 @@ class UserController extends Controller {
           }
         );
 
-
-        const apiUserDetails = await UserWrapper(user);
+          console.log("USERRR IN SIGNUPP",user.getBasicInfo);
+        const apiUserDetails = await UserWrapper(user.getBasicInfo);
 
         const dataToSend = {
-          [apiUserDetails.getUserId]: {
-            ...apiUserDetails.getBasicInfo()
+          users: {
+            [apiUserDetails.getUserId()]: {
+              ...apiUserDetails.getBasicInfo()
+            }
           }
         };
 
@@ -353,18 +355,15 @@ class UserController extends Controller {
         const { userId, userData, userData: { category } = {} } = req.userDetails;
         const user = await userService.getUserById(userId);
 
-        console.log(
-          "\n\n-----------USER------------------------------------",
-          user,
-          req.userDetails
-        );
+       
 
-        Logger.debug("user data in request", userData);
+        // Logger.debug("user data in request", userData);
 
         // const userDetails = user[0];
 
-        console.log("userId ---> ", userId);
-
+        // console.log("userId ---> ", userId);
+             
+          console.log("USERRR IN GET INITIAL DATA",userData);
         const apiUserDetails = await UserWrapper(userData);
 
         let userCategoryData = {};
@@ -532,7 +531,6 @@ class UserController extends Controller {
 
 
   getDoctorProfileRegisterData = async (req, res) => {
-    // let{user_id,name,city,category,mobile_number,prefix,profile_pic}=req.body;
     let { userId } = req.params;
     try {
       let name = '';
@@ -545,7 +543,7 @@ class UserController extends Controller {
 
 
       let user = await userService.getUserById(userId);
-      // console.log("GET PROFILE DATA USERRRRRRR",user.getBasicInfo);
+      console.log("GET PROFILE DATA USERRRRRRR",user.getBasicInfo);
       let userInfo = user.getBasicInfo;
       const { email: eMail = '', category: docCategory = '', mobile_number: mobNo = '', prefix: pre = '' } = userInfo;
 
@@ -555,7 +553,7 @@ class UserController extends Controller {
       mobile_number = mobNo;
 
       let doctor = await doctorService.getDoctorByUserId(userId);
-      // console.log('GET PROFILE DATA USERRRRRRR',doctor.get('id'),doctor.getBasicInfo);
+      console.log('GET PROFILE DATA USERRRRRRR',doctor.get('id'),doctor.getBasicInfo);
 
       if (doctor) {
 
@@ -569,7 +567,7 @@ class UserController extends Controller {
 
       const profileData = { name, city, category, mobile_number, prefix, profile_pic, email };
 
-      // console.log('FINAL+++================>',profileData);
+      console.log('FINAL+++================>',profileData);
 
       return this.raiseSuccess(res, 200, {
         profileData

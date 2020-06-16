@@ -115,7 +115,7 @@ class ClinicRegister extends Component {
             <div className='flex direction-column'>
                 {clinicsKeys.map(key => {
                     let{location='',name='',startTime={},endTime={}}=clinics[key];
-                    let locationToDisplay=location&&location.length>=25?`${location.substring(0,25)}...`:location;
+                    let locationToDisplay=location&&location.length>=45?`${location.substring(0,45)}...`:location;
                     return (
 
                         <div key={key}>

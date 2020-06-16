@@ -17,6 +17,8 @@ class UserWrapper extends BaseUser {
       email,
       mobile_number,
       sign_in_type,
+      onboarded,
+      onboarding_status,
       category,
       activated_on,
     } = _data || {};
@@ -28,6 +30,8 @@ class UserWrapper extends BaseUser {
             mobile_number,
           },
           sign_in_type,
+           onboarded,
+          onboarding_status,
           category,
           activated_on,
         };
@@ -39,5 +43,5 @@ export default async (data = null, userId = null) => {
     return new UserWrapper(data);
   }
   const user = await userService.getUserByData({id: userId});
-  return new UserWrapper(user);
+  return new UserWrapper(user.get());
 };

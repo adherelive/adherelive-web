@@ -119,12 +119,25 @@ class ClinicRegister extends Component {
                         renderInput={(props) => (
                             <Input
                             ref={this.myRef}
-                                className="form-inputs"
+                                className="form-input-google"
                                 value={address ? address.description : location ? location : ''}
                                 // Custom properties
                                 {...props}
                             />
                         )}
+                        // renderSuggestions={(active, suggestions, onSelectSuggestion) => (
+                        //     <div >
+                        //       {
+                        //         suggestions.map((suggestion) => (
+                        //           <div
+                        //             onClick={(event) => onSelectSuggestion(suggestion, event)}
+                        //           >
+                        //             {suggestion.description}
+                        //           </div>
+                        //         ))
+                        //       }
+                        //     </div>
+                        //   )}
                         //    inputStyle={{height:50,width:261,border:1,borderColor:'#d7d7d7'}}
 
 

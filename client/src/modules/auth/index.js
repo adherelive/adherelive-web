@@ -67,7 +67,7 @@ function setAuthRedirect(user) {
     category,
     userData
   );
-  let authRedirect = "/";
+  let authRedirect = "";
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
@@ -105,9 +105,9 @@ export const signIn = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { user = {} } = data;
-        let authUser = Object.values(user).length ? Object.values(user)[0] : {};
-        let authRedirection = setAuthRedirect(user);
+        const { users = {} } = data;
+        let authUser = Object.values(users).length ? Object.values(users)[0] : {};
+        let authRedirection = setAuthRedirect(users);
         console.log(
           " ID IN 898978 SIGNUPPPP",
           authRedirection,
@@ -340,7 +340,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
       return {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
-        // authRedirection: payload.authRedirection
+        authRedirection: payload.authRedirection
       };
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
