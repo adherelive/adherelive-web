@@ -119,6 +119,10 @@ class ClinicRegister extends Component {
                     return (
 
                         <div key={key}>
+
+                 <div className='flex justify-space-between align-center direction-row'>
+                            
+                            <div className='form-headings'>Name</div>
                             {clinicsKeys.indexOf(key) > 0 ? (
                                 <div className='wp100 flex justify-end'>
                                     <DeleteTwoTone
@@ -127,8 +131,8 @@ class ClinicRegister extends Component {
                                         twoToneColor="#cc0000"
                                     />
                                 </div>
-                            ) : null}
-                            <div className='form-headings'>Name</div>
+                            ) : <div/>}
+                            </div>
                             <Input
                                 placeholder="Clinic name"
                                 className={"form-inputs"}
@@ -160,8 +164,10 @@ class ClinicRegister extends Component {
     renderClinicForm = () => {
         return (
             <div className='form-block'>
+                 <div className='flex justify-space-between align-center direction-row'>
                 <div className='form-category-headings'>Clinic</div>
-                <div className='pointer align-self-end wp60 fs16 medium tar' onClick={this.addClinic}>Add More</div>
+                <div className='pointer fs16 medium ' onClick={this.addClinic}>Add More</div>
+                </div>
                 {this.renderClinics()}
             </div>
         );

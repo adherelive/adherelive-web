@@ -31,7 +31,7 @@ class ClinicRegister extends Component {
     }
 
     componentDidMount() {
-        this.setState({ address: '', pincode: '', addressManual: '' })
+        this.setState({ address: '', pincode: '', addressManual: '',landmark:'' })
     }
 
     setManualAddress = e => {
@@ -46,6 +46,9 @@ class ClinicRegister extends Component {
         this.setState({ landmark: e.target.value });
     };
 
+    componentWillMount(){
+        this.setState({ address: '', pincode: '', addressManual: '' ,landmark:''})
+    }
     
 
     handleSave = () => {
@@ -120,7 +123,7 @@ class ClinicRegister extends Component {
                             <Input
                             ref={this.myRef}
                                 className="form-input-google"
-                                value={address ? address.description : location ? location : ''}
+                                value={address ? address.description  : ''}
                                 // Custom properties
                                 {...props}
                             />
@@ -150,7 +153,7 @@ class ClinicRegister extends Component {
                     <div className='form-category-headings'>Or add manually</div>
                     <div className='form-headings'>Address</div>
                     <Input
-                        placeholder="Address"
+                        placeholder="Ex: 112,Aurobindo Marg..."
                         disabled={address ? true : false}
                         value={addressManual}
                         className={"form-inputs"}
@@ -158,7 +161,7 @@ class ClinicRegister extends Component {
                     />
                     <div className='form-headings'>Pincode</div>
                     <Input
-                        placeholder="Pincode"
+                        placeholder="Ex: 110000"
                         disabled={address ? true : false}
                         value={pincode}
                         className={"form-inputs"}
@@ -166,7 +169,7 @@ class ClinicRegister extends Component {
                     />
                     <div className='form-headings'>Landmark</div>
                     <Input
-                        placeholder="Landmark"
+                        placeholder="Ex: Near Vishvavidyalya Metro Station"
                         disabled={address ? true : false}
                         value={landmark}
                         className={"form-inputs"}
