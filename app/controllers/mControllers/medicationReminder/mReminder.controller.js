@@ -162,11 +162,24 @@ class MobileMReminderController extends Controller {
       Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
+      let medicineApiData = {};
+      let medicineId = [];
 
       await medicationDetails.forEach(async medication => {
         const medicationWrapper = await MobileMReminderWrapper(medication);
         medicationApiData[medicationWrapper.getMReminderId()] = medicationWrapper.getBasicInfo();
+        medicineId.push(medicationWrapper.getMedicineId());
       });
+
+      Logger.debug("medicineId", medicineId.filter(id => !medicineId.includes(id)));
+
+      const medicineData = await medicineService.getMedicineByData({
+        id: medicineId
+      });
+
+      Logger.debug("medicineData", medicineData);
+
+      const medicineWrapper = await MedicineApiWrapper(medicineData);
       
       return raiseSuccess(
         res,
@@ -174,11 +187,15 @@ class MobileMReminderController extends Controller {
         {
           medications: {
             ...medicationApiData
+          },
+          medicines: {
+            ...medicineWrapper.getBasicInfoBulk()
           }
         },
         "medications fetched successfully"
       );
     } catch(error) {
+      Logger.debug("500 error ", error);
       return raiseServerError(res);
     }
   };

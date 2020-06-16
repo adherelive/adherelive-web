@@ -23,7 +23,7 @@ class MedicineService {
 
   getMedicineByData = async (data) => {
     try {
-      const medicine = await Medicine.findOne({
+      const medicine = await Medicine.findAll({
         where: data
       });
       return medicine;
