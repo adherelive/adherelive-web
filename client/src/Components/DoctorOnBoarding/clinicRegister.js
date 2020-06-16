@@ -141,11 +141,11 @@ class ClinicRegister extends Component {
                             <div className='flex justify-space-between mb10'>
                                 <div className='flex direction-column'>
                                     <div className='form-headings'>Start Time</div>
-                                    <TimePicker  onChange={this.setClinicStartTime(key)} />
+                                    <TimePicker   onChange={this.setClinicStartTime(key)} />
                                 </div>
                                 <div className='flex direction-column'>
                                     <div className='form-headings'>End Time</div>
-                                    <TimePicker  onChange={this.setClinicEndTime(key)} />
+                                    <TimePicker   onChange={this.setClinicEndTime(key)} />
                                 </div>
                             </div>
                         </div>
@@ -241,8 +241,8 @@ class ClinicRegister extends Component {
                 <div className='registration-container'>
                     <div className='header'>Create your Profile</div>
                     <div className='registration-body'>
-                        <div className='flex'>
-                            <UploadSteps className="mt24" current={2} />
+                        <div className='flex mt36'>
+                            <UploadSteps  current={2} />
                         </div>
                         <div className='flex'>
                             {this.renderClinicForm()}

@@ -269,6 +269,10 @@ class QualificationRegister extends Component {
       let uid = item.uid;
       let push = true;
       console.log('Please do not add duplicate files FILE LISTTTTTTTT',item,fileList,typeof(item)=='object');
+    //  if(photos.length>=2){
+    //   push = false;
+    //  }
+     
       if(typeof(item)=='object'){
       for (let photo of photos) {
 
@@ -411,53 +415,28 @@ class QualificationRegister extends Component {
     let { education = {}, speciality = '', gender = '' } = this.state;
     let { degree = '', college = '', year = '', id = 0, photos = [] } = education[key];
     console.log('BEFOREUPLOAD CALLEDDDDDDDDDD')
+
+    // if(photos.length>=2){
+    //   message.error('Please do not add more than 2 files');
+    //   return false;
+    // }
+
     for (let photo of photos) {
       let fileName = file.name
       let newFileName = fileName.replace(/\s/g, '');
       if (photo.includes(newFileName)) {
         message.error('Please do not add duplicate files');
-        // setTimeout(() => { this.popLast(key) }, 500);
-        console.log('BEFOREUPLOAD CALLEDDDDDDDDDD RETURN FALSEEE');
         return false;
       }
     }
-    console.log('BEFOREUPLOAD CALLEDDDDDDDDDD RETURN TRUE');
     return true
-    // console.log('IN BEFOREUPLOAD',file);
-    // if (id) {
-    //   return true;
-    // } else {
-    //   console.log('IN BEFOREUPLOAD ELSEEE');
-    //   let { authenticated_user = {}, registerQualification } = this.props;
-    //   const { basic_info: { id: userId = 1 } = {} } = authenticated_user || {};
-    //   let quali={degree, year, college};
-    //   let qualificationData = {gender , speciality ,qualification:quali };
-    //     let response=await registerQualification(qualificationData, userId)
-    //   //  .then(async response=>{
-    //   console.log('IN BEFOREUPLOAD ELSEEE RESPONSE', response);
-    //   let { status, payload } = response;
-    //   if (status) {
-    //     let { data: { qualification_id = 0 } = {} } = payload
-    //     education[key].id = qualification_id;
-    //    let value = await this.setId(education);
 
-    //    console.log("VALUE RETURNEDDDDDD IN BEFOREUPLOAD ",value);
-    //    return value;
-    //   } else {
-    //     console.log('IN BEFOREUPLOAD ELSEEE RESPONSE FALSSEEEE', response);
-    //     message.error('Something went wrong');
-    //     return false;
-    //   }
-    //   // }
-    //   // );
-    // }
   }
 
   renderEducation = () => {
     // console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
     let { education = {}, educationKeys = [], fileList = [], previewImage = '', previewTitle = '', previewVisible = false ,isopen,time} = this.state;
-    // console.log(" 23829823  ------------------>  ", JSON.stringify(education, null, 4));
-    // console.log(" 23829823 Keys  ------------------>  ", educationKeys);
+  
 
     const uploadButton = (
       <div>
@@ -472,16 +451,16 @@ class QualificationRegister extends Component {
           return (
 
             <div key={key}>
-              {educationKeys.indexOf(key) > 0 ? (
-                <div className='wp100 flex justify-end'>
-                  <DeleteTwoTone
-                    className={"pointer align-self-end"}
-                    onClick={this.deleteEducation(key)}
-                    twoToneColor="#cc0000"
-                  />
-                </div>
-              ) : null}
+             <div className='flex justify-space-between align-center direction-row'>
               <div className='form-headings'>Degree</div>
+              {educationKeys.indexOf(key) > 0 ? (
+                <DeleteTwoTone
+                  className={"pointer"}
+                  onClick={this.deleteEducation(key)}
+                  twoToneColor="#cc0000"
+                />
+            ) : <div></div>}
+            </div>
               <Input
                 placeholder="Degree"
                 value={degree}
@@ -645,8 +624,10 @@ class QualificationRegister extends Component {
           {this.getGenderOptions()}
         </Select>
 
+       <div className='flex justify-space-between align-center direction-row'>
         <div className='form-category-headings'>Education</div>
-        <div className='pointer align-self-end wp60 fs16 medium tar' onClick={this.addEducation}>Add More</div>
+        <div className='pointer fs16 medium' onClick={this.addEducation}>Add More</div>
+        </div> 
         {this.renderEducation()}
         <div className='form-category-headings'>Registration details</div>
         <div className='form-headings'>Registration number</div>
@@ -683,8 +664,8 @@ class QualificationRegister extends Component {
         <div className='registration-container'>
           <div className='header'>Create your Profile</div>
           <div className='registration-body'>
-            <div className='flex'>
-              <UploadSteps className="mt24" current={1} />
+            <div className='flex mt36'>
+              <UploadSteps  current={1} />
             </div>
             <div className='flex'>
               {this.renderQualificationForm()}
