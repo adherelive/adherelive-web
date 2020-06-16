@@ -384,13 +384,13 @@ class UserController extends Controller {
         let userCategoryData = {};
         let carePlanApiData = {};
         let userApiData = {};
+        let userCaregoryApiData = {};
 
         let userCategoryApiWrapper = null;
         let userCategoryId = null;
         let patientIds = [];
         let userIds = [userId];
         let careplanData = [];
-        let x={};
 
 
         
@@ -405,11 +405,13 @@ class UserController extends Controller {
             userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
             
             userCategoryId = userCategoryApiWrapper.getDoctorId();
+            userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] = userCategoryApiWrapper.getBasicInfo();
 
             careplanData = await carePlanService.getCarePlanByData({
               doctor_id: userCategoryId,
             });
-            x[userCategoryApiWrapper.getDoctorId()] = userCategoryApiWrapper.getBasicInfo();
+
+            Logger.debug("");
 
             await careplanData.forEach(async (carePlan) => {
               const carePlanApiWrapper = await CarePlanWrapper(carePlan);
@@ -474,7 +476,7 @@ class UserController extends Controller {
             ...userApiData
           },
           [`${category}s`]: {
-           ...x
+           ...userCaregoryApiData
           },
           patients: {
             ...patientApiDetails,
