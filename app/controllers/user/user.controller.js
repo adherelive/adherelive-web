@@ -926,9 +926,9 @@ class UserController extends Controller {
         let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
         qualification_id = docQualification.get('id');
             
-        if(photos.length>2){
-          return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
-        }
+        // if(photos.length>2){
+        //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
+        // }
 
         for (let photo of photos) {
           let document = photo;
