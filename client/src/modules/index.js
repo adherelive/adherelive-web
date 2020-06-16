@@ -14,6 +14,7 @@ import appointments from "./appointments";
 import medicines from "./medicines";
 import other_details from "./otherDetails";
 import onBoarding from "./onBoarding";
+import care_plans from "./carePlans";
 
 const rootReducer = combineReducers({
   auth,
@@ -30,7 +31,8 @@ const rootReducer = combineReducers({
   appointments,
   medicines,
   other_details,
-  onBoarding
+  onBoarding,
+  care_plans
 });
 
 export default (state, action) => {

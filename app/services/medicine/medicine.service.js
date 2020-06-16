@@ -21,6 +21,19 @@ class MedicineService {
     }
   };
 
+  getMedicineById = async (id) => {
+    try {
+      const medicine = await Medicine.findOne({
+        where: {
+          id
+        }
+      });
+      return medicine;
+    } catch(error) {
+      throw error;
+    }
+  };
+
   getMedicineByData = async (data) => {
     try {
       const medicine = await Medicine.findAll({

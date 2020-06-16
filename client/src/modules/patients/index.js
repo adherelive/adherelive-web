@@ -7,19 +7,19 @@ function patientReducer(state, data) {
   const {patients} = data || {};
   if(patients) {
     return {
-      ...PATIENT_INITIAL_STATE,
+      // ...PATIENT_INITIAL_STATE,
       ...state,
       ...patients
     };
   } else {
     return {
-      ...PATIENT_INITIAL_STATE,
+      // ...PATIENT_INITIAL_STATE,
       ...state,
     };
   }
 }
 
-export default (state = PATIENT_INITIAL_STATE, action) => {
+export default (state = {}, action) => {
   const { type, data } = action;
   switch (type) {
     default:

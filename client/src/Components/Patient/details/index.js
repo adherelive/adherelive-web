@@ -331,7 +331,6 @@ class PatientDetails extends Component {
       doctors = {},
       patients = {},
     } = this.props;
-    console.log("92834792 ", appointments);
     return Object.keys(appointments).map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
@@ -396,7 +395,7 @@ class PatientDetails extends Component {
           </div>
         ),
         in_take: `${repeat_days.join(", ")}`,
-        duration: `Till ${moment(end_date).format("DD MMMM")}`,
+        duration: end_date ? `Till ${moment(end_date).format("DD MMMM")}` : "--",
       };
     });
 

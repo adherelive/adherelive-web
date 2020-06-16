@@ -4,6 +4,10 @@ export default class Doctor {
         this._data = data;
     }
 
+    getUserId = () => {
+        return this._data.get("user_id");
+    };
+
     getDoctorId = () => {
         return this._data.get("id");
     }

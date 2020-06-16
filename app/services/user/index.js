@@ -9,6 +9,10 @@ export default class User {
         return this._data;
     }
 
+    getId() {
+        return this._data.id;
+    }
+
     getUserId() {
         return this._data.user_id;
     }
