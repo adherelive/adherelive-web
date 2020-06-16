@@ -7,7 +7,7 @@ import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
-import Loading from "../Common/Loading"
+import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
 
 

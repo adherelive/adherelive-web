@@ -461,7 +461,7 @@ class PatientDetails extends Component {
   };
 
   render() {
-    const { patients, patient_id } = this.props;
+    const { patients, patient_id, users } = this.props;
     const { loading } = this.state;
     const {
       formatMessage,
@@ -482,8 +482,10 @@ class PatientDetails extends Component {
 
 
     const {
-      basic_info: { first_name, middle_name, last_name, user_id },
+      basic_info: { first_name, middle_name, last_name, user_id, age },
     } = patients[patient_id] || {};
+
+    const {basic_info: {mobile_number} = {}} = users[user_id] || {};
     const {
       user_details: {
         gender,
@@ -532,8 +534,8 @@ class PatientDetails extends Component {
               patient_middle_name={middle_name}
               patient_last_name={last_name}
               gender={gender}
-              patient_age={patient_age}
-              patient_phone_number={patient_phone_number}
+              patient_age={age}
+              patient_phone_number={mobile_number}
               patient_email_id={patient_email_id}
               formatMessage={formatMessage}
             />

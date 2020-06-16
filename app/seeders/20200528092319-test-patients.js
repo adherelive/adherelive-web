@@ -17,6 +17,7 @@ module.exports = {
     return queryInterface.bulkInsert(DB_TABLES.PATIENTS, [{
       user_id: "2",
       gender: "m",
+      age:"26",
       first_name: "Atish",
       last_name:"Kumar",
       address:"delhi",

@@ -11,10 +11,10 @@ class PatientTable extends Component {
     this.state = {};
   }
 
-  onRowClick = key => event => {
+  onRowClick = (key) => (event) => {
     const { openPatientDetailsDrawer } = this.props;
     console.log("12893712 !!! ---> ", key);
-    openPatientDetailsDrawer({patient_id: key});
+    openPatientDetailsDrawer({ patient_id: key });
     // history.push(getPatientDetailsUrl(key));
   };
 
@@ -22,18 +22,18 @@ class PatientTable extends Component {
     const { onRowClick } = this;
     const { key } = record;
     return {
-      onClick: onRowClick(key)
+      onClick: onRowClick(key),
     };
   };
 
-  onSelectChange = selectedRowKeys => {
+  onSelectChange = (selectedRowKeys) => {
     this.setState({ selectedRows: selectedRowKeys });
   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon
+      indicator: antIcon,
     };
   };
 
@@ -45,12 +45,14 @@ class PatientTable extends Component {
       doctors,
       providers,
       treatments,
-      chats
+      chats,
+      care_plans,
+      users,
     } = this.props;
 
     console.log("192837 this.props ----> ", this.props);
 
-    return Object.keys(patients).map(id => {
+    return Object.keys(patients).map((id) => {
       return generateRow({
         id,
         patients,
@@ -58,7 +60,9 @@ class PatientTable extends Component {
         providers,
         treatments,
         chats,
-        chat_ids
+        chat_ids,
+        care_plans,
+        users,
       });
     });
   };
@@ -67,7 +71,7 @@ class PatientTable extends Component {
     const { onRow, onSelectChange, getLoadingComponent, getDataSource } = this;
 
     const rowSelection = {
-      onChange: onSelectChange
+      onChange: onSelectChange,
     };
 
     console.log("192837 ", getDataSource());
@@ -75,7 +79,7 @@ class PatientTable extends Component {
     const {
       loading,
       pagination_bottom,
-      intl: { formatMessage } = {}
+      intl: { formatMessage } = {},
     } = this.props;
 
     return (
@@ -85,13 +89,13 @@ class PatientTable extends Component {
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer"
+          className: "pointer",
         })}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}
         // pagination={{ position: pagination_bottom ? "bottom" : "top" }}
         pagination={{
-          position: "bottom"
+          position: "bottom",
         }}
       />
     );

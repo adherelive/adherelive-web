@@ -33,9 +33,9 @@ export default props => {
       title: formatMessage(messages.treatment),
       ...TABLE_COLUMN.TREATMENT,
       render: data => {
-        const { patientData, treatmentData } = data;
+        const { patientData, treatmentData, carePlanData } = data;
         return (
-          <Treatment patientData={patientData} treatmentData={treatmentData} />
+          <Treatment patientData={patientData} treatmentData={treatmentData} carePlanData={carePlanData}/>
         );
       }
     },
@@ -52,7 +52,7 @@ export default props => {
     {
       title: formatMessage(messages.start_date),
       ...TABLE_COLUMN.START_DATE,
-      render: treatmentData => <StartDate {...treatmentData} />
+      render: carePlanData => <StartDate {...carePlanData} />
     },
     {
       title: formatMessage(messages.doctor),
