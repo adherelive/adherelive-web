@@ -57,7 +57,7 @@ class QualificationRegister extends Component {
     await getDoctorQualificationRegisterData(id);
 
     const { onBoarding = {} } = this.props;
-    let { qualificationData: { speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = '', qualification_details = [] } = {} } = onBoarding || {};
+    let { qualificationData: { speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = parseInt(moment().format("YYYY")), qualification_details = [] } = {} } = onBoarding || {};
     let educationKeys = [];
     let education = {};
 
@@ -80,7 +80,7 @@ class QualificationRegister extends Component {
 
     } else {
       let key = uuid();
-      education[key] = { degree: "", college: "", year: "", photo: [], photos: [], id: 0 };
+      education[key] = { degree: "", college: "", year: parseInt(moment().format("YYYY")), photo: [], photos: [], id: 0 };
       educationKeys = [key];
     }
 

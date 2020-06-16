@@ -41,9 +41,11 @@ class DoctorsService {
 
     getDoctorByData = async (data) => {
         try {
-            const doctor = await doctorModel.findOne({
+            console.log("DATA --> ", data);
+            const doctor = await doctorModel.findAll({
                 where: data
             });
+            console.log("DOCTOR ----> ", doctor);
             return doctor;
         } catch(error) {
             throw error;

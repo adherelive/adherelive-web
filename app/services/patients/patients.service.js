@@ -24,7 +24,7 @@ class PatientsService {
 
     getPatientByData = async (data) => {
         try {
-            const patient = await Patient.findOne({
+            const patient = await Patient.findAll({
                 where: data
             });
             return patient;

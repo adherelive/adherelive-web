@@ -64,9 +64,11 @@ class MReminderController extends Controller {
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
-      const medicineDetails = await medicineService.getMedicineByData({id: medicine_id});
+      const medicineDetails = await medicineService.getMedicineById(medicine_id);
 
-      const medicineApiWrapper = await new MedicineWrapper(medicineDetails);
+      Logger.debug("medicineDetails --> ", medicineDetails);
+
+      const medicineApiWrapper = await MedicineWrapper(medicineDetails);
 
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
@@ -94,14 +96,14 @@ class MReminderController extends Controller {
         dataToSave
       );
 
-      const eventScheduleData = {
-        event_type: EVENT_TYPE.MEDICATION_REMINDER,
-        event_id: mReminderDetails.id,
-        data: mReminderDetails.getBasicInfo,
-        status: EVENT_STATUS.PENDING,
-        start_time,
-        end_time: start_time
-      };
+      // const eventScheduleData = {
+      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      //   event_id: mReminderDetails.id,
+      //   data: mReminderDetails.getBasicInfo,
+      //   status: EVENT_STATUS.PENDING,
+      //   start_time,
+      //   end_time: start_time
+      // };
 
       return this.raiseSuccess(
         res,

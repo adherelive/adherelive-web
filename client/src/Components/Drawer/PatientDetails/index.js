@@ -63,7 +63,7 @@ class PatientDetailsDrawer extends Component {
           <div className="pointer tab-color fw600 flex-1">{name}</div>
           <div className="flex-2">{`${repeat_days.join(", ")}`}</div>
 
-          <div className="flex-1">{moment(end_date).format("DD MMM")}</div>
+          <div className="flex-1">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
         </div>
       );
     });
@@ -229,7 +229,7 @@ class PatientDetailsDrawer extends Component {
           // closable={false}
           onClose={onClose}
           visible={visible} // todo: change as per state, -- WIP --
-          width={550}
+          width={600}
         >
           {getPatientDetailContent()}
         </Drawer>

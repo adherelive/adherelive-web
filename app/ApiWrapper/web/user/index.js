@@ -12,7 +12,7 @@ class UserWrapper extends BaseUser {
   getBasicInfo = () => {
     const { _data } = this;
     const {
-      id,
+      user_id,
       user_name,
       email,
       mobile_number,
@@ -24,7 +24,7 @@ class UserWrapper extends BaseUser {
     } = _data || {};
     return {
           basic_info: {
-            id,
+            id:user_id,
             user_name,
             email,
             mobile_number,
