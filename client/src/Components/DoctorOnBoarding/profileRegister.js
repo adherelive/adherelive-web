@@ -132,11 +132,7 @@ class Profileregister extends Component {
         if (!isJpgOrPng) {
             message.error('You can only upload JPG/PNG file!');
         }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-            message.error('Image must smaller than 2MB!');
-        }
-        return isJpgOrPng && isLt2M;
+        return isJpgOrPng;
     }
 
 
@@ -154,7 +150,7 @@ class Profileregister extends Component {
             this.setState({
                 profile_pic,
                 loading: false,
-            }),
+            })
         );
     };
 
@@ -265,11 +261,10 @@ class Profileregister extends Component {
                 <Select className='form-inputs' onChange={this.setCategory} value={category} disabled={true}>
                     {this.getCategoryOptions()}
                 </Select>
-                <div className='form-headings'>Profile Picture</div>
+                <div className='form-headings mb6'>Profile Picture</div>
                 <Upload
                     name="avatar"
                     listType="picture-card"
-                    className="avatar-uploader"
                     showUploadList={false}
                     action={this.uploadDp}
                     beforeUpload={this.beforeUpload}
@@ -277,7 +272,7 @@ class Profileregister extends Component {
                 >
                     {profile_pic ? <img src={profile_pic} alt="avatar" style={{ width: '100%' }} /> : profile_pic_url_saved ? <img src={profile_pic_url_saved} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                 </Upload>
-                <div className='form-headings'>Name</div>
+                <div className='form-headings mt18'>Name</div>
                 <Input
                     placeholder="Name"
                     value={name}
@@ -310,7 +305,7 @@ class Profileregister extends Component {
                     // ref={(instance) => { this.GooglePlacesRef = instance }}
                     renderInput={(props) => (
                         <Input
-                            className="form-inputs"
+                        className="form-input-google"
                             value={city}
                             // Custom properties
                             {...props}
@@ -320,7 +315,7 @@ class Profileregister extends Component {
 
 
                     placeholder={city?city:'Search Address...'}
-                    // onSelect={this.setCity}
+                    initialValue={city?city:null}
                     onSelect={({ description }) => (
                         this.setState({ city: description })
                       )}
@@ -338,8 +333,8 @@ class Profileregister extends Component {
                 <div className='registration-container'>
                     <div className='header'>Create your Profile</div>
                     <div className='registration-body'>
-                        <div className='flex'>
-                            <UploadSteps className="mt24" current={0} />
+                        <div className='flex mt36'>
+                            <UploadSteps  current={0} />
                         </div>
                         <div className='flex'>
                             {this.renderProfileForm()}

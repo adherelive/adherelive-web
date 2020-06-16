@@ -5,6 +5,7 @@ import { Spring } from 'react-spring/renderprops'
 import LoginByGoogle from "./googleLogin";
 import LoginByFacebook from "./facebookLogin";
 import rightArrow from '../../Assets/images/next.png';
+import CompanyIcon from '../../Assets/images/logo3x.png'
 
 const {Item: FormItem} = Form;
 const {Password} = Input;
@@ -101,8 +102,11 @@ class SignIn extends Component {
           
                 <div className='hp100 wp75'>
                           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
-                        {/* <img alt="" src={CompanyIcon} className="w200 pt80"/> */}
+                       
+                        <div className="flex direction-row align-center">
+                        <img alt="" src={CompanyIcon}  className='company-logo'/>
                         <div className='text-white fs28 medium italic'>Adhere.Live</div>
+                        </div>
                         
                         <div className="flex direction-row align-center">
                         <div className='text-white fs16 mr16 '>{login?'New to Adhere?':'Already a user?'}</div>
