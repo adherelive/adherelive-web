@@ -99,8 +99,7 @@ class MobileMReminderController extends Controller {
         dataToSave
       );
 
-      const mReminderApiWrapper = await new MobileMReminderWrapper(
-        mReminderDetails.get("id"),
+      const mReminderApiWrapper = await MobileMReminderWrapper(
         mReminderDetails
       );
 
