@@ -12,6 +12,7 @@ import { getUploadURL } from '../../Helper/urls/user';
 import { doRequest } from '../../Helper/network';
 import plus from '../../Assets/images/plus.png';
 import LocationModal from './locationmodal';
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { withRouter } from "react-router-dom";
 
 
@@ -26,7 +27,7 @@ class ClinicRegister extends Component {
         this.state = {
             clinics: {},
             clinicsKeys: [],
-            visible:false
+            visible: false
         };
     }
 
@@ -95,8 +96,8 @@ class ClinicRegister extends Component {
         this.setState({ clinics: newClinics, clinicsKeys: newclinicsKeys });
     }
 
-    setModalVisible = key=>()=>{
-        this.setState({visible:true,clinicKeyOfModal:key});
+    setModalVisible = key => () => {
+        this.setState({ visible: true, clinicKeyOfModal: key });
     }
 
     renderClinics = () => {
@@ -113,6 +114,8 @@ class ClinicRegister extends Component {
         return (
             <div className='flex direction-column'>
                 {clinicsKeys.map(key => {
+                    let{location='',name='',startTime={},endTime={}}=clinics[key];
+                    let locationToDisplay=location&&location.length>=25?`${location.substring(0,25)}...`:location;
                     return (
 
                         <div key={key}>
@@ -129,18 +132,20 @@ class ClinicRegister extends Component {
                             <Input
                                 placeholder="Clinic name"
                                 className={"form-inputs"}
+                                // value={name}
                                 onChange={e => this.setClinicName(key, e)}
                             />
                             <div className='form-headings'>Location</div>
-                            <div className='form-input-border pointer' onClick={this.setModalVisible(key)}>{clinics[key].location?clinics[key].location:'Location'}</div>
+                            <div className={`form-input-border ${locationToDisplay ? 'active-grey' : 'default-grey'} pointer`} onClick={this.setModalVisible(key)}>
+                                <div className={locationToDisplay ? 'active-grey' : 'default-grey'}>{ locationToDisplay ?locationToDisplay : 'Location'}</div><Icon type="environment" theme="filled" /></div>
                             <div className='flex justify-space-between mb10'>
                                 <div className='flex direction-column'>
                                     <div className='form-headings'>Start Time</div>
-                                    <TimePicker onChange={this.setClinicStartTime(key)} />
+                                    <TimePicker  onChange={this.setClinicStartTime(key)} />
                                 </div>
                                 <div className='flex direction-column'>
                                     <div className='form-headings'>End Time</div>
-                                    <TimePicker onChange={this.setClinicEndTime(key)} />
+                                    <TimePicker  onChange={this.setClinicEndTime(key)} />
                                 </div>
                             </div>
                         </div>
@@ -162,52 +167,52 @@ class ClinicRegister extends Component {
         );
     }
 
-    validateClinics=newClinics=>{
-           for(let edu of newClinics){
+    validateClinics = newClinics => {
+        for (let edu of newClinics) {
 
-       console.log('NEW CLINICSSSS============>222222',edu);
-        let{name='',location='',startTime={},endTime={}}=edu;
+            console.log('NEW CLINICSSSS============>222222', edu);
+            let { name = '', location = '', startTime = {}, endTime = {} } = edu;
 
-       console.log('NEW CLINICSSSS============>3333333',name,location,startTime,endTime);
-        if(!name || !location || !Object.values(startTime?startTime:{}).length || !Object.values(endTime?endTime:{}).length){
-          return false;
+            console.log('NEW CLINICSSSS============>3333333', name, location, startTime, endTime);
+            if (!name || !location || !Object.values(startTime ? startTime : {}).length || !Object.values(endTime ? endTime : {}).length) {
+                return false;
+            }
         }
-     }
-     return true;
+        return true;
     }
 
     validateData = () => {
-        let { clinics={}} = this.state;
-         let newClinics=Object.values(clinics);
-       console.log('NEW CLINICSSSS============>1111111',newClinics);
-        if(!newClinics.length){
-          message.error('Please enter your Clinic details.')
-          return false;
-        }else if(!this.validateClinics(newClinics)){
+        let { clinics = {} } = this.state;
+        let newClinics = Object.values(clinics);
+        console.log('NEW CLINICSSSS============>1111111', newClinics);
+        if (!newClinics.length) {
+            message.error('Please enter your Clinic details.')
+            return false;
+        } else if (!this.validateClinics(newClinics)) {
             message.error('Please enter all Clinic details.')
             return false;
         }
         return true;
-      }
+    }
 
     onNextClick = () => {
         const { history, authenticated_user } = this.props;
         console.log('ONCLICKKKKKK');
-        const validate=this.validateData();
-        if(validate){
-        const { basic_info: { id = 1 } = {} } = authenticated_user || {};
-        const { clinics = {} } = this.state;
-        let newClinics = Object.values(clinics);
-        const data = { clinics: newClinics };
-        const { doctorClinicRegister } = this.props;
-        doctorClinicRegister(data,id).then(response => {
-            const { status } = response;
-            if (status) {
-                history.replace(PATH.DASHBOARD);
-            } else {
-                message.error('Something went wrong');
-            };
-        });
+        const validate = this.validateData();
+        if (validate) {
+            const { basic_info: { id = 1 } = {} } = authenticated_user || {};
+            const { clinics = {} } = this.state;
+            let newClinics = Object.values(clinics);
+            const data = { clinics: newClinics };
+            const { doctorClinicRegister } = this.props;
+            doctorClinicRegister(data, id).then(response => {
+                const { status } = response;
+                if (status) {
+                    history.replace(PATH.DASHBOARD);
+                } else {
+                    message.error('Something went wrong');
+                };
+            });
         }
     }
 
@@ -217,18 +222,18 @@ class ClinicRegister extends Component {
     }
 
 
-  handleCancel = () => this.setState({ visible: false });
+    handleCancel = () => this.setState({ visible: false });
 
-  handleOk = (location) => {
-      const{clinicKeyOfModal="",clinics}=this.state
-       let newClinics =clinics;
-       newClinics[clinicKeyOfModal].location=location
-      
-    this.setState({ visible: false,clinics:newClinics });
-};
+    handleOk = (location) => {
+        const { clinicKeyOfModal = "", clinics } = this.state
+        let newClinics = clinics;
+        newClinics[clinicKeyOfModal].location = location
+
+        this.setState({ visible: false, clinics: newClinics });
+    };
 
     render() {
-        const{visible=false}=this.state;
+        const { visible = false,clinics,clinicKeyOfModal } = this.state;
         console.log("STATEEEEEEEEEEE", this.state);
         return (
             <Fragment>
@@ -242,6 +247,7 @@ class ClinicRegister extends Component {
                         <div className='flex'>
                             {this.renderClinicForm()}
                         </div>
+
                     </div>
                     <div className='footer'>
                         <div className={'footer-text-active'} onClick={this.onBackClick}>
@@ -249,9 +255,9 @@ class ClinicRegister extends Component {
                       </div>
                         <div className={'footer-text-active'} onClick={this.onNextClick}>Finish</div></div>
                 </div>
-              
-                    <LocationModal  visible={visible} handleCancel={this.handleCancel} handleOk={this.handleOk} />
-                
+
+                <LocationModal visible={visible} handleCancel={this.handleCancel} handleOk={this.handleOk} location={clinicKeyOfModal?clinics[clinicKeyOfModal].location:''} />
+
             </Fragment>
         );
     }

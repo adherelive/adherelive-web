@@ -29,7 +29,7 @@ class MedicationStage extends Component {
   }
 
   getStagesOption = () => {
-    const { medicines = [] } = this.state;
+    const { medicines = {} } = this.state;
     let medicationStagesOption = [];
 
     return Object.keys(medicines).map(id => {
@@ -117,12 +117,12 @@ class MedicationStage extends Component {
               message: "Search Medicine"
             }
           ],
-          initialValue: getInitialValue()
+          // initialValue: getInitialValue()
         })(
           <Select
-            className=""
+            // className=""
             placeholder="Choose Medicine"
-            disabled={!!purpose}
+            // disabled={!!purpose}
             onSearch={handleMedicineSearch}
             notFoundContent={fetchingMedicines ? <Spin size="small" /> : null}
             showSearch
@@ -130,11 +130,11 @@ class MedicationStage extends Component {
             autoComplete="off"
             optionFilterProp="children"
             // suffixIcon={DropDownIcon}
-            filterOption={(input, option) =>
-              option.props.children
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
-            }
+            // filterOption={(input, option) =>
+            //   option.props.children
+            //     .toLowerCase()
+            //     .indexOf(input.toLowerCase()) >= 0
+            // }
             getPopupContainer={getParentNode}
           >
             {getStagesOption()}

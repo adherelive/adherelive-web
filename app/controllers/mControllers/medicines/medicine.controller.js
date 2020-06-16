@@ -19,7 +19,7 @@ class MobileMedicineController extends Controller {
 
             const medicine = await medicineService.search(value);
 
-            Logger.debug("medicine value from db", medicine);
+            Logger.debug("medicine search value", value);
 
             let medicineApiDetails = {};
 

@@ -17,6 +17,8 @@ class MedicineController extends Controller {
             const {query} = req;
             const {value} = query || {};
 
+            Logger.debug("value in req", value);
+
             const medicineDetails = await medicineService.search(value);
 
             if(medicineDetails.length > 0) {

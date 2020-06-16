@@ -10,13 +10,13 @@ class MobileMedicineWrapper extends BaseMedicine {
     }
 
     getBasicInfoBulk = () => {
-        const {_arrData, getExistingData, setCurrentData, _objectName} = this;
+        const {_data, getExistingData, setCurrentData, _objectName} = this;
 
         let cumulativeData = {};
-        _arrData.forEach(data => {
-            setCurrentData(data);
-            const medicineData = getExistingData();
-            const {id, name, type, description} = medicineData || {};
+        _data.forEach(data => {
+            // setCurrentData(data);
+            // const medicineData = getExistingData();
+            const {id, name, type, description} = data || {};
             cumulativeData[id] = {
                 basic_info: {
                     id,
