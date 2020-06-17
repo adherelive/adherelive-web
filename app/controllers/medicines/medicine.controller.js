@@ -12,7 +12,7 @@ class MedicineController extends Controller {
     }
 
     getAll = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
         try {
             const {query} = req;
             const {value} = query || {};
@@ -28,6 +28,8 @@ class MedicineController extends Controller {
                     medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
                 });
 
+                Logger.debug("medicineApiData --> ", medicineApiData);
+
                 return raiseSuccess(
                     res,
                     200,
@@ -38,6 +40,8 @@ class MedicineController extends Controller {
                     },
                     "medicine data fetched successfully"
                 );
+            } else {
+                return raiseClientError(res, 422, {}, `no medicine found with name including ${value}`)
             }
         } catch(error) {
             Logger.debug("500 error", error);

@@ -351,7 +351,6 @@ class PatientDetails extends Component {
         organizer: user_name,
         date: `${moment(start_date).format("DD MM YYYY")}`,
         time: `${moment(start_time).format("LT")} - ${moment(end_time)
-          .add(1, "hour")
           .format("LT")}`,
         description: description ? description : "--",
       };
@@ -450,6 +449,7 @@ class PatientDetails extends Component {
         first_name: "test",
         last_name: "patient",
       },
+      patient_id
     });
   };
 

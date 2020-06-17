@@ -1,4 +1,6 @@
 import Sequelize from "sequelize";
+import Log from "./log";
+const Logger = new Log("SEQUELIZE QUERY");
 
 export const database = new Sequelize(
   process.config.db.name,
@@ -13,6 +15,9 @@ export const database = new Sequelize(
       min: 0,
       acquire: 30000,
       idle: 10000
+    },
+    logging: function (str) {
+      Logger.debug("query", str);
     }
   }
 );
