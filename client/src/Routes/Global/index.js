@@ -7,9 +7,15 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import ResetPassword from "../Containers/ResetPassword";
 // import Register from "../../Containers/DoctorOnBoarding/clinicRegister";
 import SignIn from "../../Containers/SignIn";
+import Validation from "../../Containers/Validation";
 //import SignIn from "../../Components/SignIn";
 import BlankState from "../../Containers/BlankState";
 import { PATH } from "../../constant";
+
+
+
+
+
 
 export default class Global extends Component {
   constructor(props) {
@@ -60,7 +66,8 @@ export default class Global extends Component {
           {/* <Route exact path={PATH.SIGN_IN} component={SignIn} /> */}
           {/* <Route exact path={PATH.REGISTER} component={Register} /> */}
            <Route exact path={PATH.SIGN_IN} component={SignIn} />
-          <Route path="already-verified" component={BlankState} />
+          {/* <Route path="/already-verified" component={BlankState} /> */}
+          <Route path={PATH.VALIDATION_PAGE} component={Validation} />
           <Route path="" component={SignIn} />
           {/* <Route exact path={''} component={Register} /> */}
           {/*<Route exact path={PATH.FORGOT_PASSWORD} component={ForgotPassword} />*/}

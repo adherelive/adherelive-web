@@ -61,6 +61,7 @@ class SideMenu extends Component {
   render() {
     const { selectedKeys } = this.state;
     const { handleItemSelect } = this;
+    const{authenticated_user:{profile_pic=''}={}}=this.props;
     return (
       <Menu
         selectedKeys={[selectedKeys]}
@@ -88,7 +89,8 @@ class SideMenu extends Component {
             key={LOG_OUT}
         >
           <Tooltip placement="right" title={"Log Out"}>
-            <UserOutlined className="sidebar-bottom-custom text-white"/>
+          {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
+            (<UserOutlined className="sidebar-bottom-custom text-white"/>)}
           </Tooltip>
         </MenuItem>
       </Menu>

@@ -151,11 +151,11 @@ class ClinicRegister extends Component {
                             <div className='flex justify-space-between mb10'>
                                 <div className='flex direction-column'>
                                     <div className='form-headings'>Start Time</div>
-                                    <TimePicker use12Hours format="h:mm:ss A"   onChange={this.setClinicStartTime(key)} />
+                                    <TimePicker use12Hours  minuteStep={15} format="h:mm A"   onChange={this.setClinicStartTime(key)} />
                                 </div>
                                 <div className='flex direction-column'>
                                     <div className='form-headings'>End Time</div>
-                                    <TimePicker use12Hours format="h:mm:ss A" disabled={!Object.keys(startTime).length}  onChange={this.setClinicEndTime(key)} />
+                                    <TimePicker use12Hours minuteStep={15} format="h:mm A" disabled={!Object.keys(startTime).length}  onChange={this.setClinicEndTime(key)} />
                                 </div>
                             </div>
                         </div>

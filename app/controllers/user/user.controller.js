@@ -107,7 +107,7 @@ class UserController extends Controller {
         templateName: EMAIL_TEMPLATE_NAME.WELCOME,
         templateData: {
           title: "Doctor",
-          link: process.config.APP_URL + process.config.app.invite_link + link,
+          link: process.config.WEB_URL + process.config.app.invite_link + link,
           inviteCard: "",
           mainBodyText: "We are really happy that you chose us.",
           subBodyText: "Please verify your account",
@@ -140,67 +140,85 @@ class UserController extends Controller {
     }
   }
 
-  verifyDoctor = async (req, res) => {
+  verifyUser = async (req, res) => {
     try {
       let { link } = req.params;
 
       let verifications = await UserVerificationServices.getRequestByLink(link);
       let userId = verifications.get("user_id");
-      let userData=await userService.getUserById(userId);
-      let isVerified=userData.get('verified');
+      let userData = await userService.getUserById(userId);
+      let isVerified = userData.get('verified');
+      console.log('IS VERIFIEDDDDDD ===========>', isVerified);
+      if (!isVerified) {
+        let updateVerification = await UserVerificationServices.updateVerification(
+          { status: "verified" },
+          link
+        );
 
-      if(!isVerified){
-      let updateVerification = await UserVerificationServices.updateVerification(
-        { status: "verified" },
-        link
-      );
-     
-      let activated_on = moment();
-      let verified = true;
-      let dataToUpdate = { activated_on, verified };
-      console.log("DATA TO UPDATEEEE", dataToUpdate);
-      let user = await userService.updateUser(dataToUpdate, userId);
+        let activated_on = moment();
+        let verified = true;
+        let dataToUpdate = { activated_on, verified };
+        console.log("DATA TO UPDATEEEE", dataToUpdate);
+        let user = await userService.updateUser(dataToUpdate, userId);
 
-      const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
-      const secret = process.config.TOKEN_SECRET_KEY;
+        const secret = process.config.TOKEN_SECRET_KEY;
 
-      const accessToken = await jwt.sign(
-        {
+        const accessToken = await jwt.sign(
+          {
+            userId,
+          },
+          secret,
+          {
+            expiresIn,
+          }
+        );
+
+
+        const apiUserDetails = await UserWrapper(userData.getBasicInfo);
+
+        const dataToSend = {
+          users: {
+            [apiUserDetails.getUserId()]: {
+              ...apiUserDetails.getBasicInfo()
+            }
+          }
+        };
+
+
+        // res.redirect("/register-profile");
+        res.cookie("accessToken", accessToken, {
+          expires: new Date(
+            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+          ),
+          httpOnly: true,
+        });
+
+        console.log(
+          " Verify User --------------->  ",
+          link,
+          " 6uuu ",
           userId,
-        },
-        secret,
-        {
-          expiresIn,
-        }
-      );
+          " 90990",
+          user,
+          "            ",
+          updateVerification,
+          verifications
+        );
 
-      res.cookie("accessToken", accessToken, {
-        expires: new Date(
-          Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
-        ),
-        httpOnly: true,
-      });
 
-      console.log(
-        " Verify User --------------->  ",
-        link,
-        " 6uuu ",
-        userId,
-        " 90990",
-        user,
-        "            ",
-        updateVerification,
-        verifications
-      );
 
-      return res.redirect("/register-profile");
+        return this.raiseSuccess(
+          res,
+          200,
+          { ...dataToSend },
+          "user verified successfully"
+        );
+      } else {
 
-    
-      }else{
-        
-      res.redirect("/already-verified");
-      return this.raiseServerError(res, 401, error, error.message);
+        res.redirect("/sign-in");
+        return this.raiseServerError(res, 401, error, error.message);
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
@@ -424,6 +442,8 @@ class UserController extends Controller {
         let userIds = [userId];
         let careplanData = [];
         let x = {};
+        let profile_pic = '';
+
 
 
 
@@ -434,6 +454,9 @@ class UserController extends Controller {
             break;
           case USER_CATEGORY.DOCTOR:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
+            if (userCategoryData && Object.values(userCategoryData).length) {
+              profile_pic = userCategoryData.get('profile_pic') ? userCategoryData.get('profile_pic') : '';
+            }
             if (userCategoryData) {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
@@ -496,7 +519,12 @@ class UserController extends Controller {
           userApiData[
             apiUserDetails.getUserId()
           ] = apiUserDetails.getBasicInfo();
+          userApiData[
+            apiUserDetails.getUserId()
+          ].profile_pic = profile_pic
         }
+
+
 
         /**** API wrapper for DOCTOR ****/
 
@@ -504,7 +532,8 @@ class UserController extends Controller {
 
         const dataToSend = {
           users: {
-            ...userApiData
+            ...userApiData,
+
           },
           [`${category}s`]: {
             ...x
@@ -517,6 +546,8 @@ class UserController extends Controller {
           },
           id: userId,
         };
+
+        console.log('DATA TOO SENDD  ON APP START', dataToSend);
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
       } else {

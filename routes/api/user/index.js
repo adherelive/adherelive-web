@@ -9,7 +9,7 @@ var upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.get(
     "/register/:link",
-    userController.verifyDoctor,
+    userController.verifyUser,
 );
 
 

@@ -19,9 +19,9 @@ export default class BlankState extends Component {
     this.props.history.replace("/");
   };
 
-  componentWillUnmount() {
-    this.props.resetUnauthorizedError();
-  }
+  // componentWillUnmount() {
+  //   this.props.resetUnauthorizedError();
+  // }
 
   render() {
     return (

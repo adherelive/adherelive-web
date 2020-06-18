@@ -11,6 +11,10 @@ export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
 export const SIGNING_COMPLETED_WITH_ERROR = "SIGNING_COMPLETED_WITH_ERROR";
 
+export const VERIFY_USER = "VERIFY_USER";
+export const VERIFY_USER_COMPLETED = "VERIFY_USER_COMPLETED";
+export const VERIFY_USER_COMPLETED_WITH_ERROR = "VERIFY_USER_COMPLETED_WITH_ERROR";
+
 export const GOOGLE_SIGNING = "GOOGLE_SIGNING";
 export const GOOGLE_SIGNING_COMPLETED = "GOOGLE_SIGNING_COMPLETED";
 export const GOOGLE_SIGNING_COMPLETED_WITH_ERROR =
@@ -67,7 +71,7 @@ function setAuthRedirect(user) {
     category,
     userData
   );
-  let authRedirect =null;
+  let authRedirect ='';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
@@ -116,6 +120,54 @@ export const signIn = (payload) => {
         );
         dispatch({
           type: SIGNING_COMPLETED,
+          payload: {
+            authenticatedUser: authUser,
+            authRedirection,
+          },
+        });
+      }
+    } catch (err) {
+      console.log("err signin", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+export const verifyUser = (link) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: VALIDATING_LINK });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: Auth.getVerifyUserUrl(link)
+      });
+
+      console.log("SIGN IN response --> ", response);
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: VALIDATING_LINK_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+        const { users = {} } = data;
+        let authUser = Object.values(users).length ? Object.values(users)[0] : {};
+        let authRedirection = setAuthRedirect(users);
+        console.log(
+          " ID IN 898978 SIGNUPPPP",
+          authRedirection,
+          authUser,
+          response.payload.data.user
+        );
+        dispatch({
+          type: VALIDATING_LINK_COMPLETED,
           payload: {
             authenticatedUser: authUser,
             authRedirection,
@@ -342,10 +394,18 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection
       };
+
+    case VALIDATING_LINK_COMPLETED:
+      return{
+      authenticated: true,
+      authenticated_user: payload.authenticatedUser,
+      authRedirection: payload.authRedirection
+      }
+    
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
-        authRedirection: "/sign-in",
+        // authRedirection: "",
       };
     case GOOGLE_SIGNING_COMPLETED:
       return {

@@ -58,6 +58,7 @@ class QualificationRegister extends Component {
 
     const { onBoarding = {} } = this.props;
     let { qualificationData: { speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = parseInt(moment().format("YYYY")), qualification_details = [] } = {} } = onBoarding || {};
+    registration_year=registration_year?registration_year:parseInt(moment().format("YYYY"));
     let educationKeys = [];
     let education = {};
 
@@ -84,7 +85,7 @@ class QualificationRegister extends Component {
       educationKeys = [key];
     }
 
-    // console.log(onBoarding.qualificationData, speciality, gender, registration_number, registration_council, registration_year, education, educationKeys);
+    console.log("DID MOUNT KA SETSTATEE",onBoarding.qualificationData, speciality, gender, registration_number, registration_council, registration_year, education, educationKeys);
     this.setState({ speciality, gender, registration_number, registration_council, registration_year, education, educationKeys });
   }
 
@@ -581,6 +582,7 @@ class QualificationRegister extends Component {
       message.error('Please enter Registration council.')
       return false;
     } else if (!parseInt(registration_year)) {
+      console.log("REGISTRATION YEARRRRRRR",!parseInt(registration_year),registration_year,registration_year,this.state.registration_year,this.state);
       message.error('Please enter your Registration year.')
       return false;
     } else {
@@ -678,7 +680,7 @@ class QualificationRegister extends Component {
 
 
   render() {
-    console.log("STATEEEEEEEEEEE BEFOREUPLOAD", this.state.education);
+    console.log("STATEEEEEEEEEEE BEFOREUPLOAD", this.state,parseInt(moment().format("YYYY")));
     return (
       <Fragment>
         {/* <SideMenu {...this.props} /> */}

@@ -4,6 +4,7 @@ import {Button, Input, Form, Row, Col, message} from "antd";
 import { Spring } from 'react-spring/renderprops'
 import LoginByGoogle from "./googleLogin";
 import LoginByFacebook from "./facebookLogin";
+import { withRouter } from "react-router-dom";
 import rightArrow from '../../Assets/images/next.png';
 import CompanyIcon from '../../Assets/images/logo3x.png'
 
@@ -21,9 +22,23 @@ class SignIn extends Component {
         };
     }
 
-    componentDidMount() {
+   async componentDidMount() {
 
-    }
+        const { link = "" } = this.props.match.params;
+        if(link){
+            const {verifyUser}=this.props;
+          let response=await   verifyUser(link);
+          console.log("RESPONSE OF VERIFY USERRR12312312312312",response);
+        //   .then(response=>{
+                const{status,statusCode}=response;
+                if(!status){
+                    message.error('This verification link has expired');
+                }else{
+                    // this.props.history.push('/register-profile')
+                }
+            }
+        }
+    
 
     toggleLogin=()=>{
         let{login}=this.state;
@@ -76,6 +91,7 @@ class SignIn extends Component {
                     const { status = false } = response;
                     if (status) {
                         message.success("LoggedIn successfully", 4);
+                        this.props.history.replace('/');
                     } else {
                         this.setState({ loading: false });
                         message.error("Username or Password incorrect", 4);
@@ -304,4 +320,4 @@ class SignIn extends Component {
     }
 }
 
-export default Form.create()(SignIn);
+export default withRouter(Form.create()(SignIn));

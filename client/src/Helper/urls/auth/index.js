@@ -21,3 +21,7 @@ export const signUpUrl = () => {
 export const signOutUrl = () => {
   return `/auth/sign-out`;
 };
+
+export const getVerifyUserUrl = (link) => {
+  return `/auth/register/${link}`;
+};

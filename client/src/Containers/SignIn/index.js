@@ -1,6 +1,6 @@
 import {withRouter} from "react-router-dom";
 import SignIn from "../../Components/SignIn";
-import {signOut, signIn,signUp} from "../../modules/auth";
+import {signOut, signIn,signUp,verifyUser} from "../../modules/auth";
 import {connect} from "react-redux";
 
 const mapStateToProps = state => {
@@ -12,6 +12,7 @@ const mapDispatchToProps = dispatch => {
     return {
         signIn: data => dispatch(signIn(data)),
         signUp: data => dispatch(signUp(data)),
+        verifyUser: link => dispatch(verifyUser(link)),
         signOut: () => dispatch(signOut()),
     };
 };
