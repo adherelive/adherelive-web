@@ -326,6 +326,7 @@ class UserController extends Controller {
         let userCategoryId = "";
         let careplanData = [];
         let doctorIds = [];
+        let patientIds = [];
         let userIds = [userId];
 
         switch (category) {
@@ -338,7 +339,7 @@ class UserController extends Controller {
               patient_id: userCategoryId,
             });
 
-            Logger.debug("careplan mobile", careplanData);
+            Logger.debug("careplan mobile patient", careplanData);
 
             await careplanData.forEach(async (carePlan) => {
               const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
@@ -349,11 +350,24 @@ class UserController extends Controller {
             });
             break;
           case USER_CATEGORY.DOCTOR:
-            userCategoryData = await doctorService.getDoctorByData({
-              user_id: userId,
-            });
+            userCategoryData = await doctorService.getDoctorByUserId(userId);
+            Logger.debug("----DOCTOR-----", userCategoryData);
             userCategoryApiData = await MDoctorWrapper(userCategoryData);
             userCategoryId = userCategoryApiData.getDoctorId();
+
+            careplanData = await carePlanService.getCarePlanByData({
+              doctor_id: userCategoryId,
+            });
+
+            Logger.debug("careplan mobile doctor", careplanData);
+
+            await careplanData.forEach(async (carePlan) => {
+              const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
+              patientIds.push(carePlanApiWrapper.getPatientId());
+              carePlanApiData[
+                carePlanApiWrapper.getCarePlanId()
+              ] = carePlanApiWrapper.getBasicInfo();
+            });
             break;
           default:
             userCategoryData = await patientService.getPatientByData({
@@ -371,12 +385,26 @@ class UserController extends Controller {
 
         let doctorApiDetails = {};
 
-        await doctorData.forEach(async (patient) => {
-          const doctorWrapper = await MDoctorWrapper(patient);
+        await doctorData.forEach(async (doctor) => {
+          const doctorWrapper = await MDoctorWrapper(doctor);
           doctorApiDetails[
             doctorWrapper.getDoctorId()
           ] = doctorWrapper.getBasicInfo();
           userIds.push(doctorWrapper.getUserId());
+        });
+
+        let patientApiDetails = {};
+
+        const patientData = await patientService.getPatientByData({
+          id: patientIds,
+        });
+
+        await patientData.forEach(async (patient) => {
+          const patientWrapper = await MPatientWrapper(patient);
+          patientApiDetails[
+            patientWrapper.getPatientId()
+          ] = patientWrapper.getBasicInfo();
+          userIds.push(patientWrapper.getUserId());
         });
 
         // Logger.debug("userIds --> ", userIds);
@@ -403,9 +431,7 @@ class UserController extends Controller {
               ...userCategoryApiData.getBasicInfo(),
             },
           },
-          doctors: {
-            ...doctorApiDetails,
-          },
+          [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]: category === USER_CATEGORY.DOCTOR ? {...patientApiDetails} : {...doctorApiDetails},
           care_plans: {
             ...carePlanApiData
           }
