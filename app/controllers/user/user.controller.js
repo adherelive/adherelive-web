@@ -234,6 +234,21 @@ class UserController extends Controller {
         email,
       });
 
+      const userId=user.get('id');
+      let userCategoryData={};
+      let carePlanApiData = {};
+      let userApiData = {};
+      let userCaregoryApiData = {};
+
+      let userCategoryApiWrapper = null;
+      let userCategoryId = null;
+      let patientIds = [];
+      let userIds = [userId];
+      let careplanData = [];
+      let x = {};
+
+      let category = user.get('category');
+
       console.log('MOMENT===========>', user.getBasicInfo);
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
@@ -246,6 +261,8 @@ class UserController extends Controller {
       if (!verified) {
         return this.raiseClientError(res, 401, "user account not verified");
       }
+
+      let profile_pic='';
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
       const passwordMatch = await bcrypt.compare(
@@ -266,12 +283,53 @@ class UserController extends Controller {
           }
         );
 
+        switch (category) {
+          case USER_CATEGORY.PATIENT:
+            userCategoryData = await patientService.getPatientByUserId(userId);
+            if (userCategoryData && Object.values(userCategoryData).length) {
+              if(userCategoryData.get('details') && Object.values(userCategoryData.get('details')).length){
+                let{profile_pic:dp=''}=userCategoryData.get('details');
+                profile_pic=dp;
+              }
+            }
+            break;
+          case USER_CATEGORY.DOCTOR:
+            userCategoryData = await doctorService.getDoctorByUserId(userId);
+            if (userCategoryData && Object.values(userCategoryData).length) {
+              profile_pic = userCategoryData.get('profile_pic') ? userCategoryData.get('profile_pic') : '';
+            }
+            if (userCategoryData) {
+              userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
+
+              userCategoryId = userCategoryApiWrapper.getDoctorId();
+
+              careplanData = await carePlanService.getCarePlanByData({
+                doctor_id: userCategoryId,
+              });
+              x[userCategoryApiWrapper.getDoctorId()] = userCategoryApiWrapper.getBasicInfo();
+
+              await careplanData.forEach(async (carePlan) => {
+                const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+                patientIds.push(carePlanApiWrapper.getPatientId());
+                carePlanApiData[
+                  carePlanApiWrapper.getCarePlanId()
+                ] = carePlanApiWrapper.getBasicInfo();
+              });
+            }
+            break;
+          default:
+            userCategoryData = await doctorService.getDoctorByData({
+              user_id: userId,
+            });
+        }
+
         const apiUserDetails = await UserWrapper(user.getBasicInfo);
 
         const dataToSend = {
           users: {
             [apiUserDetails.getUserId()]: {
-              ...apiUserDetails.getBasicInfo()
+              ...apiUserDetails.getBasicInfo(),
+              profile_pic
             }
           }
         };
@@ -452,6 +510,12 @@ class UserController extends Controller {
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
+            if (userCategoryData && Object.values(userCategoryData).length) {
+              if(userCategoryData.get('details') && Object.values(userCategoryData.get('details')).length){
+                let{profile_pic:dp=''}=userCategoryData.get('details');
+                profile_pic=dp;
+              }
+            }
             break;
           case USER_CATEGORY.DOCTOR:
             userCategoryData = await doctorService.getDoctorByUserId(userId);

@@ -57,6 +57,8 @@ class AddAppointmentForm extends Component {
     }
   };
 
+  getParentNode = t => t.parentNode;
+
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialValue = () => {
@@ -105,17 +107,56 @@ class AddAppointmentForm extends Component {
     return current && current < moment().startOf("day");
   };
 
-  handleDateSelect = (date, str) => {
-    const { form: { setFieldsValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", date, str);
-    setFieldsValue({ [START_TIME]: date });
+  // onBlur = date => () => {
+  //   this.adjustEventOnStartDateChange(date);
+  // };
+
+
+
+  handleDateSelect = date => () => {
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+    console.log("312983u193812 values, value ", date);
+    const startDate = getFieldValue(DATE);
+
+    if(!date || !startDate) {
+      return;
+    }
+    
+    const eventStartTime = getFieldValue(START_TIME);
+    if (date.isSame(eventStartTime, "date")) {
+      return;
+    }
+
+    const eventEndTime = getFieldValue(END_TIME);
+
+    const newMonth = startDate.get("month");
+    const newDate = startDate.get("date");
+    const newYear = startDate.get("year");
+
+    let newEventStartTime;
+    let newEventEndTime;
+
+    if (eventStartTime) {
+      newEventStartTime = eventStartTime
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate });
+    }
+
+    if (eventEndTime) {
+      newEventEndTime = eventEndTime
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate });
+    }
+
+    setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
   };
 
   handleStartTimeChange = (time, str) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
     console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
-    setFieldsValue({ [END_TIME]: moment(startTime).add(1, "h") });
+    console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
+    setFieldsValue({ [END_TIME]: moment(time).add(1, "h") });
   };
 
   getPatientName = () => {
@@ -125,6 +166,19 @@ class AddAppointmentForm extends Component {
     return `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? `${last_name} ` : ""
     }`;
+  };
+
+  calendarComp = () => {
+    return (
+      <div className="flex justify-center align-center">
+        <img src={calendar} alt="calender icon" className="w20" />
+      </div>
+    );
+  };
+
+  disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current < moment().startOf("day");
   };
 
   render() {
@@ -193,9 +247,10 @@ class AddAppointmentForm extends Component {
           })(
             <DatePicker
               className="wp100"
-              onChange={handleDateSelect}
+              onBlur={handleDateSelect(currentDate)}
               suffixIcon={calendarComp()}
               disabledDate={disabledDate}
+              // getCalendarContainer={this.getParentNode}
             />
           )}
           {/*<img*/}
@@ -220,7 +275,6 @@ class AddAppointmentForm extends Component {
                   message: formatMessage(message.error_select_start_time),
                 },
               ],
-              initialValue: moment(),
             })(
               <TimePicker
                 use12Hours
@@ -228,6 +282,7 @@ class AddAppointmentForm extends Component {
                 minuteStep={15}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
+                // getPopupContainer={this.getParentNode}
               />
             )}
           </FormItem>
@@ -253,7 +308,6 @@ class AddAppointmentForm extends Component {
                   message: formatMessage(message.error_select_end_time),
                 },
               ],
-              initialValue: moment().add(1, 'h'),
             })(
               <TimePicker
                 use12Hours
@@ -261,6 +315,7 @@ class AddAppointmentForm extends Component {
                 value={currentDate}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
+                // getPopupContainer={this.getParentNode}
               />
             )}
           </FormItem>

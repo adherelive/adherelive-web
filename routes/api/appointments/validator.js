@@ -43,7 +43,7 @@ export const validateAppointmentFormData = (req, res, next) => {
   const { body: data = {} } = req;
   const { start_time, end_time } = data;
   const isValid = appointmentFormSchema.validate(data);
-  console.log("START TIME TEST ----------- ", moment(start_time));
+  console.log("START TIME TEST ----------- 2", moment(start_time), moment(end_time));
   if (isValid && isValid.error != null) {
     // return raiseClientError(res, 422, isValid.error, "please check filled details");
     const response = new Response(false, 422);

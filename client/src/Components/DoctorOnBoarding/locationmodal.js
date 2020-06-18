@@ -47,7 +47,6 @@ class ClinicRegister extends Component {
     };
 
 
-
     handleSave = () => {
         let { address = '', pincode = '', addressManual = '', landmark = '' } = this.state;
         let { handleOk } = this.props;

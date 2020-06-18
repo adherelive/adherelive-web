@@ -85,7 +85,7 @@ class QualificationRegister extends Component {
       educationKeys = [key];
     }
 
-    console.log("DID MOUNT KA SETSTATEE",onBoarding.qualificationData, speciality, gender, registration_number, registration_council, registration_year, education, educationKeys);
+    // console.log(onBoarding.qualificationData, speciality, gender, registration_number, registration_council, registration_year, education, educationKeys);
     this.setState({ speciality, gender, registration_number, registration_council, registration_year, education, educationKeys });
   }
 

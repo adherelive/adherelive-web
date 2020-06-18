@@ -4,10 +4,8 @@ import {Button, Input, Form, Row, Col, message} from "antd";
 import { Spring } from 'react-spring/renderprops'
 import LoginByGoogle from "./googleLogin";
 import LoginByFacebook from "./facebookLogin";
-import { withRouter } from "react-router-dom";
 import rightArrow from '../../Assets/images/next.png';
 import CompanyIcon from '../../Assets/images/logo3x.png'
-import { PATH } from "../../constant";
 
 const {Item: FormItem} = Form;
 const {Password} = Input;
@@ -321,4 +319,4 @@ class SignIn extends Component {
     }
 }
 
-export default withRouter(Form.create()(SignIn));
+export default Form.create()(SignIn);

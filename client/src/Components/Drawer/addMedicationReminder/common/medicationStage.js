@@ -121,6 +121,7 @@ class MedicationStage extends Component {
             className=""
             placeholder="Choose Medicine"
             showSearch
+            onFocus={() => handleMedicineSearch("")}
             autoComplete="off"
             // onFocus={() => handleMedicineSearch("")}
             optionFilterProp="children"
