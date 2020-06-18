@@ -42,19 +42,30 @@ class AppointmentService {
     }
   };
 
-  checkTimeSlot = async (start_time, end_time) => {
+  checkTimeSlot = async (start_date, start_time, end_time) => {
     try {
       const appointments = await Appointments.findAll({
         where: {
           [Op.or]: [
             {
+              start_date: {
+                // [Op.or]: {
+                  [Op.between]: [start_date, start_date]
+                // }
+              }
+            },
+            {
               start_time: {
-                [Op.between]: [start_time,end_time]
+                // [Op.or]: {
+                  [Op.between]: [start_time, end_time]
+                // }
               }
             },
             {
               end_time: {
-                [Op.between]: [start_time,end_time]
+                // [Op.or]: {
+                  [Op.between]: [start_time, end_time]
+                // }
               }
             }
           ]

@@ -79,14 +79,12 @@ class AddAppointment extends Component {
             payload: { message: errorMessage = "", error, error: {error_type = ""} = {} },
           } = response || {};
 
-          if (code === 422) {
-            if(error_type === "slot_present") {
+          if (code === 422 && error_type === "slot_present") {
               message.warn(
                 `${errorMessage} range: ${moment(start_time).format(
                   "LT"
                 )} - ${moment(end_time).format("LT")}`
               );
-            }
           } else if(status === true) {
             message.success(formatMessage(messages.add_appointment_success));
           } else {

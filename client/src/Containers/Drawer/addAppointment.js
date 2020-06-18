@@ -7,12 +7,14 @@ import {addAppointment} from "../../modules/appointments";
 
 const mapStateToProps = state => {
     const {
-        drawer: { visible, loading, data: { type, payload = {} } = {} }
+        drawer: { visible, loading, data: { type, payload = {} } = {} },
+        patients
     } = state
     return {
         visible: visible && type === DRAWER.ADD_APPOINTMENT,
         loading,
-        payload
+        payload,
+        patients
     };
 };
 

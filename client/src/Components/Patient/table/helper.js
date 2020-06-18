@@ -40,15 +40,20 @@ export const TABLE_COLUMN = {
 };
 
 export const formatPatientTableData = data => {
-  const { id, patients, doctors, providers, treatments, chats, chat_ids } =
+  const { id, patients, doctors, providers, treatments, chats, chat_ids, users, care_plans } =
     data || {};
 
   const patientData = patients[id] || {};
 
+  const {basic_info: {doctor_id, name: carePlanName} = {}, activated_on} = care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized
+
   console.log("2363645 patientData --> ", patientData);
-  const { treatment_id, doctor_id, provider_id, chats: patientChatIds = [] } =
+  const { basic_info: {user_id}, treatment_id, provider_id, chats: patientChatIds = [] } =
     patientData || {};
 
+    const {basic_info: {first_name, middle_name, last_name} = {}} = doctors[doctor_id] || {};
+
+    const {} = users[user_id] || {};
   let chatData = {};
 
   console.log(
@@ -68,11 +73,13 @@ export const formatPatientTableData = data => {
   const treatmentData = treatments[treatment_id] || {};
   const doctorData = doctors[doctor_id] || {};
   const providerData = providers[provider_id] || {};
+  const carePlanData = care_plans[1] || {};
   return {
     patientData,
     doctorData,
     providerData,
     treatmentData,
-    chatData
+    chatData,
+    carePlanData
   };
 };
