@@ -349,7 +349,7 @@ class PatientDetails extends Component {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
         organizer: user_name,
-        date: `${moment(start_date).format("DD MM YYYY")}`,
+        date: `${moment(start_date).format("LL")}`,
         time: `${moment(start_time).format("LT")} - ${moment(end_time)
           .format("LT")}`,
         description: description ? description : "--",
@@ -491,9 +491,7 @@ class PatientDetails extends Component {
     } = patients[patient_id] || {};
 
     const {basic_info: {mobile_number} = {}} = users[user_id] || {};
-    const {
-      basic_info: { first_name, middle_name, last_name, user_id },
-    } = patients[patient_id] || {};
+    
     const {
       user_details: {
         gender,
