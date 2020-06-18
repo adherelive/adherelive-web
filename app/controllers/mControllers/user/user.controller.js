@@ -181,11 +181,18 @@ class UserController extends Controller {
         }
       );
 
+      const apiUserDetails = await MUserWrapper(user.get());
+
       return this.raiseSuccess(
         res,
         200,
         {
           accessToken,
+          users: {
+            [apiUserDetails.getId()]: {
+              ...apiUserDetails.getBasicInfo()
+            }
+          },
         },
         "Sign up successfull"
       );
