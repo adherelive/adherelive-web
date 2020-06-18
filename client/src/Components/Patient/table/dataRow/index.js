@@ -3,7 +3,7 @@ import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 export default data => {
   const { id } = data;
   const formattedData = formatPatientTableData(data);
-  const { patientData, treatmentData, doctorData, providerData, chatData } =
+  const { patientData, treatmentData, doctorData, providerData, chatData, carePlanData } =
     formattedData || {};
   return {
     key: id,
@@ -15,7 +15,8 @@ export default data => {
       patientData
     },
     [TABLE_COLUMN.TREATMENT.dataIndex]: {
-      treatmentData
+      treatmentData,
+      carePlanData
     },
     [TABLE_COLUMN.SEVERITY.dataIndex]: {
       treatmentData
@@ -24,7 +25,8 @@ export default data => {
       patientData
     },
     [TABLE_COLUMN.START_DATE.dataIndex]: {
-      treatmentData
+      treatmentData,
+      carePlanData
     },
     [TABLE_COLUMN.DOCTOR.dataIndex]: {
       patientData,

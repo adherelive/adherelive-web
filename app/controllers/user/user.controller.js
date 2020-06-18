@@ -411,7 +411,6 @@ class UserController extends Controller {
               doctor_id: userCategoryId,
             });
 
-            Logger.debug("");
 
             await careplanData.forEach(async (carePlan) => {
               const carePlanApiWrapper = await CarePlanWrapper(carePlan);

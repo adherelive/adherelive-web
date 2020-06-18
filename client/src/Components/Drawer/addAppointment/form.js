@@ -60,28 +60,71 @@ class AddAppointmentForm extends Component {
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getInitialValue = () => {
-    const { payload } = this.props;
-    const { patients: { id, first_name, last_name } = {} } = payload || {};
-    if (first_name && last_name) {
-      return `${first_name} ${last_name}`;
-    } else {
-      return null;
-    }
+    const {
+      payload: { patient_id },
+      patients,
+    } = this.props;
+    const { patients: { basic_info: { first_name, last_name } = {} } = {} } =
+      patients[patient_id] || {};
+    // if (first_name && last_name) {
+    return `${patient_id}`;
+    // } else {
+    // return null;
+    // }
   };
 
   getPatientOptions = () => {
-    const { patients = [] } = this.props;
+    const { patients, payload: { patient_id } = {} } = this.props;
+    const { basic_info: { first_name, middle_name, last_name } = {} } =
+      patients[patient_id] || {};
 
-    const patientOptions = patients.map((patient) => {
-      const { first_name, last_name, id } = patient || {};
-      return (
-        <Option key={`p-${id}`} value={id} name={id}>
-          {`${first_name} ${last_name}`}
-        </Option>
-      );
-    });
+    // const patientOptions = patients.map((patient) => {
+    // const { first_name, last_name, id } = patient || {};
+    return (
+      <Option key={`p-${patient_id}`} value={patient_id} name={patient_id}>
+        {`${first_name} ${middle_name ? `${middle_name} ` : ""}${
+          last_name ? `${last_name} ` : ""
+        }`}
+      </Option>
+    );
+    // });
 
-    return patientOptions;
+    // return patientOptions;
+  };
+
+  calendarComp = () => {
+    return (
+      <div className="flex justify-center align-center">
+        <img src={calendar} alt="calender icon" className="w20" />
+      </div>
+    );
+  };
+
+  disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current < moment().startOf("day");
+  };
+
+  handleDateSelect = (date, str) => {
+    const { form: { setFieldsValue } = {} } = this.props;
+    console.log("312983u193812 values, value ", date, str);
+    setFieldsValue({ [START_TIME]: date });
+  };
+
+  handleStartTimeChange = (time, str) => {
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+    console.log("312983u193812 values, value ", time, str);
+    const startTime = getFieldValue(START_TIME);
+    setFieldsValue({ [END_TIME]: moment(startTime).add(1, "h") });
+  };
+
+  getPatientName = () => {
+    const { patients, payload: { patient_id } = {} } = this.props;
+    const { basic_info: { first_name, middle_name, last_name } = {} } =
+      patients[patient_id] || {};
+    return `${first_name} ${middle_name ? `${middle_name} ` : ""}${
+      last_name ? `${last_name} ` : ""
+    }`;
   };
 
   calendarComp = () => {
@@ -99,7 +142,7 @@ class AddAppointmentForm extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError },
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
     } = this.props;
     const { fetchingPatients } = this.state;
     const {
@@ -108,7 +151,14 @@ class AddAppointmentForm extends Component {
       getPatientOptions,
       calendarComp,
       disabledDate,
+      handleDateSelect,
+      handleStartTimeChange,
+      getPatientName,
     } = this;
+
+    const currentDate = moment(getFieldValue(DATE));
+
+    console.log("1289313192 ", currentDate, getFieldValue(START_TIME));
 
     let fieldsError = {};
     FIELDS.forEach((value) => {
@@ -126,7 +176,7 @@ class AddAppointmentForm extends Component {
             <Select
               className="user-select"
               // onSearch={fetchPatients}
-              placeholder={formatMessage(message.select_patient)}
+              placeholder={getPatientName()}
               notFoundContent={fetchingPatients ? <Spin size="small" /> : null}
               showSearch={true}
               disabled={getInitialValue() ? true : false}
@@ -156,6 +206,7 @@ class AddAppointmentForm extends Component {
           })(
             <DatePicker
               className="wp100"
+              onChange={handleDateSelect}
               suffixIcon={calendarComp()}
               disabledDate={disabledDate}
             />
@@ -186,6 +237,8 @@ class AddAppointmentForm extends Component {
             })(
               <TimePicker
                 use12Hours
+                onChange={handleStartTimeChange}
+                minuteStep={15}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
               />
@@ -213,9 +266,12 @@ class AddAppointmentForm extends Component {
                   message: formatMessage(message.error_select_end_time),
                 },
               ],
+              initialValue: moment().add(1, 'h'),
             })(
               <TimePicker
                 use12Hours
+                minuteStep={15}
+                value={currentDate}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
               />

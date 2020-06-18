@@ -81,11 +81,20 @@ class UserController extends Controller {
           }
         );
 
+        const apiUserDetails = await MUserWrapper(user.get());
+
+        Logger.debug("apiUserDetails ----> ", apiUserDetails.getId());
+
         return this.raiseSuccess(
           res,
           200,
           {
             accessToken,
+            users: {
+              [apiUserDetails.getId()]: {
+                ...apiUserDetails.getBasicInfo()
+              }
+            },
           },
           "initial data retrieved successfully"
         );
@@ -172,11 +181,18 @@ class UserController extends Controller {
         }
       );
 
+      const apiUserDetails = await MUserWrapper(user.get());
+
       return this.raiseSuccess(
         res,
         200,
         {
           accessToken,
+          users: {
+            [apiUserDetails.getId()]: {
+              ...apiUserDetails.getBasicInfo()
+            }
+          },
         },
         "Sign up successfull"
       );
@@ -198,79 +214,79 @@ class UserController extends Controller {
     }
   };
 
-  signIn = async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      const user = await userService.getUserByEmail({
-        email,
-      });
+  // signIn = async (req, res) => {
+  //   try {
+  //     const { email, password } = req.body;
+  //     const user = await userService.getUserByEmail({
+  //       email,
+  //     });
 
-      // const userDetails = user[0];
-      // console.log("userDetails --> ", userDetails);
-      if (!user) {
-        return this.raiseClientError(res, 422, user, "user does not exists");
-      }
+  //     // const userDetails = user[0];
+  //     // console.log("userDetails --> ", userDetails);
+  //     if (!user) {
+  //       return this.raiseClientError(res, 422, user, "user does not exists");
+  //     }
 
-      let verified = user.get("verified");
+  //     let verified = user.get("verified");
 
-      if (!verified) {
-        return this.raiseClientError(res, 401, "user account not verified");
-      }
+  //     if (!verified) {
+  //       return this.raiseClientError(res, 401, "user account not verified");
+  //     }
 
-      // TODO: UNCOMMENT below code after signup done for password check or seeder
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.get("password")
-      );
-      if (passwordMatch) {
-        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+  //     // TODO: UNCOMMENT below code after signup done for password check or seeder
+  //     const passwordMatch = await bcrypt.compare(
+  //       password,
+  //       user.get("password")
+  //     );
+  //     if (passwordMatch) {
+  //       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
-        const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userId: user.get("id"),
-          },
-          secret,
-          {
-            expiresIn,
-          }
-        );
+  //       const secret = process.config.TOKEN_SECRET_KEY;
+  //       const accessToken = await jwt.sign(
+  //         {
+  //           userId: user.get("id"),
+  //         },
+  //         secret,
+  //         {
+  //           expiresIn,
+  //         }
+  //       );
 
-        return this.raiseSuccess(
-          res,
-          200,
-          {
-            accessToken,
-          },
-          "initial data retrieved successfully"
-        );
-      } else {
-        return this.raiseClientError(res, 422, {}, "password not matching");
-      }
-    } catch (error) {
-      console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.getMessage());
-    }
-    //   );
+  //       return this.raiseSuccess(
+  //         res,
+  //         200,
+  //         {
+  //           accessToken,
+  //         },
+  //         "initial data retrieved successfully"
+  //       );
+  //     } else {
+  //       return this.raiseClientError(res, 422, {}, "password not matching");
+  //     }
+  //   } catch (error) {
+  //     console.log("error sign in  --> ", error);
+  //     return this.raiseServerError(res, 500, error, error.getMessage());
+  //   }
+  //   //   );
 
-    //   console.log("access token combines --> ", accessTokenCombined);
+  //   //   console.log("access token combines --> ", accessTokenCombined);
 
-    //   // res.cookie("accessToken", accessTokenCombined);
+  //   //   // res.cookie("accessToken", accessTokenCombined);
 
-    //   let response = new Response(true, 200);
-    //   response.setMessage("Sign in successful!");
-    //   response.setData({
-    //     accessToken: accessTokenCombined,
-    //   });
-    //   return res.status(response.getStatusCode()).send(response.getResponse());
-    // } catch (err) {
-    //   console.log("error ======== ", err);
-    //   //throw err;
-    //   let response = new Response(false, 500);
-    //   response.setMessage("Sign in Unsuccessful!");
-    //   return res.status(response.getStatusCode()).send(response.getResponse());
-    // }
-  };
+  //   //   let response = new Response(true, 200);
+  //   //   response.setMessage("Sign in successful!");
+  //   //   response.setData({
+  //   //     accessToken: accessTokenCombined,
+  //   //   });
+  //   //   return res.status(response.getStatusCode()).send(response.getResponse());
+  //   // } catch (err) {
+  //   //   console.log("error ======== ", err);
+  //   //   //throw err;
+  //   //   let response = new Response(false, 500);
+  //   //   response.setMessage("Sign in Unsuccessful!");
+  //   //   return res.status(response.getStatusCode()).send(response.getResponse());
+  //   // }
+  // };
 
   async signInFacebook(req, res) {
     const { accessToken } = req.body;
@@ -318,42 +334,65 @@ class UserController extends Controller {
         // const userApiWrapper = await MUserWrapper(userData);
 
         // const userDetails = user[0];
-        Logger.debug("category", category);
+        Logger.debug("category", userData);
         let userCategoryData = {};
         let userApiData = {};
+        let userCatApiData = {};
         let carePlanApiData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
         let careplanData = [];
         let doctorIds = [];
+        let patientIds = [];
         let userIds = [userId];
 
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
-            userCategoryApiData = await MPatientWrapper(userCategoryData);
-            userCategoryId = userCategoryApiData.getPatientId();
+            if(userCategoryData) {
+              userCategoryApiData = await MPatientWrapper(userCategoryData);
+              userCategoryId = userCategoryApiData.getPatientId();
 
-            careplanData = await carePlanService.getCarePlanByData({
-              patient_id: userCategoryId,
-            });
-
-            Logger.debug("careplan mobile", careplanData);
-
-            await careplanData.forEach(async (carePlan) => {
-              const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
-              doctorIds.push(carePlanApiWrapper.getDoctorId());
-              carePlanApiData[
-                carePlanApiWrapper.getCarePlanId()
-              ] = carePlanApiWrapper.getBasicInfo();
-            });
+              userCatApiData[userCategoryApiData.getPatientId()] = userCategoryApiData.getBasicInfo();
+  
+              careplanData = await carePlanService.getCarePlanByData({
+                patient_id: userCategoryId,
+              });
+  
+              Logger.debug("careplan mobile patient", careplanData);
+  
+              await careplanData.forEach(async (carePlan) => {
+                const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
+                doctorIds.push(carePlanApiWrapper.getDoctorId());
+                carePlanApiData[
+                  carePlanApiWrapper.getCarePlanId()
+                ] = carePlanApiWrapper.getBasicInfo();
+              });
+            }
             break;
           case USER_CATEGORY.DOCTOR:
-            userCategoryData = await doctorService.getDoctorByData({
-              user_id: userId,
-            });
-            userCategoryApiData = await MDoctorWrapper(userCategoryData);
-            userCategoryId = userCategoryApiData.getDoctorId();
+            userCategoryData = await doctorService.getDoctorByUserId(userId);
+            Logger.debug("----DOCTOR-----", userCategoryData);
+            if(userCategoryData) {
+              userCategoryApiData = await MDoctorWrapper(userCategoryData);
+              userCategoryId = userCategoryApiData.getDoctorId();
+
+              userCatApiData[userCategoryApiData.getDoctorId()] = userCategoryApiData.getBasicInfo();
+  
+              careplanData = await carePlanService.getCarePlanByData({
+                doctor_id: userCategoryId,
+              });
+  
+              Logger.debug("careplan mobile doctor", careplanData);
+  
+              await careplanData.forEach(async (carePlan) => {
+                const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
+                patientIds.push(carePlanApiWrapper.getPatientId());
+                carePlanApiData[
+                  carePlanApiWrapper.getCarePlanId()
+                ] = carePlanApiWrapper.getBasicInfo();
+              });
+            }
             break;
           default:
             userCategoryData = await patientService.getPatientByData({
@@ -371,13 +410,31 @@ class UserController extends Controller {
 
         let doctorApiDetails = {};
 
-        await doctorData.forEach(async (patient) => {
-          const doctorWrapper = await MDoctorWrapper(patient);
-          doctorApiDetails[
-            doctorWrapper.getDoctorId()
-          ] = doctorWrapper.getBasicInfo();
-          userIds.push(doctorWrapper.getUserId());
+        if(doctorData) {
+          await doctorData.forEach(async (doctor) => {
+            const doctorWrapper = await MDoctorWrapper(doctor);
+            doctorApiDetails[
+              doctorWrapper.getDoctorId()
+            ] = doctorWrapper.getBasicInfo();
+            userIds.push(doctorWrapper.getUserId());
+          });
+        }
+
+        let patientApiDetails = {};
+
+        const patientData = await patientService.getPatientByData({
+          id: patientIds,
         });
+
+        if(patientData) {
+          await patientData.forEach(async (patient) => {
+            const patientWrapper = await MPatientWrapper(patient);
+            patientApiDetails[
+              patientWrapper.getPatientId()
+            ] = patientWrapper.getBasicInfo();
+            userIds.push(patientWrapper.getUserId());
+          });
+        }
 
         // Logger.debug("userIds --> ", userIds);
 
@@ -388,9 +445,9 @@ class UserController extends Controller {
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
         } else {
-          const apiUserDetails = await MUserWrapper(userData);
+          const apiUserDetails = await MUserWrapper(userData.get());
           userApiData[
-            apiUserDetails.getUserId()
+            apiUserDetails.getId()
           ] = apiUserDetails.getBasicInfo();
         }
 
@@ -399,13 +456,9 @@ class UserController extends Controller {
             ...userApiData,
           },
           [`${category}s`]: {
-            [userCategoryId]: {
-              ...userCategoryApiData.getBasicInfo(),
-            },
+            ...userCatApiData
           },
-          doctors: {
-            ...doctorApiDetails,
-          },
+          [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]: category === USER_CATEGORY.DOCTOR ? {...patientApiDetails} : {...doctorApiDetails},
           care_plans: {
             ...carePlanApiData
           }

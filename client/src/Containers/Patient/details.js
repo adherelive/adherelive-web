@@ -8,7 +8,7 @@ import {searchMedicine} from "../../modules/medicines";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = (state, ownprops) => {
-    const {users = {}, appointments, medications, medicines = {}, patients = {}} = state;
+    const {users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}} = state;
     // const { id } = ownprops;
     const user_details = users["3"] || {};
     console.log("usee:::", user_details, state, users, users["3"]);
@@ -19,6 +19,8 @@ const mapStateToProps = (state, ownprops) => {
         medications,
         medicines,
         patients,
+        care_plans,
+        doctors,
     };
 };
 

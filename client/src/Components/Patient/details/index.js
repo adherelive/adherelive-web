@@ -234,11 +234,11 @@ const PatientTreatmentCard = ({
       <div className="treatment-details pl16 pr16">
         <div className="treatment-name flex mt10">
           <div className="w40">{formatMessage(message.treatment_header)}</div>
-          <div className="w60 wba tdh">{treatment_name}</div>
+          <div className="w120 wba tdh">{treatment_name}</div>
         </div>
         <div className="treatment-severity flex mt10">
           <div className="w40">{formatMessage(message.treatment_severity)}</div>
-          <div className="w60 wba tdh">
+          <div className="w120 wba tdh">
             <div
               className={`severity-label mr4 bg-${SEVERITY_STATUS[treatment_severity_status].color}`}
             ></div>
@@ -249,21 +249,21 @@ const PatientTreatmentCard = ({
           <div className="w40">
             {formatMessage(message.treatment_condition)}
           </div>
-          <div className="w60 wba tdh">{treatment_condition}</div>
+          <div className="w120 wba tdh">{treatment_condition}</div>
         </div>
         <div className="treatment-doctor flex mt10">
           <div className="w40">{formatMessage(message.treatment_doctor)}</div>
-          <div className="w60 wba tdh">{treatment_doctor}</div>
+          <div className="w120 wba tdh">{treatment_doctor}</div>
         </div>
         <div className="treatment-start-date flex mt10">
           <div className="w40">
             {formatMessage(message.treatment_start_date)}
           </div>
-          <div className="w60 wba">{treatment_start_date}</div>
+          <div className="w120 wba">{treatment_start_date}</div>
         </div>
         <div className="treatment-provider flex mt10">
           <div className="w40">{formatMessage(message.treatment_provider)}</div>
-          <div className="w60 wba">{treatment_provider}</div>
+          <div className="w120 wba">{treatment_provider}</div>
         </div>
       </div>
     </div>
@@ -351,7 +351,6 @@ class PatientDetails extends Component {
         organizer: user_name,
         date: `${moment(start_date).format("DD MM YYYY")}`,
         time: `${moment(start_time).format("LT")} - ${moment(end_time)
-          .add(1, "hour")
           .format("LT")}`,
         description: description ? description : "--",
       };
@@ -450,6 +449,7 @@ class PatientDetails extends Component {
         first_name: "test",
         last_name: "patient",
       },
+      patient_id
     });
   };
 
@@ -461,7 +461,7 @@ class PatientDetails extends Component {
   };
 
   render() {
-    const { patients, patient_id } = this.props;
+    const { patients, patient_id, users, care_plans, doctors } = this.props;
     const { loading } = this.state;
     const {
       formatMessage,
@@ -478,9 +478,19 @@ class PatientDetails extends Component {
       );
     }
 
+    // todo: dumm careplan 
+    const {basic_info: {name: treatment_name, doctor_id} = {}, activated_on: treatment_start_date} = care_plans[1] || {};
+
     console.log("192387123762 ", patients, patient_id);
 
+    const {basic_info: {first_name : doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name} = {}} = doctors[doctor_id] || {};
 
+
+    const {
+      basic_info: { first_name, middle_name, last_name, user_id, age },
+    } = patients[patient_id] || {};
+
+    const {basic_info: {mobile_number} = {}} = users[user_id] || {};
     const {
       basic_info: { first_name, middle_name, last_name, user_id },
     } = patients[patient_id] || {};
@@ -496,10 +506,7 @@ class PatientDetails extends Component {
 
     const {
       treatment_details: {
-        treatment_name,
         treatment_severity: treatment_severity_status = "1",
-        treatment_start_date,
-        treatment_doctor,
         treatment_provider,
         treatment_condition,
       } = {},
@@ -532,8 +539,8 @@ class PatientDetails extends Component {
               patient_middle_name={middle_name}
               patient_last_name={last_name}
               gender={gender}
-              patient_age={patient_age}
-              patient_phone_number={patient_phone_number}
+              patient_age={age}
+              patient_phone_number={mobile_number}
               patient_email_id={patient_email_id}
               formatMessage={formatMessage}
             />
@@ -543,9 +550,9 @@ class PatientDetails extends Component {
               treatment_condition={
                 treatment_condition ? treatment_condition : "--"
               }
-              treatment_doctor={treatment_doctor ? treatment_doctor : "--"}
+              treatment_doctor={doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name}` : "--"}
               treatment_start_date={
-                treatment_start_date ? treatment_start_date : "--"
+                treatment_start_date ? moment(treatment_start_date).format("Do MMM YYYY") : "--"
               }
               treatment_provider={
                 treatment_provider ? treatment_provider : "--"
