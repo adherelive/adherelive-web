@@ -31,7 +31,7 @@ class ClinicRegister extends Component {
     }
 
     componentDidMount() {
-        this.setState({ address: '', pincode: '', addressManual: '',landmark:'' })
+        this.setState({ address: '', pincode: '', addressManual: '', landmark: '' })
     }
 
     setManualAddress = e => {
@@ -46,18 +46,14 @@ class ClinicRegister extends Component {
         this.setState({ landmark: e.target.value });
     };
 
-    componentWillMount(){
-        this.setState({ address: '', pincode: '', addressManual: '' ,landmark:''})
-    }
-    
+
 
     handleSave = () => {
         let { address = '', pincode = '', addressManual = '', landmark = '' } = this.state;
         let { handleOk } = this.props;
         let manual = addressManual + (pincode ? `,${pincode}` : '') + (landmark ? `,${landmark}` : '');
 
-        let locationToSave = address ? address.description : manual;
-        // this.GooglePlacesRef.setAddressText("");
+        let locationToSave = address ? address : manual;
         handleOk(locationToSave);
         this.myRef.current && this.clearInput();
         this.setState({
@@ -90,8 +86,17 @@ class ClinicRegister extends Component {
     }
 
     clearInput = () => {
-       this.myRef.current.value = "";
+        this.myRef.current.value = "";
     }
+
+    handleChangeAddress = address => {
+        this.setState({ address });
+    };
+
+    handleSelect = address => {
+
+        this.setState({ address });
+    };
 
 
     render() {
@@ -116,37 +121,40 @@ class ClinicRegister extends Component {
             >
                 <div className='location-container'>
                     <div className='form-category-headings'>Google</div>
-                    <GooglePlacesAutocomplete
-                        inputClassName={'form-inputs-google'}
-                        // ref={(instance) => { this.GooglePlacesRef = instance }}
-                        renderInput={(props) => (
-                            <Input
-                            ref={this.myRef}
-                                className="form-input-google"
-                                value={address ? address.description  : ''}
-                                // Custom properties
-                                {...props}
-                            />
+                    <PlacesAutocomplete
+                        value={address?address:location}
+                        onChange={this.handleChangeAddress}
+                        onSelect={this.handleSelect}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div>
+                                <Input
+                                    {...getInputProps({
+                                        placeholder: 'Search Address',
+                                        className: 'form-inputs-google',
+                                    })}
+                                />
+                                <div className="google-places-autocomplete__suggestions-container">
+                                    {loading && <div>Loading...</div>}
+                                    {suggestions.map(suggestion => {
+                                        const className = "google-places-autocomplete__suggestion";
+                                        // inline style for demonstration purpose
+                                        return (
+                                            <div
+                                                {...getSuggestionItemProps(suggestion, {
+                                                    className,
+
+                                                })}
+                                            >
+                                                <span>{suggestion.description}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         )}
-                        // renderSuggestions={(active, suggestions, onSelectSuggestion) => (
-                        //     <div >
-                        //       {
-                        //         suggestions.map((suggestion) => (
-                        //           <div
-                        //             onClick={(event) => onSelectSuggestion(suggestion, event)}
-                        //           >
-                        //             {suggestion.description}
-                        //           </div>
-                        //         ))
-                        //       }
-                        //     </div>
-                        //   )}
-                        //    inputStyle={{height:50,width:261,border:1,borderColor:'#d7d7d7'}}
+                    </PlacesAutocomplete>
 
-
-                        placeholder={'Search Address...'}
-                        onSelect={this.handleChange}
-                    />
 
 
 

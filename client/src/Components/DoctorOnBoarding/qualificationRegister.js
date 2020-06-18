@@ -162,15 +162,21 @@ class QualificationRegister extends Component {
     this.setState({ education: newEducation });
   }
 
-  onUploadComplete = ({ files = [] }, key) => {
+  onUploadComplete = async ({ files = [] }, key) => {
 
     const { docs = [], education = {}, speciality = '', gender = '' } = this.state;
-    this.setState({ docs: [...docs, ...files], education }, () => {
+
+      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE BEFORE SET STATE', docs,files);
+    this.setState({ docs: [...docs, ...files] },async ()=>{
+    //  async () => {
+
       const { docs, fileList, education } = this.state;
+      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE AFTER SET STATE', docs,files);
       let newEducation = education;
       // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE', docs.length, newEducation[key].photo.length,  newEducation[key].photos, docs.length === newEducation[key].photo.length);
       if (docs.length === newEducation[key].photo.length || docs.length + newEducation[key].photos.length === newEducation[key].photo.length) {
         let newPhotos = newEducation[key].photos;
+        let newPhoto = newEducation[key].photo;
         // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE1111111', newEducation);
         const { registerQualification } = this.props;
         const { authenticated_user } = this.props;
@@ -181,31 +187,47 @@ class QualificationRegister extends Component {
             item.status = 'done'
           }
         })
+      
         const { degree = '', year = '', college = '', photos = [], id = 0 } = newEducation[key];
         let qualData = { degree, year, college, photos, id };
         let qualificationData = { speciality, gender, qualification: qualData };
-        // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE22222222',degree,year,college,photos,id,newEducation);
-        registerQualification(qualificationData, userId).then(response => {
-          const { status, payload: { data: { qualification_id = 0 } = {} } = {} } = response;
+        console.log('KEYS AND FILES IN ON UPLOAD COMPLETE0000000',degree,year,college,photos,id,newEducation);
+      let response=await  registerQualification(qualificationData, userId)
+        // .then(response => {
+          const { status,statusCode, payload: { data: { qualification_id = 0 } = {} } = {} } = response;
+
+          console.log('KEYS AND FILES IN ON UPLOAD COMPLETE111111111',status,statusCode,docs);
           if (status) {
+            if(!newEducation[key].id){
             newEducation[key].id = qualification_id;
+            }
+     
+            console.log('KEYS AND FILES IN ON UPLOAD COMPLETE22222222',newEducation);
 
-            // for(let doc of docs){
-
-            //   if(newPhotos.includes(doc)==false){
-            //     newPhotos.push(doc);
-            //   }
-            // }
-            // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE33333333', newEducation);
             this.setState({
-              fileList: [],
               docs: [],
               education: newEducation
             });
           } else {
+
+            let length=newEducation[key].photos.length;
+            newEducation[key].photo=newPhoto.slice(0,length-docs.length);
+
+            newEducation[key].photos=newPhotos;
+            
+            console.log('KEYS AND FILES IN ON UPLOAD ELSEEEEEEEEEE',newEducation);
+            this.setState({
+              docs: [],
+              education: newEducation
+            });
+            if(statusCode==422){
+
+            message.error('Please do not add more than 3 per education.')
+            }else{
             message.error('Something went wrong.')
+            }
           }
-        });
+        // });
       }
     });
   };
@@ -269,9 +291,7 @@ class QualificationRegister extends Component {
       let uid = item.uid;
       let push = true;
       console.log('Please do not add duplicate files FILE LISTTTTTTTT', item, fileList, typeof (item) == 'object');
-      // if (photos.length >= 2 || photo.length >= 2) {
-      //   push = false;
-      // }
+      
 
       if (typeof (item) == 'object') {
         for (let photo of photos) {
@@ -314,7 +334,9 @@ class QualificationRegister extends Component {
       let { status = false } = response;
       if (status) {
 
-        newEducation[key].photo.forEach((file, index) => {
+        let index=0;
+        // newEducation[key].photo.forEach((file, index) => {
+          for(let file of newEducation[key].photo){
           console.log('TYPE OFFFF STRING ===========>', typeof (file), typeof (file) == 'string' && file.localeCompare(pic));
           if (typeof (file) == 'string') {
 
@@ -323,16 +345,19 @@ class QualificationRegister extends Component {
               deleteIndex = index;
             }
           } else {
-            console.log('TYPE OFFFF STRING ELSEEEE TRUEE=======>', typeof (file), file);
+            
             let fileName = file.name
             let newFileName = fileName.replace(/\s/g, '');
-            if (pic.includes(fileName)) {
+            console.log('TYPE OFFFF STRING ELSEEEE TRUEE=======>', typeof (file), pic,newFileName,pic.includes(newFileName),file);
+            if (pic.includes(newFileName)) {
 
               console.log('TYPE OFFFF STRING ELSEEEE IFFFF TRUEE=======>', typeof (file));
               deleteIndex = index;
             }
           }
-        })
+          index++;
+        }
+        // );
 
         newEducation[key].photos.forEach((picture, index) => {
           // if (pic.includes(fileName)) {
@@ -382,7 +407,7 @@ class QualificationRegister extends Component {
     let { education = {}, educationKeys = [] } = this.state;
     let newEducation = education;
     let newEducationKeys = educationKeys;
-    newEducation[key] = { degree: "", college: "", year: "", photo: [], photos: [], id: 0 };
+    newEducation[key] = { degree: "", college: "", year:parseInt(moment().format('YYYY')) , photo: [], photos: [], id: 0 };
     newEducationKeys.push(key);
     // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
     this.setState({ education: newEducation, educationKeys: newEducationKeys });
@@ -416,10 +441,6 @@ class QualificationRegister extends Component {
     let { degree = '', college = '', year = '', id = 0, photos = [] } = education[key];
     console.log('BEFOREUPLOAD CALLEDDDDDDDDDD')
 
-    // if (photos.length >= 2) {
-    //   message.error('Please do not add more than 2 files');
-    //   return false;
-    // }
 
     for (let photo of photos) {
       let fileName = file.name
@@ -506,7 +527,7 @@ class QualificationRegister extends Component {
                   style={{ width: 128, height: 128, margin: 6 }}
                   beforeUpload={this.handleBeforeUpload(key)}
                   showUploadList={false}
-                  disabled={!(degree && college && year)}
+                  disabled={!(degree && college && year) ||photos.length>=3}
                   fileList={photo}
                   customRequest={this.customRequest(key)}
                   onChange={this.handleChangeList(key, fileList)}

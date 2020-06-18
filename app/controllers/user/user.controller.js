@@ -107,7 +107,7 @@ class UserController extends Controller {
         templateName: EMAIL_TEMPLATE_NAME.WELCOME,
         templateData: {
           title: "Doctor",
-          link: process.config.app.invite_link + link,
+          link: process.config.APP_URL + process.config.app.invite_link + link,
           inviteCard: "",
           mainBodyText: "We are really happy that you chose us.",
           subBodyText: "Please verify your account",
@@ -144,17 +144,43 @@ class UserController extends Controller {
     try {
       let { link } = req.params;
 
+      let verifications = await UserVerificationServices.getRequestByLink(link);
+      let userId = verifications.get("user_id");
+      let userData=await userService.getUserById(userId);
+      let isVerified=userData.get('verified');
+
+      if(!isVerified){
       let updateVerification = await UserVerificationServices.updateVerification(
         { status: "verified" },
         link
       );
-      let verifications = await UserVerificationServices.getRequestByLink(link);
-      let userId = verifications.get("user_id");
+     
       let activated_on = moment();
       let verified = true;
       let dataToUpdate = { activated_on, verified };
       console.log("DATA TO UPDATEEEE", dataToUpdate);
       let user = await userService.updateUser(dataToUpdate, userId);
+
+      const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+      const secret = process.config.TOKEN_SECRET_KEY;
+
+      const accessToken = await jwt.sign(
+        {
+          userId,
+        },
+        secret,
+        {
+          expiresIn,
+        }
+      );
+
+      res.cookie("accessToken", accessToken, {
+        expires: new Date(
+          Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+        ),
+        httpOnly: true,
+      });
 
       console.log(
         " Verify User --------------->  ",
@@ -168,10 +194,17 @@ class UserController extends Controller {
         verifications
       );
 
-      return res.redirect("/sign-in");
+      return res.redirect("/register-profile");
+
+    
+      }else{
+        
+      res.redirect("/already-verified");
+      return this.raiseServerError(res, 401, error, error.message);
+      }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      res.redirect("/sign-in");
+      res.redirect("/already-verified");
       return this.raiseServerError(res, 500, error, error.message);
     }
   };
@@ -182,8 +215,8 @@ class UserController extends Controller {
       const user = await userService.getUserByEmail({
         email,
       });
- 
-      console.log('MOMENT===========>',user.getBasicInfo);
+
+      console.log('MOMENT===========>', user.getBasicInfo);
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
@@ -390,35 +423,35 @@ class UserController extends Controller {
         let patientIds = [];
         let userIds = [userId];
         let careplanData = [];
-        let x={};
+        let x = {};
 
 
-        
-        console.log('GET USER CATEGORY DATA',category,userId);
+
+        console.log('GET USER CATEGORY DATA', category, userId);
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
             break;
           case USER_CATEGORY.DOCTOR:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
-            if(userCategoryData){
-            userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
-            
-            userCategoryId = userCategoryApiWrapper.getDoctorId();
+            if (userCategoryData) {
+              userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
-            careplanData = await carePlanService.getCarePlanByData({
-              doctor_id: userCategoryId,
-            });
-            x[userCategoryApiWrapper.getDoctorId()] = userCategoryApiWrapper.getBasicInfo();
+              userCategoryId = userCategoryApiWrapper.getDoctorId();
 
-            await careplanData.forEach(async (carePlan) => {
-              const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-              patientIds.push(carePlanApiWrapper.getPatientId());
-              carePlanApiData[
-                carePlanApiWrapper.getCarePlanId()
-              ] = carePlanApiWrapper.getBasicInfo();
-            });
-          }
+              careplanData = await carePlanService.getCarePlanByData({
+                doctor_id: userCategoryId,
+              });
+              x[userCategoryApiWrapper.getDoctorId()] = userCategoryApiWrapper.getBasicInfo();
+
+              await careplanData.forEach(async (carePlan) => {
+                const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+                patientIds.push(carePlanApiWrapper.getPatientId());
+                carePlanApiData[
+                  carePlanApiWrapper.getCarePlanId()
+                ] = carePlanApiWrapper.getBasicInfo();
+              });
+            }
             break;
           default:
             userCategoryData = await doctorService.getDoctorByData({
@@ -439,15 +472,15 @@ class UserController extends Controller {
 
         let patientApiDetails = {};
 
-        if(patientsData){
-        await patientsData.forEach(async (patient) => {
-          const patientWrapper = await PatientWrapper(patient);
-          patientApiDetails[
-            patientWrapper.getPatientId()
-          ] = patientWrapper.getBasicInfo();
-          userIds.push(patientWrapper.getUserId());
-        });
-      }
+        if (patientsData) {
+          await patientsData.forEach(async (patient) => {
+            const patientWrapper = await PatientWrapper(patient);
+            patientApiDetails[
+              patientWrapper.getPatientId()
+            ] = patientWrapper.getBasicInfo();
+            userIds.push(patientWrapper.getUserId());
+          });
+        }
         // Logger.debug("userIds --> ", userIds);
 
         if (userIds.length > 1) {
@@ -467,14 +500,14 @@ class UserController extends Controller {
 
         /**** API wrapper for DOCTOR ****/
 
-       
+
 
         const dataToSend = {
           users: {
             ...userApiData
           },
           [`${category}s`]: {
-           ...x
+            ...x
           },
           patients: {
             ...patientApiDetails,
@@ -589,8 +622,8 @@ class UserController extends Controller {
         doctorName.length == 3
           ? doctorName[2]
           : doctorName.length == 2
-          ? doctorName[1]
-          : "";
+            ? doctorName[1]
+            : "";
       if (doctorExist) {
         let doctor_data = {
           city,
@@ -646,7 +679,7 @@ class UserController extends Controller {
       let profile_pic = "";
 
       let user = await userService.getUserById(userId);
-      console.log("GET PROFILE DATA USERRRRRRR",user.getBasicInfo);
+      console.log("GET PROFILE DATA USERRRRRRR", user.getBasicInfo);
       let userInfo = user.getBasicInfo;
       const {
         email: eMail = "",
@@ -689,7 +722,7 @@ class UserController extends Controller {
         email,
       };
 
-      console.log('FINAL+++================>',profileData);
+      console.log('FINAL+++================>', profileData);
 
       return this.raiseSuccess(
         res,
@@ -903,7 +936,7 @@ class UserController extends Controller {
     let { gender = "", speciality = "", qualification = {} } = req.body;
     const { userId = 1 } = req.params;
     try {
-      console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
+      // console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
 
       let user = userService.getUserById(userId);
       let doctor = await doctorService.getDoctorByUserId(userId);
@@ -923,12 +956,20 @@ class UserController extends Controller {
       let parent_id = qualification_id;
       // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
       if (!qualification_id) {
+
+        if (photos.length > 3) {
+          return this.raiseServerError(res, 422, "cannot add more than 3 images");
+
+        }
+
         let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
         qualification_id = docQualification.get('id');
-            
-        // if(photos.length>2){
-        //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
-        // }
+
+
+
+        console.log("DOCUMENT EXISTTTTTTTTTTTT936===========>", photos.length);
+
+
 
         for (let photo of photos) {
           let document = photo;
@@ -938,7 +979,6 @@ class UserController extends Controller {
             document
           );
 
-          // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
           if (!docExist) {
             let qualificationDoc = await documentService.addDocument({
               doctor_id,
@@ -949,6 +989,13 @@ class UserController extends Controller {
           }
         }
       } else {
+
+        let doctorDocs = await documentService.getDoctorQualificationDocuments(parent_type, parent_id);
+
+        let documentsToAdd = [];
+
+
+
         for (let photo of photos) {
           let document = photo;
           let docExist = await documentService.getDocumentByData(
@@ -957,21 +1004,38 @@ class UserController extends Controller {
             document
           );
 
-          console.log(
-            "DOCUMENT EXISTTTTTTTTTTTT",
-            id,
-            qualification_id,
-            docExist
-          );
+
           if (!docExist) {
-            let qualificationDoc = await documentService.addDocument({
-              doctor_id,
-              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-              parent_id: qualification_id,
-              document: photo,
-            });
+            documentsToAdd.push(photo);
           }
-          // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+        }
+        console.log("DOCUMENT EXISTTTTTTTTTTTT970===========>", documentsToAdd.length, doctorDocs.length, doctorDocs, documentsToAdd);
+        if (documentsToAdd.length > 3) {
+          return this.raiseServerError(res, 422, "cannot add more than 3 images");
+        }
+
+        if (doctorDocs.length + documentsToAdd.length > 3) {
+
+          return this.raiseServerError(res, 422, "cannot add more than 3 images");
+
+        }
+        for (let pic of documentsToAdd) {
+          // let document = photo;
+          // let docExist = await documentService.getDocumentByData(
+          //   parent_type,
+          //   parent_id,
+          //   document
+          // );
+
+
+          // if (!docExist) {
+          let qualificationDoc = await documentService.addDocument({
+            doctor_id,
+            parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+            parent_id: qualification_id,
+            document: pic,
+          });
+          // }
         }
       }
 

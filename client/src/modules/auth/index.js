@@ -67,7 +67,7 @@ function setAuthRedirect(user) {
     category,
     userData
   );
-  let authRedirect = "";
+  let authRedirect =null;
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;

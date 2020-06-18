@@ -14,6 +14,7 @@ import plus from '../../Assets/images/plus.png';
 import LocationModal from './locationmodal';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { withRouter } from "react-router-dom";
+import moment from 'moment';
 
 
 
@@ -72,8 +73,13 @@ class ClinicRegister extends Component {
         let { clinics = {} } = this.state;
         let newClinics = clinics;
         console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD22222', clinics, newClinics[key]);
+        let validEndTime=moment(time).isAfter(newClinics[key].endTime);
+        if(validEndTime){
         newClinics[key].endTime = time;
         this.setState({ clinics: newClinics });
+        }else{
+            message.error('Please select a valid End Time.')
+        }
     }
 
     addClinic = () => {
@@ -145,11 +151,11 @@ class ClinicRegister extends Component {
                             <div className='flex justify-space-between mb10'>
                                 <div className='flex direction-column'>
                                     <div className='form-headings'>Start Time</div>
-                                    <TimePicker   onChange={this.setClinicStartTime(key)} />
+                                    <TimePicker use12Hours format="h:mm:ss A"   onChange={this.setClinicStartTime(key)} />
                                 </div>
                                 <div className='flex direction-column'>
                                     <div className='form-headings'>End Time</div>
-                                    <TimePicker   onChange={this.setClinicEndTime(key)} />
+                                    <TimePicker use12Hours format="h:mm:ss A" disabled={!Object.keys(startTime).length}  onChange={this.setClinicEndTime(key)} />
                                 </div>
                             </div>
                         </div>
@@ -262,7 +268,7 @@ class ClinicRegister extends Component {
                         <div className={'footer-text-active'} onClick={this.onNextClick}>Finish</div></div>
                 </div>
 
-                <LocationModal visible={visible} handleCancel={this.handleCancel} handleOk={this.handleOk} location={clinicKeyOfModal?clinics[clinicKeyOfModal].location:''} />
+                <LocationModal visible={visible} handleCancel={this.handleCancel} handleOk={this.handleOk} location={clinicKeyOfModal&&clinics[clinicKeyOfModal]?clinics[clinicKeyOfModal].location:''} />
 
             </Fragment>
         );

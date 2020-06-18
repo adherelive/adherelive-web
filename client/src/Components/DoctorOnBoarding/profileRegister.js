@@ -12,7 +12,11 @@ import { getUploadURL } from '../../Helper/urls/user';
 import { doRequest } from '../../Helper/network';
 import plus from '../../Assets/images/plus.png';
 import { withRouter } from "react-router-dom";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+// import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import PlacesAutocomplete, {
+    geocodeByAddress,
+    getLatLng,
+} from 'react-places-autocomplete';
 
 
 
@@ -72,8 +76,8 @@ class Profileregister extends Component {
         this.setState({ mobile_number: e.target.value });
     };
 
-    setCity = address => {
-        this.setState({ city:address.definition });
+    setCity = e => {
+        this.setState({ city: e.target.value });
     };
 
     getCategoryOptions = () => {
@@ -212,6 +216,15 @@ class Profileregister extends Component {
         reader.readAsDataURL(img);
     }
 
+    handleChangeCity = address => {
+        this.setState({ city: address });
+    };
+
+    handleSelect = address => {
+
+        this.setState({ city: address });
+    };
+
     renderProfileForm = () => {
 
         let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url_saved = '' } = this.state;
@@ -300,27 +313,39 @@ class Profileregister extends Component {
                 />
 
                 <div className='form-headings'>City</div>
-                <GooglePlacesAutocomplete
-                    inputClassName={'form-inputs-google'}
-                    // ref={(instance) => { this.GooglePlacesRef = instance }}
-                    renderInput={(props) => (
-                        <Input
-                        className="form-input-google"
-                            value={city}
-                            // Custom properties
-                            {...props}
-                        />
+                <PlacesAutocomplete
+                    value={this.state.city}
+                    onChange={this.handleChangeCity}
+                    onSelect={this.handleSelect}
+                >
+                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                        <div>
+                            <Input
+                                {...getInputProps({
+                                    placeholder: 'Search City',
+                                    className: 'form-inputs-google',
+                                })}
+                            />
+                            <div className="google-places-autocomplete__suggestions-container">
+                                {loading && <div>Loading...</div>}
+                                {suggestions.map(suggestion => {
+                                    const className = "google-places-autocomplete__suggestion";
+                                    // inline style for demonstration purpose
+                                    return (
+                                        <div
+                                            {...getSuggestionItemProps(suggestion, {
+                                                className,
+
+                                            })}
+                                        >
+                                            <span>{suggestion.description}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     )}
-                    //    inputStyle={{height:50,width:261,border:1,borderColor:'#d7d7d7'}}
-
-
-                    placeholder={city?city:'Search Address...'}
-                    initialValue={city?city:null}
-                    onSelect={({ description }) => (
-                        this.setState({ city: description })
-                      )}
-                />
-
+                </PlacesAutocomplete>
             </div>
         );
     }
@@ -334,7 +359,7 @@ class Profileregister extends Component {
                     <div className='header'>Create your Profile</div>
                     <div className='registration-body'>
                         <div className='flex mt36'>
-                            <UploadSteps  current={0} />
+                            <UploadSteps current={0} />
                         </div>
                         <div className='flex'>
                             {this.renderProfileForm()}

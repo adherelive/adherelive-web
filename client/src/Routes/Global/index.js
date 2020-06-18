@@ -60,6 +60,7 @@ export default class Global extends Component {
           {/* <Route exact path={PATH.SIGN_IN} component={SignIn} /> */}
           {/* <Route exact path={PATH.REGISTER} component={Register} /> */}
            <Route exact path={PATH.SIGN_IN} component={SignIn} />
+          <Route path="already-verified" component={BlankState} />
           <Route path="" component={SignIn} />
           {/* <Route exact path={''} component={Register} /> */}
           {/*<Route exact path={PATH.FORGOT_PASSWORD} component={ForgotPassword} />*/}
