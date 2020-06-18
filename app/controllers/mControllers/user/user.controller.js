@@ -81,11 +81,20 @@ class UserController extends Controller {
           }
         );
 
+        const apiUserDetails = await MUserWrapper(user.get());
+
+        Logger.debug("apiUserDetails ----> ", apiUserDetails.getId());
+
         return this.raiseSuccess(
           res,
           200,
           {
             accessToken,
+            users: {
+              [apiUserDetails.getId()]: {
+                ...apiUserDetails.getBasicInfo()
+              }
+            },
           },
           "initial data retrieved successfully"
         );
@@ -198,79 +207,79 @@ class UserController extends Controller {
     }
   };
 
-  signIn = async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      const user = await userService.getUserByEmail({
-        email,
-      });
+  // signIn = async (req, res) => {
+  //   try {
+  //     const { email, password } = req.body;
+  //     const user = await userService.getUserByEmail({
+  //       email,
+  //     });
 
-      // const userDetails = user[0];
-      // console.log("userDetails --> ", userDetails);
-      if (!user) {
-        return this.raiseClientError(res, 422, user, "user does not exists");
-      }
+  //     // const userDetails = user[0];
+  //     // console.log("userDetails --> ", userDetails);
+  //     if (!user) {
+  //       return this.raiseClientError(res, 422, user, "user does not exists");
+  //     }
 
-      let verified = user.get("verified");
+  //     let verified = user.get("verified");
 
-      if (!verified) {
-        return this.raiseClientError(res, 401, "user account not verified");
-      }
+  //     if (!verified) {
+  //       return this.raiseClientError(res, 401, "user account not verified");
+  //     }
 
-      // TODO: UNCOMMENT below code after signup done for password check or seeder
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.get("password")
-      );
-      if (passwordMatch) {
-        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+  //     // TODO: UNCOMMENT below code after signup done for password check or seeder
+  //     const passwordMatch = await bcrypt.compare(
+  //       password,
+  //       user.get("password")
+  //     );
+  //     if (passwordMatch) {
+  //       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
-        const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userId: user.get("id"),
-          },
-          secret,
-          {
-            expiresIn,
-          }
-        );
+  //       const secret = process.config.TOKEN_SECRET_KEY;
+  //       const accessToken = await jwt.sign(
+  //         {
+  //           userId: user.get("id"),
+  //         },
+  //         secret,
+  //         {
+  //           expiresIn,
+  //         }
+  //       );
 
-        return this.raiseSuccess(
-          res,
-          200,
-          {
-            accessToken,
-          },
-          "initial data retrieved successfully"
-        );
-      } else {
-        return this.raiseClientError(res, 422, {}, "password not matching");
-      }
-    } catch (error) {
-      console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.getMessage());
-    }
-    //   );
+  //       return this.raiseSuccess(
+  //         res,
+  //         200,
+  //         {
+  //           accessToken,
+  //         },
+  //         "initial data retrieved successfully"
+  //       );
+  //     } else {
+  //       return this.raiseClientError(res, 422, {}, "password not matching");
+  //     }
+  //   } catch (error) {
+  //     console.log("error sign in  --> ", error);
+  //     return this.raiseServerError(res, 500, error, error.getMessage());
+  //   }
+  //   //   );
 
-    //   console.log("access token combines --> ", accessTokenCombined);
+  //   //   console.log("access token combines --> ", accessTokenCombined);
 
-    //   // res.cookie("accessToken", accessTokenCombined);
+  //   //   // res.cookie("accessToken", accessTokenCombined);
 
-    //   let response = new Response(true, 200);
-    //   response.setMessage("Sign in successful!");
-    //   response.setData({
-    //     accessToken: accessTokenCombined,
-    //   });
-    //   return res.status(response.getStatusCode()).send(response.getResponse());
-    // } catch (err) {
-    //   console.log("error ======== ", err);
-    //   //throw err;
-    //   let response = new Response(false, 500);
-    //   response.setMessage("Sign in Unsuccessful!");
-    //   return res.status(response.getStatusCode()).send(response.getResponse());
-    // }
-  };
+  //   //   let response = new Response(true, 200);
+  //   //   response.setMessage("Sign in successful!");
+  //   //   response.setData({
+  //   //     accessToken: accessTokenCombined,
+  //   //   });
+  //   //   return res.status(response.getStatusCode()).send(response.getResponse());
+  //   // } catch (err) {
+  //   //   console.log("error ======== ", err);
+  //   //   //throw err;
+  //   //   let response = new Response(false, 500);
+  //   //   response.setMessage("Sign in Unsuccessful!");
+  //   //   return res.status(response.getStatusCode()).send(response.getResponse());
+  //   // }
+  // };
 
   async signInFacebook(req, res) {
     const { accessToken } = req.body;
