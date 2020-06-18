@@ -22,9 +22,6 @@ module.exports = {
       last_name:"Kumar",
       address:"delhi",
       uid: "1278939371923",
-      details: {
-        age: 
-      },
       created_at: new Date(),
       updated_at: new Date()
     }]);
