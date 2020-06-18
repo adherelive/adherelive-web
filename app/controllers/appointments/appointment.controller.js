@@ -38,7 +38,10 @@ class AppointmentController extends Controller {
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
+
+        Logger.debug("Start date", date);
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
+        date,
         start_time,
         end_time
       );

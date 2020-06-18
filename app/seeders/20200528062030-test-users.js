@@ -27,6 +27,8 @@ module.exports = {
                 sign_in_type: "basic",
                 category: "doctor",
                 verified:1,
+                onboarded:1,
+                mobile_number: "1234567890",
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
@@ -38,6 +40,8 @@ module.exports = {
                 sign_in_type: "basic",
                 category: "patient",
                 verified:1,
+                onboarded:1,
+                mobile_number: "9234623472",
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
@@ -49,6 +53,8 @@ module.exports = {
                 sign_in_type: "google",
                 category: "doctor",
                 verified:1,
+                onboarded:1,
+                mobile_number: "2383548292",
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()

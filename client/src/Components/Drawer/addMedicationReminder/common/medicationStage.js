@@ -6,6 +6,7 @@ import throttle from "lodash-es/throttle";
 import Form from "antd/es/form";
 import Select from "antd/es/select";
 import Spin from "antd/es/spin";
+import message from "antd/es/message";
 
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 
@@ -58,14 +59,14 @@ class MedicationStage extends Component {
     // return medicationStagesOption;
   };
 
-  getInitialValue = () => {
-    const { purpose, event: { data = {} } = {} } = this.props;
-    let initialValue;
-    if (purpose) {
-      initialValue = data[FIELD_NAME];
-    }
-    return initialValue;
-  };
+  // getInitialValue = () => {
+  //   const { purpose, event: { data = {} } = {} } = this.props;
+  //   let initialValue;
+  //   if (purpose) {
+  //     initialValue = data[FIELD_NAME];
+  //   }
+  //   return initialValue;
+  // };
 
   getParentNode = t => t.parentNode;
 
@@ -74,18 +75,21 @@ class MedicationStage extends Component {
       const {searchMedicine} = this.props;
       this.setState({ fetchingMedicines: true });
       const response = await searchMedicine(data);
-      const { status, payload } = response;
+      const { status, payload: {data: responseData, message} = {} } = response;
       if (status) {
-        const { data } = payload;
-        const { medicines = {} } = data;
+        const { medicines = {} } = responseData;
         const medicineList = {};
         Object.keys(medicines).forEach(id => {
           medicineList[id] = medicines[id];
         });
-        this.setState({ medicines: medicineList, fetchingArea: false });
+        this.setState({ medicines: medicineList, fetchingMedicines: false });
+      } else {
+        this.setState({ fetchingMedicines: false });
       }
     } catch (err) {
       console.log("err", err);
+      message.warn("Something wen't wrong. Please try again later");
+      this.setState({ fetchingMedicines: false });
     }
   };
 
@@ -109,33 +113,24 @@ class MedicationStage extends Component {
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (
-      <FormItem validateStatus={error ? "error" : ""} help={error || ""}>
-        {getFieldDecorator(FIELD_NAME, {
-          rules: [
-            {
-              required: true,
-              message: "Search Medicine"
-            }
-          ],
-          // initialValue: getInitialValue()
-        })(
+      <FormItem>
+        {getFieldDecorator(FIELD_NAME)(
           <Select
-            // className=""
-            placeholder="Choose Medicine"
-            // disabled={!!purpose}
             onSearch={handleMedicineSearch}
             notFoundContent={fetchingMedicines ? <Spin size="small" /> : null}
+            className=""
+            placeholder="Choose Medicine"
             showSearch
-            onFocus={() => handleMedicineSearch("")}
             autoComplete="off"
+            // onFocus={() => handleMedicineSearch("")}
             optionFilterProp="children"
-            // suffixIcon={DropDownIcon}
-            // filterOption={(input, option) =>
-            //   option.props.children
-            //     .toLowerCase()
-            //     .indexOf(input.toLowerCase()) >= 0
-            // }
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
             getPopupContainer={getParentNode}
+
           >
             {getStagesOption()}
           </Select>

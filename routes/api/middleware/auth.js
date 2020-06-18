@@ -36,50 +36,25 @@ export default async (req, res, next) => {
 
             const {userId = "", accessToken : access_token = ""} = decodedAccessToken || {};
             console.log("55555555555555555555555 ", userId);
-            if(userId) {
-                next();
-            }
-            console.log("66666666666666666666666 ", userId);
 
-            // we will extract the type of signIn from db, user details and accordingly verify token.
-            // for now we are commenting other for testing purpose.
-
-
-
-            // first check the accessToken if expired or active by hitting google API for google toke
-
-            // const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
-            // const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;
-            // const REDIRECT_URI = process.config.GOOGLE_KEYS.REDIRECT_URI;
-            // const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-            // const userInfo =  await client.getTokenInfo(access_token);
-            // console.log(userInfo);
+            // // const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
+            // // const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;
+            // // const REDIRECT_URI = process.config.GOOGLE_KEYS.REDIRECT_URI;
+            // // const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+            // // const userInfo =  await client.getTokenInfo(access_token);
+            // // console.log(userInfo);
 
 
-            // now check the accessToken for facebook login
-            const appToken = process.config.FACEBOOK_KEYS.APP_TOKEN;
-            const link = `https://graph.facebook.com/debug_token?input_token=${access_token}&access_token=${appToken}`;
+            // // now check the accessToken for facebook login
+            // const appToken = process.config.FACEBOOK_KEYS.APP_TOKEN;
+            // const link = `https://graph.facebook.com/debug_token?input_token=${access_token}&access_token=${appToken}`;
 
-            const res = await doRequest({
-                url:link,
-                json:true
-            });
+            // const res = await doRequest({
+            //     url:link,
+            //     json:true
+            // });
 
-            console.log("test --->>> ", res);
-
-
-            //now get user details
-            // const user = await userService.getUser({
-            // 	_id: decodedAccessToken.userId
-            // });{
-            // if (user) {
-            // 	req.userDetails = {
-            // 	    exists: true,
-            // 	    userId: decodedAccessToken.userId,
-            // 	    userData: user
-            // 	};
-            // } else {
-            // }
+            // console.log("test --->>> ", res);
         } else {
             const response = new Response(false, 401);
             response.setError({ message: errMessage.COOKIES_NOT_SET });

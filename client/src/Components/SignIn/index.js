@@ -7,6 +7,7 @@ import LoginByFacebook from "./facebookLogin";
 import { withRouter } from "react-router-dom";
 import rightArrow from '../../Assets/images/next.png';
 import CompanyIcon from '../../Assets/images/logo3x.png'
+import { PATH } from "../../constant";
 
 const {Item: FormItem} = Form;
 const {Password} = Input;
@@ -91,7 +92,7 @@ class SignIn extends Component {
                     const { status = false } = response;
                     if (status) {
                         message.success("LoggedIn successfully", 4);
-                        this.props.history.replace('/');
+                        
                     } else {
                         this.setState({ loading: false });
                         message.error("Username or Password incorrect", 4);

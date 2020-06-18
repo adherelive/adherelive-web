@@ -5,13 +5,13 @@ function doctorReducer(state, data) {
   if (doctors) {
     return {
       ...state,
-      ...DOCTOR_INITIAL_STATE,
+      // ...DOCTOR_INITIAL_STATE,
       ...doctors,
     };
   } else {
     return {
       ...state,
-      ...DOCTOR_INITIAL_STATE,
+      // ...DOCTOR_INITIAL_STATE,
     };
   }
 }

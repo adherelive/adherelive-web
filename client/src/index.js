@@ -13,6 +13,7 @@ import translations from "./i18n/locales";
 import retainState from "./RetainState";
 import { getQuery } from "./Helper/queryString";
 import * as serviceWorker from "./serviceWorker";
+// import Loading from "./Components/Common/Loading";
 
 import "./Styles/index.less";
 
@@ -46,7 +47,7 @@ const sw = window.screen.width;
 ReactDOM.render(
   <Provider store={store}>
     <IntlProvider locale={locale} key={locale} messages={messages}>
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={null}>
         <Desktop />
       </Suspense>
     </IntlProvider>

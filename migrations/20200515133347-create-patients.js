@@ -39,6 +39,9 @@ module.exports = {
               type: Sequelize.STRING(100),
               allowNull: false,
           },
+          age: {
+            type: Sequelize.STRING,
+          },
           address: {
               type: Sequelize.STRING,
           },

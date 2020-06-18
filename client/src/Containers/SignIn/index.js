@@ -4,8 +4,8 @@ import {signOut, signIn,signUp,verifyUser} from "../../modules/auth";
 import {connect} from "react-redux";
 
 const mapStateToProps = state => {
-    const {graphs} = state;
-    return {graphs};
+    const {graphs,auth} = state;
+    return {graphs,auth};
 };
 
 const mapDispatchToProps = dispatch => {

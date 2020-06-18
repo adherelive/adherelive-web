@@ -86,6 +86,37 @@ function setAuthRedirect(user) {
   return authRedirect;
 }
 
+
+function setAuthRedirectSignIn(user) {
+  let userData = Object.values(user).length ? Object.values(user)[0] : [];
+
+  const {
+    onboarded = true,
+    onboarding_status = "",
+    category = USER_CATEGORY.DOCTOR,
+  } = userData;
+  console.log(
+    "USERRRRR IN SET AUUTTTHHHHH",
+    !onboarded && category == USER_CATEGORY.DOCTOR,
+    onboarded,
+    category,
+    userData
+  );
+  let authRedirect ='/';
+  if (!onboarded && category == USER_CATEGORY.DOCTOR) {
+    if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
+      authRedirect = PATH.REGISTER_QUALIFICATIONS;
+    } else if (
+      onboarding_status == ONBOARDING_STATUS.QUALIFICATION_REGISTERED
+    ) {
+      authRedirect = PATH.REGISTER_CLINICS;
+    } else {
+      authRedirect = PATH.REGISTER_PROFILE;
+    }
+  }
+  return authRedirect;
+}
+
 export const signIn = (payload) => {
   let response = {};
   return async (dispatch) => {
@@ -111,7 +142,7 @@ export const signIn = (payload) => {
       } else if (status === true) {
         const { users = {} } = data;
         let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        let authRedirection = setAuthRedirect(users);
+        let authRedirection = setAuthRedirectSignIn(users);
         console.log(
           " ID IN 898978 SIGNUPPPP",
           authRedirection,

@@ -435,6 +435,7 @@ class UserController extends Controller {
         let userCategoryData = {};
         let carePlanApiData = {};
         let userApiData = {};
+        let userCaregoryApiData = {};
 
         let userCategoryApiWrapper = null;
         let userCategoryId = null;
@@ -536,7 +537,8 @@ class UserController extends Controller {
 
           },
           [`${category}s`]: {
-            ...x
+            // ...x
+           ...userCaregoryApiData
           },
           patients: {
             ...patientApiDetails,

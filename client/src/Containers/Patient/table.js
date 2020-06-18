@@ -11,7 +11,9 @@ const mapStateToProps = state => {
     providers = {},
     treatments = {},
     pages: { patient_ids = [], chat_ids = [] } = {},
-    chats = {}
+    chats = {},
+    users,
+    care_plans
   } = state;
 
   return {
@@ -21,7 +23,9 @@ const mapStateToProps = state => {
     doctors,
     providers,
     treatments,
-    chats
+    chats,
+    users,
+    care_plans
   };
 };
 
