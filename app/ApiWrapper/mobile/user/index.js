@@ -19,25 +19,31 @@ class MUserWrapper extends BaseUser {
       sign_in_type,
       category,
       activated_on,
+      verified,
+      onboarded,
+      onboarding_status
     } = _data || {};
     return {
-          basic_info: {
-            id,
-            user_name,
-            email,
-            mobile_number,
-          },
-          sign_in_type,
-          category,
-          activated_on,
-        };
+      basic_info: {
+        id,
+        user_name,
+        email,
+        mobile_number
+      },
+      sign_in_type,
+      category,
+      activated_on,
+      verified,
+      onboarded,
+      onboarding_status
     };
+  };
 }
 
 export default async (data = null, userId = null) => {
   if (data) {
     return new MUserWrapper(data);
   }
-  const user = await userService.getUserByData({id: userId});
+  const user = await userService.getUserByData({ id: userId });
   return new MUserWrapper(user);
 };
