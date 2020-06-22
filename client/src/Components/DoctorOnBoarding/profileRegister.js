@@ -72,9 +72,7 @@ class Profileregister extends Component {
         this.setState({ email: e.target.value });
     };
 
-    setNumber = e => {
-        this.setState({ mobile_number: e.target.value });
-    };
+   
 
     setCity = e => {
         this.setState({ city: e.target.value });
@@ -250,7 +248,7 @@ class Profileregister extends Component {
         let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url_saved = '' } = this.state;
         const prefixSelector = (
 
-            <Select className="flex align-center h50 w70"
+            <Select className="flex align-center h50 w80"
                 value={prefix}
                 onChange={this.setPrefix}>
                 {/* india */}

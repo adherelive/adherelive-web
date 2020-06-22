@@ -397,7 +397,8 @@ class AddMedicationReminderForm extends Component {
       onNext,
       onStartDateChange,
       addMedicationReminder,
-      onPatientChange
+      onPatientChange,
+      formatMessage
     } = this;
 
     const {
@@ -431,7 +432,17 @@ class AddMedicationReminderForm extends Component {
 
           {chooseMedicationField.render({ ...this.props, otherUser })}
 
-          <span className="form-label">Dose</span>
+
+          <div className="flex align-items-end justify-content-space-between">
+          <label
+            for="dose"
+            className="form-label flex-grow-1"
+            title="Dose"
+          >
+            {formatMessage(messages.dose)}
+          </label>
+          </div>
+          {/* <span className="form-label flex-grow-1">Dose</span> */}
           <InputGroup compact>
             {medicineStrengthField.render(this.props)}
             {medicineStrengthUnitField.render(this.props)}

@@ -65,25 +65,29 @@ class AddAppointmentForm extends Component {
     const {
       payload: { patient_id },
       patients,
+      patientId,
     } = this.props;
+    let pId=patientId?parseInt(patientId):patient_id;
     const { patients: { basic_info: { first_name, last_name } = {} } = {} } =
-      patients[patient_id] || {};
+      patients[pId] || {};
+      console.log('RESULT OF INITIAL VALUEEEEEEE===========>>>>>',pId,first_name, last_name);
     // if (first_name && last_name) {
-    return `${patient_id}`;
+    return `${pId}`;
     // } else {
     // return null;
     // }
   };
 
   getPatientOptions = () => {
-    const { patients, payload: { patient_id } = {} } = this.props;
+    const { patients,patientId, payload: { patient_id } = {} } = this.props;
+    let pId=patientId?patientId:patient_id;
     const { basic_info: { first_name, middle_name, last_name } = {} } =
-      patients[patient_id] || {};
+      patients[pId] || {};
 
     // const patientOptions = patients.map((patient) => {
     // const { first_name, last_name, id } = patient || {};
     return (
-      <Option key={`p-${patient_id}`} value={patient_id} name={patient_id}>
+      <Option key={`p-${pId}`} value={pId} name={pId}>
         {`${first_name} ${middle_name ? `${middle_name} ` : ""}${
           last_name ? `${last_name} ` : ""
         }`}
@@ -160,9 +164,11 @@ class AddAppointmentForm extends Component {
   };
 
   getPatientName = () => {
-    const { patients, payload: { patient_id } = {} } = this.props;
+    const { patients,patientId, payload: { patient_id } = {} } = this.props;
+
+    let pId=patientId?parseInt(patientId):patient_id;
     const { basic_info: { first_name, middle_name, last_name } = {} } =
-      patients[patient_id] || {};
+      patients[pId] || {};
     return `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? `${last_name} ` : ""
     }`;

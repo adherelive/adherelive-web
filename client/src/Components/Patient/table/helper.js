@@ -40,10 +40,31 @@ export const TABLE_COLUMN = {
 };
 
 export const formatPatientTableData = data => {
-  const { id, patients, doctors, providers, treatments, chats, chat_ids, users, care_plans } =
+  let { id, patients, doctors, providers, treatments, chats, chat_ids, users, care_plans } =
     data || {};
 
-  const patientData = patients[id] || {};
+    console.log('CARE PLANSSSSS=================>',id,patients,care_plans);
+
+  let patientData = patients[id] || {};
+  let treatment='';
+  let condition='';
+  let severity='';
+
+  let carePlanData =  {};
+  for(let carePlan of Object.values(care_plans)){
+    let{basic_info={}}=carePlan;
+    let{patient_id:patientId=1,id:carePlanId=1}=basic_info;
+    console.log('CARE PLANSSSSS222=================>',patientId,patientId==id);
+    if(patientId==id){
+    const{treatment:cTreatment='',condition:cCondition='',severity:cSeverity=''}=carePlan;
+    // console.log('CARE PLANSSSSS3333=================>',cTreatment,cCondition,cSeverity,basic_info);
+    treatment=cTreatment;
+    condition=cCondition;
+    severity=cSeverity
+    carePlanData=care_plans[carePlanId];
+    }
+  }
+  patientData = {...patients[id],treatment,condition,severity};
 
   const {basic_info: {doctor_id, name: carePlanName} = {}, activated_on} = care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized
 
@@ -73,7 +94,6 @@ export const formatPatientTableData = data => {
   const treatmentData = treatments[treatment_id] || {};
   const doctorData = doctors[doctor_id] || {};
   const providerData = providers[provider_id] || {};
-  const carePlanData = care_plans[1] || {};
   return {
     patientData,
     doctorData,

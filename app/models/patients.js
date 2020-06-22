@@ -48,6 +48,10 @@ const Patients = database.define(
     age: {
       type: Sequelize.STRING,
     },
+    birth_date: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
     address: {
       type: Sequelize.STRING
     },

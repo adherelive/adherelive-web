@@ -100,6 +100,7 @@ class AddMedicationReminder extends Component {
   handleSubmit = async () => {
     const {
       // form: { validateFields },
+      editMedication,
       addMedicationReminder,
       payload: {patient_id} = {}
     } = this.props;
@@ -159,6 +160,9 @@ class AddMedicationReminder extends Component {
           };
 
         }
+        if(editMedication){
+             editMedication(data_to_submit);
+        }else{
         try {
           const response = await addMedicationReminder(data_to_submit);
           const {status, payload: {message: msg} = {}} = response;
@@ -171,12 +175,17 @@ class AddMedicationReminder extends Component {
           console.log("add medication reminder ui error -----> ", error);
         }
       }
+      }
     });
   };
 
   render() {
     const {
       visible,
+      hideMedication,
+      medicationVisible,
+      editMedication,
+      medicationData,
       loading = false,
       intl: { formatMessage }
     } = this.props;
@@ -188,16 +197,16 @@ class AddMedicationReminder extends Component {
     };
     const { members } = this.state;
 
-    console.log("12313 visible --> ", visible);
+    console.log("12313 visible -->>>>", medicationData);
 
     return (
       <Drawer
         width={'35%'}
-        onClose={onClose}
-        visible={visible}
+        onClose={hideMedication?hideMedication:onClose}
+        visible={editMedication?medicationVisible:visible}
         destroyOnClose={true}
         className="ant-drawer"
-        title={formatMessage(messages.title)}
+        title={editMedication?formatMessage(messages.titleInner):formatMessage(messages.title)}
       >
         <FormWrapper
           wrappedComponentRef={setFormRef}
@@ -206,7 +215,7 @@ class AddMedicationReminder extends Component {
         <Footer
             onSubmit={handleSubmit}
             onClose={onClose}
-            submitText={formatMessage(messages.add_button_text)}
+            submitText={editMedication?formatMessage(messages.submit_button_text):formatMessage(messages.add_button_text)}
             submitButtonProps={{}}
             cancelComponent={null}
         />

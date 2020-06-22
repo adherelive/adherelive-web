@@ -19,7 +19,7 @@ export default class Medicine {
     }
 
     getMedicineId = () => {
-        console.log("this._data --> ", this._data);
+        // console.log("this._data --> ", this._data);
         return this._data.get("id");
     }
 }

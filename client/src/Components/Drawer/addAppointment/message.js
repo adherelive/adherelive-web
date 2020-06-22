@@ -7,6 +7,11 @@ const message = defineMessages({
         description: "",
         defaultMessage: "New Appointment"
     },
+    appointment: {
+      id: "app.drawer.appointment.title",
+      description: "",
+      defaultMessage: "Appointment"
+  },
     patient: {
         id: "app.drawer.add.appointment.patient",
         description: "",
@@ -20,7 +25,7 @@ const message = defineMessages({
     start_date: {
         id: "app.drawer.add.appointment.start.date",
         description: "",
-        defaultMessage: "Start Date"
+        defaultMessage: "Date"
     },
     start_time: {
         id: "app.drawer.add.appointment.start.time",

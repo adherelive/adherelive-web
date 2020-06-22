@@ -16,7 +16,7 @@ class MedicineService {
           },
         },
       });
-      console.log("----------- MED SEARCH 2 ", medicine);
+      // console.log("----------- MED SEARCH 2 ", medicine);
       return medicine;
     } catch (error) {
       console.log("----------- MED SEARCH 3 ", error);

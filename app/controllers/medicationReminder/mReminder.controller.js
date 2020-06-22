@@ -66,7 +66,7 @@ class MReminderController extends Controller {
 
       const medicineDetails = await medicineService.getMedicineById(medicine_id);
 
-      Logger.debug("medicineDetails --> ", medicineDetails);
+      // Logger.debug("medicineDetails --> ", medicineDetails);
 
       const medicineApiWrapper = await MedicineWrapper(medicineDetails);
 
@@ -135,7 +135,7 @@ class MReminderController extends Controller {
   getMedicationDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.debug("test", medicationReminderDetails);
+      // Logger.debug("test", medicationReminderDetails);
       return raiseSuccess(
           res,
           200,
@@ -158,7 +158,7 @@ class MReminderController extends Controller {
       const medicationDetails = await medicationReminderService.getMedicationsForParticipant({participant_id : id});
 
       // console.log("712367132 medicationDetails --> ", medicationDetails);
-      Logger.debug("medication details", medicationDetails);
+      // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
 

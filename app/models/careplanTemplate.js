@@ -16,6 +16,14 @@ const CarePlanTemplate = database.define(
             type: Sequelize.STRING,
             allowNull: false,
         },
+        severity: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
+          condition: {
+            type: Sequelize.STRING,
+            allowNull: false,
+          },
         details: {
             type: Sequelize.JSON,
         },
@@ -28,6 +36,8 @@ const CarePlanTemplate = database.define(
                 return {
                     id: this.id,
                     type: this.type,
+                    severity: this.severity,
+                    condition: this.condition,
                     details: this.details
                 };
             }

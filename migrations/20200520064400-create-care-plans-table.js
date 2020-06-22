@@ -18,9 +18,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING(1000)
-      },
+      // name: {
+      //   type: Sequelize.STRING(1000)
+      // },
       // condition_id: {
       //   type: Sequelize.INTEGER,
       //   allowNull: false,
@@ -61,6 +61,16 @@ module.exports = {
           key: 'id'
         }
       },
+      care_plan_template_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+            model: {
+                tableName: DB_TABLES.CARE_PLAN_TEMPLATE,
+            },
+            key: 'id'
+        }
+    },
       details: {
         type: Sequelize.JSON,
       },

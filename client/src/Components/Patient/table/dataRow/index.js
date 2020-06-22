@@ -19,7 +19,8 @@ export default data => {
       carePlanData
     },
     [TABLE_COLUMN.SEVERITY.dataIndex]: {
-      treatmentData
+      treatmentData,
+      carePlanData
     },
     [TABLE_COLUMN.AGE.dataIndex]: {
       patientData

@@ -80,6 +80,8 @@ export const ONBOARDING_STATUS = {
   CLINIC_REGISTERED:'CLINIC_registered',
 };
 
+
+
 export const CRITICAL = "1";
 export const HIGH = "2";
 export const MEDIUM = "3";

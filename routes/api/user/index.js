@@ -29,7 +29,10 @@ router.get(
     userController.onAppStart,
 );
 
-
+router.post(
+    "/add-patient/:userId",
+    userController.addDoctorsPatient,
+);
 
 router.post(
     "/googleSignIn",

@@ -5,7 +5,6 @@ class DoctorsService {
 
     addDoctor = async data => {
       try {
-          // todo: change to update when sign-in flow done for mobile
           const doctor = await doctorModel.create(data);
           return doctor;
       } catch(error) {

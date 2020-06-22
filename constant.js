@@ -308,7 +308,7 @@ export const DB_TABLES = {
     APPOINTMENTS: "appointments",
     SCHEDULE_EVENTS: "schedule_events",
     PATIENT_CARE_TAKERS: "patient_care_takers",
-    CARE_PLAN_TEMPLATE: "care_plan_template",
+    CARE_PLAN_TEMPLATE: "care_plan_templates",
     CONSENTS: "consents",
     CONDITIONS: "conditions",
     REGIONS: "regions",
@@ -335,10 +335,14 @@ export const DB_TABLES = {
     ADHERENCE: "adherence",
     DISEASE: "disease",
     USER_VERIFICATIONS:"user_verifications",
-    EMAIL_LOGGER:'email_logger',
+    EMAIL_LOGGER:'email_loggers',
     DOCTOR_QUALIFICATIONS: 'doctor_qualifications',
     DOCTOR_CLINICS: 'doctor_clinics',
-    UPLOAD_DOCUMENTS:'upload_documents'
+    UPLOAD_DOCUMENTS:'upload_documents',
+    TEMPLATE_MEDICATIONS:'template_medications',
+    TEMPLATE_APPOINTMENTS:'template_appointments',
+    CARE_PLAN_MEDICATIONS:'care_plan_medications',
+    CARE_PLAN_APPOINTMENTS:'care_plan_appointments'
 };
 
 export const ARTICLE_TYPE = {

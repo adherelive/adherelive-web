@@ -35,7 +35,8 @@ class MedicationStrength extends Component {
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched
+      isFieldTouched,
+      medication
       //getFieldValue
     } = form;
     // console.log("act,", activityType, activityModeOption, activityMode);

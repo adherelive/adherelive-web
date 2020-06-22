@@ -65,6 +65,11 @@ const messages = defineMessages({
         id: "app.patient_profile.patient_profile_header",
         description: "Patient Profile Header",
         defaultMessage: "Patient Details"
+    },
+    use_template: {
+        id: "app.patient_profile.use_template",
+        description: "Patient Profile Header",
+        defaultMessage: "Use Template"
     }
 
 });

@@ -11,12 +11,13 @@ import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
+import TemplateDrawer from '../../Drawer/medicationTemplateDrawer'
 
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
+import messages from "../../Dashboard/message";
 
 const { TabPane } = Tabs;
-
 const APPOINTMENT = "appointment";
 
 function callback(key) {
@@ -239,10 +240,11 @@ const PatientTreatmentCard = ({
         <div className="treatment-severity flex mt10">
           <div className="w40">{formatMessage(message.treatment_severity)}</div>
           <div className="w120 wba tdh">
-            <div
+            {/* <div
               className={`severity-label mr4 bg-${SEVERITY_STATUS[treatment_severity_status].color}`}
-            ></div>
-            {SEVERITY_STATUS[treatment_severity_status].text}
+            ></div> */}
+            {/* {SEVERITY_STATUS[treatment_severity_status].text} */}
+            {treatment_severity_status}
           </div>
         </div>
         <div className="treatment-condition flex mt10">
@@ -308,6 +310,7 @@ class PatientDetails extends Component {
     super(props);
     this.state = {
       loading: true,
+      templateDrawerVisible:false,
     };
   }
 
@@ -316,9 +319,20 @@ class PatientDetails extends Component {
       getMedications,
       getAppointments,
       searchMedicine,
+      getPatientCarePlanDetails,
       patient_id,
     } = this.props;
     this.getData();
+    getPatientCarePlanDetails(patient_id).then(response=>{
+      let{status=false,payload={}}=response;
+      if(status){
+      let{data:{show=false,appointmentsOfTemplate={},medicationsOfTemplate={}}={}}=payload;
+
+      if(show){
+        this.setState({templateDrawerVisible:show,appointmentsOfTemplate,medicationsOfTemplate});
+      }
+      }
+    });
     getMedications(patient_id);
     getAppointments(patient_id);
     searchMedicine("");
@@ -460,14 +474,23 @@ class PatientDetails extends Component {
     });
   };
 
+  onCloseTemplate =()=>{
+    this.setState({templateDrawerVisible:false});
+  }
+
+  showTemplateDrawer =()=>{
+    this.setState({templateDrawerVisible:true});
+  }
+
   render() {
-    const { patients, patient_id, users, care_plans, doctors } = this.props;
-    const { loading } = this.state;
+    let { patients, patient_id, users, care_plans, doctors , medicines} = this.props;
+    const { loading,templateDrawerVisible } = this.state;
     const {
       formatMessage,
       getMenu,
       getAppointmentsData,
       getMedicationData,
+      onCloseTemplate
     } = this;
 
     if (loading) {
@@ -478,19 +501,27 @@ class PatientDetails extends Component {
       );
     }
 
-    // todo: dumm careplan 
-    const {basic_info: {name: treatment_name, doctor_id} = {}, activated_on: treatment_start_date} = care_plans[1] || {};
+    // todo: dummy careplan 
+    let carePlanId=1;
+    for(let carePlan of Object.values(care_plans)){
+      let{basic_info:{id=1,patient_id:patientId=1}}=carePlan;
+if(patient_id==patientId){
+  carePlanId=id;
+}
 
-    console.log("192387123762 ", patients, patient_id);
+    }
+    const {basic_info:{doctor_id=1}={},treatment='',severity='',condition='', activated_on: treatment_start_date} = care_plans[carePlanId] || {};
+
 
     const {basic_info: {first_name : doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name} = {}} = doctors[doctor_id] || {};
 
+    console.log("192387123762 ",doctors[doctor_id]  );
 
     const {
       basic_info: { first_name, middle_name, last_name, user_id, age },
     } = patients[patient_id] || {};
 
-    const {basic_info: {mobile_number} = {}} = users[user_id] || {};
+    const {basic_info: {mobile_number,email} = {}} = users[user_id] || {};
     
     const {
       user_details: {
@@ -510,7 +541,7 @@ class PatientDetails extends Component {
       } = {},
     } = this.props.user_details;
 
-    console.log("2323 ", this.props.user_details);
+    console.log("2323================> ",mobile_number,users[user_id]);
 
     const {
       alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {},
@@ -539,14 +570,14 @@ class PatientDetails extends Component {
               gender={gender}
               patient_age={age}
               patient_phone_number={mobile_number}
-              patient_email_id={patient_email_id}
+              patient_email_id={email?email:''}
               formatMessage={formatMessage}
             />
             <PatientTreatmentCard
               formatMessage={formatMessage}
-              treatment_name={treatment_name ? treatment_name : "--"}
+              treatment_name={treatment ? treatment : "--"}
               treatment_condition={
-                treatment_condition ? treatment_condition : "--"
+                condition ? condition : "--"
               }
               treatment_doctor={doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name}` : "--"}
               treatment_start_date={
@@ -556,18 +587,20 @@ class PatientDetails extends Component {
                 treatment_provider ? treatment_provider : "--"
               }
               treatment_severity_status={
-                treatment_severity_status ? treatment_severity_status : "1"
+            severity ? severity : "1"
               }
             />
           </div>
-          <div className="flex-grow-1 pt20 pr24 pb20 pl24">
-            <PatientAlertCard
+          <div className="flex-grow-1 direction-column align-center pt20 pr24 pb20 pl24">
+
+                 <div className='use-template-button' onClick={this.showTemplateDrawer}><div>{formatMessage(message.use_template)}</div></div>
+            {/* <PatientAlertCard
               formatMessage={formatMessage}
               count={count}
               new_symptoms_string={new_symptoms_string}
               missed_appointment={missed_appointment}
-            />
-            <div className="patient-tab mt20">
+            /> */}
+            {/* <div className="patient-tab mt20">
               <Tabs defaultActiveKey="1" onChange={callback}>
                 <TabPane tab="Symptoms" key="1">
                   <Table
@@ -592,10 +625,14 @@ class PatientDetails extends Component {
                 </TabPane>
               </Tabs>
             </div>
+         */}
           </div>
         </div>
         <AddMedicationReminder />
         <AddAppointmentDrawer />
+        <TemplateDrawer visible={templateDrawerVisible} 
+        close={onCloseTemplate} medications={this.state.medicationsOfTemplate}
+         appointments={this.state.appointmentsOfTemplate} medicines={medicines} patientId={patient_id} patients={patients}/>
       </div>
     );
   }

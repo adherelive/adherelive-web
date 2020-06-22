@@ -22,6 +22,15 @@ class PatientsService {
       }
     };
 
+    addPatient = async data => {
+        try {
+            const patient = await Patient.create(data);
+            return patient;
+        } catch(error) {
+            throw error;
+        }
+      };
+
     getPatientByData = async (data) => {
         try {
             const patient = await Patient.findAll({

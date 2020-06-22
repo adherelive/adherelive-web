@@ -22,6 +22,7 @@ import doctorService from "../../services/doctors/doctors.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
+import CarePlanTemplateService from '../../services/carePlanTemplate/carePlanTemplate.service'
 // import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
@@ -40,6 +41,14 @@ const errMessage = require("../../../config/messages.json").errMessages;
 import minioService from "../../../app/services/minio/minio.service";
 import md5 from "js-md5";
 import UserVerifications from "../../models/userVerifications";
+import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
+import patientsService from "../../services/patients/patients.service";
+
+const MEDICATION ={1:{medicine:'Amoxil 2mg',frequency:'Everyday twice after meals',ends:'12th May',next_due:'Today at 1:30pm'},
+                   2:{medicine:'Insulin',frequency:'Once every Tuesday at 10 am',ends:'',next_due:'Next Tuesday at 10am'}};
+
+const APPOINTMENT={1:{reason:'Checking of vitals',time:'After two weeks (1st May)-1PM',notes:'Notes: Please fast before 12 hours'},
+               2:{reason:'Surgery',time:'After 18 days (4th May)-1PM',notes:'We will do a checkup in the morning too'}}
 
 const Logger = new Log("WEB USER CONTROLLER");
 
@@ -532,13 +541,35 @@ class UserController extends Controller {
               });
               x[userCategoryApiWrapper.getDoctorId()] = userCategoryApiWrapper.getBasicInfo();
 
-              await careplanData.forEach(async (carePlan) => {
+              // await careplanData.forEach(async (carePlan) => {
+                for(let carePlan of careplanData){
+                  
+                let  treatment = '';
+                let severity = '';
+                let condition = '';
+                let carePlanTemplate=null;
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+                const templateId = carePlanApiWrapper.getCarePlanTemplateId();
+                console.log('TEMPLATEEE IDDDDDDD000000000============>',templateId);
+                if(templateId){
+                 carePlanTemplate= await carePlanTemplateService.getCarePlanTemplateById(templateId);
+                 treatment = carePlanTemplate.get('type')?carePlanTemplate.get('type'):'';
+                 severity = carePlanTemplate.get('severity')?carePlanTemplate.get('severity'):'';
+                 condition =carePlanTemplate.get('condition')?carePlanTemplate.get('condition'):'';
+                }else{
+                let details=carePlanApiWrapper.getCarePlanDetails();
+                treatment=details.type;
+                severity=details.severity;
+                condition=details.condition;
+                }
+                console.log('TEMPLATEEE IDDDDDDD============>',templateId,treatment,severity,condition);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
-                ] = carePlanApiWrapper.getBasicInfo();
-              });
+                ] = {...carePlanApiWrapper.getBasicInfo(),treatment,severity,condition};
+
+                console.log('TEMPLATEEE IDDDDDDD11111111============>',carePlanApiData);
+              };
             }
             break;
           default:
@@ -1201,6 +1232,63 @@ class UserController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
+
+  addDoctorsPatient =async (req, res) => {
+    const{  mobile_number= '',name= '',gender= '',date_of_birth= '',treatment:type= '',severity= '',condition= '',prefix=''}=req.body;
+    const{userId:user_id=1}=req.params;
+    try {
+     
+     let password=process.config.DEFAULT_PASSWORD;
+     const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      const hash = await bcrypt.hash(password, salt);
+     let user = await userService.addUser({
+      prefix,
+      mobile_number,
+      password: hash,
+      sign_in_type: "basic",
+      category: "patient",
+      onboarded: false,
+    });
+
+    let newUId=user.get('id');
+
+    let patientName = name.split(" ");
+    let first_name = patientName[0];
+    let middle_name = patientName.length == 3 ? patientName[1] : "";
+    let last_name =
+      patientName.length == 3
+        ? patientName[2]
+        : patientName.length == 2
+          ? patientName[1]
+          : "";
+
+          let uid=uuidv4();
+          let birth_date=moment(date_of_birth);
+          let age=moment().diff(birth_date,'years');
+    let patient=await patientsService.addPatient({first_name,gender,middle_name,last_name,user_id:newUId,birth_date,age,uid});
+
+    let doctor = await doctorService.getDoctorByUserId(user_id);
+    let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(type,severity,condition);
+    const patient_id=patient.get('id');
+    const doctor_id =doctor.get('id');
+    const care_plan_template_id =carePlanTemplate? carePlanTemplate.get('id'):null;
+
+    console.log('**************-----INSIDE ADD DOCTORS PATIENT000000**************------',carePlanTemplate,care_plan_template_id);
+    const details = care_plan_template_id?{}:{type,severity,condition};
+    console.log('**************-----INSIDE ADD DOCTORS PATIENT111111**************------',care_plan_template_id,details);
+    const carePlan=await carePlanService.addCarePlan({patient_id,doctor_id,care_plan_template_id,details,expired_on:moment()});
+    
+    let carePlanNew=await carePlanService.getSingleCarePlanByData({patient_id,doctor_id,care_plan_template_id,details});
+     const carePlanId=carePlanNew.get('id');
+    console.log('**************-----INSIDE ADD DOCTORS PATIENT222222**************------',carePlanNew.get('id'));
+    
+
+      return this.raiseSuccess(res, 200, {patient_id,carePlanId}, "doctor's patient added successfully");
+    } catch (error) {
+      console.log("ADD DOCTOR PATIENT ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  }
 }
 
 export default new UserController();

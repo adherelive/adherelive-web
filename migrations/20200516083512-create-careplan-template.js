@@ -15,6 +15,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      severity: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      condition: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       details: {
         type: Sequelize.JSON,
       },

@@ -14,14 +14,20 @@ module.exports = {
         isBetaMember: false
       }], {});
     */
-   return queryInterface.bulkInsert(DB_TABLES.CARE_PLANS, [
+   return queryInterface.bulkInsert(DB_TABLES.TEMPLATE_MEDICATIONS, [
     {
-      name: "Sample careplan",
-      patient_id:1,
-      doctor_id: 1,
-      activated_on: new Date(),
-      renew_on: new Date(),
-      expired_on: new Date(),
+      id:1,
+      care_plan_template_id:1,
+      medicine_id:1,
+      schedule_data:JSON.stringify({'frequency':'Everyday twice after meals'}),
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
+    {
+      id:2,
+      care_plan_template_id:1,
+      medicine_id:2,
+      schedule_data:JSON.stringify({"frequency":'Once every Tuesday at 10am'}),
       created_at: new Date(),
       updated_at: new Date(),
     },
@@ -36,6 +42,6 @@ module.exports = {
       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
-   return queryInterface.bulkDelete(DB_TABLES.CARE_PLANS, null, {});
+   return queryInterface.bulkDelete(DB_TABLES.TEMPLATE_MEDICATIONS, null, {});
   }
 };

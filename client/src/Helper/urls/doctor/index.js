@@ -29,4 +29,12 @@ export const getdoctorProfileRegisterUrl = (userId) => {
     return `/auth/delete-qualification-document/${qualificationId}`;
   };
 
+  export const getAddPatientUrl = (userId) => {
+    return `/auth/add-patient/${userId}`;
+  };
+
+  export const getPatientCarePlanDetailsUrl = (patientId) => {
+    return `/patients/patient-care-plan-details/${patientId}`;
+  };
+
   

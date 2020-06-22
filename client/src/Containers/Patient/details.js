@@ -5,6 +5,7 @@ import {open} from "../../modules/drawer";
 import {getMedications} from "../../modules/medications";
 import {getAppointments} from "../../modules/appointments";
 import {searchMedicine} from "../../modules/medicines";
+import {getPatientCarePlanDetails} from "../../modules/doctors";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = (state, ownprops) => {
@@ -30,6 +31,7 @@ const mapDispatchToProps = dispatch => {
         openMReminderDrawer: (payload) => dispatch(open({type: DRAWER.ADD_MEDICATION_REMINDER, payload})),
         getMedications: (id) => dispatch(getMedications(id)),
         getAppointments: (id) => dispatch(getAppointments(id)),
+        getPatientCarePlanDetails:(patientId)=>dispatch(getPatientCarePlanDetails(patientId)),
         searchMedicine: value => dispatch(searchMedicine(value))
     };
 };

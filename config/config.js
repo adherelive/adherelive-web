@@ -65,6 +65,7 @@ module.exports =  () => {
         APP_URL: process.env.APP_URL,
         WEB_URL: process.env.WEB_URL,
         FORGOT_PASSWORD_EXPIRE_TIME: process.env.FORGOT_PASSWORD_EXPIRE_TIME,
+        DEFAULT_PASSWORD:process.env.DEFAULT_PASSWORD,
         APP_ENV: process.env.APP_ENV,
         IMAGE_HOST: process.env.IMAGE_HOST,
         DEFAULT_PASSWORD: process.env.DEFAULT_PASSWORD,

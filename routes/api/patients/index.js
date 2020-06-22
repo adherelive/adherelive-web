@@ -13,4 +13,8 @@ router.post('/patient',
     PatientController.updatePatient
 );
 
+router.get('/patient-care-plan-details/:patientId',
+    PatientController.getPatientCarePlanDetails
+);
+
 module.exports = router;

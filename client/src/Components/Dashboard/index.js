@@ -7,8 +7,12 @@ import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
+import AddPatientDrawer from "../Drawer/addPatient";
+import AddPatient  from '../../Assets/images/add-user.png';
 import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
+import { addPatient } from "../../modules/doctors";
+import { message } from "antd";
 
 
 const {TabPane} = Tabs;
@@ -19,7 +23,9 @@ const WATCHLIST = "Watch list";
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            visible:false
+        };
     }
 
     componentDidMount() {
@@ -76,11 +82,39 @@ class Dashboard extends Component {
         return chartBlocks;
     };
 
+    showAddPatientDrawer=()=>{
+        this.setState({visible:true});
+    }
+
+     addPatient=(data)=>{
+
+        const{addPatient,authenticated_user,getInitialData}=this.props;
+
+        const { basic_info: { id = 1 } = {} } = authenticated_user || {};
+        addPatient(data,id).then(response=>{
+            const{status=false,payload:{data:{patient_id=1}={}}={}}=response;
+            if(status){
+                getInitialData().then(()=>{
+
+          
+                this.props.history.push(`/patients/${patient_id}`);
+        
+                })
+            }else{
+                message.error('Something went wrong');
+            }
+        });
+     }
+
+    hideAddPatientDrawer=()=>{
+        this.setState({visible:false});
+    }
     render() {
         console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard",this.props);
         const {graphs} = this.props;
         const {formatMessage, renderChartTabs} = this;
 
+        const{visible}=this.state;
         if (Object.keys(graphs).length === 0) {
             return (
                 <Loading className={"wp100 mt20"} />
@@ -90,10 +124,9 @@ class Dashboard extends Component {
         return (
             <Fragment>
                 <div className="dashboard p20">
-                    <div className="flex direction-row justify-space-between">
+                    <div className="flex direction-row justify-space-between align-center">
                         <div className="fs40 fw700">{formatMessage(messages.report)}</div>
-                        {/*<div>{"search here"}</div>*/}
-                        {/*<div><Button onClick={this.props.signOut}>LogOut</Button></div>*/}
+                        <img src={AddPatient} className='add-patient' onClick={this.showAddPatientDrawer}/>
                     </div>
 
                     <div className="mt10 flex align-center">
@@ -121,6 +154,8 @@ class Dashboard extends Component {
                     </Tabs>
                 </div>
                 <PatientDetailsDrawer />
+
+                <AddPatientDrawer close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
             </Fragment>
         );
     }

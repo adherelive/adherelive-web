@@ -38,7 +38,7 @@ class AddAppointment extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { addAppointment } = this.props;
+    const { addAppointment,editAppointment } = this.props;
     const { formRef = {}, formatMessage } = this;
     const {
       props: {
@@ -71,21 +71,24 @@ class AddAppointment extends Component {
           treatment,
         };
 
+        if(editAppointment){
+          editAppointment(data);
+        }else{
         try {
           const response = await addAppointment(data);
           const {
             status,
             statusCode: code,
-            payload: { message: errorMessage = "", error, error: {error_type = ""} = {} },
+            payload: { message: errorMessage = "", error, error: { error_type = "" } = {} },
           } = response || {};
 
           if (code === 422 && error_type === "slot_present") {
-              message.warn(
-                `${errorMessage} range: ${moment(start_time).format(
-                  "LT"
-                )} - ${moment(end_time).format("LT")}`
-              );
-          } else if(status === true) {
+            message.warn(
+              `${errorMessage} range: ${moment(start_time).format(
+                "LT"
+              )} - ${moment(end_time).format("LT")}`
+            );
+          } else if (status === true) {
             message.success(formatMessage(messages.add_appointment_success));
           } else {
             message.warn(errorMessage);
@@ -95,6 +98,7 @@ class AddAppointment extends Component {
         } catch (error) {
           console.log("ADD APPOINTMENT UI ERROR ---> ", error);
         }
+      }
       }
     });
   };
@@ -114,8 +118,14 @@ class AddAppointment extends Component {
   };
 
   render() {
-    const { visible = true } = this.props;
+    const { visible = true,
+      hideAppointment,
+      appointmentVisible,
+      editAppointment } = this.props;
     const { disabledSubmit } = this.state;
+
+
+    console.log('STATE OF DRAWER==========>IN APPOINTMENT',editAppointment ? appointmentVisible : visible, visible,appointmentVisible,hideAppointment, editAppointment);
     const {
       onClose,
       formatMessage,
@@ -129,24 +139,24 @@ class AddAppointment extends Component {
       // loading: loading && !deleteLoading
     };
 
-    if(visible !== true) {
-      return null;
-    }
+    // if (visible !== true) {
+    //   return null;
+    // }
 
     return (
       <Fragment>
         <Drawer
           placement="right"
           // closable={false}
-          onClose={onClose}
-          visible={visible} // todo: change as per prop -> "visible", -- WIP --
-          width={`45%`}
-          title={formatMessage(messages.add_appointment)}
-          // headerStyle={{
-          //     display:"flex",
-          //     justifyContent:"space-between",
-          //     alignItems:"center"
-          // }}
+          onClose={editAppointment ? hideAppointment : onClose}
+          visible={editAppointment ? appointmentVisible : visible}
+          width={350}
+          title={editAppointment ? formatMessage(messages.appointment) : formatMessage(messages.add_appointment)}
+        // headerStyle={{
+        //     display:"flex",
+        //     justifyContent:"space-between",
+        //     alignItems:"center"
+        // }}
         >
           {/* <div className="flex direction-row justify-space-between"> */}
           <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />

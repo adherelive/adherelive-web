@@ -16,10 +16,10 @@ const CarePlan = database.define(
             primaryKey: true,
             type: Sequelize.INTEGER
         },
-        name: {
-            type: Sequelize.STRING(1000),
-            allowNull: false,
-        },
+        // name: {
+        //     type: Sequelize.STRING(1000),
+        //     allowNull: false,
+        // },
         // condition_id: {
         //     type: Sequelize.INTEGER,
         //     allowNull: false,
@@ -60,6 +60,16 @@ const CarePlan = database.define(
                 key: 'id'
             }
         },
+        care_plan_template_id: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            references: {
+                model: {
+                    tableName: DB_TABLES.CARE_PLAN_TEMPLATE,
+                },
+                key: 'id'
+            }
+        },
         details: {
             type: Sequelize.JSON,
         },
@@ -81,9 +91,9 @@ const CarePlan = database.define(
             getBasicInfo() {
                 return {
                     id: this.id,
-                    name: this.name,
-                    condition_id: this.condition_id,
-                    consent_id: this.consent_id,
+                    // name: this.name,
+                    // condition_id: this.condition_id,
+                    // consent_id: this.consent_id,
                     doctor_id: this.doctor_id,
                     patient_id: this.patient_id,
                     details: this.details,
@@ -91,6 +101,9 @@ const CarePlan = database.define(
                     renew_on: this.renew_on,
                     expired_on: this.expired_on
                 };
+            },
+            getId() {
+              return this.id;
             }
         }
     }
