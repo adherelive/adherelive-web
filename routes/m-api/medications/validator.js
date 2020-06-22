@@ -4,25 +4,6 @@ import {USER_CATEGORY} from "../../../constant";
 import {raiseClientError} from "../../helper";
 import Response from "../../../app/helper/responseFormat";
 
-const appointmentFormSchema = Joi.object().keys({
-    participant_two: Joi.object().keys({
-        id: Joi.number().required(),
-        category: Joi.string().required(),
-    }).required(),
-    organizer_type: Joi.string().optional(),
-    // organizer_id: Joi.with('organizer_type', USER_CATEGORY.CARE_TAKER).number(),
-    organizer_id: Joi.when('organizer_type', {
-        is: USER_CATEGORY.CARE_TAKER,
-        then: Joi.number().required(),
-        otherwise: Joi.number().optional()
-    }),
-    date: Joi.date().options({ convert: true }).required(),
-    start_time: Joi.date().required(),
-    end_time: Joi.date().required(),
-    description: Joi.string().optional().allow(""),
-    // TODO: rr_rule here?
-});
-
 const medicationReminderFormSchema = Joi.object().keys({
     // medicine_id: Joi.number().required(),
     strength: Joi.number().required(),
@@ -45,31 +26,6 @@ const validateStartTime = startTime => {
 
 const validateTimeInterval = (startTime, endTime) => {
     return moment(startTime) < moment(endTime);
-};
-
-export const validateAppointmentFormData = (req, res, next) => {
-    const { body: data = {} } = req;
-    const { start_time, end_time } = data;
-    // const isValid = Joi.validate(data, appointmentFormSchema);
-    const isValid = appointmentFormSchema.validate(data);
-    if (isValid && isValid.error != null) {
-        // return raiseClientError(res, 422, isValid.error, "please check filled details");
-        const response = new Response(false, 422);
-        response.setError(isValid.error);
-        response.setMessage("please check filled details");
-        return res.status(422).json(response.getResponse());
-      }
-      if (!validateStartTime(start_time)) {
-        const response = new Response(false, 422);
-        response.setMessage("you can't create Appointment on passed time.");
-        return res.status(422).json(response.getResponse());
-      }
-      if (!validateTimeInterval(start_time, end_time)) {
-        const response = new Response(false, 422);
-        response.setMessage("start time should be less than end time");
-        return res.status(422).json(response.getResponse());
-      }
-    next();
 };
 
 export const validateMedicationReminderData = (req, res, next) => {
