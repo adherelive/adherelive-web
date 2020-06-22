@@ -1,38 +1,45 @@
 import { connect } from "react-redux";
-import AddMedicationReminder from "../../Components/Drawer/addMedicationReminder/medicationsReminder";
+import EditMedicationReminder from "../../Components/Drawer/editMedicationReminder/medicationsReminder";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
-import {getMedications, addMedicationReminder} from "../../modules/medications";
+import {getMedications, updateMedication, deleteMedication} from "../../modules/medications";
 import {getMedicationDetails} from "../../modules/otherDetails";
 import {searchMedicine} from "../../modules/medicines";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
-    other_details: {medication_details = {}} = {}
+    other_details: {medication_details = {}} = {},
+    medications,
+    medicines,
+    patients,
   } = state;
 
   console.log(
     "123124 visible, type --> ",
     visible,
     type,
-    type === DRAWER.ADD_MEDICATION_REMINDER
+    type === DRAWER.EDIT_MEDICATION
   );
 
   return {
-    visible: visible && type === DRAWER.ADD_MEDICATION_REMINDER,
+    visible: visible && type === DRAWER.EDIT_MEDICATION,
     loading,
     payload,
-    medication_details
+    medication_details,
+    medications,
+    medicines,
+    patients,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     close: () => dispatch(close()),
-    addMedicationReminder: data => dispatch(addMedicationReminder(data)),
+    updateMedicationReminder: data => dispatch(updateMedication(data)),
     getMedicationDetails: () => dispatch(getMedicationDetails()),
     searchMedicine: data => dispatch(searchMedicine(data)),
+    deleteMedication: id => dispatch(deleteMedication(id)),
     getMedications: (id) => dispatch(getMedications(id)),
   };
 };
@@ -40,4 +47,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddMedicationReminder);
+)(EditMedicationReminder);

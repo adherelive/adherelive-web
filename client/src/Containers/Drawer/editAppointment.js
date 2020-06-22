@@ -1,32 +1,36 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import AddAppointmentDrawer from "../../Components/Drawer/addAppointment";
+import EditAppointmentDrawer from "../../Components/Drawer/editAppointment";
 import { close } from "../../modules/drawer";
 import {DRAWER} from "../../constant";
-import {getAppointments, addAppointment} from "../../modules/appointments";
+import {getAppointments, updateAppointment, deleteAppointment} from "../../modules/appointments";
 
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
-        patients
+        patients,
+        appointments,
     } = state
     return {
-        visible: visible && type === DRAWER.ADD_APPOINTMENT,
+        visible: visible && type === DRAWER.EDIT_APPOINTMENT,
         loading,
         payload,
-        patients
+        patients,
+        appointments
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
-        addAppointment: data => dispatch(addAppointment(data)),
+        updateAppointment: data => dispatch(updateAppointment(data)),
+        deleteAppointment: id => dispatch(deleteAppointment(id)),
         getAppointments: (id) => dispatch(getAppointments(id)),
+        // editAppointment: data => dispatch(editAppointment(data)),
     };
 };
 
 export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddAppointmentDrawer));
+)(EditAppointmentDrawer));

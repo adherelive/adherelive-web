@@ -1,11 +1,11 @@
 import React from "react";
-import moment from "moment";
 import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
 
 export default props => {
-  console.log("28374 this.props --> ", props);
   const { appointmentData } = props || {};
   const { basic_info: { description } = {} } = appointmentData || {};
+  console.log("18237183 this.props --> ", appointmentData.basic_info.description);
 
-  return <div>{description ? description : TABLE_DEFAULT_BLANK_FIELD}</div>;
+
+  return <div>{description ? description : "--"}</div>;
 };

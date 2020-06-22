@@ -44,6 +44,7 @@ class WhenToTakeMedication extends Component {
       selected_timing_overall: [],
       status: statusList,
       total_status,
+      selected_timing: {}
     };
   }
 
@@ -52,12 +53,29 @@ class WhenToTakeMedication extends Component {
       form: { validateFields },
       medication_details: { timings = {} } = {},
     } = this.props;
+    const {setWhenToTakeInitialValues} = this;
     validateFields();
-    this.setState({
-      // count: [1],
-      selected_timing: {},
-    });
+    setWhenToTakeInitialValues();
   }
+
+  setWhenToTakeInitialValues = () => {
+    const {medications, payload : {id: medication_id} = {}} = this.props;
+    const {basic_info: {details: {when_to_take = []} = {}} = {}} = medications[medication_id] || {};
+
+    let statusList = {};
+
+    when_to_take.forEach((id, index) => {
+      statusList[index] = id;
+    });
+
+    // let total_status = Object.keys(statusList);
+
+    this.setState({
+      // count: [0],
+      selected_timing: statusList,
+      selected_timing_overall: [...when_to_take],
+    });
+  };
 
   componentDidUpdate(prevProps) {
     const { medication_details } = this.props;
@@ -119,6 +137,8 @@ class WhenToTakeMedication extends Component {
         uniqueTimings.push(timing);
       }
     });
+
+    console.log("983781273 uniqueTimings --> ", current_status, remaining_status);
     return uniqueTimings;
   };
 
@@ -126,14 +146,9 @@ class WhenToTakeMedication extends Component {
     const { selected_timing, status, total_status } = this.state;
     const { getUpdatedList } = this;
     const getList = getUpdatedList(k);
+    console.log("9387812733 getList --> ", getList);
     return getList.map((id) => {
       const text = status[id];
-      console.log(
-        "1238791382 id, typeof id ----> ",
-        total_status,
-        id,
-        typeof id
-      );
       return (
         <Option key={`s-${k}.${id}`} value={id}>
           {text}
@@ -237,14 +252,27 @@ class WhenToTakeMedication extends Component {
   };
 
   remove = (k) => {
-    const { selected_timing_overall } = this.state;
+    const { selected_timing_overall, selected_timing } = this.state;
     const { form } = this.props;
     const { getFieldValue, setFieldsValue } = form;
     const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
+
+    let selectedTimingUpdate = {};
+    Object.keys(selected_timing).forEach(id => {
+      console.log("9381237192 k, id --> ", k, id);
+      if(k !== parseInt(id)) {
+        selectedTimingUpdate[k] = selected_timing[k] || {};
+      }
+    });
+
     this.setState({
       selected_timing_overall: selected_timing_overall.filter(
-        (field) => !selected.includes(field)
+        (field) => {
+          console.log("1273127362 selected, field --> ", selected_timing_overall, selected, typeof selected, field, typeof field);
+          return selected !== field;
+        }
       ),
+      // selected_timing: selectedTimingUpdate,
     });
     const keys = getFieldValue("keys");
 
@@ -256,12 +284,13 @@ class WhenToTakeMedication extends Component {
   getInitialValue = (k) => {
     const { total_status } = this.state;
     // const value = status[k+1];
+    console.log("93813128923y k, total_status --> total_status[k]", k, total_status, total_status[k]);
     return total_status[k];
     // console.log("891237183189 ", k, status, );
   };
 
   getFormItems = () => {
-    const { form, medication_details: { timings } = {} } = this.props;
+    const { form, medication_details: { timings } = {}, medications, payload: {id: medication_id} = {} } = this.props;
     const { count } = this.state;
     const {
       handleSelect,
@@ -277,13 +306,11 @@ class WhenToTakeMedication extends Component {
       getFieldValue,
     } = form;
 
-    console.log(
-      "81723681238 --> ",
-      count.map((id, index) => id)
-    );
+
+    const {basic_info: {details: {when_to_take = []} = {}} = {}} = medications[medication_id] || {};
 
     getFieldDecorator("keys", {
-      initialValue: count.map((id, index) => id),
+      initialValue: when_to_take.map((id, index) => (parseInt(id) - 1)),
     });
     const keys = getFieldValue("keys");
 
@@ -346,11 +373,12 @@ class WhenToTakeMedication extends Component {
 
   add = () => {
     const { form } = this.props;
-    const { selected_timing } = this.state;
+    const { selected_timing, selected_timing_overall } = this.state;
     const keys = form.getFieldValue("keys");
-    console.log("keys :", keys);
-    const nextKeys = keys.concat(key_field);
-    console.log("nextKeys :", nextKeys);
+    console.log("9783121238 keys :", keys);
+    const lastKey = keys[keys.length - 1];
+    const nextKeys = keys.concat(lastKey+1);
+    console.log("9783121238 nextKeys :", nextKeys);
     form.setFieldsValue({
       keys: nextKeys,
       // [`Fields[${id_checklist_field}]`]: null,
@@ -358,9 +386,16 @@ class WhenToTakeMedication extends Component {
     });
     key_field++;
     this.setState({
-      selected_timing_overall: Object.keys(selected_timing).map(
-        (id) => selected_timing[id]
-      ),
+      selected_timing_overall: [
+        ...selected_timing_overall,
+        this.getInitialValue(lastKey+1)
+      ],
+      selected_timing: {
+        ...selected_timing,
+        [lastKey+1]: this.getInitialValue(lastKey+1) 
+      }
+    }, () => {
+      console.log("1273127362 selected_timing --> ", this.state.selected_timing_overall, selected_timing);
     });
   };
 

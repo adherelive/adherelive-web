@@ -10,6 +10,9 @@ import {MailOutlined, PhoneOutlined} from "@ant-design/icons";
 import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
+import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
+import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
+import AppointmentTable from "../../../Containers/Appointments/table";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
@@ -460,6 +463,34 @@ class PatientDetails extends Component {
     });
   };
 
+  onRowClickAppointment = key => event => {
+    const {openEditAppointmentDrawer, patient_id} = this.props;
+    openEditAppointmentDrawer({id: key, patient_id});
+    //this.props.history.push(getGetFacilitiesUrl(key));
+  };
+
+  onRowAppointment = (record, rowIndex) => {
+    const { onRowClickAppointment } = this;
+    const { key } = record;
+    return {
+      onClick: onRowClickAppointment(key)
+    };
+  };
+
+  onRowClickMedication = key => event => {
+    const {openEditMedicationDrawer, patient_id} = this.props;
+    openEditMedicationDrawer({id: key, patient_id});
+    //this.props.history.push(getGetFacilitiesUrl(key));
+  };
+
+  onRowMedication = (record, rowIndex) => {
+    const { onRowClickMedication } = this;
+    const { key } = record;
+    return {
+      onClick: onRowClickMedication(key)
+    };
+  };
+
   render() {
     const { patients, patient_id, users, care_plans, doctors } = this.props;
     const { loading } = this.state;
@@ -468,6 +499,8 @@ class PatientDetails extends Component {
       getMenu,
       getAppointmentsData,
       getMedicationData,
+      onRowAppointment,
+      onRowMedication,
     } = this;
 
     if (loading) {
@@ -579,13 +612,18 @@ class PatientDetails extends Component {
                   <Table
                     columns={columns_medication}
                     dataSource={getMedicationData()}
+                    onRow={onRowMedication}
                   />
                 </TabPane>
                 <TabPane tab="Appointments" key="3">
                   <Table
                     columns={columns_appointments}
                     dataSource={getAppointmentsData()}
+                    onRow={onRowAppointment}
                   />
+                  {/* <div className="wp100">
+                    <AppointmentTable />
+                  </div> */}
                 </TabPane>
                 <TabPane tab="Actions" key="4">
                   Content of Actions Tab
@@ -596,6 +634,8 @@ class PatientDetails extends Component {
         </div>
         <AddMedicationReminder />
         <AddAppointmentDrawer />
+        <EditAppointmentDrawer />
+        <EditMedicationReminder />
       </div>
     );
   }
