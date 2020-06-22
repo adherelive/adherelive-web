@@ -12,6 +12,15 @@ class DoctorService {
             throw error;
         }
     }
+
+    getAllDoctors = async () => {
+        try {
+            const doctors = await Doctor.findAll();
+            return doctors;
+        } catch(err) {
+            throw err;
+        }
+    };
 }
 
 export default new DoctorService();

@@ -34,6 +34,34 @@ class DoctorWrapper extends BaseDoctor {
             activated_on
         };
     }
+
+    getAllInfo = () => {
+        const {_data} = this;
+        const {
+            id,
+            user_id,
+            gender,
+            first_name,
+            middle_name,
+            last_name,
+            address,
+            qualifications,
+            activated_on
+        } = _data || {};
+        return {
+            basic_info: {
+                id,
+                user_id,
+                gender,
+                first_name,
+                middle_name,
+                last_name,
+                address
+            },
+            qualifications,
+            activated_on
+        };
+    };
 }
 
 export default async (data = null, userId = null) => {
