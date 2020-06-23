@@ -29,7 +29,6 @@ module.exports = {
                 verified:1,
                 onboarded:1,
                 mobile_number: "1234567890",
-                activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -59,6 +58,19 @@ module.exports = {
                 created_at: new Date(),
                 updated_at: new Date()
             },
+            {
+                user_name: "Admin",
+                email:"admin@mail.com",
+                password: await bcrypt.hash("Password@123", 5),
+                sign_in_type: "basic",
+                category: "admin",
+                verified:1,
+                onboarded:1,
+                mobile_number: "1234567890",
+                activated_on: new Date(),
+                created_at: new Date(),
+                updated_at: new Date()
+            }
         ]);
     },
 

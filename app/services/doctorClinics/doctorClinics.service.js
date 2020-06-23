@@ -14,7 +14,7 @@ class DoctorClinicService {
 
   getClinicForDoctor = async doctor_id => {
     try {
-        const doctorClinic = await doctorClinicModel.findall({
+        const doctorClinic = await doctorClinicModel.findAll({
             where: {
                 doctor_id
             }

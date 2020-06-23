@@ -2,6 +2,7 @@
 
 import Controller from "../index";
 import Log from "../../../libs/log";
+import moment from "moment";
 
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
@@ -74,7 +75,7 @@ class DoctorController extends Controller {
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
 
-      const doctorWrapper = await DoctorWrapper(doctor);
+      const doctorWrapper = await DoctorWrapper(doctors);
 
       const doctorQualifications = await doctorQualificationService.getQualificationsByDoctorId(
         doctorWrapper.getDoctorId()
@@ -125,6 +126,44 @@ class DoctorController extends Controller {
         "doctor details fetched successfully"
       );
     } catch (error) {
+      Logger.debug("500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  verifyDoctors = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try{
+      const {params: {id} = {}} = req;
+      const doctorDetails = await doctorService.getDoctorByData({id});
+      
+      const doctorWrapper = await DoctorWrapper(doctorDetails);
+
+      let verifyData = {
+        activated_on: moment()
+      };
+
+      const userDetails = await userService.updateUser(verifyData, doctorWrapper.getUserId());
+
+      const userDetailsUpdated = await userService.getUserById(doctorWrapper.getUserId());
+
+      const userWrapper = await UserWrapper(userDetailsUpdated.get());
+
+      return raiseSuccess(
+        res, 200,
+        {
+          users: {
+            [userWrapper.getId()]: userWrapper.getBasicInfo()
+          },
+          doctors: {
+            [doctorWrapper.getDoctorId()]: doctorWrapper.getBasicInfo()
+          }
+        },
+        "doctor verified successfully"
+      );
+
+    }catch(error) {
+      Logger.debug("VERIFY DOCTOR 500 error", error);
       return raiseServerError(res);
     }
   };

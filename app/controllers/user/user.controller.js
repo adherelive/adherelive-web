@@ -150,9 +150,9 @@ class UserController extends Controller {
       );
       let verifications = await UserVerificationServices.getRequestByLink(link);
       let userId = verifications.get("user_id");
-      let activated_on = moment();
+      // let activated_on = moment();
       let verified = true;
-      let dataToUpdate = { activated_on, verified };
+      let dataToUpdate = { verified };
       console.log("DATA TO UPDATEEEE", dataToUpdate);
       let user = await userService.updateUser(dataToUpdate, userId);
 
