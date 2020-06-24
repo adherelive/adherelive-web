@@ -27,6 +27,16 @@ const message = defineMessages({
         description: "",
         defaultMessage: "Date"
     },
+    purpose_text: {
+      id: "app.drawer.add.appointment.purpose.text",
+      description: "",
+      defaultMessage: "Purpose"
+  },
+  purpose_text_placeholder: {
+    id: "app.drawer.add.appointment.purpose.text.placeholder",
+    description: "",
+    defaultMessage: "Enter purpose here"
+    },
     start_time: {
         id: "app.drawer.add.appointment.start.time",
         description: "",

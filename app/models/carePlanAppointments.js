@@ -1,64 +1,63 @@
 "use strict";
 import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES} from "../../constant";
+import { database } from "../../libs/mysql";
+import { DB_TABLES } from "../../constant";
 import Doctors from "./doctors";
 import Patients from "./patients";
-import Medicine from './medicines';
+import Appointment from './appointments';
 
 const CarePlanAppointment = database.define(
-    DB_TABLES.CARE_PLAN_APPOINTMENTS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
-          },
-          care_plan_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-              model: {
-                tableName: DB_TABLES.CARE_PLANS,
-              },
-              key: 'id'
-            }
-          },
-          reason: {
-            type: Sequelize.STRING,
-            allowNull: false,
-          },
-          appointment_time: {
-            type: Sequelize.STRING,
-            allowNull: false,
-          },
-          details: {
-            type: Sequelize.JSON,
-            allowNull: true
-          }
+  DB_TABLES.CARE_PLAN_APPOINTMENTS,
+  {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER
     },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    care_plan_id: this.care_plan_id,
-                    reason: this.reason,
-                    appointment_time: this.appointment_time,
-                    details:this.details
-                };
-            },
-            getId() {
-              return this.id;
-            }
-        }
+    care_plan_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: {
+          tableName: DB_TABLES.CARE_PLANS,
+        },
+        key: 'id'
+      }
+    },
+    appointment_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: {
+          tableName: DB_TABLES.APPOINTMENTS,
+        },
+        key: 'id'
+      }
+    },
+  },
+  {
+    underscored: true,
+    paranoid: true,
+    getterMethods: {
+      getBasicInfo() {
+        return {
+          id: this.id,
+          care_plan_id: this.care_plan_id,
+          appointment_id: this.appointment_id
+        };
+      },
+      getId() {
+        return this.id;
+      }
     }
+  }
 );
 
-
+CarePlanAppointment.hasOne(Appointment, {
+  foreignKey: "id",
+  targetKey: "appointment_id"
+});
 
 
 

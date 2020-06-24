@@ -11,6 +11,21 @@ class AppointmentService {
     }
   }
 
+  updateAppointment = async (id, data) => {
+    try {
+      console.log("29371381y73 data ---> ", data);
+      const appointment = await Appointments.update(data, {
+        where: {
+          id
+        }
+      });
+      console.log("29371381y73 data ---> ", appointment);
+      return appointment;
+    } catch(err) {
+      throw err;
+    }
+  };
+
   getAppointment = async (data) => {
     try {
       const appointment = await Appointments.findOne({
@@ -74,6 +89,19 @@ class AppointmentService {
       return appointments;
     } catch (error) {
       throw error;
+    }
+  };
+
+  deleteAppointment = async id => {
+    try {
+      const appointment = await Appointments.destroy({
+        where: {
+          id
+        }
+      });
+      return appointment;
+    } catch(err) {
+      throw err;
     }
   };
 }

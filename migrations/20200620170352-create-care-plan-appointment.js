@@ -21,18 +21,17 @@ module.exports = {
           key: 'id'
         }
       },
-      reason: {
-        type: Sequelize.STRING,
+      appointment_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: {
+            tableName: DB_TABLES.APPOINTMENTS,
+          },
+          key: 'id'
+        }
       },
-      appointment_time: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      details: {
-        type: Sequelize.JSON,
-        allowNull: true
-      },
+  
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

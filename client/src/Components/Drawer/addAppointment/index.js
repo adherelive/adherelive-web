@@ -38,8 +38,10 @@ class AddAppointment extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { addAppointment,editAppointment } = this.props;
+    const { addCarePlanAppointment, getAppointments, payload: { patient_id }, patients ,carePlanId} = this.props;
     const { formRef = {}, formatMessage } = this;
+
+    const {basic_info: {user_id} = {}} = patients[patient_id] || {};
     const {
       props: {
         form: { validateFields },
@@ -53,6 +55,7 @@ class AddAppointment extends Component {
           patient = {},
           date,
           start_time,
+          reason,
           end_time,
           description = "",
           treatment = "",
@@ -61,21 +64,20 @@ class AddAppointment extends Component {
         const data = {
           // todo: change participant one with patient from store
           participant_two: {
-            id: "2",
+            id: patient_id,
             category: "patient",
           },
           date,
           start_time,
           end_time,
+          reason,
           description,
           treatment,
+          reason
         };
 
-        if(editAppointment){
-          editAppointment(data);
-        }else{
         try {
-          const response = await addAppointment(data);
+          const response = await addCarePlanAppointment(data,carePlanId);
           const {
             status,
             statusCode: code,
@@ -90,6 +92,7 @@ class AddAppointment extends Component {
             );
           } else if (status === true) {
             message.success(formatMessage(messages.add_appointment_success));
+            getAppointments(patient_id);
           } else {
             message.warn(errorMessage);
           }
@@ -99,7 +102,7 @@ class AddAppointment extends Component {
           console.log("ADD APPOINTMENT UI ERROR ---> ", error);
         }
       }
-      }
+      
     });
   };
 

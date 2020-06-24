@@ -97,12 +97,9 @@ class MedicationStage extends Component {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
       program_has_medication_stage,
-      medicationData,
       purpose
     } = this.props;
 
-
-    const{medicine="",id=0}=medicationData;
     const {fetchingMedicines} = this.state;
 
     const { getStagesOption, getInitialValue, getParentNode, handleMedicineSearch } = this;
@@ -111,7 +108,7 @@ class MedicationStage extends Component {
     //   return null;
     // }
 
-    console.log("827312 field name ------------> ", medicine,id);
+    console.log("827312 field name --> ", FIELD_NAME);
 
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
@@ -123,7 +120,6 @@ class MedicationStage extends Component {
             notFoundContent={fetchingMedicines ? <Spin size="small" /> : null}
             className=""
             placeholder="Choose Medicine"
-            initialValue={id?id:null}
             showSearch
             onFocus={() => handleMedicineSearch("")}
             autoComplete="off"

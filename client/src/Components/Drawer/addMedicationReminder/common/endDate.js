@@ -115,7 +115,7 @@ class EndDate extends Component {
                 className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
-                suffixIcon={calendarComp()}
+                // suffixIcon={calendarComp()}
                 disabled={
                   getFieldError(repeatIntervalField.field_name) !== undefined
                 }

@@ -83,7 +83,7 @@ class UserController extends Controller {
 
         const apiUserDetails = await MUserWrapper(user.get());
 
-        Logger.debug("apiUserDetails ----> ", apiUserDetails.getId());
+        // Logger.debug("apiUserDetails ----> ", apiUserDetails.getId());
 
         return this.raiseSuccess(
           res,
@@ -334,7 +334,7 @@ class UserController extends Controller {
         // const userApiWrapper = await MUserWrapper(userData);
 
         // const userDetails = user[0];
-        Logger.debug("category", userData);
+        // Logger.debug("category", userData);
         let userCategoryData = {};
         let userApiData = {};
         let userCatApiData = {};
@@ -359,7 +359,7 @@ class UserController extends Controller {
                 patient_id: userCategoryId,
               });
   
-              Logger.debug("careplan mobile patient", careplanData);
+              // Logger.debug("careplan mobile patient", careplanData);
   
               await careplanData.forEach(async (carePlan) => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
@@ -372,7 +372,7 @@ class UserController extends Controller {
             break;
           case USER_CATEGORY.DOCTOR:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
-            Logger.debug("----DOCTOR-----", userCategoryData);
+            // Logger.debug("----DOCTOR-----", userCategoryData);
             if(userCategoryData) {
               userCategoryApiData = await MDoctorWrapper(userCategoryData);
               userCategoryId = userCategoryApiData.getDoctorId();
@@ -383,7 +383,7 @@ class UserController extends Controller {
                 doctor_id: userCategoryId,
               });
   
-              Logger.debug("careplan mobile doctor", careplanData);
+              // Logger.debug("careplan mobile doctor", careplanData);
   
               await careplanData.forEach(async (carePlan) => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
@@ -402,7 +402,7 @@ class UserController extends Controller {
             userCategoryId = userCategoryApiData.getPatientId();
         }
 
-        Logger.debug("doctor ids --> ", doctorIds);
+        // Logger.debug("doctor ids --> ", doctorIds);
 
         const doctorData = await doctorService.getDoctorByData({
           id: doctorIds,
@@ -436,7 +436,7 @@ class UserController extends Controller {
           });
         }
 
-        // Logger.debug("userIds --> ", userIds);
+        Logger.debug("userIds --> ", userIds);
 
         if (userIds.length > 1) {
           const allUserData = await userService.getUserByData({ id: userIds });

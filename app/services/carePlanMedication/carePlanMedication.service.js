@@ -28,8 +28,9 @@ class CarePlanMedicationService {
 
     getMedicationsByCarePlanId = async (care_plan_id) => {
         try {
+            console.log("careplan IDDDDDDDDD in MEDICATIONNNNN ----> ", care_plan_id);
             const carePlanMedications = await CarePlanMedication.findAll({
-                where: care_plan_id
+                where: {care_plan_id}
             });
             return carePlanMedications;
         } catch(error) {

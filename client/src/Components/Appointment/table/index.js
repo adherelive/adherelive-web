@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import { Table, Icon } from "antd";
 import generateRow from "./dataRow";
 import getColumn from "./header";
-import { getAppointmentsForPatientUrl } from "../../../Helper/url/appointments";
+// import { getAppointmentsForPatientUrl } from "../../../Helper/url/appointments";
 
 class PatientTable extends Component {
   constructor(props) {
@@ -31,14 +31,17 @@ class PatientTable extends Component {
   };
 
   getDataSource = () => {
-    const { appointments, appointment_ids = [] } = this.props;
+    const { appointments, appointment_ids = [] , users, doctors, patients } = this.props;
 
     console.log("192837 this.props ----> ", appointments, appointment_ids);
 
-    return appointment_ids.map(id => {
+    return Object.keys(appointments).map(id => {
       return generateRow({
         id,
-        appointments
+        appointments,
+        users,
+        doctors,
+        patients
       });
     });
   };
@@ -61,6 +64,7 @@ class PatientTable extends Component {
     return (
       <Table
         // onRow={onRow}
+        className="wp100"
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({

@@ -14,6 +14,18 @@ class CarePlanService {
         }
     };
 
+    getCarePlanById = async (id) => {
+        try {
+            console.log("careplan data --> ", id);
+            const carePlan = await CarePlan.findOne({
+                where: {id}
+            });
+            return carePlan;
+        } catch(error) {
+            throw error;
+        }
+    };
+
     getSingleCarePlanByData = async (data) => {
         try {
             console.log("careplan data --> ", data);
@@ -22,6 +34,19 @@ class CarePlanService {
             });
             return carePlan;
         } catch(error) {
+            throw error;
+        }
+    };
+
+    updateCarePlan = async (data, id) => {
+        try {
+            const carePlan = await CarePlan.update(data, {
+                where: {
+                    id
+                }
+            });
+            return carePlan;
+        } catch (error) {
             throw error;
         }
     };

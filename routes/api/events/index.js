@@ -20,6 +20,13 @@ router.post(
     MedicationReminder.create
 );
 
+router.post(
+    "/medication-reminder/:patient_id/:carePlanId",
+    Authenticate,
+    validator.validateMedicationReminderData,
+    MedicationReminder.createCarePlanMedication
+);
+
 router.get(
     "/medication-details",
     Authenticate,

@@ -17,7 +17,7 @@ class MedicineController extends Controller {
             const {query} = req;
             const {value} = query || {};
 
-            Logger.debug("value in req", value);
+            // Logger.debug("value in req", value);
 
             const medicineDetails = await medicineService.search(value);
 
@@ -28,7 +28,7 @@ class MedicineController extends Controller {
                     medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
                 });
 
-                Logger.debug("medicineApiData --> ", medicineApiData);
+                // Logger.debug("medicineApiData --> ", medicineApiData);
 
                 return raiseSuccess(
                     res,
@@ -44,7 +44,7 @@ class MedicineController extends Controller {
                 return raiseClientError(res, 422, {}, `no medicine found with name including ${value}`)
             }
         } catch(error) {
-            Logger.debug("500 error", error);
+            // Logger.debug("500 error", error);
             return raiseServerError(res);
         }
     };

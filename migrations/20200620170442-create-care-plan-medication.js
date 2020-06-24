@@ -21,20 +21,17 @@ module.exports = {
           key: 'id'
         }
       },
-      medicine_id: {
+      medication_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.MEDICINES,
+            tableName: DB_TABLES.MEDICATION_REMINDERS,
           },
           key: 'id'
         }
       },
-      schedule_data: {
-        type: Sequelize.JSON,
-        allowNull: true
-      },
+     
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

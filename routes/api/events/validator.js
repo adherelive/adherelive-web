@@ -50,10 +50,24 @@ const validateTimeInterval = (startTime, endTime) => {
 
 export const validateMedicationReminderData = (req, res, next) => {
   const { body: data = {} } = req;
-  const { startTime, endTime } = data;
+  const { start_date, end_date } = data;
   const isValid = medicationReminderFormSchema.validate(data);
   if (isValid && isValid.error != null) {
     return raiseClientError(res, 422, isValid.error, "");
+  }
+  if (!validateStartTime(start_date)) {
+    return raiseClientError(res, 422, {}, "you can't create Medication on passed time.");
+      // const response = new Response(false, 422);
+      // response.setError({
+      //     error: "you can't create Appointment on passed time."
+      // });
+      // return res.status(422).json(response.getResponse());
+  }
+  if (!validateTimeInterval(start_date, end_date)) {
+    return raiseClientError(res, 422, {}, "start date should be less than end date");
+      // const response = new Response(false, 422);
+      // response.setError({ error: "start time should be less than end time" });
+      // return res.status(422).json(response.getResponse());
   }
   next();
 };

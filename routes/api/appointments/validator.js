@@ -14,6 +14,7 @@ const appointmentFormSchema = Joi.object().keys({
   date: Joi.date().required(),
   start_time: Joi.date().required(),
   end_time: Joi.date().required(),
+  reason: Joi.string().required(),
   description: Joi.string()
     .optional()
     .allow(""),

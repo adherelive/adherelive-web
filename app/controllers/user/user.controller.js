@@ -550,7 +550,7 @@ class UserController extends Controller {
                 let carePlanTemplate=null;
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
                 const templateId = carePlanApiWrapper.getCarePlanTemplateId();
-                console.log('TEMPLATEEE IDDDDDDD000000000============>',templateId);
+                // console.log('TEMPLATEEE IDDDDDDD000000000============>',templateId);
                 if(templateId){
                  carePlanTemplate= await carePlanTemplateService.getCarePlanTemplateById(templateId);
                  treatment = carePlanTemplate.get('type')?carePlanTemplate.get('type'):'';
@@ -562,13 +562,13 @@ class UserController extends Controller {
                 severity=details.severity;
                 condition=details.condition;
                 }
-                console.log('TEMPLATEEE IDDDDDDD============>',templateId,treatment,severity,condition);
+                // console.log('TEMPLATEEE IDDDDDDD============>',templateId,treatment,severity,condition);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
                 ] = {...carePlanApiWrapper.getBasicInfo(),treatment,severity,condition};
 
-                console.log('TEMPLATEEE IDDDDDDD11111111============>',carePlanApiData);
+                // console.log('TEMPLATEEE IDDDDDDD11111111============>',carePlanApiData);
               };
             }
             break;
@@ -644,7 +644,7 @@ class UserController extends Controller {
           id: userId,
         };
 
-        console.log('DATA TOO SENDD  ON APP START', dataToSend);
+        // console.log('DATA TOO SENDD  ON APP START', dataToSend);
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
       } else {
@@ -1273,17 +1273,14 @@ class UserController extends Controller {
     const doctor_id =doctor.get('id');
     const care_plan_template_id =carePlanTemplate? carePlanTemplate.get('id'):null;
 
-    console.log('**************-----INSIDE ADD DOCTORS PATIENT000000**************------',carePlanTemplate,care_plan_template_id);
     const details = care_plan_template_id?{}:{type,severity,condition};
-    console.log('**************-----INSIDE ADD DOCTORS PATIENT111111**************------',care_plan_template_id,details);
     const carePlan=await carePlanService.addCarePlan({patient_id,doctor_id,care_plan_template_id,details,expired_on:moment()});
     
     let carePlanNew=await carePlanService.getSingleCarePlanByData({patient_id,doctor_id,care_plan_template_id,details});
      const carePlanId=carePlanNew.get('id');
-    console.log('**************-----INSIDE ADD DOCTORS PATIENT222222**************------',carePlanNew.get('id'));
     
 
-      return this.raiseSuccess(res, 200, {patient_id,carePlanId}, "doctor's patient added successfully");
+      return this.raiseSuccess(res, 200, {patient_id,carePlanId,carePlanTemplateId:care_plan_template_id}, "doctor's patient added successfully");
     } catch (error) {
       console.log("ADD DOCTOR PATIENT ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);

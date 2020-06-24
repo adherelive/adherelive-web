@@ -80,7 +80,7 @@ class StartDate extends Component {
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}
                 disabledDate={disabledStartDate}
-                suffixIcon={calendarComp()}
+                // suffixIcon={calendarComp()}
                 allowClear={false}
                 onBlur={this.onBlur(value)}
                 getCalendarContainer={this.getParentNode}

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Drawer, Form, message} from "antd";
+import { Drawer, Form, message } from "antd";
 import { injectIntl } from "react-intl";
 
 import { getRelatedMembersURL } from "../../../../Helper/urls/user";
@@ -15,21 +15,22 @@ import startTimeField from "../common/startTime";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import repeatDaysField from "../common/selectedDays";
+import { getInitialData } from "../../../../Helper/urls/auth";
 
 class AddMedicationReminder extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       disabledOk: true,
       fieldChanged: false,
       members: []
     };
-    this.FormWrapper = Form.create({onFieldsChange: this.onFormFieldChanges})(AddMedicationReminderForm);
+    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(AddMedicationReminderForm);
   }
 
   componentDidMount() {
-    const {getMedicationDetails} = this.props;
+    const { getMedicationDetails } = this.props;
     getMedicationDetails();
   }
 
@@ -100,9 +101,10 @@ class AddMedicationReminder extends Component {
   handleSubmit = async () => {
     const {
       // form: { validateFields },
-      editMedication,
-      addMedicationReminder,
-      payload: {patient_id} = {}
+      addCarePlanMedicationReminder,
+      getMedications,
+      carePlanId,
+      payload: { patient_id } = {}
     } = this.props;
 
     const { formRef = {}, formatMessage } = this;
@@ -115,13 +117,13 @@ class AddMedicationReminder extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         console.log("131231 values ----> ", values);
-        const {when_to_take = [], keys = []} = values || {};
+        const { when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const {medicine_id, quantity, strength, unit} = values || {};
+        const { medicine_id, quantity, strength, unit } = values || {};
         data_to_submit = {
           medicine_id,
           quantity,
@@ -134,23 +136,23 @@ class AddMedicationReminder extends Component {
           repeat: "weekly",
 
           [startTimeField.field_name]:
-              startTime && startTime !== null
-                  ? startTime.startOf("minute").toISOString()
-                  : startTime,
+            startTime && startTime !== null
+              ? startTime.startOf("minute").toISOString()
+              : startTime,
           [startDateField.field_name]:
-              startDate && startDate !== null
-                  ? startDate
-                      .clone()
-                      .startOf("day")
-                      .toISOString()
-                  : startDate,
+            startDate && startDate !== null
+              ? startDate
+                .clone()
+                .startOf("day")
+                .toISOString()
+              : startDate,
           [endDateField.field_name]:
-              endDate && endDate !== null
-                  ? endDate
-                      .clone()
-                      .endOf("day")
-                      .toISOString()
-                  : endDate
+            endDate && endDate !== null
+              ? endDate
+                .clone()
+                .endOf("day")
+                .toISOString()
+              : endDate
         };
 
         if (repeatDays) {
@@ -160,14 +162,12 @@ class AddMedicationReminder extends Component {
           };
 
         }
-        if(editMedication){
-             editMedication(data_to_submit);
-        }else{
         try {
-          const response = await addMedicationReminder(data_to_submit);
-          const {status, payload: {message: msg} = {}} = response;
-          if(status === true) {
+          const response = await addCarePlanMedicationReminder(data_to_submit,carePlanId);
+          const { status, payload: { message: msg } = {} } = response;
+          if (status === true) {
             message.success(msg);
+            getMedications(patient_id);
           } else {
             message.error(msg);
           }
@@ -175,17 +175,12 @@ class AddMedicationReminder extends Component {
           console.log("add medication reminder ui error -----> ", error);
         }
       }
-      }
     });
   };
 
   render() {
     const {
       visible,
-      hideMedication,
-      medicationVisible,
-      editMedication,
-      medicationData,
       loading = false,
       intl: { formatMessage }
     } = this.props;
@@ -197,27 +192,27 @@ class AddMedicationReminder extends Component {
     };
     const { members } = this.state;
 
-    console.log("12313 visible -->>>>", medicationData);
+    console.log("12313 visible --> ", visible);
 
     return (
       <Drawer
         width={'35%'}
-        onClose={hideMedication?hideMedication:onClose}
-        visible={editMedication?medicationVisible:visible}
+        onClose={onClose}
+        visible={visible}
         destroyOnClose={true}
         className="ant-drawer"
-        title={editMedication?formatMessage(messages.titleInner):formatMessage(messages.title)}
+        title={formatMessage(messages.title)}
       >
         <FormWrapper
           wrappedComponentRef={setFormRef}
           {...this.props}
         />
         <Footer
-            onSubmit={handleSubmit}
-            onClose={onClose}
-            submitText={editMedication?formatMessage(messages.submit_button_text):formatMessage(messages.add_button_text)}
-            submitButtonProps={{}}
-            cancelComponent={null}
+          onSubmit={handleSubmit}
+          onClose={onClose}
+          submitText={formatMessage(messages.add_button_text)}
+          submitButtonProps={{}}
+          cancelComponent={null}
         />
       </Drawer>
     );

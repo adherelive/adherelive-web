@@ -92,12 +92,14 @@ class Dashboard extends Component {
 
         const { basic_info: { id = 1 } = {} } = authenticated_user || {};
         addPatient(data,id).then(response=>{
-            const{status=false,payload:{data:{patient_id=1}={}}={}}=response;
+            const{status=false,payload:{data:{patient_id=1,carePlanTemplateId=0}={}}={}}=response;
+            let showTemplateDrawer=carePlanTemplateId?true:false;
             if(status){
                 getInitialData().then(()=>{
-
+            
           
-                this.props.history.push(`/patients/${patient_id}`);
+                this.props.history.push({pathname:`/patients/${patient_id}`,
+            state:{showTemplateDrawer}});
         
                 })
             }else{

@@ -3,7 +3,8 @@ import {withRouter} from "react-router-dom";
 import AddAppointmentDrawer from "../../Components/Drawer/addAppointment";
 import { close } from "../../modules/drawer";
 import {DRAWER} from "../../constant";
-import {addAppointment} from "../../modules/appointments";
+import {getMedications} from "../../modules/medications";
+import {getAppointments, addAppointment,addCarePlanAppointment} from "../../modules/appointments";
 
 const mapStateToProps = state => {
     const {
@@ -22,6 +23,10 @@ const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
         addAppointment: data => dispatch(addAppointment(data)),
+        addCarePlanAppointment: (data,carePlanId) => dispatch(addCarePlanAppointment(data,carePlanId)),
+        
+    getMedications: (id) => dispatch(getMedications(id)),
+        getAppointments: (id) => dispatch(getAppointments(id)),
     };
 };
 

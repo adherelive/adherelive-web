@@ -6,11 +6,15 @@ import chat_image from "../../../Assets/images/chat.svg";
 import { SEVERITY_STATUS, MEDICINE_TYPE } from "../../../constant";
 import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin } from "antd";
 
-import {MailOutlined, PhoneOutlined} from "@ant-design/icons";
+import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
+import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
+import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
+import AppointmentTable from "../../../Containers/Appointments/table";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
+import noMedication from "../../../Assets/images/no_medication@3x.png";
 import TemplateDrawer from '../../Drawer/medicationTemplateDrawer'
 
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
@@ -155,20 +159,22 @@ const data_medication = [
   },
 ];
 
-const PatientProfileHeader = ({ formatMessage, getMenu }) => {
+const PatientProfileHeader = ({ formatMessage, getMenu,showAdd }) => {
+
+  // console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd",showAdd,formatMessage,getMenu);
   return (
     <div className="flex pt20 pr24 pb20 pl24">
       <div className="patient-profile-header flex-grow-0">
-        <h3>{formatMessage(message.patient_profile_header)}</h3>
+      <div className="fs30 fw700">{formatMessage(message.patient_profile_header)}</div>
       </div>
       <div className="flex-grow-1 tar">
-        <Dropdown
+        {showAdd && (<Dropdown
           overlay={getMenu()}
           trigger={["click"]}
           placement="bottomRight"
         >
           <Button type="primary">Add</Button>
-        </Dropdown>
+        </Dropdown>)}
       </div>
     </div>
   );
@@ -199,11 +205,11 @@ const PatientCard = ({
       </div>
       <div className="patient-id mt6 mr0 mb0 ml0 ">PID: {patient_id}</div>
       <div className="patient-contact-number mt16 mr0 mb0 ml0 flex direction-row justify-center align-center">
-        <PhoneOutlined className="dark-sky-blue mr8"/>
+        <PhoneOutlined className="dark-sky-blue mr8" />
         <div>{patient_phone_number}</div>
       </div>
       <div className="patient-email-id mt8 mr0 mb0 ml0 flex direction-row justify-center align-center">
-        <MailOutlined className="dark-sky-blue mr8"/>
+        <MailOutlined className="dark-sky-blue mr8" />
         <div>{patient_email_id}</div>
       </div>
       <div className="action-buttons flex">
@@ -310,7 +316,7 @@ class PatientDetails extends Component {
     super(props);
     this.state = {
       loading: true,
-      templateDrawerVisible:false,
+      templateDrawerVisible: false,
     };
   }
 
@@ -321,16 +327,20 @@ class PatientDetails extends Component {
       searchMedicine,
       getPatientCarePlanDetails,
       patient_id,
+      showTemplateDrawer
     } = this.props;
     this.getData();
-    getPatientCarePlanDetails(patient_id).then(response=>{
-      let{status=false,payload={}}=response;
-      if(status){
-      let{data:{show=false,appointmentsOfTemplate={},medicationsOfTemplate={}}={}}=payload;
+    getPatientCarePlanDetails(patient_id).then(response => {
+      let { status = false, payload = {} } = response;
+      if (status) {
+        let { data: { show = false, appointmentsOfTemplate = {}, medicationsOfTemplate = {},carePlanAppointments={},carePlanMedications={} ,carePlanTemplateId=''} = {} } = payload;
 
-      if(show){
-        this.setState({templateDrawerVisible:show,appointmentsOfTemplate,medicationsOfTemplate});
-      }
+        
+        console.log("RESPONSEEEEEEEEE IN DID MOUNTTT",show,response);
+        if (show) {
+          this.setState({ templateDrawerVisible: true, appointmentsOfTemplate, medicationsOfTemplate});
+        }
+        this.setState({appointmentsOfTemplate,medicationsOfTemplate,carePlanTemplateId});
       }
     });
     getMedications(patient_id);
@@ -382,6 +392,7 @@ class PatientDetails extends Component {
     console.log("92834792 ", medications);
     const medicationRows = Object.keys(medications).map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
+
       const {
         basic_info: {
           organizer_id,
@@ -390,6 +401,9 @@ class PatientDetails extends Component {
           details: { medicine_id, repeat_days, start_time } = {},
         } = {},
       } = medications[id] || {};
+
+
+    console.log("92834792 ============>", id,medications,medications[id]);
       const { basic_info: { user_name = "--" } = {} } =
         users[organizer_id] || {};
 
@@ -474,23 +488,84 @@ class PatientDetails extends Component {
     });
   };
 
-  onCloseTemplate =()=>{
-    this.setState({templateDrawerVisible:false});
+  onCloseTemplate = () => {
+    this.setState({ templateDrawerVisible: false });
   }
 
-  showTemplateDrawer =()=>{
-    this.setState({templateDrawerVisible:true});
+  showTemplateDrawer = () => {
+    this.setState({ templateDrawerVisible: true });
   }
+  onRowClickAppointment = key => event => {
+    const { openEditAppointmentDrawer, patient_id } = this.props;
+    openEditAppointmentDrawer({ id: key, patient_id });
+    //this.props.history.push(getGetFacilitiesUrl(key));
+  };
+
+  onRowAppointment = (record, rowIndex) => {
+    const { onRowClickAppointment } = this;
+    const { key } = record;
+    return {
+      onClick: onRowClickAppointment(key)
+    };
+  };
+
+  onRowClickMedication = key => event => {
+    const { openEditMedicationDrawer, patient_id } = this.props;
+    openEditMedicationDrawer({ id: key, patient_id });
+    //this.props.history.push(getGetFacilitiesUrl(key));
+  };
+
+  onRowMedication = (record, rowIndex) => {
+    const { onRowClickMedication } = this;
+    const { key } = record;
+    return {
+      onClick: onRowClickMedication(key)
+    };
+  };
+
+  handleSubmitTemplate = (data)=> {
+    const { addCarePlanMedicationsAndAppointments, care_plans, patient_id } = this.props;
+    let carePlanId = 1;
+    for (let carePlan of Object.values(care_plans)) {
+      let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
+      if (patient_id == patientId) {
+        carePlanId = id;
+      }
+
+    }
+    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response=>{
+      const{status=false}=response;
+      if(status){
+        this.onCloseTemplate();
+      }
+    });
+  }
+
+
 
   render() {
-    let { patients, patient_id, users, care_plans, doctors , medicines} = this.props;
-    const { loading,templateDrawerVisible } = this.state;
+    let { patients, patient_id, users, care_plans, doctors, medicines,appointments={},medications={} } = this.props;
+    const { loading, templateDrawerVisible=false,carePlanAppointments={},carePlanMedications={},carePlanTemplateId=0 } = this.state;
+
+    let showUseTemplate =true;
+    let showAddButton =carePlanTemplateId?false:true;
+    if(!carePlanTemplateId && !(Object.keys(appointments).length || Object.keys(medications).length)){
+      showUseTemplate=false;
+    }
+    
+
+    let showTabs=(Object.keys(appointments).length || Object.keys(medications).length)?true:false;
+
+  console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd render",carePlanTemplateId,showAddButton,showUseTemplate,Object.keys(appointments).length,
+  Object.keys(medications).length);
     const {
       formatMessage,
       getMenu,
       getAppointmentsData,
       getMedicationData,
-      onCloseTemplate
+      onCloseTemplate,
+      onRowAppointment,
+      onRowMedication,
     } = this;
 
     if (loading) {
@@ -502,27 +577,27 @@ class PatientDetails extends Component {
     }
 
     // todo: dummy careplan 
-    let carePlanId=1;
-    for(let carePlan of Object.values(care_plans)){
-      let{basic_info:{id=1,patient_id:patientId=1}}=carePlan;
-if(patient_id==patientId){
-  carePlanId=id;
-}
+    let carePlanId = 1;
+    for (let carePlan of Object.values(care_plans)) {
+      let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
+      if (patient_id == patientId) {
+        carePlanId = id;
+      }
 
     }
-    const {basic_info:{doctor_id=1}={},treatment='',severity='',condition='', activated_on: treatment_start_date} = care_plans[carePlanId] || {};
+    const { basic_info: { doctor_id = 1 } = {}, treatment = '', severity = '', condition = '', activated_on: treatment_start_date } = care_plans[carePlanId] || {};
 
+    let carePlan = care_plans[carePlanId];
+    const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
 
-    const {basic_info: {first_name : doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name} = {}} = doctors[doctor_id] || {};
-
-    console.log("192387123762 ",doctors[doctor_id]  );
+    console.log("192387123762 ", doctors[doctor_id]);
 
     const {
       basic_info: { first_name, middle_name, last_name, user_id, age },
     } = patients[patient_id] || {};
 
-    const {basic_info: {mobile_number,email} = {}} = users[user_id] || {};
-    
+    const { basic_info: { mobile_number, email } = {} } = users[user_id] || {};
+
     const {
       user_details: {
         gender,
@@ -541,7 +616,7 @@ if(patient_id==patientId){
       } = {},
     } = this.props.user_details;
 
-    console.log("2323================> ",mobile_number,users[user_id]);
+    console.log("2323================> ", mobile_number, users[user_id]);
 
     const {
       alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {},
@@ -559,7 +634,7 @@ if(patient_id==patientId){
     console.log("formatMessage", formatMessage);
     return (
       <div className="pt10 pr10 pb10 pl10">
-        <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu} />
+        <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu} showAdd={showAddButton}/>
         <div className="flex">
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
             <PatientCard
@@ -570,7 +645,7 @@ if(patient_id==patientId){
               gender={gender}
               patient_age={age}
               patient_phone_number={mobile_number}
-              patient_email_id={email?email:''}
+              patient_email_id={email ? email : ''}
               formatMessage={formatMessage}
             />
             <PatientTreatmentCard
@@ -587,52 +662,71 @@ if(patient_id==patientId){
                 treatment_provider ? treatment_provider : "--"
               }
               treatment_severity_status={
-            severity ? severity : "1"
+                severity ? severity : "1"
               }
             />
           </div>
           <div className="flex-grow-1 direction-column align-center pt20 pr24 pb20 pl24">
 
-                 <div className='use-template-button' onClick={this.showTemplateDrawer}><div>{formatMessage(message.use_template)}</div></div>
-            {/* <PatientAlertCard
+            {!showTabs && (
+            <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
+              <img  src={noMedication} className='w200 h200'/>
+              <div className='fs20 fw700'>{formatMessage(message.nothing_to_show)}</div>
+            {showUseTemplate && (<div className='use-template-button' onClick={this.showTemplateDrawer}>
+              <div>{formatMessage(message.use_template)}</div>
+              </div>)}
+              </div>)}
+              {showTabs &&(
+                <div className='flex-grow-1 direction-column align-center'>
+            <PatientAlertCard
               formatMessage={formatMessage}
               count={count}
               new_symptoms_string={new_symptoms_string}
               missed_appointment={missed_appointment}
-            /> */}
-            {/* <div className="patient-tab mt20">
+            />
+            <div className="patient-tab mt20">
               <Tabs defaultActiveKey="1" onChange={callback}>
-                <TabPane tab="Symptoms" key="1">
+                {/* <TabPane tab="Symptoms" key="1">
                   <Table
                     columns={columns_symptoms}
                     dataSource={data_symptoms}
                   />
-                </TabPane>
+                </TabPane> */}
                 <TabPane tab="Medication" key="2">
                   <Table
                     columns={columns_medication}
                     dataSource={getMedicationData()}
+                    onRow={onRowMedication}
                   />
                 </TabPane>
                 <TabPane tab="Appointments" key="3">
                   <Table
                     columns={columns_appointments}
                     dataSource={getAppointmentsData()}
+                    onRow={onRowAppointment}
                   />
+                  <div className="wp100">
+                    {/* <AppointmentTable /> */}
+                  </div>
                 </TabPane>
                 <TabPane tab="Actions" key="4">
                   Content of Actions Tab
                 </TabPane>
               </Tabs>
             </div>
-         */}
+            </div>
+            )}
           </div>
         </div>
-        <AddMedicationReminder />
-        <AddAppointmentDrawer />
-        <TemplateDrawer visible={templateDrawerVisible} 
-        close={onCloseTemplate} medications={this.state.medicationsOfTemplate}
-         appointments={this.state.appointmentsOfTemplate} medicines={medicines} patientId={patient_id} patients={patients}/>
+        <AddMedicationReminder carePlanId={carePlanId}/>
+        <AddAppointmentDrawer carePlanId={carePlanId}/>
+        <TemplateDrawer visible={templateDrawerVisible}
+           submit={this.handleSubmitTemplate}
+          close={onCloseTemplate} medications={this.state.medicationsOfTemplate}
+          appointments={this.state.appointmentsOfTemplate} medicines={medicines}
+          patientId={patient_id} patients={patients} carePlan={carePlan} />
+        <EditAppointmentDrawer carePlanId={carePlanId} />
+        <EditMedicationReminder carePlanId={carePlanId}/>
       </div>
     );
   }

@@ -98,6 +98,8 @@ class PatientController extends Controller {
             let show = false;
 
             let carePlan = await carePlanService.getSingleCarePlanByData({ patient_id });
+            let cPdetails =carePlan.get('details');
+            let {shown=false}=cPdetails;
             let carePlanId = carePlan.get('id');
             let carePlanTemplateId = carePlan.get('care_plan_template_id');
             let carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
@@ -145,18 +147,25 @@ class PatientController extends Controller {
             let appointmentsOfTemplate = formattedTemplateAppointments;
 
 
-            let carePlanMedicationsExists = carePlanMedications ? !carePlanMedications.length : !carePlanMedications;
-            let carePlanAppointmentsExists = carePlanAppointments ? !carePlanAppointments.length : !carePlanAppointments;
-            if (carePlanTemplateId && carePlanMedicationsExists && carePlanAppointmentsExists) {
+            let carePlanMedicationsExists = carePlanMedications ? !carePlanMedications.length : !carePlanMedications; //true if doesnot exist
+            let carePlanAppointmentsExists = carePlanAppointments ? !carePlanAppointments.length : !carePlanAppointments; //true if doesnot exist
+            if (carePlanTemplateId && carePlanMedicationsExists && carePlanAppointmentsExists && !shown) {
                 show = true;
             }
 
 
-            console.log("CARE PLAN OF PATIENTTTT===========>>>>>>>", templateMedications, templateAppointments);
+            console.log("CARE PLAN OF PATIENTTTT===========>>>>>>>", patient_id,carePlanId,shown
+            ,carePlanMedications,carePlanAppointments
+            , show,carePlanTemplateId,carePlanMedicationsExists,carePlanAppointmentsExists);
+            if(shown==false){
+                let details=cPdetails;
+                details.shown=true;
+                let updatedCarePlan=await carePlanService.updateCarePlan({details},carePlanId);
+            }
 
 
             return this.raiseSuccess(res, 200, {
-                show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments
+                show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments,carePlanTemplateId
             }, "patient care plan details fetched successfully");
 
         } catch (error) {

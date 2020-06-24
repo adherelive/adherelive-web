@@ -4,7 +4,7 @@ import {database} from "../../libs/mysql";
 import {DB_TABLES} from "../../constant";
 import Doctors from "./doctors";
 import Patients from "./patients";
-import Medicine from './medicines';
+import Medication from './medicationReminders';
 
 const CarePlanMedication = database.define(
     DB_TABLES.CARE_PLAN_MEDICATIONS,
@@ -25,19 +25,15 @@ const CarePlanMedication = database.define(
               key: 'id'
             }
           },
-          medicine_id: {
+          medication_id: {
             type: Sequelize.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
               model: {
-                tableName: DB_TABLES.MEDICINES,
+                tableName: DB_TABLES.MEDICATION_REMINDERS,
               },
               key: 'id'
             }
-          },
-          schedule_data: {
-            type: Sequelize.JSON,
-            allowNull: true
           },
     },
     {
@@ -48,8 +44,7 @@ const CarePlanMedication = database.define(
                 return {
                     id: this.id,
                     care_plan_id: this.care_plan_id,
-                    medicine_id: this.medicine_id,
-                    schedule_data: this.schedule_data,
+                    medication_id: this.medication_id,
                 };
             },
             getId() {
@@ -60,9 +55,9 @@ const CarePlanMedication = database.define(
 );
 
 
-CarePlanMedication.hasOne(Medicine, {
+CarePlanMedication.hasOne(Medication, {
     foreignKey: "id",
-    targetKey: "medicine_id"
+    targetKey: "medication_id"
 });
 
 

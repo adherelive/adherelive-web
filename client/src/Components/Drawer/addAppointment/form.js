@@ -25,6 +25,7 @@ const END_TIME = "end_time";
 const TREATMENT = "treatment";
 const DESCRIPTION = "description";
 
+const REASON = "reason";
 const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION];
 
 class AddAppointmentForm extends Component {
@@ -65,29 +66,25 @@ class AddAppointmentForm extends Component {
     const {
       payload: { patient_id },
       patients,
-      patientId,
     } = this.props;
-    let pId=patientId?parseInt(patientId):patient_id;
     const { patients: { basic_info: { first_name, last_name } = {} } = {} } =
-      patients[pId] || {};
-      console.log('RESULT OF INITIAL VALUEEEEEEE===========>>>>>',pId,first_name, last_name);
+      patients[patient_id] || {};
     // if (first_name && last_name) {
-    return `${pId}`;
+    return `${patient_id}`;
     // } else {
     // return null;
     // }
   };
 
   getPatientOptions = () => {
-    const { patients,patientId, payload: { patient_id } = {} } = this.props;
-    let pId=patientId?patientId:patient_id;
+    const { patients, payload: { patient_id } = {} } = this.props;
     const { basic_info: { first_name, middle_name, last_name } = {} } =
-      patients[pId] || {};
+      patients[patient_id] || {};
 
     // const patientOptions = patients.map((patient) => {
     // const { first_name, last_name, id } = patient || {};
     return (
-      <Option key={`p-${pId}`} value={pId} name={pId}>
+      <Option key={`p-${patient_id}`} value={patient_id} name={patient_id}>
         {`${first_name} ${middle_name ? `${middle_name} ` : ""}${
           last_name ? `${last_name} ` : ""
         }`}
@@ -132,7 +129,7 @@ class AddAppointmentForm extends Component {
     }
 
     const eventEndTime = getFieldValue(END_TIME);
-
+  
     const newMonth = startDate.get("month");
     const newDate = startDate.get("date");
     const newYear = startDate.get("year");
@@ -164,11 +161,9 @@ class AddAppointmentForm extends Component {
   };
 
   getPatientName = () => {
-    const { patients,patientId, payload: { patient_id } = {} } = this.props;
-
-    let pId=patientId?parseInt(patientId):patient_id;
+    const { patients, payload: { patient_id } = {} } = this.props;
     const { basic_info: { first_name, middle_name, last_name } = {} } =
-      patients[pId] || {};
+      patients[patient_id] || {};
     return `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? `${last_name} ` : ""
     }`;
@@ -254,7 +249,7 @@ class AddAppointmentForm extends Component {
             <DatePicker
               className="wp100"
               onBlur={handleDateSelect(currentDate)}
-              suffixIcon={calendarComp()}
+              // suffixIcon={calendarComp()}
               disabledDate={disabledDate}
               // getCalendarContainer={this.getParentNode}
             />
@@ -335,6 +330,19 @@ class AddAppointmentForm extends Component {
             <Input
               autoFocus
               placeholder={formatMessage(message.treatment_text_placeholder)}
+            />
+          )}
+        </FormItem>
+
+        <FormItem
+          label={formatMessage(message.purpose_text)}
+          className="full-width ant-date-custom"
+        >
+          {getFieldDecorator(REASON, {
+          })(
+            <Input
+              autoFocus
+              placeholder={formatMessage(message.purpose_text_placeholder)}
             />
           )}
         </FormItem>
