@@ -126,10 +126,6 @@ class UserController extends Controller {
       console.log("signup err,", err);
       if (err.code && err.code == 11000) {
         let response = new Response(false, 400);
-        console.log(
-          "Sign ka hai -----------> , ",
-          errMessage.EMAIL_ALREADY_EXISTS
-        );
         response.setError(errMessage.EMAIL_ALREADY_EXISTS);
         return res.status(400).json(response.getResponse());
       } else {
@@ -150,9 +146,9 @@ class UserController extends Controller {
       );
       let verifications = await UserVerificationServices.getRequestByLink(link);
       let userId = verifications.get("user_id");
-      let activated_on = moment();
+      // let activated_on = moment();
       let verified = true;
-      let dataToUpdate = { activated_on, verified };
+      let dataToUpdate = { verified };
       console.log("DATA TO UPDATEEEE", dataToUpdate);
       let user = await userService.updateUser(dataToUpdate, userId);
 
@@ -222,7 +218,9 @@ class UserController extends Controller {
             [apiUserDetails.getUserId()]: {
               ...apiUserDetails.getBasicInfo()
             }
-          }
+          },
+          auth_user: apiUserDetails.getId(),
+          auth_category: apiUserDetails.getCategory()
         };
 
         res.cookie("accessToken", accessToken, {
@@ -483,7 +481,8 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData,
           },
-          id: userId,
+          auth_user: userId,
+          auth_category: category
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
@@ -566,9 +565,12 @@ class UserController extends Controller {
   };
 
   doctorProfileRegister = async (req, res) => {
+    const {userDetails: {userId: user_id} = {}} = req;
     let { name, city, category, mobile_number, prefix, profile_pic } = req.body;
     let doctorName = name.split(" ");
-    const { userId: user_id } = req.params;
+    // const { userId: user_id } = req.params;
+
+    Logger.debug("POST DOCTOR REGISTER --> ", user_id, req.params, req.body);
     try {
       let user = await userService.getUserById(user_id);
       let user_data_to_update = {
@@ -581,9 +583,12 @@ class UserController extends Controller {
       console.log("REQUESTTTTTTTT BODYYYYYY", req.body);
 
       let doctor = {};
-      console.log("USERRRRRRRR", updatedUser);
+      // console.log("USERRRRRRRR", updatedUser);
       let doctorExist = await doctorService.getDoctorByUserId(user_id);
       // console.log('DOCTORRRRR EXISTTT',doctorExist.get('id'),doctorExist.getBasicInfo);
+
+      Logger.debug("POST DOCTOR REGISTER --> ", user_id, doctorExist);
+
       let first_name = doctorName[0];
       let middle_name = doctorName.length == 3 ? doctorName[1] : "";
       let last_name =
@@ -592,10 +597,12 @@ class UserController extends Controller {
           : doctorName.length == 2
           ? doctorName[1]
           : "";
+      Logger.debug("profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] ", profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]);
+
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic,
+          profile_pic: profile_pic ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]: null,
           first_name,
           middle_name,
           last_name,
@@ -608,7 +615,7 @@ class UserController extends Controller {
         let doctor_data = {
           user_id,
           city,
-          profile_pic,
+          profile_pic: profile_pic ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]: null,
           first_name,
           middle_name,
           last_name,
@@ -636,7 +643,6 @@ class UserController extends Controller {
   };
 
   getDoctorProfileRegisterData = async (req, res) => {
-    let { userId } = req.params;
     try {
       let name = "";
       let email = "";
@@ -645,6 +651,10 @@ class UserController extends Controller {
       let prefix = "";
       let mobile_number = "";
       let profile_pic = "";
+
+      const {userDetails: {userId} = {}} = req || {};
+
+      Logger.debug("userId ---> ", req);
 
       let user = await userService.getUserById(userId);
       console.log("GET PROFILE DATA USERRRRRRR",user.getBasicInfo);
@@ -716,7 +726,7 @@ class UserController extends Controller {
       qualification_details = [],
     } = req.body;
 
-    const { userId: user_id } = req.params;
+    const {userDetails: {userId: user_id} = {}} = req || {};
     try {
       let user = userService.getUserById(user_id);
       let user_data_to_update = {
@@ -802,7 +812,7 @@ class UserController extends Controller {
   };
 
   getDoctorQualificationRegisterData = async (req, res) => {
-    let { userId } = req.params;
+    let { userDetails: {userId} = {} } = req || {};
     try {
       const qualificationData = await doctorQualificationData(userId);
       console.log("FINAL+++================>", qualificationData);
@@ -825,7 +835,7 @@ class UserController extends Controller {
     console.log("FILEEEEEEEEEEEEEEEE=================>", req.file);
 
     const file = req.file;
-    const { userId = 1 } = req.params;
+    const {userDetails: {userId} = {}} = req;
     let { qualification = {} } = req.body;
     console.log(
       "BODYYYYYYYYYYYYYYYY=================>",
@@ -837,23 +847,8 @@ class UserController extends Controller {
       let qualification_id = 0;
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
-      // let{ degree = '', year = '', college = '' } =JSON.parse(qualification);
-      // console.log('BODYYYYYYYYYYYYYYYY1111111=================>', degree, year, college);
-      // let qualificationOfDoctor = await qualificationService.getQualificationByData(doctor_id,degree,year,college);
-      // console.log(' QUALIFICATIONNNN OF DOCTORRRR',qualificationOfDoctor);
-      // // let qualificationOfDoctorExist=qualificationOfDoctor?qualificationOfDoctor.length:false;
-      // if (!qualification_id && !qualificationOfDoctor) {
-      //   let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
-      //  console.log('DOCTORRRR QUALIFICATIONNNN',docQualification);
-      //   qualification_id = docQualification.get('id');
-      //   let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // } else if(!qualification_id) {
-      //   qualification_id = qualificationOfDoctor.get('id');
-      //   let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // }else{
-      // qualification_id=qualificationId;
-      // let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // }
+
+      Logger.debug("files",files);
       return this.raiseSuccess(
         res,
         200,
@@ -902,7 +897,7 @@ class UserController extends Controller {
 
   registerQualification = async (req, res) => {
     let { gender = "", speciality = "", qualification = {} } = req.body;
-    const { userId = 1 } = req.params;
+    const {userDetails: {userId} = {}} = req;
     try {
       console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
 
@@ -994,7 +989,7 @@ class UserController extends Controller {
   doctorClinicRegister = async (req, res) => {
     let { clinics = [] } = req.body;
 
-    const { userId: user_id } = req.params;
+    const {userDetails: {userId: user_id} = {}} = req;
     try {
       // let user= await userService.getUserById(user_id);
       let doctor = await doctorService.getDoctorByUserId(user_id);

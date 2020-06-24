@@ -38,8 +38,10 @@ class AddAppointment extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { addAppointment } = this.props;
+    const { addAppointment, getAppointments, payload: { patient_id }, patients } = this.props;
     const { formRef = {}, formatMessage } = this;
+
+    const {basic_info: {user_id} = {}} = patients[patient_id] || {};
     const {
       props: {
         form: { validateFields },
@@ -61,7 +63,7 @@ class AddAppointment extends Component {
         const data = {
           // todo: change participant one with patient from store
           participant_two: {
-            id: "2",
+            id: user_id,
             category: "patient",
           },
           date,
@@ -87,6 +89,7 @@ class AddAppointment extends Component {
               );
           } else if(status === true) {
             message.success(formatMessage(messages.add_appointment_success));
+            getAppointments(user_id);
           } else {
             message.warn(errorMessage);
           }

@@ -101,6 +101,7 @@ class AddMedicationReminder extends Component {
     const {
       // form: { validateFields },
       addMedicationReminder,
+      getMedications,
       payload: {patient_id} = {}
     } = this.props;
 
@@ -164,6 +165,7 @@ class AddMedicationReminder extends Component {
           const {status, payload: {message: msg} = {}} = response;
           if(status === true) {
             message.success(msg);
+            getMedications(patient_id);
           } else {
             message.error(msg);
           }

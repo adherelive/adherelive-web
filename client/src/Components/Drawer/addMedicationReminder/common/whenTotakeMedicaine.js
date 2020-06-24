@@ -381,6 +381,8 @@ class WhenToTakeMedication extends Component {
     // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
+    console.log("627868362783 selected_timing ---. ", this.state.selected_timing);
+
     // const { getInitialValue } = this;
 
     return (

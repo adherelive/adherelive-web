@@ -118,6 +118,107 @@ class AppointmentController extends Controller {
     }
   };
 
+  update = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const { params: { appointment_id } = {}, body, userDetails } = req;
+      const {
+        participant_two,
+        description = "",
+        date,
+        organizer = {},
+        start_time,
+        end_time,
+        treatment = "",
+        // participant_one_type = "",
+        // participant_one_id = "",
+      } = body;
+      console.log("====================> ", userDetails);
+      const { userId, userData: { category } = {} } = userDetails || {};
+      const { id: participant_two_id, category: participant_two_type } =
+        participant_two || {};
+
+        Logger.debug("Start date", date);
+      const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
+        date,
+        start_time,
+        end_time, appointment_id
+      );
+
+      Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
+
+      if (getAppointmentForTimeSlot.length > 0) {
+        return raiseClientError(
+          res,
+          422,
+          {
+            error_type: "slot_present",
+          },
+          `Appointment Slot already present between`
+        );
+      }
+
+      const appointment_data = {
+        participant_one_type: category,
+        participant_one_id: userId,
+        participant_two_type,
+        participant_two_id,
+        organizer_type:
+          Object.keys(organizer).length > 0 ? organizer.category : category,
+        organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+        description,
+        start_date: moment(date),
+        end_date: moment(date),
+        start_time,
+        end_time,
+        details: {
+          treatment,
+        },
+      };
+
+      const appointment = await appointmentService.updateAppointment(appointment_id,
+        appointment_data
+      );
+
+      const updatedAppointmentDetails = await appointmentService.getAppointment({id: appointment_id});
+      console.log("[ APPOINTMENTS ] appointments ", updatedAppointmentDetails);
+
+      const appointmentApiData = await AppointmentWrapper(updatedAppointmentDetails);
+
+      // const eventScheduleData = {
+      //   event_type: EVENT_TYPE.APPOINTMENT,
+      //   event_id: appointmentApiData.getAppointmentId(),
+      //   details: appointmentApiData.getExistingData(),
+      //   status: EVENT_STATUS.PENDING,
+      //   start_time,
+      //   end_time,
+      // };
+
+      // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
+      // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+
+      // TODO: schedule event and notifications here
+      // await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
+
+      // response
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          appointments: {
+            [appointmentApiData.getAppointmentId()]: {
+              ...appointmentApiData.getBasicInfo(),
+            },
+          },
+        },
+        "appointment updated successfully"
+      );
+    } catch(error) {
+      Logger.debug("update 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
   getAppointmentForPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -147,6 +248,29 @@ class AppointmentController extends Controller {
           },
         },
         `appointment data for patient: ${id} fetched successfully`
+      );
+      // } else {
+      // }
+    } catch (error) {
+      Logger.debug("500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  delete = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { params: { appointment_id } = {}, userDetails: { userId } = {} } = req;
+
+      const appointmentDetails = await appointmentService.deleteAppointment(appointment_id);
+
+      Logger.debug("appointmentDetails --> ", appointmentDetails);
+
+      return raiseSuccess(
+        res,
+        200,
+        {},
+        `appointment deleted successfully`
       );
       // } else {
       // }

@@ -4,19 +4,22 @@ export const TABLE_COLUMN = {
   ORGANIZER: {
     key: "ORGANIZER",
     dataIndex: "ORGANIZER",
-    width: 100
+    // width: 100
   },
   DATE: {
     key: "DATE",
-    dataIndex: "DATE"
+    dataIndex: "DATE",
+    // width: 100
   },
   TIMING: {
     key: "TIMING",
-    dataIndex: "TIMING"
+    dataIndex: "TIMING",
+    // width: 150
   },
   DESCRIPTION: {
     key: "DESCRIPTION",
-    dataIndex: "DESCRIPTION"
+    dataIndex: "DESCRIPTION",
+    // width: 100
   }
 };
 
@@ -25,20 +28,13 @@ export const formatAppointmentTableData = data => {
 
   const {
     basic_info: { start_date, details: { start_time, end_time } = {} },
-    organizer_id,
-    organizer_type
+    organizer: {id: organizer_id, category} = {}
   } = appointments[id] || {};
 
-  const appointmentData = {
-    date: start_date,
-    start_time,
-    end_time
-  };
-
-  const userData = getUserDetails({type: organizer_type, id: organizer_id, doctors, patients, care_takers});
+  const userData = getUserDetails({type: category, id: organizer_id, doctors, patients, care_takers});
 
   return {
-    appointmentData,
+    appointmentData : appointments[id],
     userData
   };
 };

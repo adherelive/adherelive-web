@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import AddMedicationReminder from "../../Components/Drawer/addMedicationReminder/medicationsReminder";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
-import {addMedicationReminder} from "../../modules/medications";
+import {getMedications, addMedicationReminder} from "../../modules/medications";
 import {getMedicationDetails} from "../../modules/otherDetails";
 import {searchMedicine} from "../../modules/medicines";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
@@ -33,6 +33,7 @@ const mapDispatchToProps = dispatch => {
     addMedicationReminder: data => dispatch(addMedicationReminder(data)),
     getMedicationDetails: () => dispatch(getMedicationDetails()),
     searchMedicine: data => dispatch(searchMedicine(data)),
+    getMedications: (id) => dispatch(getMedications(id)),
   };
 };
 

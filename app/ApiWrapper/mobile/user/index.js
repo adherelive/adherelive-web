@@ -30,12 +30,12 @@ class MUserWrapper extends BaseUser {
         email,
         mobile_number
       },
-      sign_in_type,
-      category,
-      activated_on,
       verified,
       onboarded,
-      onboarding_status
+      onboarding_status,
+      sign_in_type,
+      category,
+      activated_on
     };
   };
 }

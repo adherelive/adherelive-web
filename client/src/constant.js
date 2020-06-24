@@ -12,6 +12,12 @@ export const PATH = {
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"
+  },
+  ADMIN: {
+    DOCTORS: {
+      ROOT: "/doctors",
+      DETAILS: "/doctors/:id"
+    }
   }
 };
 
@@ -128,7 +134,9 @@ export const PATIENT_BOX_CONTENT = {
 
 export const DRAWER = {
   ADD_MEDICATION_REMINDER: "ADD_MEDICATION_REMINDER",
+  EDIT_MEDICATION: "EDIT_MEDICATION",
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
+  EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
   PATIENT_DETAILS: "PATIENT_DETAILS",
 };
 
@@ -138,7 +146,8 @@ export const USER_CATEGORY = {
   PROGRAM_ADMIN: "programAdmin",
   CARE_TAKER: "care_taker",
   CHARITY_ADMIN: "charityAdmin",
-  PHARMACY_ADMIN: "pharmacyAdmin"
+  PHARMACY_ADMIN: "pharmacyAdmin",
+  ADMIN:"admin",
 };
 
 export const ACTIVITY_TYPE = {

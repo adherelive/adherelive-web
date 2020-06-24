@@ -1,0 +1,243 @@
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { hasErrors } from "../../../Helper/validation";
+import moment from "moment";
+
+import Drawer from "antd/es/drawer";
+import Form from "antd/es/form";
+import message from "antd/es/message";
+import Button from "antd/es/button";
+import confirm from "antd/es/modal/confirm";
+
+import messages from "./message";
+import EditAppointmentForm from "./form";
+import Footer from "../footer";
+import CalendarTimeSelecton from "./calender";
+
+class EditAppointment extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: true,
+      disabledSubmit: true,
+    };
+
+    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
+      EditAppointmentForm
+    );
+  }
+
+  onFormFieldChanges = (props, allvalues) => {
+    const {
+      form: { getFieldsError, isFieldsTouched },
+    } = props;
+    const isError = hasErrors(getFieldsError());
+    const { disabledSubmit } = this.state;
+    if (disabledSubmit !== isError && isFieldsTouched()) {
+      this.setState({ disabledSubmit: isError });
+    }
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const {
+      updateAppointment,
+      payload: { id } = {},
+      patients,
+      payload: { patient_id } = {},
+    } = this.props;
+    const { formRef = {}, formatMessage } = this;
+    const {
+      props: {
+        form: { validateFields },
+      },
+    } = formRef;
+
+    const { basic_info: { user_id } = {} } = patients[patient_id] || {};
+
+    validateFields(async (err, values) => {
+      if (!err) {
+        console.log("VALUES --> ", values);
+        const {
+          patient = {},
+          date,
+          start_time,
+          end_time,
+          description,
+          treatment,
+        } = values;
+
+        const data = {
+          // todo: change participant one with patient from store
+          id,
+          participant_two: {
+            id: user_id,
+            category: "patient",
+          },
+          date,
+          start_time,
+          end_time,
+          description,
+          treatment,
+        };
+
+        try {
+          const response = await updateAppointment(data);
+          const {
+            status,
+            statusCode: code,
+            payload: {
+              message: errorMessage = "",
+              error,
+              error: { error_type = "" } = {},
+            },
+          } = response || {};
+
+          if (code === 422 && error_type === "slot_present") {
+            message.warn(
+              `${errorMessage} range: ${moment(start_time).format(
+                "LT"
+              )} - ${moment(end_time).format("LT")}`
+            );
+          } else if (status === true) {
+            message.success(formatMessage(messages.add_appointment_success));
+          } else {
+            message.warn(errorMessage);
+          }
+
+          console.log("add appointment response -----> ", response);
+        } catch (error) {
+          console.log("ADD APPOINTMENT UI ERROR ---> ", error);
+        }
+      }
+    });
+  };
+
+  formatMessage = (data) => this.props.intl.formatMessage(data);
+
+  onClose = () => {
+    const { close } = this.props;
+    close();
+  };
+
+  setFormRef = (formRef) => {
+    this.formRef = formRef;
+    if (formRef) {
+      this.setState({ formRef: true });
+    }
+  };
+
+  warnNote = () => {
+    return (
+      <div className="pt50">
+        <p>
+          <span className="red">{"Note"}</span>
+          {" : This delete is irreversible"}
+        </p>
+      </div>
+    );
+  };
+
+  handleDelete = e => {
+    e.preventDefault();
+    const {payload: {id, patient_id} = {}, patients} = this.props;
+    const { warnNote } = this;
+
+    const {basic_info: {first_name, middle_name, last_name, user_id} = {}} = patients[patient_id] || {};
+
+    confirm({
+      title: `Are you sure you want to delete the appointment with ${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? last_name : ""}?`,
+      content: (
+        <div>
+          {warnNote()}
+        </div>
+      ),
+      onOk: async () => {
+        this.setState({ loading: true });
+        const { deleteAppointment, getAppointments } = this.props;
+        const response = await deleteAppointment(id);
+        const {status} = response || {};
+        if(status === true) {
+          getAppointments(user_id);
+        }
+      },
+      onCancel() {}
+    });
+  };
+
+  getDeleteButton = () => {
+    const { handleDelete } = this;
+    const { loading } = this.props;
+    return (
+      <Button
+        type="danger"
+        ghost
+        className="fs14 no-border style-delete"
+        onClick={handleDelete}
+        loading={loading}
+      >
+        <div className="flex align-center delete-text">
+          <div className="ml4">Delete</div>
+        </div>
+      </Button>
+    );
+  };
+
+  render() {
+    const { visible = true } = this.props;
+    const { disabledSubmit } = this.state;
+    const {
+      onClose,
+      formatMessage,
+      setFormRef,
+      handleSubmit,
+      FormWrapper,
+      getDeleteButton,
+    } = this;
+
+    const submitButtonProps = {
+      disabled: disabledSubmit,
+      // loading: loading && !deleteLoading
+    };
+
+    if (visible !== true) {
+      return null;
+    }
+
+    return (
+      <Fragment>
+        <Drawer
+          placement="right"
+          // closable={false}
+          onClose={onClose}
+          visible={visible} // todo: change as per prop -> "visible", -- WIP --
+          width={`45%`}
+          title={formatMessage(messages.edit_appointment)}
+          // headerStyle={{
+          //     display:"flex",
+          //     justifyContent:"space-between",
+          //     alignItems:"center"
+          // }}
+        >
+          {/* <div className="flex direction-row justify-space-between"> */}
+          <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
+          {/* <CalendarTimeSelecton 
+                className="calendar-section wp60"
+            /> */}
+          {/* </div> */}
+
+          <Footer
+            className="flex justify-space-between"
+            onSubmit={handleSubmit}
+            onClose={onClose}
+            submitText={formatMessage(messages.submit_text)}
+            submitButtonProps={submitButtonProps}
+            cancelComponent={getDeleteButton()}
+          />
+        </Drawer>
+      </Fragment>
+    );
+  }
+}
+
+export default injectIntl(EditAppointment);

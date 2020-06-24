@@ -1,22 +1,25 @@
 import AuthRoute from "../../Routes/Auth";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import {signOut} from "../../modules/auth";
+import { signOut } from "../../modules/auth";
 
-
-const mapStateToProps = state => {
-    const { auth, users } = state;
-        console.log('AUTH IN AUTH CONTAINERRR',auth,users);
-        const{authenticated_user}=auth
-    return {
-        authenticated_user,users
-    };
-};
-
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = (state) => {
+  const { auth, users } = state;
+  console.log("AUTH IN AUTH CONTAINERRR", auth, users);
+  const { authenticated_user, authenticated_category } = auth;
   return {
-      logOut: () => dispatch(signOut()),
+    authenticated_user,
+    users,
+    authenticated_category,
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AuthRoute));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logOut: () => dispatch(signOut()),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AuthRoute)
+);
