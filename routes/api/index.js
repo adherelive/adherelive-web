@@ -45,6 +45,7 @@ router.use(async function(req, res, next) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {userId = null} = decodedAccessToken || {};
       let user = await userService.getUser(userId);
+      console.log("------------------+++++++++++++++++++++------------------", userId, user);
       if (user) {
         req.userDetails = {
           exists: true,

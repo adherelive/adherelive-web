@@ -30,12 +30,14 @@ class DoctorController extends Controller {
       let doctorApiDetails = {};
       let userApiDetails = {};
       let userIds = [];
+      let doctorIds = [];
 
       await doctors.forEach(async (doctor) => {
         const doctorWrapper = await DoctorWrapper(doctor);
         doctorApiDetails[
           doctorWrapper.getDoctorId()
         ] = doctorWrapper.getBasicInfo();
+        doctorIds.push(doctorWrapper.getDoctorId());
         userIds.push(doctorWrapper.getUserId());
       });
 
@@ -58,6 +60,8 @@ class DoctorController extends Controller {
           doctors: {
             ...doctorApiDetails,
           },
+          user_ids: userIds,
+          doctor_ids: doctorIds
         },
         "doctor details fetched successfully"
       );

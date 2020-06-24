@@ -4,46 +4,56 @@ import {
   Route,
   Switch,
   Redirect,
-  useLocation
+  useLocation,
 } from "react-router-dom";
 import SideMenu from "../../Components/Sidebar";
 import BlankState from "../../Containers/BlankState";
-import { PATH } from "../../constant";
-
-
+import { PATH, USER_CATEGORY } from "../../constant";
 
 const Doctors = lazy(() =>
-  import(
-    /* webpackChunkName: "DoctorsRouter" */ "../Doctors"
-  )
+  import(/* webpackChunkName: "DoctorsRouter" */ "../Doctors")
+);
+
+const Admin = lazy(() =>
+  import(/* webpackChunkName: "AdminRouter" */ "../Admin")
 );
 
 const Dashboard = lazy(() =>
   import(/* webpackChunkName: "Dashboard" */ "../../Containers/Dashboard")
 );
 
-
 export default class Authenticated extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       // redirecting: this.props.authRedirection
     };
   }
 
-  componentDidMount() {
-
-
-  }
+  componentDidMount() {}
 
   render() {
     const { redirecting } = this.state;
-    const { authRedirection, authenticated_user, users } = this.props;
+    const {
+      authRedirection,
+      authenticated_user,
+      authenticated_category,
+      users,
+    } = this.props;
     return (
       <Fragment>
-        <Doctors {...this.props} />
-      
+        <div className="App flex" style={{ overflow: "hidden" }}>
+          <SideMenu {...this.props} />
+          <div className="container">
+            {authenticated_category === USER_CATEGORY.DOCTOR && (
+              <Doctors {...this.props} />
+            )}
+            {authenticated_category === USER_CATEGORY.ADMIN && (
+              <Admin {...this.props} />
+            )}
+          </div>
+        </div>
       </Fragment>
     );
   }

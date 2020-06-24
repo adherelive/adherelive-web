@@ -48,7 +48,7 @@ router.post(
 );
 
 router.post(
-    "/doctor-profile-registration/:userId",
+    "/doctor-profile-registration",
     userController.doctorProfileRegister
 );
 
