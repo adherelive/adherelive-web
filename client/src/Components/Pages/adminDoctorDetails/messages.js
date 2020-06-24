@@ -71,6 +71,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Verify"
     },
+    degree_text: {
+        id: "app.admin.doctors.degree.text",
+        description: "",
+        defaultMessage: "Degree"
+    }
 });
 
 export default messages;

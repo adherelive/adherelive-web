@@ -91,7 +91,11 @@ class AdminDoctorDetails extends Component {
           <div className="wp40">
             {profile_pic ? (
               <div className="w200 h200">
-                <img src={profile_pic} alt="default user photo" className="w200 h200"/>
+                <img
+                  src={profile_pic}
+                  alt="default user photo"
+                  className="w200 h200"
+                />
               </div>
             ) : (
               <div className="w200 h200 bg-dark-grey text-white flex align-center justify-center">
@@ -180,18 +184,56 @@ class AdminDoctorDetails extends Component {
       id,
       doctors,
       doctor_qualifications,
-      doctor_qualification_ids
+      doctor_qualification_ids = []
     } = this.props;
     const { formatMessage } = this;
 
-    return (
-      <div className="mt20 mb20 wp100 flex direction-column">
-        <div className="fs20 fw700 mb14">
-          {formatMessage(messages.qualification_details_text)}
+    return doctor_qualification_ids.map(qualification_id => {
+      const { basic_info: { degree, college, year } = {} } =
+        doctor_qualifications[qualification_id] || {};
+
+      return (
+        <div className="mt20 mb20 wp100 flex direction-column">
+          <div className="fs20 fw700 mb14">
+            {formatMessage(messages.qualification_details_text)}
+          </div>
+          <div className="wp100 p20 flex direction-row justify-space-between align-center border-box">
+            <div className="wp100 flex align-center flex-wrap">
+              {/*degree_name*/}
+              <div className="wp20 mt16 mb16 mr16">
+                <div className="fs16 fw700">
+                  {formatMessage(messages.degree_text)}
+                </div>
+                <div className="fs14 fw500">
+                  {degree ? degree : TABLE_DEFAULT_BLANK_FIELD}
+                </div>
+              </div>
+
+              {/*college*/}
+              {/*<div className="wp20 mt16 mb16 mr16">*/}
+              {/*  <div className="fs16 fw700">*/}
+              {/*    {formatMessage(messages.college_text)}*/}
+              {/*  </div>*/}
+              {/*  <div className="fs14 fw500">*/}
+              {/*    {college ? college : TABLE_DEFAULT_BLANK_FIELD}*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+
+              {/*/!*year*!/*/}
+              {/*<div className="wp20 mt16 mb16 mr16">*/}
+              {/*  <div className="fs16 fw700">*/}
+              {/*    {formatMessage(messages.year_text)}*/}
+              {/*  </div>*/}
+              {/*  <div className="fs14 fw500">*/}
+              {/*    {year ? year : TABLE_DEFAULT_BLANK_FIELD}*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+
+            </div>
+          </div>
         </div>
-        <div className="wp100 p20 flex direction-row justify-space-between align-center border-box"></div>
-      </div>
-    );
+      );
+    });
   };
 
   getDoctorClinicDetails = () => {
@@ -226,7 +268,7 @@ class AdminDoctorDetails extends Component {
   };
 
   handleVerify = async e => {
-      console.log("12983712893721 here");
+    console.log("12983712893721 here");
     e.preventDefault();
     const { verifyDoctor, id } = this.props;
     try {

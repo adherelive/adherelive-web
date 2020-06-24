@@ -142,7 +142,7 @@ class AppointmentController extends Controller {
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
         date,
         start_time,
-        end_time
+        end_time, appointment_id
       );
 
       Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot);

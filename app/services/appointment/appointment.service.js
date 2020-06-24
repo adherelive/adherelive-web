@@ -57,10 +57,11 @@ class AppointmentService {
     }
   };
 
-  checkTimeSlot = async (start_date, start_time, end_time) => {
+  checkTimeSlot = async (start_date, start_time, end_time, appointment_id = null) => {
     try {
       const appointments = await Appointments.findAll({
         where: {
+          [Op.not]: [{id: [appointment_id]}],
           [Op.or]: [
             {
               start_date: {
