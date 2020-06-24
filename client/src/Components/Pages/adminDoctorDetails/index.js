@@ -91,7 +91,7 @@ class AdminDoctorDetails extends Component {
           <div className="wp40">
             {profile_pic ? (
               <div className="w200 h200">
-                <img src={profile_pic} alt="default user photo" />
+                <img src={profile_pic} alt="default user photo" className="w200 h200"/>
               </div>
             ) : (
               <div className="w200 h200 bg-dark-grey text-white flex align-center justify-center">

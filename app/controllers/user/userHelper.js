@@ -94,12 +94,14 @@ export const uploadImageS3= async(userId ,file)=>{
       "Content-Type":
           "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   };
-  const fileUrl = folder+ "/" +file_name;
+  const fileUrl = "/" +file_name;
   await minioService.saveBufferObject(file.buffer, file_name, metaData);
 
   // console.log("file urlll: ", process.config.minio.MINI);
   const file_link = process.config.minio.MINIO_S3_HOST +"/" + process.config.minio.MINIO_BUCKET_NAME + fileUrl;
   let files = [file_link];
+
+  console.log("((((((((((((__________________________", file_link, fileUrl);
  return files;
 }catch(error){
     console.log(" UPLOAD  CATCH ERROR ", error);

@@ -847,23 +847,8 @@ class UserController extends Controller {
       let qualification_id = 0;
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
-      // let{ degree = '', year = '', college = '' } =JSON.parse(qualification);
-      // console.log('BODYYYYYYYYYYYYYYYY1111111=================>', degree, year, college);
-      // let qualificationOfDoctor = await qualificationService.getQualificationByData(doctor_id,degree,year,college);
-      // console.log(' QUALIFICATIONNNN OF DOCTORRRR',qualificationOfDoctor);
-      // // let qualificationOfDoctorExist=qualificationOfDoctor?qualificationOfDoctor.length:false;
-      // if (!qualification_id && !qualificationOfDoctor) {
-      //   let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
-      //  console.log('DOCTORRRR QUALIFICATIONNNN',docQualification);
-      //   qualification_id = docQualification.get('id');
-      //   let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // } else if(!qualification_id) {
-      //   qualification_id = qualificationOfDoctor.get('id');
-      //   let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // }else{
-      // qualification_id=qualificationId;
-      // let document = await documentService.addDocument({ parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: files[0] });
-      // }
+
+      Logger.debug("files",files);
       return this.raiseSuccess(
         res,
         200,
