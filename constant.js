@@ -346,7 +346,8 @@ export const DB_TABLES = {
   EMAIL_LOGGER: "email_logger",
   DOCTOR_QUALIFICATIONS: "doctor_qualifications",
   DOCTOR_CLINICS: "doctor_clinics",
-  UPLOAD_DOCUMENTS: "upload_documents"
+  UPLOAD_DOCUMENTS: "upload_documents",
+  DOCTOR_REGISTRATIONS: "doctor_registrations",
 };
 
 export const ARTICLE_TYPE = {
