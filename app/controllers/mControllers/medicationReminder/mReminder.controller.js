@@ -15,7 +15,7 @@ import {
 } from "../../../../constant";
 import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
-import medicineService from "../../../services/medicine/medicine.service";;
+import medicineService from "../../../services/medicine/medicine.service";
 
 const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -66,7 +66,7 @@ class MobileMReminderController extends Controller {
       // const {text, time} = MEDICATION_TIMING[when_to_take] || {};
       // const whenToTake = `${text}(${time})`;
 
-      const repeatDays = repeat_days.map(day => day.substring(0,3));
+      const repeatDays = repeat_days.map(day => day.substring(0, 3));
 
       // const medicineDetails = await medicineService.getMedicineByData({id: medicine_id});
 
@@ -152,11 +152,13 @@ class MobileMReminderController extends Controller {
   };
 
   getMedicationForId = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {params: {id} = {}} = req;
+      const { params: { id } = {} } = req;
 
-      const medicationDetails = await medicationReminderService.getMedicationsForParticipant({participant_id : id});
+      const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+        { participant_id: id }
+      );
 
       // console.log("712367132 medicationDetails --> ", medicationDetails);
       Logger.debug("medication details", medicationDetails);
@@ -167,11 +169,16 @@ class MobileMReminderController extends Controller {
 
       await medicationDetails.forEach(async medication => {
         const medicationWrapper = await MobileMReminderWrapper(medication);
-        medicationApiData[medicationWrapper.getMReminderId()] = medicationWrapper.getBasicInfo();
+        medicationApiData[
+          medicationWrapper.getMReminderId()
+        ] = medicationWrapper.getBasicInfo();
         medicineId.push(medicationWrapper.getMedicineId());
       });
 
-      Logger.debug("medicineId", medicineId.filter(id => !medicineId.includes(id)));
+      Logger.debug(
+        "medicineId",
+        medicineId.filter(id => !medicineId.includes(id))
+      );
 
       const medicineData = await medicineService.getMedicineByData({
         id: medicineId
@@ -180,7 +187,7 @@ class MobileMReminderController extends Controller {
       Logger.debug("medicineData", medicineData);
 
       const medicineWrapper = await MedicineApiWrapper(medicineData);
-      
+
       return raiseSuccess(
         res,
         200,
@@ -188,11 +195,11 @@ class MobileMReminderController extends Controller {
           medications: {
             ...medicationApiData
           },
-          ...medicineWrapper.getBasicInfoBulk(),
+          ...medicineWrapper.getBasicInfoBulk()
         },
         "medications fetched successfully"
       );
-    } catch(error) {
+    } catch (error) {
       Logger.debug("500 error ", error);
       return raiseServerError(res);
     }
@@ -219,11 +226,9 @@ class MobileMReminderController extends Controller {
         participant_id
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
-      const medicineData = await medicineService.getMedicineByData({
-        id: medicine_id
-      });
+      const medicineData = await medicineService.getMedicineById(medicine_id);
 
-      Logger.debug("medicineDetails --> ", medicineDetails);
+      Logger.debug("medicineDetails --> ", medicineData);
 
       const medicineApiWrapper = await MedicineApiWrapper(medicineData);
 
@@ -254,12 +259,15 @@ class MobileMReminderController extends Controller {
         id
       );
 
-
-      const updatedMedicationDetails = await medicationReminderService.getMedication({participant_id});
+      const updatedMedicationDetails = await medicationReminderService.getMedication(
+        { id }
+      );
 
       Logger.debug("updatedMedicationDetails --> ", updatedMedicationDetails);
 
-      const medicationApiDetails = await MobileMReminderWrapper(updatedMedicationDetails);
+      const medicationApiDetails = await MobileMReminderWrapper(
+        updatedMedicationDetails
+      );
 
       // const eventScheduleData = {
       //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -276,12 +284,12 @@ class MobileMReminderController extends Controller {
         {
           medications: {
             [medicationApiDetails.getMReminderId()]: {
-                ...medicationApiDetails.getBasicInfo()
+              ...medicationApiDetails.getBasicInfo()
             }
           },
           medicines: {
             [medicineApiWrapper.getMedicineId()]: {
-              ...medicineApiWrapper.getBasicInfoBulk()
+              ...medicineApiWrapper.getBasicInfo()
             }
           }
         },
@@ -291,27 +299,29 @@ class MobileMReminderController extends Controller {
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
       console.log("update m-reminder error ----> ", error);
-      return this.raiseServerError(res, 500, error.message, "something went wrong");
+      return this.raiseServerError(
+        res,
+        500,
+        error.message,
+        "something went wrong"
+      );
     }
   };
 
   delete = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {params: {id} = {}} = req;
+      const { params: { id } = {} } = req;
 
-      const medicationDetails = await medicationReminderService.deleteMedication(id);
+      const medicationDetails = await medicationReminderService.deleteMedication(
+        id
+      );
 
       // console.log("712367132 medicationDetails --> ", medicationDetails);
       Logger.debug("medication details", medicationDetails);
-      
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        "medication deleted successfully"
-      );
-    } catch(error) {
+
+      return raiseSuccess(res, 200, {}, "medication deleted successfully");
+    } catch (error) {
       return raiseServerError(res);
     }
   };
