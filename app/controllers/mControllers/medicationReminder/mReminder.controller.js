@@ -219,9 +219,7 @@ class MobileMReminderController extends Controller {
         participant_id
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
-      const medicineData = await medicineService.getMedicineByData({
-        id: medicine_id
-      });
+      const medicineData = await medicineService.getMedicineById(medicine_id);
 
       Logger.debug("medicineDetails --> ", medicineDetails);
 
@@ -255,7 +253,7 @@ class MobileMReminderController extends Controller {
       );
 
 
-      const updatedMedicationDetails = await medicationReminderService.getMedication({participant_id});
+      const updatedMedicationDetails = await medicationReminderService.getMedication({id});
 
       Logger.debug("updatedMedicationDetails --> ", updatedMedicationDetails);
 

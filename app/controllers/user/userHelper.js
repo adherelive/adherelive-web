@@ -90,12 +90,12 @@ export const uploadImageS3= async(userId ,file)=>{
     // const file_name = hash.substring(4) + "_Education_"+fileExt;
     const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
     
-    const metaData = {
-      "Content-Type":
-          "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  };
+  //   const metaData = {
+  //     "Content-Type":
+  //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  // };
   const fileUrl = "/" +file_name;
-  await minioService.saveBufferObject(file.buffer, file_name, metaData);
+  await minioService.saveBufferObject(file.buffer, file_name);
 
   // console.log("file urlll: ", process.config.minio.MINI);
   const file_link = process.config.minio.MINIO_S3_HOST +"/" + process.config.minio.MINIO_BUCKET_NAME + fileUrl;

@@ -9,6 +9,20 @@ class MobileMedicineWrapper extends BaseMedicine {
         this._objectName = OBJECT_NAME.MEDICINE;
     }
 
+    getBasicInfo = () => {
+        const {_data} = this;
+        const {id, name, type, description} = _data || {};
+        return {
+            basic_info: {
+                id,
+                name,
+                type,
+                description
+            }
+        };
+    };
+
+
     getBasicInfoBulk = () => {
         const {_data, getExistingData, setCurrentData, _objectName} = this;
 

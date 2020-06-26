@@ -11,6 +11,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Basic Details"
     },
+    profile_pic_text: {
+        id: "app.admin.doctors.details.profile.pic.text",
+        description: "",
+        defaultMessage: "Profile Picture"
+    },
     name_text: {
         id: "app.admin.doctors.details.name.text",
         description: "",
@@ -75,6 +80,81 @@ const messages = defineMessages({
         id: "app.admin.doctors.degree.text",
         description: "",
         defaultMessage: "Degree"
+    },
+    college_text: {
+        id: "app.admin.doctors.college.text",
+        description: "",
+        defaultMessage: "College"
+    },
+    year_text: {
+        id: "app.admin.doctors.year.text",
+        description: "",
+        defaultMessage: "Year"
+    },
+    location_text: {
+        id: "app.admin.doctors.location.text",
+        description: "",
+        defaultMessage: "Location"
+    },
+    open_between_text: {
+        id: "app.admin.doctors.open.between.text",
+        description: "",
+        defaultMessage: "Open Between"
+    },
+    upload_document_text: {
+        id: "app.admin.doctors.upload.document.text",
+        description: "",
+        defaultMessage: "Documents"
+    },
+    upload_document_particular_text: {
+        id: "app.admin.doctors.upload.document.particular.text",
+        description: "",
+        defaultMessage: "Document"
+    },
+    qualification_text: {
+        id: "app.admin.doctors.qualification.text",
+        description: "",
+        defaultMessage: "Qualification"
+    },
+    clinic_text: {
+        id: "app.admin.doctors.clinic.text",
+        description: "",
+        defaultMessage: "Clinic"
+    },
+    registration_details_text: {
+        id: "app.admin.doctors.registration.details.text",
+        description: "",
+        defaultMessage: "Registration Details"
+    },
+    registration_text: {
+        id: "app.admin.doctors.registration.text",
+        description: "",
+        defaultMessage: "Registration"
+    },
+    registration_number_text: {
+        id: "app.admin.doctors.registration.number.text",
+        description: "",
+        defaultMessage: "Registration Number"
+    },
+    registration_council_text: {
+        id: "app.admin.doctors.registration.council.text",
+        description: "",
+        defaultMessage: "Council"
+    },
+    registration_year_text: {
+        id: "app.admin.doctors.registration.year.text",
+        description: "",
+        defaultMessage: "Year"
+    },
+    registration_start_date_text: {
+        id: "app.admin.doctors.registration.start.date.text",
+        description: "",
+        defaultMessage: "Start Date"
+    },
+    registration_expiry_date_text: {
+        id: "app.admin.doctors.registration.expiry.date.text",
+        description: "",
+        defaultMessage: "Expiry Date"
     }
 });
 

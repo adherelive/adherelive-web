@@ -13,8 +13,10 @@ class DoctorTable extends Component {
     }
 
     componentDidMount() {
-        const {getAllDoctors} = this.props;
-        getAllDoctors();
+        const {getAllDoctors, doctor_ids} = this.props;
+        if(doctor_ids.length === 0) {
+            getAllDoctors();
+        }
     }
 
     onSelectChange = selectedRowKeys => {
@@ -80,10 +82,10 @@ class DoctorTable extends Component {
                 })}
                 dataSource={getDataSource()}
                 scroll={{ x: 1600 }}
-                // pagination={{ position: pagination_bottom ? "bottom" : "top" }}
-                // pagination={{
-                //   position: "bottom"
-                // }}
+                pagination={{ position: pagination_bottom ? "bottom" : "top" }}
+                pagination={{
+                    position: "bottom"
+                }}
             />
         );
     }

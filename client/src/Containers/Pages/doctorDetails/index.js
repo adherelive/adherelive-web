@@ -7,14 +7,26 @@ import { getDoctorDetails, verifyDoctor } from "../../../modules/doctors";
 // import {DRAWER} from "../../../constant";
 
 const mapStateToProps = state => {
-  const { users = {}, doctors = {}, pages = {} } = state;
+  const {
+    users = {},
+    doctors = {},
+    pages = {},
+    doctor_clinics = {},
+    doctor_qualifications = {},
+    upload_documents = {},
+    doctor_registrations = {}
+  } = state;
   const { qualification_ids = [], clinic_ids = [], doctor_ids = [] } = pages;
   return {
     users,
     doctors,
     qualification_ids,
     clinic_ids,
-    doctor_ids
+    doctor_ids,
+    doctor_clinics,
+    doctor_qualifications,
+    upload_documents,
+    doctor_registrations
   };
 };
 
@@ -30,7 +42,11 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     doctors,
     qualification_ids,
     clinic_ids,
-    doctor_ids
+    doctor_ids,
+    doctor_clinics,
+    doctor_qualifications,
+    upload_documents,
+    doctor_registrations
   } = stateProps;
   const { getDoctorDetails, verifyDoctor } = dispatchProps;
   const { id } = ownProps;
@@ -45,6 +61,10 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     doctor_ids,
     id,
     verifyDoctor,
+    doctor_clinics,
+    doctor_qualifications,
+    upload_documents,
+    doctor_registrations,
     getDoctorDetails: getDoctorAllDetails
   };
 };

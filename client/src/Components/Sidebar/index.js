@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Menu, Tooltip, message } from "antd";
-import { PATH } from "../../constant";
+import {PATH, USER_CATEGORY} from "../../constant";
 
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
@@ -40,13 +40,19 @@ class SideMenu extends Component {
   }
 
   handleItemSelect = ({ selectedKeys }) => {
-    const { history } = this.props;
+    const { history, authenticated_category } = this.props;
+    console.log("19231231237813 authenticated_category --> ", authenticated_category);
     const {handleLogout} = this;
     console.log(selectedKeys);
     switch (selectedKeys[0]) {
       case LOGO:
       case DASHBOARD:
-        history.push(PATH.LANDING_PAGE);
+        if(authenticated_category === USER_CATEGORY.ADMIN) {
+          console.log("91823718937812 here 2");
+          history.push(PATH.ADMIN.DOCTORS.ROOT);
+        } else {
+          history.push(PATH.LANDING_PAGE);
+        }
         break;
       case LOG_OUT:
         handleLogout();

@@ -30,7 +30,7 @@ class DoctorWrapper extends BaseDoctor {
                 middle_name,
                 last_name,
                 address,
-                profile_pic: `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${profile_pic}`
+                profile_pic: profile_pic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${profile_pic}` : profile_pic,
             },
             qualifications,
             activated_on
@@ -51,6 +51,8 @@ class DoctorWrapper extends BaseDoctor {
             activated_on,
             profile_pic,
         } = _data || {};
+
+        console.log("PROFILE PIC ------------------------------------- ", profile_pic);
         return {
             basic_info: {
                 id,
@@ -60,7 +62,7 @@ class DoctorWrapper extends BaseDoctor {
                 middle_name,
                 last_name,
                 address,
-                profile_pic: `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${profile_pic}`
+                profile_pic: profile_pic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${profile_pic}` : ""
             },
             qualifications,
             activated_on

@@ -65,9 +65,9 @@ class Doctors extends Component {
     return (
       <Fragment>
         <Router>
-          {/* <div className="App flex" style={{ overflow: "hidden" }}>
+          <div className="App flex" style={{ overflow: "hidden" }}>
             <SideMenu {...this.props} />
-            <div className="container"> */}
+            <div className="container">
               <Switch>
                 {redirecting && <Redirect to={authRedirection} />}
                 {/* {!onboarded &&category=="doctor" && <Redirect to={PATH.REGISTER_PROFILE} />} */}
@@ -101,8 +101,8 @@ class Doctors extends Component {
 
                 <Route component={Dashboard} />
               </Switch>
-            {/* </div>
-          </div> */}
+            </div>
+          </div>
         </Router>
       </Fragment>
     );

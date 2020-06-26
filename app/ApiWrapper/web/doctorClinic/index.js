@@ -8,11 +8,23 @@ class DoctorClinicWrapper extends BaseDoctorClinic {
 
     getBasicInfo = () => {
         const {_data} = this;
-        const {} = _data || {};
+        const {
+            id,
+            doctor_id,
+            name,
+            location,
+            start_time,
+            end_time
+        } = _data || {};
         return {
             basic_info: {
-
-            }
+                id,
+                doctor_id,
+                name,
+            },
+            location,
+            start_time,
+            end_time
         };
     };
 }

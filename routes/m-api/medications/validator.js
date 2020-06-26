@@ -16,7 +16,8 @@ const medicationReminderFormSchema = Joi.object().keys({
     start_date: Joi.date().required(),
     end_date: Joi.date().required(),
     medication_stage: Joi.string().optional(),
-    medicine_id: Joi.number().required()
+    medicine_id: Joi.number().required(),
+    participant_id: Joi.string().optional().allow("")
 });
 
 const validateStartTime = startTime => {

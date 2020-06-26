@@ -13,6 +13,19 @@ class UploadDocumentService {
       }
     };
 
+    getDocumentById = async id => {
+        try {
+            const documents = await uploadDocumentsModel.findOne({
+                where: {
+                    id
+                }
+            });
+            return documents;
+        } catch(error) {
+            throw error;
+        }
+    };
+
     getDoctorQualificationDocuments = async (parent_type,parent_id) => {
         try {
             const documents = await uploadDocumentsModel.findAll({

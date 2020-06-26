@@ -5,7 +5,7 @@ import {
   Switch,
   Redirect,
   useLocation,
-  withRouter,
+  withRouter
 } from "react-router-dom";
 // import SideMenu from "../../Components/Sidebar";
 // import BlankState from "../../Containers/BlankState";
@@ -20,14 +20,14 @@ class Admin extends Component {
     super(props);
     console.log("PPROPSSS IN DOCTORRRRR ROUTERRR ---->  ", this.props);
     this.state = {
-      redirecting: this.props.authRedirection,
+      redirecting: this.props.authRedirection
     };
   }
 
   componentDidMount() {
     this.setState((prevState, prevProps) => {
       return {
-        redirecting: false,
+        redirecting: false
       };
     });
   }
@@ -36,17 +36,7 @@ class Admin extends Component {
     // const {authRedirection} = this.props;
     const { redirecting = false } = this.state;
     const { authRedirection, authenticated_user, users } = this.props;
-    return (
-      <Fragment>
-        <Router>
-          <Switch>
-            {redirecting && <Redirect to={authRedirection} />}
-
-            <Route path={PATH.ADMIN.DOCTORS.ROOT} component={AdminDoctors} />
-          </Switch>
-        </Router>
-      </Fragment>
-    );
+    return <AdminDoctors {...this.props}/>;
   }
 }
 
