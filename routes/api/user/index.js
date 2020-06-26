@@ -79,6 +79,7 @@ router.post(
     userController.deleteDoctorQualificationDocument,
 );
 
+// REGISTRATION
 router.delete(
     "/registration-document/:registrationId",
     userController.deleteDoctorRegistrationDocument,

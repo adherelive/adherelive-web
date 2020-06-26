@@ -1025,7 +1025,7 @@ class UserController extends Controller {
       );
     } catch (error) {
       Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->", error);
-      return raiseServerError(res, 500, {}, `${error.message}`);
+      return raiseServerError(res);
     }
   };
 

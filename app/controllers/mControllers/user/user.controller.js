@@ -19,6 +19,8 @@ import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MUserWrapper from "../../../ApiWrapper/mobile/user";
 import MDoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
+import MUploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
+import MDoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 
 import Controller from "../../";
 import doctorService from "../../../services/doctors/doctors.service";
@@ -26,6 +28,8 @@ import qualificationService from "../../../services/doctorQualifications/doctorQ
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
+import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
+import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 
 import { doctorQualificationData, uploadImageS3 } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
@@ -42,9 +46,10 @@ import minioService from "../../../../app/services/minio/minio.service";
 import md5 from "js-md5";
 import UserVerifications from "../../../models/userVerifications";
 
+
 const Logger = new Log("MOBILE USER CONTROLLER");
 
-class UserController extends Controller {
+class MobileUserController extends Controller {
   constructor() {
     super();
   }
@@ -701,6 +706,7 @@ class UserController extends Controller {
       registration_council = "",
       registration_year = "",
       qualification_details = [],
+      registration_details = []
     } = req.body;
 
     const { userId: user_id } = req.params;
@@ -770,6 +776,54 @@ class UserController extends Controller {
           quali.destroy();
         }
       }
+
+      // REGISTRATION FOR DOCTOR
+      const registrationsOfDoctor = await registrationService.getRegistrationByDoctorId(doctor_id);
+
+      let newRegistrations = [];
+      for (const item of registration_details) {
+        const {
+          number,
+          council,
+          year,
+          expiry_date,
+          id = 0
+        } = item;
+        console.log("REGISTRATION ITEMMMMMMMMMMMMMMMM", item, id);
+        if (id && id !== "0") {
+          let registration = await registrationService.updateRegistration(
+              { doctor_id, number, year, council, expiry_date },
+              id
+          );
+          newRegistrations.push(parseInt(id));
+        } else {
+          let registration = await registrationService.addRegistration({
+            doctor_id,
+            number,
+            year,
+            council,
+            expiry_date
+          });
+          console.log("REGISTRATION ITEMMMMMMMMMMMMMMMM", registration);
+        }
+      }
+
+      for (let registration of registrationsOfDoctor) {
+        let rId = registration.get("id");
+        if (newRegistrations.includes(rId)) {
+          console.log("REGISTRATION IFFFF", newRegistrations);
+          continue;
+        } else {
+          console.log("REGISTRATION ELSEEEE", newRegistrations);
+          let deleteDocs = await documentService.deleteDocumentsOfQualification(
+              DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+              rId
+          );
+          let register = await registrationService.getRegistrationById(rId);
+          register.destroy();
+        }
+      }
+
       let updatedUser = await userService.updateUser(
         user_data_to_update,
         user_id
@@ -1034,6 +1088,261 @@ class UserController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
+
+  uploadDoctorRegistrationDocuments = async (req, res) => {
+    const {raiseServerError, raiseSuccess} = this;
+    try {
+      const file = req.file;
+      const { userDetails: { userId } = {} } = req;
+      let { qualification = {} } = req.body;
+
+      let files = await uploadImageS3(userId, file);
+
+      Logger.debug("files", files);
+
+      return this.raiseSuccess(
+          res,
+          200,
+          {
+            files: files
+          },
+          "doctor qualification updated successfully"
+      );
+    } catch(error) {
+      Logger.debug("M-API uploadDoctorRegistrationDocuments CATCH ERROR ---->", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updateRegistrationDetails = async (req, res) => {
+    const {raiseServerError, raiseSuccess} = this;
+    try {
+      const {body, userDetails: {userId} = {}} = req;
+      const {gender = "", speciality = "", qualification = {}, registration = {}} = body || {};
+
+      let doctor = await doctorService.getDoctorByUserId(userId);
+      let doctor_id = doctor.get("id");
+
+      if (gender && speciality) {
+        let doctor_data = { gender, speciality };
+        let updatedDoctor = await doctorService.updateDoctor(
+            doctor_data,
+            doctor_id
+        );
+      }
+      let { degree = "", year = "", college = "", id = 0, photos = [] } =
+      qualification || {};
+      let qualification_id = id;
+      let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
+      let parent_id = qualification_id;
+      // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
+      if (!qualification_id) {
+        let docQualification = await qualificationService.addQualification({
+          doctor_id,
+          degree,
+          year,
+          college
+        });
+        qualification_id = docQualification.get("id");
+
+        // if(photos.length>2){
+        //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
+        // }
+
+        for (let photo of photos) {
+          let document = photo;
+          let docExist = await documentService.getDocumentByData(
+              parent_type,
+              parent_id,
+              document
+          );
+
+          // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
+          if (!docExist) {
+            let qualificationDoc = await documentService.addDocument({
+              doctor_id,
+              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+              parent_id: qualification_id,
+              document: photo
+            });
+          }
+        }
+      } else {
+        for (let photo of photos) {
+          let document = photo;
+          let docExist = await documentService.getDocumentByData(
+              parent_type,
+              parent_id,
+              document
+          );
+
+          console.log(
+              "DOCUMENT EXISTTTTTTTTTTTT",
+              id,
+              qualification_id,
+              docExist
+          );
+          if (!docExist) {
+            let qualificationDoc = await documentService.addDocument({
+              doctor_id,
+              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+              parent_id: qualification_id,
+              document: photo
+            });
+          }
+        }
+      }
+
+      // REGISTRATION
+      let { number = "", council = "", year: registration_year = "", expiry_date = "", id: registration_id = 0, photos: registration_photos = [] } =
+      qualification || {};
+      parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
+      parent_id = registration_id;
+
+      if (!registration_id) {
+        let docRegistration = await registrationService.addRegistration({
+          number,
+          council,
+          year: registration_year,
+          expiry_date,
+        });
+
+        for (let photo of photos) {
+          let document = photo;
+          let docExist = await documentService.getDocumentByData(
+              parent_type,
+              parent_id,
+              document
+          );
+
+          if (!docExist) {
+            let qualificationDoc = await documentService.addDocument({
+              doctor_id,
+              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+              parent_id: docRegistration.get("id"),
+              document: photo
+            });
+          }
+        }
+      } else {
+        for (let photo of photos) {
+          let document = photo;
+          let docExist = await documentService.getDocumentByData(
+              parent_type,
+              parent_id,
+              document
+          );
+
+          if (!docExist) {
+            let registrationDoc = await documentService.addDocument({
+              doctor_id,
+              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+              parent_id: registration_id,
+              document: photo
+            });
+          }
+        }
+      }
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            registration_id
+          },
+          "registrations updated successfully"
+      );
+
+    } catch(error) {
+      return raiseServerError(res);
+    }
+  };
+
+  deleteDoctorRegistrationDocument = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+
+    try {
+      const { registrationId = 0 } = req.params;
+      const { document = "" } = req.body;
+      let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
+      let documentToDelete = await documentService.getDocumentByData(
+          parent_type,
+          registrationId,
+          document
+      );
+
+      await documentToDelete.destroy();
+      return raiseSuccess(
+          res,
+          200,
+          {},
+          "doctor registration document deleted successfully"
+      );
+    } catch (error) {
+      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getDoctorRegistrationData = async (req, res) => {
+    const {raiseServerError, raiseSuccess} = this;
+    try {
+      const {userDetails: { userId } = {}} = req;
+
+      const doctor = await doctorService.getDoctorByUserId(userId);
+      // let doctor_id = doctor.get("id");
+
+      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(doctor.get("id"));
+
+      let doctorRegistrationApiDetails = {};
+      let upload_document_ids = [];
+
+      await doctorRegistrationDetails.forEach(async doctorRegistration => {
+        const doctorRegistrationWrapper = await MDoctorRegistrationWrapper(
+            doctorRegistration
+        );
+
+        const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
+
+        await registrationDocuments.forEach(async document => {
+          const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
+          uploadDocumentApiDetails[
+              uploadDocumentWrapper.getUploadDocumentId()
+              ] = uploadDocumentWrapper.getBasicInfo();
+          upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
+        });
+
+
+        doctorRegistrationApiDetails[
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+            ] = {
+          ...doctorRegistrationWrapper.getBasicInfo(),
+          upload_document_ids
+        };
+
+        upload_document_ids = [];
+      });
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            doctor_registrations: {
+              ...doctorRegistrationApiDetails
+            }
+          },
+          "doctor registration data fetched successfully"
+      );
+
+
+    } catch(error) {
+      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---->", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
-export default new UserController();
+export default new MobileUserController();

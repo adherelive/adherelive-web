@@ -43,6 +43,7 @@ router.get(
     mUserController.getDoctorProfileRegisterData,
 );
 
+// REGISTRATION UPDATES IN CONTROLLER
 router.post(
     "/doctor-qualification-registration/:userId",
     mUserController.doctorQualificationRegister
@@ -53,9 +54,21 @@ router.get(
     mUserController.getDoctorQualificationRegisterData,
 );
 
+// REGISTRATION
+router.get(
+    "/doctor-registration",
+    mUserController.getDoctorRegistrationData,
+);
+
 router.post(
     "/delete-qualification-document/:qualificationId",
     mUserController.deleteDoctorQualificationDocument,
+);
+
+// REGISTRATION
+router.delete(
+    "/registration-document/:registrationId",
+    mUserController.deleteDoctorRegistrationDocument,
 );
 
 router.post(
@@ -63,10 +76,23 @@ router.post(
     mUserController.registerQualification
 );
 
+// REGISTRATION
+router.post(
+    "/doctor-registration",
+    mUserController.updateRegistrationDetails
+);
+
 router.post(
     "/upload-qualification-document/:userId",
     upload.single("files"),
     mUserController.uploadDoctorQualificationDocument
+);
+
+// REGISTRATION
+router.post(
+    "/registration-document",
+    upload.single("files"),
+    mUserController.uploadDoctorRegistrationDocuments
 );
 
 router.post(
