@@ -14,6 +14,19 @@ class CarePlanMedicationService {
         }
     };
 
+    deleteCarePlanMedicationByMedicationId = async medication_id => {
+        try {
+          const carePlanMedications = await CarePlanMedication.destroy({
+            where: {
+                medication_id
+            }
+          });
+          return carePlanMedications;
+        } catch(err) {
+          throw err;
+        }
+      };
+
     getSingleCarePlanMedicationByData = async (data) => {
         try {
             console.log("careplan data --> ", data);

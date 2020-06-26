@@ -4,6 +4,10 @@ import scheduleService from "../../../services/events/event.service";
 import {Proxy_Sdk, EVENTS} from "../../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
+import moment from "moment";
+import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
+import carePlanService from "../../../services/carePlan/carePlan.service";
+import {getCarePlanAppointmentIds,getCarePlanMedicationIds,getCarePlanSeverityDetails} from '../carePlans/carePlanHelper'
 
 import Log from "../../../../libs/log";
 
@@ -74,6 +78,131 @@ class MobileAppointmentController extends Controller {
             console.log("[ APPOINTMENTS ] create error ---> ", error);
             return this.raiseServerError(res, 500, error, error.getMessage());
         }
+    };
+
+
+    createCarePlanAppointment = async (req, res) => {
+      const { raiseClientError } = this;
+      try {
+        const{carePlanId: care_plan_id = 0 }=req.params;
+        const { body, userDetails,  } = req;
+        const {
+          participant_two,
+          description = "",
+          date,
+          organizer = {},
+          start_time,
+          end_time,
+          treatment = "",
+          reason=''
+          // participant_one_type = "",
+          // participant_one_id = "",
+        } = body;
+        console.log("====================> ", organizer);
+        console.log("[ APPOINTMENTS ] appointments &&&&&&&&&&&&***", care_plan_id, typeof(care_plan_id));
+        const { userId, userData: { category } = {} } = userDetails || {};
+        const { id: participant_two_id, category: participant_two_type } =
+          participant_two || {};
+  
+  
+        // Logger.debug("Start date", date);
+        const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
+          date,
+          start_time,
+          end_time
+        );
+  
+        // Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
+  
+        if (getAppointmentForTimeSlot.length > 0) {
+          return raiseClientError(
+            res,
+            422,
+            {
+              error_type: "slot_present",
+            },
+            `Appointment Slot already present between`
+          );
+        }
+  
+        const appointment_data = {
+          participant_one_type: category,
+          participant_one_id: userId,
+          participant_two_type,
+          participant_two_id,
+          organizer_type:
+            Object.keys(organizer).length > 0 ? organizer.category : category,
+          organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+          description,
+          start_date: moment(date),
+          end_date: moment(date),
+          start_time,
+          end_time,
+          details: {
+            treatment,
+            reason
+          },
+        };
+  
+        const appointment = await appointmentService.addAppointment(
+          appointment_data
+        );
+  
+        let data_to_create = {
+          care_plan_id:parseInt(care_plan_id),
+          appointment_id: appointment.get('id')
+        }
+  
+        let newAppointment = await carePlanAppointmentService.addCarePlanAppointment(data_to_create);
+  
+        let carePlan= await carePlanService.getCarePlanById(care_plan_id);
+  
+        let carePlanAppointmentIds= await getCarePlanAppointmentIds(care_plan_id);
+        let carePlanMedicationIds = await getCarePlanMedicationIds(care_plan_id);
+        let carePlanSeverityDetails = await getCarePlanSeverityDetails(care_plan_id);
+        const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+        let carePlanApiData = {};
+    
+        carePlanApiData[
+          carePlanApiWrapper.getCarePlanId()
+        ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,carePlanMedicationIds,carePlanAppointmentIds};
+    
+  
+        const appointmentApiData = await new AppointmentWrapper(appointment);
+  
+        const eventScheduleData = {
+          event_type: EVENT_TYPE.APPOINTMENT,
+          event_id: appointmentApiData.getAppointmentId(),
+          details: appointmentApiData.getExistingData(),
+          status: EVENT_STATUS.PENDING,
+          start_time,
+          end_time,
+        };
+  
+        // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
+        // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+  
+        // TODO: schedule event and notifications here
+        await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
+  
+        // response
+        return this.raiseSuccess(
+          res,
+          200,
+          {
+            care_plans: {...carePlanApiData},
+            appointments: {
+              [appointmentApiData.getAppointmentId()]: {
+                ...appointmentApiData.getBasicInfo(),
+              },
+            },
+          },
+          "appointment created successfully"
+        );
+      } catch (error) {
+        console.log("[ APPOINTMENTS ] create error ---> ", error);
+        return this.raiseServerError(res);
+      }
     };
 
     getAppointmentForPatient = async (req, res) => {
@@ -215,6 +344,8 @@ class MobileAppointmentController extends Controller {
         try {
           const { params: { appointment_id } = {}, userDetails: { userId } = {} } = req;
     
+
+      const carePlanAppointmentDetails= await carePlanAppointmentService.deleteCarePlanAppointmentByAppointmentId(appointment_id);
           const appointmentDetails = await appointmentService.deleteAppointment(appointment_id);
     
           return raiseSuccess(

@@ -7,7 +7,7 @@ import * as validator from "./validator";
 
 router.get(
     "/:id",
-    Authenticate,
+    // Authenticate,
     MobileMedication.getMedicationForId
 );
 

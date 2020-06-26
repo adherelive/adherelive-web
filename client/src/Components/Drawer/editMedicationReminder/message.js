@@ -286,11 +286,17 @@ export default defineMessages({
     description: "",
     defaultMessage: "Save"
   },
+  fill_all_details: {
+    id: "medication_reminder.modal.fillAll",
+    description: "",
+    defaultMessage: "Please Fill All Details"
+  },
   title: {
     id: "medication_reminder.modal.title",
     description: "",
-    defaultMessage: "New Medication"
+    defaultMessage: "Edit Medication"
   },
+  
   update_button_text: {
     id: "medication_reminder.drawer.edit.buttom.text",
     description: "",

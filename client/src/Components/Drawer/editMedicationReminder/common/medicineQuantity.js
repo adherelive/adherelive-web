@@ -45,7 +45,7 @@ class MedicineQuantity extends Component {
   };
 
   render() {
-    const { form, medications, payload: {id: medication_id} = {} } = this.props;
+    const { form, medications, payload: {id: medication_id} = {},medicationData = {} } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -55,7 +55,11 @@ class MedicineQuantity extends Component {
 
     const { onRadioChange, formatMessage, getInitialValue } = this;
 
-    const {basic_info : {details: {quantity} = {}} = {}} = medications[medication_id] || {};
+    let {basic_info : {details: {quantity} = {}} = {}} = medications[medication_id] || {};
+    let { schedule_data: { quantity:quant = '' } = {} } = medicationData;
+    if(quant){
+      quantity=parseInt(quant);
+    }
     // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 

@@ -348,14 +348,16 @@ class PatientDetails extends Component {
     searchMedicine("");
   }
 
-  getAppointmentsData = () => {
+  getAppointmentsData = (carePlan={}) => {
     const {
       appointments,
       users = {},
       doctors = {},
       patients = {},
     } = this.props;
-    return Object.keys(appointments).map((id) => {
+
+    let { carePlanAppointmentIds=[],carePlanMedicationIds=[] } = carePlan;
+    return carePlanAppointmentIds.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
         basic_info: {
@@ -381,7 +383,7 @@ class PatientDetails extends Component {
     });
   };
 
-  getMedicationData = () => {
+  getMedicationData = (carePlan={}) => {
     const {
       medications = {},
       users = {},
@@ -389,8 +391,10 @@ class PatientDetails extends Component {
       patients = {},
       medicines = {},
     } = this.props;
+
+    let { carePlanAppointmentIds=[],carePlanMedicationIds=[] } = carePlan;
     console.log("92834792 ", medications);
-    const medicationRows = Object.keys(medications).map((id) => {
+    const medicationRows = carePlanMedicationIds.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
 
       const {
@@ -524,7 +528,7 @@ class PatientDetails extends Component {
   };
 
   handleSubmitTemplate = (data)=> {
-    const { addCarePlanMedicationsAndAppointments, care_plans, patient_id } = this.props;
+    const { addCarePlanMedicationsAndAppointments, getMedications,getAppointments,care_plans, patient_id,getPatientCarePlanDetails } = this.props;
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
@@ -537,6 +541,12 @@ class PatientDetails extends Component {
       const{status=false}=response;
       if(status){
         this.onCloseTemplate();
+
+        getMedications(patient_id).then(()=>{
+          getAppointments(patient_id).then(()=>{
+            getPatientCarePlanDetails(patient_id);
+          })
+        })
       }
     });
   }
@@ -546,15 +556,6 @@ class PatientDetails extends Component {
   render() {
     let { patients, patient_id, users, care_plans, doctors, medicines,appointments={},medications={} } = this.props;
     const { loading, templateDrawerVisible=false,carePlanAppointments={},carePlanMedications={},carePlanTemplateId=0 } = this.state;
-
-    let showUseTemplate =true;
-    let showAddButton =carePlanTemplateId?false:true;
-    if(!carePlanTemplateId && !(Object.keys(appointments).length || Object.keys(medications).length)){
-      showUseTemplate=false;
-    }
-    
-
-    let showTabs=(Object.keys(appointments).length || Object.keys(medications).length)?true:false;
 
   console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd render",carePlanTemplateId,showAddButton,showUseTemplate,Object.keys(appointments).length,
   Object.keys(medications).length);
@@ -578,13 +579,30 @@ class PatientDetails extends Component {
 
     // todo: dummy careplan 
     let carePlanId = 1;
+    let cPAppointmentIds = [];
+    let cPMedicationIds = [];
     for (let carePlan of Object.values(care_plans)) {
-      let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
+
+      let { basic_info: { id = 1, patient_id: patientId = 1 },carePlanAppointmentIds=[],carePlanMedicationIds=[] } = carePlan;
       if (patient_id == patientId) {
         carePlanId = id;
+      let { carePlanAppointmentIds=[],carePlanMedicationIds=[] } = carePlan;
+        cPAppointmentIds=carePlanAppointmentIds;
+        cPMedicationIds=carePlanMedicationIds;
       }
 
     }
+
+
+    console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS',carePlanId);
+    let showUseTemplate =true;
+    let showAddButton =carePlanTemplateId?false:true;
+    if(!carePlanTemplateId && !(cPAppointmentIds.length || cPMedicationIds.length)){
+      showUseTemplate=false;
+    }
+    
+
+    let showTabs=(cPAppointmentIds.length || cPMedicationIds.length)?true:false;
     const { basic_info: { doctor_id = 1 } = {}, treatment = '', severity = '', condition = '', activated_on: treatment_start_date } = care_plans[carePlanId] || {};
 
     let carePlan = care_plans[carePlanId];
@@ -695,14 +713,14 @@ class PatientDetails extends Component {
                 <TabPane tab="Medication" key="2">
                   <Table
                     columns={columns_medication}
-                    dataSource={getMedicationData()}
+                    dataSource={getMedicationData(carePlan)}
                     onRow={onRowMedication}
                   />
                 </TabPane>
                 <TabPane tab="Appointments" key="3">
                   <Table
                     columns={columns_appointments}
-                    dataSource={getAppointmentsData()}
+                    dataSource={getAppointmentsData(carePlan)}
                     onRow={onRowAppointment}
                   />
                   <div className="wp100">

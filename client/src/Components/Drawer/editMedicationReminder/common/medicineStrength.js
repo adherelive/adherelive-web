@@ -31,7 +31,7 @@ class MedicationStrength extends Component {
   };
 
   render() {
-    const { form, medications, payload: {id: medication_id} = {} } = this.props;
+    const { form, medications, payload: {id: medication_id} = {} , medicationData = {}} = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -40,8 +40,12 @@ class MedicationStrength extends Component {
     } = form;
     // console.log("act,", activityType, activityModeOption, activityMode);
 
-    const {basic_info : {details: {strength} = {}} = {}} = medications[medication_id] || {};
-
+    let {basic_info : {details: {strength} = {}} = {}} = medications[medication_id] || {};
+    
+    let { schedule_data: { strength:dose=0 } = {} } = medicationData;
+    if(dose){
+      strength=parseInt(dose);
+    }
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (

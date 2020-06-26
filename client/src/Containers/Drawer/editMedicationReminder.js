@@ -5,6 +5,7 @@ import { close } from "../../modules/drawer";
 import {getMedications, updateMedication, deleteMedication} from "../../modules/medications";
 import {getMedicationDetails} from "../../modules/otherDetails";
 import {searchMedicine} from "../../modules/medicines";
+import {getPatientCarePlanDetails} from "../../modules/carePlans";
 import {getAppointments} from "../../modules/appointments";
 // import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
@@ -41,8 +42,9 @@ const mapDispatchToProps = dispatch => {
     getMedicationDetails: () => dispatch(getMedicationDetails()),
     searchMedicine: data => dispatch(searchMedicine(data)),
     deleteMedication: id => dispatch(deleteMedication(id)),
-    getMedications: (id) => dispatch(getMedications(id)),
-    getAppointments: (id) => dispatch(getAppointments(id)),
+    getMedications: (id) => dispatch(getMedications(id)), 
+    getPatientCarePlanDetails:(patientId)=>dispatch(getPatientCarePlanDetails(patientId)),
+    
   };
 };
 

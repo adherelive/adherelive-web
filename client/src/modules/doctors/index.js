@@ -1,135 +1,129 @@
 import { DOCTOR_INITIAL_STATE } from "../../data";
-import * as Doctor  from "../../Helper/urls/doctor";
-import {
-  REQUEST_TYPE,
-  USER_CATEGORY,
-  PATH,
-  ONBOARDING_STATUS,
-} from "../../constant";
+
 import { doRequest } from "../../Helper/network";
-import { Auth } from "../../Helper/urls";
+import { REQUEST_TYPE } from "../../constant";
+import { getDoctorDetailsUrl, getAllDoctorsUrl, getVerifyDoctorUrl } from "../../Helper/urls/doctor";
 
-export const ADD_PATIENT = "ADD_PATIENT";
-export const ADD_PATIENT_COMPLETED = "ADD_PATIENT_COMPLETED";
-export const ADD_PATIENT_COMPLETED_WITH_ERROR =
-  "ADD_PATIENT_COMPLETED_WITH_ERROR";
+import * as Doctor from "../../Helper/urls/doctor";
+
+export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
+export const GET_DOCTOR_DETAILS_COMPLETE = "GET_DOCTOR_DETAILS_COMPLETE";
+export const GET_DOCTOR_DETAILS_FAILED = "GET_DOCTOR_DETAILS_FAILED";
+
+export const GET_ALL_DOCTORS_START = "GET_ALL_DOCTORS_START";
+export const GET_ALL_DOCTORS_COMPLETE = "GET_ALL_DOCTORS_COMPLETE";
+export const GET_ALL_DOCTORS_FAILED = "GET_ALL_DOCTORS_FAILED";
+
+export const VERIFY_DOCTOR_START = "VERIFY_DOCTOR_START";
+export const VERIFY_DOCTOR_COMPLETE = "VERIFY_DOCTOR_COMPLETE";
+export const VERIFY_DOCTOR_FAILED = "VERIFY_DOCTOR_FAILED";
 
 
-  export const GET_PATIENT_CARE_PLAN_DETAILS = "GET_PATIENT_CARE_PLAN_DETAILS";
-export const GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED = "GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED";
-export const GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR =
-  "GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR";
-
-export const addPatient =(payload,id)=>{
+export const verifyDoctor = id => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
-      dispatch({ type: ADD_PATIENT });
-
+      dispatch({ type: VERIFY_DOCTOR_START });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Doctor.getAddPatientUrl(id),
-        data:payload
+        url: getVerifyDoctorUrl(id),
       });
 
-      console.log("ADD PATIENT response --> ", response);
-
-      const { status, payload: { error = "", data = {} } = {} } =
-        response || {};
-
-      if (status === false) {
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
         dispatch({
-          type: ADD_PATIENT_COMPLETED_WITH_ERROR,
-          payload: { error },
+          type: VERIFY_DOCTOR_COMPLETE,
+          payload: data,
         });
-      } else if (status === true) {
-        const { users = {} } = data;
-        // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        // let authRedirection = setAuthRedirect(users);
-        // console.log(
-        //   " ID IN 898978 SIGNUPPPP",
-        //   authRedirection,
-        //   authUser,
-        //   response.payload.data.user
-        // );
+      } else {
         dispatch({
-          type:ADD_PATIENT_COMPLETED,
-          payload: {
-            // authenticatedUser: authUser,
-            // authRedirection,
-          },
+          type: VERIFY_DOCTOR_FAILED,
+          error,
         });
       }
-    } catch (err) {
-      console.log("err signin", err);
-      throw err;
+    } catch (error) {
+      console.log("GET ALL DOCTORS ERROR --> ", error);
     }
-
     return response;
-  };
-}
+  }
+};
 
-export const getPatientCarePlanDetails =(patientId)=>{
+export const getAllDoctors = () => {
   let response = {};
-  return async (dispatch) => {
+  return async dispatch => {
     try {
-      dispatch({ type: GET_PATIENT_CARE_PLAN_DETAILS });
-
+      dispatch({ type: GET_ALL_DOCTORS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Doctor.getPatientCarePlanDetailsUrl(patientId)
+        url: getAllDoctorsUrl(),
       });
 
-      console.log("ADD PATIENT response --> ", response);
-
-      const { status, payload: { error = "", data = {} } = {} } =
-        response || {};
-
-      if (status === false) {
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
         dispatch({
-          type: GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR,
-          payload: { error },
+          type: GET_ALL_DOCTORS_COMPLETE,
+          payload: data,
         });
-      } else if (status === true) {
-        const { users = {} } = data;
-      
+      } else {
         dispatch({
-          type:GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED,
-          payload: { },
+          type: GET_ALL_DOCTORS_FAILED,
+          error,
         });
       }
-    } catch (err) {
-      console.log("err get patient careplan details", err);
-      throw err;
+    } catch (error) {
+      console.log("GET ALL DOCTORS ERROR --> ", error);
     }
-
     return response;
-  };
-}
+  }
+};
 
+export const getDoctorDetails = (id) => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: GET_DOCTOR_DETAILS_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getDoctorDetailsUrl(id),
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_DOCTOR_DETAILS_COMPLETE,
+          payload: data,
+        });
+      } else {
+        dispatch({
+          type: GET_DOCTOR_DETAILS_FAILED,
+          error,
+        });
+      }
+    } catch (error) {
+      console.log("GET DOCTOR DETAILS ERROR --> ", error);
+    }
+    return response;
+  }
+};
 
 function doctorReducer(state, data) {
   const { doctors } = data || {};
   if (doctors) {
     return {
       ...state,
-      // ...DOCTOR_INITIAL_STATE,
       ...doctors,
     };
   } else {
     return {
       ...state,
-      // ...DOCTOR_INITIAL_STATE,
     };
   }
 }
 
-
-
-export default (state = DOCTOR_INITIAL_STATE, action) => {
-  const { type, data } = action;
+export default (state = {}, action) => {
+  const { type, payload } = action;
   switch (type) {
     default:
-      return doctorReducer(state, data);
+      return doctorReducer(state, payload);
   }
 };

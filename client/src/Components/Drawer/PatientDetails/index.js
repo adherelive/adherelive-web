@@ -76,7 +76,9 @@ class PatientDetailsDrawer extends Component {
   handlePatientDetailsRedirect = e => {
     e.preventDefault();
     const { history, payload: {patient_id} = {} } = this.props;
+    this.onClose();
     history.push(`/patients/${patient_id}`);
+
   };
 
   getPatientDetailContent = () => {

@@ -56,7 +56,7 @@ export const AUTH_INITIAL_STATE = {
   authenticated: false,
 };
 
-function setAuthRedirect(user) {
+function setAuthRedirect(user, isInitial = false) {
   let userData = Object.values(user).length ? Object.values(user)[0] : [];
 
   const {
@@ -82,12 +82,16 @@ function setAuthRedirect(user) {
     } else {
       authRedirect = PATH.REGISTER_PROFILE;
     }
+  }else if(category === USER_CATEGORY.ADMIN) {
+    if(!isInitial) {
+      authRedirect = PATH.ADMIN.DOCTORS.ROOT;
+    }
   }
   return authRedirect;
 }
 
 
-function setAuthRedirectSignIn(user) {
+function setAuthRedirectSignIn(user, isInitial = false) {
   let userData = Object.values(user).length ? Object.values(user)[0] : [];
 
   const {
@@ -112,6 +116,10 @@ function setAuthRedirectSignIn(user) {
       authRedirect = PATH.REGISTER_CLINICS;
     } else {
       authRedirect = PATH.REGISTER_PROFILE;
+    }
+  } else if(category === USER_CATEGORY.ADMIN) {
+    if(!isInitial) {
+      authRedirect = PATH.ADMIN.DOCTORS.ROOT;
     }
   }
   return authRedirect;
@@ -140,7 +148,7 @@ export const signIn = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { users = {} } = data;
+        const { users = {}, auth_user = "", auth_category = "" } = data;
         let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users);
         console.log(
@@ -152,8 +160,9 @@ export const signIn = (payload) => {
         dispatch({
           type: SIGNING_COMPLETED,
           payload: {
-            authenticatedUser: authUser,
+            authenticatedUser: auth_user,
             authRedirection,
+            authCategory: auth_category
           },
         });
       }
@@ -381,10 +390,10 @@ export const getInitialData = () => {
         // const {lastUrl = false} = data;
         // const {  users } = response.payload.data;
 
-        let { users = {} } = response.payload.data;
+        let { users = {}, auth_user = "", auth_category = "" } = response.payload.data;
         let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
-        let authRedirection = setAuthRedirect(users);
+        let authRedirection = setAuthRedirect(users, true);
 
         console.log(
           " ID IN 898978 GET INITIAL DATAA",
@@ -396,8 +405,9 @@ export const getInitialData = () => {
           type: GETTING_INITIAL_DATA_COMPLETED,
           payload: {
             users,
-            authenticatedUser: authUser,
+            authenticatedUser: auth_user,
             authRedirection,
+            authCategory: auth_category
           },
           data,
         });
@@ -422,6 +432,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
     case GETTING_INITIAL_DATA_COMPLETED:
       return {
         authenticated: true,
+        authenticated_category: payload.authCategory,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection
       };
@@ -469,6 +480,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
     case SIGNING_COMPLETED:
       return {
         authenticated: true,
+        authenticated_category: payload.authCategory, 
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
       };

@@ -1,7 +1,7 @@
 import {withRouter} from "react-router-dom";
 import Dashboard from "../../Components/Dashboard";
 import {signOut, getInitialData} from "../../modules/auth";
-import {addPatient} from '../../modules/doctors';
+import {addPatient} from '../../modules/patients';
 import {searchMedicine} from "../../modules/medicines";
 import {connect} from "react-redux";
 

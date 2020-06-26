@@ -10,12 +10,21 @@ import { doRequest } from "../../Helper/network";
 import { Auth } from "../../Helper/urls";
 
 
+
+
+export const GET_PATIENT_CARE_PLAN_DETAILS = "GET_PATIENT_CARE_PLAN_DETAILS";
+export const GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED = "GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED";
+export const GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR =
+  "GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR";
+
+
 export const ADD_CARE_PLAN_DATA = "ADD_CARE_PLAN_DATA";
 export const ADD_CARE_PLAN_DATA_COMPLETED = "ADD_CARE_PLAN_DATA_COMPLETED";
 export const ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR =
   "ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR";
 
 function carePlanReducer(state, data) {
+  console.log('DATA IN CAREPLAN REDUCER==========>>>>>$$$$$',data);
     const {care_plans} = data || {};
     if(care_plans) {
         return {
@@ -63,6 +72,41 @@ export const addCarePlanMedicationsAndAppointments =(payload,carePlanId)=>{
         }
       } catch (err) {
         console.log("err signin", err);
+        throw err;
+      }
+  
+      return response;
+    };
+  }
+
+  export const getPatientCarePlanDetails =(patientId)=>{
+    let response = {};
+    return async (dispatch) => {
+      try {
+        dispatch({ type: GET_PATIENT_CARE_PLAN_DETAILS });
+  
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: CarePlan.getPatientCarePlanDetailsUrl(patientId)
+        });
+  
+        const { status, payload: { error = "", data:{care_plans={}} = {} } = {} } =
+          response || {};
+          
+        if (status === false) {
+          dispatch({
+            type: GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED_WITH_ERROR,
+            payload: { error },
+          });
+        } else if (status === true) {
+        
+          dispatch({
+            type:GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED,
+            data: { care_plans},
+          });
+        }
+      } catch (err) {
+        console.log("err get patient careplan details", err);
         throw err;
       }
   

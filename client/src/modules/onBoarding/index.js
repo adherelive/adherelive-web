@@ -34,7 +34,7 @@ export const REGISTER_QUALIFICATION_COMPLETED_WITH_ERROR = "REGISTER_QUALIFICATI
 
 
 
-export const doctorProfileRegister = (payload,userId) => {
+export const doctorProfileRegister = (payload) => {
   let response = {};
   console.log("DOCTORRR PROFILE REGISTERR");
   return async (dispatch) => {
@@ -43,7 +43,7 @@ export const doctorProfileRegister = (payload,userId) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Doctor.getdoctorProfileRegisterUrl(userId),
+        url: Doctor.getdoctorProfileRegisterUrl(),
         data: payload,
       });
 

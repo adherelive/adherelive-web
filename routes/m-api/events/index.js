@@ -28,4 +28,11 @@ router.post(
     MobileMedicationReminder.create
 );
 
+router.post(
+    "/medication/:patient_id/:carePlanId",
+    Authenticate,
+    validator.validateMedicationReminderData,
+    MobileMedicationReminder.createCarePlanMedication
+);
+
 module.exports = router;

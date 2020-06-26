@@ -8,8 +8,11 @@ var upload = multer({ dest: "../app/public/", storage: storage });
 const router = express.Router();
 
 router.post('/create-medications-and-appointments/:carePlanId',
-CarePlanController.createCarePlanMedicationsAndAppointmentsByTemplateData
+    CarePlanController.createCarePlanMedicationsAndAppointmentsByTemplateData
 );
 
+router.get('/patient-care-plan-details/:patientId',
+    CarePlanController.getPatientCarePlanDetails
+);
 
 module.exports = router;

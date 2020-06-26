@@ -3,6 +3,9 @@ import appointmentService from "../../services/appointment/appointment.service";
 import scheduleService from "../../services/events/event.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
+import carePlanService from "../../services/carePlan/carePlan.service";
+import {getCarePlanAppointmentIds,getCarePlanMedicationIds,getCarePlanSeverityDetails} from '../carePlans/carePlanHelper'
+import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 import { EVENT_STATUS, EVENT_TYPE } from "../../../constant";
 import moment from "moment";
@@ -137,7 +140,7 @@ class AppointmentController extends Controller {
         // participant_one_id = "",
       } = body;
       console.log("====================> ", organizer);
-      console.log("[ APPOINTMENTS ] appointments &&&&&&&&&&&&***", care_plan_id, body);
+      console.log("[ APPOINTMENTS ] appointments &&&&&&&&&&&&***", care_plan_id, typeof(care_plan_id));
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
@@ -187,12 +190,24 @@ class AppointmentController extends Controller {
       );
 
       let data_to_create = {
-        care_plan_id,
+        care_plan_id:parseInt(care_plan_id),
         appointment_id: appointment.get('id')
       }
 
       let newAppointment = await carePlanAppointmentService.addCarePlanAppointment(data_to_create);
 
+      let carePlan= await carePlanService.getCarePlanById(care_plan_id);
+
+      let carePlanAppointmentIds= await getCarePlanAppointmentIds(care_plan_id);
+      let carePlanMedicationIds = await getCarePlanMedicationIds(care_plan_id);
+      let carePlanSeverityDetails = await getCarePlanSeverityDetails(care_plan_id);
+      const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+      let carePlanApiData = {};
+  
+      carePlanApiData[
+        carePlanApiWrapper.getCarePlanId()
+      ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,carePlanMedicationIds,carePlanAppointmentIds};
+  
 
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
@@ -216,6 +231,7 @@ class AppointmentController extends Controller {
         res,
         200,
         {
+          care_plans: {...carePlanApiData},
           appointments: {
             [appointmentApiData.getAppointmentId()]: {
               ...appointmentApiData.getBasicInfo(),
@@ -242,22 +258,23 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         treatment = "",
+        reason=''
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      console.log("UPDATEEEEEEEEEEEEE====================> ", userDetails);
+      console.log("UPDATEEEEEEEEEEEEE====================> ", date,appointment_id,start_time,end_time,userDetails);
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
-      Logger.debug("Start date", date);
+      // Logger.debug("Start date", date);
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
         date,
         start_time,
-        end_time
+        end_time, appointment_id
       );
 
-      Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
+      console.log("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
 
       
 
@@ -287,6 +304,7 @@ class AppointmentController extends Controller {
         end_time,
         details: {
           treatment,
+          reason
         },
       };
       console.log("[ APPOINTMENTS ] appointments 1111111", updatedAppointmentDetails);
@@ -386,6 +404,10 @@ class AppointmentController extends Controller {
     try {
       const { params: { appointment_id } = {}, userDetails: { userId } = {} } = req;
 
+
+      console.log('CAREPLAN APPOINTMENTTTTTT',appointment_id);
+      const carePlanAppointmentDetails= await carePlanAppointmentService.deleteCarePlanAppointmentByAppointmentId(appointment_id);
+
       const appointmentDetails = await appointmentService.deleteAppointment(appointment_id);
 
       // Logger.debug("appointmentDetails --> ", appointmentDetails);
@@ -396,10 +418,10 @@ class AppointmentController extends Controller {
         {},
         `appointment deleted successfully`
       );
-      // } else {
-      // }
+      
     } catch (error) {
-      // Logger.debug("500 error", error);
+      
+      console.log("[ APPOINTMENTS ] delete error ---> ", error);
       return raiseServerError(res);
     }
   };

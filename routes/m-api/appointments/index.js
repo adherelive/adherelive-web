@@ -10,11 +10,20 @@ router.get(
     MobileAppointment.getAppointmentForPatient
 );
 
+
 router.post(
-    "/:appointment_id",
+    "/update/:appointment_id",
     Authenticate,
     validator.validateAppointmentFormData,
     MobileAppointment.update
+);
+
+
+router.post(
+    "/:carePlanId",
+    Authenticate,
+    validator.validateAppointmentFormData,
+    MobileAppointment.createCarePlanAppointment
 );
 
 router.delete(

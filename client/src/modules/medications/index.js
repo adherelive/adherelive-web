@@ -60,11 +60,6 @@ export const ADD_MEDICATION_REMINDER_COMPLETE =
   "ADD_MEDICATION_REMINDER_COMPLETE";
 export const ADD_MEDICATION_REMINDER_FAILED = "ADD_MEDICATION_REMINDER_FAILED";
 
-export const ADD_CARE_PLAN_MEDICATION_REMINDER_START = "ADD_CARE_PLAN_MEDICATION_REMINDER_START";
-export const ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE =
-  "ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE";
-export const ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED = "ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED";
-
 export const UPDATE_MEDICATION_START = "UPDATE_MEDICATION_START";
 export const UPDATE_MEDICATION_COMPLETE = "UPDATE_MEDICATION_COMPLETE";
 export const UPDATE_MEDICATION_FAILED = "UPDATE_MEDICATION_FAILED";
@@ -76,6 +71,40 @@ export const GET_MEDICATION_FAILED = "GET_MEDICATION_FAILED";
 export const DELETE_MEDICATION_START = "DELETE_MEDICATION_START";
 export const DELETE_MEDICATION_COMPLETE = "DELETE_MEDICATION_COMPLETE";
 export const DELETE_MEDICATION_FAILED = "DELETE_MEDICATION_FAILED";
+
+export const ADD_CARE_PLAN_MEDICATION_REMINDER_START = "ADD_CARE_PLAN_MEDICATION_REMINDER_START";
+export const ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE =
+  "ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE";
+export const ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED = "ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED";
+
+
+export const addCarePlanMedicationReminder = (payload,carePlanId) => {
+  let response = {};
+  const { id, ...rest } = payload || {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: getAddCarePlanMedicationReminderURL(id,carePlanId),
+        data: rest,
+      });
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+        response || {};
+      if (status === true) {
+        dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE,  data });
+      } else {
+        dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED, payload: error });
+      }
+    } catch (error) {
+      console.log("ADD medication reminder error ----> ", error);
+      dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED });
+    }
+    return response;
+  };
+};
 
 export const addMedicationReminder = (payload) => {
   let response = {};
@@ -100,34 +129,6 @@ export const addMedicationReminder = (payload) => {
     } catch (error) {
       console.log("ADD medication reminder error ----> ", error);
       dispatch({ type: ADD_MEDICATION_REMINDER_FAILED });
-    }
-    return response;
-  };
-};
-
-export const addCarePlanMedicationReminder = (payload,carePlanId) => {
-  let response = {};
-  const { id, ...rest } = payload || {};
-  return async (dispatch) => {
-    try {
-      dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_START });
-
-      response = await doRequest({
-        method: REQUEST_TYPE.POST,
-        url: getAddCarePlanMedicationReminderURL(id,carePlanId),
-        data: rest,
-      });
-
-      const { status, payload: { data = {}, error = {} } = {} } =
-        response || {};
-      if (status === true) {
-        dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE, payload: data });
-      } else {
-        dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED, payload: error });
-      }
-    } catch (error) {
-      console.log("ADD medication reminder error ----> ", error);
-      dispatch({ type: ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED });
     }
     return response;
   };
@@ -175,7 +176,7 @@ export const getMedications = (id) => {
       if (status === true) {
         dispatch({
           type: GET_MEDICATION_COMPLETE,
-          payload: data,
+           data,
         });
       } else {
         dispatch({
@@ -203,7 +204,7 @@ export const deleteMedication = (id) => {
       if (status === true) {
         dispatch({
           type: DELETE_MEDICATION_COMPLETE,
-          payload: data,
+           data,
         });
       } else {
         dispatch({
@@ -222,7 +223,7 @@ function medicationReducer(state, payload) {
   const { medications = {} } = payload || {};
   if (Object.keys(medications).length > 0) {
     return {
-      // ...state,
+      ...state,
       ...medications,
     };
   } else {
@@ -233,9 +234,11 @@ function medicationReducer(state, payload) {
 }
 
 export default (state = {}, action) => {
-  const { type, payload } = action;
+  const { type, data } = action;
   switch (type) {
     default:
-      return medicationReducer(state, payload);
+      return medicationReducer(state, data);
   }
 };
+
+

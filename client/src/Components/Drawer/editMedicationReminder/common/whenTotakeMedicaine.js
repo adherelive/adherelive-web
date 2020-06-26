@@ -69,7 +69,7 @@ class WhenToTakeMedication extends Component {
     });
 
     // let total_status = Object.keys(statusList);
-    let { schedule_data: { frequency = '' } = {} } = medicationData;
+    let { schedule_data: { when_to_take:frequency = '' } = {} } = medicationData;
     if(frequency){
       statusList[0]=frequency.toString();
       when_to_take=[frequency.toString()];
@@ -294,7 +294,7 @@ class WhenToTakeMedication extends Component {
   };
 
   getFormItems = () => {
-    const { form, medication_details: { timings } = {}, medications, payload: { id: medication_id } = {} } = this.props;
+    const { form, medication_details: { timings } = {}, medications, payload: { id: medication_id } = {} ,medicationData={}} = this.props;
     const { count } = this.state;
     const {
       handleSelect,
@@ -311,8 +311,12 @@ class WhenToTakeMedication extends Component {
     } = form;
 
 
-    const { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
-
+    let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
+    let { schedule_data: { when_to_take:frequency = '' } = {} } = medicationData;
+    if(frequency){
+      when_to_take=[frequency.toString()];
+    }
+    console.log("WHEN TO TAKE IN FORM ITEMSS",this.state);
     getFieldDecorator("keys", {
       initialValue: when_to_take.map((id, index) => (parseInt(id) - 1)),
     });
@@ -420,8 +424,9 @@ class WhenToTakeMedication extends Component {
     // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
-    console.log("627868362783 selected_timing ---. ", this.state.selected_timing, this.state);
+    // console.log("627868362783 selected_timing ---. ", this.state.selected_timing, this.state);
 
+    console.log("WHEN TO TAKE IN RENDERR",this.state);
     // const { getInitialValue } = this;
 
     return (

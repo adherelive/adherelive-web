@@ -53,7 +53,7 @@ class Profileregister extends Component {
 
         const { onBoarding = {} } = this.props;
         const { profileData: { name = "", email = "", mobile_number = '', category = '', city = '', prefix = '', profile_pic = '' } = {} } = onBoarding || {};
-        this.setState({ name, email, mobile_number, category, city, prefix, profile_pic_url_saved: profile_pic });
+        this.setState({ name, email, mobile_number, category, city, prefix, profile_pic_url_saved: profile_pic, profile_pic });
     }
 
     setName = e => {
@@ -109,6 +109,7 @@ class Profileregister extends Component {
             console.log('RESPONSEEEEEEEEEEE!@!@!@!@!@!@!@!@', response);
             if (response.status) {
                 let { files = [] } = response.payload.data;
+                console.log("9387193781 files --> ", files);
                 this.setState({ profile_pic_url: files[0] })
             } else {
                 message.error('Something went wrong.')
@@ -189,15 +190,15 @@ class Profileregister extends Component {
     }
 
     onNextClick = () => {
-        const { history, authenticated_user } = this.props;
-        const { basic_info: { id = 1 } = {} } = authenticated_user || {};
-        console.log('ONCLICKKKKKK', authenticated_user);
+        const { history, authenticated_user=1,users } = this.props;
+        const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
+        console.log('ONCLICKKKKKK', id);
         const validate = this.validateData();
         if (validate) {
             const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' } = this.state;
             const data = { name, email, mobile_number, category, city, prefix, profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved };
             const { doctorProfileRegister } = this.props;
-            doctorProfileRegister(data, id).then(response => {
+            doctorProfileRegister(data).then(response => {
                 const { status } = response;
                 if (status) {
                     history.replace(PATH.REGISTER_QUALIFICATIONS);
@@ -244,7 +245,8 @@ class Profileregister extends Component {
       };
 
     renderProfileForm = () => {
-
+        console.log("2738612386128 ", this.state.profile_pic);
+        console.log("2738612386128 2", this.state.profile_pic_url_saved);
         let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url_saved = '' } = this.state;
         const prefixSelector = (
 

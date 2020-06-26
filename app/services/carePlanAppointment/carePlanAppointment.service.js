@@ -38,6 +38,19 @@ class CarePlanAppointmentService {
         }
     };
 
+    deleteCarePlanAppointmentByAppointmentId = async appointment_id => {
+        try {
+          const carePlanAppointments = await CarePlanAppointments.destroy({
+            where: {
+                appointment_id
+            }
+          });
+          return carePlanAppointments;
+        } catch(err) {
+          throw err;
+        }
+      };
+
     addCarePlanAppointment = async data => {
         try {
             const carePlanAppointment = await CarePlanAppointments.create(data);

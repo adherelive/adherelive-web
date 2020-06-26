@@ -48,7 +48,7 @@ export const addAppointment = (payload) => {
       if (status === true) {
         dispatch({
           type: ADD_APPOINTMENT_COMPLETE,
-          payload: data,
+           data,
         });
       } else {
         dispatch({
@@ -82,7 +82,7 @@ export const addCarePlanAppointment = (payload,carePlanId) => {
       if (status === true) {
         dispatch({
           type: ADD_CARE_PLAN_APPOINTMENT_COMPLETE,
-          payload: data,
+           data,
         });
       } else {
         dispatch({
@@ -146,7 +146,7 @@ export const getAppointments = (id) => {
       if (status === true) {
         dispatch({
           type: GET_APPOINTMENTS_COMPLETE,
-          payload: data,
+          data,
         });
       } else {
         dispatch({
@@ -175,7 +175,7 @@ export const deleteAppointment = (id) => {
       if (status === true) {
         dispatch({
           type: DELETE_APPOINTMENTS_COMPLETE,
-          payload: data,
+          data,
         });
       } else {
         dispatch({
@@ -194,7 +194,7 @@ function appointmentReducer(state, data) {
   const { appointments = {} } = data || {};
   if (Object.keys(appointments).length > 0) {
     return {
-      // ...state,
+      ...state,
       ...appointments,
     };
   } else {
@@ -205,11 +205,11 @@ function appointmentReducer(state, data) {
 }
 
 export default (state = {}, action = {}) => {
-  const { type, payload } = action;
+  const { type, data } = action;
   switch (type) {
     case GET_APPOINTMENTS_COMPLETE:
-      return appointmentReducer(state, payload);
+      return appointmentReducer(state, data);
     default:
-      return appointmentReducer(state, payload);
+      return appointmentReducer(state, data);
   }
 };

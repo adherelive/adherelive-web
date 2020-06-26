@@ -17,6 +17,12 @@ router.post(
     mUserController.signUp,
 );
 
+
+router.post(
+    "/add-patient/:userId",
+    mUserController.addDoctorsPatient,
+);
+
 router.get(
     "/get-basic-info",
     Authenticate,

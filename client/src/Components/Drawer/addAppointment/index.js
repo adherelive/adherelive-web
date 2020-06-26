@@ -92,7 +92,7 @@ class AddAppointment extends Component {
             );
           } else if (status === true) {
             message.success(formatMessage(messages.add_appointment_success));
-            getAppointments(patient_id);
+            // getAppointments(patient_id);
           } else {
             message.warn(errorMessage);
           }

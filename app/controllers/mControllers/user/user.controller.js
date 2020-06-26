@@ -27,6 +27,8 @@ import clinicService from "../../../services/doctorClinics/doctorClinics.service
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 
+import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
+import patientsService from "../../../services/patients/patients.service";
 import { doctorQualificationData, uploadImageS3 } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -537,7 +539,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          files: files,
+          files: [`${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${files[0]}`],
         },
         "files uploaded successfully"
       );
@@ -575,10 +577,12 @@ class UserController extends Controller {
           : doctorName.length == 2
           ? doctorName[1]
           : "";
+
+      Logger.debug("profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] 222222", profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]);
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic,
+          profile_pic : profile_pic ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] : null,
           first_name,
           middle_name,
           last_name,
@@ -588,10 +592,11 @@ class UserController extends Controller {
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
         console.log("DOCTORRRRRIFFFFFF", doctor, doctor.getBasicInfo);
       } else {
+        Logger.debug("profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] 222222", profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]);
         let doctor_data = {
           user_id,
           city,
-          profile_pic,
+          profile_pic : profile_pic ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] : null,
           first_name,
           middle_name,
           last_name,
@@ -820,7 +825,7 @@ class UserController extends Controller {
       let files = await uploadImageS3(userId, file);
       let qualification_id = 0;
       let doctor = await doctorService.getDoctorByUserId(userId);
-      let doctor_id = doctor.get("id");
+      // let doctor_id = doctor.get("id");
       // let{ degree = '', year = '', college = '' } =JSON.parse(qualification);
       // console.log('BODYYYYYYYYYYYYYYYY1111111=================>', degree, year, college);
       // let qualificationOfDoctor = await qualificationService.getQualificationByData(doctor_id,degree,year,college);
@@ -1031,6 +1036,60 @@ class UserController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
+
+  addDoctorsPatient =async (req, res) => {
+    const{  mobile_number= '',name= '',gender= '',date_of_birth= '',treatment:type= '',severity= '',condition= '',prefix=''}=req.body;
+    const{userId:user_id=1}=req.params;
+    try {
+     
+     let password=process.config.DEFAULT_PASSWORD;
+     const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      const hash = await bcrypt.hash(password, salt);
+     let user = await userService.addUser({
+      prefix,
+      mobile_number,
+      password: hash,
+      sign_in_type: "basic",
+      category: "patient",
+      onboarded: false,
+    });
+
+    let newUId=user.get('id');
+
+    let patientName = name.split(" ");
+    let first_name = patientName[0];
+    let middle_name = patientName.length == 3 ? patientName[1] : "";
+    let last_name =
+      patientName.length == 3
+        ? patientName[2]
+        : patientName.length == 2
+          ? patientName[1]
+          : "";
+
+          let uid=uuidv4();
+          let birth_date=moment(date_of_birth);
+          let age=moment().diff(birth_date,'years');
+    let patient=await patientsService.addPatient({first_name,gender,middle_name,last_name,user_id:newUId,birth_date,age,uid});
+
+    let doctor = await doctorService.getDoctorByUserId(user_id);
+    let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(type,severity,condition);
+    const patient_id=patient.get('id');
+    const doctor_id =doctor.get('id');
+    const care_plan_template_id =carePlanTemplate? carePlanTemplate.get('id'):null;
+
+    const details = care_plan_template_id?{}:{type,severity,condition};
+    const carePlan=await carePlanService.addCarePlan({patient_id,doctor_id,care_plan_template_id,details,expired_on:moment()});
+    
+    let carePlanNew=await carePlanService.getSingleCarePlanByData({patient_id,doctor_id,care_plan_template_id,details});
+     const carePlanId=carePlanNew.get('id');
+    
+
+      return this.raiseSuccess(res, 200, {patient_id,carePlanId,carePlanTemplateId:care_plan_template_id}, "doctor's patient added successfully");
+    } catch (error) {
+      console.log("ADD DOCTOR PATIENT ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  }
 }
 
 export default new UserController();

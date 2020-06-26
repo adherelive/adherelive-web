@@ -6,6 +6,7 @@ import mEventRouter from "./events";
 import mPatientRouter from "./patients";
 import mMedicineRouter from "./medicine";
 import mMedicationRouter from "./medications";
+import mCarePlanRouter from "./carePlans";
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
 // import twilioRouter from "./twilio";
@@ -66,6 +67,7 @@ router.use("/appointments", mAppointmentRouter);
 router.use("/medications", mMedicationRouter);
 router.use("/events", mEventRouter);
 router.use("/patients", mPatientRouter);
+router.use("/carePlans", mCarePlanRouter);
 router.use("/medicines", mMedicineRouter);
 
 module.exports = router;

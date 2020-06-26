@@ -163,11 +163,12 @@ class AddMedicationReminder extends Component {
 
         }
         try {
+          console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR',carePlanId);
           const response = await addCarePlanMedicationReminder(data_to_submit,carePlanId);
           const { status, payload: { message: msg } = {} } = response;
           if (status === true) {
             message.success(msg);
-            getMedications(patient_id);
+            // getMedications(patient_id);
           } else {
             message.error(msg);
           }

@@ -145,10 +145,10 @@ class TemplateDrawer extends Component {
         this.setState({ medications, medicationKeys });
     }
 
-    deleteMedication =key=> () => {
+    deleteMedication = key => () => {
         let { medications = {}, medicationKeys = [] } = this.state;
-       delete medications[key];
-       medicationKeys.splice(medicationKeys.indexOf(key),1);
+        delete medications[key];
+        medicationKeys.splice(medicationKeys.indexOf(key), 1);
         this.setState({ medications, medicationKeys });
     }
 
@@ -160,18 +160,18 @@ class TemplateDrawer extends Component {
         let templateId = appointments[appointmentKeys[0]].care_plan_template_id;
         appointments[key] = {
             care_plan_template_id: templateId,
-              reason: "Regular Checkup",
-              schedule_data:
-              {notes: "Please fast before 12 hours"},
-              time_gap: "After One Week"
+            reason: "Regular Checkup",
+            schedule_data:
+                { notes: "Please fast before 12 hours" },
+            time_gap: "After One Week"
         };
         this.setState({ appointments, appointmentKeys });
     }
 
-    deleteAppointment =key=> () => {
+    deleteAppointment = key => () => {
         let { appointments = {}, appointmentKeys = [] } = this.state;
-       delete appointments[key];
-       appointmentKeys.splice(appointmentKeys.indexOf(key),1);
+        delete appointments[key];
+        appointmentKeys.splice(appointmentKeys.indexOf(key), 1);
         this.setState({ appointments, appointmentKeys });
     }
 
@@ -211,10 +211,10 @@ class TemplateDrawer extends Component {
                     );
                 })}
 
-                 
+
                 <div className='wp100 flex align-center justify-space-between'>
-                <div className='form-category-headings-ap align-self-start'>Appointments</div>
-                <div className='add-more' onClick={this.addAppointment}>Add More</div>
+                    <div className='form-category-headings-ap align-self-start'>Appointments</div>
+                    <div className='add-more' onClick={this.addAppointment}>Add More</div>
                 </div>
                 {appointmentKeys.map(key => {
                     const { reason = '', schedule_data: { description = '', date = '', start_time = '' } = {}, time_gap = '' } = appointments[key];
@@ -222,16 +222,16 @@ class TemplateDrawer extends Component {
                     return (
 
                         <div className='flex wp100 flex-grow-1 align-center'>
-                        <div className='drawer-block' key={key}>
+                            <div className='drawer-block' key={key}>
 
-                            <div className='flex direction-row justify-space-between align-center'>
-                                <div className='form-headings-ap'>{reason}</div>
-                                <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)} />
+                                <div className='flex direction-row justify-space-between align-center'>
+                                    <div className='form-headings-ap'>{reason}</div>
+                                    <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)} />
+                                </div>
+                                <div className='drawer-block-description'>{timeToShow ? timeToShow : time_gap}</div>
+                                <div className='drawer-block-description'>{`Notes:${description}`}</div>
                             </div>
-                            <div className='drawer-block-description'>{timeToShow ? timeToShow : time_gap}</div>
-                            <div className='drawer-block-description'>{`Notes:${description}`}</div>
-                        </div>
-                        <DeleteTwoTone
+                            <DeleteTwoTone
                                 className={"mr8"}
                                 onClick={this.deleteAppointment(key)}
                                 twoToneColor="#cc0000"
@@ -244,16 +244,44 @@ class TemplateDrawer extends Component {
 
     }
 
+    validateData = (medicationsData, appointmentsData) => {
+
+        for (let medication of medicationsData) {
+            const { medicine = "", medicineType = "", medicine_id = "",
+                schedule_data: { end_date = '', quantity = 0, repeat = "", repeat_days = [], start_date = '',
+                    start_time = '', strength = 0, unit = "", when_to_take = [] } = {} } = medication;
+            if (!medicine || !medicineType || !medicine_id || !end_date || !quantity || !repeat || !repeat_days.length || !start_date
+                || !start_time || !strength || !unit || !when_to_take.length) {
+                message.error("Please fill all details of medications ");
+                return false;
+            }
+        }
+
+        for (let appointment of appointmentsData) {
+            const { reason = '', schedule_data: { date = '', description = '',
+                end_time = '', start_time = '', treatment = "" } = {} } = appointment;
+            if (!reason || !date || !end_time || !start_time || !treatment) {
+
+                message.error("Please fill all details of appointments ");
+
+                return false;
+            }
+        }
+        return true;
+    }
 
 
 
     onSubmit = () => {
-        const{submit}=this.props;
-       let{medications={},appointments={}}=this.state;
-       let medicationsData=Object.values(medications);
-       let appointmentsData=Object.values(appointments);
-       console.log("FINAL DATA++++++>>>>>>>>>",medicationsData,appointmentsData);
-       submit({medicationsData,appointmentsData});
+        const { submit } = this.props;
+        let { medications = {}, appointments = {} } = this.state;
+        let medicationsData = Object.values(medications);
+        let appointmentsData = Object.values(appointments);
+        console.log("FINAL DATA++++++>>>>>>>>>", medicationsData, appointmentsData);
+        let validate = this.validateData(medicationsData, appointmentsData);
+        if (validate) {
+            submit({ medicationsData, appointmentsData });
+        }
     }
 
     editMedication = (data) => {
@@ -275,8 +303,8 @@ class TemplateDrawer extends Component {
         newMedication.medicine = name;
         newMedication.medicineType = type;
         newMedication.schedule_data = {
-            end_date: end_date ? moment(end_date).utc() : moment.utc(), start_date: start_date ? moment(start_date).utc() : moment.utc(),
-            unit,  when_to_take, repeat, quantity, repeat_days, strength, start_time: start_time ? moment(start_time).utc() : moment.utc()
+            end_date: moment(end_date).utc(), start_date: moment(start_date),
+            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time).utc()
         };
         console.log("DATA OF EDITED MEDICATIONNNNN===>", data);
         medications[innerFormKey] = newMedication;
@@ -299,7 +327,7 @@ class TemplateDrawer extends Component {
             reason = '' } = data;
         let newAppointment = appointments[innerFormKey];
         newAppointment.reason = reason;
-        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date,treatment };
+        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment };
         console.log("DATA OF EDITED Appointment===>", data, newAppointment);
         appointments[innerFormKey] = newAppointment;
         this.setState({ appointments }, () => {
@@ -315,16 +343,16 @@ class TemplateDrawer extends Component {
         const { close } = this.props;
         close();
     };
-   
+
     onCloseInner = () => {
         this.setState({ showInner: false })
     };
 
     render() {
-        const { visible, patientId, patients, carePlan,submit } = this.props;
+        const { visible, patientId, patients, carePlan, submit } = this.props;
         const { showInner, innerFormType, innerFormKey, medications, appointments } = this.state;
         const { onClose, renderTemplateDetails } = this;
-         
+
         console.log("PROPSSS OFF APPOINTMENT in parent========>", this.state);
 
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
@@ -350,7 +378,7 @@ class TemplateDrawer extends Component {
                     {innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER && <EditMedicationReminder medicationData={medicationData} medicationVisible={showInner} editMedication={this.editMedication} hideMedication={this.onCloseInner} />}
                     {innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT && <EditAppointmentDrawer appointmentData={appointmentData} appointmentVisible={showInner} editAppointment={this.editAppointment}
                         hideAppointment={this.onCloseInner} patientId={patientId} patients={patients}
-                         carePlan={carePlan} />}
+                        carePlan={carePlan} />}
                     <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                             Cancel

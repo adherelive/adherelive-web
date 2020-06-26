@@ -183,6 +183,8 @@ class EditMedicationReminder extends Component {
           console.log("add medication reminder ui error -----> ", error);
         }
       }
+      }else{
+        message.error(formatMessage(messages.fill_all_details));
       }
     });
   };
@@ -221,10 +223,11 @@ class EditMedicationReminder extends Component {
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.setState({ loading: true });
-        const { deleteMedication, getMedications } = this.props;
+        const { deleteMedication, getMedications,getPatientCarePlanDetails } = this.props;
         const response = await deleteMedication(id);
         const {status} = response || {};
         if(status === true) {
+          getPatientCarePlanDetails(patient_id);
           getMedications(patient_id);
         }
       },
@@ -281,7 +284,7 @@ class EditMedicationReminder extends Component {
         visible={editMedication?medicationVisible:visible}
         destroyOnClose={true}
         className="ant-drawer"
-        title={formatMessage(messages.title)}
+        title={editMedication?formatMessage(messages.medication):formatMessage(messages.title)}
       >
         <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
         <Footer

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 import userRouter from "./user";
 import appointmentRouter from "./appointments";
 import eventRouter from "./events";
@@ -8,6 +9,8 @@ import patientRouter from "./patients";
 import medicineRouter from "./medicines";
 import medicationRouter from "./medications";
 import carePlanRouter from "./carePlans";
+import adminRouter from "./admin";
+
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
 import Log from "../../libs/log";
@@ -32,7 +35,7 @@ router.use(async function(req, res, next) {
 
     //  ----- FOR API TEST POSTMAN ------
 
-    console.log("------------ ACCESS TOKEN ---------> ", req.headers);
+    // console.log("------------ ACCESS TOKEN ---------> ", req.headers);
     const { accesstoken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
@@ -43,6 +46,7 @@ router.use(async function(req, res, next) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {userId = null} = decodedAccessToken || {};
       let user = await userService.getUser(userId);
+      // console.log("------------------+++++++++++++++++++++------------------", userId, user);
       if (user) {
         req.userDetails = {
           exists: true,
@@ -77,5 +81,6 @@ router.use("/twilio", twilioRouter);
 router.use("/patients", patientRouter);
 router.use("/medicines", medicineRouter);
 router.use("/carePlans", carePlanRouter);
+router.use("/admin", adminRouter);
 
 module.exports = router;

@@ -2,9 +2,11 @@ import Controller from "../index";
 import moment from "moment";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import medicineService from "../../services/medicine/medicine.service";
-
+import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../ApiWrapper/web/medicine";
+import carePlanService from "../../services/carePlan/carePlan.service";
+import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import {
   CUSTOM_REPEAT_OPTIONS,
   DAYS,
@@ -16,6 +18,7 @@ import {
   REPEAT_TYPE
 } from "../../../constant";
 import Log from "../../../libs/log";
+import {getCarePlanAppointmentIds,getCarePlanMedicationIds,getCarePlanSeverityDetails} from '../carePlans/carePlanHelper'
 import { Proxy_Sdk } from "../../proxySdk";
 // import medicineService from "../../services/medicines/medicine.service";
 
@@ -138,7 +141,7 @@ class MReminderController extends Controller {
     try {
       const { body, userDetails, params: { patient_id,carePlanId:care_plan_id=0 } = {} } = req;
 
-      console.log("medicineDetails **********--------> ",care_plan_id);
+      console.log("medicineDetails **********--------> ",care_plan_id,typeof(care_plan_id));
       // todo: get patient_id from url
       const {
         start_date,
@@ -188,6 +191,28 @@ class MReminderController extends Controller {
         dataToSave
       );
 
+      const data_to_create = {
+        care_plan_id:parseInt(care_plan_id),
+        medication_id: mReminderDetails.get('id')
+    }
+
+    let newMedication = await carePlanMedicationService.addCarePlanMedication(data_to_create);
+
+
+
+    let carePlan= await carePlanService.getCarePlanById(care_plan_id);
+
+    let carePlanAppointmentIds= await getCarePlanAppointmentIds(care_plan_id);
+    let carePlanMedicationIds = await getCarePlanMedicationIds(care_plan_id);
+    let carePlanSeverityDetails = await getCarePlanSeverityDetails(care_plan_id);
+    const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+    let carePlanApiData = {};
+
+    carePlanApiData[
+      carePlanApiWrapper.getCarePlanId()
+    ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,carePlanMedicationIds,carePlanAppointmentIds};
+
+
       // const eventScheduleData = {
       //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
       //   event_id: mReminderDetails.id,
@@ -201,6 +226,7 @@ class MReminderController extends Controller {
         res,
         200,
         {
+          care_plans: {...carePlanApiData},
           medications: {
             [mReminderDetails.getId]: {
               basic_info: {
@@ -376,6 +402,8 @@ class MReminderController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { id } = {} } = req;
+
+      const carePlanMedicationDetails= await carePlanMedicationService.deleteCarePlanMedicationByMedicationId(id);
 
       const medicationDetails = await medicationReminderService.deleteMedication(id);
 

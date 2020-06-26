@@ -43,14 +43,17 @@ class MedicationStrengthUnit extends Component {
   getInitialValue = () => {
     const { purpose, event: { data = {} } = {} } = this.props;
     let initialValue = "mg";
+     
+    
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
+
     return initialValue;
   };
 
   render() {
-    const { form, medications, payload: {id: medication_id} = {} } = this.props;
+    const { form, medications, payload: {id: medication_id} = {},medicationData={} } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -58,7 +61,14 @@ class MedicationStrengthUnit extends Component {
       //getFieldValue
     } = form;
 
-    const {basic_info: {details: {unit} = {}} = {}} = medications[medication_id] || {};
+    let {basic_info: {details: {unit} = {}} = {}} = medications[medication_id] || {};
+    let { schedule_data: { unit:Unit="" } = {} } = medicationData;
+    
+    console.log("WHEN TO TAKE IN FORM ITEMSS",medicationData,Unit);
+    if(Unit){
+      unit=Unit;
+    }
+    console.log("WHEN TO TAKE IN FORM ITEMSS",medicationData,unit);
     // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 

@@ -87,7 +87,6 @@ const Users = database.define(
                     activated_on: this.activated_on,
                     onboarded: this.onboarded,
                     onboarding_status: this.onboarding_status,
-                    mobile_number: this.mobile_number,
                     prefix: this.prefix,
                     verified:this.verified
 

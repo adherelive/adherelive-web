@@ -38,6 +38,8 @@ class CarePlanService {
         }
     };
 
+    
+
     updateCarePlan = async (data, id) => {
         try {
             const carePlan = await CarePlan.update(data, {

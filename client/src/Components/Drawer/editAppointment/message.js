@@ -133,6 +133,11 @@ const message = defineMessages({
         description: "",
         defaultMessage: "Edit Appointment"
       },
+      appointment: {
+        id: "app.event.Appointment",
+        description: "",
+        defaultMessage: "Appointment"
+      },
       editReminder: {
         id: "app.event.EditReminder",
         description: "",

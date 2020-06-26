@@ -166,10 +166,11 @@ class EditAppointment extends Component {
       ),
       onOk: async () => {
         this.setState({ loading: true });
-        const { deleteAppointment, getAppointments } = this.props;
+        const { deleteAppointment, getAppointments,getPatientCarePlanDetails } = this.props;
         const response = await deleteAppointment(id);
         const { status } = response || {};
         if (status === true) {
+          getPatientCarePlanDetails(patient_id);
           getAppointments(patient_id);
         }
       },
@@ -230,7 +231,7 @@ class EditAppointment extends Component {
           onClose={editAppointment ? hideAppointment : onClose}
           visible={editAppointment ? appointmentVisible : visible} // todo: change as per prop -> "visible", -- WIP --
           width={350}
-          title={formatMessage(messages.edit_appointment)}
+          title={editAppointment?formatMessage(messages.appointment):formatMessage(messages.edit_appointment)}
         // headerStyle={{
         //     display:"flex",
         //     justifyContent:"space-between",

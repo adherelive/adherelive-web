@@ -5,7 +5,7 @@ import {open} from "../../modules/drawer";
 import {getMedications} from "../../modules/medications";
 import {getAppointments} from "../../modules/appointments";
 import {searchMedicine} from "../../modules/medicines";
-import {getPatientCarePlanDetails} from "../../modules/doctors";
+import {getPatientCarePlanDetails} from "../../modules/carePlans";
 import {addCarePlanMedicationsAndAppointments} from "../../modules/carePlans";
 import {DRAWER} from "../../constant";
 

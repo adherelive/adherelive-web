@@ -53,7 +53,9 @@ class RepeatInterval extends Component {
 
   getInitialValue = () => {
     let initialValue;
-    const { purpose, event } = this.props;
+    const { purpose, event,medicationData = {} } = this.props;
+    let { schedule_data: { repeat_interval = '' } = {} } = medicationData;
+    initialValue=repeat_interval;
     if (purpose) {
       const { data: { repeatInterval } = {} } = event;
       initialValue = repeatInterval;
