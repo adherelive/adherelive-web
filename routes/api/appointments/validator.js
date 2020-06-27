@@ -52,11 +52,11 @@ export const validateAppointmentFormData = (req, res, next) => {
     response.setMessage("please check filled details");
     return res.status(422).json(response.getResponse());
   }
-  if (!validateStartTime(start_time)) {
-    const response = new Response(false, 422);
-    response.setMessage("you can't create Appointment on passed time.");
-    return res.status(422).json(response.getResponse());
-  }
+  // if (!validateStartTime(start_time)) {
+  //   const response = new Response(false, 422);
+  //   response.setMessage("you can't create Appointment on passed time.");
+  //   return res.status(422).json(response.getResponse());
+  // }
   if (!validateTimeInterval(start_time, end_time)) {
     const response = new Response(false, 422);
     response.setMessage("start time should be less than end time");

@@ -255,10 +255,6 @@
   width: 90%;
 }
 
-.wp80 {
-  width: 80%;
-}
-
 .hp90 {
   height: 90%;
 }
@@ -317,6 +313,10 @@
   border-radius: 5px;
 }
 
+.br25 {
+  border-radius: @25px;
+}
+
 .br50 {
   border-radius: 50%;
 }
@@ -371,4 +371,17 @@
 
 .hi {
   height: inherit;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  //white-space: nowrap;
+  overflow: hidden;
+}
+
+.word-wrap {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }

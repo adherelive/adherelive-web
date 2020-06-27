@@ -18,10 +18,6 @@ const Admin = lazy(() =>
   import(/* webpackChunkName: "AdminRouter" */ "../Admin")
 );
 
-const Dashboard = lazy(() =>
-  import(/* webpackChunkName: "Dashboard" */ "../../Containers/Dashboard")
-);
-
 export default class Authenticated extends Component {
   constructor(props) {
     super(props);
@@ -43,17 +39,12 @@ export default class Authenticated extends Component {
     } = this.props;
     return (
       <Fragment>
-        <div className="App flex" style={{ overflow: "hidden" }}>
-          <SideMenu {...this.props} />
-          <div className="container">
             {authenticated_category === USER_CATEGORY.DOCTOR && (
               <Doctors {...this.props} />
             )}
             {authenticated_category === USER_CATEGORY.ADMIN && (
               <Admin {...this.props} />
             )}
-          </div>
-        </div>
       </Fragment>
     );
   }

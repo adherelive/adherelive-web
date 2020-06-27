@@ -15,6 +15,9 @@ import medicines from "./medicines";
 import other_details from "./otherDetails";
 import onBoarding from "./onBoarding";
 import care_plans from "./carePlans";
+import doctor_clinics from "./doctorClinics";
+import doctor_qualifications from "./doctorQualifications";
+import upload_documents from "./uploadDocuments";
 
 const rootReducer = combineReducers({
   auth,
@@ -32,7 +35,10 @@ const rootReducer = combineReducers({
   medicines,
   other_details,
   onBoarding,
-  care_plans
+  care_plans,
+  doctor_clinics,
+  doctor_qualifications,
+  upload_documents
 });
 
 export default (state, action) => {
