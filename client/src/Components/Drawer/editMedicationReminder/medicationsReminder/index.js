@@ -161,6 +161,7 @@ class EditMedicationReminder extends Component {
               : endDate,
         };
 
+        console.log("131231 values ----> ", data_to_submit);
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
@@ -237,13 +238,13 @@ class EditMedicationReminder extends Component {
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading } = this.props;
+    const { loading,deleteMedicationOfTemplate } = this.props;
     return (
       <Button
         type="danger"
         ghost
         className="fs14 no-border style-delete"
-        onClick={handleDelete}
+        onClick={deleteMedicationOfTemplate?deleteMedicationOfTemplate:handleDelete}
         loading={loading}
       >
         <div className="flex align-center delete-text">
@@ -293,7 +294,7 @@ class EditMedicationReminder extends Component {
           onClose={editMedication?hideMedication:onClose}
           submitText={formatMessage(messages.update_button_text)}
           submitButtonProps={{}}
-          cancelComponent={!editMedication?getDeleteButton():null}
+          cancelComponent={getDeleteButton()}
         />
       </Drawer>
     );

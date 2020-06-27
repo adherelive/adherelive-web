@@ -30,7 +30,7 @@ const Patients = database.define(
     },
     gender: {
       type: Sequelize.ENUM,
-      values: [GENDER.MALE, GENDER.FEMALE, GENDER.TRANS],
+      values: [GENDER.MALE, GENDER.FEMALE, GENDER.OTHER],
       allowNull: true
     },
     first_name: {

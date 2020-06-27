@@ -127,7 +127,7 @@ class PatientDetailsDrawer extends Component {
               onClick={handlePatientDetailsRedirect}
             />
           </div>
-          <div className="fw700">{`PID: ${pid}`}</div>
+          <div className="fw700 wp100">{`PID: ${pid}`}</div>
   
           {/*boxes*/}
   
@@ -162,7 +162,7 @@ class PatientDetailsDrawer extends Component {
   
           <div className="clearfix"></div>
   
-          <div className="mt20">
+          <div className="mt20 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.patient_details)}
             </div>
@@ -196,7 +196,7 @@ class PatientDetailsDrawer extends Component {
   
           {/*medications*/}
   
-          <div className="mt20 black-85">
+          <div className="mt20 black-85 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.medications)}
             </div>

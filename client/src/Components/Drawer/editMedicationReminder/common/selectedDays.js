@@ -12,8 +12,14 @@ const FIELD_NAME = "repeat_days";
 class SelectedDays extends Component {
   constructor(props) {
     super(props);
-    const {medications, payload: {id: medication_id} = {}} = props;
-    const { basic_info: { details: { repeat_days = [] } = {} } = {} } = medications[medication_id] || {};
+    const {medications, payload: {id: medication_id} = {},medicationData={}} = props;
+    let { basic_info: { details: { repeat_days = [] } = {} } = {} } = medications[medication_id] || {};
+    
+
+    let { schedule_data: { repeat_days:rDays=[] } = {} } = medicationData;
+    if(rDays.length){
+      repeat_days=rDays;
+    }
     this.state = {
       selectedDays: repeat_days
     };
@@ -24,9 +30,15 @@ class SelectedDays extends Component {
       form: { validateFields }
     } = this.props;
     validateFields();
-    const {medications, payload: {id: medication_id} = {}} = this.props;
-    const { basic_info: { details: { repeat_days = [] } = {} } = {} } = medications[medication_id] || {};
-    console.log("879123718923 repeat_days --> ", repeat_days);
+    const {medications, payload: {id: medication_id} = {},medicationData = {}} = this.props;
+    let { basic_info: { details: { repeat_days = [] } = {} } = {} } = medications[medication_id] || {};
+    
+
+    let { schedule_data: { repeat_days:rDays=[] } = {} } = medicationData;
+    if(rDays.length){
+      repeat_days=rDays;
+    }
+    console.log("879123718923 repeat_days --> ",repeat_days, rDays,medicationData);
     this.state = {
       selectedDays: repeat_days
     };

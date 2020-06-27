@@ -51,7 +51,7 @@ class MedicationStrength extends Component {
     return (
       <Fragment>
         <FormItem
-          className="flex-1 align-self-end wp80"
+          className="dose-input"
           validateStatus={error ? "error" : ""}
           help={error ? error[0] : ""}
         >

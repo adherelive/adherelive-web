@@ -180,13 +180,14 @@ class EditAppointment extends Component {
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading } = this.props;
+    const { loading,deleteAppointmentOfTemplate } = this.props;
+    console.log("DELETE APPOINTMENT IN DELETE FUNCTIONNN",typeof(deleteAppointmentOfTemplate),deleteAppointmentOfTemplate?deleteAppointmentOfTemplate:handleDelete);
     return (
       <Button
         type="danger"
         ghost
         className="fs14 no-border style-delete"
-        onClick={handleDelete}
+        onClick={deleteAppointmentOfTemplate?deleteAppointmentOfTemplate:handleDelete}
         loading={loading}
       >
         <div className="flex align-center delete-text">
@@ -210,7 +211,7 @@ class EditAppointment extends Component {
       FormWrapper,
       getDeleteButton,
     } = this;
-
+      
     console.log("PROPSSS OFF APPOINTMENT========>", editAppointment,
       appointmentVisible,
       hideAppointment);
@@ -251,7 +252,7 @@ class EditAppointment extends Component {
             onClose={editAppointment ? hideAppointment : onClose}
             submitText={formatMessage(messages.submit_text)}
             submitButtonProps={submitButtonProps}
-            cancelComponent={!editAppointment ? getDeleteButton() : null}
+            cancelComponent={ getDeleteButton()}
           />
         </Drawer>
       </Fragment>

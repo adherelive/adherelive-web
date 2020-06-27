@@ -210,7 +210,7 @@ class AddAppointmentForm extends Component {
 
     console.log("appointment form props --> ", this.props);
     return (
-      <Form className="fw700">
+      <Form className="fw700 wp90 pb30">
         <FormItem label={formatMessage(message.patient)}>
           {getFieldDecorator(PATIENT, {
             initialValue: getInitialValue(),
@@ -247,7 +247,7 @@ class AddAppointmentForm extends Component {
             initialValue: moment(),
           })(
             <DatePicker
-              className="wp100"
+              className="wp100 h53"
               onBlur={handleDateSelect(currentDate)}
               // suffixIcon={calendarComp()}
               disabledDate={disabledDate}

@@ -34,7 +34,8 @@ class CarePlanController extends Controller {
 
             const carePlan = await carePlanService.getCarePlanById(id);
 
-            console.log("====================> ", care_plan_id, id, carePlan, userDetails);
+            
+            console.log("BODYYYY====================> ", medicationsData,appointmentsData, id, carePlan, userDetails);
             const patient_id = carePlan.get('patient_id');
 
             for (let appointment of appointmentsData) {
@@ -142,7 +143,6 @@ class CarePlanController extends Controller {
             }
 
 
-            console.log("BODYYY OF REQUESTTTTT=======>", carePlan, patient_id, care_plan_id);
 
 
             return this.raiseSuccess(res, 200, {
@@ -196,7 +196,7 @@ class CarePlanController extends Controller {
             let templateAppointments = {};
             let formattedTemplateMedications = [];
             let formattedTemplateAppointments = [];
-            if (carePlanTemplateId && !carePlanMedications.length && !carePlanAppointments.length) {
+            if (carePlanTemplateId) {
                 templateMedications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanTemplateId);
                 templateAppointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanTemplateId);
                 if (templateMedications.length) {

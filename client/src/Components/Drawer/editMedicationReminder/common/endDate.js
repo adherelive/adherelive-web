@@ -101,11 +101,16 @@ class EndDate extends Component {
       form: { getFieldDecorator, getFieldError },
       disabledEndDate,
       medications,
+      medicationData={},
       payload: {id:medication_id} = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
-    const {basic_info: {end_date} = {}} = medications[medication_id] || {};
+    let {basic_info: {end_date} = {}} = medications[medication_id] || {};
+
+    if(Object.keys(medicationData).length){
+      end_date=moment().add(5, 'days');
+    }
 
     console.log("1198781937123 end_date ---> ", end_date);
 

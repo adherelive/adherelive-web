@@ -9,7 +9,24 @@ import moment from "moment";
 import CloseIcon from "../../../Assets/images/close.svg";
 import ChatIcon from "../../../Assets/images/chat.svg";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
+import india from '../../../Assets/images/india.png';
+import australia from '../../../Assets/images/australia.png';
+import us from '../../../Assets/images/flag.png';
+import uk from '../../../Assets/images/uk.png';
+import russia from '../../../Assets/images/russia.png';
+import germany from '../../../Assets/images/germany.png';
+import southAfrica from '../../../Assets/images/south-africa.png';
+import pakistan from '../../../Assets/images/pakistan.png';
+import bangladesh from '../../../Assets/images/bangladesh.png';
+import japan from '../../../Assets/images/japan.png';
+import china from '../../../Assets/images/china.png';
+import switzerland from '../../../Assets/images/switzerland.png';
+import france from '../../../Assets/images/france.png';
 const{Option}=Select;
+
+const MALE='m';
+const FEMALE='f';
+const OTHER='o';
 
 class PatientDetailsDrawer extends Component {
     constructor(props) {
@@ -22,7 +39,7 @@ class PatientDetailsDrawer extends Component {
             treatment: '',
             severity: '',
             condition: '',
-            prefix:''
+            prefix:"91"
         };
     }
 
@@ -80,7 +97,7 @@ class PatientDetailsDrawer extends Component {
         this.setState({ condition: e.target.value });
     };
 
-    setGender = value => {
+    setGender = value=>() => {
         this.setState({ gender: value });
       };
 
@@ -100,32 +117,32 @@ class PatientDetailsDrawer extends Component {
                 value={prefix}
                 onChange={this.setPrefix}>
                 {/* india */}
-                <Option value="91"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+91</div></div></Option>
+                <Option value="91"><div className='flex align-center'><img src={india} className='w16 h16' /> <div className='ml4'>+91</div></div></Option>
                 {/* australia */}
-                <Option value="61"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+61</div></div></Option>
+                <Option value="61"><div className='flex align-center'><img src={australia} className='w16 h16' /> <div className='ml4'>+61</div></div></Option>
                 {/* us */}
-                <Option value="1"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+1</div></div></Option>
+                <Option value="1"><div className='flex align-center'><img src={us} className='w16 h16' /> <div className='ml4'>+1</div></div></Option>
                 {/* uk */}
-                <Option value="44"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+44</div></div></Option>
+                <Option value="44"><div className='flex align-center'><img src={uk} className='w16 h16' /> <div className='ml4'>+44</div></div></Option>
                 {/* china */}
-                <Option value="86"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+86</div></div></Option>
+                <Option value="86"><div className='flex align-center'><img src={china} className='w16 h16' /> <div className='ml4'>+86</div></div></Option>
                 {/* japan */}
-                <Option value="81"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+81</div></div></Option>
+                <Option value="81"><div className='flex align-center'><img src={japan} className='w16 h16' /> <div className='ml4'>+81</div></div></Option>
                 {/* germany */}
-                <Option value="49"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+49</div></div></Option>
+                <Option value="49"><div className='flex align-center'><img src={germany} className='w16 h16' /> <div className='ml4'>+49</div></div></Option>
                 {/* france */}
-                <Option value="33"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+33</div></div></Option>
+                <Option value="33"><div className='flex align-center'><img src={france} className='w16 h16' /> <div className='ml4'>+33</div></div></Option>
                 {/* switzerland */}
-                <Option value="41"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+41</div></div></Option>
+                <Option value="41"><div className='flex align-center'><img src={switzerland} className='w16 h16' /> <div className='ml4'>+41</div></div></Option>
 
                 {/* russia */}
-                <Option value="7"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+7</div></div></Option>
+                <Option value="7"><div className='flex align-center'><img src={russia} className='w16 h16' /> <div className='ml4'>+7</div></div></Option>
                 {/* south africa */}
-                <Option value="27"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+27</div></div></Option>
+                <Option value="27"><div className='flex align-center'><img src={southAfrica} className='w16 h16' /> <div className='ml4'>+27</div></div></Option>
                 {/* pakistan */}
-                <Option value="92"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+92</div></div></Option>
+                <Option value="92"><div className='flex align-center'><img src={pakistan} className='w16 h16' /> <div className='ml4'>+92</div></div></Option>
                 {/* bangladesh */}
-                <Option value="880"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+880</div></div></Option>
+                <Option value="880"><div className='flex align-center'><img src={bangladesh} className='w16 h16' /> <div className='ml4'>+880</div></div></Option>
             </Select>
         );
        
@@ -148,9 +165,13 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setName}
                 />
                 <div className='form-headings-ap'>Gender</div>
-                <Select className="form-inputs-ap" placeholder="Select Gender" value={gender} onChange={this.setGender}>
-                    {this.getGenderOptions()}
-                </Select>
+                 <div className='wp100 mt6 mb18 flex justify-space-between'>
+                     <div className={gender===MALE?'gender-selected':'gender-unselected'} onClick={this.setGender(MALE)}>M</div>
+                     
+                     <div className={gender===FEMALE?'gender-selected':'gender-unselected'} onClick={this.setGender(FEMALE)}>F</div>
+                     
+                     <div className={gender===OTHER?'gender-selected':'gender-unselected'} onClick={this.setGender(OTHER)}>O</div>
+                 </div>
 
                 <div className='form-headings-ap flex align-center justify-start'>DOB<div className="star-red">*</div></div>
                 <DatePicker className='form-inputs-ap' onChange={this.setDOB} placeholder='Select DOB'/>
@@ -230,6 +251,7 @@ class PatientDetailsDrawer extends Component {
     };
 
     render() {
+        console.log("STATEEEEEEE",this.state);
         const { visible } = this.props;
         const { onClose,renderAddPatient } = this;
 

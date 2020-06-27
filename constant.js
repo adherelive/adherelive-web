@@ -376,7 +376,7 @@ export const SIGN_IN_CATEGORY = {
 export const GENDER = {
   MALE: "m",
   FEMALE: "f",
-  TRANS: "t"
+  OTHER: "o"
 };
 
 export const EVENT_STATUS = {

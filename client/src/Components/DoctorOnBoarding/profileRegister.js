@@ -17,6 +17,19 @@ import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng,
 } from 'react-places-autocomplete';
+import india from '../../Assets/images/india.png';
+import australia from '../../Assets/images/australia.png';
+import us from '../../Assets/images/flag.png';
+import uk from '../../Assets/images/uk.png';
+import russia from '../../Assets/images/russia.png';
+import germany from '../../Assets/images/germany.png';
+import southAfrica from '../../Assets/images/south-africa.png';
+import pakistan from '../../Assets/images/pakistan.png';
+import bangladesh from '../../Assets/images/bangladesh.png';
+import japan from '../../Assets/images/japan.png';
+import china from '../../Assets/images/china.png';
+import switzerland from '../../Assets/images/switzerland.png';
+import france from '../../Assets/images/france.png';
 
 
 
@@ -254,7 +267,7 @@ class Profileregister extends Component {
                 value={prefix}
                 onChange={this.setPrefix}>
                 {/* india */}
-                <Option value="91"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+91</div></div></Option>
+                <Option value="91"><div className='flex align-center'><img src={india} className='w12 h12' /> <div className='ml4'>+91</div></div></Option>
                 {/* australia */}
                 <Option value="61"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+61</div></div></Option>
                 {/* us */}

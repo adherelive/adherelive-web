@@ -418,7 +418,7 @@ class AddMedicationReminderForm extends Component {
 
     return (
       <Fragment>
-        <Form className="event-form pb80">
+        <Form className="event-form pb80 wp90">
           {/* {participantsField.render({
             ...this.props,
             otherUser,

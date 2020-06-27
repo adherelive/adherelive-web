@@ -214,6 +214,8 @@ class EditAppointmentForm extends Component {
      let pId=patientId?patientId.toString():patient_id;
     let {basic_info: {description, start_date, start_time, end_time, details: {treatment = "",reason=''} = {}} = {}} = appointments[appointment_id] || {};
 
+    
+
     if(Object.values(carePlan).length){
        let{treatment:newTreatment=''}=carePlan;
        treatment=newTreatment;
@@ -222,6 +224,12 @@ class EditAppointmentForm extends Component {
     const{reason:res='',schedule_data:{description:des=''}={}}=appointmentData||{};
     description=des?des:description;
     reason=res?res:reason;
+    if(res){   //toDo remove when real templates are created and handle accordingly
+    start_time=res==='Surgery'?moment().add('days',18):moment().add('days',14);
+    end_time=res==='Surgery'?moment().add('days',18).add('hours',1):moment().add('days',14).add('hours',1);
+    start_date=res==='Surgery'?moment().add('days',18):moment().add('days',14);
+    
+    }
     console.log("1289313192 ",res,reason,des,description,treatment,Object.values(carePlan).length,Object.values(carePlan).length,carePlan);
     
     let fieldsError = {};
@@ -231,7 +239,7 @@ class EditAppointmentForm extends Component {
     });
 
     return (
-      <Form className="fw700">
+      <Form className="fw700 wp90 pb30">
         <FormItem label={formatMessage(message.patient)}>
           {getFieldDecorator(PATIENT, {
             initialValue: pId,

@@ -547,6 +547,8 @@ class PatientDetails extends Component {
             getPatientCarePlanDetails(patient_id);
           })
         })
+      }else{
+        message.error("Something went wrong!")
       }
     });
   }
@@ -597,7 +599,7 @@ class PatientDetails extends Component {
     console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS',carePlanId);
     let showUseTemplate =true;
     let showAddButton =carePlanTemplateId?false:true;
-    if(!carePlanTemplateId && !(cPAppointmentIds.length || cPMedicationIds.length)){
+    if(cPAppointmentIds.length || cPMedicationIds.length){
       showUseTemplate=false;
     }
     
@@ -690,9 +692,11 @@ class PatientDetails extends Component {
             <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
               <img  src={noMedication} className='w200 h200'/>
               <div className='fs20 fw700'>{formatMessage(message.nothing_to_show)}</div>
-            {showUseTemplate && (<div className='use-template-button' onClick={this.showTemplateDrawer}>
+            {showUseTemplate && carePlanTemplateId?(<div className='use-template-button' onClick={this.showTemplateDrawer}>
               <div>{formatMessage(message.use_template)}</div>
-              </div>)}
+              </div>):showUseTemplate?(<div className='use-template-button' onClick={this.handleMedicationReminder}>
+              <div>{formatMessage(message.add_medication)}</div>
+              </div>):<div/>}
               </div>)}
               {showTabs &&(
                 <div className='flex-grow-1 direction-column align-center'>
