@@ -45,6 +45,7 @@ import minioService from "../../../app/services/minio/minio.service";
 import md5 from "js-md5";
 import UserVerifications from "../../models/userVerifications";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
+import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 const Logger = new Log("WEB USER CONTROLLER");
 
@@ -935,11 +936,59 @@ class UserController extends Controller {
       const qualificationData = await doctorQualificationData(userId);
       console.log("FINAL+++================>", qualificationData);
 
+      const doctor = await doctorService.getDoctorByUserId(userId);
+      // let doctor_id = doctor.get("id");
+
+      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(doctor.get("id"));
+
+      // Logger.debug("283462843 ", doctorRegistrationDetails);
+
+      let doctorRegistrationApiDetails = {};
+      let uploadDocumentApiDetails = {};
+      let upload_document_ids = [];
+
+      for(let doctorRegistration of doctorRegistrationDetails) {
+        const doctorRegistrationWrapper = await DoctorRegistrationWrapper(
+            doctorRegistration
+        );
+
+        const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
+
+        await registrationDocuments.forEach(async document => {
+          const uploadDocumentWrapper = await UploadDocumentWrapper(document);
+          uploadDocumentApiDetails[
+              uploadDocumentWrapper.getUploadDocumentId()
+              ] = uploadDocumentWrapper.getBasicInfo();
+          upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
+        });
+
+        Logger.debug("76231238368126312 ", doctorRegistrationWrapper.getBasicInfo());
+        doctorRegistrationApiDetails[
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+            ] = {
+          ...doctorRegistrationWrapper.getBasicInfo(),
+          upload_document_ids
+        };
+
+        upload_document_ids = [];
+      }
+
+      Logger.debug("doctorRegistrationApiDetails --> ", doctorRegistrationApiDetails);
+
       return this.raiseSuccess(
         res,
         200,
         {
-          qualificationData
+          qualificationData,
+          registration_details: {
+            ...doctorRegistrationApiDetails
+          },
+          upload_documents: {
+            ...uploadDocumentApiDetails
+          }
         },
         " get doctor qualification successfull"
       );
@@ -1068,10 +1117,12 @@ class UserController extends Controller {
     const {raiseServerError, raiseSuccess} = this;
     try {
       const {body, userDetails: {userId} = {}} = req;
-      const {gender = "", speciality = "", qualification = {}, registration = {}} = body || {};
+      const {gender = "", speciality = "", qualifications = [], registration = {}} = body || {};
 
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
+
+      Logger.debug("doctor id ---128371 -> ", doctor_id);
 
       if (gender && speciality) {
         let doctor_data = { gender, speciality };
@@ -1080,88 +1131,102 @@ class UserController extends Controller {
             doctor_id
         );
       }
-      let { degree = "", year = "", college = "", id = 0, photos = [] } =
-      qualification || {};
-      let qualification_id = id;
+
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
-      let parent_id = qualification_id;
-      // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
-      if (!qualification_id) {
-        let docQualification = await qualificationService.addQualification({
-          doctor_id,
-          degree,
-          year,
-          college
-        });
-        qualification_id = docQualification.get("id");
+      let parent_id = "";
 
-        // if(photos.length>2){
-        //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
-        // }
-
-        for (let photo of photos) {
-          let document = photo;
-          let docExist = await documentService.getDocumentByData(
-              parent_type,
-              parent_id,
-              document
-          );
-
-          // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
-          if (!docExist) {
-            let qualificationDoc = await documentService.addDocument({
+      if(qualifications.length > 0) {
+        for (let qualification of qualifications) {
+          let {degree = "", year = "", college = "", id = 0, photos = []} =
+          qualification || {};
+          let qualification_id = id;
+          parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
+          parent_id = qualification_id;
+          // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
+          if (!qualification_id) {
+            let docQualification = await qualificationService.addQualification({
               doctor_id,
-              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-              parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              degree,
+              year,
+              college
             });
-          }
-        }
-      } else {
-        for (let photo of photos) {
-          let document = photo;
-          let docExist = await documentService.getDocumentByData(
-              parent_type,
-              parent_id,
-              document
-          );
+            qualification_id = docQualification.get("id");
 
-          console.log(
-              "DOCUMENT EXISTTTTTTTTTTTT",
-              id,
-              qualification_id,
-              docExist
-          );
-          if (!docExist) {
-            let qualificationDoc = await documentService.addDocument({
-              doctor_id,
-              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-              parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
-            });
+            // if(photos.length>2){
+            //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
+            // }
+
+            for (let photo of photos) {
+              let document = photo;
+              let docExist = await documentService.getDocumentByData(
+                  parent_type,
+                  parent_id,
+                  document
+              );
+
+              // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
+              if (!docExist) {
+                let qualificationDoc = await documentService.addDocument({
+                  doctor_id,
+                  parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+                  parent_id: qualification_id,
+                  document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+                });
+              }
+            }
+          } else {
+            for (let photo of photos) {
+              let document = photo;
+              let docExist = await documentService.getDocumentByData(
+                  parent_type,
+                  parent_id,
+                  document
+              );
+
+              console.log(
+                  "DOCUMENT EXISTTTTTTTTTTTT",
+                  id,
+                  qualification_id,
+                  docExist
+              );
+              if (!docExist) {
+                let qualificationDoc = await documentService.addDocument({
+                  doctor_id,
+                  parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+                  parent_id: qualification_id,
+                  document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+                });
+              }
+            }
           }
-          // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
         }
       }
 
       let { number = "", council = "", year: registration_year = "", expiry_date = "", id: registration_id = 0, photos: registration_photos = [] } =
-      qualification || {};
+      registration || {};
       parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       parent_id = registration_id;
 
-      if (!registration_id) {
+      let registrationId = registration_id;
+
+      if (!registrationId) {
         let docRegistration = await registrationService.addRegistration({
+          doctor_id,
           number,
           council,
           year: registration_year,
           expiry_date,
         });
 
+        registrationId = docRegistration.get("id");
+
+
+
         // if(photos.length>2){
         //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
         // }
 
-        for (let photo of photos) {
+        for (let photo of registration_photos) {
           let document = photo;
           let docExist = await documentService.getDocumentByData(
               parent_type,
@@ -1209,12 +1274,13 @@ class UserController extends Controller {
           res,
           200,
           {
-            registration_id
+            registration_id: registrationId
           },
           "registrations updated successfully"
       );
 
     } catch(error) {
+      Logger.debug("500 error --> ", error);
       return raiseServerError(res);
     }
   };
