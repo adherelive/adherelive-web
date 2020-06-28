@@ -1144,7 +1144,8 @@ class MobileUserController extends Controller {
     try {
       const file = req.file;
       const { userDetails: { userId } = {} } = req;
-      let { qualification = {} } = req.body;
+
+      Logger.debug("7857257 file", file);
 
       let files = await uploadImageS3(userId, file);
 
