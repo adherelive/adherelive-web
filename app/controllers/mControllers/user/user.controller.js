@@ -1333,11 +1333,12 @@ class MobileUserController extends Controller {
     try {
       const { registrationId = 0 } = req.params;
       const { document = "" } = req.body;
+      const documentToCheck = document.includes(process.config.minio.MINIO_BUCKET_NAME) ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1] : document;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       let documentToDelete = await documentService.getDocumentByData(
           parent_type,
           registrationId,
-          document
+          documentToCheck,
       );
 
       await documentToDelete.destroy();
