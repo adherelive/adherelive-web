@@ -709,7 +709,7 @@ class MobileUserController extends Controller {
       registration_details = []
     } = req.body;
 
-    const { userId: user_id } = req.params;
+    const {userDetails: {userId: user_id} = {}} = req;
     try {
       let user = userService.getUserById(user_id);
       let user_data_to_update = {
@@ -1123,6 +1123,10 @@ class MobileUserController extends Controller {
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
 
+      Logger.debug("1786387131 userId", userId);
+      Logger.debug("1786387131 doctor_id", doctor_id);
+
+
       if (gender && speciality) {
         let doctor_data = { gender, speciality };
         let updatedDoctor = await doctorService.updateDoctor(
@@ -1195,18 +1199,22 @@ class MobileUserController extends Controller {
 
       // REGISTRATION
       let { number = "", council = "", year: registration_year = "", expiry_date = "", id: registration_id = 0, photos: registration_photos = [] } =
-      qualification || {};
+      registration || {};
       parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       parent_id = registration_id;
 
-      if (!registration_id) {
+      let registrationId = registration_id;
+
+      if (!registrationId) {
         let docRegistration = await registrationService.addRegistration({
+          doctor_id,
           number,
           council,
           year: registration_year,
-          expiry_date,
+          expiry_date: moment(expiry_date),
         });
 
+        registrationId = docRegistration.get("id");
         for (let photo of photos) {
           let document = photo;
           let docExist = await documentService.getDocumentByData(
@@ -1248,12 +1256,13 @@ class MobileUserController extends Controller {
           res,
           200,
           {
-            registration_id
+            registration_id :registrationId
           },
           "registrations updated successfully"
       );
 
     } catch(error) {
+      Logger.debug("500 error", error);
       return raiseServerError(res);
     }
   };
