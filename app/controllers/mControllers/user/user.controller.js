@@ -843,16 +843,62 @@ class MobileUserController extends Controller {
   };
 
   getDoctorQualificationRegisterData = async (req, res) => {
-    let { userId } = req.params;
+    // let { userId } = req.params;
     try {
+      const {userDetails: {userId} = {}} = req || {};
       const qualificationData = await doctorQualificationData(userId);
       console.log("FINAL+++================>", qualificationData);
+
+      const doctor = await doctorService.getDoctorByUserId(userId);
+      // let doctor_id = doctor.get("id");
+
+      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(doctor.get("id"));
+
+      // Logger.debug("283462843 ", doctorRegistrationDetails);
+
+      let doctorRegistrationApiDetails = {};
+      let upload_document_ids = [];
+
+      for(let doctorRegistration of doctorRegistrationDetails) {
+        const doctorRegistrationWrapper = await MDoctorRegistrationWrapper(
+            doctorRegistration
+        );
+
+        const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
+
+        await registrationDocuments.forEach(async document => {
+          const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
+          uploadDocumentApiDetails[
+              uploadDocumentWrapper.getUploadDocumentId()
+              ] = uploadDocumentWrapper.getBasicInfo();
+          upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
+        });
+
+        Logger.debug("76231238368126312 ", doctorRegistrationWrapper.getBasicInfo());
+        doctorRegistrationApiDetails[
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+            ] = {
+          ...doctorRegistrationWrapper.getBasicInfo(),
+          upload_document_ids
+        };
+
+        upload_document_ids = [];
+      }
+
+      Logger.debug("doctorRegistrationApiDetails --> ", doctorRegistrationApiDetails);
+
 
       return this.raiseSuccess(
         res,
         200,
         {
           qualificationData,
+          registration_details: {
+            ...doctorRegistrationApiDetails
+          }
         },
         " get doctor qualification successfull"
       );
@@ -1303,37 +1349,41 @@ class MobileUserController extends Controller {
 
       const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(doctor.get("id"));
 
+      // Logger.debug("283462843 ", doctorRegistrationDetails);
+
       let doctorRegistrationApiDetails = {};
       let upload_document_ids = [];
 
-      await doctorRegistrationDetails.forEach(async doctorRegistration => {
-        const doctorRegistrationWrapper = await MDoctorRegistrationWrapper(
-            doctorRegistration
-        );
+      for(let doctorRegistration of doctorRegistrationDetails) {
+          const doctorRegistrationWrapper = await MDoctorRegistrationWrapper(
+              doctorRegistration
+          );
 
-        const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
-            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-            doctorRegistrationWrapper.getDoctorRegistrationId()
-        );
+          const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+              DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+              doctorRegistrationWrapper.getDoctorRegistrationId()
+          );
 
-        await registrationDocuments.forEach(async document => {
-          const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
-          uploadDocumentApiDetails[
-              uploadDocumentWrapper.getUploadDocumentId()
-              ] = uploadDocumentWrapper.getBasicInfo();
-          upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
-        });
+          await registrationDocuments.forEach(async document => {
+            const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
+            uploadDocumentApiDetails[
+                uploadDocumentWrapper.getUploadDocumentId()
+                ] = uploadDocumentWrapper.getBasicInfo();
+            upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
+          });
 
+          Logger.debug("76231238368126312 ", doctorRegistrationWrapper.getBasicInfo());
+          doctorRegistrationApiDetails[
+              doctorRegistrationWrapper.getDoctorRegistrationId()
+              ] = {
+            ...doctorRegistrationWrapper.getBasicInfo(),
+            upload_document_ids
+          };
 
-        doctorRegistrationApiDetails[
-            doctorRegistrationWrapper.getDoctorRegistrationId()
-            ] = {
-          ...doctorRegistrationWrapper.getBasicInfo(),
-          upload_document_ids
-        };
+          upload_document_ids = [];
+        }
 
-        upload_document_ids = [];
-      });
+      Logger.debug("doctorRegistrationApiDetails --> ", doctorRegistrationApiDetails);
 
       return raiseSuccess(
           res,

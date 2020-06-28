@@ -57,6 +57,7 @@ router.get(
 // REGISTRATION
 router.get(
     "/doctor-registration",
+    Authenticate,
     mUserController.getDoctorRegistrationData,
 );
 
