@@ -857,6 +857,7 @@ class MobileUserController extends Controller {
       // Logger.debug("283462843 ", doctorRegistrationDetails);
 
       let doctorRegistrationApiDetails = {};
+      let uploadDocumentApiDetails = {};
       let upload_document_ids = [];
 
       for(let doctorRegistration of doctorRegistrationDetails) {
@@ -898,6 +899,9 @@ class MobileUserController extends Controller {
           qualificationData,
           registration_details: {
             ...doctorRegistrationApiDetails
+          },
+          upload_documents: {
+            ...uploadDocumentApiDetails
           }
         },
         " get doctor qualification successfull"
