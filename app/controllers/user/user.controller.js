@@ -876,6 +876,7 @@ class UserController extends Controller {
       const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(doctor.get("id"));
 
       let doctorRegistrationApiDetails = {};
+      let uploadDocumentApiDetails = {};
       let upload_document_ids = [];
 
       await doctorRegistrationDetails.forEach(async doctorRegistration => {
@@ -913,6 +914,9 @@ class UserController extends Controller {
           {
             doctor_registrations: {
               ...doctorRegistrationApiDetails
+            },
+            upload_documents: {
+              ...uploadDocumentApiDetails
             }
           },
           "doctor registration data fetched successfully"
