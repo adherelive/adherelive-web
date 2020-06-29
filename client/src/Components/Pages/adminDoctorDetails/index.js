@@ -19,11 +19,11 @@ class AdminDoctorDetails extends Component {
   }
 
   componentDidMount() {
-    const {doctors, id} = this.props;
+    const { doctors, id } = this.props;
     const { getInitialData } = this;
 
-    const {doctor_qualification_ids} = doctors[id] || {};
-    if(!doctor_qualification_ids) {
+    const { doctor_qualification_ids } = doctors[id] || {};
+    if (!doctor_qualification_ids) {
       getInitialData();
     }
   }
@@ -97,7 +97,10 @@ class AdminDoctorDetails extends Component {
         <div className="wp100 p20 flex direction-row justify-space-between align-center border-box">
           <div className="w200">
             {profile_pic ? (
-              <div className="w200 h200 pointer" onClick={handleProfilePicModalOpen}>
+              <div
+                className="w200 h200 pointer"
+                onClick={handleProfilePicModalOpen}
+              >
                 <img
                   src={profile_pic}
                   alt="default user photo"
@@ -199,70 +202,72 @@ class AdminDoctorDetails extends Component {
 
     return doctor_registration_ids.map((registration_id, index) => {
       const {
-        basic_info: { number, start_date, end_date, council, year } = {},
+        basic_info: { number, start_date, end_date, council, year } = {}
       } = doctor_registrations[registration_id] || {};
 
       return (
-          <div className="wp100 p20 flex direction-column">
-            {doctor_registration_ids.length > 1 && (
-                <div className="fs16 fw700 mb20">{`${formatMessage(
-                    messages.registration_text
-                )} ${index + 1} :`}</div>
-            )}
-            <div className="wp100 flex direction-row align-center flex-wrap">
-
-              {/*registration_number*/}
-              <div className="wp20 mt16 mb16 mr16">
-                <div className="fs16 fw700">
-                  {formatMessage(messages.registration_number_text)}
-                </div>
-                <div className="fs14 fw500">
-                  {number ? number : TABLE_DEFAULT_BLANK_FIELD}
-                </div>
+        <div className="wp100 p20 flex direction-column">
+          {doctor_registration_ids.length > 1 && (
+            <div className="fs16 fw700 mb20">{`${formatMessage(
+              messages.registration_text
+            )} ${index + 1} :`}</div>
+          )}
+          <div className="wp100 flex direction-row align-center flex-wrap">
+            {/*registration_number*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.registration_number_text)}
               </div>
-
-              {/*council*/}
-              <div className="wp20 mt16 mb16 mr16">
-                <div className="fs16 fw700">
-                  {formatMessage(messages.registration_council_text)}
-                </div>
-                <div className="fs14 fw500">
-                  {council ? council : TABLE_DEFAULT_BLANK_FIELD}
-                </div>
+              <div className="fs14 fw500">
+                {number ? number : TABLE_DEFAULT_BLANK_FIELD}
               </div>
+            </div>
 
-              {/*year*/}
-              <div className="wp20 mt16 mb16 mr16">
-                <div className="fs16 fw700">
-                  {formatMessage(messages.registration_year_text)}
-                </div>
-                <div className="fs14 fw500">
-                  {year ? year : TABLE_DEFAULT_BLANK_FIELD}
-                </div>
+            {/*council*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.registration_council_text)}
               </div>
-
-              {/*registration_start_date*/}
-              <div className="wp20 mt16 mb16 mr16">
-                <div className="fs16 fw700">
-                  {formatMessage(messages.registration_start_date_text)}
-                </div>
-                <div className="fs14 fw500">
-                  {start_date ? moment(start_date).format("LLL") : TABLE_DEFAULT_BLANK_FIELD}
-                </div>
+              <div className="fs14 fw500">
+                {council ? council : TABLE_DEFAULT_BLANK_FIELD}
               </div>
+            </div>
 
-              {/*registration_expiry_date*/}
-              <div className="wp20 mt16 mb16 mr16">
-                <div className="fs16 fw700">
-                  {formatMessage(messages.registration_expiry_date_text)}
-                </div>
-                <div className="fs14 fw500">
-                  {end_date ? moment(end_date).format("LLL") : TABLE_DEFAULT_BLANK_FIELD}
-                </div>
+            {/*year*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.registration_year_text)}
               </div>
+              <div className="fs14 fw500">
+                {year ? year : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
 
+            {/*registration_start_date*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.registration_start_date_text)}
+              </div>
+              <div className="fs14 fw500">
+                {start_date
+                  ? moment(start_date).format("LLL")
+                  : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+
+            {/*registration_expiry_date*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.registration_expiry_date_text)}
+              </div>
+              <div className="fs14 fw500">
+                {end_date
+                  ? moment(end_date).format("LLL")
+                  : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
             </div>
           </div>
+        </div>
       );
     });
   };
@@ -280,7 +285,10 @@ class AdminDoctorDetails extends Component {
       } = doctor_qualifications[qualification_id] || {};
 
       return (
-        <div className="wp100 p20 flex direction-column" key={`q-block-${index}`}>
+        <div
+          className="wp100 p20 flex direction-column"
+          key={`q-block-${index}`}
+        >
           {doctor_qualification_ids.length > 1 && (
             <div className="fs16 fw700 mb20">{`${formatMessage(
               messages.qualification_text
@@ -357,12 +365,18 @@ class AdminDoctorDetails extends Component {
     const { doctor_clinic_ids = [] } = doctors[id] || {};
 
     return doctor_clinic_ids.map((clinic_id, index) => {
-      const { basic_info: { name } = {}, location, start_time, end_time } =
-        doctor_clinics[clinic_id] || {};
+      const {
+        basic_info: { name } = {},
+        location,
+        details: { time_slots = [] } = {}
+      } = doctor_clinics[clinic_id] || {};
 
       return (
         // <div className="wp100 p20 flex direction-row justify-space-between align-center border-box">
-        <div className="wp100 p20 flex direction-column" key={`c-block-${index}`}>
+        <div
+          className="wp100 p20 flex direction-column"
+          key={`c-block-${index}`}
+        >
           {doctor_clinic_ids.length > 1 && (
             <div className="fs16 fw700 mb20">{`${formatMessage(
               messages.clinic_text
@@ -390,18 +404,23 @@ class AdminDoctorDetails extends Component {
             </div>
 
             {/*open_between*/}
-            <div className="wp40 mt16 mb16 mr16">
-              <div className="fs16 fw700">
-                {formatMessage(messages.open_between_text)}
-              </div>
-              <div className="fs14 fw500">
-                {start_time
-                  ? `${moment(start_time).format("LT")} - ${moment(
-                      end_time
-                    ).format("LT")}`
-                  : TABLE_DEFAULT_BLANK_FIELD}
-              </div>
-            </div>
+            {time_slots.map((time_slot, index) => {
+              const { start_time, end_time } = time_slot || {};
+              return (
+                <div className="wp40 mt16 mb16 mr16" key={`ts-${index}`}>
+                  <div className="fs16 fw700">
+                    {formatMessage(messages.open_between_text)}
+                  </div>
+                  <div className="fs14 fw500">
+                    {start_time
+                      ? `${moment(start_time).format("LT")} to ${moment(
+                          end_time
+                        ).format("LT")}`
+                      : TABLE_DEFAULT_BLANK_FIELD}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       );
@@ -471,12 +490,12 @@ class AdminDoctorDetails extends Component {
 
   handleProfilePicModalOpen = e => {
     e.preventDefault();
-    this.setState({profilePicModalVisible: true});
+    this.setState({ profilePicModalVisible: true });
   };
 
   handleProfilePicModalClose = e => {
     e.preventDefault();
-    this.setState({profilePicModalVisible: false});
+    this.setState({ profilePicModalVisible: false });
   };
 
   getProfilePicModal = () => {

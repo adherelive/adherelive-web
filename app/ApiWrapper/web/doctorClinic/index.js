@@ -13,8 +13,7 @@ class DoctorClinicWrapper extends BaseDoctorClinic {
             doctor_id,
             name,
             location,
-            start_time,
-            end_time
+            details
         } = _data || {};
         return {
             basic_info: {
@@ -23,8 +22,7 @@ class DoctorClinicWrapper extends BaseDoctorClinic {
                 name,
             },
             location,
-            start_time,
-            end_time
+            details
         };
     };
 }
