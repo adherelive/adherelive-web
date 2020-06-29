@@ -499,3 +499,7 @@ export const MEDICINE_TYPE = {
   TABLET: "tablet",
   INJECTION: "injection"
 };
+
+export const CLINIC_TIME_SLOTS = [
+
+];

@@ -1266,7 +1266,7 @@ class MobileUserController extends Controller {
       let registrationId = registration_id;
 
       if (!registrationId) {
-        let docRegistration = await registrationService.addRegistration({
+        const docRegistration = await registrationService.addRegistration({
           doctor_id,
           number,
           council,
@@ -1293,7 +1293,15 @@ class MobileUserController extends Controller {
           }
         }
       } else {
-        for (let photo of photos) {
+        const docRegistration = await registrationService.updateRegistration({
+          doctor_id,
+          number,
+          council,
+          year: registration_year,
+          expiry_date: moment(expiry_date),
+        }, registration_id);
+
+        for (let photo of registration_photos) {
           let document = photo;
           let docExist = await documentService.getDocumentByData(
               parent_type,

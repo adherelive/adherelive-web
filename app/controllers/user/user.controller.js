@@ -1382,6 +1382,25 @@ class UserController extends Controller {
     }
   };
 
+  getClinicTimeSlots = async (req, res) => {
+    const {raiseServerError, raiseSuccess} = this;
+    try {
+      return raiseSuccess(
+          res,
+          200,
+          {
+            time_slots: {
+              ...CLINIC_TIME_SLOTS
+            }
+          },
+          "clinic time slots fetched successfully"
+      )
+    } catch(error) {
+      Logger.debug("getTimeSlots 500 error---> ", error);
+      return raiseServerError(res);
+    }
+  };
+
   doctorClinicRegister = async (req, res) => {
     let { clinics = [] } = req.body;
 
