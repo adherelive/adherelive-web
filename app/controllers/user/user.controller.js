@@ -947,6 +947,7 @@ class UserController extends Controller {
     }
   };
 
+
   uploadDoctorRegistrationDocuments = async (req, res) => {
     const {raiseServerError, raiseSuccess} = this;
     try {
