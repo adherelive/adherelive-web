@@ -53,7 +53,7 @@ export const doctorQualificationData =async(userId)=>{
            let documents= await documentService.getDoctorQualificationDocuments(DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,qualificationId);
            
               for(let document of documents){
-              photos.push(document.get('document'));
+              photos.push(`${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${document.get('document')}`);
             }
             
              qualificationData.photos=photos;
