@@ -21,12 +21,27 @@ export const getRegisterQualificationUrl = (userId) => {
   return `/auth/register-qualification/${userId}`;
 };
 
+export const getRegisterRegistrationUrl = () => {
+  return `/auth/doctor-registration`;
+};
+
+
 export const getUploadQualificationDocumentUrl = (userId) => {
   return `/auth/upload-qualification-document/${userId}`;
 };
 
+
+export const getUploadRegistrationDocumentUrl = () => {
+  return `/auth/registration-document`;
+};
+
 export const getDeleteQualificationDocumentUrl = (qualificationId) => {
   return `/auth/delete-qualification-document/${qualificationId}`;
+};
+
+
+export const getDeleteRegistrationDocumentUrl = (registrationId) => {
+  return `/auth/registration-document/${registrationId}`;
 };
 
 export const getAllDoctorsUrl = () => {

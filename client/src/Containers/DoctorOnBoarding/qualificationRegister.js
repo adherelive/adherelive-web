@@ -1,7 +1,7 @@
 import {withRouter} from "react-router-dom";
 import QualificationRegister from "../../Components/DoctorOnBoarding/qualificationRegister";
 import {signOut} from "../../modules/auth";
-import {doctorQualificationRegister,getDoctorQualificationRegisterData,registerQualification,deleteDoctorQualificationImage} from "../../modules/onBoarding";
+import {doctorQualificationRegister,getDoctorQualificationRegisterData,registerQualification,deleteDoctorQualificationImage,deleteDoctorRegistrationImage,registerRegistration} from "../../modules/onBoarding";
 import {connect} from "react-redux";
 
 const mapStateToProps = state => {
@@ -16,7 +16,9 @@ const mapDispatchToProps = dispatch => {
         doctorQualificationRegister: (data,userId) => dispatch(doctorQualificationRegister(data,userId)),
         getDoctorQualificationRegisterData: (userId) => dispatch(getDoctorQualificationRegisterData(userId)),
         registerQualification: (data,userId) => dispatch(registerQualification(data,userId)),
-        deleteDoctorQualificationImage: (qualificationId,document) => dispatch(deleteDoctorQualificationImage(qualificationId,document))
+        registerRegistration: (data) => dispatch(registerRegistration(data)),
+        deleteDoctorQualificationImage: (qualificationId,document) => dispatch(deleteDoctorQualificationImage(qualificationId,document)),
+        deleteDoctorRegistrationImage: (registrationId,document) => dispatch(deleteDoctorRegistrationImage(registrationId,document))
     };
 };
 export default withRouter(

@@ -27,10 +27,18 @@ export const DELETE_QUALIFICATION_IMAGE = "DELETE_QUALIFICATION_IMAGE";
 export const DELETE_QUALIFICATION_IMAGE_COMPLETED = "DELETE_QUALIFICATION_IMAGE_COMPLETED";
 export const DELETE_QUALIFICATION_IMAGE_COMPLETED_WITH_ERROR = "DELETE_QUALIFICATION_IMAGE_COMPLETED_WITH_ERROR";
 
+export const DELETE_REGISTRATION_IMAGE = "DELETE_REGISTRATION_IMAGE";
+export const DELETE_REGISTRATION_IMAGE_COMPLETED = "DELETE_REGISTRATION_IMAGE_COMPLETED";
+export const DELETE_REGISTRATION_IMAGE_COMPLETED_WITH_ERROR = "DELETE_REGISTRATION_IMAGE_COMPLETED_WITH_ERROR";
+
 
 export const REGISTER_QUALIFICATION = "REGISTER_QUALIFICATION";
 export const REGISTER_QUALIFICATION_COMPLETED = "REGISTER_QUALIFICATION_COMPLETED";
 export const REGISTER_QUALIFICATION_COMPLETED_WITH_ERROR = "REGISTER_QUALIFICATION_COMPLETED_WITH_ERROR";
+
+export const REGISTER_REGISTRATION = "REGISTER_REGISTRATION";
+export const REGISTER_REGISTRATION_COMPLETED = "REGISTER_REGISTRATION_COMPLETED";
+export const REGISTER_REGISTRATION_COMPLETED_WITH_ERROR = "REGISTER_REGISTRATION_COMPLETED_WITH_ERROR";
 
 
 
@@ -278,6 +286,47 @@ export const registerQualification = (payload, userId) => {
   };
 }
 
+
+export const registerRegistration = (payload) => {
+  let response = {};
+  console.log("REGISTER QUALIFICATION IMAGE DATA");
+  return async (dispatch) => {
+    try {
+      dispatch({ type: REGISTER_REGISTRATION });
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: Doctor.getRegisterRegistrationUrl(),
+        data: payload
+      });
+
+      console.log("REGISTER QUALIFICATION IMAGE response --> ", response);
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: REGISTER_REGISTRATION_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+        const { qualification_id } = data;
+        dispatch({
+          type: REGISTER_REGISTRATION_COMPLETED,
+          payload: {
+            qualification_id
+          },
+        });
+      }
+    } catch (err) {
+      console.log("err REGISTER QUALIFICATION", err);
+      throw err;
+    }
+
+    return response;
+  };
+}
+
 export const deleteDoctorQualificationImage = ( qualificationId,document) => {
   let response = {};
   console.log("DELETE QUALIFICATION IMAGE DATA");
@@ -310,6 +359,46 @@ export const deleteDoctorQualificationImage = ( qualificationId,document) => {
       }
     } catch (err) {
       console.log("err DELETE QUALIFICATION IMAGE", err);
+      throw err;
+    }
+
+    return response;
+  };
+}
+
+
+export const deleteDoctorRegistrationImage = ( registrationId,document) => {
+  let response = {};
+  console.log("DELETE REGISTRATION IMAGE DATA");
+  return async (dispatch) => {
+    try {
+      dispatch({ type: DELETE_REGISTRATION_IMAGE });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.DELETE,
+        url: Doctor.getDeleteRegistrationDocumentUrl(registrationId),
+        data:{document},
+      });
+
+      console.log("DELETE REGISTRATION IMAGE response --> ", response);
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: DELETE_REGISTRATION_IMAGE_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+
+        dispatch({
+          type: DELETE_REGISTRATION_IMAGE_COMPLETED,
+          payload: {},
+        });
+      }
+    } catch (err) {
+      console.log("err DELETE REGISTRATION IMAGE", err);
       throw err;
     }
 

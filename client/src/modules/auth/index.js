@@ -57,19 +57,19 @@ export const AUTH_INITIAL_STATE = {
 };
 
 function setAuthRedirect(user, isInitial = false) {
-  let userData = Object.values(user).length ? Object.values(user)[0] : [];
+  // let userData = Object.values(user).length ? Object.values(user)[0] : [];
 
   const {
     onboarded = true,
     onboarding_status = "",
     category = USER_CATEGORY.DOCTOR,
-  } = userData;
+  } = user;
   console.log(
     "USERRRRR IN SET AUUTTTHHHHH",
     !onboarded && category == USER_CATEGORY.DOCTOR,
     onboarded,
     category,
-    userData
+    user
   );
   let authRedirect ='';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
@@ -92,19 +92,19 @@ function setAuthRedirect(user, isInitial = false) {
 
 
 function setAuthRedirectSignIn(user, isInitial = false) {
-  let userData = Object.values(user).length ? Object.values(user)[0] : [];
+  // let userData = Object.values(user).length ? Object.values(user)[0] : [];
 
   const {
     onboarded = true,
     onboarding_status = "",
     category = USER_CATEGORY.DOCTOR,
-  } = userData;
+  } = user;
   console.log(
     "USERRRRR IN SET AUUTTTHHHHH",
     !onboarded && category == USER_CATEGORY.DOCTOR,
     onboarded,
     category,
-    userData
+    user
   );
   let authRedirect ='/';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
@@ -149,12 +149,12 @@ export const signIn = (payload) => {
         });
       } else if (status === true) {
         const { users = {}, auth_user = "", auth_category = "" } = data;
-        let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        let authRedirection = setAuthRedirectSignIn(users);
+        // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
+        let authRedirection = setAuthRedirectSignIn(users[auth_user]);
         console.log(
           " ID IN 898978 SIGNUPPPP",
           authRedirection,
-          authUser,
+          // authUser,
           response.payload.data.user
         );
         dispatch({
@@ -391,14 +391,14 @@ export const getInitialData = () => {
         // const {  users } = response.payload.data;
 
         let { users = {}, auth_user = "", auth_category = "" } = response.payload.data;
-        let authUser = Object.values(users).length ? Object.values(users)[0] : {};
+        // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
-        let authRedirection = setAuthRedirect(users, true);
+        let authRedirection = setAuthRedirect(users[auth_user], true);
 
         console.log(
           " ID IN 898978 GET INITIAL DATAA",
           authRedirection,
-          authUser,
+          // authUser,
           response.payload.data.users
         );
         dispatch({

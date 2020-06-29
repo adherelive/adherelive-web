@@ -44,14 +44,6 @@ const errMessage = require("../../../config/messages.json").errMessages;
 import minioService from "../../../app/services/minio/minio.service";
 import md5 from "js-md5";
 import UserVerifications from "../../models/userVerifications";
-import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
-import patientsService from "../../services/patients/patients.service";
-
-const MEDICATION ={1:{medicine:'Amoxil 2mg',frequency:'Everyday twice after meals',ends:'12th May',next_due:'Today at 1:30pm'},
-                   2:{medicine:'Insulin',frequency:'Once every Tuesday at 10 am',ends:'',next_due:'Next Tuesday at 10am'}};
-
-const APPOINTMENT={1:{reason:'Checking of vitals',time:'After two weeks (1st May)-1PM',notes:'Notes: Please fast before 12 hours'},
-               2:{reason:'Surgery',time:'After 18 days (4th May)-1PM',notes:'We will do a checkup in the morning too'}}
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 
 const Logger = new Log("WEB USER CONTROLLER");
@@ -120,7 +112,7 @@ class UserController extends Controller {
         templateName: EMAIL_TEMPLATE_NAME.WELCOME,
         templateData: {
           title: "Doctor",
-          link: process.config.WEB_URL + process.config.app.invite_link + link,
+          link: process.config.app.invite_link + link,
           inviteCard: "",
           mainBodyText: "We are really happy that you chose us.",
           subBodyText: "Please verify your account",
@@ -153,85 +145,34 @@ class UserController extends Controller {
     try {
       let { link } = req.params;
 
+      let updateVerification = await UserVerificationServices.updateVerification(
+        { status: "verified" },
+        link
+      );
       let verifications = await UserVerificationServices.getRequestByLink(link);
       let userId = verifications.get("user_id");
-      let userData = await userService.getUserById(userId);
-      let isVerified = userData.get('verified');
-      console.log('IS VERIFIEDDDDDD ===========>', isVerified);
-      if (!isVerified) {
-        let updateVerification = await UserVerificationServices.updateVerification(
-          { status: "verified" },
-          link
-        );
+      // let activated_on = moment();
+      let verified = true;
+      let dataToUpdate = { verified };
+      console.log("DATA TO UPDATEEEE", dataToUpdate);
+      let user = await userService.updateUser(dataToUpdate, userId);
 
-        // let activated_on = moment();
-        let verified = true;
-        let dataToUpdate = {  verified };
-        console.log("DATA TO UPDATEEEE", dataToUpdate);
-        let user = await userService.updateUser(dataToUpdate, userId);
+      console.log(
+        " Verify User --------------->  ",
+        link,
+        " 6uuu ",
+        userId,
+        " 90990",
+        user,
+        "            ",
+        updateVerification,
+        verifications
+      );
 
-        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
-        const secret = process.config.TOKEN_SECRET_KEY;
-
-        const accessToken = await jwt.sign(
-          {
-            userId,
-          },
-          secret,
-          {
-            expiresIn,
-          }
-        );
-
-
-        const apiUserDetails = await UserWrapper(userData.getBasicInfo);
-
-        const dataToSend = {
-          users: {
-            [apiUserDetails.getUserId()]: {
-              ...apiUserDetails.getBasicInfo()
-            }
-          }
-        };
-
-
-        // res.redirect("/register-profile");
-        res.cookie("accessToken", accessToken, {
-          expires: new Date(
-            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
-          ),
-          httpOnly: true,
-        });
-
-        console.log(
-          " Verify User --------------->  ",
-          link,
-          " 6uuu ",
-          userId,
-          " 90990",
-          user,
-          "            ",
-          updateVerification,
-          verifications
-        );
-
-
-
-        return this.raiseSuccess(
-          res,
-          200,
-          { ...dataToSend },
-          "user verified successfully"
-        );
-      } else {
-
-        res.redirect("/sign-in");
-        return this.raiseServerError(res, 401, error, error.message);
-      }
+      return res.redirect("/sign-in");
     } catch (error) {
       console.log("error sign in  --> ", error);
-      res.redirect("/already-verified");
+      res.redirect("/sign-in");
       return this.raiseServerError(res, 500, error, error.message);
     }
   };
@@ -243,22 +184,7 @@ class UserController extends Controller {
         email
       });
 
-      const userId=user.get('id');
-      let userCategoryData={};
-      let carePlanApiData = {};
-      let userApiData = {};
-      let userCaregoryApiData = {};
-
-      let userCategoryApiWrapper = null;
-      let userCategoryId = null;
-      let patientIds = [];
-      let userIds = [userId];
-      let careplanData = [];
-      let x = {};
-
-      let category = user.get('category');
-
-      console.log('MOMENT===========>', user.getBasicInfo);
+      console.log("MOMENT===========>", user.getBasicInfo);
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
@@ -270,8 +196,6 @@ class UserController extends Controller {
       if (!verified) {
         return this.raiseClientError(res, 401, "user account not verified");
       }
-
-      let profile_pic='';
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
       const passwordMatch = await bcrypt.compare(
@@ -292,56 +216,17 @@ class UserController extends Controller {
           }
         );
 
-        switch (category) {
-          case USER_CATEGORY.PATIENT:
-            userCategoryData = await patientService.getPatientByUserId(userId);
-            if (userCategoryData && Object.values(userCategoryData).length) {
-              if(userCategoryData.get('details') && Object.values(userCategoryData.get('details')).length){
-                let{profile_pic:dp=''}=userCategoryData.get('details');
-                profile_pic=dp;
-              }
-            }
-            break;
-          case USER_CATEGORY.DOCTOR:
-            userCategoryData = await doctorService.getDoctorByUserId(userId);
-            if (userCategoryData && Object.values(userCategoryData).length) {
-              profile_pic = userCategoryData.get('profile_pic') ? userCategoryData.get('profile_pic') : '';
-            }
-            if (userCategoryData) {
-              userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
-
-              userCategoryId = userCategoryApiWrapper.getDoctorId();
-
-              careplanData = await carePlanService.getCarePlanByData({
-                doctor_id: userCategoryId,
-              });
-              x[userCategoryApiWrapper.getDoctorId()] = userCategoryApiWrapper.getBasicInfo();
-
-              await careplanData.forEach(async (carePlan) => {
-                const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-                patientIds.push(carePlanApiWrapper.getPatientId());
-                carePlanApiData[
-                  carePlanApiWrapper.getCarePlanId()
-                ] = carePlanApiWrapper.getBasicInfo();
-              });
-            }
-            break;
-          default:
-            userCategoryData = await doctorService.getDoctorByData({
-              user_id: userId,
-            });
-        }
-
         const apiUserDetails = await UserWrapper(user.getBasicInfo);
+
+        console.log('ID OF USERRRRRRRR,',);
 
         const dataToSend = {
           users: {
             [apiUserDetails.getUserId()]: {
-              ...apiUserDetails.getBasicInfo(),
-              profile_pic
+              ...apiUserDetails.getBasicInfo()
             }
           },
-          auth_user: apiUserDetails.getId(),
+          auth_user: apiUserDetails.getUserId(),
           auth_category: apiUserDetails.getCategory()
         };
 
@@ -511,67 +396,33 @@ class UserController extends Controller {
         let patientIds = [];
         let userIds = [userId];
         let careplanData = [];
-        let x = {};
-        let profile_pic = '';
 
         console.log("GET USER CATEGORY DATA", category, userId);
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
-            if (userCategoryData && Object.values(userCategoryData).length) {
-              if(userCategoryData.get('details') && Object.values(userCategoryData.get('details')).length){
-                let{profile_pic:dp=''}=userCategoryData.get('details');
-                profile_pic=dp;
-              }
-            }
             break;
           case USER_CATEGORY.DOCTOR:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
-            if (userCategoryData && Object.values(userCategoryData).length) {
-              profile_pic = userCategoryData.get('profile_pic') ? userCategoryData.get('profile_pic') : '';
-            }
             if (userCategoryData) {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               userCategoryId = userCategoryApiWrapper.getDoctorId();
-
-              careplanData = await carePlanService.getCarePlanByData({
-                doctor_id: userCategoryId,
-              });
-              // x[userCategoryApiWrapper.getDoctorId()] = userCategoryApiWrapper.getBasicInfo();
-
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
               ] = userCategoryApiWrapper.getBasicInfo();
-              // await careplanData.forEach(async (carePlan) => {
-                for(let carePlan of careplanData){
-                  
-                let  treatment = '';
-                let severity = '';
-                let condition = '';
-                let carePlanTemplate=null;
+
+              careplanData = await carePlanService.getCarePlanByData({
+                doctor_id: userCategoryId
+              });
+
+              await careplanData.forEach(async carePlan => {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-                const templateId = carePlanApiWrapper.getCarePlanTemplateId();
-                // console.log('TEMPLATEEE IDDDDDDD000000000============>',templateId);
-                if(templateId){
-                 carePlanTemplate= await carePlanTemplateService.getCarePlanTemplateById(templateId);
-                 treatment = carePlanTemplate.get('type')?carePlanTemplate.get('type'):'';
-                 severity = carePlanTemplate.get('severity')?carePlanTemplate.get('severity'):'';
-                 condition =carePlanTemplate.get('condition')?carePlanTemplate.get('condition'):'';
-                }else{
-                let details=carePlanApiWrapper.getCarePlanDetails();
-                treatment=details.type;
-                severity=details.severity;
-                condition=details.condition;
-                }
-                // console.log('TEMPLATEEE IDDDDDDD============>',templateId,treatment,severity,condition);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
-                ] = {...carePlanApiWrapper.getBasicInfo(),treatment,severity,condition};
-
-                // console.log('TEMPLATEEE IDDDDDDD11111111============>',carePlanApiData);
-              };
+                ] = carePlanApiWrapper.getBasicInfo();
+              });
             }
             break;
           default:
@@ -614,19 +465,13 @@ class UserController extends Controller {
           userApiData[
             apiUserDetails.getUserId()
           ] = apiUserDetails.getBasicInfo();
-          userApiData[
-            apiUserDetails.getUserId()
-          ].profile_pic = profile_pic
         }
-
-
 
         /**** API wrapper for DOCTOR ****/
 
         const dataToSend = {
           users: {
-            ...userApiData,
-
+            ...userApiData
           },
           [`${category}s`]: {
             ...userCaregoryApiData
@@ -640,8 +485,6 @@ class UserController extends Controller {
           auth_user: userId,
           auth_category: category
         };
-
-        // console.log('DATA TOO SENDD  ON APP START', dataToSend);
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
       } else {
@@ -763,9 +606,9 @@ class UserController extends Controller {
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-            : null,
+          profile_pic: profile_pic,
+            // ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            // : null,
           first_name,
           middle_name,
           last_name,
@@ -1224,7 +1067,8 @@ class UserController extends Controller {
     try {
       const {body, userDetails: {userId} = {}} = req;
       const {gender = "", speciality = "", qualification = {}, registration = {}} = body || {};
-
+         
+      console.log("REGISTRATIONNN DATTAAAAAAAAA",userId,registration);
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
 
@@ -1235,88 +1079,103 @@ class UserController extends Controller {
             doctor_id
         );
       }
-      let { degree = "", year = "", college = "", id = 0, photos = [] } =
-      qualification || {};
-      let qualification_id = id;
-      let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
-      let parent_id = qualification_id;
-      // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
-      if (!qualification_id) {
-        let docQualification = await qualificationService.addQualification({
-          doctor_id,
-          degree,
-          year,
-          college
-        });
-        qualification_id = docQualification.get("id");
 
-        // if(photos.length>2){
-        //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
-        // }
+      console.log("REGISTRATIONNN DATTAAAAAAAAA000000",doctor_id,gender,speciality);
+      // let { degree = "", year = "", college = "", id = 0, photos = [] } =
+      // qualification || {};
+      // let qualification_id = id;
+      // let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
+      // let parent_id = qualification_id;
+      // // console.log("REGISTER QUALIFICATIONNNNNNNNN1111111", id,qualification_id);
+      // if (!qualification_id) {
+      //   let docQualification = await qualificationService.addQualification({
+      //     doctor_id,
+      //     degree,
+      //     year,
+      //     college
+      //   });
+      //   qualification_id = docQualification.get("id");
 
-        for (let photo of photos) {
-          let document = photo;
-          let docExist = await documentService.getDocumentByData(
-              parent_type,
-              parent_id,
-              document
-          );
+      //   // if(photos.length>2){
+      //   //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
+      //   // }
 
-          // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
-          if (!docExist) {
-            let qualificationDoc = await documentService.addDocument({
-              doctor_id,
-              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-              parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
-            });
-          }
-        }
-      } else {
-        for (let photo of photos) {
-          let document = photo;
-          let docExist = await documentService.getDocumentByData(
-              parent_type,
-              parent_id,
-              document
-          );
+      //   for (let photo of photos) {
+      //     let document = photo;
+      //     let docExist = await documentService.getDocumentByData(
+      //         parent_type,
+      //         parent_id,
+      //         document
+      //     );
 
-          console.log(
-              "DOCUMENT EXISTTTTTTTTTTTT",
-              id,
-              qualification_id,
-              docExist
-          );
-          if (!docExist) {
-            let qualificationDoc = await documentService.addDocument({
-              doctor_id,
-              parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-              parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
-            });
-          }
-          // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
-        }
-      }
+      //     // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
+      //     if (!docExist) {
+      //       let qualificationDoc = await documentService.addDocument({
+      //         doctor_id,
+      //         parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+      //         parent_id: qualification_id,
+      //         document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+      //       });
+      //     }
+      //   }
+      // } else {
+      //   for (let photo of photos) {
+      //     let document = photo;
+      //     let docExist = await documentService.getDocumentByData(
+      //         parent_type,
+      //         parent_id,
+      //         document
+      //     );
 
-      let { number = "", council = "", year: registration_year = "", expiry_date = "", id: registration_id = 0, photos: registration_photos = [] } =
-      qualification || {};
-      parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
-      parent_id = registration_id;
+      //     console.log(
+      //         "DOCUMENT EXISTTTTTTTTTTTT",
+      //         id,
+      //         qualification_id,
+      //         docExist
+      //     );
+      //     if (!docExist) {
+      //       let qualificationDoc = await documentService.addDocument({
+      //         doctor_id,
+      //         parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+      //         parent_id: qualification_id,
+      //         document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+      //       });
+      //     }
+      //     // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
+      //   }
+      // }
+
+
+      // console.log("REGISTRATIONNN DATTAAAAAAAAA111",register);
+      let { number = "", council = "", year: registration_year = "", expiryDate:expiry_date = "", id: registration_id = 0, photos: registration_photos = [] } =
+      registration || {};
+
+      console.log("REGISTRATIONNN DATTAAAAAAAAA22222",number,council,registration_year,typeof(registration_id));
+     let  parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
+     let  parent_id = registration_id;
 
       if (!registration_id) {
+        console.log("IN NOT REGISTRATION IDDDDDDDDD",number,council,registration_year,expiry_date);
         let docRegistration = await registrationService.addRegistration({
+          doctor_id,
           number,
           council,
           year: registration_year,
           expiry_date,
         });
 
-        // if(photos.length>2){
-        //   return this.raiseServerError(res, 400, {}, 'cannot add more than 3 images');
-        // }
+        registration_id=docRegistration.get('id');
 
-        for (let photo of photos) {
+        console.log("REGISTRATIONNN DATTAAAAAAAAA3333333 CREATEDDD");
+      console.log("REGISTRATIONNN DATTAAAAAAAAA3333333",docRegistration);
+
+        
+        if (registration_photos.length > 3) {
+          return this.raiseServerError(res, 422, "cannot add more than 3 images");
+
+        }
+
+        for (let photo of registration_photos) {
           let document = photo;
           let docExist = await documentService.getDocumentByData(
               parent_type,
@@ -1329,34 +1188,54 @@ class UserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              document: photo
+              // .includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
             });
           }
         }
       } else {
-        for (let photo of photos) {
+          
+        console.log("IN REGISTRATION IDDDDDDDDD");
+
+        let doctorDocs = await documentService.getDoctorQualificationDocuments(parent_type, parent_id); //registration documents because
+                                                                                              //parent type is registration
+
+        let documentsToAdd = [];
+
+
+
+        for (let photo of registration_photos) {
           let document = photo;
           let docExist = await documentService.getDocumentByData(
-              parent_type,
-              parent_id,
-              document
+            parent_type,
+            parent_id,
+            document
           );
 
-          console.log(
-              "DOCUMENT EXISTTTTTTTTTTTT",
-              id,
-              registration_id,
-              docExist
-          );
+
           if (!docExist) {
+            documentsToAdd.push(photo);
+          }
+        }
+        console.log("DOCUMENT EXISTTTTTTTTTTTT970===========>", documentsToAdd.length, doctorDocs.length, doctorDocs, documentsToAdd);
+        if (documentsToAdd.length > 3) {
+          return this.raiseServerError(res, 422, "cannot add more than 3 images");
+        }
+
+        if (doctorDocs.length + documentsToAdd.length > 3) {
+
+          return this.raiseServerError(res, 422, "cannot add more than 3 images");
+
+        }
+        for (let photo of documentsToAdd) {
+          let document = photo;
             let registrationDoc = await documentService.addDocument({
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: registration_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              document: photo
+              // .includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
             });
-          }
-          // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
         }
       }
 
@@ -1370,13 +1249,15 @@ class UserController extends Controller {
       );
 
     } catch(error) {
+      console.log("add registration error",error);
       return raiseServerError(res);
     }
   };
 
+
   registerQualification = async (req, res) => {
     let { gender = "", speciality = "", qualification = {} } = req.body;
-    const { userDetails: { userId } = {} } = req;
+    const {userDetails: {userId} = {}} = req;
     try {
       // console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
 
@@ -1426,7 +1307,7 @@ class UserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              document: photo,
             });
           }
         }
@@ -1486,7 +1367,7 @@ class UserController extends Controller {
         res,
         200,
         {
-          qualification_id
+          qualification_id,
         },
         "qualifications updated successfully"
       );
@@ -1495,6 +1376,7 @@ class UserController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
+
 
   doctorClinicRegister = async (req, res) => {
     let { clinics = [] } = req.body;
@@ -1546,7 +1428,6 @@ class UserController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
-
   addDoctorsPatient =async (req, res) => {
     const{  mobile_number= '',name= '',gender= '',date_of_birth= '',treatment:type= '',severity= '',condition= '',prefix=''}=req.body;
     const{userId:user_id=1}=req.params;
@@ -1600,6 +1481,7 @@ class UserController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   }
+
 }
 
 export default new UserController();
