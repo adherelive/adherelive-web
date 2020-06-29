@@ -1102,25 +1102,17 @@ class MobileUserController extends Controller {
       );
 
       clinics.forEach(async (item) => {
-        let { name = "", location = "", startTime = "", endTime = "" } = item;
-        let start_time = moment(startTime);
-        let end_time = moment(endTime);
-        console.log(
-          "ITEMMMMMMMMMM OF CKININIC",
-          name,
-          location,
-          startTime,
-          endTime,
-          start_time,
-          end_time,
-          doctor_id
-        );
+        let { name = "", location = "", time_slots = [] } = item;
+
+        const details = {
+          time_slots
+        };
+
         let clinic = await clinicService.addClinic({
           doctor_id,
           name,
           location,
-          start_time,
-          end_time,
+          details
         });
       });
 
