@@ -7,6 +7,8 @@ const mapStateToProps = (state) => {
   const { auth, users } = state;
   console.log("AUTH IN AUTH CONTAINERRR", auth, users);
   const { authenticated_user, authenticated_category } = auth;
+
+  console.log("AUTH IN AUTH CONTAINERRR111111", authenticated_category, authenticated_user);
   return {
     authenticated_user,
     users,

@@ -26,11 +26,17 @@ export default class Authenticated extends Component {
       // redirecting: this.props.authRedirection
     };
   }
+  componentDidMount() {
+    // this.setState((prevState, prevProps) => {
+    //   return {
+    //     redirecting: false
+    //   };
+    // });
 
-  componentDidMount() {}
-
+  }
   render() {
     const { redirecting } = this.state;
+    console.log("PROPS IN AUTH COMPONENTTTT",this.props);
     const {
       authRedirection,
       authenticated_user,

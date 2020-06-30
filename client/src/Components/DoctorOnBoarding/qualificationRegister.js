@@ -60,8 +60,9 @@ class QualificationRegister extends Component {
     await getDoctorQualificationRegisterData(authenticated_user);
 
     const { onBoarding = {} } = this.props;
-    let { qualificationData: { speciality = '', gender = '', registration_details=[], qualification_details = [] } = {} } = onBoarding || {};
+    let { qualificationData: { speciality = '', gender = '',  qualification_details = []} = {},registration_details={},upload_documents=[] } = onBoarding || {};
     // registration_year=registration_year?registration_year:parseInt(moment().format("YYYY"));
+    console.log("ONBOARDING DATA IN FETCH DATATA",registration_details,typeof(registration_details),upload_documents,qualification_details,onBoarding);
     let educationKeys = [];
     let education = {};
     let registrationKeys = [];
@@ -90,7 +91,25 @@ class QualificationRegister extends Component {
       education[key] = { degree: "", college: "", year: parseInt(moment().format("YYYY")),photo: [], photos: [], id: 0 };
       educationKeys = [key];
     }
-    if (registration_details.length) {
+    if (Object.values(registration_details).length) {
+
+      for (let regis in registration_details) {
+               
+      // console.log("ONBOARDING DATA IN FETCH DATATA",regis);
+        let photos=[];
+        let key = uuid();
+    let {basic_info:{year='',council='',number='',id=0},upload_document_ids=[],expiry_date=''}=registration_details[regis];
+         
+      registration[key]={year,expiryDate:moment(expiry_date),council,number,id};
+      registration[key].photo=[];
+      for (let doc of upload_document_ids){
+        let{basic_info:{document=''}}=upload_documents[doc];
+        photos.push(document);
+      }
+      registration[key].photos=photos;
+      registrationKeys.push(key);
+      console.log("ONBOARDING DATA IN FETCH DATATA",registration,registrationKeys);
+      }
 
     }else{
       let key1 = uuid();
@@ -126,7 +145,11 @@ class QualificationRegister extends Component {
     let { registration = {} } = this.state;
     let newRegistration = registration;
     newRegistration[key].number = e.target.value;
+    const { value } = e.target;
+    const reg = /^-?\d*(\.\d*)?$/;
+    if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
     this.setState({ registration: newRegistration });
+    }
   };
 
   setRegCouncil = (key, e) => {
@@ -265,7 +288,7 @@ class QualificationRegister extends Component {
 
   onUploadCompleteRegistration = async ({ files = [] }, key) => {
 
-    const { docsReg = [], speciality = '', gender = '' } = this.state;
+    let { docsReg = [], speciality = '', gender = '' } = this.state;
 
       console.log('KEYS AND FILES IN ON UPLOAD COMPLETE BEFORE SET STATE', docsReg,files);
     this.setState({ docsReg: [...docsReg, ...files] },async ()=>{
@@ -278,7 +301,7 @@ class QualificationRegister extends Component {
       if (docsReg.length === newRegistration[key].photo.length || docsReg.length + newRegistration[key].photos.length === newRegistration[key].photo.length) {
         let newPhotos = newRegistration[key].photos;
         let newPhoto = newRegistration[key].photo;
-        // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE1111111', newRegistration);
+        console.log('KEYS AND FILES IN ON UPLOAD COMPLETE==========>', newPhotos);
         const { registerRegistration } = this.props;
         const { authenticated_user } = this.props;
         const { basic_info: { id: userId = 1 } = {} } = authenticated_user || {};
@@ -314,9 +337,9 @@ class QualificationRegister extends Component {
             let length=newRegistration[key].photos.length;
             newRegistration[key].photo=newPhoto.slice(0,length-docsReg.length);
 
-            newRegistration[key].photos=newPhotos;
+            newRegistration[key].photos=newPhotos.slice(0,length-docsReg.length);
             
-            console.log('KEYS AND FILES IN ON UPLOAD ELSEEEEEEEEEE',newRegistration);
+            console.log('KEYS AND FILES IN ON UPLOAD ELSEEEEEEEEEE',newRegistration,length,newPhotos);
             this.setState({
               docsReg: [],
               registration: newRegistration
@@ -613,7 +636,7 @@ class QualificationRegister extends Component {
         if (deleteIndexOfUrls > -1) {
           newRegistration[key].photos.splice(deleteIndexOfUrls, 1);
         }
-        this.setState({ education: newRegistration });
+        this.setState({ registration: newRegistration });
       } else {
         message.error('Something went wrong');
       }
@@ -942,37 +965,44 @@ class QualificationRegister extends Component {
   validateData = () => {
     let { speciality = '',
       gender = '',
-      registration_number = '',
-      registration_council = '',
-      registration_year = '',
+      registration={},
       education = {} } = this.state;
     let newEducation = Object.values(education);
+    let newRegistration = Object.values(registration);
     if (!speciality) {
       message.error('Please enter you Speciality.')
       return false;
     } else if (!gender) {
       message.error('Please select your gender.')
       return false;
-    } else if (!registration_number) {
-      message.error('Please enter your Registration number.')
-      return false;
+    // } else if (!registration_number) {
+    //   message.error('Please enter your Registration number.')
+    //   return false;
     } else if (!newEducation.length) {
       message.error('Please enter your Education details.')
       return false;
-    }
-    else if (!registration_council) {
-      message.error('Please enter Registration council.')
-      return false;
-    } else if (!parseInt(registration_year)) {
-      console.log("REGISTRATION YEARRRRRRR",!parseInt(registration_year),registration_year,registration_year,this.state.registration_year,this.state);
-      message.error('Please enter your Registration year.')
-      return false;
+    // }
+    // else if (!registration_council) {
+    //   message.error('Please enter Registration council.')
+    //   return false;
+    // } else if (!parseInt(registration_year)) {
+    //   console.log("REGISTRATION YEARRRRRRR",!parseInt(registration_year),registration_year,registration_year,this.state.registration_year,this.state);
+    //   message.error('Please enter your Registration year.')
+    //   return false;
     } else {
       for (let edu of newEducation) {
         let { degree = '', college = '', year = '', photos = [] } = edu;
         if (!degree || !college || !parseInt(year) || !photos.length) {
 
           message.error('Please enter all Education details.')
+          return false;
+        }
+      }
+      for(let reg of newRegistration){
+        let { number = '',expiryDate='', council = '', year = '', photos = [] } = reg;
+        if (!number || !expiryDate || !parseInt(year) || !photos.length||!council) {
+
+          message.error('Please enter all Registration details.')
           return false;
         }
       }
@@ -985,13 +1015,17 @@ class QualificationRegister extends Component {
     const validate = this.validateData();
     if (validate) {
       const { basic_info: { id = 1 } = {} } = authenticated_user || {};
-      const { speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = '', education = {} } = this.state;
+      const { speciality = '', gender = '', registration={}, education = {} } = this.state;
       let newEducation = Object.values(education);
+      let newRegistration = Object.values(registration);
       newEducation.forEach((edu, index) => {
         delete edu.photo;
       })
+      newRegistration.forEach((reg, index) => {
+        delete reg.photo;
+      })
       // console.log('ONCLICKKKKKK8797897', newEducation);
-      const data = { speciality, gender, registration_number, registration_council, registration_year, qualification_details: newEducation };
+      const data = { speciality, gender, registration_details:newRegistration, qualification_details: newEducation };
       const { doctorQualificationRegister } = this.props;
       doctorQualificationRegister(data, id).then(response => {
         const { status } = response;

@@ -229,11 +229,13 @@ export const getDoctorQualificationRegisterData = (userId) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { qualificationData } = data;
+        const { qualificationData,registration_details,upload_documents } = data;
         dispatch({
           type: GET_DOCTOR_QUALIFICATION_DATA_COMPLETED,
           payload: {
-            qualificationData
+            qualificationData,
+            registration_details,
+            upload_documents
           },
         });
       }
@@ -415,7 +417,9 @@ export default (state = {}, action) => {
       };
     case GET_DOCTOR_QUALIFICATION_DATA_COMPLETED:
       return {
-        qualificationData: payload.qualificationData
+        qualificationData: payload.qualificationData,
+        registration_details:payload.registration_details,
+        upload_documents:payload.upload_documents
       };
     default:
       return state;

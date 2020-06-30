@@ -65,7 +65,7 @@ function setAuthRedirect(user, isInitial = false) {
     category = USER_CATEGORY.DOCTOR,
   } = user;
   console.log(
-    "USERRRRR IN SET AUUTTTHHHHH",
+    "USERRRRR IN SET AUUTTTHHHHH VERIFYYYY",
     !onboarded && category == USER_CATEGORY.DOCTOR,
     onboarded,
     category,
@@ -186,7 +186,7 @@ export const verifyUser = (link) => {
         url: Auth.getVerifyUserUrl(link)
       });
 
-      console.log("SIGN IN response --> ", response);
+      console.log("VERIFY USERRRRR response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -197,20 +197,24 @@ export const verifyUser = (link) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { users = {} } = data;
-        let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        let authRedirection = setAuthRedirect(users);
+        let { users = {},auth_user='',auth_category='' } = data;
+        // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         console.log(
-          " ID IN 898978 SIGNUPPPP",
+          " ID IN 898978 VERIFYYYYY",
+          users,auth_user,users[auth_user]
+        );
+        let authRedirection = setAuthRedirect(users[auth_user]);
+        console.log(
+          " ID IN 898978 VERIFYYYYY",
           authRedirection,
-          authUser,
-          response.payload.data.user
+          users,auth_user,users[auth_user]
         );
         dispatch({
           type: VALIDATING_LINK_COMPLETED,
           payload: {
-            authenticatedUser: authUser,
+            authenticatedUser: auth_user,
             authRedirection,
+            authCategory: auth_category
           },
         });
       }
@@ -441,6 +445,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
       return{
       authenticated: true,
       authenticated_user: payload.authenticatedUser,
+      authenticated_category: payload.authCategory,
       authRedirection: payload.authRedirection
       }
     

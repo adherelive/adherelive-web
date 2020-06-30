@@ -31,11 +31,9 @@ const DoctorClinics = database.define(
             type: Sequelize.STRING(400),
             allowNull: false,
           },
-          start_time: {
-            type: Sequelize.DATE
-          },
-          end_time:{
-            type:Sequelize.DATE
+          details: {
+            type: Sequelize.JSON,
+              allowNull: true
           }
     },
     {
@@ -49,7 +47,8 @@ const DoctorClinics = database.define(
                     name: this.name,
                     location: this.location,
                     start_time: this.start_time,
-                    end_time: this.end_time
+                    end_time: this.end_time,
+                    details: this.details
                 };
             }
         }

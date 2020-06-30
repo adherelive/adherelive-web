@@ -12,7 +12,7 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
-import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from './carePlanHelper'
+import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from './carePlanHelper';
 const moment = require("moment");
 
 class CarePlanController extends Controller {

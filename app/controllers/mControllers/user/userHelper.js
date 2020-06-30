@@ -51,7 +51,7 @@ export const doctorQualificationData =async(userId)=>{
            let documents= await documentService.getDoctorQualificationDocuments(DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,qualificationId);
            
               for(let document of documents){
-              photos.push(document.get('document'));
+              photos.push(`${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${document.get('document')}`);
             }
             
              qualificationData.photos=photos;
@@ -93,12 +93,15 @@ export const uploadImageS3= async(userId ,file)=>{
     const metaData = {
       "Content-Type":
           "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  };
+    };
+
+    console.log("816575641 ---------------> ", file_name);
+
+    const file_link = process.config.minio.MINIO_S3_HOST +"/" + process.config.minio.MINIO_BUCKET_NAME + "/" + file_name;
   const fileUrl = folder+ "/" +file_name;
   await minioService.saveBufferObject(file.buffer, file_name, metaData);
 
   // console.log("file urlll: ", process.config.minio.MINI);
-  const file_link = "/" + fileUrl;
   let files = [file_link];
  return files;
 }catch(error){

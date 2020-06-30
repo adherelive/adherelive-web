@@ -33,12 +33,15 @@ class ClinicRegister extends Component {
     }
 
     componentDidMount() {
-
+        let key = uuid();
         let key1 = uuid();
 
 
         let clinics = {};
-        clinics[key1] = { name: "", location: "", startTime: {}, endTime: {} };
+        let timings = {};
+        timings[key] = { startTime: "", endTime: '' };
+        let timingsKeys = [key];
+        clinics[key1] = { name: "", location: "", timings, timingsKeys };
         let clinicsKeys = [key1];
         this.setState({ clinics, clinicsKeys });
 
@@ -60,37 +63,68 @@ class ClinicRegister extends Component {
         this.setState({ clinics: newClinics });
     }
 
-    setClinicStartTime = key => (time, timeString) => {
-        console.log('TIMEEEEEEEEEEEEEEEEEEE', key, time, timeString)
+    setClinicStartTime = (key1, key2) => (time, timeString) => {
+        // console.log('TIMEEEEEEEEEEEEEEEEEEE', key, time, timeString)
         let { clinics = {} } = this.state;
         let newClinics = clinics;
-        newClinics[key].startTime = time;
+        newClinics[key1].timings[key2].startTime = time;
         this.setState({ clinics: newClinics });
     }
 
-    setClinicEndTime = key => (time, timeString) => {
-        console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD', key, time, timeString)
+    setClinicEndTime = (key1, key2) => (time, timeString) => {
+        // console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD', key, time, timeString)
         let { clinics = {} } = this.state;
         let newClinics = clinics;
-        console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD22222', clinics, newClinics[key]);
-        let validEndTime=moment(time).isAfter(newClinics[key].endTime);
-        if(validEndTime){
-        newClinics[key].endTime = time;
-        this.setState({ clinics: newClinics });
-        }else{
+        // console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD22222', clinics, newClinics[key]);
+        let validEndTime = moment(time).isAfter(newClinics[key1].timings[key2].startTime);
+        if (validEndTime) {
+            newClinics[key1].timings[key2].endTime = time;
+            this.setState({ clinics: newClinics });
+        } else {
             message.error('Please select a valid End Time.')
         }
     }
 
     addClinic = () => {
         let key = uuid();
+        let key1 = uuid();
         let { clinics = {}, clinicsKeys = [] } = this.state;
+
+        let timings = {};
+        timings[key1] = { startTime: "", endTime: '' };
+        let timingsKeys = [key1];
+
         let newClinics = clinics;
         let newclinicsKeys = clinicsKeys;
-        newClinics[key] = { name: "", location: "", startTime: "", endTime: '' };
+        newClinics[key] = { name: "", location: "", timings, timingsKeys };
         newclinicsKeys.push(key);
         // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newClinics[key],newclinicsKeys);
         this.setState({ clinics: newClinics, clinicsKeys: newclinicsKeys });
+    }
+
+    addClinicTimings = (key) => () => {
+        let key1 = uuid();
+        let { clinics = {}, clinicsKeys = [] } = this.state;
+        // console.log("CLINIC TIMINGSSSSSSS",clin)
+        let newClinics = clinics;
+
+        let newTimings = newClinics[key].timings;
+        newClinics[key].timingsKeys.push(key1);
+        newTimings[key1] = { startTime: "", endTime: '' };
+        newClinics[key].timings = newTimings;
+        this.setState({ clinics: newClinics });
+    }
+
+    deleteClinicTimings = (key1, key2) => () => {
+
+        let { clinics = {}, clinicsKeys = [] } = this.state;
+
+        let newClinics = clinics;
+        let newTimings = newClinics[key1].timings;
+        delete newTimings[key2];
+        newClinics[key1].timings = newTimings;
+        newClinics[key1].timingsKeys.splice(newClinics[key1].timingsKeys.indexOf(key2), 1);
+        this.setState({ clinics: newClinics });
     }
 
     deleteClinic = (key) => () => {
@@ -120,24 +154,24 @@ class ClinicRegister extends Component {
         return (
             <div className='flex direction-column'>
                 {clinicsKeys.map(key => {
-                    let{location='',name='',startTime={},endTime={}}=clinics[key];
-                    let locationToDisplay=location&&location.length>=45?`${location.substring(0,45)}...`:location;
+                    let { location = '', name = '', timingsKeys = [], timings = {} } = clinics[key];
+                    let locationToDisplay = location && location.length >= 45 ? `${location.substring(0, 45)}...` : location;
                     return (
 
                         <div key={key}>
 
-                 <div className='flex justify-space-between align-center direction-row'>
-                            
-                            <div className='form-headings'>Name</div>
-                            {clinicsKeys.indexOf(key) > 0 ? (
-                                <div className='wp100 flex justify-end'>
-                                    <DeleteTwoTone
-                                        className={"pointer align-self-end"}
-                                        onClick={this.deleteClinic(key)}
-                                        twoToneColor="#cc0000"
-                                    />
-                                </div>
-                            ) : <div/>}
+                            <div className='flex justify-space-between align-center direction-row'>
+
+                                <div className='form-headings'>Name</div>
+                                {clinicsKeys.indexOf(key) > 0 ? (
+                                    <div className='wp100 flex justify-end'>
+                                        <DeleteTwoTone
+                                            className={"pointer align-self-end"}
+                                            onClick={this.deleteClinic(key)}
+                                            twoToneColor="#cc0000"
+                                        />
+                                    </div>
+                                ) : <div />}
                             </div>
                             <Input
                                 placeholder="Clinic name"
@@ -147,17 +181,36 @@ class ClinicRegister extends Component {
                             />
                             <div className='form-headings'>Location</div>
                             <div className={`form-input-border ${locationToDisplay ? 'active-grey' : 'default-grey'} pointer`} onClick={this.setModalVisible(key)}>
-                                <div className={locationToDisplay ? 'active-grey' : 'default-grey'}>{ locationToDisplay ?locationToDisplay : 'Location'}</div><Icon type="environment" theme="filled" /></div>
-                            <div className='flex justify-space-between mb10'>
-                                <div className='flex direction-column'>
-                                    <div className='form-headings'>Start Time</div>
-                                    <TimePicker   use12Hours format="HH:mm a" onChange={this.setClinicStartTime(key)} />
-                                </div>
-                                <div className='flex direction-column'>
-                                    <div className='form-headings'>End Time</div>
-                                    <TimePicker use12Hours format="HH:mm a"  onChange={this.setClinicEndTime(key)} />
-                                </div>
+                                <div className={locationToDisplay ? 'active-grey' : 'default-grey'}>{locationToDisplay ? locationToDisplay : 'Location'}</div><Icon type="environment" theme="filled" /></div>
+
+                            <div className='flex justify-space-between align-center direction-row'>
+                                <div className='form-headings'>Timings</div>
+                                <div className='pointer fs16 medium ' onClick={this.addClinicTimings(key)}>Add More</div>
                             </div>
+                            {timingsKeys.map((tKey, index) => {
+                                return (
+                                    <div key={tKey} className='flex justify-space-between mb10'>
+                                        <div className='flex direction-column'>
+                                            <div className='fs14 mt8 mb8'>Start Time</div>
+                                            <TimePicker use12Hours format="HH:mm a" onChange={this.setClinicStartTime(key, tKey)} />
+                                        </div>
+                                        <div className='flex direction-row align-center'>
+                                            <div className='flex direction-column'>
+                                                <div className='flex wp100 align-center justify-space-between fs14 mt8 mb8'>End Time   {index > 0 &&
+                                                (<Icon
+                                                    className="ml10"
+                                                    type="minus-circle-o"
+                                                    onClick={this.deleteClinicTimings(key, tKey)}
+                                                />)
+                                            }</div>
+                                                <TimePicker use12Hours format="HH:mm a" onChange={this.setClinicEndTime(key, tKey)} />
+                                            </div>
+                                          
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
                         </div>
                     );
                 })
@@ -170,9 +223,9 @@ class ClinicRegister extends Component {
     renderClinicForm = () => {
         return (
             <div className='form-block'>
-                 <div className='flex justify-space-between align-center direction-row'>
-                <div className='form-category-headings'>Clinic</div>
-                <div className='pointer fs16 medium ' onClick={this.addClinic}>Add More</div>
+                <div className='flex justify-space-between align-center direction-row'>
+                    <div className='form-category-headings'>Clinic</div>
+                    <div className='pointer fs16 medium ' onClick={this.addClinic}>Add More</div>
                 </div>
                 {this.renderClinics()}
             </div>
@@ -183,10 +236,17 @@ class ClinicRegister extends Component {
         for (let edu of newClinics) {
 
             console.log('NEW CLINICSSSS============>222222', edu);
-            let { name = '', location = '', startTime = {}, endTime = {} } = edu;
+            let { name = '', location = '', timings = {} } = edu;
 
-            console.log('NEW CLINICSSSS============>3333333', name, location, startTime, endTime);
-            if (!name || !location || !Object.values(startTime ? startTime : {}).length || !Object.values(endTime ? endTime : {}).length) {
+            for (let timeSlot of Object.values(timings)) {
+                let { startTime = '', endTime = '' } = timeSlot;
+                if (!startTime || !endTime) {
+                    return false;
+                }
+            }
+
+            console.log('NEW CLINICSSSS============>3333333', name, location);
+            if (!name || !location) {
                 return false;
             }
         }
@@ -215,6 +275,11 @@ class ClinicRegister extends Component {
             const { basic_info: { id = 1 } = {} } = authenticated_user || {};
             const { clinics = {} } = this.state;
             let newClinics = Object.values(clinics);
+            for (let clinic of newClinics) {
+                clinic.time_slots = Object.values(clinic.timings);
+                delete clinic.timings;
+                delete clinic.timingsKeys;
+            }
             const data = { clinics: newClinics };
             const { doctorClinicRegister } = this.props;
             doctorClinicRegister(data, id).then(response => {
@@ -245,7 +310,7 @@ class ClinicRegister extends Component {
     };
 
     render() {
-        const { visible = false,clinics,clinicKeyOfModal } = this.state;
+        const { visible = false, clinics, clinicKeyOfModal } = this.state;
         console.log("STATEEEEEEEEEEE", this.state);
         return (
             <Fragment>
@@ -254,7 +319,7 @@ class ClinicRegister extends Component {
                     <div className='header'>Create your Profile</div>
                     <div className='registration-body'>
                         <div className='flex mt36'>
-                            <UploadSteps  current={2} />
+                            <UploadSteps current={2} />
                         </div>
                         <div className='flex'>
                             {this.renderClinicForm()}
@@ -268,7 +333,7 @@ class ClinicRegister extends Component {
                         <div className={'footer-text-active'} onClick={this.onNextClick}>Finish</div></div>
                 </div>
 
-                <LocationModal visible={visible} handleCancel={this.handleCancel} handleOk={this.handleOk} location={clinicKeyOfModal&&clinics[clinicKeyOfModal]?clinics[clinicKeyOfModal].location:''} />
+                <LocationModal visible={visible} handleCancel={this.handleCancel} handleOk={this.handleOk} location={clinicKeyOfModal && clinics[clinicKeyOfModal] ? clinics[clinicKeyOfModal].location : ''} />
 
             </Fragment>
         );

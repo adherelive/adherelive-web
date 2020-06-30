@@ -242,7 +242,7 @@ class TemplateDrawer extends Component {
                                     <div className='form-headings-ap'>{reason}</div>
                                     <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)} />
                                 </div>
-                                <div className='drawer-block-description'>{timeToShow ? timeToShow : time_gap}</div>
+                                <div className='drawer-block-description'>{timeToShow ? timeToShow : time_gap==14?"After two weeks":`After ${time_gap} days`}</div>
                                 <div className='drawer-block-description'>{`Notes:${description}`}</div>
                             </div>
                             {/* <DeleteTwoTone
@@ -297,12 +297,12 @@ class TemplateDrawer extends Component {
             let newMed = medicationsData[medication];
             let { medicine = "", medicineType = "", medicine_id = "",
                 schedule_data: { end_date = '', quantity = 0, repeat = "", repeat_days = [], start_date = '',
-                    start_time = '', strength = 0, unit = "", when_to_take = [] } = {} } = newMed;
+                    start_time = '', strength = 0, unit = "", when_to_take = [],duration } = {} } = newMed;
 
             if (!start_time || !start_date || !end_date) {
                 medicationsData[medication].schedule_data.start_time = moment();
                 medicationsData[medication].schedule_data.start_date = moment();
-                medicationsData[medication].schedule_data.end_date = moment().add('days', 5);
+                medicationsData[medication].schedule_data.end_date = moment().add('days', duration);
 
                
             }
@@ -312,12 +312,12 @@ class TemplateDrawer extends Component {
 
             let newAppointment = appointmentsData[appointment];
             let { reason = '', schedule_data: { date = '', description = '',
-                end_time = '', start_time = '', treatment = 'Sample Care Plan' } = {} } = newAppointment;
+                end_time = '', start_time = '', treatment = 'Sample Care Plan' } = {},time_gap='' } = newAppointment;
 
             if (!date || !start_time || !end_time) {
-                appointmentsData[appointment].schedule_data.start_time = reason === 'Surgery' ? moment().add('days', 18) : moment().add('days', 14);
-                appointmentsData[appointment].schedule_data.end_time = reason === 'Surgery' ? moment().add('days', 18).add('hours', 1) : moment().add('days', 14).add('hours', 1);
-                appointmentsData[appointment].schedule_data.date = reason === 'Surgery' ? moment().add('days', 18) : moment().add('days', 14);
+                appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)) ;
+                appointmentsData[appointment].schedule_data.end_time = moment().add('days',  parseInt(time_gap)).add('hours', 1);
+                appointmentsData[appointment].schedule_data.date = moment().add('days', 18) ;
                 appointmentsData[appointment].schedule_data.participant_two = {
                     id: patientId,
                     category: "patient",
