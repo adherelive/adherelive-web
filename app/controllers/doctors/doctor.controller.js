@@ -15,7 +15,7 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import DoctorQualificationWrapper from "../../ApiWrapper/web/doctorQualification";
 import DoctorClinicWrapper from "../../ApiWrapper/web/doctorClinic";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-import { USER_CATEGORY } from "../../../constant";
+import {DOCUMENT_PARENT_TYPE, USER_CATEGORY} from "../../../constant";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 
@@ -84,7 +84,9 @@ class DoctorController extends Controller {
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
       let uploadDocumentApiDetails = {};
+      let doctorRegistrationApiDetails = {};
       let doctor_qualification_ids = [];
+      let doctor_registration_ids = [];
       let doctor_clinic_ids = [];
       let upload_document_ids = [];
 
@@ -132,6 +134,45 @@ class DoctorController extends Controller {
         upload_document_ids = [];
       });
 
+      // REGISTRATION DETAILS
+      const doctorRegistrations = await doctorRegistrationService.getRegistrationsByDoctorId(
+          doctorWrapper.getDoctorId()
+      );
+
+      await doctorRegistrations.forEach(async doctorRegistration => {
+        const doctorRegistrationWrapper = await DoctorRegistrationWrapper(
+            doctorRegistration
+        );
+
+        const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
+
+        await registrationDocuments.forEach(async document => {
+          const uploadDocumentWrapper = await UploadDocumentWrapper(document);
+          uploadDocumentApiDetails[
+              uploadDocumentWrapper.getUploadDocumentId()
+              ] = uploadDocumentWrapper.getBasicInfo();
+          upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
+        });
+
+
+        doctorRegistrationApiDetails[
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+            ] = {
+          ...doctorRegistrationWrapper.getBasicInfo(),
+          upload_document_ids
+        };
+
+        doctor_registration_ids.push(
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
+
+        upload_document_ids = [];
+      });
+
+
       const doctorClinics = await doctorClinicService.getClinicForDoctor(
         doctorWrapper.getDoctorId()
       );
@@ -143,19 +184,6 @@ class DoctorController extends Controller {
         ] = doctorClinicWrapper.getBasicInfo();
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       });
-
-      const qualificationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
-        "doctor_qualification",
-        doctor_qualification_ids
-      );
-
-      // await qualificationDocuments.forEach(async document => {
-      //   const uploadDocumentWrapper = await UploadDocumentWrapper(document);
-      //   uploadDocumentApiDetails[
-      //       uploadDocumentWrapper.getUploadDocumentId()
-      //       ] = uploadDocumentWrapper.getBasicInfo();
-      //   upload_document_ids.push(uploadDocumentWrapper.getDoctorClinicId());
-      // });
 
       return raiseSuccess(
         res,
@@ -172,10 +200,13 @@ class DoctorController extends Controller {
             }
           },
           doctor_qualifications: {
-            ...doctorQualificationApiDetails
+            ...doctorQualificationApiDetails,
           },
           doctor_clinics: {
-            ...doctorClinicApiDetails
+            ...doctorClinicApiDetails,
+          },
+          doctor_registrations: {
+            ...doctorRegistrationApiDetails,
           },
           upload_documents: {
             ...uploadDocumentApiDetails,
