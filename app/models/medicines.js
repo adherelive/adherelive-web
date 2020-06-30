@@ -13,16 +13,20 @@ const Medicines = database.define(
             type: Sequelize.INTEGER
         },
         name: {
-            type: Sequelize.STRING(100),
+            type: Sequelize.STRING(1000),
             allowNull: false,
         },
         type: {
             type: Sequelize.ENUM,
-            values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION]
+            values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
+            defaultValue: MEDICINE_TYPE.TABLET
         },
         description: {
             type: Sequelize.STRING(1000),
         },
+        pillbox_id: {
+            type: Sequelize.INTEGER,
+        }
     },
     {
         underscored: true,

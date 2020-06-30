@@ -26,7 +26,7 @@ class MedicationStage extends Component {
       fetchingMedicines: false
     };
 
-    this.handleMedicineSearch = throttle(this.handleMedicineSearch.bind(this), 1000);
+    this.handleMedicineSearch = throttle(this.handleMedicineSearch.bind(this), 2000);
   }
 
   getStagesOption = () => {
