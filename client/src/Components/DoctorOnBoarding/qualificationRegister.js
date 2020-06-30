@@ -294,7 +294,7 @@ class QualificationRegister extends Component {
     this.setState({ docsReg: [...docsReg, ...files] },async ()=>{
     //  async () => {
 
-      let { docsReg, fileList, registration ={}} = this.state;
+      let { docsReg, fileList, registration ={},education} = this.state;
       console.log('KEYS AND FILES IN ON UPLOAD COMPLETE AFTER SET STATE', docsReg,files);
       let newRegistration = registration;
       // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE', docs.length, newRegistration[key].photo.length,  newRegistration[key].photos, docs.length === newRegistration[key].photo.length);
@@ -314,7 +314,7 @@ class QualificationRegister extends Component {
       
         const { number = '', council = '',year, expiryDate = '', photos = [], id = 0 } = newRegistration[key];
         let regData = { number, council, year,expiryDate, photos, id };
-        let registrationData = { speciality, gender, registration: regData };
+        let registrationData = { speciality, gender,qualification_details:Object.values(education),registration: regData };
         // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE0000000',degree,year,college,photos,id,newRegistration);
       let response=await  registerRegistration(registrationData, userId)
         // .then(response => {
