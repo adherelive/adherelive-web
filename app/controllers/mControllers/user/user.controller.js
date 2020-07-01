@@ -39,7 +39,7 @@ import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS,
+  ONBOARDING_STATUS
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
@@ -54,7 +54,6 @@ import MSeverityWrapper from "../../../ApiWrapper/mobile/severity";
 import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 
-
 const Logger = new Log("MOBILE USER CONTROLLER");
 
 class MobileUserController extends Controller {
@@ -66,7 +65,7 @@ class MobileUserController extends Controller {
     try {
       const { email, password } = req.body;
       const user = await userService.getUserByEmail({
-        email,
+        email
       });
 
       // const userDetails = user[0];
@@ -86,11 +85,11 @@ class MobileUserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: user.get("id"),
+            userId: user.get("id")
           },
           secret,
           {
-            expiresIn,
+            expiresIn
           }
         );
 
@@ -107,7 +106,7 @@ class MobileUserController extends Controller {
               [apiUserDetails.getId()]: {
                 ...apiUserDetails.getBasicInfo()
               }
-            },
+            }
           },
           "initial data retrieved successfully"
         );
@@ -146,7 +145,7 @@ class MobileUserController extends Controller {
         category: "doctor",
         onboarded: false,
         verified,
-        activated_on: moment(),
+        activated_on: moment()
       });
 
       const userInfo = await userService.getUserByEmail({ email });
@@ -154,7 +153,7 @@ class MobileUserController extends Controller {
       const userVerification = UserVerificationServices.addRequest({
         user_id: userInfo.get("id"),
         request_id: link,
-        status: "pending",
+        status: "pending"
       });
       let uId = userInfo.get("id");
 
@@ -175,8 +174,8 @@ class MobileUserController extends Controller {
           subBodyText: "Please verify your account",
           buttonText: "Verify",
           host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com",
-        },
+          contactTo: "patientEngagement@adhere.com"
+        }
       };
 
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
@@ -186,11 +185,11 @@ class MobileUserController extends Controller {
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
         {
-          userId: user.get("id"),
+          userId: user.get("id")
         },
         secret,
         {
-          expiresIn,
+          expiresIn
         }
       );
 
@@ -205,7 +204,7 @@ class MobileUserController extends Controller {
             [apiUserDetails.getId()]: {
               ...apiUserDetails.getBasicInfo()
             }
-          },
+          }
         },
         "Sign up successfull"
       );
@@ -319,7 +318,7 @@ class MobileUserController extends Controller {
       let response = new Response(true, 200);
       response.setMessage("Sign in successful!");
       response.setData({
-        accessToken: res.body.access_token,
+        accessToken: res.body.access_token
       });
       return res.status(response.getStatusCode()).send(response.getResponse());
     } catch (err) {
@@ -340,7 +339,7 @@ class MobileUserController extends Controller {
         const {
           userId,
           userData,
-          userData: { category } = {},
+          userData: { category } = {}
         } = req.userDetails;
         // const user = await userService.getUserById(userId);
 
@@ -362,19 +361,21 @@ class MobileUserController extends Controller {
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
-            if(userCategoryData) {
+            if (userCategoryData) {
               userCategoryApiData = await MPatientWrapper(userCategoryData);
               userCategoryId = userCategoryApiData.getPatientId();
 
-              userCatApiData[userCategoryApiData.getPatientId()] = userCategoryApiData.getBasicInfo();
-  
+              userCatApiData[
+                userCategoryApiData.getPatientId()
+              ] = userCategoryApiData.getBasicInfo();
+
               careplanData = await carePlanService.getCarePlanByData({
-                patient_id: userCategoryId,
+                patient_id: userCategoryId
               });
-  
+
               // Logger.debug("careplan mobile patient", careplanData);
-  
-              await careplanData.forEach(async (carePlan) => {
+
+              await careplanData.forEach(async carePlan => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
                 doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[
@@ -386,19 +387,21 @@ class MobileUserController extends Controller {
           case USER_CATEGORY.DOCTOR:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
             // Logger.debug("----DOCTOR-----", userCategoryData);
-            if(userCategoryData) {
+            if (userCategoryData) {
               userCategoryApiData = await MDoctorWrapper(userCategoryData);
               userCategoryId = userCategoryApiData.getDoctorId();
 
-              userCatApiData[userCategoryApiData.getDoctorId()] = userCategoryApiData.getBasicInfo();
-  
+              userCatApiData[
+                userCategoryApiData.getDoctorId()
+              ] = userCategoryApiData.getBasicInfo();
+
               careplanData = await carePlanService.getCarePlanByData({
-                doctor_id: userCategoryId,
+                doctor_id: userCategoryId
               });
-  
+
               // Logger.debug("careplan mobile doctor", careplanData);
-  
-              await careplanData.forEach(async (carePlan) => {
+
+              await careplanData.forEach(async carePlan => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 carePlanApiData[
@@ -409,7 +412,7 @@ class MobileUserController extends Controller {
             break;
           default:
             userCategoryData = await patientService.getPatientByData({
-              user_id: userId,
+              user_id: userId
             });
             userCategoryApiData = await MPatientWrapper(userCategoryData);
             userCategoryId = userCategoryApiData.getPatientId();
@@ -418,13 +421,13 @@ class MobileUserController extends Controller {
         // Logger.debug("doctor ids --> ", doctorIds);
 
         const doctorData = await doctorService.getDoctorByData({
-          id: doctorIds,
+          id: doctorIds
         });
 
         let doctorApiDetails = {};
 
-        if(doctorData) {
-          await doctorData.forEach(async (doctor) => {
+        if (doctorData) {
+          await doctorData.forEach(async doctor => {
             const doctorWrapper = await MDoctorWrapper(doctor);
             doctorApiDetails[
               doctorWrapper.getDoctorId()
@@ -436,11 +439,11 @@ class MobileUserController extends Controller {
         let patientApiDetails = {};
 
         const patientData = await patientService.getPatientByData({
-          id: patientIds,
+          id: patientIds
         });
 
-        if(patientData) {
-          await patientData.forEach(async (patient) => {
+        if (patientData) {
+          await patientData.forEach(async patient => {
             const patientWrapper = await MPatientWrapper(patient);
             patientApiDetails[
               patientWrapper.getPatientId()
@@ -453,15 +456,13 @@ class MobileUserController extends Controller {
 
         if (userIds.length > 1) {
           const allUserData = await userService.getUserByData({ id: userIds });
-          await allUserData.forEach(async (user) => {
+          await allUserData.forEach(async user => {
             const apiUserDetails = await MUserWrapper(user.get());
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
         } else {
           const apiUserDetails = await MUserWrapper(userData.get());
-          userApiData[
-            apiUserDetails.getId()
-          ] = apiUserDetails.getBasicInfo();
+          userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
         }
 
         // treatments
@@ -469,10 +470,12 @@ class MobileUserController extends Controller {
         let treatmentIds = [];
         const treatmentDetails = await treatmentService.getAll();
 
-        for(const treatment of treatmentDetails) {
+        for (const treatment of treatmentDetails) {
           const treatmentWrapper = await MTreatmentWrapper(treatment);
           treatmentIds.push(treatmentWrapper.getTreatmentId());
-          treatmentApiDetails[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
+          treatmentApiDetails[
+            treatmentWrapper.getTreatmentId()
+          ] = treatmentWrapper.getBasicInfo();
         }
 
         // severity
@@ -480,10 +483,12 @@ class MobileUserController extends Controller {
         let severityIds = [];
         const severityDetails = await severityService.getAll();
 
-        for(const severity of severityDetails) {
+        for (const severity of severityDetails) {
           const severityWrapper = await MSeverityWrapper(severity);
           severityIds.push(severityWrapper.getSeverityId());
-          severityApiDetails[severityWrapper.getSeverityId()] = severityWrapper.getBasicInfo();
+          severityApiDetails[
+            severityWrapper.getSeverityId()
+          ] = severityWrapper.getBasicInfo();
         }
 
         // conditions
@@ -491,31 +496,36 @@ class MobileUserController extends Controller {
         let conditionIds = [];
         const conditionDetails = await conditionService.getAll();
 
-        for(const condition of conditionDetails) {
+        for (const condition of conditionDetails) {
           const conditionWrapper = await MConditionWrapper(condition);
           conditionIds.push(conditionWrapper.getConditionId());
-          conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
+          conditionApiDetails[
+            conditionWrapper.getConditionId()
+          ] = conditionWrapper.getBasicInfo();
         }
 
         const dataToSend = {
           users: {
-            ...userApiData,
+            ...userApiData
           },
           [`${category}s`]: {
             ...userCatApiData
           },
-          [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]: category === USER_CATEGORY.DOCTOR ? {...patientApiDetails} : {...doctorApiDetails},
+          [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]:
+            category === USER_CATEGORY.DOCTOR
+              ? { ...patientApiDetails }
+              : { ...doctorApiDetails },
           care_plans: {
             ...carePlanApiData
           },
           treatments: {
-            ...treatmentApiDetails,
+            ...treatmentApiDetails
           },
           severity: {
-            ...severityApiDetails,
+            ...severityApiDetails
           },
           conditions: {
-            ...conditionApiDetails,
+            ...conditionApiDetails
           },
           treatment_ids: treatmentIds,
           severity_ids: severityIds,
@@ -597,7 +607,9 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          files: [`${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${files[0]}`],
+          files: [
+            `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${files[0]}`
+          ]
         },
         "files uploaded successfully"
       );
@@ -618,7 +630,7 @@ class MobileUserController extends Controller {
         category,
         mobile_number,
         prefix,
-        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED,
+        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
       };
       console.log("USERRRRRRRR1111111", user_data_to_update);
       console.log("REQUESTTTTTTTT BODYYYYYY", req.body);
@@ -636,29 +648,39 @@ class MobileUserController extends Controller {
           ? doctorName[1]
           : "";
 
-      Logger.debug("profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] 222222", profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]);
+      Logger.debug(
+        "profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] 222222",
+        profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+      );
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic : profile_pic ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] : null,
+          profile_pic: profile_pic
+            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            : null,
           first_name,
           middle_name,
           last_name,
-          address: city,
+          address: city
         };
         let doctor_id = doctorExist.get("id");
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
         console.log("DOCTORRRRRIFFFFFF", doctor, doctor.getBasicInfo);
       } else {
-        Logger.debug("profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] 222222", profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]);
+        Logger.debug(
+          "profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] 222222",
+          profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        );
         let doctor_data = {
           user_id,
           city,
-          profile_pic : profile_pic ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] : null,
+          profile_pic: profile_pic
+            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            : null,
           first_name,
           middle_name,
           last_name,
-          address: city,
+          address: city
         };
         doctor = await doctorService.addDoctor(doctor_data);
         console.log("DOCTORRRRRELSEEEEE", doctor, doctor.getBasicInfo);
@@ -671,7 +693,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          doctor,
+          doctor
         },
         "doctor profile updated successfully"
       );
@@ -700,7 +722,7 @@ class MobileUserController extends Controller {
         email: eMail = "",
         category: docCategory = "",
         mobile_number: mobNo = "",
-        prefix: pre = "",
+        prefix: pre = ""
       } = userInfo;
 
       email = eMail;
@@ -718,7 +740,7 @@ class MobileUserController extends Controller {
           middle_name = "",
           last_name = "",
           city: docCity = "",
-          profile_pic: docPic = "",
+          profile_pic: docPic = ""
         } = docInfo || {};
         name =
           first_name + " " + `${middle_name && middle_name + " "}` + last_name;
@@ -734,7 +756,7 @@ class MobileUserController extends Controller {
         mobile_number,
         prefix,
         profile_pic,
-        email,
+        email
       };
 
       // console.log('FINAL+++================>',profileData);
@@ -743,7 +765,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          profileData,
+          profileData
         },
         " get doctor profile successfull"
       );
@@ -764,11 +786,11 @@ class MobileUserController extends Controller {
       registration_details = []
     } = req.body;
 
-    const {userDetails: {userId: user_id} = {}} = req;
+    const { userDetails: { userId: user_id } = {} } = req;
     try {
       let user = userService.getUserById(user_id);
       let user_data_to_update = {
-        onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED,
+        onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED
       };
       let doctor = await doctorService.getDoctorByUserId(user_id);
       let doctor_id = doctor.get("id");
@@ -777,7 +799,7 @@ class MobileUserController extends Controller {
         registration_number,
         registration_council,
         registration_year,
-        speciality,
+        speciality
       };
       let updatedDoctor = await doctorService.updateDoctor(
         doctor_data,
@@ -794,7 +816,7 @@ class MobileUserController extends Controller {
           year = "",
           college = "",
           photos = [],
-          id = 0,
+          id = 0
         } = item;
         console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", item, id);
         if (id && id != "0") {
@@ -808,7 +830,7 @@ class MobileUserController extends Controller {
             doctor_id,
             degree,
             year,
-            college,
+            college
           });
           console.log("QUALIFICATIONS ITEMMMMMMMMMMMMMMMM", qualification);
         }
@@ -833,22 +855,18 @@ class MobileUserController extends Controller {
       }
 
       // REGISTRATION FOR DOCTOR
-      const registrationsOfDoctor = await registrationService.getRegistrationByDoctorId(doctor_id);
+      const registrationsOfDoctor = await registrationService.getRegistrationByDoctorId(
+        doctor_id
+      );
 
       let newRegistrations = [];
       for (const item of registration_details) {
-        const {
-          number,
-          council,
-          year,
-          expiry_date,
-          id = 0
-        } = item;
+        const { number, council, year, expiry_date, id = 0 } = item;
         console.log("REGISTRATION ITEMMMMMMMMMMMMMMMM", item, id);
         if (id && id !== "0") {
           let registration = await registrationService.updateRegistration(
-              { doctor_id, number, year, council, expiry_date },
-              id
+            { doctor_id, number, year, council, expiry_date },
+            id
           );
           newRegistrations.push(parseInt(id));
         } else {
@@ -871,8 +889,8 @@ class MobileUserController extends Controller {
         } else {
           console.log("REGISTRATION ELSEEEE", newRegistrations);
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
-              DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-              rId
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            rId
           );
           let register = await registrationService.getRegistrationById(rId);
           register.destroy();
@@ -900,14 +918,16 @@ class MobileUserController extends Controller {
   getDoctorQualificationRegisterData = async (req, res) => {
     // let { userId } = req.params;
     try {
-      const {userDetails: {userId} = {}} = req || {};
+      const { userDetails: { userId } = {} } = req || {};
       const qualificationData = await doctorQualificationData(userId);
       console.log("FINAL+++================>", qualificationData);
 
       const doctor = await doctorService.getDoctorByUserId(userId);
       // let doctor_id = doctor.get("id");
 
-      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(doctor.get("id"));
+      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(
+        doctor.get("id")
+      );
 
       // Logger.debug("283462843 ", doctorRegistrationDetails);
 
@@ -915,28 +935,31 @@ class MobileUserController extends Controller {
       let uploadDocumentApiDetails = {};
       let upload_document_ids = [];
 
-      for(let doctorRegistration of doctorRegistrationDetails) {
+      for (let doctorRegistration of doctorRegistrationDetails) {
         const doctorRegistrationWrapper = await MDoctorRegistrationWrapper(
-            doctorRegistration
+          doctorRegistration
         );
 
         const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
-            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-            doctorRegistrationWrapper.getDoctorRegistrationId()
+          DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+          doctorRegistrationWrapper.getDoctorRegistrationId()
         );
 
         await registrationDocuments.forEach(async document => {
           const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
           uploadDocumentApiDetails[
-              uploadDocumentWrapper.getUploadDocumentId()
-              ] = uploadDocumentWrapper.getBasicInfo();
+            uploadDocumentWrapper.getUploadDocumentId()
+          ] = uploadDocumentWrapper.getBasicInfo();
           upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
         });
 
-        Logger.debug("76231238368126312 ", doctorRegistrationWrapper.getBasicInfo());
+        Logger.debug(
+          "76231238368126312 ",
+          doctorRegistrationWrapper.getBasicInfo()
+        );
         doctorRegistrationApiDetails[
-            doctorRegistrationWrapper.getDoctorRegistrationId()
-            ] = {
+          doctorRegistrationWrapper.getDoctorRegistrationId()
+        ] = {
           ...doctorRegistrationWrapper.getBasicInfo(),
           upload_document_ids
         };
@@ -944,8 +967,10 @@ class MobileUserController extends Controller {
         upload_document_ids = [];
       }
 
-      Logger.debug("doctorRegistrationApiDetails --> ", doctorRegistrationApiDetails);
-
+      Logger.debug(
+        "doctorRegistrationApiDetails --> ",
+        doctorRegistrationApiDetails
+      );
 
       return this.raiseSuccess(
         res,
@@ -1005,7 +1030,7 @@ class MobileUserController extends Controller {
         200,
         {
           files: files,
-          qualification_id,
+          qualification_id
         },
         "doctor qualification updated successfully"
       );
@@ -1022,10 +1047,15 @@ class MobileUserController extends Controller {
       console.log("DOCUMNENTTTTTTTTTT", req.body, document);
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = qualificationId;
+      const documentToCheck = document.includes(
+        process.config.minio.MINIO_BUCKET_NAME
+      )
+        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        : document;
       let documentToDelete = await documentService.getDocumentByData(
         parent_type,
         parent_id,
-        document
+        documentToCheck
       );
 
       console.log(
@@ -1075,7 +1105,7 @@ class MobileUserController extends Controller {
           doctor_id,
           degree,
           year,
-          college,
+          college
         });
         qualification_id = docQualification.get("id");
 
@@ -1093,7 +1123,9 @@ class MobileUserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                : photo
             });
           }
         }
@@ -1117,7 +1149,9 @@ class MobileUserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                : photo
             });
           }
           // let qualificationDoc = await documentService.addDocument({ doctor_id, parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION, parent_id: qualification_id, document: photo })
@@ -1129,7 +1163,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          qualification_id,
+          qualification_id
         },
         "qualifications updated successfully"
       );
@@ -1156,7 +1190,7 @@ class MobileUserController extends Controller {
         doctor
       );
 
-      clinics.forEach(async (item) => {
+      clinics.forEach(async item => {
         let { name = "", location = "", time_slots = [] } = item;
 
         const details = {
@@ -1174,7 +1208,7 @@ class MobileUserController extends Controller {
       let updateUser = await userService.updateUser(
         {
           onboarded: true,
-          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED,
+          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED
         },
         user_id
       );
@@ -1186,61 +1220,101 @@ class MobileUserController extends Controller {
     }
   };
 
-  addDoctorsPatient =async (req, res) => {
-    const{  mobile_number= '',name= '',gender= '',date_of_birth= '',prefix='', treatment_id = "1", severity_id = "1", condition_id = "1"}=req.body;
-    const{userId:user_id=1}=req.params;
+  addDoctorsPatient = async (req, res) => {
+    const {
+      mobile_number = "",
+      name = "",
+      gender = "",
+      date_of_birth = "",
+      prefix = "",
+      treatment_id = "1",
+      severity_id = "1",
+      condition_id = "1"
+    } = req.body;
+    const { userId: user_id = 1 } = req.params;
     try {
-     
-     let password=process.config.DEFAULT_PASSWORD;
-     const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      let password = process.config.DEFAULT_PASSWORD;
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
-     let user = await userService.addUser({
-      prefix,
-      mobile_number,
-      password: hash,
-      sign_in_type: "basic",
-      category: "patient",
-      onboarded: false,
-    });
+      let user = await userService.addUser({
+        prefix,
+        mobile_number,
+        password: hash,
+        sign_in_type: "basic",
+        category: "patient",
+        onboarded: false
+      });
 
-    let newUId=user.get('id');
+      let newUId = user.get("id");
 
-    let patientName = name.split(" ");
-    let first_name = patientName[0];
-    let middle_name = patientName.length == 3 ? patientName[1] : "";
-    let last_name =
-      patientName.length == 3
-        ? patientName[2]
-        : patientName.length == 2
+      let patientName = name.split(" ");
+      let first_name = patientName[0];
+      let middle_name = patientName.length == 3 ? patientName[1] : "";
+      let last_name =
+        patientName.length == 3
+          ? patientName[2]
+          : patientName.length == 2
           ? patientName[1]
           : "";
 
-          let uid=uuidv4();
-          let birth_date=moment(date_of_birth);
-          let age=moment().diff(birth_date,'years');
-    let patient=await patientsService.addPatient({first_name,gender,middle_name,last_name,user_id:newUId,birth_date,age,uid});
+      let uid = uuidv4();
+      let birth_date = moment(date_of_birth);
+      let age = moment().diff(birth_date, "years");
+      let patient = await patientsService.addPatient({
+        first_name,
+        gender,
+        middle_name,
+        last_name,
+        user_id: newUId,
+        birth_date,
+        age,
+        uid
+      });
 
-    let doctor = await doctorService.getDoctorByUserId(user_id);
-    let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(treatment_id,severity_id,condition_id);
-    const patient_id=patient.get('id');
-    const doctor_id =doctor.get('id');
-    const care_plan_template_id =carePlanTemplate? carePlanTemplate.get('id'):null;
+      let doctor = await doctorService.getDoctorByUserId(user_id);
+      let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(
+        treatment_id,
+        severity_id,
+        condition_id
+      );
+      const patient_id = patient.get("id");
+      const doctor_id = doctor.get("id");
+      const care_plan_template_id = carePlanTemplate
+        ? carePlanTemplate.get("id")
+        : null;
 
-    const details = care_plan_template_id?{}:{treatment_id,severity_id,condition_id};
-    const carePlan=await carePlanService.addCarePlan({patient_id,doctor_id,care_plan_template_id,details,expired_on:moment()});
-    
-    let carePlanNew=await carePlanService.getSingleCarePlanByData({patient_id,doctor_id,care_plan_template_id,details});
-     const carePlanId=carePlanNew.get('id');
-    
+      const details = care_plan_template_id
+        ? {}
+        : { treatment_id, severity_id, condition_id };
+      const carePlan = await carePlanService.addCarePlan({
+        patient_id,
+        doctor_id,
+        care_plan_template_id,
+        details,
+        expired_on: moment()
+      });
 
-      return this.raiseSuccess(res, 200, {patient_id,carePlanId,carePlanTemplateId:care_plan_template_id}, "doctor's patient added successfully");
+      let carePlanNew = await carePlanService.getSingleCarePlanByData({
+        patient_id,
+        doctor_id,
+        care_plan_template_id,
+        details
+      });
+      const carePlanId = carePlanNew.get("id");
+
+      return this.raiseSuccess(
+        res,
+        200,
+        { patient_id, carePlanId, carePlanTemplateId: care_plan_template_id },
+        "doctor's patient added successfully"
+      );
     } catch (error) {
       console.log("ADD DOCTOR PATIENT ERROR ", error);
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
-  }
+  };
   uploadDoctorRegistrationDocuments = async (req, res) => {
-    const {raiseServerError, raiseSuccess} = this;
+    const { raiseServerError, raiseSuccess } = this;
     try {
       const file = req.file;
       const { userDetails: { userId } = {} } = req;
@@ -1252,24 +1326,32 @@ class MobileUserController extends Controller {
       Logger.debug("files", files);
 
       return this.raiseSuccess(
-          res,
-          200,
-          {
-            files: files
-          },
-          "doctor qualification updated successfully"
+        res,
+        200,
+        {
+          files: files
+        },
+        "doctor qualification updated successfully"
       );
-    } catch(error) {
-      Logger.debug("M-API uploadDoctorRegistrationDocuments CATCH ERROR ---->", error);
+    } catch (error) {
+      Logger.debug(
+        "M-API uploadDoctorRegistrationDocuments CATCH ERROR ---->",
+        error
+      );
       return raiseServerError(res);
     }
   };
 
   updateRegistrationDetails = async (req, res) => {
-    const {raiseServerError, raiseSuccess} = this;
+    const { raiseServerError, raiseSuccess } = this;
     try {
-      const {body, userDetails: {userId} = {}} = req;
-      const {gender = "", speciality = "", qualifications = [], registration = {}} = body || {};
+      const { body, userDetails: { userId } = {} } = req;
+      const {
+        gender = "",
+        speciality = "",
+        qualifications = [],
+        registration = {}
+      } = body || {};
 
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
@@ -1277,22 +1359,21 @@ class MobileUserController extends Controller {
       Logger.debug("1786387131 userId", userId);
       Logger.debug("1786387131 doctor_id", doctor_id);
 
-
       if (gender && speciality) {
         let doctor_data = { gender, speciality };
         let updatedDoctor = await doctorService.updateDoctor(
-            doctor_data,
-            doctor_id
+          doctor_data,
+          doctor_id
         );
       }
 
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = "";
 
-      if(qualifications.length > 0) {
+      if (qualifications.length > 0) {
         for (let qualification of qualifications) {
-          let {degree = "", year = "", college = "", id = 0, photos = []} =
-          qualification || {};
+          let { degree = "", year = "", college = "", id = 0, photos = [] } =
+            qualification || {};
           let qualification_id = id;
           parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
           parent_id = qualification_id;
@@ -1313,9 +1394,9 @@ class MobileUserController extends Controller {
             for (let photo of photos) {
               let document = photo;
               let docExist = await documentService.getDocumentByData(
-                  parent_type,
-                  parent_id,
-                  document
+                parent_type,
+                parent_id,
+                document
               );
 
               // console.log("DOCUMENT EXISTTTTTTTTTTTT", id,qualification_id,docExist);
@@ -1324,7 +1405,11 @@ class MobileUserController extends Controller {
                   doctor_id,
                   parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                   parent_id: qualification_id,
-                  document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+                  document: photo.includes(
+                    process.config.minio.MINIO_BUCKET_NAME
+                  )
+                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    : photo
                 });
               }
             }
@@ -1332,23 +1417,27 @@ class MobileUserController extends Controller {
             for (let photo of photos) {
               let document = photo;
               let docExist = await documentService.getDocumentByData(
-                  parent_type,
-                  parent_id,
-                  document
+                parent_type,
+                parent_id,
+                document
               );
 
               console.log(
-                  "DOCUMENT EXISTTTTTTTTTTTT",
-                  id,
-                  qualification_id,
-                  docExist
+                "DOCUMENT EXISTTTTTTTTTTTT",
+                id,
+                qualification_id,
+                docExist
               );
               if (!docExist) {
                 let qualificationDoc = await documentService.addDocument({
                   doctor_id,
                   parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                   parent_id: qualification_id,
-                  document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+                  document: photo.includes(
+                    process.config.minio.MINIO_BUCKET_NAME
+                  )
+                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    : photo
                 });
               }
             }
@@ -1356,10 +1445,15 @@ class MobileUserController extends Controller {
         }
       }
 
-
       // REGISTRATION
-      let { number = "", council = "", year: registration_year = "", expiry_date = "", id: registration_id = 0, photos: registration_photos = [] } =
-      registration || {};
+      let {
+        number = "",
+        council = "",
+        year: registration_year = "",
+        expiry_date = "",
+        id: registration_id = 0,
+        photos: registration_photos = []
+      } = registration || {};
       parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       parent_id = registration_id;
 
@@ -1371,16 +1465,16 @@ class MobileUserController extends Controller {
           number,
           council,
           year: registration_year,
-          expiry_date: moment(expiry_date),
+          expiry_date: moment(expiry_date)
         });
 
         registrationId = docRegistration.get("id");
         for (let photo of registration_photos) {
           let document = photo;
           let docExist = await documentService.getDocumentByData(
-              parent_type,
-              parent_id,
-              document
+            parent_type,
+            parent_id,
+            document
           );
 
           if (!docExist) {
@@ -1388,25 +1482,30 @@ class MobileUserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                : photo
             });
           }
         }
       } else {
-        const docRegistration = await registrationService.updateRegistration({
-          doctor_id,
-          number,
-          council,
-          year: registration_year,
-          expiry_date: moment(expiry_date),
-        }, registration_id);
+        const docRegistration = await registrationService.updateRegistration(
+          {
+            doctor_id,
+            number,
+            council,
+            year: registration_year,
+            expiry_date: moment(expiry_date)
+          },
+          registration_id
+        );
 
         for (let photo of registration_photos) {
           let document = photo;
           let docExist = await documentService.getDocumentByData(
-              parent_type,
-              parent_id,
-              document
+            parent_type,
+            parent_id,
+            document
           );
 
           if (!docExist) {
@@ -1414,113 +1513,127 @@ class MobileUserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: registration_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                : photo
             });
           }
         }
       }
 
       return raiseSuccess(
-          res,
-          200,
-          {
-            registration_id :registrationId
-          },
-          "registrations updated successfully"
+        res,
+        200,
+        {
+          registration_id: registrationId
+        },
+        "registrations updated successfully"
       );
-
-    } catch(error) {
+    } catch (error) {
       Logger.debug("500 error", error);
       return raiseServerError(res);
     }
   };
 
   deleteDoctorRegistrationDocument = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
 
     try {
       const { registrationId = 0 } = req.params;
       const { document = "" } = req.body;
-      const documentToCheck = document.includes(process.config.minio.MINIO_BUCKET_NAME) ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1] : document;
+      const documentToCheck = document.includes(
+        process.config.minio.MINIO_BUCKET_NAME
+      )
+        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        : document;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       let documentToDelete = await documentService.getDocumentByData(
-          parent_type,
-          registrationId,
-          documentToCheck,
+        parent_type,
+        registrationId,
+        documentToCheck
       );
 
       await documentToDelete.destroy();
       return raiseSuccess(
-          res,
-          200,
-          {},
-          "doctor registration document deleted successfully"
+        res,
+        200,
+        {},
+        "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->", error);
+      Logger.debug(
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
+        error
+      );
       return raiseServerError(res);
     }
   };
 
   getDoctorRegistrationData = async (req, res) => {
-    const {raiseServerError, raiseSuccess} = this;
+    const { raiseServerError, raiseSuccess } = this;
     try {
-      const {userDetails: { userId } = {}} = req;
+      const { userDetails: { userId } = {} } = req;
 
       const doctor = await doctorService.getDoctorByUserId(userId);
       // let doctor_id = doctor.get("id");
 
-      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(doctor.get("id"));
+      const doctorRegistrationDetails = await registrationService.getRegistrationByDoctorId(
+        doctor.get("id")
+      );
 
       // Logger.debug("283462843 ", doctorRegistrationDetails);
 
       let doctorRegistrationApiDetails = {};
       let upload_document_ids = [];
 
-      for(let doctorRegistration of doctorRegistrationDetails) {
-          const doctorRegistrationWrapper = await MDoctorRegistrationWrapper(
-              doctorRegistration
-          );
+      for (let doctorRegistration of doctorRegistrationDetails) {
+        const doctorRegistrationWrapper = await MDoctorRegistrationWrapper(
+          doctorRegistration
+        );
 
-          const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
-              DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-              doctorRegistrationWrapper.getDoctorRegistrationId()
-          );
+        const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+          DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+          doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
 
-          await registrationDocuments.forEach(async document => {
-            const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
-            uploadDocumentApiDetails[
-                uploadDocumentWrapper.getUploadDocumentId()
-                ] = uploadDocumentWrapper.getBasicInfo();
-            upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
-          });
+        await registrationDocuments.forEach(async document => {
+          const uploadDocumentWrapper = await MUploadDocumentWrapper(document);
+          uploadDocumentApiDetails[
+            uploadDocumentWrapper.getUploadDocumentId()
+          ] = uploadDocumentWrapper.getBasicInfo();
+          upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
+        });
 
-          Logger.debug("76231238368126312 ", doctorRegistrationWrapper.getBasicInfo());
-          doctorRegistrationApiDetails[
-              doctorRegistrationWrapper.getDoctorRegistrationId()
-              ] = {
-            ...doctorRegistrationWrapper.getBasicInfo(),
-            upload_document_ids
-          };
+        Logger.debug(
+          "76231238368126312 ",
+          doctorRegistrationWrapper.getBasicInfo()
+        );
+        doctorRegistrationApiDetails[
+          doctorRegistrationWrapper.getDoctorRegistrationId()
+        ] = {
+          ...doctorRegistrationWrapper.getBasicInfo(),
+          upload_document_ids
+        };
 
-          upload_document_ids = [];
-        }
+        upload_document_ids = [];
+      }
 
-      Logger.debug("doctorRegistrationApiDetails --> ", doctorRegistrationApiDetails);
-
-      return raiseSuccess(
-          res,
-          200,
-          {
-            doctor_registrations: {
-              ...doctorRegistrationApiDetails
-            }
-          },
-          "doctor registration data fetched successfully"
+      Logger.debug(
+        "doctorRegistrationApiDetails --> ",
+        doctorRegistrationApiDetails
       );
 
-
-    } catch(error) {
+      return raiseSuccess(
+        res,
+        200,
+        {
+          doctor_registrations: {
+            ...doctorRegistrationApiDetails
+          }
+        },
+        "doctor registration data fetched successfully"
+      );
+    } catch (error) {
       Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---->", error);
       return raiseServerError(res);
     }
