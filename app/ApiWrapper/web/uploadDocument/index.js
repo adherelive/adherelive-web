@@ -20,8 +20,7 @@ class UploadDocumentWrapper extends BaseUploadDocument {
                 id,
                 parent_type,
                 parent_id,
-                document: document 
-                // ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${document}` : null,
+                document: document ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${document}` : null,
             },
         };
     }
