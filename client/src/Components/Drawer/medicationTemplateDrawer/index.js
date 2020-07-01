@@ -200,7 +200,7 @@ class TemplateDrawer extends Component {
                     <div className='add-more' onClick={this.addMedication}>Add More</div>
                 </div>
                 {medicationKeys.map(key => {
-                    const { medicine, medicineType, schedule_data: { when_to_take = '' } = {} } = medications[key];
+                    const { medicine, medicineType, schedule_data: { when_to_take = '',start_date=moment() } = {} } = medications[key];
                     return (
                         <div className='flex wp100 flex-grow-1 align-center'>
                             <div className='drawer-block' key={key}>
@@ -220,7 +220,7 @@ class TemplateDrawer extends Component {
                                     );
                                 })
                 }
-                            {/* <div className='drawer-block-description'>{'Next due:'}</div> */}
+                            <div className='drawer-block-description'>{`Next due: ${moment(start_date).isSame(moment(), 'd')?`Today at ${MEDICATION_TIMING[when_to_take[0]].time}`:`${moment(start_date).format('d MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`}`}</div>
                         </div>
                             {/* <DeleteTwoTone
                                 className={"mr8"}
