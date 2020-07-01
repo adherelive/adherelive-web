@@ -14,12 +14,18 @@ import userService from "../../services/user/user.service";
 // import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
+import treatmentService from "../../services/treatment/treatment.service";
+import severityService from "../../services/severity/severity.service";
+import conditionService from "../../services/condition/condition.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import DoctorRegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
+import TreatmentWrapper from "../../ApiWrapper/web/treatments";
+import SeverityWrapper from "../../ApiWrapper/web/severity";
+import ConditionWrapper from "../../ApiWrapper/web/conditions";
 
 import doctorService from "../../services/doctors/doctors.service";
 // import patientService from "../../services/patients/patients.service";
@@ -523,6 +529,39 @@ class UserController extends Controller {
           ] = apiUserDetails.getBasicInfo();
         }
 
+        // treatments
+        let treatmentApiDetails = {};
+        let treatmentIds = [];
+        const treatmentDetails = await treatmentService.getAll();
+
+        for(const treatment of treatmentDetails) {
+          const treatmentWrapper = await TreatmentWrapper(treatment);
+          treatmentIds.push(treatmentWrapper.getTreatmentId());
+          treatmentApiDetails[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
+        }
+
+        // severity
+        let severityApiDetails = {};
+        let severityIds = [];
+        const severityDetails = await severityService.getAll();
+
+        for(const severity of severityDetails) {
+          const severityWrapper = await SeverityWrapper(severity);
+          severityIds.push(severityWrapper.getSeverityId());
+          severityApiDetails[severityWrapper.getSeverityId()] = severityWrapper.getBasicInfo();
+        }
+
+        // conditions
+        let conditionApiDetails = {};
+        let conditionIds = [];
+        const conditionDetails = await conditionService.getAll();
+
+        for(const condition of conditionDetails) {
+          const conditionWrapper = await ConditionWrapper(condition);
+          conditionIds.push(conditionWrapper.getConditionId());
+          conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
+        }
+
         /**** API wrapper for DOCTOR ****/
 
         const dataToSend = {
@@ -538,6 +577,18 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
+          treatments: {
+            ...treatmentApiDetails,
+          },
+          severity: {
+            ...severityApiDetails,
+          },
+          conditions: {
+            ...conditionApiDetails,
+          },
+          treatment_ids: treatmentIds,
+          severity_ids: severityIds,
+          condition_ids: conditionIds,
           auth_user: userId,
           auth_category: category
         };
@@ -1527,7 +1578,7 @@ class UserController extends Controller {
     }
   };
   addDoctorsPatient =async (req, res) => {
-    const{  mobile_number= '',name= '',gender= '',date_of_birth= '',treatment:type= '',severity= '',condition= '',prefix=''}=req.body;
+    const{  mobile_number= '',name= '',gender= '',date_of_birth= '',treatment:type= '',severity= '',condition= '',prefix='', treatment_id = "1", severity_id = "1", condition_id = "1"}=req.body;
     // const{userId:user_id=1}=req.params;
     const {userDetails: {userId: user_id} = {}} = req;
     try {
@@ -1564,14 +1615,14 @@ class UserController extends Controller {
     let patient=await patientService.addPatient({first_name,gender,middle_name,last_name,user_id:newUId,birth_date,age,uid});
 
     let doctor = await doctorService.getDoctorByUserId(user_id);
-    let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(type,severity,condition);
+    let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(treatment_id,severity_id,condition_id);
     const patient_id=patient.get('id');
     const doctor_id =doctor.get('id');
 
     Logger.debug("9872683794 ------------->", doctor, doctor.get("id"), doctor_id);
     const care_plan_template_id =carePlanTemplate? carePlanTemplate.get('id'):null;
 
-    const details = care_plan_template_id?{}:{type,severity,condition};
+    const details = care_plan_template_id?{}:{treatment_id,severity_id,condition_id};
     const carePlan=await carePlanService.addCarePlan({patient_id,doctor_id,care_plan_template_id,details,expired_on:moment()});
     
     let carePlanNew=await carePlanService.getSingleCarePlanByData({patient_id,doctor_id,care_plan_template_id,details});

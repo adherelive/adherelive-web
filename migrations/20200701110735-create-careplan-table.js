@@ -65,12 +65,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-            model: {
-                tableName: DB_TABLES.CARE_PLAN_TEMPLATE,
-            },
-            key: 'id'
+          model: {
+            tableName: DB_TABLES.CARE_PLAN_TEMPLATE,
+          },
+          key: 'id'
         }
-    },
+      },
       details: {
         type: Sequelize.JSON,
       },

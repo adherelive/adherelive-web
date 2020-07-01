@@ -4,27 +4,16 @@ import {DB_TABLES} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.CARE_PLAN_TEMPLATE, {
+    return queryInterface.createTable(DB_TABLES.TREATMENTS, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      type: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      severity: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      condition: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      details: {
-        type: Sequelize.JSON,
       },
       created_at: {
         allowNull: false,
@@ -42,6 +31,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.CARE_PLAN_TEMPLATE);
+    return queryInterface.dropTable(DB_TABLES.TREATMENTS);
   }
 };

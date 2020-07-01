@@ -4,13 +4,14 @@ import {DB_TABLES} from "../../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-   
+
    return queryInterface.bulkInsert(DB_TABLES.CARE_PLAN_TEMPLATE, [
     {
       id: 1,
-      type: 'Sample Care Plan',
-      severity: 'High',
-      condition: 'Critical',
+      name: 'Sample Care Plan',
+        treatment_id: '1',
+      severity_id: '1',
+      condition_id: '1',
       created_at: new Date(),
       updated_at: new Date(),
     },
@@ -18,7 +19,7 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-  
+
    return queryInterface.bulkDelete(DB_TABLES.CARE_PLAN_TEMPLATE, null, {});
   }
 };

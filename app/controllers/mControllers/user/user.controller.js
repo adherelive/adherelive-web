@@ -47,6 +47,12 @@ const errMessage = require("../../../../config/messages.json").errMessages;
 import minioService from "../../../../app/services/minio/minio.service";
 import md5 from "js-md5";
 import UserVerifications from "../../../models/userVerifications";
+import treatmentService from "../../../services/treatment/treatment.service";
+import MTreatmentWrapper from "../../../ApiWrapper/mobile/treatments";
+import severityService from "../../../services/severity/severity.service";
+import MSeverityWrapper from "../../../ApiWrapper/mobile/severity";
+import conditionService from "../../../services/condition/condition.service";
+import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 
 
 const Logger = new Log("MOBILE USER CONTROLLER");
@@ -458,6 +464,39 @@ class MobileUserController extends Controller {
           ] = apiUserDetails.getBasicInfo();
         }
 
+        // treatments
+        let treatmentApiDetails = {};
+        let treatmentIds = [];
+        const treatmentDetails = await treatmentService.getAll();
+
+        for(const treatment of treatmentDetails) {
+          const treatmentWrapper = await MTreatmentWrapper(treatment);
+          treatmentIds.push(treatmentWrapper.getTreatmentId());
+          treatmentApiDetails[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
+        }
+
+        // severity
+        let severityApiDetails = {};
+        let severityIds = [];
+        const severityDetails = await severityService.getAll();
+
+        for(const severity of severityDetails) {
+          const severityWrapper = await MSeverityWrapper(severity);
+          severityIds.push(severityWrapper.getSeverityId());
+          severityApiDetails[severityWrapper.getSeverityId()] = severityWrapper.getBasicInfo();
+        }
+
+        // conditions
+        let conditionApiDetails = {};
+        let conditionIds = [];
+        const conditionDetails = await conditionService.getAll();
+
+        for(const condition of conditionDetails) {
+          const conditionWrapper = await MConditionWrapper(condition);
+          conditionIds.push(conditionWrapper.getConditionId());
+          conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
+        }
+
         const dataToSend = {
           users: {
             ...userApiData,
@@ -468,7 +507,21 @@ class MobileUserController extends Controller {
           [category === USER_CATEGORY.DOCTOR ? "patients" : "doctors"]: category === USER_CATEGORY.DOCTOR ? {...patientApiDetails} : {...doctorApiDetails},
           care_plans: {
             ...carePlanApiData
-          }
+          },
+          treatments: {
+            ...treatmentApiDetails,
+          },
+          severity: {
+            ...severityApiDetails,
+          },
+          conditions: {
+            ...conditionApiDetails,
+          },
+          treatment_ids: treatmentIds,
+          severity_ids: severityIds,
+          condition_ids: conditionIds,
+          auth_user: userId,
+          auth_category: category
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
@@ -1134,7 +1187,7 @@ class MobileUserController extends Controller {
   };
 
   addDoctorsPatient =async (req, res) => {
-    const{  mobile_number= '',name= '',gender= '',date_of_birth= '',treatment:type= '',severity= '',condition= '',prefix=''}=req.body;
+    const{  mobile_number= '',name= '',gender= '',date_of_birth= '',prefix='', treatment_id = "1", severity_id = "1", condition_id = "1"}=req.body;
     const{userId:user_id=1}=req.params;
     try {
      
@@ -1168,12 +1221,12 @@ class MobileUserController extends Controller {
     let patient=await patientsService.addPatient({first_name,gender,middle_name,last_name,user_id:newUId,birth_date,age,uid});
 
     let doctor = await doctorService.getDoctorByUserId(user_id);
-    let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(type,severity,condition);
+    let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(treatment_id,severity_id,condition_id);
     const patient_id=patient.get('id');
     const doctor_id =doctor.get('id');
     const care_plan_template_id =carePlanTemplate? carePlanTemplate.get('id'):null;
 
-    const details = care_plan_template_id?{}:{type,severity,condition};
+    const details = care_plan_template_id?{}:{treatment_id,severity_id,condition_id};
     const carePlan=await carePlanService.addCarePlan({patient_id,doctor_id,care_plan_template_id,details,expired_on:moment()});
     
     let carePlanNew=await carePlanService.getSingleCarePlanByData({patient_id,doctor_id,care_plan_template_id,details});

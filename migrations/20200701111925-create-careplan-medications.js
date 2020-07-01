@@ -4,7 +4,7 @@ import { DB_TABLES } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.CARE_PLAN_APPOINTMENTS, {
+    return queryInterface.createTable(DB_TABLES.CARE_PLAN_MEDICATIONS, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -21,17 +21,17 @@ module.exports = {
           key: 'id'
         }
       },
-      appointment_id: {
+      medication_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.APPOINTMENTS,
+            tableName: DB_TABLES.MEDICATION_REMINDERS,
           },
           key: 'id'
         }
       },
-  
+
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -48,6 +48,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.CARE_PLAN_APPOINTMENTS);
+    return queryInterface.dropTable(DB_TABLES.CARE_PLAN_MEDICATIONS);
   }
 };

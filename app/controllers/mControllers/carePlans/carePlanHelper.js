@@ -54,15 +54,15 @@ export const getCarePlanSeverityDetails =async(carePlanId)=>{
     const templateId = carePlanApiWrapper.getCarePlanTemplateId();
     if(templateId){
         carePlanTemplate= await carePlanTemplateService.getCarePlanTemplateById(templateId);
-        treatment = carePlanTemplate.get('type')?carePlanTemplate.get('type'):'';
-        severity = carePlanTemplate.get('severity')?carePlanTemplate.get('severity'):'';
-        condition =carePlanTemplate.get('condition')?carePlanTemplate.get('condition'):'';
-       }else{
-       let details=carePlanApiWrapper.getCarePlanDetails();
-       treatment=details.type;
-       severity=details.severity;
-       condition=details.condition;
-       }
+        treatment = carePlanTemplate.get('treatment_id')?carePlanTemplate.get('treatment_id'):'';
+        severity = carePlanTemplate.get('severity_id')?carePlanTemplate.get('severity_id'):'';
+        condition =carePlanTemplate.get('condition_id')?carePlanTemplate.get('condition_id'):'';
+    }else{
+        let details=carePlanApiWrapper.getCarePlanDetails();
+        treatment=details.treatment_id;
+        severity=details.severity_id;
+        condition=details.condition_id;
+    }
 
-     return {treatment,severity,condition};
+    return {treatment_id: treatment,severity_id: severity,condition_id: condition};
 }

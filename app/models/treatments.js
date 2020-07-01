@@ -4,8 +4,8 @@ import { database } from "../../libs/mysql";
 import { DB_TABLES } from "../../constant";
 import CarePlanTemplate from "./careplanTemplate";
 
-const Conditions = database.define(
-    DB_TABLES.CONDITIONS,
+const Treatment = database.define(
+    DB_TABLES.TREATMENTS,
     {
         id: {
             allowNull: false,
@@ -32,9 +32,10 @@ const Conditions = database.define(
     }
 );
 
-Conditions.hasMany(CarePlanTemplate, {
-    foreignKey: 'condition_id',
-    sourceKey: 'id'
-});
+// Treatment.belongsTo(CarePlanTemplate, {
+//     as: 'care_plan_templates',
+//     foreignKey: 'id',
+//     targetKey: 'treatment_id'
+// });
 
-export default Conditions;
+export default Treatment;

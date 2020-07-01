@@ -3,9 +3,10 @@ import Sequelize from "sequelize";
 import { database } from "../../libs/mysql";
 import { DB_TABLES } from "../../constant";
 import CarePlanTemplate from "./careplanTemplate";
+import Treatment from "./treatments";
 
-const Conditions = database.define(
-    DB_TABLES.CONDITIONS,
+const Severity = database.define(
+    DB_TABLES.SEVERITY,
     {
         id: {
             allowNull: false,
@@ -21,6 +22,7 @@ const Conditions = database.define(
     {
         underscored: true,
         paranoid: true,
+        freezeTableName: true,
         getterMethods: {
             getBasicInfo() {
                 return {
@@ -32,9 +34,9 @@ const Conditions = database.define(
     }
 );
 
-Conditions.hasMany(CarePlanTemplate, {
-    foreignKey: 'condition_id',
-    sourceKey: 'id'
-});
+// Severity.hasMany(CarePlanTemplate, {
+//     foreignKey: 'severity_id',
+//     sourceKey: 'id'
+// });
 
-export default Conditions;
+export default Severity;

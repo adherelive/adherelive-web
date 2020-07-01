@@ -13,14 +13,13 @@ class CarePlanTemplateService {
         }
     };
 
-    getCarePlanTemplateByData = async (type, severity, condition) => {
+    getCarePlanTemplateByData = async (treatment_id, severity_id, condition_id) => {
         try {
             const carePlanTemplate = await CarePlanTemplate.findOne({
                 where: {
-                    type,
-                    severity,
-                    condition,
-                    deleted_at: null
+                    treatment_id,
+                    severity_id,
+                    condition_id,
                 }
             });
             return carePlanTemplate;

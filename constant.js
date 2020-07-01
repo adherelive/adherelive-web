@@ -352,6 +352,8 @@ export const DB_TABLES = {
   CARE_PLAN_MEDICATIONS: 'care_plan_medications',
   CARE_PLAN_APPOINTMENTS: 'care_plan_appointments',
   DOCTOR_REGISTRATIONS: "doctor_registrations",
+  TREATMENTS: "treatments",
+  SEVERITY: "severity"
 };
 
 export const ARTICLE_TYPE = {
