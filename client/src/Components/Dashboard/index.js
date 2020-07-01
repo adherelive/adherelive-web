@@ -127,7 +127,7 @@ class Dashboard extends Component {
             <Fragment>
                 <div className="dashboard p20">
                     <div className="flex direction-row justify-space-between align-center">
-                        <div className="fs40 fw700">{formatMessage(messages.report)}</div>
+                        <div className="fs28 fw700">{formatMessage(messages.report)}</div>
                         <img src={AddPatient} className='add-patient' onClick={this.showAddPatientDrawer}/>
                     </div>
 

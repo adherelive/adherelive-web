@@ -68,7 +68,7 @@ class EditAppointmentForm extends Component {
       payload: { patient_id },
       patients,
     } = this.props;
-    let pId=patientId?patientId.toString():patient_id;
+    let pId = patientId ? patientId.toString() : patient_id;
     const { patients: { basic_info: { first_name, last_name } = {} } = {} } =
       patients[pId] || {};
     // if (first_name && last_name) {
@@ -79,9 +79,9 @@ class EditAppointmentForm extends Component {
   };
 
   getPatientOptions = () => {
-    const { patientId,patients, payload: { patient_id } = {} } = this.props;
+    const { patientId, patients, payload: { patient_id } = {} } = this.props;
 
-    let pId=patientId?patientId.toString():patient_id;
+    let pId = patientId ? patientId.toString() : patient_id;
     const { basic_info: { first_name, middle_name, last_name } = {} } =
       patients[pId] || {};
 
@@ -91,7 +91,7 @@ class EditAppointmentForm extends Component {
       <Option key={`p-${pId}`} value={pId} name={pId}>
         {`${first_name} ${middle_name ? `${middle_name} ` : ""}${
           last_name ? `${last_name} ` : ""
-        }`}
+          }`}
       </Option>
     );
     // });
@@ -123,10 +123,10 @@ class EditAppointmentForm extends Component {
     console.log("312983u193812 values, value ", date);
     const startDate = getFieldValue(DATE);
 
-    if(!date || !startDate) {
+    if (!date || !startDate) {
       return;
     }
-    
+
     const eventStartTime = getFieldValue(START_TIME);
     if (date.isSame(eventStartTime, "date")) {
       return;
@@ -161,18 +161,18 @@ class EditAppointmentForm extends Component {
     console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
     console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
-    setFieldsValue({ [END_TIME]: moment(time).add(1, "h") });
+    setFieldsValue({ [END_TIME]: moment(time).add('minutes', 30) });
   };
 
   getPatientName = () => {
-    const { patientId,patients, payload: { patient_id } = {} } = this.props;
+    const { patientId, patients, payload: { patient_id } = {} } = this.props;
 
-    let pId=patientId?patientId.toString():patient_id;
+    let pId = patientId ? patientId.toString() : patient_id;
     const { basic_info: { first_name, middle_name, last_name } = {} } =
       patients[pId] || {};
     return `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? `${last_name} ` : ""
-    }`;
+      }`;
   };
 
   calendarComp = () => {
@@ -197,8 +197,8 @@ class EditAppointmentForm extends Component {
       appointmentData,
       patientId,
       patients,
-      carePlan={},
-      payload: {id: appointment_id, patient_id} = {},
+      carePlan = {},
+      payload: { id: appointment_id, patient_id } = {},
     } = this.props;
     const { fetchingPatients } = this.state;
     const {
@@ -211,27 +211,29 @@ class EditAppointmentForm extends Component {
       handleStartTimeChange,
       getPatientName,
     } = this;
-     let pId=patientId?patientId.toString():patient_id;
-    let {basic_info: {description, start_date, start_time, end_time, details: {treatment = "",reason=''} = {}} = {}} = appointments[appointment_id] || {};
+    let pId = patientId ? patientId.toString() : patient_id;
+    let { basic_info: { description, start_date, start_time, end_time, details: { treatment = "", reason = '' } = {} } = {} } = appointments[appointment_id] || {};
 
-    
 
-    if(Object.values(carePlan).length){
-       let{treatment:newTreatment=''}=carePlan;
-       treatment=newTreatment;
+
+    if (Object.values(carePlan).length) {
+      let { treatment: newTreatment = '' } = carePlan;
+      treatment = newTreatment;
     }
     const currentDate = moment(getFieldValue(DATE));
-    const{reason:res='',schedule_data:{description:des=''}={}}=appointmentData||{};
-    description=des?des:description;
-    reason=res?res:reason;
-    if(res){   //toDo remove when real templates are created and handle accordingly
-    start_time=res==='Surgery'?moment().add('days',18):moment().add('days',14);
-    end_time=res==='Surgery'?moment().add('days',18).add('hours',1):moment().add('days',14).add('hours',1);
-    start_date=res==='Surgery'?moment().add('days',18):moment().add('days',14);
-    
+    const { reason: res = '', schedule_data: { description: des = '' } = {} } = appointmentData || {};
+    description = des ? des : description;
+    reason = res ? res : reason;
+    if (res) {   //toDo remove when real templates are created and handle accordingly
+
+      let minutesToAdd = 30 - (moment().minutes()) % 30;
+      start_time = res === 'Surgery' ? moment().add('days', 18).add('minutes',minutesToAdd) : moment().add('days', 14).add('minutes',minutesToAdd);
+      end_time = res === 'Surgery' ? moment().add('days', 18).add('minutes',minutesToAdd+30) : moment().add('days', 14).add('minutes',minutesToAdd+30);
+      start_date = res === 'Surgery' ? moment().add('days', 18) : moment().add('days', 14);
+
     }
-    console.log("1289313192 ",res,reason,des,description,treatment,Object.values(carePlan).length,Object.values(carePlan).length,carePlan);
-    
+    console.log("1289313192 ", res, reason, des, description, treatment, Object.values(carePlan).length, Object.values(carePlan).length, carePlan);
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
@@ -239,7 +241,7 @@ class EditAppointmentForm extends Component {
     });
 
     return (
-      <Form className="fw700 wp90 pb30">
+      <Form className="fw700 wp100 pb30">
         <FormItem label={formatMessage(message.patient)}>
           {getFieldDecorator(PATIENT, {
             initialValue: pId,
@@ -280,7 +282,7 @@ class EditAppointmentForm extends Component {
               onBlur={handleDateSelect(currentDate)}
               // suffixIcon={calendarComp()}
               disabledDate={disabledDate}
-              // getCalendarContainer={this.getParentNode}
+            // getCalendarContainer={this.getParentNode}
             />
           )}
           {/*<img*/}
@@ -291,10 +293,10 @@ class EditAppointmentForm extends Component {
           {/*/>*/}
         </FormItem>
 
-        <div className="wp100 flex justify-space-evenly align-center flex-1">
+        <div className="wp100 flex justify-space-between align-center flex-1">
           <FormItem
             label={formatMessage(message.start_time)}
-            className="wp100"
+            className="wp40"
             validateStatus={fieldsError[START_TIME] ? "error" : ""}
             help={fieldsError[START_TIME] || ""}
           >
@@ -313,22 +315,22 @@ class EditAppointmentForm extends Component {
                 minuteStep={15}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
-                // getPopupContainer={this.getParentNode}
+              // getPopupContainer={this.getParentNode}
               />
             )}
           </FormItem>
 
-          <div className="w200 text-center mt8">
+          {/* <div className="w200 text-center mt8">
             <img
               src={seperator}
               alt="between seperator"
               className="mr16 ml16"
             />
-          </div>
+          </div> */}
 
           <FormItem
             label={formatMessage(message.end_time)}
-            className="wp100"
+            className="wp40"
             validateStatus={fieldsError[END_TIME] ? "error" : ""}
             help={fieldsError[END_TIME] || ""}
           >
@@ -347,7 +349,7 @@ class EditAppointmentForm extends Component {
                 value={currentDate}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
-                // getPopupContainer={this.getParentNode}
+              // getPopupContainer={this.getParentNode}
               />
             )}
           </FormItem>

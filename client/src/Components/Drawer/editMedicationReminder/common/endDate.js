@@ -101,15 +101,15 @@ class EndDate extends Component {
       form: { getFieldDecorator, getFieldError },
       disabledEndDate,
       medications,
-      medicationData={},
-      payload: {id:medication_id} = {}
+      medicationData = {},
+      payload: { id: medication_id } = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
-    let {basic_info: {end_date} = {}} = medications[medication_id] || {};
-
-    if(Object.keys(medicationData).length){
-      end_date=moment().add(5, 'days');
+    let { basic_info: { end_date } = {} } = medications[medication_id] || {};
+    let { schedule_data: { end_date:endDate = '' } = {} } = medicationData;
+    if (Object.keys(medicationData).length) {
+      end_date = endDate ? endDate : moment().add(5, 'days');
     }
 
     console.log("1198781937123 end_date ---> ", end_date);

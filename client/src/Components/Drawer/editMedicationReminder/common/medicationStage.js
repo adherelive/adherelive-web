@@ -121,7 +121,7 @@ class MedicationStage extends Component {
     if(medicineId){
       medicine_id=medicineId.toString();
     }
-    console.log("2387128371923 medicine_id --> ", medicine_id);
+    console.log("2387128371923 medicine_id --> ", medicine_id,typeof(medication_id));
 
     const {fetchingMedicines} = this.state;
 
@@ -136,12 +136,12 @@ class MedicationStage extends Component {
     return (
       <FormItem>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue: medicine_id ? medicine_id : '1'
+          initialValue: medicine_id ? medicine_id.toString() : null
         })(
           <Select
             onSearch={handleMedicineSearch}
             notFoundContent={fetchingMedicines ? <Spin size="small" /> : null}
-            className=""
+            className="drawer-select"
             placeholder="Choose Medicine"
             showSearch
             // onFocus={() => handleMedicineSearch("")}

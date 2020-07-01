@@ -77,7 +77,7 @@ class MedicationStrengthUnit extends Component {
     return (
       <Fragment>
         <FormItem
-          className="flex-1 wp20"
+          className="flex-1 wp20 mtPoint5"
           validateStatus={error ? "error" : ""}
           help={error || ""}
         >

@@ -157,7 +157,7 @@ class AddAppointmentForm extends Component {
     console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
     console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
-    setFieldsValue({ [END_TIME]: moment(time).add(1, "h") });
+    setFieldsValue({ [END_TIME]: moment(time).add('minutes',30) });
   };
 
   getPatientName = () => {
@@ -210,7 +210,7 @@ class AddAppointmentForm extends Component {
 
     console.log("appointment form props --> ", this.props);
     return (
-      <Form className="fw700 wp90 pb30">
+      <Form className="fw700 wp100 pb30">
         <FormItem label={formatMessage(message.patient)}>
           {getFieldDecorator(PATIENT, {
             initialValue: getInitialValue(),
@@ -262,10 +262,10 @@ class AddAppointmentForm extends Component {
           {/*/>*/}
         </FormItem>
 
-        <div className="wp100 flex justify-space-evenly align-center flex-1">
+        <div className="wp100 flex justify-space-between align-center flex-1">
           <FormItem
             label={formatMessage(message.start_time)}
-            className="wp100"
+            className="wp40"
             validateStatus={fieldsError[START_TIME] ? "error" : ""}
             help={fieldsError[START_TIME] || ""}
           >
@@ -288,17 +288,17 @@ class AddAppointmentForm extends Component {
             )}
           </FormItem>
 
-          <div className="w200 text-center mt8">
+          {/* <div className="w200 text-center mt8">
             <img
               src={seperator}
               alt="between seperator"
               className="mr16 ml16"
             />
-          </div>
+          </div> */}
 
           <FormItem
             label={formatMessage(message.end_time)}
-            className="wp100"
+            className="wp40"
             validateStatus={fieldsError[END_TIME] ? "error" : ""}
             help={fieldsError[END_TIME] || ""}
           >

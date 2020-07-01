@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Drawer, Form, message } from "antd";
 import { injectIntl } from "react-intl";
 
+import moment from "moment";
 import { getRelatedMembersURL } from "../../../../Helper/urls/user";
 import { doRequest } from "../../../../Helper/network";
 import { USER_CATEGORY, MEDICATION_TIMING } from "../../../../constant";
@@ -162,6 +163,10 @@ class AddMedicationReminder extends Component {
           };
 
         }
+
+        if(moment(endDate).isBefore(moment(startDate))){
+          message.error('Please select valid dates for medication.')
+        }else{
         try {
           console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR',carePlanId);
           const response = await addCarePlanMedicationReminder(data_to_submit,carePlanId);
@@ -175,6 +180,7 @@ class AddMedicationReminder extends Component {
         } catch (error) {
           console.log("add medication reminder ui error -----> ", error);
         }
+      }
       }
     });
   };

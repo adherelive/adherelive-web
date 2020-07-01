@@ -17,6 +17,7 @@ import startTimeField from "../common/startTime";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import repeatDaysField from "../common/selectedDays";
+import moment from "moment";
 
 class EditMedicationReminder extends Component {
   constructor(props) {
@@ -168,7 +169,9 @@ class EditMedicationReminder extends Component {
             [repeatDaysField.field_name]: repeatDays.split(","),
           };
         }
-        if(editMedication){
+        if(moment(endDate).isBefore(moment(startDate))){
+          message.error('Please select valid dates for medication')
+        }else if(editMedication){
           editMedication(data_to_submit);
         }else{
         try {

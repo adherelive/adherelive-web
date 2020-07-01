@@ -61,13 +61,19 @@ class StartDate extends Component {
       disabledStartDate,
       purpose,
       medications,
+      medicationData={},
       payload: {id:medication_id} = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
     const repeat = getFieldValue(repeatTypeField.field_name);
 
-    const {basic_info: {start_date} = {}} = medications[medication_id] || {};
-
+    let {basic_info: {start_date} = {}} = medications[medication_id] || {};
+    
+    
+    let { schedule_data: { start_date:startDate = '' } = {} } = medicationData;
+    if (Object.keys(medicationData).length) {
+      start_date = startDate ? startDate : moment();
+    }
     const value = getFieldValue(FIELD_NAME);
 
     return (
@@ -79,7 +85,7 @@ class StartDate extends Component {
               initialValue: start_date ? moment(start_date) : getInitialValue(),
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
+                className={`full-width ${FIELD_NAME} ant-date-custom wp100 edit-apoint-start-date`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}

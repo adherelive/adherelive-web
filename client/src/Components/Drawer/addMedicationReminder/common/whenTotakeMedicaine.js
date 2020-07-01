@@ -315,7 +315,7 @@ class WhenToTakeMedication extends Component {
                   initialValue: getInitialValue(k),
                 })(
                   <Select
-                    className="wp100"
+                    className="wp100 drawer-select"
                     autoComplete="off"
                     placeholder={formatMessage(messages.select_timing)}
                     onSelect={(value) => handleSelect(value, k)}

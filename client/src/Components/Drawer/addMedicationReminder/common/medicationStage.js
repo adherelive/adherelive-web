@@ -118,7 +118,7 @@ class MedicationStage extends Component {
           <Select
             onSearch={handleMedicineSearch}
             notFoundContent={fetchingMedicines ? <Spin size="small" /> : null}
-            className=""
+            className="drawer-select"
             placeholder="Choose Medicine"
             showSearch
             onFocus={() => handleMedicineSearch("")}
