@@ -798,8 +798,8 @@ class UserController extends Controller {
           city: docCity = "",
           profile_pic: docPic = ""
         } = docInfo || {};
-        name =
-          first_name + " " + `${middle_name && middle_name + " "}` + last_name;
+
+        name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
 
         city = docCity;
         profile_pic = docPic;
