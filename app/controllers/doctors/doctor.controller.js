@@ -9,12 +9,14 @@ import doctorService from "../../services/doctor/doctor.service";
 import doctorQualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import doctorClinicService from "../../services/doctorClinics/doctorClinics.service";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
+import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import DoctorQualificationWrapper from "../../ApiWrapper/web/doctorQualification";
 import DoctorClinicWrapper from "../../ApiWrapper/web/doctorClinic";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
+import DoctorRegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
 import {DOCUMENT_PARENT_TYPE, USER_CATEGORY} from "../../../constant";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
@@ -135,9 +137,11 @@ class DoctorController extends Controller {
       });
 
       // REGISTRATION DETAILS
-      const doctorRegistrations = await doctorRegistrationService.getRegistrationsByDoctorId(
+      const doctorRegistrations = await doctorRegistrationService.getRegistrationByDoctorId(
           doctorWrapper.getDoctorId()
       );
+
+      Logger.debug("198361283 ---====> ", doctorRegistrations);
 
       await doctorRegistrations.forEach(async doctorRegistration => {
         const doctorRegistrationWrapper = await DoctorRegistrationWrapper(
@@ -196,7 +200,8 @@ class DoctorController extends Controller {
             [doctorWrapper.getDoctorId()]: {
               ...doctorWrapper.getAllInfo(),
               doctor_qualification_ids,
-              doctor_clinic_ids
+              doctor_clinic_ids,
+              doctor_registration_ids,
             }
           },
           doctor_qualifications: {

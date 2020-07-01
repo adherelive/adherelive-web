@@ -1120,8 +1120,8 @@ class UserController extends Controller {
       let documentToDelete = await documentService.getDocumentByData(
           parent_type,
           parent_id,
-          document,
-      );
+          document.includes(process.config.minio.MINIO_BUCKET_NAME) ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1] : document,
+    );
       console.log('DELETE REGISTRATION DOCUMENT=======*******>11111',documentToDelete);
 
       await documentToDelete.destroy();
@@ -1147,8 +1147,9 @@ class UserController extends Controller {
       let documentToDelete = await documentService.getDocumentByData(
         parent_type,
         parent_id,
-        document
-      );
+          document.includes(process.config.minio.MINIO_BUCKET_NAME) ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1] : document
+
+    );
 
       console.log(
         "DOCUMNENTTTTTTTTTT1111111",
@@ -1268,11 +1269,10 @@ class UserController extends Controller {
        
 
         for (let photo of registration_photos) {
-          let document = photo;
           let docExist = await documentService.getDocumentByData(
               parent_type,
               parent_id,
-              document
+              photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo
           );
 
           if (!docExist) {
@@ -1280,8 +1280,7 @@ class UserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
-              document: photo
-              // .includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
             });
           }
         }
@@ -1297,11 +1296,10 @@ class UserController extends Controller {
 
 
         for (let photo of registration_photos) {
-          let document = photo;
           let docExist = await documentService.getDocumentByData(
             parent_type,
             parent_id,
-            document
+              photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo
           );
 
 
@@ -1325,7 +1323,7 @@ class UserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: registration_id,
-              document: photo
+              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
               // .includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
             });
         }
@@ -1387,7 +1385,7 @@ class UserController extends Controller {
 
 
         for (let photo of photos) {
-          let document = photo;
+          let document = photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo;
           let docExist = await documentService.getDocumentByData(
             parent_type,
             parent_id,
@@ -1399,7 +1397,7 @@ class UserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
-              document: photo,
+              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
             });
           }
         }
@@ -1412,11 +1410,10 @@ class UserController extends Controller {
 
 
         for (let photo of photos) {
-          let document = photo;
           let docExist = await documentService.getDocumentByData(
             parent_type,
             parent_id,
-            document
+              photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo
           );
 
 
@@ -1434,7 +1431,7 @@ class UserController extends Controller {
           return this.raiseServerError(res, 422, "cannot add more than 3 images");
 
         }
-        for (let pic of documentsToAdd) {
+        for (let photo of documentsToAdd) {
           // let document = photo;
           // let docExist = await documentService.getDocumentByData(
           //   parent_type,
@@ -1448,7 +1445,7 @@ class UserController extends Controller {
             doctor_id,
             parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
             parent_id: qualification_id,
-            document: pic,
+            document: photo.includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
           });
           // }
         }
@@ -1531,11 +1528,14 @@ class UserController extends Controller {
   };
   addDoctorsPatient =async (req, res) => {
     const{  mobile_number= '',name= '',gender= '',date_of_birth= '',treatment:type= '',severity= '',condition= '',prefix=''}=req.body;
-    const{userId:user_id=1}=req.params;
+    // const{userId:user_id=1}=req.params;
+    const {userDetails: {userId: user_id} = {}} = req;
     try {
      
      let password=process.config.DEFAULT_PASSWORD;
      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+
+     Logger.debug("89312793812 ---> ", password, salt);
       const hash = await bcrypt.hash(password, salt);
      let user = await userService.addUser({
       prefix,
@@ -1567,6 +1567,8 @@ class UserController extends Controller {
     let carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(type,severity,condition);
     const patient_id=patient.get('id');
     const doctor_id =doctor.get('id');
+
+    Logger.debug("9872683794 ------------->", doctor, doctor.get("id"), doctor_id);
     const care_plan_template_id =carePlanTemplate? carePlanTemplate.get('id'):null;
 
     const details = care_plan_template_id?{}:{type,severity,condition};

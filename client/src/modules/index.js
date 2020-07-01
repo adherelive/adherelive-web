@@ -17,6 +17,7 @@ import onBoarding from "./onBoarding";
 import care_plans from "./carePlans";
 import doctor_clinics from "./doctorClinics";
 import doctor_qualifications from "./doctorQualifications";
+import doctor_registrations from "./doctorRegistrations";
 import upload_documents from "./uploadDocuments";
 
 const rootReducer = combineReducers({
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   care_plans,
   doctor_clinics,
   doctor_qualifications,
+  doctor_registrations,
   upload_documents
 });
 

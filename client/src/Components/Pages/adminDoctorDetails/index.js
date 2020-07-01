@@ -202,7 +202,8 @@ class AdminDoctorDetails extends Component {
 
     return doctor_registration_ids.map((registration_id, index) => {
       const {
-        basic_info: { number, start_date, end_date, council, year } = {}
+        basic_info: { number, start_date, end_date, council, year } = {},
+          expiry_date
       } = doctor_registrations[registration_id] || {};
 
       return (
@@ -261,8 +262,8 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.registration_expiry_date_text)}
               </div>
               <div className="fs14 fw500">
-                {end_date
-                  ? moment(end_date).format("LLL")
+                {expiry_date
+                  ? moment(expiry_date).format("LL")
                   : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
