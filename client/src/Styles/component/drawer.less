@@ -2,18 +2,19 @@
   font-style: normal;
   font-weight: normal;
   // font-size: @12px!important;
-  font-size: 18px!important;
+  font-size: 18px !important;
   font-weight: 500;
   margin-bottom: 8px;
   line-height: @22px;
   color: #979797;
 }
 
-.ant-drawer-body{
+.ant-drawer-body {
   display: flex;
+  padding: 16px;
   min-height: 90%;
   flex-direction: column;
-  padding-bottom:10px;
+  padding-bottom: 10px;
   // padding-left: 10px;
 }
 
@@ -22,41 +23,41 @@
   min-height: 100%;
 
   flex-direction: column;
-  align-items:center;
-  flex-grow:1;
+  align-items: center;
+  flex-grow: 1;
   margin-top: 20px;
-  padding-left: 10px;
+  width: 100%;
 }
 
-.drawer-block{
-  display:flex;
+.drawer-block {
+  display: flex;
   flex-direction: column;
-  width:100%;
+  width: 100%;
   min-width: 90%;
-  padding:8px;
-  border:solid 1px #e7e7e7;
+  padding: 8px;
+  border: solid 1px #e7e7e7;
   border-radius: 4px;
-  margin:10px;
+  margin: 10px;
   margin-left: 0px;
 }
 
-.drawer-block-description{
-  color:#212b36;
+.drawer-block-description {
+  color: #212b36;
   font-size: 12px;
   margin-top: 4px;
   margin-bottom: 4px;
   margin-right: 4px;
 }
 
-.medication-image-tablet{
-  height:20px;
-  margin-left:8px;
+.medication-image-tablet {
+  height: 20px;
+  margin-left: 8px;
 }
 
-.ant-calendar-picker-clear, .ant-calendar-picker-icon {
+.ant-calendar-picker-clear,
+.ant-calendar-picker-icon {
   top: 52%;
 }
-
 
 .ant-drawer-body .ant-form-item-children textarea {
   margin-bottom: 25px;
@@ -66,56 +67,83 @@
   align-items: center;
 }
 
-.dose-input{
-  display: flex;
-  flex: 1;
-  align-self: flex-end;
-  width: 80%;
-}
+// .dose-input {
+//   display: flex;
+//   flex: 1;
+//   align-self: flex-end;
+//   width: 80%;
+// }
 
-.ant-drawer-body .ant-form-item-children input {
-  border-radius:4px 0px 0px 4px;
+// .ant-drawer-body .ant-form-item-children input {
+//   border-radius: 4px 0px 0px 4px;
   // border-right: 0px;
-}
+// }
 
-
-.gender-unselected{
-color:@deep-cyan;
-border:1px solid @deep-cyan;
-border-radius: 4px;
-font-size: 18px;
-font-weight: 700;
-display:flex;
-justify-content: center;
-align-items: center;
-height:45px;
-width:80px;
-cursor: pointer;
-}
-
-.gender-selected{
-  background-color:@deep-cyan ;
-  color:#fff;
-  // border:1px solid @deep-cyan;
+.gender-unselected {
+  color: @deep-cyan;
+  border: 1px solid @deep-cyan;
   border-radius: 4px;
   font-size: 18px;
-  font-weight: 700;
-  display:flex;
+  font-weight: 800;
+  margin-bottom: 12px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  height:45px;
-  width:80px;
+  height: 45px;
+  width: 70px;
   cursor: pointer;
 }
 
-//  .ant-drawer-body .ant-select-selection__rendered {
-//   width:75%
-// }
+.gender-selected {
+  background-color: @deep-cyan;
+  color: #fff;
+  // border:1px solid @deep-cyan;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 70px;
+  cursor: pointer;
+}
+
+.dose-input {
+  .ant-input-number-input-wrap {
+    input {
+      // border:1px solid #979797;
+      border-right: none;
+      border-radius: 4px 0px 0px 4px;
+    }
+    
+  }
+}
+.ant-input-number-handler-down {
+  border-bottom-right-radius: 0px;
+}
+.ant-input-number-handler-up {
+  border-top-right-radius: 0px;
+}
+
+
+
+.drawer-select{
+  .ant-select-selection {
+    .ant-select-selection__rendered {
+      width: 75%;
+    }
+    .ant-select-selection__placeholder{
+      width:75%;
+    }
+  }
+}
+
+
 
 // .ant-drawer-body .ant-select-selection__placeholder, .ant-drawer-body .ant-select-selection__rendered {
 //   width:75%;
 // }
-
 
 // .ant-select-selection__placeholder{
 //   width:75%;

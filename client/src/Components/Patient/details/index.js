@@ -165,7 +165,7 @@ const PatientProfileHeader = ({ formatMessage, getMenu,showAdd }) => {
   return (
     <div className="flex pt20 pr24 pb20 pl24">
       <div className="patient-profile-header flex-grow-0">
-      <div className="fs30 fw700">{formatMessage(message.patient_profile_header)}</div>
+      <div className="fs28 fw700">{formatMessage(message.patient_profile_header)}</div>
       </div>
       <div className="flex-grow-1 tar">
         {showAdd && (<Dropdown
@@ -700,12 +700,12 @@ class PatientDetails extends Component {
               </div>)}
               {showTabs &&(
                 <div className='flex-grow-1 direction-column align-center'>
-            <PatientAlertCard
+            {/* <PatientAlertCard
               formatMessage={formatMessage}
               count={count}
               new_symptoms_string={new_symptoms_string}
               missed_appointment={missed_appointment}
-            />
+            /> */}
             <div className="patient-tab mt20">
               <Tabs defaultActiveKey="1" onChange={callback}>
                 {/* <TabPane tab="Symptoms" key="1">
@@ -731,9 +731,9 @@ class PatientDetails extends Component {
                     {/* <AppointmentTable /> */}
                   </div>
                 </TabPane>
-                <TabPane tab="Actions" key="4">
+                {/* <TabPane tab="Actions" key="4">
                   Content of Actions Tab
-                </TabPane>
+                </TabPane> */}
               </Tabs>
             </div>
             </div>

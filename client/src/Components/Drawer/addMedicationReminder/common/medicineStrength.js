@@ -63,7 +63,7 @@ class MedicationStrength extends Component {
               }
             ],
             initialValue: getInitialValue()
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber className='dose-input' min={1} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );

@@ -418,7 +418,7 @@ class EditMedicationReminderForm extends Component {
 
     return (
       <Fragment>
-        <Form className="event-form pb80 wp90">
+        <Form className="event-form pb80 wp100">
           {/* {participantsField.render({
             ...this.props,
             otherUser,
@@ -432,8 +432,8 @@ class EditMedicationReminderForm extends Component {
 
           {chooseMedicationField.render({ ...this.props, otherUser })}
 
-          <span className="form-label">Dose</span>
-          <InputGroup compact>
+          <span className="form-label flex-grow-1">Dose</span>
+          <InputGroup compact >
             {medicineStrengthField.render(this.props)}
             {medicineStrengthUnitField.render(this.props)}
           </InputGroup>

@@ -312,9 +312,9 @@ class WhenToTakeMedication extends Component {
 
 
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
-    let { schedule_data: { when_to_take:frequency = '' } = {} } = medicationData;
+    let { schedule_data: { when_to_take:frequency = [] } = {} } = medicationData;
     if(frequency){
-      when_to_take=[frequency.toString()];
+      when_to_take=frequency;
     }
     console.log("WHEN TO TAKE IN FORM ITEMSS",this.state);
     getFieldDecorator("keys", {
@@ -350,7 +350,7 @@ class WhenToTakeMedication extends Component {
                   initialValue: getInitialValue(k),
                 })(
                   <Select
-                    className="wp100"
+                    className="wp100 drawer-select"
                     autoComplete="off"
                     placeholder={formatMessage(messages.select_timing)}
                     onSelect={(value) => handleSelect(value, k)}

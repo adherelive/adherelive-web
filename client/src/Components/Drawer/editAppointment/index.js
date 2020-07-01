@@ -88,7 +88,9 @@ class EditAppointment extends Component {
           reason
         };
 
-        if(editAppointment){
+        if(moment(end_time).isBefore(moment(start_time))){
+          message.error('Please select valid timings for appointment.')
+        }else  if(editAppointment){
           editAppointment(data);
         }else{
         try {
@@ -231,7 +233,7 @@ class EditAppointment extends Component {
           // closable={false}
           onClose={editAppointment ? hideAppointment : onClose}
           visible={editAppointment ? appointmentVisible : visible} // todo: change as per prop -> "visible", -- WIP --
-          width={350}
+          width={'35%'}
           title={editAppointment?formatMessage(messages.appointment):formatMessage(messages.edit_appointment)}
         // headerStyle={{
         //     display:"flex",

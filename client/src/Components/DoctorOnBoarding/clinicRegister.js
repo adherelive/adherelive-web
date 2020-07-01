@@ -68,6 +68,8 @@ class ClinicRegister extends Component {
         let { clinics = {} } = this.state;
         let newClinics = clinics;
         newClinics[key1].timings[key2].startTime = time;
+
+        newClinics[key1].timings[key2].endTime = moment(time).add('minutes',30);
         this.setState({ clinics: newClinics });
     }
 
@@ -192,7 +194,7 @@ class ClinicRegister extends Component {
                                     <div key={tKey} className='flex justify-space-between mb10'>
                                         <div className='flex direction-column'>
                                             <div className='fs14 mt8 mb8'>Start Time</div>
-                                            <TimePicker use12Hours format="HH:mm a" onChange={this.setClinicStartTime(key, tKey)} />
+                                            <TimePicker value={timings[tKey].startTime?timings[tKey].startTime:moment()} use12Hours minuteStep={15} format="HH:mm a" onChange={this.setClinicStartTime(key, tKey)} />
                                         </div>
                                         <div className='flex direction-row align-center'>
                                             <div className='flex direction-column'>
@@ -203,7 +205,7 @@ class ClinicRegister extends Component {
                                                     onClick={this.deleteClinicTimings(key, tKey)}
                                                 />)
                                             }</div>
-                                                <TimePicker use12Hours format="HH:mm a" onChange={this.setClinicEndTime(key, tKey)} />
+                                                <TimePicker value={timings[tKey].startTime?timings[tKey].startTime:moment().add('minutes',30)} use12Hours minuteStep={15} format="HH:mm a" onChange={this.setClinicEndTime(key, tKey)} />
                                             </div>
                                           
                                         </div>

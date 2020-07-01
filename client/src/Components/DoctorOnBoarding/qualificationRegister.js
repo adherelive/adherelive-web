@@ -1000,6 +1000,10 @@ class QualificationRegister extends Component {
       }
       for(let reg of newRegistration){
         let { number = '',expiryDate='', council = '', year = '', photos = [] } = reg;
+        if(year>moment(expiryDate).year()){
+          message.error('Please select valid expiry date for registration.')
+          return false;
+        }
         if (!number || !expiryDate || !parseInt(year) || !photos.length||!council) {
 
           message.error('Please enter all Registration details.')

@@ -75,7 +75,9 @@ class AddAppointment extends Component {
           treatment,
           reason
         };
-
+        if(moment(end_time).isBefore(moment(start_time))){
+          message.error('Please select valid timings for appointment.')
+        }else{
         try {
           const response = await addCarePlanAppointment(data,carePlanId);
           const {
@@ -101,6 +103,7 @@ class AddAppointment extends Component {
         } catch (error) {
           console.log("ADD APPOINTMENT UI ERROR ---> ", error);
         }
+      }
       }
       
     });

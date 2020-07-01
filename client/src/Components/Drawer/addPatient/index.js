@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon,DatePicker,Select,Input,message,Button } from "antd";
+import { Drawer, Icon, Select, Input, message, Button } from "antd";
 import ChatComponent from "../../../Containers/Chat";
 import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
 import messages from "./message";
 import moment from "moment";
 
+import DatePicker from "react-datepicker";
 import CloseIcon from "../../../Assets/images/close.svg";
 import ChatIcon from "../../../Assets/images/chat.svg";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
@@ -22,11 +23,12 @@ import japan from '../../../Assets/images/japan.png';
 import china from '../../../Assets/images/china.png';
 import switzerland from '../../../Assets/images/switzerland.png';
 import france from '../../../Assets/images/france.png';
-const{Option}=Select;
+import "react-datepicker/dist/react-datepicker.css";
+const { Option } = Select;
 
-const MALE='m';
-const FEMALE='f';
-const OTHER='o';
+const MALE = 'm';
+const FEMALE = 'f';
+const OTHER = 'o';
 
 class PatientDetailsDrawer extends Component {
     constructor(props) {
@@ -39,7 +41,7 @@ class PatientDetailsDrawer extends Component {
             treatment: '',
             severity: '',
             condition: '',
-            prefix:"91"
+            prefix: "91"
         };
     }
 
@@ -51,24 +53,24 @@ class PatientDetailsDrawer extends Component {
 
     getGenderOptions = () => {
         const genderes = [
-          { name: "Female", value: "f" },
-          { name: "Male", value: "m" },
-          { name: "Other", value: "o" }
+            { name: "Female", value: "f" },
+            { name: "Male", value: "m" },
+            { name: "Other", value: "o" }
         ];
         let options = [];
-    
+
         for (let id = 0; id < genderes.length; ++id) {
-          const { name, value } = genderes[id];
-          options.push(
-            <Option key={id} value={value} name={name}>
-              {name}
-            </Option>
-          );
+            const { name, value } = genderes[id];
+            options.push(
+                <Option key={id} value={value} name={name}>
+                    {name}
+                </Option>
+            );
         }
         return options;
-      };
+    };
 
-      setName = e => {
+    setName = e => {
         this.setState({ name: e.target.value });
     };
 
@@ -87,7 +89,7 @@ class PatientDetailsDrawer extends Component {
         if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
             this.setState({ mobile_number: e.target.value });
         }
-      };
+    };
 
     setSeverity = e => {
         this.setState({ severity: e.target.value });
@@ -97,20 +99,20 @@ class PatientDetailsDrawer extends Component {
         this.setState({ condition: e.target.value });
     };
 
-    setGender = value=>() => {
+    setGender = value => () => {
         this.setState({ gender: value });
-      };
+    };
 
-    setDOB =(date, dateString)=> {
+    setDOB = (date) => {
 
         this.setState({ date_of_birth: date });
-      }
+    }
 
 
 
     renderAddPatient = () => {
 
-        const {  mobile_number= '', name= '',gender= '',date_of_birth= {},treatment= '',severity= '',condition= '',prefix='' } = this.state;
+        const { mobile_number = '', name = '', gender = '', date_of_birth = {}, treatment = '', severity = '', condition = '', prefix = '' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -145,7 +147,7 @@ class PatientDetailsDrawer extends Component {
                 <Option value="880"><div className='flex align-center'><img src={bangladesh} className='w16 h16' /> <div className='ml4'>+880</div></div></Option>
             </Select>
         );
-       
+
         return (
             <div className='form-block-ap'>
                 <div className='form-headings flex align-center justify-start'>Phone number<div className="star-red">*</div></div>
@@ -157,7 +159,7 @@ class PatientDetailsDrawer extends Component {
                     value={mobile_number}
                     onChange={this.setNumber}
                 />
-                <div className='form-headings-ap mt18'>Name</div>
+                <div className='form-headings-ap '>Name</div>
                 <Input
                     placeholder="Name"
                     value={name}
@@ -165,17 +167,26 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setName}
                 />
                 <div className='form-headings-ap'>Gender</div>
-                 <div className='wp100 mt6 mb18 flex justify-space-between'>
-                     <div className={gender===MALE?'gender-selected':'gender-unselected'} onClick={this.setGender(MALE)}>M</div>
-                     
-                     <div className={gender===FEMALE?'gender-selected':'gender-unselected'} onClick={this.setGender(FEMALE)}>F</div>
-                     
-                     <div className={gender===OTHER?'gender-selected':'gender-unselected'} onClick={this.setGender(OTHER)}>O</div>
-                 </div>
+                <div className='wp100 mt6 mb18 flex justify-space-between'>
+                    <div className={gender === MALE ? 'gender-selected' : 'gender-unselected'} onClick={this.setGender(MALE)}>M</div>
 
-                <div className='form-headings-ap flex align-center justify-start'>DOB<div className="star-red">*</div></div>
-                <DatePicker className='form-inputs-ap' onChange={this.setDOB} placeholder='Select DOB'/>
+                    <div className={gender === FEMALE ? 'gender-selected' : 'gender-unselected'} onClick={this.setGender(FEMALE)}>F</div>
 
+                    <div className={gender === OTHER ? 'gender-selected' : 'gender-unselected'} onClick={this.setGender(OTHER)}>O</div>
+                </div>
+
+                <div className='form-headings-ap flex align-center justify-start'>Date Of Birth<div className="star-red">*</div></div>
+                {/* <DatePicker className='form-inputs-ap' onChange={this.setDOB} /> */}
+                <DatePicker
+                    className='form-inputs-dp'
+                    placeholder='Select Date Of Birth'
+                    selected={date_of_birth}
+                    onChange={this.setDOB}
+                    peekNextMonth
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
+                />
                 <div className='form-category-headings-ap'>Care Plan</div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
@@ -185,14 +196,14 @@ class PatientDetailsDrawer extends Component {
                     value={treatment}
                     onChange={this.setTreatment}
                 />
-                <div className='form-headings-ap mt18 flex align-center justify-start'>Severity<div className="star-red">*</div></div>
+                <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
                 <Input
                     placeholder="Severity"
                     value={severity}
                     className={"form-inputs-ap"}
                     onChange={this.setSeverity}
                 />
-                    <div className='form-headings-ap mt18 flex align-center justify-start'>Condition<div className="star-red">*</div></div>
+                <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
                 <Input
                     placeholder="Condition"
                     value={condition}
@@ -205,40 +216,40 @@ class PatientDetailsDrawer extends Component {
     }
 
 
-   validateData=()=>{
-    const{   mobile_number= '',name= '',gender= '',date_of_birth= '',treatment= '',severity= '',condition= '',prefix=''}=this.state;
-    if (!prefix) {
-        message.error('Please select a prefix.')
-        return false;
-    } else if (mobile_number.length < 10|| !mobile_number) {
-        message.error('Please enter valid mobile number.')
-        return false;
-    } else if (!date_of_birth) {
-        message.error('Please select  Date of Birth .')
-        return false;
+    validateData = () => {
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+        if (!prefix) {
+            message.error('Please select a prefix.')
+            return false;
+        } else if (mobile_number.length < 10 || !mobile_number) {
+            message.error('Please enter valid mobile number.')
+            return false;
+        } else if (!date_of_birth) {
+            message.error('Please select  Date of Birth .')
+            return false;
+        }
+        else if (!treatment) {
+            message.error('Please enter a treatment.')
+            return false;
+        }
+        else if (!severity) {
+            message.error('Please enter a severity.')
+            return false;
+        }
+        else if (!condition) {
+            message.error('Please enter a condition.')
+            return false;
+        }
+        return true;
     }
-    else if (!treatment) {
-        message.error('Please enter a treatment.')
-        return false;
-    }
-    else if (!severity) {
-        message.error('Please enter a severity.')
-        return false;
-    }
-    else if (!condition) {
-        message.error('Please enter a condition.')
-        return false;
-    }
-    return true;
-   }
 
-    onSubmit = ()=>{
-        const{   mobile_number= '',name= '',gender= '',date_of_birth= '',treatment= '',severity= '',condition= '',prefix=''}=this.state;
-   const validate=this.validateData();
-   const{submit}=this.props;
-   if(validate){
-    submit({ mobile_number,name,gender,date_of_birth,treatment,severity,condition,prefix})
-   }
+    onSubmit = () => {
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+        const validate = this.validateData();
+        const { submit } = this.props;
+        if (validate) {
+            submit({ mobile_number, name, gender, date_of_birth, treatment, severity, condition, prefix })
+        }
     }
 
 
@@ -251,9 +262,9 @@ class PatientDetailsDrawer extends Component {
     };
 
     render() {
-        console.log("STATEEEEEEE",this.state);
+        console.log("STATEEEEEEE", this.state);
         const { visible } = this.props;
-        const { onClose,renderAddPatient } = this;
+        const { onClose, renderAddPatient } = this;
 
         if (visible !== true) {
             return null;
@@ -261,22 +272,22 @@ class PatientDetailsDrawer extends Component {
         return (
             <Fragment>
                 <Drawer
-                  title="Add Patient"
+                    title="Add Patient"
                     placement="right"
                     // closable={false}
                     onClose={onClose}
                     visible={visible} // todo: change as per state, -- WIP --
                     width={400}
                 >
-               {renderAddPatient()}
-               <div className='add-patient-footer'>
-            <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-              Cancel
+                    {renderAddPatient()}
+                    <div className='add-patient-footer'>
+                        <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+                            Cancel
             </Button>
-            <Button onClick={this.onSubmit} type="primary">
-              Submit
+                        <Button onClick={this.onSubmit} type="primary">
+                            Submit
             </Button>
-          </div>
+                    </div>
                 </Drawer>
 
             </Fragment>

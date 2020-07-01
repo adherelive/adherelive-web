@@ -31,7 +31,7 @@ class MedicationStrength extends Component {
   };
 
   render() {
-    const { form, medications, payload: {id: medication_id} = {} , medicationData = {}} = this.props;
+    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -40,19 +40,21 @@ class MedicationStrength extends Component {
     } = form;
     // console.log("act,", activityType, activityModeOption, activityMode);
 
-    let {basic_info : {details: {strength} = {}} = {}} = medications[medication_id] || {};
-    
-    let { schedule_data: { strength:dose=0 } = {} } = medicationData;
-    if(dose){
-      strength=parseInt(dose);
+    let { basic_info: { details: { strength } = {} } = {} } = medications[medication_id] || {};
+
+    let { schedule_data: { strength: dose = 0 } = {} } = medicationData;
+    if (dose) {
+      strength = parseInt(dose);
     }
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (
       <Fragment>
         <FormItem
-          className="dose-input"
+
+          className="flex-1 align-self-end wp80"
           validateStatus={error ? "error" : ""}
+          // className='wp80'
           help={error ? error[0] : ""}
         >
           {getFieldDecorator(FIELD_NAME, {
@@ -67,7 +69,8 @@ class MedicationStrength extends Component {
               }
             ],
             initialValue: strength ? strength : null
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber
+            className="dose-input" min={1} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );
