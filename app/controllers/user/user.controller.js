@@ -240,7 +240,7 @@ class UserController extends Controller {
         email
       });
 
-      console.log("MOMENT===========>", user.getBasicInfo);
+      // console.log("MOMENT===========>", user.getBasicInfo);
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
@@ -703,12 +703,8 @@ class UserController extends Controller {
         doctorName.length == 3
           ? doctorName[2]
           : doctorName.length == 2
-            ? doctorName[1]
-            : "";
-      Logger.debug(
-        "profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] ",
-        profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-      );
+          ? doctorName[1]
+          : "";
 
       if (doctorExist) {
         let doctor_data = {
@@ -797,11 +793,13 @@ class UserController extends Controller {
           city: docCity = "",
           profile_pic: docPic = ""
         } = docInfo || {};
-        name =
-          first_name + " " + `${middle_name && middle_name + " "}` + last_name;
+
+        Logger.debug("MIDDLE NAME --> ", first_name, middle_name, last_name, name);
+
+        name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
 
         city = docCity;
-        profile_pic = docPic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}` : null;
+        profile_pic = docPic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}` : docPic;
       }
 
       const profileData = {

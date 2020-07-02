@@ -26,7 +26,7 @@ module.exports = {
       {
         id: 2,
         care_plan_template_id: 1,
-        medicine_id: 3,
+        medicine_id: 7,
         schedule_data: JSON.stringify({ "unit": "ml", "repeat": "weekly", "quantity": 1, "strength": 5, "medicine_id": "3", "repeat_days": ["Sun", "Thu", "Tue"], "when_to_take": ["4"], "repeat_interval": 0, "medication_stage": "", "duration": 6 }),
         created_at: new Date(),
         updated_at: new Date(),

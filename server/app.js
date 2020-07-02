@@ -7,9 +7,6 @@ import Activity from "../app/activitySdk/activityObserver";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
-import twilioRouter from "../routes/api/twilio";
-import userRouter from "../routes/api/user";
-import mUserRouter from "../routes/m-api/user";
 
 const Config = require("../config/config");
 //
@@ -23,8 +20,6 @@ const cookieParser = require("cookie-parser");
 // const logger = require("morgan");
 const cors = require("cors");
 
-const jwt = require("jsonwebtoken");
-const userService = require("../app/services/user/user.service");
 const app = express();
 
 app.use(express.json({ limit: "50mb" }));

@@ -1,6 +1,7 @@
 "use strict";
 
 import { DB_TABLES, MEDICINE_TYPE } from "../constant";
+import Sequelize from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -19,16 +20,19 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       name: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(1000),
         allowNull: false,
       },
       type: {
         type: Sequelize.ENUM,
         values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
-        allowNull: false,
+        defaultValue: MEDICINE_TYPE.TABLET,
       },
       description: {
         type: Sequelize.STRING(1000),
+      },
+      pillbox_id: {
+        type: Sequelize.INTEGER,
       },
       created_at: {
         allowNull: false,

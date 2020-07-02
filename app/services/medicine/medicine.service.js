@@ -6,9 +6,17 @@ const Op = Sequelize.Op;
 class MedicineService {
   constructor() {}
 
+  add = async (data) => {
+    try {
+      const medicine = await Medicine.create(data);
+      return medicine;
+    } catch(err) {
+      throw err;
+    }
+  }
+
   search = async (data) => {
     try {
-      console.log("----------- MED SEARCH 1 ", data);
       const medicine = await Medicine.findAll({
         where: {
           name: {
@@ -16,10 +24,8 @@ class MedicineService {
           },
         },
       });
-      // console.log("----------- MED SEARCH 2 ", medicine);
       return medicine;
     } catch (error) {
-      console.log("----------- MED SEARCH 3 ", error);
       throw error;
     }
   };

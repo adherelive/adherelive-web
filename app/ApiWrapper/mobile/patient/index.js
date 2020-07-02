@@ -25,7 +25,7 @@ class MPatientWrapper extends BasePatient {
 
         const updatedDetails =  {
             ...details,
-            profile_pic: `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profile_pic}`
+            profile_pic: profile_pic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profile_pic}` : null,
         };
 
         return {

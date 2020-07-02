@@ -31,7 +31,7 @@ class Dashboard extends Component {
     componentDidMount() {
         const {graphs, getInitialData, searchMedicine} = this.props;
         getInitialData();
-        searchMedicine("");
+        // searchMedicine("");
         console.log("DashBoard Did MOunt DOCTORRRRR ROUTERRR ----------------->   ")
         setTimeout(() => {
             drawChart(graphs);

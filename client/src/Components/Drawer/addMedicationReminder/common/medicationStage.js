@@ -26,7 +26,7 @@ class MedicationStage extends Component {
       fetchingMedicines: false
     };
 
-    this.handleMedicineSearch = throttle(this.handleMedicineSearch.bind(this), 1000);
+    this.handleMedicineSearch = throttle(this.handleMedicineSearch.bind(this), 2000);
   }
 
   getStagesOption = () => {
@@ -72,17 +72,22 @@ class MedicationStage extends Component {
 
   async handleMedicineSearch(data) {
     try {
-      const {searchMedicine} = this.props;
-      this.setState({ fetchingMedicines: true });
-      const response = await searchMedicine(data);
-      const { status, payload: {data: responseData, message} = {} } = response;
-      if (status) {
-        const { medicines = {} } = responseData;
-        const medicineList = {};
-        Object.keys(medicines).forEach(id => {
-          medicineList[id] = medicines[id];
-        });
-        this.setState({ medicines: medicineList, fetchingMedicines: false });
+      console.log("1892379263 data --> ", data);
+      if(data) {
+        const {searchMedicine} = this.props;
+        this.setState({ fetchingMedicines: true });
+        const response = await searchMedicine(data);
+        const { status, payload: {data: responseData, message} = {} } = response;
+        if (status) {
+          const { medicines = {} } = responseData;
+          const medicineList = {};
+          Object.keys(medicines).forEach(id => {
+            medicineList[id] = medicines[id];
+          });
+          this.setState({ medicines: medicineList, fetchingMedicines: false });
+        } else {
+          this.setState({ fetchingMedicines: false });
+        }
       } else {
         this.setState({ fetchingMedicines: false });
       }
@@ -121,7 +126,7 @@ class MedicationStage extends Component {
             className="drawer-select"
             placeholder="Choose Medicine"
             showSearch
-            onFocus={() => handleMedicineSearch("")}
+            // onFocus={() => handleMedicineSearch("")}
             autoComplete="off"
             // onFocus={() => handleMedicineSearch("")}
             optionFilterProp="children"
