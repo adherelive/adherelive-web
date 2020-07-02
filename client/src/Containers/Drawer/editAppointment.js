@@ -11,6 +11,7 @@ const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
         patients,
+        treatments,
         appointments,
     } = state
     return {
@@ -18,7 +19,8 @@ const mapStateToProps = state => {
         loading,
         payload,
         patients,
-        appointments
+        appointments,
+        treatments
     };
 };
 
@@ -29,7 +31,7 @@ const mapDispatchToProps = dispatch => {
         deleteAppointment: id => dispatch(deleteAppointment(id)),
         getAppointments: (id) => dispatch(getAppointments(id)),
         getMedications: (id) => dispatch(getMedications(id)),
-     getPatientCarePlanDetails:(patientId)=>dispatch(getPatientCarePlanDetails(patientId)),
+        getPatientCarePlanDetails:(patientId)=>dispatch(getPatientCarePlanDetails(patientId)),
        
         // editAppointment: data => dispatch(editAppointment(data)),
     };

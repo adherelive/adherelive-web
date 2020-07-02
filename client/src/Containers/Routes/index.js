@@ -3,10 +3,10 @@ import Routes from "../../Routes";
 import {getInitialData} from "../../modules/auth";
 
 const mapStateToProps = state => {
-    const {auth} = state;
-    const {authenticated, authRedirection} = auth;
+    const {auth,users,doctors} = state;
+    const {authenticated,authenticated_user, authRedirection} = auth;
     console.log("containers ===== ", authenticated, authRedirection);
-    return {authenticated, authRedirection};
+    return {authenticated, authRedirection,authenticated_user,users,doctors};
 };
 
 const mapDispatchToProps = dispatch => {

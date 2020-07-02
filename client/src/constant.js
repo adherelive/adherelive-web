@@ -95,6 +95,7 @@ export const LOW = "4";
 
 export const MALE = "m";
 export const FEMALE = "f";
+export const OTHER = "o";
 
 export const GENDER = {
   [MALE]: {
@@ -104,6 +105,10 @@ export const GENDER = {
   [FEMALE]: {
     value: "female",
     view: "F"
+  },
+  [OTHER]: {
+    value: "other",
+    view: "O"
   }
 };
 

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { injectIntl, FormattedMessage } from "react-intl";
-import message from "./message";
+import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
 import { SEVERITY_STATUS, MEDICINE_TYPE } from "../../../constant";
-import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin } from "antd";
+import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin,message } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -19,7 +19,7 @@ import TemplateDrawer from '../../Drawer/medicationTemplateDrawer'
 
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
-import messages from "../../Dashboard/message";
+// import messages from "../../Dashboard/message";
 
 const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
@@ -159,22 +159,22 @@ const data_medication = [
   },
 ];
 
-const PatientProfileHeader = ({ formatMessage, getMenu,showAdd }) => {
+const PatientProfileHeader = ({ formatMessage, getMenu, showAdd }) => {
 
   // console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd",showAdd,formatMessage,getMenu);
   return (
     <div className="flex pt20 pr24 pb20 pl24">
       <div className="patient-profile-header flex-grow-0">
-      <div className="fs28 fw700">{formatMessage(message.patient_profile_header)}</div>
+        <div className="fs28 fw700">{formatMessage(messages.patient_profile_header)}</div>
       </div>
       <div className="flex-grow-1 tar">
-        {showAdd && (<Dropdown
+        <Dropdown
           overlay={getMenu()}
           trigger={["click"]}
           placement="bottomRight"
         >
           <Button type="primary">Add</Button>
-        </Dropdown>)}
+        </Dropdown>
       </div>
     </div>
   );
@@ -215,11 +215,11 @@ const PatientCard = ({
       <div className="action-buttons flex">
         <div className="edit-button p10">
           <img className="mr5" src={edit_image} />
-          <span>{formatMessage(message.profile_edit)}</span>
+          <span>{formatMessage(messages.profile_edit)}</span>
         </div>
         <div className="chat-button p10">
           <img className="mr5" src={chat_image} />
-          <span>{formatMessage(message.profile_chat)}</span>
+          <span>{formatMessage(messages.profile_chat)}</span>
         </div>
       </div>
     </div>
@@ -237,14 +237,14 @@ const PatientTreatmentCard = ({
 }) => {
   return (
     <div className="treatment mt20">
-      <h3>{formatMessage(message.treatment_details)}</h3>
+      <h3>{formatMessage(messages.treatment_details)}</h3>
       <div className="treatment-details pl16 pr16">
         <div className="treatment-name flex mt10">
-          <div className="w40">{formatMessage(message.treatment_header)}</div>
+          <div className="wp40">{formatMessage(messages.treatment_header)}</div>
           <div className="w120 wba tdh">{treatment_name}</div>
         </div>
         <div className="treatment-severity flex mt10">
-          <div className="w40">{formatMessage(message.treatment_severity)}</div>
+          <div className="wp40">{formatMessage(messages.treatment_severity)}</div>
           <div className="w120 wba tdh">
             {/* <div
               className={`severity-label mr4 bg-${SEVERITY_STATUS[treatment_severity_status].color}`}
@@ -254,23 +254,23 @@ const PatientTreatmentCard = ({
           </div>
         </div>
         <div className="treatment-condition flex mt10">
-          <div className="w40">
-            {formatMessage(message.treatment_condition)}
+          <div className="wp40">
+            {formatMessage(messages.treatment_condition)}
           </div>
           <div className="w120 wba tdh">{treatment_condition}</div>
         </div>
         <div className="treatment-doctor flex mt10">
-          <div className="w40">{formatMessage(message.treatment_doctor)}</div>
+          <div className="wp40">{formatMessage(messages.treatment_doctor)}</div>
           <div className="w120 wba tdh">{treatment_doctor}</div>
         </div>
         <div className="treatment-start-date flex mt10">
-          <div className="w40">
-            {formatMessage(message.treatment_start_date)}
+          <div className="wp40">
+            {formatMessage(messages.treatment_start_date)}
           </div>
           <div className="w120 wba">{treatment_start_date}</div>
         </div>
         <div className="treatment-provider flex mt10">
-          <div className="w40">{formatMessage(message.treatment_provider)}</div>
+          <div className="wp40">{formatMessage(messages.treatment_provider)}</div>
           <div className="w120 wba">{treatment_provider}</div>
         </div>
       </div>
@@ -288,20 +288,20 @@ const PatientAlertCard = ({
   return (
     <div className="patient-alerts pl16 pr16">
       <h3>
-        {formatMessage(message.alerts_last_visit)}
+        {formatMessage(messages.alerts_last_visit)}
         <span className="alerts-count"> ({count})</span>
       </h3>
       <div className="new-symptoms flex mt10">
         <div className="new-symptoms-header w40">
           <div className="symptoms-side mb4"></div>
-          {formatMessage(message.new_symptoms_header)}
+          {formatMessage(messages.new_symptoms_header)}
         </div>
         <div className="new-symptoms-text w60 tdh">{new_symptoms_string}</div>
       </div>
       <div className="missed-appointment flex mt10">
         <div className="missed-appointment-header w40">
           <div className="missed-appointment-side mb4"></div>
-          {formatMessage(message.missed_appointment_header)}
+          {formatMessage(messages.missed_appointment_header)}
         </div>
         <div className="missed-appointment-text w60 tdh">
           {missed_appointment}
@@ -333,14 +333,14 @@ class PatientDetails extends Component {
     getPatientCarePlanDetails(patient_id).then(response => {
       let { status = false, payload = {} } = response;
       if (status) {
-        let { data: { show = false, appointmentsOfTemplate = {}, medicationsOfTemplate = {},carePlanAppointments={},carePlanMedications={} ,carePlanTemplateId=''} = {} } = payload;
+        let { data: { show = false, appointmentsOfTemplate = {}, medicationsOfTemplate = {}, carePlanAppointments = {}, carePlanMedications = {}, carePlanTemplateId = '' } = {} } = payload;
 
-        
-        console.log("RESPONSEEEEEEEEE IN DID MOUNTTT",show,response);
+
+        console.log("RESPONSEEEEEEEEE IN DID MOUNTTT", show, response);
         if (show) {
-          this.setState({ templateDrawerVisible: true, appointmentsOfTemplate, medicationsOfTemplate});
+          this.setState({ templateDrawerVisible: true, appointmentsOfTemplate, medicationsOfTemplate });
         }
-        this.setState({appointmentsOfTemplate,medicationsOfTemplate,carePlanTemplateId});
+        this.setState({ appointmentsOfTemplate, medicationsOfTemplate, carePlanTemplateId });
       }
     });
     getMedications(patient_id);
@@ -348,7 +348,7 @@ class PatientDetails extends Component {
     searchMedicine("");
   }
 
-  getAppointmentsData = (carePlan={}) => {
+  getAppointmentsData = (carePlan = {}) => {
     const {
       appointments,
       users = {},
@@ -356,7 +356,7 @@ class PatientDetails extends Component {
       patients = {},
     } = this.props;
 
-    let { carePlanAppointmentIds=[],carePlanMedicationIds=[] } = carePlan;
+    let { carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
     return carePlanAppointmentIds.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
@@ -383,7 +383,7 @@ class PatientDetails extends Component {
     });
   };
 
-  getMedicationData = (carePlan={}) => {
+  getMedicationData = (carePlan = {}) => {
     const {
       medications = {},
       users = {},
@@ -392,7 +392,7 @@ class PatientDetails extends Component {
       medicines = {},
     } = this.props;
 
-    let { carePlanAppointmentIds=[],carePlanMedicationIds=[] } = carePlan;
+    let { carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
     console.log("92834792 ", medications);
     const medicationRows = carePlanMedicationIds.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
@@ -407,7 +407,7 @@ class PatientDetails extends Component {
       } = medications[id] || {};
 
 
-    console.log("92834792 ============>", id,medications,medications[id]);
+      console.log("92834792 ============>", id, medications, medications[id]);
       const { basic_info: { user_name = "--" } = {} } =
         users[organizer_id] || {};
 
@@ -527,8 +527,8 @@ class PatientDetails extends Component {
     };
   };
 
-  handleSubmitTemplate = (data)=> {
-    const { addCarePlanMedicationsAndAppointments, getMedications,getAppointments,care_plans, patient_id,getPatientCarePlanDetails } = this.props;
+  handleSubmitTemplate = (data) => {
+    const { addCarePlanMedicationsAndAppointments, getMedications, getAppointments, care_plans, patient_id, getPatientCarePlanDetails } = this.props;
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
@@ -537,17 +537,18 @@ class PatientDetails extends Component {
       }
 
     }
-    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response=>{
-      const{status=false}=response;
-      if(status){
+    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+      const { status = false } = response;
+      if (status) {
         this.onCloseTemplate();
-
-        getMedications(patient_id).then(()=>{
-          getAppointments(patient_id).then(()=>{
+         
+        message.success("Care Plan updated successfully.");
+        getMedications(patient_id).then(() => {
+          getAppointments(patient_id).then(() => {
             getPatientCarePlanDetails(patient_id);
           })
         })
-      }else{
+      } else {
         message.error("Something went wrong!")
       }
     });
@@ -556,11 +557,10 @@ class PatientDetails extends Component {
 
 
   render() {
-    let { patients, patient_id, users, care_plans, doctors, medicines,appointments={},medications={} } = this.props;
-    const { loading, templateDrawerVisible=false,carePlanAppointments={},carePlanMedications={},carePlanTemplateId=0 } = this.state;
+    let { patients, patient_id, users, care_plans, doctors, medicines, appointments = {}, medications = {}, treatments = {}, conditions = {}, severity: severities = {} } = this.props;
+    const { loading, templateDrawerVisible = false, carePlanAppointments = {}, carePlanMedications = {}, carePlanTemplateId = 0 } = this.state;
 
-  console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd render",carePlanTemplateId,showAddButton,showUseTemplate,Object.keys(appointments).length,
-  Object.keys(medications).length);
+    console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd render", this.state);
     const {
       formatMessage,
       getMenu,
@@ -585,32 +585,35 @@ class PatientDetails extends Component {
     let cPMedicationIds = [];
     for (let carePlan of Object.values(care_plans)) {
 
-      let { basic_info: { id = 1, patient_id: patientId = 1 },carePlanAppointmentIds=[],carePlanMedicationIds=[] } = carePlan;
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
       if (patient_id == patientId) {
         carePlanId = id;
-      let { carePlanAppointmentIds=[],carePlanMedicationIds=[] } = carePlan;
-        cPAppointmentIds=carePlanAppointmentIds;
-        cPMedicationIds=carePlanMedicationIds;
+        let { carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
+        cPAppointmentIds = carePlanAppointmentIds;
+        cPMedicationIds = carePlanMedicationIds;
       }
 
     }
 
 
-    console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS',carePlanId);
-    let showUseTemplate =true;
-    let showAddButton =carePlanTemplateId?false:true;
-    if(cPAppointmentIds.length || cPMedicationIds.length){
-      showUseTemplate=false;
+    console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS', carePlanId);
+    let showUseTemplate = true;
+    let showAddButton = carePlanTemplateId ? false : true;
+    if (cPAppointmentIds.length || cPMedicationIds.length) {
+      showUseTemplate = false;
     }
-    
 
-    let showTabs=(cPAppointmentIds.length || cPMedicationIds.length)?true:false;
-    const { basic_info: { doctor_id = 1 } = {}, treatment = '', severity = '', condition = '', activated_on: treatment_start_date } = care_plans[carePlanId] || {};
+
+    let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
+    const { basic_info: { doctor_id = 1 } = {}, activated_on: treatment_start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
+    const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};
+    const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
+    const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
 
     let carePlan = care_plans[carePlanId];
     const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
 
-    console.log("192387123762 ", doctors[doctor_id]);
+    console.log("192387123762 ", treatment_id, severity_id, condition_id, care_plans[carePlanId]);
 
     const {
       basic_info: { first_name, middle_name, last_name, user_id, age },
@@ -619,6 +622,7 @@ class PatientDetails extends Component {
     const { basic_info: { mobile_number, email } = {} } = users[user_id] || {};
 
     const {
+      close,
       user_details: {
         gender,
         age: patient_age,
@@ -654,7 +658,7 @@ class PatientDetails extends Component {
     console.log("formatMessage", formatMessage);
     return (
       <div className="pt10 pr10 pb10 pl10">
-        <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu} showAdd={showAddButton}/>
+        <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu} showAdd={showAddButton} />
         <div className="flex">
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
             <PatientCard
@@ -682,73 +686,74 @@ class PatientDetails extends Component {
                 treatment_provider ? treatment_provider : "--"
               }
               treatment_severity_status={
-                severity ? severity : "1"
+                severity ? severity : "--"
               }
             />
           </div>
           <div className="flex-grow-1 direction-column align-center pt20 pr24 pb20 pl24">
 
             {!showTabs && (
-            <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
-              <img  src={noMedication} className='w200 h200'/>
-              <div className='fs20 fw700'>{formatMessage(message.nothing_to_show)}</div>
-            {showUseTemplate && carePlanTemplateId?(<div className='use-template-button' onClick={this.showTemplateDrawer}>
-              <div>{formatMessage(message.use_template)}</div>
-              </div>):showUseTemplate?(<div className='use-template-button' onClick={this.handleMedicationReminder}>
-              <div>{formatMessage(message.add_medication)}</div>
-              </div>):<div/>}
+              <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
+                <img src={noMedication} className='w200 h200' />
+                <div className='fs20 fw700'>{formatMessage(messages.nothing_to_show)}</div>
+                {showUseTemplate && carePlanTemplateId ? (<div className='use-template-button' onClick={this.showTemplateDrawer}>
+                  <div>{formatMessage(messages.use_template)}</div>
+                </div>) : showUseTemplate ? (<div className='use-template-button' onClick={this.handleMedicationReminder}>
+                  <div>{formatMessage(messages.add_medication)}</div>
+                </div>) : <div />}
               </div>)}
-              {showTabs &&(
-                <div className='flex-grow-1 direction-column align-center'>
-            {/* <PatientAlertCard
+            {showTabs && (
+              <div className='flex-grow-1 direction-column align-center'>
+                {/* <PatientAlertCard
               formatMessage={formatMessage}
               count={count}
               new_symptoms_string={new_symptoms_string}
               missed_appointment={missed_appointment}
             /> */}
-            <div className="patient-tab mt20">
-              <Tabs defaultActiveKey="1" onChange={callback}>
-                {/* <TabPane tab="Symptoms" key="1">
+                <div className="patient-tab mt20">
+                  <Tabs defaultActiveKey="1" onChange={callback}>
+                    {/* <TabPane tab="Symptoms" key="1">
                   <Table
                     columns={columns_symptoms}
                     dataSource={data_symptoms}
                   />
                 </TabPane> */}
-                <TabPane tab="Medication" key="2">
-                  <Table
-                    columns={columns_medication}
-                    dataSource={getMedicationData(carePlan)}
-                    onRow={onRowMedication}
-                  />
-                </TabPane>
-                <TabPane tab="Appointments" key="3">
-                  <Table
-                    columns={columns_appointments}
-                    dataSource={getAppointmentsData(carePlan)}
-                    onRow={onRowAppointment}
-                  />
-                  <div className="wp100">
-                    {/* <AppointmentTable /> */}
-                  </div>
-                </TabPane>
-                {/* <TabPane tab="Actions" key="4">
+                    <TabPane tab="Medication" key="2">
+                      <Table
+                        columns={columns_medication}
+                        dataSource={getMedicationData(carePlan)}
+                        onRow={onRowMedication}
+                      />
+                    </TabPane>
+                    <TabPane tab="Appointments" key="3">
+                      <Table
+                        columns={columns_appointments}
+                        dataSource={getAppointmentsData(carePlan)}
+                        onRow={onRowAppointment}
+                      />
+                      <div className="wp100">
+                        {/* <AppointmentTable /> */}
+                      </div>
+                    </TabPane>
+                    {/* <TabPane tab="Actions" key="4">
                   Content of Actions Tab
                 </TabPane> */}
-              </Tabs>
-            </div>
-            </div>
+                  </Tabs>
+                </div>
+              </div>
             )}
           </div>
         </div>
-        <AddMedicationReminder carePlanId={carePlanId}/>
-        <AddAppointmentDrawer carePlanId={carePlanId}/>
+        <AddMedicationReminder carePlanId={carePlanId} />
+        <AddAppointmentDrawer carePlanId={carePlanId} />
         <TemplateDrawer visible={templateDrawerVisible}
-           submit={this.handleSubmitTemplate}
+          submit={this.handleSubmitTemplate}
+          dispatchClose={close}
           close={onCloseTemplate} medications={this.state.medicationsOfTemplate}
           appointments={this.state.appointmentsOfTemplate} medicines={medicines}
           patientId={patient_id} patients={patients} carePlan={carePlan} />
-        <EditAppointmentDrawer carePlanId={carePlanId} />
-        <EditMedicationReminder carePlanId={carePlanId}/>
+        <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
+        <EditMedicationReminder carePlanId={carePlanId} />
       </div>
     );
   }

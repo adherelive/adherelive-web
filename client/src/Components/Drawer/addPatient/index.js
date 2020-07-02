@@ -79,8 +79,8 @@ class PatientDetailsDrawer extends Component {
         this.setState({ prefix: value });
     };
 
-    setTreatment = e => {
-        this.setState({ treatment: e.target.value });
+    setTreatment = value => {
+        this.setState({ treatment: value });
     };
 
     setNumber = e => {
@@ -91,12 +91,12 @@ class PatientDetailsDrawer extends Component {
         }
     };
 
-    setSeverity = e => {
-        this.setState({ severity: e.target.value });
+    setSeverity = value => {
+        this.setState({ severity: value });
     };
 
-    setCondition = e => {
-        this.setState({ condition: e.target.value });
+    setCondition = value => {
+        this.setState({ condition: value });
     };
 
     setGender = value => () => {
@@ -108,7 +108,43 @@ class PatientDetailsDrawer extends Component {
         this.setState({ date_of_birth: date });
     }
 
+    getTreatmentOption =()=>{
+        let {treatments={}}=this.props;
+        let newTreatments=[];
+        for (let treatment of Object.values(treatments)){
+            let{basic_info:{id=0,name=''}={}}=treatment;
+            newTreatments.push(<Option key={id} value={id}>
+            {name}
+          </Option>)
+        }
+        return newTreatments;
+    }
 
+
+    getSeverityOption =()=>{
+        let {severity={}}=this.props;
+        let newSeverity=[];
+        for (let sev of Object.values(severity)){
+            let{basic_info:{id=0,name=''}={}}=sev;
+            newSeverity.push(<Option key={id} value={id}>
+            {name}
+          </Option>)
+        }
+        return newSeverity;
+    }
+
+
+    getConditionOption =()=>{
+        let {conditions={}}=this.props;
+        let newConditions=[];
+        for (let condition of Object.values(conditions)){
+            let{basic_info:{id=0,name=''}={}}=condition;
+            newConditions.push(<Option key={id} value={id}>
+            {name}
+          </Option>)
+        }
+        return newConditions;
+    }
 
     renderAddPatient = () => {
 
@@ -167,7 +203,7 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setName}
                 />
                 <div className='form-headings-ap'>Gender</div>
-                <div className='wp100 mt6 mb18 flex justify-space-between'>
+                <div className='wp100 mt6 mb18 flex'>
                     <div className={gender === MALE ? 'gender-selected' : 'gender-unselected'} onClick={this.setGender(MALE)}>M</div>
 
                     <div className={gender === FEMALE ? 'gender-selected' : 'gender-unselected'} onClick={this.setGender(FEMALE)}>F</div>
@@ -190,26 +226,37 @@ class PatientDetailsDrawer extends Component {
                 <div className='form-category-headings-ap'>Care Plan</div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
-                <Input
-                    className={"form-inputs-ap"}
-                    placeholder="Treatment"
-                    value={treatment}
-                    onChange={this.setTreatment}
-                />
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    autoComplete="off"
+                    placeholder='Select Treatment'
+                    onSelect={this.setTreatment}
+                    // onDeselect={handleDeselect}
+                    suffixIcon={null}
+                  >
+                    {this.getTreatmentOption()}
+                  </Select>
                 <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
-                <Input
-                    placeholder="Severity"
-                    value={severity}
-                    className={"form-inputs-ap"}
-                    onChange={this.setSeverity}
-                />
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    autoComplete="off"
+                    placeholder='Select Severity'
+                    onSelect={this.setSeverity}
+                    // onDeselect={handleDeselect}
+                    suffixIcon={null}
+                  >
+                    {this.getSeverityOption()}
+                  </Select>
                 <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
-                <Input
-                    placeholder="Condition"
-                    value={condition}
-                    className={"form-inputs-ap"}
-                    onChange={this.setCondition}
-                />
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    placeholder='Select Condition'
+                    onSelect={this.setCondition}
+                    // onDeselect={handleDeselect}
+                    suffixIcon={null}
+                  >
+                    {this.getConditionOption()}
+                  </Select>
             </div>
         );
 
@@ -248,7 +295,7 @@ class PatientDetailsDrawer extends Component {
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
-            submit({ mobile_number, name, gender, date_of_birth, treatment, severity, condition, prefix })
+            submit({ mobile_number, name, gender, date_of_birth, treatment_id:treatment, severity_id:severity, condition_id:condition, prefix })
         }
     }
 

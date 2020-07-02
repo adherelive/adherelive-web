@@ -2,6 +2,7 @@ import PatientDetails from "../../Components/Patient/details";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {open} from "../../modules/drawer";
+import { close } from "../../modules/drawer";
 import {getMedications} from "../../modules/medications";
 import {getAppointments} from "../../modules/appointments";
 import {searchMedicine} from "../../modules/medicines";
@@ -10,7 +11,9 @@ import {addCarePlanMedicationsAndAppointments} from "../../modules/carePlans";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = (state, ownProps) => {
-    const {users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}} = state;
+    const {users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}, treatments={},
+    conditions={},
+    severity={}} = state;
     // const { id } = ownprops;
     const user_details = users["3"] || {};
     const {
@@ -25,6 +28,9 @@ const mapStateToProps = (state, ownProps) => {
         user_details,
         appointments,
         users,
+        treatments,
+        conditions,
+        severity,
         medications,
         medicines,
         patients,
@@ -39,6 +45,8 @@ const mapDispatchToProps = dispatch => {
         openAppointmentDrawer: (payload) => dispatch(open({type: DRAWER.ADD_APPOINTMENT, payload})),
         openMReminderDrawer: (payload) => dispatch(open({type: DRAWER.ADD_MEDICATION_REMINDER, payload})),
         getMedications: (id) => dispatch(getMedications(id)),
+
+        close: () => dispatch(close()),
         getAppointments: (id) => dispatch(getAppointments(id)),
         getPatientCarePlanDetails:(patientId)=>dispatch(getPatientCarePlanDetails(patientId)),
         searchMedicine: value => dispatch(searchMedicine(value)),

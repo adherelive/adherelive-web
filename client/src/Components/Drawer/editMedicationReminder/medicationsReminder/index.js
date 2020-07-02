@@ -107,6 +107,7 @@ class EditMedicationReminder extends Component {
       // form: { validateFields },
       updateMedicationReminder,
       getMedications,
+      addMedication,
       patientId,
       editMedication,
       payload: { id: medication_id, patient_id } = {},
@@ -173,6 +174,9 @@ class EditMedicationReminder extends Component {
           message.error('Please select valid dates for medication')
         }else if(editMedication){
           editMedication(data_to_submit);
+        }else if(addMedication){
+
+          addMedication(data_to_submit);
         }else{
         try {
           const response = await updateMedicationReminder(data_to_submit);
@@ -241,19 +245,29 @@ class EditMedicationReminder extends Component {
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading,deleteMedicationOfTemplate } = this.props;
+    const { loading,deleteMedicationOfTemplate, hideMedication,addMedication} = this.props;
+    console.log('HIDE MEDICATIONNN',hideMedication,addMedication);
+    if(addMedication){
+      return(
+        <Button onClick={hideMedication} style={{ marginRight: 8 }}>
+        Cancel
+    </Button>
+      );
+    }
+
     return (
-      <Button
-        type="danger"
-        ghost
-        className="fs14 no-border style-delete"
-        onClick={deleteMedicationOfTemplate?deleteMedicationOfTemplate:handleDelete}
-        loading={loading}
-      >
-        <div className="flex align-center delete-text">
-          <div className="ml4">Delete</div>
-        </div>
-      </Button>
+       <Button
+      type={"danger"}
+      ghost
+      className="fs14 no-border style-delete"
+      onClick={deleteMedicationOfTemplate?deleteMedicationOfTemplate:handleDelete}
+      loading={loading}
+    >
+      <div className="flex align-center delete-text">
+        <div className="ml4">Delete</div>
+      </div>
+    </Button>
+     
     );
   };
 
@@ -262,6 +276,7 @@ class EditMedicationReminder extends Component {
       visible,
       medicationVisible,
       editMedication,
+      addMedication,
       hideMedication,
       loading = false,
       intl: { formatMessage },
@@ -284,17 +299,17 @@ class EditMedicationReminder extends Component {
     return (
       <Drawer
         width={"35%"}
-        onClose={editMedication?hideMedication:onClose}
-        visible={editMedication?medicationVisible:visible}
+        onClose={editMedication||addMedication?hideMedication:onClose}
+        visible={editMedication ||addMedication?medicationVisible:visible}
         destroyOnClose={true}
         className="ant-drawer"
-        title={editMedication?formatMessage(messages.medication):formatMessage(messages.title)}
+        title={editMedication?formatMessage(messages.medication):addMedication?'Add Medication': formatMessage(messages.title)}
       >
         <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
         <Footer
           className="flex justify-space-between"
           onSubmit={handleSubmit}
-          onClose={editMedication?hideMedication:onClose}
+          onClose={editMedication ||addMedication?hideMedication:onClose}
           submitText={formatMessage(messages.update_button_text)}
           submitButtonProps={{}}
           cancelComponent={getDeleteButton()}

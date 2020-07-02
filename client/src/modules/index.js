@@ -6,6 +6,8 @@ import patients from "./patients";
 import doctors from "./doctors";
 import providers from "./providers";
 import treatments from "./treatments";
+import conditions from "./conditions";
+import severity from "./severity";
 import medications from "./medications";
 import chats from "./chat";
 import pages from "./pages";
@@ -28,6 +30,8 @@ const rootReducer = combineReducers({
   doctors,
   providers,
   treatments,
+  conditions,
+  severity,
   medications,
   pages,
   chats,

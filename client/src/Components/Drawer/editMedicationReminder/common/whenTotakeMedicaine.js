@@ -59,7 +59,7 @@ class WhenToTakeMedication extends Component {
   }
 
   setWhenToTakeInitialValues = () => {
-    const { medications, medicationData = {}, payload: { id: medication_id } = {} } = this.props;
+    const { medications, medicationData = {}, payload: { id: medication_id } = {} ,addMedication} = this.props;
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
 
     let statusList = {};
@@ -67,12 +67,16 @@ class WhenToTakeMedication extends Component {
     when_to_take.forEach((id, index) => {
       statusList[index] = id;
     });
-
+     console.log("736287362718638127",medicationData,addMedication);
     // let total_status = Object.keys(statusList);
-    let { schedule_data: { when_to_take:frequency = '' } = {} } = medicationData;
-    if(frequency){
-      statusList[0]=frequency.toString();
-      when_to_take=[frequency.toString()];
+    let { schedule_data: { when_to_take:frequency = [] } = {} } = medicationData;
+    if(frequency.length){
+      statusList[0]=frequency[0];
+      when_to_take=frequency;
+    }
+    if(addMedication){
+      statusList[0]=['4'];
+      when_to_take=['4'];
     }
     this.setState({
       // count: [0],
@@ -294,7 +298,7 @@ class WhenToTakeMedication extends Component {
   };
 
   getFormItems = () => {
-    const { form, medication_details: { timings } = {}, medications, payload: { id: medication_id } = {} ,medicationData={}} = this.props;
+    const { form, medication_details: { timings } = {}, medications, payload: { id: medication_id } = {} ,medicationData={},addMedication} = this.props;
     const { count } = this.state;
     const {
       handleSelect,
@@ -315,6 +319,9 @@ class WhenToTakeMedication extends Component {
     let { schedule_data: { when_to_take:frequency = [] } = {} } = medicationData;
     if(frequency){
       when_to_take=frequency;
+    }
+    if(addMedication){
+      when_to_take=['4'];
     }
     console.log("WHEN TO TAKE IN FORM ITEMSS",this.state);
     getFieldDecorator("keys", {

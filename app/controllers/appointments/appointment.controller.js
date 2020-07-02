@@ -33,7 +33,7 @@ class AppointmentController extends Controller {
         organizer = {},
         start_time,
         end_time,
-        treatment = "",
+        treatment_id = "",
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -77,7 +77,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: {
-          treatment,
+          treatment_id,
         },
       };
 
@@ -134,7 +134,7 @@ class AppointmentController extends Controller {
         organizer = {},
         start_time,
         end_time,
-        treatment = "",
+        treatment_id = "",
         reason=''
         // participant_one_type = "",
         // participant_one_id = "",
@@ -180,7 +180,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: {
-          treatment,
+          treatment_id,
           reason
         },
       };
@@ -257,7 +257,7 @@ class AppointmentController extends Controller {
         organizer = {},
         start_time,
         end_time,
-        treatment = "",
+        treatment_id = "",
         reason=''
         // participant_one_type = "",
         // participant_one_id = "",
@@ -303,7 +303,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: {
-          treatment,
+          treatment_id,
           reason
         },
       };

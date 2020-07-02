@@ -1,10 +1,10 @@
 import { PAGE_INITIAL } from "../../data";
-function treatmentPageReducer(state, data) {
+function severityPageReducer(state, data) {
   console.log("192371937812 data --> ", data);
-  const {treatment_ids} = data || {};
-  if(treatment_ids) {
+  const {severity_ids} = data || {};
+  if(severity_ids) {
     return [
-      ...treatment_ids
+      ...severity_ids
     ];
   } else {
     return [
@@ -17,6 +17,6 @@ export default (state = [], action) => {
   const { type, data } = action;
   switch (type) {
     default:
-      return treatmentPageReducer(state,data);
+      return severityPageReducer(state,data);
   }
 };

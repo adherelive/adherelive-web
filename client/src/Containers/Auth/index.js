@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { signOut } from "../../modules/auth";
 
 const mapStateToProps = (state) => {
-  const { auth, users } = state;
+  const { auth, users ,doctors} = state;
   console.log("AUTH IN AUTH CONTAINERRR", auth, users);
   const { authenticated_user, authenticated_category } = auth;
 
@@ -12,6 +12,7 @@ const mapStateToProps = (state) => {
   return {
     authenticated_user,
     users,
+    doctors,
     authenticated_category,
   };
 };

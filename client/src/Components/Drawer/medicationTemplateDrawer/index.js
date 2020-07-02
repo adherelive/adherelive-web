@@ -29,7 +29,9 @@ class TemplateDrawer extends Component {
             medicationKeys: [],
             appointmentKeys: [],
             innerFormKey: '',
-            innerFormType: ''
+            innerFormType: '',
+            showAddMedicationInner: false,
+            showAddAppointmentInner: false,
         };
     }
 
@@ -133,16 +135,18 @@ class TemplateDrawer extends Component {
         );
     }
 
-    addMedication = () => {
-        let { medications = {}, medicationKeys = [] } = this.state;
-        let key = uuid();
-        medicationKeys.push(key);
-        let templateId = medications[medicationKeys[0]].care_plan_template_id;
-        medications[key] = {
-            care_plan_template_id: 1, id: '', medicine: "Medicine",
-            medicineType: "tablet", medicine_id: 0, schedule_data: { when_to_take: ["1"] }
-        };
-        this.setState({ medications, medicationKeys });
+
+    showAddMedication = () => {
+        this.setState({ showAddMedicationInner: true });
+    }
+    closeAddMedication = () => {
+        this.setState({ showAddMedicationInner: false });
+    }
+    showAddAppointment = () => {
+        this.setState({ showAddAppointmentInner: true });
+    }
+    closeAddAppointment = () => {
+        this.setState({ showAddAppointmentInner: false });
     }
 
     deleteMedication = key => () => {
@@ -153,20 +157,7 @@ class TemplateDrawer extends Component {
     }
 
 
-    addAppointment = () => {
-        let { appointments = {}, appointmentKeys = [] } = this.state;
-        let key = uuid();
-        appointmentKeys.push(key);
-        let templateId = appointments[appointmentKeys[0]].care_plan_template_id;
-        appointments[key] = {
-            care_plan_template_id: templateId,
-            reason: "Regular Checkup",
-            schedule_data:
-                { notes: "Please fast before 12 hours" },
-            time_gap: "After One Week"
-        };
-        this.setState({ appointments, appointmentKeys });
-    }
+   
 
     deleteAppointment = key => () => {
         let { appointments = {}, appointmentKeys = [] } = this.state;
@@ -197,10 +188,11 @@ class TemplateDrawer extends Component {
             <div className='template-block'>
                 <div className='wp100 flex align-center justify-space-between'>
                     <div className='form-category-headings-ap '>Medications</div>
-                    <div className='add-more' onClick={this.addMedication}>Add More</div>
+                    <div className='add-more' onClick={this.showAddMedication}>Add More</div>
                 </div>
                 {medicationKeys.map(key => {
-                    const { medicine, medicineType, schedule_data: { when_to_take = '',start_date=moment() } = {} } = medications[key];
+                    const { medicine, medicineType, schedule_data: { when_to_take = '', start_date = moment() } = {} } = medications[key];
+                    console.log('347928374', moment(start_date).format('D MMM'), start_date, moment(start_date).isSame(moment(), 'd') ? `Today at ${MEDICATION_TIMING[when_to_take[0]].time}` : `${moment(start_date).format('d MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`);
                     return (
                         <div className='flex wp100 flex-grow-1 align-center'>
                             <div className='drawer-block' key={key}>
@@ -213,263 +205,322 @@ class TemplateDrawer extends Component {
                                     <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.MEDICATION_REMINDER, key)} />
 
                                 </div>
-                                {when_to_take.map((timing,index)=>{
-                                    return(
+                                {when_to_take.map((timing, index) => {
+                                    return (
 
-                                    < div className='drawer-block-description'>{`${MEDICATION_TIMING[when_to_take[index]].text} ${MEDICATION_TIMING[when_to_take[index]].time}`}</div>
+                                        < div className='drawer-block-description'>{`${MEDICATION_TIMING[when_to_take[index]].text} ${MEDICATION_TIMING[when_to_take[index]].time}`}</div>
                                     );
                                 })
-                }
-                            <div className='drawer-block-description'>{`Next due: ${moment(start_date).isSame(moment(), 'd')?`Today at ${MEDICATION_TIMING[when_to_take[0]].time}`:`${moment(start_date).format('d MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`}`}</div>
-                        </div>
+                                }
+                                <div className='drawer-block-description'>{`Next due: ${moment(start_date).isSame(moment(), 'D') ? `Today at ${MEDICATION_TIMING[when_to_take[0]].time}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`}`}</div>
+                            </div>
                             {/* <DeleteTwoTone
                                 className={"mr8"}
                                 onClick={this.deleteMedication(key)}
                                 twoToneColor="#cc0000"
                             /> */}
                         </div>
-        );
-    })
-}
+                    );
+                })
+                }
 
 
-<div className='wp100 flex align-center justify-space-between'>
-    <div className='form-category-headings-ap align-self-start'>Appointments</div>
-    <div className='add-more' onClick={this.addAppointment}>Add More</div>
-</div>
-{
-    appointmentKeys.map(key => {
-        const { reason = '', schedule_data: { description = '', date = '', start_time = '' } = {}, time_gap = '' } = appointments[key];
-        let timeToShow = date && start_time ? `${moment(date).format('ll')} ${moment(date).format('hh:mm')}` : date ? moment(date).format('ll') : '';
-        return (
-
-            <div className='flex wp100 flex-grow-1 align-center'>
-                <div className='drawer-block' key={key}>
-
-                    <div className='flex direction-row justify-space-between align-center'>
-                        <div className='form-headings-ap'>{reason}</div>
-                        <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)} />
-                    </div>
-                    <div className='drawer-block-description'>{date ? `After ${moment(date).diff(moment(), 'days')} days` : `After ${time_gap-1} days`}</div>
-                    <div className='drawer-block-description'>{`Notes:${description}`}</div>
+                <div className='wp100 flex align-center justify-space-between'>
+                    <div className='form-category-headings-ap align-self-start'>Appointments</div>
+                    <div className='add-more' onClick={this.showAddAppointment}>Add More</div>
                 </div>
-                {/* <DeleteTwoTone
+                {
+                    appointmentKeys.map(key => {
+                        const { reason = '', schedule_data: { description = '', date = '', start_time = '' } = {}, time_gap = '' } = appointments[key];
+                        console.log("6878768979009", date, time_gap);
+                        let timeToShow = date && start_time ? `${moment(date).format('ll')} ${moment(date).format('hh:mm')}` : date ? moment(date).format('ll') : '';
+                        return (
+
+                            <div className='flex wp100 flex-grow-1 align-center'>
+                                <div className='drawer-block' key={key}>
+
+                                    <div className='flex direction-row justify-space-between align-center'>
+                                        <div className='form-headings-ap'>{reason}</div>
+                                        <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)} />
+                                    </div>
+                                    <div className='drawer-block-description'>{date ? `After ${moment(date).diff(moment(), 'days')} days` : time_gap ? `After ${time_gap - 1} days` : ''}</div>
+                                    <div className='drawer-block-description'>{`Notes:${description}`}</div>
+                                </div>
+                                {/* <DeleteTwoTone
                                 className={"mr8"}
                                 onClick={this.deleteAppointment(key)}
                                 twoToneColor="#cc0000"
                             /> */}
-            </div>
-        );
-    })
-}
+                            </div>
+                        );
+                    })
+                }
             </div >
         );
 
     }
 
-validateData = (medicationsData, appointmentsData) => {
+    validateData = (medicationsData, appointmentsData) => {
 
-    for (let medication of medicationsData) {
-        const { medicine = "", medicineType = "", medicine_id = "",
-            schedule_data: { end_date = moment().add('days', 5), quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
-                start_time = moment(), strength = 0, unit = "", when_to_take = [] } = {} } = medication;
+        for (let medication of medicationsData) {
+            const { medicine = "", medicineType = "", medicine_id = "",
+                schedule_data: { end_date = moment().add('days', 5), quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
+                    start_time = moment(), strength = 0, unit = "", when_to_take = [] } = {} } = medication;
 
-        if (!medicine || !medicineType || !medicine_id || !end_date || !quantity || !repeat || !repeat_days.length || !start_date
-            || !start_time || !strength || !unit || !when_to_take.length) {
-            message.error("Please fill all details of medications ");
-            return false;
-        }
-    }
-
-    for (let appointment of appointmentsData) {
-        let { reason = '', schedule_data: { date = '', description = '',
-            end_time = '', start_time = '', treatment = 'Sample Care Plan' } = {} } = appointment;
-
-        if (!reason || !date || !end_time || !start_time || !treatment) {
-
-            message.error("Please fill all details of appointments ");
-
-            return false;
-        }
-    }
-    return true;
-}
-
-
-
-onSubmit = () => {
-    const { submit, patientId } = this.props;
-    let { medications = {}, appointments = {} } = this.state;
-    let medicationsData = Object.values(medications);
-    let appointmentsData = Object.values(appointments);
-    for (let medication in medicationsData) {
-        let newMed = medicationsData[medication];
-        let { medicine = "", medicineType = "", medicine_id = "",
-            schedule_data: { end_date = '', quantity = 0, repeat = "", repeat_days = [], start_date = '',
-                start_time = '', strength = 0, unit = "", when_to_take = [], duration } = {} } = newMed;
-        if (!start_time && !start_date && !end_date) {
-            medicationsData[medication].schedule_data.start_time = moment();
-            medicationsData[medication].schedule_data.start_date = moment();
-            medicationsData[medication].schedule_data.end_date = moment().add('days', duration);
-        }
-        if (!start_time) {
-            medicationsData[medication].schedule_data.start_time = moment();
-        }
-        if (!start_date) {
-            medicationsData[medication].schedule_data.start_date = moment();
-        }
-        if (!end_date) {
-            medicationsData[medication].schedule_data.end_date = moment(medicationsData[medication].schedule_data.start_date).add('days', duration);;
-        }
-    }
-
-    for (let appointment in appointmentsData) {
-
-        let newAppointment = appointmentsData[appointment];
-        let { reason = '', schedule_data: { date = '', description = '',
-            end_time = '', start_time = '', treatment = '' } = {}, time_gap = '' } = newAppointment;
-
-        if (!date && !start_time && !end_time) {
-            // let currMinutes=moment().minutes();
-            let minutesToAdd = 30 - (moment().minutes()) % 30;
-            appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
-            appointmentsData[appointment].schedule_data.end_time = moment(appointmentsData[appointment].schedule_data.start_time).add('days', parseInt(time_gap)).add('minutes', 30);
-            appointmentsData[appointment].schedule_data.date = moment().add('days', 18);
-            appointmentsData[appointment].schedule_data.participant_two = {
-                id: patientId,
-                category: "patient",
+            if (!medicine || !medicineType || !medicine_id || !end_date || !quantity || !repeat || !repeat_days.length || !start_date
+                || !start_time || !strength || !unit || !when_to_take.length) {
+                message.error("Please fill all details of medications ");
+                return false;
             }
         }
-        if (!date) {
-            appointmentsData[appointment].schedule_data.date = reason=='Checking of Vitals'?moment().add('days', 14):moment().add('days', 18);
-        }
-        if (!start_time) {
-            let minutesToAdd = 30 - (moment().minutes()) % 30;
-            appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
-        }
-        if (!end_time) {
-            appointmentsData[appointment].schedule_data.end_time = moment(appointmentsData[appointment].schedule_data.start_time).add('days', parseInt(time_gap)).add('minutes', 30);
-        }
-        if (!treatment) {
-            const { carePlan: { treatment: cPtreat } = {} } = this.props;
-            appointmentsData[appointment].schedule_data.treatment = cPtreat;
-        }
-    }
-    console.log("FINAL DATA++++++>>>>>>>>>", medicationsData, appointmentsData);
-    let validate = this.validateData(medicationsData, appointmentsData);
-    if (validate) {
-        submit({ medicationsData, appointmentsData });
-    }
-}
 
-editMedication = (data) => {
-    let { medications = {}, innerFormKey = '' } = this.state;
-    let { medicines } = this.props;
-    let newMedication = medications[innerFormKey];
-    const { end_date = "",
-        medicine_id = "",
-        quantity = 0,
-        repeat = "",
-        repeat_days = [],
-        start_date = "",
-        start_time = '',
-        strength = '',
-        unit = "",
-        when_to_take = ["3"] } = data;
-    const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
-    newMedication.medicine_id = medicine_id;
-    newMedication.medicine = name;
-    newMedication.medicineType = type;
-    newMedication.schedule_data = {
-        end_date: moment(end_date), start_date: moment(start_date),
-        unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time)
+        for (let appointment of appointmentsData) {
+            let { reason = '', schedule_data: { date = '', description = '',
+                end_time = '', start_time = '', treatment_id = '' } = {} } = appointment;
+
+            if (!reason || !date || !end_time || !start_time || !treatment_id) {
+
+                message.error("Please fill all details of appointments ");
+
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+    onSubmit = () => {
+        const { submit, patientId } = this.props;
+        let { medications = {}, appointments = {} } = this.state;
+        let medicationsData = Object.values(medications);
+        let appointmentsData = Object.values(appointments);
+        for (let medication in medicationsData) {
+            let newMed = medicationsData[medication];
+            let { medicine = "", medicineType = "", medicine_id = "",
+                schedule_data: { end_date = '', quantity = 0, repeat = "", repeat_days = [], start_date = '',
+                    start_time = '', strength = 0, unit = "", when_to_take = [], duration } = {} } = newMed;
+            if (!start_time && !start_date && !end_date) {
+                medicationsData[medication].schedule_data.start_time = moment();
+                medicationsData[medication].schedule_data.start_date = moment();
+                medicationsData[medication].schedule_data.end_date = moment().add('days', duration);
+            }
+            if (!start_time) {
+                medicationsData[medication].schedule_data.start_time = moment();
+            }
+            if (!start_date) {
+                medicationsData[medication].schedule_data.start_date = moment();
+            }
+            if (!end_date) {
+                medicationsData[medication].schedule_data.end_date = moment(medicationsData[medication].schedule_data.start_date).add('days', duration);;
+            }
+        }
+
+        for (let appointment in appointmentsData) {
+
+            let newAppointment = appointmentsData[appointment];
+            let { reason = '', schedule_data: { date = '', description = '',
+                end_time = '', start_time = '', treatment_id = '' } = {}, time_gap = '' } = newAppointment;
+
+            if (!date && !start_time && !end_time) {
+                // let currMinutes=moment().minutes();
+                let minutesToAdd = 30 - (moment().minutes()) % 30;
+                appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
+                appointmentsData[appointment].schedule_data.end_time = moment(appointmentsData[appointment].schedule_data.start_time).add('days', parseInt(time_gap)).add('minutes', 30);
+                appointmentsData[appointment].schedule_data.date = moment().add('days', 18);
+                appointmentsData[appointment].schedule_data.participant_two = {
+                    id: patientId,
+                    category: "patient",
+                }
+            }
+            if (!date) {
+                appointmentsData[appointment].schedule_data.date = reason == 'Checking of Vitals' ? moment().add('days', 14) : moment().add('days', 18);
+            }
+            if (!start_time) {
+                let minutesToAdd = 30 - (moment().minutes()) % 30;
+                appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
+            }
+            if (!end_time) {
+                appointmentsData[appointment].schedule_data.end_time = moment(appointmentsData[appointment].schedule_data.start_time).add('days', parseInt(time_gap)).add('minutes', 30);
+            }
+            if (!treatment_id) {
+                const { carePlan: { treatment_id: cPtreat = 0 } = {} } = this.props;
+                console.log("FINAL DATA++++++>>>>>>>>>", this.props.carePlan);
+                appointmentsData[appointment].schedule_data.treatment_id = cPtreat;
+            }
+        }
+        // console.log("FINAL DATA++++++>>>>>>>>>",this.props.carePlan, medicationsData, appointmentsData);
+        let validate = this.validateData(medicationsData, appointmentsData);
+        if (validate) {
+            submit({ medicationsData, appointmentsData });
+        }
+    }
+
+    editMedication = (data) => {
+        let { medications = {}, innerFormKey = '' } = this.state;
+        let { medicines } = this.props;
+        let newMedication = medications[innerFormKey];
+        const { end_date = "",
+            medicine_id = "",
+            quantity = 0,
+            repeat = "",
+            repeat_days = [],
+            start_date = "",
+            start_time = '',
+            strength = '',
+            unit = "",
+            when_to_take = ["3"] } = data;
+        const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
+        newMedication.medicine_id = medicine_id;
+        newMedication.medicine = name;
+        newMedication.medicineType = type;
+        newMedication.schedule_data = {
+            end_date: moment(end_date), start_date: moment(start_date),
+            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time)
+        };
+        console.log("DATA OF EDITED MEDICATIONNNNN===>", data);
+        medications[innerFormKey] = newMedication;
+        this.setState({ medications }, () => {
+            this.onCloseInner();
+            this.props.dispatchClose();
+        });
+    }
+
+    addMedication = (data) => {
+        const { end_date = "",
+            medicine_id = "",
+            quantity = 0,
+            repeat = "",
+            repeat_days = [],
+            start_date = "",
+            start_time = '',
+            strength = '',
+            unit = "",
+            when_to_take = ["3"] } = data;
+            console.log("DATA OF EDITED MEDICATIONNNNN===>", data);
+        let { medications = {}, medicationKeys = [] } = this.state;
+        let { medicines } = this.props;
+        let newMedication = {};
+        const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
+        newMedication.medicine_id = medicine_id;
+        newMedication.medicine = name;
+        newMedication.medicineType = type;
+        newMedication.schedule_data = {
+            end_date: moment(end_date), start_date: moment(start_date),
+            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time)
+        };
+        let key = uuid();
+        medicationKeys.push(key);
+        // let templateId = medications[medicationKeys[0]].care_plan_template_id;
+        medications[key] = newMedication;
+        this.setState({ medications, medicationKeys },()=>{
+            this.closeAddMedication();
+        });
+    }
+
+
+    editAppointment = (data) => {
+        const { appointments = {}, innerFormKey = '' } = this.state;
+
+        let { date = {},
+            description = "",
+            end_time = {},
+            id = '',
+            participant_two = {},
+            start_time = {},
+            treatment = "",
+            reason = '' } = data;
+        let newAppointment = appointments[innerFormKey];
+        newAppointment.reason = reason;
+        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment };
+        console.log("DATA OF EDITED Appointment===>", data, newAppointment);
+        appointments[innerFormKey] = newAppointment;
+        this.setState({ appointments }, () => {
+            this.onCloseInner();
+            // this.props.dispatchClose();
+        });
+    }
+    addAppointment = (data) => {
+        let { appointments = {}, appointmentKeys = [] } = this.state;
+        let key = uuid();
+        let { date = {},
+            description = "",
+            end_time = {},
+            id = '',
+            participant_two = {},
+            start_time = {},
+            treatment = "",
+            reason = '' } = data;
+        let newAppointment = {};
+        
+        newAppointment.reason = reason;
+        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment };
+        appointments[key] = newAppointment;
+        appointmentKeys.push(key);
+        this.setState({ appointments, appointmentKeys },()=>{
+            this.closeAddAppointment();
+        });
+    }
+
+
+    formatMessage = data => this.props.intl.formatMessage(data);
+
+    onClose = () => {
+        const { close } = this.props;
+        close();
     };
-    console.log("DATA OF EDITED MEDICATIONNNNN===>", data);
-    medications[innerFormKey] = newMedication;
-    this.setState({ medications }, () => {
-        this.onCloseInner()
-    });
-}
 
+    onCloseInner = () => {
+        this.setState({ showInner: false })
+    };
 
-editAppointment = (data) => {
-    const { appointments = {}, innerFormKey = '' } = this.state;
+    render() {
+        const { visible, patientId, patients, carePlan, submit } = this.props;
+        let { showInner, innerFormType, innerFormKey, medications, appointments,showAddAppointmentInner,showAddMedicationInner } = this.state;
+        const { onClose, renderTemplateDetails } = this;
 
-    let { date = {},
-        description = "",
-        end_time = {},
-        id = '',
-        participant_two = {},
-        start_time = {},
-        treatment = "",
-        reason = '' } = data;
-    let newAppointment = appointments[innerFormKey];
-    newAppointment.reason = reason;
-    newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment };
-    console.log("DATA OF EDITED Appointment===>", data, newAppointment);
-    appointments[innerFormKey] = newAppointment;
-    this.setState({ appointments }, () => {
-        this.onCloseInner()
-    });
-}
+        console.log("DATA OF EDITED MEDICATIONNNNN===>", this.state);
 
+        let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
 
+        let appointmentData = innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT ? appointments[innerFormKey] : {};
 
-formatMessage = data => this.props.intl.formatMessage(data);
+        if (visible !== true) {
+            return null;
+        }
+        return (
+            <Fragment>
+                <Drawer
+                    title="Template"
+                    placement="right"
+                    // closable={false}
+                    onClose={onClose}
+                    width={'35%'}
+                    visible={visible}
 
-onClose = () => {
-    const { close } = this.props;
-    close();
-};
+                >
+                    {renderTemplateDetails()}
 
-onCloseInner = () => {
-    this.setState({ showInner: false })
-};
+                    {innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER && <EditMedicationReminder medicationData={medicationData} medicationVisible={showInner} editMedication={this.editMedication} hideMedication={this.onCloseInner} deleteMedicationOfTemplate={this.deleteEntry} />}
+                    {innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT && <EditAppointmentDrawer appointmentData={appointmentData} appointmentVisible={showInner} editAppointment={this.editAppointment}
+                        hideAppointment={this.onCloseInner} patientId={patientId} patients={patients} deleteAppointmentOfTemplate={this.deleteEntry}
+                        carePlan={carePlan} />}
 
-render() {
-    const { visible, patientId, patients, carePlan, submit } = this.props;
-    let { showInner, innerFormType, innerFormKey, medications, appointments } = this.state;
-    const { onClose, renderTemplateDetails } = this;
+                    {showAddMedicationInner && <EditMedicationReminder  medicationVisible={showAddMedicationInner} addMedication={this.addMedication} hideMedication={this.closeAddMedication} />}
+                    {showAddAppointmentInner && <EditAppointmentDrawer  appointmentVisible={showAddAppointmentInner} addAppointment={this.addAppointment} hideAppointment={this.closeAddAppointment} patientId={patientId} patients={patients} />}
+                    <div className='add-patient-footer'>
+                        <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+                            Cancel
+                        </Button>
+                        <Button onClick={this.onSubmit} type="primary">
+                            Submit
+                        </Button>
+                    </div>
+                </Drawer>
 
-    console.log("DATA OF EDITED MEDICATIONNNNN===>", this.state);
-
-    let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
-
-    let appointmentData = innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT ? appointments[innerFormKey] : {};
-
-    if (visible !== true) {
-        return null;
+            </Fragment>
+        );
     }
-    return (
-        <Fragment>
-            <Drawer
-                title="Template"
-                placement="right"
-                // closable={false}
-                onClose={onClose}
-                width={'35%'}
-                visible={visible}
-
-            >
-                {renderTemplateDetails()}
-
-                {innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER && <EditMedicationReminder medicationData={medicationData} medicationVisible={showInner} editMedication={this.editMedication} hideMedication={this.onCloseInner} deleteMedicationOfTemplate={this.deleteEntry} />}
-                {innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT && <EditAppointmentDrawer appointmentData={appointmentData} appointmentVisible={showInner} editAppointment={this.editAppointment}
-                    hideAppointment={this.onCloseInner} patientId={patientId} patients={patients} deleteAppointmentOfTemplate={this.deleteEntry}
-                    carePlan={carePlan} />}
-                <div className='add-patient-footer'>
-                    <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-                        Cancel
-                        </Button>
-                    <Button onClick={this.onSubmit} type="primary">
-                        Submit
-                        </Button>
-                </div>
-            </Drawer>
-
-        </Fragment>
-    );
-}
 }
 
 export default injectIntl(TemplateDrawer);

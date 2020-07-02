@@ -175,6 +175,18 @@ class EditAppointmentForm extends Component {
       }`;
   };
 
+  getTreatmentOption =()=>{
+    let {treatments={}}=this.props;
+    let newTreatments=[];
+    for (let treatment of Object.values(treatments)){
+        let{basic_info:{id=0,name=''}={}}=treatment;
+        newTreatments.push(<Option key={id} value={id}>
+        {name}
+      </Option>)
+    }
+    return newTreatments;
+}
+
   calendarComp = () => {
     return (
       <div className="flex justify-center align-center">
@@ -212,27 +224,27 @@ class EditAppointmentForm extends Component {
       getPatientName,
     } = this;
     let pId = patientId ? patientId.toString() : patient_id;
-    let { basic_info: { description, start_date, start_time, end_time, details: { treatment = "", reason = '' } = {} } = {} } = appointments[appointment_id] || {};
+    let { basic_info: { description, start_date, start_time, end_time, details: { treatment_id = "", reason = '' } = {} } = {} } = appointments[appointment_id] || {};
 
 
 
     if (Object.values(carePlan).length) {
-      let { treatment: newTreatment = '' } = carePlan;
-      treatment = newTreatment;
+      let { treatment_id: newTreatment = '' } = carePlan;
+      treatment_id = newTreatment;
     }
     const currentDate = moment(getFieldValue(DATE));
-    const { reason: res = '', schedule_data: { description: des = '' } = {} } = appointmentData || {};
+    const { reason: res = '', schedule_data: { description: des = '',date:Date='',start_time:startTime='',end_time:endTime='' } = {} } = appointmentData || {};
     description = des ? des : description;
     reason = res ? res : reason;
     if (res) {   //toDo remove when real templates are created and handle accordingly
 
       let minutesToAdd = 30 - (moment().minutes()) % 30;
-      start_time = res === 'Surgery' ? moment().add('days', 18).add('minutes',minutesToAdd) : moment().add('days', 14).add('minutes',minutesToAdd);
-      end_time = res === 'Surgery' ? moment().add('days', 18).add('minutes',minutesToAdd+30) : moment().add('days', 14).add('minutes',minutesToAdd+30);
-      start_date = res === 'Surgery' ? moment().add('days', 18) : moment().add('days', 14);
+      start_time =startTime?moment(startTime): res === 'Surgery' ? moment().add('days', 18).add('minutes',minutesToAdd) : moment().add('days', 14).add('minutes',minutesToAdd);
+      end_time =endTime?moment(endTime): res === 'Surgery' ? moment().add('days', 18).add('minutes',minutesToAdd+30) : moment().add('days', 14).add('minutes',minutesToAdd+30);
+      start_date =Date?moment(Date): res === 'Surgery' ? moment().add('days', 18) : moment().add('days', 14);
 
     }
-    console.log("1289313192 ", res, reason, des, description, treatment, Object.values(carePlan).length, Object.values(carePlan).length, carePlan);
+    console.log("1289313192 ",reason,description, start_time,end_time,start_date,appointmentData);
 
     let fieldsError = {};
     FIELDS.forEach((value) => {
@@ -360,12 +372,22 @@ class EditAppointmentForm extends Component {
           className="full-width ant-date-custom"
         >
           {getFieldDecorator(TREATMENT, {
-            initialValue: treatment,
+            initialValue: treatment_id,
           })(
-            <Input
-              autoFocus
-              placeholder={formatMessage(message.treatment_text_placeholder)}
-            />
+            // <Input
+            //   autoFocus
+            //   placeholder={formatMessage(message.treatment_text_placeholder)}
+            // />
+            <Select
+                    className="form-inputs-ap drawer-select"
+                    // autoComplete="off"
+                    placeholder="Select Treatment"
+                    // onSelect={this.setTreatment}
+                    // onDeselect={handleDeselect}
+                    suffixIcon={null}
+                  >
+                    {this.getTreatmentOption()}
+                  </Select>
           )}
         </FormItem>
 

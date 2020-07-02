@@ -113,7 +113,10 @@ class Dashboard extends Component {
     }
     render() {
         console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard",this.props);
-        const {graphs} = this.props;
+        const {graphs,
+            treatments,
+            conditions,
+            severity} = this.props;
         const {formatMessage, renderChartTabs} = this;
 
         const{visible}=this.state;
@@ -157,7 +160,7 @@ class Dashboard extends Component {
                 </div>
                 <PatientDetailsDrawer />
 
-                <AddPatientDrawer close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
+                <AddPatientDrawer treatments={treatments} conditions={conditions} severity={severity} close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
             </Fragment>
         );
     }

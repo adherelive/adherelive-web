@@ -9,12 +9,13 @@ import {getAppointments, addAppointment,addCarePlanAppointment} from "../../modu
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
-        patients
+        patients,treatments
     } = state
     return {
         visible: visible && type === DRAWER.ADD_APPOINTMENT,
         loading,
         payload,
+        treatments,
         patients
     };
 };

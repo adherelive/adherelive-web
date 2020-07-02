@@ -64,7 +64,7 @@ class ClinicRegister extends Component {
     }
 
     setClinicStartTime = (key1, key2) => (time, timeString) => {
-        // console.log('TIMEEEEEEEEEEEEEEEEEEE', key, time, timeString)
+        console.log('TIMEEEEEEEEEEEEEEEEEEE',time,moment(time).add('minutes',30));
         let { clinics = {} } = this.state;
         let newClinics = clinics;
         newClinics[key1].timings[key2].startTime = time;
@@ -190,24 +190,26 @@ class ClinicRegister extends Component {
                                 <div className='pointer fs16 medium ' onClick={this.addClinicTimings(key)}>Add More</div>
                             </div>
                             {timingsKeys.map((tKey, index) => {
+
+                                let minutesToAdd = 30 - (moment().minutes()) % 30;
                                 return (
                                     <div key={tKey} className='flex justify-space-between mb10'>
                                         <div className='flex direction-column'>
                                             <div className='fs14 mt8 mb8'>Start Time</div>
-                                            <TimePicker value={timings[tKey].startTime?timings[tKey].startTime:moment()} use12Hours minuteStep={15} format="HH:mm a" onChange={this.setClinicStartTime(key, tKey)} />
+                                            <TimePicker value={timings[tKey].startTime ? timings[tKey].startTime : moment().add('minutes',minutesToAdd)} use12Hours minuteStep={15} format="HH:mm a" onChange={this.setClinicStartTime(key, tKey)} />
                                         </div>
                                         <div className='flex direction-row align-center'>
                                             <div className='flex direction-column'>
                                                 <div className='flex wp100 align-center justify-space-between fs14 mt8 mb8'>End Time   {index > 0 &&
-                                                (<Icon
-                                                    className="ml10"
-                                                    type="minus-circle-o"
-                                                    onClick={this.deleteClinicTimings(key, tKey)}
-                                                />)
-                                            }</div>
-                                                <TimePicker value={timings[tKey].startTime?timings[tKey].startTime:moment().add('minutes',30)} use12Hours minuteStep={15} format="HH:mm a" onChange={this.setClinicEndTime(key, tKey)} />
+                                                    (<Icon
+                                                        className="ml10"
+                                                        type="minus-circle-o"
+                                                        onClick={this.deleteClinicTimings(key, tKey)}
+                                                    />)
+                                                }</div>
+                                                <TimePicker value={timings[tKey].endTime ? timings[tKey].endTime : moment().add('minutes', 30+minutesToAdd)} use12Hours minuteStep={15} format="HH:mm a" onChange={this.setClinicEndTime(key, tKey)} />
                                             </div>
-                                          
+
                                         </div>
                                     </div>
                                 );
