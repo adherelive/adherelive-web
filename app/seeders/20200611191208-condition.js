@@ -9,6 +9,11 @@ module.exports = {
         name: "Critical",
         created_at: new Date(),
         updated_at: new Date()
+      },
+      {
+        name: "Severe",
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ]);
   },

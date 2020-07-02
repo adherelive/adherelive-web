@@ -9,6 +9,11 @@ module.exports = {
         name: "High",
         created_at: new Date(),
         updated_at: new Date()
+      },
+      {
+        name: "Medium",
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ]);
   },

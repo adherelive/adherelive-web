@@ -9,6 +9,11 @@ module.exports = {
               name: "Sample Care Plan",
               created_at: new Date(),
               updated_at: new Date()
+          },
+          {
+              name: "Other Care Plan",
+              created_at: new Date(),
+              updated_at: new Date()
           }
       ]);
   },
