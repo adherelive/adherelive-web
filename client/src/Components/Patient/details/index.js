@@ -324,7 +324,7 @@ class PatientDetails extends Component {
     this.getData();
     getMedications(patient_id);
     getAppointments(patient_id);
-    searchMedicine("");
+    // searchMedicine("");
   }
 
   getAppointmentsData = () => {

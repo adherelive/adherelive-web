@@ -28,8 +28,6 @@ class MedicineController extends Controller {
                     medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
                 });
 
-                Logger.debug("medicineApiData --> ", medicineApiData);
-
                 return raiseSuccess(
                     res,
                     200,
