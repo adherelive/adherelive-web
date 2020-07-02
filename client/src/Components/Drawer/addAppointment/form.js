@@ -182,6 +182,18 @@ class AddAppointmentForm extends Component {
     return current && current < moment().startOf("day");
   };
 
+  getTreatmentOption =()=>{
+    let {treatments={}}=this.props;
+    let newTreatments=[];
+    for (let treatment of Object.values(treatments)){
+        let{basic_info:{id=0,name=''}={}}=treatment;
+        newTreatments.push(<Option key={id} value={id}>
+        {name}
+      </Option>)
+    }
+    return newTreatments;
+}
+
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
@@ -327,10 +339,16 @@ class AddAppointmentForm extends Component {
           className="full-width ant-date-custom"
         >
           {getFieldDecorator(TREATMENT)(
-            <Input
-              autoFocus
-              placeholder={formatMessage(message.treatment_text_placeholder)}
-            />
+             <Select
+             className="form-inputs-ap drawer-select"
+             autoComplete="off"
+             placeholder="Select Treatment"
+             // onSelect={this.setTreatment}
+             // onDeselect={handleDeselect}
+             suffixIcon={null}
+           >
+             {this.getTreatmentOption()}
+           </Select>
           )}
         </FormItem>
 

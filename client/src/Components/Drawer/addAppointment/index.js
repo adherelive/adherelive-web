@@ -72,7 +72,7 @@ class AddAppointment extends Component {
           end_time,
           reason,
           description,
-          treatment,
+          treatment_id:treatment,
           reason
         };
         if(moment(end_time).isBefore(moment(start_time))){
@@ -156,7 +156,7 @@ class AddAppointment extends Component {
           // closable={false}
           onClose={editAppointment ? hideAppointment : onClose}
           visible={editAppointment ? appointmentVisible : visible}
-          width={350}
+          width={'35%'}
           title={editAppointment ? formatMessage(messages.appointment) : formatMessage(messages.add_appointment)}
         // headerStyle={{
         //     display:"flex",

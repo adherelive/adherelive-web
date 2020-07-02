@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { Menu, Tooltip, message } from "antd";
+import { Menu, Tooltip, message,Avatar } from "antd";
 import {PATH, USER_CATEGORY} from "../../constant";
 
 import Logo from "../../Assets/images/logo3x.png";
@@ -67,7 +67,28 @@ class SideMenu extends Component {
   render() {
     const { selectedKeys } = this.state;
     const { handleItemSelect } = this;
-    const{authenticated_user:{profile_pic=''}={}}=this.props;
+    const{authenticated_user=0,users={},doctors={}}=this.props;
+    let dp='';
+    let initials='';
+
+    for(let doctor of Object.values(doctors)){
+      let{basic_info:{user_id=0,profile_pic='',first_name=' ',last_name=' '}={}}=doctor;
+      
+      if(user_id===authenticated_user){
+       dp=profile_pic;
+       initials=`${first_name[0]}${last_name[0]}`
+      }
+
+    }
+    let{basic_info:{user_name=''}={}}=users[authenticated_user]||{};
+    if(user_name){
+    initials= user_name
+    .split(" ")
+    .map(n => n && n.length > 0 && n[0] ? n[0].toUpperCase() : "")
+    .join("");
+    }
+
+    console.log("DATA IN SIDEBARRRRR",dp,initials);
     return (
       <Menu
         selectedKeys={[selectedKeys]}
@@ -78,7 +99,7 @@ class SideMenu extends Component {
           className="flex direction-column justify-center align-center p0"
           key={LOGO}
         >
-          <img className="w45" src={Logo} alt="Adherence logo" />
+          <img className="w35" src={Logo} alt="Adherence logo" />
         </MenuItem>
 
         <MenuItem
@@ -95,8 +116,10 @@ class SideMenu extends Component {
             key={LOG_OUT}
         >
           <Tooltip placement="right" title={"Log Out"}>
-          {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
-            (<UserOutlined className="sidebar-bottom-custom text-white"/>)}
+          {/* {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
+            (<UserOutlined className="sidebar-bottom-custom text-white"/>)} */}
+            {initials?
+            <Avatar src={dp}>{initials}</Avatar>: <Avatar icon="user" />}
           </Tooltip>
         </MenuItem>
       </Menu>

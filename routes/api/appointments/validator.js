@@ -25,7 +25,7 @@ const appointmentFormSchema = Joi.object().keys({
     })
     .optional(),
   // description: Joi.string().optional(),
-  treatment: Joi.string().optional().allow(""),
+  treatment_id: Joi.number().optional().allow(""),
   // TODO: rr_rule here?
 });
 
