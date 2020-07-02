@@ -345,7 +345,7 @@ class PatientDetails extends Component {
     });
     getMedications(patient_id);
     getAppointments(patient_id);
-    searchMedicine("");
+    // searchMedicine("");
   }
 
   getAppointmentsData = (carePlan={}) => {

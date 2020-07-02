@@ -648,10 +648,6 @@ class MobileUserController extends Controller {
           ? doctorName[1]
           : "";
 
-      Logger.debug(
-        "profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] 222222",
-        profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-      );
       if (doctorExist) {
         let doctor_data = {
           city,
@@ -667,10 +663,6 @@ class MobileUserController extends Controller {
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
         console.log("DOCTORRRRRIFFFFFF", doctor, doctor.getBasicInfo);
       } else {
-        Logger.debug(
-          "profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1] 222222",
-          profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-        );
         let doctor_data = {
           user_id,
           city,
@@ -703,7 +695,7 @@ class MobileUserController extends Controller {
     }
   };
 
-  getDoctorProfileRegisterData = async (req, res) => {
+    getDoctorProfileRegisterData = async (req, res) => {
     // let{user_id,name,city,category,mobile_number,prefix,profile_pic}=req.body;
     let { userId } = req.params;
     try {
@@ -744,6 +736,8 @@ class MobileUserController extends Controller {
         } = docInfo || {};
 
         name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
+
+        Logger.debug("MIDDLE NAME --> ", first_name, middle_name, last_name, name);
 
         city = docCity;
         profile_pic = docPic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}` : docPic;
