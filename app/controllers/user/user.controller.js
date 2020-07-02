@@ -802,7 +802,7 @@ class UserController extends Controller {
         name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
 
         city = docCity;
-        profile_pic = docPic;
+        profile_pic = docPic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}` : docPic;
       }
 
       const profileData = {
