@@ -66,3 +66,14 @@ export default async (data = null, id = null) => {
   const appointment = await appointmentService.getAppointment({ id });
   return new AppointmentWrapper(appointment.get());
 };
+
+
+
+/*
+*
+* appointment.getall
+* *.getreference
+* patient => patientWrapper(appointment->paitnet)
+*
+*
+* */
