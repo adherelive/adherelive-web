@@ -1,6 +1,6 @@
 import BasePatient from "../../../services/patients";
 import patientService from "../../../services/patients/patients.service";
-
+import {completePath} from "../../../helper/filePath";
 
 class MPatientWrapper extends BasePatient {
     constructor(data) {
@@ -25,7 +25,7 @@ class MPatientWrapper extends BasePatient {
 
         const updatedDetails =  {
             ...details,
-            profile_pic: profile_pic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profile_pic}` : null,
+            profile_pic: completePath(profile_pic)
         };
 
         return {

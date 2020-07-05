@@ -1,4 +1,5 @@
 import CarePlanAppointments from "../../models/carePlanAppointments";
+import CarePlan from "../../models/carePlan";
 
 class CarePlanAppointmentService {
 
@@ -53,7 +54,9 @@ class CarePlanAppointmentService {
 
     addCarePlanAppointment = async data => {
         try {
-            const carePlanAppointment = await CarePlanAppointments.create(data);
+            const carePlanAppointment = await CarePlanAppointments.create(data, {
+                include: CarePlan
+            });
             return carePlanAppointment;
         } catch(error) {
             throw error;

@@ -11,7 +11,7 @@ import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
 // import twilioRouter from "./twilio";
 
-router.use(async function(req, res, next) {
+router.use(async (req, res, next) => {
     try {
         const { query: { m } = {} } = req;
         let accessToken;
@@ -20,11 +20,6 @@ router.use(async function(req, res, next) {
             const bearer = authorization.split(" ");
             if (bearer.length === 2) {
                 accessToken = bearer[1];
-            }
-        } else {
-            const { accessToken : receivedAccessToken = {} } = req.body;
-            if(receivedAccessToken) {
-                accessToken = receivedAccessToken;
             }
         }
 
@@ -36,7 +31,7 @@ router.use(async function(req, res, next) {
             const decodedAccessToken = await jwt.verify(accessToken, secret);
             console.log("3 decodedAccessToken -----------------> ", accessToken);
             let user = await userService.getUser(decodedAccessToken.userId);
-            console.log("USER M-API ROUTE START ------> ", user);
+            console.log("USER M-API ROUTE START ------> ", );
             if (user) {
                 req.userDetails = {
                     exists: true,
@@ -55,6 +50,7 @@ router.use(async function(req, res, next) {
         }
         next();
     } catch (err) {
+        console.log("89127381723 err -->", err);
         req.userDetails = {
             exists: false
         };

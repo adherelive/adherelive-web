@@ -1,11 +1,9 @@
 import BaseMedicine from "../../../services/medicine";
-import { OBJECT_NAME } from "../../../../constant";
 import medicineService from "../../../services/medicine/medicine.service";
 
 class MobileMedicineWrapper extends BaseMedicine {
   constructor(data) {
     super(data);
-    this._objectName = OBJECT_NAME.MEDICINE;
   }
 
   getBasicInfo = () => {
@@ -47,8 +45,8 @@ class MobileMedicineWrapper extends BaseMedicine {
   };
 }
 
-export default async (data, id = null) => {
-  if (!id) {
+export default async (data = null, id = null) => {
+  if (data) {
     return new MobileMedicineWrapper(data);
   }
   const medicine = await medicineService.getMedicineByData({ id });

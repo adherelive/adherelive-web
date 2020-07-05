@@ -4,8 +4,6 @@ import {database} from "../../libs/mysql";
 import {DB_TABLES} from "../../constant";
 import Doctors from "./doctors";
 import Patients from "./patients";
-import Conditions from "./conditions";
-import Consents from "./consents";
 
 const CarePlan = database.define(
     DB_TABLES.CARE_PLANS,
@@ -128,5 +126,11 @@ CarePlan.hasOne(Doctors, {
     foreignKey: "id",
     targetKey: "doctor_id"
 });
+
+CarePlan.associate = (model) => {
+    CarePlan.hasMany(model.CarePlanAppointment, {
+        foreignKey: "id",
+    });
+};
 
 export default CarePlan;

@@ -1,11 +1,13 @@
 import Doctor from "../../models/doctors";
+import Users from "../../models/users";
 
 class DoctorService {
 
     getDoctorByData = async (data) => {
         try {
             const doctor = await Doctor.findOne({
-                where: data
+                where: data,
+                // include: Users
             });
             return doctor;
         } catch(error) {

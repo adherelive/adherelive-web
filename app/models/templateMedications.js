@@ -3,6 +3,8 @@ import Sequelize from "sequelize";
 import {database} from "../../libs/mysql";
 import {DB_TABLES} from "../../constant";
 import Medicine from './medicines';
+import CarePlanTemplate from "./careplanTemplate";
+import TemplateAppointment from "./templateAppointments";
 
 const TemplateMedication = database.define(
     DB_TABLES.TEMPLATE_MEDICATIONS,
@@ -63,5 +65,9 @@ TemplateMedication.hasOne(Medicine, {
     targetKey: "medicine_id"
 });
 
+TemplateAppointment.belongsTo(CarePlanTemplate, {
+    foreignKey:"care_plan_template_id",
+    targetKey:"id"
+});
 
 export default TemplateMedication;

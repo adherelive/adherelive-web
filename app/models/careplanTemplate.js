@@ -70,22 +70,19 @@ const CarePlanTemplate = database.define(
   }
 );
 
-// CarePlanTemplate.hasMany(Treatment, {
-//     as: "treatments",
-//     foreignKey: 'treatment_id',
-//     targetKey: 'id'
-// });
-//
-// CarePlanTemplate.hasMany(Severity, {
-//     as: "severity",
-//     foreignKey: 'severity_id',
-//     targetKey: 'id'
-// });
-//
-// CarePlanTemplate.hasMany(Conditions, {
-//     as: "conditions",
-//     foreignKey: 'condition_id',
-//     targetKey: 'id'
-// });
+CarePlanTemplate.hasOne(Treatment, {
+    foreignKey: "id",
+    targetKey: "treatment_id"
+});
+
+CarePlanTemplate.hasOne(Severity, {
+    foreignKey: "id",
+    targetKey: "severity_id"
+});
+
+CarePlanTemplate.hasOne(Conditions, {
+    foreignKey: "id",
+    targetKey: "condition_id"
+});
 
 export default CarePlanTemplate;

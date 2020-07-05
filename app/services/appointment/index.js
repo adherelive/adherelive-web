@@ -3,10 +3,6 @@ export default class Appointment {
         this._data = data;
     }
 
-    getExistingData = () => {
-        return this._data;
-    }
-
     getAppointmentId() {
         return this._data.get("id");
     }

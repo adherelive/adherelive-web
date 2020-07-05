@@ -1,4 +1,5 @@
 import BaseCarePlan from "../../../services/carePlan";
+import carePlanService from "../../../services/carePlan/carePlan.service";
 
 class CarePlanWrapper extends BaseCarePlan {
     constructor(data) {

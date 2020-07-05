@@ -3,10 +3,6 @@ export default class Condition {
         this._data = data;
     }
 
-    getExistingData = () => {
-        return this._data;
-    }
-
     getConditionId() {
         return this._data.get("id");
     }

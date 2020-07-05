@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-import Authenticate from "../middleware/auth";
 import MobileAppointment from "../../../app/controllers/mControllers/appointments/appointment.controller";
+import Authenticate from "../middleware/auth";
 import * as validator from "./validator";
 
 router.get(
@@ -10,24 +10,23 @@ router.get(
     MobileAppointment.getAppointmentForPatient
 );
 
+router.post(
+    "/",
+    Authenticate,
+    validator.validateAppointmentFormData,
+    MobileAppointment.create
+);
+
 
 router.post(
-    "/update/:appointment_id",
+    "/:id",
     Authenticate,
     validator.validateAppointmentFormData,
     MobileAppointment.update
 );
 
-
-router.post(
-    "/:carePlanId",
-    Authenticate,
-    validator.validateAppointmentFormData,
-    MobileAppointment.createCarePlanAppointment
-);
-
 router.delete(
-    "/:appointment_id",
+    "/:id",
     Authenticate,
     MobileAppointment.delete
 );

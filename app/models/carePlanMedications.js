@@ -5,6 +5,8 @@ import {DB_TABLES} from "../../constant";
 import Doctors from "./doctors";
 import Patients from "./patients";
 import Medication from './medicationReminders';
+import CarePlan from "./carePlan";
+import CarePlanAppointment from "./carePlanAppointments";
 
 const CarePlanMedication = database.define(
     DB_TABLES.CARE_PLAN_MEDICATIONS,
@@ -58,6 +60,11 @@ const CarePlanMedication = database.define(
 CarePlanMedication.hasOne(Medication, {
     foreignKey: "id",
     targetKey: "medication_id"
+});
+
+CarePlanMedication.belongsTo(CarePlan, {
+    foreignKey:"care_plan_id",
+    targetKey:"id"
 });
 
 

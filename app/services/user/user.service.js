@@ -1,5 +1,3 @@
-import { database } from "../../../libs/mysql";
-import Sequelize from "sequelize";
 import userModel from "../../models/users";
 
 class UserService {

@@ -1,12 +1,9 @@
 import BaseUser from "../../../services/user";
-
 import userService from "../../../services/user/user.service";
-import { OBJECT_NAME } from "../../../../constant";
 
 class MUserWrapper extends BaseUser {
   constructor(data) {
     super(data);
-    this.objectName = OBJECT_NAME.USER;
   }
 
   getBasicInfo = () => {
