@@ -13,6 +13,12 @@ import templateMedicationService from "../../../services/templateMedication/temp
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../../services/medicine/medicine.service";
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from './carePlanHelper'
+import {USER_CATEGORY} from "../../../../constant";
+import doctorService from "../../../services/doctor/doctor.service";
+import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
+import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 const moment = require("moment");
 
 class CarePlanController extends Controller {
@@ -21,10 +27,9 @@ class CarePlanController extends Controller {
     }
 
     createCarePlanMedicationsAndAppointmentsByTemplateData = async (req, res) => {
-        const { carePlanId: care_plan_id = 1 } = req.params;
         try {
+            const { carePlanId: care_plan_id = 1 } = req.params;
             const { medicationsData, appointmentsData } = req.body;
-
 
             const { userDetails } = req;
             const { userId, userData: { category } = {} } = userDetails || {};
@@ -32,14 +37,15 @@ class CarePlanController extends Controller {
             const id = parseInt(care_plan_id);
 
             const carePlan = await carePlanService.getCarePlanById(id);
+            const carePlanData = await CarePlanWrapper(carePlan);
 
             console.log("====================> ", care_plan_id, id, carePlan, userDetails);
             const patient_id = carePlan.get('patient_id');
 
-            for (let appointment of appointmentsData) {
-                let {
+            for (const appointment of appointmentsData) {
+                const {
                     schedule_data: { description = '', end_time = '', organizer = {}, treatment = '', participant_two = {}, start_time = '', date = '' } = {},
-                    reason = '', time_gap = '' } = appointment;
+                    reason = '', time_gap = '' } = appointment || {};
 
                     const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
                         date,
@@ -59,30 +65,49 @@ class CarePlanController extends Controller {
                       }
             };
 
-            for (let appointment of appointmentsData) {
-                let {
-                    schedule_data: { description = '', end_time = '', organizer = {}, treatment = '', participant_two = {}, start_time = '', date = '' } = {},
-                    reason = '', time_gap = '' } = appointment;
+            let appointmentApiDetails = {};
+            let appointment_ids = [];
 
+            for (const appointment of appointmentsData) {
+                const {
+                    schedule_data: { description = '', end_time = '', organizer = {}, treatment_id = '', participant_two = {}, start_time = '', date = '' } = {},
+                    reason = '', time_gap = '' } = appointment;
 
                 const { id: participant_two_id, category: participant_two_type } =
                     participant_two || {};
 
+                let userCategoryId = null;
+
+                switch(category) {
+                    case USER_CATEGORY.DOCTOR:
+                        const doctor = await doctorService.getDoctorByData({user_id: userId});
+                        const doctorData = await DoctorWrapper(doctor);
+                        userCategoryId = doctorData.getDoctorId();
+                        break;
+                    case USER_CATEGORY.PATIENT:
+                        const patient = await patientService.getPatientByUserId(userId);
+                        const patientData = await PatientWrapper(patient);
+                        userCategoryId = patientData.getPatientId();
+                        break;
+                    default:
+                        break;
+                }
+
                 const appointment_data = {
                     participant_one_type: category,
-                    participant_one_id: userId,
+                    participant_one_id: userCategoryId,
                     participant_two_type,
                     participant_two_id,
                     organizer_type:
                         Object.keys(organizer).length > 0 ? organizer.category : category,
-                    organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+                    organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
                     description,
                     start_date: moment(date),
                     end_date: moment(date),
                     start_time,
                     end_time,
                     details: {
-                        treatment,
+                        treatment_id,
                         reason
                     },
                 };
@@ -90,15 +115,19 @@ class CarePlanController extends Controller {
                 const baseAppointment = await appointmentService.addAppointment(
                     appointment_data
                 );
-                let data_to_create = {
+
+                const newAppointment = await carePlanAppointmentService.addCarePlanAppointment({
                     care_plan_id,
                     appointment_id: baseAppointment.get('id')
-                }
+                });
 
-                let newAppointment = await carePlanAppointmentService.addCarePlanAppointment(data_to_create);
-
+                const appointmentData = await AppointmentWrapper(baseAppointment);
+                appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+                appointment_ids.push(appointmentData.getAppointmentId());
             }
 
+            let medicationApiDetails = {};
+            let medication_ids = [];
 
             for (const medication of medicationsData) {
                 const { schedule_data: { end_date = '', description = "", start_date = '', unit = '', when_to_take = '',
@@ -135,8 +164,12 @@ class CarePlanController extends Controller {
                     medication_id: mReminderDetails.get('id')
                 }
 
-                let newMedication = await carePlanMedicationService.addCarePlanMedication(data_to_create);
+                const newMedication = await carePlanMedicationService.addCarePlanMedication(data_to_create);
                 console.log("MEDICATIONNNNNNN=======>", medication);
+
+                const medicationData = await MedicationWrapper(mReminderDetails);
+                medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
+                medication_ids.push(medicationData.getMReminderId());
             }
 
 
@@ -144,6 +177,19 @@ class CarePlanController extends Controller {
 
 
             return this.raiseSuccess(res, 200, {
+                care_plans: {
+                    [carePlanData.getCarePlanId()] : {
+                        ...carePlanData.getBasicInfo(),
+                        appointment_ids,
+                        medication_ids
+                    }
+                },
+                appointments: {
+                    ...appointmentApiDetails
+                },
+                medications: {
+                    ...medicationApiDetails
+                }
             }, "Care plan medications, appointments and actions added successfully");
         } catch (error) {
             console.log("Create Care Plan Medications And Appointments Error --> ", error);
@@ -154,14 +200,7 @@ class CarePlanController extends Controller {
     getPatientCarePlanDetails = async (req, res) => {
         const { patientId: patient_id = 1 } = req.params;
         try {
-            const { userDetails, body, file } = req;
-            const {
-                pid,
-                profile_pic,
-                name,
-                email
-            } = body || {};
-            const { userId = "3" } = userDetails || {};
+            const { userDetails: {userId} = {} } = req;
 
             let show = false;
 

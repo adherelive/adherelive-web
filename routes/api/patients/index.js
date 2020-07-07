@@ -19,4 +19,10 @@ router.get(
     PatientController.getPatientAppointments
 );
 
+router.get(
+    "/:id/medications",
+    Authenticated,
+    PatientController.getPatientMedications
+);
+
 module.exports = router;

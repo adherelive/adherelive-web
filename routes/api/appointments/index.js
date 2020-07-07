@@ -5,11 +5,11 @@ import Authenticate from "../middleware/auth";
 import Appointment from "../../../app/controllers/appointments/appointment.controller";
 import * as validator from "./validator";
 
-router.get(
-    "/:id",
-    Authenticate,
-    Appointment.getAppointmentForPatient
-);
+// router.get(
+//     "/:id",
+//     Authenticate,
+//     Appointment.getAppointmentForPatient
+// );
 
 router.post(
     "/",

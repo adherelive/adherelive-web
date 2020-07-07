@@ -38,7 +38,8 @@ class MobileAppointmentController extends Controller {
                 start_time,
                 end_time,
                 treatment_id = "",
-                care_plan_id = null
+                care_plan_id = null,
+                reason = ""
             } = body;
             const {userId, userData : {category} = {}} = userDetails || {};
             const {id: participant_two_id, category : participant_two_type} = participant_two || {};
@@ -84,7 +85,7 @@ class MobileAppointmentController extends Controller {
                 participant_two_id,
                 organizer_type:
                     Object.keys(organizer).length > 0 ? organizer.category : category,
-                organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userId,
+                organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
                 description,
                 start_date: moment(date),
                 end_date: moment(date),

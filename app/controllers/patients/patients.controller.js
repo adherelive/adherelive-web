@@ -10,7 +10,10 @@ import templateAppointmentService from "../../services/templateAppointment/templ
 import medicineService from "../../services/medicine/medicine.service";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
-import MAppointmentWrapper from "../../ApiWrapper/mobile/appointments";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
+import medicationReminderService from "../../services/medicationReminder/mReminder.service";
+import MReminderWrapper from "../../ApiWrapper/web/medicationReminder";
+import MedicineWrapper from "../../ApiWrapper/web/medicine";
 
 class PatientController extends Controller {
     constructor() {
@@ -101,7 +104,7 @@ class PatientController extends Controller {
             let appointment_ids = [];
 
             for(const appointment of appointmentList) {
-                const appointmentWrapper = await MAppointmentWrapper(appointment);
+                const appointmentWrapper = await AppointmentWrapper(appointment);
                 appointmentApiData[
                     appointmentWrapper.getAppointmentId()
                     ] = appointmentWrapper.getBasicInfo();
@@ -122,6 +125,66 @@ class PatientController extends Controller {
         } catch(error) {
             Logger.debug("getPatientAppointments 500 error", error);
             raiseServerError(res);
+        }
+    };
+
+    getPatientMedications = async (req, res) => {
+        const { raiseSuccess, raiseServerError } = this;
+        try {
+            const { params: { id } = {} } = req;
+
+            const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+                { participant_id: id }
+            );
+
+            // console.log("712367132 medicationDetails --> ", medicationDetails);
+            // Logger.debug("medication details", medicationDetails);
+
+            let medicationApiData = {};
+            let medicineId = [];
+
+            for(const medication of medicationDetails) {
+                const medicationWrapper = await MReminderWrapper(medication);
+                medicationApiData[
+                    medicationWrapper.getMReminderId()
+                    ] = medicationWrapper.getBasicInfo();
+                medicineId.push(medicationWrapper.getMedicineId());
+            }
+
+            Logger.debug(
+                "medicineId",
+                medicationDetails
+            );
+
+            const medicineData = await medicineService.getMedicineById({
+                id: medicineId
+            });
+
+            let medicineApiData = {};
+
+            if(medicineData !== null) {
+                const medicineWrapper = await MedicineWrapper(medicineData);
+                medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+            }
+
+            Logger.debug("medicineData", medicineData);
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    medications: {
+                        ...medicationApiData
+                    },
+                    medicines: {
+                        ...medicineApiData
+                    }
+                },
+                "Medications fetched successfully"
+            );
+        } catch(error) {
+            Logger.debug("500 error ", error);
+            return raiseServerError(res);
         }
     };
 }

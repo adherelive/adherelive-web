@@ -1,5 +1,3 @@
-import mDoctorController from "../../../app/controllers/mControllers/doctors/doctor.controller";
-
 const express = require("express");
 import express from "express";
 import Authenticate from "../../m-api/middleware/auth";
@@ -14,7 +12,7 @@ router.post(
 );
 
 router.post(
-    "/:id",
+    "/details",
     // validator.validateDoctorQualificationData,
     // todo :: wip
     DoctorController.updateDoctorQualificationRegistration
@@ -48,15 +46,28 @@ router.post(
     DoctorController.updateRegistrationDocs
 );
 
-// router.post(
-//     "/registrations/:id",
-//     // validator.validateDoctorQualificationData,
-//     // todo :: wip
-//     DoctorController.addDoctorRegistration
-// );
+router.post(
+    "/clinics",
+    Authenticate,
+    // validator.validateDoctorQualificationData,
+    // todo :: wip
+    DoctorController.updateDoctorClinics
+);
+
+router.delete(
+    "/qualification-documents/:id",
+    Authenticate,
+    DoctorController.deleteQualificationDocument
+);
+
+router.delete(
+    "/registration-documents/:id",
+    Authenticate,
+    DoctorController.deleteRegistrationDocument
+);
 
 router.post(
-    "/add-patient",
+    "/patients",
     Authenticate,
     // validator.verifyAddPatientData,
     DoctorController.addPatient
