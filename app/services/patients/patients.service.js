@@ -1,4 +1,5 @@
 import Patient from "../../models/patients";
+import {database} from "../../../libs/mysql";
 
 class PatientsService {
     constructor() {}
@@ -13,20 +14,26 @@ class PatientsService {
     };
 
     updatePatient = async (modelInstance, data) => {
+        const transaction = await database.transaction();
       try {
           // todo: change to update when sign-in flow done for mobile
-          const patient = await modelInstance.update({...data});
+          const patient = await modelInstance.update({...data}, {transaction});
+          await transaction.commit();
           return patient;
       } catch(error) {
+          await transaction.rollback();
           throw error;
       }
     };
 
     addPatient = async data => {
+        const transaction = await database.transaction();
         try {
-            const patient = await Patient.create(data);
+            const patient = await Patient.create(data, {transaction});
+            await transaction.commit();
             return patient;
         } catch(error) {
+            await transaction.rollback();
             throw error;
         }
       };

@@ -1,15 +1,19 @@
 import doctorQualificationModel from "../../models/doctorQualifications";
-import { defaultEventBridgePolicies } from "twilio/lib/jwt/taskrouter/util";
+import {database} from "../../../libs/mysql";
 
 class DoctorQualificationService {
     constructor() {}
 
     addQualification = async data => {
+        const transaction = await database.transaction();
       try {
-        
-          const doctorQualification = await doctorQualificationModel.create(data);
+          console.log("data --> ", data);
+          const doctorQualification = await doctorQualificationModel.create(data, {transaction});
+          await transaction.commit();
           return doctorQualification;
       } catch(error) {
+          console.log("error --> ", error);
+          await transaction.rollback();
           throw error;
       }
     };
@@ -44,15 +48,19 @@ class DoctorQualificationService {
     };
 
     updateQualification = async (data,id) => {
+        const transaction = await database.transaction();
         try {
             const doctorQualification = await doctorQualificationModel.update(data,{
                 where: {
                     id,
                     deleted_at:null
-                }
+                },
+                transaction
             });
+            await transaction.commit();
             return doctorQualification;
         } catch(error) {
+            await transaction.rollback();
             throw error;
         }
     };

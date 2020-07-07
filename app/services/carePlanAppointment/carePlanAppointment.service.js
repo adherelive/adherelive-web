@@ -1,7 +1,17 @@
 import CarePlanAppointments from "../../models/carePlanAppointments";
-import CarePlan from "../../models/carePlan";
 
 class CarePlanAppointmentService {
+
+    getAllByData = async (data) => {
+        try {
+            const carePlanAppointments = await CarePlanAppointments.findAll({
+                where: data
+            });
+            return carePlanAppointments;
+        } catch(error) {
+            throw error;
+        }
+    };
 
     getCarePlanAppointmentsByData = async (data) => {
         try {

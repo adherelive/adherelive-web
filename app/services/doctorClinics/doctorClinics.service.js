@@ -1,13 +1,17 @@
 import doctorClinicModel from "../../models/doctorClinics";
+import {database} from "../../../libs/mysql";
 
 class DoctorClinicService {
   constructor() {}
 
   addClinic = async (data) => {
+    const transaction = await database.transaction();
     try {
-      const doctorClinic = await doctorClinicModel.create(data);
+      const doctorClinic = await doctorClinicModel.create(data, {transaction});
+      await transaction.commit();
       return doctorClinic;
     } catch (error) {
+      await transaction.rollback();
       throw error;
     }
   };

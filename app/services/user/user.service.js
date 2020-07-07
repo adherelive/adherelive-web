@@ -1,4 +1,5 @@
 import userModel from "../../models/users";
+import {database} from "../../../libs/mysql";
 
 class UserService {
     constructor() {
@@ -67,38 +68,49 @@ class UserService {
     };
 
     async addUser(data) {
+        const transaction = await database.transaction();
         try {
-            const response = await userModel.create(data);
+            const response = await userModel.create(data, {transaction});
+            await transaction.commit();
             return response;
         } catch (err) {
+            await transaction.rollback();
             throw err;
         }
     }
 
     updateEmail = async (email, id) => {
+        const transaction = await database.transaction();
         try {
             const user = await userModel.update({
                email,
             }, {
                 where: {
                     id
-                }
+                },
+                transaction
             });
+            await transaction.commit();
             return user;
         } catch (error) {
+            await transaction.rollback();
             throw error;
         }
     };
 
     updateUser = async (data, id) => {
+        const transaction = await database.transaction();
         try {
             const user = await userModel.update(data, {
                 where: {
                     id
-                }
+                },
+                transaction
             });
+            await transaction.commit();
             return user;
         } catch (error) {
+            await transaction.rollback();
             throw error;
         }
     };

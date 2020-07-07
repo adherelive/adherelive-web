@@ -20,7 +20,6 @@ class CarePlanController extends Controller {
         super();
     }
 
-
     createCarePlanMedicationsAndAppointmentsByTemplateData = async (req, res) => {
         const { carePlanId: care_plan_id = 1 } = req.params;
         try {
@@ -49,7 +48,7 @@ class CarePlanController extends Controller {
                       );
 
                       if (getAppointmentForTimeSlot.length > 0) {
-                        return raiseClientError(
+                        return this.raiseClientError(
                           res,
                           422,
                           {
@@ -66,7 +65,6 @@ class CarePlanController extends Controller {
                     reason = '', time_gap = '' } = appointment;
 
 
-                console.log("AppointmentTTTTTTTTT=======>", care_plan_id, date, appointment);
                 const { id: participant_two_id, category: participant_two_type } =
                     participant_two || {};
 
@@ -102,8 +100,8 @@ class CarePlanController extends Controller {
             }
 
 
-            for (let medication of medicationsData) {
-                let { schedule_data: { end_date = '', description = "", start_date = '', unit = '', when_to_take = '',
+            for (const medication of medicationsData) {
+                const { schedule_data: { end_date = '', description = "", start_date = '', unit = '', when_to_take = '',
                     repeat = '', quantity = '', repeat_days = [], strength = '', start_time = '', repeat_interval = '', medication_stage = '' } = {},
                     medicine_id = '' } = medication;
                 const dataToSave = {
@@ -146,7 +144,7 @@ class CarePlanController extends Controller {
 
 
             return this.raiseSuccess(res, 200, {
-            }, "care plan medications ,appointments and actions added successfully");
+            }, "Care plan medications, appointments and actions added successfully");
         } catch (error) {
             console.log("Create Care Plan Medications And Appointments Error --> ", error);
             return this.raiseServerError(res, 500, error);

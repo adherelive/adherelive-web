@@ -1,5 +1,5 @@
 import Doctor from "../../models/doctors";
-import Users from "../../models/users";
+import {database} from "../../../libs/mysql";
 
 class DoctorService {
 
@@ -14,6 +14,36 @@ class DoctorService {
             throw error;
         }
     }
+
+    addDoctor = async data => {
+        const transaction = await database.transaction();
+        try {
+            const doctor = await Doctor.create(data, { transaction });
+
+            await transaction.commit();
+            return doctor;
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+    };
+
+    updateDoctor = async (data, id) => {
+        const transaction = await database.transaction();
+        try {
+            const doctor = await Doctor.update(data, {
+                where: {
+                    id
+                },
+                transaction
+            });
+            await transaction.commit();
+            return doctor;
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+    };
 
     getAllDoctors = async () => {
         try {

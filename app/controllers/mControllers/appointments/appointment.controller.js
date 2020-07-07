@@ -244,10 +244,10 @@ class MobileAppointmentController extends Controller {
     getAppointmentForPatient = async (req, res) => {
         const { raiseSuccess, raiseServerError } = this;
         try {
-          const { params: { id } = {}, userDetails: { userId } = {} } = req;
+          const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
     
           const appointmentList = await appointmentService.getAppointmentForPatient(
-            id
+              patient_id
           );
           // Logger.debug("appointmentList", appointmentList);
     

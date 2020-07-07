@@ -7,11 +7,12 @@ var upload = multer({ dest: "../app/public/", storage: storage });
 
 const router = express.Router();
 
-router.post('/create-medications-and-appointments/:carePlanId',
+// router.post('/create-medications-and-appointments/:carePlanId',
+router.post('/:carePlanId',
     CarePlanController.createCarePlanMedicationsAndAppointmentsByTemplateData
 );
 
-router.get('/patient-care-plan-details/:patientId',
+router.get('/:patientId',
     CarePlanController.getPatientCarePlanDetails
 );
 

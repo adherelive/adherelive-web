@@ -7,9 +7,15 @@ import PatientController from "../../../app/controllers/mControllers/patients/pa
 var storage = multer.memoryStorage();
 var upload = multer({ dest: "../app/public/", storage: storage });
 
-router.post('',
+router.post('/',
     // upload.single("profile_pic"),
     PatientController.mUpdatePatient
+);
+
+router.get(
+    "/:id/appointments",
+    Authenticated,
+    PatientController.getPatientAppointments
 );
 
 module.exports = router;

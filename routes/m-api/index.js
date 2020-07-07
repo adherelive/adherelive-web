@@ -4,6 +4,7 @@ import mUserRouter from "./user";
 import mAppointmentRouter from "./appointments";
 import mEventRouter from "./events";
 import mPatientRouter from "./patients";
+import mDoctorRouter from "./doctors";
 import mMedicineRouter from "./medicine";
 import mMedicationRouter from "./medications";
 import mCarePlanRouter from "./carePlans";
@@ -63,7 +64,8 @@ router.use("/appointments", mAppointmentRouter);
 router.use("/medications", mMedicationRouter);
 router.use("/events", mEventRouter);
 router.use("/patients", mPatientRouter);
-router.use("/carePlans", mCarePlanRouter);
+router.use("/doctors", mDoctorRouter);
+router.use("/care-plans", mCarePlanRouter);
 router.use("/medicines", mMedicineRouter);
 
 module.exports = router;

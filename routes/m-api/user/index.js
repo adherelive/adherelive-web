@@ -18,6 +18,7 @@ router.post(
 );
 
 
+// REMOVE_AFTER
 router.post(
     "/add-patient/:userId",
     mUserController.addDoctorsPatient,
@@ -39,6 +40,7 @@ router.post(
     mUserController.signInFacebook
 );
 
+// doctor post basic
 router.post(
     "/doctor-profile-registration/:userId",
     mUserController.doctorProfileRegister

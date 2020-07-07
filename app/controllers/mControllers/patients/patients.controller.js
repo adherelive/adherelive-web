@@ -6,11 +6,15 @@ import minioService from "../../../services/minio/minio.service";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import { randomString } from "../../../../libs/helper";
-import { saveFileIntoUserBucket } from "../../helper/user";
+import Log from "../../../../libs/log";
 
 import fs from "fs";
 import md5 from "js-md5";
 import { imgSync } from "base64-img";
+import appointmentService from "../../../services/appointment/appointment.service";
+import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
+
+const Logger  = new Log("mobile patient controller");
 
 class MPatientController extends Controller {
   constructor() {
@@ -122,6 +126,45 @@ class MPatientController extends Controller {
     } catch (error) {
       console.log("UPDATE PATIENT ERROR --> ", error);
       return this.raiseServerError(res, 500, error, error.message);
+    }
+  };
+
+  getPatientAppointments = async (req, res) => {
+    const {raiseServerError, raiseSuccess} = this;
+    try {
+      const { params: { id } = {}, userDetails: { userId } = {} } = req;
+
+      const appointmentList = await appointmentService.getAppointmentForPatient(
+          id
+      );
+      // Logger.debug("appointmentList", appointmentList);
+
+      // if (appointmentList.length > 0) {
+      let appointmentApiData = {};
+      let appointment_ids = [];
+
+      for(const appointment of appointmentList) {
+        const appointmentWrapper = await MAppointmentWrapper(appointment);
+        appointmentApiData[
+            appointmentWrapper.getAppointmentId()
+            ] = appointmentWrapper.getBasicInfo();
+        appointment_ids.push(appointmentWrapper.getAppointmentId());
+      }
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            appointments: {
+              ...appointmentApiData,
+            },
+            appointment_ids
+          },
+          `appointment data for patient: ${id} fetched successfully`
+      );
+    } catch(error) {
+      Logger.debug("getPatientAppointments 500 error", error);
+      raiseServerError(res);
     }
   };
 }

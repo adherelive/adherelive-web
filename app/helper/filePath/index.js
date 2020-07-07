@@ -4,6 +4,5 @@ export const completePath = (path) => {
 };
 
 export const getFilePath = (url) => {
-    const splitUrl = url.split(process.config.minio.MINIO_BUCKET_NAME);
-    return splitUrl.length > 1 ? splitUrl[1] : null;
+    return url && url.split(process.config.minio.MINIO_BUCKET_NAME).length > 1 ? url.split(process.config.minio.MINIO_BUCKET_NAME)[1] : null;
 };

@@ -32,14 +32,18 @@ class DoctorsService {
   };
 
   updateDoctor = async (data, id) => {
+    const transaction = await database.transaction();
     try {
       const doctor = await Doctor.update(data, {
         where: {
           id
-        }
+        },
+        transaction
       });
+      await transaction.commit();
       return doctor;
     } catch (error) {
+      await transaction.rollback();
       throw error;
     }
   };

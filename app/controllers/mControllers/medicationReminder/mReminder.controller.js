@@ -295,7 +295,7 @@ class MobileMReminderController extends Controller {
         medicineId.filter(id => !medicineId.includes(id))
       );
 
-      const medicineData = await medicineService.getMedicineByData({
+      const medicineData = await medicineService.getMedicineById({
         id: medicineId
       });
 
@@ -310,7 +310,9 @@ class MobileMReminderController extends Controller {
           medications: {
             ...medicationApiData
           },
-          ...medicineWrapper.getBasicInfoBulk()
+          medicines: {
+            [medicineWrapper.getMedicineId()]: medicineWrapper.getBasicInfo()
+          }
         },
         "medications fetched successfully"
       );
