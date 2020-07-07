@@ -37,6 +37,10 @@ import documentService from "../../../services/uploadDocuments/uploadDocuments.s
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import { uploadImageS3 } from "../user/userHelper";
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
+import DoctorQualificationWrapper from "../../../ApiWrapper/web/doctorQualification";
+import DoctorRegistrationWrapper from "../../../ApiWrapper/web/doctorRegistration";
+import doctorClinicService from "../../../services/doctorClinics/doctorClinics.service";
+import DoctorClinicWrapper from "../../../ApiWrapper/web/doctorClinic";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -933,6 +937,152 @@ class MobileDoctorController extends Controller {
           "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
           error
       );
+      return raiseServerError(res);
+    }
+  };
+
+  getAllDoctorDetails = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { userDetails: { userId } = {} } = req;
+      const doctors = await doctorService.getDoctorByData({ user_id: userId });
+
+      let doctorQualificationApiDetails = {};
+      let doctorClinicApiDetails = {};
+      let uploadDocumentApiDetails = {};
+      let doctorRegistrationApiDetails = {};
+      let doctor_qualification_ids = [];
+      let doctor_registration_ids = [];
+      let doctor_clinic_ids = [];
+      let upload_document_ids = [];
+
+      const doctorWrapper = await DoctorWrapper(doctors);
+
+      const doctorQualifications = await doctorQualificationService.getQualificationsByDoctorId(
+          doctorWrapper.getDoctorId()
+      );
+
+      const userDetails = await userService.getUserById(
+          doctorWrapper.getUserId()
+      );
+      const userWrapper = await UserWrapper(userDetails.get());
+
+      for(const doctorQualification of doctorQualifications) {
+        const doctorQualificationWrapper = await DoctorQualificationWrapper(
+            doctorQualification
+        );
+
+        const qualificationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+            doctorQualificationWrapper.getDoctorQualificationId()
+        );
+
+        for(const document of qualificationDocuments) {
+          const uploadDocumentWrapper = await UploadDocumentWrapper(document);
+          uploadDocumentApiDetails[
+              uploadDocumentWrapper.getUploadDocumentId()
+              ] = uploadDocumentWrapper.getBasicInfo();
+          upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
+        }
+
+        doctorQualificationApiDetails[
+            doctorQualificationWrapper.getDoctorQualificationId()
+            ] = {
+          ...doctorQualificationWrapper.getBasicInfo(),
+          upload_document_ids
+        };
+
+        doctor_qualification_ids.push(
+            doctorQualificationWrapper.getDoctorQualificationId()
+        );
+
+        upload_document_ids = [];
+      }
+
+      // REGISTRATION DETAILS
+      const doctorRegistrations = await doctorRegistrationService.getRegistrationByDoctorId(
+          doctorWrapper.getDoctorId()
+      );
+
+      Logger.debug("198361283 ---====> ", doctorRegistrations);
+
+      for(const doctorRegistration of doctorRegistrations) {
+        const doctorRegistrationWrapper = await DoctorRegistrationWrapper(
+            doctorRegistration
+        );
+
+        const registrationDocuments = await uploadDocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
+
+        for(const document of registrationDocuments) {
+          const uploadDocumentWrapper = await UploadDocumentWrapper(document);
+          uploadDocumentApiDetails[
+              uploadDocumentWrapper.getUploadDocumentId()
+              ] = uploadDocumentWrapper.getBasicInfo();
+          upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
+        }
+
+
+        doctorRegistrationApiDetails[
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+            ] = {
+          ...doctorRegistrationWrapper.getBasicInfo(),
+          upload_document_ids
+        };
+
+        doctor_registration_ids.push(
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+        );
+
+        upload_document_ids = [];
+      }
+
+      const doctorClinics = await doctorClinicService.getClinicForDoctor(
+          doctorWrapper.getDoctorId()
+      );
+
+      for(const doctorClinic of doctorClinics) {
+        const doctorClinicWrapper = await DoctorClinicWrapper(doctorClinic);
+        doctorClinicApiDetails[
+            doctorClinicWrapper.getDoctorClinicId()
+            ] = doctorClinicWrapper.getBasicInfo();
+        doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
+      }
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            users: {
+              [userWrapper.getId()]: userWrapper.getBasicInfo()
+            },
+            doctors: {
+              [doctorWrapper.getDoctorId()]: {
+                ...doctorWrapper.getBasicInfo(),
+                doctor_qualification_ids,
+                doctor_clinic_ids,
+                doctor_registration_ids,
+              }
+            },
+            doctor_qualifications: {
+              ...doctorQualificationApiDetails,
+            },
+            doctor_clinics: {
+              ...doctorClinicApiDetails,
+            },
+            doctor_registrations: {
+              ...doctorRegistrationApiDetails,
+            },
+            upload_documents: {
+              ...uploadDocumentApiDetails,
+            }
+          },
+          "doctor details fetched successfully"
+      );
+    } catch (error) {
+      Logger.debug("500 error", error);
       return raiseServerError(res);
     }
   };

@@ -62,7 +62,7 @@ class DoctorWrapper extends BaseDoctor {
                 middle_name,
                 last_name,
                 address,
-                profile_pic: profile_pic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${profile_pic}` : ""
+                profile_pic: completePath(profile_pic)
             },
             qualifications,
             activated_on

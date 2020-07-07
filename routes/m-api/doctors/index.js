@@ -86,4 +86,10 @@ router.post(
     mDoctorController.addPatient
 );
 
+router.get(
+    "/",
+    Authenticate,
+    mDoctorController.getAllDoctorDetails
+);
+
 module.exports = router;

@@ -1,3 +1,5 @@
+import mDoctorController from "../../../app/controllers/mControllers/doctors/doctor.controller";
+
 const express = require("express");
 import express from "express";
 import Authenticate from "../../m-api/middleware/auth";
@@ -58,6 +60,12 @@ router.post(
     Authenticate,
     // validator.verifyAddPatientData,
     DoctorController.addPatient
+);
+
+router.get(
+    "/",
+    Authenticate,
+    DoctorController.getAllDoctorDetails
 );
 
 module.exports = router;
