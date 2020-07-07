@@ -945,8 +945,9 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
+      Logger.debug("userId --> ", req.userDetails);
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
-
+      Logger.debug("doctors --> ", doctors);
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
       let uploadDocumentApiDetails = {};

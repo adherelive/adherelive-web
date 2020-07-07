@@ -19,7 +19,9 @@ class MDoctorWrapper extends BaseDoctor {
             address,
             qualifications,
             activated_on,
-            profile_pic
+            profile_pic,
+            city,
+            speciality,
         } = _data || {};
         return {
             basic_info: {
@@ -30,8 +32,10 @@ class MDoctorWrapper extends BaseDoctor {
                 middle_name,
                 last_name,
                 address,
+                speciality,
                 profile_pic: completePath(profile_pic)
             },
+            city,
             qualifications,
             activated_on
         };

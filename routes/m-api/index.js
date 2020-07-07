@@ -30,7 +30,7 @@ router.use(async (req, res, next) => {
             console.log("2 ACCESS TOKEN -----------------> ", accessToken);
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
-            console.log("3 decodedAccessToken -----------------> ", accessToken);
+            console.log("3 decodedAccessToken -----------------> ", decodedAccessToken);
             let user = await userService.getUser(decodedAccessToken.userId);
             console.log("USER M-API ROUTE START ------> ", );
             if (user) {
