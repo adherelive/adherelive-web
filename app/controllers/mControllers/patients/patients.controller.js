@@ -13,6 +13,10 @@ import md5 from "js-md5";
 import { imgSync } from "base64-img";
 import appointmentService from "../../../services/appointment/appointment.service";
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
+import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
+import MobileMReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
+import medicineService from "../../../services/medicine/medicine.service";
+import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 
 const Logger  = new Log("mobile patient controller");
 
@@ -165,6 +169,66 @@ class MPatientController extends Controller {
     } catch(error) {
       Logger.debug("getPatientAppointments 500 error", error);
       raiseServerError(res);
+    }
+  };
+
+  getPatientMedications = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { params: { id } = {} } = req;
+
+      const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+          { participant_id: id }
+      );
+
+      // console.log("712367132 medicationDetails --> ", medicationDetails);
+      // Logger.debug("medication details", medicationDetails);
+
+      let medicationApiData = {};
+      let medicineId = [];
+
+      for(const medication of medicationDetails) {
+        const medicationWrapper = await MobileMReminderWrapper(medication);
+        medicationApiData[
+            medicationWrapper.getMReminderId()
+            ] = medicationWrapper.getBasicInfo();
+        medicineId.push(medicationWrapper.getMedicineId());
+      }
+
+      Logger.debug(
+          "medicineId",
+          medicationDetails
+      );
+
+      const medicineData = await medicineService.getMedicineById({
+        id: medicineId
+      });
+
+      let medicineApiData = {};
+
+      if(medicineData !== null) {
+        const medicineWrapper = await MedicineApiWrapper(medicineData);
+        medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+      }
+
+      Logger.debug("medicineData", medicineData);
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            medications: {
+              ...medicationApiData
+            },
+            medicines: {
+              ...medicineApiData
+            }
+          },
+          "Medications fetched successfully"
+      );
+    } catch(error) {
+      Logger.debug("500 error ", error);
+      return raiseServerError(res);
     }
   };
 }
