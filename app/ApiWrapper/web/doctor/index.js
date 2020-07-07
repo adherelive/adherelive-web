@@ -51,6 +51,8 @@ class DoctorWrapper extends BaseDoctor {
             qualifications,
             activated_on,
             profile_pic,
+            city,
+            speciality
         } = _data || {};
 
         return {
@@ -62,8 +64,10 @@ class DoctorWrapper extends BaseDoctor {
                 middle_name,
                 last_name,
                 address,
+                speciality,
                 profile_pic: completePath(profile_pic)
             },
+            city,
             qualifications,
             activated_on
         };
