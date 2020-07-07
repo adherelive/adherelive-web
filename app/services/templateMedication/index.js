@@ -1,0 +1,9 @@
+export default class TemplateMedication {
+    constructor(data) {
+        this._data = data;
+    }
+
+    getTemplateMedicationId() {
+        return this._data.get("id");
+    }
+}
