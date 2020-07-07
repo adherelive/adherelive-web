@@ -9,6 +9,8 @@ import templateMedicationService from "../../services/templateMedication/templat
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import appointmentService from "../../services/appointment/appointment.service";
+import MAppointmentWrapper from "../../ApiWrapper/mobile/appointments";
 
 class PatientController extends Controller {
     constructor() {
@@ -68,7 +70,7 @@ class PatientController extends Controller {
                 uid: pid
             };
             // add patient for userId
-            const patientDetails = await patientService.updatePatientDetails(patientData);
+            const patientDetails = await patientService.updatePatient(patientData);
 
             return this.raiseSuccess(res, 200, {
                 patients: {
@@ -84,7 +86,44 @@ class PatientController extends Controller {
         }
     };
 
-    
+    getPatientAppointments = async (req, res) => {
+        const {raiseServerError, raiseSuccess} = this;
+        try {
+            const { params: { id } = {}, userDetails: { userId } = {} } = req;
+
+            const appointmentList = await appointmentService.getAppointmentForPatient(
+                id
+            );
+            // Logger.debug("appointmentList", appointmentList);
+
+            // if (appointmentList.length > 0) {
+            let appointmentApiData = {};
+            let appointment_ids = [];
+
+            for(const appointment of appointmentList) {
+                const appointmentWrapper = await MAppointmentWrapper(appointment);
+                appointmentApiData[
+                    appointmentWrapper.getAppointmentId()
+                    ] = appointmentWrapper.getBasicInfo();
+                appointment_ids.push(appointmentWrapper.getAppointmentId());
+            }
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    appointments: {
+                        ...appointmentApiData,
+                    },
+                    appointment_ids
+                },
+                `appointment data for patient: ${id} fetched successfully`
+            );
+        } catch(error) {
+            Logger.debug("getPatientAppointments 500 error", error);
+            raiseServerError(res);
+        }
+    };
 }
 
 export default new PatientController();

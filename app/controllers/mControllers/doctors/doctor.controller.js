@@ -834,7 +834,7 @@ class MobileDoctorController extends Controller {
       let doctor_clinic_ids = [];
 
       for (const clinic of clinics) {
-        const { name = "", location = "", time_slots = [] } = clinic;
+        const { name = "", location = "", time_slots = {} } = clinic;
 
         const details = {
           time_slots

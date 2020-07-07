@@ -7,12 +7,16 @@ var upload = multer({ dest: "../app/public/", storage: storage });
 
 const router = express.Router();
 
-router.post('/patient',
+router.post('/patients',
     Authenticated,
     upload.single("files"),
     PatientController.updatePatient
 );
 
-
+router.get(
+    "/:id/appointments",
+    Authenticated,
+    PatientController.getPatientAppointments
+);
 
 module.exports = router;
