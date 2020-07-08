@@ -249,10 +249,10 @@ export const SEVERITY_STATUS = {
   }
 };
 
-export const NO_ADHERENCE = "no_adherence";
-export const NO_MEDICATION = "no_medication";
-export const NO_APPOINTMENT = "no_appointment";
-export const NO_ACTION = "no_action";
+export const NO_ADHERENCE = "1";
+export const NO_MEDICATION = "2";
+export const NO_APPOINTMENT = "3";
+export const NO_ACTION = "4";
 
 export const CHART_TITLE = {
   [NO_ADHERENCE]: "Adherence",

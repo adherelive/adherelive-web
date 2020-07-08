@@ -510,3 +510,39 @@ export const VERIFICATION_TYPE = {
   FORGOT_PASSWORD: "forgot_password",
   SIGN_UP: "sign_up",
 };
+
+export const NO_ADHERENCE = "1";
+export const NO_MEDICATION = "2";
+export const NO_APPOINTMENT = "3";
+export const NO_ACTION = "4";
+export const TEST_ONE = "5";
+export const TEST_TWO = "6";
+
+export const CHART_LIMIT = 4;
+
+export const CHART_DETAILS = {
+  [NO_ADHERENCE]: {
+    critical: 19,
+    total: 100
+  },
+  [NO_MEDICATION]: {
+    critical: 25,
+    total: 80
+  },
+  [NO_APPOINTMENT]: {
+    critical: 5,
+    total: 40
+  },
+  [NO_ACTION]: {
+    critical: 30,
+    total: 120
+  },
+  [TEST_ONE]: {
+    critical: 10,
+    total: 50
+  },
+  [TEST_TWO]: {
+    critical: 10,
+    total: 60
+  },
+};
