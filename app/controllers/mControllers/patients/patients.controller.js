@@ -213,14 +213,19 @@ class MPatientController extends Controller {
 
       Logger.debug(
           "medicineId",
-          medicationDetails
+          medicineId
       );
 
-      const medicineData = await medicineService.getMedicineById({
+      const medicineData = await medicineService.getMedicineByData({
         id: medicineId
       });
 
       let medicineApiData = {};
+
+      Logger.debug(
+          "medicineData",
+          medicineData
+      );
 
       for(const medicine of medicineData) {
         const medicineWrapper = await MedicineApiWrapper(medicine);
@@ -243,7 +248,7 @@ class MPatientController extends Controller {
           "Medications fetched successfully"
       );
     } catch(error) {
-      Logger.debug("500 error ", error);
+      Logger.debug("medication get 500 error ", error);
       return raiseServerError(res);
     }
   };
