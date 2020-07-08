@@ -222,8 +222,8 @@ class MPatientController extends Controller {
 
       let medicineApiData = {};
 
-      if(medicineData !== null) {
-        const medicineWrapper = await MedicineApiWrapper(medicineData);
+      for(const medicine of medicineData) {
+        const medicineWrapper = await MedicineApiWrapper(medicine);
         medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
       }
 
