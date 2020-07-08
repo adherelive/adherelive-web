@@ -401,7 +401,7 @@ export const EVENT_STATUS = {
 
 export const EMAIL_TEMPLATE_NAME = {
   WELCOME: "welcome",
-  FORGOT_PASSWORD: "forgot_password"
+  FORGOT_PASSWORD: "forgotPassword"
 };
 
 export const OBJECT_NAME = {
@@ -506,6 +506,7 @@ export const MEDICINE_TYPE = {
   INJECTION: "injection"
 };
 
-export const CLINIC_TIME_SLOTS = [
-
-];
+export const VERIFICATION_TYPE = {
+  FORGOT_PASSWORD: "forgot_password",
+  SIGN_UP: "sign_up",
+};

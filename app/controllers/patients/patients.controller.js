@@ -18,6 +18,7 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
+import MedicineApiWrapper from "../../ApiWrapper/mobile/medicine";
 
 class PatientController extends Controller {
     constructor() {
@@ -160,14 +161,14 @@ class PatientController extends Controller {
                 medicationDetails
             );
 
-            const medicineData = await medicineService.getMedicineById({
+            const medicineData = await medicineService.getMedicineByData({
                 id: medicineId
             });
 
             let medicineApiData = {};
 
-            if(medicineData !== null) {
-                const medicineWrapper = await MedicineWrapper(medicineData);
+            for(const medicine of medicineData) {
+                const medicineWrapper = await MedicineApiWrapper(medicine);
                 medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
             }
 

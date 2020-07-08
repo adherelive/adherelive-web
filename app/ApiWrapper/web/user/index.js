@@ -39,6 +39,6 @@ export default async (data = null, userId = null) => {
   if (data) {
     return new UserWrapper(data);
   }
-  const user = await userService.getUserByData({id: userId});
+  const user = await userService.getUserById(userId);
   return new UserWrapper(user.get());
 };

@@ -20,4 +20,8 @@ export default class User {
     getCategory() {
         return this._data.category;
     }
+
+    getPassword = () => {
+        return this._data.password;
+    }
 }

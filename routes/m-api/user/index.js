@@ -111,4 +111,23 @@ router.post(
 
 router.post("/sign-out", Authenticate, mUserController.signOut);
 
+router.post(
+    "/forgot-password",
+    // validator
+    mUserController.forgotPassword
+);
+
+router.post(
+    "/verify/:link",
+    // validator
+    mUserController.verifyPasswordResetLink
+);
+
+router.post(
+  "/password-reset",
+  Authenticate,
+    // validator
+  mUserController.updateUserPassword
+);
+
 module.exports = router;

@@ -13,6 +13,8 @@ class EventExecutor {
       console.log('INSIDEEEE SEND MAILLLLLLL ');
       // let isValid = await validateMailData(mailData);
       let response = await EmailManager.sendEmail(mailData);
+
+      console.log("12931931789223 response ------------> ", response);
       Object.assign(
         mailData,
         response ? { status: "SENT" } : { status: "FAILED" }

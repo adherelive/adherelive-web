@@ -5,7 +5,8 @@ module.exports =  () => {
     process.config = {
         app: {
             invite_link: process.env.INVITE_LINK,
-            env: process.env.APP_ENV
+            env: process.env.APP_ENV,
+            reset_password: process.env.RESET_PASSWORD_LINK
         },
         db: {
             connection: process.env.DB_CONNECTION,
