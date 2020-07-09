@@ -58,6 +58,8 @@ class MPatientController extends Controller {
 
       let profilePic = "";
 
+      Logger.debug("error cause --> ", profile_pic.indexOf(";base64"));
+
       if (profile_pic.startsWith("data")) {
         const extension = profile_pic.substring(
           "data:image/".length,
@@ -268,6 +270,8 @@ class MPatientController extends Controller {
 
       let templateAppointmentData = {};
       let template_appointment_ids = [];
+      let medicine_ids = [];
+
 
       let carePlanTemplateData = null;
 
@@ -280,6 +284,7 @@ class MPatientController extends Controller {
           const medicationData = await TemplateMedicationWrapper(medication);
           templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
           template_medication_ids.push(medicationData.getTemplateMedicationId());
+          medicine_ids.push(medicationData.getTemplateMedicineId());
         }
 
         const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
@@ -291,11 +296,14 @@ class MPatientController extends Controller {
         }
       }
 
+      Logger.debug("187631631623 here 1", 1);
+
       let carePlanAppointmentData = {};
       let appointment_ids = [];
 
       let carePlanMedicationData = {};
       let medication_ids = [];
+
 
       const carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(carePlanData.getCarePlanId());
 
@@ -305,11 +313,14 @@ class MPatientController extends Controller {
 
       let appointmentApiDetails = {};
       const appointments = await appointmentService.getAppointmentByData({id: appointment_ids});
-      for(const appointment of appointments) {
-        const appointmentData = await AppointmentWrapper(appointment);
-        appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+      Logger.debug("187631631623 here 2", appointments);
+      if(appointments) {
+        for(const appointment of appointments) {
+          const appointmentData = await AppointmentWrapper(appointment);
+          appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+        }
       }
-
+      Logger.debug("187631631623 here 2", 2);
       const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanData.getCarePlanId());
 
       for(const carePlanMedication of carePlanMedications) {
@@ -321,7 +332,32 @@ class MPatientController extends Controller {
       for(const medication of medications) {
         const medicationData = await MReminderWrapper(medication);
         medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
+        medicine_ids.push(medicationData.getMedicineId());
       }
+
+
+      Logger.debug(
+          "medicineId",
+          medicine_ids
+      );
+
+      const medicineData = await medicineService.getMedicineByData({
+        id: medicine_ids
+      });
+
+      let medicineApiData = {};
+
+      Logger.debug(
+          "medicineData",
+          medicineData
+      );
+
+      for(const medicine of medicineData) {
+        const medicineWrapper = await MedicineApiWrapper(medicine);
+        medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+      }
+
+      Logger.debug("187631631623 here 3", 3);
 
       return this.raiseSuccess(res, 200, {
         // care_plans: { ...carePlanApiData },
@@ -351,10 +387,14 @@ class MPatientController extends Controller {
         },
         template_medications: {
           ...templateMedicationData
+        },
+        medicines: {
+          ...medicineApiData
         }
       }, "Patient care plan details fetched successfully");
 
     } catch (error) {
+      Logger.debug("get careplan 500 error ---> ", error);
       console.log("GET PATIENT DETAILS ERROR --> ", error);
       return this.raiseServerError(res);
     }

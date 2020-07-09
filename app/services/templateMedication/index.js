@@ -6,4 +6,8 @@ export default class TemplateMedication {
     getTemplateMedicationId() {
         return this._data.get("id");
     }
+
+    getTemplateMedicineId() {
+        return this._data.get("medicine_id");
+    }
 }

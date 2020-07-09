@@ -39,7 +39,6 @@ class CarePlanAppointmentService {
 
     getAppointmentsByCarePlanId = async (care_plan_id) => {
         try {
-            console.log("careplan IDDDDDDD in APPOINTMENT--> ", care_plan_id);
             const carePlanAppointments = await CarePlanAppointments.findAll({
                 where: {care_plan_id}
             });

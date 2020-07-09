@@ -41,7 +41,7 @@ router.use(async (req, res, next) => {
                 };
             } else {
                 req.userDetails = {
-                    exists: false.use()
+                    exists: false
                 };
             }
         } else {
