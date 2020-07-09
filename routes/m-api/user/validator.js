@@ -20,6 +20,7 @@ const validateTimeInterval = (startTime, endTime) => {
 
 export const validateCredentialsData = (req, res, next) => {
     const { body: data = {} } = req;
+    const { email, password } = data;
     const isValid = credentialsFormSchema.validate(data);
     if (isValid && isValid.error != null) {
         // return raiseClientError(res, 422, isValid.error, "please check filled details");

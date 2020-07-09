@@ -195,7 +195,7 @@ class PatientController extends Controller {
 
     getPatientCarePlanDetails = async (req, res) => {
         try {
-            const { patientId: patient_id = 1 } = req.params;
+            const { id: patient_id = 1 } = req.params;
             const { userDetails: {userId} = {} } = req;
 
             let show = false;
@@ -208,6 +208,8 @@ class PatientController extends Controller {
 
             let templateAppointmentData = {};
             let template_appointment_ids = [];
+            let medicine_ids = [];
+
 
             let carePlanTemplateData = null;
 
@@ -220,6 +222,7 @@ class PatientController extends Controller {
                     const medicationData = await TemplateMedicationWrapper(medication);
                     templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
                     template_medication_ids.push(medicationData.getTemplateMedicationId());
+                    medicine_ids.push(medicationData.getTemplateMedicineId());
                 }
 
                 const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
@@ -261,6 +264,28 @@ class PatientController extends Controller {
             for(const medication of medications) {
                 const medicationData = await MReminderWrapper(medication);
                 medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
+                medicine_ids.push(medicationData.getMedicineId());
+            }
+
+            Logger.debug(
+                "medicineId",
+                medicine_ids
+            );
+
+            const medicineData = await medicineService.getMedicineByData({
+                id: medicine_ids
+            });
+
+            let medicineApiData = {};
+
+            Logger.debug(
+                "medicineData",
+                medicineData
+            );
+
+            for(const medicine of medicineData) {
+                const medicineWrapper = await MedicineApiWrapper(medicine);
+                medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
             }
 
             // let cPdetails = carePlan.get('details')?carePlan.get('details'):{};
@@ -371,6 +396,9 @@ class PatientController extends Controller {
                 },
                 template_medications: {
                     ...templateMedicationData
+                },
+                medicines: {
+                    ...medicineApiData
                 }
             }, "Patient care plan details fetched successfully");
 
