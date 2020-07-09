@@ -20,7 +20,8 @@ class CarePlanWrapper extends BaseCarePlan {
             details,
             activated_on,
             renew_on,
-            expired_on
+            expired_on,
+            care_plan_template_id,
         } = _data || {};
 
         return {
@@ -29,6 +30,7 @@ class CarePlanWrapper extends BaseCarePlan {
                 name,
                 doctor_id,
                 patient_id,
+                care_plan_template_id,
             },
             details,
             activated_on,

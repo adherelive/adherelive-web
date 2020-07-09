@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-// const userController = require("../../../app/controllers/user/user.controller");
 import Authenticate from "../middleware/auth";
 import userController from "../../../app/controllers/user/user.controller";
+import * as validator from "./validator";
 const multer = require("multer");
 var storage = multer.memoryStorage();
 var upload = multer({ dest: "../../../app/public/", storage: storage });
@@ -15,11 +15,13 @@ router.get(
 
 router.post(
     "/sign-in",
+    validator.validateCredentialsData,
     userController.signIn,
 );
 
 router.post(
     "/sign-up",
+    validator.validateCredentialsData,
     userController.signUp,
 );
 
@@ -118,9 +120,12 @@ router.post(
 );
 router.post("/sign-out", Authenticate, userController.signOut);
 
+
+//-----------------------------------------------------------------------------------------------
+
 router.post(
     "/forgot-password",
-    // validator
+    // validator.validateEmaillData,
     userController.forgotPassword
 );
 

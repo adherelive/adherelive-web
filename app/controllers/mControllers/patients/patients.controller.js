@@ -257,7 +257,7 @@ class MPatientController extends Controller {
 
   getPatientCarePlanDetails = async (req, res) => {
     try {
-      const { patientId: patient_id = 1 } = req.params;
+      const { id: patient_id = 1 } = req.params;
       const { userDetails: {userId} = {} } = req;
 
       let show = false;
