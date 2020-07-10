@@ -93,6 +93,7 @@ class MobileAppointmentController extends Controller {
                 end_time,
                 details: {
                     treatment_id,
+                    reason
                 },
             };
 
