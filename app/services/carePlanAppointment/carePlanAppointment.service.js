@@ -63,9 +63,7 @@ class CarePlanAppointmentService {
 
     addCarePlanAppointment = async data => {
         try {
-            const carePlanAppointment = await CarePlanAppointments.create(data, {
-                include: CarePlan
-            });
+            const carePlanAppointment = await CarePlanAppointments.create(data);
             return carePlanAppointment;
         } catch(error) {
             throw error;

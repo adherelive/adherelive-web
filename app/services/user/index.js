@@ -17,7 +17,7 @@ export default class User {
         return this._data.user_id;
     }
 
-    getCategory() {
+    getCategory = () => {
         return this._data.category;
     }
 

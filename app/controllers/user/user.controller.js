@@ -281,7 +281,8 @@ class UserController extends Controller {
         const dataToSend = {
           users: {
             [apiUserDetails.getUserId()]: {
-              ...apiUserDetails.getBasicInfo()
+              ...apiUserDetails.getBasicInfo(),
+              ...await apiUserDetails.getPermissions()
             }
           },
           auth_user: apiUserDetails.getUserId(),

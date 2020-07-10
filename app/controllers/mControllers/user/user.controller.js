@@ -107,7 +107,8 @@ class MobileUserController extends Controller {
               [apiUserDetails.getId()]: {
                 ...apiUserDetails.getBasicInfo()
               }
-            }
+            },
+            ...await apiUserDetails.getPermissions()
           },
           "Initial data retrieved successfully"
         );
@@ -116,7 +117,7 @@ class MobileUserController extends Controller {
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.getMessage());
+      return this.raiseServerError(res, 500, error, error.message);
     }
   };
 
