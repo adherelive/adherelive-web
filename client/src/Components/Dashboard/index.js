@@ -45,6 +45,8 @@ class Dashboard extends Component {
         const {formatMessage} = this;
         const {missed_report = []} = graphs || {};
 
+        console.log("3897127312893 missed_report --> ", missed_report);
+
         const chartBlocks = missed_report.map(report => {
             const {id, data} = report || {};
             const {total, critical} = data || {};

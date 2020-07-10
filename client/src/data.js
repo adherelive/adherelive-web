@@ -7,28 +7,28 @@ export const AUTH_INITIAL_STATE = {
 export const GRAPH_INITIAL_STATE = {
   missed_report: [
     {
-      id: "no_adherence",
+      id: "1",
       data: {
         total: "119",
         critical: "90"
       }
     },
     {
-      id: "no_medication",
+      id: "2",
       data: {
         total: "119",
         critical: "90"
       }
     },
     {
-      id: "no_appointment",
+      id: "3",
       data: {
         total: "119",
         critical: "90"
       }
     },
     {
-      id: "no_action",
+      id: "4",
       data: {
         total: "119",
         critical: "90"
