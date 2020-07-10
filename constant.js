@@ -137,18 +137,18 @@ export const RESOURCE = {
   PROGRAMS: "programs",
   SURVEYS: "surveyS"
 };
-
-export const PERMISSIONS = {
-  CREATE: "create",
-  UPDATE: "update",
-  VIEW: "view",
-  INVITE: "invite",
-  CANCEL: "cancel",
-  VERIFY: "verify",
-  SEND: "send",
-  END: "end",
-  DISCHARGE: "discharge"
-};
+//
+// export const PERMISSIONS = {
+//   CREATE: "create",
+//   UPDATE: "update",
+//   VIEW: "view",
+//   INVITE: "invite",
+//   CANCEL: "cancel",
+//   VERIFY: "verify",
+//   SEND: "send",
+//   END: "end",
+//   DISCHARGE: "discharge"
+// };
 
 export const GRANTS = {
   PROGRAM: {
@@ -355,6 +355,8 @@ export const DB_TABLES = {
   TREATMENTS: "treatments",
   SEVERITY: "severity",
   USER_PREFERENCES: "user_preferences",
+  PERMISSIONS: "permissions",
+  USER_CATEGORY_PERMISSIONS: "user_category_permissions"
 };
 
 export const ARTICLE_TYPE = {
@@ -558,4 +560,16 @@ export const CHART_DETAILS = {
     critical: 10,
     total: 60
   },
+};
+
+export const PERMISSIONS = {
+  ADD_PATIENT: "ADD_PATIENT",
+
+  ADD_APPOINTMENT: "ADD_APPOINTMENT",
+  EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
+
+  ADD_MEDICATION: "ADD_MEDICATION",
+  EDIT_MEDICATION: "EDIT_MEDICATION",
+
+  ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE"
 };
