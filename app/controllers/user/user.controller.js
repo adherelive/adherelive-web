@@ -249,11 +249,11 @@ class UserController extends Controller {
         return this.raiseClientError(res, 422, user, "user does not exists");
       }
 
-      let verified = user.get("verified");
-
-      if (!verified) {
-        return this.raiseClientError(res, 401, "user account not verified");
-      }
+      // let verified = user.get("verified");
+      //
+      // if (!verified) {
+      //   return this.raiseClientError(res, 401, "user account not verified");
+      // }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
       const passwordMatch = await bcrypt.compare(
@@ -274,16 +274,16 @@ class UserController extends Controller {
           }
         );
 
-        const apiUserDetails = await UserWrapper(user.getBasicInfo);
+        const apiUserDetails = await UserWrapper(user.get());
 
-        console.log('ID OF USERRRRRRRR,');
+        console.log('ID OF USERRRRRRRR,', apiUserDetails);
 
         const dataToSend = {
           users: {
             [apiUserDetails.getUserId()]: {
               ...apiUserDetails.getBasicInfo(),
-              ...await apiUserDetails.getPermissions()
-            }
+            },
+            ...await apiUserDetails.getPermissions()
           },
           auth_user: apiUserDetails.getUserId(),
           auth_category: apiUserDetails.getCategory()

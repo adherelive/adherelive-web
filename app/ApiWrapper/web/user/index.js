@@ -37,7 +37,7 @@ class UserWrapper extends BaseUser {
   getPermissions = async () => {
       const {getCategory} = this;
       try {
-          const permissionsData = await userPermissionService.getPermissionsByData(getCategory());
+          const permissionsData = await userPermissionService.getPermissionsByData({category: getCategory()});
           let permissionData = [];
           permissionsData.forEach(permission => {
               const {type} = permission || {};
