@@ -343,7 +343,7 @@ class MobileAppointmentController extends Controller {
             appointment_data
           );
     
-          const updatedAppointmentDetails = await appointmentService.getAppointmentById(id);
+          const updatedAppointmentDetails = await appointmentService.getAppointmentByData({id});
     
           const appointmentApiData = await MAppointmentWrapper(updatedAppointmentDetails);
     

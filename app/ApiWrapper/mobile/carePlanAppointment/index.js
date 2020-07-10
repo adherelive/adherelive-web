@@ -30,7 +30,7 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
     getReferenceInfo = async () => {
         const {getBasicInfo, getCarePlanAppointmentId, getAppointmentId, getCarePlanId, _data} = this;
 
-        const appointment = await appointmentService.getAppointmentById(getAppointmentId());
+        const appointment = await appointmentService.getAppointmentByData({id: getAppointmentId()});
         const appointmentData = await AppointmentWrapper(appointment);
 
         const carePlan = await carePlanService.getCarePlanById(getCarePlanId());
