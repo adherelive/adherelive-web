@@ -10,7 +10,7 @@ import medicineRouter from "./medicines";
 import medicationRouter from "./medications";
 import carePlanRouter from "./carePlans";
 import adminRouter from "./admin";
-import graphRouter from "./graphs";
+import chartRouter from "./graphs";
 
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
@@ -83,6 +83,6 @@ router.use("/patients", patientRouter);
 router.use("/medicines", medicineRouter);
 router.use("/carePlans", carePlanRouter);
 router.use("/admin", adminRouter);
-router.use("/graphs", graphRouter);
+router.use("/charts", chartRouter);
 
 module.exports = router;

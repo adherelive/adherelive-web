@@ -353,7 +353,8 @@ export const DB_TABLES = {
   CARE_PLAN_APPOINTMENTS: 'care_plan_appointments',
   DOCTOR_REGISTRATIONS: "doctor_registrations",
   TREATMENTS: "treatments",
-  SEVERITY: "severity"
+  SEVERITY: "severity",
+  USER_PREFERENCES: "user_preferences",
 };
 
 export const ARTICLE_TYPE = {
@@ -522,26 +523,38 @@ export const CHART_LIMIT = 4;
 
 export const CHART_DETAILS = {
   [NO_ADHERENCE]: {
+    type: "no_adherence",
+    name: "Non Adherence",
     critical: 19,
     total: 100
   },
   [NO_MEDICATION]: {
+    type: "no_medication",
+    name: "Non Medication",
     critical: 25,
     total: 80
   },
   [NO_APPOINTMENT]: {
+    type: "no_appointment",
+    name: "Non Appointment",
     critical: 5,
     total: 40
   },
   [NO_ACTION]: {
+    type: "no_action",
+    name: "Non Action",
     critical: 30,
     total: 120
   },
   [TEST_ONE]: {
+    type: "test_one",
+    name: "Test One",
     critical: 10,
     total: 50
   },
   [TEST_TWO]: {
+    type: "test_two",
+    name: "Test Two",
     critical: 10,
     total: 60
   },

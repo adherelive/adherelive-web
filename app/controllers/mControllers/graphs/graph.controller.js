@@ -1,10 +1,10 @@
-import Controller from "../";
-import Log from "../../../libs/log";
-import {CHART_DETAILS, CHART_LIMIT} from "../../../constant";
+import Controller from "../../";
+import Log from "../../../../libs/log";
+import {CHART_DETAILS, CHART_LIMIT} from "../../../../constant";
 
-import userPreferenceService from "../../services/userPreferences/userPreference.service";
+import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
-import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
+import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
 
 const Logger = new Log("WEB GRAPH CONTROLLER");
 
@@ -52,12 +52,10 @@ class GraphController extends Controller {
 
             const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
             const userPreference = await UserPreferenceWrapper(userPreferenceData);
-
             Logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
             if(userPreference.getChartDetails().includes(id)) {
                 return this.raiseClientError(res, 422, {}, "Chart Type already added")
             }
-
 
             const updatedChart = [
                 ...userPreference.getChartDetails(),

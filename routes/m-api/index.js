@@ -8,6 +8,8 @@ import mDoctorRouter from "./doctors";
 import mMedicineRouter from "./medicine";
 import mMedicationRouter from "./medications";
 import mCarePlanRouter from "./carePlans";
+import chartRouter from "./graphs";
+
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
 // import twilioRouter from "./twilio";
@@ -67,5 +69,6 @@ router.use("/patients", mPatientRouter);
 router.use("/doctors", mDoctorRouter);
 router.use("/care-plans", mCarePlanRouter);
 router.use("/medicines", mMedicineRouter);
+router.use("/charts", chartRouter);
 
 module.exports = router;

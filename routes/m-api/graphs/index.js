@@ -1,6 +1,6 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
-import GraphController from "../../../app/controllers/graphs/graph.controller";
+import GraphController from "../../../app/controllers/mControllers/graphs/graph.controller";
 
 import {param} from "express-validator";
 
