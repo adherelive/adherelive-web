@@ -89,7 +89,10 @@ class EditAppointment extends Component {
           reason
         };
 
-        if (moment(end_time).isBefore(moment(start_time))) {
+        if ( moment(date).isSame(moment(), 'day')  && moment(start_time).isBefore(moment())) {
+          message.error('Cannot create appointment for past time.')
+        }
+        else if (moment(end_time).isBefore(moment(start_time))) {
           message.error('Please select valid timings for appointment.')
         } else if (editAppointment) {
           editAppointment(data);
@@ -243,7 +246,11 @@ render() {
       <Drawer
         placement="right"
         // closable={false}
-
+        headerStyle={{
+          position: "sticky",
+          zIndex: "9999",
+          top: "0px"
+      }}
         destroyOnClose={true}
         onClose={editAppointment || addAppointment ? hideAppointment : onClose}
         visible={editAppointment || addAppointment ? appointmentVisible : visible} // todo: change as per prop -> "visible", -- WIP --

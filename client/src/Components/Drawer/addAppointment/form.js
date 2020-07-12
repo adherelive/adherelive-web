@@ -228,7 +228,7 @@ class AddAppointmentForm extends Component {
             initialValue: getInitialValue(),
           })(
             <Select
-              className="user-select"
+              className="user-select drawer-select"
               // onSearch={fetchPatients}
               placeholder={getPatientName()}
               notFoundContent={fetchingPatients ? <Spin size="small" /> : null}

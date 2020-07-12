@@ -3,8 +3,8 @@ import { injectIntl, FormattedMessage } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { SEVERITY_STATUS, MEDICINE_TYPE } from "../../../constant";
-import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin,message } from "antd";
+import { SEVERITY_STATUS, MEDICINE_TYPE, GENDER } from "../../../constant";
+import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin, message } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -71,6 +71,8 @@ const columns_medication = [
     title: "Medicine",
     dataIndex: "medicine",
     key: "medicine",
+    width: '30%',
+    ellipsis: true,
   },
   {
     title: "In take",
@@ -99,21 +101,26 @@ const columns_appointments = [
     title: "Organizer",
     dataIndex: "organizer",
     key: "organizer",
+    width:'20%'
   },
   {
     title: "Date",
     dataIndex: "date",
     key: "date",
+    width:'20%'
   },
   {
     title: "Timing",
     dataIndex: "time",
     key: "time",
+    width:'22%'
   },
   {
     title: "Description",
     dataIndex: "description",
     key: "description",
+    width:'30%',
+    ellipsis: true,
   },
   {
     title: "",
@@ -185,7 +192,7 @@ const PatientCard = ({
   patient_first_name = "Patient one",
   patient_middle_name,
   patient_last_name,
-  gender = "M",
+  gender = 'm',
   patient_age = "--",
   patient_id = "123456",
   patient_phone_number,
@@ -200,7 +207,7 @@ const PatientCard = ({
         src={patient_display_picture}
       />
       <div className="patient-name mt8 mr0 mb0 ml0">
-        {patient_first_name} {patient_middle_name} {patient_last_name} ({gender}{" "}
+        {patient_first_name} {patient_middle_name} {patient_last_name} ({GENDER[gender].view}{" "}
         {patient_age})
       </div>
       <div className="patient-id mt6 mr0 mb0 ml0 ">PID: {patient_id}</div>
@@ -209,8 +216,8 @@ const PatientCard = ({
         <div>{patient_phone_number}</div>
       </div>
       <div className="patient-email-id mt8 mr0 mb0 ml0 flex direction-row justify-center align-center">
-        <MailOutlined className="dark-sky-blue mr8" />
-        <div>{patient_email_id}</div>
+        {patient_email_id && (<MailOutlined className="dark-sky-blue mr8" />)}
+        {patient_email_id && (<div>{patient_email_id}</div>)}
       </div>
       <div className="action-buttons flex">
         <div className="edit-button p10">
@@ -541,7 +548,7 @@ class PatientDetails extends Component {
       const { status = false } = response;
       if (status) {
         this.onCloseTemplate();
-         
+
         message.success("Care Plan updated successfully.");
         getMedications(patient_id).then(() => {
           getAppointments(patient_id).then(() => {
@@ -616,7 +623,7 @@ class PatientDetails extends Component {
     console.log("192387123762 ", treatment_id, severity_id, condition_id, care_plans[carePlanId]);
 
     const {
-      basic_info: { first_name, middle_name, last_name, user_id, age },
+      basic_info: { first_name, middle_name, last_name, user_id, age, gender },
     } = patients[patient_id] || {};
 
     const { basic_info: { mobile_number, email } = {} } = users[user_id] || {};
@@ -624,7 +631,7 @@ class PatientDetails extends Component {
     const {
       close,
       user_details: {
-        gender,
+        // gender,
         age: patient_age,
         phone_number: patient_phone_number = "--",
         email_id: patient_email_id = "test-patient@mail.com",

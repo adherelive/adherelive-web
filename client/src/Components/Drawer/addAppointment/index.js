@@ -38,10 +38,10 @@ class AddAppointment extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { addCarePlanAppointment, getAppointments, payload: { patient_id }, patients ,carePlanId} = this.props;
+    const { addCarePlanAppointment, getAppointments, payload: { patient_id }, patients, carePlanId } = this.props;
     const { formRef = {}, formatMessage } = this;
 
-    const {basic_info: {user_id} = {}} = patients[patient_id] || {};
+    const { basic_info: { user_id } = {} } = patients[patient_id] || {};
     const {
       props: {
         form: { validateFields },
@@ -72,40 +72,43 @@ class AddAppointment extends Component {
           end_time,
           reason,
           description,
-          treatment_id:treatment,
+          treatment_id: treatment,
           reason
         };
-        if(moment(end_time).isBefore(moment(start_time))){
+        if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
+          message.error('Cannot create appointment for past time.')
+        }
+        else if (moment(end_time).isBefore(moment(start_time))) {
           message.error('Please select valid timings for appointment.')
-        }else{
-        try {
-          const response = await addCarePlanAppointment(data,carePlanId);
-          const {
-            status,
-            statusCode: code,
-            payload: { message: errorMessage = "", error, error: { error_type = "" } = {} },
-          } = response || {};
+        } else {
+          try {
+            const response = await addCarePlanAppointment(data, carePlanId);
+            const {
+              status,
+              statusCode: code,
+              payload: { message: errorMessage = "", error, error: { error_type = "" } = {} },
+            } = response || {};
 
-          if (code === 422 && error_type === "slot_present") {
-            message.warn(
-              `${errorMessage} range: ${moment(start_time).format(
-                "LT"
-              )} - ${moment(end_time).format("LT")}`
-            );
-          } else if (status === true) {
-            message.success(formatMessage(messages.add_appointment_success));
-            // getAppointments(patient_id);
-          } else {
-            message.warn(errorMessage);
+            if (code === 422 && error_type === "slot_present") {
+              message.warn(
+                `${errorMessage} range: ${moment(start_time).format(
+                  "LT"
+                )} - ${moment(end_time).format("LT")}`
+              );
+            } else if (status === true) {
+              message.success(formatMessage(messages.add_appointment_success));
+              // getAppointments(patient_id);
+            } else {
+              message.warn(errorMessage);
+            }
+
+            console.log("add appointment response -----> ", response);
+          } catch (error) {
+            console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }
-
-          console.log("add appointment response -----> ", response);
-        } catch (error) {
-          console.log("ADD APPOINTMENT UI ERROR ---> ", error);
         }
       }
-      }
-      
+
     });
   };
 
@@ -131,7 +134,7 @@ class AddAppointment extends Component {
     const { disabledSubmit } = this.state;
 
 
-    console.log('STATE OF DRAWER==========>IN APPOINTMENT',editAppointment ? appointmentVisible : visible, visible,appointmentVisible,hideAppointment, editAppointment);
+    console.log('STATE OF DRAWER==========>IN APPOINTMENT', editAppointment ? appointmentVisible : visible, visible, appointmentVisible, hideAppointment, editAppointment);
     const {
       onClose,
       formatMessage,
@@ -154,6 +157,11 @@ class AddAppointment extends Component {
         <Drawer
           placement="right"
           // closable={false}
+          headerStyle={{
+            position: "sticky",
+            zIndex: "9999",
+            top: "0px"
+          }}
           onClose={editAppointment ? hideAppointment : onClose}
           visible={editAppointment ? appointmentVisible : visible}
           width={'35%'}

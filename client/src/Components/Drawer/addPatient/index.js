@@ -23,6 +23,7 @@ import japan from '../../../Assets/images/japan.png';
 import china from '../../../Assets/images/china.png';
 import switzerland from '../../../Assets/images/switzerland.png';
 import france from '../../../Assets/images/france.png';
+import backArrow from '../../../Assets/images/arrow-left-circle-simple-line-icons@3x.png';
 import "react-datepicker/dist/react-datepicker.css";
 const { Option } = Select;
 
@@ -103,45 +104,46 @@ class PatientDetailsDrawer extends Component {
         this.setState({ gender: value });
     };
 
-    setDOB = (date) => {
-
-        this.setState({ date_of_birth: date });
+    setDOB = e=>{
+    // (date) => {
+        console.log('DATEEEEEEEEEEE',e.target.value,e);
+        this.setState({ date_of_birth: moment(e.target.value) });
     }
 
-    getTreatmentOption =()=>{
-        let {treatments={}}=this.props;
-        let newTreatments=[];
-        for (let treatment of Object.values(treatments)){
-            let{basic_info:{id=0,name=''}={}}=treatment;
+    getTreatmentOption = () => {
+        let { treatments = {} } = this.props;
+        let newTreatments = [];
+        for (let treatment of Object.values(treatments)) {
+            let { basic_info: { id = 0, name = '' } = {} } = treatment;
             newTreatments.push(<Option key={id} value={id}>
-            {name}
-          </Option>)
+                {name}
+            </Option>)
         }
         return newTreatments;
     }
 
 
-    getSeverityOption =()=>{
-        let {severity={}}=this.props;
-        let newSeverity=[];
-        for (let sev of Object.values(severity)){
-            let{basic_info:{id=0,name=''}={}}=sev;
+    getSeverityOption = () => {
+        let { severity = {} } = this.props;
+        let newSeverity = [];
+        for (let sev of Object.values(severity)) {
+            let { basic_info: { id = 0, name = '' } = {} } = sev;
             newSeverity.push(<Option key={id} value={id}>
-            {name}
-          </Option>)
+                {name}
+            </Option>)
         }
         return newSeverity;
     }
 
 
-    getConditionOption =()=>{
-        let {conditions={}}=this.props;
-        let newConditions=[];
-        for (let condition of Object.values(conditions)){
-            let{basic_info:{id=0,name=''}={}}=condition;
+    getConditionOption = () => {
+        let { conditions = {} } = this.props;
+        let newConditions = [];
+        for (let condition of Object.values(conditions)) {
+            let { basic_info: { id = 0, name = '' } = {} } = condition;
             newConditions.push(<Option key={id} value={id}>
-            {name}
-          </Option>)
+                {name}
+            </Option>)
         }
         return newConditions;
     }
@@ -204,16 +206,16 @@ class PatientDetailsDrawer extends Component {
                 />
                 <div className='form-headings-ap'>Gender</div>
                 <div className='wp100 mt6 mb18 flex'>
-                    <div className={gender === MALE ? 'gender-selected' : 'gender-unselected'} onClick={this.setGender(MALE)}>M</div>
+                    <div className={gender === MALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(MALE)}>M</div>
 
-                    <div className={gender === FEMALE ? 'gender-selected' : 'gender-unselected'} onClick={this.setGender(FEMALE)}>F</div>
+                    <div className={gender === FEMALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(FEMALE)}>F</div>
 
-                    <div className={gender === OTHER ? 'gender-selected' : 'gender-unselected'} onClick={this.setGender(OTHER)}>O</div>
+                    <div className={gender === OTHER ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(OTHER)}>O</div>
                 </div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Date Of Birth<div className="star-red">*</div></div>
                 {/* <DatePicker className='form-inputs-ap' onChange={this.setDOB} /> */}
-                <DatePicker
+                {/* <DatePicker
                     className='form-inputs-dp'
                     placeholder='Select Date Of Birth'
                     selected={date_of_birth}
@@ -222,7 +224,9 @@ class PatientDetailsDrawer extends Component {
                     showMonthDropdown
                     showYearDropdown
                     dropdownMode="select"
-                />
+                /> */}
+                <Input className={"form-inputs-ap"} type='date' 
+                    onChange={this.setDOB}/>
                 <div className='form-category-headings-ap'>Care Plan</div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
@@ -233,9 +237,9 @@ class PatientDetailsDrawer extends Component {
                     onSelect={this.setTreatment}
                     // onDeselect={handleDeselect}
                     suffixIcon={null}
-                  >
+                >
                     {this.getTreatmentOption()}
-                  </Select>
+                </Select>
                 <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
                 <Select
                     className="form-inputs-ap drawer-select"
@@ -244,9 +248,9 @@ class PatientDetailsDrawer extends Component {
                     onSelect={this.setSeverity}
                     // onDeselect={handleDeselect}
                     suffixIcon={null}
-                  >
+                >
                     {this.getSeverityOption()}
-                  </Select>
+                </Select>
                 <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
                 <Select
                     className="form-inputs-ap drawer-select"
@@ -254,9 +258,9 @@ class PatientDetailsDrawer extends Component {
                     onSelect={this.setCondition}
                     // onDeselect={handleDeselect}
                     suffixIcon={null}
-                  >
+                >
                     {this.getConditionOption()}
-                  </Select>
+                </Select>
             </div>
         );
 
@@ -265,6 +269,8 @@ class PatientDetailsDrawer extends Component {
 
     validateData = () => {
         const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+        let age = date_of_birth?moment().diff(moment(date_of_birth),'years'):-1;
+
         if (!prefix) {
             message.error('Please select a prefix.')
             return false;
@@ -272,7 +278,12 @@ class PatientDetailsDrawer extends Component {
             message.error('Please enter valid mobile number.')
             return false;
         } else if (!date_of_birth) {
-            message.error('Please select  Date of Birth .')
+            message.error('Please enter  Date of Birth .')
+            return false;
+        } 
+        else if (age<0 || age>100 || moment(date_of_birth).isAfter(moment())) {  //handle case of newBorn
+            
+            message.error('Please enter a valid Date of Birth .')
             return false;
         }
         else if (!treatment) {
@@ -295,7 +306,7 @@ class PatientDetailsDrawer extends Component {
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
-            submit({ mobile_number, name, gender, date_of_birth, treatment_id:treatment, severity_id:severity, condition_id:condition, prefix })
+            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix })
         }
     }
 
@@ -322,6 +333,12 @@ class PatientDetailsDrawer extends Component {
                     title="Add Patient"
                     placement="right"
                     // closable={false}
+                    // closeIcon={<img src={backArrow} />}
+                    headerStyle={{
+                        position: "sticky",
+                        zIndex: "9999",
+                        top: "0px"
+                    }}
                     onClose={onClose}
                     visible={visible} // todo: change as per state, -- WIP --
                     width={400}

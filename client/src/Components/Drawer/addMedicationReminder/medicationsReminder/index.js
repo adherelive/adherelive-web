@@ -15,6 +15,7 @@ import Footer from "../../footer";
 import startTimeField from "../common/startTime";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
+// import backArrow from '../../../Assets/images/arrow-left-circle-simple-line-icons@3x.png';
 import repeatDaysField from "../common/selectedDays";
 import { getInitialData } from "../../../../Helper/urls/auth";
 
@@ -163,24 +164,27 @@ class AddMedicationReminder extends Component {
           };
 
         }
+        if (!medicine_id || !quantity || !strength || !unit || !when_to_take || !startDate || !endDate) {
 
-        if(moment(endDate).isBefore(moment(startDate))){
-          message.error('Please select valid dates for medication.')
-        }else{
-        try {
-          console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR',carePlanId);
-          const response = await addCarePlanMedicationReminder(data_to_submit,carePlanId);
-          const { status, payload: { message: msg } = {} } = response;
-          if (status === true) {
-            message.success(msg);
-            // getMedications(patient_id);
-          } else {
-            message.error(msg);
-          }
-        } catch (error) {
-          console.log("add medication reminder ui error -----> ", error);
+          message.error('Please fill all details.')
         }
-      }
+        else if (moment(endDate).isBefore(moment(startDate))) {
+          message.error('Please select valid dates for medication')
+        } else {
+          try {
+            console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR', carePlanId);
+            const response = await addCarePlanMedicationReminder(data_to_submit, carePlanId);
+            const { status, payload: { message: msg } = {} } = response;
+            if (status === true) {
+              message.success(msg);
+              // getMedications(patient_id);
+            } else {
+              message.error(msg);
+            }
+          } catch (error) {
+            console.log("add medication reminder ui error -----> ", error);
+          }
+        }
       }
     });
   };
@@ -206,6 +210,18 @@ class AddMedicationReminder extends Component {
         width={'35%'}
         onClose={onClose}
         visible={visible}
+
+        // closeIcon={<img src={backArrow} />}
+        headerStyle={{
+          position: "sticky",
+          zIndex: "9999",
+          top: "0px"
+        }}
+        headerStyle={{
+          position: "sticky",
+          zIndex: "9999",
+          top: "0px"
+        }}
         destroyOnClose={true}
         className="ant-drawer"
         title={formatMessage(messages.title)}

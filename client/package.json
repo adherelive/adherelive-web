@@ -24,6 +24,7 @@
     "react-app-rewire-less": "^2.1.3",
     "react-app-rewire-react-intl": "^2.4.0",
     "react-app-rewired": "1.6.2",
+    "react-chartjs-2": "^2.9.0",
     "react-datepicker": "^3.0.0",
     "react-dom": "^16.11.0",
     "react-facebook-login": "^4.1.1",

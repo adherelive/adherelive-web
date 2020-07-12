@@ -54,7 +54,6 @@ class ClinicRegister extends Component {
 
         let locationToSave = address ? address : manual;
         handleOk(locationToSave);
-        this.myRef.current && this.clearInput();
         this.setState({
             address: '',
             pincode: '',
@@ -74,7 +73,6 @@ class ClinicRegister extends Component {
         const { handleCancel } = this.props;
 
         handleCancel();
-        this.myRef.current && this.clearInput();
         this.setState({
             address: '',
             pincode: '',

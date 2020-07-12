@@ -112,7 +112,7 @@ class EditMedicationReminder extends Component {
       editMedication,
       payload: { id: medication_id, patient_id } = {},
     } = this.props;
-    let pId=patientId?patientId:patient_id;
+    let pId = patientId ? patientId : patient_id;
 
     const { formRef = {}, formatMessage } = this;
     const {
@@ -150,16 +150,16 @@ class EditMedicationReminder extends Component {
           [startDateField.field_name]:
             startDate && startDate !== null
               ? startDate
-                  .clone()
-                  .startOf("day")
-                  .toISOString()
+                .clone()
+                .startOf("day")
+                .toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
               ? endDate
-                  .clone()
-                  .endOf("day")
-                  .toISOString()
+                .clone()
+                .endOf("day")
+                .toISOString()
               : endDate,
         };
 
@@ -170,28 +170,32 @@ class EditMedicationReminder extends Component {
             [repeatDaysField.field_name]: repeatDays.split(","),
           };
         }
-        if(moment(endDate).isBefore(moment(startDate))){
+        if (!medicine_id || !quantity || !strength || !unit || !when_to_take || !startDate || !endDate) {
+           
+          message.error('Please fill all details.')
+        }
+        else if (moment(endDate).isBefore(moment(startDate))) {
           message.error('Please select valid dates for medication')
-        }else if(editMedication){
+        } else if (editMedication) {
           editMedication(data_to_submit);
-        }else if(addMedication){
+        } else if (addMedication) {
 
           addMedication(data_to_submit);
-        }else{
-        try {
-          const response = await updateMedicationReminder(data_to_submit);
-          const { status, payload: { message: msg } = {} } = response;
-          if (status === true) {
-            message.success(msg);
-            getMedications(pId);
-          } else {
-            message.error(msg);
+        } else {
+          try {
+            const response = await updateMedicationReminder(data_to_submit);
+            const { status, payload: { message: msg } = {} } = response;
+            if (status === true) {
+              message.success(msg);
+              getMedications(pId);
+            } else {
+              message.error(msg);
+            }
+          } catch (error) {
+            console.log("add medication reminder ui error -----> ", error);
           }
-        } catch (error) {
-          console.log("add medication reminder ui error -----> ", error);
         }
-      }
-      }else{
+      } else {
         message.error(formatMessage(messages.fill_all_details));
       }
     });
@@ -227,47 +231,47 @@ class EditMedicationReminder extends Component {
     confirm({
       title: `Are you sure you want to delete medication of ${name} for ${first_name} ${
         middle_name ? `${middle_name} ` : ""
-      }${last_name ? last_name : ""}?`,
+        }${last_name ? last_name : ""}?`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.setState({ loading: true });
-        const { deleteMedication, getMedications,getPatientCarePlanDetails } = this.props;
+        const { deleteMedication, getMedications, getPatientCarePlanDetails } = this.props;
         const response = await deleteMedication(id);
-        const {status} = response || {};
-        if(status === true) {
+        const { status } = response || {};
+        if (status === true) {
           getPatientCarePlanDetails(patient_id);
           getMedications(patient_id);
         }
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading,deleteMedicationOfTemplate, hideMedication,addMedication} = this.props;
-    console.log('HIDE MEDICATIONNN',hideMedication,addMedication);
-    if(addMedication){
-      return(
+    const { loading, deleteMedicationOfTemplate, hideMedication, addMedication } = this.props;
+    console.log('HIDE MEDICATIONNN', hideMedication, addMedication);
+    if (addMedication) {
+      return (
         <Button onClick={hideMedication} style={{ marginRight: 8 }}>
-        Cancel
-    </Button>
+          Cancel
+        </Button>
       );
     }
 
     return (
-       <Button
-      type={"danger"}
-      ghost
-      className="fs14 no-border style-delete"
-      onClick={deleteMedicationOfTemplate?deleteMedicationOfTemplate:handleDelete}
-      loading={loading}
-    >
-      <div className="flex align-center delete-text">
-        <div className="ml4">Delete</div>
-      </div>
-    </Button>
-     
+      <Button
+        type={"danger"}
+        ghost
+        className="fs14 no-border style-delete"
+        onClick={deleteMedicationOfTemplate ? deleteMedicationOfTemplate : handleDelete}
+        loading={loading}
+      >
+        <div className="flex align-center delete-text">
+          <div className="ml4">Delete</div>
+        </div>
+      </Button>
+
     );
   };
 
@@ -299,17 +303,22 @@ class EditMedicationReminder extends Component {
     return (
       <Drawer
         width={"35%"}
-        onClose={editMedication||addMedication?hideMedication:onClose}
-        visible={editMedication ||addMedication?medicationVisible:visible}
+        onClose={editMedication || addMedication ? hideMedication : onClose}
+        visible={editMedication || addMedication ? medicationVisible : visible}
         destroyOnClose={true}
+        headerStyle={{
+          position: "sticky",
+          zIndex: "9999",
+          top: "0px"
+      }}
         className="ant-drawer"
-        title={editMedication?formatMessage(messages.medication):addMedication?'Add Medication': formatMessage(messages.title)}
+        title={editMedication ? formatMessage(messages.medication) : addMedication ? 'Add Medication' : formatMessage(messages.title)}
       >
         <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
         <Footer
           className="flex justify-space-between"
           onSubmit={handleSubmit}
-          onClose={editMedication ||addMedication?hideMedication:onClose}
+          onClose={editMedication || addMedication ? hideMedication : onClose}
           submitText={formatMessage(messages.update_button_text)}
           submitButtonProps={{}}
           cancelComponent={getDeleteButton()}

@@ -244,6 +244,23 @@ class EditAppointmentForm extends Component {
       start_date =Date?moment(Date): res === 'Surgery' ? moment().add('days', 18) : moment().add('days', 14);
 
     }
+
+    if(!start_time){
+      let minutesToAdd = 30 - (moment().minutes()) % 30;
+      start_time=moment().add('minutes',minutesToAdd);
+    }
+
+    if(!end_time){
+      let minutesToAdd = 30 - (moment().minutes()) % 30;
+      end_time=moment().add('minutes',minutesToAdd+30);
+    }
+
+    if(!start_date){
+      let minutesToAdd = 30 - (moment().minutes()) % 30;
+      start_date=moment().add('days',2)
+    }
+
+
     console.log("1289313192 ",reason,description, start_time,end_time,start_date,appointmentData);
 
     let fieldsError = {};
@@ -259,7 +276,7 @@ class EditAppointmentForm extends Component {
             initialValue: pId,
           })(
             <Select
-              className="user-select"
+              className="user-select drawer-select"
               // onSearch={fetchPatients}
               placeholder={getPatientName()}
               notFoundContent={fetchingPatients ? <Spin size="small" /> : null}
@@ -372,7 +389,7 @@ class EditAppointmentForm extends Component {
           className="full-width ant-date-custom"
         >
           {getFieldDecorator(TREATMENT, {
-            initialValue: treatment_id,
+            initialValue: treatment_id?treatment_id:null,
           })(
             // <Input
             //   autoFocus
@@ -380,7 +397,7 @@ class EditAppointmentForm extends Component {
             // />
             <Select
                     className="form-inputs-ap drawer-select"
-                    // autoComplete="off"
+                    autoComplete="off"
                     placeholder="Select Treatment"
                     // onSelect={this.setTreatment}
                     // onDeselect={handleDeselect}

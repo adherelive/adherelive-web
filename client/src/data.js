@@ -32,7 +32,21 @@ export const GRAPH_INITIAL_STATE = {
       data: {
         total: "119",
         critical: "90"
-      }
+      },
+    },
+    {
+      id: "active_patient",
+      data: {
+        total: "119",
+        critical: "90"
+      },
+    },
+    {
+      id: "critical_patient",
+      data: {
+        total: "119",
+        critical: "90"
+      },
     }
   ]
 };
