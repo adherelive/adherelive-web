@@ -48,26 +48,29 @@ class GraphController extends Controller {
     addGraphType = async (req, res) => {
         const {raiseServerError, raiseSuccess} = this;
         try {
-            const {params: {id} = {}, userDetails: {userId} = {}} = req;
+            // const {params: {id} = {}, userDetails: {userId} = {}} = req;
+            const {body: {chart_ids = []} = {}, userDetails: {userId} = {}} = req;
 
             const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
             const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
             Logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
-            if(userPreference.getChartDetails().includes(id)) {
-                return this.raiseClientError(res, 422, {}, "Chart Type already added")
-            }
 
+            // userPreference.getChartDetails().forEach(id => {
+            //     if(chart_ids.includes(id)) {
+            //         return this.raiseClientError(res, 422, {}, "Chart Type already added");
+            //     }
+            // });
 
             const updatedChart = [
-                ...userPreference.getChartDetails(),
-                id
+                // ...userPreference.getChartDetails(),
+                ...chart_ids
             ];
 
             const updatedDetails = {
                 ...userPreference.getAllDetails(),
                 charts: updatedChart
-            }
+            };
 
             const updateUserPreference = await userPreferenceService.updateUserPreferenceData({
                 details: updatedDetails
@@ -88,7 +91,7 @@ class GraphController extends Controller {
                         ...chartData
                     }
             },
-                "Chart added successfully");
+                "Charts added successfully");
         } catch(error) {
             Logger.debug("getAllGraphs 500 error ---> ", error);
             return raiseServerError(res);
