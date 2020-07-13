@@ -248,9 +248,11 @@ class PatientController extends Controller {
 
             let appointmentApiDetails = {};
             const appointments = await appointmentService.getAppointmentByData({id: appointment_ids});
-            for(const appointment of appointments) {
-                const appointmentData = await AppointmentWrapper(appointment);
-                appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+            if(appointments) {
+                for(const appointment of appointments) {
+                    const appointmentData = await AppointmentWrapper(appointment);
+                    appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+                }
             }
 
             const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanData.getCarePlanId());
@@ -288,85 +290,6 @@ class PatientController extends Controller {
                 medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
             }
 
-            // let cPdetails = carePlan.get('details')?carePlan.get('details'):{};
-            //
-            // let { shown = false } = cPdetails;
-            // let carePlanId = carePlan.get('id');
-            // let carePlanTemplateId = carePlan.get('care_plan_template_id');
-            // // let carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
-            // // let carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(carePlanId);
-            //
-            // let carePlanAppointmentIds = await getCarePlanAppointmentIds(carePlanId);
-            // let carePlanMedicationIds = await getCarePlanMedicationIds(carePlanId);
-            // let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
-            // const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-            //
-            // let carePlanApiData = {};
-            //
-            // carePlanApiData[
-            //     carePlanApiWrapper.getCarePlanId()
-            //     ] = { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, carePlanMedicationIds, carePlanAppointmentIds };
-            //
-            //
-            //
-            //
-            // let formattedTemplateMedications = [];
-            // let formattedTemplateAppointments = [];
-            // if (carePlanTemplateId) {
-            //   // templateMedications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanTemplateId);
-            //   // templateAppointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanTemplateId);
-            //   if (templateMedications.length) {
-            //     for (let medication of templateMedications) {
-            //
-            //       let newMedication = {};
-            //       newMedication.id = medication.get('id');
-            //       newMedication.schedule_data = medication.get('schedule_data');
-            //       newMedication.care_plan_template_id = medication.get('care_plan_template_id');
-            //       let medicineId = medication.get('medicine_id');
-            //       newMedication.medicine_id = medicineId;
-            //       let medicine = await medicineService.getMedicineById(medicineId);
-            //       // console.log("CARE PLAN OF PATIENTTTT===========>>>>>>>", medicine);
-            //       let medName = medicine.get('name');
-            //       let medType = medicine.get('type');
-            //       newMedication.medicine = medName;
-            //       newMedication.medicineType = medType;
-            //       formattedTemplateMedications.push(newMedication);
-            //     }
-            //   }
-            //
-            //   if (templateAppointments.length) {
-            //     for (let appointment of templateAppointments) {
-            //       let newAppointment = {};
-            //       newAppointment.id = appointment.get('id');
-            //       newAppointment.schedule_data = appointment.get('details');
-            //       newAppointment.reason = appointment.get('reason');
-            //       newAppointment.time_gap = appointment.get('time_gap');
-            //       newAppointment.care_plan_template_id = appointment.get('care_plan_template_id');
-            //       formattedTemplateAppointments.push(newAppointment);
-            //     }
-            //   }
-            // }
-            //
-            // let medicationsOfTemplate = formattedTemplateMedications;
-            // let appointmentsOfTemplate = formattedTemplateAppointments;
-            //
-            //
-            // let carePlanMedicationsExists = carePlanMedications ? !carePlanMedications.length : !carePlanMedications; //true if doesnot exist
-            // let carePlanAppointmentsExists = carePlanAppointments ? !carePlanAppointments.length : !carePlanAppointments; //true if doesnot exist
-            // if (carePlanTemplateId && carePlanMedicationsExists && carePlanAppointmentsExists && !shown) {
-            //   show = true;
-            // }
-            //
-            //
-            // console.log("CARE PLAN OF PATIENTTTT===========>>>>>>>", patient_id, carePlanId, shown
-            //     , carePlanMedications, carePlanAppointments
-            //     , show, carePlanTemplateId, carePlanMedicationsExists, carePlanAppointmentsExists);
-            // if (shown == false) {
-            //   let details = cPdetails;
-            //   details.shown = true;
-            //   let updatedCarePlan = await carePlanService.updateCarePlan({ details }, carePlanId);
-            // }
-
 
             return this.raiseSuccess(res, 200, {
                 // care_plans: { ...carePlanApiData },
@@ -403,6 +326,7 @@ class PatientController extends Controller {
             }, "Patient care plan details fetched successfully");
 
         } catch (error) {
+            Logger.debug("get careplan 500 error ---> ", error);
             console.log("GET PATIENT DETAILS ERROR --> ", error);
             return this.raiseServerError(res);
         }

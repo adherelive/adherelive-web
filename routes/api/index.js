@@ -11,6 +11,7 @@ import medicationRouter from "./medications";
 import carePlanRouter from "./carePlans";
 import adminRouter from "./admin";
 import chartRouter from "./graphs";
+import doctorRouter from "./doctors";
 
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
@@ -84,5 +85,6 @@ router.use("/medicines", medicineRouter);
 router.use("/carePlans", carePlanRouter);
 router.use("/admin", adminRouter);
 router.use("/charts", chartRouter);
+router.use("/doctors", doctorRouter);
 
 module.exports = router;
