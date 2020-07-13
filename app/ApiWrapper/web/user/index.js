@@ -1,5 +1,6 @@
 import BaseUser from "../../../services/user";
 import userPermissionService from "../../../services/userPermission/userPermission.service";
+import permissionService from "../../../services/permission/permission.service";
 
 class UserWrapper extends BaseUser {
   constructor(data) {
@@ -38,11 +39,22 @@ class UserWrapper extends BaseUser {
       const {getCategory} = this;
       try {
           const permissionsData = await userPermissionService.getPermissionsByData({category: getCategory()});
+          let permission_ids = [];
           let permissionData = [];
-          permissionsData.forEach(permission => {
-              const {type} = permission || {};
-              permissionsData.push(type);
-          });
+
+          for(const userPermission of permissionsData) {
+            const {permission_id} = userPermission || {};
+            permission_ids.push(permission_id);
+          }
+
+          const permissions = await permissionService.getPermissionsById(permission_ids);
+
+          for(const permission of permissions) {
+            const {type} = permission || {};
+            permissionData.push(type);
+          }
+
+          console.log("permissionsData1283713893781  ------------> ", permissionData, getCategory());
 
           return {
               permissions: permissionData

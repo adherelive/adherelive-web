@@ -15,10 +15,6 @@ const Permissions = database.define(
         type: {
             type: Sequelize.STRING(100),
         },
-        name: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
     },
     {
         underscored: true,

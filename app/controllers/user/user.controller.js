@@ -278,11 +278,19 @@ class UserController extends Controller {
 
         console.log('ID OF USERRRRRRRR,', apiUserDetails);
 
+        let permissions = {
+          permissions: []
+        };
+
+        if(apiUserDetails.isActivated()) {
+          permissions = await apiUserDetails.getPermissions();
+        }
+
         const dataToSend = {
           users: {
             [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
           },
-          ...await apiUserDetails.getPermissions(),
+          ...permissions,
           auth_user: apiUserDetails.getId(),
           auth_category: apiUserDetails.getCategory()
         };
