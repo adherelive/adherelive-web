@@ -325,7 +325,8 @@ class PatientController extends Controller {
                 },
                 medicines: {
                     ...medicineApiData
-                }
+                },
+                show: false
             }, "Patient care plan details fetched successfully");
 
         } catch (error) {
