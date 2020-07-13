@@ -2,6 +2,17 @@ import CarePlanMedication from "../../models/carePlanMedications";
 
 class CarePlanMedicationService {
 
+    getAllByData = async (data) => {
+        try {
+            const carePlanMedications = await CarePlanMedication.findAll({
+                where: data
+            });
+            return carePlanMedications;
+        } catch(error) {
+            throw error;
+        }
+    };
+
     getCarePlanMedicationByData = async (data) => {
         try {
             console.log("careplan data --> ", data);

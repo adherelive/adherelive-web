@@ -5,7 +5,7 @@ import { Doughnut, Line } from "react-chartjs-2";
 import { GRAPH_COLORS, CHART_TITLE } from "../../../constant";
 
 export default function donutGraph(props) {
-  const { id, data: graphContent, total } = props || {};
+  const { id, data: graphContent, total, title } = props || {};
   const { dark, light } = GRAPH_COLORS[id] || {};
   const { className } = GRAPH_COLORS[id] || {};
   console.log("234723", GRAPH_COLORS, dark, light, id);
@@ -36,7 +36,7 @@ export default function donutGraph(props) {
     <Fragment>
       <div className="w205 br5 pb6 flex-shrink-0 chart-box-shadow mb10 mr20 flex direction-column align-center relative">
         <div className="wp100">
-          <div className="ml10 mt20 fs16 fw600">{CHART_TITLE[id]}</div>
+          <div className="ml10 mt20 fs16 fw600">{title}</div>
         </div>
         <div className="w130 h130 mt20">
           <Doughnut

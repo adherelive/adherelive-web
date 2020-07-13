@@ -88,6 +88,7 @@ class ClinicRegister extends Component {
                 <div className='location-container'>
                     {
                         graphs.map(graph => {
+                            console.log('GRAPHSSSSSSSS 19273', selectedGraphs, graph, selectedGraphs.includes(graph));
                             return (
                                 <div className='flex justify-space-between wp100 mb8 mt4'>
                                     <div className='flex'>

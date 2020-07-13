@@ -153,7 +153,7 @@ class ClinicRegister extends Component {
                                                         <TimePicker
                                                             className='wp100'
                                                             value={timings[tKey].startTime ? timings[tKey].startTime : null}
-                                                            use12Hours minuteStep={15} format="HH:mm a"
+                                                            use12Hours minuteStep={15} format="hh:mm a"
                                                             onChange={this.setDayStartTime(day, tKey)}
                                                         />
                                                     </div>
@@ -169,7 +169,7 @@ class ClinicRegister extends Component {
                                                             <TimePicker
                                                                 className='wp100'
                                                                 value={timings[tKey].endTime ? timings[tKey].endTime : null}
-                                                                use12Hours minuteStep={15} format="HH:mm a"
+                                                                use12Hours minuteStep={15} format="hh:mm a"
                                                                 onChange={this.setDayEndTime(day, tKey)}
                                                             />
                                                         </div>

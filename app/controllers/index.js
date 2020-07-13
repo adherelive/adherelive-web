@@ -12,14 +12,9 @@ class Controller {
   }
 
   raiseServerError(res, code = 500, error = {}, message = "") {
-    const payload = {
-      code: code,
-      error: errMessage.INTERNAL_SERVER_ERROR
-    };
-    const response = new Response(false, payload.code);
-    response.setError(payload.error);
-    response.setMessage("Something went wrong, try again.");
-    return res.status(payload.code).json(response.getResponse());
+    const response = new Response(false, code);
+    response.setMessage(errMessage.INTERNAL_SERVER_ERROR);
+    return res.status(code).json(response.getResponse());
   }
 
   raiseClientError(res, code = 422, error, message) {

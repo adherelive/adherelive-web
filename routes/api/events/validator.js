@@ -35,7 +35,7 @@ const medicationReminderFormSchema = Joi.object().keys({
   repeat_days: Joi.array(),
   repeat_interval: Joi.number().optional(),
   start_date: Joi.date().required(),
-  end_date: Joi.date().optional(),
+  end_date: Joi.date().optional().allow(""),
   medicine_id: Joi.number().optional()
 });
 
@@ -55,14 +55,14 @@ export const validateMedicationReminderData = (req, res, next) => {
   if (isValid && isValid.error != null) {
     return raiseClientError(res, 422, isValid.error, "");
   }
-  if (!validateStartTime(start_date)) {
-    return raiseClientError(res, 422, {}, "you can't create Medication on passed time.");
-      // const response = new Response(false, 422);
-      // response.setError({
-      //     error: "you can't create Appointment on passed time."
-      // });
-      // return res.status(422).json(response.getResponse());
-  }
+  // if (!validateStartTime(start_date)) {
+  //   return raiseClientError(res, 422, {}, "you can't create Medication on passed time.");
+  //     // const response = new Response(false, 422);
+  //     // response.setError({
+  //     //     error: "you can't create Appointment on passed time."
+  //     // });
+  //     // return res.status(422).json(response.getResponse());
+  // }
   if (!validateTimeInterval(start_date, end_date)) {
     return raiseClientError(res, 422, {}, "start date should be less than end date");
       // const response = new Response(false, 422);

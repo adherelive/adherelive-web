@@ -2,7 +2,6 @@
 import Sequelize from "sequelize";
 import {database} from "../../libs/mysql";
 import {DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY, GENDER} from "../../constant";
-import Users from "./users";
 
 const Appointments = database.define(
     DB_TABLES.APPOINTMENTS,

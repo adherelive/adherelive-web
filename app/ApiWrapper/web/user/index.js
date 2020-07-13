@@ -1,12 +1,9 @@
 import BaseUser from "../../../services/user";
-
-import userService from "../../../services/user/user.service";
-import { OBJECT_NAME } from "../../../../constant";
+import userPermissionService from "../../../services/userPermission/userPermission.service";
 
 class UserWrapper extends BaseUser {
   constructor(data) {
     super(data);
-    this.objectName = OBJECT_NAME.USER;
   }
 
   getBasicInfo = () => {
@@ -36,12 +33,30 @@ class UserWrapper extends BaseUser {
           activated_on,
         };
     };
+
+  getPermissions = async () => {
+      const {getCategory} = this;
+      try {
+          const permissionsData = await userPermissionService.getPermissionsByData({category: getCategory()});
+          let permissionData = [];
+          permissionsData.forEach(permission => {
+              const {type} = permission || {};
+              permissionsData.push(type);
+          });
+
+          return {
+              permissions: permissionData
+          };
+      } catch(error) {
+          throw error;
+      }
+  }
 }
 
 export default async (data = null, userId = null) => {
   if (data) {
     return new UserWrapper(data);
   }
-  const user = await userService.getUserByData({id: userId});
+  const user = await userService.getUserById(userId);
   return new UserWrapper(user.get());
 };

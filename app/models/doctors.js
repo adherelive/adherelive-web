@@ -111,9 +111,9 @@ const Doctors = database.define(
   }
 );
 
-Doctors.belongsTo(Users, {
-  foreignKey: "user_id",
-  targetKey: "id",
+Doctors.hasOne(Users, {
+    foreignKey: "id",
+    targetKey: "user_id"
 });
 
 export default Doctors;

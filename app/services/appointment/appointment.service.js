@@ -1,12 +1,16 @@
 import Appointments from "../../models/appointments";
 import { Op } from "sequelize";
+import {database} from "../../../libs/mysql";
 
 class AppointmentService {
   async addAppointment(data) {
+    const transaction = await database.transaction();
     try {
-      const appointment = await Appointments.create(data);
+      const appointment = await Appointments.create(data, {transaction});
+      await transaction.commit();
       return appointment;
     } catch (err) {
+      await transaction.rollback();
       throw err;
     }
   }
@@ -26,7 +30,20 @@ class AppointmentService {
     }
   };
 
-  getAppointment = async (data) => {
+  getAppointmentById = async (id) => {
+    try {
+      const appointment = await Appointments.findAll({
+        where: {
+          id
+        },
+      });
+      return appointment;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  getAppointmentByData = async (data) => {
     try {
       const appointment = await Appointments.findOne({
         where: data,
@@ -61,15 +78,11 @@ class AppointmentService {
     try {
       const appointments = await Appointments.findAll({
         where: {
-          [Op.not]: [{id: [appointment_id]}],
+          // [Op.not]: [{id: [appointment_id]}],
           [Op.or]: [
-            {
-              start_date: {
-                // [Op.or]: {
-                  [Op.between]: [start_date, start_date]
-                // }
-              }
-            },
+            // {
+            //   start_date
+            // },
             {
               start_time: {
                 // [Op.or]: {

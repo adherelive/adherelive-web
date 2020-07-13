@@ -44,7 +44,7 @@ import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS
+  ONBOARDING_STATUS, VERIFICATION_TYPE
 } from "../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
@@ -56,6 +56,7 @@ import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
+import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 const Logger = new Log("WEB USER CONTROLLER");
 
 class UserController extends Controller {
@@ -95,7 +96,8 @@ class UserController extends Controller {
       const userVerification = UserVerificationServices.addRequest({
         user_id: userInfo.get("id"),
         request_id: link,
-        status: "pending"
+        status: "pending",
+        type: VERIFICATION_TYPE.SIGN_UP
       });
       let uId = userInfo.get("id");
 
@@ -247,11 +249,11 @@ class UserController extends Controller {
         return this.raiseClientError(res, 422, user, "user does not exists");
       }
 
-      let verified = user.get("verified");
-
-      if (!verified) {
-        return this.raiseClientError(res, 401, "user account not verified");
-      }
+      // let verified = user.get("verified");
+      //
+      // if (!verified) {
+      //   return this.raiseClientError(res, 401, "user account not verified");
+      // }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
       const passwordMatch = await bcrypt.compare(
@@ -272,17 +274,16 @@ class UserController extends Controller {
           }
         );
 
-        const apiUserDetails = await UserWrapper(user.getBasicInfo);
+        const apiUserDetails = await UserWrapper(user.get());
 
-        console.log('ID OF USERRRRRRRR,');
+        console.log('ID OF USERRRRRRRR,', apiUserDetails);
 
         const dataToSend = {
           users: {
-            [apiUserDetails.getUserId()]: {
-              ...apiUserDetails.getBasicInfo()
-            }
+            [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
+            ...await apiUserDetails.getPermissions()
           },
-          auth_user: apiUserDetails.getUserId(),
+          auth_user: apiUserDetails.getId(),
           auth_category: apiUserDetails.getCategory()
         };
 
@@ -799,7 +800,7 @@ class UserController extends Controller {
         name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
 
         city = docCity;
-        profile_pic = docPic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}` : docPic;
+        profile_pic = docPic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}` : null;
       }
 
       const profileData = {
@@ -1632,6 +1633,145 @@ class UserController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   }
+
+  forgotPassword = async (req, res) => {
+    const {raiseServerError} = this;
+    try {
+      const {raiseClientError, raiseSuccess} = this;
+      const { email } = req.body;
+      const userExists = await userService.getUserByEmail({
+        email
+      });
+
+      if(userExists) {
+        const userWrapper = await UserWrapper(userExists.get());
+        const link = uuidv4();
+
+        const userVerification = UserVerificationServices.addRequest({
+          user_id: userWrapper.getId(),
+          request_id: link,
+          status: "pending",
+          type: VERIFICATION_TYPE.FORGOT_PASSWORD
+        });
+
+        Logger.debug("process.config.WEB_URL --------------->", process.config.WEB_URL);
+
+        const emailPayload = {
+          toAddress: email,
+          title: "Adhere Reset Password",
+          templateData: {
+            email,
+            link : process.config.app.reset_password + link,
+            host: process.config.WEB_URL,
+            title: "Doctor",
+            inviteCard: "",
+            mainBodyText: "Thank you for requesting password reset",
+            subBodyText: "Please click below to reset your account password",
+            buttonText: "Reset Password",
+            contactTo: "patientEngagement@adhere.com"
+          },
+          templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD
+        };
+
+        console.log("91397138923 emailPayload -------------->", emailPayload);
+        const emailResponse = await Proxy_Sdk.execute(
+            EVENTS.SEND_EMAIL,
+            emailPayload
+        );
+      } else {
+        return raiseClientError(res, 422, {}, "User does not exists for the email");
+      }
+
+      raiseSuccess(
+          res,
+          200,
+          {},
+          "Thanks! If there is an account associated with the email, we will send the password reset link to it"
+      );
+    } catch (error) {
+      Logger.debug("forgot password 500 error",error);
+      return raiseServerError(res);
+    }
+  }
+
+  verifyPasswordResetLink = async (req, res) => {
+    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    try {
+      const {params: {link} = {} } = req;
+
+      const passwordResetLink = await UserVerificationServices.getRequestByLink(link);
+
+      if(passwordResetLink) {
+        const linkVerificationData = await LinkVerificationWrapper(passwordResetLink);
+
+        const userData = await UserWrapper(null, linkVerificationData.getUserId());
+        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+        const secret = process.config.TOKEN_SECRET_KEY;
+        const accessToken = await jwt.sign(
+            {
+              userId: linkVerificationData.getUserId()
+            },
+            secret,
+            {
+              expiresIn
+            }
+        );
+
+        res.cookie("accessToken", accessToken, {
+          expires: new Date(
+              Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+          ),
+          httpOnly: true
+        });
+
+        return raiseSuccess(res, 200, {
+          users: {
+            [userData.getId()]: {
+              ...userData.getBasicInfo()
+            }
+          }
+        }, "Email verified for password reset");
+      } else {
+        return raiseClientError(res, 422, {}, "Cannot verify email to update password");
+      }
+    } catch(error) {
+      Logger.debug("updateUserPassword 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updateUserPassword = async (req, res) => {
+    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    try {
+      const {userDetails: {userId}, body : {new_password, confirm_password} = {} } = req;
+
+      const user = await userService.getUserById(userId);
+      Logger.debug("user -------------->", user);
+      const userData = await UserWrapper(user.get());
+
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      const hash = await bcrypt.hash(new_password, salt);
+
+      const updateUser = await userService.updateUser({
+        password: hash
+      }, userId);
+
+      const updatedUser = await UserWrapper(null, userId);
+
+      return raiseSuccess(res, 200, {
+            users: {
+              [updatedUser.getId()]: updatedUser.getBasicInfo()
+            },
+          },
+          "Password reset successful. Please login to continue"
+      );
+
+    } catch(error) {
+      Logger.debug("updateUserPassword 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 
 }
 

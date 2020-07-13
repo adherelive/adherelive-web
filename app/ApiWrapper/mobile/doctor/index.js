@@ -1,6 +1,6 @@
 import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
-
+import {completePath} from "../../../helper/filePath";
 
 class MDoctorWrapper extends BaseDoctor {
     constructor(data) {
@@ -19,7 +19,9 @@ class MDoctorWrapper extends BaseDoctor {
             address,
             qualifications,
             activated_on,
-            profile_pic
+            profile_pic,
+            city,
+            speciality,
         } = _data || {};
         return {
             basic_info: {
@@ -30,8 +32,10 @@ class MDoctorWrapper extends BaseDoctor {
                 middle_name,
                 last_name,
                 address,
-                profile_pic: `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${profile_pic}`
+                speciality,
+                profile_pic: completePath(profile_pic)
             },
+            city,
             qualifications,
             activated_on
         };

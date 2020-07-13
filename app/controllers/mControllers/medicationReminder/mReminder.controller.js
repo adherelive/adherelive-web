@@ -279,29 +279,33 @@ class MobileMReminderController extends Controller {
       // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
-      let medicineApiData = {};
       let medicineId = [];
 
-      await medicationDetails.forEach(async medication => {
+      for(const medication of medicationDetails) {
         const medicationWrapper = await MobileMReminderWrapper(medication);
         medicationApiData[
-          medicationWrapper.getMReminderId()
-        ] = medicationWrapper.getBasicInfo();
+            medicationWrapper.getMReminderId()
+            ] = medicationWrapper.getBasicInfo();
         medicineId.push(medicationWrapper.getMedicineId());
-      });
+      }
 
       Logger.debug(
         "medicineId",
-        medicineId.filter(id => !medicineId.includes(id))
+        medicationDetails
       );
 
-      const medicineData = await medicineService.getMedicineByData({
+      const medicineData = await medicineService.getMedicineById({
         id: medicineId
       });
 
-      // Logger.debug("medicineData", medicineData);
+      let medicineApiData = {};
 
-      const medicineWrapper = await MedicineApiWrapper(medicineData);
+      if(medicineData !== null) {
+        const medicineWrapper = await MedicineApiWrapper(medicineData);
+        medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+      }
+
+      Logger.debug("medicineData", medicineData);
 
       return raiseSuccess(
         res,
@@ -310,12 +314,14 @@ class MobileMReminderController extends Controller {
           medications: {
             ...medicationApiData
           },
-          ...medicineWrapper.getBasicInfoBulk()
+          medicines: {
+            ...medicineApiData
+          }
         },
-        "medications fetched successfully"
+        "Medications fetched successfully"
       );
     } catch(error) {
-      // Logger.debug("500 error ", error);
+      Logger.debug("500 error ", error);
       return raiseServerError(res);
     }
   };

@@ -135,13 +135,13 @@ class ClinicRegister extends Component {
             (Object.keys(timings).map((day) => {
                 return (
                     <div className='wp100 flex flex-start'>
-                        <div className='fs14 medium wp20'>{`${day} :`}</div>
-                        <div className='flex wp80 flex-start'>{
+                        <div className='fs14 medium wp15'>{`${day} :`}</div>
+                        <div className='flex wp80 flex-start flex-wrap'>{
                             timings[day].length && timings[day][0].startTime != '' && timings[day][0].endTime != '' ? timings[day].map((time, index) => {
                                 return (
-                                    <div className=' flex flex-grow-1'>
-                                        <div>{`${time.startTime ? moment(time.startTime).format('HH:MM') : ''}-`}</div>
-                                        <div>{time.endTime ? `${moment(time.endTime).format('HH:MM')}${index < timings[day].length - 1 ? ', ' : ' '} ` : ''}</div>
+                                    <div className='flex justify-start'>
+                                        <div>{`${time.startTime ? moment(time.startTime).format('hh:mm a') : ''}-`}</div>
+                                        <div>{time.endTime ? `${moment(time.endTime).format('hh:mm a')}${index < timings[day].length - 1 ? ', ' : ' '} ` : ''}</div>
                                     </div>)
                             }) : 'Closed'}</div>
                     </div>

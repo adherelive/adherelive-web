@@ -1,14 +1,17 @@
 import uploadDocumentsModel from "../../models/uploadDocuments";
+import {database} from "../../../libs/mysql";
 
 class UploadDocumentService {
     constructor() {}
 
     addDocument = async data => {
+        const transaction = await database.transaction();
       try {
-        
-          const document = await uploadDocumentsModel.create(data);
+          const document = await uploadDocumentsModel.create(data, {transaction});
+          await transaction.commit();
           return document;
       } catch(error) {
+          await transaction.rollback();
           throw error;
       }
     };

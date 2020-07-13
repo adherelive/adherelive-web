@@ -21,6 +21,7 @@ import MDoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import MUploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import MDoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
+import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
 
 import Controller from "../../";
 import doctorService from "../../../services/doctors/doctors.service";
@@ -39,20 +40,20 @@ import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS
+  ONBOARDING_STATUS, VERIFICATION_TYPE
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../../config/messages.json").errMessages;
 import minioService from "../../../../app/services/minio/minio.service";
 import md5 from "js-md5";
-import UserVerifications from "../../../models/userVerifications";
 import treatmentService from "../../../services/treatment/treatment.service";
 import MTreatmentWrapper from "../../../ApiWrapper/mobile/treatments";
 import severityService from "../../../services/severity/severity.service";
 import MSeverityWrapper from "../../../ApiWrapper/mobile/severity";
 import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
+import UserWrapper from "../../../ApiWrapper/web/user";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -106,16 +107,17 @@ class MobileUserController extends Controller {
               [apiUserDetails.getId()]: {
                 ...apiUserDetails.getBasicInfo()
               }
-            }
+            },
+            ...await apiUserDetails.getPermissions()
           },
-          "initial data retrieved successfully"
+          "Initial data retrieved successfully"
         );
       } else {
         return this.raiseClientError(res, 422, {}, "password not matching");
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.getMessage());
+      return this.raiseServerError(res, 500, error, error.message);
     }
   };
 
@@ -1629,6 +1631,143 @@ class MobileUserController extends Controller {
       );
     } catch (error) {
       Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---->", error);
+      return raiseServerError(res);
+    }
+  };
+
+  forgotPassword = async (req, res) => {
+    const {raiseServerError} = this;
+    try {
+      const {raiseClientError, raiseSuccess} = this;
+      const { email } = req.body;
+      const userExists = await userService.getUserByEmail({
+        email
+      });
+
+      if(userExists) {
+        const userWrapper = await MUserWrapper(userExists.get());
+        const link = uuidv4();
+        const status = "verified"; //make it pending completing flow with verify permission
+        // const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+        // const hash = await bcrypt.hash(password, salt);
+
+        const userVerification = UserVerificationServices.addRequest({
+          user_id: userWrapper.getId(),
+          request_id: link,
+          status: "pending",
+          type: VERIFICATION_TYPE.FORGOT_PASSWORD
+        });
+        // let uId = userInfo.get("id");
+
+        Logger.debug("process.config.WEB_URL --------------->", process.config.WEB_URL);
+
+        const emailPayload = {
+          toAddress: email,
+          title: "Adhere Reset Password",
+          templateData: {
+            email,
+            link : process.config.app.reset_password + link,
+            host: process.config.WEB_URL,
+            title: "Doctor",
+            inviteCard: "",
+            mainBodyText: "Thank you for requesting password reset",
+            subBodyText: "Please click below to reset your account password",
+            buttonText: "Reset Password",
+            contactTo: "patientEngagement@adhere.com"
+          },
+          templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD
+        };
+
+        console.log("91397138923 emailPayload -------------->", emailPayload);
+        const emailResponse = await Proxy_Sdk.execute(
+            EVENTS.SEND_EMAIL,
+            emailPayload
+        );
+      } else {
+        return raiseClientError(res, 422, {}, "User does not exists for the email");
+      }
+
+      raiseSuccess(
+          res,
+          200,
+          {},
+          "Thanks! If there is an account associated with the email, we will send the password reset link to it"
+      );
+    } catch (error) {
+      Logger.debug("forgot password 500 error",error);
+      return raiseServerError(res);
+    }
+  }
+
+  verifyPasswordResetLink = async (req, res) => {
+    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    try {
+      const {params: {link} = {} } = req;
+
+      const passwordResetLink = await UserVerificationServices.getRequestByLink(link);
+
+      if(passwordResetLink) {
+        const linkVerificationData = await LinkVerificationWrapper(passwordResetLink);
+
+        const userData = await UserWrapper(null, linkVerificationData.getUserId());
+        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+        const secret = process.config.TOKEN_SECRET_KEY;
+        const accessToken = await jwt.sign(
+            {
+              userId: linkVerificationData.getUserId()
+            },
+            secret,
+            {
+              expiresIn
+            }
+        );
+
+        return raiseSuccess(res, 200, {
+          accessToken,
+          users: {
+            [userData.getId()]: {
+              ...userData.getBasicInfo()
+            }
+          }
+        }, "Email verified for password reset");
+      } else {
+        return raiseClientError(res, 422, {}, "Cannot verify email to update password");
+      }
+    } catch(error) {
+      Logger.debug("updateUserPassword 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updateUserPassword = async (req, res) => {
+    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    try {
+      const {userDetails: {userId}, body : {new_password, confirm_password} = {} } = req;
+
+      const user = await userService.getUserById(userId);
+      Logger.debug("user -------------->", user);
+      const userData = await UserWrapper(user.get());
+
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      const hash = await bcrypt.hash(new_password, salt);
+
+      const updateUser = await userService.updateUser({
+        password: hash
+      }, userId);
+
+      const updatedUser = await UserWrapper(null, userId);
+
+      return raiseSuccess(res, 200, {
+        users: {
+          [updatedUser.getId()]: updatedUser.getBasicInfo()
+        },
+      },
+          "Password reset successful. Please login to continue"
+      );
+
+    } catch(error) {
+      Logger.debug("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };

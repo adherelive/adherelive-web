@@ -1,3 +1,5 @@
+import {body, check, param} from "express-validator";
+
 const express = require("express");
 const router = express.Router();
 import mUserController from "../../../app/controllers/mControllers/user/user.controller";
@@ -6,18 +8,49 @@ const multer = require("multer");
 var storage = multer.memoryStorage();
 var upload = multer({ dest: "../../../app/public/", storage: storage });
 
+const PASSWORD_LENGTH = 8;
+
 router.post(
     "/sign-in",
+    [
+        check("email")
+            .isEmail()
+            .withMessage("email is not valid"),
+        check("password").isLength({ min: PASSWORD_LENGTH })
+    ],
     mUserController.signIn,
 
 );
 
 router.post(
     "/sign-up",
+    [
+        check("email")
+            .isEmail()
+            .withMessage("Email is not valid"),
+        check("password")
+            .isLength({ min: PASSWORD_LENGTH })
+            .withMessage(
+                `Password must be at least ${PASSWORD_LENGTH} characters long`
+            ),
+        body("password").custom((value, { req }) => {
+            const regEx = new RegExp(
+                "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
+            );
+            if (!regEx.test(value)) {
+                throw new Error(
+                    "Password must contain atleast 1 uppercase, lowercase, number & special character"
+                );
+            } else {
+                return true;
+            }
+        }),
+    ],
     mUserController.signUp,
 );
 
 
+// REMOVE_AFTER
 router.post(
     "/add-patient/:userId",
     mUserController.addDoctorsPatient,
@@ -39,6 +72,7 @@ router.post(
     mUserController.signInFacebook
 );
 
+// doctor post basic
 router.post(
     "/doctor-profile-registration/:userId",
     mUserController.doctorProfileRegister
@@ -108,5 +142,49 @@ router.post(
 );
 
 router.post("/sign-out", Authenticate, mUserController.signOut);
+
+router.post(
+    "/forgot-password",
+    // validator
+    [
+        check("email")
+            .isEmail()
+            .withMessage("Email is not valid"),
+    ],
+    mUserController.forgotPassword
+);
+
+router.post(
+    "/verify/:link",
+    [
+        param("link")
+            .isUUID()
+    ],
+    mUserController.verifyPasswordResetLink
+);
+
+router.post(
+  "/password-reset",
+  Authenticate,
+    [
+        check("password").isLength({ min: PASSWORD_LENGTH }),
+        check("confirm_password").isLength({ min: PASSWORD_LENGTH }),
+        body("password").custom((value, { req }) => {
+            const regEx = new RegExp(
+                "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
+            );
+            if (req.body.confirm_password !== value) {
+                throw new Error("Passwords do not match");
+            } else if (!regEx.test(value)) {
+                throw new Error(
+                    "Password must contain atleast 1 uppercase, lowercase, number & special character"
+                );
+            } else {
+                return true;
+            }
+        }),
+    ],
+  mUserController.updateUserPassword
+);
 
 module.exports = router;

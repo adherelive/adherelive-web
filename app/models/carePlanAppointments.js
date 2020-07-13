@@ -2,9 +2,8 @@
 import Sequelize from "sequelize";
 import { database } from "../../libs/mysql";
 import { DB_TABLES } from "../../constant";
-import Doctors from "./doctors";
-import Patients from "./patients";
 import Appointment from './appointments';
+import CarePlan from "./carePlan";
 
 const CarePlanAppointment = database.define(
   DB_TABLES.CARE_PLAN_APPOINTMENTS,
@@ -57,6 +56,11 @@ const CarePlanAppointment = database.define(
 CarePlanAppointment.hasOne(Appointment, {
   foreignKey: "id",
   targetKey: "appointment_id"
+});
+
+CarePlanAppointment.belongsTo(CarePlan, {
+  foreignKey:"care_plan_id",
+  targetKey:"id"
 });
 
 

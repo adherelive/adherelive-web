@@ -137,18 +137,18 @@ export const RESOURCE = {
   PROGRAMS: "programs",
   SURVEYS: "surveyS"
 };
-
-export const PERMISSIONS = {
-  CREATE: "create",
-  UPDATE: "update",
-  VIEW: "view",
-  INVITE: "invite",
-  CANCEL: "cancel",
-  VERIFY: "verify",
-  SEND: "send",
-  END: "end",
-  DISCHARGE: "discharge"
-};
+//
+// export const PERMISSIONS = {
+//   CREATE: "create",
+//   UPDATE: "update",
+//   VIEW: "view",
+//   INVITE: "invite",
+//   CANCEL: "cancel",
+//   VERIFY: "verify",
+//   SEND: "send",
+//   END: "end",
+//   DISCHARGE: "discharge"
+// };
 
 export const GRANTS = {
   PROGRAM: {
@@ -353,7 +353,10 @@ export const DB_TABLES = {
   CARE_PLAN_APPOINTMENTS: 'care_plan_appointments',
   DOCTOR_REGISTRATIONS: "doctor_registrations",
   TREATMENTS: "treatments",
-  SEVERITY: "severity"
+  SEVERITY: "severity",
+  USER_PREFERENCES: "user_preferences",
+  PERMISSIONS: "permissions",
+  USER_CATEGORY_PERMISSIONS: "user_category_permissions"
 };
 
 export const ARTICLE_TYPE = {
@@ -401,7 +404,7 @@ export const EVENT_STATUS = {
 
 export const EMAIL_TEMPLATE_NAME = {
   WELCOME: "welcome",
-  FORGOT_PASSWORD: "forgot_password"
+  FORGOT_PASSWORD: "forgotPassword"
 };
 
 export const OBJECT_NAME = {
@@ -506,6 +509,67 @@ export const MEDICINE_TYPE = {
   INJECTION: "injection"
 };
 
-export const CLINIC_TIME_SLOTS = [
+export const VERIFICATION_TYPE = {
+  FORGOT_PASSWORD: "forgot_password",
+  SIGN_UP: "sign_up",
+};
 
-];
+export const NO_ADHERENCE = "1";
+export const NO_MEDICATION = "2";
+export const NO_APPOINTMENT = "3";
+export const NO_ACTION = "4";
+export const TEST_ONE = "5";
+export const TEST_TWO = "6";
+
+export const CHART_LIMIT = 4;
+
+export const CHART_DETAILS = {
+  [NO_ADHERENCE]: {
+    type: "no_adherence",
+    name: "Non Adherence",
+    critical: 19,
+    total: 100
+  },
+  [NO_MEDICATION]: {
+    type: "no_medication",
+    name: "Non Medication",
+    critical: 25,
+    total: 80
+  },
+  [NO_APPOINTMENT]: {
+    type: "no_appointment",
+    name: "Non Appointment",
+    critical: 5,
+    total: 40
+  },
+  [NO_ACTION]: {
+    type: "no_action",
+    name: "Non Action",
+    critical: 30,
+    total: 120
+  },
+  [TEST_ONE]: {
+    type: "test_one",
+    name: "Test One",
+    critical: 10,
+    total: 50
+  },
+  [TEST_TWO]: {
+    type: "test_two",
+    name: "Test Two",
+    critical: 10,
+    total: 60
+  },
+};
+
+export const PERMISSIONS = {
+  ADD_PATIENT: "ADD_PATIENT",
+
+  ADD_APPOINTMENT: "ADD_APPOINTMENT",
+  EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
+
+  ADD_MEDICATION: "ADD_MEDICATION",
+  EDIT_MEDICATION: "EDIT_MEDICATION",
+
+  ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE"
+};

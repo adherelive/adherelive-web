@@ -15,19 +15,21 @@ const appointmentFormSchema = Joi.object().keys({
   description: Joi.string()
     .optional()
     .allow(""),
+  reason: Joi.string().optional().allow(""),
   organizer: Joi.object()
     .keys({
       id: Joi.number().required(),
       category: Joi.string().required(),
     })
-    .optional(),
-  // description: Joi.string().optional(),
-  treatment: Joi.string().optional().allow(""),
-  // TODO: rr_rule here?
+    .optional().allow(""),
+  treatment_id: Joi.number().optional().allow(""),
+  care_plan_id: Joi.number().optional().allow(""),
+  // TODO: rr_rule?
 });
 
 const validateStartTime = (startTime) => {
   const now = moment().subtract(3, "minutes");
+  console.log("validateStartTime --> ", moment(startTime), now);
   return moment(startTime).isAfter(now);
 };
 
@@ -40,7 +42,6 @@ export const validateAppointmentFormData = (req, res, next) => {
   const { start_time, end_time } = data;
   const isValid = appointmentFormSchema.validate(data);
   if (isValid && isValid.error != null) {
-    // return raiseClientError(res, 422, isValid.error, "please check filled details");
     const response = new Response(false, 422);
     response.setError(isValid.error);
     response.setMessage("please check filled details");

@@ -2,6 +2,17 @@ import CarePlanAppointments from "../../models/carePlanAppointments";
 
 class CarePlanAppointmentService {
 
+    getAllByData = async (data) => {
+        try {
+            const carePlanAppointments = await CarePlanAppointments.findAll({
+                where: data
+            });
+            return carePlanAppointments;
+        } catch(error) {
+            throw error;
+        }
+    };
+
     getCarePlanAppointmentsByData = async (data) => {
         try {
             console.log("careplan data --> ", data);
@@ -28,7 +39,6 @@ class CarePlanAppointmentService {
 
     getAppointmentsByCarePlanId = async (care_plan_id) => {
         try {
-            console.log("careplan IDDDDDDD in APPOINTMENT--> ", care_plan_id);
             const carePlanAppointments = await CarePlanAppointments.findAll({
                 where: {care_plan_id}
             });

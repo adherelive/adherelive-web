@@ -1,13 +1,9 @@
 import BaseMedicationReminder from "../../../services/medicationReminder";
-
 import mReminderService from "../../../services/medicationReminder/mReminder.service";
-
-import { OBJECT_NAME } from "../../../../constant";
 
 class MReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
     super(data);
-    this._objectName = OBJECT_NAME.MEDICATION;
   }
 
   getBasicInfo = () => {

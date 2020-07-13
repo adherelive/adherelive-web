@@ -22,7 +22,7 @@ class SeverityWrapper extends BaseSeverity {
 }
 
 export default async (data = null, id = null) => {
-    if (data !== null) {
+    if (data) {
         return new SeverityWrapper(data);
     }
     const severity = await severityService.getByData({ id });

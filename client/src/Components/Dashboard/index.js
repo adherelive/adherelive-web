@@ -29,19 +29,22 @@ class Dashboard extends Component {
         this.state = {
             visible: false,
             visibleModal: false,
-            graphsToShow: [
-                NO_ADHERENCE,
-                NO_MEDICATION,
-                NO_ACTION,
-                NO_APPOINTMENT
-            ]
+            graphsToShow: []
         };
     }
 
     componentDidMount() {
-        const { graphs, getInitialData, searchMedicine } = this.props;
+        const { graphs, getInitialData, searchMedicine, getGraphs } = this.props;
         getInitialData();
-        // searchMedicine("");
+        getGraphs().then(response => {
+            console.log('19273 reponse OF GET GRAPHSSS', response)
+            const { status, payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {} } = response;
+            console.log('19273 reponse OF GET GRAPHSSS111', status, charts)
+            if (status) {
+                this.setState({ graphsToShow: [...charts] });
+            }
+        });
+        searchMedicine("");
         console.log("DashBoard Did MOunt DOCTORRRRR ROUTERRR ----------------->   ")
         // setTimeout(() => {
         //     drawChart(graphs);
@@ -71,20 +74,26 @@ class Dashboard extends Component {
         const { formatMessage } = this;
         const { missed_report = [] } = graphs || {};
 
-        const chartBlocks = missed_report.map(report => {
-            const { id, data } = report || {};
-            const { total, critical } = data || {};
-            const { className } = GRAPH_COLORS[id] || {};
-            if (graphsToShow.includes(id)) {
-                return (
+        // console.log("3897127312893 missed_report --> ", missed_report);
 
-                    <Donut id={id} data={[critical, total - critical]} total={total} />
-                );
-            } else {
-                return (null);
-            }
+        const chartBlocks = graphsToShow.map(id => {
+            // const { id, data } = report || {};
+            const { total, critical, name } = graphs[id] || {};
+            const { className } = GRAPH_COLORS[id] || {};
+            // if (graphsToShow.includes(id)) {
+            return (
+
+                <Donut id={id} data={[critical, total - critical]} total={total} title={name} />
+            );
+            // } else {
+            //     return (null);
+            // }
         });
-        return chartBlocks;
+        if (graphsToShow.length == 0) {
+            return <div className='flex flex-grow-1 wp100 align-center justify-center'><Spin /></div>
+        } else {
+            return chartBlocks;
+        }
     };
 
     showAddPatientDrawer = () => {
@@ -130,14 +139,14 @@ class Dashboard extends Component {
         this.setState({ visibleModal: false });
     }
     render() {
-        console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard", this.props);
         const { graphs,
             treatments,
             conditions,
             severity } = this.props;
         const { formatMessage, renderChartTabs } = this;
 
-        const { visible } = this.state;
+        const { visible, graphsToShow,visibleModal } = this.state;
+        console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard", graphsToShow, this.state);
         if (Object.keys(graphs).length === 0) {
             return (
                 <Loading className={"wp100 mt20"} />
@@ -187,7 +196,7 @@ class Dashboard extends Component {
                 <PatientDetailsDrawer />
 
                 <AddPatientDrawer treatments={treatments} conditions={conditions} severity={severity} close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
-                <GraphsModal visible={this.state.visibleModal} handleCancel={this.hideAddPatientDrawer} handleOk={this.editDisplayGraphs} selectedGraphs={this.state.graphsToShow} />
+               {visibleModal &&( <GraphsModal visible={visibleModal} handleCancel={this.hideEditGraphModal} handleOk={this.editDisplayGraphs} selectedGraphs={graphsToShow} />)}
             </Fragment>
         );
     }
