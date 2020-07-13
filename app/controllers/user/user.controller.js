@@ -525,14 +525,16 @@ class UserController extends Controller {
         }
         // Logger.debug("userIds --> ", userIds);
 
+        let apiUserDetails = {};
+
         if (userIds.length > 1) {
           const allUserData = await userService.getUserByData({ id: userIds });
           await allUserData.forEach(async user => {
-            const apiUserDetails = await UserWrapper(user.get());
+            apiUserDetails = await UserWrapper(user.get());
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
         } else {
-          const apiUserDetails = await UserWrapper(userData);
+          apiUserDetails = await UserWrapper(userData);
           userApiData[
             apiUserDetails.getUserId()
           ] = apiUserDetails.getBasicInfo();
@@ -571,6 +573,14 @@ class UserController extends Controller {
           conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
         }
 
+        let permissions = {
+          permissions: []
+        };
+
+        if(apiUserDetails.isActivated()) {
+          permissions = await apiUserDetails.getPermissions();
+        }
+
         /**** API wrapper for DOCTOR ****/
 
         const dataToSend = {
@@ -595,6 +605,7 @@ class UserController extends Controller {
           conditions: {
             ...conditionApiDetails,
           },
+          ...permissions,
           treatment_ids: treatmentIds,
           severity_ids: severityIds,
           condition_ids: conditionIds,
@@ -608,10 +619,12 @@ class UserController extends Controller {
         // throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
-      console.log("ON APP START CATCH ERROR ", err);
-      response = new Response(false, 500);
-      response.setError(err.message);
-      return res.status(500).json(response.getResponse());
+      Logger.debug("onAppStart 500 error", err);
+      return this.raiseServerError(res);
+      // console.log("ON APP START CATCH ERROR ", err);
+      // response = new Response(false, 500);
+      // response.setError(err.message);
+      // return res.status(500).json(response.getResponse());
     }
   };
 
