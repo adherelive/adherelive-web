@@ -18,7 +18,7 @@ router.post(
     [
         check("chart_ids")
             .isArray()
-          .withMessage("Chart options sent is not correct")
+          .withMessage("Chart options sent is not correct") 
     ],
     //validator
     GraphController.addGraphType

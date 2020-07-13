@@ -1,4 +1,4 @@
-const express = require("express");
+// const express = require("express");
 import express from "express";
 import Authenticate from "../../m-api/middleware/auth";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";

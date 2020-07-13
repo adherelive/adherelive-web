@@ -20,6 +20,9 @@ import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../ApiWrapper/mobile/medicine";
 
+import Log from "../../../libs/log";
+const Logger = new Log("WEB > PATIENTS > CONTROLLER");
+
 class PatientController extends Controller {
     constructor() {
         super();

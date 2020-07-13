@@ -54,7 +54,7 @@ class GraphController extends Controller {
             const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
             const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
-            Logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
+            // Logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
 
             // userPreference.getChartDetails().forEach(id => {
             //     if(chart_ids.includes(id)) {
