@@ -20,6 +20,9 @@ import care_plans from "./carePlans";
 import doctor_clinics from "./doctorClinics";
 import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
+import template_appointments from "./templateAppointments";
+import template_medications from "./templateMedications";
+import care_plan_templates from "./carePlanTemplates";
 import upload_documents from "./uploadDocuments";
 
 const rootReducer = combineReducers({
@@ -44,7 +47,10 @@ const rootReducer = combineReducers({
   doctor_clinics,
   doctor_qualifications,
   doctor_registrations,
-  upload_documents
+  upload_documents,
+  template_appointments,
+  template_medications,
+  care_plan_templates
 });
 
 export default (state, action) => {

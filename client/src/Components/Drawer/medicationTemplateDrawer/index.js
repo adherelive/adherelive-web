@@ -44,15 +44,16 @@ class TemplateDrawer extends Component {
         let newMedics = {};
         let newAppoints = {};
 
+        console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS DRAWERR 748327498234983234', newAppointments, newMedications);
         if (Object.keys(newMedications).length) {
-            for (let medication of newMedications) {
+            for (let medication of Object.values(newMedications)) {
                 let key = uuid();
                 newMedics[key] = medication;
                 newMedicsKeys.push(key);
             }
         }
         if (Object.keys(newAppointments).length) {
-            for (let appointment of newAppointments) {
+            for (let appointment of Object.values(newAppointments)) {
                 let key = uuid();
                 newAppoints[key] = appointment;
                 newAppointsKeys.push(key);
@@ -232,7 +233,7 @@ class TemplateDrawer extends Component {
                 {
                     appointmentKeys.map(key => {
                         const { reason = '', schedule_data: { description = '', date = '', start_time = '' } = {}, time_gap = '' } = appointments[key];
-                        console.log("6878768979009", date, time_gap);
+                        console.log("6878768979009", date, time_gap, description);
                         let timeToShow = date && start_time ? `${moment(date).format('ll')} ${moment(date).format('hh:mm')}` : date ? moment(date).format('ll') : '';
                         return (
 
@@ -454,7 +455,7 @@ class TemplateDrawer extends Component {
         let newAppointment = {};
 
 
-        if(!date || !start_time ||!end_time || !treatment_id){
+        if (!date || !start_time || !end_time || !treatment_id) {
             message.error('Please fill all appointment details.');
             return;
         }
@@ -518,7 +519,7 @@ class TemplateDrawer extends Component {
                         carePlan={carePlan} />}
 
                     {showAddMedicationInner && <EditMedicationReminder medicationVisible={showAddMedicationInner} addMedication={this.addMedication} hideMedication={this.closeAddMedication} />}
-                    {showAddAppointmentInner && <EditAppointmentDrawer appointmentVisible={showAddAppointmentInner} addAppointment={this.addAppointment} hideAppointment={this.closeAddAppointment} patientId={patientId} patients={patients} carePlan={carePlan}/>}
+                    {showAddAppointmentInner && <EditAppointmentDrawer appointmentVisible={showAddAppointmentInner} addAppointment={this.addAppointment} hideAppointment={this.closeAddAppointment} patientId={patientId} patients={patients} carePlan={carePlan} />}
                     <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                             Cancel

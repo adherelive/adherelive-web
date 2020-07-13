@@ -228,6 +228,8 @@ class EditAppointmentForm extends Component {
 
 
 
+
+    console.log('7483274982349832',carePlan);
     if (Object.values(carePlan).length) {
       let { treatment_id: newTreatment = '' } = carePlan;
       treatment_id = newTreatment;

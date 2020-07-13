@@ -88,7 +88,7 @@ class AddAppointment extends Component {
               statusCode: code,
               payload: { message: errorMessage = "", error, error: { error_type = "" } = {} },
             } = response || {};
-
+             
             if (code === 422 && error_type === "slot_present") {
               message.warn(
                 `${errorMessage} range: ${moment(start_time).format(
@@ -99,10 +99,13 @@ class AddAppointment extends Component {
               message.success(formatMessage(messages.add_appointment_success));
               // getAppointments(patient_id);
             } else {
+              if (code === 500) {
+                message.warn('Something went wrong, please try again.');
+              }else{
               message.warn(errorMessage);
+              }
             }
 
-            console.log("add appointment response -----> ", response);
           } catch (error) {
             console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }

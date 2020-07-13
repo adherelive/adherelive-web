@@ -1,5 +1,5 @@
 export const getcreateCarePlanMedicationAndAppointmentUrl = (carePlanId) => {
-  return `/carePlans/create-medications-and-appointments/${carePlanId}`;
+  return `/carePlans/${carePlanId}`;
 };
 
 export const getPatientCarePlanDetailsUrl = (patientId) => {

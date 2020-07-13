@@ -331,10 +331,12 @@ class MPatientController extends Controller {
 
       let medicationApiDetails = {};
       const medications = await medicationReminderService.getMedicationsForParticipant({id: medication_ids});
-      for(const medication of medications) {
-        const medicationData = await MReminderWrapper(medication);
-        medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
-        medicine_ids.push(medicationData.getMedicineId());
+      if(medications) {
+        for(const medication of medications) {
+          const medicationData = await MReminderWrapper(medication);
+          medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
+          medicine_ids.push(medicationData.getMedicineId());
+        }
       }
 
 
