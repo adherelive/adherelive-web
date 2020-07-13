@@ -61,6 +61,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Address"
     },
+    verified_text: {
+        id: "app.admin.doctors.details.verified.text",
+        description: "",
+        defaultMessage: "Account Status"
+    },
     qualification_details_text: {
         id: "app.admin.doctors.qualification.details.text",
         description: "",

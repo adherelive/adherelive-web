@@ -62,7 +62,7 @@ export const getAllDoctors = () => {
       if (status === true) {
         dispatch({
           type: GET_ALL_DOCTORS_COMPLETE,
-         data: data,
+          payload: data,
         });
       } else {
         dispatch({
@@ -91,7 +91,7 @@ export const getDoctorDetails = (id) => {
       if (status === true) {
         dispatch({
           type: GET_DOCTOR_DETAILS_COMPLETE,
-          data: data,
+          payload: data,
         });
       } else {
         dispatch({
@@ -121,9 +121,10 @@ function doctorReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const { type, data } = action;
+  const { type, payload } = action;
   switch (type) {
     default:
-      return doctorReducer(state, data);
+      console.log("92832738492 data 1--> ", payload);
+      return doctorReducer(state, payload);
   }
 };

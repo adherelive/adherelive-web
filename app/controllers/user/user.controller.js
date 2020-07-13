@@ -309,7 +309,7 @@ class UserController extends Controller {
           "initial data retrieved successfully"
         );
       } else {
-        return this.raiseClientError(res, 422, {}, "password not matching");
+        return this.raiseClientError(res, 422, {}, "Password not matching");
       }
     } catch (error) {
       console.log("error sign in  --> ", error);

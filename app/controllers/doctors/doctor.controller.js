@@ -95,7 +95,7 @@ class DoctorController extends Controller {
     }
   };
 
-  getAllDoctorDetails = async (req, res) => {
+  getAllAdminDoctorDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { id } = {} } = req;
@@ -250,6 +250,18 @@ class DoctorController extends Controller {
       const doctorDetails = await doctorService.getDoctorByData({ id });
 
       const doctorWrapper = await DoctorWrapper(doctorDetails);
+
+      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(doctorWrapper.getDoctorId());
+      const doctorRegistrations = await registrationService.getRegistrationByDoctorId(doctorWrapper.getDoctorId());
+      const doctorClinics = await clinicService.getClinicForDoctor(doctorWrapper.getDoctorId());
+
+      if(doctorQualifications.length === 0) {
+        return this.raiseClientError(res, 422, {}, "Doctor has not updated any qualification details yet. Cannot be verified");
+      } else if(doctorRegistrations.length === 0) {
+        return this.raiseClientError(res, 422, {}, "Doctor has not updated any registration details yet. Cannot be verified");
+      } else if(doctorClinics.length === 0) {
+        return this.raiseClientError(res, 422, {}, "Doctor has not updated any clinic details yet. Cannot be verified");
+      }
 
       let verifyData = {
         activated_on: moment()
@@ -1254,6 +1266,8 @@ class DoctorController extends Controller {
       let upload_document_ids = [];
 
       const doctorWrapper = await DoctorWrapper(doctors);
+
+      Logger.debug("doctors ---> ", userId);
 
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
         doctorWrapper.getDoctorId()
