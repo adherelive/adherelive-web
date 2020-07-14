@@ -345,7 +345,7 @@ class PatientDetails extends Component {
     if (showTd) {
       this.setState({ templateDrawerVisible: true });
     }
-    console.log('currentCarePlanId in did mount 7897987987987987',showTd );
+    console.log('currentCarePlanId in did mount 7897987987987987',this.props );
     if (!showTd) {
       getPatientCarePlanDetails(patient_id);
       // .then(response => {

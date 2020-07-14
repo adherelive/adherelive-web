@@ -115,7 +115,7 @@ class Dashboard extends Component {
             let patient_id = patient_ids ? patient_ids[0] : 0;
             console.log('currentCarePlanId after adding patient', currentCarePlanId);
             if (status) {
-                getInitialData().then(() => {
+                // getInitialData().then(() => {
 
 
                     this.props.history.push({
@@ -123,7 +123,7 @@ class Dashboard extends Component {
                         state: { showTemplateDrawer, currentCarePlanId }
                     });
 
-                })
+                // })
             } else {
                 message.error('Something went wrong');
             }

@@ -72,6 +72,11 @@ const message = defineMessages({
         description: "",
         defaultMessage: "Please select end time"
     },
+    error_purpose: {
+      id: "app.drawer.add.appointment.error.select.purpose",
+      description: "",
+      defaultMessage: "Please enter purpose of appointment."
+  },
     treatment_text: {
         id: "app.drawer.add.appointment.treatment.text",
         description: "",

@@ -415,6 +415,12 @@ class EditAppointmentForm extends Component {
           className="full-width ant-date-custom"
         >
           {getFieldDecorator(REASON, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_purpose),
+              },
+            ],
             initialValue: reason,
           })(
             <Input
