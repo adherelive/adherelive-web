@@ -98,7 +98,7 @@ class PatientController extends Controller {
     };
 
     getPatientAppointments = async (req, res) => {
-        const {raiseServerError, raiseSuccess} = this;
+        const { raiseServerError, raiseSuccess } = this;
         try {
             const { params: { id } = {}, userDetails: { userId } = {} } = req;
 
@@ -111,11 +111,11 @@ class PatientController extends Controller {
             let appointmentApiData = {};
             let appointment_ids = [];
 
-            for(const appointment of appointmentList) {
+            for (const appointment of appointmentList) {
                 const appointmentWrapper = await AppointmentWrapper(appointment);
                 appointmentApiData[
                     appointmentWrapper.getAppointmentId()
-                    ] = appointmentWrapper.getBasicInfo();
+                ] = appointmentWrapper.getBasicInfo();
                 appointment_ids.push(appointmentWrapper.getAppointmentId());
             }
 
@@ -130,7 +130,7 @@ class PatientController extends Controller {
                 },
                 `appointment data for patient: ${id} fetched successfully`
             );
-        } catch(error) {
+        } catch (error) {
             Logger.debug("getPatientAppointments 500 error", error);
             raiseServerError(res);
         }
@@ -151,11 +151,11 @@ class PatientController extends Controller {
             let medicationApiData = {};
             let medicineId = [];
 
-            for(const medication of medicationDetails) {
+            for (const medication of medicationDetails) {
                 const medicationWrapper = await MReminderWrapper(medication);
                 medicationApiData[
                     medicationWrapper.getMReminderId()
-                    ] = medicationWrapper.getBasicInfo();
+                ] = medicationWrapper.getBasicInfo();
                 medicineId.push(medicationWrapper.getMedicineId());
             }
 
@@ -170,7 +170,7 @@ class PatientController extends Controller {
 
             let medicineApiData = {};
 
-            for(const medicine of medicineData) {
+            for (const medicine of medicineData) {
                 const medicineWrapper = await MedicineApiWrapper(medicine);
                 medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
             }
@@ -190,7 +190,7 @@ class PatientController extends Controller {
                 },
                 "Medications fetched successfully"
             );
-        } catch(error) {
+        } catch (error) {
             Logger.debug("500 error ", error);
             return raiseServerError(res);
         }
@@ -199,7 +199,7 @@ class PatientController extends Controller {
     getPatientCarePlanDetails = async (req, res) => {
         try {
             const { id: patient_id = 1 } = req.params;
-            const { userDetails: {userId} = {} } = req;
+            const { userDetails: { userId } = {} } = req;
 
             let show = false;
 
@@ -216,12 +216,12 @@ class PatientController extends Controller {
 
             let carePlanTemplateData = null;
 
-            if(carePlanData.getCarePlanTemplateId()) {
+            if (carePlanData.getCarePlanTemplateId()) {
                 const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(carePlanData.getCarePlanTemplateId());
                 carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
                 const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
 
-                for(const medication of medications) {
+                for (const medication of medications) {
                     const medicationData = await TemplateMedicationWrapper(medication);
                     templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
                     template_medication_ids.push(medicationData.getTemplateMedicationId());
@@ -230,7 +230,7 @@ class PatientController extends Controller {
 
                 const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
 
-                for(const appointment of appointments) {
+                for (const appointment of appointments) {
                     const appointmentData = await TemplateAppointmentWrapper(appointment);
                     templateAppointmentData[appointmentData.getTemplateAppointmentId()] = appointmentData.getBasicInfo();
                     template_appointment_ids.push(appointmentData.getTemplateAppointmentId());
@@ -245,14 +245,14 @@ class PatientController extends Controller {
 
             const carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(carePlanData.getCarePlanId());
 
-            for(const carePlanAppointment of carePlanAppointments) {
+            for (const carePlanAppointment of carePlanAppointments) {
                 appointment_ids.push(carePlanAppointment.get("appointment_id"));
             }
 
             let appointmentApiDetails = {};
-            const appointments = await appointmentService.getAppointmentByData({id: appointment_ids});
-            if(appointments) {
-                for(const appointment of appointments) {
+            const appointments = await appointmentService.getAppointmentByData({ id: appointment_ids });
+            if (appointments) {
+                for (const appointment of appointments) {
                     const appointmentData = await AppointmentWrapper(appointment);
                     appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
                 }
@@ -260,16 +260,18 @@ class PatientController extends Controller {
 
             const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanData.getCarePlanId());
 
-            for(const carePlanMedication of carePlanMedications) {
+            for (const carePlanMedication of carePlanMedications) {
                 medication_ids.push(carePlanMedication.get("medication_id"));
             }
 
             let medicationApiDetails = {};
-            const medications = await medicationReminderService.getMedicationsForParticipant({id: medication_ids});
-            for(const medication of medications) {
-                const medicationData = await MReminderWrapper(medication);
-                medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
-                medicine_ids.push(medicationData.getMedicineId());
+            const medications = await medicationReminderService.getMedicationsForParticipant({ id: medication_ids });
+            if(medications) {
+                for (const medication of medications) {
+                    const medicationData = await MReminderWrapper(medication);
+                    medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
+                    medicine_ids.push(medicationData.getMedicineId());
+                }
             }
 
             Logger.debug(
@@ -288,7 +290,7 @@ class PatientController extends Controller {
                 medicineData
             );
 
-            for(const medicine of medicineData) {
+            for (const medicine of medicineData) {
                 const medicineWrapper = await MedicineApiWrapper(medicine);
                 medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
             }
@@ -305,7 +307,7 @@ class PatientController extends Controller {
                     }
                 },
                 care_plan_templates: {
-                    [carePlanData.getCarePlanTemplateId()] : {
+                    [carePlanData.getCarePlanTemplateId()]: {
                         ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
                         template_appointment_ids,
                         template_medication_ids

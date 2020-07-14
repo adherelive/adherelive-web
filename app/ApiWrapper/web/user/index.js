@@ -1,4 +1,5 @@
 import BaseUser from "../../../services/user";
+import userService from "../../../services/user/user.service";
 import userPermissionService from "../../../services/userPermission/userPermission.service";
 import permissionService from "../../../services/permission/permission.service";
 
@@ -54,7 +55,7 @@ class UserWrapper extends BaseUser {
             permissionData.push(type);
           }
 
-          console.log("permissionsData1283713893781  ------------> ", permissionData, getCategory());
+          console.log("permissionsData  ------------> ", permissionData, getCategory());
 
           return {
               permissions: permissionData
