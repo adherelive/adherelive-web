@@ -314,7 +314,7 @@ class MPatientController extends Controller {
       }
 
       let appointmentApiDetails = {};
-      const appointments = await appointmentService.getAppointmentById(appointment_ids);
+      const appointments = await appointmentService.getAppointmentByData({id: appointment_ids});
       Logger.debug("187631631623 here 2", appointments);
       if(appointments) {
         for(const appointment of appointments) {

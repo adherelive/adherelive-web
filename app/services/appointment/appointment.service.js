@@ -32,7 +32,7 @@ class AppointmentService {
 
   getAppointmentById = async (id) => {
     try {
-      const appointment = await Appointments.findAll({
+      const appointment = await Appointments.findOne({
         where: {
           id
         },
@@ -45,7 +45,7 @@ class AppointmentService {
 
   getAppointmentByData = async (data) => {
     try {
-      const appointment = await Appointments.findOne({
+      const appointment = await Appointments.findAll({
         where: data,
       });
       return appointment;
