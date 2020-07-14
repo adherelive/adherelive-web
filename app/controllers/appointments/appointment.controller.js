@@ -91,7 +91,7 @@ class AppointmentController extends Controller {
       const eventScheduleData = {
         event_type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentApiData.getAppointmentId(),
-        details: appointmentApiData.getExistingData(),
+        details: appointmentApiData.getBasicInfo(),
         status: EVENT_STATUS.PENDING,
         start_time,
         end_time,
@@ -214,7 +214,7 @@ class AppointmentController extends Controller {
       const eventScheduleData = {
         event_type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentApiData.getAppointmentId(),
-        details: appointmentApiData.getExistingData(),
+        details: appointmentApiData.getBasicInfo(),
         status: EVENT_STATUS.PENDING,
         start_time,
         end_time,
