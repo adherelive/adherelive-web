@@ -96,6 +96,14 @@ class MobileUserController extends Controller {
 
         const apiUserDetails = await MUserWrapper(user.get());
 
+        let permissions = {
+          permissions: []
+        };
+
+        if(apiUserDetails.isActivated()) {
+          permissions = await apiUserDetails.getPermissions();
+        }
+
         // Logger.debug("apiUserDetails ----> ", apiUserDetails.getId());
 
         return this.raiseSuccess(
@@ -108,7 +116,7 @@ class MobileUserController extends Controller {
                 ...apiUserDetails.getBasicInfo()
               }
             },
-            ...await apiUserDetails.getPermissions()
+            ...permissions,
           },
           "Initial data retrieved successfully"
         );
@@ -456,10 +464,12 @@ class MobileUserController extends Controller {
 
         Logger.debug("userIds --> ", userIds);
 
+        let apiUserDetails = {};
+
         if (userIds.length > 1) {
           const allUserData = await userService.getUserByData({ id: userIds });
           await allUserData.forEach(async user => {
-            const apiUserDetails = await MUserWrapper(user.get());
+            apiUserDetails = await MUserWrapper(user.get());
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
         } else {
@@ -506,6 +516,14 @@ class MobileUserController extends Controller {
           ] = conditionWrapper.getBasicInfo();
         }
 
+        let permissions = {
+          permissions: []
+        };
+
+        if(apiUserDetails.isActivated()) {
+          permissions = await apiUserDetails.getPermissions();
+        }
+
         const dataToSend = {
           users: {
             ...userApiData
@@ -529,6 +547,7 @@ class MobileUserController extends Controller {
           conditions: {
             ...conditionApiDetails
           },
+          ...permissions,
           treatment_ids: treatmentIds,
           severity_ids: severityIds,
           condition_ids: conditionIds,

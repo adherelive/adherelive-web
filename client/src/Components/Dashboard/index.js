@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import drawChart from "../../Helper/drawChart";
-import { CHART_TITLE, GRAPH_COLORS, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, ACTIVE_PATIENT, CRITICAL_PATIENT } from "../../constant";
+import { CHART_TITLE, GRAPH_COLORS, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_ONE, TEST_TWO } from "../../constant";
 import Tabs from "antd/es/tabs";
 import { Table, Divider, Tag, Button, Menu, Dropdown, Spin, message } from "antd";
 import Patients from "../../Containers/Patient/table";
@@ -108,16 +108,19 @@ class Dashboard extends Component {
         const { addPatient, authenticated_user, getInitialData } = this.props;
 
         const { basic_info: { id = 1 } = {} } = authenticated_user || {};
-        addPatient(data, id).then(response => {
-            const { status = false, payload: { data: { patient_id = 1, carePlanTemplateId = 0 } = {} } = {} } = response;
+        addPatient(data).then(response => {
+            let { status = false, payload: { data: { patient_ids = [], care_plan_ids = [], carePlanTemplateId = 0 } = {} } = {} } = response;
             let showTemplateDrawer = carePlanTemplateId ? true : false;
+            let currentCarePlanId = care_plan_ids[0];
+            let patient_id = patient_ids ? patient_ids[0] : 0;
+            console.log('currentCarePlanId after adding patient', currentCarePlanId);
             if (status) {
                 getInitialData().then(() => {
 
 
                     this.props.history.push({
                         pathname: `/patients/${patient_id}`,
-                        state: { showTemplateDrawer }
+                        state: { showTemplateDrawer, currentCarePlanId }
                     });
 
                 })
@@ -128,8 +131,17 @@ class Dashboard extends Component {
     }
 
     editDisplayGraphs = (data) => {
-
-        this.setState({ graphsToShow: data, visibleModal: false })
+        let dataToUpdate = {};
+        dataToUpdate.chart_ids = data;
+        let { updateGraphs } = this.props;
+        updateGraphs(dataToUpdate).then(response => {
+            const { status } = response;
+            if (status) {
+                this.setState({ graphsToShow: data, visibleModal: false })
+            } else {
+                message.error('Something went wrong,please try again.')
+            }
+        })
     }
 
     hideAddPatientDrawer = () => {
@@ -145,7 +157,7 @@ class Dashboard extends Component {
             severity } = this.props;
         const { formatMessage, renderChartTabs } = this;
 
-        const { visible, graphsToShow,visibleModal } = this.state;
+        const { visible, graphsToShow, visibleModal } = this.state;
         console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard", graphsToShow, this.state);
         if (Object.keys(graphs).length === 0) {
             return (
@@ -169,7 +181,7 @@ class Dashboard extends Component {
                     </div>
 
                     {/* <div className="mt10 flex align-center"> */}
-                    <section className='horizontal-scroll-wrapper'>
+                    <section className='horizontal-scroll-wrapper mt10'>
                         {renderChartTabs()}
                     </section>
 
@@ -196,7 +208,7 @@ class Dashboard extends Component {
                 <PatientDetailsDrawer />
 
                 <AddPatientDrawer treatments={treatments} conditions={conditions} severity={severity} close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
-               {visibleModal &&( <GraphsModal visible={visibleModal} handleCancel={this.hideEditGraphModal} handleOk={this.editDisplayGraphs} selectedGraphs={graphsToShow} />)}
+                {visibleModal && (<GraphsModal visible={visibleModal} handleCancel={this.hideEditGraphModal} handleOk={this.editDisplayGraphs} selectedGraphs={graphsToShow} />)}
             </Fragment>
         );
     }

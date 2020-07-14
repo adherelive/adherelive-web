@@ -334,28 +334,35 @@ class PatientDetails extends Component {
       searchMedicine,
       getPatientCarePlanDetails,
       patient_id,
-      showTemplateDrawer
+      showTemplateDrawer,
+      care_plans,
+      currentCarePlanId,
+      show_template_drawer = false
     } = this.props;
     this.getData();
-    getPatientCarePlanDetails(patient_id);
-    // .then(response => {
-    //   let { status = false, payload = {} } = response;
-    //   if (status) {
-    //     let { data: { show = false, care_plan_templates = {} } = {} } = payload;
-    //     const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
+    let isCarePlanDataPresent = currentCarePlanId ? true : false;
 
-    //     console.log("RESPONSEEEEEEEEE IN DID MOUNTTT", carePlanTemplateId);
-    //     if (show) {
-    //       this.setState({ templateDrawerVisible: true });
-    //     }
-    //     this.setState({ carePlanTemplateId });
-    //   }
-    // });
-    getMedications(patient_id);
-    getAppointments(patient_id);
+    console.log('currentCarePlanId in did mount', currentCarePlanId, isCarePlanDataPresent, care_plans[currentCarePlanId]);
+    if (!isCarePlanDataPresent) {
+      getPatientCarePlanDetails(patient_id);
+      // .then(response => {
+      //   let { status = false, payload = {} } = response;
+      //   if (status) {
+      //     let { data: { show = false, care_plan_templates = {} } = {} } = payload;
+      //     const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
+
+      //     console.log("RESPONSEEEEEEEEE IN DID MOUNTTT", carePlanTemplateId);
+      if (show_template_drawer) {
+        this.setState({ templateDrawerVisible: true });
+      }
+      //     this.setState({ carePlanTemplateId });
+      //   }
+      // });
+      getMedications(patient_id);
+      getAppointments(patient_id);
+    }
     searchMedicine("");
     let carePlanTemplateId = 0;
-    const { care_plans = {} } = this.props;
     for (let carePlan of Object.values(care_plans)) {
 
       let { basic_info: { id = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
@@ -378,7 +385,7 @@ class PatientDetails extends Component {
       patients = {},
     } = this.props;
 
-    let {  appointment_ids = [] } = carePlan;
+    let { appointment_ids = [] } = carePlan;
     return appointment_ids.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
@@ -414,7 +421,7 @@ class PatientDetails extends Component {
       medicines = {},
     } = this.props;
 
-    let {  medication_ids = [] } = carePlan;
+    let { medication_ids = [] } = carePlan;
     console.log("92834792 ", medications);
     const medicationRows = medication_ids.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
@@ -447,7 +454,7 @@ class PatientDetails extends Component {
             <p className="mb0">{name ? `${name}` : "--"}</p>
           </div>
         ),
-        in_take: `${repeat_days?repeat_days.join(", "):'--'}`,
+        in_take: `${repeat_days ? repeat_days.join(", ") : '--'}`,
         duration: end_date ? `Till ${moment(end_date).format("DD MMMM")}` : "--",
       };
     });
@@ -579,7 +586,9 @@ class PatientDetails extends Component {
 
 
   render() {
-    let { patients, patient_id, users, care_plans, doctors, medicines, appointments = {}, medications = {}, treatments = {}, conditions = {}, severity: severities = {}, template_medications = {}, template_appointments = {}, care_plan_templates = {} } = this.props;
+    let { patients, patient_id, users, care_plans, doctors, medicines, appointments = {}, medications = {},
+      treatments = {}, conditions = {}, severity: severities = {}, template_medications = {}, template_appointments = {},
+      care_plan_templates = {}, show_template_drawer = false } = this.props;
     const { loading, templateDrawerVisible = false, carePlanTemplateId = 0 } = this.state;
 
     console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd render", this.state);
@@ -624,7 +633,7 @@ class PatientDetails extends Component {
       newMedication.schedule_data = schedule_data;
       newMedication.care_plan_template_id = care_plan_template_id;
       newMedication.medicine_id = medicine_id;
-      const { basic_info: { name: medName = '', type:medType = '' } = {} } = medicines[medicine_id] || {};
+      const { basic_info: { name: medName = '', type: medType = '' } = {} } = medicines[medicine_id] || {};
 
 
       newMedication.medicine = medName;
@@ -652,7 +661,6 @@ class PatientDetails extends Component {
     }
 
 
-    console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS', template_appointments, template_medications);
     let showUseTemplate = true;
     let showAddButton = carePlanTemplateId ? false : true;
     if (cPAppointmentIds.length || cPMedicationIds.length) {
@@ -660,6 +668,7 @@ class PatientDetails extends Component {
     }
 
 
+    console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS', carePlanId, care_plans[carePlanId]);
     let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
     const { basic_info: { doctor_id = 1 } = {}, activated_on: treatment_start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
     const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};

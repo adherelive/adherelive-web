@@ -61,6 +61,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Address"
     },
+    verified_text: {
+        id: "app.admin.doctors.details.verified.text",
+        description: "",
+        defaultMessage: "Account Status"
+    },
     qualification_details_text: {
         id: "app.admin.doctors.qualification.details.text",
         description: "",
@@ -155,6 +160,21 @@ const messages = defineMessages({
         id: "app.admin.doctors.registration.expiry.date.text",
         description: "",
         defaultMessage: "Expiry Date"
+    },
+    no_registration_text: {
+        id: "app.admin.doctors.no.registration.text",
+        description: "",
+        defaultMessage: "Registration details yet to be updated"
+    },
+    no_qualification_text: {
+        id: "app.admin.doctors.no.qualification.text",
+        description: "",
+        defaultMessage: "Qualification details yet to be updated"
+    },
+    no_clinic_text: {
+        id: "app.admin.doctors.no.clinic.text",
+        description: "",
+        defaultMessage: "Clinic details yet to be updated"
     }
 });
 

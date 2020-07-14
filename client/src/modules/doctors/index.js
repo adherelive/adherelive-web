@@ -62,7 +62,7 @@ export const getAllDoctors = () => {
       if (status === true) {
         dispatch({
           type: GET_ALL_DOCTORS_COMPLETE,
-         data: data,
+          data: data,
         });
       } else {
         dispatch({
@@ -124,6 +124,7 @@ export default (state = {}, action) => {
   const { type, data } = action;
   switch (type) {
     default:
+      console.log("92832738492 data 1--> ", data);
       return doctorReducer(state, data);
   }
 };

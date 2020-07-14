@@ -254,16 +254,16 @@ export const NO_ADHERENCE = "1";
 export const NO_MEDICATION = "2";
 export const NO_APPOINTMENT = "3";
 export const NO_ACTION = "4";
-export const ACTIVE_PATIENT = "5";
-export const CRITICAL_PATIENT = "6";
+export const TEST_ONE = "5";
+export const TEST_TWO = "6";
 
 export const CHART_TITLE = {
   [NO_ADHERENCE]: "Adherence",
   [NO_MEDICATION]: "Missed Medication",
   [NO_APPOINTMENT]: "Missed Appointments",
   [NO_ACTION]: "Missed Actions",
-  [ACTIVE_PATIENT]: 'Active Patients',
-  [CRITICAL_PATIENT]: 'Critical Patients'
+  [TEST_ONE]: 'Test One',
+  [TEST_TWO]: 'Test Two'
 
 };
 
@@ -300,7 +300,7 @@ export const GRAPH_COLORS = {
       light: "bg-light-blue"
     }
   },
-  [ACTIVE_PATIENT]: {
+  [TEST_ONE]: {
     dark: "#A0522D",
     light: "#F5DEB3",
     className: {
@@ -310,7 +310,7 @@ export const GRAPH_COLORS = {
 
   },
 
-  [CRITICAL_PATIENT]: {
+  [TEST_TWO]: {
     dark: "#00FF7F",
     light: "#90EE90",
     className: {
@@ -325,7 +325,7 @@ export const GRAPH_TYPE = {
   [NO_MEDICATION]: 'donut',
   [NO_APPOINTMENT]: 'donut',
   [NO_ACTION]: 'donut',
-  [ACTIVE_PATIENT]: 'donut'
+  [TEST_ONE]: 'donut'
 };
 
 export const SYMPTOM = {

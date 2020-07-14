@@ -45,7 +45,7 @@ class Profileregister extends Component {
             mobile_number: '',
             category: '',
             city: '',
-            prefix: "91",
+            prefix: '91',
             profile_pic: '',
             profile_pic_url: '',
             loading: ''
@@ -58,15 +58,21 @@ class Profileregister extends Component {
     }
 
     fetchData = async () => {
-        const { authenticated_user = {}, getDoctorProfileRegisterData } = this.props;
+        const { authenticated_user = '', users, doctors } = this.props;
 
         const { basic_info: { id = 1 } = {} } = authenticated_user;
 
-        await getDoctorProfileRegisterData(id);
+        const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
+        for (let doctor of Object.values(doctors)) {
+            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '', address = '' } } = doctor;
+            if (parseInt(user_id) === parseInt(authenticated_user)) {
+                let name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
+                this.setState({ name, email, mobile_number, category, city: address, prefix: newPrefix ? newPrefix : '91', profile_pic_url_saved: profile_pic, profile_pic });
+            }
 
-        const { onBoarding = {} } = this.props;
-        const { profileData: { name = "", email = "", mobile_number = '', category = '', city = '', prefix = '', profile_pic = '' } = {} } = onBoarding || {};
-        this.setState({ name, email, mobile_number, category, city, prefix, profile_pic_url_saved: profile_pic, profile_pic });
+        }
+        // const { profileData: { name = "", email = "", mobile_number = '', category = '', city = '', prefix = '', profile_pic = '' } = {} } = onBoarding || {};
+
     }
 
     setName = e => {
@@ -85,7 +91,7 @@ class Profileregister extends Component {
         this.setState({ email: e.target.value });
     };
 
-   
+
 
     setCity = e => {
         this.setState({ city: e.target.value });
@@ -203,7 +209,7 @@ class Profileregister extends Component {
     }
 
     onNextClick = () => {
-        const { history, authenticated_user=1,users } = this.props;
+        const { history, authenticated_user = 1, users } = this.props;
         const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
         console.log('ONCLICKKKKKK', id);
         const validate = this.validateData();
@@ -242,20 +248,20 @@ class Profileregister extends Component {
         if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
             this.setState({ mobile_number: e.target.value });
         }
-      };
-    
-      // '.' at the end or only '-' in the input box.
-      onBlur = () => {
+    };
+
+    // '.' at the end or only '-' in the input box.
+    onBlur = () => {
         const { value, onBlur, onChange } = this.props;
         let valueTemp = value;
         if (value.charAt(value.length - 1) === '.' || value === '-') {
-          valueTemp = value.slice(0, -1);
+            valueTemp = value.slice(0, -1);
         }
         onChange(valueTemp.replace(/0*(\d+)/, '$1'));
         if (onBlur) {
-          onBlur();
+            onBlur();
         }
-      };
+    };
 
     renderProfileForm = () => {
         console.log("2738612386128 ", this.state.profile_pic);

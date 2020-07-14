@@ -15,7 +15,7 @@ export const ADD_PATIENT_COMPLETED_WITH_ERROR =
   "ADD_PATIENT_COMPLETED_WITH_ERROR";
 
 
-export const addPatient =(payload,id)=>{
+export const addPatient =(payload)=>{
   let response = {};
   return async (dispatch) => {
     try {
@@ -23,7 +23,7 @@ export const addPatient =(payload,id)=>{
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: getAddPatientUrl(id),
+        url: getAddPatientUrl(),
         data:payload
       });
 
@@ -38,12 +38,10 @@ export const addPatient =(payload,id)=>{
           payload: { error },
         });
       } else if (status === true) {
-        const { patients = {} } = data;
+        // const { patients = {} } = data;
         dispatch({
           type:ADD_PATIENT_COMPLETED,
-          payload: {
-           patients
-          },
+          data: data,
         });
       }
     } catch (err) {

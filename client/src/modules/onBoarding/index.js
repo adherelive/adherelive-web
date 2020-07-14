@@ -69,10 +69,7 @@ export const doctorProfileRegister = (payload) => {
 
         dispatch({
           type: DOCTOR_PROFILE_UPDATE_COMPLETED,
-          payload: {
-
-
-          },
+          data: data
         });
       }
     } catch (err) {
@@ -84,7 +81,7 @@ export const doctorProfileRegister = (payload) => {
   };
 };
 
-export const doctorQualificationRegister = (payload,userId) => {
+export const doctorQualificationRegister = (payload, userId) => {
   let response = {};
   console.log("DOCTORRR QUALIFICATION REGISTERR");
   return async (dispatch) => {
@@ -125,7 +122,7 @@ export const doctorQualificationRegister = (payload,userId) => {
   };
 };
 
-export const doctorClinicRegister = (payload,userId) => {
+export const doctorClinicRegister = (payload, userId) => {
   let response = {};
   console.log("DOCTORRR ClINIC REGISTERR");
   return async (dispatch) => {
@@ -229,7 +226,7 @@ export const getDoctorQualificationRegisterData = (userId) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { qualificationData,registration_details,upload_documents } = data;
+        const { qualificationData, registration_details, upload_documents } = data;
         dispatch({
           type: GET_DOCTOR_QUALIFICATION_DATA_COMPLETED,
           payload: {
@@ -329,7 +326,7 @@ export const registerRegistration = (payload) => {
   };
 }
 
-export const deleteDoctorQualificationImage = ( qualificationId,document) => {
+export const deleteDoctorQualificationImage = (qualificationId, document) => {
   let response = {};
   console.log("DELETE QUALIFICATION IMAGE DATA");
   return async (dispatch) => {
@@ -337,9 +334,9 @@ export const deleteDoctorQualificationImage = ( qualificationId,document) => {
       dispatch({ type: DELETE_QUALIFICATION_IMAGE });
 
       response = await doRequest({
-        method: REQUEST_TYPE.POST,
+        method: REQUEST_TYPE.DELETE,
         url: Doctor.getDeleteQualificationDocumentUrl(qualificationId),
-        data:{document},
+        data: { document },
       });
 
       console.log("DELETE QUALIFICATION IMAGE response --> ", response);
@@ -369,7 +366,7 @@ export const deleteDoctorQualificationImage = ( qualificationId,document) => {
 }
 
 
-export const deleteDoctorRegistrationImage = ( registrationId,document) => {
+export const deleteDoctorRegistrationImage = (registrationId, document) => {
   let response = {};
   console.log("DELETE REGISTRATION IMAGE DATA");
   return async (dispatch) => {
@@ -379,7 +376,7 @@ export const deleteDoctorRegistrationImage = ( registrationId,document) => {
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: Doctor.getDeleteRegistrationDocumentUrl(registrationId),
-        data:{document},
+        data: { document },
       });
 
       console.log("DELETE REGISTRATION IMAGE response --> ", response);
@@ -418,8 +415,8 @@ export default (state = {}, action) => {
     case GET_DOCTOR_QUALIFICATION_DATA_COMPLETED:
       return {
         qualificationData: payload.qualificationData,
-        registration_details:payload.registration_details,
-        upload_documents:payload.upload_documents
+        registration_details: payload.registration_details,
+        upload_documents: payload.upload_documents
       };
     default:
       return state;

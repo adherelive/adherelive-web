@@ -1,5 +1,5 @@
 export const getdoctorProfileRegisterUrl = () => {
-  return `/auth/doctor-profile-registration`;
+  return `/doctors/`;
 };
 
 export const getdoctorQualificationRegisterUrl = (userId) => {
@@ -36,12 +36,12 @@ export const getUploadRegistrationDocumentUrl = () => {
 };
 
 export const getDeleteQualificationDocumentUrl = (qualificationId) => {
-  return `/auth/delete-qualification-document/${qualificationId}`;
+  return `/doctors/qualification-documents/${qualificationId}`;
 };
 
 
 export const getDeleteRegistrationDocumentUrl = (registrationId) => {
-  return `/auth/registration-document/${registrationId}`;
+  return `/doctors/registration-documents/${registrationId}`;
 };
 
 export const getAllDoctorsUrl = () => {

@@ -33,6 +33,8 @@ class DoctorTable extends Component {
     getDataSource = () => {
         const { users, doctors, doctor_ids, user_ids } = this.props;
 
+        console.log("37129379137 users, doctors, doctor_ids, user_ids  -> ", users, doctors, doctor_ids, user_ids);
+
         return doctor_ids.map(id => {
             return generateRow({
                 id,
@@ -61,8 +63,6 @@ class DoctorTable extends Component {
         const rowSelection = {
             onChange: onSelectChange
         };
-
-        // console.log("192837 ", getDataSource());
 
         const {
             loading,

@@ -33,8 +33,8 @@ router.get(
 router.get(
     "/doctors/:id",
     Authenticate,
-    Doctor.getAllDoctorDetails
-)
+    Doctor.getAllAdminDoctorDetails
+);
 
 router.post(
     "/doctors/:id",

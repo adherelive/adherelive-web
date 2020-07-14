@@ -15,6 +15,12 @@ export const GET_GRAPHS_COMPLETED_WITH_ERROR =
   "GET_GRAPHS_COMPLETED_WITH_ERROR";
 
 
+export const UPDATE_GRAPHS = "UPDATE_GRAPHS";
+export const UPDATE_GRAPHS_COMPLETED = "UPDATE_GRAPHS_COMPLETED";
+export const UPDATE_GRAPHS_COMPLETED_WITH_ERROR =
+  "UPDATE_GRAPHS_COMPLETED_WITH_ERROR";
+
+
 function graphReducer(state, data) {
   console.log('DATA IN CAREPLAN REDUCER==========>>>>>$$$$$', data);
   const { charts } = data || {};
@@ -54,6 +60,42 @@ export const getGraphs = () => {
 
         dispatch({
           type: GET_GRAPHS_COMPLETED,
+          data: { charts },
+        });
+      }
+    } catch (err) {
+      console.log("err get patient careplan details", err);
+      throw err;
+    }
+
+    return response;
+  };
+}
+
+export const updateGraphs = (payload) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: UPDATE_GRAPHS });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: Graphs.addGraphsUrl(),
+        data:payload
+      });
+
+      const { status, payload: { error = "", data: { charts = {} } = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: UPDATE_GRAPHS_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+
+        dispatch({
+          type: UPDATE_GRAPHS_COMPLETED,
           data: { charts },
         });
       }

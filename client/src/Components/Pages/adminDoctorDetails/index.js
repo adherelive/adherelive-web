@@ -3,11 +3,12 @@ import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
 import Modal from "antd/es/modal";
-
+import { CheckCircleTwoTone, ExclamationCircleTwoTone, ArrowLeftOutlined, FileTextOutlined } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
 import { TABLE_DEFAULT_BLANK_FIELD } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
+import { withRouter } from "react-router-dom";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 
 class AdminDoctorDetails extends Component {
@@ -35,8 +36,9 @@ class AdminDoctorDetails extends Component {
       this.setState({ loading: true });
       const { getDoctorDetails } = this.props;
       const response = await getDoctorDetails();
-      const { status, payload: { message: responseMessage } = {} } =
+      const { status, payload: { message: { message: responseMessage } = {} } = {} } =
         response || {};
+
       if (status === true) {
         this.setState({
           loading: false
@@ -55,13 +57,21 @@ class AdminDoctorDetails extends Component {
     }
   };
 
+  handleBack = e => {
+    e.preventDefault();
+    const { history } = this.props;
+    console.log("1827318723 props --> ", this.props);
+    history.goBack();
+  };
+
   getDoctorDetailsHeader = () => {
     const { id, doctors, users } = this.props;
-    const { formatMessage } = this;
+    const { formatMessage, handleBack } = this;
 
     return (
       <div className="wp100 mb20 fs28 fw700 flex justify-start align-center">
-        {formatMessage(messages.doctor_details_header_text)}
+        <ArrowLeftOutlined onClick={handleBack} className="mr10" />
+        <div>{formatMessage(messages.doctor_details_header_text)}</div>
       </div>
     );
   };
@@ -86,7 +96,8 @@ class AdminDoctorDetails extends Component {
       basic_info: { user_name, email, mobile_number } = {},
       sign_in_type,
       onboarded,
-      onboarding_status
+      onboarding_status,
+      activated_on
     } = users[user_id] || {};
 
     return (
@@ -108,10 +119,10 @@ class AdminDoctorDetails extends Component {
                 />
               </div>
             ) : (
-              <div className="w200 h200 bg-dark-grey text-white flex align-center justify-center">
-                <div>{formatMessage(messages.no_photo_text)}</div>
-              </div>
-            )}
+                <div className="w200 h200 bg-dark-grey text-white flex align-center justify-center">
+                  <div>{formatMessage(messages.no_photo_text)}</div>
+                </div>
+              )}
           </div>
           <div className="wp100 ml16 flex direction-row align-center flex-wrap">
             {/*name*/}
@@ -121,7 +132,7 @@ class AdminDoctorDetails extends Component {
               </div>
               <div className="fs14 fw500">{`${first_name} ${
                 middle_name ? `${middle_name} ` : ""
-              }${last_name ? last_name : ""}`}</div>
+                }${last_name ? last_name : ""}`}</div>
             </div>
 
             {/*gender*/}
@@ -183,6 +194,26 @@ class AdminDoctorDetails extends Component {
                 {city ? city : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
+
+            {/* verified */}
+            <div className="wp40 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.verified_text)}
+              </div>
+              <div className="fs14 fw500">
+                {activated_on ?
+                  <div className="flex direction-row align-center">
+                    <CheckCircleTwoTone className="mr10" twoToneColor={`#43b02a`} />
+                    <span>{`Verified`}</span>
+                  </div>
+                  :
+                  <div className="flex direction-row align-center">
+                    <ExclamationCircleTwoTone className="mr10" twoToneColor={`#f1c40f`} />
+                    <span>{`Not Verified`}</span>
+                  </div>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -195,15 +226,16 @@ class AdminDoctorDetails extends Component {
   };
 
   getDoctorRegistrationDetails = () => {
-    const { id, doctors, doctor_registrations } = this.props;
-    const { formatMessage } = this;
+    const { id, doctors, doctor_registrations, upload_documents } = this.props;
+    const { formatMessage, handlePictureModal } = this;
 
     const { doctor_registration_ids = [] } = doctors[id] || {};
 
     return doctor_registration_ids.map((registration_id, index) => {
       const {
         basic_info: { number, start_date, end_date, council, year } = {},
-          expiry_date
+        expiry_date,
+        upload_document_ids
       } = doctor_registrations[registration_id] || {};
 
       return (
@@ -267,15 +299,69 @@ class AdminDoctorDetails extends Component {
                   : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
+
+            {/*upload_documents*/}
+            <div className="wp100 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.upload_document_text)}
+              </div>
+
+              <div className="flex align-center flex-wrap">
+                {upload_document_ids.map(id => {
+                  const { basic_info: { document } = {} } =
+                    upload_documents[id] || {};
+
+                  const documentType = document.split(".")[1] || null;
+                  if (documentType) {
+                    if (documentType !== "jpg" && documentType !== "png") {
+                      return (
+                        <a
+                          key={`q-${id}`}
+                          className="w100 h100 mr6 mt6 mb6 pointer"
+                          href={document}
+                          target="_blank"
+                        // onClick={handleDocumentDownload(id)}
+                        >
+                          <div className="w100 h100 br5 flex direction-column align-center justify-center br-black black-85">
+                            <FileTextOutlined/>
+                            {documentType.toUpperCase()}
+                          </div>
+                        </a>
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={`q-${id}`}
+                          className="w100 h100 mr6 mt6 mb6 pointer"
+                          onClick={handlePictureModal(id)}
+                        >
+                          <img
+                            src={document}
+                            className="w100 h100 br5"
+                            alt={`registration document ${id}`}
+                          />
+                        </div>
+                      );
+                    }
+                  }
+                })}
+              </div>
+            </div>
+
           </div>
         </div>
       );
     });
   };
 
+  handleDocumentDownload = id => e => {
+    e.preventDefault();
+
+  };
+
   getDoctorQualificationDetails = () => {
     const { id, doctors, doctor_qualifications, upload_documents } = this.props;
-    const { formatMessage, handlePictureModal } = this;
+    const { formatMessage, handlePictureModal, handleDocumentDownload } = this;
 
     const { doctor_qualification_ids = [] } = doctors[id] || {};
 
@@ -337,19 +423,39 @@ class AdminDoctorDetails extends Component {
                 {upload_document_ids.map(id => {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
-                  return (
-                    <div
-                      key={`q-${id}`}
-                      className="w100 h100 mr6 mt6 mb6 pointer"
-                      onClick={handlePictureModal(id)}
-                    >
-                      <img
-                        src={document}
-                        className="w100 h100 br5"
-                        alt={`qualification document ${id}`}
-                      />
-                    </div>
-                  );
+
+                  const documentType = document.split(".")[1] || null;
+                  if (documentType) {
+                    if (documentType !== "jpg" && documentType !== "png") {
+                      return (
+                        <a
+                          key={`q-${id}`}
+                          className="w100 h100 mr6 mt6 mb6 pointer"
+                          href={document}
+                          target="_blank"
+                        // onClick={handleDocumentDownload(id)}
+                        >
+                          <div className="w100 h100 br5 flex align-center justify-center">
+                            {documentType.toUpperCase()}
+                          </div>
+                        </a>
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={`q-${id}`}
+                          className="w100 h100 mr6 mt6 mb6 pointer"
+                          onClick={handlePictureModal(id)}
+                        >
+                          <img
+                            src={document}
+                            className="w100 h100 br5"
+                            alt={`qualification document ${id}`}
+                          />
+                        </div>
+                      );
+                    }
+                  }
                 })}
               </div>
             </div>
@@ -415,8 +521,8 @@ class AdminDoctorDetails extends Component {
                   <div className="fs14 fw500">
                     {start_time
                       ? `${moment(start_time).format("LT")} to ${moment(
-                          end_time
-                        ).format("LT")}`
+                        end_time
+                      ).format("LT")}`
                       : TABLE_DEFAULT_BLANK_FIELD}
                   </div>
                 </div>
@@ -429,11 +535,16 @@ class AdminDoctorDetails extends Component {
   };
 
   getFooter = () => {
+    const { id, doctors } = this.props;
     const { formatMessage, handleVerify } = this;
+
+    const { doctor_clinic_ids = [], doctor_qualification_ids = [], doctor_registration_ids = [] } = doctors[id] || {};
+
+    const disabled = doctor_clinic_ids.length === 0 || doctor_qualification_ids.length === 0 || doctor_registration_ids.length === 0;
 
     return (
       <div className="mt20 wi flex justify-end">
-        <Button type="primary" className="mb10 mr10" onClick={handleVerify}>
+        <Button disabled={disabled} type="primary" className="mb10 mr10" onClick={handleVerify}>
           {formatMessage(messages.submit_button_text)}
         </Button>
       </div>
@@ -523,6 +634,7 @@ class AdminDoctorDetails extends Component {
   };
 
   render() {
+    const { id, doctors } = this.props;
     const { loading } = this.state;
     const {
       formatMessage,
@@ -536,7 +648,9 @@ class AdminDoctorDetails extends Component {
       getProfilePicModal
     } = this;
 
-    console.log("1982317923 loading --> ", loading);
+    const { doctor_clinic_ids = [], doctor_qualification_ids = [], doctor_registration_ids = [] } = doctors[id] || {};
+
+    console.log("1982317923 loading --> ", this.props);
 
     if (loading) {
       return <PageLoading />;
@@ -556,7 +670,7 @@ class AdminDoctorDetails extends Component {
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.registration_details_text)}
             </div>
-            <div className="border-box">{getDoctorRegistrationDetails()}</div>
+            {doctor_registration_ids.length > 0 ? (<div className="border-box">{getDoctorRegistrationDetails()}</div>) : (<div>{formatMessage(messages.no_registration_text)}</div>)}
           </div>
 
           {/*qualifications*/}
@@ -564,7 +678,7 @@ class AdminDoctorDetails extends Component {
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.qualification_details_text)}
             </div>
-            <div className="border-box">{getDoctorQualificationDetails()}</div>
+            {doctor_qualification_ids.length > 0 ? <div className="border-box">{getDoctorQualificationDetails()}</div> : <div>{formatMessage(messages.no_qualification_text)}</div>}
           </div>
 
           {/*clinics*/}
@@ -572,7 +686,7 @@ class AdminDoctorDetails extends Component {
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.clinic_details_text)}
             </div>
-            <div className="border-box">{getDoctorClinicDetails()}</div>
+            {doctor_clinic_ids.length > 0 ? <div className="border-box">{getDoctorClinicDetails()}</div> : <div className="bg-grey wp100 h200 br5 flex align-center justify-center">{formatMessage(messages.no_clinic_text)}</div>}
           </div>
 
           {/*footer*/}
@@ -587,4 +701,4 @@ class AdminDoctorDetails extends Component {
   }
 }
 
-export default injectIntl(AdminDoctorDetails);
+export default withRouter(injectIntl(AdminDoctorDetails));

@@ -24,4 +24,9 @@ export default class User {
     getPassword = () => {
         return this._data.password;
     }
+
+    isActivated = () => {
+        const {verified, activated_on} = this._data || {};
+        return verified && activated_on !== null;
+    };
 }

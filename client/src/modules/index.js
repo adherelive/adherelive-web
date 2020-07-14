@@ -24,6 +24,7 @@ import template_appointments from "./templateAppointments";
 import template_medications from "./templateMedications";
 import care_plan_templates from "./carePlanTemplates";
 import upload_documents from "./uploadDocuments";
+import show_template_drawer from "./showDrawer";
 
 const rootReducer = combineReducers({
   auth,
@@ -50,7 +51,8 @@ const rootReducer = combineReducers({
   upload_documents,
   template_appointments,
   template_medications,
-  care_plan_templates
+  care_plan_templates,
+  show_template_drawer
 });
 
 export default (state, action) => {

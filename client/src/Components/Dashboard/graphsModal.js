@@ -3,13 +3,13 @@ import { injectIntl } from "react-intl";
 // import messages from "./message";
 // import {formatMessage} from "react-intl/src/format";
 import { DeleteTwoTone } from "@ant-design/icons";
-import { CHART_TITLE, GRAPH_COLORS, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, ACTIVE_PATIENT, CRITICAL_PATIENT } from "../../constant";
+import { CHART_TITLE, GRAPH_COLORS, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_TWO, TEST_ONE } from "../../constant";
 import uuid from 'react-uuid';
 import { Tabs, Button, Checkbox, Steps, Col, Select, Input, Upload, Modal, TimePicker, Icon, message } from "antd";
 
 
 
-const graphs = [NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, ACTIVE_PATIENT, CRITICAL_PATIENT];
+const graphs = [NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_TWO, TEST_ONE];
 
 class ClinicRegister extends Component {
     constructor(props) {

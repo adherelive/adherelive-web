@@ -1,4 +1,4 @@
-
+// const express = require("express");
 import express from "express";
 import Authenticate from "../../m-api/middleware/auth";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post(
     "/",
-    Authenticate,
+    // Authenticate,
     // validator.validateAddDoctorData,
     DoctorController.addDoctor
 );
@@ -56,19 +56,19 @@ router.post(
 
 router.delete(
     "/qualification-documents/:id",
-    Authenticate,
+    // Authenticate,
     DoctorController.deleteQualificationDocument
 );
 
 router.delete(
     "/registration-documents/:id",
-    Authenticate,
+    // Authenticate,
     DoctorController.deleteRegistrationDocument
 );
 
 router.post(
     "/patients",
-    Authenticate,
+    // Authenticate,
     // validator.verifyAddPatientData,
     DoctorController.addPatient
 );
