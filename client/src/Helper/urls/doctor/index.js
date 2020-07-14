@@ -14,8 +14,8 @@ export const getdoctorProfileRegisterDataUrl = (userId) => {
   return `/auth/doctor-profile-registration/${userId}`;
 };
 
-export const getdoctorQualificationRegisterDataUrl = (userId) => {
-  return `/auth/doctor-qualification-registration/${userId}`;
+export const getdoctorQualificationRegisterDataUrl = () => {
+  return `/doctors/`;
 };
 export const getRegisterQualificationUrl = (userId) => {
   return `/auth/register-qualification/${userId}`;

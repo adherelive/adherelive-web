@@ -13,9 +13,9 @@ function userPageReducer(state, data) {
 }
 
 export default (state = [], action) => {
-    const { type, payload } = action;
+    const { type, data } = action;
     switch (type) {
         default:
-            return userPageReducer(state, payload);
+            return userPageReducer(state, data);
     }
 };

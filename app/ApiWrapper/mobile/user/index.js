@@ -1,6 +1,7 @@
 import BaseUser from "../../../services/user";
 import userService from "../../../services/user/user.service";
 import userPermissionService from "../../../services/userPermission/userPermission.service";
+import permissionService from "../../../services/permission/permission.service";
 
 class MUserWrapper extends BaseUser {
   constructor(data) {
@@ -14,6 +15,7 @@ class MUserWrapper extends BaseUser {
       user_name,
       email,
       mobile_number,
+        prefix,
       sign_in_type,
       category,
       activated_on,
@@ -26,7 +28,8 @@ class MUserWrapper extends BaseUser {
         id,
         user_name,
         email,
-        mobile_number
+        mobile_number,
+          prefix,
       },
       verified,
       onboarded,
@@ -40,21 +43,31 @@ class MUserWrapper extends BaseUser {
   getPermissions = async () => {
     const {getCategory} = this;
     try {
-      const permissionsData = await userPermissionService.getPermissionsByData({category: getCategory()});
-      let permissionData = [];
+        const permissionsData = await userPermissionService.getPermissionsByData({category: getCategory()});
+        let permission_ids = [];
+        let permissionData = [];
 
-      permissionsData.forEach(permission => {
-        const {type} = permission || {};
-        permissionsData.push(type);
-      });
+        for(const userPermission of permissionsData) {
+          const {permission_id} = userPermission || {};
+          permission_ids.push(permission_id);
+        }
 
-      return {
-        permissions: permissionData
-      };
+        const permissions = await permissionService.getPermissionsById(permission_ids);
+
+        for(const permission of permissions) {
+          const {type} = permission || {};
+          permissionData.push(type);
+        }
+
+        console.log("permissionsData  ------------> ", permissionData, getCategory());
+
+        return {
+            permissions: permissionData
+        };
     } catch(error) {
-      throw error;
+        throw error;
     }
-  }
+}
 }
 
 export default async (data = null, userId = null) => {

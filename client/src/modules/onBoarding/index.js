@@ -108,9 +108,7 @@ export const doctorQualificationRegister = (payload, userId) => {
 
         dispatch({
           type: DOCTOR_QUALIFICATION_UPDATE_COMPLETED,
-          payload: {
-
-          },
+          data: data,
         });
       }
     } catch (err) {
@@ -203,7 +201,7 @@ export const getDoctorProfileRegisterData = (userId) => {
   };
 }
 
-export const getDoctorQualificationRegisterData = (userId) => {
+export const getDoctorQualificationRegisterData = () => {
   let response = {};
   console.log("DOCTORRR QUALIFICATION REGISTERR DATA");
   return async (dispatch) => {
@@ -212,7 +210,7 @@ export const getDoctorQualificationRegisterData = (userId) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Doctor.getdoctorQualificationRegisterDataUrl(userId),
+        url: Doctor.getdoctorQualificationRegisterDataUrl(),
       });
 
       console.log("DOCTORRR QUALIFICATION REGISTERR DATA response --> ", response);
@@ -226,14 +224,10 @@ export const getDoctorQualificationRegisterData = (userId) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { qualificationData, registration_details, upload_documents } = data;
+        // const { qualificationData, registration_details, upload_documents } = data;
         dispatch({
           type: GET_DOCTOR_QUALIFICATION_DATA_COMPLETED,
-          payload: {
-            qualificationData,
-            registration_details,
-            upload_documents
-          },
+          data: data
         });
       }
     } catch (err) {
@@ -353,7 +347,7 @@ export const deleteDoctorQualificationImage = (qualificationId, document) => {
 
         dispatch({
           type: DELETE_QUALIFICATION_IMAGE_COMPLETED,
-          payload: {},
+          data: {},
         });
       }
     } catch (err) {
@@ -393,7 +387,7 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
 
         dispatch({
           type: DELETE_REGISTRATION_IMAGE_COMPLETED,
-          payload: {},
+          data: {},
         });
       }
     } catch (err) {
@@ -406,17 +400,17 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
 }
 
 export default (state = {}, action) => {
-  const { payload, type } = action;
+  const { data, type } = action;
   switch (type) {
     case GET_DOCTOR_PROFILE_DATA_COMPLETED:
       return {
-        profileData: payload.profileData
+        profileData: data.profileData
       };
     case GET_DOCTOR_QUALIFICATION_DATA_COMPLETED:
       return {
-        qualificationData: payload.qualificationData,
-        registration_details: payload.registration_details,
-        upload_documents: payload.upload_documents
+        qualificationData: data.qualificationData,
+        registration_details: data.registration_details,
+        upload_documents: data.upload_documents
       };
     default:
       return state;

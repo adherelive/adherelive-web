@@ -245,7 +245,6 @@ class PatientController extends Controller {
 
             const carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(carePlanData.getCarePlanId());
 
-            console.log("ON LINE 244================>>>>>>>>>>>>>>>>>>>>>>>>>");
             for (const carePlanAppointment of carePlanAppointments) {
                 appointment_ids.push(carePlanAppointment.get("appointment_id"));
             }
@@ -253,14 +252,12 @@ class PatientController extends Controller {
             console.log("ON LINE 250================>>>>>>>>>>>>>>>>>>>>>>>>>");
             let appointmentApiDetails = {};
             const appointments = await appointmentService.getAppointmentByData({ id: appointment_ids });
-            // if (appointments) {
-
-            // console.log("ON LINE 255================>>>>>>>>>>>>>>>>>>>>>>>>>",appointments,typeof(appointments));
-            //     for (const appointment of appointments) {
-            //         const appointmentData = await AppointmentWrapper(appointment);
-            //         appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
-            //     }
-            // }
+            if (appointments) {
+                for (const appointment of appointments) {
+                    const appointmentData = await AppointmentWrapper(appointment);
+                    appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+                }
+            }
 
             console.log("ON LINE 258================>>>>>>>>>>>>>>>>>>>>>>>>>");
             const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanData.getCarePlanId());
@@ -271,10 +268,12 @@ class PatientController extends Controller {
 
             let medicationApiDetails = {};
             const medications = await medicationReminderService.getMedicationsForParticipant({ id: medication_ids });
-            for (const medication of medications) {
-                const medicationData = await MReminderWrapper(medication);
-                medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
-                medicine_ids.push(medicationData.getMedicineId());
+            if (medications) {
+                for (const medication of medications) {
+                    const medicationData = await MReminderWrapper(medication);
+                    medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
+                    medicine_ids.push(medicationData.getMedicineId());
+                }
             }
 
             // Logger.debug(

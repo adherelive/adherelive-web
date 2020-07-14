@@ -161,7 +161,9 @@ class MobileDoctorController extends Controller {
         password: hash,
         sign_in_type: SIGN_IN_CATEGORY.BASIC,
         category: USER_CATEGORY.PATIENT,
-        onboarded: false
+        onboarded: false,
+        verified: true,
+        activated_on: moment()
       });
 
       let newUserId = user.get("id");

@@ -13,9 +13,9 @@ function doctorQualificationReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const { type, payload } = action;
+    const { type, data } = action;
     switch (type) {
         default:
-            return doctorQualificationReducer(state, payload);
+            return doctorQualificationReducer(state, data);
     }
 };

@@ -1,24 +1,24 @@
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import QualificationRegister from "../../Components/DoctorOnBoarding/qualificationRegister";
-import {signOut} from "../../modules/auth";
-import {doctorQualificationRegister,getDoctorQualificationRegisterData,registerQualification,deleteDoctorQualificationImage,deleteDoctorRegistrationImage,registerRegistration} from "../../modules/onBoarding";
-import {connect} from "react-redux";
+import { signOut } from "../../modules/auth";
+import { doctorQualificationRegister, getDoctorQualificationRegisterData, registerQualification, deleteDoctorQualificationImage, deleteDoctorRegistrationImage, registerRegistration } from "../../modules/onBoarding";
+import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-    const {auth,users,onBoarding} = state;
-    let{authenticated_user={}}=auth;
-    return {authenticated_user,users,onBoarding};
+    const { auth, users, doctors, onBoarding, upload_documents, doctor_qualifications, doctor_registrations } = state;
+    let { authenticated_user = {} } = auth;
+    return { authenticated_user, doctors, users, onBoarding, upload_documents, doctor_qualifications, doctor_registrations };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         signOut: () => dispatch(signOut()),
-        doctorQualificationRegister: (data,userId) => dispatch(doctorQualificationRegister(data,userId)),
-        getDoctorQualificationRegisterData: (userId) => dispatch(getDoctorQualificationRegisterData(userId)),
-        registerQualification: (data,userId) => dispatch(registerQualification(data,userId)),
+        doctorQualificationRegister: (data, userId) => dispatch(doctorQualificationRegister(data, userId)),
+        getDoctorQualificationRegisterData: () => dispatch(getDoctorQualificationRegisterData()),
+        registerQualification: (data, userId) => dispatch(registerQualification(data, userId)),
         registerRegistration: (data) => dispatch(registerRegistration(data)),
-        deleteDoctorQualificationImage: (qualificationId,document) => dispatch(deleteDoctorQualificationImage(qualificationId,document)),
-        deleteDoctorRegistrationImage: (registrationId,document) => dispatch(deleteDoctorRegistrationImage(registrationId,document))
+        deleteDoctorQualificationImage: (qualificationId, document) => dispatch(deleteDoctorQualificationImage(qualificationId, document)),
+        deleteDoctorRegistrationImage: (registrationId, document) => dispatch(deleteDoctorRegistrationImage(registrationId, document))
     };
 };
 export default withRouter(

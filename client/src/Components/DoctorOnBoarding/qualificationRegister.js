@@ -8,7 +8,7 @@ import { Tabs, Button, Steps, Col, Select, Input, InputNumber, DatePicker, Uploa
 import SideMenu from "./sidebar";
 import { REQUEST_TYPE, PATH } from '../../constant';
 import { getUploadURL } from '../../Helper/urls/user';
-import { getUploadQualificationDocumentUrl,getUploadRegistrationDocumentUrl } from '../../Helper/urls/doctor';
+import { getUploadQualificationDocumentUrl, getUploadRegistrationDocumentUrl } from '../../Helper/urls/doctor';
 import { doRequest } from '../../Helper/network';
 import UploadSteps from './steps';
 import plus from '../../Assets/images/plus.png';
@@ -16,9 +16,9 @@ import plus from '../../Assets/images/plus.png';
 import moment from 'moment';
 import { withRouter } from "react-router-dom";
 
-const MALE='m';
-const FEMALE='f';
-const OTHER='o';
+const MALE = 'm';
+const FEMALE = 'f';
+const OTHER = 'o';
 
 const { YearPicker } = DatePicker;
 
@@ -54,25 +54,55 @@ class QualificationRegister extends Component {
   }
 
   fetchData = async () => {
-    const { authenticated_user = '', getDoctorQualificationRegisterData } = this.props;
 
 
-    await getDoctorQualificationRegisterData(authenticated_user);
+    const { getDoctorQualificationRegisterData } = this.props;
+    await getDoctorQualificationRegisterData();
+    const { authenticated_user = '', users, doctors = {} } = this.props;
+    let docGender = '';
+    let docSpeciality = '';
+    let doctorId = 0;
+    let docQualificationIds = [];
+    let docRegistrationIds = [];
+    for (let doctor of Object.values(doctors)) {
+      console.log("ONBOARDING DATA IN FETCH DATATA+++++++ 213124343242", doctor);
+      const { basic_info: { user_id = 0, id = 0, gender = '', speciality = '' }, doctor_qualification_ids = [], doctor_registration_ids = [] } = doctor;
 
-    const { onBoarding = {} } = this.props;
-    let { qualificationData: { speciality = '', gender = '',  qualification_details = []} = {},registration_details={},upload_documents=[] } = onBoarding || {};
+      console.log("ONBOARDING DATA IN FETCH DATATA-------- 213124343242", doctor_qualification_ids, doctor_registration_ids);
+      if (parseInt(user_id) === parseInt(authenticated_user)) {
+        docGender = gender;
+        docSpeciality = speciality;
+        doctorId = id;
+        docQualificationIds = doctor_qualification_ids;
+        docRegistrationIds = doctor_registration_ids;
+      }
+    }
+
+    const { onBoarding = {}, doctor_registrations = {}, doctor_qualifications = {}, upload_documents = {} } = this.props;
+    let { qualificationData: { speciality = '', gender = '', qualification_details = [] } = {} } = onBoarding || {};
     // registration_year=registration_year?registration_year:parseInt(moment().format("YYYY"));
-    console.log("ONBOARDING DATA IN FETCH DATATA",registration_details,typeof(registration_details),upload_documents,qualification_details,onBoarding);
     let educationKeys = [];
     let education = {};
     let registrationKeys = [];
     let registration = {};
 
-    if (qualification_details.length) {
-      for (let qualification of qualification_details) {
+    if (docQualificationIds.length) {
+      for (let qualifi of docQualificationIds) {
         let key = uuid();
+
+        let qualification = {};
+        let { basic_info: { year = '', college = '', degree = '', id = 0, doctor_id = 0 }, upload_document_ids = [], expiry_date = '' } = doctor_qualifications[qualifi];
+
+        qualification.year = year;
+        qualification.college = college;
+        qualification.degree = degree;
+        let photos = [];
+        for (let doc of upload_document_ids) {
+          let { basic_info: { document = '' } } = upload_documents[doc];
+          photos.push(document);
+        }
+        qualification.photos = photos;
         qualification.photo = [];
-        qualification.photos = qualification.photos && qualification.photos.length ? qualification.photos : [];
         if (!qualification.photo || qualification.photo && !qualification.photo.length) {
 
           let newPhoto = [];
@@ -81,44 +111,50 @@ class QualificationRegister extends Component {
           }
           qualification.photo = newPhoto;
         }
+
         education[key] = qualification;
         educationKeys.push(key);
+
       }
 
     } else {
       let key = uuid();
-      
-      education[key] = { degree: "", college: "", year: parseInt(moment().format("YYYY")),photo: [], photos: [], id: 0 };
+
+      education[key] = { degree: "", college: "", year: parseInt(moment().format("YYYY")), photo: [], photos: [], id: 0 };
       educationKeys = [key];
     }
-    if (Object.values(registration_details).length) {
 
-      for (let regis in registration_details) {
-               
-      // console.log("ONBOARDING DATA IN FETCH DATATA",regis);
-        let photos=[];
+
+    console.log("ONBOARDING DATA IN FETCH DATATA0000 213124343242", docQualificationIds, docRegistrationIds, doctor_qualifications, Object.values(doctor_registrations).length);
+    if (docRegistrationIds.length) {
+
+      for (let regis of docRegistrationIds) {
+
+        console.log("ONBOARDING DATA IN FETCH DATATA 213124343242", regis);
+        let photos = [];
         let key = uuid();
-    let {basic_info:{year='',council='',number='',id=0},upload_document_ids=[],expiry_date=''}=registration_details[regis];
-         
-      registration[key]={year,expiryDate:moment(expiry_date),council,number,id};
-      registration[key].photo=[];
-      for (let doc of upload_document_ids){
-        let{basic_info:{document=''}}=upload_documents[doc];
-        photos.push(document);
-      }
-      registration[key].photos=photos;
-      registrationKeys.push(key);
-      console.log("ONBOARDING DATA IN FETCH DATATA",registration,registrationKeys);
+        let { basic_info: { year = '', council = '', number = '', id = 0, doctor_id = 0 }, upload_document_ids = [], expiry_date = '' } = doctor_registrations[regis];
+        if (parseInt(doctorId) === parseInt(doctor_id)) {
+          registration[key] = { year, expiryDate: moment(expiry_date), council, number, id };
+          registration[key].photo = [];
+          for (let doc of upload_document_ids) {
+            let { basic_info: { document = '' } } = upload_documents[doc];
+            photos.push(document);
+          }
+          registration[key].photos = photos;
+          registrationKeys.push(key);
+        }
+        console.log("ONBOARDING DATA IN FETCH DATATA", registration, registrationKeys);
       }
 
-    }else{
+    } else {
       let key1 = uuid();
-      registration[key1] = { number: "", council: "", year: parseInt(moment().format("YYYY")), expiryDate:'', photo: [], photos: [], id: 0 };
+      registration[key1] = { number: "", council: "", year: parseInt(moment().format("YYYY")), expiryDate: '', photo: [], photos: [], id: 0 };
       registrationKeys = [key1];
     }
 
     // console.log(onBoarding.qualificationData, speciality, gender, registration_number, registration_council, registration_year, education, educationKeys);
-    this.setState({ speciality, gender, registration,registrationKeys, education, educationKeys });
+    this.setState({ speciality: docSpeciality, gender: docGender, registration, registrationKeys, education, educationKeys });
   }
 
   setSpeciality = e => {
@@ -137,7 +173,7 @@ class QualificationRegister extends Component {
     return years;
   }
 
-  setGender = value =>()=> {
+  setGender = value => () => {
     this.setState({ gender: value });
   };
 
@@ -148,7 +184,7 @@ class QualificationRegister extends Component {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
-    this.setState({ registration: newRegistration });
+      this.setState({ registration: newRegistration });
     }
   };
 
@@ -159,7 +195,7 @@ class QualificationRegister extends Component {
     this.setState({ registration: newRegistration });
   };
 
-  setRegYear = key=>(value) => {
+  setRegYear = key => (value) => {
     let { registration = {} } = this.state;
     let newRegistration = registration;
     newRegistration[key].year = value;
@@ -167,7 +203,7 @@ class QualificationRegister extends Component {
   };
 
 
-  setExpiryDate = key=>(date, dateString) => {
+  setExpiryDate = key => (date, dateString) => {
     let { registration = {} } = this.state;
     let newRegistration = registration;
     newRegistration[key].expiryDate = date;
@@ -220,12 +256,12 @@ class QualificationRegister extends Component {
 
     const { docs = [], education = {}, speciality = '', gender = '' } = this.state;
 
-      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE BEFORE SET STATE', docs,files);
-    this.setState({ docs: [...docs, ...files] },async ()=>{
-    //  async () => {
+    console.log('KEYS AND FILES IN ON UPLOAD COMPLETE BEFORE SET STATE', docs, files);
+    this.setState({ docs: [...docs, ...files] }, async () => {
+      //  async () => {
 
       const { docs, fileList, education } = this.state;
-      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE AFTER SET STATE', docs,files);
+      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE AFTER SET STATE', docs, files);
       let newEducation = education;
       // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE', docs.length, newEducation[key].photo.length,  newEducation[key].photos, docs.length === newEducation[key].photo.length);
       if (docs.length === newEducation[key].photo.length || docs.length + newEducation[key].photos.length === newEducation[key].photo.length) {
@@ -241,46 +277,46 @@ class QualificationRegister extends Component {
             item.status = 'done'
           }
         })
-      
+
         const { degree = '', year = '', college = '', photos = [], id = 0 } = newEducation[key];
         let qualData = { degree, year, college, photos, id };
         let qualificationData = { speciality, gender, qualification: qualData };
-        console.log('KEYS AND FILES IN ON UPLOAD COMPLETE0000000',degree,year,college,photos,id,newEducation);
-      let response=await  registerQualification(qualificationData, userId)
+        console.log('KEYS AND FILES IN ON UPLOAD COMPLETE0000000', degree, year, college, photos, id, newEducation);
+        let response = await registerQualification(qualificationData, userId)
         // .then(response => {
-          const { status,statusCode, payload: { data: { qualification_id = 0 } = {} } = {} } = response;
+        const { status, statusCode, payload: { data: { qualification_id = 0 } = {} } = {} } = response;
 
-          console.log('KEYS AND FILES IN ON UPLOAD COMPLETE111111111',status,statusCode,docs);
-          if (status) {
-            if(!newEducation[key].id){
+        console.log('KEYS AND FILES IN ON UPLOAD COMPLETE111111111', status, statusCode, docs);
+        if (status) {
+          if (!newEducation[key].id) {
             newEducation[key].id = qualification_id;
-            }
-     
-            console.log('KEYS AND FILES IN ON UPLOAD COMPLETE22222222',newEducation);
+          }
 
-            this.setState({
-              docs: [],
-              education: newEducation
-            });
-          } else {
+          console.log('KEYS AND FILES IN ON UPLOAD COMPLETE22222222', newEducation);
 
-            let length=newEducation[key].photos.length;
-            newEducation[key].photo=newPhoto.slice(0,length-docs.length);
+          this.setState({
+            docs: [],
+            education: newEducation
+          });
+        } else {
 
-            newEducation[key].photos=newPhotos;
-            
-            console.log('KEYS AND FILES IN ON UPLOAD ELSEEEEEEEEEE',newEducation);
-            this.setState({
-              docs: [],
-              education: newEducation
-            });
-            if(statusCode==422){
+          let length = newEducation[key].photos.length;
+          newEducation[key].photo = newPhoto.slice(0, length - docs.length);
+
+          newEducation[key].photos = newPhotos;
+
+          console.log('KEYS AND FILES IN ON UPLOAD ELSEEEEEEEEEE', newEducation);
+          this.setState({
+            docs: [],
+            education: newEducation
+          });
+          if (statusCode == 422) {
 
             message.error('Please do not add more than 3 per education.')
-            }else{
+          } else {
             message.error('Something went wrong.')
-            }
           }
+        }
         // });
       }
     });
@@ -290,12 +326,12 @@ class QualificationRegister extends Component {
 
     let { docsReg = [], speciality = '', gender = '' } = this.state;
 
-      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE BEFORE SET STATE', docsReg,files);
-    this.setState({ docsReg: [...docsReg, ...files] },async ()=>{
-    //  async () => {
+    console.log('KEYS AND FILES IN ON UPLOAD COMPLETE BEFORE SET STATE', docsReg, files);
+    this.setState({ docsReg: [...docsReg, ...files] }, async () => {
+      //  async () => {
 
-      let { docsReg, fileList, registration ={},education} = this.state;
-      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE AFTER SET STATE', docsReg,files);
+      let { docsReg, fileList, registration = {}, education } = this.state;
+      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE AFTER SET STATE', docsReg, files);
       let newRegistration = registration;
       // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE', docs.length, newRegistration[key].photo.length,  newRegistration[key].photos, docs.length === newRegistration[key].photo.length);
       if (docsReg.length === newRegistration[key].photo.length || docsReg.length + newRegistration[key].photos.length === newRegistration[key].photo.length) {
@@ -311,46 +347,46 @@ class QualificationRegister extends Component {
             item.status = 'done'
           }
         })
-      
-        const { number = '', council = '',year, expiryDate = '', photos = [], id = 0 } = newRegistration[key];
-        let regData = { number, council, year,expiryDate, photos, id };
-        let registrationData = { speciality, gender,qualification_details:Object.values(education),registration: regData };
+
+        const { number = '', council = '', year, expiryDate = '', photos = [], id = 0 } = newRegistration[key];
+        let regData = { number, council, year, expiryDate, photos, id };
+        let registrationData = { speciality, gender, qualification_details: Object.values(education), registration: regData };
         // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE0000000',degree,year,college,photos,id,newRegistration);
-      let response=await  registerRegistration(registrationData, userId)
+        let response = await registerRegistration(registrationData, userId)
         // .then(response => {
-          const { status,statusCode, payload: { data: { registration_id = 0 } = {} } = {} } = response;
+        const { status, statusCode, payload: { data: { registration_id = 0 } = {} } = {} } = response;
 
-          console.log('KEYS AND FILES IN ON UPLOAD COMPLETE111111111',status,statusCode,docsReg);
-          if (status) {
-            if(!newRegistration[key].id){
+        console.log('KEYS AND FILES IN ON UPLOAD COMPLETE111111111', status, statusCode, docsReg);
+        if (status) {
+          if (!newRegistration[key].id) {
             newRegistration[key].id = registration_id;
-            }
-     
-            console.log('KEYS AND FILES IN ON UPLOAD COMPLETE22222222',newRegistration);
+          }
 
-            this.setState({
-              docsReg: [],
-              registration: newRegistration
-            });
-          } else {
+          console.log('KEYS AND FILES IN ON UPLOAD COMPLETE22222222', newRegistration);
 
-            let length=newRegistration[key].photos.length;
-            newRegistration[key].photo=newPhoto.slice(0,length-docsReg.length);
+          this.setState({
+            docsReg: [],
+            registration: newRegistration
+          });
+        } else {
 
-            newRegistration[key].photos=newPhotos.slice(0,length-docsReg.length);
-            
-            console.log('KEYS AND FILES IN ON UPLOAD ELSEEEEEEEEEE',newRegistration,length,newPhotos);
-            this.setState({
-              docsReg: [],
-              registration: newRegistration
-            });
-            if(statusCode==422){
+          let length = newRegistration[key].photos.length;
+          newRegistration[key].photo = newPhoto.slice(0, length - docsReg.length);
+
+          newRegistration[key].photos = newPhotos.slice(0, length - docsReg.length);
+
+          console.log('KEYS AND FILES IN ON UPLOAD ELSEEEEEEEEEE', newRegistration, length, newPhotos);
+          this.setState({
+            docsReg: [],
+            registration: newRegistration
+          });
+          if (statusCode == 422) {
 
             message.error('Please do not add more than 3 per registration.')
-            }else{
+          } else {
             message.error('Something went wrong.')
-            }
           }
+        }
         // });
       }
     });
@@ -454,7 +490,7 @@ class QualificationRegister extends Component {
       let uid = item.uid;
       let push = true;
       console.log('Please do not add duplicate files FILE LISTTTTTTTT', item, fileList, typeof (item) == 'object');
-      
+
 
       if (typeof (item) == 'object') {
         for (let photo of photos) {
@@ -497,7 +533,7 @@ class QualificationRegister extends Component {
       let uid = item.uid;
       let push = true;
       console.log('Please do not add duplicate files FILE LISTTTTTTTT', item, fileList, typeof (item) == 'object');
-      
+
 
       if (typeof (item) == 'object') {
         for (let photo of photos) {
@@ -540,9 +576,9 @@ class QualificationRegister extends Component {
       let { status = false } = response;
       if (status) {
 
-        let index=0;
+        let index = 0;
         // newEducation[key].photo.forEach((file, index) => {
-          for(let file of newEducation[key].photo){
+        for (let file of newEducation[key].photo) {
           console.log('TYPE OFFFF STRING ===========>', typeof (file), typeof (file) == 'string' && file.localeCompare(pic));
           if (typeof (file) == 'string') {
 
@@ -551,10 +587,10 @@ class QualificationRegister extends Component {
               deleteIndex = index;
             }
           } else {
-            
+
             let fileName = file.name
             let newFileName = fileName.replace(/\s/g, '');
-            console.log('TYPE OFFFF STRING ELSEEEE TRUEE=======>', typeof (file), pic,newFileName,pic.includes(newFileName),file);
+            console.log('TYPE OFFFF STRING ELSEEEE TRUEE=======>', typeof (file), pic, newFileName, pic.includes(newFileName), file);
             if (pic.includes(newFileName)) {
 
               console.log('TYPE OFFFF STRING ELSEEEE IFFFF TRUEE=======>', typeof (file));
@@ -599,9 +635,9 @@ class QualificationRegister extends Component {
       let { status = false } = response;
       if (status) {
 
-        let index=0;
+        let index = 0;
         // newRegistration[key].photo.forEach((file, index) => {
-          for(let file of newRegistration[key].photo){
+        for (let file of newRegistration[key].photo) {
           console.log('TYPE OFFFF STRING ===========>', typeof (file), typeof (file) == 'string' && file.localeCompare(pic));
           if (typeof (file) == 'string') {
 
@@ -610,10 +646,10 @@ class QualificationRegister extends Component {
               deleteIndex = index;
             }
           } else {
-            
+
             let fileName = file.name
             let newFileName = fileName.replace(/\s/g, '');
-            console.log('TYPE OFFFF STRING ELSEEEE TRUEE=======>', typeof (file), pic,newFileName,pic.includes(newFileName),file);
+            console.log('TYPE OFFFF STRING ELSEEEE TRUEE=======>', typeof (file), pic, newFileName, pic.includes(newFileName), file);
             if (pic.includes(newFileName)) {
 
               console.log('TYPE OFFFF STRING ELSEEEE IFFFF TRUEE=======>', typeof (file));
@@ -672,18 +708,18 @@ class QualificationRegister extends Component {
     let { education = {}, educationKeys = [] } = this.state;
     let newEducation = education;
     let newEducationKeys = educationKeys;
-    newEducation[key] = { degree: "", college: "", year:parseInt(moment().format('YYYY')) , photo: [], photos: [], id: 0 };
+    newEducation[key] = { degree: "", college: "", year: parseInt(moment().format('YYYY')), photo: [], photos: [], id: 0 };
     newEducationKeys.push(key);
     // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
     this.setState({ education: newEducation, educationKeys: newEducationKeys });
   }
 
-  addRegistration = () =>{
+  addRegistration = () => {
     let key = uuid();
     let { registration = {}, registrationKeys = [] } = this.state;
     let newRegistration = registration;
     let newRegistrationKeys = registrationKeys;
-    newRegistration[key] = { number: "", council: "", year:parseInt(moment().format('YYYY')), expiryDate:'' , photo: [], photos: [], id: 0 };
+    newRegistration[key] = { number: "", council: "", year: parseInt(moment().format('YYYY')), expiryDate: '', photo: [], photos: [], id: 0 };
     newRegistrationKeys.push(key);
     // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
     this.setState({ registration: newRegistration, registrationKeys: newRegistrationKeys });
@@ -829,7 +865,7 @@ class QualificationRegister extends Component {
                   style={{ width: 128, height: 128, margin: 6 }}
                   beforeUpload={this.handleBeforeUpload(key)}
                   showUploadList={false}
-                  disabled={!(degree && college && year) ||photos.length>=3}
+                  disabled={!(degree && college && year) || photos.length >= 3}
                   fileList={photo}
                   customRequest={this.customRequest(key)}
                   onChange={this.handleChangeList(key, fileList)}
@@ -909,10 +945,10 @@ class QualificationRegister extends Component {
               <Select className="form-inputs" placeholder="Select Year" value={year ? year : null} onChange={this.setRegYear(key)}>
                 {this.getYearOptions()}
               </Select>
-              <div className='form-headings'> Expiry Date</div> 
-              
-             <DatePicker value={expiryDate} onChange={this.setExpiryDate(key)} placeholder='Select Expiry Date'/>
-              
+              <div className='form-headings'> Expiry Date</div>
+
+              <DatePicker value={expiryDate} onChange={this.setExpiryDate(key)} placeholder='Select Expiry Date' />
+
               <div className='form-headings'>Photo</div>
               <div className='qualification-photo-uploads'>
                 {photos.map(pic => {
@@ -933,7 +969,7 @@ class QualificationRegister extends Component {
                   style={{ width: 128, height: 128, margin: 6 }}
                   beforeUpload={this.handleBeforeUploadRegistration(key)}
                   showUploadList={false}
-                  disabled={!(number && council && year) ||photos.length>=3}
+                  disabled={!(number && council && year) || photos.length >= 3}
                   fileList={photo}
                   customRequest={this.customRequestRegistration(key)}
                   onChange={this.handleChangeListRegistration(key, fileList)}
@@ -965,7 +1001,7 @@ class QualificationRegister extends Component {
   validateData = () => {
     let { speciality = '',
       gender = '',
-      registration={},
+      registration = {},
       education = {} } = this.state;
     let newEducation = Object.values(education);
     let newRegistration = Object.values(registration);
@@ -975,20 +1011,20 @@ class QualificationRegister extends Component {
     } else if (!gender) {
       message.error('Please select your gender.')
       return false;
-    // } else if (!registration_number) {
-    //   message.error('Please enter your Registration number.')
-    //   return false;
+      // } else if (!registration_number) {
+      //   message.error('Please enter your Registration number.')
+      //   return false;
     } else if (!newEducation.length) {
       message.error('Please enter your Education details.')
       return false;
-    // }
-    // else if (!registration_council) {
-    //   message.error('Please enter Registration council.')
-    //   return false;
-    // } else if (!parseInt(registration_year)) {
-    //   console.log("REGISTRATION YEARRRRRRR",!parseInt(registration_year),registration_year,registration_year,this.state.registration_year,this.state);
-    //   message.error('Please enter your Registration year.')
-    //   return false;
+      // }
+      // else if (!registration_council) {
+      //   message.error('Please enter Registration council.')
+      //   return false;
+      // } else if (!parseInt(registration_year)) {
+      //   console.log("REGISTRATION YEARRRRRRR",!parseInt(registration_year),registration_year,registration_year,this.state.registration_year,this.state);
+      //   message.error('Please enter your Registration year.')
+      //   return false;
     } else {
       for (let edu of newEducation) {
         let { degree = '', college = '', year = '', photos = [] } = edu;
@@ -998,13 +1034,13 @@ class QualificationRegister extends Component {
           return false;
         }
       }
-      for(let reg of newRegistration){
-        let { number = '',expiryDate='', council = '', year = '', photos = [] } = reg;
-        if(year>moment(expiryDate).year() || moment(expiryDate).isBefore(moment())){
+      for (let reg of newRegistration) {
+        let { number = '', expiryDate = '', council = '', year = '', photos = [] } = reg;
+        if (year > moment(expiryDate).year() || moment(expiryDate).isBefore(moment())) {
           message.error('Please select valid expiry date for registration.')
           return false;
         }
-        if (!number || !expiryDate || !parseInt(year) || !photos.length||!council) {
+        if (!number || !expiryDate || !parseInt(year) || !photos.length || !council) {
 
           message.error('Please enter all Registration details.')
           return false;
@@ -1019,7 +1055,7 @@ class QualificationRegister extends Component {
     const validate = this.validateData();
     if (validate) {
       const { basic_info: { id = 1 } = {} } = authenticated_user || {};
-      const { speciality = '', gender = '', registration={}, education = {} } = this.state;
+      const { speciality = '', gender = '', registration = {}, education = {} } = this.state;
       let newEducation = Object.values(education);
       let newRegistration = Object.values(registration);
       newEducation.forEach((edu, index) => {
@@ -1029,7 +1065,7 @@ class QualificationRegister extends Component {
         delete reg.photo;
       })
       // console.log('ONCLICKKKKKK8797897', newEducation);
-      const data = { speciality, gender, registration_details:newRegistration, qualification_details: newEducation };
+      const data = { speciality, gender, registration_details: newRegistration, qualification_details: newEducation };
       const { doctorQualificationRegister } = this.props;
       doctorQualificationRegister(data, id).then(response => {
         const { status } = response;
@@ -1064,12 +1100,12 @@ class QualificationRegister extends Component {
         />
         <div className='form-headings'>Gender</div>
         <div className='wp100 mt6 mb18 flex justify-space-around'>
-                     <div className={gender===MALE?'gender-selected mr12':'gender-unselected mr12'} onClick={this.setGender(MALE)}>M</div>
-                     
-                     <div className={gender===FEMALE?'gender-selected mr12':'gender-unselected mr12'} onClick={this.setGender(FEMALE)}>F</div>
-                     
-                     <div className={gender===OTHER?'gender-selected mr12':'gender-unselected mr12'} onClick={this.setGender(OTHER)}>O</div>
-                 </div>
+          <div className={gender === MALE ? 'gender-selected mr12' : 'gender-unselected mr12'} onClick={this.setGender(MALE)}>M</div>
+
+          <div className={gender === FEMALE ? 'gender-selected mr12' : 'gender-unselected mr12'} onClick={this.setGender(FEMALE)}>F</div>
+
+          <div className={gender === OTHER ? 'gender-selected mr12' : 'gender-unselected mr12'} onClick={this.setGender(OTHER)}>O</div>
+        </div>
         <div className='flex justify-space-between align-center direction-row'>
           <div className='form-category-headings'>Education</div>
           <div className='pointer fs16 medium' onClick={this.addEducation}>Add More</div>
@@ -1077,9 +1113,9 @@ class QualificationRegister extends Component {
         {this.renderEducation()}
 
         <div className='flex justify-space-between align-center direction-row'>
-        <div className='form-category-headings'>Registration details</div>
+          <div className='form-category-headings'>Registration details</div>
           <div className='pointer fs16 medium' onClick={this.addRegistration}>Add More</div>
-          </div>
+        </div>
         {this.renderRegistration()}
       </div>
     );

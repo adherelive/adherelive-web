@@ -15,7 +15,7 @@ router.post(
     [
         check("email")
             .isEmail()
-            .withMessage("email is not valid"),
+            .withMessage("Invalid credentials"),
         check("password").isLength({ min: PASSWORD_LENGTH })
     ],
     mUserController.signIn,

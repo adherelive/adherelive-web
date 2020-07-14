@@ -13,9 +13,9 @@ function doctorRegistrationReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-    const { type, payload } = action;
+    const { type, data } = action;
     switch (type) {
         default:
-            return doctorRegistrationReducer(state, payload);
+            return doctorRegistrationReducer(state, data);
     }
 };

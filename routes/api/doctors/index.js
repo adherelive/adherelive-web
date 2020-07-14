@@ -75,7 +75,7 @@ router.post(
 
 router.get(
     "/",
-    Authenticate,
+    // Authenticate,
     DoctorController.getAllDoctorDetails
 );
 
