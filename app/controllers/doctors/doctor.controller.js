@@ -898,7 +898,6 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          // qualification_id
           doctors: {
             [updatedDoctorData.getDoctorId()]: { ...updatedDoctorData.getBasicInfo(), doctor_qualification_ids }
           },
@@ -907,7 +906,8 @@ class DoctorController extends Controller {
           },
           upload_documents: {
             ...uploadDocumentsData
-          }
+          },
+          doctor_qualification_ids,
         },
         "qualification details updated successfully"
       );
