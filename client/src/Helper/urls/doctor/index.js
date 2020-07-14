@@ -26,13 +26,13 @@ export const getRegisterRegistrationUrl = () => {
 };
 
 
-export const getUploadQualificationDocumentUrl = (userId) => {
-  return `/auth/upload-qualification-document/${userId}`;
+export const getUploadQualificationDocumentUrl = () => {
+  return `/doctors/qualifications/docs`;
 };
 
 
 export const getUploadRegistrationDocumentUrl = () => {
-  return `/auth/registration-document`;
+  return `/doctors/registrations/docs`;
 };
 
 export const getDeleteQualificationDocumentUrl = (qualificationId) => {

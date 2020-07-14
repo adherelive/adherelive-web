@@ -93,6 +93,7 @@ class QualificationRegister extends Component {
         let qualification = {};
         let { basic_info: { year = '', college = '', degree = '', id = 0, doctor_id = 0 }, upload_document_ids = [], expiry_date = '' } = doctor_qualifications[qualifi];
 
+        qualification.id = id;
         qualification.year = year;
         qualification.college = college;
         qualification.degree = degree;
