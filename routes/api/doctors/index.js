@@ -4,6 +4,10 @@ import Authenticate from "../../m-api/middleware/auth";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
 const router = express.Router();
 
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ dest: "../../../app/public/", storage: storage });
+
 router.post(
     "/",
     Authenticate,
@@ -29,6 +33,7 @@ router.post(
     "/qualifications/docs",
     // validator.validateDoctorQualificationData,
     // todo :: wip
+    upload.single("files"),
     DoctorController.updateQualificationDocs
 );
 
@@ -43,6 +48,7 @@ router.post(
     "/registrations/docs",
     // validator.validateDoctorQualificationData,
     // todo :: wip
+    upload.single("files"),
     DoctorController.updateRegistrationDocs
 );
 
