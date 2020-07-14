@@ -1044,7 +1044,7 @@ class DoctorController extends Controller {
           }
         }
 
-        docRegistrationDetails = await RegistrationWrapper(doctorRegistration.get());
+        docRegistrationDetails = await RegistrationWrapper(doctorRegistration);
       } else {
         const docRegistration = await registrationService.updateRegistration(
           {

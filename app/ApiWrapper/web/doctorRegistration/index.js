@@ -34,5 +34,5 @@ export default async (data = null, id = null) => {
         return new DoctorRegistrationWrapper(data);
     }
     const doctorRegistration = await doctorRegistrationService.getRegistrationById(id);
-    return new DoctorRegistrationWrapper(doctorRegistration.get());
+    return new DoctorRegistrationWrapper(doctorRegistration);
 };
