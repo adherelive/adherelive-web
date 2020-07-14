@@ -13,7 +13,7 @@ import {DRAWER} from "../../constant";
 const mapStateToProps = (state, ownProps) => {
     const {users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}, treatments={},
     conditions={},template_medications={},template_appointments={},care_plan_templates={},
-    severity={},show_template_drawer=false} = state;
+    severity={},show_template_drawer={}} = state;
     // const { id } = ownprops;
     const user_details = users["3"] || {};
     const {

@@ -337,13 +337,16 @@ class PatientDetails extends Component {
       showTemplateDrawer,
       care_plans,
       currentCarePlanId,
-      show_template_drawer = false
+      show_template_drawer = {}
     } = this.props;
     this.getData();
+    const{show:showTd=false}=show_template_drawer;
     let isCarePlanDataPresent = currentCarePlanId ? true : false;
-
-    console.log('currentCarePlanId in did mount', currentCarePlanId, isCarePlanDataPresent, care_plans[currentCarePlanId]);
-    if (!isCarePlanDataPresent) {
+    if (showTd) {
+      this.setState({ templateDrawerVisible: true });
+    }
+    console.log('currentCarePlanId in did mount 7897987987987987',showTd );
+    if (!showTd) {
       getPatientCarePlanDetails(patient_id);
       // .then(response => {
       //   let { status = false, payload = {} } = response;
@@ -352,9 +355,7 @@ class PatientDetails extends Component {
       //     const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
       //     console.log("RESPONSEEEEEEEEE IN DID MOUNTTT", carePlanTemplateId);
-      if (show_template_drawer) {
-        this.setState({ templateDrawerVisible: true });
-      }
+      
       //     this.setState({ carePlanTemplateId });
       //   }
       // });
@@ -641,7 +642,7 @@ class PatientDetails extends Component {
       templateMedications[mId] = newMedication;
     }
 
-    console.log('7483274982349832', templateAppointments);
+    console.log('7897987987987987', this.state);
 
     // todo: dummy careplan 
     let carePlanId = 1;
