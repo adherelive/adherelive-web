@@ -5,6 +5,15 @@ class UserPreferenceService {
     constructor() {
     }
 
+    addUserPreference = async data => {
+        try {
+            const userPreference = await UserPreference.create(data);
+            return userPreference;
+        } catch(error) {
+            throw error;
+        }
+    };
+
     getPreferenceByData = async data => {
         try {
             const userPreference = await UserPreference.findOne({
