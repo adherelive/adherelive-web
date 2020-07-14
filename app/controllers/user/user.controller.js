@@ -34,6 +34,7 @@ import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 import registrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../";
@@ -89,6 +90,13 @@ class UserController extends Controller {
         sign_in_type: "basic",
         category: "doctor",
         onboarded: false
+      });
+
+      const userPreference = await userPreferenceService.addUserPreference({
+        user_id: user.get("id"),
+        details: {
+          charts: ["1","2","3","4"]
+        }
       });
 
       const userInfo = await userService.getUserByEmail({ email });
