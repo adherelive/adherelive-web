@@ -546,7 +546,7 @@ class DoctorController extends Controller {
           template_medications: {
             ...templateMedicationData
           },
-          show: true,
+          show: carePlanTemplate ? true : false,
         },
         "doctor's patient added successfully"
       );
