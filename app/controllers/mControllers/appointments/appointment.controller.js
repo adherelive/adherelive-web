@@ -326,7 +326,7 @@ class MobileAppointmentController extends Controller {
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
-      const oldAppointment = await appointmentService.getAppointmentByData({ id });
+      const oldAppointment = await appointmentService.getAppointmentById(id);
 
       const oldAppointmentData = await MAppointmentWrapper(oldAppointment);
 
@@ -384,9 +384,7 @@ class MobileAppointmentController extends Controller {
         appointment_data
       );
 
-      const updatedAppointmentDetails = await appointmentService.getAppointmentByData(
-        { id }
-      );
+      const updatedAppointmentDetails = await appointmentService.getAppointmentById(id);
 
       const appointmentApiData = await MAppointmentWrapper(
         updatedAppointmentDetails
