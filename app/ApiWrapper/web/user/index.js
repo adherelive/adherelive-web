@@ -20,6 +20,7 @@ class UserWrapper extends BaseUser {
       onboarding_status,
       category,
       activated_on,
+        prefix,
     } = _data || {};
     return {
           basic_info: {
@@ -27,6 +28,7 @@ class UserWrapper extends BaseUser {
             user_name,
             email,
             mobile_number,
+              prefix,
           },
           sign_in_type,
            onboarded,

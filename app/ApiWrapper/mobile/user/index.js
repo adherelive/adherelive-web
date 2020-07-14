@@ -15,6 +15,7 @@ class MUserWrapper extends BaseUser {
       user_name,
       email,
       mobile_number,
+        prefix,
       sign_in_type,
       category,
       activated_on,
@@ -27,7 +28,8 @@ class MUserWrapper extends BaseUser {
         id,
         user_name,
         email,
-        mobile_number
+        mobile_number,
+          prefix,
       },
       verified,
       onboarded,
