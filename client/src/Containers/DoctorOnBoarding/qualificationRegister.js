@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         signOut: () => dispatch(signOut()),
-        doctorQualificationRegister: (data, userId) => dispatch(doctorQualificationRegister(data, userId)),
+        doctorQualificationRegister: (data) => dispatch(doctorQualificationRegister(data)),
         getDoctorQualificationRegisterData: () => dispatch(getDoctorQualificationRegisterData()),
         registerQualification: (data) => dispatch(registerQualification(data)),
         registerRegistration: (data) => dispatch(registerRegistration(data)),

@@ -1068,7 +1068,7 @@ class QualificationRegister extends Component {
       // console.log('ONCLICKKKKKK8797897', newEducation);
       const data = { speciality, gender, registration_details: newRegistration, qualification_details: newEducation };
       const { doctorQualificationRegister } = this.props;
-      doctorQualificationRegister(data, id).then(response => {
+      doctorQualificationRegister(data).then(response => {
         const { status } = response;
         if (status) {
           history.replace(PATH.REGISTER_CLINICS);

@@ -2,12 +2,12 @@ export const getdoctorProfileRegisterUrl = () => {
   return `/doctors/`;
 };
 
-export const getdoctorQualificationRegisterUrl = (userId) => {
-  return `/auth/doctor-qualification-registration/${userId}`;
+export const getdoctorQualificationRegisterUrl = () => {
+  return `/doctors/details/`;
 };
 
-export const getdoctorClinicRegisterUrl = (userId) => {
-  return `/auth/doctor-clinic-registration/${userId}`;
+export const getdoctorClinicRegisterUrl = () => {
+  return `/doctors/clinics`;
 };
 
 export const getdoctorProfileRegisterDataUrl = (userId) => {

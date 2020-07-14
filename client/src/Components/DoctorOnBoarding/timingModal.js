@@ -139,7 +139,7 @@ class ClinicRegister extends Component {
                                         <Checkbox checked={daySelected[day]} onChange={this.toggleDaySelected(day)} />
                                         <div className='ml10 fs16 fw700'>{day}</div>
                                     </div>
-                                    {daySelected[day] && (<div className='pointer fs14 medium' onClick={this.addDayTimings(day)}>Add More</div>)}
+                                    {daySelected[day] && (<div className='pointer fs14 medium theme-green' onClick={this.addDayTimings(day)}>Add More</div>)}
                                 </div>
                                 {daySelected[day] && (
                                     <div className='flex direction-column wp100'>

@@ -63,11 +63,13 @@ class Profileregister extends Component {
         const { basic_info: { id = 1 } = {} } = authenticated_user;
 
         const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
+
+        this.setState({ email, mobile_number, category, prefix: newPrefix ? newPrefix : '91' });
         for (let doctor of Object.values(doctors)) {
             const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '', address = '' } } = doctor;
             if (parseInt(user_id) === parseInt(authenticated_user)) {
                 let name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
-                this.setState({ name, email, mobile_number, category, city: address, prefix: newPrefix ? newPrefix : '91', profile_pic_url_saved: profile_pic, profile_pic });
+                this.setState({ name, city: address, profile_pic_url_saved: profile_pic, profile_pic });
             }
 
         }

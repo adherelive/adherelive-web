@@ -192,19 +192,37 @@ class ClinicRegister extends Component {
                                     onChange={e => this.setClinicName(key, e)}
                                 />
                                 <div className='form-headings'>Location</div>
-                                <div className={`form-input-border ${locationToDisplay ? 'active-grey' : 'default-grey'} pointer`} onClick={this.setModalVisible(key)}>
-                                    <div className={locationToDisplay ? 'active-grey' : 'default-grey'}>{locationToDisplay ? locationToDisplay : 'Location'}</div><Icon type="environment" theme="filled" /></div>
+                                <div className={`form-input-border ${locationToDisplay ? 'active-grey-location' : 'default-grey'} pointer`} onClick={this.setModalVisible(key)}>
+                                    <div className={locationToDisplay ? 'active-grey-location' : 'default-grey'}>{locationToDisplay ? locationToDisplay : 'Location'}</div>
+                                    <Icon type="environment" theme="filled" />
+                                </div>
 
                                 <div className='flex justify-space-between align-center direction-row'>
                                     <div className='form-headings'>Timings</div>
                                     {/* <div className='pointer fs16 medium ' onClick={this.addClinicTimings(key)}>Add More</div> */}
                                 </div>
-                                <div className={`form-input-timing ${Object.keys(timings).length ? 'active-grey' : 'default-grey'} pointer`} onClick={this.setModalTimingVisible(key)}>
+
+                                {Object.keys(timings).length ? (
+                                    <div className={`form-input-timing active-grey `} >
+                                        <div className={'active-grey'}>
+                                            <div className='flex justify-end wp100'>
+                                                <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.setModalTimingVisible(key)} />
+                                            </div>
+                                            {this.renderTimings(timings)}
+                                        </div>
+                                    </div>) :
+                                    (
+                                        <div className={`form-input-timing default-grey pointer`} onClick={this.setModalTimingVisible(key)}>
+                                            <div className={'default-grey'}>
+                                                {'Timings'}</div>
+                                            {<Icon type="clock-circle" />}
+                                        </div>)}
+                                {/* <div className={`form-input-timing ${Object.keys(timings).length ? 'active-grey' : 'default-grey'} pointer`} onClick={this.setModalTimingVisible(key)}>
                                     <div className={Object.keys(timings).length ? 'active-grey' : 'default-grey'}>
                                         {Object.keys(timings).length ?
                                             // Object.keys(timings).length :
                                             this.renderTimings(timings) :
-                                            'Timings'}</div>{!(Object.keys(timings).length) && (<Icon type="clock-circle" />)}</div>
+                                            'Timings'}</div>{!(Object.keys(timings).length) && (<Icon type="clock-circle" />)}</div> */}
 
                             </div>
                         );
@@ -231,13 +249,10 @@ class ClinicRegister extends Component {
         for (let edu of newClinics) {
 
             console.log('NEW CLINICSSSS============>222222', edu);
-            let { name = '', location = '', timings = {} } = edu;
+            let { name = '', location = '', timings = [] } = edu;
 
-            for (let timeSlot of Object.values(timings)) {
-                let { startTime = '', endTime = '' } = timeSlot;
-                if (!startTime || !endTime) {
-                    return false;
-                }
+            if (!Object.keys(timings).length) {
+                return false;
             }
 
             console.log('NEW CLINICSSSS============>3333333', name, location);
@@ -271,13 +286,13 @@ class ClinicRegister extends Component {
             const { clinics = {} } = this.state;
             let newClinics = Object.values(clinics);
             for (let clinic of newClinics) {
-                clinic.time_slots = Object.values(clinic.timings);
+                clinic.time_slots = clinic.timings;
                 delete clinic.timings;
                 delete clinic.timingsKeys;
             }
             const data = { clinics: newClinics };
             const { doctorClinicRegister } = this.props;
-            doctorClinicRegister(data, id).then(response => {
+            doctorClinicRegister(data).then(response => {
                 const { status } = response;
                 if (status) {
                     history.replace(PATH.DASHBOARD);
@@ -318,8 +333,15 @@ class ClinicRegister extends Component {
 
     render() {
         const { visible = false, clinics, clinicKeyOfModal, timingsVisible = false, clinicKeyOfModalTiming } = this.state;
-        let timingForModal = clinicKeyOfModalTiming && Object.keys(clinics[clinicKeyOfModalTiming].timings).length ? clinics[clinicKeyOfModalTiming].timings : dayTimings;
-        let daySelectForModal = clinicKeyOfModalTiming && Object.keys(clinics[clinicKeyOfModalTiming].daySelected).length ? clinics[clinicKeyOfModalTiming].daySelected : daySelected;
+        let currClinicTimings = {};
+        let currClinicDaySelect = {};
+        if (clinicKeyOfModalTiming) {
+            const { timings = {}, daySelected = {} } = clinics[clinicKeyOfModalTiming] || {};
+            currClinicTimings = timings;
+            currClinicDaySelect = daySelected;
+        }
+        let timingForModal = clinicKeyOfModalTiming && Object.keys(currClinicTimings).length ? currClinicTimings : dayTimings;
+        let daySelectForModal = clinicKeyOfModalTiming && Object.keys(currClinicDaySelect).length ? currClinicDaySelect : daySelected;
         console.log("STATEEEEEEEEEEE of Clinic register 234324234324234", clinicKeyOfModalTiming, clinicKeyOfModalTiming ? Object.keys(clinics[clinicKeyOfModalTiming].daySelected).length : -1, daySelectForModal, this.state);
         return (
             <Fragment>

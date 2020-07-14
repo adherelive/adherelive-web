@@ -54,7 +54,7 @@ router.post(
 
 router.post(
     "/clinics",
-    Authenticate,
+    // Authenticate,
     // validator.validateDoctorQualificationData,
     // todo :: wip
     DoctorController.updateDoctorClinics

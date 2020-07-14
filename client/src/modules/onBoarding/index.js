@@ -81,7 +81,7 @@ export const doctorProfileRegister = (payload) => {
   };
 };
 
-export const doctorQualificationRegister = (payload, userId) => {
+export const doctorQualificationRegister = (payload) => {
   let response = {};
   console.log("DOCTORRR QUALIFICATION REGISTERR");
   return async (dispatch) => {
@@ -90,7 +90,7 @@ export const doctorQualificationRegister = (payload, userId) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Doctor.getdoctorQualificationRegisterUrl(userId),
+        url: Doctor.getdoctorQualificationRegisterUrl(),
         data: payload,
       });
 
@@ -120,7 +120,7 @@ export const doctorQualificationRegister = (payload, userId) => {
   };
 };
 
-export const doctorClinicRegister = (payload, userId) => {
+export const doctorClinicRegister = (payload) => {
   let response = {};
   console.log("DOCTORRR ClINIC REGISTERR");
   return async (dispatch) => {
@@ -129,7 +129,7 @@ export const doctorClinicRegister = (payload, userId) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Doctor.getdoctorClinicRegisterUrl(userId),
+        url: Doctor.getdoctorClinicRegisterUrl(),
         data: payload,
       });
 
