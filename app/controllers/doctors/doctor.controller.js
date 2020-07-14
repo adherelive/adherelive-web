@@ -1,4 +1,3 @@
-// import DoctorWrapper from "../../services/doctor/doctorHelper";
 
 import Controller from "../index";
 import Log from "../../../libs/log";

@@ -350,7 +350,7 @@ class QualificationRegister extends Component {
         })
 
         const { number = '', council = '', year, expiryDate = '', photos = [], id = 0 } = newRegistration[key];
-        let regData = { number, council, year, expiryDate, photos, id };
+        let regData = { number, council, year, expiry_date: expiryDate, photos, id };
         let registrationData = { speciality, gender, qualification_details: Object.values(education), registration: regData };
         // console.log('KEYS AND FILES IN ON UPLOAD COMPLETE0000000',degree,year,college,photos,id,newRegistration);
         let response = await registerRegistration(registrationData, userId)
@@ -422,7 +422,7 @@ class QualificationRegister extends Component {
     let uploadResponse = await doRequest({
       method: REQUEST_TYPE.POST,
       data: data,
-      url: getUploadQualificationDocumentUrl(authenticated_user)
+      url: getUploadQualificationDocumentUrl()
     })
 
     let { status = false } = uploadResponse;
