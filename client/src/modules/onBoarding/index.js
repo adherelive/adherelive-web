@@ -239,7 +239,7 @@ export const getDoctorQualificationRegisterData = () => {
   };
 }
 
-export const registerQualification = (payload, userId) => {
+export const registerQualification = (payload) => {
   let response = {};
   console.log("REGISTER QUALIFICATION IMAGE DATA");
   return async (dispatch) => {
@@ -247,7 +247,7 @@ export const registerQualification = (payload, userId) => {
       dispatch({ type: REGISTER_QUALIFICATION });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Doctor.getRegisterQualificationUrl(userId),
+        url: Doctor.getRegisterQualificationUrl(),
         data: payload
       });
 
@@ -265,9 +265,7 @@ export const registerQualification = (payload, userId) => {
         const { qualification_id } = data;
         dispatch({
           type: REGISTER_QUALIFICATION_COMPLETED,
-          payload: {
-            qualification_id
-          },
+          data: data,
         });
       }
     } catch (err) {
@@ -306,9 +304,7 @@ export const registerRegistration = (payload) => {
         const { qualification_id } = data;
         dispatch({
           type: REGISTER_REGISTRATION_COMPLETED,
-          payload: {
-            qualification_id
-          },
+          data: data,
         });
       }
     } catch (err) {

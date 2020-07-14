@@ -17,12 +17,12 @@ export const getdoctorProfileRegisterDataUrl = (userId) => {
 export const getdoctorQualificationRegisterDataUrl = () => {
   return `/doctors/`;
 };
-export const getRegisterQualificationUrl = (userId) => {
-  return `/auth/register-qualification/${userId}`;
+export const getRegisterQualificationUrl = () => {
+  return `/doctors/qualifications`;
 };
 
 export const getRegisterRegistrationUrl = () => {
-  return `/auth/doctor-registration`;
+  return `/doctors/registrations`;
 };
 
 

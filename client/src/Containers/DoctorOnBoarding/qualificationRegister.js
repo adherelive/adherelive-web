@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => {
         signOut: () => dispatch(signOut()),
         doctorQualificationRegister: (data, userId) => dispatch(doctorQualificationRegister(data, userId)),
         getDoctorQualificationRegisterData: () => dispatch(getDoctorQualificationRegisterData()),
-        registerQualification: (data, userId) => dispatch(registerQualification(data, userId)),
+        registerQualification: (data) => dispatch(registerQualification(data)),
         registerRegistration: (data) => dispatch(registerRegistration(data)),
         deleteDoctorQualificationImage: (qualificationId, document) => dispatch(deleteDoctorQualificationImage(qualificationId, document)),
         deleteDoctorRegistrationImage: (registrationId, document) => dispatch(deleteDoctorRegistrationImage(registrationId, document))

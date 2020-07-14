@@ -282,7 +282,7 @@ class QualificationRegister extends Component {
         let qualData = { degree, year, college, photos, id };
         let qualificationData = { speciality, gender, qualification: qualData };
         console.log('KEYS AND FILES IN ON UPLOAD COMPLETE0000000', degree, year, college, photos, id, newEducation);
-        let response = await registerQualification(qualificationData, userId)
+        let response = await registerQualification(qualificationData)
         // .then(response => {
         const { status, statusCode, payload: { data: { qualification_id = 0 } = {} } = {} } = response;
 
@@ -409,9 +409,9 @@ class QualificationRegister extends Component {
 
     const { registerQualification } = this.props;
     const { history, authenticated_user } = this.props;
-    const { basic_info: { id = 1 } = {} } = authenticated_user || {};
+    // const { basic_info: { id = 1 } = {} } = authenticated_user || {};
     let qualificationData = { degree, college, year };
-    console.log('FILEEE IN CUSTOM REQUESTTTTIFFFFFFFF', qualification, id);
+    console.log('FILEEE IN CUSTOM REQUESTTTTIFFFFFFFF', qualification);
 
 
     let data = new FormData();
@@ -421,7 +421,7 @@ class QualificationRegister extends Component {
     let uploadResponse = await doRequest({
       method: REQUEST_TYPE.POST,
       data: data,
-      url: getUploadQualificationDocumentUrl(id)
+      url: getUploadQualificationDocumentUrl(authenticated_user)
     })
 
     let { status = false } = uploadResponse;
@@ -1028,7 +1028,7 @@ class QualificationRegister extends Component {
     } else {
       for (let edu of newEducation) {
         let { degree = '', college = '', year = '', photos = [] } = edu;
-        if (!degree || !college || !parseInt(year) || !photos.length) {
+        if (!degree || !college || !parseInt(year)) {
 
           message.error('Please enter all Education details.')
           return false;
