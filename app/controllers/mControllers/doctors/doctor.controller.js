@@ -529,7 +529,7 @@ class MobileDoctorController extends Controller {
           const docExist = await documentService.getDocumentByData(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
             id,
-            photo
+            getFilePath(photo)
           );
 
           if (!docExist) {
@@ -546,7 +546,7 @@ class MobileDoctorController extends Controller {
           const docExist = await documentService.getDocumentByData(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
             id,
-            photo
+              getFilePath(photo)
           );
 
           if (!docExist) {
@@ -649,7 +649,7 @@ class MobileDoctorController extends Controller {
               const docExist = await documentService.getDocumentByData(
                 DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                 id,
-                photo
+                getFilePath(photo)
               );
 
               if (!docExist) {
@@ -666,7 +666,7 @@ class MobileDoctorController extends Controller {
               const docExist = await documentService.getDocumentByData(
                 DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                 id,
-                photo
+                getFilePath(photo)
               );
 
               if (!docExist) {
@@ -733,7 +733,7 @@ class MobileDoctorController extends Controller {
           const docExist = await documentService.getDocumentByData(
             DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
             id,
-            photo
+            getFilePath(photo)
           );
 
           if (!docExist) {
