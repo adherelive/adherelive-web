@@ -429,7 +429,7 @@ class DoctorController extends Controller {
       const age = moment().diff(birth_date, "y");
       const patient = await patientsService.addPatient({
         first_name,
-        gender,
+        gender: gender ? gender : null,
         middle_name,
         last_name,
         user_id: newUserId,
@@ -593,7 +593,7 @@ class DoctorController extends Controller {
       let newQualifications = [];
       for (const item of qualification_details) {
         const {
-          degree = "",
+          degree_id = "",
           year = "",
           college = "",
           photos = [],
@@ -608,7 +608,7 @@ class DoctorController extends Controller {
         } else {
           const qualification = await qualificationService.addQualification({
             doctor_id: doctorData.getDoctorId(),
-            degree,
+            degree_id,
             year,
             college
           });
@@ -824,7 +824,7 @@ class DoctorController extends Controller {
           doctorData.getDoctorId()
         );
       }
-      const { degree = "", year = "", college = "", id = 0, photos = [] } =
+      const { degree_id = "", year = "", college = "", id = 0, photos = [] } =
         qualification || {};
 
       let docQualification = null;
@@ -836,7 +836,7 @@ class DoctorController extends Controller {
       if (!id) {
         docQualification = await qualificationService.addQualification({
           doctor_id: doctorData.getDoctorId(),
-          degree,
+          degree_id,
           year,
           college
         });
@@ -952,7 +952,7 @@ class DoctorController extends Controller {
 
       if (qualifications.length > 0) {
         for (const qualification of qualifications) {
-          const { degree = "", year = "", college = "", id = 0, photos = [] } =
+          const { degree_id = "", year = "", college = "", id = 0, photos = [] } =
             qualification || {};
 
           if (photos.length > 3) {
@@ -962,7 +962,7 @@ class DoctorController extends Controller {
             const docQualification = await qualificationService.addQualification(
               {
                 doctor_id: doctorData.getDoctorId(),
-                degree,
+                degree_id,
                 year,
                 college
               }
