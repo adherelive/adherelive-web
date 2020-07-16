@@ -33,9 +33,15 @@ const DoctorQualifications = database.define(
                 key: 'id'
             }
         },
-          college: {
-            type: Sequelize.STRING(100),
-            allowNull: false,
+          college_id: {
+              type: Sequelize.INTEGER,
+              allowNull: false,
+              references: {
+                  model: {
+                      tableName: DB_TABLES.COLLEGE,
+                  },
+                  key: 'id'
+              }
           },
           year: {
             type: Sequelize.INTEGER,

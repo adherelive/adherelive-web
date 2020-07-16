@@ -16,7 +16,8 @@ import medicineService from "../../services/medicine/medicine.service";
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import degreeService from "../../services/degree/degree.service";
-import courseService from "../../services/course/course.service";
+import collegeService from "../../services/college/college.service";
+import councilService from  "../../services/council/council.service";
 
 import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
@@ -32,7 +33,8 @@ import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
 import MedicineApiWrapper from "../../ApiWrapper/web/medicine";
 import DegreeWrapper from "../../ApiWrapper/web/degree";
-import CourseWrapper from "../../ApiWrapper/web/course";
+import CollegeWrapper from "../../ApiWrapper/web/college";
+import CouncilWrapper from "../../ApiWrapper/web/council";
 
 import { DOCUMENT_PARENT_TYPE, ONBOARDING_STATUS, SIGN_IN_CATEGORY, USER_CATEGORY } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
@@ -602,13 +604,13 @@ class DoctorController extends Controller {
         const {
           degree_id = "",
           year = "",
-          college = "",
+          college_id = "",
           photos = [],
           id = 0
         } = item;
         if (id && id !== "0") {
           const qualification = await qualificationService.updateQualification(
-            { doctor_id: doctorData.getDoctorId(), degree, year, college },
+            { doctor_id: doctorData.getDoctorId(), degree_id, year, college_id },
             id
           );
           newQualifications.push(parseInt(id));
@@ -617,7 +619,7 @@ class DoctorController extends Controller {
             doctor_id: doctorData.getDoctorId(),
             degree_id,
             year,
-            college
+            college_id
           });
         }
       }
@@ -643,10 +645,10 @@ class DoctorController extends Controller {
 
       let newRegistrations = [];
       for (const item of registration_details) {
-        const { number, council, year, expiry_date, id = 0 } = item;
+        const { number, registration_council_id, year, expiry_date, id = 0 } = item;
         if (id && id !== "0") {
           const registration = await registrationService.updateRegistration(
-            { doctor_id: doctorData.getDoctorId(), number, year, council, expiry_date },
+            { doctor_id: doctorData.getDoctorId(), number, year, registration_council_id, expiry_date },
             id
           );
           newRegistrations.push(parseInt(id));
@@ -655,7 +657,7 @@ class DoctorController extends Controller {
             doctor_id: doctorData.getDoctorId(),
             number,
             year,
-            council,
+            registration_council_id,
             expiry_date
           });
         }
@@ -831,7 +833,7 @@ class DoctorController extends Controller {
           doctorData.getDoctorId()
         );
       }
-      const { degree_id = "", year = "", college = "", id = 0, photos = [] } =
+      const { degree_id = "", year = "", college_id = "", id = 0, photos = [] } =
         qualification || {};
 
       let docQualification = null;
@@ -845,7 +847,7 @@ class DoctorController extends Controller {
           doctor_id: doctorData.getDoctorId(),
           degree_id,
           year,
-          college
+          college_id
         });
 
         for (const photo of photos) {
@@ -959,7 +961,7 @@ class DoctorController extends Controller {
 
       if (qualifications.length > 0) {
         for (const qualification of qualifications) {
-          const { degree_id = "", year = "", college = "", id = 0, photos = [] } =
+          const { degree_id = "", year = "", college_id = "", id = 0, photos = [] } =
             qualification || {};
 
           if (photos.length > 3) {
@@ -971,7 +973,7 @@ class DoctorController extends Controller {
                 doctor_id: doctorData.getDoctorId(),
                 degree_id,
                 year,
-                college
+                college_id
               }
             );
 
@@ -1015,7 +1017,7 @@ class DoctorController extends Controller {
       // REGISTRATION
       const {
         number = "",
-        council = "",
+        registration_council_id = "",
         year: registration_year = "",
         expiry_date = "",
         id = 0,
@@ -1033,7 +1035,7 @@ class DoctorController extends Controller {
         const doctorRegistration = await registrationService.addRegistration({
           doctor_id: doctorData.getDoctorId(),
           number,
-          council,
+          registration_council_id,
           year: registration_year,
           expiry_date: moment(expiry_date)
         });
@@ -1061,7 +1063,7 @@ class DoctorController extends Controller {
           {
             doctor_id: doctorData.getDoctorId(),
             number,
-            council,
+            registration_council_id,
             year: registration_year,
             expiry_date: moment(expiry_date)
           },
@@ -1403,12 +1405,28 @@ class DoctorController extends Controller {
         degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
       }
 
-      const courses = await courseService.getAll();
-      let courseData = {};
-      for(const course of courses) {
-        const courseWrapper = await CourseWrapper(course);
-        courseData[courseWrapper.getDegreeId()] = courseWrapper.getBasicInfo();
+      // const courses = await courseService.getAll();
+      // let courseData = {};
+      // for(const course of courses) {
+      //   const courseWrapper = await CourseWrapper(course);
+      //   courseData[courseWrapper.getDegreeId()] = courseWrapper.getBasicInfo();
+      // }
+
+      const colleges = await collegeService.getAll();
+      let collegeData = {};
+      for(const college of colleges) {
+        const collegeWrapper = await CollegeWrapper(college);
+        collegeData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
       }
+
+      const councils = await councilService.getAll();
+      let councilData = {};
+      for(const council of councils) {
+        const councilWrapper = await CouncilWrapper(council);
+        councilData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
+      }
+
+
       return raiseSuccess(
         res,
         200,
@@ -1436,17 +1454,20 @@ class DoctorController extends Controller {
           upload_documents: {
             ...uploadDocumentApiDetails,
           },
-          courses: {
-            ...courseData,
+          colleges: {
+            ...collegeData,
           },
           degrees: {
             ...degreeData,
+          },
+          registration_councils: {
+            ...councilData,
           }
         },
         "Doctor details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("500 error", error);
+      Logger.debug(" get all details 500 error", error);
       return raiseServerError(res);
     }
   };
