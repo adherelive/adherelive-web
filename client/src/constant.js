@@ -6,9 +6,9 @@ export const PATH = {
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
   SIGN_UP: "/sign-up/:link",
-  REGISTER_PROFILE:'/register-profile',
-  REGISTER_QUALIFICATIONS:'/register-qualifications',
-  REGISTER_CLINICS:'/register-clinics',
+  REGISTER_PROFILE: '/register-profile',
+  REGISTER_QUALIFICATIONS: '/register-qualifications',
+  REGISTER_CLINICS: '/register-clinics',
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",
@@ -39,14 +39,14 @@ export const BEFORE_SLEEP = "10";
 export const MEDICATION_TIMING = {
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
-        [TIME_KEY]: "8am"
-},
-    [AFTER_BREAKFAST]:
+    [TIME_KEY]: "8am"
+  },
+  [AFTER_BREAKFAST]:
   {
     [TEXT_KEY]: "After Breakfast",
     [TIME_KEY]: "9am"
   },
-  [NOON] : {
+  [NOON]: {
     [TEXT_KEY]: "Noon",
     [TIME_KEY]: "12pm"
   },
@@ -81,9 +81,9 @@ export const MEDICATION_TIMING = {
 };
 
 export const ONBOARDING_STATUS = {
-  PROFILE_REGISTERED:'profile_registered',
-  QUALIFICATION_REGISTERED:'qualification_registered',
-  CLINIC_REGISTERED:'CLINIC_registered',
+  PROFILE_REGISTERED: 'profile_registered',
+  QUALIFICATION_REGISTERED: 'qualification_registered',
+  CLINIC_REGISTERED: 'CLINIC_registered',
 };
 
 
@@ -155,7 +155,7 @@ export const USER_CATEGORY = {
   CARE_TAKER: "care_taker",
   CHARITY_ADMIN: "charityAdmin",
   PHARMACY_ADMIN: "pharmacyAdmin",
-  ADMIN:"admin",
+  ADMIN: "admin",
 };
 
 export const ACTIVITY_TYPE = {
@@ -249,16 +249,22 @@ export const SEVERITY_STATUS = {
   }
 };
 
+
 export const NO_ADHERENCE = "1";
 export const NO_MEDICATION = "2";
 export const NO_APPOINTMENT = "3";
 export const NO_ACTION = "4";
+export const TEST_ONE = "5";
+export const TEST_TWO = "6";
 
 export const CHART_TITLE = {
   [NO_ADHERENCE]: "Adherence",
   [NO_MEDICATION]: "Missed Medication",
   [NO_APPOINTMENT]: "Missed Appointments",
-  [NO_ACTION]: "Missed Actions"
+  [NO_ACTION]: "Missed Actions",
+  [TEST_ONE]: 'Test One',
+  [TEST_TWO]: 'Test Two'
+
 };
 
 export const GRAPH_COLORS = {
@@ -293,7 +299,33 @@ export const GRAPH_COLORS = {
       dark: "bg-dark-blue",
       light: "bg-light-blue"
     }
+  },
+  [TEST_ONE]: {
+    dark: "#A0522D",
+    light: "#F5DEB3",
+    className: {
+      dark: "bg-dark-brown",
+      light: "bg-light-brown"
+    }
+
+  },
+
+  [TEST_TWO]: {
+    dark: "#00FF7F",
+    light: "#90EE90",
+    className: {
+      dark: "bg-spring-green",
+      light: "bg-light-green"
+    }
   }
+};
+
+export const GRAPH_TYPE = {
+  [NO_ADHERENCE]: 'donut',
+  [NO_MEDICATION]: 'donut',
+  [NO_APPOINTMENT]: 'donut',
+  [NO_ACTION]: 'donut',
+  [TEST_ONE]: 'donut'
 };
 
 export const SYMPTOM = {
@@ -315,3 +347,34 @@ export const MEDICINE_TYPE = {
   TABLET: "tablet",
   INJECTION: "injection"
 }
+
+export const FULL_DAYS = {
+  SUN: "Sun",
+  MON: "Mon",
+  TUE: "Tue",
+  WED: "Wed",
+  THU: "Thu",
+  FRI: "Fri",
+  SAT: "Sat",
+};
+
+export const DAYS_LIST = [
+  FULL_DAYS.MON,
+  FULL_DAYS.TUE,
+  FULL_DAYS.WED,
+  FULL_DAYS.THU,
+  FULL_DAYS.FRI,
+  FULL_DAYS.SAT,
+  FULL_DAYS.SUN
+];
+
+
+export const DAYS_KEYS = [
+  'MON',
+  'TUE',
+  'WED',
+  'THU',
+  'FRI',
+  'SAT',
+  'SUN'
+];

@@ -10,7 +10,7 @@ const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.post(
     "/",
-    Authenticate,
+    // Authenticate,
     // validator.validateAddDoctorData,
     DoctorController.addDoctor
 );
@@ -54,7 +54,7 @@ router.post(
 
 router.post(
     "/clinics",
-    Authenticate,
+    // Authenticate,
     // validator.validateDoctorQualificationData,
     // todo :: wip
     DoctorController.updateDoctorClinics
@@ -62,26 +62,26 @@ router.post(
 
 router.delete(
     "/qualification-documents/:id",
-    Authenticate,
+    // Authenticate,
     DoctorController.deleteQualificationDocument
 );
 
 router.delete(
     "/registration-documents/:id",
-    Authenticate,
+    // Authenticate,
     DoctorController.deleteRegistrationDocument
 );
 
 router.post(
     "/patients",
-    Authenticate,
+    // Authenticate,
     // validator.verifyAddPatientData,
     DoctorController.addPatient
 );
 
 router.get(
     "/",
-    Authenticate,
+    // Authenticate,
     DoctorController.getAllDoctorDetails
 );
 

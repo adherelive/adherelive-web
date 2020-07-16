@@ -17,18 +17,18 @@ class PatientDetailsDrawer extends Component {
   }
 
   componentDidMount() {
-    const {getMedications, payload: {patient_id} = {}} = this.props;
+    const { getMedications, payload: { patient_id } = {} } = this.props;
     console.log("19283791273 patient_id --> ", patient_id);
-    if(patient_id) {
+    if (patient_id) {
       getMedications(patient_id);
     }
   }
 
   componentDidUpdate(prevProps) {
-    const {payload: {patient_id} = {}, getMedications} = this.props;
-    const {payload: {patient_id: prev_patient_id} = {}} = prevProps;
+    const { payload: { patient_id } = {}, getMedications } = this.props;
+    const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
 
-    if(patient_id !== prev_patient_id) {
+    if (patient_id !== prev_patient_id) {
       getMedications(patient_id);
     }
   }
@@ -56,7 +56,7 @@ class PatientDetailsDrawer extends Component {
         } = {}
       } = medications[id] || {};
 
-      const {basic_info: {type, name} = {}} = medicines[medicine_id] || {};
+      const { basic_info: { type, name } = {} } = medicines[medicine_id] || {};
       // const { repeat_type, doses, date = [] } = schedule || {};
       return (
         <div className="flex justify-space-between align-center mb10">
@@ -75,7 +75,7 @@ class PatientDetailsDrawer extends Component {
 
   handlePatientDetailsRedirect = e => {
     e.preventDefault();
-    const { history, payload: {patient_id} = {} } = this.props;
+    const { history, payload: { patient_id } = {} } = this.props;
     this.onClose();
     history.push(`/patients/${patient_id}`);
 
@@ -89,9 +89,9 @@ class PatientDetailsDrawer extends Component {
       handlePatientDetailsRedirect
     } = this;
 
-    const {patient_id : id = ""} = payload || {};
+    const { patient_id: id = "" } = payload || {};
 
-    if(id) {
+    if (id) {
       const {
         basic_info: { first_name, middle_name, last_name, age = "--", gender } = {},
         reports = [],
@@ -100,20 +100,20 @@ class PatientDetailsDrawer extends Component {
         doctor_id,
         condition = "--"
       } = patients[id] || {};
-  
+
       const { basic_info: { treatment_type = "--", pid = "123456" } = {}, severity_level = "1", start_date = "--" } =
         treatments[treatment_id] || {};
       const { basic_info: { name: doctorName = "--" } = {} } = doctors[doctor_id] || {};
       const { basic_info: { name: providerName = "--" } = {} } =
         providers[provider_id] || {};
-  
-        console.log("3912739 gender --> ", gender);
+
+      console.log("3912739 gender --> ", patients[id]);
       return (
         <Fragment>
           {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
-  
+
           {/*header*/}
-  
+
           <div className="wp100 flex justify-space-between align-center mt20">
             <div className="flex justify-space-around align-center">
               <div className="pr10 fs24 fw600">{`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name}`}</div>
@@ -128,15 +128,15 @@ class PatientDetailsDrawer extends Component {
             />
           </div>
           <div className="fw700 wp100">{`PID: ${pid}`}</div>
-  
+
           {/*boxes*/}
-  
+
           <div className="mt20">
             {Object.keys(PATIENT_BOX_CONTENT).map(id => {
               const { total = "1", critical = "0" } = reports[id] || {};
               return (
                 <div
-                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS  ? "ml20" : ""} w235 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex direction-column justify-space-between`}
+                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS ? "ml20" : ""} w235 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex direction-column justify-space-between`}
                 >
                   <div className="ml10 mt10 fs16 fw600">
                     {PATIENT_BOX_CONTENT[id]["text"]}
@@ -157,11 +157,11 @@ class PatientDetailsDrawer extends Component {
               );
             })}
           </div>
-  
+
           {/*details*/}
-  
+
           <div className="clearfix"></div>
-  
+
           <div className="mt20 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.patient_details)}
@@ -193,14 +193,14 @@ class PatientDetailsDrawer extends Component {
               </div>
             </div>
           </div>
-  
+
           {/*medications*/}
-  
+
           <div className="mt20 black-85 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.medications)}
             </div>
-  
+
             {getMedicationList()}
           </div>
         </Fragment>
@@ -221,7 +221,7 @@ class PatientDetailsDrawer extends Component {
     const { visible } = this.props;
     const { onClose, getPatientDetailContent } = this;
 
-    if(visible !== true) {
+    if (visible !== true) {
       return null;
     }
     return (

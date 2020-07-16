@@ -87,7 +87,7 @@ class AddAppointmentForm extends Component {
       <Option key={`p-${patient_id}`} value={patient_id} name={patient_id}>
         {`${first_name} ${middle_name ? `${middle_name} ` : ""}${
           last_name ? `${last_name} ` : ""
-        }`}
+          }`}
       </Option>
     );
     // });
@@ -105,7 +105,9 @@ class AddAppointmentForm extends Component {
 
   disabledDate = (current) => {
     // Can not select days before today and today
-    return current && current < moment().startOf("day");
+    return current
+      && (current < moment().startOf("day")
+        || current > moment().add(1, "year"));;
   };
 
   // onBlur = date => () => {
@@ -119,17 +121,17 @@ class AddAppointmentForm extends Component {
     console.log("312983u193812 values, value ", date);
     const startDate = getFieldValue(DATE);
 
-    if(!date || !startDate) {
+    if (!date || !startDate) {
       return;
     }
-    
+
     const eventStartTime = getFieldValue(START_TIME);
     if (date.isSame(eventStartTime, "date")) {
       return;
     }
 
     const eventEndTime = getFieldValue(END_TIME);
-  
+
     const newMonth = startDate.get("month");
     const newDate = startDate.get("date");
     const newYear = startDate.get("year");
@@ -157,7 +159,7 @@ class AddAppointmentForm extends Component {
     console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
     console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
-    setFieldsValue({ [END_TIME]: moment(time).add('minutes',30) });
+    setFieldsValue({ [END_TIME]: moment(time).add('minutes', 30) });
   };
 
   getPatientName = () => {
@@ -166,8 +168,21 @@ class AddAppointmentForm extends Component {
       patients[patient_id] || {};
     return `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? `${last_name} ` : ""
-    }`;
+      }`;
   };
+
+  getTreatment = () => {
+    const { patients, payload: { patient_id } = {}, care_plans } = this.props;
+    let treatmentId = 0;
+
+    for (let carePlan of Object.values(care_plans)) {
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, treatment_id = 0 } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId)) {
+        treatmentId = treatment_id;
+      }
+    }
+    return treatmentId;
+  }
 
   calendarComp = () => {
     return (
@@ -177,22 +192,22 @@ class AddAppointmentForm extends Component {
     );
   };
 
-  disabledDate = (current) => {
-    // Can not select days before today and today
-    return current && current < moment().startOf("day");
-  };
+  // disabledDate = (current) => {
+  //   // Can not select days before today and today
+  //   return current && current < moment().startOf("day");
+  // };
 
-  getTreatmentOption =()=>{
-    let {treatments={}}=this.props;
-    let newTreatments=[];
-    for (let treatment of Object.values(treatments)){
-        let{basic_info:{id=0,name=''}={}}=treatment;
-        newTreatments.push(<Option key={id} value={id}>
+  getTreatmentOption = () => {
+    let { treatments = {} } = this.props;
+    let newTreatments = [];
+    for (let treatment of Object.values(treatments)) {
+      let { basic_info: { id = 0, name = '' } = {} } = treatment;
+      newTreatments.push(<Option key={id} value={id}>
         {name}
       </Option>)
     }
     return newTreatments;
-}
+  }
 
   render() {
     const {
@@ -208,6 +223,7 @@ class AddAppointmentForm extends Component {
       handleDateSelect,
       handleStartTimeChange,
       getPatientName,
+      getTreatment
     } = this;
 
     const currentDate = moment(getFieldValue(DATE));
@@ -228,7 +244,7 @@ class AddAppointmentForm extends Component {
             initialValue: getInitialValue(),
           })(
             <Select
-              className="user-select"
+              className="user-select drawer-select"
               // onSearch={fetchPatients}
               placeholder={getPatientName()}
               notFoundContent={fetchingPatients ? <Spin size="small" /> : null}
@@ -263,7 +279,7 @@ class AddAppointmentForm extends Component {
               onBlur={handleDateSelect(currentDate)}
               // suffixIcon={calendarComp()}
               disabledDate={disabledDate}
-              // getCalendarContainer={this.getParentNode}
+            // getCalendarContainer={this.getParentNode}
             />
           )}
           {/*<img*/}
@@ -295,7 +311,7 @@ class AddAppointmentForm extends Component {
                 minuteStep={15}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
-                // getPopupContainer={this.getParentNode}
+              // getPopupContainer={this.getParentNode}
               />
             )}
           </FormItem>
@@ -328,7 +344,7 @@ class AddAppointmentForm extends Component {
                 value={currentDate}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
-                // getPopupContainer={this.getParentNode}
+              // getPopupContainer={this.getParentNode}
               />
             )}
           </FormItem>
@@ -338,17 +354,21 @@ class AddAppointmentForm extends Component {
           label={formatMessage(message.treatment_text)}
           className="full-width ant-date-custom"
         >
-          {getFieldDecorator(TREATMENT)(
-             <Select
-             className="form-inputs-ap drawer-select"
-             autoComplete="off"
-             placeholder="Select Treatment"
-             // onSelect={this.setTreatment}
-             // onDeselect={handleDeselect}
-             suffixIcon={null}
-           >
-             {this.getTreatmentOption()}
-           </Select>
+          {getFieldDecorator(TREATMENT, {
+            initialValue: getTreatment(),
+          }
+          )(
+            <Select
+              className="form-inputs-ap drawer-select"
+              autoComplete="off"
+              placeholder="Select Treatment"
+              disabled={getTreatment() ? true : false}
+              // onSelect={this.setTreatment}
+              // onDeselect={handleDeselect}
+              suffixIcon={null}
+            >
+              {this.getTreatmentOption()}
+            </Select>
           )}
         </FormItem>
 
@@ -357,6 +377,17 @@ class AddAppointmentForm extends Component {
           className="full-width ant-date-custom"
         >
           {getFieldDecorator(REASON, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_purpose),
+              },
+              {
+                pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
+                message: formatMessage(message.error_valid_purpose)
+              }
+            ],
+
           })(
             <Input
               autoFocus
@@ -372,6 +403,7 @@ class AddAppointmentForm extends Component {
           {getFieldDecorator(DESCRIPTION)(
             <TextArea
               autoFocus
+              maxLength={1000}
               placeholder={formatMessage(message.description_text_placeholder)}
               rows={4}
             />

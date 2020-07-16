@@ -54,7 +54,6 @@ class ClinicRegister extends Component {
 
         let locationToSave = address ? address : manual;
         handleOk(locationToSave);
-        this.myRef.current && this.clearInput();
         this.setState({
             address: '',
             pincode: '',
@@ -74,7 +73,6 @@ class ClinicRegister extends Component {
         const { handleCancel } = this.props;
 
         handleCancel();
-        this.myRef.current && this.clearInput();
         this.setState({
             address: '',
             pincode: '',
@@ -121,13 +119,16 @@ class ClinicRegister extends Component {
                 <div className='location-container'>
                     <div className='form-category-headings'>Google</div>
                     <PlacesAutocomplete
-                        value={address?address:location}
+                        value={address ? address : location}
+                        disabled={addressManual ? true : false}
                         onChange={this.handleChangeAddress}
                         onSelect={this.handleSelect}
                     >
                         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                             <div>
                                 <Input
+
+                                    disabled={addressManual ? true : false}
                                     {...getInputProps({
                                         placeholder: 'Search Address',
                                         className: 'form-inputs-google',

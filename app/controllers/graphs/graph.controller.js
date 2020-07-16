@@ -50,7 +50,7 @@ class GraphController extends Controller {
         try {
             // const {params: {id} = {}, userDetails: {userId} = {}} = req;
             const {body: {chart_ids = []} = {}, userDetails: {userId} = {}} = req;
-
+            console.log('CHART IDSSSSSSSSSSSSS==========================>',chart_ids);
             const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
             const userPreference = await UserPreferenceWrapper(userPreferenceData);
 

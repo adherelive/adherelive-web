@@ -160,6 +160,7 @@ export const signIn = (payload) => {
         dispatch({
           type: SIGNING_COMPLETED,
           payload: {
+            users,
             authenticatedUser: auth_user,
             authRedirection,
             authCategory: auth_category
@@ -212,6 +213,7 @@ export const verifyUser = (link) => {
         dispatch({
           type: VALIDATING_LINK_COMPLETED,
           payload: {
+            users,
             authenticatedUser: auth_user,
             authRedirection,
             authCategory: auth_category

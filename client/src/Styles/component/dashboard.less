@@ -17,16 +17,21 @@
   cursor: pointer;
 }
 
-.add-more{
-  font-size:16px;
+.add-more {
+  font-size: 16px;
   font-weight: 700;
-  color:@deep-cyan;
-  cursor:pointer;
+  color: @deep-cyan;
+  cursor: pointer;
+}
+
+.theme-green{
+
+  color: @deep-cyan;
 }
 
 .form-block-ap {
   display: flex;
-  width:100%;
+  width: 100%;
   min-height: 80%;
   flex-direction: column;
   margin-top: 20px;
@@ -67,17 +72,16 @@
   }
 }
 
-.form-inputs-ap{
-.ant-calendar-picker-clear,
-.ant-calendar-picker-icon {
-  top: 60%;
-}
+.form-inputs-ap {
+  .ant-calendar-picker-clear,
+  .ant-calendar-picker-icon {
+    top: 60%;
+  }
 }
 
-
-.form-inputs-dp{
+.form-inputs-dp {
   border-radius: 4px;
-  padding-left:11px;
+  padding-left: 11px;
   border: 1px solid #d9d9d9;
   width: 100%;
   height: 50px;
@@ -91,12 +95,26 @@
 
 .add-patient-footer {
   padding: 10px 16px;
-  display:flex;
+  display: flex;
   justify-content: space-between;
   background: #fff;
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
-  border-top: 0.5px solid #9d9d9d;
+  border-top: 1px solid #e8e8e8;
 }
+
+.horizontal-scroll-wrapper {
+  background-color: #fff;
+  min-width: 100%;
+  min-height: 200px;
+  display: flex;
+  overflow-x: auto;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+

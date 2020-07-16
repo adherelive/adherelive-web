@@ -5,9 +5,9 @@ import {doctorProfileRegister,getDoctorProfileRegisterData} from "../../modules/
 import {connect} from "react-redux";
 
 const mapStateToProps = state => {
-    const {auth,users,onBoarding} = state;
+    const {auth,users,onBoarding,doctors} = state;
     let{authenticated_user={}}=auth;
-    return {authenticated_user,users,onBoarding};
+    return {authenticated_user,users,doctors,onBoarding};
 };
 
 const mapDispatchToProps = dispatch => {

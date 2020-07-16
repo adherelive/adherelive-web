@@ -290,7 +290,7 @@ class UserController extends Controller {
           permissions: []
         };
 
-        if(apiUserDetails.isActivated()) {
+        if (apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
         }
 
@@ -585,7 +585,7 @@ class UserController extends Controller {
           permissions: []
         };
 
-        if(apiUserDetails.isActivated()) {
+        if (apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
         }
 
@@ -661,32 +661,7 @@ class UserController extends Controller {
     const file = req.file;
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
-      //   await minioService.createBucket();
 
-      //   const imageName = md5(`${userId}-education-pics`);
-
-      //   let hash = md5.create();
-
-      //   hash.hex();
-      //   hash = String(hash);
-
-      //   const folder = "adhere";
-      //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
-      //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
-
-      //   const metaData = {
-      //     "Content-Type":
-      //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      // };
-      // const fileUrl = folder+ "/" +file_name;
-      // await minioService.saveBufferObject(file.buffer, file_name, metaData);
-
-      // // console.log("file urlll: ", process.config.minio.MINI);
-      // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
-      // let files = [file_link];
-      // console.log("Uplaoded File Url ---------------------->  ", file_link);
-      // console.log("User Controllers =------------------->   ", files);
-      //const resume_link = process.config.BASE_DOC_URL + files[0]
       let files = await uploadImageS3(userId, file);
       return this.raiseSuccess(
         res,
@@ -733,8 +708,8 @@ class UserController extends Controller {
         doctorName.length == 3
           ? doctorName[2]
           : doctorName.length == 2
-          ? doctorName[1]
-          : "";
+            ? doctorName[1]
+            : "";
 
       if (doctorExist) {
         let doctor_data = {
@@ -1450,8 +1425,7 @@ class UserController extends Controller {
 
         if (photos.length > 3) {
           return this.raiseServerError(res, 422, "cannot add more than 3 images");
-
-        }
+         }
 
         let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
         qualification_id = docQualification.get('id');
@@ -1664,15 +1638,15 @@ class UserController extends Controller {
   }
 
   forgotPassword = async (req, res) => {
-    const {raiseServerError} = this;
+    const { raiseServerError } = this;
     try {
-      const {raiseClientError, raiseSuccess} = this;
+      const { raiseClientError, raiseSuccess } = this;
       const { email } = req.body;
       const userExists = await userService.getUserByEmail({
         email
       });
 
-      if(userExists) {
+      if (userExists) {
         const userWrapper = await UserWrapper(userExists.get());
         const link = uuidv4();
 
@@ -1690,7 +1664,7 @@ class UserController extends Controller {
           title: "Adhere Reset Password",
           templateData: {
             email,
-            link : process.config.app.reset_password + link,
+            link: process.config.app.reset_password + link,
             host: process.config.WEB_URL,
             title: "Doctor",
             inviteCard: "",
@@ -1704,33 +1678,33 @@ class UserController extends Controller {
 
         console.log("91397138923 emailPayload -------------->", emailPayload);
         const emailResponse = await Proxy_Sdk.execute(
-            EVENTS.SEND_EMAIL,
-            emailPayload
+          EVENTS.SEND_EMAIL,
+          emailPayload
         );
       } else {
         return raiseClientError(res, 422, {}, "User does not exists for the email");
       }
 
       raiseSuccess(
-          res,
-          200,
-          {},
-          "Thanks! If there is an account associated with the email, we will send the password reset link to it"
+        res,
+        200,
+        {},
+        "Thanks! If there is an account associated with the email, we will send the password reset link to it"
       );
     } catch (error) {
-      Logger.debug("forgot password 500 error",error);
+      Logger.debug("forgot password 500 error", error);
       return raiseServerError(res);
     }
   }
 
   verifyPasswordResetLink = async (req, res) => {
-    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const {params: {link} = {} } = req;
+      const { params: { link } = {} } = req;
 
       const passwordResetLink = await UserVerificationServices.getRequestByLink(link);
 
-      if(passwordResetLink) {
+      if (passwordResetLink) {
         const linkVerificationData = await LinkVerificationWrapper(passwordResetLink);
 
         const userData = await UserWrapper(null, linkVerificationData.getUserId());
@@ -1738,18 +1712,18 @@ class UserController extends Controller {
 
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
-            {
-              userId: linkVerificationData.getUserId()
-            },
-            secret,
-            {
-              expiresIn
-            }
+          {
+            userId: linkVerificationData.getUserId()
+          },
+          secret,
+          {
+            expiresIn
+          }
         );
 
         res.cookie("accessToken", accessToken, {
           expires: new Date(
-              Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
           ),
           httpOnly: true
         });
@@ -1764,16 +1738,16 @@ class UserController extends Controller {
       } else {
         return raiseClientError(res, 422, {}, "Cannot verify email to update password");
       }
-    } catch(error) {
+    } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };
 
   updateUserPassword = async (req, res) => {
-    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const {userDetails: {userId}, body : {new_password, confirm_password} = {} } = req;
+      const { userDetails: { userId }, body: { new_password, confirm_password } = {} } = req;
 
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
@@ -1789,14 +1763,14 @@ class UserController extends Controller {
       const updatedUser = await UserWrapper(null, userId);
 
       return raiseSuccess(res, 200, {
-            users: {
-              [updatedUser.getId()]: updatedUser.getBasicInfo()
-            },
-          },
-          "Password reset successful. Please login to continue"
+        users: {
+          [updatedUser.getId()]: updatedUser.getBasicInfo()
+        },
+      },
+        "Password reset successful. Please login to continue"
       );
 
-    } catch(error) {
+    } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }

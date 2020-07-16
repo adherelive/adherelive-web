@@ -69,10 +69,7 @@ export const doctorProfileRegister = (payload) => {
 
         dispatch({
           type: DOCTOR_PROFILE_UPDATE_COMPLETED,
-          payload: {
-
-
-          },
+          data: data
         });
       }
     } catch (err) {
@@ -84,7 +81,7 @@ export const doctorProfileRegister = (payload) => {
   };
 };
 
-export const doctorQualificationRegister = (payload,userId) => {
+export const doctorQualificationRegister = (payload) => {
   let response = {};
   console.log("DOCTORRR QUALIFICATION REGISTERR");
   return async (dispatch) => {
@@ -93,7 +90,7 @@ export const doctorQualificationRegister = (payload,userId) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Doctor.getdoctorQualificationRegisterUrl(userId),
+        url: Doctor.getdoctorQualificationRegisterUrl(),
         data: payload,
       });
 
@@ -111,9 +108,7 @@ export const doctorQualificationRegister = (payload,userId) => {
 
         dispatch({
           type: DOCTOR_QUALIFICATION_UPDATE_COMPLETED,
-          payload: {
-
-          },
+          data: data,
         });
       }
     } catch (err) {
@@ -125,7 +120,7 @@ export const doctorQualificationRegister = (payload,userId) => {
   };
 };
 
-export const doctorClinicRegister = (payload,userId) => {
+export const doctorClinicRegister = (payload) => {
   let response = {};
   console.log("DOCTORRR ClINIC REGISTERR");
   return async (dispatch) => {
@@ -134,7 +129,7 @@ export const doctorClinicRegister = (payload,userId) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Doctor.getdoctorClinicRegisterUrl(userId),
+        url: Doctor.getdoctorClinicRegisterUrl(),
         data: payload,
       });
 
@@ -206,7 +201,7 @@ export const getDoctorProfileRegisterData = (userId) => {
   };
 }
 
-export const getDoctorQualificationRegisterData = (userId) => {
+export const getDoctorQualificationRegisterData = () => {
   let response = {};
   console.log("DOCTORRR QUALIFICATION REGISTERR DATA");
   return async (dispatch) => {
@@ -215,7 +210,7 @@ export const getDoctorQualificationRegisterData = (userId) => {
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Doctor.getdoctorQualificationRegisterDataUrl(userId),
+        url: Doctor.getdoctorQualificationRegisterDataUrl(),
       });
 
       console.log("DOCTORRR QUALIFICATION REGISTERR DATA response --> ", response);
@@ -229,14 +224,10 @@ export const getDoctorQualificationRegisterData = (userId) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { qualificationData,registration_details,upload_documents } = data;
+        // const { qualificationData, registration_details, upload_documents } = data;
         dispatch({
           type: GET_DOCTOR_QUALIFICATION_DATA_COMPLETED,
-          payload: {
-            qualificationData,
-            registration_details,
-            upload_documents
-          },
+          data: data
         });
       }
     } catch (err) {
@@ -248,7 +239,7 @@ export const getDoctorQualificationRegisterData = (userId) => {
   };
 }
 
-export const registerQualification = (payload, userId) => {
+export const registerQualification = (payload) => {
   let response = {};
   console.log("REGISTER QUALIFICATION IMAGE DATA");
   return async (dispatch) => {
@@ -256,7 +247,7 @@ export const registerQualification = (payload, userId) => {
       dispatch({ type: REGISTER_QUALIFICATION });
       response = await doRequest({
         method: REQUEST_TYPE.POST,
-        url: Doctor.getRegisterQualificationUrl(userId),
+        url: Doctor.getRegisterQualificationUrl(),
         data: payload
       });
 
@@ -274,9 +265,7 @@ export const registerQualification = (payload, userId) => {
         const { qualification_id } = data;
         dispatch({
           type: REGISTER_QUALIFICATION_COMPLETED,
-          payload: {
-            qualification_id
-          },
+          data: data,
         });
       }
     } catch (err) {
@@ -315,9 +304,7 @@ export const registerRegistration = (payload) => {
         const { qualification_id } = data;
         dispatch({
           type: REGISTER_REGISTRATION_COMPLETED,
-          payload: {
-            qualification_id
-          },
+          data: data,
         });
       }
     } catch (err) {
@@ -329,7 +316,7 @@ export const registerRegistration = (payload) => {
   };
 }
 
-export const deleteDoctorQualificationImage = ( qualificationId,document) => {
+export const deleteDoctorQualificationImage = (qualificationId, document) => {
   let response = {};
   console.log("DELETE QUALIFICATION IMAGE DATA");
   return async (dispatch) => {
@@ -337,9 +324,9 @@ export const deleteDoctorQualificationImage = ( qualificationId,document) => {
       dispatch({ type: DELETE_QUALIFICATION_IMAGE });
 
       response = await doRequest({
-        method: REQUEST_TYPE.POST,
+        method: REQUEST_TYPE.DELETE,
         url: Doctor.getDeleteQualificationDocumentUrl(qualificationId),
-        data:{document},
+        data: { document },
       });
 
       console.log("DELETE QUALIFICATION IMAGE response --> ", response);
@@ -356,7 +343,7 @@ export const deleteDoctorQualificationImage = ( qualificationId,document) => {
 
         dispatch({
           type: DELETE_QUALIFICATION_IMAGE_COMPLETED,
-          payload: {},
+          data: {},
         });
       }
     } catch (err) {
@@ -369,7 +356,7 @@ export const deleteDoctorQualificationImage = ( qualificationId,document) => {
 }
 
 
-export const deleteDoctorRegistrationImage = ( registrationId,document) => {
+export const deleteDoctorRegistrationImage = (registrationId, document) => {
   let response = {};
   console.log("DELETE REGISTRATION IMAGE DATA");
   return async (dispatch) => {
@@ -379,7 +366,7 @@ export const deleteDoctorRegistrationImage = ( registrationId,document) => {
       response = await doRequest({
         method: REQUEST_TYPE.DELETE,
         url: Doctor.getDeleteRegistrationDocumentUrl(registrationId),
-        data:{document},
+        data: { document },
       });
 
       console.log("DELETE REGISTRATION IMAGE response --> ", response);
@@ -396,7 +383,7 @@ export const deleteDoctorRegistrationImage = ( registrationId,document) => {
 
         dispatch({
           type: DELETE_REGISTRATION_IMAGE_COMPLETED,
-          payload: {},
+          data: {},
         });
       }
     } catch (err) {
@@ -409,17 +396,17 @@ export const deleteDoctorRegistrationImage = ( registrationId,document) => {
 }
 
 export default (state = {}, action) => {
-  const { payload, type } = action;
+  const { data, type } = action;
   switch (type) {
     case GET_DOCTOR_PROFILE_DATA_COMPLETED:
       return {
-        profileData: payload.profileData
+        profileData: data.profileData
       };
     case GET_DOCTOR_QUALIFICATION_DATA_COMPLETED:
       return {
-        qualificationData: payload.qualificationData,
-        registration_details:payload.registration_details,
-        upload_documents:payload.upload_documents
+        qualificationData: data.qualificationData,
+        registration_details: data.registration_details,
+        upload_documents: data.upload_documents
       };
     default:
       return state;

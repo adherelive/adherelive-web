@@ -210,7 +210,7 @@ class MReminderController extends Controller {
 
     carePlanApiData[
       carePlanApiWrapper.getCarePlanId()
-    ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,carePlanMedicationIds,carePlanAppointmentIds};
+    ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,medication_ids:carePlanMedicationIds,appointment_ids:carePlanAppointmentIds};
 
 
       // const eventScheduleData = {

@@ -1,47 +1,47 @@
 export const getdoctorProfileRegisterUrl = () => {
-  return `/auth/doctor-profile-registration`;
+  return `/doctors/`;
 };
 
-export const getdoctorQualificationRegisterUrl = (userId) => {
-  return `/auth/doctor-qualification-registration/${userId}`;
+export const getdoctorQualificationRegisterUrl = () => {
+  return `/doctors/details/`;
 };
 
-export const getdoctorClinicRegisterUrl = (userId) => {
-  return `/auth/doctor-clinic-registration/${userId}`;
+export const getdoctorClinicRegisterUrl = () => {
+  return `/doctors/clinics`;
 };
 
 export const getdoctorProfileRegisterDataUrl = (userId) => {
   return `/auth/doctor-profile-registration/${userId}`;
 };
 
-export const getdoctorQualificationRegisterDataUrl = (userId) => {
-  return `/auth/doctor-qualification-registration/${userId}`;
+export const getdoctorQualificationRegisterDataUrl = () => {
+  return `/doctors/`;
 };
-export const getRegisterQualificationUrl = (userId) => {
-  return `/auth/register-qualification/${userId}`;
+export const getRegisterQualificationUrl = () => {
+  return `/doctors/qualifications`;
 };
 
 export const getRegisterRegistrationUrl = () => {
-  return `/auth/doctor-registration`;
+  return `/doctors/registrations`;
 };
 
 
-export const getUploadQualificationDocumentUrl = (userId) => {
-  return `/auth/upload-qualification-document/${userId}`;
+export const getUploadQualificationDocumentUrl = () => {
+  return `/doctors/qualifications/docs`;
 };
 
 
 export const getUploadRegistrationDocumentUrl = () => {
-  return `/auth/registration-document`;
+  return `/doctors/registrations/docs`;
 };
 
 export const getDeleteQualificationDocumentUrl = (qualificationId) => {
-  return `/auth/delete-qualification-document/${qualificationId}`;
+  return `/doctors/qualification-documents/${qualificationId}`;
 };
 
 
 export const getDeleteRegistrationDocumentUrl = (registrationId) => {
-  return `/auth/registration-document/${registrationId}`;
+  return `/doctors/registration-documents/${registrationId}`;
 };
 
 export const getAllDoctorsUrl = () => {

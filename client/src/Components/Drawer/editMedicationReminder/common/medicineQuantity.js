@@ -58,8 +58,10 @@ class MedicineQuantity extends Component {
     let {basic_info : {details: {quantity} = {}} = {}} = medications[medication_id] || {};
     let { schedule_data: { quantity:quant = '' } = {} } = medicationData;
     if(quant){
-      quantity=parseInt(quant);
+      quantity=parseFloat(quant);
     }
+
+    console.log('623721836872136',quantity,medicationData);
     // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 

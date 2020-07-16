@@ -65,9 +65,7 @@ export const addCarePlanMedicationsAndAppointments =(payload,carePlanId)=>{
        
           dispatch({
             type:ADD_CARE_PLAN_DATA_COMPLETED,
-            payload: {
-             
-            },
+            data,
           });
         }
       } catch (err) {
@@ -90,7 +88,7 @@ export const addCarePlanMedicationsAndAppointments =(payload,carePlanId)=>{
           url: CarePlan.getPatientCarePlanDetailsUrl(patientId)
         });
   
-        const { status, payload: { error = "", data:{care_plans={}} = {} } = {} } =
+        const { status, payload: { error = "", data={} } = {} } =
           response || {};
           
         if (status === false) {
@@ -102,7 +100,7 @@ export const addCarePlanMedicationsAndAppointments =(payload,carePlanId)=>{
         
           dispatch({
             type:GET_PATIENT_CARE_PLAN_DETAILS_COMPLETED,
-            data: { care_plans},
+            data: data,
           });
         }
       } catch (err) {
