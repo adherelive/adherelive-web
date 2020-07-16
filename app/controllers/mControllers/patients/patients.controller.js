@@ -316,7 +316,7 @@ class MPatientController extends Controller {
       let appointmentApiDetails = {};
       const appointments = await appointmentService.getAppointmentByData({id: appointment_ids});
       Logger.debug("187631631623 here 2", appointments);
-      if(appointments) {
+      if(appointments.length > 0) {
         for(const appointment of appointments) {
           const appointmentData = await AppointmentWrapper(appointment);
           appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
@@ -331,7 +331,7 @@ class MPatientController extends Controller {
 
       let medicationApiDetails = {};
       const medications = await medicationReminderService.getMedicationsForParticipant({id: medication_ids});
-      if(medications) {
+      if(medications.length > 0) {
         for(const medication of medications) {
           const medicationData = await MReminderWrapper(medication);
           medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
