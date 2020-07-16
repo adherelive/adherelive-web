@@ -1,7 +1,7 @@
-import BaseCondition from "../../../services/condition";
-import conditionService from "../../../services/condition/condition.service";
+import BaseCourse from "../../../services/course";
+import courseService from "../../../services/course/course.service";
 
-class ConditionWrapper extends BaseCondition {
+class CourseWrapper extends BaseCourse {
     constructor(data) {
         super(data);
     }
@@ -23,8 +23,8 @@ class ConditionWrapper extends BaseCondition {
 
 export default async (data = null, id = null) => {
     if (data !== null) {
-        return new ConditionWrapper(data);
+        return new CourseWrapper(data);
     }
-    const condition = await conditionService.getByData({ id });
-    return new ConditionWrapper(condition);
+    const course = await courseService.getByData({ id });
+    return new CourseWrapper(course);
 };

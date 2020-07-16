@@ -15,6 +15,8 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 import medicineService from "../../services/medicine/medicine.service";
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+import degreeService from "../../services/degree/degree.service";
+import courseService from "../../services/course/course.service";
 
 import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
@@ -29,6 +31,8 @@ import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
 import MedicineApiWrapper from "../../ApiWrapper/web/medicine";
+import DegreeWrapper from "../../ApiWrapper/web/degree";
+import CourseWrapper from "../../ApiWrapper/web/course";
 
 import { DOCUMENT_PARENT_TYPE, ONBOARDING_STATUS, SIGN_IN_CATEGORY, USER_CATEGORY } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
@@ -1385,6 +1389,19 @@ class DoctorController extends Controller {
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       }
 
+      const degrees = await degreeService.getAll();
+      let degreeData = {};
+      for(const degree of degrees) {
+        const degreeWrapper = await DegreeWrapper(degree);
+        degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
+      }
+
+      const courses = await courseService.getAll();
+      let courseData = {};
+      for(const course of courses) {
+        const courseWrapper = await CourseWrapper(course);
+        courseData[courseWrapper.getDegreeId()] = courseWrapper.getBasicInfo();
+      }
       return raiseSuccess(
         res,
         200,
@@ -1411,6 +1428,12 @@ class DoctorController extends Controller {
           },
           upload_documents: {
             ...uploadDocumentApiDetails,
+          },
+          courses: {
+            ...courseData,
+          },
+          degrees: {
+            ...degreeData,
           }
         },
         "Doctor details fetched successfully"
