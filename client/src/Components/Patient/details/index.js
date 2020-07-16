@@ -107,7 +107,8 @@ const columns_appointments = [
     title: "Date",
     dataIndex: "date",
     key: "date",
-    width: '20%'
+    width: '20%',
+    ellipsis: true,
   },
   {
     title: "Timing",
@@ -166,7 +167,7 @@ const data_medication = [
   },
 ];
 
-const PatientProfileHeader = ({ formatMessage, getMenu, showAdd }) => {
+const PatientProfileHeader = ({ formatMessage, getMenu }) => {
 
   // console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd",showAdd,formatMessage,getMenu);
   return (
@@ -340,12 +341,12 @@ class PatientDetails extends Component {
       show_template_drawer = {}
     } = this.props;
     this.getData();
-    const{show:showTd=false}=show_template_drawer;
+    const { show: showTd = false } = show_template_drawer;
     let isCarePlanDataPresent = currentCarePlanId ? true : false;
     if (showTd) {
       this.setState({ templateDrawerVisible: true });
     }
-    console.log('currentCarePlanId in did mount 7897987987987987',this.props );
+    console.log('currentCarePlanId in did mount 7897987987987987', this.props);
     if (!showTd) {
       getPatientCarePlanDetails(patient_id);
       // .then(response => {
@@ -355,7 +356,7 @@ class PatientDetails extends Component {
       //     const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
       //     console.log("RESPONSEEEEEEEEE IN DID MOUNTTT", carePlanTemplateId);
-      
+
       //     this.setState({ carePlanTemplateId });
       //   }
       // });
@@ -387,7 +388,7 @@ class PatientDetails extends Component {
     } = this.props;
 
     let { appointment_ids = [] } = carePlan;
-    return appointment_ids.map((id) => {
+    let formattedAppointments = appointment_ids.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
         basic_info: {
@@ -411,6 +412,11 @@ class PatientDetails extends Component {
         description: description ? description : "--",
       };
     });
+    formattedAppointments.sort(function (a, b) {
+      var dateA = new Date(a.date), dateB = new Date(b.date);
+      return dateA - dateB;
+    });
+    return formattedAppointments;
   };
 
   getMedicationData = (carePlan = {}) => {
@@ -642,7 +648,6 @@ class PatientDetails extends Component {
       templateMedications[mId] = newMedication;
     }
 
-    console.log('7897987987987987', this.state);
 
     // todo: dummy careplan 
     let carePlanId = 1;
@@ -661,6 +666,14 @@ class PatientDetails extends Component {
 
     }
 
+    if (loading) {
+      return (
+        <div className="page-loader hp100 wp100 flex align-center justify-center ">
+          <Spin size="large"></Spin>
+        </div>
+      );
+    }
+
 
     let showUseTemplate = true;
     let showAddButton = carePlanTemplateId ? false : true;
@@ -669,16 +682,18 @@ class PatientDetails extends Component {
     }
 
 
-    console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS', carePlanId, care_plans[carePlanId]);
     let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
     const { basic_info: { doctor_id = 1 } = {}, activated_on: treatment_start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
     const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};
     const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
     const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
 
-    let carePlan = care_plans[carePlanId];
+
+    let carePlan = care_plans[carePlanId] || {};
+    console.log('239748963874392423', getAppointmentsData(carePlan));
     let { details: { condition_id: cId = 0, severity_id: sId = 0, treatment_id: tId = 0 } = {} } = carePlan;
     if (carePlanTemplateId) {
+
       let { basic_info: { condition_id: cIdTemp = 0, severity_id: sIdTemp = 0, treatment_id: tIdTemp = 0 } = {} } = care_plan_templates[carePlanTemplateId] || {};
       carePlan.treatment_id = tIdTemp;
       carePlan.severity_id = sIdTemp;
@@ -725,16 +740,9 @@ class PatientDetails extends Component {
     const new_symptoms_string =
       new_symptoms.length > 0 ? new_symptoms.map((e) => e).join(", ") : "";
 
-    console.log("user", count);
-
-    // const patientName="John Doe";
-
-    // const { id = 0 } = this.props;
-
-    console.log("formatMessage", formatMessage);
     return (
       <div className="pt10 pr10 pb10 pl10">
-        <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu} showAdd={showAddButton} />
+        <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu} />
         <div className="flex">
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
             <PatientCard

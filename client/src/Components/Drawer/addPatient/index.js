@@ -104,9 +104,9 @@ class PatientDetailsDrawer extends Component {
         this.setState({ gender: value });
     };
 
-    setDOB = e=>{
-    // (date) => {
-        console.log('DATEEEEEEEEEEE',e.target.value,e);
+    setDOB = e => {
+        // (date) => {
+        console.log('DATEEEEEEEEEEE', e.target.value, e);
         this.setState({ date_of_birth: moment(e.target.value) });
     }
 
@@ -225,9 +225,33 @@ class PatientDetailsDrawer extends Component {
                     showYearDropdown
                     dropdownMode="select"
                 /> */}
-                <Input className={"form-inputs-ap"} type='date' 
-                    onChange={this.setDOB}/>
-                <div className='form-category-headings-ap'>Care Plan</div>
+                <Input className={"form-inputs-ap"} type='date'
+                    onChange={this.setDOB} />
+                <div className='form-category-headings-ap'>Treatment Plan</div>
+
+                <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    placeholder='Select Condition'
+                    onSelect={this.setCondition}
+                    // onDeselect={handleDeselect}
+                    suffixIcon={null}
+                >
+                    {this.getConditionOption()}
+                </Select>
+
+                <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    autoComplete="off"
+                    placeholder='Select Severity'
+                    onSelect={this.setSeverity}
+                    // onDeselect={handleDeselect}
+                    suffixIcon={null}
+                >
+                    {this.getSeverityOption()}
+                </Select>
+
 
                 <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
                 <Select
@@ -240,27 +264,6 @@ class PatientDetailsDrawer extends Component {
                 >
                     {this.getTreatmentOption()}
                 </Select>
-                <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
-                <Select
-                    className="form-inputs-ap drawer-select"
-                    autoComplete="off"
-                    placeholder='Select Severity'
-                    onSelect={this.setSeverity}
-                    // onDeselect={handleDeselect}
-                    suffixIcon={null}
-                >
-                    {this.getSeverityOption()}
-                </Select>
-                <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
-                <Select
-                    className="form-inputs-ap drawer-select"
-                    placeholder='Select Condition'
-                    onSelect={this.setCondition}
-                    // onDeselect={handleDeselect}
-                    suffixIcon={null}
-                >
-                    {this.getConditionOption()}
-                </Select>
             </div>
         );
 
@@ -269,7 +272,7 @@ class PatientDetailsDrawer extends Component {
 
     validateData = () => {
         const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
-        let age = date_of_birth?moment().diff(moment(date_of_birth),'years'):-1;
+        let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
         if (!prefix) {
             message.error('Please select a prefix.')
@@ -280,9 +283,9 @@ class PatientDetailsDrawer extends Component {
         } else if (!date_of_birth) {
             message.error('Please enter  Date of Birth .')
             return false;
-        } 
-        else if (age<0 || age>100 || moment(date_of_birth).isAfter(moment())) {  //handle case of newBorn
-            
+        }
+        else if (age < 0 || age > 100 || moment(date_of_birth).isAfter(moment())) {  //handle case of newBorn
+
             message.error('Please enter a valid Date of Birth .')
             return false;
         }

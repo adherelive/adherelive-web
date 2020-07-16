@@ -192,13 +192,42 @@ class ClinicRegister extends Component {
     }
 
     setDayStartTime = (day, key) => (time, timeString) => {
-        console.log('TIMEEEEEEEEEEEEEEEEEEE', time, moment(time).add('minutes', 30));
         let { dayTimings = {} } = this.state;
         let newDayTimings = dayTimings;
-        newDayTimings[day].timings[key].startTime = time;
+        let { timings = {} } = newDayTimings[day];
+        let wrongHours = false;
 
-        newDayTimings[day].timings[key].endTime = moment(time).add('minutes', 30);
-        this.setState({ clinics: newDayTimings });
+
+        if (time) {
+
+            for (let tkey in timings) {
+
+                if (tkey.localeCompare(key)) {
+                    let { startTime = '', endTime = '' } = timings[tkey];
+                    if (startTime && endTime) {
+
+                        let newEndTime = moment(time).add('minutes', 30);
+
+                        if (time.isAfter(moment(startTime)) && time.isBefore(moment(endTime))
+                            || newEndTime.isAfter(moment(startTime)) && newEndTime.isBefore(moment(endTime))
+                            || moment(time).isSame(moment(startTime)) || moment(time).isSame(moment(endTime))
+                            || moment(newEndTime).isSame(moment(startTime)) || moment(newEndTime).isSame(moment(endTime))
+                        ) {
+                            wrongHours = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (!wrongHours) {
+
+            timings[key].startTime = time;
+            timings[key].endTime = time ? moment(time).add('minutes', 30) : '';
+            newDayTimings[day].timings = timings;
+            this.setState({ clinics: newDayTimings });
+        } else {
+            message.error('Please select valid timings!')
+        }
     }
 
     setDayEndTime = (day, key) => (time, timeString) => {
@@ -208,9 +237,25 @@ class ClinicRegister extends Component {
         // console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD22222', clinics, newClinics[key]);
         let { timings = {} } = newDayTimings[day];
         let { startTime = '' } = timings[key];
-        let validEndTime = moment(time).isAfter(startTime);
+        let validEndTime = true;
 
-        if (validEndTime) {
+
+        let wrongHours = false;
+        if (time) {
+            validEndTime = moment(time).isAfter(startTime);
+            for (let tkey in timings) {
+                if (tkey.localeCompare(key)) {
+                    let { startTime = '', endTime = '' } = timings[tkey];
+                    if (startTime && endTime) {
+                        if (time.isAfter(moment(startTime)) && time.isBefore(moment(endTime))
+                            || moment(time).isSame(moment(startTime)) || moment(time).isSame(moment(endTime))) {
+                            wrongHours = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (validEndTime && !wrongHours) {
             timings[key].endTime = time;
             newDayTimings[day].timings = timings;
             this.setState({ dayTimings: newDayTimings });

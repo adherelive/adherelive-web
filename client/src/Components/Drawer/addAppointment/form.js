@@ -105,7 +105,9 @@ class AddAppointmentForm extends Component {
 
   disabledDate = (current) => {
     // Can not select days before today and today
-    return current && current < moment().startOf("day");
+    return current
+      && (current < moment().startOf("day")
+        || current > moment().add(1, "year"));;
   };
 
   // onBlur = date => () => {
@@ -169,6 +171,19 @@ class AddAppointmentForm extends Component {
       }`;
   };
 
+  getTreatment = () => {
+    const { patients, payload: { patient_id } = {}, care_plans } = this.props;
+    let treatmentId = 0;
+
+    for (let carePlan of Object.values(care_plans)) {
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, treatment_id = 0 } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId)) {
+        treatmentId = treatment_id;
+      }
+    }
+    return treatmentId;
+  }
+
   calendarComp = () => {
     return (
       <div className="flex justify-center align-center">
@@ -177,10 +192,10 @@ class AddAppointmentForm extends Component {
     );
   };
 
-  disabledDate = (current) => {
-    // Can not select days before today and today
-    return current && current < moment().startOf("day");
-  };
+  // disabledDate = (current) => {
+  //   // Can not select days before today and today
+  //   return current && current < moment().startOf("day");
+  // };
 
   getTreatmentOption = () => {
     let { treatments = {} } = this.props;
@@ -208,6 +223,7 @@ class AddAppointmentForm extends Component {
       handleDateSelect,
       handleStartTimeChange,
       getPatientName,
+      getTreatment
     } = this;
 
     const currentDate = moment(getFieldValue(DATE));
@@ -338,11 +354,15 @@ class AddAppointmentForm extends Component {
           label={formatMessage(message.treatment_text)}
           className="full-width ant-date-custom"
         >
-          {getFieldDecorator(TREATMENT)(
+          {getFieldDecorator(TREATMENT, {
+            initialValue: getTreatment(),
+          }
+          )(
             <Select
               className="form-inputs-ap drawer-select"
               autoComplete="off"
               placeholder="Select Treatment"
+              disabled={getTreatment() ? true : false}
               // onSelect={this.setTreatment}
               // onDeselect={handleDeselect}
               suffixIcon={null}
@@ -362,6 +382,10 @@ class AddAppointmentForm extends Component {
                 required: true,
                 message: formatMessage(message.error_purpose),
               },
+              {
+                pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
+                message: formatMessage(message.error_valid_purpose)
+              }
             ],
 
           })(
@@ -379,6 +403,7 @@ class AddAppointmentForm extends Component {
           {getFieldDecorator(DESCRIPTION)(
             <TextArea
               autoFocus
+              maxLength={1000}
               placeholder={formatMessage(message.description_text_placeholder)}
               rows={4}
             />

@@ -6,6 +6,7 @@ import Organizer from "../dataColumn/organizer";
 import AppointmentDate from "../dataColumn/appointmentDate";
 import Timing from "../dataColumn/timing";
 import Description from "../dataColumn/description";
+import moment from 'moment';
 
 export default props => {
   const { formatMessage } = props || {};
@@ -24,6 +25,8 @@ export default props => {
     {
       title: formatMessage(messages.appointment_date),
       ...TABLE_COLUMN.DATE,
+
+      ellipsis: true,
       render: appointmentData => <AppointmentDate {...appointmentData} />
     },
     {
@@ -34,6 +37,8 @@ export default props => {
     {
       title: formatMessage(messages.description),
       ...TABLE_COLUMN.DESCRIPTION,
+
+      ellipsis: true,
       render: appointmentData => <Description {...appointmentData} />
     }
   ];

@@ -159,7 +159,12 @@ class QualificationRegister extends Component {
   }
 
   setSpeciality = e => {
-    this.setState({ speciality: e.target.value });
+    const { value } = e.target;
+    const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+    // console.log('8423907492837589723859325', value, reg.test(value));
+    if (reg.test(value) || value === '') {
+      this.setState({ speciality: e.target.value });
+    }
   };
 
   getYearOptions = () => {
@@ -235,8 +240,13 @@ class QualificationRegister extends Component {
   setDegree = (key, e) => {
     let { education = {} } = this.state;
     let newEducation = education;
-    newEducation[key].degree = e.target.value;
-    this.setState({ education: newEducation });
+    const { value } = e.target;
+    const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+    // console.log('8423907492837589723859325', value, reg.test(value));
+    if (reg.test(value) || value === '') {
+      newEducation[key].degree = e.target.value;
+      this.setState({ education: newEducation });
+    }
   }
   setCollege = (key, e) => {
     let { education = {} } = this.state;
@@ -926,6 +936,7 @@ class QualificationRegister extends Component {
               <Input
                 placeholder="Registration number"
                 value={number}
+                maxLength={20}
                 className={"form-inputs"}
                 onChange={e => this.setRegNo(key, e)}
               />
@@ -1109,13 +1120,13 @@ class QualificationRegister extends Component {
         </div>
         <div className='flex justify-space-between align-center direction-row'>
           <div className='form-category-headings'>Education</div>
-          <div className='pointer fs16 medium' onClick={this.addEducation}>Add More</div>
+          <div className='pointer fs16 medium theme-green' onClick={this.addEducation}>Add More</div>
         </div>
         {this.renderEducation()}
 
         <div className='flex justify-space-between align-center direction-row'>
           <div className='form-category-headings'>Registration details</div>
-          <div className='pointer fs16 medium' onClick={this.addRegistration}>Add More</div>
+          <div className='pointer fs16 medium theme-green' onClick={this.addRegistration}>Add More</div>
         </div>
         {this.renderRegistration()}
       </div>

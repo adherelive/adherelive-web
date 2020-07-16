@@ -68,7 +68,7 @@ class Profileregister extends Component {
         for (let doctor of Object.values(doctors)) {
             const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '', address = '' } } = doctor;
             if (parseInt(user_id) === parseInt(authenticated_user)) {
-                let name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
+                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
                 this.setState({ name, city: address, profile_pic_url_saved: profile_pic, profile_pic });
             }
 
@@ -78,7 +78,13 @@ class Profileregister extends Component {
     }
 
     setName = e => {
-        this.setState({ name: e.target.value });
+        // this.setState({ name: e.target.value });
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        // console.log('8423907492837589723859325', value, reg.test(value));
+        if (reg.test(value) || value === '') {
+            this.setState({ name: e.target.value });
+        }
     };
 
     setCategory = value => {
@@ -237,7 +243,13 @@ class Profileregister extends Component {
     }
 
     handleChangeCity = address => {
+
+        // console.log('8423907492837589723859325', address);
+        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        // console.log('8423907492837589723859325', address, reg.test(address));
+        // if (reg.test(address) || address === '') {
         this.setState({ city: address });
+        // }
     };
 
     handleSelect = address => {
@@ -330,6 +342,7 @@ class Profileregister extends Component {
                 <Input
                     placeholder="Name"
                     value={name}
+                    maxLength={200}
                     className={"form-inputs"}
                     onChange={this.setName}
                 />

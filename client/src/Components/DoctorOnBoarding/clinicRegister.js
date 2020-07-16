@@ -72,8 +72,14 @@ class ClinicRegister extends Component {
     setClinicName = (key, e) => {
         let { clinics = {} } = this.state;
         let newClinics = clinics;
-        newClinics[key].name = e.target.value;
-        this.setState({ clinics: newClinics });
+
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        console.log('8423907492837589723859325', value, reg.test(value));
+        if (reg.test(value) || value === '') {
+            newClinics[key].name = e.target.value;
+            this.setState({ clinics: newClinics });
+        }
     }
 
     setClinicLocation = (key, e) => {
@@ -188,7 +194,7 @@ class ClinicRegister extends Component {
                                 <Input
                                     placeholder="Clinic name"
                                     className={"form-inputs"}
-                                    // value={name}
+                                    value={name}
                                     onChange={e => this.setClinicName(key, e)}
                                 />
                                 <div className='form-headings'>Location</div>
@@ -238,7 +244,7 @@ class ClinicRegister extends Component {
             <div className='form-block'>
                 <div className='flex justify-space-between align-center direction-row'>
                     <div className='form-category-headings'>Clinic</div>
-                    <div className='pointer fs16 medium ' onClick={this.addClinic}>Add More</div>
+                    <div className='pointer fs16 medium theme-green' onClick={this.addClinic}>Add More</div>
                 </div>
                 {this.renderClinics()}
             </div>
@@ -263,6 +269,28 @@ class ClinicRegister extends Component {
         return true;
     }
 
+    duplicateClinics = newClinics => {
+        for (let edu in newClinics) {
+
+            let { name = '' } = newClinics[edu];
+
+
+            console.log('NEW CLINICSSSS============>222222  0', edu, name);
+            for (let nEdu in newClinics) {
+
+                console.log('NEW CLINICSSSS============>222222  1', edu, nEdu, edu !== nEdu);
+
+                if (edu !== nEdu) {
+                    let { name: newname = '' } = newClinics[nEdu];
+                    console.log('NEW CLINICSSSS============>222222 2', newname, name);
+                    if (!newname.localeCompare(name)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    }
     validateData = () => {
         let { clinics = {} } = this.state;
         let newClinics = Object.values(clinics);
@@ -272,6 +300,10 @@ class ClinicRegister extends Component {
             return false;
         } else if (!this.validateClinics(newClinics)) {
             message.error('Please enter all Clinic details.')
+            return false;
+        } else if (!this.duplicateClinics(newClinics)) {
+
+            message.error('Please do not add duplicate clinics.')
             return false;
         }
         return true;
@@ -322,6 +354,7 @@ class ClinicRegister extends Component {
     };
 
     handleOkTiming = (timing, selectedDays) => {
+
         const { clinicKeyOfModalTiming = "", clinics } = this.state
         let newClinics = clinics;
         newClinics[clinicKeyOfModalTiming].timings = timing;
