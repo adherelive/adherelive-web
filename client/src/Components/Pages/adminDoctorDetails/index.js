@@ -177,11 +177,11 @@ class AdminDoctorDetails extends Component {
 
             {/*onboarding_status*/}
             {!onboarded && (
-              <div className="wp20 mt16 mb16 mr16">
+              <div className="wp40 mt16 mb16 mr16">
                 <div className="fs16 fw700">
                   {formatMessage(messages.onboarding_status_text)}
                 </div>
-                <div className="fs14 fw500">{onboarding_status}</div>
+                <div className="fs14 fw500">{onboarding_status ? onboarding_status : TABLE_DEFAULT_BLANK_FIELD}</div>
               </div>
             )}
 
@@ -511,23 +511,43 @@ class AdminDoctorDetails extends Component {
             </div>
 
             {/*open_between*/}
-            {time_slots.map((time_slot, index) => {
-              const { start_time, end_time } = time_slot || {};
-              return (
-                <div className="wp40 mt16 mb16 mr16" key={`ts-${index}`}>
-                  <div className="fs16 fw700">
-                    {formatMessage(messages.open_between_text)}
-                  </div>
-                  <div className="fs14 fw500">
-                    {start_time
-                      ? `${moment(start_time).format("LT")} to ${moment(
-                        end_time
-                      ).format("LT")}`
-                      : TABLE_DEFAULT_BLANK_FIELD}
-                  </div>
-                </div>
-              );
-            })}
+            <div className="wp40 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.timings_text)}
+              </div>
+              {Object.keys(time_slots).map((day, index) => {
+                // todo: add DAY[day] later from constants
+
+                return (
+                    <Fragment>
+                      <div className="wp100 flex align-center">
+                        <div className="fs16 fw700">{day.toLocaleUpperCase()}</div>
+                        {time_slots[day].map((time_slot, index) => {
+                          const { startTime : start_time, endTime: end_time } = time_slot || {};
+
+                          return (
+                              <div className="wp100 mt16 mb16 mr16 flex align-center" key={`ts-${index}`}>
+                                <div className="fs16 fw700">
+                                  {formatMessage(messages.open_between_text)}
+                                </div>
+                                <div className="fs14 fw500">
+                                  {start_time
+                                      ? `${moment(start_time).format("LT")} - ${moment(
+                                          end_time
+                                      ).format("LT")}`
+                                      : "CLOSED"}
+                                </div>
+                              </div>
+                          );
+                        })}
+                      </div>
+
+                    </Fragment>
+                );
+              })}
+            </div>
+
+
           </div>
         </div>
       );
@@ -670,7 +690,7 @@ class AdminDoctorDetails extends Component {
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.registration_details_text)}
             </div>
-            {doctor_registration_ids.length > 0 ? (<div className="border-box">{getDoctorRegistrationDetails()}</div>) : (<div>{formatMessage(messages.no_registration_text)}</div>)}
+            {doctor_registration_ids.length > 0 ? (<div className="border-box">{getDoctorRegistrationDetails()}</div>) : (<div className="bg-grey wp100 h200 br5 flex align-center justify-center">{formatMessage(messages.no_registration_text)}</div>)}
           </div>
 
           {/*qualifications*/}
@@ -678,7 +698,7 @@ class AdminDoctorDetails extends Component {
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.qualification_details_text)}
             </div>
-            {doctor_qualification_ids.length > 0 ? <div className="border-box">{getDoctorQualificationDetails()}</div> : <div>{formatMessage(messages.no_qualification_text)}</div>}
+            {doctor_qualification_ids.length > 0 ? <div className="border-box">{getDoctorQualificationDetails()}</div> : <div className="bg-grey wp100 h200 br5 flex align-center justify-center">{formatMessage(messages.no_qualification_text)}</div>}
           </div>
 
           {/*clinics*/}

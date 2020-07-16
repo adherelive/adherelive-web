@@ -41,6 +41,8 @@ function userReducer(state, data) {
 
 export default (state = intial_state, action) => {
     const {type, payload} = action;
+
+    console.log("19287178923 payload ---> ", payload);
     switch (type) {
         default:
             return userReducer(state, payload);

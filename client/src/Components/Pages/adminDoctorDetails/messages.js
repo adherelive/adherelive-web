@@ -175,6 +175,11 @@ const messages = defineMessages({
         id: "app.admin.doctors.no.clinic.text",
         description: "",
         defaultMessage: "Clinic details yet to be updated"
+    },
+    timings_text: {
+        id: "app.admin.doctors.timings.text",
+        description: "",
+        defaultMessage: "Timings"
     }
 });
 

@@ -89,6 +89,8 @@ export const uploadImageS3= async(userId ,file)=>{
   
     // const file_name = hash.substring(4) + "_Education_"+fileExt;
     const file_name = hash.substring(4) + "/" + imageName + "/" + fileExt;
+
+    console.log("----------------------------------------- imageName, fileExt ---> ", imageName, fileExt);
     
   //   const metaData = {
   //     "Content-Type":
