@@ -4,7 +4,7 @@ import { injectIntl } from "react-intl";
 // import {formatMessage} from "react-intl/src/format";
 import { DeleteTwoTone, DeleteOutlined } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import { Tabs, Button, Steps, Col, Select, Input, InputNumber, DatePicker, Upload, Modal, TimePicker, Icon, message } from "antd";
+import { Tabs, Button, Steps, Col, Select, Input, InputNumber, DatePicker, Upload, Modal, TimePicker, Icon, message, Spin } from "antd";
 import SideMenu from "./sidebar";
 import { REQUEST_TYPE, PATH } from '../../constant';
 import { getUploadURL } from '../../Helper/urls/user';
@@ -13,6 +13,7 @@ import { doRequest } from '../../Helper/network';
 import UploadSteps from './steps';
 import plus from '../../Assets/images/plus.png';
 // import YearPicker from "react-year-picker";
+import throttle from "lodash-es/throttle";
 import moment from 'moment';
 import { withRouter } from "react-router-dom";
 
@@ -44,8 +45,16 @@ class QualificationRegister extends Component {
       previewVisible: false,
       previewImage: '',
       previewTitle: '',
+      degrees: {},
+      fetchingDegrees: false,
+      colleges: {},
+      fetchingColleges: false,
+      councils: {},
+      fetchingCouncils: false
 
     };
+
+    this.handleDegreeSearch = throttle(this.handleDegreeSearch.bind(this), 2000);
   }
 
 
@@ -803,6 +812,48 @@ class QualificationRegister extends Component {
 
   }
 
+  getDegreesOption = () => {
+    const { degrees = {} } = this.state;
+    let medicationStagesOption = [];
+
+    return Object.keys(degrees).map(id => {
+      const { basic_info: { name, type } = {} } = degrees[id] || {};
+      return (
+        <Option key={id} value={id}>
+          {name}
+        </Option>
+      );
+    });
+  };
+
+  async handleDegreeSearch(data) {
+    try {
+      console.log("1892379263 data --> ", data);
+      if (data) {
+        const { searchDegree } = this.props;
+        this.setState({ fetchingDegrees: true });
+        const response = await searchDegree(data);
+        const { status, payload: { data: responseData, message } = {} } = response;
+        if (status) {
+          const { degrees = {} } = responseData;
+          const degreeList = {};
+          Object.keys(degrees).forEach(id => {
+            degreeList[id] = degrees[id];
+          });
+          this.setState({ degrees: degreeList, fetchingDegrees: false });
+        } else {
+          this.setState({ fetchingDegrees: false });
+        }
+      } else {
+        this.setState({ fetchingDegrees: false });
+      }
+    } catch (err) {
+      console.log("err", err);
+      message.warn("Something wen't wrong. Please try again later");
+      this.setState({ fetchingDegrees: false });
+    }
+  };
+
   renderEducation = () => {
     // console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
     let { education = {}, educationKeys = [], fileList = [], previewImage = '', previewTitle = '', previewVisible = false, isopen, time } = this.state;
@@ -831,12 +882,32 @@ class QualificationRegister extends Component {
                   />
                 ) : <div></div>}
               </div>
-              <Input
+              {/* <Input
                 placeholder="Degree"
                 value={degree}
                 className={"form-inputs"}
                 onChange={e => this.setDegree(key, e)}
-              />
+              /> */}
+              <Select
+                onSearch={this.handleDegreeSearch}
+                notFoundContent={this.state.fetchingDegrees ? <Spin size="small" /> : null}
+                className="form-inputs"
+                placeholder="Select Degree"
+                showSearch
+                // onFocus={() => handleMedicineSearch("")}
+                autoComplete="off"
+                // onFocus={() => handleMedicineSearch("")}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+              // getPopupContainer={getParentNode}
+
+              >
+                {this.getDegreesOption()}
+              </Select>
               <div className='form-headings'>College</div>
               <Input
                 placeholder="College"

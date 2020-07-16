@@ -3,16 +3,22 @@ import QualificationRegister from "../../Components/DoctorOnBoarding/qualificati
 import { signOut } from "../../modules/auth";
 import { doctorQualificationRegister, getDoctorQualificationRegisterData, registerQualification, deleteDoctorQualificationImage, deleteDoctorRegistrationImage, registerRegistration } from "../../modules/onBoarding";
 import { connect } from "react-redux";
+import { searchCollege } from "../../modules/colleges";
+import { searchCouncil } from "../../modules/councils";
+import { searchDegree } from "../../modules/degrees";
 
 const mapStateToProps = state => {
-    const { auth, users, doctors, onBoarding, upload_documents, doctor_qualifications, doctor_registrations } = state;
+    const { auth, users, doctors, onBoarding, upload_documents, doctor_qualifications, doctor_registrations, colleges, degrees, councils } = state;
     let { authenticated_user = {} } = auth;
-    return { authenticated_user, doctors, users, onBoarding, upload_documents, doctor_qualifications, doctor_registrations };
+    return { authenticated_user, doctors, users, onBoarding, upload_documents, doctor_qualifications, doctor_registrations, colleges, degrees, councils };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         signOut: () => dispatch(signOut()),
+        searchCollege: data => dispatch(searchCollege(data)),
+        searchCouncil: data => dispatch(searchCouncil(data)),
+        searchDegree: data => dispatch(searchDegree(data)),
         doctorQualificationRegister: (data) => dispatch(doctorQualificationRegister(data)),
         getDoctorQualificationRegisterData: () => dispatch(getDoctorQualificationRegisterData()),
         registerQualification: (data) => dispatch(registerQualification(data)),

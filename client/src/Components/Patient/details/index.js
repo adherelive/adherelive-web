@@ -208,7 +208,7 @@ const PatientCard = ({
         src={patient_display_picture}
       />
       <div className="patient-name mt8 mr0 mb0 ml0">
-        {patient_first_name} {patient_middle_name} {patient_last_name} ({GENDER[gender].view}{" "}
+        {patient_first_name} {patient_middle_name} {patient_last_name} ({gender ? GENDER[gender].view : ''}{" "}
         {patient_age})
       </div>
       <div className="patient-id mt6 mr0 mb0 ml0 ">PID: {patient_id}</div>
