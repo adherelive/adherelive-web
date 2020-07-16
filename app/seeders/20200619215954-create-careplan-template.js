@@ -7,7 +7,6 @@ module.exports = {
 
    return queryInterface.bulkInsert(DB_TABLES.CARE_PLAN_TEMPLATE, [
     {
-      id: 1,
       name: 'Sample Care Plan',
         treatment_id: '1',
       severity_id: '1',

@@ -356,7 +356,12 @@ export const DB_TABLES = {
   SEVERITY: "severity",
   USER_PREFERENCES: "user_preferences",
   PERMISSIONS: "permissions",
-  USER_CATEGORY_PERMISSIONS: "user_category_permissions"
+  USER_CATEGORY_PERMISSIONS: "user_category_permissions",
+  COLLEGE:"colleges",
+  COURSE:"courses",
+  DEGREE:"degrees",
+  QUALIFICATION:"qualifications",
+  REGISTRATION_COUNCIL:"registration_councils"
 };
 
 export const ARTICLE_TYPE = {

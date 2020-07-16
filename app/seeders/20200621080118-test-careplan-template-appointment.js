@@ -7,7 +7,6 @@ module.exports = {
     
    return queryInterface.bulkInsert(DB_TABLES.TEMPLATE_APPOINTMENTS, [
     {
-      id:1,
       care_plan_template_id:1,
       reason:'Checking of Vitals',
       time_gap:'14',
@@ -16,7 +15,6 @@ module.exports = {
       updated_at: new Date(),
     },
     {
-      id:2,
       care_plan_template_id:1,
       reason:'Surgery',
       time_gap:'18',

@@ -27,9 +27,15 @@ const DoctorRegistrations = database.define(
             type: Sequelize.STRING(100),
             allowNull: false,
         },
-        council: {
-            type: Sequelize.STRING(100),
+        registration_council_id: {
+            type: Sequelize.INTEGER,
             allowNull: false,
+            references: {
+                model: {
+                    tableName: DB_TABLES.REGISTRATION_COUNCIL,
+                },
+                key: 'id'
+            }
         },
         year: {
             type: Sequelize.INTEGER,

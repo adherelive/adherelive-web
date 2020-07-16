@@ -34,6 +34,7 @@ export const verifyDoctor = id => {
         dispatch({
           type: VERIFY_DOCTOR_COMPLETE,
           data: data,
+          payload: data
         });
       } else {
         dispatch({
@@ -63,6 +64,7 @@ export const getAllDoctors = () => {
         dispatch({
           type: GET_ALL_DOCTORS_COMPLETE,
           data: data,
+          payload: data
         });
       } else {
         dispatch({
@@ -92,6 +94,7 @@ export const getDoctorDetails = (id) => {
         dispatch({
           type: GET_DOCTOR_DETAILS_COMPLETE,
           data: data,
+          payload: data
         });
       } else {
         dispatch({

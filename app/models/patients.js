@@ -35,7 +35,7 @@ const Patients = database.define(
     },
     first_name: {
       type: Sequelize.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     middle_name: {
       type: Sequelize.STRING(100),
@@ -43,7 +43,7 @@ const Patients = database.define(
     },
     last_name: {
       type: Sequelize.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     age: {
       type: Sequelize.STRING,

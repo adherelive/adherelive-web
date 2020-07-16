@@ -26,5 +26,5 @@ export default async (data = null, id = null) => {
         return new ConditionWrapper(data);
     }
     const condition = await conditionService.getByData({ id });
-    return new ConditionWrapper(condition.get());
+    return new ConditionWrapper(condition);
 };

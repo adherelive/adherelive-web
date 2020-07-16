@@ -16,7 +16,6 @@ module.exports = {
     */
     return queryInterface.bulkInsert(DB_TABLES.TEMPLATE_MEDICATIONS, [
       {
-        id: 1,
         care_plan_template_id: 1,
         medicine_id: 1,
         schedule_data: JSON.stringify({ "unit": "mg", "repeat": "weekly", "quantity": 1, "strength": 2, "medicine_id": "1", "repeat_days": ["Mon", "Fri"], "when_to_take": ["6"], "repeat_interval": 0, "medication_stage": "", "duration": 5 }),
@@ -24,7 +23,6 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        id: 2,
         care_plan_template_id: 1,
         medicine_id: 2,
         schedule_data: JSON.stringify({ "unit": "ml", "repeat": "weekly", "quantity": 1, "strength": 5, "medicine_id": "3", "repeat_days": ["Sun", "Thu", "Tue"], "when_to_take": ["4"], "repeat_interval": 0, "medication_stage": "", "duration": 6 }),

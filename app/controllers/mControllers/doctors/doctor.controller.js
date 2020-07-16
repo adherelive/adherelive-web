@@ -37,10 +37,14 @@ import documentService from "../../../services/uploadDocuments/uploadDocuments.s
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import { uploadImageS3 } from "../user/userHelper";
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
-import DoctorQualificationWrapper from "../../../ApiWrapper/web/doctorQualification";
-import DoctorRegistrationWrapper from "../../../ApiWrapper/web/doctorRegistration";
+import DoctorQualificationWrapper from "../../../ApiWrapper/mobile/doctorQualification";
+import DoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import doctorClinicService from "../../../services/doctorClinics/doctorClinics.service";
-import DoctorClinicWrapper from "../../../ApiWrapper/web/doctorClinic";
+import DoctorClinicWrapper from "../../../ApiWrapper/mobile/doctorClinic";
+import degreeService from "../../../services/degree/degree.service";
+import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
+import courseService from "../../../services/course/course.service";
+import CourseWrapper from "../../../ApiWrapper/mobile/course";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -1054,6 +1058,20 @@ class MobileDoctorController extends Controller {
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       }
 
+      const degrees = await degreeService.getAll();
+      let degreeData = {};
+      for(const degree of degrees) {
+        const degreeWrapper = await DegreeWrapper(degree);
+        degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
+      }
+
+      const courses = await courseService.getAll();
+      let courseData = {};
+      for(const course of courses) {
+        const courseWrapper = await CourseWrapper(course);
+        courseData[courseWrapper.getDegreeId()] = courseWrapper.getBasicInfo();
+      }
+
       return raiseSuccess(
           res,
           200,
@@ -1080,6 +1098,12 @@ class MobileDoctorController extends Controller {
             },
             upload_documents: {
               ...uploadDocumentApiDetails,
+            },
+            courses: {
+              ...courseData,
+            },
+            degrees: {
+              ...degreeData,
             }
           },
           "doctor details fetched successfully"
