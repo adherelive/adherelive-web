@@ -386,6 +386,7 @@ class DoctorController extends Controller {
   };
 
   addPatient = async (req, res) => {
+    console.log("add patient controller ---> ");
     try {
       const {
         mobile_number = "",
@@ -414,15 +415,21 @@ class DoctorController extends Controller {
 
       let newUserId = user.get("id");
 
-      let patientName = name.split(" ");
-      let first_name = patientName[0];
-      let middle_name = patientName.length == 3 ? patientName[1] : "";
-      let last_name =
-        patientName.length == 3
-          ? patientName[2]
-          : patientName.length == 2
-            ? patientName[1]
-            : "";
+      let first_name = "";
+      let middle_name = "";
+      let last_name = "";
+
+      if(name) {
+        let patientName = name.split(" ");
+        first_name = patientName[0];
+        middle_name = patientName.length == 3 ? patientName[1] : "";
+        last_name =
+            patientName.length == 3
+                ? patientName[2]
+                : patientName.length == 2
+                ? patientName[1]
+                : "";
+      }
 
       const uid = uuidv4();
       const birth_date = moment(date_of_birth);
