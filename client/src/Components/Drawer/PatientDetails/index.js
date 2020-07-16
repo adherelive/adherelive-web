@@ -82,28 +82,40 @@ class PatientDetailsDrawer extends Component {
   };
 
   getPatientDetailContent = () => {
-    const { treatments, doctors, providers, patients, payload } = this.props;
+    const { treatments = {}, doctors = {}, conditions = {}, severity: severities = {}, providers, patients, payload, care_plans, } = this.props;
     const {
       formatMessage,
       getMedicationList,
       handlePatientDetailsRedirect
     } = this;
 
-    const { patient_id: id = "" } = payload || {};
+    let { patient_id: id = "" } = payload || {};
 
     if (id) {
+
+      let carePlanId = 1;
+      for (let carePlan of Object.values(care_plans)) {
+
+        let { basic_info: { id: cpId = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
+
+        console.log('73284782734783274982347', carePlanId, id, patientId);
+        if (parseInt(id) === parseInt(patientId)) {
+          carePlanId = cpId;
+        }
+      }
+
+
+      const { basic_info: { doctor_id = 1 } = {}, activated_on: start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
+      const { basic_info: { name: treatment = '', pid = "123456" } = {} } = treatments[treatment_id] || {};
+      const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
+      const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
       const {
         basic_info: { first_name, middle_name, last_name, age = "--", gender } = {},
         reports = [],
-        treatment_id,
         provider_id,
-        doctor_id,
-        condition = "--"
       } = patients[id] || {};
 
-      const { basic_info: { treatment_type = "--", pid = "123456" } = {}, severity_level = "1", start_date = "--" } =
-        treatments[treatment_id] || {};
-      const { basic_info: { name: doctorName = "--" } = {} } = doctors[doctor_id] || {};
+      const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
       const { basic_info: { name: providerName = "--" } = {} } =
         providers[provider_id] || {};
 
@@ -169,11 +181,11 @@ class PatientDetailsDrawer extends Component {
             <div className="fw500 black-85">
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.treatment)}</div>
-                <div className="flex-2">{treatment_type}</div>
+                <div className="flex-2">{treatment}</div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.severity)}</div>
-                <div className="flex-2">{severity_level}</div>
+                <div className="flex-2">{severity}</div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.condition)}</div>
@@ -181,11 +193,11 @@ class PatientDetailsDrawer extends Component {
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.doctor)}</div>
-                <div className="flex-2">{doctorName}</div>
+                <div className="flex-2">{doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name ? `${doctor_last_name} ` : ""}` : "--"}</div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.start_date)}</div>
-                <div className="flex-2">{start_date}</div>
+                <div className="flex-2">{start_date ? moment(start_date).format("Do MMM YYYY") : '--'}</div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.provider)}</div>

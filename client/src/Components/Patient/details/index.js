@@ -363,7 +363,7 @@ class PatientDetails extends Component {
       getMedications(patient_id);
       getAppointments(patient_id);
     }
-    searchMedicine("");
+    // searchMedicine("");
     let carePlanTemplateId = 0;
     for (let carePlan of Object.values(care_plans)) {
 

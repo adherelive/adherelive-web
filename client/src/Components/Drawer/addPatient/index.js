@@ -284,7 +284,7 @@ class PatientDetailsDrawer extends Component {
             message.error('Please enter  Date of Birth .')
             return false;
         }
-        else if (age < 0 || age > 100 || moment(date_of_birth).isAfter(moment())) {  //handle case of newBorn
+        else if (date_of_birth && (age < 0 || age > 140 || moment(date_of_birth).isAfter(moment()))) {  //handle case of newBorn
 
             message.error('Please enter a valid Date of Birth .')
             return false;
