@@ -38,6 +38,7 @@ import CouncilWrapper from "../../ApiWrapper/web/council";
 
 import { DOCUMENT_PARENT_TYPE, ONBOARDING_STATUS, SIGN_IN_CATEGORY, USER_CATEGORY } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
+import getReferenceId from "../../helper/referenceIdGenerator";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
@@ -433,7 +434,8 @@ class DoctorController extends Controller {
                 : "";
       }
 
-      const uid = uuidv4();
+      // const uid = uuidv4();
+
       const birth_date = moment(date_of_birth);
       const age = moment().diff(birth_date, "y");
       const patient = await patientsService.addPatient({
@@ -444,10 +446,16 @@ class DoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
-        uid
+        // uid
       });
 
       const patientData = await PatientWrapper(patient);
+      const uid = getReferenceId(patientData.getPatientId());
+      Logger.debug("UID -------------> ", uid);
+
+      const updatePatientUid = await patientsService.update({uid}, patientData.getPatientId());
+
+      const updatedPatientData = await PatientWrapper(null, patientData.getPatientId());
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(
@@ -545,7 +553,7 @@ class DoctorController extends Controller {
           care_plan_ids: [carePlanData.getCarePlanId()],
           care_plan_template_ids: [care_plan_template_id],
           patients: {
-            [patientData.getPatientId()]: patientData.getBasicInfo()
+            [updatedPatientData.getPatientId()]: updatedPatientData.getBasicInfo()
           },
           care_plans: {
             [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()

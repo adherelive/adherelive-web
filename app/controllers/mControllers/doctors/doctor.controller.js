@@ -45,6 +45,7 @@ import degreeService from "../../../services/degree/degree.service";
 import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
 import courseService from "../../../services/course/course.service";
 import CourseWrapper from "../../../ApiWrapper/mobile/course";
+import getReferenceId from "../../../helper/referenceIdGenerator";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -182,7 +183,7 @@ class MobileDoctorController extends Controller {
           ? patientName[1]
           : "";
 
-      const uid = uuidv4();
+      // const uid = uuidv4();
       const birth_date = moment(date_of_birth);
       const age = moment().diff(birth_date, "y");
       const patient = await patientsService.addPatient({
@@ -193,10 +194,16 @@ class MobileDoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
-        uid
+        // uid
       });
 
       const patientData = await PatientWrapper(patient);
+      const uid = getReferenceId(patientData.getPatientId());
+      Logger.debug("UID -------------> ", uid);
+
+      const updatePatientUid = await patientsService.update({uid}, patientData.getPatientId());
+
+      const updatedPatientData = await PatientWrapper(null, patientData.getPatientId());
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(
@@ -237,7 +244,7 @@ class MobileDoctorController extends Controller {
           care_plan_ids: [carePlanData.getCarePlanId()],
           care_plan_template_ids: [care_plan_template_id],
           patients: {
-            [patientData.getPatientId()]: patientData.getBasicInfo()
+            [updatedPatientData.getPatientId()]: updatedPatientData.getBasicInfo()
           },
           care_plans: {
             [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
