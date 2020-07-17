@@ -585,9 +585,13 @@ class UserController extends Controller {
           permissions: []
         };
 
+        Logger.debug("permissions check --> ", apiUserDetails.isActivated());
+
         if (apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
         }
+
+        Logger.debug("permissions value --> ", permissions);
 
         /**** API wrapper for DOCTOR ****/
 
