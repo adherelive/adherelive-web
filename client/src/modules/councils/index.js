@@ -35,11 +35,11 @@ export const searchCouncil = value => {
 };
 
 function councilReducer(state, data) {
-    const { councils = {} } = data || {};
-    if (councils) {
+    const { registration_councils = {} } = data || {};
+    if (registration_councils) {
         return {
             ...state,
-            ...councils
+            ...registration_councils
         };
     } else {
         return {
