@@ -45,6 +45,11 @@ import degreeService from "../../../services/degree/degree.service";
 import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
 import courseService from "../../../services/course/course.service";
 import CourseWrapper from "../../../ApiWrapper/mobile/course";
+import getReferenceId from "../../../helper/referenceIdGenerator";
+import collegeService from "../../../services/college/college.service";
+import CollegeWrapper from "../../../ApiWrapper/mobile/college";
+import councilService from "../../../services/council/council.service";
+import CouncilWrapper from "../../../ApiWrapper/mobile/council";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -182,7 +187,7 @@ class MobileDoctorController extends Controller {
           ? patientName[1]
           : "";
 
-      const uid = uuidv4();
+      // const uid = uuidv4();
       const birth_date = moment(date_of_birth);
       const age = moment().diff(birth_date, "y");
       const patient = await patientsService.addPatient({
@@ -193,10 +198,16 @@ class MobileDoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
-        uid
+        // uid
       });
 
       const patientData = await PatientWrapper(patient);
+      const uid = getReferenceId(patientData.getPatientId());
+      Logger.debug("UID -------------> ", uid);
+
+      const updatePatientUid = await patientsService.update({uid}, patientData.getPatientId());
+
+      const updatedPatientData = await PatientWrapper(null, patientData.getPatientId());
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(
@@ -237,7 +248,7 @@ class MobileDoctorController extends Controller {
           care_plan_ids: [carePlanData.getCarePlanId()],
           care_plan_template_ids: [care_plan_template_id],
           patients: {
-            [patientData.getPatientId()]: patientData.getBasicInfo()
+            [updatedPatientData.getPatientId()]: updatedPatientData.getBasicInfo()
           },
           care_plans: {
             [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
@@ -1058,12 +1069,26 @@ class MobileDoctorController extends Controller {
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       }
 
-      // const degrees = await degreeService.getAll();
-      // let degreeData = {};
-      // for(const degree of degrees) {
-      //   const degreeWrapper = await DegreeWrapper(degree);
-      //   degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
-      // }
+      const degrees = await degreeService.getAll();
+      let degreeData = {};
+      for(const degree of degrees) {
+        const degreeWrapper = await DegreeWrapper(degree);
+        degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
+      }
+
+      const colleges = await collegeService.getAll();
+      let collegeData = {};
+      for(const college of colleges) {
+        const collegeWrapper = await CollegeWrapper(college);
+        collegeData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
+      }
+
+      const councils = await councilService.getAll();
+      let councilData = {};
+      for(const council of councils) {
+        const councilWrapper = await CouncilWrapper(council);
+        councilData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
+      }
       //
       // const courses = await courseService.getAll();
       // let courseData = {};
@@ -1099,12 +1124,15 @@ class MobileDoctorController extends Controller {
             upload_documents: {
               ...uploadDocumentApiDetails,
             },
-            // courses: {
-            //   ...courseData,
-            // },
-            // degrees: {
-            //   ...degreeData,
-            // }
+            colleges: {
+              ...collegeData,
+            },
+            degrees: {
+              ...degreeData,
+            },
+            registration_councils: {
+              ...councilData,
+            }
           },
           "Doctor details fetched successfully"
       );

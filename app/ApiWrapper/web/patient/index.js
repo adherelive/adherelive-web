@@ -19,7 +19,8 @@ class PatientWrapper extends BasePatient {
             age,
             address,
             activated_on,
-            details
+            details,
+            uid
         } = _data || {};
         return {
             basic_info: {
@@ -30,7 +31,8 @@ class PatientWrapper extends BasePatient {
                 first_name,
                 middle_name,
                 last_name,
-                address
+                address,
+                uid
             },
             activated_on,
             details
@@ -38,10 +40,10 @@ class PatientWrapper extends BasePatient {
     };
 }
 
-export default async (data = null, userId = null) => {
+export default async (data = null, id = null) => {
     if (data) {
         return new PatientWrapper(data);
     }
-    const patient = await patientService.getPatientByData({ user_id: userId });
+    const patient = await patientService.getPatientById({ id });
     return new PatientWrapper(patient);
 }

@@ -19,7 +19,8 @@ class MPatientWrapper extends BasePatient {
             age,
             address,
             activated_on,
-            details
+            details,
+            uid
         } = _data || {};
         const {profile_pic} = details || {};
 
@@ -37,7 +38,8 @@ class MPatientWrapper extends BasePatient {
                 first_name,
                 middle_name,
                 last_name,
-                address
+                address,
+                uid
             },
             activated_on,
             details: updatedDetails
@@ -45,10 +47,10 @@ class MPatientWrapper extends BasePatient {
     };
 }
 
-export default async (data = null, userId = null) => {
+export default async (data = null, id = null) => {
     if(data) {
         return new MPatientWrapper(data);
     }
-    const patient = await patientService.getPatientByData({user_id: userId});
+    const patient = await patientService.getPatientById({id});
     return new MPatientWrapper(patient);
 }

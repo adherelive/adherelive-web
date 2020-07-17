@@ -60,7 +60,6 @@ const Patients = database.define(
     },
     uid: {
       type: Sequelize.STRING,
-      allowNull: false
     },
     details: {
       type: Sequelize.JSON

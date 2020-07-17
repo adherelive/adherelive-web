@@ -21,7 +21,7 @@ module.exports = {
       first_name: "Atish",
       last_name:"Kumar",
       address:"delhi",
-      uid: "1278939371923",
+      uid: `ADH/${new Date().getFullYear()}/0001`,
       created_at: new Date(),
       updated_at: new Date()
     }]);

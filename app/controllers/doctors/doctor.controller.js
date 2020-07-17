@@ -38,6 +38,7 @@ import CouncilWrapper from "../../ApiWrapper/web/council";
 
 import { DOCUMENT_PARENT_TYPE, ONBOARDING_STATUS, SIGN_IN_CATEGORY, USER_CATEGORY } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
+import getReferenceId from "../../helper/referenceIdGenerator";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
@@ -433,7 +434,8 @@ class DoctorController extends Controller {
                 : "";
       }
 
-      const uid = uuidv4();
+      // const uid = uuidv4();
+
       const birth_date = moment(date_of_birth);
       const age = moment().diff(birth_date, "y");
       const patient = await patientsService.addPatient({
@@ -444,10 +446,16 @@ class DoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
-        uid
+        // uid
       });
 
       const patientData = await PatientWrapper(patient);
+      const uid = getReferenceId(patientData.getPatientId());
+      Logger.debug("UID -------------> ", uid);
+
+      const updatePatientUid = await patientsService.update({uid}, patientData.getPatientId());
+
+      const updatedPatientData = await PatientWrapper(null, patientData.getPatientId());
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(
@@ -545,7 +553,7 @@ class DoctorController extends Controller {
           care_plan_ids: [carePlanData.getCarePlanId()],
           care_plan_template_ids: [care_plan_template_id],
           patients: {
-            [patientData.getPatientId()]: patientData.getBasicInfo()
+            [updatedPatientData.getPatientId()]: updatedPatientData.getBasicInfo()
           },
           care_plans: {
             [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
@@ -1398,12 +1406,12 @@ class DoctorController extends Controller {
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       }
 
-      // const degrees = await degreeService.getAll();
-      // let degreeData = {};
-      // for(const degree of degrees) {
-      //   const degreeWrapper = await DegreeWrapper(degree);
-      //   degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
-      // }
+      const degrees = await degreeService.getAll();
+      let degreeData = {};
+      for(const degree of degrees) {
+        const degreeWrapper = await DegreeWrapper(degree);
+        degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
+      }
 
       // const courses = await courseService.getAll();
       // let courseData = {};
@@ -1412,19 +1420,19 @@ class DoctorController extends Controller {
       //   courseData[courseWrapper.getDegreeId()] = courseWrapper.getBasicInfo();
       // }
 
-      // const colleges = await collegeService.getAll();
-      // let collegeData = {};
-      // for(const college of colleges) {
-      //   const collegeWrapper = await CollegeWrapper(college);
-      //   collegeData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
-      // }
-      //
-      // const councils = await councilService.getAll();
-      // let councilData = {};
-      // for(const council of councils) {
-      //   const councilWrapper = await CouncilWrapper(council);
-      //   councilData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
-      // }
+      const colleges = await collegeService.getAll();
+      let collegeData = {};
+      for(const college of colleges) {
+        const collegeWrapper = await CollegeWrapper(college);
+        collegeData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
+      }
+
+      const councils = await councilService.getAll();
+      let councilData = {};
+      for(const council of councils) {
+        const councilWrapper = await CouncilWrapper(council);
+        councilData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
+      }
 
 
       return raiseSuccess(
@@ -1454,15 +1462,15 @@ class DoctorController extends Controller {
           upload_documents: {
             ...uploadDocumentApiDetails,
           },
-          // colleges: {
-          //   ...collegeData,
-          // },
-          // degrees: {
-          //   ...degreeData,
-          // },
-          // registration_councils: {
-          //   ...councilData,
-          // }
+          colleges: {
+            ...collegeData,
+          },
+          degrees: {
+            ...degreeData,
+          },
+          registration_councils: {
+            ...councilData,
+          }
         },
         "Doctor details fetched successfully"
       );
