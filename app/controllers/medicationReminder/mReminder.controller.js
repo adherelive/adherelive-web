@@ -64,6 +64,7 @@ class MReminderController extends Controller {
         medication_stage = "",
         description,
         start_time,
+        critical = false
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
@@ -93,7 +94,8 @@ class MReminderController extends Controller {
           strength,
           unit,
           when_to_take,
-          medication_stage
+          medication_stage,
+          critical
         }
       };
 
@@ -157,6 +159,7 @@ class MReminderController extends Controller {
         medication_stage = "",
         description,
         start_time,
+        critical = false
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
@@ -183,7 +186,8 @@ class MReminderController extends Controller {
           strength,
           unit,
           when_to_take,
-          medication_stage
+          medication_stage,
+          critical
         }
       };
 
@@ -268,7 +272,8 @@ class MReminderController extends Controller {
         medication_stage = "",
         description,
         start_time,
-        participant_id
+        participant_id,
+          critical = false
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
@@ -296,7 +301,8 @@ class MReminderController extends Controller {
           strength,
           unit,
           when_to_take,
-          medication_stage
+          medication_stage,
+          critical
         }
       };
 

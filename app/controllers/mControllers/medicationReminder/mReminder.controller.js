@@ -59,7 +59,8 @@ class MobileMReminderController extends Controller {
         when_to_take,
         medication_stage = "",
         description,
-        start_time
+        start_time,
+          critical = false
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
@@ -92,7 +93,8 @@ class MobileMReminderController extends Controller {
           strength,
           unit,
           when_to_take,
-          medication_stage
+          medication_stage,
+          critical
         }
       };
 
@@ -155,6 +157,7 @@ class MobileMReminderController extends Controller {
         medication_stage = "",
         description,
         start_time,
+          critical = false
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
@@ -181,7 +184,8 @@ class MobileMReminderController extends Controller {
           strength,
           unit,
           when_to_take,
-          medication_stage
+          medication_stage,
+          critical
         }
       };
 
@@ -344,7 +348,8 @@ class MobileMReminderController extends Controller {
         medication_stage = "",
         description,
         start_time,
-        participant_id
+        participant_id,
+          critical = false
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
       const medicineData = await medicineService.getMedicineById(medicine_id);
@@ -371,7 +376,8 @@ class MobileMReminderController extends Controller {
           strength,
           unit,
           when_to_take,
-          medication_stage
+          medication_stage,
+          critical
         }
       };
 
