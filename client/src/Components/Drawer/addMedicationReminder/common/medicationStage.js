@@ -30,11 +30,11 @@ class MedicationStage extends Component {
   }
 
   getStagesOption = () => {
-    const { medicines = {} } = this.state;
+    const { medicines = {} } = this.props;
     let medicationStagesOption = [];
 
     return Object.keys(medicines).map(id => {
-      const { basic_info: {name, type} = {} } = medicines[id] || {};
+      const { basic_info: { name, type } = {} } = medicines[id] || {};
       return (
         <Option key={id} value={id}>
           {name}
@@ -73,18 +73,19 @@ class MedicationStage extends Component {
   async handleMedicineSearch(data) {
     try {
       console.log("1892379263 data --> ", data);
-      if(data) {
-        const {searchMedicine} = this.props;
+      if (data) {
+        const { searchMedicine } = this.props;
         this.setState({ fetchingMedicines: true });
         const response = await searchMedicine(data);
-        const { status, payload: {data: responseData, message} = {} } = response;
+        const { status, payload: { data: responseData, message } = {} } = response;
         if (status) {
-          const { medicines = {} } = responseData;
-          const medicineList = {};
-          Object.keys(medicines).forEach(id => {
-            medicineList[id] = medicines[id];
-          });
-          this.setState({ medicines: medicineList, fetchingMedicines: false });
+          // const { medicines = {} } = responseData;
+          // const medicineList = {};
+          // Object.keys(medicines).forEach(id => {
+          //   medicineList[id] = medicines[id];
+          // });
+          // this.setState({ medicines: medicineList, fetchingMedicines: false });
+          this.setState({ fetchingMedicines: false });
         } else {
           this.setState({ fetchingMedicines: false });
         }
@@ -105,7 +106,7 @@ class MedicationStage extends Component {
       purpose
     } = this.props;
 
-    const {fetchingMedicines} = this.state;
+    const { fetchingMedicines } = this.state;
 
     const { getStagesOption, getInitialValue, getParentNode, handleMedicineSearch } = this;
 

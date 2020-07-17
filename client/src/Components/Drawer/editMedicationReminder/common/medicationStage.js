@@ -32,13 +32,13 @@ class MedicationStage extends Component {
 
   componentDidMount() {
     const {medicines} = this.props;
-    this.setState({medicines});
+    // this.setState({medicines});
   }
 
   getStagesOption = () => {
     const {medications, payload: {id: medication_id} = {}} = this.props;
     let medicationStagesOption = [];
-    const {medicines} = this.state;
+    const {medicines} = this.props;
 
     const {basic_info: {details: {medicine_id} = {}} = {}} = medications[medication_id] || {};
 
@@ -88,12 +88,14 @@ class MedicationStage extends Component {
       const response = await searchMedicine(data);
       const { status, payload: {data: responseData, message} = {} } = response;
       if (status) {
-        const { medicines = {} } = responseData;
-        const medicineList = {};
-        Object.keys(medicines).forEach(id => {
-          medicineList[id] = medicines[id];
-        });
-        this.setState({ medicines: medicineList, fetchingMedicines: false });
+        // const { medicines = {} } = responseData;
+        // const medicineList = {};
+        // Object.keys(medicines).forEach(id => {
+        //   medicineList[id] = medicines[id];
+        // });
+        // this.setState({ medicines: medicineList, fetchingMedicines: false });
+
+        this.setState({ fetchingMedicines: false });
       } else {
         this.setState({ fetchingMedicines: false });
       }
@@ -145,14 +147,14 @@ class MedicationStage extends Component {
             placeholder="Choose Medicine"
             showSearch
             // onFocus={() => handleMedicineSearch("")}
-            // autoComplete="off"
+            autoComplete="off"
             // onFocus={() => handleMedicineSearch("")}
-            // optionFilterProp="children"
-            // filterOption={(input, option) =>
-            //   option.props.children
-            //     .toLowerCase()
-            //     .indexOf(input.toLowerCase()) >= 0
-            // }
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
             getPopupContainer={getParentNode}
 
           >

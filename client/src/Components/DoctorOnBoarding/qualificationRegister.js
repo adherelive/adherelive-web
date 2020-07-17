@@ -70,7 +70,7 @@ class QualificationRegister extends Component {
 
     const { getDoctorQualificationRegisterData } = this.props;
     await getDoctorQualificationRegisterData();
-    const { authenticated_user = '', users, doctors = {} } = this.props;
+    const { authenticated_user = '', users, doctors = {}, degrees = {}, colleges = {}, councils = {} } = this.props;
     let docGender = '';
     let docSpeciality = '';
     let doctorId = 0;
@@ -98,6 +98,21 @@ class QualificationRegister extends Component {
     let registrationKeys = [];
     let registration = {};
 
+    const degreeList = {};
+    // Object.keys(degrees).forEach(id => {
+    //   degreeList[id] = degrees[id];
+    // });
+
+    const collegeList = {};
+    // Object.keys(colleges).forEach(id => {
+    //   collegeList[id] = colleges[id];
+    // });
+
+    const councilList = {};
+    // Object.keys(councils).forEach(id => {
+    //   councilList[id] = councils[id];
+    // });
+
     if (docQualificationIds.length) {
       for (let qualifi of docQualificationIds) {
         let key = uuid();
@@ -105,6 +120,7 @@ class QualificationRegister extends Component {
         let qualification = {};
         let { basic_info: { year = '', college_id = '', degree_id = '', id = 0, doctor_id = 0 }, upload_document_ids = [], expiry_date = '' } = doctor_qualifications[qualifi];
 
+        console.log('89798798378927398217839712983219', typeof (college_id), typeof (degree_id));
         qualification.id = id;
         qualification.year = year;
         qualification.college_id = college_id;
@@ -167,7 +183,11 @@ class QualificationRegister extends Component {
     }
 
     // console.log(onBoarding.qualificationData, speciality, gender, registration_number, registration_council, registration_year, education, educationKeys);
-    this.setState({ speciality: docSpeciality, gender: docGender, registration, registrationKeys, education, educationKeys });
+    this.setState({
+      speciality: docSpeciality, gender: docGender,
+      registration, registrationKeys, education, educationKeys,
+      degrees: degreeList, councils: councilList, colleges: collegeList
+    });
   }
 
   setSpeciality = e => {
@@ -813,7 +833,7 @@ class QualificationRegister extends Component {
   }
 
   getDegreesOption = () => {
-    const { degrees = {} } = this.state;
+    const { degrees = {} } = this.props;
 
     return Object.keys(degrees).map(id => {
       const { basic_info: { name, type } = {} } = degrees[id] || {};
@@ -826,7 +846,7 @@ class QualificationRegister extends Component {
   };
 
   getCollegesOption = () => {
-    const { colleges = {} } = this.state;
+    const { colleges = {} } = this.props;
 
     return Object.keys(colleges).map(id => {
       const { basic_info: { name, type } = {} } = colleges[id] || {};
@@ -839,7 +859,7 @@ class QualificationRegister extends Component {
   };
 
   getCouncilOption = () => {
-    const { councils = {} } = this.state;
+    const { councils = {} } = this.props;
 
     return Object.keys(councils).map(id => {
       const { basic_info: { name, type } = {} } = councils[id] || {};
@@ -860,12 +880,13 @@ class QualificationRegister extends Component {
         const response = await searchDegree(data);
         const { status, payload: { data: responseData, message } = {} } = response;
         if (status) {
-          const { degrees = {} } = responseData;
-          const degreeList = {};
-          Object.keys(degrees).forEach(id => {
-            degreeList[id] = degrees[id];
-          });
-          this.setState({ degrees: degreeList, fetchingDegrees: false });
+          // const { degrees = {} } = responseData;
+          // const degreeList = {};
+          // Object.keys(degrees).forEach(id => {
+          //   degreeList[id] = degrees[id];
+          // });
+          // this.setState({ degrees: degreeList, fetchingDegrees: false });
+          this.setState({ fetchingDegrees: false });
         } else {
           this.setState({ fetchingDegrees: false });
         }
@@ -891,10 +912,11 @@ class QualificationRegister extends Component {
         if (status) {
           const { colleges = {} } = responseData;
           const collegeList = {};
-          Object.keys(colleges).forEach(id => {
-            collegeList[id] = colleges[id];
-          });
-          this.setState({ colleges: collegeList, fetchingColleges: false });
+          this.setState({ fetchingColleges: false });
+          // Object.keys(colleges).forEach(id => {
+          //   collegeList[id] = colleges[id];
+          // });
+          // this.setState({ colleges: collegeList, fetchingColleges: false });
         } else {
           this.setState({ fetchingColleges: false });
         }
@@ -917,12 +939,14 @@ class QualificationRegister extends Component {
         const response = await searchCouncil(data);
         const { status, payload: { data: responseData, message } = {} } = response;
         if (status) {
-          const { registration_councils = {} } = responseData;
-          const councilList = {};
-          Object.keys(registration_councils).forEach(id => {
-            councilList[id] = registration_councils[id];
-          });
-          this.setState({ councils: councilList, fetchingCouncils: false });
+          // const { registration_councils = {} } = responseData;
+          // const councilList = {};
+          // Object.keys(registration_councils).forEach(id => {
+          //   councilList[id] = registration_councils[id];
+          // });
+          // this.setState({ councils: councilList, fetchingCouncils: false });
+
+          this.setState({ fetchingCouncils: false });
         } else {
           this.setState({ fetchingCouncils: false });
         }
@@ -970,7 +994,7 @@ class QualificationRegister extends Component {
                 className="form-inputs"
                 placeholder="Select Degree"
                 showSearch
-                value={degree_id}
+                value={degree_id.toString()}
                 onChange={this.setDegree(key)}
                 // onFocus={() => handleMedicineSearch("")}
                 autoComplete="off"
@@ -993,7 +1017,7 @@ class QualificationRegister extends Component {
                 className="form-inputs"
                 placeholder="Select College"
                 showSearch
-                value={college_id}
+                value={college_id.toString()}
                 onChange={this.setCollege(key)}
                 // onFocus={() => handleMedicineSearch("")}
                 autoComplete="off"
@@ -1118,7 +1142,7 @@ class QualificationRegister extends Component {
                 className="form-inputs"
                 placeholder="Select Council"
                 showSearch
-                value={registration_council_id}
+                value={registration_council_id.toString()}
                 onChange={this.setRegCouncil(key)}
                 // onFocus={() => handleMedicineSearch("")}
                 autoComplete="off"
@@ -1239,7 +1263,7 @@ class QualificationRegister extends Component {
           message.error('Please select valid expiry date for registration.')
           return false;
         }
-        if (!number || !expiryDate || !parseInt(year)  || !registration_council_id) {
+        if (!number || !expiryDate || !parseInt(year) || !registration_council_id) {
 
           message.error('Please enter all Registration details.')
           return false;
