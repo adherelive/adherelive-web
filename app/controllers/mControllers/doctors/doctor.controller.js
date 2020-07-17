@@ -287,24 +287,24 @@ class MobileDoctorController extends Controller {
       let newQualifications = [];
       for (const item of qualification_details) {
         const {
-          degree = "",
+          degree_id = "",
           year = "",
-          college = "",
+          college_id = "",
           photos = [],
           id = 0
         } = item;
         if (id && id !== "0") {
           const qualification = await qualificationService.updateQualification(
-            { doctor_id: doctorData.getDoctorId(), degree, year, college },
+            { doctor_id: doctorData.getDoctorId(), degree_id, year, college_id },
             id
           );
           newQualifications.push(parseInt(id));
         } else {
           const qualification = await qualificationService.addQualification({
             doctor_id: doctorData.getDoctorId(),
-            degree,
+            degree_id,
             year,
-            college
+            college_id
           });
         }
       }
@@ -330,10 +330,10 @@ class MobileDoctorController extends Controller {
 
       let newRegistrations = [];
       for (const item of registration_details) {
-        const { number, council, year, expiry_date, id = 0 } = item;
+        const { number, registration_council_id, year, expiry_date, id = 0 } = item;
         if (id && id !== "0") {
           const registration = await registrationService.updateRegistration(
-            { doctor_id: doctorData.getDoctorId(), number, year, council, expiry_date },
+            { doctor_id: doctorData.getDoctorId(), number, year, registration_council_id, expiry_date },
             id
           );
           newRegistrations.push(parseInt(id));
@@ -342,7 +342,7 @@ class MobileDoctorController extends Controller {
             doctor_id: doctorData.getDoctorId(),
             number,
             year,
-            council,
+            registration_council_id,
             expiry_date
           });
         }
@@ -518,15 +518,15 @@ class MobileDoctorController extends Controller {
           doctorData.getDoctorId()
         );
       }
-      const { degree = "", year = "", college = "", id = 0, photos = [] } =
+      const { degree_id = "", year = "", college_id = "", id = 0, photos = [] } =
         qualification || {};
 
       if (!id) {
         const docQualification = await qualificationService.addQualification({
           doctor_id: doctorData.getDoctorId(),
-          degree,
+          degree_id,
           year,
-          college
+          college_id
         });
 
         for (const photo of photos) {
@@ -637,15 +637,15 @@ class MobileDoctorController extends Controller {
 
       if (qualifications.length > 0) {
         for (const qualification of qualifications) {
-          const { degree = "", year = "", college = "", id = 0, photos = [] } =
+          const { degree_id = "", year = "", college_id = "", id = 0, photos = [] } =
             qualification || {};
           if (!id) {
             const docQualification = await qualificationService.addQualification(
               {
                 doctor_id: doctorData.getDoctorId(),
-                degree,
+                degree_id,
                 year,
-                college
+                college_id
               }
             );
 
@@ -689,7 +689,7 @@ class MobileDoctorController extends Controller {
       // REGISTRATION
       const {
         number = "",
-        council = "",
+        registration_council_id = "",
         year: registration_year = "",
         expiry_date = "",
         id = 0,
@@ -700,7 +700,7 @@ class MobileDoctorController extends Controller {
         const docRegistration = await registrationService.addRegistration({
           doctor_id: doctorData.getDoctorId(),
           number,
-          council,
+          registration_council_id,
           year: registration_year,
           expiry_date: moment(expiry_date)
         });
@@ -726,7 +726,7 @@ class MobileDoctorController extends Controller {
           {
             doctor_id: doctorData.getDoctorId(),
             number,
-            council,
+            registration_council_id,
             year: registration_year,
             expiry_date: moment(expiry_date)
           },
@@ -1058,19 +1058,19 @@ class MobileDoctorController extends Controller {
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       }
 
-      const degrees = await degreeService.getAll();
-      let degreeData = {};
-      for(const degree of degrees) {
-        const degreeWrapper = await DegreeWrapper(degree);
-        degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
-      }
-
-      const courses = await courseService.getAll();
-      let courseData = {};
-      for(const course of courses) {
-        const courseWrapper = await CourseWrapper(course);
-        courseData[courseWrapper.getDegreeId()] = courseWrapper.getBasicInfo();
-      }
+      // const degrees = await degreeService.getAll();
+      // let degreeData = {};
+      // for(const degree of degrees) {
+      //   const degreeWrapper = await DegreeWrapper(degree);
+      //   degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
+      // }
+      //
+      // const courses = await courseService.getAll();
+      // let courseData = {};
+      // for(const course of courses) {
+      //   const courseWrapper = await CourseWrapper(course);
+      //   courseData[courseWrapper.getDegreeId()] = courseWrapper.getBasicInfo();
+      // }
 
       return raiseSuccess(
           res,
@@ -1099,17 +1099,17 @@ class MobileDoctorController extends Controller {
             upload_documents: {
               ...uploadDocumentApiDetails,
             },
-            courses: {
-              ...courseData,
-            },
-            degrees: {
-              ...degreeData,
-            }
+            // courses: {
+            //   ...courseData,
+            // },
+            // degrees: {
+            //   ...degreeData,
+            // }
           },
-          "doctor details fetched successfully"
+          "Doctor details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("500 error", error);
+      Logger.debug("getalldoctors 500 error", error);
       return raiseServerError(res);
     }
   };

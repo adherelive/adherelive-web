@@ -12,7 +12,7 @@ class DoctorRegistrationWrapper extends BaseDoctorRegistration {
             id,
             doctor_id,
             number,
-            council,
+            registration_council_id,
             year,
             expiry_date
         } = _data || {};
@@ -21,7 +21,7 @@ class DoctorRegistrationWrapper extends BaseDoctorRegistration {
                 id,
                 doctor_id,
                 number,
-                council,
+                registration_council_id,
                 year,
             },
             expiry_date

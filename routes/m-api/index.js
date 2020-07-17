@@ -12,6 +12,13 @@ import chartRouter from "./graphs";
 
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
+
+import collegeRouter from "./college";
+import degreeRouter from "./degree";
+import councilRouter from "./council";
+import conditionRouter from "./condition";
+import severityRouter from "./severity";
+import treatmentRouter from "./treatment";
 // import twilioRouter from "./twilio";
 
 router.use(async (req, res, next) => {
@@ -70,5 +77,12 @@ router.use("/doctors", mDoctorRouter);
 router.use("/care-plans", mCarePlanRouter);
 router.use("/medicines", mMedicineRouter);
 router.use("/charts", chartRouter);
+
+router.use("/colleges", collegeRouter);
+router.use("/degrees", degreeRouter);
+router.use("/councils", councilRouter);
+router.use("/conditions", conditionRouter);
+router.use("/severity", severityRouter);
+router.use("/treatments", treatmentRouter);
 
 module.exports = router;

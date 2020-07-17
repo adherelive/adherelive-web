@@ -11,16 +11,16 @@ class DoctorQualificationWrapper extends BaseDoctorQualification {
         const {
             id,
             doctor_id,
-            degree,
-            college,
+            degree_id,
+            college_id,
             year
         } = _data || {};
         return {
             basic_info: {
                 id,
                 doctor_id,
-                degree,
-                college,
+                degree_id,
+                college_id,
                 year
             }
         };

@@ -1,4 +1,7 @@
 import Treatment from "../../models/treatments";
+import Sequelize from "sequelize";
+
+const Op = Sequelize.Op;
 
 class TreatmentService {
 
@@ -7,6 +10,21 @@ class TreatmentService {
             const treatment = await Treatment.findAll();
             return treatment;
         } catch(error) {
+            throw error;
+        }
+    };
+
+    search = async (data) => {
+        try {
+            const treatment = await Treatment.findAll({
+                where: {
+                    name: {
+                        [Op.like]: `%${data}%`,
+                    },
+                },
+            });
+            return treatment;
+        } catch (error) {
             throw error;
         }
     };
