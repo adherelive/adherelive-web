@@ -46,6 +46,10 @@ import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
 import courseService from "../../../services/course/course.service";
 import CourseWrapper from "../../../ApiWrapper/mobile/course";
 import getReferenceId from "../../../helper/referenceIdGenerator";
+import collegeService from "../../../services/college/college.service";
+import CollegeWrapper from "../../../ApiWrapper/mobile/college";
+import councilService from "../../../services/council/council.service";
+import CouncilWrapper from "../../../ApiWrapper/mobile/council";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -1065,12 +1069,26 @@ class MobileDoctorController extends Controller {
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       }
 
-      // const degrees = await degreeService.getAll();
-      // let degreeData = {};
-      // for(const degree of degrees) {
-      //   const degreeWrapper = await DegreeWrapper(degree);
-      //   degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
-      // }
+      const degrees = await degreeService.getAll();
+      let degreeData = {};
+      for(const degree of degrees) {
+        const degreeWrapper = await DegreeWrapper(degree);
+        degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
+      }
+
+      const colleges = await collegeService.getAll();
+      let collegeData = {};
+      for(const college of colleges) {
+        const collegeWrapper = await CollegeWrapper(college);
+        collegeData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
+      }
+
+      const councils = await councilService.getAll();
+      let councilData = {};
+      for(const council of councils) {
+        const councilWrapper = await CouncilWrapper(council);
+        councilData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
+      }
       //
       // const courses = await courseService.getAll();
       // let courseData = {};
@@ -1106,12 +1124,15 @@ class MobileDoctorController extends Controller {
             upload_documents: {
               ...uploadDocumentApiDetails,
             },
-            // courses: {
-            //   ...courseData,
-            // },
-            // degrees: {
-            //   ...degreeData,
-            // }
+            colleges: {
+              ...collegeData,
+            },
+            degrees: {
+              ...degreeData,
+            },
+            registration_councils: {
+              ...councilData,
+            }
           },
           "Doctor details fetched successfully"
       );
