@@ -1,4 +1,7 @@
 import Council from "../../models/registrationCouncil";
+import Sequelize from "sequelize";
+
+const Op = Sequelize.Op;
 
 class CouncilService {
 
@@ -7,6 +10,21 @@ class CouncilService {
             const council = await Council.findAll();
             return council;
         } catch(error) {
+            throw error;
+        }
+    };
+
+    search = async (data) => {
+        try {
+            const council = await Council.findAll({
+                where: {
+                    name: {
+                        [Op.like]: `%${data}%`,
+                    },
+                },
+            });
+            return council;
+        } catch (error) {
             throw error;
         }
     };

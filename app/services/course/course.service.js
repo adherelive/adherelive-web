@@ -1,4 +1,7 @@
 import Course from "../../models/course";
+import Sequelize from "sequelize";
+
+const Op = Sequelize.Op;
 
 class CourseService {
 
@@ -7,6 +10,21 @@ class CourseService {
             const course = await Course.findAll();
             return course;
         } catch(error) {
+            throw error;
+        }
+    };
+
+    search = async (data) => {
+        try {
+            const course = await Course.findAll({
+                where: {
+                    name: {
+                        [Op.like]: `%${data}%`,
+                    },
+                },
+            });
+            return course;
+        } catch (error) {
             throw error;
         }
     };

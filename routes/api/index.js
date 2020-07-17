@@ -12,6 +12,12 @@ import carePlanRouter from "./carePlans";
 import adminRouter from "./admin";
 import chartRouter from "./graphs";
 import doctorRouter from "./doctors";
+import collegeRouter from "./college";
+import degreeRouter from "./degree";
+import councilRouter from "./council";
+import conditionRouter from "./condition";
+import severityRouter from "./severity";
+import treatmentRouter from "./treatment";
 
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
@@ -86,5 +92,12 @@ router.use("/carePlans", carePlanRouter);
 router.use("/admin", adminRouter);
 router.use("/charts", chartRouter);
 router.use("/doctors", doctorRouter);
+
+router.use("/colleges", collegeRouter);
+router.use("/degrees", degreeRouter);
+router.use("/councils", councilRouter);
+router.use("/conditions", conditionRouter);
+router.use("/severity", severityRouter);
+router.use("/treatments", treatmentRouter);
 
 module.exports = router;

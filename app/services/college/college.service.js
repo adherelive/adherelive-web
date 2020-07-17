@@ -1,4 +1,7 @@
 import College from "../../models/college";
+import Sequelize from "sequelize";
+
+const Op = Sequelize.Op;
 
 class CollegeService {
 
@@ -7,6 +10,21 @@ class CollegeService {
             const college = await College.findAll();
             return college;
         } catch(error) {
+            throw error;
+        }
+    };
+
+    search = async (data) => {
+        try {
+            const college = await College.findAll({
+                where: {
+                    name: {
+                        [Op.like]: `%${data}%`,
+                    },
+                },
+            });
+            return college;
+        } catch (error) {
             throw error;
         }
     };
