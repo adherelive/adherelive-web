@@ -1398,12 +1398,12 @@ class DoctorController extends Controller {
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       }
 
-      const degrees = await degreeService.getAll();
-      let degreeData = {};
-      for(const degree of degrees) {
-        const degreeWrapper = await DegreeWrapper(degree);
-        degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
-      }
+      // const degrees = await degreeService.getAll();
+      // let degreeData = {};
+      // for(const degree of degrees) {
+      //   const degreeWrapper = await DegreeWrapper(degree);
+      //   degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
+      // }
 
       // const courses = await courseService.getAll();
       // let courseData = {};
@@ -1412,19 +1412,19 @@ class DoctorController extends Controller {
       //   courseData[courseWrapper.getDegreeId()] = courseWrapper.getBasicInfo();
       // }
 
-      const colleges = await collegeService.getAll();
-      let collegeData = {};
-      for(const college of colleges) {
-        const collegeWrapper = await CollegeWrapper(college);
-        collegeData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
-      }
-
-      const councils = await councilService.getAll();
-      let councilData = {};
-      for(const council of councils) {
-        const councilWrapper = await CouncilWrapper(council);
-        councilData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
-      }
+      // const colleges = await collegeService.getAll();
+      // let collegeData = {};
+      // for(const college of colleges) {
+      //   const collegeWrapper = await CollegeWrapper(college);
+      //   collegeData[collegeWrapper.getCollegeId()] = collegeWrapper.getBasicInfo();
+      // }
+      //
+      // const councils = await councilService.getAll();
+      // let councilData = {};
+      // for(const council of councils) {
+      //   const councilWrapper = await CouncilWrapper(council);
+      //   councilData[councilWrapper.getCouncilId()] = councilWrapper.getBasicInfo();
+      // }
 
 
       return raiseSuccess(
@@ -1454,15 +1454,15 @@ class DoctorController extends Controller {
           upload_documents: {
             ...uploadDocumentApiDetails,
           },
-          colleges: {
-            ...collegeData,
-          },
-          degrees: {
-            ...degreeData,
-          },
-          registration_councils: {
-            ...councilData,
-          }
+          // colleges: {
+          //   ...collegeData,
+          // },
+          // degrees: {
+          //   ...degreeData,
+          // },
+          // registration_councils: {
+          //   ...councilData,
+          // }
         },
         "Doctor details fetched successfully"
       );

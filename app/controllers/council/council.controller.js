@@ -32,7 +32,7 @@ class CouncilController extends Controller {
                     res,
                     200,
                     {
-                        councils: {
+                        registration_councils: {
                             ...councilApiData
                         }
                     },
