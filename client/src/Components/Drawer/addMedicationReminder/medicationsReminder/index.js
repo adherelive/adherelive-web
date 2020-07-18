@@ -164,11 +164,11 @@ class AddMedicationReminder extends Component {
           };
 
         }
-        if (!medicine_id || !quantity || !strength || !unit || !when_to_take || !startDate || !endDate) {
+        if (!medicine_id || !quantity || !strength || !unit || !when_to_take || !startDate) {
 
           message.error('Please fill all details.')
         }
-        else if (moment(endDate).isBefore(moment(startDate))) {
+        else if (endDate && moment(endDate).isBefore(moment(startDate))) {
           message.error('Please select valid dates for medication')
         } else {
           try {

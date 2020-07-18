@@ -170,11 +170,11 @@ class EditMedicationReminder extends Component {
             [repeatDaysField.field_name]: repeatDays.split(","),
           };
         }
-        if (!medicine_id || !quantity || !strength || !unit || !when_to_take || !startDate || !endDate) {
-           
+        if (!medicine_id || !quantity || !strength || !unit || !when_to_take || !startDate) {
+
           message.error('Please fill all details.')
         }
-        else if (moment(endDate).isBefore(moment(startDate))) {
+        else if (endDate && moment(endDate).isBefore(moment(startDate))) {
           message.error('Please select valid dates for medication')
         } else if (editMedication) {
           editMedication(data_to_submit);
@@ -310,7 +310,7 @@ class EditMedicationReminder extends Component {
           position: "sticky",
           zIndex: "9999",
           top: "0px"
-      }}
+        }}
         className="ant-drawer"
         title={editMedication ? formatMessage(messages.medication) : addMedication ? 'Add Medication' : formatMessage(messages.title)}
       >
