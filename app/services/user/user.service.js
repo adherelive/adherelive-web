@@ -1,5 +1,6 @@
 import userModel from "../../models/users";
 import {database} from "../../../libs/mysql";
+import {USER_CATEGORY} from "../../../constant";
 
 class UserService {
     constructor() {
@@ -121,6 +122,20 @@ class UserService {
         } catch (error) {
             await transaction.rollback();
             throw error;
+        }
+    };
+
+    getPatientByMobile = async (mobile_number) => {
+        try {
+            const user = await userModel.findOne({
+                where: {
+                    category: USER_CATEGORY.PATIENT,
+                    mobile_number,
+                }
+            });
+            return user;
+        } catch (err) {
+            throw err;
         }
     };
 

@@ -411,6 +411,12 @@ class DoctorController extends Controller {
       } = req.body;
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
+      const userExists = await userService.getPatientByMobile(mobile_number);
+
+      if(!userExists) {
+        this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
+      }
+
       let password = process.config.DEFAULT_PASSWORD;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
