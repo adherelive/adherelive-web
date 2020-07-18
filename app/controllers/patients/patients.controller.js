@@ -35,14 +35,14 @@ class PatientController extends Controller {
                 pid,
                 profile_pic,
                 name,
-                email
+                email = ""
             } = body || {};
             const { userId = "3" } = userDetails || {};
 
             console.log("\n\n PROFILE PIC FILE \n", req);
 
             if (email) {
-                const updateUserDetails = await userService.updateEmail(email, userId);
+                const updateUserDetails = await userService.updateEmail({email}, userId);
             }
 
             const splitName = name.split(' ');
@@ -81,7 +81,7 @@ class PatientController extends Controller {
                 uid: pid
             };
             // add patient for userId
-            const patientDetails = await patientService.updatePatient(patientData);
+            const patientDetails = await patientService.update(patientData);
 
             return this.raiseSuccess(res, 200, {
                 patients: {

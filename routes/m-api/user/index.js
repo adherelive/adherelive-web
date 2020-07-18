@@ -13,9 +13,10 @@ const PASSWORD_LENGTH = 8;
 router.post(
     "/sign-in",
     [
-        check("email")
-            .isEmail()
-            .withMessage("Invalid credentials"),
+        check("mobile_number")
+            .isNumeric()
+            .isLength({max: 10})
+            .withMessage("Invalid mobile number"),
         check("password").isLength({ min: PASSWORD_LENGTH })
     ],
     mUserController.signIn,

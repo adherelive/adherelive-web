@@ -413,7 +413,8 @@ class DoctorController extends Controller {
         password: hash,
         sign_in_type: SIGN_IN_CATEGORY.BASIC,
         category: USER_CATEGORY.PATIENT,
-        onboarded: false
+        onboarded: false,
+        activated_on: moment().format()
       });
 
       let newUserId = user.get("id");

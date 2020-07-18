@@ -172,7 +172,7 @@ class MobileDoctorController extends Controller {
         category: USER_CATEGORY.PATIENT,
         onboarded: false,
         verified: true,
-        activated_on: moment()
+        activated_on: moment().format()
       });
 
       let newUserId = user.get("id");

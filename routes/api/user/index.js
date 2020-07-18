@@ -27,7 +27,7 @@ router.post(
         check("email")
             .isEmail()
 
-            .withMessage("email is not valid"),
+            .withMessage("Email is not valid"),
         check("password").isLength({ min: PASSWORD_LENGTH })
     ],
     // validator.validateCredentialsData,

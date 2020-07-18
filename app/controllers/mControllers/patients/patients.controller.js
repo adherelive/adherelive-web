@@ -24,6 +24,7 @@ import carePlanAppointmentService from "../../../services/carePlanAppointment/ca
 //   getCarePlanMedicationIds,
 //   getCarePlanSeverityDetails
 // } from "../../carePlans/carePlanHelper";
+import UserWrapper from "../../../ApiWrapper/mobile/user";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -45,7 +46,7 @@ class MPatientController extends Controller {
     try {
       console.log("-------------- req.body ------------", req.body);
       const { userDetails, body } = req;
-      const { pid, profile_pic, name, email } = body || {};
+      const { profile_pic, name, email } = body || {};
       const { userId = "3" } = userDetails || {};
 
       if (email) {
@@ -113,7 +114,9 @@ class MPatientController extends Controller {
       }
 
       // const profilePicUrl = `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profilePic}`;
-      const profilePicUrl = `${profilePic}`;
+      const profilePicUrl = `/${profilePic}`;
+
+      Logger.debug("18371823 profilePicUrl ---> ", profilePicUrl);
 
       // todo minio configure here
 
@@ -126,17 +129,22 @@ class MPatientController extends Controller {
           // todo: profile_pic
           profile_pic: profilePicUrl,
         },
-        uid: pid,
       };
 
       const updatedpatientDetails = await patientService.updatePatient(patientDetails, patientData);
+      const updateUser = await userService.updateUser({onboarded: true}, userId);
 
       const patientApiWrapper = await PatientWrapper(updatedpatientDetails);
+
+      const updatedUserDetails = await UserWrapper(null, userId);
 
       return this.raiseSuccess(
         res,
         200,
         {
+          users: {
+            [updatedUserDetails.getId()]: updatedUserDetails.getBasicInfo()
+          },
           patients: {
             [patientApiWrapper.getPatientId()]: {
               ...patientApiWrapper.getBasicInfo(),

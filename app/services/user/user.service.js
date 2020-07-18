@@ -43,6 +43,17 @@ class UserService {
         }
     }
 
+    getUserByNumber = async (data) => {
+        try {
+            const user = await userModel.findOne({
+                where: data
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     getUserById = async id => {
         try {
             const user = await userModel.findOne({
@@ -79,12 +90,10 @@ class UserService {
         }
     }
 
-    updateEmail = async (email, id) => {
+    updateEmail = async (data, id) => {
         const transaction = await database.transaction();
         try {
-            const user = await userModel.update({
-               email,
-            }, {
+            const user = await userModel.update(data, {
                 where: {
                     id
                 },

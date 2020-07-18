@@ -64,9 +64,9 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const user = await userService.getUserByEmail({
-        email
+      const { mobile_number, password } = req.body;
+      const user = await userService.getUserByNumber({
+        mobile_number
       });
 
       // const userDetails = user[0];
@@ -116,6 +116,8 @@ class MobileUserController extends Controller {
                 ...apiUserDetails.getBasicInfo()
               }
             },
+            auth_user: apiUserDetails.getId(),
+            auth_category: apiUserDetails.getCategory(),
             ...permissions,
           },
           "Initial data retrieved successfully"
