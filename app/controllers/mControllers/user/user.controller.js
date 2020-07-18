@@ -1833,6 +1833,34 @@ class MobileUserController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  updatePassword = async (req, res) => {
+    try {
+      const {body : {password, confirm_password} = {}, userDetails : {userId} = {}} = req;
+
+      if(password !== confirm_password) {
+        return this.raiseClientError(res, 422, {}, "Password does not match");
+      }
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      const hash = await bcrypt.hash(password, salt);
+
+      const updateUser = await userService.updateUser({password: hash}, userId);
+
+      const updatedUser = await UserWrapper(null, userId);
+
+      return this.raiseSuccess(res, 200, {
+        users: {
+          [updatedUser.getId()]: updatedUser.getBasicInfo()
+        },
+      },
+        "Password updated successfully"
+      );
+
+    } catch(error) {
+      Logger.debug("updatePassword 500 error", error);
+      return this.raiseServerError(res);
+    }
+  };
 }
 
 export default new MobileUserController();

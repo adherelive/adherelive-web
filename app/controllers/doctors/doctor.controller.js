@@ -826,7 +826,7 @@ class DoctorController extends Controller {
           files: files,
           // qualification_id
         },
-        "doctor qualification document uploaded successfully"
+        "Doctor qualification document uploaded successfully"
       );
     } catch (error) {
       return raiseServerError(res);

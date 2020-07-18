@@ -3,6 +3,7 @@ import {body, check, param} from "express-validator";
 const express = require("express");
 const router = express.Router();
 import mUserController from "../../../app/controllers/mControllers/user/user.controller";
+import * as validator from "./validator";
 import Authenticate from "../middleware/auth";
 const multer = require("multer");
 var storage = multer.memoryStorage();
@@ -171,6 +172,13 @@ router.post(
             .isUUID()
     ],
     mUserController.verifyPatientLink
+);
+
+router.post(
+    "/update-password",
+    Authenticate,
+    validator.validateUpdatePasswordData,
+    mUserController.updatePassword
 );
 
 router.post(
