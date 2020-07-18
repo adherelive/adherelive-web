@@ -156,12 +156,21 @@ router.post(
 );
 
 router.post(
-    "/verify/:link",
+    "/verify-password/:link",
     [
         param("link")
             .isUUID()
     ],
     mUserController.verifyPasswordResetLink
+);
+
+router.post(
+    "/verify/:link",
+    [
+        param("link")
+            .isUUID()
+    ],
+    mUserController.verifyPatientLink
 );
 
 router.post(

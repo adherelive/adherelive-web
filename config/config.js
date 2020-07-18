@@ -6,6 +6,7 @@ module.exports =  () => {
         app: {
             invite_link: process.env.INVITE_LINK,
             env: process.env.APP_ENV,
+            mobile_verify_link: process.env.MOBILE_INVITE_LINK,
             reset_password: process.env.RESET_PASSWORD_LINK
         },
         db: {

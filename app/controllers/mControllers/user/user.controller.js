@@ -1792,6 +1792,47 @@ class MobileUserController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  verifyPatientLink = async (req, res) => {
+    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    try {
+      const {params: {link} = {} } = req;
+
+      const patientVerifyLink = await UserVerificationServices.getRequestByLink(link);
+
+      if(patientVerifyLink) {
+        const linkVerificationData = await LinkVerificationWrapper(patientVerifyLink);
+
+        const userData = await UserWrapper(null, linkVerificationData.getUserId());
+        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+        const secret = process.config.TOKEN_SECRET_KEY;
+        const accessToken = await jwt.sign(
+            {
+              userId: linkVerificationData.getUserId()
+            },
+            secret,
+            {
+              expiresIn
+            }
+        );
+
+        return raiseSuccess(res, 200, {
+          accessToken,
+          users: {
+            [userData.getId()]: {
+              ...userData.getBasicInfo()
+            }
+          }
+        }, "Email verified for password reset");
+      } else {
+        return raiseClientError(res, 422, {}, "Cannot verify email to update password");
+      }
+    } catch(error) {
+      Logger.debug("updateUserPassword 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new MobileUserController();

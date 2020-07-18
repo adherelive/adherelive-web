@@ -36,13 +36,20 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 
-import { DOCUMENT_PARENT_TYPE, ONBOARDING_STATUS, SIGN_IN_CATEGORY, USER_CATEGORY } from "../../../constant";
+import {
+  DOCUMENT_PARENT_TYPE,
+  ONBOARDING_STATUS,
+  SIGN_IN_CATEGORY,
+  USER_CATEGORY,
+  VERIFICATION_TYPE
+} from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
 import {EVENTS, Proxy_Sdk} from "../../proxySdk";
+import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 
@@ -546,13 +553,25 @@ class DoctorController extends Controller {
         medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
       }
 
+      const link = uuidv4();
+      const status = "pending";
+
+      const userVerification = UserVerificationServices.addRequest({
+        user_id: userId,
+        request_id: link,
+        status: "pending",
+        type: VERIFICATION_TYPE.PATIENT_SIGN_UP
+      });
+
+      const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
+
       const smsPayload = {
-        countryCode: "+91",
-        phoneNumber: "6360433138",
-        message: "hello from adhere"
+        // countryCode: prefix,
+        phoneNumber: `+${prefix}6360433138`, // mobile_number
+        message: `Hello from Adhere! Please click the link to verify your number. ${mobileUrl}`
       };
 
-      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      // Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
 
       return this.raiseSuccess(
         res,

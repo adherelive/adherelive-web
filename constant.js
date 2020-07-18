@@ -517,6 +517,7 @@ export const MEDICINE_TYPE = {
 export const VERIFICATION_TYPE = {
   FORGOT_PASSWORD: "forgot_password",
   SIGN_UP: "sign_up",
+  PATIENT_SIGN_UP: "patient_sign_up"
 };
 
 export const NO_ADHERENCE = "1";
