@@ -42,6 +42,7 @@ import getReferenceId from "../../helper/referenceIdGenerator";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
+import {EVENTS, Proxy_Sdk} from "../../proxySdk";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 
@@ -544,6 +545,14 @@ class DoctorController extends Controller {
         const medicineWrapper = await MedicineApiWrapper(medicine);
         medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
       }
+
+      const smsPayload = {
+        countryCode: "+91",
+        phoneNumber: "6360433138",
+        message: "hello from adhere"
+      };
+
+      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
 
       return this.raiseSuccess(
         res,

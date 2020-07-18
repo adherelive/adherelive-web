@@ -76,6 +76,9 @@ module.exports =  () => {
         TOKEN_EXPIRE_TIME: process.env.TOKEN_EXPIRE_TIME,
         TOKEN_SECRET_KEY: process.env.TOKEN_SECRET_KEY,
         INVITE_EXPIRE_TIME: process.env.INVITE_EXPIRE_TIME,
+        MSG91_AUTH_KEY: process.env.MSG91_AUTH_KEY,
+        MSG91_SMS_URL: process.env.MSG91_SMS_URL,
+        MSG91_SENDER: process.env.MSG91_SENDER,
     };
 };
 
