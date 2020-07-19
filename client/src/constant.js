@@ -205,6 +205,16 @@ export const EVENT_ACTION = {
 
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+export const DAYS_TEXT = {
+  "Mon" : "monday",
+  "Tue" : "tuesday",
+  "Wed" : "wednesday",
+  "Thu" : "thursday",
+  "Fri" : "friday",
+  "Sat" : "saturday",
+  "Sun" : "sunday",
+};
+
 export const HOST = "/api";
 
 export const EVENT_TYPE = {

@@ -124,6 +124,10 @@ class DoctorController extends Controller {
       let doctor_clinic_ids = [];
       let upload_document_ids = [];
 
+      let registration_council_ids = [];
+      let degree_ids = [];
+      let college_ids = [];
+
       const doctorWrapper = await DoctorWrapper(doctors);
 
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
@@ -165,6 +169,10 @@ class DoctorController extends Controller {
           doctorQualificationWrapper.getDoctorQualificationId()
         );
 
+        degree_ids.push(doctorQualificationWrapper.getDegreeId());
+
+        college_ids.push(doctorQualificationWrapper.getCollegeId());
+
         upload_document_ids = [];
       });
 
@@ -205,6 +213,8 @@ class DoctorController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         );
 
+        registration_council_ids.push(doctorRegistrationWrapper.getCouncilId());
+
         upload_document_ids = [];
       });
 
@@ -220,6 +230,30 @@ class DoctorController extends Controller {
         ] = doctorClinicWrapper.getBasicInfo();
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       });
+
+      const doctorCouncils = await councilService.getCouncilByData({id : registration_council_ids});
+
+      let councilApiDetails = {};
+      for(const doctorCouncil of doctorCouncils) {
+        const council = await CouncilWrapper(doctorCouncil);
+        councilApiDetails[council.getCouncilId()] = council.getBasicInfo();
+      }
+
+      const doctorDegrees = await degreeService.getDegreeByData({id: degree_ids});
+
+      let degreeApiDetails = {};
+      for(const doctorDegree of doctorDegrees) {
+        const degree = await DegreeWrapper(doctorDegree);
+        degreeApiDetails[degree.getDegreeId()] = degree.getBasicInfo();
+      }
+
+      const doctorColleges = await collegeService.getCollegeByData({id: college_ids});
+
+      let collegeApiDetails = {};
+      for(const doctorCollege of doctorColleges) {
+        const college = await CollegeWrapper(doctorCollege);
+        collegeApiDetails[college.getCollegeId()] = college.getBasicInfo();
+      }
 
       return raiseSuccess(
         res,
@@ -247,6 +281,15 @@ class DoctorController extends Controller {
           },
           upload_documents: {
             ...uploadDocumentApiDetails,
+          },
+          colleges: {
+            ...collegeApiDetails,
+          },
+          degrees: {
+            ...degreeApiDetails,
+          },
+          registration_councils: {
+            ...councilApiDetails,
           }
         },
         "doctor details fetched successfully"

@@ -6,4 +6,8 @@ export default class DoctorRegistration {
     getDoctorRegistrationId = () => {
         return this._data.get("id");
     };
+
+    getCouncilId = () => {
+        return this._data.get("registration_council_id");
+    };
 }

@@ -39,6 +39,17 @@ class CouncilService {
             throw error;
         }
     };
+
+    getCouncilByData = async data => {
+        try {
+            const council = await Council.findAll({
+                where: data
+            });
+            return council;
+        } catch(error) {
+            throw error;
+        }
+    }
 }
 
 export default new CouncilService();

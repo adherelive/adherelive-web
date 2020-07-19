@@ -6,4 +6,12 @@ export default class DoctorQualification {
     getDoctorQualificationId = () => {
         return this._data.get("id");
     };
+
+    getDegreeId = () => {
+        return this._data.get("degree_id");
+    };
+
+    getCollegeId = () => {
+        return this._data.get("college_id");
+    };
 }
