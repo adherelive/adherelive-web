@@ -334,10 +334,10 @@ class MobileAppointmentController extends Controller {
       Logger.debug("CONDITION CHECK ---> 2",  moment(oldAppointmentData.getStartTime()));
 
       if (
-        moment(date).diff(moment(oldAppointmentData.getStartDate()), 'd') > 0 ||
-        moment(start_time).diff(moment(oldAppointmentData.getStartTime()), 'm') >
+        moment(date).diff(moment(oldAppointmentData.getStartDate()), 'd') !== 0 ||
+        moment(start_time).diff(moment(oldAppointmentData.getStartTime()), 'm') !==
           0 ||
-        moment(end_time).diff(moment(oldAppointmentData.getEndTime()), 'm') > 0
+        moment(end_time).diff(moment(oldAppointmentData.getEndTime()), 'm') !== 0
       ) {
           const previousAppointments = await appointmentService.checkTimeSlot(
               date,
@@ -345,7 +345,14 @@ class MobileAppointmentController extends Controller {
               end_time
           );
 
-          if (previousAppointments.length > 0) {
+        const filteredAppointments = previousAppointments.filter(appointment => {
+          console.log("appointment id", typeof id,typeof appointment.get("id"));
+          return `${appointment.get("id")}` !== id;
+        });
+
+        console.log("appointment id", filteredAppointments);
+
+          if (filteredAppointments.length > 0) {
               return raiseClientError(
                   res,
                   422,
