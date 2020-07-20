@@ -736,7 +736,7 @@ class DoctorController extends Controller {
 
       let newRegistrations = [];
       for (const item of registration_details) {
-        const { number, registration_council_id, year, expiry_date, id = 0 } = item;
+        const { number, registration_council_id, year, expiryDate: expiry_date, id = 0 } = item;
         if (id && id !== "0") {
           const registration = await registrationService.updateRegistration(
             { doctor_id: doctorData.getDoctorId(), number, year, registration_council_id, expiry_date },
