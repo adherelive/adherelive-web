@@ -2,6 +2,7 @@ const AWS = require("aws-sdk");
 const log = require("../../../libs/log")("communications ---> smsManger");
 const axios = require("axios");
 
+
 class SmsManager {
   constructor() {
     AWS.config.update({
@@ -32,28 +33,28 @@ class SmsManager {
       log.info(`Sending SMS...!!`);
       console.log("smspayload: ", smsData);
 
-      let options = {
-        method: "POST",
-        url: process.config.MSG91_SMS_URL,
-        headers: {
-          authkey: process.config.MSG91_AUTH_KEY,
-          "content-type": "application/json"
-        },
-        data: {
-          sender: process.config.MSG91_SENDER,
-          route: "4",
-          country: smsData.countryCode,
-          sms: [
-            {
-              message: smsData.Message,
-              to: [smsData.PhoneNumber]
-            }
-          ]
-        }
-      };
-      let response = await axios(options);
-      log.info("sms sent manager...........!!", response);
-      return response.data;
+      // let options = {
+      //   method: "POST",
+      //   url: process.config.MSG91_SMS_URL,
+      //   headers: {
+      //     authkey: process.config.MSG91_AUTH_KEY,
+      //     "content-type": "application/json"
+      //   },
+      //   data: {
+      //     sender: process.config.MSG91_SENDER,
+      //     route: "4",
+      //     country: smsData.countryCode,
+      //     sms: [
+      //       {
+      //         message: smsData.Message,
+      //         to: [smsData.PhoneNumber]
+      //       }
+      //     ]
+      //   }
+      // };
+      // let response = await axios(options);
+      // log.info("sms sent manager...........!!", response);
+      // return response.data;
 
       // let smsPublishResponse = await this.sns
       //   .publish(smsData, (err, data) => {
@@ -69,18 +70,18 @@ class SmsManager {
       //   });
       // console.log("smsPublishResponse ----", smsPublishResponse);
 
-      // let smsPublishResponse = await this.sns
-      //   .publish(smsData, (err, data) => {
-      //     console.log("smsData ----", smsData);
-      //     if (err) {
-      //       log.info("sending sms error ------->>>>", err);
-      //     }
-      //     if (data) {
-      //       log.info("sms sent...........!!", data);
-      //     }
-      //   })
-      //   .promise();
-      //return smsPublishResponse;
+      let smsPublishResponse = await this.sns
+        .publish(smsData, (err, data) => {
+          console.log("smsData ----", smsData);
+          if (err) {
+            log.info("sending sms error ------->>>>", err);
+          }
+          if (data) {
+            log.info("sms sent...........!!", data);
+          }
+        })
+        .promise();
+      return smsPublishResponse;
     } catch (err) {
       console.log("err ----", err);
       log.info("sending sms error ------->>>>", err);
@@ -91,10 +92,10 @@ class SmsManager {
   smsDataTransformer(smsData) {
     let smsTransformedData = new Object();
     smsTransformedData.PhoneNumber = smsData.phoneNumber;
-    smsTransformedData.countryCode = smsData.countryCode;
+    // smsTransformedData.countryCode = smsData.countryCode;
     smsTransformedData.Message = smsData.message;
     smsTransformedData.MessageStructure = smsData.messageStructure || "string";
-    smsTransformedData.Subject = smsData.Subject || "EconsultingAppWaala";
+    smsTransformedData.Subject = smsData.Subject || "Patient Onboarding";
     // smsTransformedData.TopicArn = this.TopicArn;
     return smsTransformedData;
   }

@@ -36,12 +36,21 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 
-import { DOCUMENT_PARENT_TYPE, ONBOARDING_STATUS, SIGN_IN_CATEGORY, USER_CATEGORY } from "../../../constant";
+import {
+  DOCUMENT_PARENT_TYPE, EVENT_TYPE,
+  ONBOARDING_STATUS,
+  SIGN_IN_CATEGORY,
+  USER_CATEGORY,
+  VERIFICATION_TYPE
+} from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
+import getUniversalLink from "../../helper/universalLink";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
+import {EVENTS, Proxy_Sdk} from "../../proxySdk";
+import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 
@@ -116,6 +125,10 @@ class DoctorController extends Controller {
       let doctor_clinic_ids = [];
       let upload_document_ids = [];
 
+      let registration_council_ids = [];
+      let degree_ids = [];
+      let college_ids = [];
+
       const doctorWrapper = await DoctorWrapper(doctors);
 
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
@@ -157,6 +170,10 @@ class DoctorController extends Controller {
           doctorQualificationWrapper.getDoctorQualificationId()
         );
 
+        degree_ids.push(doctorQualificationWrapper.getDegreeId());
+
+        college_ids.push(doctorQualificationWrapper.getCollegeId());
+
         upload_document_ids = [];
       });
 
@@ -197,6 +214,8 @@ class DoctorController extends Controller {
           doctorRegistrationWrapper.getDoctorRegistrationId()
         );
 
+        registration_council_ids.push(doctorRegistrationWrapper.getCouncilId());
+
         upload_document_ids = [];
       });
 
@@ -212,6 +231,30 @@ class DoctorController extends Controller {
         ] = doctorClinicWrapper.getBasicInfo();
         doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
       });
+
+      const doctorCouncils = await councilService.getCouncilByData({id : registration_council_ids});
+
+      let councilApiDetails = {};
+      for(const doctorCouncil of doctorCouncils) {
+        const council = await CouncilWrapper(doctorCouncil);
+        councilApiDetails[council.getCouncilId()] = council.getBasicInfo();
+      }
+
+      const doctorDegrees = await degreeService.getDegreeByData({id: degree_ids});
+
+      let degreeApiDetails = {};
+      for(const doctorDegree of doctorDegrees) {
+        const degree = await DegreeWrapper(doctorDegree);
+        degreeApiDetails[degree.getDegreeId()] = degree.getBasicInfo();
+      }
+
+      const doctorColleges = await collegeService.getCollegeByData({id: college_ids});
+
+      let collegeApiDetails = {};
+      for(const doctorCollege of doctorColleges) {
+        const college = await CollegeWrapper(doctorCollege);
+        collegeApiDetails[college.getCollegeId()] = college.getBasicInfo();
+      }
 
       return raiseSuccess(
         res,
@@ -239,6 +282,15 @@ class DoctorController extends Controller {
           },
           upload_documents: {
             ...uploadDocumentApiDetails,
+          },
+          colleges: {
+            ...collegeApiDetails,
+          },
+          degrees: {
+            ...degreeApiDetails,
+          },
+          registration_councils: {
+            ...councilApiDetails,
           }
         },
         "doctor details fetched successfully"
@@ -403,6 +455,12 @@ class DoctorController extends Controller {
       } = req.body;
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
+      const userExists = await userService.getPatientByMobile(mobile_number);
+
+      if(userExists.length > 0) {
+        return this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
+      }
+
       let password = process.config.DEFAULT_PASSWORD;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
@@ -413,7 +471,8 @@ class DoctorController extends Controller {
         password: hash,
         sign_in_type: SIGN_IN_CATEGORY.BASIC,
         category: USER_CATEGORY.PATIENT,
-        onboarded: false
+        onboarded: false,
+        activated_on: moment().format()
       });
 
       let newUserId = user.get("id");
@@ -544,6 +603,30 @@ class DoctorController extends Controller {
         medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
       }
 
+      const link = uuidv4();
+      const status = "pending";
+
+      const userVerification = UserVerificationServices.addRequest({
+        user_id: userId,
+        request_id: link,
+        status: "pending",
+        type: VERIFICATION_TYPE.PATIENT_SIGN_UP
+      });
+
+      const universalLink = await getUniversalLink({event_type : VERIFICATION_TYPE.PATIENT_SIGN_UP,link});
+
+      Logger.debug("universalLink --> ", universalLink);
+
+      const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
+
+      const smsPayload = {
+        // countryCode: prefix,
+        phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
+        message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
+      };
+
+      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+
       return this.raiseSuccess(
         res,
         200,
@@ -572,7 +655,7 @@ class DoctorController extends Controller {
         "doctor's patient added successfully"
       );
     } catch (error) {
-      console.log("ADD DOCTOR PATIENT ERROR ", error);
+      Logger.debug("ADD DOCTOR PATIENT ERROR", error);
       return this.raiseServerError(res);
     }
   };
@@ -791,7 +874,7 @@ class DoctorController extends Controller {
           files: files,
           // qualification_id
         },
-        "doctor qualification document uploaded successfully"
+        "Doctor qualification document uploaded successfully"
       );
     } catch (error) {
       return raiseServerError(res);

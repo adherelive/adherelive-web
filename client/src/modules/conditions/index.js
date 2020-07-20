@@ -4,9 +4,9 @@ import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import { searchConditions } from "../../Helper/urls/conditions";
 
-export const SEARCH_SEVERITY_START = "SEARCH_SEVERITY_START";
-export const SEARCH_SEVERITY_COMPLETED = "SEARCH_SEVERITY_COMPLETED";
-export const SEARCH_SEVERITY_FAILED = "SEARCH_SEVERITY_FAILED";
+export const SEARCH_CONDITION_START = "SEARCH_CONDITION_START";
+export const SEARCH_CONDITION_COMPLETED = "SEARCH_CONDITION_COMPLETED";
+export const SEARCH_CONDITION_FAILED = "SEARCH_CONDITION_FAILED";
 
 export const searchCondition = value => {
   let response = {};
@@ -20,17 +20,17 @@ export const searchCondition = value => {
       const { status, payload: { data, error = {}, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
-          type: SEARCH_SEVERITY_COMPLETED,
+          type: SEARCH_CONDITION_COMPLETED,
           data
         });
       } else {
         dispatch({
-          type: SEARCH_SEVERITY_FAILED,
+          type: SEARCH_CONDITION_FAILED,
           message
         });
       }
     } catch (error) {
-      console.log("SEARCH SEVERITY MODULE catch error -> ", error);
+      console.log("SEARCH CONDITION MODULE catch error -> ", error);
     }
     return response;
   }
@@ -54,6 +54,8 @@ function conditionReducer(state, data) {
 export default (state = {}, action) => {
   const { type, data } = action;
   switch (type) {
+    case SEARCH_CONDITION_COMPLETED:
+      return conditionReducer(state, data);
     default:
       return conditionReducer(state, data)
   }

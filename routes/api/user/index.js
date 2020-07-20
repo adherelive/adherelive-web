@@ -1,3 +1,5 @@
+import Response from "../../../app/helper/responseFormat";
+
 const express = require("express");
 const router = express.Router();
 import Authenticate from "../middleware/auth";
@@ -25,7 +27,7 @@ router.post(
         check("email")
             .isEmail()
 
-            .withMessage("email is not valid"),
+            .withMessage("Email is not valid"),
         check("password").isLength({ min: PASSWORD_LENGTH })
     ],
     // validator.validateCredentialsData,
@@ -43,14 +45,20 @@ router.post(
             .withMessage(
                 `Password must be at least ${PASSWORD_LENGTH} characters long`
             ),
-        body("password").custom((value, { req }) => {
+        body("password").custom((value, { req, res }) => {
             const regEx = new RegExp(
                 "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
             );
+            console.log("91380123 value ---> ", value, regEx.test(value));
+
             if (!regEx.test(value)) {
-                throw new Error(
-                    "Password must contain atleast 1 uppercase, lowercase, number & special character"
-                );
+                const response = new Response(false, 422);
+                // response.setError(isValid.error);
+                response.setMessage("Password must contain atleast 1 uppercase, lowercase, number & special character");
+                return res.status(422).json(response.getResponse());
+                // throw new Error(
+                //     "Password must contain atleast 1 uppercase, lowercase, number & special character"
+                // );
             } else {
                 return true;
             }

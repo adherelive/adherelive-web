@@ -441,14 +441,14 @@ export const CUSTOM_REPEAT_OPTIONS = {
 export const DOSE_AMOUNT = ["2", "8", "100", "200", "500"];
 
 export const MG = "1";
-export const IU = "2";
+export const ML = "2";
 
 export const DOSE_UNIT = {
   [MG]: {
     text: "mg"
   },
-  [IU]: {
-    text: "IU"
+  [ML]: {
+    text: "ml"
   }
 };
 
@@ -517,6 +517,7 @@ export const MEDICINE_TYPE = {
 export const VERIFICATION_TYPE = {
   FORGOT_PASSWORD: "forgot_password",
   SIGN_UP: "sign_up",
+  PATIENT_SIGN_UP: "patient_sign_up"
 };
 
 export const NO_ADHERENCE = "1";

@@ -12,10 +12,11 @@ import moment from "moment";
 
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/helper";
+import MAppointmentWrapper from "../../ApiWrapper/mobile/appointments";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
-// const Logger = new Log(FILE_NAME);
+const Logger = new Log(FILE_NAME);
 
 class AppointmentController extends Controller {
   constructor() {
@@ -267,27 +268,68 @@ class AppointmentController extends Controller {
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
-      // Logger.debug("Start date", date);
-      const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
-        date,
-        start_time,
-        end_time, appointment_id
-      );
+      const oldAppointment = await appointmentService.getAppointmentById(appointment_id);
 
-      console.log("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
+      const oldAppointmentData = await MAppointmentWrapper(oldAppointment);
 
+      Logger.debug("CONDITION CHECK ---> 1",  moment(date));
+      Logger.debug("CONDITION CHECK ---> 2", moment(oldAppointmentData.getStartDate()));
 
+      Logger.debug("12378939832 getting here 88888888888888888888888", moment(date).diff(moment(oldAppointmentData.getStartDate())));
 
-      if (getAppointmentForTimeSlot.length > 0) {
-        return raiseClientError(
-          res,
-          422,
-          {
-            error_type: "slot_present",
-          },
-          `Appointment Slot already present between`
+      if (
+          moment(date).diff(moment(oldAppointmentData.getStartDate()), 'd') !== 0 ||
+          moment(start_time).diff(moment(oldAppointmentData.getStartTime()), 'm') !==
+          0 ||
+          moment(end_time).diff(moment(oldAppointmentData.getEndTime()), 'm') !== 0
+      ) {
+
+        const previousAppointments = await appointmentService.checkTimeSlot(
+            date,
+            start_time,
+            end_time
         );
+
+        const filteredAppointments = previousAppointments.filter(appointment => {
+          console.log("appointment id", typeof appointment_id,typeof appointment.get("id"));
+          return `${appointment.get("id")}` !== appointment_id;
+        });
+
+        console.log("appointment id", filteredAppointments);
+
+        if (filteredAppointments.length > 0) {
+          return raiseClientError(
+              res,
+              422,
+              {
+                error_type: "slot_present"
+              },
+              `Appointment Slot already present between`
+          );
+        }
       }
+
+      // Logger.debug("Start date", date);
+      // const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
+      //   date,
+      //   start_time,
+      //   end_time, appointment_id
+      // );
+      //
+      // console.log("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
+      //
+      //
+      //
+      // if (getAppointmentForTimeSlot.length > 0) {
+      //   return raiseClientError(
+      //     res,
+      //     422,
+      //     {
+      //       error_type: "slot_present",
+      //     },
+      //     `Appointment Slot already present between`
+      //   );
+      // }
 
       const appointment_data = {
         participant_one_type: category,
@@ -307,14 +349,12 @@ class AppointmentController extends Controller {
           reason
         },
       };
-      console.log("[ APPOINTMENTS ] appointments 1111111", updatedAppointmentDetails);
 
       const appointment = await appointmentService.updateAppointment(appointment_id,
         appointment_data
       );
-      console.log("[ APPOINTMENTS ] appointments 2222222", updatedAppointmentDetails);
 
-      const updatedAppointmentDetails = await appointmentService.getAppointment({ id: appointment_id });
+      const updatedAppointmentDetails = await appointmentService.getAppointmentById(appointment_id);
       console.log("[ APPOINTMENTS ] appointments 333333", updatedAppointmentDetails);
 
       const appointmentApiData = await AppointmentWrapper(updatedAppointmentDetails);
@@ -348,7 +388,7 @@ class AppointmentController extends Controller {
         "appointment updated successfully"
       );
     } catch (error) {
-      // Logger.debug("update 500 error", error);
+      Logger.debug("update 500 error", error);
       return raiseServerError(res);
     }
   };

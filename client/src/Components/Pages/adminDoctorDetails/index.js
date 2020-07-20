@@ -3,10 +3,15 @@ import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
 import Modal from "antd/es/modal";
-import { CheckCircleTwoTone, ExclamationCircleTwoTone, ArrowLeftOutlined, FileTextOutlined } from "@ant-design/icons";
+import {
+  CheckCircleTwoTone,
+  ExclamationCircleTwoTone,
+  ArrowLeftOutlined,
+  FileTextOutlined
+} from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
-import { TABLE_DEFAULT_BLANK_FIELD } from "../../../constant";
+import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
@@ -36,8 +41,10 @@ class AdminDoctorDetails extends Component {
       this.setState({ loading: true });
       const { getDoctorDetails } = this.props;
       const response = await getDoctorDetails();
-      const { status, payload: { message: { message: responseMessage } = {} } = {} } =
-        response || {};
+      const {
+        status,
+        payload: { message: { message: responseMessage } = {} } = {}
+      } = response || {};
 
       if (status === true) {
         this.setState({
@@ -119,10 +126,10 @@ class AdminDoctorDetails extends Component {
                 />
               </div>
             ) : (
-                <div className="w200 h200 bg-dark-grey text-white flex align-center justify-center">
-                  <div>{formatMessage(messages.no_photo_text)}</div>
-                </div>
-              )}
+              <div className="w200 h200 bg-dark-grey text-white flex align-center justify-center">
+                <div>{formatMessage(messages.no_photo_text)}</div>
+              </div>
+            )}
           </div>
           <div className="wp100 ml16 flex direction-row align-center flex-wrap">
             {/*name*/}
@@ -132,7 +139,7 @@ class AdminDoctorDetails extends Component {
               </div>
               <div className="fs14 fw500">{`${first_name} ${
                 middle_name ? `${middle_name} ` : ""
-                }${last_name ? last_name : ""}`}</div>
+              }${last_name ? last_name : ""}`}</div>
             </div>
 
             {/*gender*/}
@@ -181,7 +188,11 @@ class AdminDoctorDetails extends Component {
                 <div className="fs16 fw700">
                   {formatMessage(messages.onboarding_status_text)}
                 </div>
-                <div className="fs14 fw500">{onboarding_status ? onboarding_status : TABLE_DEFAULT_BLANK_FIELD}</div>
+                <div className="fs14 fw500">
+                  {onboarding_status
+                    ? onboarding_status
+                    : TABLE_DEFAULT_BLANK_FIELD}
+                </div>
               </div>
             )}
 
@@ -201,17 +212,23 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.verified_text)}
               </div>
               <div className="fs14 fw500">
-                {activated_on ?
+                {activated_on ? (
                   <div className="flex direction-row align-center">
-                    <CheckCircleTwoTone className="mr10" twoToneColor={`#43b02a`} />
+                    <CheckCircleTwoTone
+                      className="mr10"
+                      twoToneColor={`#43b02a`}
+                    />
                     <span>{`Verified`}</span>
                   </div>
-                  :
+                ) : (
                   <div className="flex direction-row align-center">
-                    <ExclamationCircleTwoTone className="mr10" twoToneColor={`#f1c40f`} />
+                    <ExclamationCircleTwoTone
+                      className="mr10"
+                      twoToneColor={`#f1c40f`}
+                    />
                     <span>{`Not Verified`}</span>
                   </div>
-                }
+                )}
               </div>
             </div>
           </div>
@@ -226,17 +243,32 @@ class AdminDoctorDetails extends Component {
   };
 
   getDoctorRegistrationDetails = () => {
-    const { id, doctors, doctor_registrations, upload_documents } = this.props;
+    const {
+      id,
+      doctors,
+      doctor_registrations,
+      upload_documents,
+      councils = {}
+    } = this.props;
     const { formatMessage, handlePictureModal } = this;
 
     const { doctor_registration_ids = [] } = doctors[id] || {};
 
     return doctor_registration_ids.map((registration_id, index) => {
       const {
-        basic_info: { number, start_date, end_date, council, year } = {},
+        basic_info: {
+          number,
+          start_date,
+          end_date,
+          registration_council_id,
+          year
+        } = {},
         expiry_date,
         upload_document_ids
       } = doctor_registrations[registration_id] || {};
+
+      const { basic_info: { name: registrationCouncilName } = {} } =
+        councils[registration_council_id] || {};
 
       return (
         <div className="wp100 p20 flex direction-column">
@@ -262,7 +294,9 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.registration_council_text)}
               </div>
               <div className="fs14 fw500">
-                {council ? council : TABLE_DEFAULT_BLANK_FIELD}
+                {registration_council_id
+                  ? registrationCouncilName
+                  : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
@@ -320,10 +354,10 @@ class AdminDoctorDetails extends Component {
                           className="w100 h100 mr6 mt6 mb6 pointer"
                           href={document}
                           target="_blank"
-                        // onClick={handleDocumentDownload(id)}
+                          // onClick={handleDocumentDownload(id)}
                         >
                           <div className="w100 h100 br5 flex direction-column align-center justify-center br-black black-85">
-                            <FileTextOutlined/>
+                            <FileTextOutlined />
                             {documentType.toUpperCase()}
                           </div>
                         </a>
@@ -347,7 +381,6 @@ class AdminDoctorDetails extends Component {
                 })}
               </div>
             </div>
-
           </div>
         </div>
       );
@@ -356,20 +389,31 @@ class AdminDoctorDetails extends Component {
 
   handleDocumentDownload = id => e => {
     e.preventDefault();
-
   };
 
   getDoctorQualificationDetails = () => {
-    const { id, doctors, doctor_qualifications, upload_documents } = this.props;
+    const {
+      id,
+      doctors,
+      doctor_qualifications,
+      upload_documents,
+      degrees = {},
+      colleges = {}
+    } = this.props;
     const { formatMessage, handlePictureModal, handleDocumentDownload } = this;
 
     const { doctor_qualification_ids = [] } = doctors[id] || {};
 
     return doctor_qualification_ids.map((qualification_id, index) => {
       const {
-        basic_info: { degree, college, year } = {},
+        basic_info: { degree_id, college_id, year } = {},
         upload_document_ids = []
       } = doctor_qualifications[qualification_id] || {};
+
+      const { basic_info: { name: collegeName } = {} } =
+        colleges[college_id] || {};
+      const { basic_info: { name: degreeName } = {} } =
+        degrees[degree_id] || {};
 
       return (
         <div
@@ -388,17 +432,17 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.degree_text)}
               </div>
               <div className="fs14 fw500">
-                {degree ? degree : TABLE_DEFAULT_BLANK_FIELD}
+                {degree_id ? degreeName : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
             {/*college*/}
-            <div className="wp20 mt16 mb16 mr16">
+            <div className="wp40 mt16 mb16 mr16">
               <div className="fs16 fw700">
                 {formatMessage(messages.college_text)}
               </div>
               <div className="fs14 fw500">
-                {college ? college : TABLE_DEFAULT_BLANK_FIELD}
+                {college_id ? collegeName : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
@@ -433,7 +477,7 @@ class AdminDoctorDetails extends Component {
                           className="w100 h100 mr6 mt6 mb6 pointer"
                           href={document}
                           target="_blank"
-                        // onClick={handleDocumentDownload(id)}
+                          // onClick={handleDocumentDownload(id)}
                         >
                           <div className="w100 h100 br5 flex align-center justify-center">
                             {documentType.toUpperCase()}
@@ -465,9 +509,14 @@ class AdminDoctorDetails extends Component {
     });
   };
 
+  getFullDayText = day => {
+    console.log("137163 day --> ", day);
+    return DAYS_TEXT[day].toLocaleUpperCase();
+  };
+
   getDoctorClinicDetails = () => {
     const { id, doctors, doctor_clinics } = this.props;
-    const { formatMessage } = this;
+    const { formatMessage, getFullDayText } = this;
 
     const { doctor_clinic_ids = [] } = doctors[id] || {};
 
@@ -479,7 +528,6 @@ class AdminDoctorDetails extends Component {
       } = doctor_clinics[clinic_id] || {};
 
       return (
-        // <div className="wp100 p20 flex direction-row justify-space-between align-center border-box">
         <div
           className="wp100 p20 flex direction-column"
           key={`c-block-${index}`}
@@ -519,35 +567,33 @@ class AdminDoctorDetails extends Component {
                 // todo: add DAY[day] later from constants
 
                 return (
-                    <Fragment>
-                      <div className="wp100 flex align-center">
-                        <div className="fs16 fw700">{day.toLocaleUpperCase()}</div>
-                        {time_slots[day].map((time_slot, index) => {
-                          const { startTime : start_time, endTime: end_time } = time_slot || {};
+                  <Fragment>
+                    {time_slots[day].length > 0 && <div className="wp100 flex">
+                      <div className="fs14 fw700 mt16 mb10 mr16">{getFullDayText(day)}</div>
+                      <div
+                        className="wp100 mt16 mb10 mr16 flex"
+                        key={`ts-${index}`}
+                      >
+                        {time_slots[day].map((time_slot, i) => {
+                          const { startTime: start_time, endTime: end_time } =
+                            time_slot || {};
 
                           return (
-                              <div className="wp100 mt16 mb16 mr16 flex align-center" key={`ts-${index}`}>
-                                <div className="fs16 fw700">
-                                  {formatMessage(messages.open_between_text)}
-                                </div>
-                                <div className="fs14 fw500">
-                                  {start_time
-                                      ? `${moment(start_time).format("LT")} - ${moment(
-                                          end_time
-                                      ).format("LT")}`
-                                      : "CLOSED"}
-                                </div>
-                              </div>
+                            <div className="fs14 fw500" key={`ts/${index}/${i}`}>
+                              {start_time
+                                ? `${moment(start_time).format(
+                                    "LT"
+                                  )} - ${moment(end_time).format("LT")}`
+                                : "CLOSED"}
+                            </div>
                           );
                         })}
                       </div>
-
-                    </Fragment>
+                    </div>}
+                  </Fragment>
                 );
               })}
             </div>
-
-
           </div>
         </div>
       );
@@ -558,13 +604,25 @@ class AdminDoctorDetails extends Component {
     const { id, doctors } = this.props;
     const { formatMessage, handleVerify } = this;
 
-    const { doctor_clinic_ids = [], doctor_qualification_ids = [], doctor_registration_ids = [] } = doctors[id] || {};
+    const {
+      doctor_clinic_ids = [],
+      doctor_qualification_ids = [],
+      doctor_registration_ids = []
+    } = doctors[id] || {};
 
-    const disabled = doctor_clinic_ids.length === 0 || doctor_qualification_ids.length === 0 || doctor_registration_ids.length === 0;
+    const disabled =
+      doctor_clinic_ids.length === 0 ||
+      doctor_qualification_ids.length === 0 ||
+      doctor_registration_ids.length === 0;
 
     return (
       <div className="mt20 wi flex justify-end">
-        <Button disabled={disabled} type="primary" className="mb10 mr10" onClick={handleVerify}>
+        <Button
+          disabled={disabled}
+          type="primary"
+          className="mb10 mr10"
+          onClick={handleVerify}
+        >
           {formatMessage(messages.submit_button_text)}
         </Button>
       </div>
@@ -668,7 +726,11 @@ class AdminDoctorDetails extends Component {
       getProfilePicModal
     } = this;
 
-    const { doctor_clinic_ids = [], doctor_qualification_ids = [], doctor_registration_ids = [] } = doctors[id] || {};
+    const {
+      doctor_clinic_ids = [],
+      doctor_qualification_ids = [],
+      doctor_registration_ids = []
+    } = doctors[id] || {};
 
     console.log("1982317923 loading --> ", this.props);
 
@@ -685,20 +747,34 @@ class AdminDoctorDetails extends Component {
           {/*basic details*/}
           {getDoctorBasicDetails()}
 
-          {/*registration*/}
-          <div className="mt20 mb20 wp100 flex direction-column">
-            <div className="fs20 fw700 mb14">
-              {formatMessage(messages.registration_details_text)}
-            </div>
-            {doctor_registration_ids.length > 0 ? (<div className="border-box">{getDoctorRegistrationDetails()}</div>) : (<div className="bg-grey wp100 h200 br5 flex align-center justify-center">{formatMessage(messages.no_registration_text)}</div>)}
-          </div>
-
           {/*qualifications*/}
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.qualification_details_text)}
             </div>
-            {doctor_qualification_ids.length > 0 ? <div className="border-box">{getDoctorQualificationDetails()}</div> : <div className="bg-grey wp100 h200 br5 flex align-center justify-center">{formatMessage(messages.no_qualification_text)}</div>}
+            {doctor_qualification_ids.length > 0 ? (
+              <div className="border-box">
+                {getDoctorQualificationDetails()}
+              </div>
+            ) : (
+              <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                {formatMessage(messages.no_qualification_text)}
+              </div>
+            )}
+          </div>
+
+          {/*registration*/}
+          <div className="mt20 mb20 wp100 flex direction-column">
+            <div className="fs20 fw700 mb14">
+              {formatMessage(messages.registration_details_text)}
+            </div>
+            {doctor_registration_ids.length > 0 ? (
+              <div className="border-box">{getDoctorRegistrationDetails()}</div>
+            ) : (
+              <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                {formatMessage(messages.no_registration_text)}
+              </div>
+            )}
           </div>
 
           {/*clinics*/}
@@ -706,7 +782,13 @@ class AdminDoctorDetails extends Component {
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.clinic_details_text)}
             </div>
-            {doctor_clinic_ids.length > 0 ? <div className="border-box">{getDoctorClinicDetails()}</div> : <div className="bg-grey wp100 h200 br5 flex align-center justify-center">{formatMessage(messages.no_clinic_text)}</div>}
+            {doctor_clinic_ids.length > 0 ? (
+              <div className="border-box">{getDoctorClinicDetails()}</div>
+            ) : (
+              <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                {formatMessage(messages.no_clinic_text)}
+              </div>
+            )}
           </div>
 
           {/*footer*/}

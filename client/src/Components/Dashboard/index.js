@@ -118,10 +118,10 @@ class Dashboard extends Component {
                 // getInitialData().then(() => {
 
 
-                    this.props.history.push({
-                        pathname: `/patients/${patient_id}`,
-                        state: { showTemplateDrawer, currentCarePlanId }
-                    });
+                this.props.history.push({
+                    pathname: `/patients/${patient_id}`,
+                    state: { showTemplateDrawer, currentCarePlanId }
+                });
 
                 // })
             } else {
@@ -207,7 +207,11 @@ class Dashboard extends Component {
                 </div>
                 <PatientDetailsDrawer />
 
-                <AddPatientDrawer treatments={treatments} conditions={conditions} severity={severity} close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
+                <AddPatientDrawer
+                    searchCondition={this.props.searchCondition}
+                    searchTreatment={this.props.searchTreatment}
+                    searchSeverity={this.props.searchSeverity}
+                    treatments={treatments} conditions={conditions} severity={severity} close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
                 {visibleModal && (<GraphsModal visible={visibleModal} handleCancel={this.hideEditGraphModal} handleOk={this.editDisplayGraphs} selectedGraphs={graphsToShow} />)}
             </Fragment>
         );

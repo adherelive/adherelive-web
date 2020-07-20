@@ -1,5 +1,6 @@
 import userModel from "../../models/users";
 import {database} from "../../../libs/mysql";
+import {USER_CATEGORY} from "../../../constant";
 
 class UserService {
     constructor() {
@@ -43,6 +44,17 @@ class UserService {
         }
     }
 
+    getUserByNumber = async (data) => {
+        try {
+            const user = await userModel.findOne({
+                where: data
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     getUserById = async id => {
         try {
             const user = await userModel.findOne({
@@ -79,12 +91,10 @@ class UserService {
         }
     }
 
-    updateEmail = async (email, id) => {
+    updateEmail = async (data, id) => {
         const transaction = await database.transaction();
         try {
-            const user = await userModel.update({
-               email,
-            }, {
+            const user = await userModel.update(data, {
                 where: {
                     id
                 },
@@ -112,6 +122,20 @@ class UserService {
         } catch (error) {
             await transaction.rollback();
             throw error;
+        }
+    };
+
+    getPatientByMobile = async (mobile_number) => {
+        try {
+            const user = await userModel.findAll({
+                where: {
+                    category: USER_CATEGORY.PATIENT,
+                    mobile_number,
+                }
+            });
+            return user;
+        } catch (err) {
+            throw err;
         }
     };
 

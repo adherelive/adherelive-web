@@ -3,6 +3,7 @@ import {body, check, param} from "express-validator";
 const express = require("express");
 const router = express.Router();
 import mUserController from "../../../app/controllers/mControllers/user/user.controller";
+import * as validator from "./validator";
 import Authenticate from "../middleware/auth";
 const multer = require("multer");
 var storage = multer.memoryStorage();
@@ -13,9 +14,10 @@ const PASSWORD_LENGTH = 8;
 router.post(
     "/sign-in",
     [
-        check("email")
-            .isEmail()
-            .withMessage("Invalid credentials"),
+        check("mobile_number")
+            .isNumeric()
+            .isLength({max: 10})
+            .withMessage("Invalid mobile number"),
         check("password").isLength({ min: PASSWORD_LENGTH })
     ],
     mUserController.signIn,
@@ -155,12 +157,28 @@ router.post(
 );
 
 router.post(
-    "/verify/:link",
+    "/verify-password/:link",
     [
         param("link")
             .isUUID()
     ],
     mUserController.verifyPasswordResetLink
+);
+
+router.post(
+    "/verify/:link",
+    [
+        param("link")
+            .isUUID()
+    ],
+    mUserController.verifyPatientLink
+);
+
+router.post(
+    "/update-password",
+    Authenticate,
+    validator.validateUpdatePasswordData,
+    mUserController.updatePassword
 );
 
 router.post(

@@ -39,6 +39,17 @@ class CollegeService {
             throw error;
         }
     };
+
+    getCollegeByData = async data => {
+        try {
+            const college = await College.findAll({
+                where: data
+            });
+            return college;
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new CollegeService();

@@ -74,6 +74,6 @@ export default async (data = null, userId = null) => {
   if (data) {
     return new MUserWrapper(data);
   }
-  const user = await userService.getUserByData({ id: userId });
-  return new MUserWrapper(user);
+  const user = await userService.getUserById(userId);
+  return new MUserWrapper(user.get());
 };

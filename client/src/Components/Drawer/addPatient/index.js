@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon, Select, Input, message, Button } from "antd";
+import { Drawer, Icon, Select, Input, message, Button, Spin } from "antd";
 import ChatComponent from "../../../Containers/Chat";
 import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
 import messages from "./message";
 import moment from "moment";
+import throttle from "lodash-es/throttle";
 
 import DatePicker from "react-datepicker";
 import CloseIcon from "../../../Assets/images/close.svg";
@@ -42,8 +43,15 @@ class PatientDetailsDrawer extends Component {
             treatment: '',
             severity: '',
             condition: '',
-            prefix: "91"
+            prefix: "91",
+            fetchingCondition: false,
+            fetchingTreatment: false,
+            fetchingSeverity: false,
         };
+
+        this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
+        this.handleTreatmentSearch = throttle(this.handleTreatmentSearch.bind(this), 2000);
+        this.handleSeveritySearch = throttle(this.handleSeveritySearch.bind(this), 2000);
     }
 
     componentDidMount() {
@@ -80,16 +88,16 @@ class PatientDetailsDrawer extends Component {
         this.setState({ prefix: value });
     };
 
-    setTreatment = value => {
-        this.setState({ treatment: value });
-    };
-
     setNumber = e => {
         const { value } = e.target;
         const reg = /^-?\d*(\.\d*)?$/;
         if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
             this.setState({ mobile_number: e.target.value });
         }
+    };
+
+    setTreatment = value => {
+        this.setState({ treatment: value });
     };
 
     setSeverity = value => {
@@ -147,6 +155,75 @@ class PatientDetailsDrawer extends Component {
         }
         return newConditions;
     }
+
+    async handleConditionSearch(data) {
+        try {
+            if (data) {
+                const { searchCondition } = this.props;
+                this.setState({ fetchingCondition: true });
+                const response = await searchCondition(data);
+                const { status, payload: { data: responseData, message } = {} } = response;
+                console.log("82398923892382398 00000000==============>  ", response);
+                if (status) {
+                    this.setState({ fetchingCondition: false });
+                } else {
+                    this.setState({ fetchingCondition: false });
+                }
+            } else {
+                this.setState({ fetchingCondition: false });
+            }
+        } catch (err) {
+            console.log("err", err);
+            message.warn("Something wen't wrong. Please try again later");
+            this.setState({ fetchingCondition: false });
+        }
+    };
+
+    async handleTreatmentSearch(data) {
+        try {
+            if (data) {
+                const { searchTreatment } = this.props;
+                this.setState({ fetchingTreatment: true });
+                const response = await searchTreatment(data);
+                const { status, payload: { data: responseData, message } = {} } = response;
+                console.log("82398923892382398 treatment 00000000==============>  ", response);
+                if (status) {
+                    this.setState({ fetchingTreatment: false });
+                } else {
+                    this.setState({ fetchingTreatment: false });
+                }
+            } else {
+                this.setState({ fetchingTreatment: false });
+            }
+        } catch (err) {
+            console.log("err", err);
+            message.warn("Something wen't wrong. Please try again later");
+            this.setState({ fetchingCondition: false });
+        }
+    };
+
+    async handleSeveritySearch(data) {
+        try {
+            if (data) {
+                const { searchSeverity } = this.props;
+                this.setState({ fetchingSeverity: true });
+                const response = await searchSeverity(data);
+                const { status, payload: { data: responseData, message } = {} } = response;
+                console.log("82398923892382398 Severity 00000000==============>  ", response);
+                if (status) {
+                    this.setState({ fetchingSeverity: false });
+                } else {
+                    this.setState({ fetchingSeverity: false });
+                }
+            } else {
+                this.setState({ fetchingSeverity: false });
+            }
+        } catch (err) {
+            console.log("err", err);
+            message.warn("Something wen't wrong. Please try again later");
+            this.setState({ fetchingSeverity: false });
+        }
+    };
 
     renderAddPatient = () => {
 
@@ -230,7 +307,7 @@ class PatientDetailsDrawer extends Component {
                 <div className='form-category-headings-ap'>Treatment Plan</div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
-                <Select
+                {/* <Select
                     className="form-inputs-ap drawer-select"
                     placeholder='Select Condition'
                     onSelect={this.setCondition}
@@ -238,10 +315,32 @@ class PatientDetailsDrawer extends Component {
                     suffixIcon={null}
                 >
                     {this.getConditionOption()}
+                </Select> */}
+
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    placeholder="Select Condition"
+                    onChange={this.setCondition}
+                    onSearch={this.handleConditionSearch}
+                    notFoundContent={this.state.fetchingCondition ? <Spin size="small" /> : null}
+                    showSearch
+                    // onFocus={() => handleMedicineSearch("")}
+                    autoComplete="off"
+                    // onFocus={() => handleMedicineSearch("")}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.props.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                    }
+                // getPopupContainer={getParentNode}
+
+                >
+                    {this.getConditionOption()}
                 </Select>
 
                 <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
-                <Select
+                {/* <Select
                     className="form-inputs-ap drawer-select"
                     autoComplete="off"
                     placeholder='Select Severity'
@@ -250,17 +349,60 @@ class PatientDetailsDrawer extends Component {
                     suffixIcon={null}
                 >
                     {this.getSeverityOption()}
+                </Select> */}
+
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    placeholder="Select Severity"
+                    onChange={this.setSeverity}
+                    onSearch={this.handleSeveritySearch}
+                    notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : null}
+                    showSearch
+                    // onFocus={() => handleMedicineSearch("")}
+                    autoComplete="off"
+                    // onFocus={() => handleMedicineSearch("")}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.props.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                    }
+                // getPopupContainer={getParentNode}
+
+                >
+                    {this.getSeverityOption()}
                 </Select>
 
 
                 <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
-                <Select
+                {/* <Select
                     className="form-inputs-ap drawer-select"
                     autoComplete="off"
                     placeholder='Select Treatment'
                     onSelect={this.setTreatment}
                     // onDeselect={handleDeselect}
                     suffixIcon={null}
+                >
+                    {this.getTreatmentOption()}
+                </Select> */}
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    placeholder="Select Treatment"
+                    onChange={this.setTreatment}
+                    onSearch={this.handleTreatmentSearch}
+                    notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : null}
+                    showSearch
+                    // onFocus={() => handleMedicineSearch("")}
+                    autoComplete="off"
+                    // onFocus={() => handleMedicineSearch("")}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.props.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                    }
+                // getPopupContainer={getParentNode}
+
                 >
                     {this.getTreatmentOption()}
                 </Select>

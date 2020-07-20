@@ -39,6 +39,17 @@ class DegreeService {
             throw error;
         }
     };
+
+    getDegreeByData = async data => {
+        try {
+            const degree = await Degree.findAll({
+                where: data
+            });
+            return degree;
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new DegreeService();

@@ -29,7 +29,7 @@ import {
   DOCUMENT_PARENT_TYPE,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
-  USER_CATEGORY
+  USER_CATEGORY, VERIFICATION_TYPE
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
@@ -50,6 +50,15 @@ import collegeService from "../../../services/college/college.service";
 import CollegeWrapper from "../../../ApiWrapper/mobile/college";
 import councilService from "../../../services/council/council.service";
 import CouncilWrapper from "../../../ApiWrapper/mobile/council";
+import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
+import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
+import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
+import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
+import medicineService from "../../../services/medicine/medicine.service";
+import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
+import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
+import getUniversalLink from "../../../helper/universalLink";
+import {EVENTS, Proxy_Sdk} from "../../../proxySdk";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -160,6 +169,12 @@ class MobileDoctorController extends Controller {
       } = req.body;
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
+      const userExists = await userService.getPatientByMobile(mobile_number);
+
+      if(!userExists) {
+        this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
+      }
+
       let password = process.config.DEFAULT_PASSWORD;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
@@ -172,7 +187,7 @@ class MobileDoctorController extends Controller {
         category: USER_CATEGORY.PATIENT,
         onboarded: false,
         verified: true,
-        activated_on: moment()
+        activated_on: moment().format()
       });
 
       let newUserId = user.get("id");
@@ -216,9 +231,9 @@ class MobileDoctorController extends Controller {
         condition_id
       );
 
-      const carePlanTemplateData = await CarePlanTemplateWrapper(
-        carePlanTemplate
-      );
+      // const carePlanTemplateData = await CarePlanTemplateWrapper(
+      //   carePlanTemplate
+      // );
 
       const patient_id = patient.get("id");
       const care_plan_template_id = carePlanTemplate
@@ -239,6 +254,89 @@ class MobileDoctorController extends Controller {
 
       const carePlanData = await CarePlanWrapper(carePlan);
 
+      let templateMedicationData = {};
+      let template_medication_ids = [];
+
+      let templateAppointmentData = {};
+      let template_appointment_ids = [];
+      let medicine_ids = [];
+
+
+      let carePlanTemplateData = null;
+
+      if (carePlanData.getCarePlanTemplateId()) {
+        const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(carePlanData.getCarePlanTemplateId());
+        carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
+        const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
+
+        for (const medication of medications) {
+          const medicationData = await TemplateMedicationWrapper(medication);
+          templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
+          template_medication_ids.push(medicationData.getTemplateMedicationId());
+          medicine_ids.push(medicationData.getTemplateMedicineId());
+        }
+
+        const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
+
+        for (const appointment of appointments) {
+          const appointmentData = await TemplateAppointmentWrapper(appointment);
+          templateAppointmentData[appointmentData.getTemplateAppointmentId()] = appointmentData.getBasicInfo();
+          template_appointment_ids.push(appointmentData.getTemplateAppointmentId());
+        }
+      }
+
+      const medicineData = await medicineService.getMedicineByData({
+        id: medicine_ids
+      });
+
+      let medicineApiData = {};
+
+      let carePlanTemplateDetails = {};
+      if (carePlanTemplate) {
+        const carePlanTemplateData = await CarePlanTemplateWrapper(
+            carePlanTemplate
+        );
+        carePlanTemplateDetails[carePlanTemplateData.getCarePlanTemplateId()] = {
+          ...carePlanTemplateData.getBasicInfo(),
+          template_appointment_ids,
+          template_medication_ids
+        };
+      }
+
+      Logger.debug(
+          "medicineData",
+          medicineData
+      );
+
+      for (const medicine of medicineData) {
+        const medicineWrapper = await MedicineApiWrapper(medicine);
+        medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+      }
+
+      const link = uuidv4();
+      const status = "pending";
+
+      const userVerification = UserVerificationServices.addRequest({
+        user_id: updatedPatientData.getUserId(),
+        request_id: link,
+        status: "pending",
+        type: VERIFICATION_TYPE.PATIENT_SIGN_UP
+      });
+
+      const universalLink = await getUniversalLink({event_type : VERIFICATION_TYPE.PATIENT_SIGN_UP,link});
+
+      Logger.debug("universalLink --> ", universalLink);
+
+      const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
+
+      const smsPayload = {
+        // countryCode: prefix,
+        phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
+        message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
+      };
+
+      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+
       return this.raiseSuccess(
         res,
         200,
@@ -255,7 +353,13 @@ class MobileDoctorController extends Controller {
           },
           care_plan_templates: {
             [carePlanTemplateData.getCarePlanTemplateId()]: carePlanTemplateData.getBasicInfo()
-          }
+          },
+          template_appointments: {
+            ...templateAppointmentData
+          },
+          template_medications: {
+            ...templateMedicationData
+          },
         },
         "doctor's patient added successfully"
       );

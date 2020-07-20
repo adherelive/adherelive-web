@@ -64,9 +64,9 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const user = await userService.getUserByEmail({
-        email
+      const { mobile_number, password } = req.body;
+      const user = await userService.getUserByNumber({
+        mobile_number
       });
 
       // const userDetails = user[0];
@@ -116,6 +116,8 @@ class MobileUserController extends Controller {
                 ...apiUserDetails.getBasicInfo()
               }
             },
+            auth_user: apiUserDetails.getId(),
+            auth_category: apiUserDetails.getCategory(),
             ...permissions,
           },
           "Initial data retrieved successfully"
@@ -1788,6 +1790,75 @@ class MobileUserController extends Controller {
     } catch(error) {
       Logger.debug("updateUserPassword 500 error", error);
       return raiseServerError(res);
+    }
+  };
+
+  verifyPatientLink = async (req, res) => {
+    const {raiseServerError, raiseSuccess, raiseClientError} = this;
+    try {
+      const {params: {link} = {} } = req;
+
+      const patientVerifyLink = await UserVerificationServices.getRequestByLink(link);
+
+      if(patientVerifyLink) {
+        const linkVerificationData = await LinkVerificationWrapper(patientVerifyLink);
+
+        const userData = await UserWrapper(null, linkVerificationData.getUserId());
+        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+        const secret = process.config.TOKEN_SECRET_KEY;
+        const accessToken = await jwt.sign(
+            {
+              userId: linkVerificationData.getUserId()
+            },
+            secret,
+            {
+              expiresIn
+            }
+        );
+
+        return raiseSuccess(res, 200, {
+          accessToken,
+          users: {
+            [userData.getId()]: {
+              ...userData.getBasicInfo()
+            }
+          }
+        }, "Email verified for password reset");
+      } else {
+        return raiseClientError(res, 422, {}, "Cannot verify email to update password");
+      }
+    } catch(error) {
+      Logger.debug("updateUserPassword 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updatePassword = async (req, res) => {
+    try {
+      const {body : {password, confirm_password} = {}, userDetails : {userId} = {}} = req;
+
+      if(password !== confirm_password) {
+        return this.raiseClientError(res, 422, {}, "Password does not match");
+      }
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      const hash = await bcrypt.hash(password, salt);
+
+      const updateUser = await userService.updateUser({password: hash}, userId);
+
+      const updatedUser = await UserWrapper(null, userId);
+
+      return this.raiseSuccess(res, 200, {
+        users: {
+          [updatedUser.getId()]: updatedUser.getBasicInfo()
+        },
+      },
+        "Password updated successfully"
+      );
+
+    } catch(error) {
+      Logger.debug("updatePassword 500 error", error);
+      return this.raiseServerError(res);
     }
   };
 }

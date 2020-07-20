@@ -8,6 +8,11 @@ const credentialsFormSchema = Joi.object().keys({
     password: Joi.string().required()
 });
 
+const updatedPasswordSchema = Joi.object().keys({
+   password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).required(),
+   confirm_password: Joi.when('password', {is: Joi.string(), then: Joi.string().required()})
+});
+
 const validateStartTime = (startTime) => {
     const now = moment().subtract(3, "minutes");
     console.log("START TIME TEST ----------- ", moment(startTime), now, moment(startTime).isAfter(now));
@@ -27,6 +32,20 @@ export const validateCredentialsData = (req, res, next) => {
         const response = new Response(false, 422);
         response.setError(isValid.error);
         response.setMessage("please check filled details");
+        return res.status(422).json(response.getResponse());
+    }
+    next();
+};
+
+export const validateUpdatePasswordData = (req, res, next) => {
+    const { body: data = {} } = req;
+    const isValid = updatedPasswordSchema.validate(data);
+    if (isValid && isValid.error != null) {
+        // console.log("39013093 ----------- isValid --> ", isValid.error.details[0].message);
+        // return raiseClientError(res, 422, isValid.error, "please check filled details");
+        const response = new Response(false, 422);
+        response.setError(isValid.error);
+        response.setMessage("Password must contain atleast 1 uppercase, lowercase, number & special character");
         return res.status(422).json(response.getResponse());
     }
     next();
