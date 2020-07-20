@@ -113,7 +113,6 @@ class MPatientController extends Controller {
         }
       }
 
-      // const profilePicUrl = `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}/${profilePic}`;
       const profilePicUrl = `/${profilePic}`;
 
       Logger.debug("18371823 profilePicUrl ---> ", profilePicUrl);
@@ -151,7 +150,7 @@ class MPatientController extends Controller {
             },
           },
         },
-        "patient details updated successfully"
+        "Patient details updated successfully"
       );
     } catch (error) {
       console.log("UPDATE PATIENT ERROR --> ", error);

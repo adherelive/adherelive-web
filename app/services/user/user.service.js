@@ -127,7 +127,7 @@ class UserService {
 
     getPatientByMobile = async (mobile_number) => {
         try {
-            const user = await userModel.findOne({
+            const user = await userModel.findAll({
                 where: {
                     category: USER_CATEGORY.PATIENT,
                     mobile_number,

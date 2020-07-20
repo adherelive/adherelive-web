@@ -37,7 +37,7 @@ module.exports = {
     },
        type: {
         type: Sequelize.ENUM,
-           values: [VERIFICATION_TYPE.FORGOT_PASSWORD, VERIFICATION_TYPE.SIGN_UP]
+           values: [VERIFICATION_TYPE.FORGOT_PASSWORD, VERIFICATION_TYPE.SIGN_UP, VERIFICATION_TYPE.PATIENT_SIGN_UP]
        },
     created_at: {
       allowNull: false,

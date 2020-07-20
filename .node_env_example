@@ -4,7 +4,7 @@ APP_NAME=
 
 API_URL=
 WEB_URL=http://localhost:3000
-APP_URL=http://192.168.0.112:3000
+APP_URL=https://adhere.tripock.com
 S3_HOST=http://localhost:9001
 INVITE_LINK=/validation/
 
@@ -84,3 +84,6 @@ FACEBOOK_SECRET_TOKEN=1f756a8c109e56b9476e41c0fac468a8
 COOKIE_KEY=["cookey938"]
 
 FORCE_COLOR=1
+
+BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
+BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url

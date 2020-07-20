@@ -37,7 +37,7 @@ import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 
 import {
-  DOCUMENT_PARENT_TYPE,
+  DOCUMENT_PARENT_TYPE, EVENT_TYPE,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
@@ -45,6 +45,7 @@ import {
 } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
+import getUniversalLink from "../../helper/universalLink";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
@@ -456,8 +457,8 @@ class DoctorController extends Controller {
 
       const userExists = await userService.getPatientByMobile(mobile_number);
 
-      if(!userExists) {
-        this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
+      if(userExists.length > 0) {
+        return this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
       }
 
       let password = process.config.DEFAULT_PASSWORD;
@@ -612,15 +613,19 @@ class DoctorController extends Controller {
         type: VERIFICATION_TYPE.PATIENT_SIGN_UP
       });
 
+      const universalLink = await getUniversalLink({event_type : VERIFICATION_TYPE.PATIENT_SIGN_UP,link});
+
+      Logger.debug("universalLink --> ", universalLink);
+
       const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
 
       const smsPayload = {
         // countryCode: prefix,
-        phoneNumber: `+${prefix}6360433138`, // mobile_number
-        message: `Hello from Adhere! Please click the link to verify your number. ${mobileUrl}`
+        phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
+        message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
       };
 
-      // Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
 
       return this.raiseSuccess(
         res,
@@ -650,7 +655,7 @@ class DoctorController extends Controller {
         "doctor's patient added successfully"
       );
     } catch (error) {
-      console.log("ADD DOCTOR PATIENT ERROR ", error);
+      Logger.debug("ADD DOCTOR PATIENT ERROR", error);
       return this.raiseServerError(res);
     }
   };
