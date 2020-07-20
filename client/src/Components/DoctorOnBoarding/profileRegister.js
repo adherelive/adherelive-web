@@ -58,9 +58,11 @@ class Profileregister extends Component {
     }
 
     fetchData = async () => {
-        const { authenticated_user = '', users, doctors } = this.props;
+        const { authenticated_user = '', users, getDoctorQualificationRegisterData } = this.props;
 
         const { basic_info: { id = 1 } = {} } = authenticated_user;
+        await getDoctorQualificationRegisterData();
+        const { doctors } = this.props;
 
         const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
 
@@ -415,7 +417,7 @@ class Profileregister extends Component {
                         <div className='flex mt36'>
                             <UploadSteps current={0} />
                         </div>
-                        <div className='flex'>
+                        <div className='flex mb100'>
                             {this.renderProfileForm()}
                         </div>
                     </div>

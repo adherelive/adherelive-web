@@ -71,7 +71,7 @@ function setAuthRedirect(user, isInitial = false) {
     category,
     user
   );
-  let authRedirect ='';
+  let authRedirect = '';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
@@ -82,8 +82,8 @@ function setAuthRedirect(user, isInitial = false) {
     } else {
       authRedirect = PATH.REGISTER_PROFILE;
     }
-  }else if(category === USER_CATEGORY.ADMIN) {
-    if(!isInitial) {
+  } else if (category === USER_CATEGORY.ADMIN) {
+    if (!isInitial) {
       authRedirect = PATH.ADMIN.DOCTORS.ROOT;
     }
   }
@@ -106,7 +106,7 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     category,
     user
   );
-  let authRedirect ='/';
+  let authRedirect = '/';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
@@ -117,8 +117,8 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     } else {
       authRedirect = PATH.REGISTER_PROFILE;
     }
-  } else if(category === USER_CATEGORY.ADMIN) {
-    if(!isInitial) {
+  } else if (category === USER_CATEGORY.ADMIN) {
+    if (!isInitial) {
       authRedirect = PATH.ADMIN.DOCTORS.ROOT;
     }
   }
@@ -165,6 +165,7 @@ export const signIn = (payload) => {
             authRedirection,
             authCategory: auth_category
           },
+          data,
         });
       }
     } catch (err) {
@@ -198,17 +199,17 @@ export const verifyUser = (link) => {
           payload: { error },
         });
       } else if (status === true) {
-        let { users = {},auth_user='',auth_category='' } = data;
+        let { users = {}, auth_user = '', auth_category = '' } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         console.log(
           " ID IN 898978 VERIFYYYYY",
-          users,auth_user,users[auth_user]
+          users, auth_user, users[auth_user]
         );
         let authRedirection = setAuthRedirect(users[auth_user]);
         console.log(
           " ID IN 898978 VERIFYYYYY",
           authRedirection,
-          users,auth_user,users[auth_user]
+          users, auth_user, users[auth_user]
         );
         dispatch({
           type: VALIDATING_LINK_COMPLETED,
@@ -444,13 +445,13 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
       };
 
     case VALIDATING_LINK_COMPLETED:
-      return{
-      authenticated: true,
-      authenticated_user: payload.authenticatedUser,
-      authenticated_category: payload.authCategory,
-      authRedirection: payload.authRedirection
+      return {
+        authenticated: true,
+        authenticated_user: payload.authenticatedUser,
+        authenticated_category: payload.authCategory,
+        authRedirection: payload.authRedirection
       }
-    
+
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
@@ -487,7 +488,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
     case SIGNING_COMPLETED:
       return {
         authenticated: true,
-        authenticated_category: payload.authCategory, 
+        authenticated_category: payload.authCategory,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
       };

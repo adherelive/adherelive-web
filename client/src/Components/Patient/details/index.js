@@ -711,7 +711,9 @@ class PatientDetails extends Component {
       basic_info: { first_name, middle_name, last_name, user_id, age, gender },
     } = patients[patient_id] || {};
 
-    const { basic_info: { mobile_number, email } = {} } = users[user_id] || {};
+    const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
+
+    console.log('3904823094723894723987498237498234', user_id, mobile_number, prefix, users[user_id], users);
 
     const {
       close,
@@ -752,7 +754,7 @@ class PatientDetails extends Component {
               patient_last_name={last_name}
               gender={gender}
               patient_age={age}
-              patient_phone_number={mobile_number}
+              patient_phone_number={`${prefix ? `+${prefix} ` : ''}${mobile_number}`}
               patient_email_id={email ? email : ''}
               formatMessage={formatMessage}
             />

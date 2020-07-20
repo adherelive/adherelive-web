@@ -112,7 +112,7 @@ class ClinicRegister extends Component {
 
             }
         };
-        newclinicsKeys.push(key);
+        newclinicsKeys.unshift(key);
         // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newClinics[key],newclinicsKeys);
         this.setState({ clinics: newClinics, clinicsKeys: newclinicsKeys });
     }
@@ -172,7 +172,13 @@ class ClinicRegister extends Component {
             <div className='flex direction-column'>
                 {
                     clinicsKeys.map(key => {
-                        let { location = '', name = '', timings = {} } = clinics[key];
+                        let { location = '', name = '', timings = {}, daySelected = {} } = clinics[key];
+                        let isClinicOpen = false;
+                        for (let day in daySelected) {
+                            if (daySelected[day]) {
+                                isClinicOpen = true;
+                            }
+                        }
                         let locationToDisplay = location && location.length >= 45 ? `${location.substring(0, 45)}...` : location;
                         return (
 
@@ -181,7 +187,7 @@ class ClinicRegister extends Component {
                                 <div className='flex justify-space-between align-center direction-row'>
 
                                     <div className='form-headings'>Name</div>
-                                    {clinicsKeys.indexOf(key) > 0 ? (
+                                    {clinicsKeys.length > 1 ? (
                                         <div className='wp100 flex justify-end'>
                                             <DeleteTwoTone
                                                 className={"pointer align-self-end"}
@@ -208,7 +214,7 @@ class ClinicRegister extends Component {
                                     {/* <div className='pointer fs16 medium ' onClick={this.addClinicTimings(key)}>Add More</div> */}
                                 </div>
 
-                                {Object.keys(timings).length ? (
+                                {Object.keys(timings).length && isClinicOpen ? (
                                     <div className={`form-input-timing active-grey `} >
                                         <div className={'active-grey'}>
                                             <div className='flex justify-end wp100'>
@@ -385,7 +391,7 @@ class ClinicRegister extends Component {
                         <div className='flex mt36'>
                             <UploadSteps current={2} />
                         </div>
-                        <div className='flex'>
+                        <div className='flex mb100'>
                             {this.renderClinicForm()}
                         </div>
 

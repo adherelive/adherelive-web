@@ -227,6 +227,15 @@ class PatientDetailsDrawer extends Component {
 
     renderAddPatient = () => {
 
+        let dtToday = new Date();
+
+        let month = dtToday.getMonth()+1;
+        let day = dtToday.getDate();
+        let year = dtToday.getFullYear();
+
+        let maxDate = year + '-0' + month + '-' + day;
+        console.log('DATE OF PATIENTTTT',maxDate);
+
         const { mobile_number = '', name = '', gender = '', date_of_birth = {}, treatment = '', severity = '', condition = '', prefix = '' } = this.state;
         const prefixSelector = (
 
@@ -303,6 +312,7 @@ class PatientDetailsDrawer extends Component {
                     dropdownMode="select"
                 /> */}
                 <Input className={"form-inputs-ap"} type='date'
+                    max={maxDate}
                     onChange={this.setDOB} />
                 <div className='form-category-headings-ap'>Treatment Plan</div>
 

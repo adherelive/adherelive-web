@@ -1261,6 +1261,12 @@ class QualificationRegister extends Component {
           message.error('Please enter all Education details.')
           return false;
         }
+
+        if(!photos.length){
+          message.error('Please add at least 1 photo for education.')
+          return false;
+        }
+
       }
       for (let reg of newRegistration) {
         let { number = '', expiryDate = '', registration_council_id = '', year = '', photos = [] } = reg;
@@ -1271,6 +1277,10 @@ class QualificationRegister extends Component {
         if (!number || !expiryDate || !parseInt(year) || !registration_council_id) {
 
           message.error('Please enter all Registration details.')
+          return false;
+        }
+        if(!photos.length){
+          message.error('Please add at least 1 photo for registration.')
           return false;
         }
       }
@@ -1362,7 +1372,7 @@ class QualificationRegister extends Component {
             <div className='flex mt36'>
               <UploadSteps current={1} />
             </div>
-            <div className='flex'>
+            <div className='flex mb100'>
               {this.renderQualificationForm()}
             </div>
           </div>

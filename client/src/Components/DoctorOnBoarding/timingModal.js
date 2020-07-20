@@ -91,10 +91,20 @@ class ClinicRegister extends Component {
 
     toggleDaySelected = (day) => () => {
 
-        let { daySelected } = this.state;
+        let { daySelected, dayTimings = {} } = this.state;
         let newDaySelected = daySelected;
         let isDaySelected = newDaySelected[day];
-        newDaySelected[day] = !isDaySelected;
+        if (isDaySelected) {
+            newDaySelected[day] = !isDaySelected;
+            let key = uuid();
+            let dayTiming = {};
+            dayTiming[key] = { startTime: "", endTime: '' };
+            let dayTimingKeys = [key];
+            dayTimings[day].timings = dayTiming;
+            dayTimings[day].timingsKeys = dayTimingKeys;
+        } else {
+            newDaySelected[day] = !isDaySelected;
+        }
 
         this.setState({ daySelected: newDaySelected });
     }
@@ -147,9 +157,9 @@ class ClinicRegister extends Component {
 
                                             let minutesToAdd = 30 - (moment().minutes()) % 30;
                                             return (
-                                                <div key={tKey} className='flex justify-space-between mb10'>
-                                                    <div className='flex direction-column'>
-                                                        <div className='fs14 mt8 mb8'>Start Time</div>
+                                                <div key={tKey} className='flex mb10'>
+                                                    <div className='flex direction-column flex-grow-1 mr24'>
+                                                        <div className='fs14 mt8 mb8 '>Start Time</div>
                                                         <TimePicker
                                                             className='wp100'
                                                             value={timings[tKey].startTime ? timings[tKey].startTime : null}
@@ -157,8 +167,8 @@ class ClinicRegister extends Component {
                                                             onChange={this.setDayStartTime(day, tKey)}
                                                         />
                                                     </div>
-                                                    <div className='flex direction-row align-center'>
-                                                        <div className='flex direction-column'>
+                                                    <div className='flex direction-row align-center flex-grow-1'>
+                                                        <div className='flex direction-column wp100'>
                                                             <div className='flex wp100 align-center justify-space-between fs14 mt8 mb8'>End Time   {index > 0 &&
                                                                 (<Icon
                                                                     className="ml10"

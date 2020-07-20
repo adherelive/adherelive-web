@@ -164,7 +164,7 @@ class ClinicRegister extends Component {
                         placeholder="Ex: 112,Aurobindo Marg..."
                         disabled={address ? true : false}
                         value={addressManual}
-                        className={"form-inputs"}
+                        className={"form-inputs-location-modal"}
                         onChange={this.setManualAddress}
                     />
                     <div className='form-headings'>Pincode</div>
@@ -172,7 +172,7 @@ class ClinicRegister extends Component {
                         placeholder="Ex: 110000"
                         disabled={address ? true : false}
                         value={pincode}
-                        className={"form-inputs"}
+                        className={"form-inputs-location-modal"}
                         onChange={this.setManualPincode}
                     />
                     <div className='form-headings'>Landmark</div>
@@ -180,7 +180,7 @@ class ClinicRegister extends Component {
                         placeholder="Ex: Near Vishvavidyalya Metro Station"
                         disabled={address ? true : false}
                         value={landmark}
-                        className={"form-inputs"}
+                        className={"form-inputs-location-modal"}
                         onChange={this.setManualLandMark}
                     />
 
