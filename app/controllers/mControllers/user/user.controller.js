@@ -473,8 +473,10 @@ class MobileUserController extends Controller {
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
         } else {
-          const apiUserDetails = await MUserWrapper(userData.get());
+          apiUserDetails = await MUserWrapper(userData.get());
           userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
+
+          // Logger.debug("userApiData --> ", apiUserDetails.isActivated());
         }
 
         // treatments
@@ -520,7 +522,7 @@ class MobileUserController extends Controller {
           permissions: []
         };
 
-        Logger.debug("apiUserDetails ---> ", apiUserDetails.getBasicInfo());
+        Logger.debug("apiUserDetails ---> ", apiUserDetails);
 
         if(apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
