@@ -189,6 +189,10 @@ class MobileDoctorController extends Controller {
         verified: true,
         activated_on: moment().format()
       });
+      Logger.debug("user -------------> ", user.get());
+      const userData = await UserWrapper(user.get());
+
+      Logger.debug("userData -------------> ", userData.getId());
 
       let newUserId = user.get("id");
 
@@ -243,6 +247,9 @@ class MobileDoctorController extends Controller {
       const details = care_plan_template_id
         ? {}
         : { treatment_id, severity_id, condition_id };
+
+      Logger.debug("doctor ------> ", doctor);
+      Logger.debug("userId ------> ", userId);
 
       const carePlan = await carePlanService.addCarePlan({
         patient_id,
@@ -345,6 +352,9 @@ class MobileDoctorController extends Controller {
           // carePlanId,
           care_plan_ids: [carePlanData.getCarePlanId()],
           care_plan_template_ids: [care_plan_template_id],
+          users: {
+            [userData.getId()]: userData.getBasicInfo()
+          },
           patients: {
             [updatedPatientData.getPatientId()]: updatedPatientData.getBasicInfo()
           },
