@@ -475,6 +475,8 @@ class DoctorController extends Controller {
         activated_on: moment().format()
       });
 
+      const userData = await UserWrapper(user.get());
+
       let newUserId = user.get("id");
 
       let first_name = "";
@@ -635,6 +637,9 @@ class DoctorController extends Controller {
           // carePlanId,
           care_plan_ids: [carePlanData.getCarePlanId()],
           care_plan_template_ids: [care_plan_template_id],
+          users: {
+            [userData.getId()] : userData.getBasicInfo()
+          },
           patients: {
             [updatedPatientData.getPatientId()]: updatedPatientData.getBasicInfo()
           },
