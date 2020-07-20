@@ -749,10 +749,15 @@ class QualificationRegister extends Component {
     let newEducation = education;
     let newEducationKeys = educationKeys;
     newEducation[key] = { degree_id: "", college_id: "", year: parseInt(moment().format('YYYY')), photo: [], photos: [], id: 0 };
-    newEducationKeys.push(key);
+    newEducationKeys.unshift(key);
     // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
     this.setState({ education: newEducation, educationKeys: newEducationKeys });
   }
+
+  disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current < moment().startOf("day");
+  };
 
   addRegistration = () => {
     let key = uuid();
@@ -760,7 +765,7 @@ class QualificationRegister extends Component {
     let newRegistration = registration;
     let newRegistrationKeys = registrationKeys;
     newRegistration[key] = { number: "", registration_council_id: "", year: parseInt(moment().format('YYYY')), expiryDate: '', photo: [], photos: [], id: 0 };
-    newRegistrationKeys.push(key);
+    newRegistrationKeys.unshift(key);
     // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
     this.setState({ registration: newRegistration, registrationKeys: newRegistrationKeys });
 
@@ -980,7 +985,7 @@ class QualificationRegister extends Component {
             <div key={key}>
               <div className='flex justify-space-between align-center direction-row'>
                 <div className='form-headings'>Degree</div>
-                {educationKeys.indexOf(key) > 0 ? (
+                {educationKeys.length > 1 ? (
                   <DeleteTwoTone
                     className={"pointer"}
                     onClick={this.deleteEducation(key)}
@@ -1114,7 +1119,7 @@ class QualificationRegister extends Component {
             <div key={key}>
               <div className='flex justify-space-between align-center direction-row'>
                 <div className='form-headings'>Registration Number</div>
-                {registrationKeys.indexOf(key) > 0 ? (
+                {registrationKeys.length > 1 ? (
                   <DeleteTwoTone
                     className={"pointer"}
                     onClick={this.deleteRegistration(key)}
@@ -1170,7 +1175,7 @@ class QualificationRegister extends Component {
               </Select>
               <div className='form-headings'> Expiry Date</div>
 
-              <DatePicker value={expiryDate} onChange={this.setExpiryDate(key)} placeholder='Select Expiry Date' />
+              <DatePicker value={expiryDate} disabledDate={this.disabledDate} onChange={this.setExpiryDate(key)} placeholder='Select Expiry Date' />
 
               <div className='form-headings'>Photo</div>
               <div className='qualification-photo-uploads'>
@@ -1282,10 +1287,10 @@ class QualificationRegister extends Component {
       let newEducation = Object.values(education);
       let newRegistration = Object.values(registration);
       newEducation.forEach((edu, index) => {
-        delete edu.photo;
+        // delete edu.photo;
       })
       newRegistration.forEach((reg, index) => {
-        delete reg.photo;
+        // delete reg.photo;
       })
       // console.log('ONCLICKKKKKK8797897', newEducation);
       const data = { speciality, gender, registration_details: newRegistration, qualification_details: newEducation };
