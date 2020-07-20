@@ -1,6 +1,7 @@
 import userModel from "../../models/users";
 import {database} from "../../../libs/mysql";
 import {USER_CATEGORY} from "../../../constant";
+import {Op} from "sequelize";
 
 class UserService {
     constructor() {
@@ -131,6 +132,26 @@ class UserService {
                 where: {
                     category: USER_CATEGORY.PATIENT,
                     mobile_number,
+                }
+            });
+            return user;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    getUserByUsername = async (user_name) => {
+        try {
+            const user = await userModel.findOne({
+                where: {
+                    [Op.or]: [
+                        {
+                            email: user_name
+                        },
+                        {
+                            mobile_number: user_name
+                        }
+                    ]
                 }
             });
             return user;

@@ -64,10 +64,8 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { mobile_number, password } = req.body;
-      const user = await userService.getUserByNumber({
-        mobile_number
-      });
+      const { user_name, password } = req.body;
+      const user = await userService.getUserByUsername(user_name);
 
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
@@ -521,6 +519,8 @@ class MobileUserController extends Controller {
         let permissions = {
           permissions: []
         };
+
+        Logger.debug("apiUserDetails ---> ", apiUserDetails.getBasicInfo());
 
         if(apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();

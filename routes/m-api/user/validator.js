@@ -13,6 +13,17 @@ const updatedPasswordSchema = Joi.object().keys({
    confirm_password: Joi.when('password', {is: Joi.string(), then: Joi.string().required()})
 });
 
+const signInSchema = Joi.object().keys({
+   // user_name: Joi.when('user_name', {is: Joi.string().email(), then: Joi.string().email().required()}).concat(
+   //     Joi.when('user_name', {is: Joi.number(), then: Joi.number().max(10).required()})
+   // ),
+    user_name: Joi.alternatives().try(
+        Joi.string().email().required(),
+        Joi.string().length(10).regex(/^\d+$/).required()
+    ),
+    password: Joi.string().required()
+});
+
 const validateStartTime = (startTime) => {
     const now = moment().subtract(3, "minutes");
     console.log("START TIME TEST ----------- ", moment(startTime), now, moment(startTime).isAfter(now));
@@ -27,6 +38,19 @@ export const validateCredentialsData = (req, res, next) => {
     const { body: data = {} } = req;
     const { email, password } = data;
     const isValid = credentialsFormSchema.validate(data);
+    if (isValid && isValid.error != null) {
+        // return raiseClientError(res, 422, isValid.error, "please check filled details");
+        const response = new Response(false, 422);
+        response.setError(isValid.error);
+        response.setMessage("please check filled details");
+        return res.status(422).json(response.getResponse());
+    }
+    next();
+};
+
+export const validateSignInData = (req, res, next) => {
+    const { body: data = {} } = req;
+    const isValid = signInSchema.validate(data);
     if (isValid && isValid.error != null) {
         // return raiseClientError(res, 422, isValid.error, "please check filled details");
         const response = new Response(false, 422);
