@@ -457,7 +457,7 @@ class UserController extends Controller {
 
         // const userDetails = user[0];
 
-        // const apiUserDetails = await UserWrapper(userData);
+        const authUserDetails = await UserWrapper(userData);
 
         let userCategoryData = {};
         let carePlanApiData = {};
@@ -585,10 +585,10 @@ class UserController extends Controller {
           permissions: []
         };
 
-        Logger.debug("permissions check --> ", apiUserDetails.isActivated());
+        Logger.debug("permissions check --> ", authUserDetails.getPermissions());
 
-        if (apiUserDetails.isActivated()) {
-          permissions = await apiUserDetails.getPermissions();
+        if (authUserDetails.isActivated()) {
+          permissions = await authUserDetails.getPermissions();
         }
 
         Logger.debug("permissions value --> ", permissions);

@@ -353,7 +353,7 @@ class MobileUserController extends Controller {
         } = req.userDetails;
         // const user = await userService.getUserById(userId);
 
-        // const userApiWrapper = await MUserWrapper(userData);
+        const userApiWrapper = await MUserWrapper(userData);
 
         // const userDetails = user[0];
         // Logger.debug("category", userData);
@@ -522,10 +522,10 @@ class MobileUserController extends Controller {
           permissions: []
         };
 
-        Logger.debug("apiUserDetails ---> ", apiUserDetails);
+        Logger.debug("apiUserDetails ---> ", userApiWrapper);
 
-        if(apiUserDetails.isActivated()) {
-          permissions = await apiUserDetails.getPermissions();
+        if(userApiWrapper.isActivated()) {
+          permissions = await userApiWrapper.getPermissions();
         }
 
         const dataToSend = {

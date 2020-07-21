@@ -57,7 +57,7 @@ class UserWrapper extends BaseUser {
             permissionData.push(type);
           }
 
-          console.log("permissionsData  ------------> ", permissionData, getCategory());
+          console.log("121 permissionsData  ------------> ", permissionsData, getCategory());
 
           return {
               permissions: permissionData
