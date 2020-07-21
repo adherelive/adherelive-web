@@ -59,7 +59,7 @@ class MUserWrapper extends BaseUser {
           permissionData.push(type);
         }
 
-        console.log("permissionsData  ------------> ", permissions, permission_ids);
+        console.log("permissionsData  ------------> ", permissionsData, permission_ids);
 
         return {
             permissions: permissionData
