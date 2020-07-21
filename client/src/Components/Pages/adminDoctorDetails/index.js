@@ -345,7 +345,7 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType = document.split(".")[1] || null;
+                  const documentType = document.substring(document.length - 3) || null;
                   console.log("13971923788 registration --> ", documentType);
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
@@ -469,7 +469,7 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType = document.split(".")[1] || null;
+                  const documentType = document.substring(document.length - 3) || null;
                   console.log("13971923788 qualification --> ", documentType);
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
