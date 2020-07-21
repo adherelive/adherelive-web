@@ -149,6 +149,12 @@ class EditMedicationReminderForm extends Component {
           break;
       }
     }
+    console.log('3647823651783265818347========>', newEndDate);
+    
+    if (!newEndDate) {
+
+      newEndDate = startDateCopy;
+    }
 
     return newEndDate;
   };

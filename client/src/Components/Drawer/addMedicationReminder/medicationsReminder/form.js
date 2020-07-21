@@ -141,10 +141,9 @@ class AddMedicationReminderForm extends Component {
       }
     }
 
-    console.log('3647823651783265818347========>', newEndDate);
     if (!newEndDate) {
 
-      newEndDate = startDateCopy.add(1, "d");
+      newEndDate = startDateCopy;
     }
 
     return newEndDate;

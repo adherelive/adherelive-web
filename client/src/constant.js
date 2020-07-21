@@ -164,6 +164,18 @@ export const ACTIVITY_TYPE = {
   CHAT: "chat"
 };
 
+export const PERMISSIONS = {
+  ADD_PATIENT: "ADD_PATIENT",
+
+  ADD_APPOINTMENT: "ADD_APPOINTMENT",
+  EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
+
+  ADD_MEDICATION: "ADD_MEDICATION",
+  EDIT_MEDICATION: "EDIT_MEDICATION",
+
+  ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE"
+};
+
 export const APPOINTMENT_TYPE = {
   FOLLOWUP: "followup",
   MEDICATION: "medication",
@@ -206,13 +218,13 @@ export const EVENT_ACTION = {
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export const DAYS_TEXT = {
-  "Mon" : "monday",
-  "Tue" : "tuesday",
-  "Wed" : "wednesday",
-  "Thu" : "thursday",
-  "Fri" : "friday",
-  "Sat" : "saturday",
-  "Sun" : "sunday",
+  "Mon": "monday",
+  "Tue": "tuesday",
+  "Wed": "wednesday",
+  "Thu": "thursday",
+  "Fri": "friday",
+  "Sat": "saturday",
+  "Sun": "sunday",
 };
 
 export const HOST = "/api";
@@ -358,9 +370,9 @@ export const MEDICINE_TYPE = {
   INJECTION: "injection"
 }
 
-export const MEDICINE_UNITS={
-  MG:'mg',
-  ML:'ml'
+export const MEDICINE_UNITS = {
+  MG: 'mg',
+  ML: 'ml'
 }
 
 export const FULL_DAYS = {
