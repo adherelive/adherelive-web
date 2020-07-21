@@ -347,7 +347,7 @@ class AdminDoctorDetails extends Component {
 
                   const documentType = document.split(".")[1] || null;
                   if (documentType) {
-                    if (documentType !== "jpg" && documentType !== "png") {
+                    if (documentType !== "jpg" || documentType !== "png") {
                       return (
                         <a
                           key={`q-${id}`}
@@ -470,7 +470,7 @@ class AdminDoctorDetails extends Component {
 
                   const documentType = document.split(".")[1] || null;
                   if (documentType) {
-                    if (documentType !== "jpg" && documentType !== "png") {
+                    if (documentType !== "jpg" || documentType !== "png") {
                       return (
                         <a
                           key={`q-${id}`}
