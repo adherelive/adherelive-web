@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 import AppointmentTable from "../../Components/Appointment/table";
 import { withRouter } from "react-router-dom";
-import {open} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
+import { open } from "../../modules/drawer";
+import { DRAWER } from "../../constant";
 
 const mapStateToProps = state => {
   const {
@@ -11,6 +11,7 @@ const mapStateToProps = state => {
     users,
     care_plans,
     appointments,
+    auth: { authPermissions = [] } = {}
   } = state;
 
   return {
@@ -18,7 +19,8 @@ const mapStateToProps = state => {
     doctors,
     users,
     care_plans,
-    appointments
+    appointments,
+    authPermissions
   };
 };
 

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { Menu, Tooltip, message,Avatar } from "antd";
-import {PATH, USER_CATEGORY} from "../../constant";
+import { Menu, Tooltip, message, Avatar } from "antd";
+import { PATH, USER_CATEGORY,PERMISSIONS } from "../../constant";
 
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
 
-import {UserOutlined} from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 
 const { Item: MenuItem } = Menu || {};
 
@@ -25,33 +25,37 @@ class SideMenu extends Component {
   }
 
   handleLogout = async () => {
-    const {logOut} = this.props;
+    const { logOut } = this.props;
     try {
       const response = await logOut();
-      const {status} = response || {};
-      if(status === true) {
+      const { status } = response || {};
+      if (status === true) {
         message.success("signed out successfully");
       } else {
         message.warn("something went wrong. Please try again later");
       }
-    } catch(error) {
+    } catch (error) {
       console.log("SIDEBAR LOGOUT ERROR ---> ", error);
     }
   }
 
   handleItemSelect = ({ selectedKeys }) => {
-    const { history, authenticated_category } = this.props;
-    console.log("19231231237813 authenticated_category --> ", authenticated_category);
-    const {handleLogout} = this;
+    const { history, authenticated_category, authPermissions = [] } = this.props;
+    console.log("19231231237813 authenticated_category --> ", this.props);
+    const { handleLogout } = this;
     console.log(selectedKeys);
     switch (selectedKeys[0]) {
       case LOGO:
       case DASHBOARD:
-        if(authenticated_category === USER_CATEGORY.ADMIN) {
+        if (authenticated_category === USER_CATEGORY.ADMIN) {
           console.log("91823718937812 here 2");
-          history.push(PATH.ADMIN.DOCTORS.ROOT);
+          if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+            history.push(PATH.ADMIN.DOCTORS.ROOT);
+          }
         } else {
-          history.push(PATH.LANDING_PAGE);
+          if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+            history.push(PATH.LANDING_PAGE);
+          }
         }
         break;
       case LOG_OUT:
@@ -67,28 +71,28 @@ class SideMenu extends Component {
   render() {
     const { selectedKeys } = this.state;
     const { handleItemSelect } = this;
-    const{authenticated_user=0,users={},doctors={}}=this.props;
-    let dp='';
-    let initials='';
+    const { authenticated_user = 0, users = {}, doctors = {} } = this.props;
+    let dp = '';
+    let initials = '';
 
-    for(let doctor of Object.values(doctors)){
-      let{basic_info:{user_id=0,profile_pic='',first_name=' ',last_name=' '}={}}=doctor;
-      
-      if(user_id===authenticated_user){
-       dp=profile_pic;
-       initials=`${first_name[0]}${last_name[0]}`
+    for (let doctor of Object.values(doctors)) {
+      let { basic_info: { user_id = 0, profile_pic = '', first_name = ' ', last_name = ' ' } = {} } = doctor;
+
+      if (user_id === authenticated_user) {
+        dp = profile_pic;
+        initials = `${first_name[0]}${last_name[0]}`
       }
 
     }
-    let{basic_info:{user_name=''}={}}=users[authenticated_user]||{};
-    if(user_name){
-    initials= user_name
-    .split(" ")
-    .map(n => n && n.length > 0 && n[0] ? n[0].toUpperCase() : "")
-    .join("");
+    let { basic_info: { user_name = '' } = {} } = users[authenticated_user] || {};
+    if (user_name) {
+      initials = user_name
+        .split(" ")
+        .map(n => n && n.length > 0 && n[0] ? n[0].toUpperCase() : "")
+        .join("");
     }
 
-    console.log("DATA IN SIDEBARRRRR",dp,initials);
+    console.log("DATA IN SIDEBARRRRR", dp, initials);
     return (
       <Menu
         selectedKeys={[selectedKeys]}
@@ -112,14 +116,14 @@ class SideMenu extends Component {
         </MenuItem>
 
         <MenuItem
-            className="flex direction-column justify-center align-center p0"
-            key={LOG_OUT}
+          className="flex direction-column justify-center align-center p0"
+          key={LOG_OUT}
         >
           <Tooltip placement="right" title={"Log Out"}>
-          {/* {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
+            {/* {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
             (<UserOutlined className="sidebar-bottom-custom text-white"/>)} */}
-            {initials?
-            <Avatar src={dp}>{initials}</Avatar>: <Avatar icon="user" />}
+            {initials ?
+              <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
           </Tooltip>
         </MenuItem>
       </Menu>

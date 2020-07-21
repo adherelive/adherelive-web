@@ -98,7 +98,7 @@ class SignIn extends Component {
 
                     } else {
                         if (statusCode === 422) {
-                            message.error("Email doesnot exist!", 4);
+                            message.error("Email does not exist!", 4);
                         } else {
                             this.setState({ loading: false });
                             message.error("Username or Password incorrect", 4);

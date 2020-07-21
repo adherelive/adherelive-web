@@ -3,7 +3,7 @@ import { injectIntl, FormattedMessage } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { SEVERITY_STATUS, MEDICINE_TYPE, GENDER } from "../../../constant";
+import { SEVERITY_STATUS, MEDICINE_TYPE, GENDER, PERMISSIONS } from "../../../constant";
 import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin, message } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -96,6 +96,26 @@ const columns_medication = [
   },
 ];
 
+const columns_medication_non_editable = [
+  {
+    title: "Medicine",
+    dataIndex: "medicine",
+    key: "medicine",
+    width: '30%',
+    ellipsis: true,
+  },
+  {
+    title: "In take",
+    dataIndex: "in_take",
+    key: "in_take",
+  },
+  {
+    title: "Duration",
+    dataIndex: "duration",
+    key: "duration",
+  }
+];
+
 const columns_appointments = [
   {
     title: "Organizer",
@@ -137,6 +157,37 @@ const columns_appointments = [
   },
 ];
 
+const columns_appointments_non_editable = [
+  {
+    title: "Organizer",
+    dataIndex: "organizer",
+    key: "organizer",
+    width: '20%',
+
+    ellipsis: true,
+  },
+  {
+    title: "Date",
+    dataIndex: "date",
+    key: "date",
+    width: '20%',
+    ellipsis: true,
+  },
+  {
+    title: "Timing",
+    dataIndex: "time",
+    key: "time",
+    width: '22%'
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+    width: '30%',
+    ellipsis: true,
+  }
+];
+
 const data_symptoms = [
   {
     key: "1",
@@ -169,7 +220,7 @@ const data_medication = [
   },
 ];
 
-const PatientProfileHeader = ({ formatMessage, getMenu }) => {
+const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
 
   // console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd",showAdd,formatMessage,getMenu);
   return (
@@ -178,13 +229,13 @@ const PatientProfileHeader = ({ formatMessage, getMenu }) => {
         <div className="fs28 fw700">{formatMessage(messages.patient_profile_header)}</div>
       </div>
       <div className="flex-grow-1 tar">
-        <Dropdown
+        {showAddButton && (<Dropdown
           overlay={getMenu()}
           trigger={["click"]}
           placement="bottomRight"
         >
           <Button type="primary">Add</Button>
-        </Dropdown>
+        </Dropdown>)}
       </div>
     </div>
   );
@@ -494,18 +545,19 @@ class PatientDetails extends Component {
 
   getMenu = () => {
     const { handleAppointment, handleMedicationReminder } = this;
+    const { authPermissions = [] } = this.props;
     console.log("12312 getMenu");
     return (
       <Menu>
-        <Menu.Item onClick={handleMedicationReminder}>
+        {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleMedicationReminder}>
           <div>Medication</div>
-        </Menu.Item>
-        <Menu.Item onClick={handleAppointment}>
+        </Menu.Item>)}
+        {authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) && (<Menu.Item onClick={handleAppointment}>
           <div>Appointments</div>
-        </Menu.Item>
-        <Menu.Item>
+        </Menu.Item>)}
+        {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
           <div>Actions</div>
-        </Menu.Item>
+        </Menu.Item>)}
       </Menu>
     );
   };
@@ -601,7 +653,8 @@ class PatientDetails extends Component {
   render() {
     let { patients, patient_id, users, care_plans, doctors, medicines, appointments = {}, medications = {},
       treatments = {}, conditions = {}, severity: severities = {}, template_medications = {}, template_appointments = {},
-      care_plan_templates = {}, show_template_drawer = false } = this.props;
+      care_plan_templates = {}, show_template_drawer = false,
+      authPermissions = [] } = this.props;
     const { loading, templateDrawerVisible = false, carePlanTemplateId = 0 } = this.state;
 
     console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd render", this.state);
@@ -682,7 +735,6 @@ class PatientDetails extends Component {
 
 
     let showUseTemplate = true;
-    let showAddButton = carePlanTemplateId ? false : true;
     if (cPAppointmentIds.length || cPMedicationIds.length) {
       showUseTemplate = false;
     }
@@ -721,7 +773,7 @@ class PatientDetails extends Component {
 
     const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
 
-    console.log('3904823094723894723987498237498234', user_id, mobile_number, prefix, users[user_id], users);
+    console.log('3904823094723894723987498237498234', authPermissions, authPermissions.includes(PERMISSIONS.EDIT_MEDICATION), authPermissions.includes(PERMISSIONS.EDIT_APPOINTMENT));
 
     const {
       close,
@@ -742,6 +794,7 @@ class PatientDetails extends Component {
       } = {},
     } = this.props.user_details;
 
+    let showAddButton = authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) || authPermissions.includes(PERMISSIONS.ADD_MEDICATION) || authPermissions.includes(PERMISSIONS.ADD_ACTION);
 
     const {
       alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {},
@@ -754,7 +807,7 @@ class PatientDetails extends Component {
 
     return (
       <div className="pt10 pr10 pb10 pl10">
-        <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu} />
+        <PatientProfileHeader formatMessage={formatMessage} getMenu={getMenu} showAddButton={showAddButton} />
         <div className="flex">
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
             <PatientCard
@@ -816,16 +869,16 @@ class PatientDetails extends Component {
                 </TabPane> */}
                     <TabPane tab="Medication" key="2">
                       <Table
-                        columns={columns_medication}
+                        columns={authPermissions.includes(PERMISSIONS.EDIT_MEDICATION) ? columns_medication : columns_medication_non_editable}
                         dataSource={getMedicationData(carePlan)}
-                        onRow={onRowMedication}
+                        onRow={authPermissions.includes(PERMISSIONS.EDIT_MEDICATION) ? onRowMedication : null}
                       />
                     </TabPane>
                     <TabPane tab="Appointments" key="3">
                       <Table
-                        columns={columns_appointments}
+                        columns={authPermissions.includes(PERMISSIONS.EDIT_APPOINTMENT) ? columns_appointments : columns_appointments_non_editable}
                         dataSource={getAppointmentsData(carePlan, docName)}
-                        onRow={onRowAppointment}
+                        onRow={authPermissions.includes(PERMISSIONS.EDIT_APPOINTMENT) ? onRowAppointment : null}
                       />
                       <div className="wp100">
                         {/* <AppointmentTable /> */}

@@ -33,10 +33,13 @@ export default class Routes extends Component {
                     <Auth
                         unauthorizedError={unauthorizedError}
                         authRedirection={this.props.authRedirection}
+                        {...this.props}
                     />
                 ) : (
                         <Global unauthorizedError={unauthorizedError}
-                            authRedirection={this.props.authRedirection} />
+                            authRedirection={this.props.authRedirection} 
+                            {...this.props}
+                            />
                     )}
             </Fragment>
         );

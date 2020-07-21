@@ -17,7 +17,8 @@ export default props => {
 
   return [
     {
-      title: formatMessage(messages.pid),
+      // title: formatMessage(messages.pid),
+      title: 'Patient',
       ...TABLE_COLUMN.PID,
       render: data => {
         const { patientData, chatData } = data || {};
@@ -35,7 +36,7 @@ export default props => {
       render: data => {
         const { patientData, treatmentData, carePlanData } = data;
         return (
-          <Treatment patientData={patientData} treatmentData={treatmentData} carePlanData={carePlanData}/>
+          <Treatment patientData={patientData} treatmentData={treatmentData} carePlanData={carePlanData} />
         );
       }
     },
