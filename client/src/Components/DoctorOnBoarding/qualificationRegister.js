@@ -1065,7 +1065,7 @@ class QualificationRegister extends Component {
                     </div>
                   );
                 })}
-                <Upload
+                {photos.length < 3 && (<Upload
                   multiple={true}
                   style={{ width: 128, height: 128, margin: 6 }}
                   beforeUpload={this.handleBeforeUpload(key)}
@@ -1080,7 +1080,7 @@ class QualificationRegister extends Component {
 
                 >
                   {uploadButton}
-                </Upload>
+                </Upload>)}
                 {/* <Modal
           visible={previewVisible}
           title={previewTitle}
@@ -1192,7 +1192,7 @@ class QualificationRegister extends Component {
                     </div>
                   );
                 })}
-                <Upload
+                {photos.length < 3 && (<Upload
                   multiple={true}
                   style={{ width: 128, height: 128, margin: 6 }}
                   beforeUpload={this.handleBeforeUploadRegistration(key)}
@@ -1207,7 +1207,7 @@ class QualificationRegister extends Component {
 
                 >
                   {uploadButton}
-                </Upload>
+                </Upload>)}
                 {/* <Modal
           visible={previewVisible}
           title={previewTitle}
@@ -1262,7 +1262,7 @@ class QualificationRegister extends Component {
           return false;
         }
 
-        if(!photos.length){
+        if (!photos.length) {
           message.error('Please add at least 1 photo for education.')
           return false;
         }
@@ -1279,7 +1279,7 @@ class QualificationRegister extends Component {
           message.error('Please enter all Registration details.')
           return false;
         }
-        if(!photos.length){
+        if (!photos.length) {
           message.error('Please add at least 1 photo for registration.')
           return false;
         }

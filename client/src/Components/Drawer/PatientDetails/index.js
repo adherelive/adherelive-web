@@ -56,12 +56,14 @@ class PatientDetailsDrawer extends Component {
         } = {}
       } = medications[id] || {};
 
-      const { basic_info: { type, name } = {} } = medicines[medicine_id] || {};
+      const { basic_info: { type, name = '' } = {} } = medicines[medicine_id] || {};
       // const { repeat_type, doses, date = [] } = schedule || {};
       return (
         <div className="flex justify-space-between align-center mb10">
-          <div className="pointer tab-color fw600 flex-1">{name}</div>
-          <div className="flex-2">{`${repeat_days.join(", ")}`}</div>
+          <div className="pointer tab-color fw600 flex-1 tooltip">{name.length > 20 ? name.substring(0, 21) + '...' : name}
+          
+  <span class="tooltiptext">{name}</span></div>
+          <div className="flex-1">{`${repeat_days.join(", ")}`}</div>
 
           <div className="flex-1">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
         </div>
