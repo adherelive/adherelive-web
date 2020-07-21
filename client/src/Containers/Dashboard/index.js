@@ -10,7 +10,7 @@ import { getGraphs, updateGraphs } from "../../modules/graphs";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-    const { graphs, authenticatedUser,
+    const { graphs, auth: { authPermissions = [] } = {},
         treatments = {},
         conditions = {},
         severity = {} } = state;
@@ -18,7 +18,8 @@ const mapStateToProps = state => {
         graphs,
         treatments,
         conditions,
-        severity
+        severity,
+        authPermissions
     };
 };
 

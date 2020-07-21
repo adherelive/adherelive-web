@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 import PatientTable from "../../Components/Patient/table";
 import { withRouter } from "react-router-dom";
-import {open} from "../../modules/drawer";
-import {DRAWER} from "../../constant";
+import { open } from "../../modules/drawer";
+import { DRAWER } from "../../constant";
 
 const mapStateToProps = state => {
   const {
@@ -10,11 +10,12 @@ const mapStateToProps = state => {
     doctors = {},
     providers = {},
     treatments = {},
-    conditions ={},
+    conditions = {},
     severity = {},
     pages: { patient_ids = [], chat_ids = [] } = {},
     chats = {},
     users,
+    auth: { authPermissions = [] } = {},
     care_plans
   } = state;
 
@@ -29,13 +30,14 @@ const mapStateToProps = state => {
     severity,
     chats,
     users,
-    care_plans
+    care_plans,
+    authPermissions
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    openPatientDetailsDrawer: (payload) => dispatch(open({type: DRAWER.PATIENT_DETAILS, payload}))
+    openPatientDetailsDrawer: (payload) => dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload }))
   };
 };
 

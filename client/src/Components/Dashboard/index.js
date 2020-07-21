@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import drawChart from "../../Helper/drawChart";
-import { CHART_TITLE, GRAPH_COLORS, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_ONE, TEST_TWO } from "../../constant";
+import { CHART_TITLE, GRAPH_COLORS, PERMISSIONS, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_ONE, TEST_TWO } from "../../constant";
 import Tabs from "antd/es/tabs";
 import { Table, Divider, Tag, Button, Menu, Dropdown, Spin, message } from "antd";
 import Patients from "../../Containers/Patient/table";
@@ -52,15 +52,17 @@ class Dashboard extends Component {
     }
 
     getMenu = () => {
+
+        const { authPermissions = [] } = this.props;
         console.log("12312 getMenu");
         return (
             <Menu>
-                <Menu.Item onClick={this.showAddPatientDrawer}>
+                {authPermissions.includes(PERMISSIONS.ADD_PATIENT) && (<Menu.Item onClick={this.showAddPatientDrawer}>
                     <div>Patients</div>
-                </Menu.Item>
-                <Menu.Item onClick={this.showEditGraphModal}>
+                </Menu.Item>)}
+                {authPermissions.includes(PERMISSIONS.EDIT_GRAPH) && (<Menu.Item onClick={this.showEditGraphModal}>
                     <div>Graphs</div>
-                </Menu.Item>
+                </Menu.Item>)}
             </Menu>
         );
     };
@@ -154,7 +156,8 @@ class Dashboard extends Component {
         const { graphs,
             treatments,
             conditions,
-            severity } = this.props;
+            severity,
+            authPermissions = [] } = this.props;
         const { formatMessage, renderChartTabs } = this;
 
         const { visible, graphsToShow, visibleModal } = this.state;
@@ -170,14 +173,15 @@ class Dashboard extends Component {
                 <div className="dashboard p20">
                     <div className="flex direction-row justify-space-between align-center">
                         <div className="fs28 fw700">{formatMessage(messages.report)}</div>
-                        <Dropdown
-                            className={'mr10'}
-                            overlay={this.getMenu()}
-                            trigger={["click"]}
-                            placement="bottomRight"
-                        >
-                            <Button type="primary">Add</Button>
-                        </Dropdown>
+                        {(authPermissions.includes(PERMISSIONS.ADD_PATIENT) || authPermissions.includes(PERMISSIONS.EDIT_GRAPH)) &&
+                            (<Dropdown
+                                className={'mr10'}
+                                overlay={this.getMenu()}
+                                trigger={["click"]}
+                                placement="bottomRight"
+                            >
+                                <Button type="primary">Add</Button>
+                            </Dropdown>)}
                     </div>
 
                     {/* <div className="mt10 flex align-center"> */}
