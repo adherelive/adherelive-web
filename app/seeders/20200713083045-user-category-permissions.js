@@ -47,6 +47,12 @@ module.exports = {
         updated_at: new Date(),
       },
       {
+        category:USER_CATEGORY.DOCTOR,
+        permission_id: "8",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
         category:USER_CATEGORY.PATIENT,
         permission_id: "1",
         created_at: new Date(),

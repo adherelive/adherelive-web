@@ -38,6 +38,11 @@ module.exports = {
         type: "EDIT_MEDICATION",
         created_at: new Date(),
         updated_at: new Date(),
+      },
+      {
+        type: "EDIT_GRAPH",
+        created_at: new Date(),
+        updated_at: new Date(),
       }
     ]);
   },

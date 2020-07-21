@@ -345,7 +345,8 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType = document.split(".")[1] || null;
+                  const documentType = document.substring(document.length - 3) || null;
+                  console.log("13971923788 registration --> ", documentType);
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -468,7 +469,8 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType = document.split(".")[1] || null;
+                  const documentType = document.substring(document.length - 3) || null;
+                  console.log("13971923788 qualification --> ", documentType);
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -579,7 +581,7 @@ class AdminDoctorDetails extends Component {
                             time_slot || {};
 
                           return (
-                            <div className="fs14 fw500" key={`ts/${index}/${i}`}>
+                            <div className="fs14 fw500 wp100" key={`ts/${index}/${i}`}>
                               {start_time
                                 ? `${moment(start_time).format(
                                     "LT"
