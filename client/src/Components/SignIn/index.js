@@ -225,10 +225,7 @@ class SignIn extends Component {
                                                 help={fieldsError[PASSWORD] || ""}>
                                                 <div className='fs16 medium tal'>Password</div>
                                                 {getFieldDecorator(PASSWORD, {
-                                                    rules: [{ required: true, message: "Enter your password" }, {
-                                                        min: 6,
-                                                        message: "The password must be at least 6 characters long"
-                                                    }]
+                                                    rules: [{ required: true, message: "Enter your password" }]
                                                 })(<Password placeholder="Password" className="h40" />)}
                                             </FormItem>
                                             {/* <div classname='fs12 wp100 medium dark-sky-blue mt4 flex tar'>Forgot Password?</div> */}
@@ -320,11 +317,7 @@ class SignIn extends Component {
                                                 >
                                                     <div className='fs16 medium tal'>Create a Password</div>
                                                     {getFieldDecorator(PASSWORD, {
-                                                        rules: [{ required: true, message: "Enter your password" },
-                                                        {
-                                                            min: 6,
-                                                            message: "The password must be at least 6 characters long"
-                                                        }]
+                                                        rules: [{ required: true, message: "Enter your password" }]
                                                     })(<Password placeholder="Password" className="h40" />)}
                                                 </FormItem>
 
