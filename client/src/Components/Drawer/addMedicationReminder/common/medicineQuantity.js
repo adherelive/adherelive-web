@@ -94,7 +94,7 @@ class MedicineQuantity extends Component {
               }
             ],
             initialValue: getInitialValue()
-          })(<InputNumber min={0.25} style={{ width: "100%" }} />)}
+          })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );
