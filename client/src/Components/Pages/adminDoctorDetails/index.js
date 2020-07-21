@@ -346,8 +346,9 @@ class AdminDoctorDetails extends Component {
                     upload_documents[id] || {};
 
                   const documentType = document.split(".")[1] || null;
+                  console.log("13971923788 registration --> ", documentType);
                   if (documentType) {
-                    if (documentType !== "jpg" || documentType !== "png") {
+                    if (documentType !== "jpg" && documentType !== "png") {
                       return (
                         <a
                           key={`q-${id}`}
@@ -469,8 +470,9 @@ class AdminDoctorDetails extends Component {
                     upload_documents[id] || {};
 
                   const documentType = document.split(".")[1] || null;
+                  console.log("13971923788 qualification --> ", documentType);
                   if (documentType) {
-                    if (documentType !== "jpg" || documentType !== "png") {
+                    if (documentType !== "jpg" && documentType !== "png") {
                       return (
                         <a
                           key={`q-${id}`}
