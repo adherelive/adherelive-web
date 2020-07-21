@@ -45,7 +45,7 @@ class MedicineQuantity extends Component {
   };
 
   render() {
-    const { form, medications, payload: {id: medication_id} = {},medicationData = {} } = this.props;
+    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -55,13 +55,13 @@ class MedicineQuantity extends Component {
 
     const { onRadioChange, formatMessage, getInitialValue } = this;
 
-    let {basic_info : {details: {quantity} = {}} = {}} = medications[medication_id] || {};
-    let { schedule_data: { quantity:quant = '' } = {} } = medicationData;
-    if(quant){
-      quantity=parseFloat(quant);
+    let { basic_info: { details: { quantity } = {} } = {} } = medications[medication_id] || {};
+    let { schedule_data: { quantity: quant = '' } = {} } = medicationData;
+    if (quant) {
+      quantity = parseFloat(quant);
     }
 
-    console.log('623721836872136',quantity,medicationData);
+    console.log('623721836872136', quantity, medicationData);
     // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
@@ -96,16 +96,12 @@ class MedicineQuantity extends Component {
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {
-                required: true,
-                message: "Enter Quantity"
-              },
-              {
                 type: "number",
                 message: "Quantity should be a number"
               }
             ],
             initialValue: quantity ? quantity : null
-          })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
+          })(<InputNumber min={0.25} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );

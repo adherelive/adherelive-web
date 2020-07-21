@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon, Select, Input, message, Button, Spin } from "antd";
+import { Drawer, Icon, Select, Input, message, Button, Spin, Radio } from "antd";
 import ChatComponent from "../../../Containers/Chat";
 import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
 import messages from "./message";
@@ -229,12 +229,12 @@ class PatientDetailsDrawer extends Component {
 
         let dtToday = new Date();
 
-        let month = dtToday.getMonth()+1;
+        let month = dtToday.getMonth() + 1;
         let day = dtToday.getDate();
         let year = dtToday.getFullYear();
 
         let maxDate = year + '-0' + month + '-' + day;
-        console.log('DATE OF PATIENTTTT',maxDate);
+        console.log('DATE OF PATIENTTTT', maxDate);
 
         const { mobile_number = '', name = '', gender = '', date_of_birth = {}, treatment = '', severity = '', condition = '', prefix = '' } = this.state;
         const prefixSelector = (
@@ -291,12 +291,18 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setName}
                 />
                 <div className='form-headings-ap'>Gender</div>
-                <div className='wp100 mt6 mb18 flex'>
-                    <div className={gender === MALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(MALE)}>M</div>
+                <div className='add-patient-radio wp100 mt6 mb18 flex'>
+                    {/* <div className={gender === MALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(MALE)}>M</div>
 
                     <div className={gender === FEMALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(FEMALE)}>F</div>
 
-                    <div className={gender === OTHER ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(OTHER)}>O</div>
+                    <div className={gender === OTHER ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(OTHER)}>O</div> */}
+
+                    <Radio.Group buttonStyle="solid" >
+                        <Radio.Button value={MALE} onClick={this.setGender(MALE)}>M</Radio.Button>
+                        <Radio.Button value={FEMALE} onClick={this.setGender(FEMALE)}>F</Radio.Button>
+                        <Radio.Button value={OTHER} onClick={this.setGender(OTHER)}>O</Radio.Button>
+                    </Radio.Group>
                 </div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Date Of Birth<div className="star-red">*</div></div>
@@ -475,7 +481,7 @@ class PatientDetailsDrawer extends Component {
     };
 
     render() {
-        console.log("STATEEEEEEE", this.state);
+        console.log("STATEEEEEEE 6472483256784358623545", this.state);
         const { visible } = this.props;
         const { onClose, renderAddPatient } = this;
 

@@ -358,6 +358,11 @@ export const MEDICINE_TYPE = {
   INJECTION: "injection"
 }
 
+export const MEDICINE_UNITS={
+  MG:'mg',
+  ML:'ml'
+}
+
 export const FULL_DAYS = {
   SUN: "Sun",
   MON: "Mon",

@@ -13,6 +13,8 @@ const { Password } = Input;
 const EMAIL = "email";
 const PASSWORD = "password";
 
+const FIELDS = [EMAIL, PASSWORD];
+
 class SignIn extends Component {
     constructor(props) {
         super(props);
@@ -90,13 +92,17 @@ class SignIn extends Component {
                     console.log("email, password --> ", email, password);
 
                     const response = await signIn({ email, password });
-                    const { status = false } = response;
+                    const { status = false, statusCode } = response;
                     if (status) {
                         message.success("LoggedIn successfully", 4);
 
                     } else {
-                        this.setState({ loading: false });
-                        message.error("Username or Password incorrect", 4);
+                        if (statusCode === 422) {
+                            message.error("Email doesnot exist!", 4);
+                        } else {
+                            this.setState({ loading: false });
+                            message.error("Username or Password incorrect", 4);
+                        }
                     }
                 } catch (err) {
                     console.log("298293 err ----> ", err);
@@ -112,7 +118,14 @@ class SignIn extends Component {
     };
 
     render() {
-        const { googleSignIn, facebookSignIn, form: { getFieldDecorator } } = this.props;
+        const { googleSignIn, facebookSignIn, form: { getFieldDecorator, isFieldTouched,
+            getFieldError,
+            getFieldsError } } = this.props;
+        let fieldsError = {};
+        FIELDS.forEach(value => {
+            const error = isFieldTouched(value) && getFieldError(value);
+            fieldsError = { ...fieldsError, [value]: error };
+        });
         const { handleSignIn, handleSignUp } = this;
         const { login } = this.state;
         return (
@@ -181,7 +194,11 @@ class SignIn extends Component {
                     </div>
 
                                         <Form onSubmit={handleSignIn} className="login-form">
-                                            <FormItem >
+                                            <FormItem
+
+                                                validateStatus={fieldsError[EMAIL] ? "error" : ""}
+                                                help={fieldsError[EMAIL] || ""}
+                                            >
                                                 <div className='fs16 medium tal mt8'>Email</div>
                                                 {getFieldDecorator(EMAIL, {
                                                     rules: [
@@ -203,7 +220,9 @@ class SignIn extends Component {
                                                 )}
                                             </FormItem>
 
-                                            <FormItem >
+                                            <FormItem
+                                                validateStatus={fieldsError[PASSWORD] ? "error" : ""}
+                                                help={fieldsError[PASSWORD] || ""}>
                                                 <div className='fs16 medium tal'>Password</div>
                                                 {getFieldDecorator(PASSWORD, {
                                                     rules: [{ required: true, message: "Enter your password" }, {
@@ -268,7 +287,11 @@ class SignIn extends Component {
                     </div>
 
                                             <Form onSubmit={handleSignUp} className="login-form">
-                                                <FormItem >
+                                                <FormItem
+
+                                                    validateStatus={fieldsError[EMAIL] ? "error" : ""}
+                                                    help={fieldsError[EMAIL] || ""}
+                                                >
                                                     <div className='fs16 medium tal mt8'>Your Work Email</div>
                                                     {getFieldDecorator(EMAIL, {
                                                         rules: [
@@ -290,7 +313,11 @@ class SignIn extends Component {
                                                     )}
                                                 </FormItem>
 
-                                                <FormItem >
+                                                <FormItem
+
+                                                    validateStatus={fieldsError[PASSWORD] ? "error" : ""}
+                                                    help={fieldsError[PASSWORD] || ""}
+                                                >
                                                     <div className='fs16 medium tal'>Create a Password</div>
                                                     {getFieldDecorator(PASSWORD, {
                                                         rules: [{ required: true, message: "Enter your password" },

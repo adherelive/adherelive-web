@@ -129,7 +129,7 @@ class PatientDetailsDrawer extends Component {
           <div className="wp100 flex justify-space-between align-center mt20">
             <div className="flex justify-space-around align-center">
               <div className="pr10 fs24 fw600">{`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name}`}</div>
-              <div className="pr10 fs20 fw500">{`(${gender ? GENDER[gender].view : ''} ${age})`}</div>
+              <div className="pr10 fs20 fw500">{`(${gender ? `${GENDER[gender].view} ` : ''}${age ? age : '--'})`}</div>
               {/* <Icon type="wechat" width={20} /> */}
             </div>
             <img

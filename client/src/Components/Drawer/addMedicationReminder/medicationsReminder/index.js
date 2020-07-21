@@ -5,7 +5,7 @@ import { injectIntl } from "react-intl";
 import moment from "moment";
 import { getRelatedMembersURL } from "../../../../Helper/urls/user";
 import { doRequest } from "../../../../Helper/network";
-import { USER_CATEGORY, MEDICATION_TIMING } from "../../../../constant";
+import { USER_CATEGORY, MEDICATION_TIMING, MEDICINE_UNITS } from "../../../../constant";
 import AddMedicationReminderForm from "./form";
 
 import participants from "../common/participants";
@@ -125,12 +125,13 @@ class AddMedicationReminder extends Component {
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const { medicine_id, quantity, strength, unit } = values || {};
+        const { medicine_id, quantity, strength, unit, critical } = values || {};
         data_to_submit = {
           medicine_id,
           quantity,
           strength,
           unit,
+          critical,
           when_to_take: keys.map(id => when_to_take[id]) || [],
           // when_to_take: when_to_take.map(id => `${id}`),
           id: patient_id,
@@ -164,7 +165,7 @@ class AddMedicationReminder extends Component {
           };
 
         }
-        if (!medicine_id || !quantity || !strength || !unit || !when_to_take || !startDate) {
+        if (!medicine_id || !unit || (unit === MEDICINE_UNITS.MG && !quantity) || !strength || !when_to_take || !startDate) {
 
           message.error('Please fill all details.')
         }

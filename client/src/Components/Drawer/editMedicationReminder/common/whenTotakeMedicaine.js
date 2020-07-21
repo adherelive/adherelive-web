@@ -59,7 +59,7 @@ class WhenToTakeMedication extends Component {
   }
 
   setWhenToTakeInitialValues = () => {
-    const { medications, medicationData = {}, payload: { id: medication_id } = {} ,addMedication} = this.props;
+    const { medications, medicationData = {}, payload: { id: medication_id } = {}, addMedication } = this.props;
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
 
     let statusList = {};
@@ -67,16 +67,18 @@ class WhenToTakeMedication extends Component {
     when_to_take.forEach((id, index) => {
       statusList[index] = id;
     });
-     console.log("736287362718638127",medicationData,addMedication);
+    console.log("736287362718638127", medicationData, addMedication);
+
+    console.log("WHEN TO TAKE IN FORM ITEMSS DID UPDATE", when_to_take, medications[medication_id], typeof (medication_id));
     // let total_status = Object.keys(statusList);
-    let { schedule_data: { when_to_take:frequency = [] } = {} } = medicationData;
-    if(frequency.length){
-      statusList[0]=frequency[0];
-      when_to_take=frequency;
+    let { schedule_data: { when_to_take: frequency = [] } = {} } = medicationData;
+    if (frequency.length) {
+      statusList[0] = frequency[0];
+      when_to_take = frequency;
     }
-    if(addMedication){
-      statusList[0]=['4'];
-      when_to_take=['4'];
+    if (addMedication) {
+      statusList[0] = ['4'];
+      when_to_take = ['4'];
     }
     this.setState({
       // count: [0],
@@ -123,6 +125,9 @@ class WhenToTakeMedication extends Component {
 
     let current_status = [];
 
+
+    console.log("9387812733 getList -->1111 ", selected_timing);
+
     Object.keys(selected_timing).forEach((id) => {
       if (id === `${k}`) {
         current_status.push(selected_timing[id]);
@@ -130,12 +135,18 @@ class WhenToTakeMedication extends Component {
       }
     });
 
+
+    console.log("9387812733 getList -->22222 ", current_status, selected_timing_overall, total_status);
+
     const { getFieldValue } = this.props.form;
     const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
 
     const remaining_status = total_status.filter(
       (s) => !selected_timing_overall.includes(s)
     );
+
+
+    console.log("9387812733 getList -->333333 ", all_timings);
 
     const all_timings = [...current_status, ...remaining_status];
 
@@ -146,6 +157,7 @@ class WhenToTakeMedication extends Component {
       }
     });
 
+    console.log("9387812733 getList -->44444 ", uniqueTimings);
     console.log("983781273 uniqueTimings --> ", current_status, remaining_status);
     return uniqueTimings;
   };
@@ -154,7 +166,7 @@ class WhenToTakeMedication extends Component {
     const { selected_timing, status, total_status } = this.state;
     const { getUpdatedList } = this;
     const getList = getUpdatedList(k);
-    console.log("9387812733 getList --> ", getList);
+    console.log("9387812733 getList --> ", k, getList);
     return getList.map((id) => {
       const text = status[id];
       return (
@@ -298,7 +310,7 @@ class WhenToTakeMedication extends Component {
   };
 
   getFormItems = () => {
-    const { form, medication_details: { timings } = {}, medications, payload: { id: medication_id } = {} ,medicationData={},addMedication} = this.props;
+    const { form, medication_details: { timings } = {}, medications, payload: { id: medication_id } = {}, medicationData = {}, addMedication } = this.props;
     const { count } = this.state;
     const {
       handleSelect,
@@ -315,15 +327,19 @@ class WhenToTakeMedication extends Component {
     } = form;
 
 
+
+    // let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
+
+
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
-    let { schedule_data: { when_to_take:frequency = [] } = {} } = medicationData;
-    if(frequency){
-      when_to_take=frequency;
+    let { schedule_data: { when_to_take: frequency = [] } = {} } = medicationData;
+    if (frequency.length) {
+      when_to_take = frequency;
     }
-    if(addMedication){
-      when_to_take=['4'];
+    if (addMedication) {
+      when_to_take = ['4'];
     }
-    console.log("WHEN TO TAKE IN FORM ITEMSS",this.state);
+    console.log("WHEN TO TAKE IN FORM ITEMSS", when_to_take, medications[medication_id], typeof (medication_id));
     getFieldDecorator("keys", {
       initialValue: when_to_take.map((id, index) => (parseInt(id) - 1)),
     });
@@ -433,7 +449,7 @@ class WhenToTakeMedication extends Component {
 
     // console.log("627868362783 selected_timing ---. ", this.state.selected_timing, this.state);
 
-    console.log("WHEN TO TAKE IN RENDERR",this.state);
+    console.log("WHEN TO TAKE IN RENDERR", this.state);
     // const { getInitialValue } = this;
 
     return (

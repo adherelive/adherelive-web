@@ -88,7 +88,7 @@ class AddAppointment extends Component {
               statusCode: code,
               payload: { message: errorMessage = "", error, error: { error_type = "" } = {} },
             } = response || {};
-             
+
             if (code === 422 && error_type === "slot_present") {
               message.warn(
                 `${errorMessage} range: ${moment(start_time).format(
@@ -101,8 +101,8 @@ class AddAppointment extends Component {
             } else {
               if (code === 500) {
                 message.warn('Something went wrong, please try again.');
-              }else{
-              message.warn(errorMessage);
+              } else {
+                message.warn(errorMessage);
               }
             }
 
@@ -130,7 +130,7 @@ class AddAppointment extends Component {
   };
 
   render() {
-    const { visible = true,
+    const { visible,
       hideAppointment,
       appointmentVisible,
       editAppointment } = this.props;

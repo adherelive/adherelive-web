@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Form, Button, Input, message } from "antd";
+import { Form, Button, Input, message, Radio } from "antd";
 import moment from "moment";
 import participantsField from "../common/participants";
 import startTimeField from "../common/startTime";
@@ -12,6 +12,7 @@ import repeatDaysField from "../common/selectedDays";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import chooseMedicationField from "../common/medicationStage";
+import criticalMedicationField from "../common/criticalMedication";
 import medicineStrengthField from "../common/medicineStrength";
 import medicineStrengthUnitField from "../common/medicationStrengthUnit";
 import medicineQuantityField from "../common/medicineQuantity";
@@ -25,6 +26,19 @@ import { hasErrors, isNumber } from "../../../../Helper/validation";
 import { REPEAT_TYPE, USER_CATEGORY } from "../../../../constant";
 const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
+
+
+
+const UNIT_FIELD = 'unit';
+
+
+const UNIT_ML = 'ml';
+
+const UNIT_MG = 'mg';
+
+
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 class EditMedicationReminderForm extends Component {
   constructor(props) {
@@ -72,6 +86,18 @@ class EditMedicationReminderForm extends Component {
   }
 
   formatMessage = data => this.props.intl.formatMessage(data);
+
+
+  setUnit = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue }
+    } = this.props;
+    console.log('738467386587346578234625834 called', getFieldValue(UNIT_FIELD), e.target.value);
+
+    const currentValue = getFieldValue(UNIT_FIELD) || 0.0;
+    setFieldsValue({ [UNIT_FIELD]: e.target.value });
+  };
 
   handleCancel = e => {
     if (e) {
@@ -169,7 +195,7 @@ class EditMedicationReminderForm extends Component {
     validateFields([startTimeField.field_name]);
   };
 
-  onChangeEventStartTime = startTime => {};
+  onChangeEventStartTime = startTime => { };
 
   onStartDateChange = currentDate => {
     const {
@@ -194,11 +220,11 @@ class EditMedicationReminderForm extends Component {
     }
   };
 
-  onEndDateChange = () => {};
+  onEndDateChange = () => { };
 
-  onStartTimeChange = () => {};
+  onStartTimeChange = () => { };
 
-  onEndTimeChange = () => {};
+  onEndTimeChange = () => { };
 
   onEventDurationChange = (start, end) => {
     const {
@@ -262,7 +288,7 @@ class EditMedicationReminderForm extends Component {
     const {
       form: { validateFields },
       addMedicationReminder,
-        payload: {patient_id = "2"} = {}
+      payload: { patient_id = "2" } = {}
     } = this.props;
     validateFields(async (err, values) => {
       if (!err) {
@@ -285,16 +311,16 @@ class EditMedicationReminderForm extends Component {
           [startDateField.field_name]:
             startDate && startDate !== null
               ? startDate
-                  .clone()
-                  .startOf("day")
-                  .toISOString()
+                .clone()
+                .startOf("day")
+                .toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
               ? endDate
-                  .clone()
-                  .endOf("day")
-                  .toISOString()
+                .clone()
+                .endOf("day")
+                .toISOString()
               : endDate
         };
 
@@ -306,13 +332,13 @@ class EditMedicationReminderForm extends Component {
 
         }
         try {
-         const response = await addMedicationReminder(data_to_submit);
-         const {status, payload: {message: msg} = {}} = response;
-         if(status === true) {
-           message.success(msg);
-         } else {
-           message.error(msg);
-         }
+          const response = await addMedicationReminder(data_to_submit);
+          const { status, payload: { message: msg } = {} } = response;
+          if (status === true) {
+            message.success(msg);
+          } else {
+            message.error(msg);
+          }
         } catch (error) {
           console.log("add medication reminder ui error -----> ", error);
         }
@@ -397,7 +423,9 @@ class EditMedicationReminderForm extends Component {
       onNext,
       onStartDateChange,
       addMedicationReminder,
-      onPatientChange
+      onPatientChange,
+      setUnit,
+      formatMessage
     } = this;
 
     const {
@@ -407,13 +435,14 @@ class EditMedicationReminderForm extends Component {
     const otherUser = this.getOtherUser();
 
     const startTime = getFieldValue(startTimeField.field_name);
+    let medicineUnit = getFieldValue(medicineStrengthUnitField.field_name);
     let endTime;
 
     if (startTime && startTime.isValid) {
       endTime = startTime.clone().add("minutes", 3);
     }
 
-    console.log("PROPSSS OF FORMMMMMM=====>",this.props);
+    console.log("PROPSSS OF FORMMMMMM=====>", this.props);
     const startDate = getFieldValue(startDateField.field_name);
 
     return (
@@ -431,14 +460,35 @@ class EditMedicationReminderForm extends Component {
           })} */}
 
           {chooseMedicationField.render({ ...this.props, otherUser })}
+          {criticalMedicationField.render(this.props)}
 
-          <span className="form-label flex-grow-1">Dose</span>
+          <div className="flex align-items-end justify-content-space-between">
+            <label
+              for="dose"
+              className="form-label flex-grow-1"
+              title="Dose"
+            >
+              {formatMessage(messages.dose)}
+            </label>
+            {/* <div className="label-color fontsize12 mb8">
+              
+            </div> */}
+            <div className="mg-ml-radio-group flex-grow-0">
+              <RadioGroup
+                size="small"
+                className="mg-ml flex justify-content-end"
+              >
+                <RadioButton value={UNIT_ML} className={medicineUnit !== 'ml' ? `unselected-text` : ''} onClick={setUnit}>ml</RadioButton>
+                <RadioButton value={UNIT_MG} className={medicineUnit !== 'mg' ? `unselected-text` : ''} onClick={setUnit}>mg</RadioButton>
+              </RadioGroup>
+            </div>
+          </div>
           <InputGroup compact >
             {medicineStrengthField.render(this.props)}
             {medicineStrengthUnitField.render(this.props)}
           </InputGroup>
 
-          <div id="quantity">{medicineQuantityField.render(this.props)}</div>
+          {medicineUnit !== 'ml' && (<div id="quantity">{medicineQuantityField.render(this.props)}</div>)}
 
           <div id="timing">{whenToTakeMedicineField.render(this.props)}</div>
 

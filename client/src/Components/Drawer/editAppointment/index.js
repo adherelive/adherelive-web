@@ -214,7 +214,7 @@ class EditAppointment extends Component {
   };
 
   render() {
-    const { visible = true,
+    const { visible,
       editAppointment,
       addAppointment,
       appointmentVisible = false,
@@ -229,7 +229,7 @@ class EditAppointment extends Component {
       getDeleteButton,
     } = this;
 
-    console.log("PROPSSS OFF APPOINTMENT========>", editAppointment,
+    console.log("PROPSSS OFF APPOINTMENT========>8697857668975675976465467", editAppointment,
       appointmentVisible,
       hideAppointment);
     const submitButtonProps = {

@@ -89,16 +89,12 @@ class MedicineQuantity extends Component {
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {
-                required: true,
-                message: "Enter Quantity"
-              },
-              {
                 type: "number",
                 message: "Quantity should be a number"
               }
             ],
             initialValue: getInitialValue()
-          })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
+          })(<InputNumber min={0.25} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );

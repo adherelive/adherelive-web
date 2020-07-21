@@ -296,7 +296,7 @@ export default defineMessages({
     description: "",
     defaultMessage: "Edit Medication"
   },
-  
+
   update_button_text: {
     id: "medication_reminder.drawer.edit.buttom.text",
     description: "",
@@ -321,5 +321,10 @@ export default defineMessages({
     id: "medication_reminder.drawer.delete.text",
     description: "",
     defaultMessage: "Delete",
+  },
+  dose: {
+    id: "medication_reminder.drawer.Dose",
+    description: "",
+    defaultMessage: "Dose",
   }
 });

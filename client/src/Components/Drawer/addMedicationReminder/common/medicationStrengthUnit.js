@@ -2,6 +2,8 @@ import React, { Component, Fragment } from "react";
 import { Select, Form } from "antd";
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 import { injectIntl } from "react-intl";
+import { MEDICINE_UNITS, MEDICINE_TYPE } from '../../../../constant';
+import chooseMedicationField from "./medicationStage";
 
 const FIELD_NAME = "unit";
 
@@ -41,11 +43,24 @@ class MedicationStrengthUnit extends Component {
   };
 
   getInitialValue = () => {
-    const { purpose, event: { data = {} } = {} } = this.props;
-    let initialValue = "mg";
+    const { purpose, event: { data = {} } = {},
+      form: { getFieldValue },
+      medicines } = this.props;
+    let medicine = getFieldValue(chooseMedicationField.field_name);
+    let { basic_info: { type: medType = '' } = {} } = medicines[medicine] || {};
+
+    let initialValue = MEDICINE_UNITS.MG;
+
+    if (medType === MEDICINE_TYPE.INJECTION) {
+      initialValue = MEDICINE_UNITS.ML
+    }
+
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
+
+
+    console.log('478562897346578925782935', medicine, medType, purpose, data[FIELD_NAME], initialValue);
     return initialValue;
   };
 
@@ -65,7 +80,6 @@ class MedicationStrengthUnit extends Component {
     return (
       <Fragment>
         <FormItem
-          className="flex-1 wp20 mtPoint5"
           validateStatus={error ? "error" : ""}
           help={error || ""}
         >
@@ -78,22 +92,23 @@ class MedicationStrengthUnit extends Component {
             ],
             initialValue: getInitialValue()
           })(
-            <Select
-              className="wp100"
-              placeholder=""
-              showSearch
-              autoComplete="off"
-              optionFilterProp="children"
-              // suffixIcon={DropDownIcon}
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
-              }
-              getPopupContainer={this.getParentNode}
-            >
-              {this.getUnitOption()}
-            </Select>
+            <div></div>
+            // <Select
+            //   className="wp100"
+            //   placeholder=""
+            //   showSearch
+            //   autoComplete="off"
+            //   optionFilterProp="children"
+            //   // suffixIcon={DropDownIcon}
+            //   filterOption={(input, option) =>
+            //     option.props.children
+            //       .toLowerCase()
+            //       .indexOf(input.toLowerCase()) >= 0
+            //   }
+            //   getPopupContainer={this.getParentNode}
+            // >
+            //   {this.getUnitOption()}
+            // </Select>
           )}
         </FormItem>
       </Fragment>

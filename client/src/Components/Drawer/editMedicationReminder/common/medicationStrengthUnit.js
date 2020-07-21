@@ -43,8 +43,8 @@ class MedicationStrengthUnit extends Component {
   getInitialValue = () => {
     const { purpose, event: { data = {} } = {} } = this.props;
     let initialValue = "mg";
-     
-    
+
+
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
@@ -53,7 +53,7 @@ class MedicationStrengthUnit extends Component {
   };
 
   render() {
-    const { form, medications, payload: {id: medication_id} = {},medicationData={} } = this.props;
+    const { form, medications, payload: { id: medication_id } = {}, medicationData = {} } = this.props;
     const {
       getFieldDecorator,
       getFieldError,
@@ -61,14 +61,12 @@ class MedicationStrengthUnit extends Component {
       //getFieldValue
     } = form;
 
-    let {basic_info: {details: {unit} = {}} = {}} = medications[medication_id] || {};
-    let { schedule_data: { unit:Unit="" } = {} } = medicationData;
-    
-    console.log("WHEN TO TAKE IN FORM ITEMSS",medicationData,Unit);
-    if(Unit){
-      unit=Unit;
+    let { basic_info: { details: { unit } = {} } = {} } = medications[medication_id] || {};
+    let { schedule_data: { unit: Unit = "" } = {} } = medicationData;
+
+    if (Unit) {
+      unit = Unit;
     }
-    console.log("WHEN TO TAKE IN FORM ITEMSS",medicationData,unit);
     // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
@@ -77,7 +75,7 @@ class MedicationStrengthUnit extends Component {
     return (
       <Fragment>
         <FormItem
-          className="flex-1 wp20 mtPoint5"
+          className=""
           validateStatus={error ? "error" : ""}
           help={error || ""}
         >
@@ -90,22 +88,23 @@ class MedicationStrengthUnit extends Component {
             ],
             initialValue: unit ? unit : "mg",
           })(
-            <Select
-              className="wp100"
-              placeholder=""
-              showSearch
-              autoComplete="off"
-              optionFilterProp="children"
-              // suffixIcon={DropDownIcon}
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
-              }
-              getPopupContainer={this.getParentNode}
-            >
-              {this.getUnitOption()}
-            </Select>
+            <div />
+            // <Select
+            //   className="wp100"
+            //   placeholder=""
+            //   showSearch
+            //   autoComplete="off"
+            //   optionFilterProp="children"
+            //   // suffixIcon={DropDownIcon}
+            //   filterOption={(input, option) =>
+            //     option.props.children
+            //       .toLowerCase()
+            //       .indexOf(input.toLowerCase()) >= 0
+            //   }
+            //   getPopupContainer={this.getParentNode}
+            // >
+            //   {this.getUnitOption()}
+            // </Select>
           )}
         </FormItem>
       </Fragment>

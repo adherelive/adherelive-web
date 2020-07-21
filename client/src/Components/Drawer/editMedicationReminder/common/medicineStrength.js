@@ -52,7 +52,7 @@ class MedicationStrength extends Component {
       <Fragment>
         <FormItem
 
-          className="flex-1 align-self-end wp80"
+          className="flex-1 align-self-end wp100"
           validateStatus={error ? "error" : ""}
           // className='wp80'
           help={error ? error[0] : ""}
@@ -69,8 +69,7 @@ class MedicationStrength extends Component {
               }
             ],
             initialValue: strength ? strength : null
-          })(<InputNumber
-            className="dose-input" min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber min={1} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );

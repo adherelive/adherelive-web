@@ -101,7 +101,9 @@ const columns_appointments = [
     title: "Organizer",
     dataIndex: "organizer",
     key: "organizer",
-    width: '20%'
+    width: '20%',
+
+    ellipsis: true,
   },
   {
     title: "Date",
@@ -208,7 +210,7 @@ const PatientCard = ({
         src={patient_display_picture}
       />
       <div className="patient-name mt8 mr0 mb0 ml0">
-        {patient_first_name} {patient_middle_name} {patient_last_name} ({gender ? GENDER[gender].view : ''}{" "}
+        {patient_first_name} {patient_middle_name} {patient_last_name} ({gender ? `${GENDER[gender].view} ` : ''}
         {patient_age})
       </div>
       <div className="patient-id mt6 mr0 mb0 ml0 ">PID: {patient_id}</div>
@@ -379,7 +381,7 @@ class PatientDetails extends Component {
     this.setState({ carePlanTemplateId });
   }
 
-  getAppointmentsData = (carePlan = {}) => {
+  getAppointmentsData = (carePlan = {}, docName = '--') => {
     const {
       appointments,
       users = {},
@@ -400,12 +402,12 @@ class PatientDetails extends Component {
         } = {},
         organizer: { id: organizer_id } = {},
       } = appointments[id] || {};
-      const { basic_info: { user_name = "--" } = {} } =
+      const { basic_info: { user_name = "" } = {} } =
         users[organizer_id] || {};
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
-        organizer: user_name,
+        organizer: user_name ? user_name : docName,
         date: `${moment(start_date).format("LL")}`,
         time: `${moment(start_time).format("LT")} - ${moment(end_time)
           .format("LT")}`,
@@ -574,7 +576,7 @@ class PatientDetails extends Component {
 
     }
     addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
-      const { status = false } = response;
+      const { status = false, statusCode, payload: { error: { error_type = '' } = {} } = {} } = response;
       if (status) {
         this.onCloseTemplate();
 
@@ -585,7 +587,11 @@ class PatientDetails extends Component {
           })
         })
       } else {
-        message.error("Something went wrong!")
+        if (statusCode === 422 && error_type == 'slot_present') {
+          message.error("Appointment slots already present for selected timings!")
+        } else {
+          message.error("Something went wrong!")
+        }
       }
     });
   }
@@ -683,6 +689,8 @@ class PatientDetails extends Component {
 
 
     let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
+    console.log("192387123762 JSON OBJECT ---------------->  ", JSON.stringify(care_plans[carePlanId], null, 2), "\n\n")
+    console.log("192387123762 dsjhfjsd ----->   ", care_plans[carePlanId], "  ", care_plans[carePlanId]["treatment_id"], care_plans[carePlanId]["severity_id"], care_plans[carePlanId]["condition_id"], "        \n\n");
     const { basic_info: { doctor_id = 1 } = {}, activated_on: treatment_start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
     const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};
     const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
@@ -705,7 +713,7 @@ class PatientDetails extends Component {
     }
     const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
 
-    console.log("192387123762 ", treatment_id, severity_id, condition_id, care_plans[carePlanId]);
+    console.log("192387123762 ", treatment_id, severity_id, condition_id, treatment, condition, severity, care_plans[carePlanId]);
 
     const {
       basic_info: { first_name, middle_name, last_name, user_id, age, gender },
@@ -738,6 +746,8 @@ class PatientDetails extends Component {
     const {
       alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {},
     } = this.props.user_details || {};
+
+    let docName = doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name}` : "--";
 
     const new_symptoms_string =
       new_symptoms.length > 0 ? new_symptoms.map((e) => e).join(", ") : "";
@@ -814,7 +824,7 @@ class PatientDetails extends Component {
                     <TabPane tab="Appointments" key="3">
                       <Table
                         columns={columns_appointments}
-                        dataSource={getAppointmentsData(carePlan)}
+                        dataSource={getAppointmentsData(carePlan, docName)}
                         onRow={onRowAppointment}
                       />
                       <div className="wp100">

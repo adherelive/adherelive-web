@@ -203,7 +203,7 @@ class TemplateDrawer extends Component {
                                         {medicineType && (<img src={medicineType == MEDICINE_TYPE.TABLET ? TabletIcon : InjectionIcon} className={'medication-image-tablet'} />)}
                                     </div>
 
-                                    <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.MEDICATION_REMINDER, key)} />
+                                    <Icon type="edit" className='ml20' style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.MEDICATION_REMINDER, key)} />
 
                                 </div>
                                 {when_to_take.map((timing, index) => {
@@ -242,7 +242,7 @@ class TemplateDrawer extends Component {
 
                                     <div className='flex direction-row justify-space-between align-center'>
                                         <div className='form-headings-ap'>{reason}</div>
-                                        <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)} />
+                                        <Icon type="edit" className='ml20' style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.APPOINTMENT, key)} />
                                     </div>
                                     <div className='drawer-block-description'>{date ? `After ${moment(date).diff(moment(), 'days')} days` : time_gap ? `After ${time_gap - 1} days` : ''}</div>
                                     <div className='drawer-block-description'>{`Notes:${description}`}</div>
@@ -486,7 +486,7 @@ class TemplateDrawer extends Component {
         let { showInner, innerFormType, innerFormKey, medications, appointments, showAddAppointmentInner, showAddMedicationInner } = this.state;
         const { onClose, renderTemplateDetails } = this;
 
-        console.log("DATA OF EDITED MEDICATIONNNNN===>", this.state);
+        console.log("DATA OF EDITED MEDICATIONNNNN===> 8697857668975675976465467", this.state);
 
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
 

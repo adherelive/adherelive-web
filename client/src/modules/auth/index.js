@@ -219,6 +219,7 @@ export const verifyUser = (link) => {
             authRedirection,
             authCategory: auth_category
           },
+          data
         });
       }
     } catch (err) {

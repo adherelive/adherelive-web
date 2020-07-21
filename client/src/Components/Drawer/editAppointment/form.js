@@ -331,7 +331,7 @@ class EditAppointmentForm extends Component {
         <div className="wp100 flex justify-space-between align-center flex-1">
           <FormItem
             label={formatMessage(message.start_time)}
-            className="wp40"
+            className="flex-grow-1 mr16"
             validateStatus={fieldsError[START_TIME] ? "error" : ""}
             help={fieldsError[START_TIME] || ""}
           >
@@ -365,7 +365,7 @@ class EditAppointmentForm extends Component {
 
           <FormItem
             label={formatMessage(message.end_time)}
-            className="wp40"
+            className="flex-grow-1"
             validateStatus={fieldsError[END_TIME] ? "error" : ""}
             help={fieldsError[END_TIME] || ""}
           >
@@ -405,6 +405,7 @@ class EditAppointmentForm extends Component {
               className="form-inputs-ap drawer-select"
               autoComplete="off"
               placeholder="Select Treatment"
+              disabled={treatment_id?true:false}
               // onSelect={this.setTreatment}
               // onDeselect={handleDeselect}
               suffixIcon={null}

@@ -32,7 +32,9 @@ export default class Authenticated extends Component {
     //     redirecting: false
     //   };
     // });
-
+    // const {getInitialData} = this.props;
+    // getInitialData();
+    
   }
   render() {
     const { redirecting } = this.state;

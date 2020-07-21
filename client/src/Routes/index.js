@@ -1,4 +1,4 @@
-import React, {Component, lazy, Fragment} from "react";
+import React, { Component, lazy, Fragment } from "react";
 // import Footer from "../Containers/Footer";
 
 const Global = lazy(() =>
@@ -16,12 +16,12 @@ export default class Routes extends Component {
     }
 
     componentDidMount() {
-        const {getInitialData} = this.props;
+        const { getInitialData } = this.props;
         getInitialData();
     }
 
     render() {
-        const {authenticated, unauthorizedError} = this.props;
+        const { authenticated, unauthorizedError, getInitialData } = this.props;
         console.log("39182312  DOCTORRRRR ROUTERRR ", this.props);
         // if (authenticated !== true && authenticated !== false) {
         //     return <div>Loading</div>;
@@ -35,9 +35,9 @@ export default class Routes extends Component {
                         authRedirection={this.props.authRedirection}
                     />
                 ) : (
-                    <Global unauthorizedError={unauthorizedError}
-                            authRedirection={this.props.authRedirection}/>
-                )}
+                        <Global unauthorizedError={unauthorizedError}
+                            authRedirection={this.props.authRedirection} />
+                    )}
             </Fragment>
         );
     }

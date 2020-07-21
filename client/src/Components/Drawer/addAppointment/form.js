@@ -293,7 +293,7 @@ class AddAppointmentForm extends Component {
         <div className="wp100 flex justify-space-between align-center flex-1">
           <FormItem
             label={formatMessage(message.start_time)}
-            className="wp40"
+            className="flex-grow-1 mr16"
             validateStatus={fieldsError[START_TIME] ? "error" : ""}
             help={fieldsError[START_TIME] || ""}
           >
@@ -326,7 +326,7 @@ class AddAppointmentForm extends Component {
 
           <FormItem
             label={formatMessage(message.end_time)}
-            className="wp40"
+            className="flex-grow-1"
             validateStatus={fieldsError[END_TIME] ? "error" : ""}
             help={fieldsError[END_TIME] || ""}
           >

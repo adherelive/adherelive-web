@@ -19,6 +19,7 @@ import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../ApiWrapper/mobile/medicine";
+import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 
 import Log from "../../../libs/log";
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
@@ -42,7 +43,7 @@ class PatientController extends Controller {
             console.log("\n\n PROFILE PIC FILE \n", req);
 
             if (email) {
-                const updateUserDetails = await userService.updateEmail({email}, userId);
+                const updateUserDetails = await userService.updateEmail({ email }, userId);
             }
 
             const splitName = name.split(' ');
@@ -280,7 +281,7 @@ class PatientController extends Controller {
             //     "medicineId",
             //     medicine_ids
             // );
-
+            let severityDetails = await getCarePlanSeverityDetails(carePlanData.getCarePlanId());
             const medicineData = await medicineService.getMedicineByData({
                 id: medicine_ids
             });
@@ -305,7 +306,8 @@ class PatientController extends Controller {
                     [carePlanData.getCarePlanId()]: {
                         ...carePlanData.getBasicInfo(),
                         appointment_ids,
-                        medication_ids
+                        medication_ids,
+                        ...severityDetails
                     }
                 },
                 care_plan_templates: {

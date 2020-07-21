@@ -120,13 +120,22 @@ class MedicationStage extends Component {
 
     return (
       <FormItem>
-        {getFieldDecorator(FIELD_NAME)(
+        {getFieldDecorator(FIELD_NAME, {
+          // rules: [
+          //   {
+          //     required: true,
+          //     message: "Select a medicine"
+          //   }
+          // ]
+        })(
           <Select
             onSearch={handleMedicineSearch}
-            notFoundContent={fetchingMedicines ? <Spin size="small" /> : null}
+            notFoundContent={fetchingMedicines ? <Spin size="small" /> : 'No data'}
             className="drawer-select"
             placeholder="Choose Medicine"
             showSearch
+
+            defaultActiveFirstOption={true}
             // onFocus={() => handleMedicineSearch("")}
             autoComplete="off"
             // onFocus={() => handleMedicineSearch("")}

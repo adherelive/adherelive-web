@@ -10,7 +10,7 @@ import Button from "antd/es/button";
 import EditMedicationReminderForm from "./form";
 
 import participants from "../common/participants";
-
+import { MEDICINE_UNITS } from '../../../../constant'
 import messages from "../message";
 import Footer from "../../footer";
 import startTimeField from "../common/startTime";
@@ -170,7 +170,7 @@ class EditMedicationReminder extends Component {
             [repeatDaysField.field_name]: repeatDays.split(","),
           };
         }
-        if (!medicine_id || !quantity || !strength || !unit || !when_to_take || !startDate) {
+        if (!medicine_id || !unit || (unit === MEDICINE_UNITS.MG && !quantity) || !strength || !when_to_take || !startDate) {
 
           message.error('Please fill all details.')
         }
