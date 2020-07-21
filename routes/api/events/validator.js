@@ -35,7 +35,7 @@ const medicationReminderFormSchema = Joi.object().keys({
   repeat_days: Joi.array(),
   repeat_interval: Joi.number().optional().allow(""),
   start_date: Joi.date().required(),
-  end_date: Joi.date().optional().allow(""),
+  end_date: Joi.date().optional().allow("", null),
   medicine_id: Joi.number().optional().allow(""),
   participant_id: Joi.number().optional().allow(""),
   critical: Joi.boolean().optional().allow(""),
