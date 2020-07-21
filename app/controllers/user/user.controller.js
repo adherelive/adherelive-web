@@ -191,12 +191,21 @@ class UserController extends Controller {
 
         const apiUserDetails = await UserWrapper(userData.getBasicInfo);
 
+        let permissions = {
+          permissions: []
+        };
+
+        if (apiUserDetails.isActivated()) {
+          permissions = await apiUserDetails.getPermissions();
+        }
+
         const dataToSend = {
           users: {
             [apiUserDetails.getUserId()]: {
               ...apiUserDetails.getBasicInfo()
             }
           },
+          ...permissions,
           auth_user: apiUserDetails.getUserId(),
           auth_category: apiUserDetails.getCategory()
         };
