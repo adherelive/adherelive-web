@@ -581,7 +581,7 @@ class AdminDoctorDetails extends Component {
                             time_slot || {};
 
                           return (
-                            <div className="fs14 fw500" key={`ts/${index}/${i}`}>
+                            <div className="fs14 fw500 wp100" key={`ts/${index}/${i}`}>
                               {start_time
                                 ? `${moment(start_time).format(
                                     "LT"
