@@ -472,6 +472,7 @@ class DoctorController extends Controller {
         sign_in_type: SIGN_IN_CATEGORY.BASIC,
         category: USER_CATEGORY.PATIENT,
         onboarded: false,
+        onboarding_status: ONBOARDING_STATUS.PATIENT.PASSWORD_UPDATE,
         activated_on: moment().format()
       });
 
