@@ -69,7 +69,10 @@ class StartDate extends Component {
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pr8 wp100">
-          <span className="form-label">From</span>
+          <div className='flex  row'>
+            <span className="form-label-from">From</span>
+            <div className="star-red">*</div>
+          </div>
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue(),

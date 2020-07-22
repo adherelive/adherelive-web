@@ -251,7 +251,7 @@ class WhenToTakeMedication extends Component {
     let updatedSelectedTimings = {};
     Object.keys(selected_timing).forEach(id => {
       // console.log("12983719283 id, k ---> ", id, typeof id, k, typeof k);
-      if(id !== `${k}`) {
+      if (id !== `${k}`) {
         updatedSelectedTimings[id] = selected_timing[id];
       }
     });
@@ -264,7 +264,7 @@ class WhenToTakeMedication extends Component {
           return selected === field;
         }
       ),
-      selected_timing: {...updatedSelectedTimings}
+      selected_timing: { ...updatedSelectedTimings }
     });
     const keys = getFieldValue("keys");
 
@@ -350,11 +350,11 @@ class WhenToTakeMedication extends Component {
             {keys.length > 1 && (
               <div className="wp20 hp100 flex justify-center align-center">
                 {/* <Tooltip mouseEnterDelay={0.5} placement="bottom" title={formatMessage(messages.delete_text)}> */}
-                  <Icon
-                    className="hp100"
-                    type="minus-circle-o"
-                    onClick={() => this.remove(k)}
-                  />
+                <Icon
+                  className="hp100"
+                  type="minus-circle-o"
+                  onClick={() => this.remove(k)}
+                />
                 {/* </Tooltip> */}
               </div>
             )}
@@ -369,7 +369,7 @@ class WhenToTakeMedication extends Component {
     const { selected_timing } = this.state;
     const keys = form.getFieldValue("keys");
     let whenToTakeValues = {};
-        keys.forEach(id => {
+    keys.forEach(id => {
       whenToTakeValues[id] = form.getFieldValue(`${FIELD_NAME}[${id}]`);
     });
     console.log("391309 keys :", keys, whenToTakeValues);
@@ -381,14 +381,14 @@ class WhenToTakeMedication extends Component {
       // [`Status[${id_checklist_field}]`]: null
     });
 
-    const updatedSelectedTimings = {...selected_timing, ...whenToTakeValues};
+    const updatedSelectedTimings = { ...selected_timing, ...whenToTakeValues };
 
     key_field++;
     this.setState({
       selected_timing_overall: Object.keys(updatedSelectedTimings).map(
         (id) => updatedSelectedTimings[id]
       ),
-      selected_timing : updatedSelectedTimings
+      selected_timing: updatedSelectedTimings
     });
   };
 
@@ -416,13 +416,17 @@ class WhenToTakeMedication extends Component {
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
-          <label
-            for="quantity"
-            className="form-label flex-grow-1"
-            title="Quantity"
-          >
-            {formatMessage(messages.timing)}
-          </label>
+          <div className='flex row flex-grow-1'>
+            <label
+              for="quantity"
+              className="form-label "
+              title="Quantity"
+            >
+              {formatMessage(messages.timing)}
+            </label>
+
+            <div className="star-red">*</div>
+          </div>
           {/* <div className="label-color fontsize12 mb8">
               
             </div> */}

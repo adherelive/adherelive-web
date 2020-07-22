@@ -67,7 +67,8 @@ class SignIn extends Component {
 
                         console.log('RESPONSE OF SIGNUP REQUESTTT', error);
                         if (statusCode === 400 || statusCode === 422) {
-                            message.error(responseMessage);
+                            const { message: errorMessage = '' } = error;
+                            message.error(statusCode === 400 ? errorMessage : responseMessage);
                         } else {
                             message.error('Something went wrong.');
                         }

@@ -496,13 +496,17 @@ class AddMedicationReminderForm extends Component {
           </div> */}
 
           <div className="flex align-items-end justify-content-space-between">
-            <label
-              for="dose"
-              className="form-label flex-grow-1"
-              title="Dose"
-            >
-              {formatMessage(messages.dose)}
-            </label>
+            <div className='flex direction-row flex-grow-1'>
+              <label
+                for="dose"
+                className="form-label"
+                title="Dose"
+              >
+                {formatMessage(messages.dose)}
+              </label>
+
+              <div className="star-red">*</div>
+            </div>
             {/* <div className="label-color fontsize12 mb8">
               
             </div> */}

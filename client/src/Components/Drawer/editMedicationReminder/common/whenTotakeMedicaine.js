@@ -455,13 +455,17 @@ class WhenToTakeMedication extends Component {
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
-          <label
-            for="quantity"
-            className="form-label flex-grow-1"
-            title="Quantity"
-          >
-            {formatMessage(messages.timing)}
-          </label>
+          <div className='flex row flex-grow-1'>
+            <label
+              for="quantity"
+              className="form-label "
+              title="Quantity"
+            >
+              {formatMessage(messages.timing)}
+            </label>
+
+            <div className="star-red">*</div>
+          </div>
           {/* <div className="label-color fontsize12 mb8">
               
             </div> */}
