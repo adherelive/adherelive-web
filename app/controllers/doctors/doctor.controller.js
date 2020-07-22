@@ -37,7 +37,7 @@ import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 
 import {
-  DOCUMENT_PARENT_TYPE, EVENT_TYPE,
+  DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME, EVENT_TYPE,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
@@ -636,7 +636,27 @@ class DoctorController extends Controller {
         message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
       };
 
-      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      if(process.config.app.env === "development") {
+        const emailPayload = {
+          title: "Mobile Patient Verification mail",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.INVITATION,
+          templateData: {
+            title: "Patient",
+            link: universalLink,
+            inviteCard: "",
+            mainBodyText: "We are really happy to welcome you onboard.",
+            subBodyText: "Please verify your account",
+            buttonText: "Verify",
+            host: process.config.WEB_URL,
+            contactTo: "patientEngagement@adhere.com"
+          }
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      } else {
+        Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      }
+
 
       return this.raiseSuccess(
         res,
