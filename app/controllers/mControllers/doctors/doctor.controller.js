@@ -186,7 +186,7 @@ class MobileDoctorController extends Controller {
         sign_in_type: SIGN_IN_CATEGORY.BASIC,
         category: USER_CATEGORY.PATIENT,
         onboarded: false,
-        onboarding_status: ONBOARDING_STATUS.PATIENT.PASSWORD_UPDATE,
+        onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
         verified: true,
         activated_on: moment().format()
       });

@@ -1846,7 +1846,7 @@ class MobileUserController extends Controller {
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
 
-      const updateUser = await userService.updateUser({password: hash, onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED}, userId);
+      const updateUser = await userService.updateUser({password: hash}, userId);
 
       const updatedUser = await UserWrapper(null, userId);
 
