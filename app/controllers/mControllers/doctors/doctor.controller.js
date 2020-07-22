@@ -172,7 +172,7 @@ class MobileDoctorController extends Controller {
       const userExists = await userService.getPatientByMobile(mobile_number);
 
       if(userExists.length > 0) {
-        this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
+        return this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
       }
 
       let password = process.config.DEFAULT_PASSWORD;
