@@ -61,8 +61,8 @@ class PatientDetailsDrawer extends Component {
       return (
         <div className="flex justify-space-between align-center mb10">
           <div className="pointer tab-color fw600 flex-1 tooltip">{name.length > 20 ? name.substring(0, 21) + '...' : name}
-          
-  <span class="tooltiptext">{name}</span></div>
+
+            <span class="tooltiptext">{name}</span></div>
           <div className="flex-1">{`${repeat_days.join(", ")}`}</div>
 
           <div className="flex-1">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
@@ -108,11 +108,11 @@ class PatientDetailsDrawer extends Component {
 
 
       const { basic_info: { doctor_id = 1 } = {}, activated_on: start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
-      const { basic_info: { name: treatment = '', pid = "123456" } = {} } = treatments[treatment_id] || {};
+      const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};
       const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
       const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
       const {
-        basic_info: { first_name, middle_name, last_name, age = "--", gender } = {},
+        basic_info: { first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
         reports = [],
         provider_id,
       } = patients[id] || {};
@@ -141,7 +141,7 @@ class PatientDetailsDrawer extends Component {
               onClick={handlePatientDetailsRedirect}
             />
           </div>
-          <div className="fw700 wp100">{`PID: ${pid}`}</div>
+          <div className="fw700 wp100">{`PID: ${uid}`}</div>
 
           {/*boxes*/}
 

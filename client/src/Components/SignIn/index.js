@@ -63,11 +63,11 @@ class SignIn extends Component {
                         this.props.form.resetFields();
                         message.success('Please go to your email to verify your account.')
                     } else {
-                        let { payload: { error = {} } = {} } = response;
+                        let { payload: { error = {}, message: responseMessage = '' } = {}, statusCode = '' } = response;
 
                         console.log('RESPONSE OF SIGNUP REQUESTTT', error);
-                        if (error.status == 'EMAIL_ALREADY_EXISTS') {
-                            message.error('Email already exists.');
+                        if (statusCode === 400 || statusCode === 422) {
+                            message.error(responseMessage);
                         } else {
                             message.error('Something went wrong.');
                         }
