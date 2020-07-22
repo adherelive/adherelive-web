@@ -155,7 +155,6 @@ class MobileUserController extends Controller {
         category: "doctor",
         onboarded: false,
         verified,
-        activated_on: moment()
       });
 
       const userInfo = await userService.getUserByEmail({ email });

@@ -239,6 +239,16 @@ export const DAYS_TEXT = {
   "Sun": "sunday",
 };
 
+export const DAYS_TEXT_NUM = {
+  "0": "monday",
+  "1": "tuesday",
+  "2": "wednesday",
+  "3": "thursday",
+  "4": "friday",
+  "5": "saturday",
+  "6": "sunday",
+}
+
 export const HOST = "/api";
 
 export const EVENT_TYPE = {

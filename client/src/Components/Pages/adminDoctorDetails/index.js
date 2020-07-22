@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
-import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT } from "../../../constant";
+import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT, DAYS_TEXT_NUM } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
@@ -513,6 +513,9 @@ class AdminDoctorDetails extends Component {
 
   getFullDayText = day => {
     console.log("137163 day --> ", day);
+    if(typeof parseInt(day) === "number") {
+      return DAYS_TEXT_NUM[day].toLocaleUpperCase();
+    }
     return DAYS_TEXT[day].toLocaleUpperCase();
   };
 
