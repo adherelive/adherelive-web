@@ -171,7 +171,7 @@ class MobileDoctorController extends Controller {
 
       const userExists = await userService.getPatientByMobile(mobile_number);
 
-      if(!userExists) {
+      if(userExists.length > 0) {
         this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
       }
 
