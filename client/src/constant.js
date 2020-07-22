@@ -177,6 +177,17 @@ export const PERMISSIONS = {
   ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE"
 };
 
+
+const DAY = "1";
+const MONTH = "2";
+const YEAR = "3";
+
+export const AGE_TYPE = {
+  [DAY]: "d",
+  [MONTH]: "m",
+  [YEAR]: "y"
+};
+
 export const APPOINTMENT_TYPE = {
   FOLLOWUP: "followup",
   MEDICATION: "medication",

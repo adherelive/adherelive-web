@@ -114,8 +114,11 @@ class PatientDetailsDrawer extends Component {
       const {
         basic_info: { first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
         reports = [],
+        details = {},
         provider_id,
       } = patients[id] || {};
+
+      let { age_type = '' } = details || {};
 
       const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
       const { basic_info: { name: providerName = "--" } = {} } =
@@ -131,7 +134,7 @@ class PatientDetailsDrawer extends Component {
           <div className="wp100 flex justify-space-between align-center mt20">
             <div className="flex justify-space-around align-center">
               <div className="pr10 fs24 fw600">{`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name}`}</div>
-              <div className="pr10 fs20 fw500">{`(${gender ? `${GENDER[gender].view} ` : ''}${age ? age : '--'})`}</div>
+              <div className="pr10 fs20 fw500">{`(${gender ? `${GENDER[gender].view} ` : ''}${age ? age + `${age_type === '2' && age > 1 ? ' months' : age_type === '2' ? ' month' : age_type === '1' && age > 1 ? ' days' : age_type === '1' ? ' day' : ''}` : '--'})`}</div>
               {/* <Icon type="wechat" width={20} /> */}
             </div>
             <img
