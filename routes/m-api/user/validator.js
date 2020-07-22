@@ -9,7 +9,7 @@ const credentialsFormSchema = Joi.object().keys({
 });
 
 const updatedPasswordSchema = Joi.object().keys({
-   password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).required(),
+   password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).required().label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
    confirm_password: Joi.when('password', {is: Joi.string(), then: Joi.string().required()})
 });
 
@@ -18,8 +18,8 @@ const signInSchema = Joi.object().keys({
    //     Joi.when('user_name', {is: Joi.number(), then: Joi.number().max(10).required()})
    // ),
     user_name: Joi.alternatives().try(
-        Joi.string().email().required(),
-        Joi.string().length(10).regex(/^\d+$/).required()
+        Joi.string().email().required().label("Please enter valid email"),
+        Joi.string().length(10).regex(/^\d+$/).required().label("Please enter a valid mobile number"),
     ),
     password: Joi.string().required()
 });
@@ -52,10 +52,12 @@ export const validateSignInData = (req, res, next) => {
     const { body: data = {} } = req;
     const isValid = signInSchema.validate(data);
     if (isValid && isValid.error != null) {
+        const {error: {details} = {}} = isValid || {};
+        const {context: {label} = {}} = details[0] || {};
         // return raiseClientError(res, 422, isValid.error, "please check filled details");
         const response = new Response(false, 422);
         response.setError(isValid.error);
-        response.setMessage("please check filled details");
+        response.setMessage(label);
         return res.status(422).json(response.getResponse());
     }
     next();
