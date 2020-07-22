@@ -11,4 +11,8 @@ export default class Patient {
     getPatientId = () => {
         return this._data.get("id");
     }
+
+    getDetails = () => {
+        return this._data.get("details");
+    };
 }

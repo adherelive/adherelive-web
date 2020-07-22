@@ -54,6 +54,7 @@ class MPatientController extends Controller {
       }
 
       const patientDetails = await patientService.getPatientByUserId(userId);
+      const initialPatientData = await PatientWrapper(patientDetails);
 
       const splitName = name.split(" ");
 
@@ -119,6 +120,8 @@ class MPatientController extends Controller {
 
       // todo minio configure here
 
+      const previousDetails = await initialPatientData.getDetails() || {};
+
       const patientData = {
         user_id: userId,
         first_name: splitName[0],
@@ -126,6 +129,7 @@ class MPatientController extends Controller {
         last_name: splitName.length > 1 ? splitName[1] : null,
         details: {
           // todo: profile_pic
+          ...previousDetails,
           profile_pic: profilePicUrl,
         },
       };

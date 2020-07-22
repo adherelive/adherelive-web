@@ -58,6 +58,7 @@ import medicineService from "../../../services/medicine/medicine.service";
 import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import getUniversalLink from "../../../helper/universalLink";
+import getAge from "../../../helper/getAge";
 import {EVENTS, Proxy_Sdk} from "../../../proxySdk";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
@@ -209,7 +210,7 @@ class MobileDoctorController extends Controller {
 
       // const uid = uuidv4();
       const birth_date = moment(date_of_birth);
-      const age = moment().diff(birth_date, "y");
+      const {age, age_type} = getAge(date_of_birth);
       const patient = await patientsService.addPatient({
         first_name,
         gender,
@@ -218,6 +219,9 @@ class MobileDoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
+        details: {
+          age_type
+        }
         // uid
       });
 
