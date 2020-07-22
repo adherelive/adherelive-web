@@ -171,8 +171,8 @@ class MobileDoctorController extends Controller {
 
       const userExists = await userService.getPatientByMobile(mobile_number);
 
-      if(!userExists) {
-        this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
+      if(userExists.length > 0) {
+        return this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
       }
 
       let password = process.config.DEFAULT_PASSWORD;
@@ -186,6 +186,7 @@ class MobileDoctorController extends Controller {
         sign_in_type: SIGN_IN_CATEGORY.BASIC,
         category: USER_CATEGORY.PATIENT,
         onboarded: false,
+        onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
         verified: true,
         activated_on: moment().format()
       });

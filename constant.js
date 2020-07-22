@@ -384,7 +384,11 @@ export const DOCUMENT_PARENT_TYPE = {
 export const ONBOARDING_STATUS = {
   PROFILE_REGISTERED: "profile_registered",
   QUALIFICATION_REGISTERED: "qualification_registered",
-  CLINIC_REGISTERED: "CLINIC_registered"
+  CLINIC_REGISTERED: "CLINIC_registered",
+  PATIENT: {
+    PASSWORD_UPDATE: "password_update",
+    PROFILE_REGISTERED: "profile_registration"
+  },
 };
 
 export const SIGN_IN_CATEGORY = {

@@ -14,6 +14,12 @@ class SmsManager {
     this.TopicArn = process.config.aws.topic_arn;
 
     this.sns = new AWS.SNS();
+
+    this.sns.setSMSAttributes({
+      attributes: {
+        'DefaultSMSType': 'Transactional',
+      }
+    });
   }
 
   async sendSms(smsPayload) {

@@ -1838,7 +1838,7 @@ class MobileUserController extends Controller {
 
   updatePassword = async (req, res) => {
     try {
-      const {body : {password, confirm_password} = {}, userDetails : {userId} = {}} = req;
+      const {body : {password, confirm_password} = {}, userDetails : {userId, userData: {category} = {} } = {}} = req;
 
       if(password !== confirm_password) {
         return this.raiseClientError(res, 422, {}, "Password does not match");
@@ -1850,9 +1850,28 @@ class MobileUserController extends Controller {
 
       const updatedUser = await UserWrapper(null, userId);
 
+      let categoryData = {};
+
+      switch(category) {
+        case USER_CATEGORY.PATIENT:
+          const patient = await patientsService.getPatientByUserId(userId);
+          const patientData = await MPatientWrapper(patient);
+          categoryData[patientData.getPatientId()] = patientData.getBasicInfo();
+          break;
+        case USER_CATEGORY.DOCTOR:
+          const doctor = await doctorService.getDoctorByUserId(userId);
+          const doctorData = await MDoctorWrapper(doctor);
+          categoryData[doctorData.getDoctorId()] = doctorData.getBasicInfo();
+          break;
+        default:
+      }
+
       return this.raiseSuccess(res, 200, {
         users: {
           [updatedUser.getId()]: updatedUser.getBasicInfo()
+        },
+        [`${category}s`]: {
+          ...categoryData
         },
       },
         "Password updated successfully"

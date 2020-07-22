@@ -141,10 +141,12 @@ class UserController extends Controller {
       if (err.code && err.code == 11000) {
         let response = new Response(false, 400);
         response.setError(errMessage.EMAIL_ALREADY_EXISTS);
+        response.setMessage(errMessage.EMAIL_ALREADY_EXISTS);
         return res.status(400).json(response.getResponse());
       } else {
         let response = new Response(false, 500);
         response.setError(errMessage.INTERNAL_SERVER_ERROR);
+        response.setMessage(errMessage.INTERNAL_SERVER_ERROR);
         return res.status(500).json(response.getResponse());
       }
     }

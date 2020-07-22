@@ -51,7 +51,7 @@ class AppointmentController extends Controller {
         end_time
       );
 
-      // Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
+      Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot.length);
 
       if (getAppointmentForTimeSlot.length > 0) {
         return raiseClientError(
