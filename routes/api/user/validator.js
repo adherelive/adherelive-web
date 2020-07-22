@@ -37,7 +37,7 @@ const validateTimeInterval = (startTime, endTime) => {
 export const validateCredentialsData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = credentialsFormSchema.validate(data);
-  console.log("3718293 isValid --> ", isValid.error.details[0].context.label);
+  // console.log("3718293 isValid --> ", isValid.error);
   if (isValid && isValid.error != null) {
       const {error: {details} = {}} = isValid || {};
       const {context: {label} = {}} = details[0] || {};
