@@ -111,7 +111,7 @@ class Dashboard extends Component {
 
         const { basic_info: { id = 1 } = {} } = authenticated_user || {};
         addPatient(data).then(response => {
-            let { status = false, payload: { data: { patient_ids = [], care_plan_ids = [], carePlanTemplateId = 0 } = {} } = {} } = response;
+            let { status = false, statusCode = 0, payload: { data: { patient_ids = [], care_plan_ids = [], carePlanTemplateId = 0 } = {}, message: responseMessage = '' } = {} } = response;
             let showTemplateDrawer = carePlanTemplateId ? true : false;
             let currentCarePlanId = care_plan_ids[0];
             let patient_id = patient_ids ? patient_ids[0] : 0;
@@ -127,7 +127,11 @@ class Dashboard extends Component {
 
                 // })
             } else {
-                message.error('Something went wrong');
+                if (statusCode === 422) {
+                    message.error('Patient already exist with same number!');
+                } else {
+                    message.error('Something went wrong');
+                }
             }
         });
     }
