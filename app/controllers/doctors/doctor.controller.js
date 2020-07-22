@@ -46,6 +46,7 @@ import {
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
+import getAge from "../../helper/getAge";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
@@ -499,7 +500,11 @@ class DoctorController extends Controller {
       // const uid = uuidv4();
 
       const birth_date = moment(date_of_birth);
-      const age = moment().diff(birth_date, "y");
+      const {age, age_type} = getAge(date_of_birth);
+
+
+
+      // const age = moment().diff(birth_date, "y");
       const patient = await patientsService.addPatient({
         first_name,
         gender: gender ? gender : null,
@@ -508,6 +513,9 @@ class DoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
+        details: {
+          age_type
+        }
         // uid
       });
 

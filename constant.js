@@ -585,3 +585,13 @@ export const PERMISSIONS = {
 };
 
 export const USER_REFERENCE_ID_SIZE = 4;
+
+const DAY = "1";
+const MONTH = "2";
+const YEAR = "3";
+
+export const AGE_TYPE = {
+  [DAY]: "d",
+  [MONTH]: "m",
+  [YEAR]: "y"
+};
