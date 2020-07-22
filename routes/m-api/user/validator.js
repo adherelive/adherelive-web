@@ -5,7 +5,7 @@ import Response from "../../../app/helper/responseFormat";
 
 const credentialsFormSchema = Joi.object().keys({
     email: Joi.string().email().required(),
-    password: Joi.string().required()
+    password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).min(12).required()
 });
 
 const updatedPasswordSchema = Joi.object().keys({
@@ -39,10 +39,38 @@ export const validateCredentialsData = (req, res, next) => {
     const { email, password } = data;
     const isValid = credentialsFormSchema.validate(data);
     if (isValid && isValid.error != null) {
+        console.log("00000000000000 isValid ---> ", isValid, isValid.error);
+        let errorMessage = "Please check filled details";
+        const {error : {details} = {} } = isValid || {};
+        const {type} = details[0] || {};
+        switch(type) {
+            case "string.empty":
+                const {context: {label} = {}} = details[0] || {};
+                if(label === "email") {
+                    errorMessage = "Email cannot be empty";
+                } else {
+                    errorMessage = "Password cannot be empty";
+                }
+                break;
+            case "string.pattern.base":
+                const {context: {label : passwordLabel} = {}} = details[0] || {};
+                if(passwordLabel === "password") {
+                    errorMessage = "Password must contain at least 1 uppercase, lowercase, number & special character";
+                }
+                break;
+            case "string.min":
+                const {context: {label : passwordLengthLabel} = {}} = details[0] || {};
+                if(passwordLengthLabel === "password") {
+                    errorMessage = "Password must be at least 12 characters long";
+                }
+                break;
+            default:
+                break;
+        }
         // return raiseClientError(res, 422, isValid.error, "please check filled details");
         const response = new Response(false, 422);
         response.setError(isValid.error);
-        response.setMessage("please check filled details");
+        response.setMessage(errorMessage);
         return res.status(422).json(response.getResponse());
     }
     next();

@@ -1,3 +1,5 @@
+import userController from "../../../app/controllers/user/user.controller";
+
 const express = require("express");
 const router = express.Router();
 import Authenticate from "../middleware/auth";
@@ -11,9 +13,9 @@ import mDoctorController from "../../../app/controllers/mControllers/doctors/doc
 router.post(
   "/",
   Authenticate,
-  // validator.validateAddDoctorData,
+  validator.validateUpdateDoctorData,
     // todo :: wip
-    mDoctorController.addDoctor
+    mDoctorController.updateDoctor
 );
 
 router.post(
@@ -22,6 +24,13 @@ router.post(
     // validator.validateDoctorQualificationData,
     // todo :: wip
     mDoctorController.updateDoctorQualificationRegistration
+);
+
+router.post(
+    "/upload",
+    Authenticate,
+    upload.single("files"),
+    mDoctorController.uploadImage
 );
 
 router.post(

@@ -59,6 +59,7 @@ import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import getUniversalLink from "../../../helper/universalLink";
 import getAge from "../../../helper/getAge";
+import {getSeparateName} from "../../../helper/common";
 import {EVENTS, Proxy_Sdk} from "../../../proxySdk";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
@@ -68,7 +69,7 @@ class MobileDoctorController extends Controller {
     super();
   }
 
-  addDoctor = async (req, res) => {
+  updateDoctor = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
@@ -92,14 +93,15 @@ class MobileDoctorController extends Controller {
       let doctorExist = await doctorService.getDoctorByData({
         user_id: userId
       });
-      let first_name = doctorName[0];
-      let middle_name = doctorName.length === 3 ? doctorName[1] : "";
-      let last_name =
-        doctorName.length === 3
-          ? doctorName[2]
-          : doctorName.length === 2
-          ? doctorName[1]
-          : "";
+      const {first_name, middle_name, last_name} = getSeparateName(name);
+      // let first_name = doctorName[0];
+      // let middle_name = doctorName.length === 3 ? doctorName[1] : "";
+      // let last_name =
+      //   doctorName.length === 3
+      //     ? doctorName[2]
+      //     : doctorName.length === 2
+      //     ? doctorName[1]
+      //     : "";
 
       if (doctorExist) {
         let doctor_data = {
@@ -607,6 +609,8 @@ class MobileDoctorController extends Controller {
     try {
         const {userDetails: {userId} = {}} = req;
       const file = req.file;
+
+      Logger.debug("file --> ", file);
 
       let files = await uploadImageS3(userId, file);
       let qualification_id = 0;
@@ -1279,6 +1283,54 @@ class MobileDoctorController extends Controller {
     } catch (error) {
       Logger.debug("getalldoctors 500 error", error);
       return raiseServerError(res);
+    }
+  };
+
+  uploadImage = async (req, res) => {
+    const { userDetails, body } = req;
+    const { userId = "3" } = userDetails || {};
+    const file = req.file;
+    Logger.debug("file ----> ", file);
+    // const fileExt= file.originalname.replace(/\s+/g, '');
+    try {
+      //   await minioService.createBucket();
+
+      //   const imageName = md5(`${userId}-education-pics`);
+
+      //   let hash = md5.create();
+
+      //   hash.hex();
+      //   hash = String(hash);
+
+      //   const folder = "adhere";
+      //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
+      //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
+
+      //   const metaData = {
+      //     "Content-Type":
+      //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      // };
+      // const fileUrl = folder+ "/" +file_name;
+      // await minioService.saveBufferObject(file.buffer, file_name, metaData);
+
+      // // console.log("file urlll: ", process.config.minio.MINI);
+      // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
+      // let files = [file_link];
+      // console.log("Uplaoded File Url ---------------------->  ", file_link);
+      // console.log("User Controllers =------------------->   ", files);
+      //const resume_link = process.config.BASE_DOC_URL + files[0]
+      let files = await uploadImageS3(userId, file);
+      return this.raiseSuccess(
+          res,
+          200,
+          {
+            files
+          },
+          "Profile pic uploaded successfully"
+      );
+    } catch (error) {
+      console.log("FILE UPLOAD CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
 }
