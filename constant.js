@@ -387,7 +387,7 @@ export const ONBOARDING_STATUS = {
   CLINIC_REGISTERED: "CLINIC_registered",
   PATIENT: {
     PASSWORD_UPDATE: "password_update",
-    PROFILE_REGISTERED: "profile_registered"
+    PROFILE_REGISTERED: "profile_registration"
   },
 };
 
