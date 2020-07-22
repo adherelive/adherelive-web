@@ -513,7 +513,7 @@ class AdminDoctorDetails extends Component {
 
   getFullDayText = day => {
     console.log("137163 day --> ", day);
-    if(typeof parseInt(day) === "number") {
+    if(day.length === 1) {
       return DAYS_TEXT_NUM[day].toLocaleUpperCase();
     }
     return DAYS_TEXT[day].toLocaleUpperCase();
