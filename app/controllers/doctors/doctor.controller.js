@@ -992,6 +992,16 @@ class DoctorController extends Controller {
           }
         }
       } else {
+        const docQualificationUpdate = await qualificationService.updateQualification(
+            {
+              doctor_id: doctorData.getDoctorId(),
+              degree_id,
+              year,
+              college_id
+            },
+            id
+        );
+
         docQualification = await qualificationService.getQualificationById(id);
         for (const photo of photos) {
           const docExist = await documentService.getDocumentByData(

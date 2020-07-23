@@ -676,8 +676,14 @@ class MobileDoctorController extends Controller {
       const { degree_id = "", year = "", college_id = "", id = 0, photos = [] } =
         qualification || {};
 
+      let docQualification = null;
+
+      if (photos.length > 3) {
+        return this.raiseServerError(res, 422, {}, "Cannot add more than 3 documents");
+      }
+
       if (!id) {
-        const docQualification = await qualificationService.addQualification({
+        docQualification = await qualificationService.addQualification({
           doctor_id: doctorData.getDoctorId(),
           degree_id,
           year,
@@ -701,6 +707,17 @@ class MobileDoctorController extends Controller {
           }
         }
       } else {
+        const docQualificationUpdate = await qualificationService.updateQualification(
+            {
+              doctor_id: doctorData.getDoctorId(),
+              degree_id,
+              year,
+              college_id
+            },
+            id
+        );
+
+        docQualification = await qualificationService.getQualificationById(id);
         for (const photo of photos) {
           const docExist = await documentService.getDocumentByData(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
@@ -718,6 +735,8 @@ class MobileDoctorController extends Controller {
           }
         }
       }
+
+      const docQualificationDetails = await QualificationWrapper(docQualification);
 
         const updatedDoctor = await doctorService.getDoctorByData({user_id: userId});
         const updatedDoctorData = await DoctorWrapper(updatedDoctor);
