@@ -414,7 +414,8 @@ export const EVENT_STATUS = {
 export const EMAIL_TEMPLATE_NAME = {
   WELCOME: "welcome",
   FORGOT_PASSWORD: "forgotPassword",
-  INVITATION:"invitation"
+  INVITATION:"invitation",
+  VERIFIED_DOCTOR: "verifiedDoctor",
 };
 
 export const OBJECT_NAME = {

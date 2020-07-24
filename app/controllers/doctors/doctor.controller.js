@@ -322,6 +322,8 @@ class DoctorController extends Controller {
         return this.raiseClientError(res, 422, {}, "Doctor has not updated any clinic details yet. Cannot be verified");
       }
 
+      const {basic_info : {first_name, middle_name, last_name} = {}} = doctorWrapper.getBasicInfo();
+
       let verifyData = {
         activated_on: moment()
       };
@@ -336,6 +338,23 @@ class DoctorController extends Controller {
       );
 
       const userWrapper = await UserWrapper(userDetailsUpdated.get());
+
+      const emailPayload = {
+        title: "Doctor Account Verification Update",
+        toAddress: userWrapper.getEmail(),
+        templateName: EMAIL_TEMPLATE_NAME.VERIFIED_DOCTOR,
+        templateData: {
+          title: "Patient",
+          link: process.config.WEB_URL,
+          inviteCard: "",
+          mainBodyText: `Greetings Dr.${first_name},We are really happy to inform you that your account has been verified.`,
+          subBodyText: "Please click the below link to your account",
+          buttonText: "Verify",
+          host: process.config.WEB_URL,
+          contactTo: "patientEngagement@adhere.com"
+        }
+      };
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
       return raiseSuccess(
         res,
@@ -640,7 +659,7 @@ class DoctorController extends Controller {
         const emailPayload = {
           title: "Mobile Patient Verification mail",
           toAddress: process.config.app.developer_email,
-          templateName: EMAIL_TEMPLATE_NAME.VERIFY_DOCTOR,
+          templateName: EMAIL_TEMPLATE_NAME.INVITATION,
           templateData: {
             title: "Patient",
             link: universalLink,
