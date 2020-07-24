@@ -376,9 +376,16 @@ class AppointmentController extends Controller {
       ) {
 
         const previousAppointments = await appointmentService.checkTimeSlot(
-            date,
             start_time,
-            end_time
+            end_time,
+            {
+                participant_one_id: userCategoryId,
+              participant_one_type: category
+            },
+            {
+              participant_two_id,
+              participant_two_type
+            }
         );
 
         const filteredAppointments = previousAppointments.filter(appointment => {
