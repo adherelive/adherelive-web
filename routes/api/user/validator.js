@@ -21,8 +21,8 @@ const credentialsFormSchema = Joi.object().keys({
 
 const matchPassword = (value, helpers) => {
   const {state: {ancestors = []} = {}} = helpers || {};
-  const {password} = ancestors[0] || {};
-  if(password === value) {
+  const {new_password} = ancestors[0] || {};
+  if(new_password === value) {
     return value;
   } else {
     return helpers.error('any.invalid');
@@ -30,7 +30,7 @@ const matchPassword = (value, helpers) => {
 };
 
 const updatePasswordSchema = Joi.object().keys({
-  password: Joi.string()
+  new_password: Joi.string()
       .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/)
       .required()
       .label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
@@ -55,7 +55,6 @@ const validateTimeInterval = (startTime, endTime) => {
 export const validateCredentialsData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = credentialsFormSchema.validate(data);
-  // console.log("3718293 isValid --> ", isValid.error);
   if (isValid && isValid.error != null) {
       const {error: {details} = {}} = isValid || {};
       const {context: {label} = {}} = details[0] || {};
@@ -71,7 +70,7 @@ export const validateCredentialsData = (req, res, next) => {
 export const validateUpdatePasswordData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = updatePasswordSchema.validate(data);
-  // console.log("3718293 isValid --> ", isValid.error);
+  console.log("3718293 isValid --> ", isValid.error);
   if (isValid && isValid.error != null) {
     const {error: {details} = {}} = isValid || {};
     const {context: {label} = {}} = details[0] || {};

@@ -1753,14 +1753,14 @@ class UserController extends Controller {
   updateUserPassword = async (req, res) => {
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { userDetails: { userId }, body: { password, confirm_password } = {} } = req;
+      const { userDetails: { userId }, body: { new_password, confirm_password } = {} } = req;
 
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(password, salt);
+      const hash = await bcrypt.hash(new_password, salt);
 
       const updateUser = await userService.updateUser({
         password: hash
