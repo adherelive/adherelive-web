@@ -30,6 +30,7 @@ module.exports = {
                 onboarded:1,
                 onboarding_status: "CLINIC_registered",
                 mobile_number: "1234567890",
+                prefix:"91",
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
@@ -43,6 +44,7 @@ module.exports = {
                 verified:1,
                 onboarded:1,
                 mobile_number: "9234623472",
+                prefix:"91",
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
@@ -57,6 +59,7 @@ module.exports = {
                 onboarded:1,
                 onboarding_status: "CLINIC_registered",
                 mobile_number: "2383548292",
+                prefix:"91",
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()
@@ -70,6 +73,7 @@ module.exports = {
                 verified:1,
                 onboarded:1,
                 mobile_number: "1234567890",
+                prefix:"91",
                 activated_on: new Date(),
                 created_at: new Date(),
                 updated_at: new Date()

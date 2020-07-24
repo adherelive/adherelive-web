@@ -44,6 +44,19 @@ class AppointmentController extends Controller {
         participant_two || {};
 
 
+      /*
+      * check previous time slot for appointment based on
+      * date,
+      * start_time,
+      * end_time,
+      *
+      * participant_one_id,
+      * participant_one_type,
+      * participant_two_id,
+      * participant_two_type
+      * */
+
+
       // Logger.debug("Start date", date);
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
         date,

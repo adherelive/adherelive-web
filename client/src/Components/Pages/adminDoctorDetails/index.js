@@ -95,12 +95,12 @@ class AdminDoctorDetails extends Component {
         user_id,
         profile_pic,
         gender,
-        age,
-        city
-      } = {}
+          address,
+      } = {},
+      city,
     } = doctors[id] || {};
     const {
-      basic_info: { user_name, email, mobile_number } = {},
+      basic_info: { user_name, email, mobile_number, prefix } = {},
       sign_in_type,
       onboarded,
       onboarding_status,
@@ -152,15 +152,15 @@ class AdminDoctorDetails extends Component {
               </div>
             </div>
 
-            {/*age*/}
-            <div className="wp20 hp20 mt16 mb16 mr16">
-              <div className="fs16 fw700">
-                {formatMessage(messages.age_text)}
-              </div>
-              <div className="fs14 fw500">
-                {age ? age : TABLE_DEFAULT_BLANK_FIELD}
-              </div>
-            </div>
+            {/*/!*age*!/*/}
+            {/*<div className="wp20 hp20 mt16 mb16 mr16">*/}
+            {/*  <div className="fs16 fw700">*/}
+            {/*    {formatMessage(messages.age_text)}*/}
+            {/*  </div>*/}
+            {/*  <div className="fs14 fw500">*/}
+            {/*    {age ? age : TABLE_DEFAULT_BLANK_FIELD}*/}
+            {/*  </div>*/}
+            {/*</div>*/}
 
             {/*mobile_number*/}
             <div className="wp20 mt16 mb16 mr16">
@@ -168,7 +168,7 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.mobile_number_text)}
               </div>
               <div className="fs14 fw500">
-                {mobile_number ? mobile_number : TABLE_DEFAULT_BLANK_FIELD}
+                {mobile_number ? `+${prefix}-${mobile_number}` : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
@@ -202,7 +202,7 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.address_text)}
               </div>
               <div className="fs14 fw500">
-                {city ? city : TABLE_DEFAULT_BLANK_FIELD}
+                {address ? address : city ? city : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
@@ -258,8 +258,6 @@ class AdminDoctorDetails extends Component {
       const {
         basic_info: {
           number,
-          start_date,
-          end_date,
           registration_council_id,
           year
         } = {},
@@ -307,18 +305,6 @@ class AdminDoctorDetails extends Component {
               </div>
               <div className="fs14 fw500">
                 {year ? year : TABLE_DEFAULT_BLANK_FIELD}
-              </div>
-            </div>
-
-            {/*registration_start_date*/}
-            <div className="wp20 mt16 mb16 mr16">
-              <div className="fs16 fw700">
-                {formatMessage(messages.registration_start_date_text)}
-              </div>
-              <div className="fs14 fw500">
-                {start_date
-                  ? moment(start_date).format("LLL")
-                  : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
@@ -606,19 +592,22 @@ class AdminDoctorDetails extends Component {
   };
 
   getFooter = () => {
-    const { id, doctors } = this.props;
+    const { id, doctors, users } = this.props;
     const { formatMessage, handleVerify } = this;
 
     const {
       doctor_clinic_ids = [],
       doctor_qualification_ids = [],
-      doctor_registration_ids = []
+      doctor_registration_ids = [],
+        user_id
     } = doctors[id] || {};
+
+    const {activated_on} = users[user_id] || {};
 
     const disabled =
       doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
-      doctor_registration_ids.length === 0;
+      doctor_registration_ids.length === 0 || activated_on !== null;
 
     return (
       <div className="mt20 wi flex justify-end">
