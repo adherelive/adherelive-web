@@ -599,7 +599,7 @@ class AdminDoctorDetails extends Component {
       doctor_clinic_ids = [],
       doctor_qualification_ids = [],
       doctor_registration_ids = [],
-        user_id
+    basic_info :{user_id} = {}
     } = doctors[id] || {};
 
     const {activated_on} = users[user_id] || {};
