@@ -41,7 +41,7 @@ class ClinicRegister extends Component {
     handleSave = () => {
         let { address = '', pincode = '', addressManual = '', landmark = '' } = this.state;
         let { handleOk } = this.props;
-        let manual = addressManual + (pincode ? `,${pincode}` : '') + (landmark ? `,${landmark}` : '');
+        let manual = addressManual + (landmark ? `,${landmark}` : '') + (pincode ? `,Pincode:${pincode}` : '');
 
         let locationToSave = address ? address : manual;
         handleOk(locationToSave);
