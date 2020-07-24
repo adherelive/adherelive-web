@@ -2,7 +2,6 @@ import Controller from "../index";
 import appointmentService from "../../services/appointment/appointment.service";
 import scheduleService from "../../services/events/event.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper'
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
@@ -12,11 +11,11 @@ import moment from "moment";
 
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/helper";
-import MAppointmentWrapper from "../../ApiWrapper/mobile/appointments";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import doctorService from "../../services/doctor/doctor.service";
-import DoctorWrapper from "../../ApiWrapper/mobile/doctor";
+import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import patientService from "../../services/patients/patients.service";
-import PatientWrapper from "../../ApiWrapper/mobile/patient";
+import PatientWrapper from "../../ApiWrapper/web/patient";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -131,9 +130,8 @@ class AppointmentController extends Controller {
       const appointment = await appointmentService.addAppointment(
         appointment_data
       );
-      console.log("[ APPOINTMENTS ] appointments ", appointment.getBasicInfo);
 
-      const appointmentApiData = await new MAppointmentWrapper(appointment);
+      const appointmentApiData = await new AppointmentWrapper(appointment);
 
       const eventScheduleData = {
         event_type: EVENT_TYPE.APPOINTMENT,
@@ -192,12 +190,40 @@ class AppointmentController extends Controller {
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
+      let userCategoryId = null;
+
+      Logger.debug("userDetails --------------------> ", userDetails);
+
+      switch (category) {
+        case USER_CATEGORY.DOCTOR:
+          const doctor = await doctorService.getDoctorByData({
+            user_id: userId
+          });
+          const doctorData = await DoctorWrapper(doctor);
+          userCategoryId = doctorData.getDoctorId();
+          break;
+        case USER_CATEGORY.PATIENT:
+          const patient = await patientService.getPatientByUserId(userId);
+          const patientData = await PatientWrapper(patient);
+          userCategoryId = patientData.getPatientId();
+          break;
+        default:
+          break;
+      }
+
 
       // Logger.debug("Start date", date);
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
-        date,
         start_time,
-        end_time
+        end_time,
+          {
+            participant_one_id: userCategoryId,
+            participant_one_type: category
+          },
+          {
+            participant_two_id,
+            participant_two_type
+          }
       );
 
       // Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot);

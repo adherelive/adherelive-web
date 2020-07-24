@@ -640,7 +640,7 @@ class DoctorController extends Controller {
         const emailPayload = {
           title: "Mobile Patient Verification mail",
           toAddress: process.config.app.developer_email,
-          templateName: EMAIL_TEMPLATE_NAME.INVITATION,
+          templateName: EMAIL_TEMPLATE_NAME.VERIFY_DOCTOR,
           templateData: {
             title: "Patient",
             link: universalLink,
