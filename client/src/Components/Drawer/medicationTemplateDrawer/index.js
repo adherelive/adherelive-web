@@ -1,17 +1,12 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, DatePicker, Select, Input, message, Button, TimePicker } from "antd";
-import ChatComponent from "../../../Containers/Chat";
-import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS, MEDICATION_TIMING, EVENT_TYPE, MEDICINE_TYPE } from "../../../constant";
-import messages from "./message";
+
+import {  MEDICATION_TIMING, EVENT_TYPE, MEDICINE_TYPE } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
 
-import { DeleteTwoTone, DeleteOutlined } from "@ant-design/icons";
-import CloseIcon from "../../../Assets/images/close.svg";
-import ChatIcon from "../../../Assets/images/chat.svg";
-import ShareIcon from "../../../Assets/images/redirect3x.png";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import uuid from 'react-uuid';

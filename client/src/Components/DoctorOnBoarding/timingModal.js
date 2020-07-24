@@ -3,18 +3,10 @@ import { injectIntl } from "react-intl";
 // import messages from "./message";
 // import {formatMessage} from "react-intl/src/format";
 import moment from 'moment';
-import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import { Tabs, Button, Steps, Col, Select, Input, Upload, Modal, TimePicker, Icon, message, Checkbox } from "antd";
-import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH, DAYS, DAYS_KEYS, DAYS_LIST, FULL_DAYS } from '../../constant';
-import throttle from "lodash-es/throttle";
-import { withRouter } from "react-router-dom";
-import PlacesAutocomplete, {
-    geocodeByAddress,
-    getLatLng
-} from "react-places-autocomplete";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import {  Button, Modal, TimePicker, Icon, message, Checkbox } from "antd";
+import {  FULL_DAYS } from '../../constant';
+
 
 const Initial_State = {
     daySelected: {

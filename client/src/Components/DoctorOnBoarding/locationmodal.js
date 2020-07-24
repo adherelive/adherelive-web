@@ -1,19 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-// import messages from "./message";
-// import {formatMessage} from "react-intl/src/format";
-import { DeleteTwoTone } from "@ant-design/icons";
-import uuid from 'react-uuid';
-import { Tabs, Button, Steps, Col, Select, Input, Upload, Modal, TimePicker, Icon, message } from "antd";
-import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH } from '../../constant';
-import throttle from "lodash-es/throttle";
-import { withRouter } from "react-router-dom";
+import { Button, Input, Modal } from "antd";
 import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng
 } from "react-places-autocomplete";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 
 

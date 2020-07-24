@@ -6,6 +6,7 @@ export const PATH = {
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
   SIGN_UP: "/sign-up/:link",
+  FORGOT_PASSWORD: "/forgot-password",
   REGISTER_PROFILE: '/register-profile',
   REGISTER_QUALIFICATIONS: '/register-qualifications',
   REGISTER_CLINICS: '/register-clinics',

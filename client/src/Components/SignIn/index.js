@@ -6,6 +6,7 @@ import LoginByGoogle from "./googleLogin";
 import LoginByFacebook from "./facebookLogin";
 import rightArrow from '../../Assets/images/next.png';
 import CompanyIcon from '../../Assets/images/logo3x.png'
+import { PATH } from "../../constant";
 
 const { Item: FormItem } = Form;
 const { Password } = Input;
@@ -29,13 +30,14 @@ class SignIn extends Component {
         if (link) {
             const { verifyUser } = this.props;
             let response = await verifyUser(link);
-            console.log("RESPONSE OF VERIFY USERRR12312312312312", response);
+            console.log("97867896879686899999868", response);
             //   .then(response=>{
             const { status, statusCode } = response;
             if (!status) {
-                message.error('This verification link has expired');
+                message.error('This verification link has expired!');
+
             } else {
-                // this.props.history.push('/register-profile')
+                this.props.history.push('/register-profile');
             }
         }
     }
@@ -77,6 +79,12 @@ class SignIn extends Component {
             }
         });
     };
+
+    redirectToForgotPassword = () => {
+
+        const { history } = this.props;
+        history.push(PATH.FORGOT_PASSWORD);
+    }
 
     handleSignIn = async e => {
         e.preventDefault();
@@ -229,7 +237,7 @@ class SignIn extends Component {
                                                     rules: [{ required: true, message: "Enter your password" }]
                                                 })(<Password placeholder="Password" className="h40" />)}
                                             </FormItem>
-                                            {/* <div classname='fs12 wp100 medium dark-sky-blue mt4 flex tar'>Forgot Password?</div> */}
+                                            <div className='flex wp100 justify-end mt-20 mb16'><div className='Forgot-Password medium pointer ' onClick={this.redirectToForgotPassword}>Forgot Password?</div></div>
 
                                             <FormItem className="mb53">
                                                 <Button
@@ -241,7 +249,7 @@ class SignIn extends Component {
                                                 >
                                                     Log in
                             </Button>
-                                                <div className="flex justify-space-between direction-column mt10 align-end">
+                                                <div className="flex justify-space-between direction-column align-end">
                                                     {/* <span className="login-form-forgot inline-flex">
                   <Link to="/forgot-password">Forgot password?</Link>
                 </span> */}

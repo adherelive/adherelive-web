@@ -1,13 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-// import messages from "./message";
-// import {formatMessage} from "react-intl/src/format";
-import { DeleteTwoTone, DeleteOutlined } from "@ant-design/icons";
+import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import { Tabs, Button, Steps, Col, Select, Input, InputNumber, DatePicker, Upload, Modal, TimePicker, Icon, message, Spin } from "antd";
-import SideMenu from "./sidebar";
+import { Select, Input, DatePicker, Upload, message, Spin } from "antd";
 import { REQUEST_TYPE, PATH } from '../../constant';
-import { getUploadURL } from '../../Helper/urls/user';
 import { getUploadQualificationDocumentUrl, getUploadRegistrationDocumentUrl } from '../../Helper/urls/doctor';
 import { doRequest } from '../../Helper/network';
 import UploadSteps from './steps';

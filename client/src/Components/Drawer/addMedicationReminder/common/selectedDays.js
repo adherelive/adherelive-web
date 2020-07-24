@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Form, Input, Tag } from "antd";
-import messages from "../message";
 import { DAYS } from "../../../../constant";
 
 const { Item: FormItem } = Form;
@@ -65,7 +64,8 @@ class SelectedDays extends Component {
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {
-                required: true
+                required: true,
+                message:'Please select days for medication!'
               }
             ],
             initialValue: selectedDays.join(",")

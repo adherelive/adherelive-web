@@ -86,8 +86,8 @@ class MedicationStrengthUnit extends Component {
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {
-                // required: true,
-                // message: "Select Strength Unit"
+                required: true,
+                message: "Select Strength Unit"
               }
             ],
             initialValue: getInitialValue()

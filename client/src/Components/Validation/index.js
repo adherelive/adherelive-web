@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { injectIntl, FormattedMessage } from "react-intl";
-import { Button, Input, Form, Row, Col, message } from "antd";
+import {  message } from "antd";
 import Loading from '../Common/Loading'
 
 import { withRouter } from "react-router-dom";
@@ -26,7 +26,7 @@ class ValidationPage extends Component {
             if (!status) {
                 if (statusCode == 422) {
 
-                    message.error('This verification link has expired');
+                    message.error('This verification link has expired!');
                     this.props.history.replace('/');
                 } else {
 

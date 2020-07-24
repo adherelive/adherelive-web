@@ -3,8 +3,8 @@ import { injectIntl, FormattedMessage } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { SEVERITY_STATUS, MEDICINE_TYPE, GENDER, PERMISSIONS } from "../../../constant";
-import { Tabs, Table, Divider, Tag, Button, Menu, Dropdown, Spin, message } from "antd";
+import {  MEDICINE_TYPE, GENDER, PERMISSIONS } from "../../../constant";
+import { Tabs, Table, Menu, Dropdown, Spin, message,Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -12,7 +12,6 @@ import AddMedicationReminder from "../../../Containers/Drawer/addMedicationRemin
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
-import AppointmentTable from "../../../Containers/Appointments/table";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 import noMedication from "../../../Assets/images/no_medication@3x.png";
 import TemplateDrawer from '../../Drawer/medicationTemplateDrawer'

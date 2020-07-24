@@ -2,14 +2,6 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 // import messages from "./message";
 // import {formatMessage} from "react-intl/src/format";
-import { DeleteTwoTone, DeleteOutlined } from "@ant-design/icons";
-import uuid from 'react-uuid';
-import { Tabs, Button, Col, Select, Input, InputNumber, Upload, Modal, TimePicker, Icon, message } from "antd";
-import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH } from '../../constant';
-import { getUploadURL } from '../../Helper/urls/user';
-import { doRequest } from '../../Helper/network';
-import plus from '../../Assets/images/plus.png';
 import { withRouter } from "react-router-dom";
 
 

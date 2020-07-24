@@ -95,7 +95,7 @@ class UserController extends Controller {
       const userPreference = await userPreferenceService.addUserPreference({
         user_id: user.get("id"),
         details: {
-          charts: ["1","2","3","4"]
+          charts: ["1", "2", "3", "4"]
         }
       });
 
@@ -234,11 +234,11 @@ class UserController extends Controller {
         );
       } else {
 
-        res.redirect("/sign-in");
-        return this.raiseServerError(res, 422, error, error.message);
+        // res.redirect("/sign-in");
+        return this.raiseServerError(res, 422, {}, 'This verification link is expired!');
       }
     } catch (error) {
-      console.log("error sign in  --> ", error);
+      console.log("error verify user  --> ", error);
       res.redirect("/sign-in");
       return this.raiseServerError(res, 500, error, error.message);
     }
@@ -1431,7 +1431,7 @@ class UserController extends Controller {
 
         if (photos.length > 3) {
           return this.raiseServerError(res, 422, "cannot add more than 3 images");
-         }
+        }
 
         let docQualification = await qualificationService.addQualification({ doctor_id, degree, year, college });
         qualification_id = docQualification.get('id');
