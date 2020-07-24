@@ -122,7 +122,7 @@ class EditAppointment extends Component {
               message.success(formatMessage(messages.edit_appointment_success));
               getAppointments(pId);
             } else {
-              message.warn(errorMessage);
+              message.warn('Something went wrong, Please try again!');
             }
 
             console.log("add appointment response -----> ", response);
