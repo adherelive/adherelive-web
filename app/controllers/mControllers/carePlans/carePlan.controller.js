@@ -34,6 +34,25 @@ class CarePlanController extends Controller {
             const { userDetails } = req;
             const { userId, userData: { category } = {} } = userDetails || {};
 
+            let userCategoryId = null;
+
+            switch (category) {
+                case USER_CATEGORY.DOCTOR:
+                    const doctor = await doctorService.getDoctorByData({
+                        user_id: userId
+                    });
+                    const doctorData = await DoctorWrapper(doctor);
+                    userCategoryId = doctorData.getDoctorId();
+                    break;
+                case USER_CATEGORY.PATIENT:
+                    const patient = await patientService.getPatientByUserId(userId);
+                    const patientData = await PatientWrapper(patient);
+                    userCategoryId = patientData.getPatientId();
+                    break;
+                default:
+                    break;
+            }
+
             const id = parseInt(care_plan_id);
 
             const carePlan = await carePlanService.getCarePlanById(id);
@@ -47,10 +66,19 @@ class CarePlanController extends Controller {
                     schedule_data: { description = '', end_time = '', organizer = {}, treatment = '', participant_two = {}, start_time = '', date = '' } = {},
                     reason = '', time_gap = '' } = appointment || {};
 
+                const {id : participant_two_id, category: participant_two_type} = participant_two || {};
+
                     const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
-                        date,
                         start_time,
-                        end_time
+                        end_time,
+                        {
+                            participant_one_id: userCategoryId,
+                            participant_one_type: category,
+                        },
+                        {
+                            participant_two_id,
+                            participant_two_type,
+                        }
                       );
 
                       if (getAppointmentForTimeSlot.length > 0) {
