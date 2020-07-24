@@ -1753,14 +1753,14 @@ class UserController extends Controller {
   updateUserPassword = async (req, res) => {
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { userDetails: { userId }, body: { new_password, confirm_password } = {} } = req;
+      const { userDetails: { userId }, body: { password, confirm_password } = {} } = req;
 
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(new_password, salt);
+      const hash = await bcrypt.hash(password, salt);
 
       const updateUser = await userService.updateUser({
         password: hash
@@ -1768,13 +1768,16 @@ class UserController extends Controller {
 
       const updatedUser = await UserWrapper(null, userId);
 
-      return raiseSuccess(res, 200, {
-        users: {
-          [updatedUser.getId()]: updatedUser.getBasicInfo()
-        },
-      },
-        "Password reset successful. Please login to continue"
-      );
+      if (req.cookies.accessToken) {
+        res.clearCookie("accessToken");
+
+        return this.raiseSuccess(res, 200, {}, "Password reset successful. Please login to continue");
+      } else {
+        return this.raiseClientError(res, 422, {}, constants.COOKIES_NOT_SET);
+        // let response = new Response(false, 500);
+        // response.setError(errMessage.INTERNAL_SERVER_ERROR);
+        // return res.status(500).json(response.getResponse());
+      }
 
     } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
