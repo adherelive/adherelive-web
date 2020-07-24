@@ -1,13 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon } from "antd";
-import ChatComponent from "../../../Containers/Chat";
 import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
 import messages from "./message";
 import moment from "moment";
 
-import CloseIcon from "../../../Assets/images/close.svg";
-import ChatIcon from "../../../Assets/images/chat.svg";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
 
 class PatientDetailsDrawer extends Component {

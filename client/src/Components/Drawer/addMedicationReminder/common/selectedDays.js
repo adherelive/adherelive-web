@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Form, Input, Tag } from "antd";
-import messages from "../message";
 import { DAYS } from "../../../../constant";
 
 const { Item: FormItem } = Form;

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { DatePicker, Form } from "antd";
-import messages from "../message";
 import calendar from "../../../../Assets/images/calendar1.svg";
 import moment from "moment";
 
@@ -78,7 +77,7 @@ class StartDate extends Component {
               rules: [
                 {
                   required: true,
-                  message: "Please enter email"
+                  message: "Please enter start date"
                 }
               ],
               initialValue: getInitialValue(),

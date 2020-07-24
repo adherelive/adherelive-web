@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-// import messages from "./message";
-// import {formatMessage} from "react-intl/src/format";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
 import { Tabs, Button, Steps, Col, Select, Input, Upload, Modal, TimePicker, Icon, message } from "antd";

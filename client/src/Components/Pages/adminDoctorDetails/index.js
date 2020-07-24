@@ -14,7 +14,6 @@ import messages from "./messages";
 import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT, DAYS_TEXT_NUM } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
-import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 
 class AdminDoctorDetails extends Component {
   constructor(props) {

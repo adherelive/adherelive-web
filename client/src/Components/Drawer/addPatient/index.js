@@ -1,16 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, Select, Input, message, Button, Spin, Radio } from "antd";
-import ChatComponent from "../../../Containers/Chat";
-import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
-import messages from "./message";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
 
-import DatePicker from "react-datepicker";
-import CloseIcon from "../../../Assets/images/close.svg";
-import ChatIcon from "../../../Assets/images/chat.svg";
-import ShareIcon from "../../../Assets/images/redirect3x.png";
 import india from '../../../Assets/images/india.png';
 import australia from '../../../Assets/images/australia.png';
 import us from '../../../Assets/images/flag.png';
@@ -24,7 +17,6 @@ import japan from '../../../Assets/images/japan.png';
 import china from '../../../Assets/images/china.png';
 import switzerland from '../../../Assets/images/switzerland.png';
 import france from '../../../Assets/images/france.png';
-import backArrow from '../../../Assets/images/arrow-left-circle-simple-line-icons@3x.png';
 import "react-datepicker/dist/react-datepicker.css";
 const { Option } = Select;
 

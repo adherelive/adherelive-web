@@ -1,18 +1,14 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
-import drawChart from "../../Helper/drawChart";
-import { CHART_TITLE, GRAPH_COLORS, PERMISSIONS, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_ONE, TEST_TWO } from "../../constant";
+import { GRAPH_COLORS, PERMISSIONS } from "../../constant";
 import Tabs from "antd/es/tabs";
-import { Table, Divider, Tag, Button, Menu, Dropdown, Spin, message } from "antd";
+import { Button, Menu, Dropdown, Spin, message } from "antd";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
-import AddAppointmentDrawer from "../../Containers/Drawer/addAppointment";
 import AddPatientDrawer from "../Drawer/addPatient";
-import AddPatient from '../../Assets/images/add-user.png';
 import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
-import { addPatient } from "../../modules/doctors";
 import Donut from '../Common/graphs/donut'
 import GraphsModal from "./graphsModal";
 
