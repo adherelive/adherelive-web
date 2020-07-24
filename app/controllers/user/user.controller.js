@@ -256,7 +256,7 @@ class UserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "user does not exists");
+        return this.raiseClientError(res, 422, user, "User does not exists");
       }
 
       // let verified = user.get("verified");
@@ -319,7 +319,7 @@ class UserController extends Controller {
           "initial data retrieved successfully"
         );
       } else {
-        return this.raiseClientError(res, 401, {}, "Password not matching");
+        return this.raiseClientError(res, 401, {}, "Invalid Credentials");
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
