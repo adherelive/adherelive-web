@@ -12,10 +12,10 @@ import medicineService from "../../services/medicine/medicine.service";
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from './carePlanHelper';
 import {USER_CATEGORY} from "../../../constant";
 import doctorService from "../../services/doctor/doctor.service";
-import DoctorWrapper from "../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../ApiWrapper/mobile/patient";
-import AppointmentWrapper from "../../ApiWrapper/mobile/appointments";
-import MedicationWrapper from "../../ApiWrapper/mobile/medicationReminder";
+import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import PatientWrapper from "../../ApiWrapper/web/patient";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
+import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 const moment = require("moment");
 
 class CarePlanController extends Controller {
