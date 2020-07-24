@@ -65,7 +65,8 @@ class SelectedDays extends Component {
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {
-                required: true
+                required: true,
+                message:'Please select days for medication!'
               }
             ],
             initialValue: selectedDays.join(",")

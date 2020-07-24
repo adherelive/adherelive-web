@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import landingPage from "../Components/landingPage";
 // import Signup from "../Containers/Invite";
@@ -8,9 +8,12 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import Register from "../../Containers/DoctorOnBoarding/clinicRegister";
 import SignIn from "../../Containers/SignIn";
 import Validation from "../../Containers/Validation";
+import ForgotPassword from "../../Containers/forgotPassword";
+import ResetPassword from "../../Containers/forgotPassword/resetPassword";
 //import SignIn from "../../Components/SignIn";
 import BlankState from "../../Containers/BlankState";
 import { PATH } from "../../constant";
+import { resetPassword } from "../../modules/auth";
 
 
 
@@ -34,9 +37,9 @@ export default class Global extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {authRedirection} = this.props;
-    const {redirecting} = this.state;
-    const {authRedirection : prevAuthRedirection} = prevProps || {};
+    const { authRedirection } = this.props;
+    const { redirecting } = this.state;
+    const { authRedirection: prevAuthRedirection } = prevProps || {};
     if (!(prevAuthRedirection === authRedirection)) {
       this.setState((prevState, prevProps) => {
         return {
@@ -55,8 +58,8 @@ export default class Global extends Component {
   }
 
   render() {
-    const {authRedirection} = this.props;
-    const {redirecting} = this.state;
+    const { authRedirection } = this.props;
+    const { redirecting } = this.state;
     console.log("179236 redirecting -> DOCTORRRRR ROUTERRR ", redirecting);
     return (
       <BrowserRouter>
@@ -65,9 +68,11 @@ export default class Global extends Component {
           {/* {this.state.redirecting && <Redirect to={this.state.redirecting} />} */}
           {/* <Route exact path={PATH.SIGN_IN} component={SignIn} /> */}
           {/* <Route exact path={PATH.REGISTER} component={Register} /> */}
-           <Route exact path={PATH.SIGN_IN} component={SignIn} />
+          <Route exact path={PATH.SIGN_IN} component={SignIn} />
           {/* <Route path="/already-verified" component={BlankState} /> */}
           <Route path={PATH.VALIDATION_PAGE} component={Validation} />
+          <Route path={PATH.FORGOT_PASSWORD} component={ForgotPassword} />
+          <Route path={PATH.RESET_PASSWORD} component={ResetPassword} />
           <Route path="" component={SignIn} />
           {/* <Route exact path={''} component={Register} /> */}
           {/*<Route exact path={PATH.FORGOT_PASSWORD} component={ForgotPassword} />*/}
@@ -75,7 +80,7 @@ export default class Global extends Component {
           {/*<Route exact path={PATH.SIGN_UP} component={Signup} />*/}
           {/*<Route exact path={PATH.RESET_PASSWORD} component={ResetPassword} />*/}
           {/*<Route exact path={PATH.LANDING_PAGE} component={landingPage} />*/}
-        {/*<Route path="" component={BlankState} />*/}
+          {/*<Route path="" component={BlankState} />*/}
         </Switch>
       </BrowserRouter>
     );

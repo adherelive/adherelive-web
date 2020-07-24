@@ -75,6 +75,8 @@ class AddAppointment extends Component {
           treatment_id: treatment,
           reason
         };
+
+        // console.log('6797867076878678978768',data);
         if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')
         }

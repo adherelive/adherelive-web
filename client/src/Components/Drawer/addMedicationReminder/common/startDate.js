@@ -75,6 +75,12 @@ class StartDate extends Component {
           </div>
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
+              rules: [
+                {
+                  required: true,
+                  message: "Please enter email"
+                }
+              ],
               initialValue: getInitialValue(),
             })(
               <DatePicker
