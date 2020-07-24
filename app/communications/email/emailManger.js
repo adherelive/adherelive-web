@@ -105,6 +105,13 @@ class EmailManger {
               {}
           );
           break;
+        case "verifiedDoctor":
+          templateString = await this.genrateEmailTemplateString(
+              "verifiedDoctor",
+              payload.templateData,
+              {}
+          );
+          break;
         case "BookingStatusSubmittedUser":
           templateString = await this.genrateEmailTemplateString(
             "general",

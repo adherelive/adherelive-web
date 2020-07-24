@@ -186,6 +186,11 @@ class AddMedicationReminder extends Component {
             console.log("add medication reminder ui error -----> ", error);
           }
         }
+      } else {
+        Object.keys(err).forEach(id => {
+          const {errors} = err[id] || {};
+          message.warn(errors[0].message, 10);
+        });
       }
     });
   };

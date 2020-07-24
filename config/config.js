@@ -8,7 +8,8 @@ module.exports = () => {
       env: process.env.APP_ENV,
       mobile_verify_link: process.env.MOBILE_INVITE_LINK,
       reset_password: process.env.RESET_PASSWORD_LINK,
-      developer_email: process.env.DEVELOPER_EMAIL
+      developer_email: process.env.DEVELOPER_EMAIL,
+      verified_doctor: process.env.DASHBOARD_LINK
     },
     db: {
       connection: process.env.DB_CONNECTION,
