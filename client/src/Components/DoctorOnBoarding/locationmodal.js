@@ -30,7 +30,12 @@ class ClinicRegister extends Component {
     };
 
     setManualPincode = e => {
-        this.setState({ pincode: e.target.value });
+
+        const { value } = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+            this.setState({ pincode: e.target.value });
+        }
     };
 
     setManualLandMark = e => {

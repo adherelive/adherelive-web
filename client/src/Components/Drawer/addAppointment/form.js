@@ -158,8 +158,46 @@ class AddAppointmentForm extends Component {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
     console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
-    console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
-    setFieldsValue({ [END_TIME]: moment(time).add('minutes', 30) });
+    const startDate = getFieldValue(DATE);
+    if (startDate) {
+      const newMonth = startDate.get("month");
+      const newDate = startDate.get("date");
+      const newYear = startDate.get("year");
+      let newEventStartTime;
+      let newEventEndTime;
+      newEventStartTime = moment(startTime)
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate });
+      newEventEndTime = moment(newEventStartTime).add('minutes', 30);
+      setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
+    } else {
+      console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
+      setFieldsValue({ [END_TIME]: moment(time).add('minutes', 30) });
+    }
+  };
+
+  handleEndTimeChange = (time, str) => {
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+    console.log("312983u193812 values, value ", time, str);
+    const startTime = getFieldValue(START_TIME);
+    const startDate = getFieldValue(DATE);
+    if (startDate) {
+      const newMonth = startDate.get("month");
+      const newDate = startDate.get("date");
+      const newYear = startDate.get("year");
+      let newEventStartTime;
+      let newEventEndTime;
+      newEventStartTime = moment(startTime)
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate });
+      newEventEndTime = time
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate });
+      setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
+    } else {
+      console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
+      setFieldsValue({ [END_TIME]: moment(time) });
+    }
   };
 
   getPatientName = () => {
@@ -222,6 +260,7 @@ class AddAppointmentForm extends Component {
       disabledDate,
       handleDateSelect,
       handleStartTimeChange,
+      handleEndTimeChange,
       getPatientName,
       getTreatment
     } = this;
@@ -341,7 +380,7 @@ class AddAppointmentForm extends Component {
               <TimePicker
                 use12Hours
                 minuteStep={15}
-                value={currentDate}
+                onChange={handleEndTimeChange}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
               // getPopupContainer={this.getParentNode}
