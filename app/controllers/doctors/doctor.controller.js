@@ -636,7 +636,7 @@ class DoctorController extends Controller {
         message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
       };
 
-      if(process.config.app.env === "development") {
+      // if(process.config.app.env === "development") {
         const emailPayload = {
           title: "Mobile Patient Verification mail",
           toAddress: process.config.app.developer_email,
@@ -653,9 +653,9 @@ class DoctorController extends Controller {
           }
         };
         Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-      } else {
+      // } else {
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
-      }
+      // }
 
 
       return this.raiseSuccess(
