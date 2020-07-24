@@ -115,7 +115,7 @@ class ClinicRegister extends Component {
                 <div className='location-container'>
                     <div className='form-category-headings'>Google</div>
                     <PlacesAutocomplete
-                        value={address ? address : location}
+                        value={address ? address : (!location.includes('Pincode')) ? location : null}
                         disabled={addressManual ? true : false}
                         onChange={this.handleChangeAddress}
                         onSelect={this.handleSelect}
@@ -159,7 +159,7 @@ class ClinicRegister extends Component {
                     <Input
                         placeholder="Ex: 112,Aurobindo Marg..."
                         disabled={address ? true : false}
-                        value={addressManual}
+                        value={addressManual ? addressManual : location.includes('Pincode:') ? location.split(',')[0] : ''}
                         className={"form-inputs-location-modal"}
                         onChange={this.setManualAddress}
                     />
@@ -167,7 +167,7 @@ class ClinicRegister extends Component {
                     <Input
                         placeholder="Ex: 110000"
                         disabled={address ? true : false}
-                        value={pincode}
+                        value={pincode ? pincode : location.includes('Pincode:') ? location.split('Pincode:')[1] : ''}
                         className={"form-inputs-location-modal"}
                         onChange={this.setManualPincode}
                     />
@@ -175,7 +175,7 @@ class ClinicRegister extends Component {
                     <Input
                         placeholder="Ex: Near Vishvavidyalya Metro Station"
                         disabled={address ? true : false}
-                        value={landmark}
+                        value={landmark ? landmark : location.includes('Pincode:') ? location.split(',')[1] : ''}
                         className={"form-inputs-location-modal"}
                         onChange={this.setManualLandMark}
                     />
