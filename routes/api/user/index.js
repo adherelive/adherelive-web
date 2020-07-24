@@ -188,24 +188,25 @@ router.post(
 router.post(
     "/password-reset",
     Authenticate,
-    [
-        check("password").isLength({ min: PASSWORD_LENGTH }),
-        check("confirm_password").isLength({ min: PASSWORD_LENGTH }),
-        body("password").custom((value, { req }) => {
-            const regEx = new RegExp(
-                "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
-            );
-            if (req.body.confirm_password !== value) {
-                throw new Error("Passwords do not match");
-            } else if (!regEx.test(value)) {
-                throw new Error(
-                    "Password must contain atleast 1 uppercase, lowercase, number & special character"
-                );
-            } else {
-                return true;
-            }
-        }),
-    ],
+    // [
+    //     check("password").isLength({ min: PASSWORD_LENGTH }),
+    //     check("confirm_password").isLength({ min: PASSWORD_LENGTH }),
+    //     body("password").custom((value, { req }) => {
+    //         const regEx = new RegExp(
+    //             "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
+    //         );
+    //         if (req.body.confirm_password !== value) {
+    //             throw new Error("Passwords do not match");
+    //         } else if (!regEx.test(value)) {
+    //             throw new Error(
+    //                 "Password must contain atleast 1 uppercase, lowercase, number & special character"
+    //             );
+    //         } else {
+    //             return true;
+    //         }
+    //     }),
+    // ],
+    validator.validateUpdatePasswordData,
     userController.updateUserPassword
 );
 

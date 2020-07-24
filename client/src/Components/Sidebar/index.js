@@ -39,12 +39,12 @@ class SideMenu extends Component {
     }
   }
 
-  handleItemSelect = ({ selectedKeys }) => {
+  handleItemSelect = ({ key }) => {
     const { history, authenticated_category, authPermissions = [] } = this.props;
     console.log("19231231237813 authenticated_category --> ", this.props);
     const { handleLogout } = this;
-    console.log(selectedKeys);
-    switch (selectedKeys[0]) {
+    console.log("28931893197382379 ", key);
+    switch (key) {
       case LOGO:
       case DASHBOARD:
         if (authenticated_category === USER_CATEGORY.ADMIN) {
@@ -65,7 +65,7 @@ class SideMenu extends Component {
         history.push(PATH.LANDING_PAGE);
         break;
     }
-    this.setState({ selectedKeys: selectedKeys[0] });
+    this.setState({ selectedKeys: key });
   };
 
   render() {
@@ -95,9 +95,10 @@ class SideMenu extends Component {
     console.log("DATA IN SIDEBARRRRR", dp, initials);
     return (
       <Menu
-        selectedKeys={[selectedKeys]}
+        // selectedKeys={[selectedKeys]}
         className="side-bar-menu p0 bg-dark-grey"
-        onSelect={handleItemSelect}
+        onClick={handleItemSelect}
+        selectable={false}
       >
         <MenuItem
           className="flex direction-column justify-center align-center p0"

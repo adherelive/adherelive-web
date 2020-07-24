@@ -351,7 +351,7 @@ class MobileDoctorController extends Controller {
 
       Logger.debug("process.config.app.env ---> ", process.config.app.env);
 
-      if(process.config.app.env === "development") {
+      // if(process.config.app.env === "development") {
         const emailPayload = {
           title: "Mobile Patient Verification mail",
           toAddress: process.config.app.developer_email,
@@ -368,9 +368,9 @@ class MobileDoctorController extends Controller {
           }
         };
         Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-      } else {
+      // } else {
         Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
-      }
+      // }
 
       return this.raiseSuccess(
         res,

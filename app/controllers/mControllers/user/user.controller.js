@@ -64,7 +64,7 @@ class MobileUserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "user does not exists");
+        return this.raiseClientError(res, 422, user, "User does not exists");
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
@@ -112,10 +112,10 @@ class MobileUserController extends Controller {
             auth_category: apiUserDetails.getCategory(),
             ...permissions,
           },
-          "Initial data retrieved successfully"
+          "Signed in successfully"
         );
       } else {
-        return this.raiseClientError(res, 422, {}, "password not matching");
+        return this.raiseClientError(res, 422, {}, "Invalid Credentials");
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
