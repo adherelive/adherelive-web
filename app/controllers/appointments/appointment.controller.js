@@ -282,7 +282,7 @@ class AppointmentController extends Controller {
       ] = { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: carePlanMedicationIds, appointment_ids: carePlanAppointmentIds };
 
 
-      const appointmentApiData = await new MAppointmentWrapper(appointment);
+      const appointmentApiData = await new AppointmentWrapper(appointment);
 
       const eventScheduleData = {
         event_type: EVENT_TYPE.APPOINTMENT,
@@ -342,7 +342,7 @@ class AppointmentController extends Controller {
 
       const oldAppointment = await appointmentService.getAppointmentById(appointment_id);
 
-      const oldAppointmentData = await MAppointmentWrapper(oldAppointment);
+      const oldAppointmentData = await AppointmentWrapper(oldAppointment);
 
       let userCategoryId = null;
 
@@ -425,7 +425,7 @@ class AppointmentController extends Controller {
 
       const updatedAppointmentDetails = await appointmentService.getAppointmentById(appointment_id);
 
-      const appointmentApiData = await MAppointmentWrapper(updatedAppointmentDetails);
+      const appointmentApiData = await AppointmentWrapper(updatedAppointmentDetails);
 
       // const eventScheduleData = {
       //   event_type: EVENT_TYPE.APPOINTMENT,
@@ -479,7 +479,7 @@ class AppointmentController extends Controller {
       let appointmentApiData = {};
 
       for(const appointment of appointmentList) {
-        const appointmentWrapper = await MAppointmentWrapper(appointment);
+        const appointmentWrapper = await AppointmentWrapper(appointment);
 
         console.log('DETAILSSSSS in API WRAPPER', appointmentWrapper.getBasicInfo());
         appointmentApiData[
@@ -500,7 +500,7 @@ class AppointmentController extends Controller {
       // } else {
       // }
     } catch (error) {
-      // Logger.debug("500 error", error);
+      Logger.debug("500 error", error);
       return raiseServerError(res);
     }
   };
