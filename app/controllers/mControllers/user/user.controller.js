@@ -1,11 +1,9 @@
 import * as constants from "../../../../config/constants";
 
-const { OAuth2Client } = require("google-auth-library");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
 import bcrypt from "bcrypt";
-import chalk from "chalk";
 
 import Log from "../../../../libs/log";
 
@@ -13,7 +11,6 @@ const Response = require("../../helper/responseFormat");
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-// import doctorService from "../../../services/doctor/doctor.service";
 
 import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MUserWrapper from "../../../ApiWrapper/mobile/user";
@@ -43,10 +40,7 @@ import {
   ONBOARDING_STATUS, VERIFICATION_TYPE
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
-// import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../../config/messages.json").errMessages;
-import minioService from "../../../../app/services/minio/minio.service";
-import md5 from "js-md5";
 import treatmentService from "../../../services/treatment/treatment.service";
 import MTreatmentWrapper from "../../../ApiWrapper/mobile/treatments";
 import severityService from "../../../services/severity/severity.service";
@@ -155,7 +149,6 @@ class MobileUserController extends Controller {
         category: "doctor",
         onboarded: false,
         verified,
-        activated_on: moment()
       });
 
       const userInfo = await userService.getUserByEmail({ email });

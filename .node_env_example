@@ -87,3 +87,5 @@ FORCE_COLOR=1
 
 BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
 BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
+
+DEVELOPER_EMAIL=

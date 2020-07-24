@@ -74,30 +74,50 @@ class AppointmentService {
     }
   };
 
-  checkTimeSlot = async (start_date, start_time, end_time, appointment_id = null) => {
+  checkTimeSlot = async (start_time, end_time, participantOne = {}, participantTwo = {}) => {
     try {
+      const {participant_one_id, participant_one_type} = participantOne || {};
+      const {participant_two_id, participant_two_type} = participantTwo || {};
       const appointments = await Appointments.findAll({
         where: {
-          // [Op.not]: [{id: [appointment_id]}],
+          // [Op.or]: [
+          //   {
+          //     participant_one_id,
+          //     participant_one_type,
+          //   },
+          //   {
+          //     participant_two_id,
+          //     participant_two_type,
+          //   }
+          // ],
           [Op.or]: [
-            // {
-            //   start_date
-            // },
             {
-              start_time: {
-                // [Op.or]: {
-                  [Op.between]: [start_time, end_time]
-                // }
-              }
+              participant_one_id,
+              participant_one_type,
             },
             {
-              end_time: {
-                // [Op.or]: {
+              participant_two_id,
+              participant_two_type,
+            },
+          ],
+          [Op.and] : {
+            [Op.or]: [
+              {
+                start_time: {
+                  // [Op.or]: {
                   [Op.between]: [start_time, end_time]
-                // }
+                  // }
+                }
+              },
+              {
+                end_time: {
+                  // [Op.or]: {
+                  [Op.between]: [start_time, end_time]
+                  // }
+                }
               }
-            }
-          ]
+            ],
+          },
         },
       });
       return appointments;

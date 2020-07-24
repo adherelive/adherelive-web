@@ -13,13 +13,6 @@ const PASSWORD_LENGTH = 8;
 
 router.post(
     "/sign-in",
-    // [
-    //     check("mobile_number")
-    //         .isNumeric()
-    //         .isLength({max: 10})
-    //         .withMessage("Invalid mobile number"),
-    //     check("password").isLength({ min: PASSWORD_LENGTH })
-    // ],
     validator.validateSignInData,
     mUserController.signIn,
 
@@ -27,28 +20,7 @@ router.post(
 
 router.post(
     "/sign-up",
-    [
-        check("email")
-            .isEmail()
-            .withMessage("Email is not valid"),
-        check("password")
-            .isLength({ min: PASSWORD_LENGTH })
-            .withMessage(
-                `Password must be at least ${PASSWORD_LENGTH} characters long`
-            ),
-        body("password").custom((value, { req }) => {
-            const regEx = new RegExp(
-                "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
-            );
-            if (!regEx.test(value)) {
-                throw new Error(
-                    "Password must contain atleast 1 uppercase, lowercase, number & special character"
-                );
-            } else {
-                return true;
-            }
-        }),
-    ],
+    validator.validateCredentialsData,
     mUserController.signUp,
 );
 
