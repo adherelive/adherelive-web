@@ -73,7 +73,6 @@ class AddAppointment extends Component {
           reason,
           description,
           treatment_id: treatment,
-          reason
         };
 
         // console.log('6797867076878678978768',data);

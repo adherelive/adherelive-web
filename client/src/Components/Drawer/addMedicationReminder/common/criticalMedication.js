@@ -47,7 +47,7 @@ class CriticalMedication extends Component {
         return (
             <Fragment>
                 <FormItem
-                    className="flex-1 align-self-end wp100 critical-checkbox"
+                    className="flex-1 wp100 critical-checkbox"
                     validateStatus={error ? "error" : ""}
                     help={error ? error[0] : ""}
                 >
