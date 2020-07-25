@@ -488,8 +488,8 @@ class EditMedicationReminderForm extends Component {
                 size="small"
                 className="mg-ml flex justify-content-end"
               >
-                <RadioButton value={UNIT_ML} className={medicineUnit !== 'ml' ? `unselected-text` : ''} onClick={setUnit}>ml</RadioButton>
-                <RadioButton value={UNIT_MG} className={medicineUnit !== 'mg' ? `unselected-text` : ''} onClick={setUnit}>mg</RadioButton>
+                <RadioButton value={UNIT_ML} className={medicineUnit !== 'ml' ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit}>ml</RadioButton>
+                <RadioButton value={UNIT_MG} className={medicineUnit !== 'mg' ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit}>mg</RadioButton>
               </RadioGroup>
             </div>
           </div>
