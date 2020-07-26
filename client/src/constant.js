@@ -40,16 +40,16 @@ export const BEFORE_SLEEP = "10";
 export const MEDICATION_TIMING = {
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
-    [TIME_KEY]: "8am"
+    [TIME_KEY]: "8:00am"
   },
   [AFTER_BREAKFAST]:
   {
     [TEXT_KEY]: "After Breakfast",
-    [TIME_KEY]: "9am"
+    [TIME_KEY]: "9:00am"
   },
   [NOON]: {
     [TEXT_KEY]: "Noon",
-    [TIME_KEY]: "12pm"
+    [TIME_KEY]: "12:00pm"
   },
   [BEFORE_LUNCH]: {
     [TEXT_KEY]: "Before Lunch",
@@ -65,7 +65,7 @@ export const MEDICATION_TIMING = {
   },
   [AFTER_EVENING_SNACK]: {
     [TEXT_KEY]: "After Evening Snack",
-    [TIME_KEY]: "6pm"
+    [TIME_KEY]: "6:00pm"
   },
   [BEFORE_DINNER]: {
     [TEXT_KEY]: "Before Dinner",
@@ -79,6 +79,33 @@ export const MEDICATION_TIMING = {
     [TEXT_KEY]: "Before Sleeping",
     [TIME_KEY]: "10:30pm"
   }
+};
+
+
+export const MEDICATION_TIMING_HOURS = {
+  [BEFORE_BREAKFAST]: 8,
+  [AFTER_BREAKFAST]: 9,
+  [NOON]: 12,
+  [BEFORE_LUNCH]: 12,
+  [AFTER_LUNCH]: 13,
+  [BEFORE_EVENING_SNACK]: 17,
+  [AFTER_EVENING_SNACK]: 18,
+  [BEFORE_DINNER]: 19,
+  [AFTER_DINNER]: 20,
+  [BEFORE_SLEEP]: 22
+};
+
+export const MEDICATION_TIMING_MINUTES = {
+  [BEFORE_BREAKFAST]: 0,
+  [AFTER_BREAKFAST]: 0,
+  [NOON]: 0,
+  [BEFORE_LUNCH]: 30,
+  [AFTER_LUNCH]: 30,
+  [BEFORE_EVENING_SNACK]: 30,
+  [AFTER_EVENING_SNACK]: 0,
+  [BEFORE_DINNER]: 30,
+  [AFTER_DINNER]: 30,
+  [BEFORE_SLEEP]: 30
 };
 
 export const ONBOARDING_STATUS = {
@@ -238,6 +265,16 @@ export const DAYS_TEXT = {
   "Fri": "friday",
   "Sat": "saturday",
   "Sun": "sunday",
+};
+
+export const DAYS_NUMBER = {
+  "Mon": 1,
+  "Tue": 2,
+  "Wed": 3,
+  "Thu": 4,
+  "Fri": 5,
+  "Sat": 6,
+  "Sun": 7,
 };
 
 export const DAYS_TEXT_NUM = {

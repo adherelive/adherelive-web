@@ -23,7 +23,7 @@ import CalendarTimeSelection from "../calendarTimeSelection";
 
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
-import { REPEAT_TYPE, USER_CATEGORY, MEDICINE_TYPE } from "../../../../constant";
+import { REPEAT_TYPE, USER_CATEGORY, MEDICINE_TYPE, DAYS_NUMBER } from "../../../../constant";
 const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
 
@@ -100,6 +100,8 @@ class AddMedicationReminderForm extends Component {
 
     let repeat = getFieldValue(repeatField.field_name);
 
+
+    let selectedDays = getFieldValue(repeatDaysField.field_name);
     let repeatInterval = getFieldValue(repeatIntervalField.field_name);
 
     if (repeatValue) {
@@ -110,8 +112,31 @@ class AddMedicationReminderForm extends Component {
 
     // }
 
-    console.log('3647823651783265818347========>', repeatInterval, repeat);
+    // console.log('3647823651783265818347========>', selectedDays, repeat);
     const startDate = getFieldValue(startDateField.field_name);
+    let startDateDay = startDate ? moment(startDate).format('ddd') : moment().format('ddd');
+    let startDayNumber = DAYS_NUMBER[startDateDay];
+    let dayDiffPos = 0;
+    let dayDiffNeg = 0;
+    let daysToAdd = 0;
+    if (selectedDays.length) {
+      // if (selectedDays.length === 1) {
+      //   selectedDays = [selectedDays];
+      // }
+      selectedDays = selectedDays.split(',');
+      for (let day of selectedDays) {
+        let dayNo = DAYS_NUMBER[day];
+        let dayDiff = dayNo - startDayNumber;
+
+        dayDiffPos = dayDiffPos === 0 && dayDiff > 0 ? dayDiff : dayDiff > 0 && dayDiff < dayDiffPos ? dayDiff : dayDiffPos;
+        dayDiffNeg = dayDiffNeg === 0 && dayDiff < 0 ? dayDiff : dayDiff < 0 && Math.abs(dayDiff) > Math.abs(dayDiffNeg) ? dayDiff : dayDiffNeg;
+      }
+
+      daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
+
+      console.log('3647823651783265818347========>', selectedDays, dayDiffPos, dayDiffNeg, daysToAdd);
+    }
+
 
     let newEndDate;
 
@@ -146,7 +171,7 @@ class AddMedicationReminderForm extends Component {
       newEndDate = startDateCopy;
     }
 
-    return newEndDate;
+    return moment(newEndDate).add(daysToAdd, 'days');
   };
 
   adjustEndDate = repeatValue => {

@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from "react";
-import { injectIntl, FormattedMessage } from "react-intl";
 import { Button, Input, Form, Row, Col, message } from "antd";
-import { Spring } from 'react-spring/renderprops'
-import LoginByGoogle from "./googleLogin";
-import LoginByFacebook from "./facebookLogin";
+import { Spring } from 'react-spring/renderprops';
+import SignInForm from './signIn';
+import SignUpForm from './signUp';
+
 import rightArrow from '../../Assets/images/next.png';
-import CompanyIcon from '../../Assets/images/logo3x.png'
+import CompanyIcon from '../../Assets/images/logo3x.png';
 import { PATH } from "../../constant";
 
 const { Item: FormItem } = Form;
@@ -47,38 +47,38 @@ class SignIn extends Component {
         let { login } = this.state;
         let newLogin = !login;
 
-        this.props.form.resetFields();
+        // this.props.form.resetFields();
         this.setState({ login: newLogin });
     }
 
-    handleSignUp = e => {
-        e.preventDefault();
-        const { signUp } = this.props;
+    // handleSignUp = e => {
+    //     e.preventDefault();
+    //     const { signUp } = this.props;
 
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                signUp(values).then(response => {
+    //     this.props.form.validateFields((err, values) => {
+    //         if (!err) {
+    //             signUp(values).then(response => {
 
-                    const { status } = response;
-                    if (status) {
-                        let { payload = {} } = response;
-                        this.props.form.resetFields();
-                        message.success('Please go to your email to verify your account.')
-                    } else {
-                        let { payload: { error = {}, message: responseMessage = '' } = {}, statusCode = '' } = response;
+    //                 const { status } = response;
+    //                 if (status) {
+    //                     let { payload = {} } = response;
+    //                     this.props.form.resetFields();
+    //                     message.success('Please go to your email to verify your account.')
+    //                 } else {
+    //                     let { payload: { error = {}, message: responseMessage = '' } = {}, statusCode = '' } = response;
 
-                        console.log('RESPONSE OF SIGNUP REQUESTTT', error);
-                        if (statusCode === 400 || statusCode === 422) {
-                            const { message: errorMessage = '' } = error;
-                            message.error(statusCode === 400 ? errorMessage : responseMessage);
-                        } else {
-                            message.error('Something went wrong.');
-                        }
-                    }
-                });
-            }
-        });
-    };
+    //                     console.log('RESPONSE OF SIGNUP REQUESTTT', error);
+    //                     if (statusCode === 400 || statusCode === 422) {
+    //                         const { message: errorMessage = '' } = error;
+    //                         message.error(statusCode === 400 ? errorMessage : responseMessage);
+    //                     } else {
+    //                         message.error('Something went wrong.');
+    //                     }
+    //                 }
+    //             });
+    //         }
+    //     });
+    // };
 
     redirectToForgotPassword = () => {
 
@@ -86,55 +86,53 @@ class SignIn extends Component {
         history.push(PATH.FORGOT_PASSWORD);
     }
 
-    handleSignIn = async e => {
-        e.preventDefault();
-        const {
-            form: { validateFields },
-            signIn,
-            match: { path } = {},
-            history
-        } = this.props;
-        this.setState({ loading: true });
-        validateFields(async (err, { email, password }) => {
-            if (!err) {
-                try {
-                    console.log("email, password --> ", email, password);
+    // handleSignIn = async e => {
+    //     e.preventDefault();
+    //     const {
+    //         form: { validateFields },
+    //         signIn,
+    //         match: { path } = {},
+    //         history
+    //     } = this.props;
+    //     this.setState({ loading: true });
+    //     validateFields(async (err, { email, password }) => {
+    //         if (!err) {
+    //             try {
+    //                 console.log("email, password --> ", email, password);
 
-                    const response = await signIn({ email, password });
-                    const { status = false, statusCode } = response;
-                    if (status) {
-                        message.success("LoggedIn successfully", 4);
+    //                 const response = await signIn({ email, password });
+    //                 const { status = false, statusCode } = response;
+    //                 if (status) {
+    //                     message.success("LoggedIn successfully", 4);
 
-                    } else {
-                        if (statusCode === 422) {
-                            message.error("Email does not exist!", 4);
-                        } else {
-                            this.setState({ loading: false });
-                            message.error("Username or Password incorrect", 4);
-                        }
-                    }
-                } catch (err) {
-                    console.log("298293 err ----> ", err);
-                    this.setState({ loading: false });
-                    message.error("Something went wrong, Please try again", 4);
-                }
-            } else {
-                this.setState({ loading: false });
-                message.error("Please fill both Username and Password", 4);
-            }
-        });
-        // signIn();
-    };
+    //                 } else {
+    //                     if (statusCode === 422) {
+    //                         message.error("Email does not exist!", 4);
+    //                     } else {
+    //                         this.setState({ loading: false });
+    //                         message.error("Username or Password incorrect", 4);
+    //                     }
+    //                 }
+    //             } catch (err) {
+    //                 console.log("298293 err ----> ", err);
+    //                 this.setState({ loading: false });
+    //                 message.error("Something went wrong, Please try again", 4);
+    //             }
+    //         } else {
+    //             this.setState({ loading: false });
+    //             message.error("Please fill both Username and Password", 4);
+    //         }
+    //     });
+    //     // signIn();
+    // };
 
     render() {
-        const { googleSignIn, facebookSignIn, form: { getFieldDecorator, isFieldTouched,
-            getFieldError,
-            getFieldsError } } = this.props;
-        let fieldsError = {};
-        FIELDS.forEach(value => {
-            const error = isFieldTouched(value) && getFieldError(value);
-            fieldsError = { ...fieldsError, [value]: error };
-        });
+        const { signIn, signUp } = this.props;
+        // let fieldsError = {};
+        // FIELDS.forEach(value => {
+        //     const error = isFieldTouched(value) && getFieldError(value);
+        //     fieldsError = { ...fieldsError, [value]: error };
+        // });
         const { handleSignIn, handleSignUp } = this;
         const { login } = this.state;
         return (
@@ -202,67 +200,7 @@ class SignIn extends Component {
                                             Enter Your Credentials
                     </div>
 
-                                        <Form onSubmit={handleSignIn} className="login-form">
-                                            <FormItem
-
-                                                validateStatus={fieldsError[EMAIL] ? "error" : ""}
-                                                help={fieldsError[EMAIL] || ""}
-                                            >
-                                                <div className='fs16 medium tal mt8'>Email</div>
-                                                {getFieldDecorator(EMAIL, {
-                                                    rules: [
-                                                        {
-                                                            required: true,
-                                                            message: "Please enter email"
-                                                        },
-                                                        {
-                                                            type: "email",
-                                                            message: "Please enter a valid email!"
-                                                        }
-                                                    ]
-                                                })(
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Email"
-                                                        className="h40"
-                                                    />
-                                                )}
-                                            </FormItem>
-
-                                            <FormItem
-                                                validateStatus={fieldsError[PASSWORD] ? "error" : ""}
-                                                help={fieldsError[PASSWORD] || ""}>
-                                                <div className='fs16 medium tal'>Password</div>
-                                                {getFieldDecorator(PASSWORD, {
-                                                    rules: [{ required: true, message: "Enter your password" }]
-                                                })(<Password placeholder="Password" className="h40" />)}
-                                            </FormItem>
-                                            <div className='flex wp100 justify-end mt-20 mb16'><div className='Forgot-Password medium pointer ' onClick={this.redirectToForgotPassword}>Forgot Password?</div></div>
-
-                                            <FormItem className="mb53">
-                                                <Button
-                                                    type="primary"
-                                                    className="wp100 h40"
-                                                    htmlType="submit"
-                                                    size={"large"}
-                                                // loading={loading}
-                                                >
-                                                    Log in
-                            </Button>
-                                                <div className="flex justify-space-between direction-column align-end">
-                                                    {/* <span className="login-form-forgot inline-flex">
-                  <Link to="/forgot-password">Forgot password?</Link>
-                </span> */}
-                                                    {/*              <p>*/}
-                                                    {/*                  Or{" "}*/}
-                                                    {/*                  <span>*/}
-                                                    {/*  <Link to="/register">Sign Up</Link>*/}
-                                                    {/*</span>*/}
-                                                    {/*              </p>*/}
-                                                </div>
-                                            </FormItem>
-                                        </Form>
-
+                                        <SignInForm signIn={signIn} redirectToForgotPassword={this.redirectToForgotPassword} />
                                         <div className="flex direction-column justify-space-between align-center">
                                             {/* <LoginByGoogle googleSignIn={googleSignIn}/> */}
                                             {/* <LoginByFacebook facebookSignIn={facebookSignIn}/> */}
@@ -292,62 +230,8 @@ class SignIn extends Component {
                                                 Create a password to continue
                     </div>
 
-                                            <Form onSubmit={handleSignUp} className="login-form">
-                                                <FormItem
 
-                                                    validateStatus={fieldsError[EMAIL] ? "error" : ""}
-                                                    help={fieldsError[EMAIL] || ""}
-                                                >
-                                                    <div className='fs16 medium tal mt8'>Your Work Email</div>
-                                                    {getFieldDecorator(EMAIL, {
-                                                        rules: [
-                                                            {
-                                                                required: true,
-                                                                message: "Please enter email"
-                                                            },
-                                                            {
-                                                                type: "email",
-                                                                message: "Please enter a valid email!"
-                                                            }
-                                                        ]
-                                                    })(
-                                                        <Input
-                                                            type="text"
-                                                            placeholder="Email"
-                                                            className="h40"
-                                                        />
-                                                    )}
-                                                </FormItem>
-
-                                                <FormItem
-
-                                                    validateStatus={fieldsError[PASSWORD] ? "error" : ""}
-                                                    help={fieldsError[PASSWORD] || ""}
-                                                >
-                                                    <div className='fs16 medium tal'>Create a Password</div>
-                                                    {getFieldDecorator(PASSWORD, {
-                                                        rules: [{ required: true, message: "Enter your password" }]
-                                                    })(<Password placeholder="Password" className="h40" />)}
-                                                </FormItem>
-
-                                                {/* <div classname='fs12 medium dark-sky-blue mt4 tar'>Forgot Password?</div> */}
-                                                <div className='slate-grey mt-10 mb8 fs12 medium'> By signing up you agree to our privacy policy and terms of use.</div>
-                                                <FormItem >
-                                                    <Button
-                                                        type="primary"
-                                                        className="wp100 h40"
-                                                        htmlType="submit"
-                                                        size={"large"}
-                                                    // loading={loading}
-                                                    >
-                                                        Create Account
-                            </Button>
-                                                    <div className="flex justify-space-between direction-column mt10 align-end">
-
-                                                    </div>
-                                                </FormItem>
-                                            </Form>
-
+                                            <SignUpForm signUp={signUp} />
                                             <div className="flex direction-column justify-space-between align-center">
 
 
@@ -366,4 +250,4 @@ class SignIn extends Component {
     }
 }
 
-export default Form.create()(SignIn);
+export default SignIn;
