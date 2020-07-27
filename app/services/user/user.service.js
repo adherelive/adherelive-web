@@ -48,7 +48,10 @@ class UserService {
     getUserByNumber = async (data) => {
         try {
             const user = await userModel.findOne({
-                where: data
+                where: {
+                    ...data,
+                    category: USER_CATEGORY.PATIENT
+                }
             });
             return user;
         } catch (error) {
