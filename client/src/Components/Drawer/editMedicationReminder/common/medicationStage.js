@@ -21,7 +21,7 @@ const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
 class MedicationStage extends Component {
   constructor(props) {
     super(props);
-    const {medicines} = props;
+    const { medicines } = props;
     this.state = {
       medicines,
       fetchingMedicines: false
@@ -31,21 +31,21 @@ class MedicationStage extends Component {
   }
 
   componentDidMount() {
-    const {medicines} = this.props;
+    const { medicines } = this.props;
     // this.setState({medicines});
   }
 
   getStagesOption = () => {
-    const {medications, payload: {id: medication_id} = {}} = this.props;
+    const { medications, payload: { id: medication_id } = {} } = this.props;
     let medicationStagesOption = [];
-    const {medicines} = this.props;
+    const { medicines } = this.props;
 
-    const {basic_info: {details: {medicine_id} = {}} = {}} = medications[medication_id] || {};
+    const { basic_info: { details: { medicine_id } = {} } = {} } = medications[medication_id] || {};
 
     console.log("918239813 medicines --> ", medicines);
 
     return Object.keys(medicines).map(id => {
-      const { basic_info: {name, type} = {} } = medicines[id] || {};
+      const { basic_info: { name, type } = {} } = medicines[id] || {};
       return (
         <Option key={id} value={id}>
           {name}
@@ -83,10 +83,10 @@ class MedicationStage extends Component {
 
   async handleMedicineSearch(data) {
     try {
-      const {searchMedicine} = this.props;
+      const { searchMedicine } = this.props;
       this.setState({ fetchingMedicines: true });
       const response = await searchMedicine(data);
-      const { status, payload: {data: responseData, message} = {} } = response;
+      const { status, payload: { data: responseData, message } = {} } = response;
       if (status) {
         // const { medicines = {} } = responseData;
         // const medicineList = {};
@@ -113,19 +113,19 @@ class MedicationStage extends Component {
       purpose,
       medications,
       medicationData,
-      payload: {id: medication_id} = {},
+      payload: { id: medication_id } = {},
     } = this.props;
 
-    let {basic_info : {details: {medicine_id} = {}} = {}} = medications[medication_id] || {};
-    
+    let { basic_info: { details: { medicine_id } = {} } = {} } = medications[medication_id] || {};
 
-    const{medicine_id:medicineId=''}=medicationData||{};
-    if(medicineId){
-      medicine_id=medicineId.toString();
+
+    const { medicine_id: medicineId = '' } = medicationData || {};
+    if (medicineId) {
+      medicine_id = medicineId.toString();
     }
-    console.log("2387128371923 medicine_id --> ", medicine_id,typeof(medication_id));
+    console.log("2387128371923 medicine_id --> ", medicine_id, typeof (medication_id));
 
-    const {fetchingMedicines} = this.state;
+    const { fetchingMedicines } = this.state;
 
     const { getStagesOption, getInitialValue, getParentNode, handleMedicineSearch } = this;
 
@@ -142,7 +142,7 @@ class MedicationStage extends Component {
         })(
           <Select
             onSearch={handleMedicineSearch}
-            notFoundContent={fetchingMedicines ? <Spin size="small" /> : 'No match'}
+            notFoundContent={fetchingMedicines ? <Spin size="small" /> : 'No match found'}
             className="drawer-select"
             placeholder="Choose Medicine"
             showSearch

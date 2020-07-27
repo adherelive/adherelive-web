@@ -991,7 +991,7 @@ class QualificationRegister extends Component {
               </div>
               <Select
                 onSearch={this.handleDegreeSearch}
-                notFoundContent={this.state.fetchingDegrees ? <Spin size="small" /> : null}
+                notFoundContent={this.state.fetchingDegrees ? <Spin size="small" /> : 'No match found'}
                 className="form-inputs"
                 placeholder="Select Degree"
                 showSearch
@@ -1014,7 +1014,7 @@ class QualificationRegister extends Component {
               <div className='form-headings'>College</div>
               <Select
                 onSearch={this.handleCollegeSearch}
-                notFoundContent={this.state.fetchingColleges ? <Spin size="small" /> : null}
+                notFoundContent={this.state.fetchingColleges ? <Spin size="small" /> : 'No match found'}
                 className="form-inputs"
                 placeholder="Select College"
                 showSearch
@@ -1139,7 +1139,7 @@ class QualificationRegister extends Component {
               /> */}
               <Select
                 onSearch={this.handleCouncilSearch}
-                notFoundContent={this.state.fetchingCouncils ? <Spin size="small" /> : null}
+                notFoundContent={this.state.fetchingCouncils ? <Spin size="small" /> : 'No match found'}
                 className="form-inputs"
                 placeholder="Select Council"
                 showSearch
