@@ -130,7 +130,7 @@ class MedicationStage extends Component {
         })(
           <Select
             onSearch={handleMedicineSearch}
-            notFoundContent={fetchingMedicines ? <Spin size="small" /> : 'No match'}
+            notFoundContent={fetchingMedicines ? <Spin size="small" /> : 'No match found'}
             className="drawer-select"
             placeholder="Choose Medicine"
             showSearch

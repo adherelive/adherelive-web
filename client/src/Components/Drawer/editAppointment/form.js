@@ -285,7 +285,7 @@ class EditAppointmentForm extends Component {
               className="user-select drawer-select"
               // onSearch={fetchPatients}
               placeholder={getPatientName()}
-              notFoundContent={fetchingPatients ? <Spin size="small" /> : null}
+              notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
               showSearch={true}
               disabled={getInitialValue() ? true : false}
               // todo: update when patients are there

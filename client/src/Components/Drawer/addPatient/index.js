@@ -330,7 +330,7 @@ class PatientDetailsDrawer extends Component {
                     placeholder="Select Condition"
                     onChange={this.setCondition}
                     onSearch={this.handleConditionSearch}
-                    notFoundContent={this.state.fetchingCondition ? <Spin size="small" /> : null}
+                    notFoundContent={this.state.fetchingCondition ? <Spin size="small" /> : 'No match found'}
                     showSearch
                     // onFocus={() => handleMedicineSearch("")}
                     autoComplete="off"
@@ -364,7 +364,7 @@ class PatientDetailsDrawer extends Component {
                     placeholder="Select Severity"
                     onChange={this.setSeverity}
                     onSearch={this.handleSeveritySearch}
-                    notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : null}
+                    notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : 'No match found'}
                     showSearch
                     // onFocus={() => handleMedicineSearch("")}
                     autoComplete="off"
@@ -398,7 +398,7 @@ class PatientDetailsDrawer extends Component {
                     placeholder="Select Treatment"
                     onChange={this.setTreatment}
                     onSearch={this.handleTreatmentSearch}
-                    notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : null}
+                    notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : 'No match found'}
                     showSearch
                     // onFocus={() => handleMedicineSearch("")}
                     autoComplete="off"
