@@ -241,11 +241,19 @@ class PatientDetailsDrawer extends Component {
     return (
       <Fragment>
         <Drawer
+
+          title="   "
           placement="right"
           // closable={false}
+          headerStyle={{
+            position: "sticky",
+            zIndex: "9999",
+            top: "0px"
+          }}
           onClose={onClose}
           visible={visible} // todo: change as per state, -- WIP --
           width={600}
+
         >
           {getPatientDetailContent()}
         </Drawer>
