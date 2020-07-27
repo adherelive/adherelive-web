@@ -187,10 +187,11 @@ class AddMedicationReminder extends Component {
           }
         }
       } else {
-        Object.keys(err).forEach(id => {
-          const {errors} = err[id] || {};
-          message.warn(errors[0].message, 10);
-        });
+        message.warn("Please fill all the mandatory fields");
+        // Object.keys(err).forEach(id => {
+        //   const {errors} = err[id] || {};
+        //   message.warn(errors[0].message, 10);
+        // });
       }
     });
   };
