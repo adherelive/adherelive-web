@@ -48,9 +48,10 @@ class EditMedicationReminder extends Component {
     } = props;
     const isError = this.hasErrors(getFieldsError());
     const { disabledOk } = this.state;
-    if (disabledOk !== isError && isFieldsTouched()) {
-      console.log("[1234] this.state.fieldChanged ", this.state.fieldChanged);
-      this.setState({ disabledOk: isError, fieldChanged: true });
+
+    console.log("[1234] this.state.fieldChanged ", isError, isFieldsTouched(), getFieldsError());
+    if (isFieldsTouched()) {
+      this.setState({ disabledOk: false, fieldChanged: true });
     }
   };
 
@@ -321,7 +322,7 @@ class EditMedicationReminder extends Component {
           onSubmit={handleSubmit}
           onClose={editMedication || addMedication ? hideMedication : onClose}
           submitText={formatMessage(messages.update_button_text)}
-          submitButtonProps={{}}
+          submitButtonProps={submitButtonProps}
           cancelComponent={getDeleteButton()}
         />
       </Drawer>
