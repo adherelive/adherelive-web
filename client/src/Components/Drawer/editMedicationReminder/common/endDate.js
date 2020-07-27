@@ -123,14 +123,14 @@ class EndDate extends Component {
               initialValue: end_date ? moment(end_date) : getInitialValue()
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
+                className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 // suffixIcon={calendarComp()}
                 disabled={
                   getFieldError(repeatIntervalField.field_name) !== undefined
                 }
-                allowClear={false}
+                // allowClear={false}
                 disabledDate={disabledEndDate}
                 getCalendarContainer={this.getParentNode}
                 popupStyle={{ left: 0 }}

@@ -83,7 +83,7 @@ class StartDate extends Component {
               initialValue: getInitialValue(),
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
+                className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}

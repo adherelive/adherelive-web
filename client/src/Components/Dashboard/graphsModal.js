@@ -9,7 +9,7 @@ import { Tabs, Button, Checkbox, Steps, Col, Select, Input, Upload, Modal, TimeP
 
 
 
-const graphs = [NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_TWO, TEST_ONE];
+const graphs = [NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_ONE, TEST_TWO];
 
 class ClinicRegister extends Component {
     constructor(props) {

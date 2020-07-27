@@ -160,12 +160,60 @@ class EditAppointmentForm extends Component {
     setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
   };
 
+  // handleStartTimeChange = (time, str) => {
+  //   const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+  //   console.log("312983u193812 values, value ", time, str);
+  //   const startTime = getFieldValue(START_TIME);
+  //   console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
+  //   setFieldsValue({ [END_TIME]: moment(time).add('minutes', 30) });
+  // };
+
   handleStartTimeChange = (time, str) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
     console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
-    console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
-    setFieldsValue({ [END_TIME]: moment(time).add('minutes', 30) });
+    const startDate = getFieldValue(DATE);
+    if (startDate) {
+      const newMonth = startDate.get("month");
+      const newDate = startDate.get("date");
+      const newYear = startDate.get("year");
+      let newEventStartTime;
+      let newEventEndTime;
+      newEventStartTime = time ? moment(time)
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      newEventEndTime = newEventStartTime ? moment(newEventStartTime).add('minutes', 30) : null;
+      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
+      setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
+    } else {
+      console.log("298467232894 moment(startTime).add(1, h) ", time);
+      setFieldsValue({ [END_TIME]: time ? moment(time).add('minutes', 30) : null });
+    }
+  };
+
+  handleEndTimeChange = (time, str) => {
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+    console.log("312983u193812 values, value ", time, str);
+    const startTime = getFieldValue(START_TIME);
+    const startDate = getFieldValue(DATE);
+    if (startDate) {
+      const newMonth = startDate.get("month");
+      const newDate = startDate.get("date");
+      const newYear = startDate.get("year");
+      let newEventStartTime;
+      let newEventEndTime;
+      newEventStartTime = startTime ? moment(startTime)
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      newEventEndTime = time ? time
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
+      setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
+    } else {
+      console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
+      setFieldsValue({ [END_TIME]: moment(time) });
+    }
   };
 
   getPatientName = () => {
@@ -225,6 +273,7 @@ class EditAppointmentForm extends Component {
       disabledDate,
       handleDateSelect,
       handleStartTimeChange,
+      handleEndTimeChange,
       getPatientName,
     } = this;
     let pId = patientId ? patientId.toString() : patient_id;
@@ -277,31 +326,35 @@ class EditAppointmentForm extends Component {
 
     return (
       <Form className="fw700 wp100 pb30">
-        <FormItem label={formatMessage(message.patient)}>
+        <FormItem
+          // label={formatMessage(message.patient)}
+          className='mb-24'
+        >
           {getFieldDecorator(PATIENT, {
             initialValue: pId,
           })(
-            <Select
-              className="user-select drawer-select"
-              // onSearch={fetchPatients}
-              placeholder={getPatientName()}
-              notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
-              showSearch={true}
-              disabled={getInitialValue() ? true : false}
-              // todo: update when patients are there
-              filterOption={false}
-              suffixIcon={null}
-              removeIcon={null}
-              clearIcon={null}
-            >
-              {getPatientOptions()}
-            </Select>
+            <div />
+            // <Select
+            //   className="user-select drawer-select"
+            //   // onSearch={fetchPatients}
+            //   placeholder={getPatientName()}
+            //   notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
+            //   showSearch={true}
+            //   disabled={getInitialValue() ? true : false}
+            //   // todo: update when patients are there
+            //   filterOption={false}
+            //   suffixIcon={null}
+            //   removeIcon={null}
+            //   clearIcon={null}
+            // >
+            //   {getPatientOptions()}
+            // </Select>
           )}
         </FormItem>
 
         <FormItem
           label={formatMessage(message.start_date)}
-          className="full-width ant-date-custom"
+          className="full-width mt16 ant-date-custom-edit"
         >
           {getFieldDecorator(DATE, {
             rules: [
@@ -381,6 +434,7 @@ class EditAppointmentForm extends Component {
               <TimePicker
                 use12Hours
                 minuteStep={15}
+                onChange={handleEndTimeChange}
                 value={currentDate}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
@@ -391,33 +445,35 @@ class EditAppointmentForm extends Component {
         </div>
 
         <FormItem
-          label={formatMessage(message.treatment_text)}
-          className="full-width ant-date-custom"
+          // label={formatMessage(message.treatment_text)}
+          // className="full-width ant-date-custom"
+          className='mb-24'
         >
           {getFieldDecorator(TREATMENT, {
             initialValue: treatment_id ? treatment_id : null,
           })(
+            <div />
             // <Input
             //   autoFocus
             //   placeholder={formatMessage(message.treatment_text_placeholder)}
             // />
-            <Select
-              className="form-inputs-ap drawer-select"
-              autoComplete="off"
-              placeholder="Select Treatment"
-              disabled={treatment_id?true:false}
-              // onSelect={this.setTreatment}
-              // onDeselect={handleDeselect}
-              suffixIcon={null}
-            >
-              {this.getTreatmentOption()}
-            </Select>
+            // <Select
+            //   className="form-inputs-ap drawer-select"
+            //   autoComplete="off"
+            //   placeholder="Select Treatment"
+            //   disabled={treatment_id ? true : false}
+            //   // onSelect={this.setTreatment}
+            //   // onDeselect={handleDeselect}
+            //   suffixIcon={null}
+            // >
+            //   {this.getTreatmentOption()}
+            // </Select>
           )}
         </FormItem>
 
         <FormItem
           label={formatMessage(message.purpose_text)}
-          className="full-width ant-date-custom"
+          className="full-width mt16 ant-date-custom"
         >
           {getFieldDecorator(REASON, {
             rules: [
@@ -434,6 +490,7 @@ class EditAppointmentForm extends Component {
           })(
             <Input
               autoFocus
+              className='mt4'
               placeholder={formatMessage(message.purpose_text_placeholder)}
             />
           )}
@@ -448,6 +505,7 @@ class EditAppointmentForm extends Component {
           })(
             <TextArea
               autoFocus
+              className='mt4'
               maxLength={1000}
               placeholder={formatMessage(message.description_text_placeholder)}
               rows={4}

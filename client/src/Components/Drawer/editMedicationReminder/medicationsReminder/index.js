@@ -14,6 +14,7 @@ import { MEDICINE_UNITS } from '../../../../constant'
 import messages from "../message";
 import Footer from "../../footer";
 import startTimeField from "../common/startTime";
+import whenToTakeMedicineField from "../common/whenTotakeMedicaine";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import repeatDaysField from "../common/selectedDays";
@@ -39,7 +40,16 @@ class EditMedicationReminder extends Component {
   }
 
   hasErrors = (fieldsError) => {
-    return Object.keys(fieldsError).some((field) => fieldsError[field]);
+    let hasError = false;
+    // return Object.keys(fieldsError).some((field) => fieldsError[field]);
+    for (let err of Object.keys(fieldsError)) {
+      if (err !== whenToTakeMedicineField.fieLd_name && fieldsError[err]) {
+        hasError = true;
+      } else if (err === whenToTakeMedicineField.fieLd_name) {
+        hasError = Object.values(fieldsError[err]).some((field) => fieldsError[field]);
+      }
+    }
+    return hasError;
   };
 
   onFormFieldChanges = (props, allvalues) => {
@@ -49,9 +59,11 @@ class EditMedicationReminder extends Component {
     const isError = this.hasErrors(getFieldsError());
     const { disabledOk } = this.state;
 
-    console.log("[1234] this.state.fieldChanged ", isError, isFieldsTouched(), getFieldsError());
-    if (isFieldsTouched()) {
-      this.setState({ disabledOk: false, fieldChanged: true });
+    // console.log('89698876879856784654675798 called onclose', this.state);
+
+    console.log("89698876879856784654675798 ON FORMS FIELS CHANGE", isError, getFieldsError(),this.state);
+    if (disabledOk !== isError && isFieldsTouched()) {
+      this.setState({ disabledOk: isError, fieldChanged: true });
     }
   };
 
@@ -100,6 +112,13 @@ class EditMedicationReminder extends Component {
 
   onClose = () => {
     const { close } = this.props;
+    console.log('89698876879856784654675798 called onclose', this.state);
+    this.setState({
+      disabledOk: true,
+      fieldChanged: false,
+    }, () => {
+      console.log('89698876879856784654675798 called onclose11111111111', this.state);
+    });
     close();
   };
 
@@ -188,6 +207,8 @@ class EditMedicationReminder extends Component {
             const response = await updateMedicationReminder(data_to_submit);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
+
+              this.setState({ disabledOk: true });
               message.success(msg);
               getMedications(pId);
             } else {
@@ -295,6 +316,8 @@ class EditMedicationReminder extends Component {
       getDeleteButton,
     } = this;
     const { disabledOk } = this.state;
+
+    console.log('89698876879856784654675798  RENDERRRRRR', this.state);
     const submitButtonProps = {
       disabled: disabledOk,
       loading: loading,

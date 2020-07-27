@@ -165,14 +165,15 @@ class AddAppointmentForm extends Component {
       const newYear = startDate.get("year");
       let newEventStartTime;
       let newEventEndTime;
-      newEventStartTime = moment(startTime)
+      newEventStartTime = time ? moment(time)
         .clone()
-        .set({ month: newMonth, year: newYear, date: newDate });
-      newEventEndTime = moment(newEventStartTime).add('minutes', 30);
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      newEventEndTime = newEventStartTime ? moment(newEventStartTime).add('minutes', 30) : null;
+      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
       setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
     } else {
-      console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
-      setFieldsValue({ [END_TIME]: moment(time).add('minutes', 30) });
+      console.log("298467232894 moment(startTime).add(1, h) ", time);
+      setFieldsValue({ [END_TIME]: time ? moment(time).add('minutes', 30) : null });
     }
   };
 
@@ -187,12 +188,13 @@ class AddAppointmentForm extends Component {
       const newYear = startDate.get("year");
       let newEventStartTime;
       let newEventEndTime;
-      newEventStartTime = moment(startTime)
+      newEventStartTime = startTime ? moment(startTime)
         .clone()
-        .set({ month: newMonth, year: newYear, date: newDate });
-      newEventEndTime = time
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      newEventEndTime = time ? time
         .clone()
-        .set({ month: newMonth, year: newYear, date: newDate });
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
       setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
     } else {
       console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
@@ -278,31 +280,35 @@ class AddAppointmentForm extends Component {
     console.log("appointment form props --> ", this.props);
     return (
       <Form className="fw700 wp100 pb30">
-        <FormItem label={formatMessage(message.patient)}>
+        <FormItem
+          // label={formatMessage(message.patient)}
+          className='mb-24'
+        >
           {getFieldDecorator(PATIENT, {
             initialValue: getInitialValue(),
           })(
-            <Select
-              className="user-select drawer-select"
-              // onSearch={fetchPatients}
-              placeholder={getPatientName()}
-              notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
-              showSearch={true}
-              disabled={getInitialValue() ? true : false}
-              // todo: update when patients are there
-              filterOption={false}
-              suffixIcon={null}
-              removeIcon={null}
-              clearIcon={null}
-            >
-              {getPatientOptions()}
-            </Select>
+            <div/>
+            //   <Select
+            //     className="user-select drawer-select"
+            //     // onSearch={fetchPatients}
+            //     placeholder={getPatientName()}
+            //     notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
+            //     showSearch={true}
+            //     disabled={getInitialValue() ? true : false}
+            //     // todo: update when patients are there
+            //     filterOption={false}
+            //     suffixIcon={null}
+            //     removeIcon={null}
+            //     clearIcon={null}
+            //   >
+            //     {getPatientOptions()}
+            //   </Select>
           )}
         </FormItem>
 
         <FormItem
           label={formatMessage(message.start_date)}
-          className="full-width ant-date-custom"
+          className="full-width mt16 ant-date-custom-ap-date"
         >
           {getFieldDecorator(DATE, {
             rules: [
@@ -390,30 +396,32 @@ class AddAppointmentForm extends Component {
         </div>
 
         <FormItem
-          label={formatMessage(message.treatment_text)}
-          className="full-width ant-date-custom"
+          // label={formatMessage(message.treatment_text)}
+          // className="full-width ant-date-custom"
+          className='mb-24'
         >
           {getFieldDecorator(TREATMENT, {
             initialValue: getTreatment(),
           }
           )(
-            <Select
-              className="form-inputs-ap drawer-select"
-              autoComplete="off"
-              placeholder="Select Treatment"
-              disabled={getTreatment() ? true : false}
-              // onSelect={this.setTreatment}
-              // onDeselect={handleDeselect}
-              suffixIcon={null}
-            >
-              {this.getTreatmentOption()}
-            </Select>
+            <div/>
+            // <Select
+            //   className="form-inputs-ap drawer-select"
+            //   autoComplete="off"
+            //   placeholder="Select Treatment"
+            //   disabled={getTreatment() ? true : false}
+            //   // onSelect={this.setTreatment}
+            //   // onDeselect={handleDeselect}
+            //   suffixIcon={null}
+            // >
+            //   {this.getTreatmentOption()}
+            // </Select>
           )}
         </FormItem>
 
         <FormItem
           label={formatMessage(message.purpose_text)}
-          className="full-width ant-date-custom"
+          className="full-width mt16 ant-date-custom"
         >
           {getFieldDecorator(REASON, {
             rules: [
@@ -430,6 +438,7 @@ class AddAppointmentForm extends Component {
           })(
             <Input
               autoFocus
+              className='mt4'
               placeholder={formatMessage(message.purpose_text_placeholder)}
             />
           )}
@@ -442,6 +451,7 @@ class AddAppointmentForm extends Component {
           {getFieldDecorator(DESCRIPTION)(
             <TextArea
               autoFocus
+              className='mt4'
               maxLength={1000}
               placeholder={formatMessage(message.description_text_placeholder)}
               rows={4}

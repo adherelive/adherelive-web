@@ -51,7 +51,7 @@ class SignIn extends Component {
                             message.error("Email does not exist!", 4);
                         } else {
                             this.setState({ loading: false });
-                            message.error("Username or Password incorrect", 4);
+                            message.error("Invalid Credentials", 4);
                         }
                     }
                 } catch (err) {

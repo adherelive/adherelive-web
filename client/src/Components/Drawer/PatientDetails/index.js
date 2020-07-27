@@ -57,12 +57,12 @@ class PatientDetailsDrawer extends Component {
       // const { repeat_type, doses, date = [] } = schedule || {};
       return (
         <div className="flex justify-space-between align-center mb10">
-          <div className="pointer tab-color fw600 flex-1 tooltip">{name.length > 20 ? name.substring(0, 21) + '...' : name}
+          <div className="pointer tab-color fw600 wp35 tooltip">{name.length > 20 ? name.substring(0, 21) + '...' : name}
 
             <span class="tooltiptext">{name}</span></div>
-          <div className="flex-1">{`${repeat_days.join(", ")}`}</div>
+          <div className="wp35 tal">{`${repeat_days.join(", ")}`}</div>
 
-          <div className="flex-1">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
+          <div className="wp20 tar">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
         </div>
       );
     });
@@ -150,7 +150,7 @@ class PatientDetailsDrawer extends Component {
               const { total = "1", critical = "0" } = reports[id] || {};
               return (
                 <div
-                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS ? "ml20" : ""} w235 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex direction-column justify-space-between`}
+                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS ? "ml16" : ""} mwp45 maxwp48 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex flex-1 direction-column justify-space-between`}
                 >
                   <div className="ml10 mt10 fs16 fw600">
                     {PATIENT_BOX_CONTENT[id]["text"]}
