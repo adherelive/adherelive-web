@@ -501,7 +501,7 @@ class AdminDoctorDetails extends Component {
     if(day.length === 1) {
       return DAYS_TEXT_NUM[day].toLocaleUpperCase();
     }
-    return DAYS_TEXT[day].toLocaleUpperCase();
+    // return DAYS_TEXT[day].toLocaleUpperCase();
   };
 
   getDoctorClinicDetails = () => {
