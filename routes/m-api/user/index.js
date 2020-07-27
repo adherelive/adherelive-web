@@ -18,6 +18,12 @@ router.post(
 );
 
 router.post(
+    "/verify-otp",
+    validator.validateOtpData,
+    mUserController.verifyOtp
+);
+
+router.post(
     "/doctors/sign-in",
     validator.validateDoctorSignInData,
     mUserController.doctorSignIn

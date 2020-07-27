@@ -28,6 +28,7 @@ import documentService from "../../../services/uploadDocuments/uploadDocuments.s
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import patientsService from "../../../services/patients/patients.service";
@@ -49,6 +50,8 @@ import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
 
+import generateOTP from "../../../helper/generateOtp";
+
 const Logger = new Log("MOBILE USER CONTROLLER");
 
 class MobileUserController extends Controller {
@@ -58,8 +61,8 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { user_name, password } = req.body;
-      const user = await userService.getUserByUsername(user_name);
+      const { mobile_number } = req.body;
+      const user = await userService.getUserByNumber({mobile_number});
 
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
@@ -68,58 +71,132 @@ class MobileUserController extends Controller {
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.get("password")
-      );
-      if (passwordMatch) {
-        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+      // const passwordMatch = await bcrypt.compare(
+      //   password,
+      //   user.get("password")
+      // );
+      // if (passwordMatch) {
+      //   const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+      //
+      //   const secret = process.config.TOKEN_SECRET_KEY;
+      //   const accessToken = await jwt.sign(
+      //     {
+      //       userId: user.get("id")
+      //     },
+      //     secret,
+      //     {
+      //       expiresIn
+      //     }
+      //   );
+      const apiUserDetails = await MUserWrapper(user.get());
+      const otp = generateOTP();
 
-        const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userId: user.get("id")
-          },
-          secret,
-          {
-            expiresIn
-          }
-        );
+      const patientOtpVerification = await otpVerificationService.create({
+        user_id: apiUserDetails.getId(),
+        otp,
+      });
 
-        const apiUserDetails = await MUserWrapper(user.get());
-
-        let permissions = {
-          permissions: []
-        };
-
-        if(apiUserDetails.isActivated()) {
-          permissions = await apiUserDetails.getPermissions();
+      const emailPayload = {
+        title: "OTP Verification for patient",
+        toAddress: process.config.app.developer_email,
+        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+        templateData: {
+          title: "Patient",
+          mainBodyText: "OTP for adhere patient login is",
+          subBodyText: otp,
+          host: process.config.WEB_URL,
+          contactTo: "patientEngagement@adhere.com"
         }
+      };
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
-        Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
+        // let permissions = {
+        //   permissions: []
+        // };
+        //
+        // if(apiUserDetails.isActivated()) {
+        //   permissions = await apiUserDetails.getPermissions();
+        // }
+        //
+        // Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
 
         return this.raiseSuccess(
           res,
           200,
           {
+            user_id: apiUserDetails.getId()
+          },
+          "OTP sent successfully"
+        );
+      // } else {
+      //   return this.raiseClientError(res, 422, {}, "Invalid Credentials");
+      // }
+    } catch (error) {
+      console.log("error sign in  --> ", error);
+      return this.raiseServerError(res);
+    }
+  };
+
+  verifyOtp = async (req, res) => {
+    const {raiseServerError, raiseSuccess} = this;
+    try {
+      const {otp, user_id} = req.body;
+
+      const otpDetails = await otpVerificationService.getOtpByData({
+        otp,
+        user_id
+      });
+
+      Logger.debug("otpDetails --> ", otpDetails);
+
+      if(otpDetails.length > 0) {
+        const userDetails = await userService.getUserById(otpDetails[0].get("user_id"));
+
+        const userData = await UserWrapper(userDetails.get());
+        let permissions = {
+          permissions: []
+        };
+
+        if(userData.isActivated()) {
+          permissions = await userData.getPermissions();
+        }
+
+          const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+          const secret = process.config.TOKEN_SECRET_KEY;
+          const accessToken = await jwt.sign(
+            {
+              userId: userData.getId()
+            },
+            secret,
+            {
+              expiresIn
+            }
+          );
+
+        Logger.debug("userData ----> ", userData.isActivated());
+        return raiseSuccess(
+          res,
+          200,
+          {
             accessToken,
             users: {
-              [apiUserDetails.getId()]: {
-                ...apiUserDetails.getBasicInfo()
+              [userData.getId()]: {
+                ...userData.getBasicInfo()
               }
             },
-            auth_user: apiUserDetails.getId(),
-            auth_category: apiUserDetails.getCategory(),
-            ...permissions,
+            auth_user: userData.getId(),
+            auth_category: userData.getCategory(),
+            ...permissions
           },
           "Signed in successfully"
         );
       } else {
-        return this.raiseClientError(res, 422, {}, "Invalid Credentials");
+        return this.raiseClientError(res, 422, {}, "OTP not correct. Please try again");
       }
-    } catch (error) {
-      console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.message);
+    } catch(error) {
+      Logger.debug("verifyOtp 500 error", error);
+      raiseServerError(res);
     }
   };
 

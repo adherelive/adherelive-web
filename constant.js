@@ -361,7 +361,8 @@ export const DB_TABLES = {
   COURSE:"courses",
   DEGREE:"degrees",
   QUALIFICATION:"qualifications",
-  REGISTRATION_COUNCIL:"registration_councils"
+  REGISTRATION_COUNCIL:"registration_councils",
+  OTP_VERIFICATIONS: "otp_verifications",
 };
 
 export const ARTICLE_TYPE = {
@@ -416,6 +417,7 @@ export const EMAIL_TEMPLATE_NAME = {
   FORGOT_PASSWORD: "forgotPassword",
   INVITATION:"invitation",
   VERIFIED_DOCTOR: "verifiedDoctor",
+  OTP_VERIFICATION:"otpVerification",
 };
 
 export const OBJECT_NAME = {

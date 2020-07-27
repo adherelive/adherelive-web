@@ -14,14 +14,12 @@ const updatedPasswordSchema = Joi.object().keys({
 });
 
 const signInSchema = Joi.object().keys({
-   // user_name: Joi.when('user_name', {is: Joi.string().email(), then: Joi.string().email().required()}).concat(
-   //     Joi.when('user_name', {is: Joi.number(), then: Joi.number().max(10).required()})
-   // ),
-    user_name: Joi.alternatives().try(
-        Joi.string().email().required().label("Please enter valid email"),
-        Joi.string().length(10).regex(/^\d+$/).required().label("Please enter a valid mobile number"),
-    ),
-    password: Joi.string().required()
+    mobile_number: Joi.string().length(10).regex(/^\d+$/).required().label("Please enter a valid mobile number"),
+});
+
+const otpSchema = Joi.object().keys({
+    user_id: Joi.number().required(),
+    otp: Joi.string().regex(/^\d+$/).length(4).required()
 });
 
 const doctorSignInSchema = Joi.object().keys({
@@ -91,6 +89,31 @@ export const validateSignInData = (req, res, next) => {
         const response = new Response(false, 422);
         response.setError(isValid.error);
         response.setMessage(label);
+        return res.status(422).json(response.getResponse());
+    }
+    next();
+};
+
+export const validateOtpData = (req, res, next) => {
+    const { body: data = {} } = req;
+    const isValid = otpSchema.validate(data);
+    if (isValid && isValid.error != null) {
+        const {error: {details} = {}} = isValid || {};
+        const {type, context: {label} = {}} = details[0] || {};
+        // return raiseClientError(res, 422, isValid.error, "please check filled details");
+        let errorMessage = label;
+        switch(type) {
+            case "string.pattern.base":
+                errorMessage = "OTP must contain only numbers";
+                break;
+            case "string.length":
+                errorMessage = "OTP must be of 4 digits"
+                break;
+            default:
+        }
+        const response = new Response(false, 422);
+        response.setError(isValid.error);
+        response.setMessage(errorMessage);
         return res.status(422).json(response.getResponse());
     }
     next();
