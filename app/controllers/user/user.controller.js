@@ -256,7 +256,7 @@ class UserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "Invalid Credentials");
+        return this.raiseClientError(res, 422, user, "Invalid Credentials ");
       }
 
       // let verified = user.get("verified");
