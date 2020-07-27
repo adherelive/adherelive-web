@@ -293,9 +293,9 @@ class EditMedicationReminder extends Component {
       handleSubmit,
       getDeleteButton,
     } = this;
-    const { disabledSubmit } = this.state;
+    const { disabledOk } = this.state;
     const submitButtonProps = {
-      disabled: disabledSubmit,
+      disabled: disabledOk,
       loading: loading,
     };
 

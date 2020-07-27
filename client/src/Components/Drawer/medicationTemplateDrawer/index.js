@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, DatePicker, Select, Input, message, Button, TimePicker } from "antd";
 
-import {  MEDICATION_TIMING, EVENT_TYPE, MEDICINE_TYPE } from "../../../constant";
+import { MEDICATION_TIMING, EVENT_TYPE, MEDICINE_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
@@ -185,9 +185,24 @@ class TemplateDrawer extends Component {
                 <div className='wp100 flex align-center justify-space-between'>
                     <div className='form-category-headings-ap '>Medications</div>
                     <div className='add-more' onClick={this.showAddMedication}>Add More</div>
+
                 </div>
                 {medicationKeys.map(key => {
-                    const { medicine, medicineType, schedule_data: { when_to_take = '', start_date = moment() } = {} } = medications[key];
+                    let { medicine, medicineType, schedule_data: { when_to_take = '', start_date = moment() } = {} } = medications[key];
+                    when_to_take.sort();
+                    let nextDueTime = moment().format('HH:MM A');
+                    let closestWhenToTake = 0;
+                    let minDiff = 0;
+                    if (moment(start_date).isSame(moment(), 'D')) {
+                        for (let wtt of when_to_take) {
+                            let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
+                            minDiff = minDiff === 0 && newMinDiff > 0 ? newMinDiff : newMinDiff > 0 && newMinDiff < minDiff ? newMinDiff : minDiff;
+                            console.log('6487132687123578123650861325871', when_to_take, wtt, typeof (wtt), minDiff, newMinDiff, moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }), moment());
+                            closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
+                        }
+                    }
+                    nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
+                    let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
                     console.log('347928374', moment(start_date).format('D MMM'), start_date, moment(start_date).isSame(moment(), 'd') ? `Today at ${MEDICATION_TIMING[when_to_take[0]].time}` : `${moment(start_date).format('d MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`);
                     return (
                         <div className='flex wp100 flex-grow-1 align-center'>
@@ -208,7 +223,7 @@ class TemplateDrawer extends Component {
                                     );
                                 })
                                 }
-                                <div className='drawer-block-description'>{`Next due: ${moment(start_date).isSame(moment(), 'D') ? `Today at ${MEDICATION_TIMING[when_to_take[0]].time}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`}`}</div>
+                                <div className='drawer-block-description'>{`Next due: ${nextDue}`}</div>
                             </div>
                             {/* <DeleteTwoTone
                                 className={"mr8"}
