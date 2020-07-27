@@ -64,7 +64,7 @@ class MobileUserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "User does not exists");
+        return this.raiseClientError(res, 422, user, "Invalid Credentials");
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
@@ -113,6 +113,73 @@ class MobileUserController extends Controller {
             ...permissions,
           },
           "Signed in successfully"
+        );
+      } else {
+        return this.raiseClientError(res, 422, {}, "Invalid Credentials");
+      }
+    } catch (error) {
+      console.log("error sign in  --> ", error);
+      return this.raiseServerError(res, 500, error, error.message);
+    }
+  };
+
+  doctorSignIn = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await userService.getUserByEmail({email});
+
+      // const userDetails = user[0];
+      // console.log("userDetails --> ", userDetails);
+      if (!user) {
+        return this.raiseClientError(res, 422, {}, "Invalid Credentials");
+      }
+
+      // TODO: UNCOMMENT below code after signup done for password check or seeder
+      const passwordMatch = await bcrypt.compare(
+          password,
+          user.get("password")
+      );
+      if (passwordMatch) {
+        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+        const secret = process.config.TOKEN_SECRET_KEY;
+        const accessToken = await jwt.sign(
+            {
+              userId: user.get("id")
+            },
+            secret,
+            {
+              expiresIn
+            }
+        );
+
+        const apiUserDetails = await MUserWrapper(user.get());
+
+        let permissions = {
+          permissions: []
+        };
+
+        if(apiUserDetails.isActivated()) {
+          permissions = await apiUserDetails.getPermissions();
+        }
+
+        Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
+
+        return this.raiseSuccess(
+            res,
+            200,
+            {
+              accessToken,
+              users: {
+                [apiUserDetails.getId()]: {
+                  ...apiUserDetails.getBasicInfo()
+                }
+              },
+              auth_user: apiUserDetails.getId(),
+              auth_category: apiUserDetails.getCategory(),
+              ...permissions,
+            },
+            "Signed in successfully"
         );
       } else {
         return this.raiseClientError(res, 422, {}, "Invalid Credentials");

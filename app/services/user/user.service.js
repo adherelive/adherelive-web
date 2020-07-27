@@ -144,6 +144,7 @@ class UserService {
         try {
             const user = await userModel.findOne({
                 where: {
+                    // category: USER_CATEGORY.PATIENT,
                     [Op.or]: [
                         {
                             email: user_name

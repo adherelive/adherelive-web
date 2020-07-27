@@ -15,8 +15,13 @@ router.post(
     "/sign-in",
     validator.validateSignInData,
     mUserController.signIn,
-
 );
+
+router.post(
+    "/doctors/sign-in",
+    validator.validateDoctorSignInData,
+    mUserController.doctorSignIn
+)
 
 router.post(
     "/sign-up",
