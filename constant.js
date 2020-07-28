@@ -363,6 +363,7 @@ export const DB_TABLES = {
   QUALIFICATION:"qualifications",
   REGISTRATION_COUNCIL:"registration_councils",
   OTP_VERIFICATIONS: "otp_verifications",
+  TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
 };
 
 export const ARTICLE_TYPE = {

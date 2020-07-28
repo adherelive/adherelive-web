@@ -4,20 +4,32 @@ import {DB_TABLES} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.CONDITIONS, {
+    return queryInterface.createTable(DB_TABLES.TREATMENT_CONDITION_MAPPING, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      code: {
-        type: Sequelize.STRING,
+      condition_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: {
+            tableName: DB_TABLES.CONDITIONS,
+          },
+          key: 'id'
+        }
       },
-      name: {
-        type: Sequelize.STRING(1000),
+      treatment_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: {
+            tableName: DB_TABLES.TREATMENTS,
+          },
+          key: 'id'
+        }
       },
       created_at: {
         allowNull: false,
@@ -35,6 +47,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.CONDITIONS);
+    return queryInterface.dropTable(DB_TABLES.TREATMENT_CONDITION_MAPPING);
   }
 };

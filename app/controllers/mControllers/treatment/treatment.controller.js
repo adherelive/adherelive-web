@@ -1,5 +1,7 @@
 import Controller from "../../";
 import treatmentService from "../../../services/treatment/treatment.service";
+import treatmentConditionService from "../../../services/treatmentConditionMapping/treatmentCondition.service";
+
 import TreatmentWrapper from "../../../ApiWrapper/mobile/treatments";
 
 import Log from "../../../../libs/log";
@@ -12,20 +14,34 @@ class TreatmentController extends Controller {
     }
 
     getAll = async (req, res) => {
-        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        const { raiseSuccess, raiseClientError, raiseServerError } = this;
         try {
-            const {query} = req;
-            const {value} = query || {};
+            const { query } = req;
+            const { condition_id } = query || {};
 
-            // Logger.debug("value in req", value);
+            Logger.debug("condition_id in req", condition_id);
 
-            const treatmentDetails = await treatmentService.search(value);
+            const conditionMappingDetails = await treatmentConditionService.getAll({
+                condition_id
+            });
 
-            if(treatmentDetails.length > 0) {
+            let treatmentIds = [];
+
+            if (conditionMappingDetails.length > 0) {
+                for (const mapping of conditionMappingDetails) {
+                    treatmentIds.push(mapping.get("treatment_id"));
+                }
+
+                const treatmentDetails = await treatmentService.getAll({
+                    id: treatmentIds
+                });
+
                 let treatmentApiData = {};
-                for(const treatment of treatmentDetails) {
+                for (const treatment of treatmentDetails) {
                     const treatmentWrapper = await new TreatmentWrapper(treatment);
-                    treatmentApiData[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
+                    treatmentApiData[
+                        treatmentWrapper.getTreatmentId()
+                        ] = treatmentWrapper.getBasicInfo();
                 }
 
                 return raiseSuccess(
@@ -39,9 +55,14 @@ class TreatmentController extends Controller {
                     "Treatments fetched successfully"
                 );
             } else {
-                return raiseClientError(res, 422, {}, `No treatment found with name including ${value}`)
+                return raiseClientError(
+                    res,
+                    422,
+                    {},
+                    `No treatment found for selected condition`
+                );
             }
-        } catch(error) {
+        } catch (error) {
             Logger.debug("treatment search 500 error", error);
             return raiseServerError(res);
         }
