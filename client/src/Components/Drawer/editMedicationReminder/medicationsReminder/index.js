@@ -52,18 +52,24 @@ class EditMedicationReminder extends Component {
     return hasError;
   };
 
-  onFormFieldChanges = (props, allvalues) => {
+  onFormFieldChanges = (props, changedFields, allvalues) => {
     const {
       form: { getFieldsError, isFieldsTouched },
     } = props;
-    const isError = this.hasErrors(getFieldsError());
     const { disabledOk } = this.state;
 
     // console.log('89698876879856784654675798 called onclose', this.state);
 
-    console.log("89698876879856784654675798 ON FORMS FIELS CHANGE", isError, getFieldsError(),this.state);
-    if (disabledOk !== isError && isFieldsTouched()) {
-      this.setState({ disabledOk: isError, fieldChanged: true });
+    // console.log("8917912321 isError, disabledOk ", isError, disabledOk, isFieldsTouched());
+
+    if(isFieldsTouched()) {
+      const isError = this.hasErrors(getFieldsError());
+
+      if (disabledOk !== isError && isFieldsTouched()) {
+        this.setState({ disabledOk: isError });
+      }
+    } else {
+      this.setState({disabledOk: true});
     }
   };
 
@@ -112,14 +118,13 @@ class EditMedicationReminder extends Component {
 
   onClose = () => {
     const { close } = this.props;
-    console.log('89698876879856784654675798 called onclose', this.state);
     this.setState({
       disabledOk: true,
-      fieldChanged: false,
     }, () => {
-      console.log('89698876879856784654675798 called onclose11111111111', this.state);
+      close();
+
     });
-    close();
+    // close();
   };
 
   handleSubmit = async () => {
@@ -208,7 +213,7 @@ class EditMedicationReminder extends Component {
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
 
-              this.setState({ disabledOk: true });
+              // this.setState({ disabledOk: true });
               message.success(msg);
               getMedications(pId);
             } else {
@@ -317,7 +322,7 @@ class EditMedicationReminder extends Component {
     } = this;
     const { disabledOk } = this.state;
 
-    console.log('89698876879856784654675798  RENDERRRRRR', this.state);
+    console.log('912783718923 render --> ', disabledOk);
     const submitButtonProps = {
       disabled: disabledOk,
       loading: loading,
