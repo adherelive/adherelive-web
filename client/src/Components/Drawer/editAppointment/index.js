@@ -29,7 +29,7 @@ class EditAppointment extends Component {
 
   componentDidMount = () => {
 
-    console.log("COMPONENT DID MOUNT========>8697857668975675976465467", this.state);
+    // console.log("COMPONENT DID MOUNT========>8697857668975675976465467", this.state);
   }
 
   onFormFieldChanges = (props, allvalues) => {
@@ -38,7 +38,10 @@ class EditAppointment extends Component {
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
+
+    console.log("COMPONENT DID MOUNT========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
     if (disabledSubmit !== isError && isFieldsTouched()) {
+      console.log("INSIDE IFFFF========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
       this.setState({ disabledSubmit: isError });
     }
   };
@@ -243,7 +246,7 @@ class EditAppointment extends Component {
       getDeleteButton,
     } = this;
 
-    console.log("PROPSSS OFF APPOINTMENT========>8697857668975675976465467", disabledSubmit);
+    console.log("PROPSSS OFF APPOINTMENT========>8697857668975675976465467", JSON.stringify(this.state));
     const submitButtonProps = {
       disabled: disabledSubmit,
       // loading: loading && !deleteLoading
