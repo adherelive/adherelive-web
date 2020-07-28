@@ -50,7 +50,7 @@ class TreatmentController extends Controller {
                     {
                         treatments: {
                             ...treatmentApiData
-                        }
+                        },
                     },
                     "Treatments fetched successfully"
                 );

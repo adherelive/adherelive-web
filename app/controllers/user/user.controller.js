@@ -550,16 +550,16 @@ class UserController extends Controller {
           ] = apiUserDetails.getBasicInfo();
         }
 
-        // treatments
-        let treatmentApiDetails = {};
-        let treatmentIds = [];
-        const treatmentDetails = await treatmentService.getAll();
-
-        for (const treatment of treatmentDetails) {
-          const treatmentWrapper = await TreatmentWrapper(treatment);
-          treatmentIds.push(treatmentWrapper.getTreatmentId());
-          treatmentApiDetails[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
-        }
+        // // treatments
+        // let treatmentApiDetails = {};
+        // let treatmentIds = [];
+        // const treatmentDetails = await treatmentService.getAll();
+        //
+        // for (const treatment of treatmentDetails) {
+        //   const treatmentWrapper = await TreatmentWrapper(treatment);
+        //   treatmentIds.push(treatmentWrapper.getTreatmentId());
+        //   treatmentApiDetails[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
+        // }
 
         // severity
         let severityApiDetails = {};
@@ -572,16 +572,16 @@ class UserController extends Controller {
           severityApiDetails[severityWrapper.getSeverityId()] = severityWrapper.getBasicInfo();
         }
 
-        // conditions
-        let conditionApiDetails = {};
-        let conditionIds = [];
-        const conditionDetails = await conditionService.getAll();
-
-        for (const condition of conditionDetails) {
-          const conditionWrapper = await ConditionWrapper(condition);
-          conditionIds.push(conditionWrapper.getConditionId());
-          conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
-        }
+        // // conditions
+        // let conditionApiDetails = {};
+        // let conditionIds = [];
+        // const conditionDetails = await conditionService.getAll();
+        //
+        // for (const condition of conditionDetails) {
+        //   const conditionWrapper = await ConditionWrapper(condition);
+        //   conditionIds.push(conditionWrapper.getConditionId());
+        //   conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
+        // }
 
         let permissions = {
           permissions: []
@@ -610,19 +610,11 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
-          treatments: {
-            ...treatmentApiDetails,
-          },
           severity: {
             ...severityApiDetails,
           },
-          conditions: {
-            ...conditionApiDetails,
-          },
           ...permissions,
-          treatment_ids: treatmentIds,
           severity_ids: severityIds,
-          condition_ids: conditionIds,
           auth_user: userId,
           auth_category: category
         };
