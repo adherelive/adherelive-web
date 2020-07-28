@@ -23,7 +23,7 @@ class OtpVerificationService {
                     otp,
                     user_id,
                     updated_at: {
-                        [Op.gte]: moment().subtract(10, 'minutes').toDate()
+                        [Op.gte]: moment().subtract(2, 'minutes').toDate()
                     }
                 },
             });
