@@ -212,7 +212,7 @@ class AddMedicationReminderForm extends Component {
     setFieldsValue({
       [startTimeField.field_name]: newEventStartTime
     });
-    this.adjustEndDate();
+    // this.adjustEndDate();
     validateFields([startTimeField.field_name]);
   };
 
