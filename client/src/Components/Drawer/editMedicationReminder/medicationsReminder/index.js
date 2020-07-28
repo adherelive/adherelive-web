@@ -59,13 +59,19 @@ class EditMedicationReminder extends Component {
     const isError = this.hasErrors(getFieldsError());
     const { disabledOk } = this.state;
 
+    if(isFieldsTouched()) {
+      console.log("89698876879856784654675798 ON FORMS FIELS CHANGE", isFieldsTouched(), isError, JSON.stringify(this.state));
+      if (disabledOk !== isError && isFieldsTouched()) {
+        console.log("89698876879856784654675798 INSIDE IFFF", isFieldsTouched(), isError, JSON.stringify(this.state));
+        this.setState({ disabledOk: isError, fieldChanged: true });
+      }
+    } else {
+      this.setState({disabledOk: true});
+    }
+
     // console.log('89698876879856784654675798 called onclose', this.state);
 
-    console.log("89698876879856784654675798 ON FORMS FIELS CHANGE", isFieldsTouched(), isError, JSON.stringify(this.state));
-    if (disabledOk !== isError && isFieldsTouched()) {
-      console.log("89698876879856784654675798 INSIDE IFFF", isFieldsTouched(), isError, JSON.stringify(this.state));
-      this.setState({ disabledOk: isError, fieldChanged: true });
-    }
+
   };
 
   handleCancel = (e) => {
