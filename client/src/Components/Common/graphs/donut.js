@@ -8,7 +8,7 @@ export default function donutGraph(props) {
   const { id, data: graphContent, total, title } = props || {};
   const { dark, light } = GRAPH_COLORS[id] || {};
   const { className } = GRAPH_COLORS[id] || {};
-  console.log("234723", GRAPH_COLORS, dark, light, id);
+  console.log("234723", GRAPH_COLORS, dark, light, id, className, className['dark'], className['light']);
   const labels = [CHART_TITLE[id] === "Adherence" ? 'Compliant' : 'Critical',
   CHART_TITLE[id] === "Adherence" ? 'Non-Compliant' : 'Non-Critical'
   ];
@@ -34,7 +34,7 @@ export default function donutGraph(props) {
   return (
 
     <Fragment>
-      <div className="w205 br5 pb6 flex-shrink-0 chart-box-shadow mb10 mr20 flex direction-column align-center relative">
+      <div className="w205 br5 pb6 flex-shrink-0 mt6 ml6 mr6 chart-box-shadow mb10 mr20 flex direction-column align-center relative">
         <div className="wp100">
           <div className="ml10 mt20 fs16 fw600">{title}</div>
         </div>

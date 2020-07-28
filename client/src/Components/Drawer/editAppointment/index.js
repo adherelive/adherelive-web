@@ -27,13 +27,21 @@ class EditAppointment extends Component {
     );
   }
 
+  componentDidMount = () => {
+
+    // console.log("COMPONENT DID MOUNT========>8697857668975675976465467", this.state);
+  }
+
   onFormFieldChanges = (props, allvalues) => {
     const {
       form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
+
+    console.log("COMPONENT DID MOUNT========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
     if (disabledSubmit !== isError && isFieldsTouched()) {
+      console.log("INSIDE IFFFF========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
       this.setState({ disabledSubmit: isError });
     }
   };
@@ -95,12 +103,17 @@ class EditAppointment extends Component {
         else if (moment(end_time).isBefore(moment(start_time))) {
           message.error('Please select valid timings for appointment.')
         } else if (editAppointment) {
+
+          // this.setState({ disabledSubmit: true });
           editAppointment(data);
 
         } else if (addAppointment) {
+
+          // this.setState({ disabledSubmit: true });
           addAppointment(data);
         } else {
           try {
+
             const response = await updateAppointment(data);
             const {
               status,
@@ -119,6 +132,8 @@ class EditAppointment extends Component {
                 )} - ${moment(end_time).format("LT")}`
               );
             } else if (status === true) {
+
+              this.setState({ disabledSubmit: true });
               message.success(formatMessage(messages.edit_appointment_success));
               getAppointments(pId);
             } else {
@@ -138,6 +153,8 @@ class EditAppointment extends Component {
 
   onClose = () => {
     const { close } = this.props;
+    console.log('8697857668975675976465467 ON CLOSE CALLED----->');
+    this.setState({ disabledSubmit: true });
     close();
   };
 
@@ -229,9 +246,7 @@ class EditAppointment extends Component {
       getDeleteButton,
     } = this;
 
-    console.log("PROPSSS OFF APPOINTMENT========>8697857668975675976465467", editAppointment,
-      appointmentVisible,
-      hideAppointment);
+    console.log("PROPSSS OFF APPOINTMENT========>8697857668975675976465467", JSON.stringify(this.state));
     const submitButtonProps = {
       disabled: disabledSubmit,
       // loading: loading && !deleteLoading

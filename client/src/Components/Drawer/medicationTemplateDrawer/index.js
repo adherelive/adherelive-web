@@ -201,6 +201,11 @@ class TemplateDrawer extends Component {
                             closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
                         }
                     }
+                    let medTimingsToShow = '';
+                    for (let wtt in when_to_take) {
+                        medTimingsToShow += `${MEDICATION_TIMING[when_to_take[wtt]].text} `;
+                        medTimingsToShow += `(${MEDICATION_TIMING[when_to_take[wtt]].time})${wtt < when_to_take.length - 1 ? ', ' : ''}`
+                    }
                     nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
                     let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
                     console.log('347928374', moment(start_date).format('D MMM'), start_date, moment(start_date).isSame(moment(), 'd') ? `Today at ${MEDICATION_TIMING[when_to_take[0]].time}` : `${moment(start_date).format('d MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`);
@@ -216,13 +221,13 @@ class TemplateDrawer extends Component {
                                     <Icon type="edit" className='ml20' style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.MEDICATION_REMINDER, key)} />
 
                                 </div>
-                                {when_to_take.map((timing, index) => {
-                                    return (
+                                {/* {when_to_take.map((timing, index) => {
+                                    return ( */}
 
-                                        < div className='drawer-block-description'>{`${MEDICATION_TIMING[when_to_take[index]].text} ${MEDICATION_TIMING[when_to_take[index]].time}`}</div>
-                                    );
-                                })
-                                }
+                                < div className='drawer-block-description'>{medTimingsToShow}</div>
+                                {/* );
+                                }) */}
+                                {/* } */}
                                 <div className='drawer-block-description'>{`Next due: ${nextDue}`}</div>
                             </div>
                             {/* <DeleteTwoTone
@@ -278,7 +283,7 @@ class TemplateDrawer extends Component {
                 schedule_data: { end_date = moment().add('days', 5), quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
                     start_time = moment(), strength = 0, unit = "", when_to_take = [] } = {} } = medication;
 
-            if (!medicine || !medicineType || !medicine_id || !end_date || !quantity || !repeat || !repeat_days.length || !start_date
+            if (!medicine || !medicineType || !medicine_id  || !quantity || !repeat || !repeat_days.length || !start_date
                 || !start_time || !strength || !unit || !when_to_take.length) {
                 message.error("Please fill all details of medications ");
                 return false;
@@ -496,7 +501,7 @@ class TemplateDrawer extends Component {
         let { showInner, innerFormType, innerFormKey, medications, appointments, showAddAppointmentInner, showAddMedicationInner } = this.state;
         const { onClose, renderTemplateDetails } = this;
 
-        console.log("DATA OF EDITED MEDICATIONNNNN===> 8697857668975675976465467", this.state);
+        // console.log("DATA OF EDITED MEDICATIONNNNN===> 8697857668975675976465467", this.state);
 
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
 

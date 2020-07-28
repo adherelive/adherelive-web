@@ -185,7 +185,7 @@ class Dashboard extends Component {
                     </div>
 
                     {/* <div className="mt10 flex align-center"> */}
-                    <section className='horizontal-scroll-wrapper mt10'>
+                    <section className='horizontal-scroll-wrapper pr20 mt10'>
                         {renderChartTabs()}
                     </section>
 

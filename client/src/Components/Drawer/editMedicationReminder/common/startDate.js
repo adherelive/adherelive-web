@@ -88,7 +88,7 @@ class StartDate extends Component {
               initialValue: start_date ? moment(start_date) : getInitialValue(),
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME} ant-date-custom wp100 edit-apoint-start-date`}
+                className={`full-width ${FIELD_NAME} ant-date-custom-med wp100 edit-apoint-start-date`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}
