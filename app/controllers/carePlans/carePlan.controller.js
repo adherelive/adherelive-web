@@ -10,7 +10,7 @@ import templateMedicationService from "../../services/templateMedication/templat
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from './carePlanHelper';
-import {USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
@@ -64,7 +64,7 @@ class CarePlanController extends Controller {
                     schedule_data: { description = '', end_time = '', organizer = {}, treatment = '', participant_two = {}, start_time = '', date = '' } = {},
                     reason = '', time_gap = '' } = appointment || {};
 
-                const {id : participant_two_id, category: participant_two_type} = participant_two || {};
+                const { id: participant_two_id, category: participant_two_type } = participant_two || {};
 
                 const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
                     start_time,
@@ -96,17 +96,17 @@ class CarePlanController extends Controller {
 
             for (const appointment of appointmentsData) {
                 const {
-                    schedule_data: { description = '', end_time = '', organizer = {}, treatment_id = '', participant_two = {}, start_time = '', date = '' } = {},
-                    reason = '', time_gap = '' } = appointment;
+                    schedule_data: { description = '', end_time = '', organizer = {}, treatment_id = '', participant_two = {}, start_time = '', date = '', type = '', critical = false, type_description = '' } = {},
+                    reason = '', time_gap = '', provider_id = '', provider_name = '' } = appointment;
 
                 const { id: participant_two_id, category: participant_two_type } =
-                participant_two || {};
+                    participant_two || {};
 
                 let userCategoryId = null;
 
-                switch(category) {
+                switch (category) {
                     case USER_CATEGORY.DOCTOR:
-                        const doctor = await doctorService.getDoctorByData({user_id: userId});
+                        const doctor = await doctorService.getDoctorByData({ user_id: userId });
                         const doctorData = await DoctorWrapper(doctor);
                         userCategoryId = doctorData.getDoctorId();
                         break;
@@ -124,6 +124,8 @@ class CarePlanController extends Controller {
                     participant_one_id: userCategoryId,
                     participant_two_type,
                     participant_two_id,
+                    provider_id:provider_id?provider_id:null,
+                    provider_name,
                     organizer_type:
                         Object.keys(organizer).length > 0 ? organizer.category : category,
                     organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
@@ -134,7 +136,10 @@ class CarePlanController extends Controller {
                     end_time,
                     details: {
                         treatment_id,
-                        reason
+                        reason,
+                        type,
+                        type_description,
+                        critical
                     },
                 };
 
@@ -204,7 +209,7 @@ class CarePlanController extends Controller {
 
             return this.raiseSuccess(res, 200, {
                 care_plans: {
-                    [carePlanData.getCarePlanId()] : {
+                    [carePlanData.getCarePlanId()]: {
                         ...carePlanData.getBasicInfo(),
                         appointment_ids,
                         medication_ids
@@ -240,8 +245,8 @@ class CarePlanController extends Controller {
             let carePlan = await carePlanService.getSingleCarePlanByData({ patient_id });
 
 
-            let cPdetails = carePlan.get('details')?carePlan.get('details'):{};
-           
+            let cPdetails = carePlan.get('details') ? carePlan.get('details') : {};
+
             let { shown = false } = cPdetails;
             let carePlanId = carePlan.get('id');
             let carePlanTemplateId = carePlan.get('care_plan_template_id');

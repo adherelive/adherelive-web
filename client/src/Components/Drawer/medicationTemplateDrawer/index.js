@@ -283,7 +283,7 @@ class TemplateDrawer extends Component {
                 schedule_data: { end_date = moment().add('days', 5), quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
                     start_time = moment(), strength = 0, unit = "", when_to_take = [] } = {} } = medication;
 
-            if (!medicine || !medicineType || !medicine_id  || !quantity || !repeat || !repeat_days.length || !start_date
+            if (!medicine || !medicineType || !medicine_id || !quantity || !repeat || !repeat_days.length || !start_date
                 || !start_time || !strength || !unit || !when_to_take.length) {
                 message.error("Please fill all details of medications ");
                 return false;
@@ -335,15 +335,18 @@ class TemplateDrawer extends Component {
         for (let appointment in appointmentsData) {
 
             let newAppointment = appointmentsData[appointment];
-            let { reason = '', schedule_data: { date = '', description = '',
-                end_time = '', start_time = '', treatment_id = '' } = {}, time_gap = '' } = newAppointment;
-
+            let { reason = '', provider_id = 0, provider_name = 0, schedule_data: { date = '', description = '',
+                end_time = '', start_time = '', treatment_id = '', type = '', type_description = '', critical = 0, appointment_type = '' } = {}, time_gap = '' } = newAppointment;
+            appointmentsData[appointment].schedule_data.type = appointment_type ? appointment_type : type;
             if (!date && !start_time && !end_time) {
                 // let currMinutes=moment().minutes();
                 let minutesToAdd = 30 - (moment().minutes()) % 30;
                 appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
                 appointmentsData[appointment].schedule_data.end_time = moment(appointmentsData[appointment].schedule_data.start_time).add('days', parseInt(time_gap)).add('minutes', 30);
                 appointmentsData[appointment].schedule_data.date = moment().add('days', 18);
+                // appointmentsData[appointment].schedule_data.type = type;
+                // appointmentsData[appointment].schedule_data.type_description =type_description ;
+                // appointmentsData[appointment].schedule_data.critical = critical;
                 appointmentsData[appointment].schedule_data.participant_two = {
                     id: patientId,
                     category: "patient",
@@ -442,13 +445,20 @@ class TemplateDrawer extends Component {
             description = "",
             end_time = {},
             id = '',
+            critical,
+            type = '',
+            type_description = '',
+            provider_id = 0,
+            provider_name = '',
             participant_two = {},
             start_time = {},
             treatment_id = "",
             reason = '' } = data;
         let newAppointment = appointments[innerFormKey];
         newAppointment.reason = reason;
-        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id };
+        newAppointment.provider_id = provider_id;
+        newAppointment.provider_name = provider_name;
+        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
         console.log("DATA OF EDITED Appointment===>", data, newAppointment);
         appointments[innerFormKey] = newAppointment;
         this.setState({ appointments }, () => {
@@ -463,6 +473,11 @@ class TemplateDrawer extends Component {
             description = "",
             end_time = {},
             id = '',
+            critical,
+            type = '',
+            type_description = '',
+            provider_id = 0,
+            provider_name = '',
             participant_two = {},
             start_time = {},
             treatment_id = "",
@@ -476,7 +491,9 @@ class TemplateDrawer extends Component {
         }
 
         newAppointment.reason = reason;
-        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id };
+        newAppointment.provider_id = provider_id;
+        newAppointment.provider_name = provider_name;
+        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
         appointments[key] = newAppointment;
         appointmentKeys.push(key);
         this.setState({ appointments, appointmentKeys }, () => {

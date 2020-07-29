@@ -363,6 +363,37 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Follow Up appointment"
   },
+  appointmentType: {
+    id: "app.drawer.add.appointment.appointmentType",
+    description: "",
+    defaultMessage: "Type"
+  },
+  error_provider: {
+    id: "app.drawer.add.appointment.error.select.provider",
+    description: "",
+    defaultMessage: "Please select provider"
+  },
+  provider: {
+    id: "app.event.provider",
+    description: "",
+    defaultMessage: "Provider"
+  },
+  error_appointment_type_description: {
+    id: "app.drawer.add.appointment.error.select.type.description",
+    description: "",
+    defaultMessage: "Please select type description"
+  },
+  error_appointment_type: {
+    id: "app.drawer.add.appointment.error.select.type",
+    description: "",
+    defaultMessage: "Please select appointment type"
+  },
+  appointmentTypeDescription: {
+    id: "app.drawer.add.appointment.appointmentTypeDescription",
+    description: "",
+    defaultMessage: "Type Description"
+
+  },
   econsulting: {
     id: "add.event.econsulting",
     description: "",

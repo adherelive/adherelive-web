@@ -3,8 +3,8 @@ import { injectIntl, FormattedMessage } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import {  MEDICINE_TYPE, GENDER, PERMISSIONS } from "../../../constant";
-import { Tabs, Table, Menu, Dropdown, Spin, message,Button } from "antd";
+import { MEDICINE_TYPE, GENDER, PERMISSIONS } from "../../../constant";
+import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -772,7 +772,6 @@ class PatientDetails extends Component {
       basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456' }, details = {}
     } = patients[patient_id] || {};
 
-    let { age_type = '' } = details || {};
 
     const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
 
@@ -820,7 +819,7 @@ class PatientDetails extends Component {
               patient_last_name={last_name}
               patient_id={uid}
               gender={gender}
-              patient_age={age + `${age_type === '2' && age > 1 ? ' months' : age_type === '2' ? ' month' : age_type === '1' && age > 1 ? ' days' : age_type === '1' ? ' day' : ''}`}
+              patient_age={age}
               patient_phone_number={`${prefix ? `+${prefix} ` : ''}${mobile_number}`}
               patient_email_id={email ? email : ''}
               formatMessage={formatMessage}

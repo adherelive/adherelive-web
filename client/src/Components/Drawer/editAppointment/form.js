@@ -8,6 +8,7 @@ import DatePicker from "antd/es/date-picker";
 import TimePicker from "antd/es/time-picker";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
+import { Checkbox } from "antd";
 
 import message from "./message";
 import { doRequest } from "../../../Helper/network";
@@ -21,18 +22,23 @@ const { Option } = Select;
 const PATIENT = "patient";
 const DATE = "date";
 const START_TIME = "start_time";
+const CRITICAL = 'critical';
 const END_TIME = "end_time";
 const TREATMENT = "treatment";
 const REASON = "reason";
+const APPOINTMENT_TYPE = "type";
+const APPOINTMENT_TYPE_DESCRIPTION = "type_description";
+const PROVIDER_ID = "provider_id";
 const DESCRIPTION = "description";
 
-const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION];
+const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION, APPOINTMENT_TYPE, APPOINTMENT_TYPE_DESCRIPTION, PROVIDER_ID];
 
 class EditAppointmentForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fetchingPatients: false,
+      typeDescription: []
     };
   }
 
@@ -50,7 +56,22 @@ class EditAppointmentForm extends Component {
   //     }
   //   }
   // };
+  componentDidMount = () => {
+    let {
+      appointments,
+      appointmentData,
+      payload: { id: appointment_id, patient_id } = {},
+    } = this.props;
 
+    let { basic_info: { details: { type = '' } = {} } = {} } = appointments[appointment_id] || {};
+
+    const { schedule_data: { appointment_type = '' } = {} } = appointmentData || {};
+    type = appointment_type ? appointment_type : type;
+    let { type_descriptions = {} } = this.props;
+    let descArray = type_descriptions[type] ? type_descriptions[type] : [];
+
+    this.setState({ typeDescription: descArray });
+  }
   fetchPatients = async (data) => {
     try {
     } catch (err) {
@@ -247,10 +268,85 @@ class EditAppointmentForm extends Component {
     );
   };
 
-  // disabledDate = (current) => {
-  //   // Can not select days before today and today
-  //   return current && current < moment().startOf("day") && (moment(current).diff(moment(), 'days') < 31);
-  // };
+  handleTypeSelect = (value) => {
+    let { type_descriptions = {} } = this.props;
+    let descArray = type_descriptions[value] ? type_descriptions[value] : [];
+
+    this.setState({ typeDescription: descArray });
+  }
+
+  getTypeOption = () => {
+    let { appointment_types = {} } = this.props;
+    let newTypes = [];
+    for (let type of Object.keys(appointment_types)) {
+      let { title = '' } = appointment_types[type] || {};
+      newTypes.push(
+        <Option key={type} value={type}>
+          {title}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
+
+  getTypeDescriptionOption = () => {
+
+
+    let { typeDescription = [] } = this.state;
+    let newTypes = [];
+    for (let desc of typeDescription) {
+      newTypes.push(
+        <Option key={desc} value={desc}>
+          {desc}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
+
+  handleProviderSearch = (data) => {
+    try {
+      const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+      if (data) {
+
+        setFieldsValue({ [PROVIDER_ID]: data });
+      }
+    } catch (err) {
+      console.log("err", err);
+      // message.warn("Something wen't wrong. Please try again later");
+      // this.setState({ fetchingMedicines: false });
+    }
+  };
+
+  getProviderOption = () => {
+    let { providers = [],
+      appointments,
+      appointmentData,
+      payload: { id: appointment_id } = {} } = this.props;
+    let { provider_name = '' } = appointments[appointment_id] || {};
+
+    const { provider_name: provName = '' } = appointmentData || {};
+    provider_name = provName ? provName : provider_name;
+    let newTypes = [];
+
+    for (let provider of Object.values(providers)) {
+
+      let { basic_info: { id = 0, name = '' } = {} } = provider;
+      newTypes.push(
+        <Option key={id} value={parseInt(id)}>
+          {name}
+        </Option>
+      )
+    }
+    if (provider_name) {
+      newTypes.push(
+        <Option key={provider_name} value={parseInt(provider_name)}>
+          {provider_name}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
 
   render() {
     let {
@@ -264,7 +360,7 @@ class EditAppointmentForm extends Component {
       carePlan = {},
       payload: { id: appointment_id, patient_id } = {},
     } = this.props;
-    const { fetchingPatients } = this.state;
+    const { fetchingPatients, typeDescription } = this.state;
     const {
       formatMessage,
       getInitialValue,
@@ -277,20 +373,27 @@ class EditAppointmentForm extends Component {
       getPatientName,
     } = this;
     let pId = patientId ? patientId.toString() : patient_id;
-    let { basic_info: { description, start_date, start_time, end_time, details: { treatment_id = "", reason = '' } = {} } = {} } = appointments[appointment_id] || {};
+    let { basic_info: { description, start_date, start_time, end_time, details: { treatment_id = "", reason = '', type = '', type_description = '', critical = false } = {} } = {}, provider_id = 0, provider_name = '' } = appointments[appointment_id] || {};
+    provider_id = provider_name ? provider_name : provider_id;
 
 
 
-
-    console.log('7483274982349832', carePlan);
+    console.log('7483274982349832', appointmentData);
     if (Object.values(carePlan).length) {
       let { treatment_id: newTreatment = '' } = carePlan;
       treatment_id = newTreatment;
     }
     const currentDate = moment(getFieldValue(DATE));
-    const { reason: res = '', schedule_data: { description: des = '', date: Date = '', start_time: startTime = '', end_time: endTime = '' } = {} } = appointmentData || {};
+
+
+
+    const { reason: res = '', provider_id: provId = 0, provider_name: provName = '', schedule_data: { description: des = '', date: Date = '', start_time: startTime = '', end_time: endTime = '', appointment_type = '', type_description: typeDes = '', critical: critic = false } = {} } = appointmentData || {};
     description = des ? des : description;
     reason = res ? res : reason;
+    type = appointment_type ? appointment_type : type;
+    type_description = typeDes ? typeDes : type_description;
+    provider_id = provName ? provName : provId ? provId : provider_id;
+    critical = critic ? critic : critical;
     if (res) {   //toDo remove when real templates are created and handle accordingly
 
       let minutesToAdd = 30 - (moment().minutes()) % 30;
@@ -351,6 +454,114 @@ class EditAppointmentForm extends Component {
             // </Select>
           )}
         </FormItem>
+
+        <FormItem
+          label={formatMessage(message.appointmentType)}
+          className='mt24'
+        >
+          {getFieldDecorator(APPOINTMENT_TYPE, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_appointment_type),
+              },
+            ],
+            initialValue: type ? type : null
+          })(
+            <Select
+              className="drawer-select"
+              placeholder="Choose Appointment Type"
+              onSelect={this.handleTypeSelect}
+
+
+            >
+              {this.getTypeOption()}
+            </Select>
+          )}
+        </FormItem>
+
+        <FormItem
+          label={formatMessage(message.appointmentTypeDescription)}
+          className='mt24'
+        >
+          {getFieldDecorator(APPOINTMENT_TYPE_DESCRIPTION, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_appointment_type_description),
+              },
+            ],
+            initialValue: type_description ? type_description : null
+          })(
+            <Select
+              // onSearch={handleMedicineSearch}
+              notFoundContent={'No match found'}
+              className="drawer-select"
+              placeholder="Choose Type Descrition"
+              showSearch
+              defaultActiveFirstOption={true}
+              autoComplete="off"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+
+            >
+              {this.getTypeDescriptionOption()}
+            </Select>
+          )}
+        </FormItem>
+
+        <FormItem
+          label={formatMessage(message.provider)}
+          className='mt24'
+        >
+          {getFieldDecorator(PROVIDER_ID, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_provider),
+              },
+            ],
+            initialValue: provider_id ? provider_id : null
+          }
+          )(
+            <Select
+              notFoundContent={null}
+              className="drawer-select"
+              placeholder="Choose Provider"
+              showSearch
+              // defaultActiveFirstOption={true}
+              autoComplete="off"
+              onSearch={this.handleProviderSearch}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+
+            >
+              {this.getProviderOption()}
+            </Select>
+          )}
+        </FormItem>
+
+
+        <FormItem
+          className="flex-1 wp100 critical-checkbox"
+
+        >
+          {getFieldDecorator(CRITICAL, {
+
+            valuePropName: 'checked',
+            initialValue: critical
+          })(
+            <Checkbox className=''>Critical Appointment</Checkbox>)}
+        </FormItem>
+
 
         <FormItem
           label={formatMessage(message.start_date)}

@@ -341,7 +341,6 @@ class PatientDetailsDrawer extends Component {
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
-                // getPopupContainer={getParentNode}
 
                 >
                     {this.getConditionOption()}

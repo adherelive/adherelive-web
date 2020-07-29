@@ -1,15 +1,15 @@
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import AddAppointmentDrawer from "../../Components/Drawer/addAppointment";
 import { close } from "../../modules/drawer";
-import {DRAWER} from "../../constant";
-import {getMedications} from "../../modules/medications";
-import {getAppointments, addAppointment,addCarePlanAppointment} from "../../modules/appointments";
+import { DRAWER } from "../../constant";
+import { getMedications } from "../../modules/medications";
+import { getAppointments, addAppointment, addCarePlanAppointment } from "../../modules/appointments";
 
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
-        patients,treatments,care_plans
+        patients, treatments, care_plans, appointment_types, type_descriptions, providers
     } = state
     return {
         visible: visible && type === DRAWER.ADD_APPOINTMENT,
@@ -17,7 +17,10 @@ const mapStateToProps = state => {
         payload,
         treatments,
         patients,
-        care_plans
+        care_plans,
+        appointment_types,
+        type_descriptions,
+        providers
     };
 };
 
@@ -25,9 +28,9 @@ const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
         addAppointment: data => dispatch(addAppointment(data)),
-        addCarePlanAppointment: (data,carePlanId) => dispatch(addCarePlanAppointment(data,carePlanId)),
-        
-    getMedications: (id) => dispatch(getMedications(id)),
+        addCarePlanAppointment: (data, carePlanId) => dispatch(addCarePlanAppointment(data, carePlanId)),
+
+        getMedications: (id) => dispatch(getMedications(id)),
         getAppointments: (id) => dispatch(getAppointments(id)),
     };
 };

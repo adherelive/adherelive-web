@@ -71,16 +71,22 @@ class EditAppointment extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         console.log("VALUES --> ", values);
-        const {
+        let {
           patient = {},
           date,
+          type,
+          type_description,
+          provider_id,
+          critical,
           start_time,
+          reason,
           end_time,
-          description,
-
-          treatment,
-          reason
+          description = "",
+          treatment = "",
         } = values;
+        let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
+
+        let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
 
         const data = {
           // todo: change participant one with patient from store
@@ -92,9 +98,14 @@ class EditAppointment extends Component {
           date,
           start_time,
           end_time,
+          reason,
           description,
+          type,
+          type_description,
+          provider_id: newProvider_id,
+          provider_name,
+          critical,
           treatment_id: treatment,
-          reason
         };
 
         if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
