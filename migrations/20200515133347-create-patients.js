@@ -42,7 +42,7 @@ module.exports = {
           age: {
             type: Sequelize.STRING,
           },
-          birth_date: {
+          dob: {
             type: Sequelize.DATE,
             allowNull: true,
           },

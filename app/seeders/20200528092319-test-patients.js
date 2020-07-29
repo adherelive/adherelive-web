@@ -17,10 +17,11 @@ module.exports = {
     return queryInterface.bulkInsert(DB_TABLES.PATIENTS, [{
       user_id: "2",
       gender: "m",
-      age:"26",
+      age:"25 y",
       first_name: "Atish",
       last_name:"Kumar",
       address:"delhi",
+      dob:"1994-09-02 12:05:21",
       uid: `ADH/${new Date().getFullYear()}/0001`,
       created_at: new Date(),
       updated_at: new Date()
