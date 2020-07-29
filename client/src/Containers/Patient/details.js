@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { open } from "../../modules/drawer";
 import { close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
-import { getAppointments } from "../../modules/appointments";
+import { getAppointments,getAppointmentsDetails } from "../../modules/appointments";
 import { searchMedicine } from "../../modules/medicines";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
@@ -54,6 +54,7 @@ const mapDispatchToProps = dispatch => {
 
         close: () => dispatch(close()),
         getAppointments: (id) => dispatch(getAppointments(id)),
+        getAppointmentsDetails: () => dispatch(getAppointmentsDetails()),
         getPatientCarePlanDetails: (patientId) => dispatch(getPatientCarePlanDetails(patientId)),
         searchMedicine: value => dispatch(searchMedicine(value)),
         addCarePlanMedicationsAndAppointments: (payload, carePlanId) => dispatch(addCarePlanMedicationsAndAppointments(payload, carePlanId)),

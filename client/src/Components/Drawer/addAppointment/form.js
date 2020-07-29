@@ -8,7 +8,7 @@ import DatePicker from "antd/es/date-picker";
 import TimePicker from "antd/es/time-picker";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
-
+import { Checkbox } from "antd";
 import message from "./message";
 import { doRequest } from "../../../Helper/network";
 import seperator from "../../../Assets/images/seperator.svg";
@@ -20,6 +20,7 @@ const { Option } = Select;
 
 const PATIENT = "patient";
 const DATE = "date";
+const CRITICAL = 'critical';
 const START_TIME = "start_time";
 const END_TIME = "end_time";
 const TREATMENT = "treatment";
@@ -287,7 +288,7 @@ class AddAppointmentForm extends Component {
           {getFieldDecorator(PATIENT, {
             initialValue: getInitialValue(),
           })(
-            <div/>
+            <div />
             //   <Select
             //     className="user-select drawer-select"
             //     // onSearch={fetchPatients}
@@ -307,8 +308,18 @@ class AddAppointmentForm extends Component {
         </FormItem>
 
         <FormItem
+          className="flex-1 wp100 mt24 critical-checkbox"
+
+        >
+          {getFieldDecorator(CRITICAL, {
+            initialValue: getInitialValue()
+          })(
+            <Checkbox className=''>Critical Appointment</Checkbox>)}
+        </FormItem>
+
+        <FormItem
           label={formatMessage(message.start_date)}
-          className="full-width mt16 ant-date-custom-ap-date"
+          className="full-width mt-20 ant-date-custom-ap-date"
         >
           {getFieldDecorator(DATE, {
             rules: [
@@ -404,7 +415,7 @@ class AddAppointmentForm extends Component {
             initialValue: getTreatment(),
           }
           )(
-            <div/>
+            <div />
             // <Select
             //   className="form-inputs-ap drawer-select"
             //   autoComplete="off"

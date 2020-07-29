@@ -386,6 +386,7 @@ class PatientDetails extends Component {
       getAppointments,
       searchMedicine,
       getPatientCarePlanDetails,
+      getAppointmentsDetails,
       patient_id,
       showTemplateDrawer,
       care_plans,
@@ -413,6 +414,7 @@ class PatientDetails extends Component {
       //   }
       // });
       getMedications(patient_id);
+      getAppointmentsDetails();
       getAppointments(patient_id);
     }
     // searchMedicine("");
