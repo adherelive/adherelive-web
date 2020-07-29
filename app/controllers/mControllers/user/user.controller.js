@@ -504,6 +504,9 @@ class MobileUserController extends Controller {
         let patientIds = [];
         let userIds = [userId];
 
+        let treatmentIds = [];
+        let conditionIds = [];
+
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
@@ -527,6 +530,10 @@ class MobileUserController extends Controller {
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
+
+                const {severity_id, treatment_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
+                treatmentIds.push(treatment_id);
+                conditionIds.push(condition_id);
               });
             }
             break;
@@ -553,6 +560,10 @@ class MobileUserController extends Controller {
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
+
+                const {severity_id, treatment_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
+                treatmentIds.push(treatment_id);
+                conditionIds.push(condition_id);
               });
             }
             break;
@@ -615,18 +626,18 @@ class MobileUserController extends Controller {
           // Logger.debug("userApiData --> ", apiUserDetails.isActivated());
         }
 
-        // // treatments
-        // let treatmentApiDetails = {};
-        // let treatmentIds = [];
-        // const treatmentDetails = await treatmentService.getAll();
-        //
-        // for (const treatment of treatmentDetails) {
-        //   const treatmentWrapper = await MTreatmentWrapper(treatment);
-        //   treatmentIds.push(treatmentWrapper.getTreatmentId());
-        //   treatmentApiDetails[
-        //     treatmentWrapper.getTreatmentId()
-        //   ] = treatmentWrapper.getBasicInfo();
-        // }
+        // treatments
+        let treatmentApiDetails = {};
+        const treatmentDetails = await treatmentService.getAll({id: treatmentIds});
+        treatmentIds = [];
+
+        for (const treatment of treatmentDetails) {
+          const treatmentWrapper = await MTreatmentWrapper(treatment);
+          treatmentIds.push(treatmentWrapper.getTreatmentId());
+          treatmentApiDetails[
+            treatmentWrapper.getTreatmentId()
+          ] = treatmentWrapper.getBasicInfo();
+        }
 
         // severity
         let severityApiDetails = {};
@@ -641,18 +652,18 @@ class MobileUserController extends Controller {
           ] = severityWrapper.getBasicInfo();
         }
 
-        // // conditions
-        // let conditionApiDetails = {};
-        // let conditionIds = [];
-        // const conditionDetails = await conditionService.getAll();
-        //
-        // for (const condition of conditionDetails) {
-        //   const conditionWrapper = await MConditionWrapper(condition);
-        //   conditionIds.push(conditionWrapper.getConditionId());
-        //   conditionApiDetails[
-        //     conditionWrapper.getConditionId()
-        //   ] = conditionWrapper.getBasicInfo();
-        // }
+        // conditions
+        let conditionApiDetails = {};
+        const conditionDetails = await conditionService.getAllByData({id: conditionIds});
+        conditionIds = [];
+
+        for (const condition of conditionDetails) {
+          const conditionWrapper = await MConditionWrapper(condition);
+          conditionIds.push(conditionWrapper.getConditionId());
+          conditionApiDetails[
+            conditionWrapper.getConditionId()
+          ] = conditionWrapper.getBasicInfo();
+        }
 
         let permissions = {
           permissions: []
@@ -681,8 +692,16 @@ class MobileUserController extends Controller {
           severity: {
             ...severityApiDetails
           },
+          conditions: {
+            ...conditionApiDetails,
+          },
+          treatments: {
+            ...treatmentApiDetails,
+          },
           ...permissions,
           severity_ids: severityIds,
+          condition_ids: conditionIds,
+          treatment_ids: treatmentIds,
           auth_user: userId,
           auth_category: category
         };

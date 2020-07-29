@@ -29,6 +29,17 @@ class ConditionService {
         }
     };
 
+    getAllByData = async data => {
+        try {
+            const condition = await Condition.findAll({
+                where: data
+            });
+            return condition;
+        } catch(error) {
+            throw error;
+        }
+    };
+
     getByData = async data => {
         try {
             const condition = await Condition.findOne({

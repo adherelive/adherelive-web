@@ -472,7 +472,9 @@ class UserController extends Controller {
         let userIds = [userId];
         let careplanData = [];
 
-        console.log("GET USER CATEGORY DATA", category, userId);
+        let treatmentIds = [];
+        let conditionIds = [];
+
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
@@ -497,6 +499,9 @@ class UserController extends Controller {
                 const carePlanId = carePlanApiWrapper.getCarePlanId();
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
 
+                const {treatment_id, severity_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
+                treatmentIds.push(treatment_id);
+                conditionIds.push(condition_id);
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
                 ] =
@@ -517,7 +522,6 @@ class UserController extends Controller {
         // });
 
         // todo: as of now, get all patients
-        console.log("PATIENT IDSSSSSSSSSS========>", patientIds);
         const patientsData = await patientService.getPatientByData({
           id: patientIds
         });
@@ -550,16 +554,16 @@ class UserController extends Controller {
           ] = apiUserDetails.getBasicInfo();
         }
 
-        // // treatments
-        // let treatmentApiDetails = {};
-        // let treatmentIds = [];
-        // const treatmentDetails = await treatmentService.getAll();
-        //
-        // for (const treatment of treatmentDetails) {
-        //   const treatmentWrapper = await TreatmentWrapper(treatment);
-        //   treatmentIds.push(treatmentWrapper.getTreatmentId());
-        //   treatmentApiDetails[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
-        // }
+        // treatments
+        let treatmentApiDetails = {};
+        const treatmentDetails = await treatmentService.getAll({id: treatmentIds});
+        treatmentIds = [];
+        for (const treatment of treatmentDetails) {
+
+          const treatmentWrapper = await TreatmentWrapper(treatment);
+          treatmentIds.push(treatmentWrapper.getTreatmentId());
+          treatmentApiDetails[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
+        }
 
         // severity
         let severityApiDetails = {};
@@ -572,32 +576,31 @@ class UserController extends Controller {
           severityApiDetails[severityWrapper.getSeverityId()] = severityWrapper.getBasicInfo();
         }
 
-        // // conditions
-        // let conditionApiDetails = {};
-        // let conditionIds = [];
-        // const conditionDetails = await conditionService.getAll();
-        //
-        // for (const condition of conditionDetails) {
-        //   const conditionWrapper = await ConditionWrapper(condition);
-        //   conditionIds.push(conditionWrapper.getConditionId());
-        //   conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
-        // }
+        // conditions
+        let conditionApiDetails = {};
+        const conditionDetails = await conditionService.getAllByData({id: conditionIds});
+        conditionIds = [];
+        for (const condition of conditionDetails) {
+          const conditionWrapper = await ConditionWrapper(condition);
+          conditionIds.push(conditionWrapper.getConditionId());
+          conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
+        }
+
+        Logger.debug("conditionWrapper.getConditionId() --> ", conditionApiDetails);
+
 
         let permissions = {
           permissions: []
         };
 
-        Logger.debug("permissions check --> ", authUserDetails.getPermissions());
 
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
         }
 
-        Logger.debug("permissions value --> ", permissions);
-
         /**** API wrapper for DOCTOR ****/
 
-        const dataToSend = {
+        return this.raiseSuccess(res, 200, {
           users: {
             ...userApiData
           },
@@ -613,13 +616,19 @@ class UserController extends Controller {
           severity: {
             ...severityApiDetails,
           },
+          treatments: {
+            ...treatmentApiDetails,
+          },
+          conditions: {
+            ...conditionApiDetails,
+          },
           ...permissions,
           severity_ids: severityIds,
+          treatment_ids: treatmentIds,
+          condition_ids: conditionIds,
           auth_user: userId,
           auth_category: category
-        };
-
-        return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
+        }, "basic info");
       } else {
         console.log("userExists --->>> ", req.userDetails.exists);
         // throw new Error(constants.COOKIES_NOT_SET);

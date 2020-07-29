@@ -251,9 +251,7 @@ class MobileDoctorController extends Controller {
         ? carePlanTemplate.get("id")
         : null;
 
-      const details = care_plan_template_id
-        ? {}
-        : { treatment_id, severity_id, condition_id };
+      const details = { treatment_id, severity_id, condition_id };
 
       Logger.debug("doctor ------> ", doctor);
       Logger.debug("userId ------> ", userId);
