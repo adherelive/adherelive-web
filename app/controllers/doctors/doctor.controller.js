@@ -519,7 +519,7 @@ class DoctorController extends Controller {
       // const uid = uuidv4();
 
       const birth_date = moment(date_of_birth);
-      const {age, age_type} = getAge(date_of_birth);
+      const age = getAge(date_of_birth);
 
 
 
@@ -532,9 +532,7 @@ class DoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
-        details: {
-          age_type
-        }
+        dob: moment(date_of_birth).toISOString()
         // uid
       });
 
@@ -560,9 +558,7 @@ class DoctorController extends Controller {
         ? carePlanTemplate.get("id")
         : null;
 
-      const details = care_plan_template_id
-        ? {}
-        : { treatment_id, severity_id, condition_id };
+      const details = { treatment_id, severity_id, condition_id };
 
       const carePlan = await carePlanService.addCarePlan({
         patient_id,

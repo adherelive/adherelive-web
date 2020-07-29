@@ -20,6 +20,7 @@ class PatientWrapper extends BasePatient {
             address,
             activated_on,
             details,
+            dob,
             uid
         } = _data || {};
         return {
@@ -35,7 +36,8 @@ class PatientWrapper extends BasePatient {
                 uid
             },
             activated_on,
-            details
+            details,
+            dob,
         };
     };
 }

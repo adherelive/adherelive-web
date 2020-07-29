@@ -17,6 +17,7 @@ class MPatientWrapper extends BasePatient {
             middle_name,
             last_name,
             age,
+            dob,
             address,
             activated_on,
             details,
@@ -42,6 +43,7 @@ class MPatientWrapper extends BasePatient {
                 uid
             },
             activated_on,
+            dob,
             details: updatedDetails
         };
     };

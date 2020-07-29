@@ -212,7 +212,7 @@ class MobileDoctorController extends Controller {
 
       // const uid = uuidv4();
       const birth_date = moment(date_of_birth);
-      const {age, age_type} = getAge(date_of_birth);
+      const age = getAge(date_of_birth);
       const patient = await patientsService.addPatient({
         first_name,
         gender,
@@ -221,9 +221,7 @@ class MobileDoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
-        details: {
-          age_type
-        }
+        dob: date_of_birth
         // uid
       });
 
@@ -251,12 +249,7 @@ class MobileDoctorController extends Controller {
         ? carePlanTemplate.get("id")
         : null;
 
-      const details = care_plan_template_id
-        ? {}
-        : { treatment_id, severity_id, condition_id };
-
-      Logger.debug("doctor ------> ", doctor);
-      Logger.debug("userId ------> ", userId);
+      const details = { treatment_id, severity_id, condition_id };
 
       const carePlan = await carePlanService.addCarePlan({
         patient_id,
