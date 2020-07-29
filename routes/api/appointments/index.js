@@ -5,6 +5,13 @@ import Authenticate from "../middleware/auth";
 import Appointment from "../../../app/controllers/appointments/appointment.controller";
 import * as validator from "./validator";
 
+
+router.get(
+    "/details",
+    Authenticate,
+    Appointment.getAppointmentDetails
+);
+
 router.get(
     "/:id",
     Authenticate,

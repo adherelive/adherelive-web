@@ -23,6 +23,11 @@ const appointmentFormSchema = Joi.object().keys({
       category: Joi.string().required(),
     })
     .optional().allow(""),
+  type: Joi.number().required(),
+  provider_id: Joi.number().optional().allow(""),
+  provider_name: Joi.string().optional().allow(""),
+  type_description:Joi.string().required(),
+  critical: Joi.boolean().optional().allow(""),
   treatment_id: Joi.number().optional().allow(""),
   care_plan_id: Joi.number().optional().allow(""),
   // TODO: rr_rule?

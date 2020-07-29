@@ -19,6 +19,11 @@ const appointmentFormSchema = Joi.object().keys({
       .max(500, 'utf-8')
     .optional()
     .allow(""),
+  type: Joi.number().required(),
+  provider_id: Joi.number().optional().allow(""),
+  provider_name: Joi.string().optional().allow(""),
+  type_description:Joi.string().required(),
+  critical: Joi.boolean().optional().allow(""),
   organizer: Joi.object()
     .keys({
       id: Joi.number().required(),

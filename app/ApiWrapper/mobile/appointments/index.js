@@ -22,6 +22,8 @@ class MAppointmentWrapper extends BaseAppointment {
       end_date,
       start_time,
       end_time,
+        provider_id,
+        provider_name,
       rr_rule = "",
     } = _data || {};
     const updatedDetails = {
@@ -50,6 +52,8 @@ class MAppointmentWrapper extends BaseAppointment {
         category: organizer_type,
       },
       rr_rule,
+      provider_id,
+      provider_name,
     };
   };
 }
@@ -58,6 +62,6 @@ export default async (data = null, id = null) => {
   if (data) {
     return new MAppointmentWrapper(data);
   }
-  const appointment = await appointmentService.getAppointment({ id });
+  const appointment = await appointmentService.getAppointmentById(id);
   return new MAppointmentWrapper(appointment);
 };

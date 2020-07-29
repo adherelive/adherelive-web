@@ -5,6 +5,12 @@ import Authenticate from "../middleware/auth";
 import * as validator from "./validator";
 
 router.get(
+    "/details",
+    Authenticate,
+    MobileAppointment.getAppointmentDetails
+);
+
+router.get(
     "/:patient_id",
     Authenticate,
     MobileAppointment.getAppointmentForPatient

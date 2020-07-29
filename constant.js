@@ -364,6 +364,7 @@ export const DB_TABLES = {
   REGISTRATION_COUNCIL:"registration_councils",
   OTP_VERIFICATIONS: "otp_verifications",
   TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
+  FEATURE_DETAILS: 'feature_details',
 };
 
 export const ARTICLE_TYPE = {
@@ -599,4 +600,41 @@ export const AGE_TYPE = {
   [DAY]: "d",
   [MONTH]: "m",
   [YEAR]: "y"
+};
+
+/*------------------------------- APPOINTMENT DETAILS ---------------------------------*/
+
+const MEDICAL_TEST = "1";
+const CONSULTATION = "2";
+const RADIOLOGY = "3";
+
+export const APPOINTMENT_TYPE = {
+  [MEDICAL_TEST]: {
+    title: "Medical Test",
+  },
+  [CONSULTATION]: {
+    title: "Consultation",
+  },
+  [RADIOLOGY]: {
+    title: "Radiology",
+  },
+};
+
+export const APPOINTMENT_TYPE_DESCRIPTION = {
+  [MEDICAL_TEST]: {
+    options: [
+      {}
+    ],
+  },
+  [CONSULTATION]: {
+    title: "Consultation",
+  },
+  [RADIOLOGY]: {
+    title: "Radiology",
+  },
+};
+
+export const FEATURE_TYPE = {
+  APPOINTMENT:"appointment",
+  MEDICATION:"medication",
 };
