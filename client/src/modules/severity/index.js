@@ -16,7 +16,7 @@ export const searchSeverity = value => {
         url: searchSeverities(value),
       });
 
-      const { status, payload: { data, error = {}, message = "" } = {} } = response || {};
+      const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
           type: SEARCH_SEVERITY_COMPLETED,

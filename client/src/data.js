@@ -5,7 +5,7 @@ export const AUTH_INITIAL_STATE = {
 };
 
 export const GRAPH_INITIAL_STATE = {
-  missed_report: [
+  dashboard_report: [
     {
       id: "1",
       data: {

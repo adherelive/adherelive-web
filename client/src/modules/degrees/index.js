@@ -15,7 +15,7 @@ export const searchDegree = value => {
                 url: searchDegrees(value),
             });
 
-            const { status, payload: { data, error = {}, message = "" } = {} } = response || {};
+            const { status, payload: { data, message = "" } = {} } = response || {};
             if (status === true) {
                 dispatch({
                     type: SEARCH_DEGREES_COMPLETED,

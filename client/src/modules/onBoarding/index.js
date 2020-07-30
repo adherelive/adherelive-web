@@ -135,7 +135,7 @@ export const doctorClinicRegister = (payload) => {
 
       console.log("Doctor clinic response --> ", response);
 
-      const { status, payload: { error = "", data = {} } = {} } =
+      const { status, payload: { error = "" } = {} } =
         response || {};
 
       if (status === false) {
@@ -262,7 +262,7 @@ export const registerQualification = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { qualification_id } = data;
+        // const { qualification_id } = data;
         dispatch({
           type: REGISTER_QUALIFICATION_COMPLETED,
           data: data,
@@ -301,7 +301,7 @@ export const registerRegistration = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { qualification_id } = data;
+        // const { qualification_id } = data;
         dispatch({
           type: REGISTER_REGISTRATION_COMPLETED,
           data: data,
@@ -371,7 +371,7 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
 
       console.log("DELETE REGISTRATION IMAGE response --> ", response);
 
-      const { status, payload: { error = "", data = {} } = {} } =
+      const { status, payload: { error = "" } = {} } =
         response || {};
 
       if (status === false) {

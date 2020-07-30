@@ -233,7 +233,7 @@ const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
           trigger={["click"]}
           placement="bottomRight"
         >
-          <Button type="primary">Add</Button>
+          <Button type="primary" className='add-button'>Add</Button>
         </Dropdown>)}
       </div>
     </div>
@@ -684,7 +684,7 @@ class PatientDetails extends Component {
 
     for (let aId of template_appointment_ids) {
       let newAppointment = {};
-      let { basic_info: { id = 0, care_plan_template_id = 0 } = {}, reason = '', time_gap = 0, details = {}, provider_id , provider_name = '' } = template_appointments[aId];
+      let { basic_info: { id = 0, care_plan_template_id = 0 } = {}, reason = '', time_gap = 0, details = {}, provider_id, provider_name = '' } = template_appointments[aId];
       newAppointment.id = id;
       newAppointment.schedule_data = details;
       newAppointment.reason = reason;

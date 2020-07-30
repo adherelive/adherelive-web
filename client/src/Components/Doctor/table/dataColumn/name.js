@@ -9,7 +9,6 @@ export default props => {
       middle_name,
       last_name,
       gender,
-      age,
       profile_pic
     } = {}
   } = doctorData || {};

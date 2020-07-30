@@ -10,7 +10,6 @@ import message from "antd/es/message";
 import messages from "./message";
 import AddAppointmentForm from "./form";
 import Footer from "../footer";
-import CalendarTimeSelecton from "./calender";
 
 class AddAppointment extends Component {
   constructor(props) {
@@ -25,7 +24,7 @@ class AddAppointment extends Component {
     );
   }
 
-  onFormFieldChanges = (props, allvalues) => {
+  onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
     } = props;
@@ -41,10 +40,10 @@ class AddAppointment extends Component {
     const { addCarePlanAppointment, getAppointments, payload: { patient_id }, patients, carePlanId } = this.props;
     const { formRef = {}, formatMessage } = this;
 
-    const { basic_info: { user_id } = {} } = patients[patient_id] || {};
+    // const { basic_info: { user_id } = {} } = patients[patient_id] || {};
     const {
       props: {
-        form: { validateFields },
+        form: { validateFields,resetFields },
       },
     } = formRef;
 
@@ -52,12 +51,11 @@ class AddAppointment extends Component {
       if (!err) {
         console.log("VALUES --> ", values);
         let {
-          patient = {},
           date,
           type,
           type_description,
           provider_id,
-          critical=false,
+          critical = false,
           start_time,
           reason,
           end_time,
@@ -87,8 +85,8 @@ class AddAppointment extends Component {
             category: "patient",
           },
           date,
-          start_time:newEventStartTime,
-          end_time:newEventEndTime,
+          start_time: newEventStartTime,
+          end_time: newEventEndTime,
           reason,
           description,
           type,
@@ -104,8 +102,8 @@ class AddAppointment extends Component {
               category: "patient",
             },
             date,
-            start_time:newEventStartTime,
-            end_time:newEventEndTime,
+            start_time: newEventStartTime,
+            end_time: newEventEndTime,
             reason,
             description,
             type,
@@ -127,7 +125,7 @@ class AddAppointment extends Component {
             const {
               status,
               statusCode: code,
-              payload: { message: errorMessage = "", error, error: { error_type = "" } = {} },
+              payload: { message: errorMessage = "", error: { error_type = "" } = {} },
             } = response || {};
 
             if (code === 422 && error_type === "slot_present") {
@@ -137,6 +135,7 @@ class AddAppointment extends Component {
                 )} - ${moment(end_time).format("LT")}`
               );
             } else if (status === true) {
+              resetFields();
               message.success(formatMessage(messages.add_appointment_success));
               // getAppointments(patient_id);
             } else {
@@ -160,6 +159,13 @@ class AddAppointment extends Component {
 
   onClose = () => {
     const { close } = this.props;
+    const{formRef}=this;
+    const {
+      props: {
+        form: { resetFields },
+      },
+    } = formRef;
+    resetFields();
     close();
   };
 
@@ -201,6 +207,7 @@ class AddAppointment extends Component {
         <Drawer
           placement="right"
           // closable={false}
+          maskClosable={false}
           headerStyle={{
             position: "sticky",
             zIndex: "9999",

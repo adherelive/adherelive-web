@@ -229,6 +229,7 @@ class AddMedicationReminder extends Component {
           zIndex: "9999",
           top: "0px"
         }}
+        maskClosable={false}
         destroyOnClose={true}
         className="ant-drawer"
         title={formatMessage(messages.title)}

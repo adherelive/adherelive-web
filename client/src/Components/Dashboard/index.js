@@ -69,23 +69,15 @@ class Dashboard extends Component {
         const { graphs } = this.props;
 
         const { graphsToShow } = this.state;
-        const { formatMessage } = this;
-        const { missed_report = [] } = graphs || {};
 
-        // console.log("3897127312893 missed_report --> ", missed_report);
 
         const chartBlocks = graphsToShow.map(id => {
-            // const { id, data } = report || {};
             const { total, critical, name } = graphs[id] || {};
-            const { className } = GRAPH_COLORS[id] || {};
-            // if (graphsToShow.includes(id)) {
             return (
 
-                <Donut id={id} data={[critical, total - critical]} total={total} title={name} />
+                <Donut key={id} id={id} data={[critical, total - critical]} total={total} title={name} />
             );
-            // } else {
-            //     return (null);
-            // }
+            
         });
         if (graphsToShow.length == 0) {
             return <div className='flex flex-grow-1 wp100 align-center justify-center'><Spin /></div>
@@ -180,7 +172,7 @@ class Dashboard extends Component {
                                 trigger={["click"]}
                                 placement="bottomRight"
                             >
-                                <Button type="primary">Add</Button>
+                                <Button type="primary" className='add-button'>Add</Button>
                             </Dropdown>)}
                     </div>
 

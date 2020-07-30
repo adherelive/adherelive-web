@@ -1,10 +1,8 @@
-import { DOCTOR_INITIAL_STATE } from "../../data";
 
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import { getDoctorDetailsUrl, getAllDoctorsUrl, getVerifyDoctorUrl } from "../../Helper/urls/doctor";
 
-import * as Doctor from "../../Helper/urls/doctor";
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
 export const GET_DOCTOR_DETAILS_COMPLETE = "GET_DOCTOR_DETAILS_COMPLETE";

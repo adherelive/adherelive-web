@@ -1,4 +1,3 @@
-import { PAGE_INITIAL } from "../../data";
 function severityPageReducer(state, data) {
   console.log("192371937812 data --> ", data);
   const {severity_ids} = data || {};

@@ -103,9 +103,9 @@ class PatientDetailsDrawer extends Component {
 
         const response = await searchTreatment(value);
 
-        const { status, payload: { data:{treatments={}}={}, message } = {} } = response;
-        if(status){
-            this.setState({treatments,treatment:''});
+        const { status, payload: { data: { treatments = {} } = {}, message } = {} } = response;
+        if (status) {
+            this.setState({ treatments, treatment: '' });
         }
         console.log('364871326478623471923784823', response);
     };
@@ -303,14 +303,14 @@ class PatientDetailsDrawer extends Component {
                 </div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Date Of Birth<div className="star-red">*</div></div>
-              
+
                 <Input className={"form-inputs-ap"} type='date'
                     max={maxDate}
                     onChange={this.setDOB} />
                 <div className='form-category-headings-ap'>Treatment Plan</div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
-              
+
 
                 <Select
                     className="form-inputs-ap drawer-select"
@@ -335,7 +335,7 @@ class PatientDetailsDrawer extends Component {
                 </Select>
 
                 <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
-              
+
 
                 <Select
                     className="form-inputs-ap drawer-select"
@@ -361,7 +361,7 @@ class PatientDetailsDrawer extends Component {
 
 
                 <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
-              
+
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Treatment"
@@ -457,6 +457,7 @@ class PatientDetailsDrawer extends Component {
                     placement="right"
                     // closable={false}
                     // closeIcon={<img src={backArrow} />}
+                    maskClosable={false}
                     headerStyle={{
                         position: "sticky",
                         zIndex: "9999",
