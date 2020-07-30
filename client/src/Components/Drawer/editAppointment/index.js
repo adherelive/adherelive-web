@@ -88,7 +88,7 @@ class EditAppointment extends Component {
 
         let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
 
-        const data = {
+        const data = newProvider_id ? {
           // todo: change participant one with patient from store
           id,
           participant_two: {
@@ -106,7 +106,24 @@ class EditAppointment extends Component {
           provider_name,
           critical,
           treatment_id: treatment,
-        };
+        } : {
+            // todo: change participant one with patient from store
+            id,
+            participant_two: {
+              id: pId,
+              category: "patient",
+            },
+            date,
+            start_time,
+            end_time,
+            reason,
+            description,
+            type,
+            type_description,
+            provider_name,
+            critical,
+            treatment_id: treatment,
+          };
 
         if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')

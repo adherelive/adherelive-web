@@ -335,7 +335,7 @@ class TemplateDrawer extends Component {
         for (let appointment in appointmentsData) {
 
             let newAppointment = appointmentsData[appointment];
-            let { reason = '', provider_id = 0, provider_name = 0, schedule_data: { date = '', description = '',
+            let { reason = '', provider_id, provider_name = 0, schedule_data: { date = '', description = '',
                 end_time = '', start_time = '', treatment_id = '', type = '', type_description = '', critical = 0, appointment_type = '' } = {}, time_gap = '' } = newAppointment;
             appointmentsData[appointment].schedule_data.type = appointment_type ? appointment_type : type;
             if (!date && !start_time && !end_time) {
@@ -456,7 +456,9 @@ class TemplateDrawer extends Component {
             reason = '' } = data;
         let newAppointment = appointments[innerFormKey];
         newAppointment.reason = reason;
-        newAppointment.provider_id = provider_id;
+        if (provider_id) {
+            newAppointment.provider_id = provider_id;
+        }
         newAppointment.provider_name = provider_name;
         newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
         console.log("DATA OF EDITED Appointment===>", data, newAppointment);

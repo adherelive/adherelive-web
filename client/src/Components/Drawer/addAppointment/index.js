@@ -68,7 +68,7 @@ class AddAppointment extends Component {
 
         let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
 
-        const data = {
+        const data = newProvider_id ? {
           // todo: change participant one with patient from store
           participant_two: {
             id: patient_id,
@@ -85,7 +85,23 @@ class AddAppointment extends Component {
           provider_name,
           critical,
           treatment_id: treatment,
-        };
+        } : {
+            // todo: change participant one with patient from store
+            participant_two: {
+              id: patient_id,
+              category: "patient",
+            },
+            date,
+            start_time,
+            end_time,
+            reason,
+            description,
+            type,
+            type_description,
+            provider_name,
+            critical,
+            treatment_id: treatment,
+          };
 
         // console.log('6797867076878678978768',data);
         if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {

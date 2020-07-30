@@ -97,7 +97,7 @@ class CarePlanController extends Controller {
             for (const appointment of appointmentsData) {
                 const {
                     schedule_data: { description = '', end_time = '', organizer = {}, treatment_id = '', participant_two = {}, start_time = '', date = '', type = '', critical = false, type_description = '' } = {},
-                    reason = '', time_gap = '', provider_id = '', provider_name = '' } = appointment;
+                    reason = '', time_gap = '', provider_id, provider_name = '' } = appointment;
 
                 const { id: participant_two_id, category: participant_two_type } =
                     participant_two || {};
@@ -124,7 +124,7 @@ class CarePlanController extends Controller {
                     participant_one_id: userCategoryId,
                     participant_two_type,
                     participant_two_id,
-                    provider_id:provider_id?provider_id:null,
+                    provider_id,
                     provider_name,
                     organizer_type:
                         Object.keys(organizer).length > 0 ? organizer.category : category,
