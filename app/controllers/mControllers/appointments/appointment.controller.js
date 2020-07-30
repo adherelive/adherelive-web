@@ -407,7 +407,9 @@ class MobileAppointmentController extends Controller {
 
 
       return raiseSuccess(res, 200, {
-            ...appointmentData.getFeatureDetails(),
+            static_templates: {
+              appointments: {...appointmentData.getFeatureDetails()},
+            },
             providers: {
               ...providerData
             }

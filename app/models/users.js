@@ -3,6 +3,9 @@ import Sequelize from "sequelize";
 import { database } from "../../libs/mysql";
 import { DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
+import Permissions from "./permissions";
+import UserCategoryPermissions from "./userCategoryPermissions";
+
 const Users = database.define(
     DB_TABLES.USERS,
     {
@@ -95,5 +98,11 @@ const Users = database.define(
         }
     }
 );
+
+Users.belongsToMany(Permissions, {
+    through: DB_TABLES.USER_CATEGORY_PERMISSIONS,
+    sourceKey:"category",
+    foreignKey:"category"
+});
 
 export default Users;
