@@ -458,6 +458,7 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
+          critical,
         },
       };
 

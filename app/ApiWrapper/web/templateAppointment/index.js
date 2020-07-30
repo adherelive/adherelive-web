@@ -14,6 +14,8 @@ class TemplateAppointmentWrapper extends BaseTemplateAppointment {
             reason,
             time_gap,
             details,
+            provider_id,
+            provider_name,
         } = _data || {};
         return {
             basic_info: {
@@ -23,6 +25,8 @@ class TemplateAppointmentWrapper extends BaseTemplateAppointment {
             reason,
             time_gap,
             details,
+            provider_id,
+            provider_name,
         };
     };
 }

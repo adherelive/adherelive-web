@@ -493,7 +493,9 @@ class TemplateDrawer extends Component {
         }
 
         newAppointment.reason = reason;
-        newAppointment.provider_id = provider_id;
+        if (provider_id) {
+            newAppointment.provider_id = provider_id;
+        }
         newAppointment.provider_name = provider_name;
         newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
         appointments[key] = newAppointment;
@@ -520,7 +522,7 @@ class TemplateDrawer extends Component {
         let { showInner, innerFormType, innerFormKey, medications, appointments, showAddAppointmentInner, showAddMedicationInner } = this.state;
         const { onClose, renderTemplateDetails } = this;
 
-        // console.log("DATA OF EDITED MEDICATIONNNNN===> 8697857668975675976465467", this.state);
+        console.log("DATA OF EDITED MEDICATIONNNNN===> 8697857668975675976465467", this.state);
 
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
 

@@ -57,7 +57,7 @@ class AddAppointment extends Component {
           type,
           type_description,
           provider_id,
-          critical,
+          critical=false,
           start_time,
           reason,
           end_time,
@@ -68,6 +68,18 @@ class AddAppointment extends Component {
 
         let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
 
+
+        const startDate = date ? moment(date) : moment();
+        const newMonth = date ? startDate.get("month") : moment().get("month");
+        const newDate = date ? startDate.get("date") : moment().get("date");
+        const newYear = date ? startDate.get("year") : moment().get("year");
+        let newEventStartTime = date ? moment(start_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : start_time;
+        let newEventEndTime = date ? moment(end_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : end_time;
+
         const data = newProvider_id ? {
           // todo: change participant one with patient from store
           participant_two: {
@@ -75,8 +87,8 @@ class AddAppointment extends Component {
             category: "patient",
           },
           date,
-          start_time,
-          end_time,
+          start_time:newEventStartTime,
+          end_time:newEventEndTime,
           reason,
           description,
           type,
@@ -92,8 +104,8 @@ class AddAppointment extends Component {
               category: "patient",
             },
             date,
-            start_time,
-            end_time,
+            start_time:newEventStartTime,
+            end_time:newEventEndTime,
             reason,
             description,
             type,

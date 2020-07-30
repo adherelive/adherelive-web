@@ -468,7 +468,6 @@ class AddAppointmentForm extends Component {
 
         >
           {getFieldDecorator(CRITICAL, {
-            initialValue: getInitialValue()
           })(
             <Checkbox className=''>Critical Appointment</Checkbox>)}
         </FormItem>

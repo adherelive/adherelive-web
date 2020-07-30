@@ -96,8 +96,11 @@ class CarePlanController extends Controller {
 
             for (const appointment of appointmentsData) {
                 const {
-                    schedule_data: { description = '', end_time = '', organizer = {}, treatment_id = '', participant_two = {}, start_time = '', date = '', type = '', critical = false, type_description = '' } = {},
-                    reason = '', time_gap = '', provider_id, provider_name = '' } = appointment;
+                    schedule_data: { description = '', end_time = '', organizer = {}, type = "", type_description = "", treatment_id = '', participant_two = {}, start_time = '', date = '' } = {},
+                    reason = '', time_gap = '', provider_id = null, provider_name = null, critical = false } = appointment;
+
+
+                console.log('38748917239857893745917345891347051=====>', appointment);
 
                 const { id: participant_two_id, category: participant_two_type } =
                     participant_two || {};
@@ -134,12 +137,14 @@ class CarePlanController extends Controller {
                     end_date: moment(date),
                     start_time,
                     end_time,
+                    provider_id,
+                    provider_name,
                     details: {
                         treatment_id,
                         reason,
                         type,
                         type_description,
-                        critical
+                        critical,
                     },
                 };
 

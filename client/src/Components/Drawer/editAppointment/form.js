@@ -31,7 +31,7 @@ const APPOINTMENT_TYPE_DESCRIPTION = "type_description";
 const PROVIDER_ID = "provider_id";
 const DESCRIPTION = "description";
 
-const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION, APPOINTMENT_TYPE, APPOINTMENT_TYPE_DESCRIPTION, PROVIDER_ID];
+const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION, APPOINTMENT_TYPE, APPOINTMENT_TYPE_DESCRIPTION];
 
 class EditAppointmentForm extends Component {
   constructor(props) {
@@ -378,7 +378,6 @@ class EditAppointmentForm extends Component {
 
 
 
-    console.log('7483274982349832', appointmentData);
     if (Object.values(carePlan).length) {
       let { treatment_id: newTreatment = '' } = carePlan;
       treatment_id = newTreatment;
@@ -396,6 +395,7 @@ class EditAppointmentForm extends Component {
     critical = critic ? critic : critical;
     if (res) {   //toDo remove when real templates are created and handle accordingly
 
+      console.log('7483274982349832', appointmentData, provider_id, provId);
       let minutesToAdd = 30 - (moment().minutes()) % 30;
       start_time = startTime ? moment(startTime) : res === 'Surgery' ? moment().add('days', 18).add('minutes', minutesToAdd) : moment().add('days', 14).add('minutes', minutesToAdd);
       end_time = endTime ? moment(endTime) : res === 'Surgery' ? moment().add('days', 18).add('minutes', minutesToAdd + 30) : moment().add('days', 14).add('minutes', minutesToAdd + 30);
