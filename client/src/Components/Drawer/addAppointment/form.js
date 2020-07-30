@@ -8,7 +8,7 @@ import DatePicker from "antd/es/date-picker";
 import TimePicker from "antd/es/time-picker";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
-
+import { Checkbox } from "antd";
 import message from "./message";
 import { doRequest } from "../../../Helper/network";
 import seperator from "../../../Assets/images/seperator.svg";
@@ -20,19 +20,25 @@ const { Option } = Select;
 
 const PATIENT = "patient";
 const DATE = "date";
+const CRITICAL = 'critical';
 const START_TIME = "start_time";
 const END_TIME = "end_time";
 const TREATMENT = "treatment";
 const DESCRIPTION = "description";
-
+const APPOINTMENT_TYPE = "type";
+const APPOINTMENT_TYPE_DESCRIPTION = "type_description";
+const PROVIDER_ID = "provider_id";
 const REASON = "reason";
-const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION];
+
+const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION, APPOINTMENT_TYPE, APPOINTMENT_TYPE_DESCRIPTION, PROVIDER_ID];
 
 class AddAppointmentForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fetchingPatients: false,
+      fetchingTypes: false,
+      typeDescription: []
     };
   }
 
@@ -232,11 +238,6 @@ class AddAppointmentForm extends Component {
     );
   };
 
-  // disabledDate = (current) => {
-  //   // Can not select days before today and today
-  //   return current && current < moment().startOf("day");
-  // };
-
   getTreatmentOption = () => {
     let { treatments = {} } = this.props;
     let newTreatments = [];
@@ -249,11 +250,75 @@ class AddAppointmentForm extends Component {
     return newTreatments;
   }
 
+  handleTypeSelect = (value) => {
+    let { static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
+    let descArray = type_description[value] ? type_description[value] : [];
+
+    this.setState({ typeDescription: descArray });
+  }
+
+  getTypeOption = () => {
+    let { static_templates: { appointments: { appointment_type = {} } = {} } = {} } = this.props;
+    console.log("appointment form props 87678698987545685679578--> ", this.props.static_templates);
+    let newTypes = [];
+    for (let type of Object.keys(appointment_type)) {
+      let { title = '' } = appointment_type[type] || {};
+      newTypes.push(
+        <Option key={type} value={type}>
+          {title}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
+
+  getTypeDescriptionOption = () => {
+    let { typeDescription = [] } = this.state;
+    let newTypes = [];
+    for (let desc of typeDescription) {
+      newTypes.push(
+        <Option key={desc} value={desc}>
+          {desc}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
+
+  handleProviderSearch = (data) => {
+    try {
+      const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+      if (data) {
+
+        setFieldsValue({ [PROVIDER_ID]: data });
+      }
+    } catch (err) {
+      console.log("err", err);
+      // message.warn("Something wen't wrong. Please try again later");
+      // this.setState({ fetchingMedicines: false });
+    }
+  };
+
+  getProviderOption = () => {
+    let { providers = [] } = this.props;
+    let newTypes = [];
+    for (let provider of Object.values(providers)) {
+
+      let { basic_info: { id = 0, name = '' } = {} } = provider;
+      newTypes.push(
+        <Option key={id} value={parseInt(id)}>
+          {name}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
+
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
     } = this.props;
-    const { fetchingPatients } = this.state;
+    const { fetchingPatients, typeDescription } = this.state;
     const {
       formatMessage,
       getInitialValue,
@@ -268,8 +333,8 @@ class AddAppointmentForm extends Component {
     } = this;
 
     const currentDate = moment(getFieldValue(DATE));
+    let appointmentType = getFieldValue(APPOINTMENT_TYPE);
 
-    console.log("1289313192 ", currentDate, getFieldValue(START_TIME));
 
     let fieldsError = {};
     FIELDS.forEach((value) => {
@@ -277,7 +342,6 @@ class AddAppointmentForm extends Component {
       fieldsError = { ...fieldsError, [value]: error };
     });
 
-    console.log("appointment form props --> ", this.props);
     return (
       <Form className="fw700 wp100 pb30">
         <FormItem
@@ -287,7 +351,7 @@ class AddAppointmentForm extends Component {
           {getFieldDecorator(PATIENT, {
             initialValue: getInitialValue(),
           })(
-            <div/>
+            <div />
             //   <Select
             //     className="user-select drawer-select"
             //     // onSearch={fetchPatients}
@@ -307,8 +371,109 @@ class AddAppointmentForm extends Component {
         </FormItem>
 
         <FormItem
+          label={formatMessage(message.appointmentType)}
+          className='mt24'
+        >
+          {getFieldDecorator(APPOINTMENT_TYPE, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_appointment_type),
+              },
+            ],
+          })(
+            <Select
+              className="drawer-select"
+              placeholder="Choose Appointment Type"
+              onSelect={this.handleTypeSelect}
+
+
+            >
+              {this.getTypeOption()}
+            </Select>
+          )}
+        </FormItem>
+
+        <FormItem
+          label={formatMessage(message.appointmentTypeDescription)}
+          className='mt24'
+        >
+          {getFieldDecorator(APPOINTMENT_TYPE_DESCRIPTION, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_appointment_type_description),
+              },
+            ],
+          })(
+            <Select
+              // onSearch={handleMedicineSearch}
+              disabled={!appointmentType}
+              notFoundContent={'No match found'}
+              className="drawer-select"
+              placeholder="Choose Type Descrition"
+              showSearch
+              defaultActiveFirstOption={true}
+              autoComplete="off"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+
+            >
+              {this.getTypeDescriptionOption()}
+            </Select>
+          )}
+        </FormItem>
+
+        <FormItem
+          label={formatMessage(message.provider)}
+          className='mt24'
+        >
+          {getFieldDecorator(PROVIDER_ID, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_provider),
+              },
+            ],
+          })(
+            <Select
+              notFoundContent={null}
+              className="drawer-select"
+              placeholder="Choose Provider"
+              showSearch
+              // defaultActiveFirstOption={true}
+              autoComplete="off"
+              onSearch={this.handleProviderSearch}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+
+            >
+              {this.getProviderOption()}
+            </Select>
+          )}
+        </FormItem>
+
+
+        <FormItem
+          className="flex-1 wp100 critical-checkbox"
+
+        >
+          {getFieldDecorator(CRITICAL, {
+          })(
+            <Checkbox className=''>Critical Appointment</Checkbox>)}
+        </FormItem>
+
+        <FormItem
           label={formatMessage(message.start_date)}
-          className="full-width mt16 ant-date-custom-ap-date"
+          className="full-width mt-10 ant-date-custom-ap-date"
         >
           {getFieldDecorator(DATE, {
             rules: [
@@ -404,7 +569,7 @@ class AddAppointmentForm extends Component {
             initialValue: getTreatment(),
           }
           )(
-            <div/>
+            <div />
             // <Select
             //   className="form-inputs-ap drawer-select"
             //   autoComplete="off"

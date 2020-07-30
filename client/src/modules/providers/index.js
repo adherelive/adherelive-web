@@ -1,11 +1,23 @@
-import { PROVIDER_INITIAL_STATE } from "../../data";
 
-export default (state = PROVIDER_INITIAL_STATE, action) => {
+
+function providersReducer(state, data) {
+  const { providers } = data || {};
+  if (providers) {
+      return {
+          ...state,
+          ...providers,
+      };
+  } else {
+      return {
+          ...state,
+      };
+  }
+}
+
+export default (state = {}, action) => {
   const { type, data } = action;
   switch (type) {
-    default:
-      return {
-        ...PROVIDER_INITIAL_STATE
-      };
+      default:
+          return providersReducer(state, data)
   }
 };

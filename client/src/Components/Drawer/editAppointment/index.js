@@ -39,9 +39,9 @@ class EditAppointment extends Component {
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
 
-    console.log("COMPONENT DID MOUNT========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
+    console.log("COMPONENT DID MOUNT========>8697857668975675976465467", isFieldsTouched(), isError, getFieldsError(), JSON.stringify(this.state));
     if (disabledSubmit !== isError && isFieldsTouched()) {
-      console.log("INSIDE IFFFF========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
+      // console.log("INSIDE IFFFF========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
       this.setState({ disabledSubmit: isError });
     }
   };
@@ -71,18 +71,35 @@ class EditAppointment extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         console.log("VALUES --> ", values);
-        const {
+        let {
           patient = {},
           date,
+          type,
+          type_description,
+          provider_id,
+          critical=false,
           start_time,
+          reason,
           end_time,
-          description,
-
-          treatment,
-          reason
+          description = "",
+          treatment = "",
         } = values;
+        let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
 
-        const data = {
+        let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
+
+
+        const startDate = date ? moment(date) : moment();
+        const newMonth = date ? startDate.get("month") : moment().get("month");
+        const newDate = date ? startDate.get("date") : moment().get("date");
+        const newYear = date ? startDate.get("year") : moment().get("year");
+        let newEventStartTime = date ? moment(start_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : start_time;
+        let newEventEndTime = date ? moment(end_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : end_time;
+        const data = newProvider_id ? {
           // todo: change participant one with patient from store
           id,
           participant_two: {
@@ -90,12 +107,34 @@ class EditAppointment extends Component {
             category: "patient",
           },
           date,
-          start_time,
-          end_time,
+          start_time: newEventStartTime,
+          end_time: newEventEndTime,
+          reason,
           description,
+          type,
+          type_description,
+          provider_id: newProvider_id,
+          provider_name,
+          critical,
           treatment_id: treatment,
-          reason
-        };
+        } : {
+            // todo: change participant one with patient from store
+            id,
+            participant_two: {
+              id: pId,
+              category: "patient",
+            },
+            date,
+            start_time: newEventStartTime,
+            end_time: newEventEndTime,
+            reason,
+            description,
+            type,
+            type_description,
+            provider_name,
+            critical,
+            treatment_id: treatment,
+          };
 
         if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')

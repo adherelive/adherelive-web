@@ -3,8 +3,8 @@ import { injectIntl, FormattedMessage } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import {  MEDICINE_TYPE, GENDER, PERMISSIONS } from "../../../constant";
-import { Tabs, Table, Menu, Dropdown, Spin, message,Button } from "antd";
+import { MEDICINE_TYPE, GENDER, PERMISSIONS } from "../../../constant";
+import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -386,6 +386,7 @@ class PatientDetails extends Component {
       getAppointments,
       searchMedicine,
       getPatientCarePlanDetails,
+      getAppointmentsDetails,
       patient_id,
       showTemplateDrawer,
       care_plans,
@@ -413,6 +414,7 @@ class PatientDetails extends Component {
       //   }
       // });
       getMedications(patient_id);
+      getAppointmentsDetails();
       getAppointments(patient_id);
     }
     // searchMedicine("");
@@ -682,11 +684,13 @@ class PatientDetails extends Component {
 
     for (let aId of template_appointment_ids) {
       let newAppointment = {};
-      let { basic_info: { id = 0, care_plan_template_id = 0 } = {}, reason = '', time_gap = 0, details = {} } = template_appointments[aId];
+      let { basic_info: { id = 0, care_plan_template_id = 0 } = {}, reason = '', time_gap = 0, details = {}, provider_id , provider_name = '' } = template_appointments[aId];
       newAppointment.id = id;
       newAppointment.schedule_data = details;
       newAppointment.reason = reason;
       newAppointment.time_gap = time_gap;
+      newAppointment.provider_id = provider_id;
+      newAppointment.provider_name = provider_name;
       newAppointment.care_plan_template_id = care_plan_template_id;
       templateAppointments[aId] = newAppointment;
     }
@@ -770,7 +774,6 @@ class PatientDetails extends Component {
       basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456' }, details = {}
     } = patients[patient_id] || {};
 
-    let { age_type = '' } = details || {};
 
     const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
 
@@ -818,7 +821,7 @@ class PatientDetails extends Component {
               patient_last_name={last_name}
               patient_id={uid}
               gender={gender}
-              patient_age={age + `${age_type === '2' && age > 1 ? ' months' : age_type === '2' ? ' month' : age_type === '1' && age > 1 ? ' days' : age_type === '1' ? ' day' : ''}`}
+              patient_age={age}
               patient_phone_number={`${prefix ? `+${prefix} ` : ''}${mobile_number}`}
               patient_email_id={email ? email : ''}
               formatMessage={formatMessage}

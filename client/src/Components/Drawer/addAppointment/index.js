@@ -51,29 +51,69 @@ class AddAppointment extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         console.log("VALUES --> ", values);
-        const {
+        let {
           patient = {},
           date,
+          type,
+          type_description,
+          provider_id,
+          critical=false,
           start_time,
           reason,
           end_time,
           description = "",
           treatment = "",
         } = values;
+        let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
 
-        const data = {
+        let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
+
+
+        const startDate = date ? moment(date) : moment();
+        const newMonth = date ? startDate.get("month") : moment().get("month");
+        const newDate = date ? startDate.get("date") : moment().get("date");
+        const newYear = date ? startDate.get("year") : moment().get("year");
+        let newEventStartTime = date ? moment(start_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : start_time;
+        let newEventEndTime = date ? moment(end_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : end_time;
+
+        const data = newProvider_id ? {
           // todo: change participant one with patient from store
           participant_two: {
             id: patient_id,
             category: "patient",
           },
           date,
-          start_time,
-          end_time,
+          start_time:newEventStartTime,
+          end_time:newEventEndTime,
           reason,
           description,
+          type,
+          type_description,
+          provider_id: newProvider_id,
+          provider_name,
+          critical,
           treatment_id: treatment,
-        };
+        } : {
+            // todo: change participant one with patient from store
+            participant_two: {
+              id: patient_id,
+              category: "patient",
+            },
+            date,
+            start_time:newEventStartTime,
+            end_time:newEventEndTime,
+            reason,
+            description,
+            type,
+            type_description,
+            provider_name,
+            critical,
+            treatment_id: treatment,
+          };
 
         // console.log('6797867076878678978768',data);
         if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {

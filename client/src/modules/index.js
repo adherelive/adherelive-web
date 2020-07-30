@@ -5,6 +5,8 @@ import auth from "./auth";
 import patients from "./patients";
 import doctors from "./doctors";
 import providers from "./providers";
+import appointment_types from "./appointmentType";
+import type_descriptions from "./typeDescription";
 import treatments from "./treatments";
 import conditions from "./conditions";
 import severity from "./severity";
@@ -18,6 +20,7 @@ import other_details from "./otherDetails";
 import onBoarding from "./onBoarding";
 import care_plans from "./carePlans";
 import doctor_clinics from "./doctorClinics";
+import static_templates from "./staticTemplates";
 import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
@@ -58,7 +61,8 @@ const rootReducer = combineReducers({
   show_template_drawer,
   colleges,
   degrees,
-  councils
+  councils,
+  static_templates
 });
 
 export default (state, action) => {
