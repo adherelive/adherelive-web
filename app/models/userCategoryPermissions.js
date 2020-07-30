@@ -2,6 +2,7 @@
 import Sequelize from "sequelize";
 import { database } from "../../libs/mysql";
 import {DB_TABLES, USER_CATEGORY} from "../../constant";
+import Permissions from "./permissions";
 import Users from "./users";
 
 const UserCategoryPermissions = database.define(
@@ -33,10 +34,5 @@ const UserCategoryPermissions = database.define(
         paranoid: true,
     }
 );
-
-UserCategoryPermissions.hasOne(Users, {
-    foreignKey: "id",
-    targetKey: "user_id"
-});
 
 export default UserCategoryPermissions;

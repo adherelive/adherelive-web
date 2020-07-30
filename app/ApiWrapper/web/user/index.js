@@ -3,6 +3,8 @@ import userService from "../../../services/user/user.service";
 import userPermissionService from "../../../services/userPermission/userPermission.service";
 import permissionService from "../../../services/permission/permission.service";
 
+import PermissionWrapper from "../permission";
+
 class UserWrapper extends BaseUser {
   constructor(data) {
     super(data);
@@ -64,6 +66,27 @@ class UserWrapper extends BaseUser {
           throw error;
       }
   }
+
+  getReferenceData = async () => {
+    const {getPermissionData, getBasicInfo, getId} = this;
+
+    const permissions = getPermissionData();
+    let userPermissions = [];
+    console.log("10938103913 permissions ---> ", permissions);
+    for(const permission of permissions) {
+        const permissionData = await PermissionWrapper(permission);
+        userPermissions.push(permissionData.getPermissionType());
+    }
+
+    return {
+        users: {
+            [getId()]: getBasicInfo()
+        },
+        permissions: userPermissions
+    };
+  };
+
+
 }
 
 export default async (data = null, userId = null) => {

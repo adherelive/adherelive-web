@@ -284,7 +284,12 @@ class UserController extends Controller {
           }
         );
 
-        const apiUserDetails = await UserWrapper(user.get());
+        const userRef = await userService.getUserData({id: user.get("id")});
+        // Logger.debug("userRef ---> ", userRef);
+
+        const apiUserDetails = await UserWrapper(userRef.get());
+
+        Logger.debug("userRef ----------------> ", apiUserDetails.getPermissionData());
 
         console.log('ID OF USERRRRRRRR,', apiUserDetails);
 
@@ -297,10 +302,11 @@ class UserController extends Controller {
         }
 
         const dataToSend = {
-          users: {
-            [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
-          },
-          ...permissions,
+          // users: {
+          //   [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
+          // },
+          // ...permissions,
+          ...await apiUserDetails.getReferenceData(),
           auth_user: apiUserDetails.getId(),
           auth_category: apiUserDetails.getCategory()
         };
