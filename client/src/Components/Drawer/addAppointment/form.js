@@ -30,7 +30,7 @@ const APPOINTMENT_TYPE_DESCRIPTION = "type_description";
 const PROVIDER_ID = "provider_id";
 const REASON = "reason";
 
-const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION,APPOINTMENT_TYPE,APPOINTMENT_TYPE_DESCRIPTION,PROVIDER_ID];
+const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION, APPOINTMENT_TYPE, APPOINTMENT_TYPE_DESCRIPTION, PROVIDER_ID];
 
 class AddAppointmentForm extends Component {
   constructor(props) {
@@ -251,17 +251,18 @@ class AddAppointmentForm extends Component {
   }
 
   handleTypeSelect = (value) => {
-    let { type_descriptions = {} } = this.props;
-    let descArray = type_descriptions[value] ? type_descriptions[value] : [];
+    let { static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
+    let descArray = type_description[value] ? type_description[value] : [];
 
     this.setState({ typeDescription: descArray });
   }
 
   getTypeOption = () => {
-    let { appointment_types = {} } = this.props;
+    let { static_templates: { appointments: { appointment_type = {} } = {} } = {} } = this.props;
+    console.log("appointment form props 87678698987545685679578--> ", this.props.static_templates);
     let newTypes = [];
-    for (let type of Object.keys(appointment_types)) {
-      let { title = '' } = appointment_types[type] || {};
+    for (let type of Object.keys(appointment_type)) {
+      let { title = '' } = appointment_type[type] || {};
       newTypes.push(
         <Option key={type} value={type}>
           {title}
@@ -289,7 +290,7 @@ class AddAppointmentForm extends Component {
       const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
       if (data) {
 
-        setFieldsValue({[PROVIDER_ID]: data });
+        setFieldsValue({ [PROVIDER_ID]: data });
       }
     } catch (err) {
       console.log("err", err);
@@ -334,7 +335,6 @@ class AddAppointmentForm extends Component {
     const currentDate = moment(getFieldValue(DATE));
     let appointmentType = getFieldValue(APPOINTMENT_TYPE);
 
-    console.log("1289313192 ", currentDate, getFieldValue(START_TIME));
 
     let fieldsError = {};
     FIELDS.forEach((value) => {
@@ -342,7 +342,6 @@ class AddAppointmentForm extends Component {
       fieldsError = { ...fieldsError, [value]: error };
     });
 
-    console.log("appointment form props --> ", this.props);
     return (
       <Form className="fw700 wp100 pb30">
         <FormItem

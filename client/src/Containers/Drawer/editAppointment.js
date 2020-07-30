@@ -13,8 +13,7 @@ const mapStateToProps = state => {
         patients,
         treatments,
         appointments,
-        appointment_types,
-        type_descriptions,
+        static_templates,
         providers
     } = state
     return {
@@ -24,8 +23,7 @@ const mapStateToProps = state => {
         patients,
         appointments,
         treatments,
-        appointment_types,
-        type_descriptions,
+        static_templates,
         providers
     };
 };

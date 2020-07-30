@@ -67,8 +67,8 @@ class EditAppointmentForm extends Component {
 
     const { schedule_data: { appointment_type = '' } = {} } = appointmentData || {};
     type = appointment_type ? appointment_type : type;
-    let { type_descriptions = {} } = this.props;
-    let descArray = type_descriptions[type] ? type_descriptions[type] : [];
+    let { static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
+    let descArray = type_description[type] ? type_description[type] : [];
 
     this.setState({ typeDescription: descArray });
   }
@@ -269,17 +269,17 @@ class EditAppointmentForm extends Component {
   };
 
   handleTypeSelect = (value) => {
-    let { type_descriptions = {} } = this.props;
-    let descArray = type_descriptions[value] ? type_descriptions[value] : [];
+    let { static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
+    let descArray = type_description[value] ? type_description[value] : [];
 
     this.setState({ typeDescription: descArray });
   }
 
   getTypeOption = () => {
-    let { appointment_types = {} } = this.props;
+    let { static_templates: { appointments: { appointment_type = {} } = {} } = {} } = this.props;
     let newTypes = [];
-    for (let type of Object.keys(appointment_types)) {
-      let { title = '' } = appointment_types[type] || {};
+    for (let type of Object.keys(appointment_type)) {
+      let { title = '' } = appointment_type[type] || {};
       newTypes.push(
         <Option key={type} value={type}>
           {title}

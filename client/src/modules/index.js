@@ -20,6 +20,7 @@ import other_details from "./otherDetails";
 import onBoarding from "./onBoarding";
 import care_plans from "./carePlans";
 import doctor_clinics from "./doctorClinics";
+import static_templates from "./staticTemplates";
 import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
@@ -61,8 +62,7 @@ const rootReducer = combineReducers({
   colleges,
   degrees,
   councils,
-  appointment_types,
-  type_descriptions
+  static_templates
 });
 
 export default (state, action) => {

@@ -9,7 +9,7 @@ import { getAppointments, addAppointment, addCarePlanAppointment } from "../../m
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
-        patients, treatments, care_plans, appointment_types, type_descriptions, providers
+        patients, treatments, care_plans, static_templates, providers
     } = state
     return {
         visible: visible && type === DRAWER.ADD_APPOINTMENT,
@@ -18,8 +18,7 @@ const mapStateToProps = state => {
         treatments,
         patients,
         care_plans,
-        appointment_types,
-        type_descriptions,
+        static_templates,
         providers
     };
 };
