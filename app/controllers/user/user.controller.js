@@ -50,14 +50,13 @@ import {
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
-import minioService from "../../../app/services/minio/minio.service";
-import md5 from "js-md5";
-import UserVerifications from "../../models/userVerifications";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
+import careplanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 
-import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
+import { getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
+
 const Logger = new Log("WEB USER CONTROLLER");
 
 class UserController extends Controller {
@@ -503,6 +502,15 @@ class UserController extends Controller {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 const carePlanId = carePlanApiWrapper.getCarePlanId();
+
+                const medicationDetails = await careplanMedicationService.getMedicationsByCarePlanId(carePlanId);
+
+                let medicationIds = [];
+
+                for(const medication of medicationDetails) {
+                  medicationIds.push(medication.get("medication_id"));
+                }
+                
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
 
                 const {treatment_id, severity_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
@@ -512,7 +520,7 @@ class UserController extends Controller {
                   carePlanApiWrapper.getCarePlanId()
                 ] =
                   // carePlanApiWrapper.getBasicInfo();
-                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails };
+                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: medicationIds };
               });
             }
             break;

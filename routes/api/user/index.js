@@ -74,93 +74,94 @@ router.get(
     userController.onAppStart,
 );
 
-router.post(
-    "/add-patient/:userId",
-    userController.addDoctorsPatient,
-);
+// router.post(
+//     "/add-patient/:userId",
+//     userController.addDoctorsPatient,
+// );
 
-router.post(
-    "/googleSignIn",
-    userController.signInGoogle
-);
+// future requirement -------------------------
 
-router.post(
-    "/facebookSignIn",
-    userController.signInFacebook
-);
+// router.post(
+//     "/googleSignIn",
+//     userController.signInGoogle
+// );
+//
+// router.post(
+//     "/facebookSignIn",
+//     userController.signInFacebook
+// );
 
-router.post(
-    "/upload",
-    upload.single("files"),
-    userController.uploadImage
-);
+// router.post(
+//     "/upload",
+//     upload.single("files"),
+//     userController.uploadImage
+// );
 
-router.post(
-    "/doctor-profile-registration",
-    userController.doctorProfileRegister
-);
+// router.post(
+//     "/doctor-profile-registration",
+//     userController.doctorProfileRegister
+// );
+//
+// router.get(
+//     "/doctor-profile-registration/:userId",
+//     userController.getDoctorProfileRegisterData,
+// );
+//
+// // REGISTRATION UPDATES IN CONTROLLER
+// router.post(
+//     "/doctor-qualification-registration/:userId",
+//     userController.doctorQualificationRegister
+// );
+//
+// router.get(
+//     "/doctor-qualification-registration/:userId",
+//     userController.getDoctorQualificationRegisterData,
+// );
 
-router.get(
-    "/doctor-profile-registration/:userId",
-    userController.getDoctorProfileRegisterData,
-);
-
-// REGISTRATION UPDATES IN CONTROLLER
-router.post(
-    "/doctor-qualification-registration/:userId",
-    userController.doctorQualificationRegister
-);
-
-router.get(
-    "/doctor-qualification-registration/:userId",
-    userController.getDoctorQualificationRegisterData,
-);
-
-// REGISTRATION
-router.get(
-    "/doctor-registration",
-    userController.getDoctorRegistrationData,
-);
-
-router.post(
-    "/delete-qualification-document/:qualificationId",
-    userController.deleteDoctorQualificationDocument,
-);
-
-// REGISTRATION
-router.delete(
-    "/registration-document/:registrationId",
-    userController.deleteDoctorRegistrationDocument,
-);
-
-router.post(
-    "/register-qualification/:userId",
-    userController.registerQualification
-);
-
-// REGISTRATION
-router.post(
-    "/doctor-registration",
-    userController.updateRegistrationDetails
-);
-
-router.post(
-    "/upload-qualification-document/:userId",
-    upload.single("files"),
-    userController.uploadDoctorQualificationDocument
-);
-
-// REGISTRATION
-router.post(
-    "/registration-document",
-    upload.single("files"),
-    userController.uploadDoctorRegistrationDocuments
-);
-
-router.post(
-    "/doctor-clinic-registration/:userId",
-    userController.doctorClinicRegister
-);
+// router.get(
+//     "/doctor-registration",
+//     userController.getDoctorRegistrationData,
+// );
+//
+// router.post(
+//     "/delete-qualification-document/:qualificationId",
+//     userController.deleteDoctorQualificationDocument,
+// );
+//
+// // REGISTRATION
+// router.delete(
+//     "/registration-document/:registrationId",
+//     userController.deleteDoctorRegistrationDocument,
+// );
+//
+// router.post(
+//     "/register-qualification/:userId",
+//     userController.registerQualification
+// );
+//
+// // REGISTRATION
+// router.post(
+//     "/doctor-registration",
+//     userController.updateRegistrationDetails
+// );
+//
+// router.post(
+//     "/upload-qualification-document/:userId",
+//     upload.single("files"),
+//     userController.uploadDoctorQualificationDocument
+// );
+//
+// // REGISTRATION
+// router.post(
+//     "/registration-document",
+//     upload.single("files"),
+//     userController.uploadDoctorRegistrationDocuments
+// );
+//
+// router.post(
+//     "/doctor-clinic-registration/:userId",
+//     userController.doctorClinicRegister
+// );
 router.post("/sign-out", Authenticate, userController.signOut);
 
 

@@ -2,16 +2,17 @@
 import express from "express";
 import Authenticate from "../../m-api/middleware/auth";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
-const router = express.Router();
+import * as validator from "./validator";
 
+const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.post(
     "/",
-    // Authenticate,
-    // validator.validateAddDoctorData,
+    Authenticate,
+    validator.validateAddDoctorData,
     DoctorController.addDoctor
 );
 
