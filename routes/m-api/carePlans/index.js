@@ -12,8 +12,8 @@ router.post('/:carePlanId',
     CarePlanController.createCarePlanMedicationsAndAppointmentsByTemplateData
 );
 
-router.get('/:patientId',
-    CarePlanController.getPatientCarePlanDetails
-);
+// router.get('/:patientId',
+//     CarePlanController.getPatientCarePlanDetails
+// );
 
 module.exports = router;

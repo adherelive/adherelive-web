@@ -300,7 +300,7 @@ class MobileDoctorController extends Controller {
 
       let carePlanTemplateDetails = {};
       if (carePlanTemplate) {
-        const carePlanTemplateData = await CarePlanTemplateWrapper(
+        carePlanTemplateData = await CarePlanTemplateWrapper(
             carePlanTemplate
         );
         carePlanTemplateDetails[carePlanTemplateData.getCarePlanTemplateId()] = {
@@ -383,7 +383,7 @@ class MobileDoctorController extends Controller {
             [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
           },
           care_plan_templates: {
-            [carePlanTemplateData.getCarePlanTemplateId()]: carePlanTemplateData.getBasicInfo()
+            ...carePlanTemplateDetails,
           },
           template_appointments: {
             ...templateAppointmentData

@@ -135,7 +135,7 @@ class MPatientController extends Controller {
       };
 
       const updatedpatientDetails = await patientService.updatePatient(patientDetails, patientData);
-      const updateUser = await userService.updateUser({onboarded: true, onboarding_status: null}, userId);
+        const updateUser = await userService.updateUser({onboarded: true, onboarding_status: null}, userId);
 
       const patientApiWrapper = await PatientWrapper(updatedpatientDetails);
 

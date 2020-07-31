@@ -13,8 +13,8 @@ router.post('/:carePlanId',
 );
 
 // router.get('/patient-care-plan-details/:patientId',
-router.get('/:patientId',
-    CarePlanController.getPatientCarePlanDetails
-);
+// router.get('/:patientId',
+//     CarePlanController.getPatientCarePlanDetails
+// );
 
 module.exports = router;
