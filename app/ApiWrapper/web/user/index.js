@@ -68,14 +68,17 @@ class UserWrapper extends BaseUser {
   }
 
   getReferenceData = async () => {
-    const {getPermissionData, getBasicInfo, getId} = this;
+    const {getPermissionData, getBasicInfo, getId, isActivated} = this;
 
     const permissions = getPermissionData();
     let userPermissions = [];
     console.log("10938103913 permissions ---> ", permissions);
-    for(const permission of permissions) {
-        const permissionData = await PermissionWrapper(permission);
-        userPermissions.push(permissionData.getPermissionType());
+
+    if(isActivated()) {
+        for(const permission of permissions) {
+            const permissionData = await PermissionWrapper(permission);
+            userPermissions.push(permissionData.getPermissionType());
+        }
     }
 
     return {

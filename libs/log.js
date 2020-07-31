@@ -24,7 +24,6 @@ class Log {
       )}] \n\nMESSAGE: ${msg}\n\n`,
       code
     );
-    console.log(`\n${this._dashString}\n`);
   }
 
   warn(msg) {
