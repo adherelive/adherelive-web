@@ -20,7 +20,6 @@ class SideMenu extends Component {
 
   handleItemSelect = ({ selectedKeys }) => {
     const { history, logout } = this.props;
-    console.log(selectedKeys);
     switch (selectedKeys[0]) {
       case LOGO:
       case DASHBOARD:

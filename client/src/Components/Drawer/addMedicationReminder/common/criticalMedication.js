@@ -39,7 +39,6 @@ class CriticalMedication extends Component {
             medication
             //getFieldValue
         } = form;
-        // console.log("act,", activityType, activityModeOption, activityMode);
         const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
         const { getInitialValue } = this;

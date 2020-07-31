@@ -67,7 +67,6 @@ class MedicationStage extends Component {
 
   async handleMedicineSearch(data) {
     try {
-      console.log("1892379263 data --> ", data);
       if (data) {
         const { searchMedicine } = this.props;
         this.setState({ fetchingMedicines: true });
@@ -107,8 +106,7 @@ class MedicationStage extends Component {
     //   return null;
     // }
 
-    console.log("827312 field name --> ", FIELD_NAME);
-
+    
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (

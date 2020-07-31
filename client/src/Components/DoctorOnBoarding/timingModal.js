@@ -63,7 +63,6 @@ class ClinicRegister extends Component {
         const { timings = {}, daySelected: activeDays = {} } = this.props;
         let newTimings = {};
 
-        console.log("DID MOUNT OF TIMING MODAL CALLED 234324234324234", timings, activeDays)
         for (let day in timings) {
             let dayTiming = {};
             let dayTimingKeys = [];
@@ -76,7 +75,6 @@ class ClinicRegister extends Component {
             newTimings[day].timings = dayTiming;
             newTimings[day].timingsKeys = dayTimingKeys;
         }
-        console.log("DID MOUNT OF TIMING MODAL AFTER CALLED 234324234324234", newTimings, activeDays)
         this.setState({ dayTimings: newTimings, daySelected: activeDays });
 
     }
@@ -104,7 +102,6 @@ class ClinicRegister extends Component {
     addDayTimings = (day) => () => {
         let key1 = uuid();
         let { dayTimings = {} } = this.state;
-        // console.log("CLINIC TIMINGSSSSSSS",clin)
         let newDayTimings = dayTimings;
 
         let newTimings = newDayTimings[day].timings;
@@ -133,8 +130,7 @@ class ClinicRegister extends Component {
                 {
                     Object.keys(daySelected).map((day) => {
                         const { timingsKeys = [], timings = {} } = dayTimings[day];
-                        console.log("TIMINGS KEYSSS OF DAY TIMINGSS", timingsKeys, dayTimings, day, dayTimings[day]);
-                        return (
+                       return (
                             <div className='flex direction-column wp100 pt8 pb8'>
                                 <div className='flex justify-space-between wp100 mb8 mt4'>
                                     <div className='flex'>
@@ -233,10 +229,8 @@ class ClinicRegister extends Component {
     }
 
     setDayEndTime = (day, key) => (time, timeString) => {
-        // console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD', key, time, timeString)
         let { dayTimings = {} } = this.state;
         let newDayTimings = dayTimings;
-        // console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD22222', clinics, newClinics[key]);
         let { timings = {} } = newDayTimings[day];
         let { startTime = '' } = timings[key];
         let validEndTime = true;
@@ -306,7 +300,6 @@ class ClinicRegister extends Component {
 
 
     render() {
-        console.log("STATEEEEEEEEEEE OF MODAL", this.state);
         const { address = '', addressManual = '', pincode = '', landmark = '' } = this.state;
 
         const { visible, handleCancel, handleOk, location } = this.props;

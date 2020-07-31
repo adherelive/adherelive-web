@@ -34,7 +34,6 @@ export const formatDoctorTableData = data => {
   const {basic_info: {user_id} = {}} = doctors[id] || {};
   const userData = users[user_id] || {};
 
-  console.log("961636813 users, user_id, users[user_id]  ->", users, user_id, users[user_id]);
 
   return {
     userData,
