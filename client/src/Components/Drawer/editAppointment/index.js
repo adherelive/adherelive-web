@@ -12,7 +12,6 @@ import confirm from "antd/es/modal/confirm";
 import messages from "./message";
 import EditAppointmentForm from "./form";
 import Footer from "../footer";
-import CalendarTimeSelecton from "./calender";
 
 class EditAppointment extends Component {
   constructor(props) {
@@ -300,6 +299,7 @@ class EditAppointment extends Component {
         <Drawer
           placement="right"
           // closable={false}
+          maskClosable={false}
           headerStyle={{
             position: "sticky",
             zIndex: "9999",

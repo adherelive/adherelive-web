@@ -63,14 +63,14 @@ class EditMedicationReminder extends Component {
 
     // console.log("8917912321 isError, disabledOk ", isError, disabledOk, isFieldsTouched());
 
-    if(isFieldsTouched()) {
+    if (isFieldsTouched()) {
       const isError = this.hasErrors(getFieldsError());
 
       if (disabledOk !== isError && isFieldsTouched()) {
         this.setState({ disabledOk: isError });
       }
     } else {
-      this.setState({disabledOk: true});
+      this.setState({ disabledOk: true });
     }
   };
 
@@ -337,6 +337,7 @@ class EditMedicationReminder extends Component {
         onClose={editMedication || addMedication ? hideMedication : onClose}
         visible={editMedication || addMedication ? medicationVisible : visible}
         destroyOnClose={true}
+        maskClosable={false}
         headerStyle={{
           position: "sticky",
           zIndex: "9999",

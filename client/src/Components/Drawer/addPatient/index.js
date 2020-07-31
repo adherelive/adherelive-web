@@ -96,8 +96,18 @@ class PatientDetailsDrawer extends Component {
         this.setState({ severity: value });
     };
 
-    setCondition = value => {
+    setCondition = async value => {
+
+        const { searchTreatment } = this.props;
         this.setState({ condition: value });
+
+        const response = await searchTreatment(value);
+
+        const { status, payload: { data: { treatments = {} } = {}, message } = {} } = response;
+        if (status) {
+            this.setState({ treatments, treatment: '' });
+        }
+        console.log('364871326478623471923784823', response);
     };
 
     setGender = value => () => {
@@ -111,7 +121,7 @@ class PatientDetailsDrawer extends Component {
     }
 
     getTreatmentOption = () => {
-        let { treatments = {} } = this.props;
+        let { treatments = {} } = this.state;
         let newTreatments = [];
         for (let treatment of Object.values(treatments)) {
             let { basic_info: { id = 0, name = '' } = {} } = treatment;
@@ -284,11 +294,6 @@ class PatientDetailsDrawer extends Component {
                 />
                 <div className='form-headings-ap'>Gender</div>
                 <div className='add-patient-radio wp100 mt6 mb18 flex'>
-                    {/* <div className={gender === MALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(MALE)}>M</div>
-
-                    <div className={gender === FEMALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(FEMALE)}>F</div>
-
-                    <div className={gender === OTHER ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(OTHER)}>O</div> */}
 
                     <Radio.Group buttonStyle="solid" >
                         <Radio.Button value={MALE} onClick={this.setGender(MALE)}>M</Radio.Button>
@@ -298,32 +303,14 @@ class PatientDetailsDrawer extends Component {
                 </div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Date Of Birth<div className="star-red">*</div></div>
-                {/* <DatePicker className='form-inputs-ap' onChange={this.setDOB} /> */}
-                {/* <DatePicker
-                    className='form-inputs-dp'
-                    placeholder='Select Date Of Birth'
-                    selected={date_of_birth}
-                    onChange={this.setDOB}
-                    peekNextMonth
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select"
-                /> */}
+
                 <Input className={"form-inputs-ap"} type='date'
                     max={maxDate}
                     onChange={this.setDOB} />
                 <div className='form-category-headings-ap'>Treatment Plan</div>
 
                 <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
-                {/* <Select
-                    className="form-inputs-ap drawer-select"
-                    placeholder='Select Condition'
-                    onSelect={this.setCondition}
-                    // onDeselect={handleDeselect}
-                    suffixIcon={null}
-                >
-                    {this.getConditionOption()}
-                </Select> */}
+
 
                 <Select
                     className="form-inputs-ap drawer-select"
@@ -341,22 +328,14 @@ class PatientDetailsDrawer extends Component {
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
+                // getPopupContainer={getParentNode}
 
                 >
                     {this.getConditionOption()}
                 </Select>
 
                 <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
-                {/* <Select
-                    className="form-inputs-ap drawer-select"
-                    autoComplete="off"
-                    placeholder='Select Severity'
-                    onSelect={this.setSeverity}
-                    // onDeselect={handleDeselect}
-                    suffixIcon={null}
-                >
-                    {this.getSeverityOption()}
-                </Select> */}
+
 
                 <Select
                     className="form-inputs-ap drawer-select"
@@ -382,24 +361,16 @@ class PatientDetailsDrawer extends Component {
 
 
                 <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
-                {/* <Select
-                    className="form-inputs-ap drawer-select"
-                    autoComplete="off"
-                    placeholder='Select Treatment'
-                    onSelect={this.setTreatment}
-                    // onDeselect={handleDeselect}
-                    suffixIcon={null}
-                >
-                    {this.getTreatmentOption()}
-                </Select> */}
+
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Treatment"
+                    value={this.state.treatment}
                     onChange={this.setTreatment}
-                    onSearch={this.handleTreatmentSearch}
+                    // onSearch={this.handleTreatmentSearch}
                     notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : 'No match found'}
                     showSearch
-                    // onFocus={() => handleMedicineSearch("")}
+                    disabled={!condition}
                     autoComplete="off"
                     // onFocus={() => handleMedicineSearch("")}
                     optionFilterProp="children"
@@ -486,6 +457,7 @@ class PatientDetailsDrawer extends Component {
                     placement="right"
                     // closable={false}
                     // closeIcon={<img src={backArrow} />}
+                    maskClosable={false}
                     headerStyle={{
                         position: "sticky",
                         zIndex: "9999",

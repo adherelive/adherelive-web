@@ -7,7 +7,6 @@ import chooseMedicationField from "./medicationStage";
 
 const FIELD_NAME = "unit";
 
-const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
 
 const units = [
   { key: "mg", value: "mg" },

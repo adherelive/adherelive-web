@@ -2,8 +2,8 @@ import * as Chart from "chart.js";
 import { GRAPH_COLORS } from "../constant";
 
 export default data => {
-  const { missed_report = [] } = data || {};
-  missed_report.forEach(report => {
+  const { dashboard_report = [] } = data || {};
+  dashboard_report.forEach(report => {
     const { id, data: graphContent } = report || {};
     const { total, critical } = graphContent || {};
     const { dark, light } = GRAPH_COLORS[id] || {};

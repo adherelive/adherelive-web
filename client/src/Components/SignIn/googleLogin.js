@@ -9,7 +9,7 @@ class LoginByGoogle extends Component{
 
     responseGoogle = (response) => {
       console.log(response);
-	var res = response.profileObj;
+	// var res = response.profileObj;
       const tokenId = response.code;
 	let data = {
 	    accessToken:response.accessToken,

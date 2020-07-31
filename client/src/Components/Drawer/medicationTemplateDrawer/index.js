@@ -537,6 +537,7 @@ class TemplateDrawer extends Component {
                     title="Template"
                     placement="right"
                     // closable={false}
+                    maskClosable={false}
                     headerStyle={{
                         position: "sticky",
                         zIndex: "9999",

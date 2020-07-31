@@ -1,11 +1,9 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 // import messages from "./message";
-// import {formatMessage} from "react-intl/src/format";
-import { DeleteTwoTone } from "@ant-design/icons";
-import { CHART_TITLE, GRAPH_COLORS, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_TWO, TEST_ONE } from "../../constant";
-import uuid from 'react-uuid';
-import { Tabs, Button, Checkbox, Steps, Col, Select, Input, Upload, Modal, TimePicker, Icon, message } from "antd";
+import { CHART_TITLE, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_TWO, TEST_ONE } from "../../constant";
+
+import { Button, Checkbox, Modal } from "antd";
 
 
 
@@ -69,7 +67,7 @@ class ClinicRegister extends Component {
         console.log("STATEEEEEEEEEEE OF MODAL", this.state);
         const { selectedGraphs = [] } = this.state;
 
-        const { visible, handleCancel, handleOk } = this.props;
+        const { visible } = this.props;
         return (
             <Modal
                 visible={visible}

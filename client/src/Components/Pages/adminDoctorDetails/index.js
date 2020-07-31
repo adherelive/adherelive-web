@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
-import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT, DAYS_TEXT_NUM } from "../../../constant";
+import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 
@@ -71,7 +71,7 @@ class AdminDoctorDetails extends Component {
   };
 
   getDoctorDetailsHeader = () => {
-    const { id, doctors, users } = this.props;
+    // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
@@ -99,8 +99,7 @@ class AdminDoctorDetails extends Component {
       city,
     } = doctors[id] || {};
     const {
-      basic_info: { user_name, email, mobile_number, prefix } = {},
-      sign_in_type,
+      basic_info: {  email, mobile_number, prefix } = {},
       onboarded,
       onboarding_status,
       activated_on
@@ -386,7 +385,7 @@ class AdminDoctorDetails extends Component {
       degrees = {},
       colleges = {}
     } = this.props;
-    const { formatMessage, handlePictureModal, handleDocumentDownload } = this;
+    const { formatMessage, handlePictureModal } = this;
 
     const { doctor_qualification_ids = [] } = doctors[id] || {};
 

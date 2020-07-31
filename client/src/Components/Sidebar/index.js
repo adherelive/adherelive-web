@@ -7,13 +7,11 @@ import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
 
-import { UserOutlined } from "@ant-design/icons";
 
 const { Item: MenuItem } = Menu || {};
 
 const LOGO = "logo";
 const DASHBOARD = "dashboard";
-const PROFILE = "profile";
 const LOG_OUT = "log_out";
 
 class SideMenu extends Component {
