@@ -63,8 +63,7 @@ class WhenToTakeMedication extends Component {
     const { medication_details } = this.props;
     const { medication_details: prev_medication_details } = prevProps;
 
-    console.log("18273123 medication_details  ---> ", medication_details);
-
+   
     if (
       Object.keys(medication_details).length !==
       Object.keys(prev_medication_details).length
@@ -95,8 +94,7 @@ class WhenToTakeMedication extends Component {
       selected_timing_overall = [],
     } = this.state;
 
-    console.log("93182392 selected_timing ", selected_timing);
-
+    
     let current_status = [];
 
     Object.keys(selected_timing).forEach((id) => {
@@ -122,7 +120,6 @@ class WhenToTakeMedication extends Component {
       }
     });
 
-    console.log("12093138 uniqueTimings ----> ", selected_timing, total_status, selected_timing_overall);
     return uniqueTimings;
   };
 
@@ -131,15 +128,8 @@ class WhenToTakeMedication extends Component {
     const { getUpdatedList } = this;
     const getList = getUpdatedList(k);
 
-    console.log("18982731273 getList ---> ", selected_timing);
     return getList.map((id) => {
       const text = status[id];
-      console.log(
-        "1238791382 id, typeof id ----> ",
-        total_status,
-        id,
-        typeof id
-      );
       return (
         <Option key={`s-${k}.${id}`} value={id}>
           {text}
@@ -152,20 +142,12 @@ class WhenToTakeMedication extends Component {
   //   e.preventDefault();
   //   const { medication_details: { timings } = {} } = this.props;
   //   const { count, remaining_timing, selected_timing } = this.state;
-  //   console.log("91276391 selected_timing --> ", selected_timing);
   //   if (count.length === Object.keys(timings).length) {
   //     return null;
   //   }
 
   //   let updatedOptions = {};
   //   Object.keys(remaining_timing).forEach((id) => {
-  //     console.log(
-  //       "127831273 updatedOptions --> ",
-  //       selected_timing,
-  //       id,
-  //       typeof selected_timing,
-  //       typeof id
-  //     );
   //     if (parseInt(id) !== selected_timing) {
   //       updatedOptions[id] = { ...timings[id] };
   //     }
@@ -179,12 +161,10 @@ class WhenToTakeMedication extends Component {
 
   // deleteOnClick = (e) => {
   //   e.preventDefault();
-  //   console.log("892379132 e.target.value, e.currentTarget ", e.target.value);
   //   const id = e.target.value;
   //   const { medication_details: { timings = {} } = {} } = this.props;
   //   const { count, remaining_timing } = this.state;
   //   const updatedCount = count.filter((id, index) => {
-  //     console.log("91723189 delete_id, index --> ", e.target.value, index);
   //   });
   //   this.setState({
   //     // count: [...updatedCount],
@@ -224,10 +204,7 @@ class WhenToTakeMedication extends Component {
         selected_timing: updatedSelectTiming,
       },
       () => {
-        console.log(
-          "712831 this.state.selected_timing_overall ---> ",
-          this.state.selected_timing
-        );
+      
       }
     );
   };
@@ -250,17 +227,14 @@ class WhenToTakeMedication extends Component {
 
     let updatedSelectedTimings = {};
     Object.keys(selected_timing).forEach(id => {
-      // console.log("12983719283 id, k ---> ", id, typeof id, k, typeof k);
       if (id !== `${k}`) {
         updatedSelectedTimings[id] = selected_timing[id];
       }
     });
 
-    console.log("18371239 updatedSelectedTimings --> ", selected_timing, updatedSelectedTimings);
     this.setState({
       selected_timing_overall: selected_timing_overall.filter(
         (field) => {
-          console.log("98738912 selected, field --> ", selected, typeof selected, field, typeof field);
           return selected === field;
         }
       ),
@@ -277,8 +251,7 @@ class WhenToTakeMedication extends Component {
     const { total_status } = this.state;
     // const value = status[k+1];
     return total_status[k];
-    // console.log("891237183189 ", k, status, );
-  };
+    };
 
   getFormItems = () => {
     const { form, medication_details: { timings } = {} } = this.props;
@@ -297,17 +270,12 @@ class WhenToTakeMedication extends Component {
       getFieldValue,
     } = form;
 
-    console.log(
-      "81723681238 --> ",
-      count.map((id, index) => id)
-    );
+    
 
     getFieldDecorator("keys", {
       initialValue: count.map((id, index) => id),
     });
     const keys = getFieldValue("keys");
-
-    console.log("912312837 getUnitOption ", this.getUnitOption(0));
 
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
     return keys.map((k, index) => {
