@@ -39,7 +39,6 @@ addLocaleData(hiLocalData);
 /* fetch locale */
 const search = window.location.search;
 const { locale = "en" } = getQuery(search);
-console.log("locale :", locale);
 const messages = translations[locale];
 
 const sw = window.screen.width;

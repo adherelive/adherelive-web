@@ -33,8 +33,6 @@ class PatientTable extends Component {
   getDataSource = () => {
     const { appointments, appointment_ids = [] , users, doctors, patients } = this.props;
 
-    console.log("192837 this.props ----> ", appointments, appointment_ids);
-
     return Object.keys(appointments).map(id => {
       return generateRow({
         id,
@@ -52,8 +50,6 @@ class PatientTable extends Component {
     const rowSelection = {
       onChange: onSelectChange
     };
-
-    // console.log("192837 ", getDataSource());
 
     const {
       loading,

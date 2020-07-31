@@ -3,7 +3,6 @@ import { TABLE_COLUMN, formatDoctorTableData } from "../helper";
 export default data => {
   const { id } = data;
   const formattedData = formatDoctorTableData(data);
-  console.log("78676 formattedData --> ", formattedData);
   const { userData, doctorData } =
     formattedData || {};
   return {

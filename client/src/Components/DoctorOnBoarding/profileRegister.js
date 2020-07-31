@@ -79,7 +79,6 @@ class Profileregister extends Component {
         // this.setState({ name: e.target.value });
         const { value } = e.target;
         const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        // console.log('8423907492837589723859325', value, reg.test(value));
         if (reg.test(value) || value === '') {
             this.setState({ name: e.target.value });
         }
@@ -123,7 +122,6 @@ class Profileregister extends Component {
     uploadDp = file => {
 
 
-        console.log('FILEEE IN CUSTOM REQUESTTTT', file);
         let data = new FormData();
         data.append("files", file, file.name);
         doRequest({
@@ -131,10 +129,8 @@ class Profileregister extends Component {
             data: data,
             url: getUploadURL()
         }).then(response => {
-            console.log('RESPONSEEEEEEEEEEE!@!@!@!@!@!@!@!@', response);
             if (response.status) {
                 let { files = [] } = response.payload.data;
-                console.log("9387193781 files --> ", files);
                 this.setState({ profile_pic_url: files[0] })
             } else {
                 message.error('Something went wrong.')
@@ -165,7 +161,6 @@ class Profileregister extends Component {
 
 
     handleChange = info => {
-        console.log('HANDLE CHANGE CALLED', info);
         // if (info.file.status === 'uploading') {
         //   this.setState({ loading: true });
         //   return;
@@ -217,7 +212,6 @@ class Profileregister extends Component {
     onNextClick = () => {
         const { history, authenticated_user = 1, users } = this.props;
         const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
-        console.log('ONCLICKKKKKK', id);
         const validate = this.validateData();
         if (validate) {
             const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' } = this.state;
@@ -242,12 +236,8 @@ class Profileregister extends Component {
 
     handleChangeCity = address => {
 
-        // console.log('8423907492837589723859325', address);
-        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        // console.log('8423907492837589723859325', address, reg.test(address));
-        // if (reg.test(address) || address === '') {
         this.setState({ city: address });
-        // }
+
     };
 
     handleSelect = address => {
@@ -276,8 +266,6 @@ class Profileregister extends Component {
     };
 
     renderProfileForm = () => {
-        console.log("2738612386128 ", this.state.profile_pic);
-        console.log("2738612386128 2", this.state.profile_pic_url_saved);
         let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url_saved = '' } = this.state;
         const prefixSelector = (
 
@@ -403,7 +391,6 @@ class Profileregister extends Component {
     }
 
     render() {
-        console.log("STATEEEEEEEEEEE", this.state);
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}

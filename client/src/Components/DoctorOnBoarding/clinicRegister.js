@@ -73,7 +73,6 @@ class ClinicRegister extends Component {
 
         const { value } = e.target;
         const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        console.log('8423907492837589723859325', value, reg.test(value));
         if (reg.test(value) || value === '') {
             newClinics[key].name = e.target.value;
             this.setState({ clinics: newClinics });
@@ -111,7 +110,6 @@ class ClinicRegister extends Component {
             }
         };
         newclinicsKeys.unshift(key);
-        // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newClinics[key],newclinicsKeys);
         this.setState({ clinics: newClinics, clinicsKeys: newclinicsKeys });
     }
 
@@ -156,11 +154,8 @@ class ClinicRegister extends Component {
     }
 
     renderClinics = () => {
-        console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
         let { clinics = {}, clinicsKeys = [] } = this.state;
-        console.log(" 23829823  ------------------>  ", JSON.stringify(clinics, null, 4));
-        console.log(" 23829823 Keys  ------------------>  ", clinicsKeys);
-
+      
         const uploadButton = (
             <div>
                 Upload
@@ -258,14 +253,12 @@ class ClinicRegister extends Component {
     validateClinics = newClinics => {
         for (let edu of newClinics) {
 
-            console.log('NEW CLINICSSSS============>222222', edu);
             let { name = '', location = '', timings = [] } = edu;
 
             if (!Object.keys(timings).length) {
                 return false;
             }
 
-            console.log('NEW CLINICSSSS============>3333333', name, location);
             if (!name || !location) {
                 return false;
             }
@@ -279,14 +272,11 @@ class ClinicRegister extends Component {
             let { name = '' } = newClinics[edu];
 
 
-            console.log('NEW CLINICSSSS============>222222  0', edu, name);
             for (let nEdu in newClinics) {
 
-                console.log('NEW CLINICSSSS============>222222  1', edu, nEdu, edu !== nEdu);
-
+                
                 if (edu !== nEdu) {
                     let { name: newname = '' } = newClinics[nEdu];
-                    console.log('NEW CLINICSSSS============>222222 2', newname, name);
                     if (!newname.localeCompare(name)) {
                         return false;
                     }
@@ -298,7 +288,6 @@ class ClinicRegister extends Component {
     validateData = () => {
         let { clinics = {} } = this.state;
         let newClinics = Object.values(clinics);
-        console.log('NEW CLINICSSSS============>1111111', newClinics);
         if (!newClinics.length) {
             message.error('Please enter your Clinic details.')
             return false;
@@ -315,7 +304,6 @@ class ClinicRegister extends Component {
 
     onNextClick = () => {
         const { history, authenticated_user } = this.props;
-        console.log('ONCLICKKKKKK');
         const validate = this.validateData();
         if (validate) {
             const { basic_info: { id = 1 } = {} } = authenticated_user || {};
@@ -379,7 +367,6 @@ class ClinicRegister extends Component {
         }
         let timingForModal = clinicKeyOfModalTiming && Object.keys(currClinicTimings).length ? currClinicTimings : dayTimings;
         let daySelectForModal = clinicKeyOfModalTiming && Object.keys(currClinicDaySelect).length ? currClinicDaySelect : daySelected;
-        console.log("STATEEEEEEEEEEE of Clinic register 234324234324234", clinicKeyOfModalTiming, clinicKeyOfModalTiming ? Object.keys(clinics[clinicKeyOfModalTiming].daySelected).length : -1, daySelectForModal, this.state);
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}

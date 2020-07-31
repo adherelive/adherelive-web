@@ -33,7 +33,6 @@ import { RESET_PASSWORD_LINK_COMPLETED } from "./modules/auth";
 const retainState = store => next => action => {
   const storeInstance = store.getState();
     const { auth: { authenticated = false } = {} } = storeInstance;
-    console.log(authenticated);
   if (authenticated) {
     next(action);
   } else {

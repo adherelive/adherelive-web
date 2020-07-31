@@ -101,7 +101,6 @@ class Register extends Component {
         let newEducationKeys=educationKeys;
         newEducation[key] = {degree:"",college:"",year:"",photo:[]};
         newEducationKeys.push(key);
-        // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newEducation[key],newEducationKeys);
         this.setState({education:newEducation,educationKeys:newEducationKeys});
       }
 
@@ -112,7 +111,6 @@ class Register extends Component {
         let newclinicsKeys=clinicsKeys;
         newClinics[key] = {name:"",location:"",startTime:"",endTime:''};
         newclinicsKeys.push(key);
-        // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newClinics[key],newclinicsKeys);
         this.setState({clinics:newClinics,clinicsKeys:newclinicsKeys});
       }
 
@@ -138,7 +136,6 @@ class Register extends Component {
 
 
     handleChange = info => {
-        console.log('HANDLE CHANGE CALLED',info);
         // if (info.file.status === 'uploading') {
         //   this.setState({ loading: true });
         //   return;
@@ -236,7 +233,6 @@ class Register extends Component {
     }
 
     setClinicStartTime = key=>(time, timeString)=>{
-        console.log('TIMEEEEEEEEEEEEEEEEEEE',key,time,timeString)
         let{clinics={}}=this.state;
         let newClinics=clinics;
         newClinics[key].startTime = time;
@@ -244,10 +240,8 @@ class Register extends Component {
     }
 
     setClinicEndTime = key=>(time, timeString)=>{
-        console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD',key,time,timeString)
         let{clinics={}}=this.state;
         let newClinics=clinics;
-        console.log('TIMEEEEEEEEEEEEEEEEEEEENDDDDD22222',clinics,newClinics[key]);
         newClinics[key].endTime = time;
         this.setState({clinics:newClinics});
     }
@@ -316,11 +310,9 @@ class Register extends Component {
       const { docs, fileList,education } = this.state;
       let{photos=[]}=education[key] || {};
 
-      console.log('KEYS AND FILES IN ON UPLOAD COMPLETE',docs.length,education[key].photo.length,photos,docs.length === education[key].photo.length);
       if (docs.length === education[key].photo.length || docs.length+photos.length=== education[key].photo.length) {
         let newEducation=education;
         newEducation[key].photos=[...photos,...docs];
-        console.log('KEYS AND FILES IN ON UPLOAD COMPLETE1111111',newEducation);
         education[key].photo.forEach((item,index)=>{
             item.status='done'
         })
@@ -337,7 +329,6 @@ class Register extends Component {
       customRequest = key=>({ file, filename, onError, onProgress, onSuccess }) => {
         const { onUploadComplete } = this;
 
-        console.log('FILEEE IN CUSTOM REQUESTTTT',file);
         const { docs, fileList,education } = this.state;
         // setTimeout(() => {
         //     education[key].photo.forEach((item,index)=>{
@@ -353,7 +344,6 @@ class Register extends Component {
           data: data,
           url: getUploadURL()
         }).then(response => {
-            console.log('FILEEEEEEEEEE',response,'             ',response.payload.data);
           onUploadComplete(response.payload.data,key);
         });
     
@@ -367,7 +357,6 @@ class Register extends Component {
         const fileList = info.fileList;
         let{education={}}=this.state;
         let newEducation=education;
-        console.log('FILE LISTTTTTTTT',newEducation[key].photo,fileList);
         fileList.forEach((item,index)=>{
             let uid=item.uid;
             let push= true;
@@ -391,7 +380,6 @@ class Register extends Component {
         let deleteIndex=-1;
         let deleteIndexOfUrls=-1;
         let fileName=file.name.replace(/\s+/g, '');
-        console.log('FILE REMOVEEEEEEEEE',key,file);
         newEducation[key].photo.forEach((pic,index)=>{
             if(pic.uid==file.uid){
                 deleteIndex=index;
@@ -434,10 +422,7 @@ class Register extends Component {
       };
 
     renderEducation=()=>{
-        // console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
         let{education={},educationKeys=[],fileList=[],previewImage='',previewTitle='',previewVisible=false}=this.state;
-        // console.log(" 23829823  ------------------>  ", JSON.stringify(education, null, 4));
-        // console.log(" 23829823 Keys  ------------------>  ", educationKeys);
 
         const uploadButton = (
             <div>
@@ -448,7 +433,6 @@ class Register extends Component {
             <div className='flex direction-column'>
            {educationKeys.map(key=>{
             let{photo=[]}=education[key];
-            console.log('PHOTOOOOOOOOOOOOOOO',photo);
                 return(
                     
                     <div key={key}>
@@ -515,10 +499,7 @@ class Register extends Component {
     }
 
     renderClinics=()=>{
-        console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
         let{clinics={},clinicsKeys=[]}=this.state;
-        console.log(" 23829823  ------------------>  ", JSON.stringify(clinics, null, 4));
-        console.log(" 23829823 Keys  ------------------>  ", clinicsKeys);
 
         const uploadButton = (
             <div>
@@ -574,7 +555,6 @@ class Register extends Component {
     uploadDp = file => {
         
 
-        console.log('FILEEE IN CUSTOM REQUESTTTT',file);
         // file.status='done';
         // return file;
         const { imageUrl } = this.state;
@@ -739,7 +719,6 @@ class Register extends Component {
     
 
     render() {
-        console.log("19273 here --> dashboard",this.state);
         const {graphs} = this.props;
         // const {formatMessage, renderChartTabs} = this;
          const{step}=this.state;
