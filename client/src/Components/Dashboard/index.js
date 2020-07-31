@@ -33,15 +33,12 @@ class Dashboard extends Component {
         const { graphs, getInitialData, searchMedicine, getGraphs } = this.props;
         getInitialData();
         getGraphs().then(response => {
-            console.log('19273 reponse OF GET GRAPHSSS', response)
             const { status, payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {} } = response;
-            console.log('19273 reponse OF GET GRAPHSSS111', status, charts)
             if (status) {
                 this.setState({ graphsToShow: [...charts] });
             }
         });
         searchMedicine("");
-        console.log("DashBoard Did MOunt DOCTORRRRR ROUTERRR ----------------->   ")
         // setTimeout(() => {
         //     drawChart(graphs);
         // }, 500);
@@ -50,7 +47,6 @@ class Dashboard extends Component {
     getMenu = () => {
 
         const { authPermissions = [] } = this.props;
-        console.log("12312 getMenu");
         return (
             <Menu>
                 {authPermissions.includes(PERMISSIONS.ADD_PATIENT) && (<Menu.Item onClick={this.showAddPatientDrawer}>
@@ -103,7 +99,6 @@ class Dashboard extends Component {
             let showTemplateDrawer = carePlanTemplateId ? true : false;
             let currentCarePlanId = care_plan_ids[0];
             let patient_id = patient_ids ? patient_ids[0] : 0;
-            console.log('currentCarePlanId after adding patient', currentCarePlanId);
             if (status) {
                 // getInitialData().then(() => {
 
@@ -153,7 +148,6 @@ class Dashboard extends Component {
         const { formatMessage, renderChartTabs } = this;
 
         const { visible, graphsToShow, visibleModal } = this.state;
-        console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard", graphsToShow, this.state);
         if (Object.keys(graphs).length === 0) {
             return (
                 <Loading className={"wp100 mt20"} />

@@ -8,7 +8,6 @@ export default function donutGraph(props) {
   const { id, data: graphContent, total, title } = props || {};
   const { dark, light } = GRAPH_COLORS[id] || {};
   const { className } = GRAPH_COLORS[id] || {};
-  console.log("234723", GRAPH_COLORS, dark, light, id, className, className['dark'], className['light']);
   const labels = [CHART_TITLE[id] === "Adherence" ? 'Compliant' : 'Critical',
   CHART_TITLE[id] === "Adherence" ? 'Non-Compliant' : 'Non-Critical'
   ];

@@ -93,7 +93,6 @@ class ClinicRegister extends Component {
 
 
     render() {
-        console.log("STATEEEEEEEEEEE OF MODAL", this.state);
         const { address = '', addressManual = '', pincode = '', landmark = '' } = this.state;
 
         const { visible, handleCancel, handleOk, location } = this.props;
