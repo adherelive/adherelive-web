@@ -20,7 +20,7 @@ const addPatientForm = Joi.object().keys({
     date_of_birth: Joi.date().required().label("Please enter date of birth"),
     prefix: Joi.string().regex(/^\d+$/).required().label("Please select prefix"),
     treatment_id: Joi.number().required().label("Incorrect Treatment value selected"),
-    severity_id: Joi.string().regex(/^\d+$/).required().label("Incorrect Severity value selected"),
+    severity_id: Joi.number().required().label("Incorrect Severity value selected"),
     condition_id: Joi.number().required().label("Incorrect Condition value selected"),
 });
 
