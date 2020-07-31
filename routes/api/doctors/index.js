@@ -76,7 +76,7 @@ router.delete(
 router.post(
     "/patients",
     // Authenticate,
-    // validator.verifyAddPatientData,
+    validator.validateAddPatientData,
     DoctorController.addPatient
 );
 

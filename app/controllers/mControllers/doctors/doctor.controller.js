@@ -160,6 +160,7 @@ class MobileDoctorController extends Controller {
 
   addPatient = async (req, res) => {
     try {
+      Logger.request(req.body);
       const {
         mobile_number = "",
         name = "",

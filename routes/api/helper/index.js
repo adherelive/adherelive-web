@@ -33,10 +33,10 @@ export const raiseClientError = (res, code = 422, error, message) => {
 export const validationError = (res, isValid) => {
   const { error: { details } = {} } = isValid || {};
   const { context: { label } = {} } = details[0] || {};
-  const response = new Response(false, code);
-  response.setError(error);
-  response.setMessage(message);
-  return res.status(code).json(response.getResponse());
+  const response = new Response(false, 422);
+  response.setError(details);
+  response.setMessage(label);
+  return res.status(response.getStatusCode()).json(response.getResponse());
 };
 
 export default {};

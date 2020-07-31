@@ -510,7 +510,7 @@ class UserController extends Controller {
                 for(const medication of medicationDetails) {
                   medicationIds.push(medication.get("medication_id"));
                 }
-                
+
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
 
                 const {treatment_id, severity_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
