@@ -26,6 +26,15 @@ class Log {
     );
   }
 
+  request(data) {
+    console.log(
+        `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
+            this.source
+        )}] \n\n--- REQUEST ---\n\n`,
+        data
+    );
+  }
+
   warn(msg) {
     console.log(
       `\n ${chalk.red(this.getLogDate())}  ${chalk.red(

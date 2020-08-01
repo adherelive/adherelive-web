@@ -90,7 +90,7 @@ router.delete(
 router.post(
     "/patients",
     Authenticate,
-    // validator.verifyAddPatientData,
+    // validator.validateAddPatientData,
     // todo :: wip
     mDoctorController.addPatient
 );

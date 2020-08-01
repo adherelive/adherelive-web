@@ -91,11 +91,11 @@ router.get(
 //     userController.signInFacebook
 // );
 
-// router.post(
-//     "/upload",
-//     upload.single("files"),
-//     userController.uploadImage
-// );
+router.post(
+    "/upload",
+    upload.single("files"),
+    userController.uploadImage
+);
 
 // router.post(
 //     "/doctor-profile-registration",

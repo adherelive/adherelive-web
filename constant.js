@@ -638,3 +638,5 @@ export const FEATURE_TYPE = {
   APPOINTMENT:"appointment",
   MEDICATION:"medication",
 };
+
+export const BLANK_STATE = "";

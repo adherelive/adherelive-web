@@ -498,7 +498,7 @@ class UserController extends Controller {
                 doctor_id: userCategoryId
               });
 
-              await careplanData.forEach(async carePlan => {
+              for(const carePlan of careplanData) {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 const carePlanId = carePlanApiWrapper.getCarePlanId();
@@ -510,18 +510,18 @@ class UserController extends Controller {
                 for(const medication of medicationDetails) {
                   medicationIds.push(medication.get("medication_id"));
                 }
-                
+
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
 
                 const {treatment_id, severity_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
                 carePlanApiData[
-                  carePlanApiWrapper.getCarePlanId()
-                ] =
-                  // carePlanApiWrapper.getBasicInfo();
-                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: medicationIds };
-              });
+                    carePlanApiWrapper.getCarePlanId()
+                    ] =
+                    // carePlanApiWrapper.getBasicInfo();
+                    { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: medicationIds };
+              }
             }
             break;
           default:
@@ -600,7 +600,7 @@ class UserController extends Controller {
           conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
         }
 
-        Logger.debug("conditionWrapper.getConditionId() --> ", conditionApiDetails);
+        Logger.debug("conditionWrapper.getConditionId() --> ", treatmentIds);
 
 
         let permissions = {
