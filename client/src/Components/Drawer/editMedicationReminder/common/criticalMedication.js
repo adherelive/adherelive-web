@@ -39,7 +39,6 @@ class CriticalMedication extends Component {
             medication
             //getFieldValue
         } = form;
-        // console.log("act,", activityType, activityModeOption, activityMode);
 
         let { basic_info: { details: { critical = false } = {} } = {} } = medications[medication_id] || {};
         let { schedule_data: { critical: Critical = false } = {} } = medicationData;
@@ -47,7 +46,6 @@ class CriticalMedication extends Component {
         if (Critical) {
             critical = Critical;
         }
-        console.log('42638746823764872368473468723', critical, medication_id, medications[medication_id], medications);
         const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
         const { getInitialValue } = this;

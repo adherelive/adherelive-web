@@ -38,7 +38,6 @@ export default class Authenticated extends Component {
   }
   render() {
     const { redirecting } = this.state;
-    console.log("PROPS IN AUTH COMPONENTTTT",this.props);
     const {
       authRedirection,
       authenticated_user,

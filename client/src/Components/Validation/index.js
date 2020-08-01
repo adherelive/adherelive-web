@@ -20,7 +20,6 @@ class ValidationPage extends Component {
         if (link) {
             const { verifyUser } = this.props;
             let response = await verifyUser(link);
-            console.log("RESPONSE OF VERIFY USERRR12312312312312", response);
             //   .then(response=>{
             const { status, statusCode } = response;
             if (!status) {

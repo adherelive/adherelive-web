@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
-import Spin from "antd/es/spin";
 import Select from "antd/es/select";
 import DatePicker from "antd/es/date-picker";
 import TimePicker from "antd/es/time-picker";
@@ -10,8 +9,6 @@ import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
 import { Checkbox } from "antd";
 import message from "./message";
-import { doRequest } from "../../../Helper/network";
-import seperator from "../../../Assets/images/seperator.svg";
 import moment from "moment";
 import calendar from "../../../Assets/images/calendar1.svg";
 

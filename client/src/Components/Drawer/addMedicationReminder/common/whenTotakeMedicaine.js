@@ -340,9 +340,7 @@ class WhenToTakeMedication extends Component {
     keys.forEach(id => {
       whenToTakeValues[id] = form.getFieldValue(`${FIELD_NAME}[${id}]`);
     });
-    console.log("391309 keys :", keys, whenToTakeValues);
     const nextKeys = keys.concat(key_field);
-    console.log("391309 nextKeys :", nextKeys);
     form.setFieldsValue({
       keys: nextKeys,
       // [`Fields[${id_checklist_field}]`]: null,
@@ -374,10 +372,8 @@ class WhenToTakeMedication extends Component {
       isFieldTouched,
       //getFieldValue
     } = form;
-    // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
-    console.log("627868362783 selected_timing ---. ", this.state.selected_timing);
 
     // const { getInitialValue } = this;
 
@@ -386,7 +382,7 @@ class WhenToTakeMedication extends Component {
         <div className="flex align-items-end justify-content-space-between">
           <div className='flex row flex-grow-1'>
             <label
-              for="quantity"
+              htmlFor="quantity"
               className="form-label "
               title="Quantity"
             >

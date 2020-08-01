@@ -1,7 +1,6 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl, FormattedMessage } from "react-intl";
-import { Button, Input, Form, Row, Col, message } from "antd";
-import { PATH } from "../../constant";
+import React, { Component } from "react";
+// import { injectIntl, FormattedMessage } from "react-intl";
+import { Button, Input, Form, message } from "antd";
 
 
 const { Item: FormItem } = Form;
@@ -32,20 +31,19 @@ class SignIn extends Component {
         const {
             form: { validateFields },
             signIn,
-            match: { path } = {},
-            history
+            getInitialData
         } = this.props;
         this.setState({ loading: true });
         validateFields(async (err, { email, password }) => {
             if (!err) {
                 try {
-                    console.log("email, password --> ", email, password);
 
                     const response = await signIn({ email, password });
                     const { status = false, statusCode } = response;
                     if (status) {
-                        message.success("LoggedIn successfully", 4);
 
+                        message.success("LoggedIn successfully", 4);
+                        getInitialData();
                     } else {
                         if (statusCode === 422) {
                             message.error("Email does not exist!", 4);
@@ -64,13 +62,11 @@ class SignIn extends Component {
                 message.error("Please fill both Username and Password", 4);
             }
         });
-        // signIn();
     };
 
     render() {
         const { form: { getFieldDecorator, isFieldTouched,
-            getFieldError,
-            getFieldsError }, redirectToForgotPassword } = this.props;
+            getFieldError }, redirectToForgotPassword } = this.props;
         let fieldsError = {};
         FIELDS.forEach(value => {
             const error = isFieldTouched(value) && getFieldError(value);

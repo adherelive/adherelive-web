@@ -93,8 +93,7 @@ class EditMedicationReminderForm extends Component {
     const {
       form: { setFieldsValue, getFieldValue }
     } = this.props;
-    console.log('738467386587346578234625834 called', getFieldValue(UNIT_FIELD), e.target.value);
-
+   
     const currentValue = getFieldValue(UNIT_FIELD) || 0.0;
     setFieldsValue({ [UNIT_FIELD]: e.target.value });
   };
@@ -126,7 +125,6 @@ class EditMedicationReminderForm extends Component {
 
     // }
 
-    // console.log('3647823651783265818347========>', selectedDays, repeat);
     const startDate = getFieldValue(startDateField.field_name);
     let startDateDay = startDate ? moment(startDate).format('ddd') : moment().format('ddd');
     let startDayNumber = DAYS_NUMBER[startDateDay];
@@ -148,7 +146,6 @@ class EditMedicationReminderForm extends Component {
 
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
 
-      console.log('3647823651783265818347========>', selectedDays, dayDiffPos, dayDiffNeg, daysToAdd);
     }
 
 
@@ -327,7 +324,6 @@ class EditMedicationReminderForm extends Component {
     } = this.props;
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("9127619237 values ---> ", values);
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
@@ -477,7 +473,6 @@ class EditMedicationReminderForm extends Component {
       endTime = startTime.clone().add("minutes", 3);
     }
 
-    console.log("PROPSSS OF FORMMMMMM=====>", this.props);
     const startDate = getFieldValue(startDateField.field_name);
 
     return (
@@ -500,7 +495,7 @@ class EditMedicationReminderForm extends Component {
           <div className="flex align-items-end justify-content-space-between">
             <div className='flex direction-row flex-grow-1'>
               <label
-                for="dose"
+                htmlFor="dose"
                 className="form-label"
                 title="Dose"
               >

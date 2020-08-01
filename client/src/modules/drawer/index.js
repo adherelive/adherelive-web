@@ -20,7 +20,6 @@ const intial_state = {
 };
 
 export const open = (data) => {
-  console.log("12312 here module");
   return {
     type: OPEN_DRAWER,
     data,

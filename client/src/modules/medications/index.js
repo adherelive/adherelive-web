@@ -7,7 +7,6 @@ import {
   updateMedicationUrl,
   deleteMedicationUrl,
 } from "../../Helper/urls/mReminders";
-import moment from "moment";
 
 // const INITIAL_STATE = {
 //   "100": {

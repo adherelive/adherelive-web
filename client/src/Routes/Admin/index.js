@@ -18,7 +18,6 @@ const AdminDoctors = lazy(() =>
 class Admin extends Component {
   constructor(props) {
     super(props);
-    console.log("PPROPSSS IN DOCTORRRRR ROUTERRR ---->  ", this.props);
     this.state = {
       redirecting: this.props.authRedirection
     };

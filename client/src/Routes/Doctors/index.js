@@ -42,7 +42,6 @@ const PatientDetailsComp = props => {
 class Doctors extends Component {
   constructor(props) {
     super(props);
-    console.log("PPROPSSS IN DOCTORRRRR ROUTERRR ---->  ", this.props);
     this.state = {
       redirecting: this.props.authRedirection
     };
@@ -59,9 +58,7 @@ class Doctors extends Component {
   render() {
     // const {authRedirection} = this.props;
     const { redirecting = false } = this.state;
-    const { authRedirection, authenticated_user, users } = this.props;
-    console.log("Render Props DOCTORRRRR ROUTERRR ====>    ", this.props);
-    console.log('STATE OF DOCTORRRRR ROUTERRR', this.state, "     ", authRedirection);
+    const { authRedirection } = this.props;
     return (
       <Fragment>
         <Router>

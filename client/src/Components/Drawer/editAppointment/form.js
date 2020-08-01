@@ -129,7 +129,6 @@ class EditAppointmentForm extends Component {
   };
 
   disabledDate = (current) => {
-    console.log('463274834687234', current);
     // Can not select days before today and today
 
     return current
@@ -145,7 +144,6 @@ class EditAppointmentForm extends Component {
 
   handleDateSelect = date => () => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", date);
     const startDate = getFieldValue(DATE);
 
     if (!date || !startDate) {
@@ -181,17 +179,9 @@ class EditAppointmentForm extends Component {
     setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
   };
 
-  // handleStartTimeChange = (time, str) => {
-  //   const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-  //   console.log("312983u193812 values, value ", time, str);
-  //   const startTime = getFieldValue(START_TIME);
-  //   console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
-  //   setFieldsValue({ [END_TIME]: moment(time).add('minutes', 30) });
-  // };
 
   handleStartTimeChange = (time, str) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
@@ -204,17 +194,14 @@ class EditAppointmentForm extends Component {
         .clone()
         .set({ month: newMonth, year: newYear, date: newDate }) : null;
       newEventEndTime = newEventStartTime ? moment(newEventStartTime).add('minutes', 30) : null;
-      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
       setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
     } else {
-      console.log("298467232894 moment(startTime).add(1, h) ", time);
       setFieldsValue({ [END_TIME]: time ? moment(time).add('minutes', 30) : null });
     }
   };
 
   handleEndTimeChange = (time, str) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
@@ -229,10 +216,8 @@ class EditAppointmentForm extends Component {
       newEventEndTime = time ? time
         .clone()
         .set({ month: newMonth, year: newYear, date: newDate }) : null;
-      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
       setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
     } else {
-      console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
       setFieldsValue({ [END_TIME]: moment(time) });
     }
   };
@@ -395,7 +380,6 @@ class EditAppointmentForm extends Component {
     critical = critic ? critic : critical;
     if (res) {   //toDo remove when real templates are created and handle accordingly
 
-      console.log('7483274982349832', appointmentData, provider_id, provId);
       let minutesToAdd = 30 - (moment().minutes()) % 30;
       start_time = startTime ? moment(startTime) : res === 'Surgery' ? moment().add('days', 18).add('minutes', minutesToAdd) : moment().add('days', 14).add('minutes', minutesToAdd);
       end_time = endTime ? moment(endTime) : res === 'Surgery' ? moment().add('days', 18).add('minutes', minutesToAdd + 30) : moment().add('days', 14).add('minutes', minutesToAdd + 30);
@@ -419,8 +403,7 @@ class EditAppointmentForm extends Component {
     }
 
 
-    console.log("1289313192 ", reason, description, start_time, end_time, start_date, appointmentData);
-
+   
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);
@@ -646,7 +629,6 @@ class EditAppointmentForm extends Component {
                 use12Hours
                 minuteStep={15}
                 onChange={handleEndTimeChange}
-                value={currentDate}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
               // getPopupContainer={this.getParentNode}

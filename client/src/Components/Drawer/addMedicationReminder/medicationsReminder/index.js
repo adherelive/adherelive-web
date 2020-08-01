@@ -47,7 +47,6 @@ class AddMedicationReminder extends Component {
     const isError = this.hasErrors(getFieldsError());
     const { disabledOk } = this.state;
     if (disabledOk !== isError && isFieldsTouched()) {
-      console.log("[1234] this.state.fieldChanged ", this.state.fieldChanged);
       this.setState({ disabledOk: isError, fieldChanged: true });
     }
   };
@@ -118,7 +117,6 @@ class AddMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("131231 values ----> ", values);
         const { when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
@@ -173,7 +171,6 @@ class AddMedicationReminder extends Component {
           message.error('Please select valid dates for medication')
         } else {
           try {
-            console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR', carePlanId);
             const response = await addCarePlanMedicationReminder(data_to_submit, carePlanId);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
@@ -210,8 +207,7 @@ class AddMedicationReminder extends Component {
     };
     const { members } = this.state;
 
-    console.log("12313 visible --> ", visible);
-
+    
     return (
       <Drawer
         width={'35%'}

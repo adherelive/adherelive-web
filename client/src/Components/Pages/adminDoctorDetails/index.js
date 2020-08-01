@@ -66,7 +66,6 @@ class AdminDoctorDetails extends Component {
   handleBack = e => {
     e.preventDefault();
     const { history } = this.props;
-    console.log("1827318723 props --> ", this.props);
     history.goBack();
   };
 
@@ -330,7 +329,6 @@ class AdminDoctorDetails extends Component {
                     upload_documents[id] || {};
 
                   const documentType = document.substring(document.length - 3) || null;
-                  console.log("13971923788 registration --> ", documentType);
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -454,7 +452,6 @@ class AdminDoctorDetails extends Component {
                     upload_documents[id] || {};
 
                   const documentType = document.substring(document.length - 3) || null;
-                  console.log("13971923788 qualification --> ", documentType);
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -496,7 +493,6 @@ class AdminDoctorDetails extends Component {
   };
 
   getFullDayText = day => {
-    console.log("137163 day --> ", day);
     if(day.length === 1) {
       return DAYS_TEXT_NUM[day].toLocaleUpperCase();
     }
@@ -622,7 +618,6 @@ class AdminDoctorDetails extends Component {
   };
 
   handleVerify = async e => {
-    console.log("12983712893721 here");
     e.preventDefault();
     const { verifyDoctor, id } = this.props;
     try {
@@ -724,7 +719,6 @@ class AdminDoctorDetails extends Component {
       doctor_registration_ids = []
     } = doctors[id] || {};
 
-    console.log("1982317923 loading --> ", this.props);
 
     if (loading) {
       return <PageLoading />;

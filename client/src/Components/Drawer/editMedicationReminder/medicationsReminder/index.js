@@ -52,16 +52,11 @@ class EditMedicationReminder extends Component {
     return hasError;
   };
 
-  onFormFieldChanges = (props, changedFields, allvalues) => {
+  onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
     } = props;
     const { disabledOk } = this.state;
-
-
-    // console.log('89698876879856784654675798 called onclose', this.state);
-
-    // console.log("8917912321 isError, disabledOk ", isError, disabledOk, isFieldsTouched());
 
     if (isFieldsTouched()) {
       const isError = this.hasErrors(getFieldsError());
@@ -149,7 +144,6 @@ class EditMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("131231 values ----> ", values);
         const { when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
@@ -189,8 +183,6 @@ class EditMedicationReminder extends Component {
                 .toISOString()
               : endDate,
         };
-
-        console.log("131231 values ----> ", data_to_submit);
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
@@ -279,7 +271,7 @@ class EditMedicationReminder extends Component {
   getDeleteButton = () => {
     const { handleDelete } = this;
     const { loading, deleteMedicationOfTemplate, hideMedication, addMedication } = this.props;
-    console.log('HIDE MEDICATIONNN', hideMedication, addMedication);
+    
     if (addMedication) {
       return (
         <Button onClick={hideMedication} style={{ marginRight: 8 }}>
@@ -323,13 +315,10 @@ class EditMedicationReminder extends Component {
     } = this;
     const { disabledOk } = this.state;
 
-    console.log('912783718923 render --> ', disabledOk);
     const submitButtonProps = {
       disabled: disabledOk,
       loading: loading,
     };
-
-    console.log("8749234 visible --> ", visible);
 
     return (
       <Drawer

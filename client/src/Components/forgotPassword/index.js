@@ -1,13 +1,10 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl, FormattedMessage } from "react-intl";
-import { Button, Input, Form, Row, Col, message } from "antd";
+import React, { Component } from "react";
+import { Button, Input, Form, message } from "antd";
 import CompanyIcon from '../../Assets/images/logo3x.png'
 
 const { Item: FormItem } = Form;
-const { Password } = Input;
 
 const EMAIL = "email";
-const PASSWORD = "password";
 
 const FIELDS = [EMAIL];
 
@@ -27,14 +24,13 @@ class ForgotPassword extends Component {
         const {
             form: { validateFields },
             forgotPassword,
-            match: { path } = {},
-            history
+            // match: { path } = {},
+            // history
         } = this.props;
         this.setState({ loading: true });
-        validateFields(async (err, { email, password }) => {
+        validateFields(async (err, { email }) => {
             if (!err) {
                 try {
-                    console.log("email, password --> ", email, password);
 
                     const response = await forgotPassword({ email });
                     const { status = false, statusCode, payload: { message: resMessage } = {} } = response;
@@ -62,16 +58,16 @@ class ForgotPassword extends Component {
     };
 
     render() {
-        const { googleSignIn, facebookSignIn, form: { getFieldDecorator, isFieldTouched,
-            getFieldError,
-            getFieldsError } } = this.props;
+        const { form: { getFieldDecorator, isFieldTouched,
+            getFieldError
+             } } = this.props;
         let fieldsError = {};
         FIELDS.forEach(value => {
             const error = isFieldTouched(value) && getFieldError(value);
             fieldsError = { ...fieldsError, [value]: error };
         });
         const { handleForgotPassword } = this;
-        const { login } = this.state;
+       
         return (
             <div className="wp100 landing-background flex direction-column justify-center align-center">
 

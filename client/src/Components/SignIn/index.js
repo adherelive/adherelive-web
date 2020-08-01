@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { Button, Input, Form, Row, Col, message } from "antd";
+import React, { Component } from "react";
+import { message } from "antd";
 import { Spring } from 'react-spring/renderprops';
 import SignInForm from './signIn';
 import SignUpForm from './signUp';
@@ -8,13 +8,7 @@ import rightArrow from '../../Assets/images/next.png';
 import CompanyIcon from '../../Assets/images/logo3x.png';
 import { PATH } from "../../constant";
 
-const { Item: FormItem } = Form;
-const { Password } = Input;
 
-const EMAIL = "email";
-const PASSWORD = "password";
-
-const FIELDS = [EMAIL, PASSWORD];
 
 class SignIn extends Component {
     constructor(props) {
@@ -30,9 +24,8 @@ class SignIn extends Component {
         if (link) {
             const { verifyUser } = this.props;
             let response = await verifyUser(link);
-            console.log("97867896879686899999868", response);
             //   .then(response=>{
-            const { status, statusCode } = response;
+            const { status } = response;
             if (!status) {
                 message.error('This verification link has expired!');
 
@@ -51,34 +44,7 @@ class SignIn extends Component {
         this.setState({ login: newLogin });
     }
 
-    // handleSignUp = e => {
-    //     e.preventDefault();
-    //     const { signUp } = this.props;
-
-    //     this.props.form.validateFields((err, values) => {
-    //         if (!err) {
-    //             signUp(values).then(response => {
-
-    //                 const { status } = response;
-    //                 if (status) {
-    //                     let { payload = {} } = response;
-    //                     this.props.form.resetFields();
-    //                     message.success('Please go to your email to verify your account.')
-    //                 } else {
-    //                     let { payload: { error = {}, message: responseMessage = '' } = {}, statusCode = '' } = response;
-
-    //                     console.log('RESPONSE OF SIGNUP REQUESTTT', error);
-    //                     if (statusCode === 400 || statusCode === 422) {
-    //                         const { message: errorMessage = '' } = error;
-    //                         message.error(statusCode === 400 ? errorMessage : responseMessage);
-    //                     } else {
-    //                         message.error('Something went wrong.');
-    //                     }
-    //                 }
-    //             });
-    //         }
-    //     });
-    // };
+  
 
     redirectToForgotPassword = () => {
 
@@ -86,54 +52,10 @@ class SignIn extends Component {
         history.push(PATH.FORGOT_PASSWORD);
     }
 
-    // handleSignIn = async e => {
-    //     e.preventDefault();
-    //     const {
-    //         form: { validateFields },
-    //         signIn,
-    //         match: { path } = {},
-    //         history
-    //     } = this.props;
-    //     this.setState({ loading: true });
-    //     validateFields(async (err, { email, password }) => {
-    //         if (!err) {
-    //             try {
-    //                 console.log("email, password --> ", email, password);
-
-    //                 const response = await signIn({ email, password });
-    //                 const { status = false, statusCode } = response;
-    //                 if (status) {
-    //                     message.success("LoggedIn successfully", 4);
-
-    //                 } else {
-    //                     if (statusCode === 422) {
-    //                         message.error("Email does not exist!", 4);
-    //                     } else {
-    //                         this.setState({ loading: false });
-    //                         message.error("Username or Password incorrect", 4);
-    //                     }
-    //                 }
-    //             } catch (err) {
-    //                 console.log("298293 err ----> ", err);
-    //                 this.setState({ loading: false });
-    //                 message.error("Something went wrong, Please try again", 4);
-    //             }
-    //         } else {
-    //             this.setState({ loading: false });
-    //             message.error("Please fill both Username and Password", 4);
-    //         }
-    //     });
-    //     // signIn();
-    // };
+    
 
     render() {
-        const { signIn, signUp } = this.props;
-        // let fieldsError = {};
-        // FIELDS.forEach(value => {
-        //     const error = isFieldTouched(value) && getFieldError(value);
-        //     fieldsError = { ...fieldsError, [value]: error };
-        // });
-        const { handleSignIn, handleSignUp } = this;
+        const { signIn, signUp,getInitialData } = this.props;
         const { login } = this.state;
         return (
             <div className="wp100 landing-background flex direction-column justify-center align-center">
@@ -142,7 +64,7 @@ class SignIn extends Component {
                     <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
 
                         <div className="flex direction-row align-center">
-                            <img alt="" src={CompanyIcon} className='company-logo' />
+                            <img alt="adhere-logo" src={CompanyIcon} className='company-logo' />
                             <div className='text-white fs28 medium italic'>Adhere.Live</div>
                         </div>
 
@@ -200,7 +122,7 @@ class SignIn extends Component {
                                             Enter Your Credentials
                     </div>
 
-                                        <SignInForm signIn={signIn} redirectToForgotPassword={this.redirectToForgotPassword} />
+                                        <SignInForm signIn={signIn} getInitialData={getInitialData} redirectToForgotPassword={this.redirectToForgotPassword} />
                                         <div className="flex direction-column justify-space-between align-center">
                                             {/* <LoginByGoogle googleSignIn={googleSignIn}/> */}
                                             {/* <LoginByFacebook facebookSignIn={facebookSignIn}/> */}

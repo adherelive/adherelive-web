@@ -24,7 +24,6 @@ export const ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR =
   "ADD_CARE_PLAN_DATA_COMPLETED_WITH_ERROR";
 
 function carePlanReducer(state, data) {
-  console.log('DATA IN CAREPLAN REDUCER==========>>>>>$$$$$',data);
     const {care_plans} = data || {};
     if(care_plans) {
         return {
@@ -49,8 +48,6 @@ export const addCarePlanMedicationsAndAppointments =(payload,carePlanId)=>{
           url: CarePlan.getcreateCarePlanMedicationAndAppointmentUrl(carePlanId),
           data:payload
         });
-  
-        console.log("ADD CARE PLAN DATA COMPLETED response --> ", response);
   
         const { status, payload: { error = "", data = {} } = {} } =
           response || {};

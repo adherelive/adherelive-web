@@ -79,13 +79,6 @@ function setAuthRedirect(user, isInitial = false) {
     onboarding_status = "",
     category = USER_CATEGORY.DOCTOR,
   } = user;
-  console.log(
-    "USERRRRR IN SET AUUTTTHHHHH VERIFYYYY",
-    !onboarded && category == USER_CATEGORY.DOCTOR,
-    onboarded,
-    category,
-    user
-  );
   let authRedirect = '';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
@@ -114,13 +107,7 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     onboarding_status = "",
     category = USER_CATEGORY.DOCTOR,
   } = user;
-  console.log(
-    "USERRRRR IN SET AUUTTTHHHHH",
-    !onboarded && category == USER_CATEGORY.DOCTOR,
-    onboarded,
-    category,
-    user
-  );
+  
   let authRedirect = '/';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
@@ -152,7 +139,6 @@ export const signIn = (payload) => {
         data: payload,
       });
 
-      console.log("SIGN IN response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -166,12 +152,7 @@ export const signIn = (payload) => {
         const { users = {}, auth_user = "", auth_category = "", permissions = [] } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users[auth_user]);
-        console.log(
-          " ID IN 898978 SIGNUPPPP",
-          authRedirection,
-          // authUser,
-          response.payload.data.user
-        );
+        
         dispatch({
           type: SIGNING_COMPLETED,
           payload: {
@@ -204,8 +185,6 @@ export const forgotPassword = (payload) => {
         url: Auth.forgotPasswordUrl(),
         data: payload,
       });
-
-      console.log("SIGN IN response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -243,8 +222,6 @@ export const verifyForgotPasswordLink = (link) => {
         url: Auth.verifyResetPasswordLinkUrl(link),
 
       });
-
-      console.log("SIGN IN response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -284,8 +261,6 @@ export const resetPassword = (payload) => {
         data: payload
       });
 
-      console.log("SIGN IN response --> ", response);
-
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
@@ -324,8 +299,6 @@ export const verifyUser = (link) => {
         url: Auth.getVerifyUserUrl(link)
       });
 
-      console.log("8798078960785766086897968776465555555555557 ", response);
-
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
@@ -337,16 +310,9 @@ export const verifyUser = (link) => {
       } else if (status === true) {
         let { users = {}, auth_user = '', auth_category = '', permissions = [] } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        console.log(
-          " ID IN 898978 VERIFYYYYY",
-          users, auth_user, users[auth_user]
-        );
+        
         let authRedirection = setAuthRedirect(users[auth_user]);
-        console.log(
-          " ID IN 898978 VERIFYYYYY",
-          authRedirection,
-          users, auth_user, users[auth_user]
-        );
+        
         dispatch({
           type: VALIDATING_LINK_COMPLETED,
           payload: {
@@ -379,8 +345,6 @@ export const signUp = (payload) => {
         url: Auth.signUpUrl(),
         data: payload,
       });
-
-      console.log("SIGN UP response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -495,7 +459,6 @@ export const facebookSignIn = (data) => {
         const { lastUrl = false } = data || {};
         const { _id, users = {} } = response.payload.data || {};
         let authRedirection = "/";
-        console.log("10939032  ----->");
         dispatch({
           type: FACEBOOK_SIGNING_COMPLETED,
           payload: {
@@ -522,8 +485,6 @@ export const getInitialData = () => {
         url: Auth.getInitialData(),
       });
 
-      console.log("GET INITIAL DATA response --> ", response);
-
       const { status, payload: { error, data } = {} } = response || {};
 
       if (status === false) {
@@ -540,12 +501,7 @@ export const getInitialData = () => {
 
         let authRedirection = setAuthRedirect(users[auth_user], true);
 
-        console.log(
-          " ID IN 898978 GET INITIAL DATAA",
-          authRedirection,
-          // authUser,
-          response.payload.data.users
-        );
+
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED,
           payload: {
@@ -573,7 +529,6 @@ export const getInitialData = () => {
 
 export default (state = AUTH_INITIAL_STATE, action = {}) => {
   const { type, payload } = action;
-  console.log("10939032 type, payload ---> ", type, payload);
   switch (type) {
     case GETTING_INITIAL_DATA_COMPLETED:
       return {

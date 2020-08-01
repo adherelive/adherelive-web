@@ -61,7 +61,7 @@ class MedicineQuantity extends Component {
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
           <label
-            for="quantity"
+            htmlFor="quantity"
             className="form-label flex-grow-1"
             title="Quantity"
           >

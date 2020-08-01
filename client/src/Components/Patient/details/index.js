@@ -24,7 +24,6 @@ const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
 
 function callback(key) {
-  console.log(key);
 }
 
 // const menu = (
@@ -221,7 +220,6 @@ const data_medication = [
 
 const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
 
-  // console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd",showAdd,formatMessage,getMenu);
   return (
     <div className="flex pt20 pr24 pb20 pl24">
       <div className="patient-profile-header flex-grow-0">
@@ -344,7 +342,6 @@ const PatientAlertCard = ({
   new_symptoms_string,
   missed_appointment,
 }) => {
-  console.log("9838123 ", count, new_symptoms_string, missed_appointment);
   return (
     <div className="patient-alerts pl16 pr16">
       <h3>
@@ -399,7 +396,6 @@ class PatientDetails extends Component {
     if (showTd) {
       this.setState({ templateDrawerVisible: true });
     }
-    console.log('currentCarePlanId in did mount 7897987987987987', this.props);
     if (!showTd) {
       getPatientCarePlanDetails(patient_id);
       // .then(response => {
@@ -408,7 +404,6 @@ class PatientDetails extends Component {
       //     let { data: { show = false, care_plan_templates = {} } = {} } = payload;
       //     const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
-      //     console.log("RESPONSEEEEEEEEE IN DID MOUNTTT", carePlanTemplateId);
 
       //     this.setState({ carePlanTemplateId });
       //   }
@@ -423,7 +418,6 @@ class PatientDetails extends Component {
 
       let { basic_info: { id = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
 
-      console.log("RESPONSEEEEEEEEE IN DID MOUNTTT", patient_id, patientId, patient_id === patientId);
       if (parseInt(patient_id) === parseInt(patientId)) {
         let { basic_info: { care_plan_template_id = 0 } = {} } = carePlan;
         carePlanTemplateId = care_plan_template_id;
@@ -483,7 +477,6 @@ class PatientDetails extends Component {
     } = this.props;
 
     let { medication_ids = [] } = carePlan;
-    console.log("92834792 ", medications);
     const medicationRows = medication_ids.map((id) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
 
@@ -496,8 +489,6 @@ class PatientDetails extends Component {
         } = {},
       } = medications[id] || {};
 
-
-      console.log("92834792 ============>", id, medications, medications[id]);
       const { basic_info: { user_name = "--" } = {} } =
         users[organizer_id] || {};
 
@@ -525,11 +516,8 @@ class PatientDetails extends Component {
 
   handleItemSelect = ({ selectedKeys }) => {
     const { history, logout, openAppointmentDrawer } = this.props;
-    console.log("12312 handleItemSelect --> ");
-    console.log(selectedKeys);
     switch (selectedKeys[0]) {
       case APPOINTMENT:
-        console.log("12312 here component");
         openAppointmentDrawer();
       default:
         openAppointmentDrawer();
@@ -547,7 +535,6 @@ class PatientDetails extends Component {
   getMenu = () => {
     const { handleAppointment, handleMedicationReminder } = this;
     const { authPermissions = [] } = this.props;
-    console.log("12312 getMenu");
     return (
       <Menu>
         {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleMedicationReminder}>
@@ -658,7 +645,6 @@ class PatientDetails extends Component {
       authPermissions = [] } = this.props;
     const { loading, templateDrawerVisible = false, carePlanTemplateId = 0 } = this.state;
 
-    console.log("RESPONSEEEEEEEEE IN DID MOUNTTT showAdd render", this.state);
     const {
       formatMessage,
       getMenu,
@@ -744,8 +730,6 @@ class PatientDetails extends Component {
 
 
     let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
-    console.log("192387123762 JSON OBJECT ---------------->  ", JSON.stringify(care_plans[carePlanId], null, 2), "\n\n")
-    console.log("192387123762 dsjhfjsd ----->   ", care_plans[carePlanId], "  ", care_plans[carePlanId]["treatment_id"], care_plans[carePlanId]["severity_id"], care_plans[carePlanId]["condition_id"], "        \n\n");
     const { basic_info: { doctor_id = 1 } = {}, activated_on: treatment_start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
     const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};
     const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
@@ -753,7 +737,6 @@ class PatientDetails extends Component {
 
 
     let carePlan = care_plans[carePlanId] || {};
-    console.log('239748963874392423', getAppointmentsData(carePlan));
     let { details: { condition_id: cId = 0, severity_id: sId = 0, treatment_id: tId = 0 } = {} } = carePlan;
     if (carePlanTemplateId) {
 
@@ -768,8 +751,7 @@ class PatientDetails extends Component {
     }
     const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
 
-    console.log("192387123762 ", treatment_id, severity_id, condition_id, treatment, condition, severity, care_plans[carePlanId]);
-
+    
     const {
       basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456' }, details = {}
     } = patients[patient_id] || {};
@@ -777,8 +759,7 @@ class PatientDetails extends Component {
 
     const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
 
-    console.log('3904823094723894723987498237498234', authPermissions, authPermissions.includes(PERMISSIONS.EDIT_MEDICATION), authPermissions.includes(PERMISSIONS.EDIT_APPOINTMENT));
-
+    
     const {
       close,
       user_details: {

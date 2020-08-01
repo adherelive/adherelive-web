@@ -2,22 +2,17 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import { Tabs, Button, Steps, Col, Select, Input, Upload, Modal, TimePicker, Icon, message } from "antd";
-import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH, FULL_DAYS } from '../../constant';
+import {  Select, Input,  Icon, message } from "antd";
+import {  PATH, FULL_DAYS } from '../../constant';
 import UploadSteps from './steps';
-import { getUploadURL } from '../../Helper/urls/user';
-import { doRequest } from '../../Helper/network';
-import plus from '../../Assets/images/plus.png';
 import LocationModal from './locationmodal';
 import TimingModal from './timingModal';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { withRouter } from "react-router-dom";
 import moment from 'moment';
 
 
 
-const { Option } = Select;
+// const { Option } = Select;
 
 const dayTimings = {
     [FULL_DAYS.MON]: [{ startTime: "", endTime: '' }],
@@ -90,10 +85,10 @@ class ClinicRegister extends Component {
 
     addClinic = () => {
         let key = uuid();
-        let key1 = uuid();
+        // let key1 = uuid();
         let { clinics = {}, clinicsKeys = [] } = this.state;
 
-        let timings = [];
+        // let timings = [];
 
         let newClinics = clinics;
         let newclinicsKeys = clinicsKeys;
@@ -156,11 +151,6 @@ class ClinicRegister extends Component {
     renderClinics = () => {
         let { clinics = {}, clinicsKeys = [] } = this.state;
       
-        const uploadButton = (
-            <div>
-                Upload
-            </div>
-        );
         return (
             <div className='flex direction-column'>
                 {

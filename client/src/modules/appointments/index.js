@@ -47,8 +47,6 @@ export const addAppointment = (payload) => {
         data: payload,
       });
 
-      console.log("728136182 response --> ", response);
-
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
       if (status === true) {
@@ -81,7 +79,6 @@ export const addCarePlanAppointment = (payload, carePlanId) => {
         data: payload,
       });
 
-      console.log("728136182 response --> ", response);
 
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
@@ -116,7 +113,6 @@ export const updateAppointment = (payload) => {
         data: rest,
       });
 
-      console.log("7281361824 response --> ", response);
 
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};

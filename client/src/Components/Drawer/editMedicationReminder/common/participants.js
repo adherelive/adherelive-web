@@ -140,7 +140,6 @@ class Participants extends Component {
 
   getParticipantOption = () => {
     const { members = [] } = this.props;
-    // console.log(" ---- members", members);
     let options = [];
     const doctors = members.filter(member => {
       const { basicInfo: { category } = {} } = member || {};

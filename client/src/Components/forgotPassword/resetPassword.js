@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl, FormattedMessage } from "react-intl";
-import { Button, Input, Form, Row, Col, message } from "antd";
+import React, { Component } from "react";
+
+import { Button, Input, Form, message } from "antd";
 import CompanyIcon from '../../Assets/images/logo3x.png'
 import { PATH } from "../../constant";
 
@@ -24,7 +24,6 @@ class ResetPassword extends Component {
         if (link) {
             const { verifyForgotPasswordLink } = this.props;
             let response = await verifyForgotPasswordLink(link);
-            console.log("RESPONSE OF VERIFY USERRR12312312312312", response);
             //   .then(response=>{
             const { status, statusCode, payload: { message: resMessage = '' } = {} } = response;
             if (!status) {
@@ -49,7 +48,7 @@ class ResetPassword extends Component {
         const {
             form: { validateFields },
             resetPassword,
-            match: { path } = {},
+            // match: { path } = {},
             history
         } = this.props;
         this.setState({ loading: true });
@@ -83,7 +82,7 @@ class ResetPassword extends Component {
         // signIn();
     };
 
-    compareToFirstPassword = (rule, value, callback) => {
+    compareToFirstPassword = ( value, callback) => {
         const { form } = this.props;
         if (value && value !== form.getFieldValue("new_password")) {
             callback("Two passwords that you enter are inconsistent!");
@@ -93,16 +92,14 @@ class ResetPassword extends Component {
     };
 
     render() {
-        const { googleSignIn, facebookSignIn, form: { getFieldDecorator, isFieldTouched,
-            getFieldError,
-            getFieldsError } } = this.props;
+        const {  form: { getFieldDecorator, isFieldTouched,
+            getFieldError } } = this.props;
         let fieldsError = {};
         FIELDS.forEach(value => {
             const error = isFieldTouched(value) && getFieldError(value);
             fieldsError = { ...fieldsError, [value]: error };
         });
         const { handleResetPassword } = this;
-        const { login } = this.state;
         return (
             <div className="wp100 landing-background flex direction-column justify-center align-center">
 

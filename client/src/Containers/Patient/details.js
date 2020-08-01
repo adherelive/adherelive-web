@@ -24,7 +24,6 @@ const mapStateToProps = (state, ownProps) => {
             } = {}
         } = {}
     } = ownProps;
-    console.log("usee:::", user_details, state, users, users["3"]);
     return {
         user_details,
         appointments,

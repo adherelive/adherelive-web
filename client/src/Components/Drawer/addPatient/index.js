@@ -107,7 +107,6 @@ class PatientDetailsDrawer extends Component {
         if (status) {
             this.setState({ treatments, treatment: '' });
         }
-        console.log('364871326478623471923784823', response);
     };
 
     setGender = value => () => {
@@ -116,7 +115,6 @@ class PatientDetailsDrawer extends Component {
 
     setDOB = e => {
         // (date) => {
-        console.log('DATEEEEEEEEEEE', e.target.value, e);
         this.setState({ date_of_birth: moment(e.target.value) });
     }
 
@@ -165,7 +163,6 @@ class PatientDetailsDrawer extends Component {
                 this.setState({ fetchingCondition: true });
                 const response = await searchCondition(data);
                 const { status, payload: { data: responseData, message } = {} } = response;
-                console.log("82398923892382398 00000000==============>  ", response);
                 if (status) {
                     this.setState({ fetchingCondition: false });
                 } else {
@@ -188,7 +185,6 @@ class PatientDetailsDrawer extends Component {
                 this.setState({ fetchingTreatment: true });
                 const response = await searchTreatment(data);
                 const { status, payload: { data: responseData, message } = {} } = response;
-                console.log("82398923892382398 treatment 00000000==============>  ", response);
                 if (status) {
                     this.setState({ fetchingTreatment: false });
                 } else {
@@ -211,7 +207,6 @@ class PatientDetailsDrawer extends Component {
                 this.setState({ fetchingSeverity: true });
                 const response = await searchSeverity(data);
                 const { status, payload: { data: responseData, message } = {} } = response;
-                console.log("82398923892382398 Severity 00000000==============>  ", response);
                 if (status) {
                     this.setState({ fetchingSeverity: false });
                 } else {
@@ -236,8 +231,7 @@ class PatientDetailsDrawer extends Component {
         let year = dtToday.getFullYear();
 
         let maxDate = year + '-0' + month + '-' + day;
-        console.log('DATE OF PATIENTTTT', maxDate);
-
+       
         const { mobile_number = '', name = '', gender = '', date_of_birth = {}, treatment = '', severity = '', condition = '', prefix = '' } = this.state;
         const prefixSelector = (
 
@@ -443,7 +437,6 @@ class PatientDetailsDrawer extends Component {
     };
 
     render() {
-        console.log("STATEEEEEEE 6472483256784358623545", this.state);
         const { visible } = this.props;
         const { onClose, renderAddPatient } = this;
 

@@ -14,7 +14,6 @@ class PatientTable extends Component {
 
   onRowClick = (key) => (event) => {
     const { openPatientDetailsDrawer } = this.props;
-    console.log("12893712 !!! ---> ", key);
     openPatientDetailsDrawer({ patient_id: key });
     // history.push(getPatientDetailsUrl(key));
   };
@@ -53,7 +52,6 @@ class PatientTable extends Component {
       users,
     } = this.props;
 
-    console.log("192837 this.props ----> ", this.props);
 
     return Object.keys(patients).map((id) => {
       return generateRow({
@@ -79,7 +77,6 @@ class PatientTable extends Component {
       onChange: onSelectChange,
     };
 
-    console.log("192837 ", getDataSource());
 
     const {
       loading,

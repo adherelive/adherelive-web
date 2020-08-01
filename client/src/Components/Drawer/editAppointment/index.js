@@ -27,8 +27,6 @@ class EditAppointment extends Component {
   }
 
   componentDidMount = () => {
-
-    // console.log("COMPONENT DID MOUNT========>8697857668975675976465467", this.state);
   }
 
   onFormFieldChanges = (props, allvalues) => {
@@ -38,9 +36,7 @@ class EditAppointment extends Component {
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
 
-    console.log("COMPONENT DID MOUNT========>8697857668975675976465467", isFieldsTouched(), isError, getFieldsError(), JSON.stringify(this.state));
     if (disabledSubmit !== isError && isFieldsTouched()) {
-      // console.log("INSIDE IFFFF========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
       this.setState({ disabledSubmit: isError });
     }
   };
@@ -69,14 +65,13 @@ class EditAppointment extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("VALUES --> ", values);
         let {
           patient = {},
           date,
           type,
           type_description,
           provider_id,
-          critical=false,
+          critical = false,
           start_time,
           reason,
           end_time,
@@ -178,7 +173,6 @@ class EditAppointment extends Component {
               message.warn('Something went wrong, Please try again!');
             }
 
-            console.log("add appointment response -----> ", response);
           } catch (error) {
             console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }
@@ -191,7 +185,6 @@ class EditAppointment extends Component {
 
   onClose = () => {
     const { close } = this.props;
-    console.log('8697857668975675976465467 ON CLOSE CALLED----->');
     this.setState({ disabledSubmit: true });
     close();
   };
@@ -245,8 +238,7 @@ class EditAppointment extends Component {
   getDeleteButton = () => {
     const { handleDelete } = this;
     const { loading, deleteAppointmentOfTemplate, addAppointment, hideAppointment } = this.props;
-    console.log("DELETE APPOINTMENT IN DELETE FUNCTIONNN", typeof (deleteAppointmentOfTemplate), deleteAppointmentOfTemplate ? deleteAppointmentOfTemplate : handleDelete);
-    if (addAppointment) {
+     if (addAppointment) {
       return (
         <Button onClick={hideAppointment} style={{ marginRight: 8 }}>
           Cancel
@@ -284,7 +276,6 @@ class EditAppointment extends Component {
       getDeleteButton,
     } = this;
 
-    console.log("PROPSSS OFF APPOINTMENT========>8697857668975675976465467", JSON.stringify(this.state));
     const submitButtonProps = {
       disabled: disabledSubmit,
       // loading: loading && !deleteLoading

@@ -82,18 +82,17 @@ class PatientDetailsDrawer extends Component {
       const { basic_info: { type, name = '' } = {} } = medicines[medicine_id] || {};
       // const { repeat_type, doses, date = [] } = schedule || {};
       return (
-        <div className="flex justify-space-between align-center mb10">
+        <div key={id} className="flex justify-space-between align-center mb10">
           <div className="pointer tab-color fw600 wp35 tooltip">{name.length > 20 ? name.substring(0, 21) + '...' : name}
 
-            <span class="tooltiptext">{name}</span></div>
-          <div className="wp35 tal">{repeat_days?`${repeat_days.join(", ")}`:'--'}</div>
+            <span className="tooltiptext">{name}</span></div>
+          <div className="wp35 tal">{repeat_days ? `${repeat_days.join(", ")}` : '--'}</div>
 
           <div className="wp20 tar">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
         </div>
       );
     });
 
-    console.log("123781232 here");
 
     return medicationList;
   };
@@ -123,7 +122,6 @@ class PatientDetailsDrawer extends Component {
 
         let { basic_info: { id: cpId = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
 
-        console.log('73284782734783274982347', carePlanId, id, patientId);
         if (parseInt(id) === parseInt(patientId)) {
           carePlanId = cpId;
         }
@@ -146,7 +144,6 @@ class PatientDetailsDrawer extends Component {
       const { basic_info: { name: providerName = "--" } = {} } =
         providers[provider_id] || {};
 
-      console.log("3912739 gender --> ", patients[id]);
       return (
         <Fragment>
           {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
@@ -175,6 +172,7 @@ class PatientDetailsDrawer extends Component {
               const { total = "1", critical = "0" } = reports[id] || {};
               return (
                 <div
+                  key={id}
                   className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS ? "ml16" : ""} mwp45 maxwp48 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex flex-1 direction-column justify-space-between`}
                 >
                   <div className="ml10 mt10 fs16 fw600">
@@ -245,8 +243,6 @@ class PatientDetailsDrawer extends Component {
         </Fragment>
       );
     }
-
-    console.log("2873618312 payload --> ", payload);
   };
 
   formatMessage = data => this.props.intl.formatMessage(data);

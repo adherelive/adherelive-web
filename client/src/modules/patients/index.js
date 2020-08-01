@@ -1,5 +1,3 @@
-import { PATIENT_INITIAL_STATE } from "../../data";
-
 
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
@@ -26,8 +24,6 @@ export const addPatient =(payload)=>{
         url: getAddPatientUrl(),
         data:payload
       });
-
-      console.log("ADD PATIENT response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -58,7 +54,6 @@ export const addPatient =(payload)=>{
 
 
 function patientReducer(state, data) {
-  console.log("19237819283 data --> ", data);
   const {patients} = data || {};
   if(patients) {
     return {

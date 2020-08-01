@@ -1,4 +1,4 @@
-"use strict";
+
 import React, { Component } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import fbLogo from "../../Assets/png/fb-logo.png";
@@ -26,7 +26,7 @@ class LoginByFacebook extends Component{
 	    fields="name,email,picture"
 	    callback={this.responseFacebook}
 	    render={renderProps => (
-		    <button onClick={renderProps.onClick} className="facebook-button"><img src={fbLogo} className="fb-logo"/>Login with Facebook</button>
+		    <button onClick={renderProps.onClick} className="facebook-button"><img alt='fb-logo' src={fbLogo} className="fb-logo"/>Login with Facebook</button>
 	    )}
 		/>
 	);
