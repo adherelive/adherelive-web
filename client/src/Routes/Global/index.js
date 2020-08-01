@@ -58,7 +58,6 @@ export default class Global extends Component {
   render() {
     const { authRedirection } = this.props;
     const { redirecting } = this.state;
-    console.log("179236 redirecting -> DOCTORRRRR ROUTERRR ", redirecting);
     return (
       <BrowserRouter>
         <Switch>

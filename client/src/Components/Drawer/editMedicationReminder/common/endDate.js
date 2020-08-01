@@ -112,8 +112,7 @@ class EndDate extends Component {
       end_date = endDate ? endDate : moment().add(5, 'days');
     }
 
-    console.log("1198781937123 end_date ---> ", end_date);
-
+   
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pl8 wp100">

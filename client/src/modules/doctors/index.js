@@ -125,7 +125,6 @@ export default (state = {}, action) => {
   const { type, data } = action;
   switch (type) {
     default:
-      console.log("92832738492 data 1--> ", data);
       return doctorReducer(state, data);
   }
 };

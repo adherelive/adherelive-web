@@ -1,5 +1,4 @@
 function severityPageReducer(state, data) {
-  console.log("192371937812 data --> ", data);
   const {severity_ids} = data || {};
   if(severity_ids) {
     return [

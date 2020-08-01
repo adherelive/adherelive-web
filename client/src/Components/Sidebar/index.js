@@ -33,20 +33,16 @@ class SideMenu extends Component {
         message.warn("something went wrong. Please try again later");
       }
     } catch (error) {
-      console.log("SIDEBAR LOGOUT ERROR ---> ", error);
     }
   }
 
   handleItemSelect = ({ key }) => {
     const { history, authenticated_category, authPermissions = [] } = this.props;
-    console.log("19231231237813 authenticated_category --> ", this.props);
     const { handleLogout } = this;
-    console.log("28931893197382379 ", key);
     switch (key) {
       case LOGO:
       case DASHBOARD:
         if (authenticated_category === USER_CATEGORY.ADMIN) {
-          console.log("91823718937812 here 2");
           if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
             history.push(PATH.ADMIN.DOCTORS.ROOT);
           }
@@ -90,7 +86,6 @@ class SideMenu extends Component {
         .join("");
     }
 
-    console.log("DATA IN SIDEBARRRRR", dp, initials);
     return (
       <Menu
         // selectedKeys={[selectedKeys]}

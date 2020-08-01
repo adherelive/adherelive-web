@@ -22,7 +22,6 @@ export const UPDATE_GRAPHS_COMPLETED_WITH_ERROR =
 
 
 function graphReducer(state, data) {
-  console.log('DATA IN CAREPLAN REDUCER==========>>>>>$$$$$', data);
   const { charts } = data || {};
   if (charts) {
     return {

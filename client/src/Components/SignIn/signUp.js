@@ -1,10 +1,6 @@
-import React, { Component, Fragment } from "react";
-import { injectIntl, FormattedMessage } from "react-intl";
-import { Button, Input, Form, Row, Col, message } from "antd";
-import { Spring } from 'react-spring/renderprops'
-import LoginByGoogle from "./googleLogin";
-import LoginByFacebook from "./facebookLogin";
-import rightArrow from '../../Assets/images/next.png';
+import React, { Component } from "react";
+// import { injectIntl, FormattedMessage } from "react-intl";
+import { Button, Input, Form, message } from "antd";
 
 
 const { Item: FormItem } = Form;
@@ -39,13 +35,11 @@ class SignUp extends Component {
 
                     const { status } = response;
                     if (status) {
-                        let { payload = {} } = response;
                         this.props.form.resetFields();
                         message.success('Please go to your email to verify your account.')
                     } else {
                         let { payload: { error = {}, message: responseMessage = '' } = {}, statusCode = '' } = response;
 
-                        console.log('RESPONSE OF SIGNUP REQUESTTT', error);
                         if (statusCode === 400 || statusCode === 422) {
                             const { message: errorMessage = '' } = error;
                             message.error(statusCode === 400 ? errorMessage : responseMessage);
@@ -60,14 +54,12 @@ class SignUp extends Component {
 
     render() {
         const { form: { getFieldDecorator, isFieldTouched,
-            getFieldError,
-            getFieldsError } } = this.props;
+            getFieldError } } = this.props;
         let fieldsError = {};
         FIELDS.forEach(value => {
             const error = isFieldTouched(value) && getFieldError(value);
             fieldsError = { ...fieldsError, [value]: error };
         }); const { handleSignUp } = this;
-        const { login } = this.state;
         return (
 
 

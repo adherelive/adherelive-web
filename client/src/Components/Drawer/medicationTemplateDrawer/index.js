@@ -39,7 +39,6 @@ class TemplateDrawer extends Component {
         let newMedics = {};
         let newAppoints = {};
 
-        console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR DETAILSSS DRAWERR 748327498234983234', newAppointments, newMedications);
         if (Object.keys(newMedications).length) {
             for (let medication of Object.values(newMedications)) {
                 let key = uuid();
@@ -179,7 +178,6 @@ class TemplateDrawer extends Component {
 
     renderTemplateDetails = () => {
         const { medications = {}, appointments = {}, medicationKeys = [], appointmentKeys = [] } = this.state;
-        console.log('DATAAAA IN STATE OF DRAWER', medications, appointments, medicationKeys, appointmentKeys);
         return (
             <div className='template-block'>
                 <div className='wp100 flex align-center justify-space-between'>
@@ -197,7 +195,6 @@ class TemplateDrawer extends Component {
                         for (let wtt of when_to_take) {
                             let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
                             minDiff = minDiff === 0 && newMinDiff > 0 ? newMinDiff : newMinDiff > 0 && newMinDiff < minDiff ? newMinDiff : minDiff;
-                            console.log('6487132687123578123650861325871', when_to_take, wtt, typeof (wtt), minDiff, newMinDiff, moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }), moment());
                             closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
                         }
                     }
@@ -208,7 +205,6 @@ class TemplateDrawer extends Component {
                     }
                     nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
                     let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
-                    console.log('347928374', moment(start_date).format('D MMM'), start_date, moment(start_date).isSame(moment(), 'd') ? `Today at ${MEDICATION_TIMING[when_to_take[0]].time}` : `${moment(start_date).format('d MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`);
                     return (
                         <div className='flex wp100 flex-grow-1 align-center'>
                             <div className='drawer-block' key={key}>
@@ -248,7 +244,6 @@ class TemplateDrawer extends Component {
                 {
                     appointmentKeys.map(key => {
                         const { reason = '', schedule_data: { description = '', date = '', start_time = '' } = {}, time_gap = '' } = appointments[key];
-                        console.log("6878768979009", date, time_gap, description);
                         let timeToShow = date && start_time ? `${moment(date).format('ll')} ${moment(date).format('hh:mm')}` : date ? moment(date).format('ll') : '';
                         return (
 
@@ -364,11 +359,9 @@ class TemplateDrawer extends Component {
             }
             if (!treatment_id) {
                 const { carePlan: { treatment_id: cPtreat = 0 } = {} } = this.props;
-                console.log("FINAL DATA++++++>>>>>>>>>", this.props.carePlan);
                 appointmentsData[appointment].schedule_data.treatment_id = cPtreat;
             }
         }
-        // console.log("FINAL DATA++++++>>>>>>>>>",this.props.carePlan, medicationsData, appointmentsData);
         let validate = this.validateData(medicationsData, appointmentsData);
         if (validate) {
             submit({ medicationsData, appointmentsData });
@@ -397,7 +390,6 @@ class TemplateDrawer extends Component {
             end_date: moment(end_date), start_date: moment(start_date),
             unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time)
         };
-        console.log("DATA OF EDITED MEDICATIONNNNN===>", data);
         medications[innerFormKey] = newMedication;
         this.setState({ medications }, () => {
             this.onCloseInner();
@@ -416,7 +408,6 @@ class TemplateDrawer extends Component {
             strength = '',
             unit = "",
             when_to_take = ["3"] } = data;
-        console.log("DATA OF EDITED MEDICATIONNNNN===>", data);
         let { medications = {}, medicationKeys = [] } = this.state;
         let { medicines } = this.props;
         let newMedication = {};
@@ -461,7 +452,6 @@ class TemplateDrawer extends Component {
         }
         newAppointment.provider_name = provider_name;
         newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
-        console.log("DATA OF EDITED Appointment===>", data, newAppointment);
         appointments[innerFormKey] = newAppointment;
         this.setState({ appointments }, () => {
             this.onCloseInner();
@@ -521,9 +511,6 @@ class TemplateDrawer extends Component {
         const { visible, patientId, patients, carePlan, submit } = this.props;
         let { showInner, innerFormType, innerFormKey, medications, appointments, showAddAppointmentInner, showAddMedicationInner } = this.state;
         const { onClose, renderTemplateDetails } = this;
-
-        console.log("DATA OF EDITED MEDICATIONNNNN===> 8697857668975675976465467", this.state);
-
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
 
         let appointmentData = innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT ? appointments[innerFormKey] : {};

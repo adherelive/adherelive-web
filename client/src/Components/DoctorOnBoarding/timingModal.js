@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 // import messages from "./message";
 // import {formatMessage} from "react-intl/src/format";
@@ -8,27 +8,27 @@ import {  Button, Modal, TimePicker, Icon, message, Checkbox } from "antd";
 import {  FULL_DAYS } from '../../constant';
 
 
-const Initial_State = {
-    daySelected: {
-        [FULL_DAYS.MON]: false,
-        [FULL_DAYS.TUE]: false,
-        [FULL_DAYS.WED]: false,
-        [FULL_DAYS.THU]: false,
-        [FULL_DAYS.FRI]: false,
-        [FULL_DAYS.SAT]: false,
-        [FULL_DAYS.SUN]: false,
+// const Initial_State = {
+//     daySelected: {
+//         [FULL_DAYS.MON]: false,
+//         [FULL_DAYS.TUE]: false,
+//         [FULL_DAYS.WED]: false,
+//         [FULL_DAYS.THU]: false,
+//         [FULL_DAYS.FRI]: false,
+//         [FULL_DAYS.SAT]: false,
+//         [FULL_DAYS.SUN]: false,
 
-    },
-    dayTimings: {
-        [FULL_DAYS.MON]: {},
-        [FULL_DAYS.TUE]: {},
-        [FULL_DAYS.WED]: {},
-        [FULL_DAYS.THU]: {},
-        [FULL_DAYS.FRI]: {},
-        [FULL_DAYS.SAT]: {},
-        [FULL_DAYS.SUN]: {},
-    }
-};
+//     },
+//     dayTimings: {
+//         [FULL_DAYS.MON]: {},
+//         [FULL_DAYS.TUE]: {},
+//         [FULL_DAYS.WED]: {},
+//         [FULL_DAYS.THU]: {},
+//         [FULL_DAYS.FRI]: {},
+//         [FULL_DAYS.SAT]: {},
+//         [FULL_DAYS.SUN]: {},
+//     }
+// };
 
 
 
@@ -143,7 +143,7 @@ class ClinicRegister extends Component {
                                     <div className='flex direction-column wp100'>
                                         {timingsKeys.map((tKey, index) => {
 
-                                            let minutesToAdd = 30 - (moment().minutes()) % 30;
+                                            // let minutesToAdd = 30 - (moment().minutes()) % 30;
                                             return (
                                                 <div key={tKey} className='flex mb10'>
                                                     <div className='flex direction-column flex-grow-1 mr24'>
@@ -189,7 +189,7 @@ class ClinicRegister extends Component {
         );
     }
 
-    setDayStartTime = (day, key) => (time, timeString) => {
+    setDayStartTime = (day, key) => (time) => {
         let { dayTimings = {} } = this.state;
         let newDayTimings = dayTimings;
         let { timings = {} } = newDayTimings[day];
@@ -206,8 +206,8 @@ class ClinicRegister extends Component {
 
                         let newEndTime = moment(time).add('minutes', 30);
 
-                        if (time.isAfter(moment(startTime)) && time.isBefore(moment(endTime))
-                            || newEndTime.isAfter(moment(startTime)) && newEndTime.isBefore(moment(endTime))
+                        if ((time.isAfter(moment(startTime)) && time.isBefore(moment(endTime)))
+                            || (newEndTime.isAfter(moment(startTime)) && newEndTime.isBefore(moment(endTime)))
                             || moment(time).isSame(moment(startTime)) || moment(time).isSame(moment(endTime))
                             || moment(newEndTime).isSame(moment(startTime)) || moment(newEndTime).isSame(moment(endTime))
                         ) {
@@ -228,7 +228,7 @@ class ClinicRegister extends Component {
         }
     }
 
-    setDayEndTime = (day, key) => (time, timeString) => {
+    setDayEndTime = (day, key) => (time) => {
         let { dayTimings = {} } = this.state;
         let newDayTimings = dayTimings;
         let { timings = {} } = newDayTimings[day];
@@ -243,7 +243,7 @@ class ClinicRegister extends Component {
                 if (tkey.localeCompare(key)) {
                     let { startTime = '', endTime = '' } = timings[tkey];
                     if (startTime && endTime) {
-                        if (time.isAfter(moment(startTime)) && time.isBefore(moment(endTime))
+                        if ((time.isAfter(moment(startTime)) && time.isBefore(moment(endTime)))
                             || moment(time).isSame(moment(startTime)) || moment(time).isSame(moment(endTime))) {
                             wrongHours = true;
                         }
@@ -300,9 +300,7 @@ class ClinicRegister extends Component {
 
 
     render() {
-        const { address = '', addressManual = '', pincode = '', landmark = '' } = this.state;
-
-        const { visible, handleCancel, handleOk, location } = this.props;
+        const { visible} = this.props;
         return (
             <Modal
                 visible={visible}

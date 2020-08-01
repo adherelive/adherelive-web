@@ -7,7 +7,6 @@ export default data => {
     const { id, data: graphContent } = report || {};
     const { total, critical } = graphContent || {};
     const { dark, light } = GRAPH_COLORS[id] || {};
-    console.log("234723", GRAPH_COLORS, dark, light, id);
     const elementId = `myChart-${id}`;
     const ctx = document.getElementById(elementId).getContext("2d");
     const myChart = new Chart(ctx, {

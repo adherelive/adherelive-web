@@ -35,8 +35,7 @@ class MedicationStage extends Component {
 
     // const { basic_info: { details: { medicine_id } = {} } = {} } = medications[medication_id] || {};
 
-    console.log("918239813 medicines --> ", medicines);
-
+    
     return Object.keys(medicines).map(id => {
       const { basic_info: { name, type } = {} } = medicines[id] || {};
       return (
@@ -107,8 +106,7 @@ class MedicationStage extends Component {
     if (medicineId) {
       medicine_id = medicineId.toString();
     }
-    console.log("2387128371923 medicine_id --> ", medicine_id, typeof (medication_id));
-
+   
     const { fetchingMedicines } = this.state;
 
     const { getStagesOption, getInitialValue, getParentNode, handleMedicineSearch } = this;

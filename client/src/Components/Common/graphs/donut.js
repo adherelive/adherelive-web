@@ -1,7 +1,6 @@
-import React, { Component, Fragment } from "react";
-import * as Chart from "chart.js";
+import React, {  Fragment } from "react";
 
-import { Doughnut, Line } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { GRAPH_COLORS, CHART_TITLE } from "../../../constant";
 
 export default function donutGraph(props) {

@@ -38,7 +38,6 @@ class MedicationStrength extends Component {
       isFieldTouched
       //getFieldValue
     } = form;
-    // console.log("act,", activityType, activityModeOption, activityMode);
 
     let { basic_info: { details: { strength } = {} } = {} } = medications[medication_id] || {};
 

@@ -112,7 +112,6 @@ class AddMedicationReminderForm extends Component {
 
     // }
 
-    // console.log('3647823651783265818347========>', selectedDays, repeat);
     const startDate = getFieldValue(startDateField.field_name);
     let startDateDay = startDate ? moment(startDate).format('ddd') : moment().format('ddd');
     let startDayNumber = DAYS_NUMBER[startDateDay];
@@ -134,8 +133,7 @@ class AddMedicationReminderForm extends Component {
 
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
 
-      console.log('3647823651783265818347========>', selectedDays, dayDiffPos, dayDiffNeg, daysToAdd);
-    }
+     }
 
 
     let newEndDate;
@@ -236,7 +234,6 @@ class AddMedicationReminderForm extends Component {
 
   disabledEndDate = current => {
     const endDate = this.getNewEndDate();
-    console.log('3647823651783265818347', endDate);
     if (endDate) {
       return current && current < endDate;
     }
@@ -314,7 +311,6 @@ class AddMedicationReminderForm extends Component {
     } = this.props;
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("9127619237 values ---> ", values);
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
@@ -363,7 +359,6 @@ class AddMedicationReminderForm extends Component {
             message.error(msg);
           }
         } catch (error) {
-          console.log("add medication reminder ui error -----> ", error);
         }
       }
     });
@@ -438,8 +433,7 @@ class AddMedicationReminderForm extends Component {
     const {
       form: { setFieldsValue, getFieldValue }
     } = this.props;
-    console.log('738467386587346578234625834 called', getFieldValue(UNIT_FIELD), e.target.value);
-
+   
     setFieldsValue({ [UNIT_FIELD]: e.target.value });
   };
 
@@ -482,8 +476,7 @@ class AddMedicationReminderForm extends Component {
     let medicineUnit = getFieldValue(medicineStrengthUnitField.field_name);
 
 
-    console.log('478562897346578925782935', medicineUnit);
-
+   
     let endTime;
 
     if (startTime && startTime.isValid) {
@@ -523,7 +516,7 @@ class AddMedicationReminderForm extends Component {
           <div className="flex align-items-end justify-content-space-between">
             <div className='flex direction-row flex-grow-1'>
               <label
-                for="dose"
+                htmlFor="dose"
                 className="form-label"
                 title="Dose"
               >

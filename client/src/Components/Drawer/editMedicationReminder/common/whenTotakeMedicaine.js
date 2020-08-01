@@ -67,9 +67,7 @@ class WhenToTakeMedication extends Component {
     when_to_take.forEach((id, index) => {
       statusList[index] = id;
     });
-    console.log("736287362718638127", medicationData, addMedication);
 
-    console.log("WHEN TO TAKE IN FORM ITEMSS DID UPDATE", when_to_take, medications[medication_id], typeof (medication_id));
     // let total_status = Object.keys(statusList);
     let { schedule_data: { when_to_take: frequency = [] } = {} } = medicationData;
     if (frequency.length) {
@@ -91,7 +89,6 @@ class WhenToTakeMedication extends Component {
     const { medication_details } = this.props;
     const { medication_details: prev_medication_details } = prevProps;
 
-    console.log("18273123 medication_details  ---> ", medication_details);
 
     if (
       Object.keys(medication_details).length !==
@@ -126,7 +123,6 @@ class WhenToTakeMedication extends Component {
     let current_status = [];
 
 
-    console.log("9387812733 getList -->1111 ", selected_timing);
 
     Object.keys(selected_timing).forEach((id) => {
       if (id === `${k}`) {
@@ -136,7 +132,6 @@ class WhenToTakeMedication extends Component {
     });
 
 
-    console.log("9387812733 getList -->22222 ", current_status, selected_timing_overall, total_status);
 
     const { getFieldValue } = this.props.form;
     const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
@@ -146,7 +141,6 @@ class WhenToTakeMedication extends Component {
     );
 
 
-    console.log("9387812733 getList -->333333 ", all_timings);
 
     const all_timings = [...current_status, ...remaining_status];
 
@@ -157,8 +151,6 @@ class WhenToTakeMedication extends Component {
       }
     });
 
-    console.log("9387812733 getList -->44444 ", uniqueTimings);
-    console.log("983781273 uniqueTimings --> ", current_status, remaining_status);
     return uniqueTimings;
   };
 
@@ -166,7 +158,6 @@ class WhenToTakeMedication extends Component {
     const { selected_timing, status, total_status } = this.state;
     const { getUpdatedList } = this;
     const getList = getUpdatedList(k);
-    console.log("9387812733 getList --> ", k, getList);
     return getList.map((id) => {
       const text = status[id];
       return (
@@ -181,308 +172,272 @@ class WhenToTakeMedication extends Component {
   //   e.preventDefault();
   //   const { medication_details: { timings } = {} } = this.props;
   //   const { count, remaining_timing, selected_timing } = this.state;
-  //   console.log("91276391 selected_timing --> ", selected_timing);
   //   if (count.length === Object.keys(timings).length) {
   //     return null;
   //   }
 
   //   let updatedOptions = {};
   //   Object.keys(remaining_timing).forEach((id) => {
-  //     console.log(
-  //       "127831273 updatedOptions --> ",
-  //       selected_timing,
-  //       id,
-  //       typeof selected_timing,
-  //       typeof id
-  //     );
-  //     if (parseInt(id) !== selected_timing) {
-  //       updatedOptions[id] = { ...timings[id] };
-  //     }
-  //   });
+  
+//     if (parseInt(id) !== selected_timing) {
+//       updatedOptions[id] = { ...timings[id] };
+//     }
+//   });
 
-  //   this.setState({
-  //     count: [...count, remaining_timing],
-  //     remaining_timing: { ...updatedOptions },
-  //   });
-  // };
+//   this.setState({
+//     count: [...count, remaining_timing],
+//     remaining_timing: { ...updatedOptions },
+//   });
+// };
 
-  // deleteOnClick = (e) => {
-  //   e.preventDefault();
-  //   console.log("892379132 e.target.value, e.currentTarget ", e.target.value);
-  //   const id = e.target.value;
-  //   const { medication_details: { timings = {} } = {} } = this.props;
-  //   const { count, remaining_timing } = this.state;
-  //   const updatedCount = count.filter((id, index) => {
-  //     console.log("91723189 delete_id, index --> ", e.target.value, index);
-  //   });
-  //   this.setState({
-  //     // count: [...updatedCount],
-  //     remaining_timing: { ...remaining_timing, [`${id}`]: timings[id] },
-  //   });
-  // };
+// deleteOnClick = (e) => {
+//   e.preventDefault();
+//   const id = e.target.value;
+//   const { medication_details: { timings = {} } = {} } = this.props;
+//   const { count, remaining_timing } = this.state;
+//   const updatedCount = count.filter((id, index) => {
+//   });
+//   this.setState({
+//     // count: [...updatedCount],
+//     remaining_timing: { ...remaining_timing, [`${id}`]: timings[id] },
+//   });
+// };
 
-  // getSelectRender = () => {
-  //   const { timings, selected_timing, count } = this.state;
-  //   let selectComp = [];
-  //   // todo: WIP
-  //   count.forEach((select_options, index) => {
-  //     selectComp = Object.keys(select_options).map((id) => {
-  //       const { text, time } = select_options[id] || {};
-  //       const content = `${text} (${time})`;
-  //       return (
-  //         <Option key={`${id}-${index}-when-to-take`} value={id}>
-  //           {content}
-  //         </Option>
-  //       );
-  //     });
-  //   });
+// getSelectRender = () => {
+//   const { timings, selected_timing, count } = this.state;
+//   let selectComp = [];
+//   // todo: WIP
+//   count.forEach((select_options, index) => {
+//     selectComp = Object.keys(select_options).map((id) => {
+//       const { text, time } = select_options[id] || {};
+//       const content = `${text} (${time})`;
+//       return (
+//         <Option key={`${id}-${index}-when-to-take`} value={id}>
+//           {content}
+//         </Option>
+//       );
+//     });
+//   });
 
-  //   return selectComp;
-  // };
+//   return selectComp;
+// };
 
-  handleSelect = (value, select_box_id) => {
-    const { selected_timing_overall = [], selected_timing = {} } = this.state;
-    const keys = new Set([...selected_timing_overall, value]);
-    const updatedSelectTiming = {
-      ...selected_timing,
-      [select_box_id]: value,
-    };
-    this.setState(
-      {
-        // selected_timing_overall: [...keys],
-        selected_timing: updatedSelectTiming,
-      },
-      () => {
-        console.log(
-          "712831 this.state.selected_timing_overall ---> ",
-          this.state.selected_timing
-        );
-      }
-    );
+handleSelect = (value, select_box_id) => {
+  const { selected_timing_overall = [], selected_timing = {} } = this.state;
+  const keys = new Set([...selected_timing_overall, value]);
+  const updatedSelectTiming = {
+    ...selected_timing,
+    [select_box_id]: value,
   };
+  this.setState({
+    selected_timing: updatedSelectTiming
+  });
+};
 
-  handleDeselect = (value) => {
-    const { selected_timing_overall } = this.state;
-    const updateField = selected_timing_overall.filter(
-      (field) => field !== value
-    );
-    this.setState({
-      // selected_timing_overall: updateField
-    });
-  };
+handleDeselect = (value) => {
+  const { selected_timing_overall } = this.state;
+  const updateField = selected_timing_overall.filter(
+    (field) => field !== value
+  );
+  this.setState({
+    // selected_timing_overall: updateField
+  });
+};
 
-  remove = (k) => {
-    const { selected_timing_overall, selected_timing } = this.state;
-    const { form } = this.props;
-    const { getFieldValue, setFieldsValue } = form;
-    const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
+remove = (k) => {
+  const { selected_timing_overall, selected_timing } = this.state;
+  const { form } = this.props;
+  const { getFieldValue, setFieldsValue } = form;
+  const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
 
-    let selectedTimingUpdate = {};
-    Object.keys(selected_timing).forEach(id => {
-      console.log("9381237192 k, id --> ", k, id);
-      if (k !== parseInt(id)) {
-        selectedTimingUpdate[k] = selected_timing[k] || {};
-      }
-    });
-
-    this.setState({
-      selected_timing_overall: selected_timing_overall.filter(
-        (field) => {
-          console.log("1273127362 selected, field --> ", selected_timing_overall, selected, typeof selected, field, typeof field);
-          return selected !== field;
-        }
-      ),
-      // selected_timing: selectedTimingUpdate,
-    });
-    const keys = getFieldValue("keys");
-
-    setFieldsValue({
-      keys: keys.filter((key) => key !== k),
-    });
-  };
-
-  getInitialValue = (k) => {
-    const { total_status } = this.state;
-    // const value = status[k+1];
-    console.log("93813128923y k, total_status --> total_status[k]", k, total_status, total_status[k]);
-    return total_status[k];
-    // console.log("891237183189 ", k, status, );
-  };
-
-  getFormItems = () => {
-    const { form, medication_details: { timings } = {}, medications, payload: { id: medication_id } = {}, medicationData = {}, addMedication } = this.props;
-    const { count } = this.state;
-    const {
-      handleSelect,
-      getUnitOption,
-      handleDeselect,
-      getInitialValue,
-      formatMessage,
-    } = this;
-    const {
-      getFieldDecorator,
-      // getFieldError,
-      // isFieldTouched,
-      getFieldValue,
-    } = form;
-
-
-
-    // let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
-
-
-    let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
-    let { schedule_data: { when_to_take: frequency = [] } = {} } = medicationData;
-    if (frequency.length) {
-      when_to_take = frequency;
+  let selectedTimingUpdate = {};
+  Object.keys(selected_timing).forEach(id => {
+    if (k !== parseInt(id)) {
+      selectedTimingUpdate[k] = selected_timing[k] || {};
     }
-    if (addMedication) {
-      when_to_take = ['4'];
-    }
-    console.log("WHEN TO TAKE IN FORM ITEMSS", when_to_take, medications[medication_id], typeof (medication_id));
-    getFieldDecorator("keys", {
-      initialValue: when_to_take.map((id, index) => (parseInt(id) - 1)),
-    });
-    const keys = getFieldValue("keys");
+  });
 
-    console.log("912312837 getUnitOption ", this.getUnitOption(0));
+  this.setState({
+    selected_timing_overall: selected_timing_overall.filter(
+      (field) => {
+        return selected !== field;
+      }
+    ),
+    // selected_timing: selectedTimingUpdate,
+  });
+  const keys = getFieldValue("keys");
 
-    // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-    return keys.map((k, index) => {
-      return (
-        <Fragment>
-          {/* <FormList>
+  setFieldsValue({
+    keys: keys.filter((key) => key !== k),
+  });
+};
+
+getInitialValue = (k) => {
+  const { total_status } = this.state;
+  return total_status[k];
+};
+
+getFormItems = () => {
+  const { form, medication_details: { timings } = {}, medications, payload: { id: medication_id } = {}, medicationData = {}, addMedication } = this.props;
+  const { count } = this.state;
+  const {
+    handleSelect,
+    getUnitOption,
+    handleDeselect,
+    getInitialValue,
+    formatMessage,
+  } = this;
+  const {
+    getFieldDecorator,
+    // getFieldError,
+    // isFieldTouched,
+    getFieldValue,
+  } = form;
+
+
+
+  // let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
+
+
+  let { basic_info: { details: { when_to_take = [] } = {} } = {} } = medications[medication_id] || {};
+  let { schedule_data: { when_to_take: frequency = [] } = {} } = medicationData;
+  if (frequency.length) {
+    when_to_take = frequency;
+  }
+  if (addMedication) {
+    when_to_take = ['4'];
+  }
+  getFieldDecorator("keys", {
+    initialValue: when_to_take.map((id, index) => (parseInt(id) - 1)),
+  });
+  const keys = getFieldValue("keys");
+  // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
+  return keys.map((k, index) => {
+    return (
+      <Fragment>
+        {/* <FormList>
           {(fields, { add, remove }) => {
             return (
               {fields.map(fiels)}
             );
           }}
           </FormList> */}
-          <div className="flex direction-row justify-space-between align-center mb24">
-            <div key={`random${k}`} className="wp100">
-              <FormItem
-                className="flex-1 mb0"
-              >
-                {getFieldDecorator(`${FIELD_NAME}[${k}]`, {
-                  rules: [
-                    {
-                      required: true,
-                      message: "Select The Time",
-                    },
-                  ],
-                  initialValue: getInitialValue(k),
-                })(
-                  <Select
-                    className="wp100 drawer-select"
-                    autoComplete="off"
-                    placeholder={formatMessage(messages.select_timing)}
-                    onSelect={(value) => handleSelect(value, k)}
-                    onDeselect={handleDeselect}
-                    suffixIcon={null}
-                  >
-                    {this.getUnitOption(k)}
-                  </Select>
-                )}
-              </FormItem>
-            </div>
-            {keys.length > 1 && (
-              <div className="wp20 hp100 flex justify-center align-center">
-                {/* <Tooltip mouseEnterDelay={0.5} placement="bottom" title={formatMessage(messages.delete_text)}> */}
-                <Icon
-                  className="hp100"
-                  type="minus-circle-o"
-                  onClick={() => this.remove(k)}
-                />
-                {/* </Tooltip> */}
-              </div>
-            )}
-          </div>
-        </Fragment>
-      );
-    });
-  };
-
-  add = () => {
-    const { form } = this.props;
-    const { selected_timing, selected_timing_overall } = this.state;
-    const keys = form.getFieldValue("keys");
-    console.log("9783121238 keys :", keys);
-    const lastKey = keys[keys.length - 1];
-    const nextKeys = keys.concat(lastKey + 1);
-    console.log("9783121238 nextKeys :", nextKeys);
-    form.setFieldsValue({
-      keys: nextKeys,
-      // [`Fields[${id_checklist_field}]`]: null,
-      // [`Status[${id_checklist_field}]`]: null
-    });
-    key_field++;
-    this.setState({
-      selected_timing_overall: [
-        ...selected_timing_overall,
-        this.getInitialValue(lastKey + 1)
-      ],
-      selected_timing: {
-        ...selected_timing,
-        [lastKey + 1]: this.getInitialValue(lastKey + 1)
-      }
-    }, () => {
-      console.log("1273127362 selected_timing --> ", this.state.selected_timing_overall, selected_timing);
-    });
-  };
-
-  render() {
-    const { form } = this.props;
-    const {
-      getFormItems,
-      onAddMoreClick,
-      getSelectRender,
-      formatMessage,
-    } = this;
-    const {
-      getFieldDecorator,
-      getFieldError,
-      isFieldTouched,
-      //getFieldValue
-    } = form;
-    // console.log("act,", activityType, activityModeOption, activityMode);
-    const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-
-    // console.log("627868362783 selected_timing ---. ", this.state.selected_timing, this.state);
-
-    console.log("WHEN TO TAKE IN RENDERR", this.state);
-    // const { getInitialValue } = this;
-
-    return (
-      <Fragment>
-        <div className="flex align-items-end justify-content-space-between">
-          <div className='flex row flex-grow-1'>
-            <label
-              for="quantity"
-              className="form-label "
-              title="Quantity"
+        <div className="flex direction-row justify-space-between align-center mb24">
+          <div key={`random${k}`} className="wp100">
+            <FormItem
+              className="flex-1 mb0"
             >
-              {formatMessage(messages.timing)}
-            </label>
-
-            <div className="star-red">*</div>
+              {getFieldDecorator(`${FIELD_NAME}[${k}]`, {
+                rules: [
+                  {
+                    required: true,
+                    message: "Select The Time",
+                  },
+                ],
+                initialValue: getInitialValue(k),
+              })(
+                <Select
+                  className="wp100 drawer-select"
+                  autoComplete="off"
+                  placeholder={formatMessage(messages.select_timing)}
+                  onSelect={(value) => handleSelect(value, k)}
+                  onDeselect={handleDeselect}
+                  suffixIcon={null}
+                >
+                  {this.getUnitOption(k)}
+                </Select>
+              )}
+            </FormItem>
           </div>
-          {/* <div className="label-color fontsize12 mb8">
-              
-            </div> */}
-          <div className="flex-grow-0">
-            <RadioGroup size="small" className="flex justify-content-end">
-              <RadioButton value={1} onClick={this.add}>
-                {formatMessage(messages.add_more_text)}
-              </RadioButton>
-            </RadioGroup>
-          </div>
+          {keys.length > 1 && (
+            <div className="wp20 hp100 flex justify-center align-center">
+              {/* <Tooltip mouseEnterDelay={0.5} placement="bottom" title={formatMessage(messages.delete_text)}> */}
+              <Icon
+                className="hp100"
+                type="minus-circle-o"
+                onClick={() => this.remove(k)}
+              />
+              {/* </Tooltip> */}
+            </div>
+          )}
         </div>
-
-        {getFormItems()}
       </Fragment>
     );
-    // }
-  }
+  });
+};
+
+add = () => {
+  const { form } = this.props;
+  const { selected_timing, selected_timing_overall } = this.state;
+  const keys = form.getFieldValue("keys");
+  const lastKey = keys[keys.length - 1];
+  const nextKeys = keys.concat(lastKey + 1);
+  form.setFieldsValue({
+    keys: nextKeys,
+    // [`Fields[${id_checklist_field}]`]: null,
+    // [`Status[${id_checklist_field}]`]: null
+  });
+  key_field++;
+  this.setState({
+    selected_timing_overall: [
+      ...selected_timing_overall,
+      this.getInitialValue(lastKey + 1)
+    ],
+    selected_timing: {
+      ...selected_timing,
+      [lastKey + 1]: this.getInitialValue(lastKey + 1)
+    }
+  });
+};
+
+render() {
+  const { form } = this.props;
+  const {
+    getFormItems,
+    onAddMoreClick,
+    getSelectRender,
+    formatMessage,
+  } = this;
+  const {
+    getFieldDecorator,
+    getFieldError,
+    isFieldTouched,
+    //getFieldValue
+  } = form;
+  const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
+  // const { getInitialValue } = this;
+
+  return (
+    <Fragment>
+      <div className="flex align-items-end justify-content-space-between">
+        <div className='flex row flex-grow-1'>
+          <label
+            htmlFor="quantity"
+            className="form-label "
+            title="Quantity"
+          >
+            {formatMessage(messages.timing)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
+        {/* <div className="label-color fontsize12 mb8">
+              
+            </div> */}
+        <div className="flex-grow-0">
+          <RadioGroup size="small" className="flex justify-content-end">
+            <RadioButton value={1} onClick={this.add}>
+              {formatMessage(messages.add_more_text)}
+            </RadioButton>
+          </RadioGroup>
+        </div>
+      </div>
+
+      {getFormItems()}
+    </Fragment>
+  );
+  // }
+}
 }
 
 const Field = injectIntl(WhenToTakeMedication);

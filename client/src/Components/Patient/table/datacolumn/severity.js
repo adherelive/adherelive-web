@@ -5,7 +5,6 @@ import {
 } from "../../../../constant";
 
 export default props => {
-  console.log("123891 treatmentData this.props --> ", props);
   const { carePlanData: { severity = "" } = {} } = props || {};
 
   return (

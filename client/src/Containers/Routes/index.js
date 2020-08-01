@@ -5,7 +5,6 @@ import { getInitialData } from "../../modules/auth";
 const mapStateToProps = state => {
   const { auth, users, doctors } = state;
   const { authenticated, authenticated_user, authRedirection, authPermissions = [] } = auth;
-  console.log("containers ===== ", authenticated, authRedirection);
   return { authenticated, authPermissions, authRedirection, authenticated_user, users, doctors };
 };
 

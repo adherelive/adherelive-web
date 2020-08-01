@@ -38,7 +38,6 @@ class SelectedDays extends Component {
     if (rDays.length) {
       repeat_days = rDays;
     }
-    console.log("879123718923 repeat_days --> ", repeat_days, rDays, medicationData);
     this.state = {
       selectedDays: repeat_days
     };
@@ -78,7 +77,6 @@ class SelectedDays extends Component {
     const { selectedDays } = this.state;
     const { handleCheckDays, formatMessage } = this;
 
-    console.log("879123718923 selectedDays --> ", selectedDays);
 
     return (
       <div className="mb20 select-days-form-content">
