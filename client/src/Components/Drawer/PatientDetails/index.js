@@ -10,23 +10,49 @@ import ShareIcon from "../../../Assets/images/redirect3x.png";
 class PatientDetailsDrawer extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      carePlanId: 1,
+      carePlanMedicationIds: []
+    };
   }
 
   componentDidMount() {
-    const { getMedications, payload: { patient_id } = {} } = this.props;
-    console.log("19283791273 patient_id --> ", patient_id);
+    const { getMedications, payload: { patient_id } = {}, care_plans = {} } = this.props;
+    let carePlanId = 1;
+    let carePlanMedicationIds = [];
+    for (let carePlan of Object.values(care_plans)) {
+
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId)) {
+        carePlanId = id;
+        carePlanMedicationIds = medication_ids;
+      }
+
+    }
+    this.setState({ carePlanId, carePlanMedicationIds });
     if (patient_id) {
       getMedications(patient_id);
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { payload: { patient_id } = {}, getMedications } = this.props;
+    const { payload: { patient_id } = {}, getMedications, care_plans = {} } = this.props;
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
+    let carePlanId = 1;
+    let carePlanMedicationIds = [];
+    for (let carePlan of Object.values(care_plans)) {
+
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId)) {
+        carePlanId = id;
+        carePlanMedicationIds = medication_ids;
+      }
+
+    }
 
     if (patient_id !== prev_patient_id) {
       getMedications(patient_id);
+      this.setState({ carePlanId, carePlanMedicationIds });
     }
   }
 
@@ -41,10 +67,10 @@ class PatientDetailsDrawer extends Component {
   };
 
   getMedicationList = () => {
-    const { patients, id = "1", medications = {}, medicines = {} } = this.props;
-    const { getFormattedDays } = this;
+    const { medications = {}, medicines = {} } = this.props;
+    const { carePlanMedicationIds } = this.state;
     // const { medications: medication_ids = [] } = patients[id] || {};
-    const medicationList = Object.keys(medications).map(id => {
+    const medicationList = carePlanMedicationIds.map(id => {
       const {
         basic_info: {
           start_date,
@@ -60,7 +86,7 @@ class PatientDetailsDrawer extends Component {
           <div className="pointer tab-color fw600 wp35 tooltip">{name.length > 20 ? name.substring(0, 21) + '...' : name}
 
             <span class="tooltiptext">{name}</span></div>
-          <div className="wp35 tal">{`${repeat_days.join(", ")}`}</div>
+          <div className="wp35 tal">{repeat_days?`${repeat_days.join(", ")}`:'--'}</div>
 
           <div className="wp20 tar">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
         </div>

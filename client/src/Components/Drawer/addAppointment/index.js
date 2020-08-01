@@ -49,7 +49,6 @@ class AddAppointment extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("VALUES --> ", values);
         let {
           date,
           type,
@@ -113,7 +112,6 @@ class AddAppointment extends Component {
             treatment_id: treatment,
           };
 
-        // console.log('6797867076878678978768',data);
         if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')
         }
@@ -147,7 +145,6 @@ class AddAppointment extends Component {
             }
 
           } catch (error) {
-            console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }
         }
       }
@@ -184,7 +181,6 @@ class AddAppointment extends Component {
     const { disabledSubmit } = this.state;
 
 
-    console.log('STATE OF DRAWER==========>IN APPOINTMENT', editAppointment ? appointmentVisible : visible, visible, appointmentVisible, hideAppointment, editAppointment);
     const {
       onClose,
       formatMessage,

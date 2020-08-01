@@ -59,7 +59,6 @@ class MedicationStrengthUnit extends Component {
     }
 
 
-    console.log('478562897346578925782935', medicine, medType, purpose, data[FIELD_NAME], initialValue);
     return initialValue;
   };
 
@@ -71,7 +70,6 @@ class MedicationStrengthUnit extends Component {
       isFieldTouched
       //getFieldValue
     } = form;
-    // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     const { getInitialValue } = this;

@@ -124,7 +124,6 @@ class AddAppointmentForm extends Component {
 
   handleDateSelect = date => () => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", date);
     const startDate = getFieldValue(DATE);
 
     if (!date || !startDate) {
@@ -162,7 +161,6 @@ class AddAppointmentForm extends Component {
 
   handleStartTimeChange = (time, str) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
@@ -175,17 +173,14 @@ class AddAppointmentForm extends Component {
         .clone()
         .set({ month: newMonth, year: newYear, date: newDate }) : null;
       newEventEndTime = newEventStartTime ? moment(newEventStartTime).add('minutes', 30) : null;
-      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
       setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
     } else {
-      console.log("298467232894 moment(startTime).add(1, h) ", time);
       setFieldsValue({ [END_TIME]: time ? moment(time).add('minutes', 30) : null });
     }
   };
 
   handleEndTimeChange = (time, str) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
@@ -200,10 +195,8 @@ class AddAppointmentForm extends Component {
       newEventEndTime = time ? time
         .clone()
         .set({ month: newMonth, year: newYear, date: newDate }) : null;
-      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
       setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
     } else {
-      console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
       setFieldsValue({ [END_TIME]: moment(time) });
     }
   };
@@ -259,7 +252,6 @@ class AddAppointmentForm extends Component {
 
   getTypeOption = () => {
     let { static_templates: { appointments: { appointment_type = {} } = {} } = {} } = this.props;
-    console.log("appointment form props 87678698987545685679578--> ", this.props.static_templates);
     let newTypes = [];
     for (let type of Object.keys(appointment_type)) {
       let { title = '' } = appointment_type[type] || {};

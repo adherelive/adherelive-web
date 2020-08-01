@@ -55,7 +55,6 @@ class MedicineQuantity extends Component {
 
     const { onRadioChange, formatMessage, getInitialValue } = this;
 
-    // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (
