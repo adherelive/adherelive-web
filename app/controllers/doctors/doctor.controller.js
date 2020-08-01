@@ -1453,7 +1453,7 @@ class DoctorController extends Controller {
 
       const doctorWrapper = await DoctorWrapper(doctors);
 
-      Logger.debug("doctors ---> ", userId);
+      Logger.debug("doctors ---> ", doctors);
 
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
         doctorWrapper.getDoctorId()
