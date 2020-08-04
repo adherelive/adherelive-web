@@ -2,8 +2,8 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import {  Select, Input,  Icon, message } from "antd";
-import {  PATH, FULL_DAYS } from '../../constant';
+import { Input, Icon, message } from "antd";
+import { PATH, FULL_DAYS, FULL_DAYS_NUMBER } from '../../constant';
 import UploadSteps from './steps';
 import LocationModal from './locationmodal';
 import TimingModal from './timingModal';
@@ -11,8 +11,6 @@ import { withRouter } from "react-router-dom";
 import moment from 'moment';
 
 
-
-// const { Option } = Select;
 
 const dayTimings = {
     [FULL_DAYS.MON]: [{ startTime: "", endTime: '' }],
@@ -150,7 +148,7 @@ class ClinicRegister extends Component {
 
     renderClinics = () => {
         let { clinics = {}, clinicsKeys = [] } = this.state;
-      
+
         return (
             <div className='flex direction-column'>
                 {
@@ -264,7 +262,7 @@ class ClinicRegister extends Component {
 
             for (let nEdu in newClinics) {
 
-                
+
                 if (edu !== nEdu) {
                     let { name: newname = '' } = newClinics[nEdu];
                     if (!newname.localeCompare(name)) {
@@ -296,7 +294,6 @@ class ClinicRegister extends Component {
         const { history, authenticated_user } = this.props;
         const validate = this.validateData();
         if (validate) {
-            const { basic_info: { id = 1 } = {} } = authenticated_user || {};
             const { clinics = {} } = this.state;
             let newClinics = Object.values(clinics);
             for (let clinic of newClinics) {

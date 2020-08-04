@@ -37,7 +37,7 @@ class AddAppointment extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { addCarePlanAppointment, getAppointments, payload: { patient_id }, patients, carePlanId } = this.props;
+    const { addCarePlanAppointment, payload: { patient_id }, carePlanId } = this.props;
     const { formRef = {}, formatMessage } = this;
 
     // const { basic_info: { user_id } = {} } = patients[patient_id] || {};

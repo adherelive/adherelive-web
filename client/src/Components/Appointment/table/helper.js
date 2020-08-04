@@ -24,10 +24,9 @@ export const TABLE_COLUMN = {
 };
 
 export const formatAppointmentTableData = data => {
-  const { appointments, id, users, doctors, patients, care_takers } = data || {};
+  const { appointments, id, doctors, patients, care_takers } = data || {};
 
   const {
-    basic_info: { start_date, details: { start_time, end_time } = {} },
     organizer: {id: organizer_id, category} = {}
   } = appointments[id] || {};
 

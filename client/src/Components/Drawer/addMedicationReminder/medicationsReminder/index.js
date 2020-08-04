@@ -201,10 +201,10 @@ class AddMedicationReminder extends Component {
     } = this.props;
     const { onClose, setFormRef, FormWrapper, handleSubmit } = this;
     const { disabledSubmit } = this.state;
-    const submitButtonProps = {
-      disabled: disabledSubmit,
-      loading: loading
-    };
+    // const submitButtonProps = {
+    //   disabled: disabledSubmit,
+    //   loading: loading
+    // };
     const { members } = this.state;
 
     

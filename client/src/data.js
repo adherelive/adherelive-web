@@ -231,7 +231,8 @@ export const PAGE_INITIAL = {
 
 export const USER_INITIAL_STATE = {};
 
-const medication = {
+
+export const medication = {
   basic_info: {
     medicine_name: "Amoxill 2mg"
     // other data

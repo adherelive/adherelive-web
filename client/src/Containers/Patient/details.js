@@ -19,7 +19,7 @@ const mapStateToProps = (state, ownProps) => {
     const {
         location: {
             state: {
-                showTemplateDrawer = false,
+                // showTemplateDrawer = false,
                 currentCarePlanId = 0
             } = {}
         } = {}

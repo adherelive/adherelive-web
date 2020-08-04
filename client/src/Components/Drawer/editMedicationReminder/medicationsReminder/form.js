@@ -443,17 +443,10 @@ class EditMedicationReminderForm extends Component {
 
   render() {
     const {
-      getFooter,
       disabledEndDate,
       disabledStartDate,
       adjustEndDate,
-      onChangeEventStartTime,
       adjustEventOnStartDateChange,
-      onEventDurationChange,
-      onPrev,
-      onNext,
-      onStartDateChange,
-      addMedicationReminder,
       onPatientChange,
       setUnit,
       formatMessage

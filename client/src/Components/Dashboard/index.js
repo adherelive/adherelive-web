@@ -31,7 +31,7 @@ class Dashboard extends Component {
 
     componentDidMount() {
         const { graphs, getInitialData, searchMedicine, getGraphs } = this.props;
-        getInitialData();
+        // getInitialData();
         getGraphs().then(response => {
             const { status, payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {} } = response;
             if (status) {

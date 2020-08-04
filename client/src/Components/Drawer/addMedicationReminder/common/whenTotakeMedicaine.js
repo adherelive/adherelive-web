@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
-import { Select, Form, Radio, Icon, Tooltip } from "antd";
-import { MinusCircleOutlined } from "@ant-design/icons";
+import { Select, Form, Radio, Icon } from "antd";
+// import { MinusCircleOutlined } from "@ant-design/icons";
 import { injectIntl } from "react-intl";
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 import messages from "../message";
@@ -10,16 +10,16 @@ import { MEDICATION_TIMING } from "../../../../constant";
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
-const { Item: FormItem, List: FormList } = Form;
-const when = [
-  { key: "Before BreakFast", value: "Before BreakFast" },
-  { key: "After BreakFast", value: "After BreakFast" },
-  { key: "Before Lunch", value: "Before Lunch" },
-  { key: "After Lunch", value: "After Lunch" },
-  { key: "Before Dinner", value: "Before Dinner" },
-  { key: "After Dinner", value: "After Dinner" },
-];
+// const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
+const { Item: FormItem } = Form;
+// const when = [
+//   { key: "Before BreakFast", value: "Before BreakFast" },
+//   { key: "After BreakFast", value: "After BreakFast" },
+//   { key: "Before Lunch", value: "Before Lunch" },
+//   { key: "After Lunch", value: "After Lunch" },
+//   { key: "Before Dinner", value: "Before Dinner" },
+//   { key: "After Dinner", value: "After Dinner" },
+// ];
 const { Option } = Select;
 
 const FIELD_NAME = "when_to_take";
@@ -50,7 +50,7 @@ class WhenToTakeMedication extends Component {
   componentDidMount() {
     const {
       form: { validateFields },
-      medication_details: { timings = {} } = {},
+      // medication_details: { timings = {} } = {},
     } = this.props;
     validateFields();
     this.setState({
@@ -104,8 +104,8 @@ class WhenToTakeMedication extends Component {
       }
     });
 
-    const { getFieldValue } = this.props.form;
-    const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
+    // const { getFieldValue } = this.props.form;
+    // const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
 
     const remaining_status = total_status.filter(
       (s) => !selected_timing_overall.includes(s)
@@ -124,7 +124,7 @@ class WhenToTakeMedication extends Component {
   };
 
   getUnitOption = (k) => {
-    const { selected_timing, status, total_status } = this.state;
+    const {  status } = this.state;
     const { getUpdatedList } = this;
     const getList = getUpdatedList(k);
 
@@ -192,8 +192,8 @@ class WhenToTakeMedication extends Component {
   // };
 
   handleSelect = (value, select_box_id) => {
-    const { selected_timing_overall = [], selected_timing = {} } = this.state;
-    const keys = new Set([...selected_timing_overall, value]);
+    const {  selected_timing = {} } = this.state;
+    // const keys = new Set([...selected_timing_overall, value]);
     const updatedSelectTiming = {
       ...selected_timing,
       [select_box_id]: value,
@@ -210,10 +210,10 @@ class WhenToTakeMedication extends Component {
   };
 
   handleDeselect = (value) => {
-    const { selected_timing_overall } = this.state;
-    const updateField = selected_timing_overall.filter(
-      (field) => field !== value
-    );
+    // const { selected_timing_overall } = this.state;
+    // const updateField = selected_timing_overall.filter(
+    //   (field) => field !== value
+    // );
     this.setState({
       // selected_timing_overall: updateField
     });
@@ -254,11 +254,10 @@ class WhenToTakeMedication extends Component {
     };
 
   getFormItems = () => {
-    const { form, medication_details: { timings } = {} } = this.props;
+    const { form } = this.props;
     const { count } = this.state;
     const {
       handleSelect,
-      getUnitOption,
       handleDeselect,
       getInitialValue,
       formatMessage,
@@ -362,17 +361,14 @@ class WhenToTakeMedication extends Component {
     const { form } = this.props;
     const {
       getFormItems,
-      onAddMoreClick,
-      getSelectRender,
       formatMessage,
     } = this;
     const {
-      getFieldDecorator,
-      getFieldError,
       isFieldTouched,
+      getFieldError,
       //getFieldValue
     } = form;
-    const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
+    // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
 
     // const { getInitialValue } = this;

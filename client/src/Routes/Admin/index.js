@@ -1,15 +1,10 @@
-import React, { lazy, Component, Fragment } from "react";
+import React, { lazy, Component } from "react";
 import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-  useLocation,
+  
   withRouter
 } from "react-router-dom";
 // import SideMenu from "../../Components/Sidebar";
 // import BlankState from "../../Containers/BlankState";
-import { PATH } from "../../constant";
 
 const AdminDoctors = lazy(() =>
   import(/* webpackChunkName: "AdminDoctorRouter" */ "./doctor")
@@ -24,7 +19,7 @@ class Admin extends Component {
   }
 
   componentDidMount() {
-    this.setState((prevState, prevProps) => {
+    this.setState(() => {
       return {
         redirecting: false
       };
@@ -33,8 +28,6 @@ class Admin extends Component {
 
   render() {
     // const {authRedirection} = this.props;
-    const { redirecting = false } = this.state;
-    const { authRedirection, authenticated_user, users } = this.props;
     return <AdminDoctors {...this.props}/>;
   }
 }

@@ -1,10 +1,7 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Button, Input, Modal } from "antd";
-import PlacesAutocomplete, {
-    geocodeByAddress,
-    getLatLng
-} from "react-places-autocomplete";
+import PlacesAutocomplete from "react-places-autocomplete";
 
 
 
@@ -95,7 +92,7 @@ class ClinicRegister extends Component {
     render() {
         const { address = '', addressManual = '', pincode = '', landmark = '' } = this.state;
 
-        const { visible, handleCancel, handleOk, location } = this.props;
+        const { visible, location } = this.props;
         return (
             <Modal
                 visible={visible}

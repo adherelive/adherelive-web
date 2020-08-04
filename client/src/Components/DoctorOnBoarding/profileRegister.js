@@ -211,7 +211,7 @@ class Profileregister extends Component {
 
     onNextClick = () => {
         const { history, authenticated_user = 1, users } = this.props;
-        const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
+        // const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
         const validate = this.validateData();
         if (validate) {
             const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' } = this.state;
@@ -266,7 +266,7 @@ class Profileregister extends Component {
     };
 
     renderProfileForm = () => {
-        let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url_saved = '' } = this.state;
+        let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"

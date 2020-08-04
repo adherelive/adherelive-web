@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { DatePicker, Form } from "antd";
-import messages from "../message";
+// import messages from "../message";
 import calendar from "../../../../Assets/images/calendar1.svg";
 import moment from "moment";
 
 import repeatTypeField from "./repeatType";
 
-import { REPEAT_TYPE, EVENT_ACTION } from "../../../../constant";
+import {  EVENT_ACTION } from "../../../../constant";
 
 const { Item: FormItem } = Form;
 const FIELD_NAME = "start_date";
@@ -64,8 +64,8 @@ class StartDate extends Component {
       medicationData = {},
       payload: { id: medication_id } = {}
     } = this.props;
-    const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
-    const repeat = getFieldValue(repeatTypeField.field_name);
+    const {  getInitialValue } = this;
+    // const repeat = getFieldValue(repeatTypeField.field_name);
 
     let { basic_info: { start_date } = {} } = medications[medication_id] || {};
 

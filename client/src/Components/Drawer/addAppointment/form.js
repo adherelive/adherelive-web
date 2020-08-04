@@ -156,9 +156,9 @@ class AddAppointmentForm extends Component {
     setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
   };
 
-  handleStartTimeChange = (time, str) => {
+  handleStartTimeChange = (time) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    const startTime = getFieldValue(START_TIME);
+    // const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
       const newMonth = startDate.get("month");
@@ -176,7 +176,7 @@ class AddAppointmentForm extends Component {
     }
   };
 
-  handleEndTimeChange = (time, str) => {
+  handleEndTimeChange = (time) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
     const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
@@ -208,11 +208,11 @@ class AddAppointmentForm extends Component {
   };
 
   getTreatment = () => {
-    const { patients, payload: { patient_id } = {}, care_plans } = this.props;
+    const { payload: { patient_id } = {}, care_plans } = this.props;
     let treatmentId = 0;
 
     for (let carePlan of Object.values(care_plans)) {
-      let { basic_info: { id = 1, patient_id: patientId = 1 }, treatment_id = 0 } = carePlan;
+      let { basic_info: { patient_id: patientId = 1 }, treatment_id = 0 } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         treatmentId = treatment_id;
       }
@@ -276,7 +276,7 @@ class AddAppointmentForm extends Component {
 
   handleProviderSearch = (data) => {
     try {
-      const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+      const { form: { setFieldsValue } = {} } = this.props;
       if (data) {
 
         setFieldsValue({ [PROVIDER_ID]: data });
@@ -307,7 +307,7 @@ class AddAppointmentForm extends Component {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
     } = this.props;
-    const { fetchingPatients, typeDescription } = this.state;
+    // const { fetchingPatients, typeDescription } = this.state;
     const {
       formatMessage,
       getInitialValue,
@@ -359,16 +359,28 @@ class AddAppointmentForm extends Component {
           )}
         </FormItem>
 
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="type"
+            className="form-label"
+            title="Type"
+          >
+            {'Type'}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
+
         <FormItem
-          label={formatMessage(message.appointmentType)}
-          className='mt24'
+          // label={formatMessage(message.appointmentType)}
+          // className='mt24'
         >
           {getFieldDecorator(APPOINTMENT_TYPE, {
             rules: [
-              {
-                required: true,
-                message: formatMessage(message.error_appointment_type),
-              },
+              // {
+              //   required: true,
+              //   message: formatMessage(message.error_appointment_type),
+              // },
             ],
           })(
             <Select
@@ -383,9 +395,20 @@ class AddAppointmentForm extends Component {
           )}
         </FormItem>
 
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="type description"
+            className="form-label"
+            title="Type Description"
+          >
+            {'Type Description'}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
         <FormItem
           label={formatMessage(message.appointmentTypeDescription)}
-          className='mt24'
+          // className='mt24'
         >
           {getFieldDecorator(APPOINTMENT_TYPE_DESCRIPTION, {
             rules: [

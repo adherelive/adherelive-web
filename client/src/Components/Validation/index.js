@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { injectIntl, FormattedMessage } from "react-intl";
+import { injectIntl } from "react-intl";
 import {  message } from "antd";
 import Loading from '../Common/Loading'
 

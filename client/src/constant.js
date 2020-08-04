@@ -444,6 +444,16 @@ export const FULL_DAYS = {
   SAT: "Sat",
 };
 
+export const FULL_DAYS_NUMBER = {
+  SUN: "1",
+  MON: "2",
+  TUE: "3",
+  WED: "4",
+  THU: "5",
+  FRI: "6",
+  SAT: "7",
+};
+
 export const DAYS_LIST = [
   FULL_DAYS.MON,
   FULL_DAYS.TUE,

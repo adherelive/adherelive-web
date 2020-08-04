@@ -6,7 +6,6 @@ import Organizer from "../dataColumn/organizer";
 import AppointmentDate from "../dataColumn/appointmentDate";
 import Timing from "../dataColumn/timing";
 import Description from "../dataColumn/description";
-import moment from 'moment';
 
 export default props => {
   const { formatMessage } = props || {};

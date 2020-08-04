@@ -254,6 +254,14 @@ class EditAppointmentForm extends Component {
   };
 
   handleTypeSelect = (value) => {
+
+    const {
+      form: { setFieldsValue } = {}
+    } = this.props;
+
+    // resetFields([APPOINTMENT_TYPE_DESCRIPTION]);
+    setFieldsValue({ [APPOINTMENT_TYPE_DESCRIPTION]: null });
+
     let { static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
     let descArray = type_description[value] ? type_description[value] : [];
 
@@ -336,21 +344,16 @@ class EditAppointmentForm extends Component {
   render() {
     let {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
-      auth,
-      users,
+
       appointments,
       appointmentData,
       patientId,
-      patients,
       carePlan = {},
       payload: { id: appointment_id, patient_id } = {},
     } = this.props;
     const { fetchingPatients, typeDescription } = this.state;
     const {
       formatMessage,
-      getInitialValue,
-      getPatientOptions,
-      calendarComp,
       disabledDate,
       handleDateSelect,
       handleStartTimeChange,
@@ -403,7 +406,7 @@ class EditAppointmentForm extends Component {
     }
 
 
-   
+
     let fieldsError = {};
     FIELDS.forEach((value) => {
       const error = isFieldTouched(value) && getFieldError(value);

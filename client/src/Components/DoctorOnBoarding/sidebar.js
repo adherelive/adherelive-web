@@ -4,11 +4,11 @@ import { Menu, Tooltip } from "antd";
 import { PATH } from "../../constant";
 import { withRouter } from "react-router-dom";
 
-const { Item: MenuItem } = Menu || {};
+// const { Item: MenuItem } = Menu || {};
 
 const LOGO = "logo";
 const DASHBOARD = "dashboard";
-const PROFILE = "profile";
+// const PROFILE = "profile";
 
 class SideMenu extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class SideMenu extends Component {
   }
 
   handleItemSelect = ({ selectedKeys }) => {
-    const { history, logout } = this.props;
+    const { history } = this.props;
     switch (selectedKeys[0]) {
       case LOGO:
       case DASHBOARD:
