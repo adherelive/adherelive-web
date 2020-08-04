@@ -10,7 +10,8 @@ const addDoctorForm = Joi.object().keys({
     category: Joi.string().required().valid(USER_CATEGORY.DOCTOR).label("Please select correct category"),
     mobile_number: Joi.string().length(10).regex(/^\d+$/).optional().allow("", null).label("Please enter correct mobile number"),
     prefix: Joi.string().regex(/^\d+$/).required().label("Please select correct prefix"),
-    profile_pic: Joi.string().uri().label("Please check uploaded profile pic")
+    profile_pic: Joi.string().uri().label("Please check uploaded profile pic"),
+    email: Joi.string().optional().allow(""),
 });
 
 const addPatientForm = Joi.object().keys({
