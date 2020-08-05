@@ -351,14 +351,13 @@ class EditAppointmentForm extends Component {
       carePlan = {},
       payload: { id: appointment_id, patient_id } = {},
     } = this.props;
-    const { fetchingPatients, typeDescription } = this.state;
+    // const { fetchingPatients, typeDescription } = this.state;
     const {
       formatMessage,
       disabledDate,
       handleDateSelect,
       handleStartTimeChange,
       handleEndTimeChange,
-      getPatientName,
     } = this;
     let pId = patientId ? patientId.toString() : patient_id;
     let { basic_info: { description, start_date, start_time, end_time, details: { treatment_id = "", reason = '', type = '', type_description = '', critical = false } = {} } = {}, provider_id = 0, provider_name = '' } = appointments[appointment_id] || {};
@@ -401,7 +400,7 @@ class EditAppointmentForm extends Component {
     }
 
     if (!start_date) {
-      let minutesToAdd = 30 - (moment().minutes()) % 30;
+      // let minutesToAdd = 30 - (moment().minutes()) % 30;
       start_date = moment().add('days', 2)
     }
 
@@ -441,17 +440,23 @@ class EditAppointmentForm extends Component {
           )}
         </FormItem>
 
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="type"
+            className="form-label"
+            title={formatMessage(message.appointmentType)}
+          >
+            {formatMessage(message.appointmentType)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
+
         <FormItem
-          label={formatMessage(message.appointmentType)}
-          className='mt24'
+        // label={formatMessage(message.appointmentType)}
+        // className='mt24'
         >
           {getFieldDecorator(APPOINTMENT_TYPE, {
-            rules: [
-              {
-                required: true,
-                message: formatMessage(message.error_appointment_type),
-              },
-            ],
             initialValue: type ? type : null
           })(
             <Select
@@ -466,9 +471,20 @@ class EditAppointmentForm extends Component {
           )}
         </FormItem>
 
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="type description"
+            className="form-label"
+            title={formatMessage(message.appointmentTypeDescription)}
+          >
+            {formatMessage(message.appointmentTypeDescription)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
         <FormItem
-          label={formatMessage(message.appointmentTypeDescription)}
-          className='mt24'
+        // label={formatMessage(message.appointmentTypeDescription)}
+        // className='mt24'
         >
           {getFieldDecorator(APPOINTMENT_TYPE_DESCRIPTION, {
             rules: [
@@ -500,17 +516,23 @@ class EditAppointmentForm extends Component {
           )}
         </FormItem>
 
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="provider"
+            className="form-label"
+            title={formatMessage(message.provider)}
+          >
+            {formatMessage(message.provider)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
         <FormItem
-          label={formatMessage(message.provider)}
-          className='mt24'
+        // label={formatMessage(message.provider)}
+        // className='mt24'
         >
           {getFieldDecorator(PROVIDER_ID, {
-            rules: [
-              {
-                required: true,
-                message: formatMessage(message.error_provider),
-              },
-            ],
+
             initialValue: provider_id ? provider_id : null
           }
           )(
@@ -549,16 +571,24 @@ class EditAppointmentForm extends Component {
         </FormItem>
 
 
+        <div className='flex mt24 direction-row flex-grow-1 mt-6'>
+          <label
+            htmlFor="date"
+            className="form-label"
+            title={formatMessage(message.start_date)}
+          >
+            {formatMessage(message.start_date)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
         <FormItem
-          label={formatMessage(message.start_date)}
-          className="full-width mt16 ant-date-custom-edit"
+          // label={formatMessage(message.start_date)}
+          className="full-width mt-10 ant-date-custom-edit"
         >
           {getFieldDecorator(DATE, {
             rules: [
-              {
-                required: true,
-                message: formatMessage(message.error_select_date),
-              },
+              
             ],
             initialValue: moment(start_date),
           })(
@@ -578,136 +608,163 @@ class EditAppointmentForm extends Component {
           {/*/>*/}
         </FormItem>
 
-        <div className="wp100 flex justify-space-between align-center flex-1">
-          <FormItem
-            label={formatMessage(message.start_time)}
-            className="flex-grow-1 mr16"
-            validateStatus={fieldsError[START_TIME] ? "error" : ""}
-            help={fieldsError[START_TIME] || ""}
-          >
-            {getFieldDecorator(START_TIME, {
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage(message.error_select_start_time),
-                }
-              ],
-              initialValue: moment(start_time),
-            })(
-              <TimePicker
-                use12Hours
-                onChange={handleStartTimeChange}
-                minuteStep={15}
-                format="h:mm a"
-                className="wp100 ant-time-custom"
-              // getPopupContainer={this.getParentNode}
-              />
-            )}
-          </FormItem>
 
-          {/* <div className="w200 text-center mt8">
-            <img
-              src={seperator}
-              alt="between seperator"
-              className="mr16 ml16"
-            />
-          </div> */}
+        <div className="wp100 mt-6 flex justify-space-between align-center flex-1">
+          <div className='flex flex-1 direction-column mr16'>
+            <div className='flex mt24 direction-row flex-grow-1'>
+              <label
+                htmlFor="start_time"
+                className="form-label"
+                title={formatMessage(message.start_time)}
+              >
+                {formatMessage(message.start_time)}
+              </label>
 
-          <FormItem
-            label={formatMessage(message.end_time)}
-            className="flex-grow-1"
-            validateStatus={fieldsError[END_TIME] ? "error" : ""}
-            help={fieldsError[END_TIME] || ""}
-          >
-            {getFieldDecorator(END_TIME, {
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage(message.error_select_end_time),
-                },
-              ],
-              initialValue: moment(end_time),
-            })(
-              <TimePicker
-                use12Hours
-                minuteStep={15}
-                onChange={handleEndTimeChange}
-                format="h:mm a"
-                className="wp100 ant-time-custom"
-              // getPopupContainer={this.getParentNode}
-              />
-            )}
-          </FormItem>
+              <div className="star-red">*</div>
+            </div>
+            <FormItem
+              // label={formatMessage(message.start_time)}
+              className="flex-grow-1 mt-4"
+              validateStatus={fieldsError[START_TIME] ? "error" : ""}
+              help={fieldsError[START_TIME] || ""}
+            >
+              {getFieldDecorator(START_TIME, {
+                
+                initialValue: moment(start_time),
+              })(
+                <TimePicker
+                  use12Hours
+                  onChange={handleStartTimeChange}
+                  minuteStep={15}
+                  format="h:mm a"
+                  className="wp100 ant-time-custom"
+                // getPopupContainer={this.getParentNode}
+                />
+              )}
+            </FormItem>
+          </div>
+
+
+          <div className='flex flex-1 direction-column'>
+            <div className='flex mt24 direction-row flex-grow-1'>
+              <label
+                htmlFor="end_time"
+                className="form-label"
+                title={formatMessage(message.end_time)}
+              >
+                {formatMessage(message.end_time)}
+              </label>
+
+              <div className="star-red">*</div>
+            </div>
+            <FormItem
+              // label={formatMessage(message.end_time)}
+              className="flex-grow-1 mt-4"
+              validateStatus={fieldsError[END_TIME] ? "error" : ""}
+              help={fieldsError[END_TIME] || ""}
+            >
+              {getFieldDecorator(END_TIME, {
+                initialValue: moment(end_time),
+              })(
+                <TimePicker
+                  use12Hours
+                  minuteStep={15}
+                  onChange={handleEndTimeChange}
+                  format="h:mm a"
+                  className="wp100 ant-time-custom"
+                // getPopupContainer={this.getParentNode}
+                />
+              )}
+            </FormItem>
+          </div>
         </div>
 
-        <FormItem
-          // label={formatMessage(message.treatment_text)}
-          // className="full-width ant-date-custom"
-          className='mb-24'
-        >
-          {getFieldDecorator(TREATMENT, {
-            initialValue: treatment_id ? treatment_id : null,
-          })(
-            <div />
-            // <Input
-            //   autoFocus
-            //   placeholder={formatMessage(message.treatment_text_placeholder)}
-            // />
-            // <Select
-            //   className="form-inputs-ap drawer-select"
-            //   autoComplete="off"
-            //   placeholder="Select Treatment"
-            //   disabled={treatment_id ? true : false}
-            //   // onSelect={this.setTreatment}
-            //   // onDeselect={handleDeselect}
-            //   suffixIcon={null}
-            // >
-            //   {this.getTreatmentOption()}
-            // </Select>
-          )}
-        </FormItem>
+          <FormItem
+            // label={formatMessage(message.treatment_text)}
+            // className="full-width ant-date-custom"
+            className='mb-24'
+          >
+            {getFieldDecorator(TREATMENT, {
+              initialValue: treatment_id ? treatment_id : null,
+            })(
+              <div />
+              // <Input
+              //   autoFocus
+              //   placeholder={formatMessage(message.treatment_text_placeholder)}
+              // />
+              // <Select
+              //   className="form-inputs-ap drawer-select"
+              //   autoComplete="off"
+              //   placeholder="Select Treatment"
+              //   disabled={treatment_id ? true : false}
+              //   // onSelect={this.setTreatment}
+              //   // onDeselect={handleDeselect}
+              //   suffixIcon={null}
+              // >
+              //   {this.getTreatmentOption()}
+              // </Select>
+            )}
+          </FormItem>
 
-        <FormItem
-          label={formatMessage(message.purpose_text)}
-          className="full-width mt16 ant-date-custom"
-        >
-          {getFieldDecorator(REASON, {
-            rules: [
-              {
-                required: true,
-                message: formatMessage(message.error_purpose),
-              },
-              {
-                pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
-                message: formatMessage(message.error_valid_purpose)
-              }
-            ],
-            initialValue: reason,
-          })(
-            <Input
-              autoFocus
-              className='mt4'
-              placeholder={formatMessage(message.purpose_text_placeholder)}
-            />
-          )}
-        </FormItem>
 
-        <FormItem
-          label={formatMessage(message.description_text)}
-          className="full-width ant-date-custom"
-        >
-          {getFieldDecorator(DESCRIPTION, {
-            initialValue: description
-          })(
-            <TextArea
-              autoFocus
-              className='mt4'
-              maxLength={1000}
-              placeholder={formatMessage(message.description_text_placeholder)}
-              rows={4}
-            />
-          )}
-        </FormItem>
+          <div className='flex mt24 direction-row flex-grow-1'>
+            <label
+              htmlFor="purpose"
+              className="form-label"
+              title={formatMessage(message.purpose_text)}
+            >
+              {formatMessage(message.purpose_text)}
+            </label>
+
+            <div className="star-red">*</div>
+          </div>
+          <FormItem
+            // label={formatMessage(message.purpose_text)}
+            className="full-width ant-date-custom"
+          >
+            {getFieldDecorator(REASON, {
+              rules: [
+              
+                {
+                  pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
+                  message: formatMessage(message.error_valid_purpose)
+                }
+              ],
+              initialValue: reason,
+            })(
+              <Input
+                autoFocus
+                className='mt4'
+                placeholder={formatMessage(message.purpose_text_placeholder)}
+              />
+            )}
+          </FormItem>
+
+          <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="notes"
+            className="form-label"
+            title={formatMessage(message.description_text)}
+          >
+            {formatMessage(message.description_text)}
+          </label>
+        </div>
+          <FormItem
+            // label={formatMessage(message.description_text)}
+            className="full-width ant-date-custom"
+          >
+            {getFieldDecorator(DESCRIPTION, {
+              initialValue: description
+            })(
+              <TextArea
+                autoFocus
+                className='mt4'
+                maxLength={1000}
+                placeholder={formatMessage(message.description_text_placeholder)}
+                rows={4}
+              />
+            )}
+          </FormItem>
       </Form>
     );
   }

@@ -130,7 +130,9 @@ class EditAppointment extends Component {
             treatment_id: treatment,
           };
 
-        if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
+        if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
+          message.error('Please fill all mandatory fields.')
+        } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
@@ -237,7 +239,7 @@ class EditAppointment extends Component {
   getDeleteButton = () => {
     const { handleDelete } = this;
     const { loading, deleteAppointmentOfTemplate, addAppointment, hideAppointment } = this.props;
-     if (addAppointment) {
+    if (addAppointment) {
       return (
         <Button onClick={hideAppointment} style={{ marginRight: 8 }}>
           Cancel

@@ -43,7 +43,7 @@ class AddAppointment extends Component {
     // const { basic_info: { user_id } = {} } = patients[patient_id] || {};
     const {
       props: {
-        form: { validateFields,resetFields },
+        form: { validateFields, resetFields },
       },
     } = formRef;
 
@@ -112,7 +112,9 @@ class AddAppointment extends Component {
             treatment_id: treatment,
           };
 
-        if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
+        if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
+          message.error('Please fill all mandatory fields.')
+        } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
@@ -156,7 +158,7 @@ class AddAppointment extends Component {
 
   onClose = () => {
     const { close } = this.props;
-    const{formRef}=this;
+    const { formRef } = this;
     const {
       props: {
         form: { resetFields },

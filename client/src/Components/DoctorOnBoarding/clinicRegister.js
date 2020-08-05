@@ -291,13 +291,23 @@ class ClinicRegister extends Component {
     }
 
     onNextClick = () => {
-        const { history, authenticated_user } = this.props;
+        const { history } = this.props;
         const validate = this.validateData();
         if (validate) {
             const { clinics = {} } = this.state;
             let newClinics = Object.values(clinics);
             for (let clinic of newClinics) {
-                clinic.time_slots = clinic.timings;
+                let { timings = {} } = clinic;
+                let time_slots = {
+                    [FULL_DAYS_NUMBER.MON]: timings[FULL_DAYS.MON],
+                    [FULL_DAYS_NUMBER.TUE]: timings[FULL_DAYS.TUE],
+                    [FULL_DAYS_NUMBER.WED]: timings[FULL_DAYS.WED],
+                    [FULL_DAYS_NUMBER.THU]: timings[FULL_DAYS.THU],
+                    [FULL_DAYS_NUMBER.FRI]: timings[FULL_DAYS.FRI],
+                    [FULL_DAYS_NUMBER.SAT]: timings[FULL_DAYS.SAT],
+                    [FULL_DAYS_NUMBER.SUN]: timings[FULL_DAYS.SUN],
+                }
+                clinic.time_slots = time_slots;
                 delete clinic.timings;
                 delete clinic.timingsKeys;
             }
