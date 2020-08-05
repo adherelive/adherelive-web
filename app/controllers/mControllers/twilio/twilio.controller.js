@@ -1,8 +1,8 @@
 // const Log = require("../../../libs/log")("twilio.controller");
 import twilioTokenService from "../../services/twilio/tokenService";
 import faker from "faker";
-import twilioService from "../../services/twilio/twilio.service";
-import Controller from "../";
+import twilioService from "../../../services/twilio/twilio.service";
+import Controller from "../../";
 
 class TwilioController extends Controller {
     async generateTwilioChatAccessToken(req, res) {
@@ -71,4 +71,4 @@ class TwilioController extends Controller {
     }
 }
 
-module.exports = new TwilioController();
+export default new TwilioController();

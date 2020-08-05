@@ -63,4 +63,4 @@ class TwilioService {
     }
 }
 
-module.exports = new TwilioService();
+export default new TwilioService();
