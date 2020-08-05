@@ -33,6 +33,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
             college_id: Joi.string().regex(/^\d+$/).required("College is required"),
             degree_id: Joi.string().regex(/^\d+$/).required("Degree is required"),
             photos: Joi.array().items(Joi.string().uri().label("Please upload valid qualification document")),
+            year: Joi.number().max(3000).required("Qualification Year is required"),
             id: Joi.string().optional().allow(0, null),
             photo: Joi.array().optional().allow("")
         })
@@ -56,6 +57,7 @@ const addQualificationStepForm = Joi.object().keys({
     qualification: Joi.object().keys({
        college_id: Joi.string().regex(/^\d+$/).required("College is required"),
        degree_id: Joi.string().regex(/^\d+$/).required("Degree is required"),
+        year: Joi.number().max(3000).required("Qualification Year is required"),
         photos: Joi.array().items(Joi.string().uri().label("Please upload valid qualification document")),
         id: Joi.number().optional().allow(0, null),
     }),
@@ -68,6 +70,7 @@ const addRegistrationStepForm = Joi.object().keys({
         Joi.object().keys({
             college_id: Joi.string().regex(/^\d+$/).required("College is required"),
             degree_id: Joi.string().regex(/^\d+$/).required("Degree is required"),
+            year: Joi.number().max(3000).required("Qualification Year is required"),
             photos: Joi.array().items(Joi.string().uri().label("Please upload valid qualification document")),
             id: Joi.number().optional().allow(0, null),
         })
