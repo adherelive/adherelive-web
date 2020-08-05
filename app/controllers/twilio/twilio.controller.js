@@ -8,8 +8,8 @@ class TwilioController extends Controller {
     constructor() {
         super();
     }
-    
-    async generateTwilioChatAccessToken(req, res) {
+
+    generateTwilioChatAccessToken = async (req, res) => {
         try {
             const deviceId = req.query.device;
             const identity = req.query.identity;
@@ -30,7 +30,7 @@ class TwilioController extends Controller {
         }
     }
 
-    async generateTwilioVideoAccessToken(req, res) {
+    generateTwilioVideoAccessToken = async (req, res) => {
         try {
             const userId = req.query.userId ? req.query.userId : null;
             const identity = userId ? userId : faker.name.findName();
@@ -52,7 +52,7 @@ class TwilioController extends Controller {
         }
     }
 
-    async getConnectedParticipants(req, res) {
+    getConnectedParticipants = async (req, res) => {
         try {
             const { roomId } = req.params;
 
@@ -75,4 +75,4 @@ class TwilioController extends Controller {
     }
 }
 
-module.exports = new TwilioController();
+export default new TwilioController();

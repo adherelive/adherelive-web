@@ -8,10 +8,11 @@ class TwilioController extends Controller {
         super();
     }
 
-    async generateTwilioChatAccessToken(req, res) {
+    generateTwilioChatAccessToken = async (req, res) => {
         try {
             const deviceId = req.query.device;
-            const identity = req.query.identity;
+            const {userDetails: {userId}} = req;
+            const identity = req.query.identity ? req.query.identity : userId;
 
             const token = await twilioService.chatTokenGenerator(identity, deviceId);
 
@@ -22,16 +23,17 @@ class TwilioController extends Controller {
             // response.setMessage("Created new chat token with userId");
             // return res.send(response.getResponse());
         } catch (error) {
-            return this.raiseServerError(res, 500, error, error.message());
+            return this.raiseServerError(res);
             // let response = new Response(false, 500);
             // response.setError({ error: err });
             // res.status(500).json(response.getResponse());
         }
     }
 
-    async generateTwilioVideoAccessToken(req, res) {
+    generateTwilioVideoAccessToken = async (req, res) => {
         try {
-            const userId = req.query.userId ? req.query.userId : null;
+            // const userId = req.query.userId ? req.query.userId : null;
+            const {userDetails: {userId}} = req;
             const identity = userId ? userId : faker.name.findName();
 
             const token = await twilioService.videoTokenGenerator(identity);
@@ -51,7 +53,7 @@ class TwilioController extends Controller {
         }
     }
 
-    async getConnectedParticipants(req, res) {
+    getConnectedParticipants = async (req, res) => {
         try {
             const { roomId } = req.params;
 
