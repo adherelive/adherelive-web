@@ -67,7 +67,7 @@ class MobileUserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "Invalid Credentials");
+        return this.raiseClientError(res, 422, user, "Mobile Number doesn't exists");
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
