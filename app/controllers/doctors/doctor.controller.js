@@ -344,11 +344,11 @@ class DoctorController extends Controller {
         toAddress: userWrapper.getEmail(),
         templateName: EMAIL_TEMPLATE_NAME.VERIFIED_DOCTOR,
         templateData: {
-          title: "Patient",
+          title: "Doctor",
           link: process.config.WEB_URL,
           inviteCard: "",
-          mainBodyText: `Greetings Dr.${first_name},We are really happy to inform you that your account has been verified.`,
-          subBodyText: "Please click the below link to your account",
+          mainBodyText: `Greetings from Adhere! We are really happy to inform you that your account has been verified.`,
+          subBodyText: "To enable Add Patient option on your Dashboard, please click on the link below",
           buttonText: "Verify",
           host: process.config.WEB_URL,
           contactTo: "patientEngagement@adhere.com"

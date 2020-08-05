@@ -59,7 +59,7 @@ const messages = defineMessages({
     address_text: {
         id: "app.admin.doctors.details.address.text",
         description: "",
-        defaultMessage: "Address"
+        defaultMessage: "City"
     },
     verified_text: {
         id: "app.admin.doctors.details.verified.text",

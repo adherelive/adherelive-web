@@ -80,16 +80,6 @@ class AppointmentService {
       const {participant_two_id, participant_two_type} = participantTwo || {};
       const appointments = await Appointments.findAll({
         where: {
-          // [Op.or]: [
-          //   {
-          //     participant_one_id,
-          //     participant_one_type,
-          //   },
-          //   {
-          //     participant_two_id,
-          //     participant_two_type,
-          //   }
-          // ],
           [Op.or]: [
             {
               participant_one_id,

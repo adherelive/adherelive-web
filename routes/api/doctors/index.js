@@ -18,21 +18,20 @@ router.post(
 
 router.post(
     "/details",
-    // validator.validateDoctorQualificationData,
+    validator.validateDoctorQualificationData,
     // todo :: wip
     DoctorController.updateDoctorQualificationRegistration
 );
 
 router.post(
     "/qualifications",
-    // validator.validateDoctorQualificationData,
+    validator.validateQualificationStepData,
     // todo :: wip
     DoctorController.updateQualificationStep
 );
 
 router.post(
     "/qualifications/docs",
-    // validator.validateDoctorQualificationData,
     // todo :: wip
     upload.single("files"),
     DoctorController.updateQualificationDocs
@@ -40,7 +39,7 @@ router.post(
 
 router.post(
     "/registrations",
-    // validator.validateDoctorQualificationData,
+    validator.validateRegistrationStepData,
     // todo :: wip
     DoctorController.updateRegistrationStep
 );
@@ -56,7 +55,7 @@ router.post(
 router.post(
     "/clinics",
     // Authenticate,
-    // validator.validateDoctorQualificationData,
+    validator.validateClinicData,
     // todo :: wip
     DoctorController.updateDoctorClinics
 );
