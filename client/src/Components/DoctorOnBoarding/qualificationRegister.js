@@ -110,7 +110,7 @@ class QualificationRegister extends Component {
         let key = uuid();
 
         let qualification = {};
-        let { basic_info: { year = '', college_id = '', degree_id = '', id = 0}, upload_document_ids = [] } = doctor_qualifications[qualifi];
+        let { basic_info: { year = '', college_id = '', degree_id = '', id = 0 }, upload_document_ids = [] } = doctor_qualifications[qualifi];
 
         qualification.id = id;
         qualification.year = year;
@@ -162,7 +162,7 @@ class QualificationRegister extends Component {
           registration[key].photos = photos;
           registrationKeys.push(key);
         }
-       }
+      }
 
     } else {
       let key1 = uuid();
@@ -279,9 +279,9 @@ class QualificationRegister extends Component {
 
   onUploadComplete = async ({ files = [] }, key) => {
 
-    const { docs = [],  speciality = '', gender = '' } = this.state;
+    const { docs = [], speciality = '', gender = '' } = this.state;
 
-     this.setState({ docs: [...docs, ...files] }, async () => {
+    this.setState({ docs: [...docs, ...files] }, async () => {
       //  async () => {
 
       const { docs, education } = this.state;
@@ -290,7 +290,6 @@ class QualificationRegister extends Component {
         let newPhotos = newEducation[key].photos;
         let newPhoto = newEducation[key].photo;
         const { registerQualification } = this.props;
-        const { authenticated_user } = this.props;
         newEducation[key].photos = [...newPhotos, ...docs];
         newEducation[key].photo.forEach((item, index) => {
           if (typeof (item) != 'string') {
@@ -298,8 +297,8 @@ class QualificationRegister extends Component {
           }
         })
 
-        const { degree_id = '', year = '', college_id = '', photos = [], id = 0 } = newEducation[key];
-        let qualData = { degree_id, year, college_id, photos, id };
+        let { degree_id = '', year = '', college_id = '', photos = [], id = 0 } = newEducation[key];
+        let qualData = { degree_id: degree_id.toString(), year, college_id: college_id.toString(), photos, id: id.toString() };
         let qualificationData = { speciality, gender, qualification: qualData };
         let response = await registerQualification(qualificationData)
         // .then(response => {
@@ -310,7 +309,7 @@ class QualificationRegister extends Component {
             newEducation[key].id = qualification_id;
           }
 
-          
+
           this.setState({
             docs: [],
             education: newEducation
@@ -360,9 +359,15 @@ class QualificationRegister extends Component {
           }
         })
 
-        const { number = '', registration_council_id = '', year, expiryDate = '', photos = [], id = 0 } = newRegistration[key];
-        let regData = { number, registration_council_id, year, expiry_date: expiryDate, photos, id };
-        let registrationData = { speciality, gender, qualification_details: Object.values(education), registration: regData };
+        let { number = '', registration_council_id = '', year, expiryDate = '', photos = [], id = 0 } = newRegistration[key];
+        let regData = { number, registration_council_id: registration_council_id.toString(), year, expiry_date: expiryDate, photos, id: id.toString() };
+        let newEdu = [];
+        for (let edu of Object.values(education)) {
+          let { college_id = '', degree_id = '', id = '', photos = [], year = '' } = edu;
+          let localEdu = { college_id: college_id.toString(), degree_id: degree_id.toString(), id: id.toString(), photos, year };
+          newEdu.push(localEdu);
+        }
+        let registrationData = { speciality, gender, qualification_details: newEdu, registration: regData };
         let response = await registerRegistration(registrationData, userId)
         // .then(response => {
         const { status, statusCode, payload: { data: { registration_id = 0 } = {} } = {} } = response;
@@ -372,7 +377,7 @@ class QualificationRegister extends Component {
             newRegistration[key].id = registration_id;
           }
 
-        
+
           this.setState({
             docsReg: [],
             registration: newRegistration
@@ -404,18 +409,18 @@ class QualificationRegister extends Component {
   customRequest = key => async ({ file, filename, onError, onProgress, onSuccess }) => {
 
     const { onUploadComplete } = this;
-   
-    let {  education = {} } = this.state;
+
+    let { education = {} } = this.state;
 
 
     let qualification = education[key];
 
-    let {  degree_id = '', college_id = '', year = '' } = qualification;
+    let { degree_id = '', college_id = '', year = '' } = qualification;
 
-   
+
     // const { basic_info: { id = 1 } = {} } = authenticated_user || {};
     // let qualificationData = { degree_id, college_id, year };
-    
+
 
     let data = new FormData();
     data.append("files", file, file.name);
@@ -445,13 +450,13 @@ class QualificationRegister extends Component {
   customRequestRegistration = key => async ({ file, filename, onError, onProgress, onSuccess }) => {
 
     const { onUploadCompleteRegistration } = this;
-   
-    let { registration = {}} = this.state;
+
+    let { registration = {} } = this.state;
 
 
     let newReg = registration[key];
 
-   
+
 
     let data = new FormData();
     data.append("files", file, file.name);
@@ -487,7 +492,7 @@ class QualificationRegister extends Component {
 
       let uid = item.uid;
       let push = true;
-     
+
 
       if (typeof (item) == 'object') {
         for (let photo of photos) {
@@ -526,7 +531,7 @@ class QualificationRegister extends Component {
 
       let uid = item.uid;
       let push = true;
-     
+
 
       if (typeof (item) == 'object') {
         for (let photo of photos) {
@@ -746,7 +751,7 @@ class QualificationRegister extends Component {
   handleBeforeUpload = key => (file) => {
     let { education = {} } = this.state;
     let { photos = [] } = education[key];
-    
+
     for (let photo of photos) {
       let fileName = file.name
       let newFileName = fileName.replace(/\s/g, '');
@@ -1032,7 +1037,7 @@ class QualificationRegister extends Component {
   }
 
   renderRegistration = () => {
-    let { registration = {}, registrationKeys = [], fileList = []} = this.state;
+    let { registration = {}, registrationKeys = [], fileList = [] } = this.state;
 
 
     const uploadButton = (
@@ -1218,12 +1223,25 @@ class QualificationRegister extends Component {
   }
 
   onNextClick = () => {
-    const { history, authenticated_user } = this.props;
+    const { history } = this.props;
     const validate = this.validateData();
     if (validate) {
       const { speciality = '', gender = '', registration = {}, education = {} } = this.state;
-      let newEducation = Object.values(education);
-      let newRegistration = Object.values(registration);
+      // let newEducation = Object.values(education);
+      let newEducation = [];
+      for (let edu of Object.values(education)) {
+        let { college_id = '', degree_id = '', id = '', photos = [], year = '' } = edu;
+        let localEdu = { college_id: college_id.toString(), degree_id: degree_id.toString(), id: id.toString(), photos, year };
+        newEducation.push(localEdu);
+      }
+      // let newRegistration = Object.values(registration);
+      let newRegistration = []
+      for (let reg of Object.values(registration)) {
+        let { expiryDate = '', registration_council_id = '', number = '', photos = [], year = '', id = '' } = reg;
+        let localReg = { expiry_date:expiryDate, registration_council_id: registration_council_id.toString(), id: id.toString(), number, photos, year };
+        newRegistration.push(localReg);
+      }
+
       newEducation.forEach((edu, index) => {
         // delete edu.photo;
       })
