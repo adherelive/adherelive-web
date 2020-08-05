@@ -184,7 +184,7 @@ class PatientDetailsDrawer extends Component {
                 const { searchTreatment } = this.props;
                 this.setState({ fetchingTreatment: true });
                 const response = await searchTreatment(data);
-                const { status, payload: { data: responseData, message } = {} } = response;
+                const { status } = response;
                 if (status) {
                     this.setState({ fetchingTreatment: false });
                 } else {
@@ -206,7 +206,7 @@ class PatientDetailsDrawer extends Component {
                 const { searchSeverity } = this.props;
                 this.setState({ fetchingSeverity: true });
                 const response = await searchSeverity(data);
-                const { status, payload: { data: responseData, message } = {} } = response;
+                const { status } = response;
                 if (status) {
                     this.setState({ fetchingSeverity: false });
                 } else {
@@ -231,8 +231,8 @@ class PatientDetailsDrawer extends Component {
         let year = dtToday.getFullYear();
 
         let maxDate = year + '-0' + month + '-' + day;
-       
-        const { mobile_number = '', name = '', gender = '', date_of_birth = {}, treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+
+        const { mobile_number = '', name = '', condition = '', prefix = '' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -309,6 +309,7 @@ class PatientDetailsDrawer extends Component {
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Condition"
+                    value={this.state.condition}
                     onChange={this.setCondition}
                     onSearch={this.handleConditionSearch}
                     notFoundContent={this.state.fetchingCondition ? <Spin size="small" /> : 'No match found'}
@@ -334,6 +335,7 @@ class PatientDetailsDrawer extends Component {
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Severity"
+                    value={this.state.severity}
                     onChange={this.setSeverity}
                     onSearch={this.handleSeveritySearch}
                     notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : 'No match found'}
@@ -385,7 +387,7 @@ class PatientDetailsDrawer extends Component {
 
 
     validateData = () => {
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+        const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
         if (!prefix) {
@@ -433,6 +435,19 @@ class PatientDetailsDrawer extends Component {
 
     onClose = () => {
         const { close } = this.props;
+        this.setState({
+            mobile_number: '',
+            name: '',
+            gender: '',
+            date_of_birth: '',
+            treatment: '',
+            severity: '',
+            condition: '',
+            prefix: "91",
+            fetchingCondition: false,
+            fetchingTreatment: false,
+            fetchingSeverity: false
+        });
         close();
     };
 

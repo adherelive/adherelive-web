@@ -35,8 +35,6 @@ class WhenToTakeForm extends Component {
     const { count } = this.state;
     const {
       getFieldDecorator,
-      getFieldError,
-      isFieldTouched,
       //getFieldValue
     } = form;
     return count.map((details, index) => {

@@ -244,7 +244,7 @@ class TemplateDrawer extends Component {
                 {
                     appointmentKeys.map(key => {
                         const { reason = '', schedule_data: { description = '', date = '', start_time = '' } = {}, time_gap = '' } = appointments[key];
-                        let timeToShow = date && start_time ? `${moment(date).format('ll')} ${moment(date).format('hh:mm')}` : date ? moment(date).format('ll') : '';
+                        // let timeToShow = date && start_time ? `${moment(date).format('ll')} ${moment(date).format('hh:mm')}` : date ? moment(date).format('ll') : '';
                         return (
 
                             <div className='flex wp100 flex-grow-1 align-center'>
@@ -275,7 +275,7 @@ class TemplateDrawer extends Component {
 
         for (let medication of medicationsData) {
             const { medicine = "", medicineType = "", medicine_id = "",
-                schedule_data: { end_date = moment().add('days', 5), quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
+                schedule_data: {  quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
                     start_time = moment(), strength = 0, unit = "", when_to_take = [] } = {} } = medication;
 
             if (!medicine || !medicineType || !medicine_id || !quantity || !repeat || !repeat_days.length || !start_date
@@ -286,7 +286,7 @@ class TemplateDrawer extends Component {
         }
 
         for (let appointment of appointmentsData) {
-            let { reason = '', schedule_data: { date = '', description = '',
+            let { reason = '', schedule_data: { date = '',
                 end_time = '', start_time = '', treatment_id = '' } = {} } = appointment;
 
             if (!reason || !date || !end_time || !start_time || !treatment_id) {
@@ -308,9 +308,9 @@ class TemplateDrawer extends Component {
         let appointmentsData = Object.values(appointments);
         for (let medication in medicationsData) {
             let newMed = medicationsData[medication];
-            let { medicine = "", medicineType = "", medicine_id = "",
-                schedule_data: { end_date = '', quantity = 0, repeat = "", repeat_days = [], start_date = '',
-                    start_time = '', strength = 0, unit = "", when_to_take = [], duration } = {} } = newMed;
+            let { 
+                schedule_data: { end_date = '',  start_date = '',
+                    start_time = '',  duration } = {} } = newMed;
             if (!start_time && !start_date && !end_date) {
                 medicationsData[medication].schedule_data.start_time = moment();
                 medicationsData[medication].schedule_data.start_date = moment();
@@ -323,15 +323,15 @@ class TemplateDrawer extends Component {
                 medicationsData[medication].schedule_data.start_date = moment();
             }
             if (!end_date) {
-                medicationsData[medication].schedule_data.end_date = moment(medicationsData[medication].schedule_data.start_date).add('days', duration);;
+                medicationsData[medication].schedule_data.end_date = moment(medicationsData[medication].schedule_data.start_date).add('days', duration);
             }
         }
 
         for (let appointment in appointmentsData) {
 
             let newAppointment = appointmentsData[appointment];
-            let { reason = '', provider_id, provider_name = 0, schedule_data: { date = '', description = '',
-                end_time = '', start_time = '', treatment_id = '', type = '', type_description = '', critical = 0, appointment_type = '' } = {}, time_gap = '' } = newAppointment;
+            let { reason = '',  schedule_data: { date = '', 
+                end_time = '', start_time = '', treatment_id = '', type = '',  appointment_type = '' } = {}, time_gap = '' } = newAppointment;
             appointmentsData[appointment].schedule_data.type = appointment_type ? appointment_type : type;
             if (!date && !start_time && !end_time) {
                 // let currMinutes=moment().minutes();
@@ -464,7 +464,6 @@ class TemplateDrawer extends Component {
         let { date = {},
             description = "",
             end_time = {},
-            id = '',
             critical,
             type = '',
             type_description = '',

@@ -17,12 +17,10 @@ const MALE = 'm';
 const FEMALE = 'f';
 const OTHER = 'o';
 
-const { YearPicker } = DatePicker;
 
 
 const { Option } = Select;
 
-let wait = ms => new Promise((r, j) => setTimeout(r, ms))
 
 
 class QualificationRegister extends Component {
@@ -66,7 +64,7 @@ class QualificationRegister extends Component {
 
     const { getDoctorQualificationRegisterData } = this.props;
     await getDoctorQualificationRegisterData();
-    const { authenticated_user = '', users, doctors = {}, degrees = {}, colleges = {}, councils = {} } = this.props;
+    const { authenticated_user = '', doctors = {} } = this.props;
     let docGender = '';
     let docSpeciality = '';
     let doctorId = 0;
@@ -85,7 +83,7 @@ class QualificationRegister extends Component {
     }
 
     const { onBoarding = {}, doctor_registrations = {}, doctor_qualifications = {}, upload_documents = {} } = this.props;
-    let { qualificationData: { speciality = '', gender = '', qualification_details = [] } = {} } = onBoarding || {};
+    // let { qualificationData: { speciality = '', gender = '', qualification_details = [] } = {} } = onBoarding || {}; 
     // registration_year=registration_year?registration_year:parseInt(moment().format("YYYY"));
     let educationKeys = [];
     let education = {};
@@ -112,7 +110,7 @@ class QualificationRegister extends Component {
         let key = uuid();
 
         let qualification = {};
-        let { basic_info: { year = '', college_id = '', degree_id = '', id = 0, doctor_id = 0 }, upload_document_ids = [], expiry_date = '' } = doctor_qualifications[qualifi];
+        let { basic_info: { year = '', college_id = '', degree_id = '', id = 0}, upload_document_ids = [] } = doctor_qualifications[qualifi];
 
         qualification.id = id;
         qualification.year = year;
@@ -125,7 +123,7 @@ class QualificationRegister extends Component {
         }
         qualification.photos = photos;
         qualification.photo = [];
-        if (!qualification.photo || qualification.photo && !qualification.photo.length) {
+        if (!qualification.photo || (qualification.photo && !qualification.photo.length)) {
 
           let newPhoto = [];
           for (let pic of qualification.photos) {
@@ -281,19 +279,18 @@ class QualificationRegister extends Component {
 
   onUploadComplete = async ({ files = [] }, key) => {
 
-    const { docs = [], education = {}, speciality = '', gender = '' } = this.state;
+    const { docs = [],  speciality = '', gender = '' } = this.state;
 
      this.setState({ docs: [...docs, ...files] }, async () => {
       //  async () => {
 
-      const { docs, fileList, education } = this.state;
+      const { docs, education } = this.state;
       let newEducation = education;
       if (docs.length === newEducation[key].photo.length || docs.length + newEducation[key].photos.length === newEducation[key].photo.length) {
         let newPhotos = newEducation[key].photos;
         let newPhoto = newEducation[key].photo;
         const { registerQualification } = this.props;
         const { authenticated_user } = this.props;
-        const { basic_info: { id: userId = 1 } = {} } = authenticated_user || {};
         newEducation[key].photos = [...newPhotos, ...docs];
         newEducation[key].photo.forEach((item, index) => {
           if (typeof (item) != 'string') {
@@ -329,7 +326,7 @@ class QualificationRegister extends Component {
             docs: [],
             education: newEducation
           });
-          if (statusCode == 422) {
+          if (statusCode === 422) {
 
             message.error('Please do not add more than 3 per education.')
           } else {
@@ -408,18 +405,16 @@ class QualificationRegister extends Component {
 
     const { onUploadComplete } = this;
    
-    let { docs = [], fileList = [], education = {}, speciality = '', gender = '' } = this.state;
+    let {  education = {} } = this.state;
 
 
     let qualification = education[key];
 
-    let { id: qualificationId = 0, degree_id = '', college_id = '', year = '' } = qualification;
+    let {  degree_id = '', college_id = '', year = '' } = qualification;
 
    
-    const { registerQualification } = this.props;
-    const { history, authenticated_user } = this.props;
     // const { basic_info: { id = 1 } = {} } = authenticated_user || {};
-    let qualificationData = { degree_id, college_id, year };
+    // let qualificationData = { degree_id, college_id, year };
     
 
     let data = new FormData();
@@ -451,12 +446,10 @@ class QualificationRegister extends Component {
 
     const { onUploadCompleteRegistration } = this;
    
-    let { docs = [], fileList = [], registration = {}, speciality = '', gender = '' } = this.state;
+    let { registration = {}} = this.state;
 
 
     let newReg = registration[key];
-
-    let { id: qualificationId = 0, degree_id = '', college_id = '', year = '' } = newReg;
 
    
 
@@ -528,7 +521,7 @@ class QualificationRegister extends Component {
     const fileList = info.fileList;
     let { registration = {} } = this.state;
     let newRegistration = registration;
-    let { photos = [], photo = [] } = newRegistration[key];
+    let { photos = [] } = newRegistration[key];
     for (let item of fileList) {
 
       let uid = item.uid;
@@ -750,9 +743,9 @@ class QualificationRegister extends Component {
     this.setState({ education });
   }
 
-  handleBeforeUpload = key => (file, fileList) => {
-    let { education = {}, speciality = '', gender = '' } = this.state;
-    let { degree_id = '', college_id = '', year = '', id = 0, photos = [] } = education[key];
+  handleBeforeUpload = key => (file) => {
+    let { education = {} } = this.state;
+    let { photos = [] } = education[key];
     
     for (let photo of photos) {
       let fileName = file.name
@@ -766,9 +759,9 @@ class QualificationRegister extends Component {
 
   }
 
-  handleBeforeUploadRegistration = key => (file, fileList) => {
-    let { registration = {}, speciality = '', gender = '' } = this.state;
-    let { degree_id = '', college_id = '', year = '', id = 0, photos = [] } = registration[key];
+  handleBeforeUploadRegistration = key => (file) => {
+    let { registration = {} } = this.state;
+    let { photos = [] } = registration[key];
     for (let photo of photos) {
       let fileName = file.name
       let newFileName = fileName.replace(/\s/g, '');
@@ -798,7 +791,7 @@ class QualificationRegister extends Component {
     const { colleges = {} } = this.props;
 
     return Object.keys(colleges).map(id => {
-      const { basic_info: { name, type } = {} } = colleges[id] || {};
+      const { basic_info: { name } = {} } = colleges[id] || {};
       return (
         <Option key={id} value={id}>
           {name}
@@ -811,7 +804,7 @@ class QualificationRegister extends Component {
     const { councils = {} } = this.props;
 
     return Object.keys(councils).map(id => {
-      const { basic_info: { name, type } = {} } = councils[id] || {};
+      const { basic_info: { name } = {} } = councils[id] || {};
       return (
         <Option key={id} value={id}>
           {name}
@@ -826,7 +819,7 @@ class QualificationRegister extends Component {
         const { searchDegree } = this.props;
         this.setState({ fetchingDegrees: true });
         const response = await searchDegree(data);
-        const { status, payload: { data: responseData, message } = {} } = response;
+        const { status } = response;
         if (status) {
           // const { degrees = {} } = responseData;
           // const degreeList = {};
@@ -855,10 +848,10 @@ class QualificationRegister extends Component {
         const { searchCollege } = this.props;
         this.setState({ fetchingColleges: true });
         const response = await searchCollege(data);
-        const { status, payload: { data: responseData, message } = {} } = response;
+        const { status } = response;
         if (status) {
-          const { colleges = {} } = responseData;
-          const collegeList = {};
+          // const { colleges = {} } = responseData;
+          // const collegeList = {};
           this.setState({ fetchingColleges: false });
           // Object.keys(colleges).forEach(id => {
           //   collegeList[id] = colleges[id];
@@ -883,7 +876,7 @@ class QualificationRegister extends Component {
         const { searchCouncil } = this.props;
         this.setState({ fetchingCouncils: true });
         const response = await searchCouncil(data);
-        const { status, payload: { data: responseData, message } = {} } = response;
+        const { status } = response;
         if (status) {
           // const { registration_councils = {} } = responseData;
           // const councilList = {};
@@ -907,7 +900,7 @@ class QualificationRegister extends Component {
   };
 
   renderEducation = () => {
-    let { education = {}, educationKeys = [], fileList = [], previewImage = '', previewTitle = '', previewVisible = false, isopen, time } = this.state;
+    let { education = {}, educationKeys = [], fileList = [] } = this.state;
 
 
     const uploadButton = (
@@ -1039,7 +1032,7 @@ class QualificationRegister extends Component {
   }
 
   renderRegistration = () => {
-    let { registration = {}, registrationKeys = [], fileList = [], previewImage = '', previewTitle = '', previewVisible = false, isopen, time } = this.state;
+    let { registration = {}, registrationKeys = [], fileList = []} = this.state;
 
 
     const uploadButton = (
@@ -1228,7 +1221,6 @@ class QualificationRegister extends Component {
     const { history, authenticated_user } = this.props;
     const validate = this.validateData();
     if (validate) {
-      const { basic_info: { id = 1 } = {} } = authenticated_user || {};
       const { speciality = '', gender = '', registration = {}, education = {} } = this.state;
       let newEducation = Object.values(education);
       let newRegistration = Object.values(registration);

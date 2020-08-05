@@ -3,7 +3,7 @@ import { Form, Button, Input, message, Radio } from "antd";
 import moment from "moment";
 import participantsField from "../common/participants";
 import startTimeField from "../common/startTime";
-import notesField from "../common/notes";
+
 import RepeatFields from "../common/repeatFields";
 
 import repeatField from "../common/repeatType";
@@ -17,13 +17,10 @@ import criticalMedicationField from "../common/criticalMedication";
 import medicineStrengthUnitField from "../common/medicationStrengthUnit";
 import medicineQuantityField from "../common/medicineQuantity";
 import whenToTakeMedicineField from "../common/whenTotakeMedicaine";
-import medicationReminderStageField from "../common/medicationStage";
-
-import CalendarTimeSelection from "../calendarTimeSelection";
 
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
-import { REPEAT_TYPE, USER_CATEGORY, MEDICINE_TYPE, DAYS_NUMBER } from "../../../../constant";
+import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER } from "../../../../constant";
 const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
 
@@ -407,7 +404,7 @@ class AddMedicationReminderForm extends Component {
       form: { getFieldsError },
       requesting
     } = this.props;
-    const { formatMessage, handleCancel } = this;
+    const { formatMessage } = this;
 
     return (
       <div className="footer">
@@ -431,7 +428,7 @@ class AddMedicationReminderForm extends Component {
   setUnit = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue }
     } = this.props;
    
     setFieldsValue({ [UNIT_FIELD]: e.target.value });
@@ -439,7 +436,7 @@ class AddMedicationReminderForm extends Component {
 
   setUnitByMedicineType = unit => {
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue }
     } = this.props;
     setFieldsValue({ [UNIT_FIELD]: unit });
 
@@ -447,21 +444,13 @@ class AddMedicationReminderForm extends Component {
 
   render() {
     const {
-      getFooter,
       disabledEndDate,
       disabledStartDate,
       adjustEndDate,
-      onChangeEventStartTime,
       adjustEventOnStartDateChange,
-      onEventDurationChange,
-      onPrev,
-      onNext,
-      onStartDateChange,
-      addMedicationReminder,
       onPatientChange,
       formatMessage,
       setUnit,
-      setUnitByMedicineType
     } = this;
 
     const {
@@ -483,7 +472,7 @@ class AddMedicationReminderForm extends Component {
       endTime = startTime.clone().add("minutes", 3);
     }
 
-    const startDate = getFieldValue(startDateField.field_name);
+    // const startDate = getFieldValue(startDateField.field_name);
 
     return (
       <Fragment>

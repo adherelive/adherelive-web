@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { injectIntl, FormattedMessage } from "react-intl";
+import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
@@ -46,23 +46,23 @@ function callback(key) {
 //   </Menu>
 // );
 
-const columns_symptoms = [
-  {
-    title: "Medicine",
-    dataIndex: "medicine",
-    key: "medicine",
-  },
-  {
-    title: "In take",
-    dataIndex: "in_take",
-    key: "in_take",
-  },
-  {
-    title: "Duration",
-    dataIndex: "duration",
-    key: "duration",
-  },
-];
+// const columns_symptoms = [
+//   {
+//     title: "Medicine",
+//     dataIndex: "medicine",
+//     key: "medicine",
+//   },
+//   {
+//     title: "In take",
+//     dataIndex: "in_take",
+//     key: "in_take",
+//   },
+//   {
+//     title: "Duration",
+//     dataIndex: "duration",
+//     key: "duration",
+//   },
+// ];
 
 const columns_medication = [
   {
@@ -186,37 +186,37 @@ const columns_appointments_non_editable = [
   }
 ];
 
-const data_symptoms = [
-  {
-    key: "1",
-    medicine: "Amoxil 2mg",
-    in_take: "Twice, Daily",
-    duration: "Till 3rd March",
-  },
-  {
-    key: "2",
-    medicine: "Insulin",
-    in_take: "Mon at 10am, Wed at 2pm",
-    duration: "till 2nd March",
-  },
-];
+// const data_symptoms = [
+//   {
+//     key: "1",
+//     medicine: "Amoxil 2mg",
+//     in_take: "Twice, Daily",
+//     duration: "Till 3rd March",
+//   },
+//   {
+//     key: "2",
+//     medicine: "Insulin",
+//     in_take: "Mon at 10am, Wed at 2pm",
+//     duration: "till 2nd March",
+//   },
+// ];
 
-const data_medication = [
-  {
-    key: "1",
-    medicine: "Amoxil 2mg",
-    in_take: "Twice, Daily",
-    duration: "Till 3rd March",
-    edit: { edit_image },
-  },
-  {
-    key: "2",
-    medicine: "Insulin",
-    in_take: "Mon at 10am, Wed at 2pm",
-    duration: "till 2nd March",
-    edit: { edit_image },
-  },
-];
+// const data_medication = [
+//   {
+//     key: "1",
+//     medicine: "Amoxil 2mg",
+//     in_take: "Twice, Daily",
+//     duration: "Till 3rd March",
+//     edit: { edit_image },
+//   },
+//   {
+//     key: "2",
+//     medicine: "Insulin",
+//     in_take: "Mon at 10am, Wed at 2pm",
+//     duration: "till 2nd March",
+//     edit: { edit_image },
+//   },
+// ];
 
 const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
 
@@ -381,18 +381,16 @@ class PatientDetails extends Component {
     let {
       getMedications,
       getAppointments,
-      searchMedicine,
       getPatientCarePlanDetails,
       getAppointmentsDetails,
       patient_id,
-      showTemplateDrawer,
       care_plans,
       currentCarePlanId,
       show_template_drawer = {}
     } = this.props;
     this.getData();
     const { show: showTd = false } = show_template_drawer;
-    let isCarePlanDataPresent = currentCarePlanId ? true : false;
+    // let isCarePlanDataPresent = currentCarePlanId ? true : false;
     if (showTd) {
       this.setState({ templateDrawerVisible: true });
     }
@@ -416,7 +414,7 @@ class PatientDetails extends Component {
     let carePlanTemplateId = 0;
     for (let carePlan of Object.values(care_plans)) {
 
-      let { basic_info: { id = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
+      let { basic_info: {  patient_id: patientId = 1 } } = carePlan;
 
       if (parseInt(patient_id) === parseInt(patientId)) {
         let { basic_info: { care_plan_template_id = 0 } = {} } = carePlan;
@@ -431,8 +429,8 @@ class PatientDetails extends Component {
     const {
       appointments,
       users = {},
-      doctors = {},
-      patients = {},
+      // doctors = {},
+      // patients = {},
     } = this.props;
 
     let { appointment_ids = [] } = carePlan;
@@ -440,11 +438,11 @@ class PatientDetails extends Component {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
         basic_info: {
-          organizer_type = "doctor",
+          // organizer_type = "doctor",
           start_date,
-          description,
           start_time,
           end_time,
+          description=''
         } = {},
         organizer: { id: organizer_id } = {},
       } = appointments[id] || {};
@@ -470,9 +468,7 @@ class PatientDetails extends Component {
   getMedicationData = (carePlan = {}) => {
     const {
       medications = {},
-      users = {},
-      doctors = {},
-      patients = {},
+      // users = {},
       medicines = {},
     } = this.props;
 
@@ -482,15 +478,15 @@ class PatientDetails extends Component {
 
       const {
         basic_info: {
-          organizer_id,
-          organizer_type = "doctor",
+          // organizer_id,
+          // organizer_type = "doctor",
           end_date,
-          details: { medicine_id, repeat_days, start_time } = {},
+          details: { medicine_id, repeat_days } = {},
         } = {},
       } = medications[id] || {};
 
-      const { basic_info: { user_name = "--" } = {} } =
-        users[organizer_id] || {};
+      // const { basic_info: { user_name = "--" } = {} } =
+      //   users[organizer_id] || {};
 
       const { basic_info: { name, type } = {} } = medicines[medicine_id] || {};
       return {
@@ -515,7 +511,7 @@ class PatientDetails extends Component {
   };
 
   handleItemSelect = ({ selectedKeys }) => {
-    const { history, logout, openAppointmentDrawer } = this.props;
+    const { openAppointmentDrawer } = this.props;
     switch (selectedKeys[0]) {
       case APPOINTMENT:
         openAppointmentDrawer();
@@ -639,9 +635,9 @@ class PatientDetails extends Component {
 
 
   render() {
-    let { patients, patient_id, users, care_plans, doctors, medicines, appointments = {}, medications = {},
+    let { patients, patient_id, users, care_plans, doctors, medicines,
       treatments = {}, conditions = {}, severity: severities = {}, template_medications = {}, template_appointments = {},
-      care_plan_templates = {}, show_template_drawer = false,
+      care_plan_templates = {},
       authPermissions = [] } = this.props;
     const { loading, templateDrawerVisible = false, carePlanTemplateId = 0 } = this.state;
 
@@ -703,7 +699,7 @@ class PatientDetails extends Component {
     let cPMedicationIds = [];
     for (let carePlan of Object.values(care_plans)) {
 
-      let { basic_info: { id = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
+      let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
         let { appointment_ids = [], medication_ids = [] } = carePlan;
@@ -753,7 +749,7 @@ class PatientDetails extends Component {
 
     
     const {
-      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456' }, details = {}
+      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456' }
     } = patients[patient_id] || {};
 
 
@@ -763,32 +759,32 @@ class PatientDetails extends Component {
     const {
       close,
       user_details: {
-        // gender,
-        age: patient_age,
-        phone_number: patient_phone_number = "--",
-        email_id: patient_email_id = "test-patient@mail.com",
+        // // gender,
+        // age: patient_age,
+        // phone_number: patient_phone_number = "--",
+        // email_id: patient_email_id = "test-patient@mail.com",
         profile_picture: patient_display_picture,
       } = {},
     } = this.props;
 
     const {
       treatment_details: {
-        treatment_severity: treatment_severity_status = "1",
+        // treatment_severity: treatment_severity_status = "1",
         treatment_provider,
-        treatment_condition,
+        // treatment_condition,
       } = {},
     } = this.props.user_details;
 
     let showAddButton = authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) || authPermissions.includes(PERMISSIONS.ADD_MEDICATION) || authPermissions.includes(PERMISSIONS.ADD_ACTION);
 
-    const {
-      alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {},
-    } = this.props.user_details || {};
+    // const {
+    //   alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {},
+    // } = this.props.user_details || {};
 
     let docName = doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name}` : "--";
 
-    const new_symptoms_string =
-      new_symptoms.length > 0 ? new_symptoms.map((e) => e).join(", ") : "";
+    // const new_symptoms_string =
+    //   new_symptoms.length > 0 ? new_symptoms.map((e) => e).join(", ") : "";
 
     return (
       <div className="pt10 pr10 pb10 pl10">

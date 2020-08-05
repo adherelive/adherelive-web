@@ -21,8 +21,7 @@ export const doRequest = async requestdata => {
     baseURL = HOST,
     params = {},
     data = {},
-    onUploadProgress,
-    query = {},
+    onUploadProgress
   } = requestdata;
 
   //create request config according to data

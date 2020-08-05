@@ -499,13 +499,8 @@ class Register extends Component {
     }
 
     renderClinics=()=>{
-        let{clinics={},clinicsKeys=[]}=this.state;
+        let{clinicsKeys=[]}=this.state;
 
-        const uploadButton = (
-            <div>
-              Upload
-            </div>
-          );
         return(
             <div className='flex direction-column'>
            {clinicsKeys.map(key=>{
@@ -555,14 +550,8 @@ class Register extends Component {
     uploadDp = file => {
         
 
-        // file.status='done';
-        // return file;
         const { imageUrl } = this.state;
-        // setTimeout(() => {
-            
-        //     imageUrl.status='done'
-            
-        // },100);
+     
        
     
         return {
@@ -719,7 +708,7 @@ class Register extends Component {
     
 
     render() {
-        const {graphs} = this.props;
+        // const {graphs} = this.props;
         // const {formatMessage, renderChartTabs} = this;
          const{step}=this.state;
 

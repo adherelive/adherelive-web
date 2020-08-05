@@ -31,7 +31,7 @@ class PatientTable extends Component {
   };
 
   getDataSource = () => {
-    const { appointments, appointment_ids = [] , users, doctors, patients } = this.props;
+    const { appointments, users, doctors, patients } = this.props;
 
     return Object.keys(appointments).map(id => {
       return generateRow({
@@ -47,13 +47,12 @@ class PatientTable extends Component {
   render() {
     const { onRow, onSelectChange, getLoadingComponent, getDataSource } = this;
 
-    const rowSelection = {
-      onChange: onSelectChange
-    };
+    // const rowSelection = {
+    //   onChange: onSelectChange
+    // };
 
     const {
       loading,
-      pagination_bottom,
       intl: { formatMessage } = {}
     } = this.props;
 

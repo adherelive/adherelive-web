@@ -29,7 +29,7 @@ class EditAppointment extends Component {
   componentDidMount = () => {
   }
 
-  onFormFieldChanges = (props, allvalues) => {
+  onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
     } = props;
@@ -61,7 +61,7 @@ class EditAppointment extends Component {
     } = formRef;
 
     let pId = patientId ? patientId : patient_id;
-    const { basic_info: { user_id } = {} } = patients[pId] || {};
+    // const { basic_info: { user_id } = {} } = patients[pId] || {};
 
     validateFields(async (err, values) => {
       if (!err) {
@@ -130,7 +130,9 @@ class EditAppointment extends Component {
             treatment_id: treatment,
           };
 
-        if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
+        if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
+          message.error('Please fill all mandatory fields.')
+        } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
@@ -153,7 +155,6 @@ class EditAppointment extends Component {
               statusCode: code,
               payload: {
                 message: errorMessage = "",
-                error,
                 error: { error_type = "" } = {},
               },
             } = response || {};
@@ -212,7 +213,7 @@ class EditAppointment extends Component {
     const { payload: { id, patient_id } = {}, patients } = this.props;
     const { warnNote } = this;
 
-    const { basic_info: { first_name, middle_name, last_name, user_id } = {} } = patients[patient_id] || {};
+    const { basic_info: { first_name, middle_name, last_name } = {} } = patients[patient_id] || {};
 
     confirm({
       title: `Are you sure you want to delete the appointment with ${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? last_name : ""}?`,
@@ -238,7 +239,7 @@ class EditAppointment extends Component {
   getDeleteButton = () => {
     const { handleDelete } = this;
     const { loading, deleteAppointmentOfTemplate, addAppointment, hideAppointment } = this.props;
-     if (addAppointment) {
+    if (addAppointment) {
       return (
         <Button onClick={hideAppointment} style={{ marginRight: 8 }}>
           Cancel

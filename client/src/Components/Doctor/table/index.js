@@ -31,7 +31,7 @@ class DoctorTable extends Component {
     };
 
     getDataSource = () => {
-        const { users, doctors, doctor_ids, user_ids } = this.props;
+        const { users, doctors, doctor_ids } = this.props;
 
       
         return doctor_ids.map(id => {
@@ -48,7 +48,7 @@ class DoctorTable extends Component {
         history.push(`/doctors/${key}`);
     };
 
-    onRow = (record, rowIndex) => {
+    onRow = (record) => {
         const { onRowClick } = this;
         const { key } = record;
         return {
