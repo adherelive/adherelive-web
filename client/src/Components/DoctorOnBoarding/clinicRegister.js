@@ -310,6 +310,7 @@ class ClinicRegister extends Component {
                 clinic.time_slots = time_slots;
                 delete clinic.timings;
                 delete clinic.timingsKeys;
+                delete clinic.daySelected;
             }
             const data = { clinics: newClinics };
             const { doctorClinicRegister } = this.props;

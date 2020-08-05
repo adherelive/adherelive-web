@@ -113,7 +113,7 @@ class AddAppointment extends Component {
           };
 
         if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
-          message.error('Please fill all mandatory fields.')
+          message.error('Please fill all mandatory details.')
         } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')
         }
