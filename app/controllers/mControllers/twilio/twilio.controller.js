@@ -4,6 +4,10 @@ import twilioService from "../../../services/twilio/twilio.service";
 import Controller from "../../";
 
 class TwilioController extends Controller {
+    constructor() {
+        super();
+    }
+
     async generateTwilioChatAccessToken(req, res) {
         try {
             const deviceId = req.query.device;
