@@ -14,7 +14,9 @@ const appointmentFormSchema = Joi.object().keys({
   date: Joi.date().required(),
   start_time: Joi.date().required(),
   end_time: Joi.date().required(),
+  reason: Joi.string().required().max(200, 'utf-8'),
   description: Joi.string()
+      .max(500, 'utf-8')
     .optional()
     .allow(""),
   organizer: Joi.object()
@@ -24,7 +26,7 @@ const appointmentFormSchema = Joi.object().keys({
     })
     .optional(),
   // description: Joi.string().optional(),
-  treatment: Joi.string().optional().allow(""),
+  treatment_id: Joi.number().optional().allow(""),
   // TODO: rr_rule here?
 });
 
@@ -51,11 +53,11 @@ export const validateAppointmentFormData = (req, res, next) => {
     response.setMessage("please check filled details");
     return res.status(422).json(response.getResponse());
   }
-  if (!validateStartTime(start_time)) {
-    const response = new Response(false, 422);
-    response.setMessage("you can't create Appointment on passed time.");
-    return res.status(422).json(response.getResponse());
-  }
+  // if (!validateStartTime(start_time)) {
+  //   const response = new Response(false, 422);
+  //   response.setMessage("you can't create Appointment on passed time.");
+  //   return res.status(422).json(response.getResponse());
+  // }
   if (!validateTimeInterval(start_time, end_time)) {
     const response = new Response(false, 422);
     response.setMessage("start time should be less than end time");

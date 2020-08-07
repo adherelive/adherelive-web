@@ -20,14 +20,6 @@ const Conditions = database.define(
     {
         underscored: true,
         paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    name:this.name,
-                };
-            }
-        }
     }
 );
 

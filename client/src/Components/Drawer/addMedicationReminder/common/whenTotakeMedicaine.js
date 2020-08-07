@@ -95,6 +95,8 @@ class WhenToTakeMedication extends Component {
       selected_timing_overall = [],
     } = this.state;
 
+    console.log("93182392 selected_timing ", selected_timing);
+
     let current_status = [];
 
     Object.keys(selected_timing).forEach((id) => {
@@ -119,6 +121,8 @@ class WhenToTakeMedication extends Component {
         uniqueTimings.push(timing);
       }
     });
+
+    console.log("12093138 uniqueTimings ----> ", selected_timing, total_status, selected_timing_overall);
     return uniqueTimings;
   };
 
@@ -126,6 +130,8 @@ class WhenToTakeMedication extends Component {
     const { selected_timing, status, total_status } = this.state;
     const { getUpdatedList } = this;
     const getList = getUpdatedList(k);
+
+    console.log("18982731273 getList ---> ", selected_timing);
     return getList.map((id) => {
       const text = status[id];
       console.log(
@@ -237,14 +243,28 @@ class WhenToTakeMedication extends Component {
   };
 
   remove = (k) => {
-    const { selected_timing_overall } = this.state;
+    const { selected_timing_overall, selected_timing } = this.state;
     const { form } = this.props;
     const { getFieldValue, setFieldsValue } = form;
     const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
+
+    let updatedSelectedTimings = {};
+    Object.keys(selected_timing).forEach(id => {
+      // console.log("12983719283 id, k ---> ", id, typeof id, k, typeof k);
+      if (id !== `${k}`) {
+        updatedSelectedTimings[id] = selected_timing[id];
+      }
+    });
+
+    console.log("18371239 updatedSelectedTimings --> ", selected_timing, updatedSelectedTimings);
     this.setState({
       selected_timing_overall: selected_timing_overall.filter(
-        (field) => !selected.includes(field)
+        (field) => {
+          console.log("98738912 selected, field --> ", selected, typeof selected, field, typeof field);
+          return selected === field;
+        }
       ),
+      selected_timing: { ...updatedSelectedTimings }
     });
     const keys = getFieldValue("keys");
 
@@ -315,7 +335,7 @@ class WhenToTakeMedication extends Component {
                   initialValue: getInitialValue(k),
                 })(
                   <Select
-                    className="wp100"
+                    className="wp100 drawer-select"
                     autoComplete="off"
                     placeholder={formatMessage(messages.select_timing)}
                     onSelect={(value) => handleSelect(value, k)}
@@ -330,11 +350,11 @@ class WhenToTakeMedication extends Component {
             {keys.length > 1 && (
               <div className="wp20 hp100 flex justify-center align-center">
                 {/* <Tooltip mouseEnterDelay={0.5} placement="bottom" title={formatMessage(messages.delete_text)}> */}
-                  <Icon
-                    className="hp100"
-                    type="minus-circle-o"
-                    onClick={() => this.remove(k)}
-                  />
+                <Icon
+                  className="hp100"
+                  type="minus-circle-o"
+                  onClick={() => this.remove(k)}
+                />
                 {/* </Tooltip> */}
               </div>
             )}
@@ -348,19 +368,27 @@ class WhenToTakeMedication extends Component {
     const { form } = this.props;
     const { selected_timing } = this.state;
     const keys = form.getFieldValue("keys");
-    console.log("keys :", keys);
+    let whenToTakeValues = {};
+    keys.forEach(id => {
+      whenToTakeValues[id] = form.getFieldValue(`${FIELD_NAME}[${id}]`);
+    });
+    console.log("391309 keys :", keys, whenToTakeValues);
     const nextKeys = keys.concat(key_field);
-    console.log("nextKeys :", nextKeys);
+    console.log("391309 nextKeys :", nextKeys);
     form.setFieldsValue({
       keys: nextKeys,
       // [`Fields[${id_checklist_field}]`]: null,
       // [`Status[${id_checklist_field}]`]: null
     });
+
+    const updatedSelectedTimings = { ...selected_timing, ...whenToTakeValues };
+
     key_field++;
     this.setState({
-      selected_timing_overall: Object.keys(selected_timing).map(
-        (id) => selected_timing[id]
+      selected_timing_overall: Object.keys(updatedSelectedTimings).map(
+        (id) => updatedSelectedTimings[id]
       ),
+      selected_timing: updatedSelectedTimings
     });
   };
 
@@ -381,18 +409,24 @@ class WhenToTakeMedication extends Component {
     // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
+    console.log("627868362783 selected_timing ---. ", this.state.selected_timing);
+
     // const { getInitialValue } = this;
 
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
-          <label
-            for="quantity"
-            className="form-label flex-grow-1"
-            title="Quantity"
-          >
-            {formatMessage(messages.timing)}
-          </label>
+          <div className='flex row flex-grow-1'>
+            <label
+              for="quantity"
+              className="form-label "
+              title="Quantity"
+            >
+              {formatMessage(messages.timing)}
+            </label>
+
+            <div className="star-red">*</div>
+          </div>
           {/* <div className="label-color fontsize12 mb8">
               
             </div> */}

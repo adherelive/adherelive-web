@@ -13,6 +13,8 @@ class EventExecutor {
       console.log('INSIDEEEE SEND MAILLLLLLL ');
       // let isValid = await validateMailData(mailData);
       let response = await EmailManager.sendEmail(mailData);
+
+      console.log("12931931789223 response ------------> ", response);
       Object.assign(
         mailData,
         response ? { status: "SENT" } : { status: "FAILED" }
@@ -34,6 +36,7 @@ class EventExecutor {
 
   async sendSms(smsData, scheduledJobId) {
     try {
+      console.log("88127313 here sendSms");
       let response = SmsManager.sendSms(smsData);
       Object.assign(
         smsData,

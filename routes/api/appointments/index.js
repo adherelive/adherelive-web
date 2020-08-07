@@ -18,4 +18,24 @@ router.post(
     Appointment.create
 );
 
+router.post(
+    "/:carePlanId",
+    Authenticate,
+    validator.validateAppointmentFormData,
+    Appointment.createCarePlanAppointment
+);
+
+router.post(
+    "/update/:appointment_id",
+    Authenticate,
+    validator.validateAppointmentFormData,
+    Appointment.update
+);
+
+router.delete(
+    "/:appointment_id",
+    Authenticate,
+    Appointment.delete
+);
+
 module.exports = router;

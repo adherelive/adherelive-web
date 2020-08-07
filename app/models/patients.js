@@ -30,12 +30,12 @@ const Patients = database.define(
     },
     gender: {
       type: Sequelize.ENUM,
-      values: [GENDER.MALE, GENDER.FEMALE, GENDER.TRANS],
+      values: [GENDER.MALE, GENDER.FEMALE, GENDER.OTHER],
       allowNull: true
     },
     first_name: {
       type: Sequelize.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     middle_name: {
       type: Sequelize.STRING(100),
@@ -43,10 +43,14 @@ const Patients = database.define(
     },
     last_name: {
       type: Sequelize.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     age: {
       type: Sequelize.STRING,
+    },
+    birth_date: {
+      type: Sequelize.DATE,
+      allowNull: true,
     },
     address: {
       type: Sequelize.STRING
@@ -56,7 +60,6 @@ const Patients = database.define(
     },
     uid: {
       type: Sequelize.STRING,
-      allowNull: false
     },
     details: {
       type: Sequelize.JSON

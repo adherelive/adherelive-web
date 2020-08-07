@@ -1,12 +1,9 @@
-
 import BaseMedicine from "../../../services/medicine";
-import { OBJECT_NAME } from "../../../../constant";
 import medicineService from "../../../services/medicine/medicine.service";
 
 class MedicineWrapper extends BaseMedicine {
     constructor(data) {
         super(data);
-        this._objectName = OBJECT_NAME.MEDICINE;
     }
 
     getBasicInfo = () => {

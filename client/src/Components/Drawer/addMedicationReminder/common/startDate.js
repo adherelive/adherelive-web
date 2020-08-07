@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { DatePicker, Form } from "antd";
-import messages from "../message";
 import calendar from "../../../../Assets/images/calendar1.svg";
 import moment from "moment";
 
@@ -69,18 +68,27 @@ class StartDate extends Component {
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pr8 wp100">
-          <span className="form-label">From</span>
+          <div className='flex  row'>
+            <span className="form-label-from">From</span>
+            <div className="star-red">*</div>
+          </div>
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
+              rules: [
+                {
+                  required: true,
+                  message: "Please enter start date"
+                }
+              ],
               initialValue: getInitialValue(),
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME} ant-date-custom wp100`}
+                className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}
                 disabledDate={disabledStartDate}
-                suffixIcon={calendarComp()}
+                // suffixIcon={calendarComp()}
                 allowClear={false}
                 onBlur={this.onBlur(value)}
                 getCalendarContainer={this.getParentNode}

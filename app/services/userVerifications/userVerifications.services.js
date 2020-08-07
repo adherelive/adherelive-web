@@ -36,6 +36,17 @@ class UserVerificationsService {
             throw error;
         }
     };
+
+    getRequestByData = async (data) => {
+        try {
+            const verification = await UserVerifications.findOne({
+                where: data
+            });
+            return verification;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 export default new UserVerificationsService();

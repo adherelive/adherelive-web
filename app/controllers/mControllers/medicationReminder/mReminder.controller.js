@@ -3,6 +3,7 @@ import moment from "moment";
 import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
 import MobileMReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
+import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import {
   EVENT_STATUS,
   EVENT_TYPE,
@@ -15,7 +16,7 @@ import {
 } from "../../../../constant";
 import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
-import medicineService from "../../../services/medicine/medicine.service";;
+import medicineService from "../../../services/medicine/medicine.service";
 
 const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -58,7 +59,8 @@ class MobileMReminderController extends Controller {
         when_to_take,
         medication_stage = "",
         description,
-        start_time
+        start_time,
+          critical = false
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
@@ -66,7 +68,7 @@ class MobileMReminderController extends Controller {
       // const {text, time} = MEDICATION_TIMING[when_to_take] || {};
       // const whenToTake = `${text}(${time})`;
 
-      const repeatDays = repeat_days.map(day => day.substring(0,3));
+      const repeatDays = repeat_days.map(day => day.substring(0, 3));
 
       // const medicineDetails = await medicineService.getMedicineByData({id: medicine_id});
 
@@ -91,7 +93,8 @@ class MobileMReminderController extends Controller {
           strength,
           unit,
           when_to_take,
-          medication_stage
+          medication_stage,
+          critical
         }
       };
 
@@ -133,10 +136,126 @@ class MobileMReminderController extends Controller {
     }
   };
 
+
+  createCarePlanMedication = async (req, res) => {
+    try {
+      const { body, userDetails, params: { patient_id,carePlanId:care_plan_id=0 } = {} } = req;
+
+      console.log("medicineDetails **********--------> ",care_plan_id,typeof(care_plan_id));
+      // todo: get patient_id from url
+      const {
+        start_date,
+        end_date,
+        repeat,
+        repeat_days,
+        repeat_interval = 0,
+        medicine_id,
+        quantity,
+        strength,
+        unit,
+        when_to_take,
+        medication_stage = "",
+        description,
+        start_time,
+          critical = false
+      } = body;
+      const { userId, userData: { category } = {} } = userDetails || {};
+
+      const medicineDetails = await medicineService.getMedicineById(medicine_id);
+
+
+      const medicineApiWrapper = await MedicineWrapper(medicineDetails);
+
+      const dataToSave = {
+        participant_id: patient_id, // todo: patient_id
+        organizer_type: category,
+        organizer_id: userId,
+        description,
+        start_date,
+        end_date,
+        details: {
+          medicine_id,
+          start_time: start_time ? start_time : moment(),
+          end_time: start_time ? start_time : moment(),
+          repeat,
+          repeat_days,
+          repeat_interval,
+          quantity,
+          strength,
+          unit,
+          when_to_take,
+          medication_stage,
+          critical
+        }
+      };
+
+      const mReminderDetails = await medicationReminderService.addMReminder(
+        dataToSave
+      );
+
+      const data_to_create = {
+        care_plan_id:parseInt(care_plan_id),
+        medication_id: mReminderDetails.get('id')
+    }
+
+    let newMedication = await carePlanMedicationService.addCarePlanMedication(data_to_create);
+
+
+
+    let carePlan= await carePlanService.getCarePlanById(care_plan_id);
+
+    let carePlanAppointmentIds= await getCarePlanAppointmentIds(care_plan_id);
+    let carePlanMedicationIds = await getCarePlanMedicationIds(care_plan_id);
+    let carePlanSeverityDetails = await getCarePlanSeverityDetails(care_plan_id);
+    const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+    let carePlanApiData = {};
+
+    carePlanApiData[
+      carePlanApiWrapper.getCarePlanId()
+    ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,carePlanMedicationIds,carePlanAppointmentIds};
+
+
+      // const eventScheduleData = {
+      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      //   event_id: mReminderDetails.id,
+      //   data: mReminderDetails.getBasicInfo,
+      //   status: EVENT_STATUS.PENDING,
+      //   start_time,
+      //   end_time: start_time
+      // };
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          care_plans: {...carePlanApiData},
+          medications: {
+            [mReminderDetails.getId]: {
+              basic_info: {
+                ...mReminderDetails.getBasicInfo
+              }
+            }
+          },
+          medicines: {
+            [medicineApiWrapper.getMedicineId()]: {
+              ...medicineApiWrapper.getBasicInfo()
+            }
+          }
+        },
+        "medication reminder added successfully"
+      );
+
+      // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
+    } catch (error) {
+      console.log("Add m-reminder error ----> ", error);
+      return this.raiseServerError(res, 500, error.message, "something went wrong");
+    }
+  };
+
   getMedicationDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.debug("test", medicationReminderDetails);
+      // Logger.debug("test", medicationReminderDetails);
       return raiseSuccess(
         res,
         200,
@@ -152,35 +271,46 @@ class MobileMReminderController extends Controller {
   };
 
   getMedicationForId = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const {params: {id} = {}} = req;
+      const { params: { id } = {} } = req;
 
-      const medicationDetails = await medicationReminderService.getMedicationsForParticipant({participant_id : id});
+      const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+        { participant_id: id }
+      );
 
       // console.log("712367132 medicationDetails --> ", medicationDetails);
-      Logger.debug("medication details", medicationDetails);
+      // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
-      let medicineApiData = {};
       let medicineId = [];
 
-      await medicationDetails.forEach(async medication => {
+      for(const medication of medicationDetails) {
         const medicationWrapper = await MobileMReminderWrapper(medication);
-        medicationApiData[medicationWrapper.getMReminderId()] = medicationWrapper.getBasicInfo();
+        medicationApiData[
+            medicationWrapper.getMReminderId()
+            ] = medicationWrapper.getBasicInfo();
         medicineId.push(medicationWrapper.getMedicineId());
-      });
+      }
 
-      Logger.debug("medicineId", medicineId.filter(id => !medicineId.includes(id)));
+      Logger.debug(
+        "medicineId",
+        medicationDetails
+      );
 
-      const medicineData = await medicineService.getMedicineByData({
+      const medicineData = await medicineService.getMedicineById({
         id: medicineId
       });
 
+      let medicineApiData = {};
+
+      if(medicineData !== null) {
+        const medicineWrapper = await MedicineApiWrapper(medicineData);
+        medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+      }
+
       Logger.debug("medicineData", medicineData);
 
-      const medicineWrapper = await MedicineApiWrapper(medicineData);
-      
       return raiseSuccess(
         res,
         200,
@@ -188,12 +318,137 @@ class MobileMReminderController extends Controller {
           medications: {
             ...medicationApiData
           },
-          ...medicineWrapper.getBasicInfoBulk(),
+          medicines: {
+            ...medicineApiData
+          }
         },
-        "medications fetched successfully"
+        "Medications fetched successfully"
       );
     } catch(error) {
       Logger.debug("500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  update = async (req, res) => {
+    try {
+      const { body, userDetails, params: { id } = {} } = req;
+      // todo: get patient_id from url
+      const {
+        start_date,
+        end_date,
+        repeat,
+        repeat_days,
+        repeat_interval = 0,
+        medicine_id,
+        quantity,
+        strength,
+        unit,
+        when_to_take,
+        medication_stage = "",
+        description,
+        start_time,
+        participant_id,
+          critical = false
+      } = body;
+      const { userId, userData: { category } = {} } = userDetails || {};
+      const medicineData = await medicineService.getMedicineById(medicine_id);
+
+      // Logger.debug("medicineDetails --> ", medicineDetails);
+
+      const medicineApiWrapper = await MedicineApiWrapper(medicineData);
+
+      const dataToSave = {
+        participant_id, // todo: patient_id
+        organizer_type: category,
+        organizer_id: userId,
+        description,
+        start_date,
+        end_date,
+        details: {
+          medicine_id,
+          start_time: start_time ? start_time : moment(),
+          end_time: start_time ? start_time : moment(),
+          repeat,
+          repeat_days,
+          repeat_interval,
+          quantity,
+          strength,
+          unit,
+          when_to_take,
+          medication_stage,
+          critical
+        }
+      };
+
+      const mReminderDetails = await medicationReminderService.updateMedication(
+        dataToSave,
+        id
+      );
+
+
+      const updatedMedicationDetails = await medicationReminderService.getMedication({id});
+
+      // Logger.debug("updatedMedicationDetails --> ", updatedMedicationDetails);
+
+      const medicationApiDetails = await MobileMReminderWrapper(
+        updatedMedicationDetails
+      );
+
+      // const eventScheduleData = {
+      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      //   event_id: mReminderDetails.id,
+      //   data: mReminderDetails.getBasicInfo,
+      //   status: EVENT_STATUS.PENDING,
+      //   start_time,
+      //   end_time: start_time
+      // };
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          medications: {
+            [medicationApiDetails.getMReminderId()]: {
+              ...medicationApiDetails.getBasicInfo()
+            }
+          },
+          medicines: {
+            [medicineApiWrapper.getMedicineId()]: {
+              ...medicineApiWrapper.getBasicInfo()
+            }
+          }
+        },
+        "medication reminder updated successfully"
+      );
+
+      // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
+    } catch (error) {
+      console.log("update m-reminder error ----> ", error);
+      return this.raiseServerError(
+        res,
+        500,
+        error.message,
+        "something went wrong"
+      );
+    }
+  };
+
+  delete = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const {params: {id} = {}} = req;
+      const carePlanMedicationDetails= await carePlanMedicationService.deleteCarePlanMedicationByMedicationId(id);
+
+      const medicationDetails = await medicationReminderService.deleteMedication(
+        id
+      );
+
+      // console.log("712367132 medicationDetails --> ", medicationDetails);
+      Logger.debug("medication details", medicationDetails);
+
+      return raiseSuccess(res, 200, {}, "medication deleted successfully");
+    } catch (error) {
       return raiseServerError(res);
     }
   };

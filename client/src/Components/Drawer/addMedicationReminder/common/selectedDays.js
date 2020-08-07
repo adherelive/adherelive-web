@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Form, Input, Tag } from "antd";
-import messages from "../message";
 import { DAYS } from "../../../../constant";
 
 const { Item: FormItem } = Form;
@@ -57,14 +56,16 @@ class SelectedDays extends Component {
 
     return (
       <div className="mb20 select-days-form-content">
-        <div className="mb8">
+        <div className="flex row">
           <span className="form-label">Repeats</span>
+          <div className="star-red">*</div>
         </div>
         <FormItem style={{ display: "none" }}>
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {
-                required: true
+                required: true,
+                message:'Please select days for medication!'
               }
             ],
             initialValue: selectedDays.join(",")

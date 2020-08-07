@@ -1,18 +1,13 @@
 import BaseAppointment from "../../../services/appointment";
-
 import appointmentService from "../../../services/appointment/appointment.service";
-
-import { OBJECT_NAME } from "../../../../constant";
 
 class MAppointmentWrapper extends BaseAppointment {
   constructor(data) {
     super(data);
-    this._objectName = OBJECT_NAME.APPOINTMENT;
   }
 
   getBasicInfo = () => {
     const { _data } = this;
-    console.log("1283718923 _data ", _data);
     const {
       id,
       participant_one_id,

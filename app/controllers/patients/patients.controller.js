@@ -2,6 +2,27 @@ import Controller from "../";
 import userService from "../../../app/services/user/user.service";
 import patientService from "../../../app/services/patients/patients.service";
 import minioService from "../../../app/services/minio/minio.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
+import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
+import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+import medicineService from "../../services/medicine/medicine.service";
+import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import appointmentService from "../../services/appointment/appointment.service";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
+import medicationReminderService from "../../services/medicationReminder/mReminder.service";
+import MReminderWrapper from "../../ApiWrapper/web/medicationReminder";
+import MedicineWrapper from "../../ApiWrapper/web/medicine";
+import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
+import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
+import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
+import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
+import MedicineApiWrapper from "../../ApiWrapper/mobile/medicine";
+import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
+
+import Log from "../../../libs/log";
+const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
 class PatientController extends Controller {
     constructor() {
@@ -10,25 +31,25 @@ class PatientController extends Controller {
 
     updatePatient = async (req, res) => {
         try {
-            const {userDetails, body, file} = req;
+            const { userDetails, body, file } = req;
             const {
                 pid,
                 profile_pic,
                 name,
-                email
+                email = ""
             } = body || {};
-            const {userId = "3"} = userDetails || {};
+            const { userId = "3" } = userDetails || {};
 
             console.log("\n\n PROFILE PIC FILE \n", req);
 
-            if(email) {
-                const updateUserDetails = await userService.updateEmail(email, userId);
+            if (email) {
+                const updateUserDetails = await userService.updateEmail({ email }, userId);
             }
 
             const splitName = name.split(' ');
 
             // todo minio configure here
-            if(profile_pic) {
+            if (profile_pic) {
                 await minioService.createBucket();
                 // var file = path.join(__dirname, "../../../report.xlsx");
                 const fileStream = fs.createReadStream(profile_pic);
@@ -61,19 +82,263 @@ class PatientController extends Controller {
                 uid: pid
             };
             // add patient for userId
-            const patientDetails = await patientService.updatePatientDetails(patientData);
+            const patientDetails = await patientService.update(patientData);
 
             return this.raiseSuccess(res, 200, {
                 patients: {
-                    [patientDetails.getId] : {
+                    [patientDetails.getId]: {
                         ...patientDetails.getBasicInfo
                     }
                 }
             }, "patient details updated successfully");
 
-        } catch(error) {
+        } catch (error) {
             console.log("UPDATE PATIENT ERROR --> ", error);
             return this.raiseServerError(res, 500, error, error.getMessage());
+        }
+    };
+
+    getPatientAppointments = async (req, res) => {
+        const { raiseServerError, raiseSuccess } = this;
+        try {
+            const { params: { id } = {}, userDetails: { userId } = {} } = req;
+
+            const appointmentList = await appointmentService.getAppointmentForPatient(
+                id
+            );
+            // Logger.debug("appointmentList", appointmentList);
+
+            // if (appointmentList.length > 0) {
+            let appointmentApiData = {};
+            let appointment_ids = [];
+
+            for (const appointment of appointmentList) {
+                const appointmentWrapper = await AppointmentWrapper(appointment);
+                appointmentApiData[
+                    appointmentWrapper.getAppointmentId()
+                ] = appointmentWrapper.getBasicInfo();
+                appointment_ids.push(appointmentWrapper.getAppointmentId());
+            }
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    appointments: {
+                        ...appointmentApiData,
+                    },
+                    appointment_ids
+                },
+                `appointment data for patient: ${id} fetched successfully`
+            );
+        } catch (error) {
+            Logger.debug("getPatientAppointments 500 error", error);
+            raiseServerError(res);
+        }
+    };
+
+    getPatientMedications = async (req, res) => {
+        const { raiseSuccess, raiseServerError } = this;
+        try {
+            const { params: { id } = {} } = req;
+
+            const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+                { participant_id: id }
+            );
+
+            // console.log("712367132 medicationDetails --> ", medicationDetails);
+            // Logger.debug("medication details", medicationDetails);
+
+            let medicationApiData = {};
+            let medicineId = [];
+
+            for (const medication of medicationDetails) {
+                const medicationWrapper = await MReminderWrapper(medication);
+                medicationApiData[
+                    medicationWrapper.getMReminderId()
+                ] = medicationWrapper.getBasicInfo();
+                medicineId.push(medicationWrapper.getMedicineId());
+            }
+
+            Logger.debug(
+                "medicineId",
+                medicationDetails
+            );
+
+            const medicineData = await medicineService.getMedicineByData({
+                id: medicineId
+            });
+
+            let medicineApiData = {};
+
+            for (const medicine of medicineData) {
+                const medicineWrapper = await MedicineApiWrapper(medicine);
+                medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+            }
+
+            Logger.debug("medicineData", medicineData);
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    medications: {
+                        ...medicationApiData
+                    },
+                    medicines: {
+                        ...medicineApiData
+                    }
+                },
+                "Medications fetched successfully"
+            );
+        } catch (error) {
+            Logger.debug("500 error ", error);
+            return raiseServerError(res);
+        }
+    };
+
+    getPatientCarePlanDetails = async (req, res) => {
+        try {
+            const { id: patient_id = 1 } = req.params;
+            const { userDetails: { userId } = {} } = req;
+
+            let show = false;
+
+            let carePlan = await carePlanService.getSingleCarePlanByData({ patient_id });
+            const carePlanData = await CarePlanWrapper(carePlan);
+
+            let templateMedicationData = {};
+            let template_medication_ids = [];
+
+            let templateAppointmentData = {};
+            let template_appointment_ids = [];
+            let medicine_ids = [];
+
+
+            let carePlanTemplateData = null;
+
+            if (carePlanData.getCarePlanTemplateId()) {
+                const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(carePlanData.getCarePlanTemplateId());
+                carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
+                const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
+
+                for (const medication of medications) {
+                    const medicationData = await TemplateMedicationWrapper(medication);
+                    templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
+                    template_medication_ids.push(medicationData.getTemplateMedicationId());
+                    medicine_ids.push(medicationData.getTemplateMedicineId());
+                }
+
+                const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
+
+                for (const appointment of appointments) {
+                    const appointmentData = await TemplateAppointmentWrapper(appointment);
+                    templateAppointmentData[appointmentData.getTemplateAppointmentId()] = appointmentData.getBasicInfo();
+                    template_appointment_ids.push(appointmentData.getTemplateAppointmentId());
+                }
+            }
+            console.log("ON LINE 236================>>>>>>>>>>>>>>>>>>>>>>>>>");
+            let carePlanAppointmentData = {};
+            let appointment_ids = [];
+
+            let carePlanMedicationData = {};
+            let medication_ids = [];
+
+            const carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(carePlanData.getCarePlanId());
+
+            for (const carePlanAppointment of carePlanAppointments) {
+                appointment_ids.push(carePlanAppointment.get("appointment_id"));
+            }
+
+            console.log("ON LINE 250================>>>>>>>>>>>>>>>>>>>>>>>>>");
+            let appointmentApiDetails = {};
+            const appointments = await appointmentService.getAppointmentByData({ id: appointment_ids });
+            if (appointments) {
+                for (const appointment of appointments) {
+                    const appointmentData = await AppointmentWrapper(appointment);
+                    appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+                }
+            }
+
+            console.log("ON LINE 258================>>>>>>>>>>>>>>>>>>>>>>>>>");
+            const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanData.getCarePlanId());
+
+            for (const carePlanMedication of carePlanMedications) {
+                medication_ids.push(carePlanMedication.get("medication_id"));
+            }
+
+            let medicationApiDetails = {};
+            const medications = await medicationReminderService.getMedicationsForParticipant({ id: medication_ids });
+            if (medications) {
+                for (const medication of medications) {
+                    const medicationData = await MReminderWrapper(medication);
+                    medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
+                    medicine_ids.push(medicationData.getMedicineId());
+                }
+            }
+
+            // Logger.debug(
+            //     "medicineId",
+            //     medicine_ids
+            // );
+            let severityDetails = await getCarePlanSeverityDetails(carePlanData.getCarePlanId());
+            const medicineData = await medicineService.getMedicineByData({
+                id: medicine_ids
+            });
+
+            let medicineApiData = {};
+
+            // Logger.debug(
+            //     "medicineData",
+            //     medicineData
+            // );
+
+            for (const medicine of medicineData) {
+                const medicineWrapper = await MedicineApiWrapper(medicine);
+                medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+            }
+
+
+            return this.raiseSuccess(res, 200, {
+                // care_plans: { ...carePlanApiData },
+                // show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments, carePlanTemplateId,
+                care_plans: {
+                    [carePlanData.getCarePlanId()]: {
+                        ...carePlanData.getBasicInfo(),
+                        appointment_ids,
+                        medication_ids,
+                        ...severityDetails
+                    }
+                },
+                care_plan_templates: {
+                    [carePlanData.getCarePlanTemplateId()]: {
+                        ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
+                        template_appointment_ids,
+                        template_medication_ids
+                    }
+                },
+                appointments: {
+                    ...appointmentApiDetails
+                },
+                medications: {
+                    ...medicationApiDetails
+                },
+                template_appointments: {
+                    ...templateAppointmentData
+                },
+                template_medications: {
+                    ...templateMedicationData
+                },
+                medicines: {
+                    ...medicineApiData
+                },
+                show: false
+            }, "Patient care plan details fetched successfully");
+
+        } catch (error) {
+            // Logger.debug("get careplan 500 error ---> ", error);
+            console.log("GET PATIENT DETAILS ERROR --> ", error);
+            return this.raiseServerError(res);
         }
     };
 }

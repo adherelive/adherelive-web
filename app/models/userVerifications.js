@@ -1,7 +1,7 @@
 "use strict";
 import Sequelize from "sequelize";
 import {database} from "../../libs/mysql";
-import {DB_TABLES} from "../../constant";
+import {DB_TABLES, VERIFICATION_TYPE} from "../../constant";
 import Users from "./users";
 
 const UserVerifications = database.define(
@@ -30,6 +30,10 @@ const UserVerifications = database.define(
           status: {
             type: Sequelize.STRING(20)
           },
+        type: {
+            type: Sequelize.ENUM,
+            values: [VERIFICATION_TYPE.FORGOT_PASSWORD, VERIFICATION_TYPE.SIGN_UP, VERIFICATION_TYPE.PATIENT_SIGN_UP]
+        },
     },
     {
         underscored: true,

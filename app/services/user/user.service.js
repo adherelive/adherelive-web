@@ -1,6 +1,7 @@
-import { database } from "../../../libs/mysql";
-import Sequelize from "sequelize";
 import userModel from "../../models/users";
+import {database} from "../../../libs/mysql";
+import {USER_CATEGORY} from "../../../constant";
+import {Op} from "sequelize";
 
 class UserService {
     constructor() {
@@ -44,6 +45,17 @@ class UserService {
         }
     }
 
+    getUserByNumber = async (data) => {
+        try {
+            const user = await userModel.findOne({
+                where: data
+            });
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     getUserById = async id => {
         try {
             const user = await userModel.findOne({
@@ -69,39 +81,83 @@ class UserService {
     };
 
     async addUser(data) {
+        const transaction = await database.transaction();
         try {
-            const response = await userModel.create(data);
+            const response = await userModel.create(data, {transaction});
+            await transaction.commit();
             return response;
         } catch (err) {
+            await transaction.rollback();
             throw err;
         }
     }
 
-    updateEmail = async (email, id) => {
+    updateEmail = async (data, id) => {
+        const transaction = await database.transaction();
         try {
-            const user = await userModel.update({
-               email,
-            }, {
+            const user = await userModel.update(data, {
                 where: {
                     id
-                }
+                },
+                transaction
             });
+            await transaction.commit();
             return user;
         } catch (error) {
+            await transaction.rollback();
             throw error;
         }
     };
 
     updateUser = async (data, id) => {
+        const transaction = await database.transaction();
         try {
             const user = await userModel.update(data, {
                 where: {
                     id
+                },
+                transaction
+            });
+            await transaction.commit();
+            return user;
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+    };
+
+    getPatientByMobile = async (mobile_number) => {
+        try {
+            const user = await userModel.findAll({
+                where: {
+                    category: USER_CATEGORY.PATIENT,
+                    mobile_number,
                 }
             });
             return user;
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    getUserByUsername = async (user_name) => {
+        try {
+            const user = await userModel.findOne({
+                where: {
+                    // category: USER_CATEGORY.PATIENT,
+                    [Op.or]: [
+                        {
+                            email: user_name
+                        },
+                        {
+                            mobile_number: user_name
+                        }
+                    ]
+                }
+            });
+            return user;
+        } catch (err) {
+            throw err;
         }
     };
 

@@ -1,4 +1,5 @@
 import BaseCarePlan from "../../../services/carePlan";
+import carePlanService from "../../../services/carePlan/carePlan.service";
 
 class CarePlanWrapper extends BaseCarePlan {
     constructor(data) {
@@ -9,8 +10,8 @@ class CarePlanWrapper extends BaseCarePlan {
         const {_data} = this;
         const {
             id,
-            name,
             doctor_id,
+            care_plan_template_id,
             patient_id,
             details,
             activated_on,
@@ -21,9 +22,9 @@ class CarePlanWrapper extends BaseCarePlan {
         return {
             basic_info: {
                 id,
-                name,
                 doctor_id,
                 patient_id,
+                care_plan_template_id,
             },
             details,
             activated_on,

@@ -2,16 +2,23 @@ export const PATH = {
   LANDING_PAGE: "/",
   DASHBOARD: "/dashboard",
   SIGN_IN: "/sign-in",
+  VALIDATION_PAGE: "/validation/:link",
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
   SIGN_UP: "/sign-up/:link",
-  REGISTER_PROFILE:'/register-profile',
-  REGISTER_QUALIFICATIONS:'/register-qualifications',
-  REGISTER_CLINICS:'/register-clinics',
+  REGISTER_PROFILE: '/register-profile',
+  REGISTER_QUALIFICATIONS: '/register-qualifications',
+  REGISTER_CLINICS: '/register-clinics',
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"
+  },
+  ADMIN: {
+    DOCTORS: {
+      ROOT: "/doctors",
+      DETAILS: "/doctors/:id"
+    }
   }
 };
 
@@ -32,16 +39,16 @@ export const BEFORE_SLEEP = "10";
 export const MEDICATION_TIMING = {
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
-        [TIME_KEY]: "8am"
-},
-    [AFTER_BREAKFAST]:
+    [TIME_KEY]: "8:00am"
+  },
+  [AFTER_BREAKFAST]:
   {
     [TEXT_KEY]: "After Breakfast",
-    [TIME_KEY]: "9am"
+    [TIME_KEY]: "9:00am"
   },
-  [NOON] : {
+  [NOON]: {
     [TEXT_KEY]: "Noon",
-    [TIME_KEY]: "12pm"
+    [TIME_KEY]: "12:00pm"
   },
   [BEFORE_LUNCH]: {
     [TEXT_KEY]: "Before Lunch",
@@ -57,7 +64,7 @@ export const MEDICATION_TIMING = {
   },
   [AFTER_EVENING_SNACK]: {
     [TEXT_KEY]: "After Evening Snack",
-    [TIME_KEY]: "6pm"
+    [TIME_KEY]: "6:00pm"
   },
   [BEFORE_DINNER]: {
     [TEXT_KEY]: "Before Dinner",
@@ -73,11 +80,40 @@ export const MEDICATION_TIMING = {
   }
 };
 
-export const ONBOARDING_STATUS = {
-  PROFILE_REGISTERED:'profile_registered',
-  QUALIFICATION_REGISTERED:'qualification_registered',
-  CLINIC_REGISTERED:'CLINIC_registered',
+
+export const MEDICATION_TIMING_HOURS = {
+  [BEFORE_BREAKFAST]: 8,
+  [AFTER_BREAKFAST]: 9,
+  [NOON]: 12,
+  [BEFORE_LUNCH]: 12,
+  [AFTER_LUNCH]: 13,
+  [BEFORE_EVENING_SNACK]: 17,
+  [AFTER_EVENING_SNACK]: 18,
+  [BEFORE_DINNER]: 19,
+  [AFTER_DINNER]: 20,
+  [BEFORE_SLEEP]: 22
 };
+
+export const MEDICATION_TIMING_MINUTES = {
+  [BEFORE_BREAKFAST]: 0,
+  [AFTER_BREAKFAST]: 0,
+  [NOON]: 0,
+  [BEFORE_LUNCH]: 30,
+  [AFTER_LUNCH]: 30,
+  [BEFORE_EVENING_SNACK]: 30,
+  [AFTER_EVENING_SNACK]: 0,
+  [BEFORE_DINNER]: 30,
+  [AFTER_DINNER]: 30,
+  [BEFORE_SLEEP]: 30
+};
+
+export const ONBOARDING_STATUS = {
+  PROFILE_REGISTERED: 'profile_registered',
+  QUALIFICATION_REGISTERED: 'qualification_registered',
+  CLINIC_REGISTERED: 'CLINIC_registered',
+};
+
+
 
 export const CRITICAL = "1";
 export const HIGH = "2";
@@ -86,6 +122,7 @@ export const LOW = "4";
 
 export const MALE = "m";
 export const FEMALE = "f";
+export const OTHER = "o";
 
 export const GENDER = {
   [MALE]: {
@@ -95,6 +132,10 @@ export const GENDER = {
   [FEMALE]: {
     value: "female",
     view: "F"
+  },
+  [OTHER]: {
+    value: "other",
+    view: "O"
   }
 };
 
@@ -128,7 +169,9 @@ export const PATIENT_BOX_CONTENT = {
 
 export const DRAWER = {
   ADD_MEDICATION_REMINDER: "ADD_MEDICATION_REMINDER",
+  EDIT_MEDICATION: "EDIT_MEDICATION",
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
+  EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
   PATIENT_DETAILS: "PATIENT_DETAILS",
 };
 
@@ -138,13 +181,38 @@ export const USER_CATEGORY = {
   PROGRAM_ADMIN: "programAdmin",
   CARE_TAKER: "care_taker",
   CHARITY_ADMIN: "charityAdmin",
-  PHARMACY_ADMIN: "pharmacyAdmin"
+  PHARMACY_ADMIN: "pharmacyAdmin",
+  ADMIN: "admin",
 };
 
 export const ACTIVITY_TYPE = {
   VISIT: "visit",
   CALL: "call",
   CHAT: "chat"
+};
+
+export const PERMISSIONS = {
+  ADD_PATIENT: "ADD_PATIENT",
+  VERIFIED_ACCOUNT: 'VERIFIED_ACCOUNT',
+  ADD_APPOINTMENT: "ADD_APPOINTMENT",
+  EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
+  VIEW_PATIENT: 'VIEW_PATIENT',
+  ADD_MEDICATION: "ADD_MEDICATION",
+  EDIT_MEDICATION: "EDIT_MEDICATION",
+  EDIT_GRAPH: 'EDIT_GRAPH',
+  ADD_ACTION: 'ADD_ACTION',
+  ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE"
+};
+
+
+const DAY = "1";
+const MONTH = "2";
+const YEAR = "3";
+
+export const AGE_TYPE = {
+  [DAY]: "d",
+  [MONTH]: "m",
+  [YEAR]: "y"
 };
 
 export const APPOINTMENT_TYPE = {
@@ -187,6 +255,36 @@ export const EVENT_ACTION = {
 };
 
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+export const DAYS_TEXT = {
+  "Mon": "monday",
+  "Tue": "tuesday",
+  "Wed": "wednesday",
+  "Thu": "thursday",
+  "Fri": "friday",
+  "Sat": "saturday",
+  "Sun": "sunday",
+};
+
+export const DAYS_NUMBER = {
+  "Mon": 1,
+  "Tue": 2,
+  "Wed": 3,
+  "Thu": 4,
+  "Fri": 5,
+  "Sat": 6,
+  "Sun": 7,
+};
+
+export const DAYS_TEXT_NUM = {
+  "1": "monday",
+  "2": "tuesday",
+  "3": "wednesday",
+  "4": "thursday",
+  "5": "friday",
+  "6": "saturday",
+  "7": "sunday",
+}
 
 export const HOST = "/api";
 
@@ -232,16 +330,22 @@ export const SEVERITY_STATUS = {
   }
 };
 
-export const NO_ADHERENCE = "no_adherence";
-export const NO_MEDICATION = "no_medication";
-export const NO_APPOINTMENT = "no_appointment";
-export const NO_ACTION = "no_action";
+
+export const NO_ADHERENCE = "1";
+export const NO_MEDICATION = "2";
+export const NO_APPOINTMENT = "3";
+export const NO_ACTION = "4";
+export const TEST_ONE = "5";
+export const TEST_TWO = "6";
 
 export const CHART_TITLE = {
   [NO_ADHERENCE]: "Adherence",
   [NO_MEDICATION]: "Missed Medication",
   [NO_APPOINTMENT]: "Missed Appointments",
-  [NO_ACTION]: "Missed Actions"
+  [NO_ACTION]: "Missed Actions",
+  [TEST_ONE]: 'Test One',
+  [TEST_TWO]: 'Test Two'
+
 };
 
 export const GRAPH_COLORS = {
@@ -276,7 +380,33 @@ export const GRAPH_COLORS = {
       dark: "bg-dark-blue",
       light: "bg-light-blue"
     }
+  },
+  [TEST_ONE]: {
+    dark: "#A0522D",
+    light: "#F5DEB3",
+    className: {
+      dark: "bg-dark-brown",
+      light: "bg-light-brown"
+    }
+
+  },
+
+  [TEST_TWO]: {
+    dark: "#00FF7F",
+    light: "#90EE90",
+    className: {
+      dark: "bg-spring-green",
+      light: "bg-light-green"
+    }
   }
+};
+
+export const GRAPH_TYPE = {
+  [NO_ADHERENCE]: 'donut',
+  [NO_MEDICATION]: 'donut',
+  [NO_APPOINTMENT]: 'donut',
+  [NO_ACTION]: 'donut',
+  [TEST_ONE]: 'donut'
 };
 
 export const SYMPTOM = {
@@ -298,3 +428,39 @@ export const MEDICINE_TYPE = {
   TABLET: "tablet",
   INJECTION: "injection"
 }
+
+export const MEDICINE_UNITS = {
+  MG: 'mg',
+  ML: 'ml'
+}
+
+export const FULL_DAYS = {
+  SUN: "Sun",
+  MON: "Mon",
+  TUE: "Tue",
+  WED: "Wed",
+  THU: "Thu",
+  FRI: "Fri",
+  SAT: "Sat",
+};
+
+export const DAYS_LIST = [
+  FULL_DAYS.MON,
+  FULL_DAYS.TUE,
+  FULL_DAYS.WED,
+  FULL_DAYS.THU,
+  FULL_DAYS.FRI,
+  FULL_DAYS.SAT,
+  FULL_DAYS.SUN
+];
+
+
+export const DAYS_KEYS = [
+  'MON',
+  'TUE',
+  'WED',
+  'THU',
+  'FRI',
+  'SAT',
+  'SUN'
+];

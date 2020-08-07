@@ -69,7 +69,7 @@ class Doctors extends Component {
             <SideMenu {...this.props} />
             <div className="container">
               <Switch>
-                {redirecting && <Redirect to={authRedirection} />}
+                {redirecting && redirecting.length > 0 && (<Redirect to={authRedirection} />)}
                 {/* {!onboarded &&category=="doctor" && <Redirect to={PATH.REGISTER_PROFILE} />} */}
                 {/*{this.state.redirecting && <Redirect to={this.state.redirecting}/>}*/}
                 <Route exact path="/" component={Dashboard} />
@@ -99,7 +99,7 @@ class Doctors extends Component {
                   component={Dashboard}
                 /> */}
 
-                <Route component={Dashboard} />
+                <Route path="" component={Dashboard} />
               </Switch>
             </div>
           </div>

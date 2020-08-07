@@ -15,4 +15,12 @@ export default class CarePlan {
     getCarePlanId = () => {
         return this._data.get("id");
     };
+
+    getCarePlanTemplateId = () => {
+        return this._data.get("care_plan_template_id");
+    };
+
+    getCarePlanDetails = () => {
+        return this._data.get('details');
+    };
 }

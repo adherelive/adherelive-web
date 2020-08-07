@@ -1,6 +1,9 @@
 const Minio = require("minio");
+const fs = require("fs");
 
 const Log = require("../../../libs/log")("minioService");
+
+console.log("__dirname --> ", __dirname);
 
 class MinioService {
   constructor() {
@@ -22,7 +25,7 @@ class MinioService {
       let doesBucketExists = await this.minioClient.bucketExists(
         process.config.minio.MINIO_BUCKET_NAME
       );
-      Log.debug(doesBucketExists);
+      Log.debug("doesBucketExists",doesBucketExists);
       const bucket_name = process.config.minio.MINIO_BUCKET_NAME;
       if (!doesBucketExists) {
         const policy = {
@@ -35,7 +38,7 @@ class MinioService {
               Principal: {
                 AWS: ["*"]
               },
-              Resource: [`arn:aws:s3:::${bucket_name}/*`]
+              Resource: [`arn:aws:s3:::${bucket_name}/*`] //${bucket_name}
             }
           ]
         };
@@ -49,6 +52,17 @@ class MinioService {
           process.config.minio.MINIO_BUCKET_NAME,
           JSON.stringify(policy)
         );
+
+        fs.readFile(`${__dirname}/../../../logo.png`, (err, data) => {
+          if(!err) {
+            const emailLogo = this.saveBufferObject(data, "logo.png");
+            Log.debug("emailLogo", emailLogo);
+          } else {
+            Log.debug("err", err);
+          }
+        });
+
+
       }
       this.bucket = process.config.minio.MINIO_BUCKET_NAME;
       return result;
