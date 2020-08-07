@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Menu, Tooltip } from "antd";
 import { PATH } from "../../constant";
-
-import Logo from "../../Assets/images/logo3x.png";
-import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
 
 const { Item: MenuItem } = Menu || {};

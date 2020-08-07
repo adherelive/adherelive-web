@@ -1,17 +1,17 @@
 import { connect } from "react-redux";
 import Routes from "../../Routes";
-import {getInitialData} from "../../modules/auth";
+import { getInitialData } from "../../modules/auth";
 
 const mapStateToProps = state => {
-    const {auth} = state;
-    const {authenticated, authRedirection} = auth;
-    console.log("containers ===== ", authenticated, authRedirection);
-    return {authenticated, authRedirection};
+  const { auth, users, doctors } = state;
+  const { authenticated, authenticated_user, authRedirection, authPermissions = [] } = auth;
+  console.log("containers ===== ", authenticated, authRedirection);
+  return { authenticated, authPermissions, authRedirection, authenticated_user, users, doctors };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-      getInitialData: () => dispatch(getInitialData())
+    getInitialData: () => dispatch(getInitialData())
   };
 };
 

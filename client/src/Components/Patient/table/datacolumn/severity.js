@@ -6,16 +6,16 @@ import {
 
 export default props => {
   console.log("123891 treatmentData this.props --> ", props);
-  const { treatmentData: { severity_level = "" } = {} } = props || {};
+  const { carePlanData: { severity = "" } = {} } = props || {};
 
   return (
     <div className="wp100 flex align-center">
       <div
-        className={`w10 h10 br50 bg-${severity_level ? SEVERITY_STATUS[severity_level].color : ""}`}
+        className={`w10 h10 br50 bg-${severity?severity : ""}`}
       ></div>
       <div className="ml10">
-        {severity_level
-          ? SEVERITY_STATUS[severity_level].text
+        {severity
+          ? severity
           : TABLE_DEFAULT_BLANK_FIELD}
       </div>
     </div>

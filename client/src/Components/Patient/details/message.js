@@ -65,6 +65,21 @@ const messages = defineMessages({
         id: "app.patient_profile.patient_profile_header",
         description: "Patient Profile Header",
         defaultMessage: "Patient Details"
+    },
+    use_template: {
+        id: "app.patient_profile.use_template",
+        description: "Patient Profile Header",
+        defaultMessage: "Use Template"
+    },
+    add_medication: {
+        id: "app.patient_profile.addMedication",
+        description: "Patient Profile Header",
+        defaultMessage: "Add Medication"
+    },
+    nothing_to_show: {
+        id: "app.patient_profile.nothing_to_show",
+        description: "Patient Profile Header",
+        defaultMessage: "No Medications or Appointments to Show"
     }
 
 });

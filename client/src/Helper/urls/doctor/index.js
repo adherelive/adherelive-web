@@ -1,32 +1,57 @@
-export const getdoctorProfileRegisterUrl = (userId) => {
-    return `/auth/doctor-profile-registration/${userId}`;
-  };
+export const getdoctorProfileRegisterUrl = () => {
+  return `/doctors/`;
+};
 
-  export const getdoctorQualificationRegisterUrl = (userId) => {
-    return `/auth/doctor-qualification-registration/${userId}`;
-  };
+export const getdoctorQualificationRegisterUrl = () => {
+  return `/doctors/details/`;
+};
 
-  export const getdoctorClinicRegisterUrl = (userId) => {
-    return `/auth/doctor-clinic-registration/${userId}`;
-  };
+export const getdoctorClinicRegisterUrl = () => {
+  return `/doctors/clinics`;
+};
 
-  export const getdoctorProfileRegisterDataUrl = (userId) => {
-    return `/auth/doctor-profile-registration/${userId}`;
-  };
+export const getdoctorProfileRegisterDataUrl = (userId) => {
+  return `/auth/doctor-profile-registration/${userId}`;
+};
 
-  export const getdoctorQualificationRegisterDataUrl = (userId) => {
-    return `/auth/doctor-qualification-registration/${userId}`;
-  };
-  export const getRegisterQualificationUrl = (userId) => {
-    return `/auth/register-qualification/${userId}`;
-  };
+export const getdoctorQualificationRegisterDataUrl = () => {
+  return `/doctors/`;
+};
+export const getRegisterQualificationUrl = () => {
+  return `/doctors/qualifications`;
+};
 
-  export const getUploadQualificationDocumentUrl = (userId) => {
-    return `/auth/upload-qualification-document/${userId}`;
-  };
+export const getRegisterRegistrationUrl = () => {
+  return `/doctors/registrations`;
+};
 
-  export const getDeleteQualificationDocumentUrl = (qualificationId) => {
-    return `/auth/delete-qualification-document/${qualificationId}`;
-  };
 
-  
+export const getUploadQualificationDocumentUrl = () => {
+  return `/doctors/qualifications/docs`;
+};
+
+
+export const getUploadRegistrationDocumentUrl = () => {
+  return `/doctors/registrations/docs`;
+};
+
+export const getDeleteQualificationDocumentUrl = (qualificationId) => {
+  return `/doctors/qualification-documents/${qualificationId}`;
+};
+
+
+export const getDeleteRegistrationDocumentUrl = (registrationId) => {
+  return `/doctors/registration-documents/${registrationId}`;
+};
+
+export const getAllDoctorsUrl = () => {
+  return `/admin/doctors`;
+};
+
+export const getDoctorDetailsUrl = id => {
+  return `/admin/doctors/${id}`;
+};
+
+export const getVerifyDoctorUrl = id => {
+  return `/admin/doctors/${id}`;
+};

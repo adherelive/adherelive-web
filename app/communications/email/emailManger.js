@@ -98,7 +98,20 @@ class EmailManger {
               {}
             );
             break;
-          
+        case "invitation":
+          templateString = await this.genrateEmailTemplateString(
+              "invitation",
+              payload.templateData,
+              {}
+          );
+          break;
+        case "verifiedDoctor":
+          templateString = await this.genrateEmailTemplateString(
+              "verifiedDoctor",
+              payload.templateData,
+              {}
+          );
+          break;
         case "BookingStatusSubmittedUser":
           templateString = await this.genrateEmailTemplateString(
             "general",

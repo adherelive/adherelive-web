@@ -17,22 +17,24 @@ class MobileMedicineController extends Controller {
         try {
             const {query: {value = ""} = {}} = req;
 
-            const medicine = await medicineService.search(value);
+            const allMedicine = await medicineService.search(value);
 
-            Logger.debug("medicine search value", value);
+            // Logger.debug("medicine search value", value);
 
             let medicineApiDetails = {};
 
-            if(medicine) {
-                const medicineApiWrapper = await MedicineApiWrapper(medicine);
-                medicineApiDetails = medicineApiWrapper.getBasicInfoBulk();
+            if(allMedicine.length > 0) {
+                for(const medicine of allMedicine) {
+                    const medicineApiWrapper = await MedicineApiWrapper(medicine);
+                    medicineApiDetails[medicineApiWrapper.getMedicineId()] = medicineApiWrapper.getBasicInfo();
+                }
             } else {
                 
             }
 
             return raiseSuccess(res, 200, {...medicineApiDetails}, "medicine data fetched successfully");
         } catch(error) {
-            Logger.debug("500 error", error);
+            // Logger.debug("500 error", error);
             return raiseServerError(res, 500, {}, error.message);
         }
     };

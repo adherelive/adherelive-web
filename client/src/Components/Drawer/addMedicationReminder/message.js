@@ -291,10 +291,20 @@ export default defineMessages({
     description: "",
     defaultMessage: "New Medication"
   },
+  titleInner: {
+    id: "medication_reminder.modal.titleInner",
+    description: "",
+    defaultMessage: "Medication"
+  },
   add_button_text: {
     id: "medication_reminder.drawer.add.buttom.text",
     description: "",
     defaultMessage: "Add"
+  },
+  submit_button_text: {
+    id: "medication_reminder.drawer.submit.buttom.text",
+    description: "",
+    defaultMessage: "Submit"
   },
   timing: {
     id: "medication_reminder.drawer.add.timing.text",
@@ -315,5 +325,10 @@ export default defineMessages({
     id: "medication_reminder.drawer.delete.text",
     description: "",
     defaultMessage: "Delete",
+  },
+  dose: {
+    id: "medication_reminder.drawer.Dose",
+    description: "",
+    defaultMessage: "Dose",
   }
 });

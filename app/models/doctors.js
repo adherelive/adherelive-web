@@ -58,7 +58,7 @@ const Doctors = database.define(
     },
     gender: {
       type: Sequelize.ENUM,
-      values: [GENDER.MALE, GENDER.FEMALE, GENDER.TRANS],
+      values: [GENDER.MALE, GENDER.FEMALE, GENDER.OTHER],
       allowNull: true,
     },
     profile_pic: {
@@ -111,9 +111,9 @@ const Doctors = database.define(
   }
 );
 
-Doctors.belongsTo(Users, {
-  foreignKey: "user_id",
-  targetKey: "id",
+Doctors.hasOne(Users, {
+    foreignKey: "id",
+    targetKey: "user_id"
 });
 
 export default Doctors;

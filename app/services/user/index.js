@@ -16,4 +16,21 @@ export default class User {
     getUserId() {
         return this._data.user_id;
     }
+
+    getCategory = () => {
+        return this._data.category;
+    }
+
+    getPassword = () => {
+        return this._data.password;
+    }
+
+    getEmail = () => {
+        return this._data.email;
+    };
+
+    isActivated = () => {
+        const {verified, activated_on} = this._data || {};
+        return verified && activated_on !== null;
+    };
 }

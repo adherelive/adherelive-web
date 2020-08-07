@@ -29,14 +29,17 @@ const medicationReminderFormSchema = Joi.object().keys({
   // medicine_id: Joi.number().required(),
   strength: Joi.number().required(),
   unit: Joi.string().required(),
-  quantity: Joi.number().required(),
+  quantity: Joi.number().optional(),
   when_to_take: Joi.array().required(),
   repeat: Joi.string().required(),
   repeat_days: Joi.array(),
-  repeat_interval: Joi.number().optional(),
+  repeat_interval: Joi.number().optional().allow(""),
   start_date: Joi.date().required(),
-  end_date: Joi.date().optional(),
-  medicine_id: Joi.number().optional()
+  end_date: Joi.date().optional().allow("", null),
+  medicine_id: Joi.number().optional().allow(""),
+  participant_id: Joi.number().optional().allow(""),
+  critical: Joi.boolean().optional().allow(""),
+  description: Joi.string().max(500, 'utf-8').optional().allow("")
 });
 
 const validateStartTime = startTime => {
@@ -50,10 +53,24 @@ const validateTimeInterval = (startTime, endTime) => {
 
 export const validateMedicationReminderData = (req, res, next) => {
   const { body: data = {} } = req;
-  const { startTime, endTime } = data;
+  const { start_date, end_date } = data;
   const isValid = medicationReminderFormSchema.validate(data);
   if (isValid && isValid.error != null) {
     return raiseClientError(res, 422, isValid.error, "");
+  }
+  // if (!validateStartTime(start_date)) {
+  //   return raiseClientError(res, 422, {}, "you can't create Medication on passed time.");
+  //     // const response = new Response(false, 422);
+  //     // response.setError({
+  //     //     error: "you can't create Appointment on passed time."
+  //     // });
+  //     // return res.status(422).json(response.getResponse());
+  // }
+  if (end_date && !validateTimeInterval(start_date, end_date)) {
+    return raiseClientError(res, 422, {}, "start date should be less than end date");
+    // const response = new Response(false, 422);
+    // response.setError({ error: "start time should be less than end time" });
+    // return res.status(422).json(response.getResponse());
   }
   next();
 };

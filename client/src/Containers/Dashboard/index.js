@@ -1,19 +1,39 @@
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Dashboard from "../../Components/Dashboard";
-import {signOut, getInitialData} from "../../modules/auth";
-import {searchMedicine} from "../../modules/medicines";
-import {connect} from "react-redux";
+import { signOut, getInitialData } from "../../modules/auth";
+import { addPatient } from '../../modules/patients';
+import { searchMedicine } from "../../modules/medicines";
+import { searchTreatment } from "../../modules/treatments";
+import { searchCondition } from "../../modules/conditions";
+import { searchSeverity } from "../../modules/severity";
+import { getGraphs, updateGraphs } from "../../modules/graphs";
+import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-    const {graphs} = state;
-    return {graphs};
+    const { graphs, auth: { authPermissions = [] } = {},
+        treatments = {},
+        conditions = {},
+        severity = {} } = state;
+    return {
+        graphs,
+        treatments,
+        conditions,
+        severity,
+        authPermissions
+    };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         signOut: () => dispatch(signOut()),
+        getGraphs: () => dispatch(getGraphs()),
+        updateGraphs: (data) => dispatch(updateGraphs(data)),
         getInitialData: () => dispatch(getInitialData()),
         searchMedicine: value => dispatch(searchMedicine(value)),
+        searchCondition: value => dispatch(searchCondition(value)),
+        searchTreatment: value => dispatch(searchTreatment(value)),
+        searchSeverity: value => dispatch(searchSeverity(value)),
+        addPatient: (data) => dispatch(addPatient(data)),
     };
 };
 

@@ -10,7 +10,7 @@ export default props => {
   return (
     <div>
       {start_date
-        ? `${moment(start_date).format("DD-MM-YYYY")}`
+        ? `${moment(start_date).format("LL")}`
         : TABLE_DEFAULT_BLANK_FIELD}
     </div>
   );

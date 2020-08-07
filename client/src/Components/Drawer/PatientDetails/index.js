@@ -1,13 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon } from "antd";
-import ChatComponent from "../../../Containers/Chat";
 import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
 import messages from "./message";
 import moment from "moment";
 
-import CloseIcon from "../../../Assets/images/close.svg";
-import ChatIcon from "../../../Assets/images/chat.svg";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
 
 class PatientDetailsDrawer extends Component {
@@ -17,18 +14,18 @@ class PatientDetailsDrawer extends Component {
   }
 
   componentDidMount() {
-    const {getMedications, payload: {patient_id} = {}} = this.props;
+    const { getMedications, payload: { patient_id } = {} } = this.props;
     console.log("19283791273 patient_id --> ", patient_id);
-    if(patient_id) {
+    if (patient_id) {
       getMedications(patient_id);
     }
   }
 
   componentDidUpdate(prevProps) {
-    const {payload: {patient_id} = {}, getMedications} = this.props;
-    const {payload: {patient_id: prev_patient_id} = {}} = prevProps;
+    const { payload: { patient_id } = {}, getMedications } = this.props;
+    const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
 
-    if(patient_id !== prev_patient_id) {
+    if (patient_id !== prev_patient_id) {
       getMedications(patient_id);
     }
   }
@@ -56,14 +53,16 @@ class PatientDetailsDrawer extends Component {
         } = {}
       } = medications[id] || {};
 
-      const {basic_info: {type, name} = {}} = medicines[medicine_id] || {};
+      const { basic_info: { type, name = '' } = {} } = medicines[medicine_id] || {};
       // const { repeat_type, doses, date = [] } = schedule || {};
       return (
         <div className="flex justify-space-between align-center mb10">
-          <div className="pointer tab-color fw600 flex-1">{name}</div>
-          <div className="flex-2">{`${repeat_days.join(", ")}`}</div>
+          <div className="pointer tab-color fw600 wp35 tooltip">{name.length > 20 ? name.substring(0, 21) + '...' : name}
 
-          <div className="flex-1">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
+            <span class="tooltiptext">{name}</span></div>
+          <div className="wp35 tal">{`${repeat_days.join(", ")}`}</div>
+
+          <div className="wp20 tar">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
         </div>
       );
     });
@@ -75,47 +74,64 @@ class PatientDetailsDrawer extends Component {
 
   handlePatientDetailsRedirect = e => {
     e.preventDefault();
-    const { history, payload: {patient_id} = {} } = this.props;
+    const { history, payload: { patient_id } = {} } = this.props;
+    this.onClose();
     history.push(`/patients/${patient_id}`);
+
   };
 
   getPatientDetailContent = () => {
-    const { treatments, doctors, providers, patients, payload } = this.props;
+    const { treatments = {}, doctors = {}, conditions = {}, severity: severities = {}, providers, patients, payload, care_plans, } = this.props;
     const {
       formatMessage,
       getMedicationList,
       handlePatientDetailsRedirect
     } = this;
 
-    const {patient_id : id = ""} = payload || {};
+    let { patient_id: id = "" } = payload || {};
 
-    if(id) {
+    if (id) {
+
+      let carePlanId = 1;
+      for (let carePlan of Object.values(care_plans)) {
+
+        let { basic_info: { id: cpId = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
+
+        console.log('73284782734783274982347', carePlanId, id, patientId);
+        if (parseInt(id) === parseInt(patientId)) {
+          carePlanId = cpId;
+        }
+      }
+
+
+      const { basic_info: { doctor_id = 1 } = {}, activated_on: start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
+      const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};
+      const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
+      const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
       const {
-        basic_info: { first_name, middle_name, last_name, age = "--", gender } = {},
+        basic_info: { first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
         reports = [],
-        treatment_id,
+        details = {},
         provider_id,
-        doctor_id,
-        condition = "--"
       } = patients[id] || {};
-  
-      const { basic_info: { treatment_type = "--", pid = "123456" } = {}, severity_level = "1", start_date = "--" } =
-        treatments[treatment_id] || {};
-      const { basic_info: { name: doctorName = "--" } = {} } = doctors[doctor_id] || {};
+
+      let { age_type = '' } = details || {};
+
+      const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
       const { basic_info: { name: providerName = "--" } = {} } =
         providers[provider_id] || {};
-  
-        console.log("3912739 gender --> ", gender);
+
+      console.log("3912739 gender --> ", patients[id]);
       return (
         <Fragment>
           {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
-  
+
           {/*header*/}
-  
+
           <div className="wp100 flex justify-space-between align-center mt20">
             <div className="flex justify-space-around align-center">
               <div className="pr10 fs24 fw600">{`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name}`}</div>
-              <div className="pr10 fs20 fw500">{`(${GENDER[gender].view} ${age})`}</div>
+              <div className="pr10 fs20 fw500">{`(${gender ? `${GENDER[gender].view} ` : ''}${age ? age + `${age_type === '2' && age > 1 ? ' months' : age_type === '2' ? ' month' : age_type === '1' && age > 1 ? ' days' : age_type === '1' ? ' day' : ''}` : '--'})`}</div>
               {/* <Icon type="wechat" width={20} /> */}
             </div>
             <img
@@ -125,16 +141,16 @@ class PatientDetailsDrawer extends Component {
               onClick={handlePatientDetailsRedirect}
             />
           </div>
-          <div className="fw700">{`PID: ${pid}`}</div>
-  
+          <div className="fw700 wp100">{`PID: ${uid}`}</div>
+
           {/*boxes*/}
-  
+
           <div className="mt20">
             {Object.keys(PATIENT_BOX_CONTENT).map(id => {
               const { total = "1", critical = "0" } = reports[id] || {};
               return (
                 <div
-                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS  ? "ml20" : ""} w235 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex direction-column justify-space-between`}
+                  className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS ? "ml16" : ""} mwp45 maxwp48 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex flex-1 direction-column justify-space-between`}
                 >
                   <div className="ml10 mt10 fs16 fw600">
                     {PATIENT_BOX_CONTENT[id]["text"]}
@@ -155,23 +171,23 @@ class PatientDetailsDrawer extends Component {
               );
             })}
           </div>
-  
+
           {/*details*/}
-  
+
           <div className="clearfix"></div>
-  
-          <div className="mt20">
+
+          <div className="mt20 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.patient_details)}
             </div>
             <div className="fw500 black-85">
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.treatment)}</div>
-                <div className="flex-2">{treatment_type}</div>
+                <div className="flex-2">{treatment}</div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.severity)}</div>
-                <div className="flex-2">{severity_level}</div>
+                <div className="flex-2">{severity}</div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.condition)}</div>
@@ -179,11 +195,11 @@ class PatientDetailsDrawer extends Component {
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.doctor)}</div>
-                <div className="flex-2">{doctorName}</div>
+                <div className="flex-2">{doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name ? `${doctor_last_name} ` : ""}` : "--"}</div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.start_date)}</div>
-                <div className="flex-2">{start_date}</div>
+                <div className="flex-2">{start_date ? moment(start_date).format("Do MMM YYYY") : '--'}</div>
               </div>
               <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.provider)}</div>
@@ -191,14 +207,14 @@ class PatientDetailsDrawer extends Component {
               </div>
             </div>
           </div>
-  
+
           {/*medications*/}
-  
-          <div className="mt20 black-85">
+
+          <div className="mt20 black-85 wp100">
             <div className="mt10 mb10 fs18 fw600">
               {formatMessage(messages.medications)}
             </div>
-  
+
             {getMedicationList()}
           </div>
         </Fragment>
@@ -219,17 +235,25 @@ class PatientDetailsDrawer extends Component {
     const { visible } = this.props;
     const { onClose, getPatientDetailContent } = this;
 
-    if(visible !== true) {
+    if (visible !== true) {
       return null;
     }
     return (
       <Fragment>
         <Drawer
+
+          title="   "
           placement="right"
           // closable={false}
+          headerStyle={{
+            position: "sticky",
+            zIndex: "9999",
+            top: "0px"
+          }}
           onClose={onClose}
           visible={visible} // todo: change as per state, -- WIP --
           width={600}
+
         >
           {getPatientDetailContent()}
         </Drawer>

@@ -1,6 +1,6 @@
 import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
-
+import {completePath} from "../../../helper/filePath";
 
 class MDoctorWrapper extends BaseDoctor {
     constructor(data) {
@@ -18,7 +18,10 @@ class MDoctorWrapper extends BaseDoctor {
             last_name,
             address,
             qualifications,
-            activated_on
+            activated_on,
+            profile_pic,
+            city,
+            speciality,
         } = _data || {};
         return {
             basic_info: {
@@ -28,8 +31,11 @@ class MDoctorWrapper extends BaseDoctor {
                 first_name,
                 middle_name,
                 last_name,
-                address
+                address,
+                speciality,
+                profile_pic: completePath(profile_pic)
             },
+            city,
             qualifications,
             activated_on
         };

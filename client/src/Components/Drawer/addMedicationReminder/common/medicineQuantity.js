@@ -89,10 +89,6 @@ class MedicineQuantity extends Component {
           {getFieldDecorator(FIELD_NAME, {
             rules: [
               {
-                required: true,
-                message: "Enter Quantity"
-              },
-              {
                 type: "number",
                 message: "Quantity should be a number"
               }

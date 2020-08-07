@@ -11,6 +11,25 @@ export const SIGNING = "SIGNING";
 export const SIGNING_COMPLETED = "SIGNING_COMPLETED";
 export const SIGNING_COMPLETED_WITH_ERROR = "SIGNING_COMPLETED_WITH_ERROR";
 
+
+export const FORGOT_PASSWORD = "FORGOT_PASSWORD";
+export const FORGOT_PASSWORD_COMPLETED = "FORGOT_PASSWORD_COMPLETED";
+export const FORGOT_PASSWORD_COMPLETED_WITH_ERROR = "FORGOT_PASSWORD_COMPLETED_WITH_ERROR";
+
+
+export const VERIFY_FORGOT_PASSWORD_LINK = "VERIFY_FORGOT_PASSWORD_LINK";
+export const VERIFY_FORGOT_PASSWORD_LINK_COMPLETED = "VERIFY_FORGOT_PASSWORD_LINK_COMPLETED";
+export const VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR = "VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR";
+
+
+export const RESET_PASSWORD = "RESET_PASSWORD";
+export const RESET_PASSWORD_COMPLETED = "RESET_PASSWORD_COMPLETED";
+export const RESET_PASSWORD_COMPLETED_WITH_ERROR = "RESET_PASSWORD_COMPLETED_WITH_ERROR";
+
+export const VERIFY_USER = "VERIFY_USER";
+export const VERIFY_USER_COMPLETED = "VERIFY_USER_COMPLETED";
+export const VERIFY_USER_COMPLETED_WITH_ERROR = "VERIFY_USER_COMPLETED_WITH_ERROR";
+
 export const GOOGLE_SIGNING = "GOOGLE_SIGNING";
 export const GOOGLE_SIGNING_COMPLETED = "GOOGLE_SIGNING_COMPLETED";
 export const GOOGLE_SIGNING_COMPLETED_WITH_ERROR =
@@ -52,22 +71,22 @@ export const AUTH_INITIAL_STATE = {
   authenticated: false,
 };
 
-function setAuthRedirect(user) {
-  let userData = Object.values(user).length ? Object.values(user)[0] : [];
+function setAuthRedirect(user, isInitial = false) {
+  // let userData = Object.values(user).length ? Object.values(user)[0] : [];
 
   const {
     onboarded = true,
     onboarding_status = "",
     category = USER_CATEGORY.DOCTOR,
-  } = userData;
+  } = user;
   console.log(
-    "USERRRRR IN SET AUUTTTHHHHH",
+    "USERRRRR IN SET AUUTTTHHHHH VERIFYYYY",
     !onboarded && category == USER_CATEGORY.DOCTOR,
     onboarded,
     category,
-    userData
+    user
   );
-  let authRedirect = "";
+  let authRedirect = '';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
       authRedirect = PATH.REGISTER_QUALIFICATIONS;
@@ -77,6 +96,45 @@ function setAuthRedirect(user) {
       authRedirect = PATH.REGISTER_CLINICS;
     } else {
       authRedirect = PATH.REGISTER_PROFILE;
+    }
+  } else if (category === USER_CATEGORY.ADMIN) {
+    if (!isInitial) {
+      authRedirect = PATH.ADMIN.DOCTORS.ROOT;
+    }
+  }
+  return authRedirect;
+}
+
+
+function setAuthRedirectSignIn(user, isInitial = false) {
+  // let userData = Object.values(user).length ? Object.values(user)[0] : [];
+
+  const {
+    onboarded = true,
+    onboarding_status = "",
+    category = USER_CATEGORY.DOCTOR,
+  } = user;
+  console.log(
+    "USERRRRR IN SET AUUTTTHHHHH",
+    !onboarded && category == USER_CATEGORY.DOCTOR,
+    onboarded,
+    category,
+    user
+  );
+  let authRedirect = '/';
+  if (!onboarded && category == USER_CATEGORY.DOCTOR) {
+    if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
+      authRedirect = PATH.REGISTER_QUALIFICATIONS;
+    } else if (
+      onboarding_status == ONBOARDING_STATUS.QUALIFICATION_REGISTERED
+    ) {
+      authRedirect = PATH.REGISTER_CLINICS;
+    } else {
+      authRedirect = PATH.REGISTER_PROFILE;
+    }
+  } else if (category === USER_CATEGORY.ADMIN) {
+    if (!isInitial) {
+      authRedirect = PATH.ADMIN.DOCTORS.ROOT;
     }
   }
   return authRedirect;
@@ -105,21 +163,200 @@ export const signIn = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { users = {} } = data;
-        let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        let authRedirection = setAuthRedirect(users);
+        const { users = {}, auth_user = "", auth_category = "", permissions = [] } = data;
+        // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
+        let authRedirection = setAuthRedirectSignIn(users[auth_user]);
         console.log(
           " ID IN 898978 SIGNUPPPP",
           authRedirection,
-          authUser,
+          // authUser,
           response.payload.data.user
         );
         dispatch({
           type: SIGNING_COMPLETED,
           payload: {
-            authenticatedUser: authUser,
+            users,
+            authenticatedUser: auth_user,
             authRedirection,
+            authCategory: auth_category,
+            authPermissions: permissions
           },
+          data,
+        });
+      }
+    } catch (err) {
+      console.log("err signin", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+export const forgotPassword = (payload) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: FORGOT_PASSWORD });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: Auth.forgotPasswordUrl(),
+        data: payload,
+      });
+
+      console.log("SIGN IN response --> ", response);
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: FORGOT_PASSWORD_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+        const { users = {}, auth_user = "", auth_category = "", permissions = [] } = data;
+
+        dispatch({
+          type: FORGOT_PASSWORD_COMPLETED,
+          payload: {}
+        });
+      }
+    } catch (err) {
+      console.log("err signin", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+export const verifyForgotPasswordLink = (link) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: VERIFY_FORGOT_PASSWORD_LINK });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: Auth.verifyResetPasswordLinkUrl(link),
+
+      });
+
+      console.log("SIGN IN response --> ", response);
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: VERIFY_FORGOT_PASSWORD_LINK_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+
+
+        dispatch({
+          type: VERIFY_FORGOT_PASSWORD_LINK_COMPLETED,
+          payload: {}
+        });
+      }
+    } catch (err) {
+      console.log("err VALIDATE FORGOT PASSWORD LINK", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+
+export const resetPassword = (payload) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: RESET_PASSWORD });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: Auth.resetPasswordUrl(),
+        data: payload
+      });
+
+      console.log("SIGN IN response --> ", response);
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: RESET_PASSWORD_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+
+
+        dispatch({
+          type: RESET_PASSWORD_COMPLETED,
+          payload: {}
+        });
+      }
+    } catch (err) {
+      console.log("err RESET PASSWORD", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+
+
+export const verifyUser = (link) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: VALIDATING_LINK });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: Auth.getVerifyUserUrl(link)
+      });
+
+      console.log("8798078960785766086897968776465555555555557 ", response);
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: VALIDATING_LINK_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+        let { users = {}, auth_user = '', auth_category = '', permissions = [] } = data;
+        // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
+        console.log(
+          " ID IN 898978 VERIFYYYYY",
+          users, auth_user, users[auth_user]
+        );
+        let authRedirection = setAuthRedirect(users[auth_user]);
+        console.log(
+          " ID IN 898978 VERIFYYYYY",
+          authRedirection,
+          users, auth_user, users[auth_user]
+        );
+        dispatch({
+          type: VALIDATING_LINK_COMPLETED,
+          payload: {
+            users,
+            authenticatedUser: auth_user,
+            authRedirection,
+            authCategory: auth_category,
+            authPermissions: permissions
+          },
+          data
         });
       }
     } catch (err) {
@@ -298,23 +535,25 @@ export const getInitialData = () => {
         // const {lastUrl = false} = data;
         // const {  users } = response.payload.data;
 
-        let { users = {} } = response.payload.data;
-        let authUser = Object.values(users).length ? Object.values(users)[0] : {};
+        let { users = {}, auth_user = "", auth_category = "", permissions = [] } = data;
+        // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
-        let authRedirection = setAuthRedirect(users);
+        let authRedirection = setAuthRedirect(users[auth_user], true);
 
         console.log(
           " ID IN 898978 GET INITIAL DATAA",
           authRedirection,
-          authUser,
+          // authUser,
           response.payload.data.users
         );
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED,
           payload: {
             users,
-            authenticatedUser: authUser,
+            authenticatedUser: auth_user,
             authRedirection,
+            authCategory: auth_category,
+            authPermissions: permissions
           },
           data,
         });
@@ -339,13 +578,25 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
     case GETTING_INITIAL_DATA_COMPLETED:
       return {
         authenticated: true,
+        authenticated_category: payload.authCategory,
         authenticated_user: payload.authenticatedUser,
-        authRedirection: payload.authRedirection
+        authRedirection: payload.authRedirection,
+        authPermissions: payload.authPermissions
       };
+
+    case VALIDATING_LINK_COMPLETED:
+      return {
+        authenticated: true,
+        authenticated_user: payload.authenticatedUser,
+        authenticated_category: payload.authCategory,
+        authRedirection: payload.authRedirection,
+        authPermissions: payload.authPermissions
+      }
+
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
       return {
         authenticated: false,
-        authRedirection: "/sign-in",
+        // authRedirection: "",
       };
     case GOOGLE_SIGNING_COMPLETED:
       return {
@@ -378,8 +629,10 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
     case SIGNING_COMPLETED:
       return {
         authenticated: true,
+        authenticated_category: payload.authCategory,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
+        authPermissions: payload.authPermissions
       };
     default:
       return state;

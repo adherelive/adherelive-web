@@ -1,18 +1,10 @@
 import BaseAppointment from "../../../services/appointment";
-
 import appointmentService from "../../../services/appointment/appointment.service";
-
-import { OBJECT_NAME } from "../../../../constant";
 
 class AppointmentWrapper extends BaseAppointment {
   constructor(data) {
     super(data);
-    this._objectName = OBJECT_NAME.APPOINTMENT;
   }
-
-  getObjectName = () => {
-    return this._objectName;
-  };
 
   getBasicInfo = () => {
     const { _data } = this;
@@ -66,3 +58,14 @@ export default async (data = null, id = null) => {
   const appointment = await appointmentService.getAppointment({ id });
   return new AppointmentWrapper(appointment.get());
 };
+
+
+
+/*
+*
+* appointment.getall
+* *.getreference
+* patient => patientWrapper(appointment->paitnet)
+*
+*
+* */

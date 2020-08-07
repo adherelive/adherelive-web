@@ -1,7 +1,234 @@
 .form-label {
   font-style: normal;
   font-weight: normal;
-  font-size: @12px!important;
+  // font-size: @12px!important;
+  font-size: 18px !important;
+  font-weight: 500;
+  margin-bottom: 8px;
   line-height: @22px;
   color: #979797;
+}
+
+.form-label-from {
+  font-style: normal;
+  font-weight: normal;
+  // font-size: @12px!important;
+  font-size: 18px !important;
+  font-weight: 500;
+  line-height: @22px;
+  color: #979797;
+}
+
+.ant-drawer-body {
+  display: flex;
+  padding: 16px;
+  min-height: 90%;
+  flex-direction: column;
+  padding-bottom: 10px;
+  // padding-left: 10px;
+}
+
+.template-block {
+  display: flex;
+  min-height: 100%;
+  padding-bottom: 40px;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.drawer-block {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 90%;
+  padding: 8px;
+  border: solid 1px #e7e7e7;
+  border-radius: 4px;
+  margin: 10px;
+  margin-left: 0px;
+}
+
+.drawer-block-description {
+  color: #212b36;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-right: 4px;
+}
+
+.medication-image-tablet {
+  height: 20px;
+  margin-left: 8px;
+}
+
+.ant-calendar-picker-clear,
+.ant-calendar-picker-icon {
+  top: 52%;
+}
+
+.ant-drawer-body .ant-form-item-children textarea {
+  margin-bottom: 25px;
+}
+
+.ant-drawer-body {
+  align-items: center;
+}
+
+// .dose-input {
+//   display: flex;
+//   flex: 1;
+//   align-self: flex-end;
+//   width: 80%;
+// }
+
+// .ant-drawer-body .ant-form-item-children input {
+//   border-radius: 4px 0px 0px 4px;
+// border-right: 0px;
+// }
+
+.gender-unselected {
+  color: @deep-cyan;
+  border: 1px solid @deep-cyan;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  margin-right: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 70px;
+  cursor: pointer;
+}
+
+.gender-selected {
+  background-color: @deep-cyan;
+  color: #fff;
+  margin-right: 8px;
+  // border:1px solid @deep-cyan;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 70px;
+  cursor: pointer;
+}
+
+.dose-input {
+  .ant-input-number-input-wrap {
+    input {
+      // border:1px solid #979797;
+      border-right: none;
+      border-radius: 4px 0px 0px 4px;
+    }
+  }
+}
+.ant-input-number-handler-down {
+  border-bottom-right-radius: 0px;
+}
+.ant-input-number-handler-up {
+  border-top-right-radius: 0px;
+}
+
+.drawer-select {
+  .ant-select-selection {
+    .ant-select-selection__rendered {
+      width: 75%;
+    }
+    .ant-select-selection__placeholder {
+      width: 75%;
+    }
+  }
+}
+
+.add-patient-radio {
+  .ant-radio-group {
+    display: flex;
+    width: 100%;
+    margin-left:-16px;
+    justify-content: flex-start;
+    .ant-radio-button-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      color: @deep-cyan;
+      font-size: 18px;
+      font-weight: 500;
+      height: 45px;
+      width: 80px;
+      margin-left:16px;
+      border-radius: 4px;
+      border: 1px solid @deep-cyan;
+    }
+  }
+
+  .ant-radio-group-solid
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: #fff;
+    background: @deep-cyan;
+    border-color: @deep-cyan;
+    box-shadow: none !important;
+    border-radius: 4px;
+  }
+}
+
+.critical-checkbox {
+  .ant-checkbox {
+    color: @deep-cyan;
+  }
+  .ant-checkbox-wrapper {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 18px;
+    font-weight: 500;
+    font-variant: tabular-nums;
+    line-height: 1.5;
+    list-style: none;
+    font-feature-settings: "tnum", "tnum";
+    display: flex;
+    align-items: center;
+    line-height: unset;
+    cursor: pointer;
+  }
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+// .ant-drawer-body .ant-select-selection__placeholder, .ant-drawer-body .ant-select-selection__rendered {
+//   width:75%;
+// }
+
+// .ant-select-selection__placeholder{
+//   width:75%;
+// }
+
+.ant-drawer-header {
+  min-height: 55px;
 }

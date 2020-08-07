@@ -53,7 +53,7 @@ export const doctorQualificationData =async(userId)=>{
            let documents= await documentService.getDoctorQualificationDocuments(DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,qualificationId);
            
               for(let document of documents){
-              photos.push(document.get('document'));
+              photos.push(`${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${document.get('document')}`);
             }
             
              qualificationData.photos=photos;
@@ -87,20 +87,23 @@ export const uploadImageS3= async(userId ,file)=>{
     hash.hex();
     hash = String(hash);
   
-    const folder = "adhere";
     // const file_name = hash.substring(4) + "_Education_"+fileExt;
-    const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
+    const file_name = hash.substring(4) + "/" + imageName + "/" + fileExt;
+
+    console.log("----------------------------------------- imageName, fileExt ---> ", imageName, fileExt);
     
-    const metaData = {
-      "Content-Type":
-          "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  };
-  const fileUrl = folder+ "/" +file_name;
-  await minioService.saveBufferObject(file.buffer, file_name, metaData);
+  //   const metaData = {
+  //     "Content-Type":
+  //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  // };
+  const fileUrl = "/" +file_name;
+  await minioService.saveBufferObject(file.buffer, file_name);
 
   // console.log("file urlll: ", process.config.minio.MINI);
-  const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
+  const file_link = process.config.minio.MINIO_S3_HOST +"/" + process.config.minio.MINIO_BUCKET_NAME + fileUrl;
   let files = [file_link];
+
+  console.log("((((((((((((__________________________", file_link, fileUrl);
  return files;
 }catch(error){
     console.log(" UPLOAD  CATCH ERROR ", error);

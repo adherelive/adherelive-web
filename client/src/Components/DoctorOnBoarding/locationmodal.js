@@ -1,19 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-// import messages from "./message";
-// import {formatMessage} from "react-intl/src/format";
-import { DeleteTwoTone } from "@ant-design/icons";
-import uuid from 'react-uuid';
-import { Tabs, Button, Steps, Col, Select, Input, Upload, Modal, TimePicker, Icon, message } from "antd";
-import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH } from '../../constant';
-import throttle from "lodash-es/throttle";
-import { withRouter } from "react-router-dom";
+import { Button, Input, Modal } from "antd";
 import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng
 } from "react-places-autocomplete";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 
 
@@ -31,7 +22,7 @@ class ClinicRegister extends Component {
     }
 
     componentDidMount() {
-        this.setState({ address: '', pincode: '', addressManual: '',landmark:'' })
+        this.setState({ address: '', pincode: '', addressManual: '', landmark: '' })
     }
 
     setManualAddress = e => {
@@ -39,27 +30,26 @@ class ClinicRegister extends Component {
     };
 
     setManualPincode = e => {
-        this.setState({ pincode: e.target.value });
+
+        const { value } = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+            this.setState({ pincode: e.target.value });
+        }
     };
 
     setManualLandMark = e => {
         this.setState({ landmark: e.target.value });
     };
 
-    componentWillMount(){
-        this.setState({ address: '', pincode: '', addressManual: '' ,landmark:''})
-    }
-    
 
     handleSave = () => {
         let { address = '', pincode = '', addressManual = '', landmark = '' } = this.state;
         let { handleOk } = this.props;
-        let manual = addressManual + (pincode ? `,${pincode}` : '') + (landmark ? `,${landmark}` : '');
+        let manual = addressManual + (landmark ? `,${landmark}` : '') + (pincode ? `,Pincode:${pincode}` : '');
 
-        let locationToSave = address ? address.description : manual;
-        // this.GooglePlacesRef.setAddressText("");
+        let locationToSave = address ? address : manual;
         handleOk(locationToSave);
-        this.myRef.current && this.clearInput();
         this.setState({
             address: '',
             pincode: '',
@@ -79,7 +69,6 @@ class ClinicRegister extends Component {
         const { handleCancel } = this.props;
 
         handleCancel();
-        this.myRef.current && this.clearInput();
         this.setState({
             address: '',
             pincode: '',
@@ -90,8 +79,17 @@ class ClinicRegister extends Component {
     }
 
     clearInput = () => {
-       this.myRef.current.value = "";
+        this.myRef.current.value = "";
     }
+
+    handleChangeAddress = address => {
+        this.setState({ address });
+    };
+
+    handleSelect = address => {
+
+        this.setState({ address });
+    };
 
 
     render() {
@@ -116,37 +114,43 @@ class ClinicRegister extends Component {
             >
                 <div className='location-container'>
                     <div className='form-category-headings'>Google</div>
-                    <GooglePlacesAutocomplete
-                        inputClassName={'form-inputs-google'}
-                        // ref={(instance) => { this.GooglePlacesRef = instance }}
-                        renderInput={(props) => (
-                            <Input
-                            ref={this.myRef}
-                                className="form-input-google"
-                                value={address ? address.description  : ''}
-                                // Custom properties
-                                {...props}
-                            />
+                    <PlacesAutocomplete
+                        value={address ? address : (!location.includes('Pincode')) ? location : null}
+                        disabled={addressManual ? true : false}
+                        onChange={this.handleChangeAddress}
+                        onSelect={this.handleSelect}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div>
+                                <Input
+
+                                    disabled={addressManual ? true : false}
+                                    {...getInputProps({
+                                        placeholder: 'Search Address',
+                                        className: 'form-inputs-google',
+                                    })}
+                                />
+                                <div className="google-places-autocomplete__suggestions-container">
+                                    {loading && <div>Loading...</div>}
+                                    {suggestions.map(suggestion => {
+                                        const className = "google-places-autocomplete__suggestion";
+                                        // inline style for demonstration purpose
+                                        return (
+                                            <div
+                                                {...getSuggestionItemProps(suggestion, {
+                                                    className,
+
+                                                })}
+                                            >
+                                                <span>{suggestion.description}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         )}
-                        // renderSuggestions={(active, suggestions, onSelectSuggestion) => (
-                        //     <div >
-                        //       {
-                        //         suggestions.map((suggestion) => (
-                        //           <div
-                        //             onClick={(event) => onSelectSuggestion(suggestion, event)}
-                        //           >
-                        //             {suggestion.description}
-                        //           </div>
-                        //         ))
-                        //       }
-                        //     </div>
-                        //   )}
-                        //    inputStyle={{height:50,width:261,border:1,borderColor:'#d7d7d7'}}
+                    </PlacesAutocomplete>
 
-
-                        placeholder={'Search Address...'}
-                        onSelect={this.handleChange}
-                    />
 
 
 
@@ -155,24 +159,24 @@ class ClinicRegister extends Component {
                     <Input
                         placeholder="Ex: 112,Aurobindo Marg..."
                         disabled={address ? true : false}
-                        value={addressManual}
-                        className={"form-inputs"}
+                        value={addressManual ? addressManual : location.includes('Pincode:') ? location.split(',')[0] : ''}
+                        className={"form-inputs-location-modal"}
                         onChange={this.setManualAddress}
                     />
                     <div className='form-headings'>Pincode</div>
                     <Input
                         placeholder="Ex: 110000"
                         disabled={address ? true : false}
-                        value={pincode}
-                        className={"form-inputs"}
+                        value={pincode ? pincode : location.includes('Pincode:') ? location.split('Pincode:')[1] : ''}
+                        className={"form-inputs-location-modal"}
                         onChange={this.setManualPincode}
                     />
                     <div className='form-headings'>Landmark</div>
                     <Input
                         placeholder="Ex: Near Vishvavidyalya Metro Station"
                         disabled={address ? true : false}
-                        value={landmark}
-                        className={"form-inputs"}
+                        value={landmark ? landmark : location.includes('Pincode:') ? location.split(',')[1] : ''}
+                        className={"form-inputs-location-modal"}
                         onChange={this.setManualLandMark}
                     />
 

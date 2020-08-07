@@ -21,13 +21,25 @@ module.exports = {
           key: 'id'
         }
       },
-      degree: {
-        type: Sequelize.STRING(100),
+      degree_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: {
+            tableName: DB_TABLES.DEGREE,
+          },
+          key: 'id'
+        }
       },
-      college: {
-        type: Sequelize.STRING(100),
+      college_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: {
+            tableName: DB_TABLES.COLLEGE,
+          },
+          key: 'id'
+        }
       },
       year: {
         type: Sequelize.INTEGER,

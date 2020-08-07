@@ -1,56 +1,65 @@
-import doctorModel from "../../models/doctors";
+import Doctor from "../../models/doctors";
+import { database } from "../../../libs/mysql";
+import Users from "../../models/users";
 
 class DoctorsService {
-    constructor() {}
+  constructor() {}
 
-    addDoctor = async data => {
-      try {
-          // todo: change to update when sign-in flow done for mobile
-          const doctor = await doctorModel.create(data);
-          return doctor;
-      } catch(error) {
-          throw error;
-      }
-    };
+  addDoctor = async data => {
+    const transaction = await database.transaction();
+    try {
+      const doctor = await Doctor.create(data, { transaction });
 
-    getDoctorByUserId = async user_id => {
-        try {
-            const doctor = await doctorModel.findOne({
-                where: {
-                    user_id
-                }
-            });
-            return doctor;
-        } catch(error) {
-            throw error;
-        }
-    };
-
-    updateDoctor = async (data, id) => {
-        try {
-            const doctor = await doctorModel.update(data, {
-                where: {
-                    id
-                }
-            });
-            return doctor;
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    getDoctorByData = async (data) => {
-        try {
-            console.log("DATA --> ", data);
-            const doctor = await doctorModel.findAll({
-                where: data
-            });
-            console.log("DOCTOR ----> ", doctor);
-            return doctor;
-        } catch(error) {
-            throw error;
-        }
+      await transaction.commit();
+      return doctor;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
     }
+  };
+
+  getDoctorByUserId = async user_id => {
+    try {
+      const doctor = await Doctor.findOne({
+        where: {
+          user_id,
+        },
+      });
+      return doctor;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  updateDoctor = async (data, id) => {
+    const transaction = await database.transaction();
+    try {
+      const doctor = await Doctor.update(data, {
+        where: {
+          id
+        },
+        transaction
+      });
+      await transaction.commit();
+      return doctor;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  };
+
+  getDoctorByData = async data => {
+    try {
+      console.log("DATA --> ", data);
+      const doctor = await Doctor.findAll({
+        where: data
+      });
+      console.log("DOCTOR ----> ", doctor);
+      return doctor;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default new DoctorsService();

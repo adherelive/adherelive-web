@@ -1,9 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-// import messages from "./message";
-// import {formatMessage} from "react-intl/src/format";
-import { DeleteTwoTone } from "@ant-design/icons";
-import uuid from 'react-uuid';
 import { Tabs, Button, Steps, Col, Select, Input, InputNumber, Upload, Modal, TimePicker, Icon, message } from "antd";
 import SideMenu from "./sidebar";
 import { REQUEST_TYPE, PATH } from '../../constant';
@@ -12,7 +8,24 @@ import { getUploadURL } from '../../Helper/urls/user';
 import { doRequest } from '../../Helper/network';
 import plus from '../../Assets/images/plus.png';
 import { withRouter } from "react-router-dom";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+// import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import PlacesAutocomplete, {
+    geocodeByAddress,
+    getLatLng,
+} from 'react-places-autocomplete';
+import india from '../../Assets/images/india.png';
+import australia from '../../Assets/images/australia.png';
+import us from '../../Assets/images/flag.png';
+import uk from '../../Assets/images/uk.png';
+import russia from '../../Assets/images/russia.png';
+import germany from '../../Assets/images/germany.png';
+import southAfrica from '../../Assets/images/south-africa.png';
+import pakistan from '../../Assets/images/pakistan.png';
+import bangladesh from '../../Assets/images/bangladesh.png';
+import japan from '../../Assets/images/japan.png';
+import china from '../../Assets/images/china.png';
+import switzerland from '../../Assets/images/switzerland.png';
+import france from '../../Assets/images/france.png';
 
 
 
@@ -28,7 +41,7 @@ class Profileregister extends Component {
             mobile_number: '',
             category: '',
             city: '',
-            prefix: '',
+            prefix: '91',
             profile_pic: '',
             profile_pic_url: '',
             loading: ''
@@ -41,19 +54,35 @@ class Profileregister extends Component {
     }
 
     fetchData = async () => {
-        const { authenticated_user = {}, getDoctorProfileRegisterData } = this.props;
+        const { authenticated_user = '', users, getDoctorQualificationRegisterData } = this.props;
 
         const { basic_info: { id = 1 } = {} } = authenticated_user;
+        await getDoctorQualificationRegisterData();
+        const { doctors } = this.props;
 
-        await getDoctorProfileRegisterData(id);
+        const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
 
-        const { onBoarding = {} } = this.props;
-        const { profileData: { name = "", email = "", mobile_number = '', category = '', city = '', prefix = '', profile_pic = '' } = {} } = onBoarding || {};
-        this.setState({ name, email, mobile_number, category, city, prefix, profile_pic_url_saved: profile_pic });
+        this.setState({ email, mobile_number, category, prefix: newPrefix ? newPrefix : '91' });
+        for (let doctor of Object.values(doctors)) {
+            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '', address = '' } } = doctor;
+            if (parseInt(user_id) === parseInt(authenticated_user)) {
+                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
+                this.setState({ name, city: address, profile_pic_url_saved: profile_pic, profile_pic });
+            }
+
+        }
+        // const { profileData: { name = "", email = "", mobile_number = '', category = '', city = '', prefix = '', profile_pic = '' } = {} } = onBoarding || {};
+
     }
 
     setName = e => {
-        this.setState({ name: e.target.value });
+        // this.setState({ name: e.target.value });
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        // console.log('8423907492837589723859325', value, reg.test(value));
+        if (reg.test(value) || value === '') {
+            this.setState({ name: e.target.value });
+        }
     };
 
     setCategory = value => {
@@ -68,8 +97,10 @@ class Profileregister extends Component {
         this.setState({ email: e.target.value });
     };
 
-    setCity = address => {
-        this.setState({ city:address.definition });
+
+
+    setCity = e => {
+        this.setState({ city: e.target.value });
     };
 
     getCategoryOptions = () => {
@@ -103,6 +134,7 @@ class Profileregister extends Component {
             console.log('RESPONSEEEEEEEEEEE!@!@!@!@!@!@!@!@', response);
             if (response.status) {
                 let { files = [] } = response.payload.data;
+                console.log("9387193781 files --> ", files);
                 this.setState({ profile_pic_url: files[0] })
             } else {
                 message.error('Something went wrong.')
@@ -183,15 +215,15 @@ class Profileregister extends Component {
     }
 
     onNextClick = () => {
-        const { history, authenticated_user } = this.props;
-        const { basic_info: { id = 1 } = {} } = authenticated_user || {};
-        console.log('ONCLICKKKKKK', authenticated_user);
+        const { history, authenticated_user = 1, users } = this.props;
+        const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
+        console.log('ONCLICKKKKKK', id);
         const validate = this.validateData();
         if (validate) {
             const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' } = this.state;
             const data = { name, email, mobile_number, category, city, prefix, profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved };
             const { doctorProfileRegister } = this.props;
-            doctorProfileRegister(data, id).then(response => {
+            doctorProfileRegister(data).then(response => {
                 const { status } = response;
                 if (status) {
                     history.replace(PATH.REGISTER_QUALIFICATIONS);
@@ -208,62 +240,77 @@ class Profileregister extends Component {
         reader.readAsDataURL(img);
     }
 
+    handleChangeCity = address => {
+
+        // console.log('8423907492837589723859325', address);
+        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        // console.log('8423907492837589723859325', address, reg.test(address));
+        // if (reg.test(address) || address === '') {
+        this.setState({ city: address });
+        // }
+    };
+
+    handleSelect = address => {
+
+        this.setState({ city: address });
+    };
     setNumber = e => {
         const { value } = e.target;
         const reg = /^-?\d*(\.\d*)?$/;
         if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
             this.setState({ mobile_number: e.target.value });
         }
-      };
-    
-      // '.' at the end or only '-' in the input box.
-      onBlur = () => {
+    };
+
+    // '.' at the end or only '-' in the input box.
+    onBlur = () => {
         const { value, onBlur, onChange } = this.props;
         let valueTemp = value;
         if (value.charAt(value.length - 1) === '.' || value === '-') {
-          valueTemp = value.slice(0, -1);
+            valueTemp = value.slice(0, -1);
         }
         onChange(valueTemp.replace(/0*(\d+)/, '$1'));
         if (onBlur) {
-          onBlur();
+            onBlur();
         }
-      };
+    };
 
     renderProfileForm = () => {
-
+        console.log("2738612386128 ", this.state.profile_pic);
+        console.log("2738612386128 2", this.state.profile_pic_url_saved);
         let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url_saved = '' } = this.state;
         const prefixSelector = (
 
-            <Select className="flex align-center h50 w70"
+            <Select className="flex align-center h50 w80"
                 value={prefix}
                 onChange={this.setPrefix}>
                 {/* india */}
-                <Option value="91"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+91</div></div></Option>
+                <Option value="91"><div className='flex align-center'><img src={india} className='w16 h16' /> <div className='ml4'>+91</div></div></Option>
                 {/* australia */}
-                <Option value="61"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+61</div></div></Option>
+                <Option value="61"><div className='flex align-center'><img src={australia} className='w16 h16' /> <div className='ml4'>+61</div></div></Option>
                 {/* us */}
-                <Option value="1"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+1</div></div></Option>
+                <Option value="1"><div className='flex align-center'><img src={us} className='w16 h16' /> <div className='ml4'>+1</div></div></Option>
                 {/* uk */}
-                <Option value="44"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+44</div></div></Option>
+                <Option value="44"><div className='flex align-center'><img src={uk} className='w16 h16' /> <div className='ml4'>+44</div></div></Option>
                 {/* china */}
-                <Option value="86"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+86</div></div></Option>
+                <Option value="86"><div className='flex align-center'><img src={china} className='w16 h16' /> <div className='ml4'>+86</div></div></Option>
                 {/* japan */}
-                <Option value="81"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+81</div></div></Option>
+                <Option value="81"><div className='flex align-center'><img src={japan} className='w16 h16' /> <div className='ml4'>+81</div></div></Option>
                 {/* germany */}
-                <Option value="49"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+49</div></div></Option>
+                <Option value="49"><div className='flex align-center'><img src={germany} className='w16 h16' /> <div className='ml4'>+49</div></div></Option>
                 {/* france */}
-                <Option value="33"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+33</div></div></Option>
+                <Option value="33"><div className='flex align-center'><img src={france} className='w16 h16' /> <div className='ml4'>+33</div></div></Option>
                 {/* switzerland */}
-                <Option value="41"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+41</div></div></Option>
+                <Option value="41"><div className='flex align-center'><img src={switzerland} className='w16 h16' /> <div className='ml4'>+41</div></div></Option>
 
                 {/* russia */}
-                <Option value="7"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+7</div></div></Option>
+                <Option value="7"><div className='flex align-center'><img src={russia} className='w16 h16' /> <div className='ml4'>+7</div></div></Option>
                 {/* south africa */}
-                <Option value="27"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+27</div></div></Option>
+                <Option value="27"><div className='flex align-center'><img src={southAfrica} className='w16 h16' /> <div className='ml4'>+27</div></div></Option>
                 {/* pakistan */}
-                <Option value="92"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+92</div></div></Option>
+                <Option value="92"><div className='flex align-center'><img src={pakistan} className='w16 h16' /> <div className='ml4'>+92</div></div></Option>
                 {/* bangladesh */}
-                <Option value="880"><div className='flex align-center'><Icon type="flag" theme="filled" /> <div className='ml4'>+880</div></div></Option>
+                <Option value="880"><div className='flex align-center'><img src={bangladesh} className='w16 h16' /> <div className='ml4'>+880</div></div></Option>
             </Select>
         );
         const uploadButton = (
@@ -293,6 +340,7 @@ class Profileregister extends Component {
                 <Input
                     placeholder="Name"
                     value={name}
+                    maxLength={200}
                     className={"form-inputs"}
                     onChange={this.setName}
                 />
@@ -317,27 +365,39 @@ class Profileregister extends Component {
                 />
 
                 <div className='form-headings'>City</div>
-                <GooglePlacesAutocomplete
-                    inputClassName={'form-inputs-google'}
-                    // ref={(instance) => { this.GooglePlacesRef = instance }}
-                    renderInput={(props) => (
-                        <Input
-                        className="form-input-google"
-                            value={city}
-                            // Custom properties
-                            {...props}
-                        />
+                <PlacesAutocomplete
+                    value={this.state.city}
+                    onChange={this.handleChangeCity}
+                    onSelect={this.handleSelect}
+                >
+                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                        <div>
+                            <Input
+                                {...getInputProps({
+                                    placeholder: 'Search City',
+                                    className: 'form-inputs-google',
+                                })}
+                            />
+                            <div className="google-places-autocomplete__suggestions-container">
+                                {loading && <div>Loading...</div>}
+                                {suggestions.map(suggestion => {
+                                    const className = "google-places-autocomplete__suggestion";
+                                    // inline style for demonstration purpose
+                                    return (
+                                        <div
+                                            {...getSuggestionItemProps(suggestion, {
+                                                className,
+
+                                            })}
+                                        >
+                                            <span>{suggestion.description}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     )}
-                    //    inputStyle={{height:50,width:261,border:1,borderColor:'#d7d7d7'}}
-
-
-                    placeholder={city?city:'Search Address...'}
-                    initialValue={city?city:null}
-                    onSelect={({ description }) => (
-                        this.setState({ city: description })
-                      )}
-                />
-
+                </PlacesAutocomplete>
             </div>
         );
     }
@@ -351,9 +411,9 @@ class Profileregister extends Component {
                     <div className='header'>Create your Profile</div>
                     <div className='registration-body'>
                         <div className='flex mt36'>
-                            <UploadSteps  current={0} />
+                            <UploadSteps current={0} />
                         </div>
-                        <div className='flex'>
+                        <div className='flex mb100'>
                             {this.renderProfileForm()}
                         </div>
                     </div>

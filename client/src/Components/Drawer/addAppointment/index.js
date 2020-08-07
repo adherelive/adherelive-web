@@ -38,8 +38,10 @@ class AddAppointment extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { addAppointment } = this.props;
+    const { addCarePlanAppointment, getAppointments, payload: { patient_id }, patients, carePlanId } = this.props;
     const { formRef = {}, formatMessage } = this;
+
+    const { basic_info: { user_id } = {} } = patients[patient_id] || {};
     const {
       props: {
         form: { validateFields },
@@ -53,6 +55,7 @@ class AddAppointment extends Component {
           patient = {},
           date,
           start_time,
+          reason,
           end_time,
           description = "",
           treatment = "",
@@ -61,41 +64,55 @@ class AddAppointment extends Component {
         const data = {
           // todo: change participant one with patient from store
           participant_two: {
-            id: "2",
+            id: patient_id,
             category: "patient",
           },
           date,
           start_time,
           end_time,
+          reason,
           description,
-          treatment,
+          treatment_id: treatment,
         };
 
-        try {
-          const response = await addAppointment(data);
-          const {
-            status,
-            statusCode: code,
-            payload: { message: errorMessage = "", error, error: {error_type = ""} = {} },
-          } = response || {};
+        // console.log('6797867076878678978768',data);
+        if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
+          message.error('Cannot create appointment for past time.')
+        }
+        else if (moment(end_time).isBefore(moment(start_time))) {
+          message.error('Please select valid timings for appointment.')
+        } else {
+          try {
+            const response = await addCarePlanAppointment(data, carePlanId);
+            const {
+              status,
+              statusCode: code,
+              payload: { message: errorMessage = "", error, error: { error_type = "" } = {} },
+            } = response || {};
 
-          if (code === 422 && error_type === "slot_present") {
+            if (code === 422 && error_type === "slot_present") {
               message.warn(
                 `${errorMessage} range: ${moment(start_time).format(
                   "LT"
                 )} - ${moment(end_time).format("LT")}`
               );
-          } else if(status === true) {
-            message.success(formatMessage(messages.add_appointment_success));
-          } else {
-            message.warn(errorMessage);
-          }
+            } else if (status === true) {
+              message.success(formatMessage(messages.add_appointment_success));
+              // getAppointments(patient_id);
+            } else {
+              if (code === 500) {
+                message.warn('Something went wrong, please try again.');
+              } else {
+                message.warn(errorMessage);
+              }
+            }
 
-          console.log("add appointment response -----> ", response);
-        } catch (error) {
-          console.log("ADD APPOINTMENT UI ERROR ---> ", error);
+          } catch (error) {
+            console.log("ADD APPOINTMENT UI ERROR ---> ", error);
+          }
         }
       }
+
     });
   };
 
@@ -114,8 +131,14 @@ class AddAppointment extends Component {
   };
 
   render() {
-    const { visible = true } = this.props;
+    const { visible,
+      hideAppointment,
+      appointmentVisible,
+      editAppointment } = this.props;
     const { disabledSubmit } = this.state;
+
+
+    console.log('STATE OF DRAWER==========>IN APPOINTMENT', editAppointment ? appointmentVisible : visible, visible, appointmentVisible, hideAppointment, editAppointment);
     const {
       onClose,
       formatMessage,
@@ -129,24 +152,29 @@ class AddAppointment extends Component {
       // loading: loading && !deleteLoading
     };
 
-    if(visible !== true) {
-      return null;
-    }
+    // if (visible !== true) {
+    //   return null;
+    // }
 
     return (
       <Fragment>
         <Drawer
           placement="right"
           // closable={false}
-          onClose={onClose}
-          visible={visible} // todo: change as per prop -> "visible", -- WIP --
-          width={`45%`}
-          title={formatMessage(messages.add_appointment)}
-          // headerStyle={{
-          //     display:"flex",
-          //     justifyContent:"space-between",
-          //     alignItems:"center"
-          // }}
+          headerStyle={{
+            position: "sticky",
+            zIndex: "9999",
+            top: "0px"
+          }}
+          onClose={editAppointment ? hideAppointment : onClose}
+          visible={editAppointment ? appointmentVisible : visible}
+          width={'35%'}
+          title={editAppointment ? formatMessage(messages.appointment) : formatMessage(messages.add_appointment)}
+        // headerStyle={{
+        //     display:"flex",
+        //     justifyContent:"space-between",
+        //     alignItems:"center"
+        // }}
         >
           {/* <div className="flex direction-row justify-space-between"> */}
           <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />

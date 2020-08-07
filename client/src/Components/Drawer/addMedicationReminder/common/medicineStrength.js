@@ -35,7 +35,8 @@ class MedicationStrength extends Component {
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched
+      isFieldTouched,
+      medication
       //getFieldValue
     } = form;
     // console.log("act,", activityType, activityModeOption, activityMode);
@@ -46,7 +47,7 @@ class MedicationStrength extends Component {
     return (
       <Fragment>
         <FormItem
-          className="flex-1 align-self-end wp80"
+          className="flex-1 align-self-end wp100"
           validateStatus={error ? "error" : ""}
           help={error ? error[0] : ""}
         >
@@ -62,7 +63,7 @@ class MedicationStrength extends Component {
               }
             ],
             initialValue: getInitialValue()
-          })(<InputNumber min={1} style={{ width: "100%" }} />)}
+          })(<InputNumber  min={1} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>
     );

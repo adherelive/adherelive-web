@@ -1,12 +1,11 @@
 import BaseUser from "../../../services/user";
-
 import userService from "../../../services/user/user.service";
-import { OBJECT_NAME } from "../../../../constant";
+import userPermissionService from "../../../services/userPermission/userPermission.service";
+import permissionService from "../../../services/permission/permission.service";
 
 class MUserWrapper extends BaseUser {
   constructor(data) {
     super(data);
-    this.objectName = OBJECT_NAME.USER;
   }
 
   getBasicInfo = () => {
@@ -16,6 +15,7 @@ class MUserWrapper extends BaseUser {
       user_name,
       email,
       mobile_number,
+        prefix,
       sign_in_type,
       category,
       activated_on,
@@ -28,22 +28,52 @@ class MUserWrapper extends BaseUser {
         id,
         user_name,
         email,
-        mobile_number
+        mobile_number,
+          prefix,
       },
-      sign_in_type,
-      category,
-      activated_on,
       verified,
       onboarded,
-      onboarding_status
+      onboarding_status,
+      sign_in_type,
+      category,
+      activated_on
     };
   };
+
+  getPermissions = async () => {
+    const {getCategory} = this;
+    try {
+        const permissionsData = await userPermissionService.getPermissionsByData({category: getCategory()});
+        let permission_ids = [];
+        let permissionData = [];
+
+        for(const userPermission of permissionsData) {
+          const {permission_id} = userPermission || {};
+          permission_ids.push(permission_id);
+        }
+
+        const permissions = await permissionService.getPermissionsById(permission_ids);
+
+        for(const permission of permissions) {
+          const {type} = permission || {};
+          permissionData.push(type);
+        }
+
+        console.log("permissionsData  ------------> ", permissionsData, permission_ids);
+
+        return {
+            permissions: permissionData
+        };
+    } catch(error) {
+        throw error;
+    }
+}
 }
 
 export default async (data = null, userId = null) => {
   if (data) {
     return new MUserWrapper(data);
   }
-  const user = await userService.getUserByData({ id: userId });
-  return new MUserWrapper(user);
+  const user = await userService.getUserById(userId);
+  return new MUserWrapper(user.get());
 };

@@ -6,6 +6,10 @@
   height: auto;
 }
 
+.w80 {
+  width: 80px;
+}
+
 .tac {
   text-align: center;
 }
@@ -18,8 +22,12 @@
   text-align: right;
 }
 
-.w40 {
+.wp40 {
   width: 40%;
+}
+
+.wp35 {
+  width: 35%;
 }
 
 .w50 {
@@ -36,6 +44,10 @@
 
 .h50 {
   height: 50px;
+}
+
+.h53 {
+  height: 53px;
 }
 
 .h60 {
@@ -127,8 +139,31 @@
   width: 120px;
 }
 
+.w12 {
+  width: 12px;
+}
+
+.w14 {
+  width: 14px;
+}
+
+.w16 {
+  width: 16px;
+}
+
 .h120 {
   height: 120px;
+}
+.h12 {
+  height: 12px;
+}
+
+.h14 {
+  height: 14px;
+}
+
+.h16 {
+  height: 16px;
 }
 
 .w130 {
@@ -191,6 +226,18 @@
   width: 350px;
 }
 
+.w35 {
+  width: 35px;
+}
+
+.w40 {
+  width: 40px;
+}
+
+.w30 {
+  width: 30px;
+}
+
 .h350 {
   height: 350px;
 }
@@ -223,10 +270,6 @@
   width: 90%;
 }
 
-.wp80 {
-  width: 80%;
-}
-
 .hp90 {
   height: 90%;
 }
@@ -243,6 +286,13 @@
   width: 50%;
 }
 
+.mwp45 {
+  min-width: 45%;
+}
+.maxwp48 {
+  min-width: 48%;
+}
+
 .hp50 {
   height: 50%;
 }
@@ -257,6 +307,14 @@
 
 .wp20 {
   width: 20%;
+}
+
+.wp15 {
+  width: 15%;
+}
+
+.wp45 {
+  width: 45%;
 }
 
 .hp20 {
@@ -283,6 +341,10 @@
 
 .br5 {
   border-radius: 5px;
+}
+
+.br25 {
+  border-radius: @25px;
 }
 
 .br50 {
@@ -321,6 +383,64 @@
   border: 1px solid @dark-blue;
 }
 
+.br-black {
+  border: 1px solid @dark;
+}
+
 .z1 {
   z-index: 1;
+}
+
+.mwp40 {
+  min-width: 40%;
+}
+
+.mhp40 {
+  min-height: 40%;
+}
+
+.wi {
+  width: inherit;
+}
+
+.hi {
+  height: inherit;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  //white-space: nowrap;
+  overflow: hidden;
+}
+
+.word-wrap {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+a {
+  text-decoration: none;
+}
+
+.mg-ml-radio-group {
+  .ant-radio-group-solid
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: #000;
+    background: #fff;
+    border: none;
+    border-color: #fff;
+    box-shadow: none;
+    border-radius: 4px;
+  }
+  .mg-ml {
+    .unselected-text {
+      color: #979797;
+    }
+  }
+}
+
+.no-shadow {
+  box-shadow: none !important;
 }

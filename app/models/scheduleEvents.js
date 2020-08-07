@@ -2,7 +2,6 @@
 import Sequelize from "sequelize";
 import {database} from "../../libs/mysql";
 import {DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY, GENDER, EVENT_TYPE, EVENT_STATUS} from "../../constant";
-import Users from "./users";
 
 const ScheduleEvent = database.define(
     DB_TABLES.SCHEDULE_EVENTS,

@@ -25,6 +25,7 @@ const END_TIME = "end_time";
 const TREATMENT = "treatment";
 const DESCRIPTION = "description";
 
+const REASON = "reason";
 const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION];
 
 class AddAppointmentForm extends Component {
@@ -86,7 +87,7 @@ class AddAppointmentForm extends Component {
       <Option key={`p-${patient_id}`} value={patient_id} name={patient_id}>
         {`${first_name} ${middle_name ? `${middle_name} ` : ""}${
           last_name ? `${last_name} ` : ""
-        }`}
+          }`}
       </Option>
     );
     // });
@@ -104,7 +105,9 @@ class AddAppointmentForm extends Component {
 
   disabledDate = (current) => {
     // Can not select days before today and today
-    return current && current < moment().startOf("day");
+    return current
+      && (current < moment().startOf("day")
+        || current > moment().add(1, "year"));;
   };
 
   // onBlur = date => () => {
@@ -118,10 +121,10 @@ class AddAppointmentForm extends Component {
     console.log("312983u193812 values, value ", date);
     const startDate = getFieldValue(DATE);
 
-    if(!date || !startDate) {
+    if (!date || !startDate) {
       return;
     }
-    
+
     const eventStartTime = getFieldValue(START_TIME);
     if (date.isSame(eventStartTime, "date")) {
       return;
@@ -155,8 +158,48 @@ class AddAppointmentForm extends Component {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
     console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
-    console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
-    setFieldsValue({ [END_TIME]: moment(time).add(1, "h") });
+    const startDate = getFieldValue(DATE);
+    if (startDate) {
+      const newMonth = startDate.get("month");
+      const newDate = startDate.get("date");
+      const newYear = startDate.get("year");
+      let newEventStartTime;
+      let newEventEndTime;
+      newEventStartTime = time ? moment(time)
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      newEventEndTime = newEventStartTime ? moment(newEventStartTime).add('minutes', 30) : null;
+      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
+      setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
+    } else {
+      console.log("298467232894 moment(startTime).add(1, h) ", time);
+      setFieldsValue({ [END_TIME]: time ? moment(time).add('minutes', 30) : null });
+    }
+  };
+
+  handleEndTimeChange = (time, str) => {
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+    console.log("312983u193812 values, value ", time, str);
+    const startTime = getFieldValue(START_TIME);
+    const startDate = getFieldValue(DATE);
+    if (startDate) {
+      const newMonth = startDate.get("month");
+      const newDate = startDate.get("date");
+      const newYear = startDate.get("year");
+      let newEventStartTime;
+      let newEventEndTime;
+      newEventStartTime = startTime ? moment(startTime)
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      newEventEndTime = time ? time
+        .clone()
+        .set({ month: newMonth, year: newYear, date: newDate }) : null;
+      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
+      setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
+    } else {
+      console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
+      setFieldsValue({ [END_TIME]: moment(time) });
+    }
   };
 
   getPatientName = () => {
@@ -165,8 +208,21 @@ class AddAppointmentForm extends Component {
       patients[patient_id] || {};
     return `${first_name} ${middle_name ? `${middle_name} ` : ""}${
       last_name ? `${last_name} ` : ""
-    }`;
+      }`;
   };
+
+  getTreatment = () => {
+    const { patients, payload: { patient_id } = {}, care_plans } = this.props;
+    let treatmentId = 0;
+
+    for (let carePlan of Object.values(care_plans)) {
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, treatment_id = 0 } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId)) {
+        treatmentId = treatment_id;
+      }
+    }
+    return treatmentId;
+  }
 
   calendarComp = () => {
     return (
@@ -176,10 +232,22 @@ class AddAppointmentForm extends Component {
     );
   };
 
-  disabledDate = (current) => {
-    // Can not select days before today and today
-    return current && current < moment().startOf("day");
-  };
+  // disabledDate = (current) => {
+  //   // Can not select days before today and today
+  //   return current && current < moment().startOf("day");
+  // };
+
+  getTreatmentOption = () => {
+    let { treatments = {} } = this.props;
+    let newTreatments = [];
+    for (let treatment of Object.values(treatments)) {
+      let { basic_info: { id = 0, name = '' } = {} } = treatment;
+      newTreatments.push(<Option key={id} value={id}>
+        {name}
+      </Option>)
+    }
+    return newTreatments;
+  }
 
   render() {
     const {
@@ -194,7 +262,9 @@ class AddAppointmentForm extends Component {
       disabledDate,
       handleDateSelect,
       handleStartTimeChange,
+      handleEndTimeChange,
       getPatientName,
+      getTreatment
     } = this;
 
     const currentDate = moment(getFieldValue(DATE));
@@ -209,32 +279,36 @@ class AddAppointmentForm extends Component {
 
     console.log("appointment form props --> ", this.props);
     return (
-      <Form className="fw700">
-        <FormItem label={formatMessage(message.patient)}>
+      <Form className="fw700 wp100 pb30">
+        <FormItem
+          // label={formatMessage(message.patient)}
+          className='mb-24'
+        >
           {getFieldDecorator(PATIENT, {
             initialValue: getInitialValue(),
           })(
-            <Select
-              className="user-select"
-              // onSearch={fetchPatients}
-              placeholder={getPatientName()}
-              notFoundContent={fetchingPatients ? <Spin size="small" /> : null}
-              showSearch={true}
-              disabled={getInitialValue() ? true : false}
-              // todo: update when patients are there
-              filterOption={false}
-              suffixIcon={null}
-              removeIcon={null}
-              clearIcon={null}
-            >
-              {getPatientOptions()}
-            </Select>
+            <div/>
+            //   <Select
+            //     className="user-select drawer-select"
+            //     // onSearch={fetchPatients}
+            //     placeholder={getPatientName()}
+            //     notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
+            //     showSearch={true}
+            //     disabled={getInitialValue() ? true : false}
+            //     // todo: update when patients are there
+            //     filterOption={false}
+            //     suffixIcon={null}
+            //     removeIcon={null}
+            //     clearIcon={null}
+            //   >
+            //     {getPatientOptions()}
+            //   </Select>
           )}
         </FormItem>
 
         <FormItem
           label={formatMessage(message.start_date)}
-          className="full-width ant-date-custom"
+          className="full-width mt16 ant-date-custom-ap-date"
         >
           {getFieldDecorator(DATE, {
             rules: [
@@ -246,11 +320,11 @@ class AddAppointmentForm extends Component {
             initialValue: moment(),
           })(
             <DatePicker
-              className="wp100"
+              className="wp100 h53"
               onBlur={handleDateSelect(currentDate)}
-              suffixIcon={calendarComp()}
+              // suffixIcon={calendarComp()}
               disabledDate={disabledDate}
-              // getCalendarContainer={this.getParentNode}
+            // getCalendarContainer={this.getParentNode}
             />
           )}
           {/*<img*/}
@@ -261,10 +335,10 @@ class AddAppointmentForm extends Component {
           {/*/>*/}
         </FormItem>
 
-        <div className="wp100 flex justify-space-evenly align-center flex-1">
+        <div className="wp100 flex justify-space-between align-center flex-1">
           <FormItem
             label={formatMessage(message.start_time)}
-            className="wp100"
+            className="flex-grow-1 mr16"
             validateStatus={fieldsError[START_TIME] ? "error" : ""}
             help={fieldsError[START_TIME] || ""}
           >
@@ -282,22 +356,22 @@ class AddAppointmentForm extends Component {
                 minuteStep={15}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
-                // getPopupContainer={this.getParentNode}
+              // getPopupContainer={this.getParentNode}
               />
             )}
           </FormItem>
 
-          <div className="w200 text-center mt8">
+          {/* <div className="w200 text-center mt8">
             <img
               src={seperator}
               alt="between seperator"
               className="mr16 ml16"
             />
-          </div>
+          </div> */}
 
           <FormItem
             label={formatMessage(message.end_time)}
-            className="wp100"
+            className="flex-grow-1"
             validateStatus={fieldsError[END_TIME] ? "error" : ""}
             help={fieldsError[END_TIME] || ""}
           >
@@ -312,23 +386,60 @@ class AddAppointmentForm extends Component {
               <TimePicker
                 use12Hours
                 minuteStep={15}
-                value={currentDate}
+                onChange={handleEndTimeChange}
                 format="h:mm a"
                 className="wp100 ant-time-custom"
-                // getPopupContainer={this.getParentNode}
+              // getPopupContainer={this.getParentNode}
               />
             )}
           </FormItem>
         </div>
 
         <FormItem
-          label={formatMessage(message.treatment_text)}
-          className="full-width ant-date-custom"
+          // label={formatMessage(message.treatment_text)}
+          // className="full-width ant-date-custom"
+          className='mb-24'
         >
-          {getFieldDecorator(TREATMENT)(
+          {getFieldDecorator(TREATMENT, {
+            initialValue: getTreatment(),
+          }
+          )(
+            <div/>
+            // <Select
+            //   className="form-inputs-ap drawer-select"
+            //   autoComplete="off"
+            //   placeholder="Select Treatment"
+            //   disabled={getTreatment() ? true : false}
+            //   // onSelect={this.setTreatment}
+            //   // onDeselect={handleDeselect}
+            //   suffixIcon={null}
+            // >
+            //   {this.getTreatmentOption()}
+            // </Select>
+          )}
+        </FormItem>
+
+        <FormItem
+          label={formatMessage(message.purpose_text)}
+          className="full-width mt16 ant-date-custom"
+        >
+          {getFieldDecorator(REASON, {
+            rules: [
+              {
+                required: true,
+                message: formatMessage(message.error_purpose),
+              },
+              {
+                pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
+                message: formatMessage(message.error_valid_purpose)
+              }
+            ],
+
+          })(
             <Input
               autoFocus
-              placeholder={formatMessage(message.treatment_text_placeholder)}
+              className='mt4'
+              placeholder={formatMessage(message.purpose_text_placeholder)}
             />
           )}
         </FormItem>
@@ -340,6 +451,8 @@ class AddAppointmentForm extends Component {
           {getFieldDecorator(DESCRIPTION)(
             <TextArea
               autoFocus
+              className='mt4'
+              maxLength={1000}
               placeholder={formatMessage(message.description_text_placeholder)}
               rows={4}
             />
