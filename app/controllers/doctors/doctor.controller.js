@@ -997,6 +997,9 @@ class DoctorController extends Controller {
             getFilePath(photo)
           );
 
+          Logger.debug("docExists --> ", docExist);
+          Logger.debug("docQualification --> ", docQualification.get("id"));
+
           if (!docExist) {
             const qualificationDoc = await documentService.addDocument({
               doctor_id: doctorData.getDoctorId(),
