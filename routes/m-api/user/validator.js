@@ -1,20 +1,21 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import { USER_CATEGORY } from "../../../constant";
+import {PASSWORD_LENGTH, USER_CATEGORY} from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
+import {validationError} from "../../api/helper";
 
 const credentialsFormSchema = Joi.object().keys({
     email: Joi.string().email().required(),
-    password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).min(12).required()
+    password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).min(PASSWORD_LENGTH).required()
 });
 
 const updatedPasswordSchema = Joi.object().keys({
-   password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).required().label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
-   confirm_password: Joi.when('password', {is: Joi.string(), then: Joi.string().required()})
+   new_password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).required().label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
+   confirm_password: Joi.when('password', {is: Joi.string(), then: Joi.string().allow(Joi.ref("new_password"))})
 });
 
 const signInSchema = Joi.object().keys({
-    mobile_number: Joi.string().length(10).regex(/^\d+$/).required().label("Please enter a valid mobile number"),
+    mobile_number: Joi.string().length(10).regex(/^[0-9]*$/).required().label("Please enter a valid mobile number"),
 });
 
 const otpSchema = Joi.object().keys({
@@ -27,9 +28,16 @@ const doctorSignInSchema = Joi.object().keys({
     password: Joi.string().required()
 });
 
+const forgotPasswordSchema = Joi.object().keys({
+    email:  Joi.string().email().required().label("Please enter valid email"),
+});
+
+const verifyLinkSchema = Joi.object().keys({
+    link: Joi.string().guid({version: 'uuidv4'}).required().label("Verification link is not correct")
+});
+
 const validateStartTime = (startTime) => {
     const now = moment().subtract(3, "minutes");
-    console.log("START TIME TEST ----------- ", moment(startTime), now, moment(startTime).isAfter(now));
     return moment(startTime).isAfter(now);
 };
 
@@ -70,7 +78,6 @@ export const validateCredentialsData = (req, res, next) => {
             default:
                 break;
         }
-        // return raiseClientError(res, 422, isValid.error, "please check filled details");
         const response = new Response(false, 422);
         response.setError(isValid.error);
         response.setMessage(errorMessage);
@@ -134,16 +141,29 @@ export const validateDoctorSignInData = (req, res, next) => {
     next();
 };
 
-export const validateUpdatePasswordData = (req, res, next) => {
+export const forgotPassword = (req, res, next) => {
+    const { body: data = {} } = req;
+    const isValid = forgotPasswordSchema.validate(data);
+    if (isValid && isValid.error != null) {
+        return validationError(res, isValid);
+    }
+    next();
+};
+
+export const verifyLink = (req, res, next) => {
+    const { params: data = {} } = req;
+    const isValid = verifyLinkSchema.validate(data);
+    if (isValid && isValid.error != null) {
+        return validationError(res, isValid);
+    }
+    next();
+};
+
+export const updatePasswordForm = (req, res, next) => {
     const { body: data = {} } = req;
     const isValid = updatedPasswordSchema.validate(data);
     if (isValid && isValid.error != null) {
-        // console.log("39013093 ----------- isValid --> ", isValid.error.details[0].message);
-        // return raiseClientError(res, 422, isValid.error, "please check filled details");
-        const response = new Response(false, 422);
-        response.setError(isValid.error);
-        response.setMessage("Password must contain atleast 1 uppercase, lowercase, number & special character");
-        return res.status(422).json(response.getResponse());
+        return validationError(res, isValid);
     }
     next();
 };

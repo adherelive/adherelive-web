@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon, Select, Input, message, Button, Spin, Radio } from "antd";
+import {Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker} from "antd";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
 
@@ -230,9 +230,13 @@ class PatientDetailsDrawer extends Component {
         let day = dtToday.getDate();
         let year = dtToday.getFullYear();
 
-        let maxDate = year + '-0' + month + '-' + day;
+        if(day < 10) {
+            day = '0'+day;
+        } else if(month < 10) {
+            month = '0'+month;
+        }
 
-        const { mobile_number = '', name = '', condition = '', prefix = '' } = this.state;
+            const { mobile_number = '', name = '', condition = '', prefix = '' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -299,7 +303,7 @@ class PatientDetailsDrawer extends Component {
                 <div className='form-headings-ap flex align-center justify-start'>Date Of Birth<div className="star-red">*</div></div>
 
                 <Input className={"form-inputs-ap"} type='date'
-                    max={maxDate}
+                    max={`${year}-${month}-${day}`}
                     onChange={this.setDOB} />
                 <div className='form-category-headings-ap'>Treatment Plan</div>
 

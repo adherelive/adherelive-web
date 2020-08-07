@@ -224,9 +224,9 @@ class EditMedicationReminder extends Component {
 
   warnNote = () => {
     return (
-      <div className="pt50">
-        <p>
-          <span className="red">{"Note"}</span>
+      <div className="pt16">
+        <p className="red">
+          <span className="fw600">{"Note"}</span>
           {" : This delete is irreversible"}
         </p>
       </div>

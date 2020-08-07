@@ -640,3 +640,5 @@ export const FEATURE_TYPE = {
 };
 
 export const BLANK_STATE = "";
+
+export const PASSWORD_LENGTH = 8;
