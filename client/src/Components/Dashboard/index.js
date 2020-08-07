@@ -30,12 +30,13 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        const { graphs, getInitialData, searchMedicine, getGraphs } = this.props;
+        const { searchMedicine, getGraphs } = this.props;
         // getInitialData();
+        this.setState({graphLoading: true});
         getGraphs().then(response => {
             const { status, payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {} } = response;
             if (status) {
-                this.setState({ graphsToShow: [...charts] });
+                this.setState({ graphsToShow: [...charts], graphLoading: false });
             }
         });
         searchMedicine("");
@@ -64,19 +65,26 @@ class Dashboard extends Component {
     renderChartTabs = () => {
         const { graphs } = this.props;
 
-        const { graphsToShow } = this.state;
+        const { graphsToShow, graphLoading } = this.state;
+
+        // initial loading phase
+        if(graphLoading) {
+            return (<div className='flex flex-grow-1 wp100 align-center justify-center'><Spin /></div>);
+        }
 
 
         const chartBlocks = graphsToShow.map(id => {
             const { total, critical, name } = graphs[id] || {};
             return (
-
                 <Donut key={id} id={id} data={[critical, total - critical]} total={total} title={name} />
             );
             
         });
-        if (graphsToShow.length == 0) {
-            return <div className='flex flex-grow-1 wp100 align-center justify-center'><Spin /></div>
+        // no graph selected to show phase
+        if (graphsToShow.length === 0) {
+            return (
+              <div className="flex justify-center align-center fs20 fw600 wp100 bg-grey br5">{this.formatMessage(messages.no_graph_text)}</div>
+            );
         } else {
             return chartBlocks;
         }
@@ -171,7 +179,7 @@ class Dashboard extends Component {
                     </div>
 
                     {/* <div className="mt10 flex align-center"> */}
-                    <section className='horizontal-scroll-wrapper pr20 mt10'>
+                    <section className='horizontal-scroll-wrapper pr10 mt10'>
                         {renderChartTabs()}
                     </section>
 

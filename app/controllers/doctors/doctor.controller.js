@@ -37,6 +37,7 @@ import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 
 import {
+  ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME, EVENT_TYPE,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
@@ -911,6 +912,13 @@ class DoctorController extends Controller {
     try {
       const { userDetails: { userId } = {} } = req;
       const file = req.file;
+
+      const {mimetype} = file || {};
+      const fileType = mimetype.split("/");
+      Logger.debug("mimetype ------> ", mimetype);
+      if(!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
+        return this.raiseClientError(res, 422, {}, "Only images and pdf documents are allowed")
+      }
 
       let files = await uploadImageS3(userId, file);
       let qualification_id = 0;

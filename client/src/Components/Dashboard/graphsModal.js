@@ -87,9 +87,9 @@ class ClinicRegister extends Component {
                         graphs.map(graph => {
                             return (
                                 <div key={graph} className='flex justify-space-between wp100 mb8 mt4'>
-                                    <div className='flex'>
-                                        <Checkbox checked={selectedGraphs.includes(graph)} onChange={this.toggleGraphSelected(graph)} />
-                                        <div className='ml10 fs16 fw700'>{CHART_TITLE[graph]}</div>
+                                    <div className='flex pointer'>
+                                        <Checkbox checked={selectedGraphs.includes(graph)} onChange={this.toggleGraphSelected(graph)}/>
+                                        <div className='ml10 fs16 fw700' onClick={this.toggleGraphSelected(graph)}>{CHART_TITLE[graph]}</div>
                                     </div>
                                 </div>
                             );

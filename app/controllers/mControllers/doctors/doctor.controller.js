@@ -26,6 +26,7 @@ import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 
 import Log from "../../../../libs/log";
 import {
+  ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
@@ -604,7 +605,12 @@ class MobileDoctorController extends Controller {
         const {userDetails: {userId} = {}} = req;
       const file = req.file;
 
-      Logger.debug("file --> ", file);
+      const {mimetype} = file || {};
+      const fileType = mimetype.split("/");
+      Logger.debug("mimetype ------> ", mimetype);
+      if(!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
+        return this.raiseClientError(res, 422, {}, "Only images and pdf documents are allowed")
+      }
 
       let files = await uploadImageS3(userId, file);
       let qualification_id = 0;
@@ -620,6 +626,7 @@ class MobileDoctorController extends Controller {
         "doctor qualification document uploaded successfully"
       );
     } catch (error) {
+      Logger.debug("updateQualificationDocs 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -642,3 +642,5 @@ export const FEATURE_TYPE = {
 export const BLANK_STATE = "";
 
 export const PASSWORD_LENGTH = 8;
+
+export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg","svg","png","pdf"];
