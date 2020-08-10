@@ -400,7 +400,7 @@ class AddAppointmentForm extends Component {
           <label
             htmlFor="type description"
             className="form-label"
-            title={formatMessage(message.appointmentTypeDescription)}
+            // title={formatMessage(message.appointmentTypeDescription)}
           >
             {formatMessage(message.appointmentTypeDescription)}
           </label>

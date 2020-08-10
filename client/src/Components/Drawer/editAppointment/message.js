@@ -143,11 +143,6 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Edit Appointment"
   },
-  appointment: {
-    id: "app.event.Appointment",
-    description: "",
-    defaultMessage: "Appointment"
-  },
   editReminder: {
     id: "app.event.EditReminder",
     description: "",
@@ -222,11 +217,6 @@ const message = defineMessages({
     id: "add.event.repeatsYearly",
     description: "",
     defaultMessage: "Repeats Yearly"
-  },
-  appointmentType: {
-    id: "add.event.appointmentType",
-    description: "",
-    defaultMessage: "Appointment Type"
   },
   repeatIntervalError: {
     id: "add.event.repeatIntervalError",
@@ -391,7 +381,7 @@ const message = defineMessages({
   appointmentTypeDescription: {
     id: "app.drawer.add.appointment.appointmentTypeDescription",
     description: "",
-    defaultMessage: "Type Description"
+    defaultMessage: "Description"
 
   },
   econsulting: {

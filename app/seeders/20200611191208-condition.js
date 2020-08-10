@@ -36,6 +36,12 @@ module.exports = {
         updated_at: "2020-07-28 09:49:15"
       },
       {
+        code: "1",
+        name: "UNCONFIRMED",
+        created_at: "2020-07-28 09:49:15",
+        updated_at: "2020-07-28 09:49:15"
+      },
+      {
         code: "A0102",
         name: "Typhoid fever with heart involvement",
         created_at: "2020-07-28 09:49:15",

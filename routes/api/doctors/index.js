@@ -26,7 +26,6 @@ router.post(
 router.post(
     "/qualifications",
     validator.validateQualificationStepData,
-    // todo :: wip
     DoctorController.updateQualificationStep
 );
 

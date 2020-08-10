@@ -21,7 +21,7 @@ class TreatmentService {
             const treatment = await Treatment.findAll({
                 where: {
                     name: {
-                        [Op.like]: `%${data}%`,
+                        [Op.like]: `${data}%`,
                     },
                 },
             });

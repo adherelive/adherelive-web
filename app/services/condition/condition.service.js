@@ -19,7 +19,7 @@ class ConditionService {
             const condition = await Condition.findAll({
                 where: {
                     name: {
-                        [Op.like]: `%${data}%`,
+                        [Op.like]: `${data}%`,
                     },
                 },
             });

@@ -32,6 +32,21 @@ class OtpVerificationService {
             throw error;
         }
     };
+
+    delete = async (data) => {
+        try {
+            const {otp, user_id} = data;
+            console.log("moment now ---> ", moment().toDate());
+            const otpDetails = await OtpVerification.destroy({
+                where: {
+                    user_id,
+                },
+            });
+            return otpDetails;
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new OtpVerificationService();

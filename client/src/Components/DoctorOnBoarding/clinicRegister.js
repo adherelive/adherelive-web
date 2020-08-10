@@ -315,11 +315,11 @@ class ClinicRegister extends Component {
             const data = { clinics: newClinics };
             const { doctorClinicRegister } = this.props;
             doctorClinicRegister(data).then(response => {
-                const { status } = response;
+                const { status, message: errorMessage } = response;
                 if (status) {
                     history.replace(PATH.DASHBOARD);
                 } else {
-                    message.error('Something went wrong');
+                    message.error(errorMessage);
                 };
             });
         }

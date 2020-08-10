@@ -37,6 +37,7 @@ import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 
 import {
+  ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME, EVENT_TYPE,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
@@ -912,6 +913,13 @@ class DoctorController extends Controller {
       const { userDetails: { userId } = {} } = req;
       const file = req.file;
 
+      const {mimetype} = file || {};
+      const fileType = mimetype.split("/");
+      Logger.debug("mimetype ------> ", mimetype);
+      if(!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
+        return this.raiseClientError(res, 422, {}, "Only images and pdf documents are allowed")
+      }
+
       let files = await uploadImageS3(userId, file);
       let qualification_id = 0;
       // let doctor = await doctorService.getDoctorByUserId(userId);
@@ -973,16 +981,16 @@ class DoctorController extends Controller {
           doctorData.getDoctorId()
         );
       }
-      const { degree_id = "", year = "", college_id = "", id = 0, photos = [] } =
+      const { degree_id = "", year = "", college_id = "", id, photos = [] } =
         qualification || {};
 
-      let docQualification = null;
+      let docQualification = {};
 
       if (photos.length > 3) {
         return this.raiseServerError(res, 422, {}, "Cannot add more than 3 documents");
       }
 
-      if (!id) {
+      if (id === "0") {
         docQualification = await qualificationService.addQualification({
           doctor_id: doctorData.getDoctorId(),
           degree_id,
@@ -996,6 +1004,9 @@ class DoctorController extends Controller {
             id,
             getFilePath(photo)
           );
+
+          Logger.debug("docExists --> ", docExist);
+          Logger.debug("docQualification --> ", docQualification.get("id"));
 
           if (!docExist) {
             const qualificationDoc = await documentService.addDocument({
@@ -1046,6 +1057,8 @@ class DoctorController extends Controller {
       let qualificationsData = {};
       let doctor_qualification_ids = [];
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(updatedDoctorData.getDoctorId());
+
+      Logger.debug("1893712983 doctorQualifications --> ", doctorQualifications);
       for (const doctorQualification of doctorQualifications) {
         let upload_document_ids = [];
         const qualificationData = await QualificationWrapper(doctorQualification);
@@ -1111,13 +1124,13 @@ class DoctorController extends Controller {
 
       if (qualifications.length > 0) {
         for (const qualification of qualifications) {
-          const { degree_id = "", year = "", college_id = "", id = 0, photos = [] } =
+          const { degree_id = "", year = "", college_id = "", id, photos = [] } =
             qualification || {};
 
           if (photos.length > 3) {
             return this.raiseServerError(res, 422, {}, "Cannot add more than 3 documents");
           }
-          if (!id) {
+          if (id === "0") {
             const docQualification = await qualificationService.addQualification(
               {
                 doctor_id: doctorData.getDoctorId(),
@@ -1170,7 +1183,7 @@ class DoctorController extends Controller {
         registration_council_id = "",
         year: registration_year = "",
         expiry_date = "",
-        id = 0,
+        id,
         photos: registration_photos = []
       } = registration || {};
 
@@ -1180,7 +1193,7 @@ class DoctorController extends Controller {
         return this.raiseServerError(res, 422, {}, "Cannot add more than 3 documents");
       }
 
-      if (!id) {
+      if (id === "0") {
 
         const doctorRegistration = await registrationService.addRegistration({
           doctor_id: doctorData.getDoctorId(),

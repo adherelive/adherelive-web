@@ -31,6 +31,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Non Compliant"
   },
+  no_graph_text: {
+    id: "app.dashboard.graph.no.graph.text",
+    description: "",
+    defaultMessage: "Please add graphs from the menu above to display here"
+  }
 });
 
 export default messages;
