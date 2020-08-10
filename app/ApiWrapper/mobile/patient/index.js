@@ -27,7 +27,7 @@ class MPatientWrapper extends BasePatient {
 
         const updatedDetails =  {
             ...details,
-            profile_pic: completePath(profile_pic)
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
         };
 
         return {
