@@ -9,6 +9,8 @@ export const PATH = {
   REGISTER_PROFILE: '/register-profile',
   REGISTER_QUALIFICATIONS: '/register-qualifications',
   REGISTER_CLINICS: '/register-clinics',
+  PATIENT_CONSULTING: '/patient-consulting/:patient_id',
+  PATIENT_CONSULTING_VIDEO: '/patient-consulting-video/:room_id',
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",

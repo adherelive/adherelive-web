@@ -4,11 +4,10 @@ import {
   Route,
   Switch,
   Redirect,
-  useLocation,
   withRouter
 } from "react-router-dom";
 import SideMenu from "../../Components/Sidebar";
-import BlankState from "../../Containers/BlankState";
+// import BlankState from "../../Containers/BlankState";
 import { PATH } from "../../constant";
 
 
@@ -32,6 +31,14 @@ const RegisterQualifications = lazy(() =>
 
 const RegisterClinics = lazy(() =>
   import(/* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister")
+);
+
+const ChatFullScreen = lazy(() =>
+  import(/* webpackChunkName: "ChatFullScreen" */ "../../Containers/ChatFullScreen")
+);
+
+const TwilioVideo = lazy(() =>
+  import(/* webpackChunkName: "ChatFullScreen" */ "../../Containers/ChatFullScreen/twilioVideo")
 );
 
 const PatientDetailsComp = props => {
@@ -58,18 +65,21 @@ class Doctors extends Component {
   render() {
     // const {authRedirection} = this.props;
     const { redirecting = false } = this.state;
+    let { location: { pathname = '' } = {} } = this.props;
+    let isNotChatComponent = pathname.includes('patient-consulting') ? false : true;
+    console.log('78324687234687326487326', isNotChatComponent, this.props.location, this.props.location.pathname);
     const { authRedirection } = this.props;
     return (
       <Fragment>
         <Router>
           <div className="App flex" style={{ overflow: "hidden" }}>
-            <SideMenu {...this.props} />
-            <div className="container">
+            {isNotChatComponent && (<SideMenu {...this.props} />)}
+            <div className={isNotChatComponent ? `container` : 'container-chat-page '}>
               <Switch>
                 {redirecting && redirecting.length > 0 && (<Redirect to={authRedirection} />)}
                 {/* {!onboarded &&category=="doctor" && <Redirect to={PATH.REGISTER_PROFILE} />} */}
                 {/*{this.state.redirecting && <Redirect to={this.state.redirecting}/>}*/}
-                <Route exact path="/" component={Dashboard} />
+
                 <Route
                   exact
                   path={PATH.PATIENT.DETAILS}
@@ -79,6 +89,21 @@ class Doctors extends Component {
                   exact
                   path={PATH.REGISTER_PROFILE}
                   component={RegisterProfile}
+                />
+                <Route
+                  exact
+                  path={PATH.PATIENT_CONSULTING}
+                  component={ChatFullScreen}
+                />
+                <Route
+                  exact
+                  path={PATH.PATIENT_CONSULTING}
+                  component={ChatFullScreen}
+                />
+                <Route
+                  exact
+                  path={PATH.PATIENT_CONSULTING_VIDEO}
+                  component={TwilioVideo}
                 />
                 <Route
                   exact
@@ -95,7 +120,7 @@ class Doctors extends Component {
                   path={PATH.DASHBOARD}
                   component={Dashboard}
                 /> */}
-
+                <Route exact path="/" component={Dashboard} />
                 <Route path="" component={Dashboard} />
               </Switch>
             </div>

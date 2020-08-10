@@ -4,6 +4,7 @@ import PatientDetailsDrawer from "../../Components/Drawer/PatientDetails";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
+import { setPatientForChat } from "../../modules/twilio";
 
 const mapStateToProps = (state) => {
   const {
@@ -41,6 +42,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
     getMedications: (id) => dispatch(getMedications(id)),
+    setPatientForChat:(patient_id) => dispatch(setPatientForChat(patient_id))
   };
 };
 

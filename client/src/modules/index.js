@@ -31,6 +31,7 @@ import show_template_drawer from "./showDrawer";
 import colleges from "./colleges";
 import degrees from "./degrees";
 import councils from "./councils";
+import twilio from "./twilio";
 
 const rootReducer = combineReducers({
   auth,
@@ -62,7 +63,8 @@ const rootReducer = combineReducers({
   colleges,
   degrees,
   councils,
-  static_templates
+  static_templates,
+  twilio
 });
 
 export default (state, action) => {
