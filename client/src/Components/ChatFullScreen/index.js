@@ -50,7 +50,7 @@ class ChatFullScreen extends Component {
             }
         }
 
-        let roomId = doctorUserId + '-' + patientUserId;
+        let roomId = doctorUserId + '-adhere-' + patientUserId;
 
         // console.log('754624646546245624562462456', doctorUserId, patient_id, roomId);
         this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
@@ -68,7 +68,7 @@ class ChatFullScreen extends Component {
         let { doctorUserId } = this.state;
         let { patients = {} } = this.props;
         let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id];
-        let roomId = doctorUserId + '-' + patientUserId;
+        let roomId = doctorUserId + '-adhere-' + patientUserId;
         this.setState({ patientUserId: patientUserId, patientId: patient_id, roomId });
     }
 
@@ -111,8 +111,8 @@ class ChatFullScreen extends Component {
                         <PatientList setPatientId={this.setPatientId} doctorUserId={doctorUserId} patientId={patientId} {...this.props} />
                     </div>
                     <div className='chat-messageBox-container'>
-                        <Header placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp='' />
-                        <TwilioChat roomId={roomId} />
+                        {/* <Header placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp='' /> */}
+                        <TwilioChat roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp='' />
                     </div>
                 </Fragment>
             </div>

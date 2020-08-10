@@ -4,7 +4,26 @@ import moment from 'moment';
 import Chat from "twilio-chat";
 import ImagePlaceHolder from "../../Assets/images/image_placeholder.png";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
+import CallIcon from '../../Assets/images/telephone.png';
 
+const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false }) => {
+    let pic = patientName ?
+        <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
+    return (
+        <div className='chat-patientListheader-chatBox'>
+            <div className='flex direction-row align-center wp90 mb4'>
+                {pic}
+
+                <div className='flex direction-column align-center justify-center'>
+                    <div className='doctor-name-chat-header mt4'>{patientName}</div>
+                    <div className='doctor-name-chat-header-online'>{isOnline ? 'online' : ''}</div>
+                </div>
+            </div>
+
+            <img src={CallIcon} className='callIcon-header mr10' onClick={placeVideoCall} />
+        </div>
+    );
+}
 
 class ChatForm extends Component {
     constructor() {
@@ -491,9 +510,11 @@ class TwilioChat extends Component {
 
     render() {
         const { ChatForm } = this;
-        const { messagesLoading = false } = this.state;
+        const { messagesLoading = false, other_user_online = false } = this.state;
+        const { placeVideoCall, patientDp = '', patientName = '' } = this.props;
         return (
             <Fragment>
+                <Header placeVideoCall={placeVideoCall} patientName={patientName} patientDp={patientDp} isOnline={other_user_online} />
                 <div className="twilio-chat-container">
                     <div className="twilio-chat-body">
                         {messagesLoading ?
