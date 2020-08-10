@@ -91,6 +91,11 @@ class MobileUserController extends Controller {
       const apiUserDetails = await MUserWrapper(user.get());
       const otp = generateOTP();
 
+      // delete previous generated otp if generated within time limit
+      const previousOtp = await otpVerificationService.delete({
+        user_id: apiUserDetails.getId()
+      });
+
       const patientOtpVerification = await otpVerificationService.create({
         user_id: apiUserDetails.getId(),
         otp,
@@ -150,6 +155,7 @@ class MobileUserController extends Controller {
       Logger.debug("otpDetails --> ", otpDetails);
 
       if(otpDetails.length > 0) {
+        const destroyOtp = await otpVerificationService.delete({user_id});
         const userDetails = await userService.getUserById(otpDetails[0].get("user_id"));
 
         const userData = await UserWrapper(userDetails.get());
