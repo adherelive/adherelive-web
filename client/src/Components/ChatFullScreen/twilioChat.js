@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Form, Input, Button, Avatar, Icon, Upload } from "antd";
+import { Form, Input, Button, Spin, Avatar, Icon, Upload } from "antd";
 import moment from 'moment';
 import Chat from "twilio-chat";
 import ImagePlaceHolder from "../../Assets/images/image_placeholder.png";
@@ -179,7 +179,9 @@ class TwilioChat extends Component {
             chatReady: false,
             messages: [],
             messagesLoading: true,
-            newMessage: ""
+            newMessage: "",
+            other_user_online: false,
+            otherUserLastConsumedMessageIndex: null,
         };
         this.channelName = "test";
     }
@@ -221,7 +223,8 @@ class TwilioChat extends Component {
         this.chatClient.initialize().then(this.clientInitiated.bind(this));
     };
 
-    clientInitiated = () => {
+    clientInitiated = async () => {
+        const { authenticated_user } = this.props;
         this.setState({ chatReady: true }, () => {
             this.chatClient
                 .getChannelByUniqueName(this.channelName)
@@ -247,16 +250,65 @@ class TwilioChat extends Component {
                         return this.channel;
                     }
                 })
-                .then(() => {
+                .then(async () => {
                     this.channel.getMessages().then(this.messagesLoaded);
+
                     this.channel.on("messageAdded", this.messageAdded);
+
+                    const members = await this.channel.getMembers();
+
+                    console.log("members24352543534634262346", members);
+
+                    members.map(async mem => {
+                        const mem_user = await mem.getUser();
+
+                        console.log("******** other user details:0000 ", mem_user.online, mem.lastConsumedMessageIndex);
+                        if (mem.identity !== `${authenticated_user}`) {
+                            const other_user = await mem.getUser();
+
+                            console.log("******** other user details: ", other_user);
+
+                            this.setState({
+                                other_user_online: other_user.online,
+                                otherUserLastConsumedMessageIndex: mem.lastConsumedMessageIndex
+                            });
+
+                            other_user.on("updated", obj => {
+                                console.log("user_updated", obj);
+                            });
+                        }
+                    });
                 });
         });
     };
 
+    // updateMessageRecieved = messages => {
+    //     const { otherUserLastConsumedMessageIndex } = this.state;
+    //     const { authenticated_user } = this.props;
+
+    //     for (let messageData of messages) {
+    //         if (
+    //             messageData.index <= otherUserLastConsumedMessageIndex &&
+    //             messageData.user._id === `${authenticated_user}`
+    //         ) {
+    //             messageData.received = true;
+    //             messageData.sent = true;
+    //         }
+    //     }
+
+    //     console.log("going to set the messages in the update: ", messages);
+
+    //     return messages;
+    // };
+
     messagesLoaded = messagePage => {
+        // let messages = this.updateMessageRecieved(messagePage.items);
         this.setState(
-            { messagesLoading: false, messages: messagePage.items },
+            {
+                messagesLoading: false,
+                messages: messagePage.items,
+                // messages
+            },
             this.scrollToBottom
         );
     };
@@ -275,6 +327,7 @@ class TwilioChat extends Component {
             roomId: prevRoomId
         } = prevProps;
         if (roomId !== prevRoomId) {
+            this.setState({ messagesLoading: true });
             this.getToken();
         }
         this.scrollToBottom();
@@ -432,11 +485,16 @@ class TwilioChat extends Component {
 
     render() {
         const { ChatForm } = this;
+        const { messagesLoading = false } = this.state;
         return (
             <Fragment>
                 <div className="twilio-chat-container">
                     <div className="twilio-chat-body">
-                        {this.renderMessages()}
+                        {messagesLoading ?
+                            <div className='wp100 hp100 flex justify-center align-center'>
+                                <Spin size="medium" />
+                            </div>
+                            : this.renderMessages()}
                         <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                     </div>
                 </div>

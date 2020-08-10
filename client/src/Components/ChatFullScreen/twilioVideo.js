@@ -315,11 +315,19 @@ class VideoComponent extends Component {
     getOtherParticipantData = () => {
         const { users, authenticated_user, match: {
             params: { room_id = '' }
-        }, patients } = this.props;
-        let patientId = room_id.split('-')[room_id.split('-').length - 1];
-        console.log('83658713658791345', this.props);
+        }, patients = {} } = this.props;
+        let patientUserId = room_id.split('-')[room_id.split('-').length - 1];
+        let patientId = '';
+        for (let pat of Object.values(patients)) {
+            let { basic_info: { user_id, id = 1 } } = pat;
+            if (parseInt(user_id) === parseInt(patientUserId)) {
+                patientId = id;
+            }
+        }
+        console.log('83658713658791345', patientId, this.props);
         const userIds = Object.keys(users);
         // const otherUserId = userIds.filter(id => id !== authenticated_user)[0];
+
         let { basic_info: { user_id: otherUserId = 1, first_name: name = '', profile_pic: profilePic = UserDpPlaceholder, gender = '' } = {}, dob = '' } = patients[patientId];
         if (otherUserId) {
             const { basic_info, category } = users[otherUserId] || {};

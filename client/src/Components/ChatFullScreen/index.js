@@ -26,8 +26,9 @@ class ChatFullScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            doctorId: 1,
+            doctorUserId: 1,
             roomId: '',
+            patientUserId: 1,
             patientId: 1,
             placeCall: false
         };
@@ -37,21 +38,22 @@ class ChatFullScreen extends Component {
 
         let { match: {
             params: { patient_id }
-        }, doctors = {}, authenticated_user = 1 } = this.props;
+        }, doctors = {}, patients = {}, authenticated_user = 1 } = this.props;
 
 
-        let doctorId = '';
+        let doctorUserId = '';   //user_id of doctor
+        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id];
         for (let doc of Object.values(doctors)) {
             let { basic_info: { user_id, id = 1 } } = doc;
             if (parseInt(user_id) === parseInt(authenticated_user)) {
-                doctorId = id;
+                doctorUserId = user_id;
             }
         }
 
-        let roomId = doctorId + '-adhere-' + patient_id;
+        let roomId = doctorUserId + '-' + patientUserId;
 
-        // console.log('754624646546245624562462456', doctorId, patient_id, roomId);
-        this.setState({ doctorId, roomId, patientId: patient_id });
+        // console.log('754624646546245624562462456', doctorUserId, patient_id, roomId);
+        this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
     }
 
     openVideoChatTab = () => {
@@ -63,9 +65,11 @@ class ChatFullScreen extends Component {
 
     setPatientId = (patient_id) => () => {
 
-        let { doctorId } = this.state;
-        let roomId = doctorId + '-adhere-' + patient_id;
-        this.setState({ patientId: patient_id, roomId });
+        let { doctorUserId } = this.state;
+        let { patients = {} } = this.props;
+        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id];
+        let roomId = doctorUserId + '-' + patientUserId;
+        this.setState({ patientUserId: patientUserId, patientId: patient_id, roomId });
     }
 
     showVideoCall = () => {
@@ -77,13 +81,13 @@ class ChatFullScreen extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let { patientId } = this.state;
+        let { patientUserId } = this.state;
 
-        let { patientId: prevPatientId } = this.state;
-        if (patientId !== prevPatientId) {
+        let { patientUserId: prevPatientId } = this.state;
+        if (patientUserId !== prevPatientId) {
 
-            let { doctorId } = this.state;
-            let roomId = doctorId + '-adhere-' + patientId;
+            let { doctorUserId } = this.state;
+            let roomId = doctorUserId + '-' + patientUserId;
             this.setState({ roomId });
         }
     }
@@ -92,7 +96,7 @@ class ChatFullScreen extends Component {
     render() {
         console.log('754624646546245624562462456', this.state);
 
-        let { roomId, patientId, doctorId, placeCall } = this.state;
+        let { roomId, patientId, doctorUserId } = this.state;
         let { patients = {} } = this.props;
 
         const { basic_info: { first_name = '', middle_name = '', last_name = '' } = {} } = patients[patientId];
@@ -100,11 +104,11 @@ class ChatFullScreen extends Component {
             <div className="chat-screen-container">
                 {/* {placeCall
                     ?
-                    (<TwilioVideo patientId={patientId} hideChat={this.hideVideoCall} roomId={roomId} />) :
+                    (<TwilioVideo patientUserId={patientUserId} hideChat={this.hideVideoCall} roomId={roomId} />) :
                     ( */}
                 <Fragment>
                     <div className='chat-patientList-container'>
-                        <PatientList setPatientId={this.setPatientId} doctorId={doctorId} {...this.props} />
+                        <PatientList setPatientId={this.setPatientId} doctorUserId={doctorUserId} patientId={patientId} {...this.props} />
                     </div>
                     <div className='chat-messageBox-container'>
                         <Header placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp='' />

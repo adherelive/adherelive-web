@@ -49,11 +49,11 @@ class PatientListSideBar extends Component {
     }
 
     renderPatients = () => {
-        const { patients = {}, setPatientId } = this.props;
+        const { patients = {}, setPatientId, patientId = 1 } = this.props;
         let allPatients = Object.values(patients).map((patient) => {
             const { basic_info: { id = 0, first_name = '', middle_name = '', last_name = '' } = {} } = patient;
             return (
-                <div key={id} className='chat-patient-card-parent'>
+                <div key={id} className={parseInt(id) === parseInt(patientId) ? 'chat-patient-card-parent-selected' : 'chat-patient-card-parent'}>
                     <PatientCard setPatientId={setPatientId} patientId={id} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp='' />
                 </div>
             );
