@@ -2,6 +2,8 @@ import React, { Component, Fragment } from "react";
 import { Form, Input, Button, Spin, Avatar, Icon, Upload } from "antd";
 import moment from 'moment';
 import Chat from "twilio-chat";
+import DoubleTick from "../../Assets/images/double-tick-indicator.png";
+import SingleTick from "../../Assets/images/check-symbol.png";
 import ImagePlaceHolder from "../../Assets/images/image_placeholder.png";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
@@ -286,7 +288,7 @@ class TwilioChat extends Component {
                         if (mem.identity !== `${authenticated_user}`) {
                             const other_user = await mem.getUser();
 
-                            console.log("******** other user details: ", other_user);
+                            console.log("******** other user details: ", other_user, mem.lastConsumedMessageIndex);
 
                             this.setState({
                                 other_user_online: other_user.online,
@@ -433,12 +435,15 @@ class TwilioChat extends Component {
 
     renderMessages() {
         const { authenticated_user, users } = this.props;
+        const { otherUserLastConsumedMessageIndex } = this.state;
         if (this.state.messages.length > 0) {
             const messagesArray = this.state.messages;
             const messagesToRender = [];
             for (let i = 0; i < messagesArray.length; ++i) {
                 const message = messagesArray[i];
                 console.log("jskdjskjsd 37373 ------------> ", message);
+                // const seen=
+                const { state: { index = 1 } = {} } = message;
                 const user = users[message.state.author]
                     ? users[message.state.author]
                     : {};
@@ -490,8 +495,11 @@ class TwilioChat extends Component {
                                             <div className="chat-text end">{message.state.body}</div>
                                         )}
                                     {/* <div className="chat-text end">{message.state.body}</div> */}
-                                    <div className="chat-time">
-                                        {moment(message.state.timestamp).format("H:mm")}
+                                    <div className="flex">
+                                        <div className="chat-time mr-4">
+                                            {moment(message.state.timestamp).format("H:mm")}
+                                        </div>
+                                        <img className={index < otherUserLastConsumedMessageIndex?`h14 mt4`:`h12 mt4`} src={index < otherUserLastConsumedMessageIndex ? DoubleTick : SingleTick} />
                                     </div>
                                     {/* </div> */}
                                     {/* <div className="chat-avatar left">

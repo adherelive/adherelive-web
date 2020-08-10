@@ -350,6 +350,7 @@ class VideoComponent extends Component {
 
     render() {
         const otherUserdata = this.getOtherParticipantData();
+        console.log('32524534534523425===>>', Video.version);
         // Only show video track after user has joined a room
         let showLocalTrack = this.state.localMediaAvailable ? (
             <div className="videoWrapper" ref="localMedia" />
