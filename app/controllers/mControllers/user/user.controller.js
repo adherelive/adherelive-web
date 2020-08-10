@@ -91,6 +91,11 @@ class MobileUserController extends Controller {
       const apiUserDetails = await MUserWrapper(user.get());
       const otp = generateOTP();
 
+      // delete previous generated otp if generated within time limit
+      const previousOtp = await otpVerificationService.delete({
+        user_id: apiUserDetails.getId()
+      });
+
       const patientOtpVerification = await otpVerificationService.create({
         user_id: apiUserDetails.getId(),
         otp,
@@ -539,6 +544,7 @@ class MobileUserController extends Controller {
             break;
           case USER_CATEGORY.DOCTOR:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
+
             // Logger.debug("----DOCTOR-----", userCategoryData);
             if (userCategoryData) {
               userCategoryApiData = await MDoctorWrapper(userCategoryData);
@@ -609,8 +615,6 @@ class MobileUserController extends Controller {
           });
         }
 
-        Logger.debug("userIds --> ", userIds);
-
         let apiUserDetails = {};
 
         if (userIds.length > 1) {
@@ -669,11 +673,17 @@ class MobileUserController extends Controller {
           permissions: []
         };
 
-        Logger.debug("apiUserDetails ---> ", userApiWrapper);
-
         if(userApiWrapper.isActivated()) {
           permissions = await userApiWrapper.getPermissions();
         }
+
+        // speciality temp todo
+        let referenceData = {};
+        if(category === USER_CATEGORY.DOCTOR) {
+          referenceData = await userCategoryApiData.getReferenceInfo();
+        }
+
+        Logger.debug("Reference data ---> ", referenceData);
 
         const dataToSend = {
           users: {
@@ -698,6 +708,7 @@ class MobileUserController extends Controller {
           treatments: {
             ...treatmentApiDetails,
           },
+          ...referenceData,
           ...permissions,
           severity_ids: severityIds,
           condition_ids: conditionIds,

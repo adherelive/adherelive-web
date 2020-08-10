@@ -1,6 +1,7 @@
 import Doctor from "../../models/doctors";
 import { database } from "../../../libs/mysql";
 import Users from "../../models/users";
+import Specialities from "../../models/specialities";
 
 class DoctorsService {
   constructor() {}
@@ -24,6 +25,7 @@ class DoctorsService {
         where: {
           user_id,
         },
+        include: Specialities
       });
       return doctor;
     } catch (error) {

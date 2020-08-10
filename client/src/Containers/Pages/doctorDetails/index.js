@@ -18,6 +18,7 @@ const mapStateToProps = state => {
       degrees = {},
       colleges = {},
       councils = {},
+      specialities = {},
   } = state;
   const { qualification_ids = [], clinic_ids = [], doctor_ids = [] } = pages;
   return {
@@ -33,6 +34,7 @@ const mapStateToProps = state => {
     degrees,
     colleges,
     councils,
+    specialities
   };
 };
 
@@ -56,6 +58,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     degrees,
     colleges,
     councils,
+    specialities,
   } = stateProps;
   const { getDoctorDetails, verifyDoctor } = dispatchProps;
   const { id } = ownProps;
@@ -77,6 +80,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     degrees,
     colleges,
     councils,
+    specialities,
     getDoctorDetails: getDoctorAllDetails
   };
 };

@@ -20,6 +20,7 @@ import conditionRouter from "./condition";
 import severityRouter from "./severity";
 import treatmentRouter from "./treatment";
 import twilioRouter from "./twilio";
+import specialityRouter from "./speciality";
 
 router.use(async (req, res, next) => {
     try {
@@ -85,5 +86,6 @@ router.use("/councils", councilRouter);
 router.use("/conditions", conditionRouter);
 router.use("/severity", severityRouter);
 router.use("/treatments", treatmentRouter);
+router.use("/specialities", specialityRouter);
 
 module.exports = router;

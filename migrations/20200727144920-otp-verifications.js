@@ -1,6 +1,7 @@
 'use strict';
 
 import {DB_TABLES} from "../constant";
+import Sequelize from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -22,7 +23,7 @@ module.exports = {
         }
       },
       otp: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(4),
         allowNull: false,
       },
       created_at: {

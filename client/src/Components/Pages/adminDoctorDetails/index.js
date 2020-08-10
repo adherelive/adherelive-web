@@ -82,7 +82,7 @@ class AdminDoctorDetails extends Component {
   };
 
   getDoctorBasicDetails = () => {
-    const { id, doctors, users } = this.props;
+    const { id, doctors, users, specialities } = this.props;
     const { formatMessage, handleProfilePicModalOpen } = this;
 
     const {
@@ -94,6 +94,7 @@ class AdminDoctorDetails extends Component {
         profile_pic,
         gender,
           address,
+          speciality_id
       } = {},
       city,
     } = doctors[id] || {};
@@ -103,6 +104,8 @@ class AdminDoctorDetails extends Component {
       onboarding_status,
       activated_on
     } = users[user_id] || {};
+
+    const {basic_info: {name : specialityName} = {}} = specialities[speciality_id] || {};
 
     return (
       <div className="mt20 mb20 wp100 flex direction-column">
@@ -149,15 +152,15 @@ class AdminDoctorDetails extends Component {
               </div>
             </div>
 
-            {/*/!*age*!/*/}
-            {/*<div className="wp20 hp20 mt16 mb16 mr16">*/}
-            {/*  <div className="fs16 fw700">*/}
-            {/*    {formatMessage(messages.age_text)}*/}
-            {/*  </div>*/}
-            {/*  <div className="fs14 fw500">*/}
-            {/*    {age ? age : TABLE_DEFAULT_BLANK_FIELD}*/}
-            {/*  </div>*/}
-            {/*</div>*/}
+            {/*speciality*/}
+            <div className="wp20 hp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.speciality_text)}
+              </div>
+              <div className="fs14 fw500">
+                {speciality_id ? specialityName : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
 
             {/*mobile_number*/}
             <div className="wp20 mt16 mb16 mr16">

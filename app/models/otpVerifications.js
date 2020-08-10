@@ -23,7 +23,7 @@ const OtpVerifications = database.define(
             }
         },
         otp: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING(4),
             allowNull: false,
         },
     },

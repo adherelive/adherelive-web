@@ -5,8 +5,6 @@ import auth from "./auth";
 import patients from "./patients";
 import doctors from "./doctors";
 import providers from "./providers";
-import appointment_types from "./appointmentType";
-import type_descriptions from "./typeDescription";
 import treatments from "./treatments";
 import conditions from "./conditions";
 import severity from "./severity";
@@ -31,6 +29,7 @@ import show_template_drawer from "./showDrawer";
 import colleges from "./colleges";
 import degrees from "./degrees";
 import councils from "./councils";
+import specialities from "./specialities";
 
 const rootReducer = combineReducers({
   auth,
@@ -62,7 +61,8 @@ const rootReducer = combineReducers({
   colleges,
   degrees,
   councils,
-  static_templates
+  static_templates,
+  specialities
 });
 
 export default (state, action) => {

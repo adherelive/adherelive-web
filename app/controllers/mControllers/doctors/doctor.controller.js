@@ -406,7 +406,7 @@ class MobileDoctorController extends Controller {
     const { raiseServerError, raiseSuccess } = this;
     try {
       const {
-        speciality = "",
+        speciality_id = "",
         gender = "",
         qualification_details = [],
         registration_details = []
@@ -424,7 +424,7 @@ class MobileDoctorController extends Controller {
       const doctorUpdate = await doctorService.updateDoctor(
           {
               gender,
-              speciality
+            speciality_id
           },
           doctorData.getDoctorId()
       );
@@ -579,6 +579,7 @@ class MobileDoctorController extends Controller {
             doctors: {
                 [updatedDoctorData.getDoctorId()]: updatedDoctorData.getBasicInfo()
             },
+            ...await updatedDoctorData.getReferenceInfo(),
             doctor_qualifications: {
                 ...qualificationsData
             },
@@ -659,17 +660,17 @@ class MobileDoctorController extends Controller {
   updateQualificationStep = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
-      const { gender = "", speciality = "", qualification = {} } = req.body;
+      const { gender = "", speciality_id = "", qualification = {} } = req.body;
       const { userDetails: { userId } = {} } = req;
 
       let doctor = await doctorService.getDoctorByData({user_id: userId});
       const doctorData = await DoctorWrapper(doctor);
 
-      if (gender && speciality) {
+      if (gender && speciality_id) {
         const updatedDoctor = await doctorService.updateDoctor(
           {
             gender,
-            speciality
+            speciality_id
           },
           doctorData.getDoctorId()
         );
@@ -774,6 +775,7 @@ class MobileDoctorController extends Controller {
           doctors: {
               [updatedDoctorData.getDoctorId()]: {...updatedDoctorData.getBasicInfo(), doctor_qualification_ids}
           },
+          ...await updatedDoctorData.getReferenceInfo(),
           doctor_qualifications: {
               ...qualificationsData
           },
@@ -795,7 +797,7 @@ class MobileDoctorController extends Controller {
       const { body, userDetails: { userId } = {} } = req;
       const {
         gender = "",
-        speciality = "",
+        speciality_id = "",
         qualifications = [],
         registration = {}
       } = body || {};
@@ -803,9 +805,9 @@ class MobileDoctorController extends Controller {
       const doctor = await doctorService.getDoctorByData({user_id: userId});
       const doctorData = await DoctorWrapper(doctor);
 
-      if (gender && speciality) {
+      if (gender && speciality_id) {
         const updatedDoctor = await doctorService.updateDoctor(
-          { gender, speciality },
+          { gender, speciality_id },
           doctorData.getDoctorId()
         );
       }
@@ -982,6 +984,7 @@ class MobileDoctorController extends Controller {
           doctors: {
             [updatedDoctorData.getDoctorId()]: updatedDoctorData.getBasicInfo()
           },
+          ...await updatedDoctorData.getReferenceInfo(),
           doctor_qualifications: {
             ...qualificationsData
           },
@@ -994,7 +997,7 @@ class MobileDoctorController extends Controller {
           doctor_qualification_ids,
           doctor_registration_ids
         },
-        "registration details updated successfully"
+        "Registration details updated successfully"
       );
     } catch (error) {
       Logger.debug("registrationStep 500 error", error);
@@ -1276,6 +1279,7 @@ class MobileDoctorController extends Controller {
                 doctor_registration_ids,
               }
             },
+            ...await doctorWrapper.getReferenceInfo(),
             doctor_qualifications: {
               ...doctorQualificationApiDetails,
             },

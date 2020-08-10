@@ -10,7 +10,7 @@ const credentialsFormSchema = Joi.object().keys({
 });
 
 const updatedPasswordSchema = Joi.object().keys({
-   new_password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).required().label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
+   new_password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).min(PASSWORD_LENGTH).required().label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
    confirm_password: Joi.when('password', {is: Joi.string(), then: Joi.string().allow(Joi.ref("new_password"))})
 });
 
@@ -20,7 +20,7 @@ const signInSchema = Joi.object().keys({
 
 const otpSchema = Joi.object().keys({
     user_id: Joi.number().required(),
-    otp: Joi.string().regex(/^\d+$/).length(4).required()
+    otp: Joi.string().length(4).regex(/^[0-9]*$/).required()
 });
 
 const doctorSignInSchema = Joi.object().keys({

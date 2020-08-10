@@ -31,7 +31,7 @@ class DoctorTable extends Component {
     };
 
     getDataSource = () => {
-        const { users, doctors, doctor_ids } = this.props;
+        const { users, doctors, doctor_ids, specialities } = this.props;
 
       
         return doctor_ids.map(id => {
@@ -39,6 +39,7 @@ class DoctorTable extends Component {
                 id,
                 users,
                 doctors,
+                specialities
             });
         });
     };
