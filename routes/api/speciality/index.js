@@ -7,7 +7,7 @@ import SpecialityController from "../../../app/controllers/mControllers/speciali
 router.get(
     "/",
     Authenticate,
-    SpecialityController.search
+    SpecialityController.searchSpeciality
 );
 
 module.exports = router;
