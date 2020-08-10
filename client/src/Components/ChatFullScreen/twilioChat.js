@@ -20,7 +20,9 @@ class ChatForm extends Component {
     };
 
     sendMessage = event => {
-        // event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
         if (this.state.newMessage.length > 0) {
             const message = this.state.newMessage;
             this.setState({ newMessage: "" });
@@ -139,7 +141,9 @@ class MediaComponent extends Component {
                 return (
                     <Fragment>
                         {url.length > 0 ? (
-                            <div onClick={this.onClickDownloader}>
+                            <div
+                            // onClick={this.onClickDownloader}
+                            >
                                 <img
                                     className="chat-media-message-image"
                                     src={url}
@@ -260,9 +264,6 @@ class TwilioChat extends Component {
                     console.log("members24352543534634262346", members);
 
                     members.map(async mem => {
-                        const mem_user = await mem.getUser();
-
-                        console.log("******** other user details:0000 ", mem_user.online, mem.lastConsumedMessageIndex);
                         if (mem.identity !== `${authenticated_user}`) {
                             const other_user = await mem.getUser();
 
@@ -282,41 +283,46 @@ class TwilioChat extends Component {
         });
     };
 
-    // updateMessageRecieved = messages => {
-    //     const { otherUserLastConsumedMessageIndex } = this.state;
-    //     const { authenticated_user } = this.props;
+    updateMessageRecieved = messages => {
+        const { otherUserLastConsumedMessageIndex } = this.state;
+        const { authenticated_user } = this.props;
 
-    //     for (let messageData of messages) {
-    //         if (
-    //             messageData.index <= otherUserLastConsumedMessageIndex &&
-    //             messageData.user._id === `${authenticated_user}`
-    //         ) {
-    //             messageData.received = true;
-    //             messageData.sent = true;
-    //         }
-    //     }
+        for (let messageData of messages) {
+            console.log('534856486546888798', messageData);
+            if (
+                messageData.state.index <= otherUserLastConsumedMessageIndex &&
+                messageData.state.author === `${authenticated_user}`
+            ) {
+                messageData.received = true;
+                messageData.sent = true;
 
-    //     console.log("going to set the messages in the update: ", messages);
+                console.log('534856486546888798111111', messageData);
+            }
+        }
 
-    //     return messages;
-    // };
+        // console.log("going to set the messages in the update: ", messages);
+
+        return messages;
+    };
 
     messagesLoaded = messagePage => {
-        // let messages = this.updateMessageRecieved(messagePage.items);
+        let messages = this.updateMessageRecieved(messagePage.items);
         this.setState(
             {
                 messagesLoading: false,
-                messages: messagePage.items,
-                // messages
+                // messages: messagePage.items,
+                messages
             },
             this.scrollToBottom
         );
     };
 
-    messageAdded = message => {
+    messageAdded = (message) => {
         this.setState((prevState, props) => ({
             messages: [...prevState.messages, message]
         }));
+
+        this.channel.setAllMessagesConsumed();
     };
 
     componentDidUpdate(prevProps, prevState) {
