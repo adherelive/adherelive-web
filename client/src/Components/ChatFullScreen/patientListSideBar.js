@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { Avatar } from "antd";
+import { Avatar, Input } from "antd";
+import throttle from "lodash-es/throttle";
 
-const Header = ({ docName, docDp = '' }) => {
-    let pic = docName ?
-        <Avatar src={docDp}>{docName[0]}</Avatar> : <Avatar src={docDp} icon="user" />
+const Header = ({ handleSearch }) => {
     return (
         <div className='chat-patientListheader'>
-            {pic}
-            <div className='doctor-name-chat-header mt4'>{docName}</div>
+            <Input className='patientSearch' placeholder='Search Patient' onChange={handleSearch} />
         </div>
     );
 }
@@ -29,13 +27,46 @@ class PatientListSideBar extends Component {
         super(props);
         this.state = {
             doctorName: '',
-            docDp: ''
+            docDp: '',
+            allPatientIds: [],
+            searchPatientIds: [],
+            searchText: ''
         };
+        // this.handlePatientSearch = throttle(this.handlePatientSearch.bind(this), 2000);
     }
+
+
+
+    handlePatientSearch = (e) => {
+
+        let { patients = {} } = this.props;
+        let { allPatientIds } = this.state;
+        let newsearchPatientIds = [];
+        let textToSearch = ''
+        // if (e) {
+        //     if (e.target && e.target.value) {
+        textToSearch = e.target.value;
+        newsearchPatientIds = allPatientIds.filter((patId) => {
+            const { basic_info: { id = 0, first_name = '', middle_name = '', last_name = '' } = {}, } = patients[patId];
+            let firstName = first_name ? first_name : '';
+            let middleName = middle_name ? middle_name : '';
+            let lastName = last_name ? last_name : '';
+            console.log('67598587659769', first_name, middle_name, last_name);
+            return firstName.includes(textToSearch) || middleName.includes(textToSearch) || lastName.includes(textToSearch);
+        })
+        //     }
+        // }
+        // if (textToSearch && newsearchPatientIds.length) {
+        this.setState({ searchText: textToSearch, searchPatientIds: newsearchPatientIds });
+        // } else if (textToSearch) {
+        //     this.setState({ searchText: textToSearch });
+        // }
+    };
+
 
     componentDidMount() {
 
-        let { doctors = {}, authenticated_user = 1 } = this.props;
+        let { doctors = {}, authenticated_user = 1, patients = {} } = this.props;
         let doctorName = '';
         let doctorDp = '';
         for (let doc of Object.values(doctors)) {
@@ -45,16 +76,17 @@ class PatientListSideBar extends Component {
                 doctorDp = profile_pic;
             }
         }
-        this.setState({ doctorName, doctorDp });
+        this.setState({ doctorName, doctorDp, allPatientIds: Object.keys(patients), searchPatientIds: Object.keys(patients) });
     }
 
     renderPatients = () => {
         const { patients = {}, setPatientId, patientId = 1 } = this.props;
-        let allPatients = Object.values(patients).map((patient) => {
-            const { basic_info: { id = 0, first_name = '', middle_name = '', last_name = '' } = {} } = patient;
+        const { searchPatientIds } = this.state;
+        let allPatients = Object.values(searchPatientIds).map((patient) => {
+            const { basic_info: { id = 0, first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[patient];
             return (
                 <div key={id} className={parseInt(id) === parseInt(patientId) ? 'chat-patient-card-parent-selected' : 'chat-patient-card-parent'}>
-                    <PatientCard setPatientId={setPatientId} patientId={id} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp='' />
+                    <PatientCard setPatientId={setPatientId} patientId={id} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
                 </div>
             );
         })
@@ -62,12 +94,14 @@ class PatientListSideBar extends Component {
     }
 
     render() {
-        let { doctorName = '', doctorDp = '' } = this.state;
+        // let { doctorName = '', doctorDp = '' } = this.state;
 
         return (
             <div className="patientList-component-container">
-                <Header docName={doctorName} docDp={doctorDp} />
-                {this.renderPatients()}
+                <Header handleSearch={this.handlePatientSearch} />
+                <div className='patientList-list-component-container'>
+                    {this.renderPatients()}
+                </div>
             </div>
         );
     }

@@ -3,18 +3,18 @@ import { injectIntl } from "react-intl";
 import { Avatar } from "antd";
 import PatientList from './patientListSideBar';
 import TwilioChat from '../../Containers/ChatFullScreen/twilioChat';
-import TwilioVideo from '../../Containers/ChatFullScreen/twilioVideo';
 import CallIcon from '../../Assets/images/telephone.png';
 import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
+import {ROOM_ID_TEXT} from '../../constant';
 
 const Header = ({ placeVideoCall, patientName, patientDp = '' }) => {
     let pic = patientName ?
         <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
     return (
-        <div className='chat-patientListheader-chatBox'>
+        <div className='chat-patientListheader-chatBoxPopUp'>
             <div className='flex direction-row align-center wp90'>
                 {pic}
-                <div className='doctor-name-chat-header mt4'>{patientName}</div>
+                <div className='doctor-name-chat-header mt2'>{patientName}</div>
             </div>
             <img src={CallIcon} className='callIcon-header mr10' onClick={placeVideoCall} />
         </div>
@@ -50,7 +50,7 @@ class ChatFullScreen extends Component {
             }
         }
 
-        let roomId = doctorUserId + '-adhere-' + patientUserId;
+        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
 
         // console.log('754624646546245624562462456', doctorUserId, patient_id, roomId);
         this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
@@ -68,7 +68,7 @@ class ChatFullScreen extends Component {
         let { doctorUserId } = this.state;
         let { patients = {} } = this.props;
         let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id];
-        let roomId = doctorUserId + '-adhere-' + patientUserId;
+        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
         this.setState({ patientUserId: patientUserId, patientId: patient_id, roomId });
     }
 
@@ -99,7 +99,7 @@ class ChatFullScreen extends Component {
         let { roomId, patientId, doctorUserId } = this.state;
         let { patients = {} } = this.props;
 
-        const { basic_info: { first_name = '', middle_name = '', last_name = '' } = {} } = patients[patientId];
+        const { basic_info: { first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[patientId];
         return (
             <div className="chat-screen-container">
                 {/* {placeCall
@@ -111,8 +111,8 @@ class ChatFullScreen extends Component {
                         <PatientList setPatientId={this.setPatientId} doctorUserId={doctorUserId} patientId={patientId} {...this.props} />
                     </div>
                     <div className='chat-messageBox-container'>
-                        {/* <Header placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp='' /> */}
-                        <TwilioChat roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp='' />
+                        {/* <Header placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={} /> */}
+                        <TwilioChat roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
                     </div>
                 </Fragment>
             </div>

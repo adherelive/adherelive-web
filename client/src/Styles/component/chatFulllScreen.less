@@ -25,8 +25,11 @@
   cursor: pointer;
 }
 .chat-patient-card-parent {
+  display: flex;
+  // justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 51px;
+  height: 70px;
   border-bottom: 1px solid #e5ddd5;
   &:hover {
     background-color: #f7f7f7;
@@ -34,8 +37,12 @@
 }
 
 .chat-patient-card-parent-selected {
+  display: flex;
+  // justify-content: center;
+  // overflow-y: scroll;
+  align-items: center;
   width: 100%;
-  height: 51px;
+  height: 70px;
   background-color: #f0f0f0;
   border-bottom: 1px solid #e5ddd5;
 }
@@ -49,21 +56,22 @@
 }
 
 .callIcon-header {
-  height: 30px;
-  width: 30px;
+  height: 24px;
+  width: 24px;
   cursor: pointer;
 }
 
 .chat-patientListheader-chatBox {
   height: 60px;
+  min-height: 60px;
   width: 100%;
-  padding-left: 20px;
+  padding-left: 10px;
   position: sticky;
   top: 0px;
   display: flex;
   color: #fff;
   flex-direction: row;
-  background-color: #4a4a4a;
+  background-color: #528ff0;
   justify-content: start;
   align-items: center;
 }
@@ -72,14 +80,25 @@
   height: 60px;
   width: 100%;
   padding-left: 10px;
+  padding-right: 10px;
   position: sticky;
   top: 0px;
   display: flex;
   flex-direction: row;
   color: #fff;
-  background-color: #4a4a4a;
+  background-color: #528ff0;
   justify-content: start;
   align-items: center;
+  .patientSearch {
+    flex-grow: 1;
+    height: 40px;
+    border-radius: 20px;
+    .ant-input {
+      flex-grow: 1;
+      height: 40px;
+      border-radius: 20px;
+    }
+  }
 }
 
 .doctor-name-chat-header {
@@ -107,8 +126,21 @@
 .patientList-component-container {
   height: 100%;
   width: 100%;
+  // overflow-y: scroll;
   display: flex;
   flex-direction: column;
+}
+
+.patientList-list-component-container {
+  height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  .element::-webkit-scrollbar {
+    width: 0 !important;
+  }
 }
 
 .message-input {
@@ -157,6 +189,9 @@
       width: auto;
       height: auto;
       word-break: break-word;
+      padding: 10px;
+      border-radius: 6px;
+      background-color: rgba(24, 144, 255, 0.19);
       align-self: flex-start;
       &.end {
         align-self: flex-end;
@@ -222,17 +257,33 @@
     height: 100%;
     width: 100%;
     align-items: center;
-    background-color: #4a4a4a;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #528ff0;
     .chat-form {
       display: flex;
       width: 100%;
-      justify-content: space-around;
+      justify-content: space-between;
       .form-input {
         display: flex;
-        width: 80%;
-      }
-      .form-button {
-        display: flex;
+        flex-grow: 1;
+        margin-right: 10px;
+        // width: 80%;
+        .ant-input {
+          flex-grow: 1;
+          height: 40px;
+          border-radius: 20px;
+        }
+        .form-button {
+          display: flex;
+        }
+        .ant-btn {
+          border: 1px solid #fff;
+          height: 100%;
+          border-radius: 50%;
+          margin-right: -12px;
+          margin-bottom: 2px;
+        }
       }
     }
   }
@@ -355,4 +406,29 @@
 
 #remote-media video {
   width: 100%;
+}
+.downloadable-file {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.chat-media-modal-dialog {
+  .chat-media-modal {
+    .ant-modal-content {
+      .ant-modal-header {
+        padding: 0px;
+        height: 48px;
+      }
+      .ant-modal-close {
+        height: 48px;
+        line-height: 48px;
+      }
+    }
+  }
 }

@@ -1,16 +1,20 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
-import { GRAPH_COLORS, PERMISSIONS } from "../../constant";
+import { GRAPH_COLORS, PERMISSIONS, ROOM_ID_TEXT } from "../../constant";
 import Tabs from "antd/es/tabs";
 import { Button, Menu, Dropdown, Spin, message } from "antd";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
+import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
 import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
 import Donut from '../Common/graphs/donut'
 import GraphsModal from "./graphsModal";
+import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
+import { getPatientConsultingUrl } from '../../Helper/url/patients';
+import config from "../../config/config";
 
 
 
@@ -25,20 +29,29 @@ class Dashboard extends Component {
         this.state = {
             visible: false,
             visibleModal: false,
-            graphsToShow: []
+            graphsToShow: [],
+            doctorUserId: 1
         };
     }
 
     componentDidMount() {
-        const { searchMedicine, getGraphs } = this.props;
+        const { searchMedicine, getGraphs, doctors = {}, authenticated_user } = this.props;
         // getInitialData();
-        this.setState({graphLoading: true});
+        let doctorUserId = '';   //user_id of doctor
+        for (let doc of Object.values(doctors)) {
+            let { basic_info: { user_id, id = 1 } } = doc;
+            if (parseInt(user_id) === parseInt(authenticated_user)) {
+                doctorUserId = user_id;
+            }
+        }
+        this.setState({ graphLoading: true, doctorUserId: 1 });
         getGraphs().then(response => {
             const { status, payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {} } = response;
             if (status) {
                 this.setState({ graphsToShow: [...charts], graphLoading: false });
             }
         });
+
         searchMedicine("");
         // setTimeout(() => {
         //     drawChart(graphs);
@@ -68,7 +81,7 @@ class Dashboard extends Component {
         const { graphsToShow, graphLoading } = this.state;
 
         // initial loading phase
-        if(graphLoading) {
+        if (graphLoading) {
             return (<div className='flex flex-grow-1 wp100 align-center justify-center'><Spin /></div>);
         }
 
@@ -78,12 +91,12 @@ class Dashboard extends Component {
             return (
                 <Donut key={id} id={id} data={[critical, total - critical]} total={total} title={name} />
             );
-            
+
         });
         // no graph selected to show phase
         if (graphsToShow.length === 0) {
             return (
-              <div className="flex justify-center align-center fs20 fw600 wp100 bg-grey br5">{this.formatMessage(messages.no_graph_text)}</div>
+                <div className="flex justify-center align-center fs20 fw600 wp100 bg-grey br5">{this.formatMessage(messages.no_graph_text)}</div>
             );
         } else {
             return chartBlocks;
@@ -147,15 +160,42 @@ class Dashboard extends Component {
     hideEditGraphModal = () => {
         this.setState({ visibleModal: false });
     }
+
+
+    openVideoChatTab = () => {
+        const {
+            patients,
+            twilio: { patientId: chatPatientId = 1 } } = this.props;
+        const { doctorUserId } = this.state;
+        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[chatPatientId];
+        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+        window.open(`http://localhost:3000${getPatientConsultingVideoUrl(roomId)}`, '_blank');
+    }
+
+    maximizeChat = () => {
+        const {
+            patients,
+            twilio: { patientId: chatPatientId = 1 } } = this.props;
+        window.open(`http://localhost:3000${getPatientConsultingUrl(chatPatientId)}`, '_blank');
+    }
     render() {
         const { graphs,
             treatments,
             conditions,
             severity,
-            authPermissions = [] } = this.props;
+            patients,
+            authPermissions = [],
+            chats: { minimized = false, visible: popUpVisible = false },
+            drawer: { visible: drawerVisible = false } = {},
+            twilio: { patientId: chatPatientId = 1 } } = this.props;
         const { formatMessage, renderChartTabs } = this;
+        console.log('452345134625362456', config.WEB_URL);
+        let { basic_info: { user_id: patientUserId = '', first_name = '', middle_name = '', last_name = '' } = {} } = patients[chatPatientId] || {};
 
-        const { visible, graphsToShow, visibleModal } = this.state;
+
+        const { visible, graphsToShow, visibleModal, doctorUserId } = this.state;
+
+        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
         if (Object.keys(graphs).length === 0) {
             return (
                 <Loading className={"wp100 mt20"} />
@@ -202,8 +242,17 @@ class Dashboard extends Component {
                             {/*add watchlist table here*/}
                         </TabPane>
                     </Tabs>
+
                 </div>
                 <PatientDetailsDrawer />
+                {popUpVisible && (<div className={drawerVisible && minimized ? 'chat-popup-minimized' : drawerVisible && !minimized ? 'chat-popup' : minimized ? 'chat-popup-minimized-closedDrawer' : 'chat-popup-closedDrawer'}>
+                    <ChatPopup
+                        roomId={roomId}
+                        placeVideoCall={this.openVideoChatTab}
+                        patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''}
+                        maximizeChat={this.maximizeChat}
+                    />
+                </div>)}
 
                 <AddPatientDrawer
                     searchCondition={this.props.searchCondition}

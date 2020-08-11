@@ -4,7 +4,6 @@ import { Drawer } from "antd";
 import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
 import messages from "./message";
 import moment from "moment";
-import { getPatientConsultingUrl } from '../../../Helper/url/patients';
 import ShareIcon from "../../../Assets/images/redirect3x.png";
 import MsgIcon from "../../../Assets/images/chat.png";
 // import config from "../../../config/config";
@@ -104,9 +103,12 @@ class PatientDetailsDrawer extends Component {
 
   openChatTab = () => {
 
-    const { payload: { patient_id } = {}, setPatientForChat } = this.props;
-    // setPatientForChat(patient_id);
-    window.open(`http://localhost:3000${getPatientConsultingUrl(patient_id)}`, '_blank');
+    const { payload: { patient_id } = {}, setPatientForChat, openPopUp } = this.props;
+    setPatientForChat(patient_id).then(() => {
+      openPopUp()
+    }
+    );
+    // window.open(`http://localhost:3000${getPatientConsultingUrl(patient_id)}`, '_blank');
   }
 
   handlePatientDetailsRedirect = e => {
@@ -281,7 +283,7 @@ class PatientDetailsDrawer extends Component {
     return (
       <Fragment>
         <Drawer
-
+          mask={false}
           title="   "
           placement="right"
           // closable={false}

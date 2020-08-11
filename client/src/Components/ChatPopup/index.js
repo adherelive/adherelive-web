@@ -1,32 +1,53 @@
 import React, { Component, Fragment } from "react";
-import { Form, Input, Button, Spin, Avatar, Icon, Upload, Modal } from "antd";
+import { Form, Input, Button, Spin, Avatar, Icon, Upload } from "antd";
 import moment from 'moment';
 import Chat from "twilio-chat";
 import DoubleTick from "../../Assets/images/double-tick-indicator.png";
 import Send from "../../Assets/images/send.png";
 import SingleTick from "../../Assets/images/check-symbol.png";
-import PaperClip from "../../Assets/images/attach.png";
+import PaperClip from "../../Assets/images/attachPop.png";
 import ImagePlaceHolder from "../../Assets/images/image_placeholder.png";
+import Close from "../../Assets/images/close.png";
+import Maximize from "../../Assets/images/maximize.png";
 import Download from "../../Assets/images/down-arrow.png";
 import File from "../../Assets/images/file.png";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
 
-const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false }) => {
+const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, onHeaderClick, close, maximizeChat }) => {
     let pic = patientName ?
         <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
     return (
-        <div className='chat-patientListheader-chatBox'>
-            <div className='flex direction-row align-center flex-grow-1 mb4'>
-                {pic}
-
+        <div className='chat-patientListheader-PopUp' >
+            <div className='flex direction-row align-center'>
                 <div className='flex direction-column align-center justify-center'>
-                    <div className='doctor-name-chat-header medium mt4'>{patientName}</div>
+                    <div className='doctor-name-chat-header mb2 pointer' onClick={onHeaderClick}>{patientName}</div>
+                    {/* <div className='doctor-name-chat-header-online'>{isOnline ? 'online' : ''}</div> */}
+                </div>
+            </div>
+            <div>
+                <img src={CallIcon} className='callIcon-header-PopUp mr20' onClick={placeVideoCall} />
+
+                <img src={Maximize} className='callIcon-header-PopUp mr20' onClick={maximizeChat} />
+
+                <img src={Close} className='callIcon-header-PopUp mr20' onClick={close} />
+            </div>
+        </div>
+    );
+}
+
+const MinimizedHeader = ({ placeVideoCall, patientName, isOnline = false, onHeaderClick, close }) => {
+    return (
+        <div className='chat-patientListheader-PopUp-minimized'>
+            <div className='flex direction-row align-center'>
+                <div className='flex direction-column align-center justify-center'>
+                    <div className='doctor-name-chat-header mb2 pointer' onClick={onHeaderClick}>{patientName}</div>
                     <div className='doctor-name-chat-header-online'>{isOnline ? 'online' : ''}</div>
                 </div>
             </div>
-
-            <img src={CallIcon} className='callIcon-header mr10' onClick={placeVideoCall} />
+            <div>
+                <img src={Close} className='callIcon-header-PopUp mr20' onClick={close} />
+            </div>
         </div>
     );
 }
@@ -36,13 +57,14 @@ class ChatForm extends Component {
         super();
         this.state = {
             newMessage: "",
-            fileList: []
+            fileList: [],
         };
     }
 
     onMessageChanged = event => {
         this.setState({ newMessage: event.target.value });
     };
+
 
     sendMessage = event => {
         if (event) {
@@ -108,7 +130,7 @@ class ChatForm extends Component {
                 >
                     <div className="chat-upload-btn">
                         {/* <Icon type="paper-clip" className='h20 mt6' /> */}
-                        <img src={PaperClip} className='h30 mt6 pointer' />
+                        <img src={PaperClip} className='h20 mt6 pointer' />
                     </div>
                 </Upload>
 
@@ -123,8 +145,7 @@ class MediaComponent extends Component {
         this.state = {
             url: "",
             blobUrl: "",
-            message: "",
-            imageModalVisible: false
+            message: ""
         };
     }
 
@@ -157,41 +178,11 @@ class MediaComponent extends Component {
         }
     };
 
-    closeModal = () => {
-
-        this.setState({ imageModalVisible: false });
-    }
-
-    openModal = () => {
-
-        this.setState({ imageModalVisible: true });
-    }
-
     getUrl = async () => {
         const { message } = this.state;
         console.log('23452363451346134513461', message);
         const url = await message.media.getContentTemporaryUrl();
         this.setState({ url: url });
-    };
-
-    imageModal = () => {
-
-        return (
-            <Modal
-                className={"chat-media-modal"}
-                visible={this.state.imageModalVisible}
-                title={' '}
-                closable
-                mask
-                maskClosable
-                onCancel={this.closeModal}
-                wrapClassName={"chat-media-modal-dialog"}
-                width={`50%`}
-                footer={null}
-            >
-                <img src={this.state.url} alt="qualification document" className="wp100" />
-            </Modal>
-        );
     };
 
     getMedia = () => {
@@ -203,10 +194,10 @@ class MediaComponent extends Component {
                     <Fragment>
                         {url.length > 0 ? (
                             <div
-                                onClick={this.openModal}
+                            // onClick={this.onClickDownloader}
                             >
                                 <img
-                                    className="chat-media-message-image pointer"
+                                    className="chat-media-message-image"
                                     src={url}
                                     alt="Uploaded Image"
                                 />
@@ -218,15 +209,15 @@ class MediaComponent extends Component {
                                     alt="Uploaded Image"
                                 />
                             )}
-                        {this.imageModal()}
                     </Fragment>
                 );
             } else {
                 return (
+                    // <div onClick={this.onClickDownloader}>{message.media.filename}</div>
                     <div className='downloadable-file'>
-                        <img src={File} className='w20 mr10' />
-                        <div className='fs14 mr10'>{message.media.filename}</div>
-                        <img src={Download} className='w20 mr10 pointer' onClick={this.onClickDownloader} />
+                        <img src={File} className='h20 mr10' />
+                        <div className='fs14 mr10'>{message.media.filename.length<=12?message.media.filename:`${message.media.filename.substring(0,13)}...`}</div>
+                        <img src={Download} className='h20 mr10 pointer' onClick={this.onClickDownloader} />
                     </div>
                 );
             }
@@ -240,7 +231,7 @@ class MediaComponent extends Component {
     }
 }
 
-class TwilioChat extends Component {
+class ChatPopUp extends Component {
     constructor(props) {
         super(props);
         this.ChatForm = Form.create()(ChatForm);
@@ -256,10 +247,15 @@ class TwilioChat extends Component {
         this.channelName = "test";
     }
 
+
+
     scrollToBottom = () => {
-        const chatEndElement = document.getElementById("chatEnd");
-        chatEndElement.focus();
-        chatEndElement.scrollIntoView({ behavior: "smooth" });
+        const { chats: { minimized = false } = {} } = this.props;
+        if (!minimized) {
+            const chatEndElement = document.getElementById("chatEnd");
+            chatEndElement.focus();
+            chatEndElement.scrollIntoView({ behavior: "smooth" });
+        }
     };
 
     componentDidMount() {
@@ -411,67 +407,6 @@ class TwilioChat extends Component {
         this.channel = null;
     };
 
-    // renderMessages() {
-    //     const { authenticated_user, users } = this.props;
-    //     return this.state.messages.length > 0
-    //         ? this.state.messages.map((message, index) => {
-    //             const user = users[message.state.author]
-    //                 ? users[message.state.author]
-    //                 : {};
-    //             const { basicInfo: { profilePicLink: profilePic } = {} } = user;
-    //             console.log('3452345234523452345234', message.state.author, typeof (message.state.author), authenticated_user, typeof (authenticated_user), message)
-    //             return (
-    //                 <Fragment key={message.state.sid}>
-    //                     {parseInt(message.state.author) !== parseInt(authenticated_user) ? (
-    //                         <div className="chat-messages">
-    //                             <div className="chat-avatar">
-    //                                 <span className="twilio-avatar">
-    //                                     <Avatar src={profilePic} />
-    //                                 </span>
-    //                                 {message.type === "media" ? (
-    //                                     <div className="chat-text">
-    //                                         <div className="clickable white chat-media-message-text">
-    //                                             <MediaComponent message={message}></MediaComponent>
-    //                                         </div>
-    //                                     </div>
-    //                                 ) : (
-    //                                         <div className="chat-text">{message.state.body}</div>
-    //                                     )}
-    //                             </div>
-    //                             <div className="chat-time start">
-    //                                 {moment(message.state.timestamp).format("H:mm")}
-    //                             </div>
-    //                         </div>
-    //                     ) : (
-    //                             <div className="chat-messages end">
-    //                                 <div
-    //                                     className={
-    //                                         "chat-message-box " +
-    //                                         (message.type === "media" ? "media-text-width" : "")
-    //                                     }
-    //                                 >
-    //                                     {message.type === "media" ? (
-    //                                         <div className="chat-text end">
-    //                                             <div className="clickable white chat-media-message-text">
-    //                                                 <MediaComponent message={message}></MediaComponent>
-    //                                             </div>
-    //                                         </div>
-    //                                     ) : (
-    //                                             <div className="chat-text end">{message.state.body}</div>
-    //                                         )}
-    //                                     <div className="chat-time"> {moment(message.state.timestamp).format("H:mm")}
-    //                                     </div>
-    //                                 </div>
-    //                                 {/* <div className="chat-avatar left">
-    //               <Avatar src={profilePic} />
-    //             </div> */}
-    //                             </div>
-    //                         )}
-    //                 </Fragment>
-    //             );
-    //         })
-    //         : "";
-    // }
 
     renderMessages() {
         const { authenticated_user, users } = this.props;
@@ -560,32 +495,40 @@ class TwilioChat extends Component {
     render() {
         const { ChatForm } = this;
         const { messagesLoading = false, other_user_online = false } = this.state;
-        const { placeVideoCall, patientDp = '', patientName = '' } = this.props;
+        const { placeVideoCall, patientName = '', chats: { minimized = false } = {}, minimizePopUp, maximizePopUp, closePopUp, maximizeChat } = this.props;
+        if (minimized) {
+            return (
+
+                <MinimizedHeader patientName={patientName} isOnline={other_user_online} onHeaderClick={maximizePopUp} close={closePopUp} />
+            );
+        }
         return (
             <Fragment>
-                <Header placeVideoCall={placeVideoCall} patientName={patientName} patientDp={patientDp} isOnline={other_user_online} />
-                <div className="twilio-chat-container">
-                    <div className="twilio-chat-body">
-                        {messagesLoading ?
-                            <div className='wp100 hp100 flex justify-center align-center'>
-                                <Spin size="medium" />
-                            </div>
-                            : this.renderMessages()}
-                        <div id="chatEnd" style={{ float: "left", clear: "both" }} />
+                <div className={'popup-chatWindow'}>
+                    <Header placeVideoCall={placeVideoCall} patientName={patientName} isOnline={other_user_online} onHeaderClick={minimizePopUp} close={closePopUp} maximizeChat={maximizeChat} />
+                    <div className="twilio-chat-container-popUp">
+                        <div className="twilio-chat-body">
+                            {messagesLoading ?
+                                <div className='wp100 hp100 flex justify-center align-center'>
+                                    <Spin size="medium" />
+                                </div>
+                                : this.renderMessages()}
+                            <div id="chatEnd" style={{ float: "left", clear: "both" }} />
+                        </div>
                     </div>
-                </div>
 
-                <div className="twilio-chat-footer">
-                    {/* <div className="footer-left"> */}
-                    {/* <img
+                    <div className="twilio-chat-footer-popUp">
+                        {/* <div className="footer-left"> */}
+                        {/* <img
               src={CloseChatIcon}
               className="back-image"
               onClick={this.props.hideChat}
               alt="chatImg"
             /> */}
-                    {/* </div> */}
-                    <div className="footer-right wp100">
-                        <ChatForm messages={this.messages} channel={this.channel} />
+                        {/* </div> */}
+                        <div className="footer-right-popUp">
+                            <ChatForm messages={this.messages} channel={this.channel} />
+                        </div>
                     </div>
                 </div>
             </Fragment>
@@ -593,4 +536,4 @@ class TwilioChat extends Component {
     }
 }
 
-export default TwilioChat;
+export default ChatPopUp;

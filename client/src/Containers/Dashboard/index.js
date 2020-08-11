@@ -13,13 +13,18 @@ const mapStateToProps = state => {
     const { graphs, auth: { authPermissions = [] } = {},
         treatments = {},
         conditions = {},
-        severity = {} } = state;
+        severity = {}, chats, drawer, twilio, patients, doctors } = state;
     return {
         graphs,
         treatments,
         conditions,
         severity,
-        authPermissions
+        authPermissions,
+        chats,
+        drawer,
+        twilio,
+        patients,
+        doctors
     };
 };
 

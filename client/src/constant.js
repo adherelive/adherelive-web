@@ -24,6 +24,8 @@ export const PATH = {
   }
 };
 
+export const ROOM_ID_TEXT = '-adhere-';
+
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
 
