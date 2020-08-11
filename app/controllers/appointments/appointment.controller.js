@@ -155,7 +155,7 @@ class AppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentApiData.getAppointmentId(),
         details: appointmentApiData.getBasicInfo(),
-        status: EVENT_STATUS.PENDING,
+        status: EVENT_STATUS.SCHEDULED,
         start_time,
         end_time,
       };
@@ -332,10 +332,12 @@ class AppointmentController extends Controller {
       };
 
       // RRule
-      EventSchedule.create({
-        eventType: EVENT_TYPE.APPOINTMENT,
+      await EventSchedule.create({
+        event_id: appointmentApiData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
         start_time,
-        end_time
+        end_time,
+        details: appointmentApiData.getBasicInfo()
       });
 
       // Logger.debug("startdate ---> ", moment(start_time).utc().toDate());

@@ -679,7 +679,7 @@ class MobileUserController extends Controller {
 
         // speciality temp todo
         let referenceData = {};
-        if(category === USER_CATEGORY.DOCTOR) {
+        if(userCategoryApiData && category === USER_CATEGORY.DOCTOR) {
           referenceData = await userCategoryApiData.getReferenceInfo();
         }
 
