@@ -20,6 +20,7 @@ import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import patientService from "../../services/patients/patients.service";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import {RRule} from "rrule";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -157,6 +158,16 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
       };
+
+      // RRule
+
+      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_time).utc().toDate(),
+      });
+
+      Logger.debug("rrule ----> ", rrule.all());
 
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
@@ -318,6 +329,17 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
       };
+
+      // RRule
+
+      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_time).utc().toDate(),
+        until: moment(start_time).add(6,'months').utc().toDate()
+      });
+
+      Logger.debug("rrule ----> ", rrule.all());
 
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);

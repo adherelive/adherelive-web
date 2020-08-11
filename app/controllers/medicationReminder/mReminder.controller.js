@@ -20,6 +20,7 @@ import {
 import Log from "../../../libs/log";
 import {getCarePlanAppointmentIds,getCarePlanMedicationIds,getCarePlanSeverityDetails} from '../carePlans/carePlanHelper'
 import { Proxy_Sdk } from "../../proxySdk";
+import {RRule} from "rrule";
 // import medicineService from "../../services/medicines/medicine.service";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
@@ -98,6 +99,15 @@ class MReminderController extends Controller {
           critical
         }
       };
+
+      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_time).utc().toDate(),
+        until: moment(start_time).add(6,'months').utc().toDate()
+      });
+
+      Logger.debug("rrule ----> ", rrule.all());
 
       const mReminderDetails = await medicationReminderService.addMReminder(
         dataToSave
