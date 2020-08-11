@@ -9,6 +9,7 @@ import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import moment from "moment";
+import EventSchedule from "../../eventSchedules";
 
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/helper";
@@ -331,15 +332,20 @@ class AppointmentController extends Controller {
       };
 
       // RRule
-
-      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
-      const rrule = new RRule({
-        freq: RRule.WEEKLY,
-        dtstart: moment(start_time).utc().toDate(),
-        until: moment(start_time).add(6,'months').utc().toDate()
+      EventSchedule.create({
+        eventType: EVENT_TYPE.APPOINTMENT,
+        start_time,
+        end_time
       });
 
-      Logger.debug("rrule ----> ", rrule.all());
+      // Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      // const rrule = new RRule({
+      //   freq: RRule.WEEKLY,
+      //   dtstart: moment(start_time).utc().toDate(),
+      //   until: moment(start_time).add(6,'months').utc().toDate()
+      // });
+      //
+      // Logger.debug("rrule ----> ", rrule.all());
 
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
