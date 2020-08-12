@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS } from "../../../constant";
+import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -15,10 +15,13 @@ import EditMedicationReminder from "../../../Containers/Drawer/editMedicationRem
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 import noMedication from "../../../Assets/images/no_medication@3x.png";
 import TemplateDrawer from '../../Drawer/medicationTemplateDrawer'
-
+import ChatPopup from "../../../Containers/ChatPopup";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
+import { getPatientConsultingVideoUrl } from '../../../Helper/url/patients';
+import { getPatientConsultingUrl } from '../../../Helper/url/patients';
 // import messages from "../../Dashboard/message";
+import config from "../../../config";
 
 const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
@@ -249,6 +252,7 @@ const PatientCard = ({
   patient_phone_number,
   patient_email_id,
   formatMessage,
+  openChat
 }) => {
   return (
     <div className="patient-card tac">
@@ -275,7 +279,7 @@ const PatientCard = ({
           <img className="mr5" src={edit_image} />
           <span>{formatMessage(messages.profile_edit)}</span>
         </div>
-        <div className="chat-button p10">
+        <div className="chat-button p10" onClick={openChat}>
           <img className="mr5" src={chat_image} />
           <span>{formatMessage(messages.profile_chat)}</span>
         </div>
@@ -414,7 +418,7 @@ class PatientDetails extends Component {
     let carePlanTemplateId = 0;
     for (let carePlan of Object.values(care_plans)) {
 
-      let { basic_info: {  patient_id: patientId = 1 } } = carePlan;
+      let { basic_info: { patient_id: patientId = 1 } } = carePlan;
 
       if (parseInt(patient_id) === parseInt(patientId)) {
         let { basic_info: { care_plan_template_id = 0 } = {} } = carePlan;
@@ -442,7 +446,7 @@ class PatientDetails extends Component {
           start_date,
           start_time,
           end_time,
-          description=''
+          description = ''
         } = {},
         organizer: { id: organizer_id } = {},
       } = appointments[id] || {};
@@ -631,14 +635,25 @@ class PatientDetails extends Component {
       }
     });
   }
+  openVideoChatTab = (roomId) => () => {
 
+    window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
+  }
+
+  maximizeChat = () => {
+    const {
+      patient_id } = this.props;
+    window.open(`${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`, '_blank');
+  }
 
 
   render() {
     let { patients, patient_id, users, care_plans, doctors, medicines,
       treatments = {}, conditions = {}, severity: severities = {}, template_medications = {}, template_appointments = {},
       care_plan_templates = {},
-      authPermissions = [] } = this.props;
+      authPermissions = [],
+      chats: { minimized = false, visible: popUpVisible = false },
+      drawer: { visible: drawerVisible = false } = {}, } = this.props;
     const { loading, templateDrawerVisible = false, carePlanTemplateId = 0 } = this.state;
 
     const {
@@ -745,19 +760,22 @@ class PatientDetails extends Component {
       carePlan.severity_id = sId;
       carePlan.condition_id = cId;
     }
-    const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
+    const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name, user_id: doctorUserId = 1 } = {} } = doctors[doctor_id] || {};
 
-    
+
     const {
-      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456' }
+      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456', user_id: patientUserId = '' }
     } = patients[patient_id] || {};
 
 
+    let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+
     const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
 
-    
+
     const {
       close,
+      openPopUp,
       user_details: {
         // // gender,
         // age: patient_age,
@@ -802,6 +820,7 @@ class PatientDetails extends Component {
               patient_phone_number={`${prefix ? `+${prefix} ` : ''}${mobile_number}`}
               patient_email_id={email ? email : ''}
               formatMessage={formatMessage}
+              openChat={openPopUp}
             />
             <PatientTreatmentCard
               formatMessage={formatMessage}
@@ -876,6 +895,14 @@ class PatientDetails extends Component {
           </div>
         </div>
         <AddMedicationReminder carePlanId={carePlanId} />
+        {popUpVisible && (<div className={(drawerVisible || templateDrawerVisible) && minimized ? 'chat-popup-minimized' : (drawerVisible || templateDrawerVisible) && !minimized ? 'chat-popup' : minimized ? 'chat-popup-minimized-closedDrawer' : 'chat-popup-closedDrawer'}>
+          <ChatPopup
+            roomId={roomId}
+            placeVideoCall={this.openVideoChatTab(roomId)}
+            patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''}
+            maximizeChat={this.maximizeChat}
+          />
+        </div>)}
         <AddAppointmentDrawer carePlanId={carePlanId} />
         <TemplateDrawer visible={templateDrawerVisible}
           submit={this.handleSubmitTemplate}

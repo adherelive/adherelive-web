@@ -4,6 +4,8 @@ import PatientDetailsDrawer from "../../Components/Drawer/PatientDetails";
 import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
+import { setPatientForChat } from "../../modules/twilio";
+import { openPopUp } from "../../modules/chat";
 
 const mapStateToProps = (state) => {
   const {
@@ -19,6 +21,7 @@ const mapStateToProps = (state) => {
     appointments,
     care_plans,
     medicines,
+    chats
   } = state;
   return {
     visible: visible && type === DRAWER.PATIENT_DETAILS,
@@ -34,6 +37,7 @@ const mapStateToProps = (state) => {
     appointments,
     payload,
     medicines,
+    chats
   };
 };
 
@@ -41,6 +45,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     close: () => dispatch(close()),
     getMedications: (id) => dispatch(getMedications(id)),
+    setPatientForChat: (patient_id) => dispatch(setPatientForChat(patient_id)),
+    openPopUp: () => dispatch(openPopUp())
   };
 };
 

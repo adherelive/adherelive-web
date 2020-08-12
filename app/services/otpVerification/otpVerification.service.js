@@ -35,14 +35,11 @@ class OtpVerificationService {
 
     delete = async (data) => {
         try {
-            const {user_id} = data;
+            const {otp, user_id} = data;
             console.log("moment now ---> ", moment().toDate());
             const otpDetails = await OtpVerification.destroy({
                 where: {
                     user_id,
-                    updated_at: {
-                        [Op.gte]: moment().subtract(2, 'minutes').toDate()
-                    }
                 },
             });
             return otpDetails;

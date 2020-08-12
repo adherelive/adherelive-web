@@ -155,6 +155,7 @@ class MobileUserController extends Controller {
       Logger.debug("otpDetails --> ", otpDetails);
 
       if(otpDetails.length > 0) {
+        const destroyOtp = await otpVerificationService.delete({user_id});
         const userDetails = await userService.getUserById(otpDetails[0].get("user_id"));
 
         const userData = await UserWrapper(userDetails.get());

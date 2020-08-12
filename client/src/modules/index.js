@@ -30,6 +30,8 @@ import colleges from "./colleges";
 import degrees from "./degrees";
 import councils from "./councils";
 import specialities from "./specialities";
+import twilio from "./twilio";
+import chatMessages from "./chatMessages";
 
 const rootReducer = combineReducers({
   auth,
@@ -62,7 +64,9 @@ const rootReducer = combineReducers({
   degrees,
   councils,
   static_templates,
-  specialities
+  specialities,
+  twilio,
+  chatMessages
 });
 
 export default (state, action) => {

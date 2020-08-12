@@ -7,12 +7,13 @@ const IpMessagingGrant = AccessToken.ChatGrant;
 const accountSid = process.config.twilio.TWILIO_ACCOUNT_SID;
 const apiKey = process.config.twilio.TWILIO_API_KEY;
 const apiSecret = process.config.twilio.TWILIO_API_SECRET;
+const chatServiceId = process.config.twilio.TWILIO_CHAT_SERVICE_SID;
 const authToken = process.config.twilio.TWILIO_AUTH_TOKEN;
 
 const Logger = new Log("TWILIO SERVICES");
 
 class TwilioService {
-    constructor() {}
+    constructor() { }
 
     async createRoom(name) {
         const client = require("twilio")(accountSid, authToken);
@@ -24,8 +25,15 @@ class TwilioService {
     }
 
     async chatTokenGenerator(identity, deviceId) {
+
+        // const client = twilio(accountSid, authToken);
+        // client.chat.services(chatServiceId)
+        //     .update({ reachabilityEnabled: true })
+        //     .then(service => console.log(service));
+
         const token = new AccessToken(accountSid, apiKey, apiSecret);
         token.identity = identity;
+
 
         const appName = "TwilioChat";
         const endpointId = appName + ":" + identity + ":" + deviceId;

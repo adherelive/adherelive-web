@@ -1,0 +1,434 @@
+.chat-screen-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.chat-patientList-container {
+  width: 35%;
+  height: 100%;
+  max-width: 800px;
+  border-right: 1px solid #e5ddd5;
+}
+.chat-patient-card {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  color: #4a4a4a;
+  font-size: 20px;
+  justify-content: start;
+  align-items: center;
+  font-weight: 600;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.chat-patient-card-parent {
+  display: flex;
+  // justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  border-bottom: 1px solid #e5ddd5;
+  &:hover {
+    background-color: #f7f7f7;
+  }
+}
+
+.chat-patient-card-parent-selected {
+  display: flex;
+  // justify-content: center;
+  // overflow-y: scroll;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #e5ddd5;
+}
+
+.chat-messageBox-container {
+  height: 100%;
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.callIcon-header {
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+}
+
+.chat-patientListheader-chatBox {
+  height: 60px;
+  min-height: 60px;
+  width: 100%;
+  padding-left: 10px;
+  position: sticky;
+  top: 0px;
+  display: flex;
+  color: #fff;
+  flex-direction: row;
+  background-color: #528ff0;
+  justify-content: start;
+  align-items: center;
+}
+
+.chat-patientListheader {
+  height: 60px;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: sticky;
+  top: 0px;
+  display: flex;
+  flex-direction: row;
+  color: #fff;
+  background-color: #528ff0;
+  justify-content: start;
+  align-items: center;
+  .patientSearch {
+    flex-grow: 1;
+    height: 40px;
+    border-radius: 20px;
+    .ant-input {
+      flex-grow: 1;
+      height: 40px;
+      border-radius: 20px;
+    }
+  }
+}
+
+.doctor-name-chat-header {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+.doctor-name-chat-header-online {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: -4px;
+  // margin-left: 10px;
+}
+
+.patient-name-chat {
+  color: #4a4a4a;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+.patientList-component-container {
+  height: 100%;
+  width: 100%;
+  // overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.patientList-list-component-container {
+  height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  .element::-webkit-scrollbar {
+    width: 0 !important;
+  }
+}
+
+.message-input {
+  width: 100%;
+  margin-right: 20;
+  margin-left: 20;
+}
+
+.twilio-chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: calc(100% - 120px);
+  width: 100%;
+
+  .twilio-chat-body {
+    color: black;
+    width: 100%;
+    overflow-y: scroll;
+    height: 100%;
+    overflow-x: hidden;
+    .chat-messages {
+      display: flex;
+      height: auto;
+      padding: 10px 24px;
+      width: 100%;
+      flex-direction: column;
+      &.end {
+        justify-content: flex-end;
+      }
+    }
+
+    .chat-avatar {
+      display: flex;
+      height: auto;
+      &.left {
+        margin-left: 8px;
+      }
+      &.right {
+        margin-right: 8px;
+      }
+    }
+
+    .chat-text {
+      display: flex;
+      width: auto;
+      height: auto;
+      word-break: break-word;
+      padding: 10px;
+      border-radius: 6px;
+      background-color: rgba(24, 144, 255, 0.19);
+      align-self: flex-start;
+      &.end {
+        align-self: flex-end;
+        text-align: end;
+      }
+      .chat-media-message-text {
+        .chat-media-message-image {
+          height: 160px;
+        }
+        &:hover {
+          color: @primary-color;
+        }
+      }
+    }
+
+    .chat-time {
+      display: flex;
+      width: auto;
+      height: auto;
+      word-break: break-word;
+      align-self: flex-end;
+      font-size: 12px;
+      color: #aab0b3;
+      padding: 2px;
+      &.start {
+        align-self: flex-start;
+        margin-left: 32px;
+      }
+    }
+
+    .twilio-avatar {
+      .ant-avatar.ant-avatar-circle {
+        width: 24px;
+        height: 24px;
+        left: 0;
+        border-radius: 15px;
+        top: 0;
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+.twilio-chat-footer {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  height: 60px;
+  width: 65%;
+  align-items: center;
+  .footer-left {
+    display: flex;
+    height: 100%;
+    width: 20%;
+    justify-content: center;
+    align-items: center;
+    .back-image {
+      cursor: pointer;
+    }
+  }
+  .footer-right {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #528ff0;
+    .chat-form {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      .form-input {
+        display: flex;
+        flex-grow: 1;
+        margin-right: 10px;
+        // width: 80%;
+        .ant-input {
+          flex-grow: 1;
+          height: 40px;
+          border-radius: 20px;
+        }
+        .form-button {
+          display: flex;
+        }
+        .ant-btn {
+          border: 1px solid #fff;
+          height: 100%;
+          border-radius: 50%;
+          margin-right: -12px;
+          margin-bottom: 2px;
+        }
+      }
+    }
+  }
+}
+
+.twilioVideoCard {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+.twilioVideoBodyContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+}
+.twilioVideoCardHolder1 {
+  height: 400px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.twilioVideoCard {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.twilioVideoCardHolder2 {
+  height: 200px;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+.twilioVideoCard2 {
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.twilioVideoCard .ant-card-body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 0 0;
+}
+.twilioVideoCard2 .ant-card-body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 0 0 0 0;
+}
+.twilioVideoCard video {
+  width: 100%;
+  height: 100%;
+}
+.twilioVideoCard2 video {
+  width: 100%;
+  height: 100%;
+}
+.videoButtonContainer {
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.WaitingForUser {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  height: 20%;
+  width: 20%;
+  display: flex;
+}
+
+.loadingForUser {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+}
+
+/**********css helper classes********/
+
+.clearFixVerticalVS {
+  height: 100%;
+  width: 2%;
+}
+
+.clearFixHorizontalVS {
+  height: 25px;
+  width: 100%;
+}
+
+.videoWrapper,
+.videoWrapper video {
+  height: 180px;
+  width: 250px;
+}
+
+#remote-media {
+  height: 100%;
+  overflow: hidden;
+}
+
+#remote-media video {
+  width: 100%;
+}
+.downloadable-file {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.chat-media-modal-dialog {
+  .chat-media-modal {
+    .ant-modal-content {
+      .ant-modal-header {
+        padding: 0px;
+        height: 48px;
+      }
+      .ant-modal-close {
+        height: 48px;
+        line-height: 48px;
+      }
+    }
+  }
+}

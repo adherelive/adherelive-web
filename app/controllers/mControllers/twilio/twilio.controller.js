@@ -3,6 +3,10 @@ import faker from "faker";
 import twilioService from "../../../services/twilio/twilio.service";
 import Controller from "../../";
 
+import Log from "../../../../libs/log";
+
+const Logger = new Log("MOBILE TWILIO CONTROLLER");
+
 class TwilioController extends Controller {
     constructor() {
         super();
@@ -10,7 +14,7 @@ class TwilioController extends Controller {
 
     generateTwilioChatAccessToken = async (req, res) => {
         try {
-            const deviceId = req.query.device;
+            const deviceId = req.query.device ? req.query.device : "application";
             const {userDetails: {userId}} = req;
             const identity = req.query.identity ? req.query.identity : userId;
 
@@ -23,6 +27,7 @@ class TwilioController extends Controller {
             // response.setMessage("Created new chat token with userId");
             // return res.send(response.getResponse());
         } catch (error) {
+            Logger.debug("generateTwilioChatAccessToken 50 error", error);
             return this.raiseServerError(res);
             // let response = new Response(false, 500);
             // response.setError({ error: err });
@@ -46,6 +51,7 @@ class TwilioController extends Controller {
             //
             // return res.send(response.getResponse());
         } catch (error) {
+            Logger.debug("generateTwilioVideoAccessToken 50 error", error);
             return this.raiseServerError(res, 500, error, error.message());
             // let response = new Response(false, 500);
             // response.setError({ error: err });
@@ -70,7 +76,7 @@ class TwilioController extends Controller {
                 connectedParticipants
             }, "Fetched Connected Participants");
         } catch (err) {
-            console.log("err", err);
+            Logger.debug("getConnectedParticipants 50 error", error);
             return this.raiseServerError(res);
         }
     }

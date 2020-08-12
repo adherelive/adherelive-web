@@ -4,16 +4,17 @@ import { withRouter } from "react-router-dom";
 import { open } from "../../modules/drawer";
 import { close } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
-import { getAppointments,getAppointmentsDetails } from "../../modules/appointments";
+import { getAppointments, getAppointmentsDetails } from "../../modules/appointments";
 import { searchMedicine } from "../../modules/medicines";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
 import { DRAWER } from "../../constant";
+import { openPopUp } from "../../modules/chat";
 
 const mapStateToProps = (state, ownProps) => {
     const { users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}, treatments = {},
         conditions = {}, template_medications = {}, template_appointments = {}, care_plan_templates = {},
-        severity = {}, show_template_drawer = {}, auth: { authPermissions = [] } = {} } = state;
+        severity = {}, show_template_drawer = {}, auth: { authPermissions = [] } = {}, chats, drawer } = state;
     // const { id } = ownprops;
     const user_details = users["3"] || {};
     const {
@@ -41,7 +42,9 @@ const mapStateToProps = (state, ownProps) => {
         template_medications,
         show_template_drawer,
         currentCarePlanId,
-        authPermissions
+        authPermissions,
+        chats,
+        drawer
     };
 };
 
@@ -59,6 +62,7 @@ const mapDispatchToProps = dispatch => {
         addCarePlanMedicationsAndAppointments: (payload, carePlanId) => dispatch(addCarePlanMedicationsAndAppointments(payload, carePlanId)),
         openEditAppointmentDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_APPOINTMENT, payload })),
         openEditMedicationDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_MEDICATION, payload })),
+        openPopUp: () => dispatch(openPopUp())
     };
 };
 

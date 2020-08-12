@@ -1,11 +1,15 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon } from "antd";
+import { Drawer } from "antd";
 import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
 import messages from "./message";
 import moment from "moment";
-
 import ShareIcon from "../../../Assets/images/redirect3x.png";
+import MsgIcon from "../../../Assets/images/chat.png";
+// import config from "../../../config/config";
+
+
+// const { WEB_URL } = config;
 
 class PatientDetailsDrawer extends Component {
   constructor(props) {
@@ -97,6 +101,16 @@ class PatientDetailsDrawer extends Component {
     return medicationList;
   };
 
+  openChatTab = () => {
+
+    const { payload: { patient_id } = {}, setPatientForChat, openPopUp } = this.props;
+    setPatientForChat(patient_id).then(() => {
+      openPopUp()
+    }
+    );
+    // window.open(`http://localhost:3000${getPatientConsultingUrl(patient_id)}`, '_blank');
+  }
+
   handlePatientDetailsRedirect = e => {
     e.preventDefault();
     const { history, payload: { patient_id } = {} } = this.props;
@@ -110,7 +124,8 @@ class PatientDetailsDrawer extends Component {
     const {
       formatMessage,
       getMedicationList,
-      handlePatientDetailsRedirect
+      handlePatientDetailsRedirect,
+      openChatTab
     } = this;
 
     let { patient_id: id = "" } = payload || {};
@@ -135,7 +150,6 @@ class PatientDetailsDrawer extends Component {
       const {
         basic_info: { first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
         reports = [],
-        details = {},
         provider_id,
       } = patients[id] || {};
 
@@ -155,6 +169,12 @@ class PatientDetailsDrawer extends Component {
               <div className="pr10 fs24 fw600">{`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name}`}</div>
               <div className="pr10 fs20 fw500">{`(${gender ? `${GENDER[gender].view} ` : ''}${age ? age : '--'})`}</div>
               {/* <Icon type="wechat" width={20} /> */}
+              <img
+                src={MsgIcon}
+                alt="share icon"
+                className="pointer w25"
+                onClick={openChatTab}
+              />
             </div>
             <img
               src={ShareIcon}
@@ -256,13 +276,14 @@ class PatientDetailsDrawer extends Component {
     const { visible } = this.props;
     const { onClose, getPatientDetailContent } = this;
 
+
     if (visible !== true) {
       return null;
     }
     return (
       <Fragment>
         <Drawer
-
+          mask={false}
           title="   "
           placement="right"
           // closable={false}
