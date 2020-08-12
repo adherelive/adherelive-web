@@ -9,13 +9,13 @@ const intial_state = {
   visible: false,
 };
 
-export const openPopUp = (data) => {
+export const openPopUp = () => {
   return {
     type: OPEN_POPUP
   };
 };
 
-export const closePopUp = (data) => {
+export const closePopUp = () => {
   return {
     type: CLOSE_POPUP
   };

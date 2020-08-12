@@ -216,7 +216,7 @@ class MediaComponent extends Component {
                     // <div onClick={this.onClickDownloader}>{message.media.filename}</div>
                     <div className='downloadable-file'>
                         <img src={File} className='h20 mr10' />
-                        <div className='fs14 mr10'>{message.media.filename.length<=12?message.media.filename:`${message.media.filename.substring(0,13)}...`}</div>
+                        <div className='fs14 mr10'>{message.media.filename.length <= 12 ? message.media.filename : `${message.media.filename.substring(0, 13)}...`}</div>
                         <img src={Download} className='h20 mr10 pointer' onClick={this.onClickDownloader} />
                     </div>
                 );
@@ -363,21 +363,26 @@ class ChatPopUp extends Component {
 
     messagesLoaded = messagePage => {
         let messages = this.updateMessageRecieved(messagePage.items);
+        const { roomId, addMessageOfChat } = this.props
+        addMessageOfChat(roomId, messages);
         this.setState(
             {
                 messagesLoading: false,
                 // messages: messagePage.items,
-                messages
+                // messages
             },
             this.scrollToBottom
         );
     };
 
     messageAdded = (message) => {
-        this.setState((prevState, props) => {
-            const newVal = [...prevState.messages, message];
-            return ({ messages: newVal })
-        });
+        console.log("4567895678  8237897323 on MEssage Added------------->   ")
+        const { roomId, addMessageOfChat } = this.props
+        addMessageOfChat(roomId, message);
+        // this.setState((prevState, props) => {
+        //     const newVal = [...prevState.messages, message];
+        //     return ({ messages: newVal })
+        // });
 
         this.channel.setAllMessagesConsumed();
     };
@@ -409,10 +414,11 @@ class ChatPopUp extends Component {
 
 
     renderMessages() {
-        const { authenticated_user, users } = this.props;
+        const { authenticated_user, users, roomId, chatMessages } = this.props;
         const { otherUserLastConsumedMessageIndex } = this.state;
-        if (this.state.messages.length > 0) {
-            const messagesArray = this.state.messages;
+        const { messages: messagesArray = [] } = chatMessages[roomId] || {};
+        if (messagesArray.length > 0) {
+            // const messagesArray = this.state.messages;
             const messagesToRender = [];
             console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", messagesArray);
             for (let i = 0; i < messagesArray.length; ++i) {

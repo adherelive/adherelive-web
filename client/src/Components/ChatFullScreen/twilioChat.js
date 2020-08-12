@@ -279,32 +279,39 @@ class TwilioChat extends Component {
             roomId ? roomId :
                 "test";
         // this.channelName = '1-adhere-3';
+
+        console.log("******** other user details: getToken");
         fetchChatAccessToken(authenticated_user).then(result => {
             this.setState((prevState, props) => {
                 return {
                     token: props.twilio.chatToken
                 };
-            }, this.initChat);
+            }, () => { this.initChat() });
         });
     };
 
     initChat = () => {
+
+        console.log("******** other user details: initChat");
         this.chatClient = new Chat(this.state.token);
         this.chatClient.initialize().then(this.clientInitiated.bind(this));
     };
 
     clientInitiated = async () => {
         const { authenticated_user } = this.props;
+
         this.setState({ chatReady: true }, () => {
             this.chatClient
                 .getChannelByUniqueName(this.channelName)
                 .then(channel => {
+
                     if (channel) {
                         return (this.channel = channel);
                     }
                 })
                 .catch(err => {
                     if (err.body.code === 50300) {
+
                         return this.chatClient.createChannel({
                             uniqueName: this.channelName
                         });
@@ -315,6 +322,7 @@ class TwilioChat extends Component {
                     window.channel = channel;
                     console.log("CHannel 5678 ------------------>  ", channel)
                     if (channel.channelState.status !== "joined") {
+
                         return this.channel.join();
                     } else {
                         return this.channel;
@@ -327,22 +335,25 @@ class TwilioChat extends Component {
                     this.channel.on("messageAdded", this.messageAdded);
 
                     const members = await this.channel.getMembers();
+                    let other_user_online = false;
+                    let otherUserLastConsumedMessageIndex = 0;
 
-                    members.map(async mem => {
+                    await Promise.all(members.map(async mem => {
                         if (mem.identity !== `${authenticated_user}`) {
                             const other_user = await mem.getUser();
 
-                            console.log("******** other user details: ", other_user, mem.lastConsumedMessageIndex);
+                            other_user_online = other_user.online;
+                            otherUserLastConsumedMessageIndex = mem.lastConsumedMessageIndex;
 
-                            this.setState({
-                                other_user_online: other_user.online,
-                                otherUserLastConsumedMessageIndex: mem.lastConsumedMessageIndex
-                            });
 
                             other_user.on("updated", obj => {
                                 console.log("user_updated", obj);
                             });
                         }
+                    }));
+                    this.setState({
+                        other_user_online,
+                        otherUserLastConsumedMessageIndex
                     });
                 });
         });
@@ -366,22 +377,28 @@ class TwilioChat extends Component {
     };
 
     messagesLoaded = messagePage => {
+        console.log("4567895678  8237897323 on MEssage Loaded------------->   ")
         let messages = this.updateMessageRecieved(messagePage.items);
+        const { roomId, addMessageOfChat } = this.props
+        addMessageOfChat(roomId, messages);
         this.setState(
             {
                 messagesLoading: false,
                 // messages: messagePage.items,
-                messages
+                // messages
             },
             this.scrollToBottom
         );
     };
 
     messageAdded = (message) => {
-        this.setState((prevState, props) => {
-            const newVal = [...prevState.messages, message];
-            return ({ messages: newVal })
-        });
+        console.log("4567895678  8237897323 on MEssage Added------------->   ")
+        const { roomId, addMessageOfChat } = this.props
+        addMessageOfChat(roomId, message);
+        // this.setState((prevState, props) => {
+        //     const newVal = [...prevState.messages, message];
+        //     return ({ messages: newVal })
+        // });
 
         this.channel.setAllMessagesConsumed();
     };
@@ -394,6 +411,8 @@ class TwilioChat extends Component {
             roomId: prevRoomId
         } = prevProps;
         if (roomId !== prevRoomId) {
+
+            // console.log("******** other user details: didUpdate");
             this.setState({ messagesLoading: true });
             this.getToken();
         }
@@ -411,75 +430,15 @@ class TwilioChat extends Component {
         this.channel = null;
     };
 
-    // renderMessages() {
-    //     const { authenticated_user, users } = this.props;
-    //     return this.state.messages.length > 0
-    //         ? this.state.messages.map((message, index) => {
-    //             const user = users[message.state.author]
-    //                 ? users[message.state.author]
-    //                 : {};
-    //             const { basicInfo: { profilePicLink: profilePic } = {} } = user;
-    //             console.log('3452345234523452345234', message.state.author, typeof (message.state.author), authenticated_user, typeof (authenticated_user), message)
-    //             return (
-    //                 <Fragment key={message.state.sid}>
-    //                     {parseInt(message.state.author) !== parseInt(authenticated_user) ? (
-    //                         <div className="chat-messages">
-    //                             <div className="chat-avatar">
-    //                                 <span className="twilio-avatar">
-    //                                     <Avatar src={profilePic} />
-    //                                 </span>
-    //                                 {message.type === "media" ? (
-    //                                     <div className="chat-text">
-    //                                         <div className="clickable white chat-media-message-text">
-    //                                             <MediaComponent message={message}></MediaComponent>
-    //                                         </div>
-    //                                     </div>
-    //                                 ) : (
-    //                                         <div className="chat-text">{message.state.body}</div>
-    //                                     )}
-    //                             </div>
-    //                             <div className="chat-time start">
-    //                                 {moment(message.state.timestamp).format("H:mm")}
-    //                             </div>
-    //                         </div>
-    //                     ) : (
-    //                             <div className="chat-messages end">
-    //                                 <div
-    //                                     className={
-    //                                         "chat-message-box " +
-    //                                         (message.type === "media" ? "media-text-width" : "")
-    //                                     }
-    //                                 >
-    //                                     {message.type === "media" ? (
-    //                                         <div className="chat-text end">
-    //                                             <div className="clickable white chat-media-message-text">
-    //                                                 <MediaComponent message={message}></MediaComponent>
-    //                                             </div>
-    //                                         </div>
-    //                                     ) : (
-    //                                             <div className="chat-text end">{message.state.body}</div>
-    //                                         )}
-    //                                     <div className="chat-time"> {moment(message.state.timestamp).format("H:mm")}
-    //                                     </div>
-    //                                 </div>
-    //                                 {/* <div className="chat-avatar left">
-    //               <Avatar src={profilePic} />
-    //             </div> */}
-    //                             </div>
-    //                         )}
-    //                 </Fragment>
-    //             );
-    //         })
-    //         : "";
-    // }
 
     renderMessages() {
-        const { authenticated_user, users } = this.props;
+        const { authenticated_user, users, roomId, chatMessages } = this.props;
         const { otherUserLastConsumedMessageIndex } = this.state;
-        if (this.state.messages.length > 0) {
-            const messagesArray = this.state.messages;
+        const { messages: messagesArray = [] } = chatMessages[roomId] || {};
+        if (messagesArray.length > 0) {
+            // const messagesArray = this.state.messages;
             const messagesToRender = [];
-            console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", messagesArray);
+            // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", messagesArray);
             for (let i = 0; i < messagesArray.length; ++i) {
                 const message = messagesArray[i];
                 console.log("jskdjskjsd 37373 ------------> ", message);
