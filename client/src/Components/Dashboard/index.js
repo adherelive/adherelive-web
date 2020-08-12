@@ -14,7 +14,7 @@ import Donut from '../Common/graphs/donut'
 import GraphsModal from "./graphsModal";
 import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
 import { getPatientConsultingUrl } from '../../Helper/url/patients';
-import config from "../../config/config";
+import config from "../../config";
 
 
 
@@ -169,14 +169,14 @@ class Dashboard extends Component {
         const { doctorUserId } = this.state;
         let { basic_info: { user_id: patientUserId = '' } = {} } = patients[chatPatientId];
         let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
-        window.open(`http://localhost:3000${getPatientConsultingVideoUrl(roomId)}`, '_blank');
+        window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
     }
 
     maximizeChat = () => {
         const {
             patients,
             twilio: { patientId: chatPatientId = 1 } } = this.props;
-        window.open(`http://localhost:3000${getPatientConsultingUrl(chatPatientId)}`, '_blank');
+        window.open(`${config.WEB_URL}${getPatientConsultingUrl(chatPatientId)}`, '_blank');
     }
     render() {
         const { graphs,
@@ -189,7 +189,6 @@ class Dashboard extends Component {
             drawer: { visible: drawerVisible = false } = {},
             twilio: { patientId: chatPatientId = 1 } } = this.props;
         const { formatMessage, renderChartTabs } = this;
-        console.log('452345134625362456', config.WEB_URL);
         let { basic_info: { user_id: patientUserId = '', first_name = '', middle_name = '', last_name = '' } = {} } = patients[chatPatientId] || {};
 
 

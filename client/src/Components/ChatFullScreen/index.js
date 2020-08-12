@@ -6,6 +6,7 @@ import TwilioChat from '../../Containers/ChatFullScreen/twilioChat';
 import CallIcon from '../../Assets/images/telephone.png';
 import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
 import {ROOM_ID_TEXT} from '../../constant';
+import config from "../../config";
 
 const Header = ({ placeVideoCall, patientName, patientDp = '' }) => {
     let pic = patientName ?
@@ -60,7 +61,7 @@ class ChatFullScreen extends Component {
 
         const { roomId = '' } = this.state;
         // setPatientForChat(patient_id);
-        window.open(`http://localhost:3000${getPatientConsultingVideoUrl(roomId)}`, '_blank');
+        window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
     }
 
     setPatientId = (patient_id) => () => {
@@ -94,8 +95,6 @@ class ChatFullScreen extends Component {
 
 
     render() {
-        console.log('754624646546245624562462456', this.state);
-
         let { roomId, patientId, doctorUserId } = this.state;
         let { patients = {} } = this.props;
 

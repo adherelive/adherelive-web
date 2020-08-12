@@ -21,6 +21,7 @@ import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import { getPatientConsultingVideoUrl } from '../../../Helper/url/patients';
 import { getPatientConsultingUrl } from '../../../Helper/url/patients';
 // import messages from "../../Dashboard/message";
+import config from "../../../config";
 
 const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
@@ -636,13 +637,13 @@ class PatientDetails extends Component {
   }
   openVideoChatTab = (roomId) => () => {
 
-    window.open(`http://localhost:3000${getPatientConsultingVideoUrl(roomId)}`, '_blank');
+    window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
   }
 
   maximizeChat = () => {
     const {
       patient_id } = this.props;
-    window.open(`http://localhost:3000${getPatientConsultingUrl(patient_id)}`, '_blank');
+    window.open(`${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`, '_blank');
   }
 
 
