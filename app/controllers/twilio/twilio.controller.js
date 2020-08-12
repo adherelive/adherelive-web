@@ -1,5 +1,5 @@
 // const Log = require("../../../libs/log")("twilio.controller");
-import twilioTokenService from "../../services/twilio/tokenService";
+// import twilioTokenService from "../../services/twilio/tokenService";
 import faker from "faker";
 import twilioService from "../../services/twilio/twilio.service";
 import Controller from "../";
