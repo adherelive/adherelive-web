@@ -169,6 +169,7 @@ class Dashboard extends Component {
         const { doctorUserId } = this.state;
         let { basic_info: { user_id: patientUserId = '' } = {} } = patients[chatPatientId];
         let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+
         window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
     }
 
