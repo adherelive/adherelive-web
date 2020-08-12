@@ -5,6 +5,8 @@ import { DB_TABLES } from "../../constant";
 import Treatment from "./treatments";
 import Severity from "./severity";
 import Conditions from "./conditions";
+import TemplateAppointment from "./templateAppointments";
+import TemplateMedication from "./templateMedications";
 
 const CarePlanTemplate = database.define(
   DB_TABLES.CARE_PLAN_TEMPLATE,
@@ -72,17 +74,26 @@ const CarePlanTemplate = database.define(
 
 CarePlanTemplate.hasOne(Treatment, {
     foreignKey: "id",
-    targetKey: "treatment_id"
+    sourceKey: "treatment_id"
 });
 
 CarePlanTemplate.hasOne(Severity, {
     foreignKey: "id",
-    targetKey: "severity_id"
+    sourceKey: "severity_id"
 });
 
 CarePlanTemplate.hasOne(Conditions, {
     foreignKey: "id",
-    targetKey: "condition_id"
+    sourceKey: "condition_id"
+});
+
+CarePlanTemplate.hasMany(TemplateAppointment, {
+    foreignKey:"care_plan_template_id",
+    sourceKey:"id",
+});
+CarePlanTemplate.hasMany(TemplateMedication, {
+    foreignKey:"care_plan_template_id",
+    sourceKey:"id",
 });
 
 export default CarePlanTemplate;

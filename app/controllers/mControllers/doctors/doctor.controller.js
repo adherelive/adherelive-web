@@ -183,7 +183,6 @@ class MobileDoctorController extends Controller {
       let password = process.config.DEFAULT_PASSWORD;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
-      console.log("17823812 USER_CATEGORY.PATIENT --> ", USER_CATEGORY.PATIENT);
       let user = await userService.addUser({
         prefix,
         mobile_number,
@@ -195,10 +194,8 @@ class MobileDoctorController extends Controller {
         verified: true,
         activated_on: moment().format()
       });
-      Logger.debug("user -------------> ", user.get());
       const userData = await UserWrapper(user.get());
 
-      Logger.debug("userData -------------> ", userData.getId());
 
       let newUserId = user.get("id");
 
@@ -229,7 +226,6 @@ class MobileDoctorController extends Controller {
 
       const patientData = await PatientWrapper(patient);
       const uid = getReferenceId(patientData.getPatientId());
-      Logger.debug("UID -------------> ", uid);
 
       const updatePatientUid = await patientsService.update({uid}, patientData.getPatientId());
 
@@ -241,6 +237,8 @@ class MobileDoctorController extends Controller {
         severity_id,
         condition_id
       );
+
+      Logger.debug("carePlanTemplate ---> ", carePlanTemplate);
 
       // const carePlanTemplateData = await CarePlanTemplateWrapper(
       //   carePlanTemplate
@@ -312,11 +310,6 @@ class MobileDoctorController extends Controller {
         };
       }
 
-      Logger.debug(
-          "medicineData",
-          medicineData
-      );
-
       for (const medicine of medicineData) {
         const medicineWrapper = await MedicineApiWrapper(medicine);
         medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
@@ -334,7 +327,7 @@ class MobileDoctorController extends Controller {
 
       const universalLink = await getUniversalLink({event_type : VERIFICATION_TYPE.PATIENT_SIGN_UP,link});
 
-      Logger.debug("universalLink --> ", universalLink);
+      // Logger.debug("universalLink --> ", universalLink);
 
       const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
 
@@ -344,7 +337,7 @@ class MobileDoctorController extends Controller {
         message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
       };
 
-      Logger.debug("process.config.app.env ---> ", process.config.app.env);
+      // Logger.debug("process.config.app.env ---> ", process.config.app.env);
 
       // if(process.config.app.env === "development") {
         const emailPayload = {
@@ -364,7 +357,7 @@ class MobileDoctorController extends Controller {
         };
         Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
       // } else {
-        Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      //   Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
       // }
 
       return this.raiseSuccess(
@@ -397,7 +390,7 @@ class MobileDoctorController extends Controller {
         "doctor's patient added successfully"
       );
     } catch (error) {
-      console.log("ADD DOCTOR PATIENT ERROR ", error);
+      Logger.debug("ADD DOCTOR PATIENT 500 ERROR ", error);
       return this.raiseServerError(res);
     }
   };

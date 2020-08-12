@@ -472,7 +472,6 @@ class DoctorController extends Controller {
   };
 
   addPatient = async (req, res) => {
-    console.log("add patient controller ---> ");
     try {
       const {
         mobile_number = "",
@@ -495,7 +494,6 @@ class DoctorController extends Controller {
       let password = process.config.DEFAULT_PASSWORD;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
-      console.log("17823812 USER_CATEGORY.PATIENT --> ", USER_CATEGORY.PATIENT);
       let user = await userService.addUser({
         prefix,
         mobile_number,
@@ -549,7 +547,7 @@ class DoctorController extends Controller {
 
       const patientData = await PatientWrapper(patient);
       const uid = getReferenceId(patientData.getPatientId());
-      Logger.debug("UID -------------> ", uid);
+      // Logger.debug("UID -------------> ", uid);
 
       const updatePatientUid = await patientsService.update({uid}, patientData.getPatientId());
 
@@ -562,6 +560,7 @@ class DoctorController extends Controller {
         condition_id
       );
 
+      Logger.debug("careplanTemplate ----> ", carePlanTemplate);
 
 
       const patient_id = patient.get("id");
@@ -630,10 +629,10 @@ class DoctorController extends Controller {
         };
       }
 
-      Logger.debug(
-        "medicineData",
-        medicineData
-      );
+      // Logger.debug(
+      //   "medicineData",
+      //   medicineData
+      // );
 
       for (const medicine of medicineData) {
         const medicineWrapper = await MedicineApiWrapper(medicine);
@@ -652,7 +651,7 @@ class DoctorController extends Controller {
 
       const universalLink = await getUniversalLink({event_type : VERIFICATION_TYPE.PATIENT_SIGN_UP,link});
 
-      Logger.debug("universalLink --> ", universalLink);
+      // Logger.debug("universalLink --> ", universalLink);
 
       const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
 
@@ -680,7 +679,7 @@ class DoctorController extends Controller {
         };
         Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
       // } else {
-        Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      //   Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
       // }
 
 
@@ -715,7 +714,7 @@ class DoctorController extends Controller {
         "doctor's patient added successfully"
       );
     } catch (error) {
-      Logger.debug("ADD DOCTOR PATIENT ERROR", error);
+      Logger.debug("ADD DOCTOR PATIENT 500 ERROR", error);
       return this.raiseServerError(res);
     }
   };

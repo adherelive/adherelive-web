@@ -1,11 +1,17 @@
 import CarePlanTemplate from "../../models/careplanTemplate";
+import TemplateAppointment from "../../models/templateAppointments";
+import TemplateMedication from "../../models/templateMedications";
+import Condition from "../../models/conditions";
+import Severity from "../../models/severity";
+import Treatment from "../../models/treatments";
 
 class CarePlanTemplateService {
 
     getCarePlanTemplateById = async (id) => {
         try {
             const carePlanTemplate = await CarePlanTemplate.findOne({
-                where: id
+                where: id,
+                include: [Condition, Severity, Treatment, TemplateAppointment, TemplateMedication]
             });
             return carePlanTemplate;
         } catch (error) {
@@ -20,7 +26,8 @@ class CarePlanTemplateService {
                     treatment_id,
                     severity_id,
                     condition_id,
-                }
+                },
+                include: [Condition, Severity, Treatment, TemplateAppointment, TemplateMedication]
             });
             return carePlanTemplate;
         } catch (error) {
