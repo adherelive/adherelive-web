@@ -62,7 +62,7 @@
     "axios": "^0.19.2",
     "base64-img": "^1.0.4",
     "bcrypt": "^4.0.1",
-    "chalk": "^4.0.0",
+    "chalk": "^4.1.0",
     "concurrently": "^5.1.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
