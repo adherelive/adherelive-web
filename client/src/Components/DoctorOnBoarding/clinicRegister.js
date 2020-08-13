@@ -9,6 +9,7 @@ import LocationModal from './locationmodal';
 import TimingModal from './timingModal';
 import { withRouter } from "react-router-dom";
 import moment from 'moment';
+import messages from './messages';
 
 
 
@@ -80,6 +81,8 @@ class ClinicRegister extends Component {
     }
 
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
 
     addClinic = () => {
         let key = uuid();
@@ -138,7 +141,7 @@ class ClinicRegister extends Component {
                                         <div>{`${time.startTime ? moment(time.startTime).format('hh:mm a') : ''}-`}</div>
                                         <div>{time.endTime ? `${moment(time.endTime).format('hh:mm a')}${index < timings[day].length - 1 ? ', ' : ' '} ` : ''}</div>
                                     </div>)
-                            }) : 'Closed'}</div>
+                            }) : this.formatMessage(messages.close)}</div>
                     </div>
                 )
             }))
@@ -167,7 +170,7 @@ class ClinicRegister extends Component {
 
                                 <div className='flex justify-space-between align-center direction-row'>
 
-                                    <div className='form-headings'>Name</div>
+                                    <div className='form-headings'>{this.formatMessage(messages.name)}</div>
                                     {clinicsKeys.length > 1 ? (
                                         <div className='wp100 flex justify-end'>
                                             <DeleteTwoTone
@@ -179,19 +182,19 @@ class ClinicRegister extends Component {
                                     ) : <div />}
                                 </div>
                                 <Input
-                                    placeholder="Clinic name"
+                                    placeholder={this.formatMessage(messages.clinicName)}
                                     className={"form-inputs"}
                                     value={name}
                                     onChange={e => this.setClinicName(key, e)}
                                 />
-                                <div className='form-headings'>Location</div>
+                                <div className='form-headings'>{this.formatMessage(messages.location)}</div>
                                 <div className={`form-input-border ${locationToDisplay ? 'active-grey-location' : 'default-grey'} pointer`} onClick={this.setModalVisible(key)}>
                                     <div className={locationToDisplay ? 'active-grey-location' : 'default-grey'}>{locationToDisplay ? locationToDisplay : 'Location'}</div>
                                     <Icon type="environment" theme="filled" />
                                 </div>
 
                                 <div className='flex justify-space-between align-center direction-row'>
-                                    <div className='form-headings'>Timings</div>
+                                    <div className='form-headings'>{this.formatMessage(messages.timings)}</div>
                                     {/* <div className='pointer fs16 medium ' onClick={this.addClinicTimings(key)}>Add More</div> */}
                                 </div>
 
@@ -207,7 +210,7 @@ class ClinicRegister extends Component {
                                     (
                                         <div className={`form-input-timing default-grey pointer`} onClick={this.setModalTimingVisible(key)}>
                                             <div className={'default-grey'}>
-                                                {'Timings'}</div>
+                                                {this.formatMessage(messages.timings)}</div>
                                             {<Icon type="clock-circle" />}
                                         </div>)}
                                 {/* <div className={`form-input-timing ${Object.keys(timings).length ? 'active-grey' : 'default-grey'} pointer`} onClick={this.setModalTimingVisible(key)}>
@@ -230,8 +233,8 @@ class ClinicRegister extends Component {
         return (
             <div className='form-block'>
                 <div className='flex justify-space-between align-center direction-row'>
-                    <div className='form-category-headings'>Clinic</div>
-                    <div className='pointer fs16 medium theme-green' onClick={this.addClinic}>Add More</div>
+                    <div className='form-category-headings'>{this.formatMessage(messages.clinic)}</div>
+                    <div className='pointer fs16 medium theme-green' onClick={this.addClinic}>{this.formatMessage(messages.addMore)}</div>
                 </div>
                 {this.renderClinics()}
             </div>
@@ -277,14 +280,14 @@ class ClinicRegister extends Component {
         let { clinics = {} } = this.state;
         let newClinics = Object.values(clinics);
         if (!newClinics.length) {
-            message.error('Please enter your Clinic details.')
+            message.error(this.formatMessage(messages.clinicDetails))
             return false;
         } else if (!this.validateClinics(newClinics)) {
-            message.error('Please enter all Clinic details.')
+            message.error(this.formatMessage(messages.allClinicDetails))
             return false;
         } else if (!this.duplicateClinics(newClinics)) {
 
-            message.error('Please do not add duplicate clinics.')
+            message.error(this.formatMessage(messages.duplicateClinics))
             return false;
         }
         return true;
@@ -369,7 +372,7 @@ class ClinicRegister extends Component {
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
-                    <div className='header'>Create your Profile</div>
+                    <div className='header'>{this.formatMessage(messages.createProfile)}</div>
                     <div className='registration-body'>
                         <div className='flex mt36'>
                             <UploadSteps current={2} />
@@ -381,9 +384,11 @@ class ClinicRegister extends Component {
                     </div>
                     <div className='footer'>
                         <div className={'footer-text-active'} onClick={this.onBackClick}>
-                            Back
+                            
+                        {this.formatMessage(messages.back)}
                       </div>
-                        <div className={'footer-text-active'} onClick={this.onNextClick}>Finish</div></div>
+                        <div className={'footer-text-active'} onClick={this.onNextClick}>
+                            {this.formatMessage(messages.finish)}</div></div>
                 </div>
 
                 <LocationModal visible={visible} handleCancel={this.handleCancel} handleOk={this.handleOk} location={clinicKeyOfModal && clinics[clinicKeyOfModal] ? clinics[clinicKeyOfModal].location : ''} />

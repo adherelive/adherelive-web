@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Button, Input, Modal } from "antd";
 import PlacesAutocomplete from "react-places-autocomplete";
-
+import messages from './messages';
 
 
 
@@ -25,6 +25,9 @@ class ClinicRegister extends Component {
     setManualAddress = e => {
         this.setState({ addressManual: e.target.value });
     };
+
+
+    formatMessage = data => this.props.intl.formatMessage(data);
 
     setManualPincode = e => {
 
@@ -96,20 +99,20 @@ class ClinicRegister extends Component {
         return (
             <Modal
                 visible={visible}
-                title={'Location'}
+                title={this.formatMessage(messages.location)}
                 onCancel={this.handleClose}
                 onOk={this.handleSave}
                 footer={[
                     <Button key="back" onClick={this.handleClose}>
-                        Return
+                        {this.formatMessage(messages.return)}
                     </Button>,
                     <Button key="submit" type="primary" onClick={this.handleSave}>
-                        Submit
+                        {this.formatMessage(messages.submit)}
                     </Button>,
                 ]}
             >
                 <div className='location-container'>
-                    <div className='form-category-headings'>Google</div>
+                    <div className='form-category-headings'>{this.formatMessage(messages.google)}</div>
                     <PlacesAutocomplete
                         value={address ? address : (!location.includes('Pincode')) ? location : null}
                         disabled={addressManual ? true : false}
@@ -122,7 +125,7 @@ class ClinicRegister extends Component {
 
                                     disabled={addressManual ? true : false}
                                     {...getInputProps({
-                                        placeholder: 'Search Address',
+                                        placeholder: this.formatMessage(messages.searchAddress),
                                         className: 'form-inputs-google',
                                     })}
                                 />
@@ -150,8 +153,8 @@ class ClinicRegister extends Component {
 
 
 
-                    <div className='form-category-headings'>Or add manually</div>
-                    <div className='form-headings'>Address</div>
+                    <div className='form-category-headings'>{this.formatMessage(messages.addManually)}</div>
+                    <div className='form-headings'>{this.formatMessage(messages.address)}</div>
                     <Input
                         placeholder="Ex: 112,Aurobindo Marg..."
                         disabled={address ? true : false}
@@ -159,7 +162,7 @@ class ClinicRegister extends Component {
                         className={"form-inputs-location-modal"}
                         onChange={this.setManualAddress}
                     />
-                    <div className='form-headings'>Pincode</div>
+                    <div className='form-headings'>{this.formatMessage(messages.pincode)}</div>
                     <Input
                         placeholder="Ex: 110000"
                         disabled={address ? true : false}
@@ -167,7 +170,7 @@ class ClinicRegister extends Component {
                         className={"form-inputs-location-modal"}
                         onChange={this.setManualPincode}
                     />
-                    <div className='form-headings'>Landmark</div>
+                    <div className='form-headings'>{this.formatMessage(messages.landmark)}</div>
                     <Input
                         placeholder="Ex: Near Vishvavidyalya Metro Station"
                         disabled={address ? true : false}

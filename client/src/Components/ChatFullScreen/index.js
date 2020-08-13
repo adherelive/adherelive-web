@@ -5,22 +5,22 @@ import PatientList from './patientListSideBar';
 import TwilioChat from '../../Containers/ChatFullScreen/twilioChat';
 import CallIcon from '../../Assets/images/telephone.png';
 import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
-import {ROOM_ID_TEXT} from '../../constant';
+import { ROOM_ID_TEXT } from '../../constant';
 import config from "../../config";
 
-const Header = ({ placeVideoCall, patientName, patientDp = '' }) => {
-    let pic = patientName ?
-        <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
-    return (
-        <div className='chat-patientListheader-chatBoxPopUp'>
-            <div className='flex direction-row align-center wp90'>
-                {pic}
-                <div className='doctor-name-chat-header mt2'>{patientName}</div>
-            </div>
-            <img src={CallIcon} className='callIcon-header mr10' onClick={placeVideoCall} />
-        </div>
-    );
-}
+// const Header = ({ placeVideoCall, patientName, patientDp = '' }) => {
+//     let pic = patientName ?
+//         <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
+//     return (
+//         <div className='chat-patientListheader-chatBoxPopUp'>
+//             <div className='flex direction-row align-center wp90'>
+//                 {pic}
+//                 <div className='doctor-name-chat-header mt2'>{patientName}</div>
+//             </div>
+//             <img src={CallIcon} className='callIcon-header mr10' onClick={placeVideoCall} />
+//         </div>
+//     );
+// }
 
 
 class ChatFullScreen extends Component {

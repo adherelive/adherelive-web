@@ -113,11 +113,11 @@ class VideoComponent extends Component {
     };
 
     joinRoom = async () => {
-        const {
-            match: {
-                params: { room_id }
-            }
-        } = this.props;
+        // const {
+        //     match: {
+        //         params: { room_id }
+        //     }
+        // } = this.props;
 
         this.setState({ status: "loading" });
 
@@ -137,7 +137,7 @@ class VideoComponent extends Component {
         if (this.state.previewTracks) {
             connectOptions.tracks = this.state.previewTracks;
         }
-        const { status } = this.state;
+        // const { status } = this.state;
 
         // if (status === PASSED || status === COMPLETED) {
         //   this.showMessage();
@@ -313,7 +313,7 @@ class VideoComponent extends Component {
     }
 
     getOtherParticipantData = () => {
-        const { users, authenticated_user, match: {
+        const { users, match: {
             params: { room_id = '' }
         }, patients = {} } = this.props;
         let patientUserId = room_id.split('-')[room_id.split('-').length - 1];
@@ -325,12 +325,12 @@ class VideoComponent extends Component {
             }
         }
         console.log('83658713658791345', patientId, this.props);
-        const userIds = Object.keys(users);
+        // const userIds = Object.keys(users);
         // const otherUserId = userIds.filter(id => id !== authenticated_user)[0];
 
         let { basic_info: { user_id: otherUserId = 1, first_name: name = '', profile_pic: profilePic = UserDpPlaceholder, gender = '' } = {}, dob = '' } = patients[patientId];
         if (otherUserId) {
-            const { basic_info, category } = users[otherUserId] || {};
+            const { category } = users[otherUserId] || {};
             // const {
             //     // name,
             //     category

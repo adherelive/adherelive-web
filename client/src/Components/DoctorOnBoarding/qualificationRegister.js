@@ -12,6 +12,7 @@ import plus from '../../Assets/images/plus.png';
 import throttle from "lodash-es/throttle";
 import moment from 'moment';
 import { withRouter } from "react-router-dom";
+import messages from "./messages";
 
 const MALE = 'm';
 const FEMALE = 'f';
@@ -185,6 +186,9 @@ class QualificationRegister extends Component {
     }
   };
 
+
+  formatMessage = data => this.props.intl.formatMessage(data);
+
   getYearOptions = () => {
     let currYear = moment().format("YYYY");
     let curryearNum = parseInt(currYear);
@@ -327,9 +331,9 @@ class QualificationRegister extends Component {
           });
           if (statusCode === 422) {
 
-            message.error('Please do not add more than 3 per education.')
+            message.error(this.formatMessage(messages.eduPhotoError))
           } else {
-            message.error('Something went wrong.')
+            message.error(this.formatMessage(messages.somethingWentWrong))
           }
         }
         // });
@@ -395,9 +399,9 @@ class QualificationRegister extends Component {
           });
           if (statusCode == 422) {
 
-            message.error('Please do not add more than 3 per registration.')
+            message.error(this.formatMessage(messages.regPhotoError))
           } else {
-            message.error('Something went wrong.')
+            message.error(this.formatMessage(messages.somethingWentWrong))
           }
         }
         // });
@@ -437,7 +441,7 @@ class QualificationRegister extends Component {
     if (status) {
       onUploadComplete(uploadResponse.payload.data, key);
     } else {
-      message.error('Something went wrong.')
+      message.error(this.formatMessage(messages.somethingWentWrong))
     }
 
 
@@ -472,7 +476,7 @@ class QualificationRegister extends Component {
     if (status) {
       onUploadCompleteRegistration(uploadResponse.payload.data, key);
     } else {
-      message.error('Something went wrong.')
+      message.error(this.formatMessage(messages.somethingWentWrong))
     }
 
 
@@ -607,7 +611,7 @@ class QualificationRegister extends Component {
         }
         this.setState({ education: newEducation });
       } else {
-        message.error('Something went wrong');
+        message.error(this.formatMessage(messages.somethingWentWrong))
       }
     })
 
@@ -662,7 +666,7 @@ class QualificationRegister extends Component {
         }
         this.setState({ registration: newRegistration });
       } else {
-        message.error('Something went wrong');
+        message.error(this.formatMessage(messages.somethingWentWrong))
       }
     })
 
@@ -756,7 +760,7 @@ class QualificationRegister extends Component {
       let fileName = file.name
       let newFileName = fileName.replace(/\s/g, '');
       if (photo.includes(newFileName)) {
-        message.error('Please do not add duplicate files');
+        message.error(this.formatMessage(messages.duplicateError));
         return false;
       }
     }
@@ -771,7 +775,7 @@ class QualificationRegister extends Component {
       let fileName = file.name
       let newFileName = fileName.replace(/\s/g, '');
       if (photo.includes(newFileName)) {
-        message.error('Please do not add duplicate files');
+        message.error(this.formatMessage(messages.duplicateError));
         return false;
       }
     }
@@ -841,7 +845,7 @@ class QualificationRegister extends Component {
       }
     } catch (err) {
       console.log("err", err);
-      message.warn("Something wen't wrong. Please try again later");
+      message.error(this.formatMessage(messages.somethingWentWrong))
       this.setState({ fetchingDegrees: false });
     }
   };
@@ -870,7 +874,7 @@ class QualificationRegister extends Component {
       }
     } catch (err) {
       console.log("err", err);
-      message.warn("Something wen't wrong. Please try again later");
+      message.error(this.formatMessage(messages.somethingWentWrong))
       this.setState({ fetchingColleges: false });
     }
   };
@@ -899,7 +903,7 @@ class QualificationRegister extends Component {
       }
     } catch (err) {
       console.log("err", err);
-      message.warn("Something wen't wrong. Please try again later");
+      message.error(this.formatMessage(messages.somethingWentWrong))
       this.setState({ fetchingCouncils: false });
     }
   };
@@ -921,7 +925,7 @@ class QualificationRegister extends Component {
 
             <div key={key}>
               <div className='flex justify-space-between align-center direction-row'>
-                <div className='form-headings'>Degree</div>
+                <div className='form-headings'>{this.formatMessage(messages.degree)}</div>
                 {educationKeys.length > 1 ? (
                   <DeleteTwoTone
                     className={"pointer"}
@@ -932,9 +936,9 @@ class QualificationRegister extends Component {
               </div>
               <Select
                 onSearch={this.handleDegreeSearch}
-                notFoundContent={this.state.fetchingDegrees ? <Spin size="small" /> : 'No match found'}
+                notFoundContent={this.state.fetchingDegrees ? <Spin size="small" /> : this.formatMessage(messages.noMatch)}
                 className="form-inputs"
-                placeholder="Select Degree"
+                placeholder={this.formatMessage(messages.selectDegree)}
                 showSearch
                 value={degree_id.toString()}
                 onChange={this.setDegree(key)}
@@ -952,12 +956,12 @@ class QualificationRegister extends Component {
               >
                 {this.getDegreesOption()}
               </Select>
-              <div className='form-headings'>College</div>
+              <div className='form-headings'>{this.formatMessage(messages.college)}</div>
               <Select
                 onSearch={this.handleCollegeSearch}
-                notFoundContent={this.state.fetchingColleges ? <Spin size="small" /> : 'No match found'}
+                notFoundContent={this.state.fetchingColleges ? <Spin size="small" /> : this.formatMessage(messages.noMatch)}
                 className="form-inputs"
-                placeholder="Select College"
+                placeholder={this.formatMessage(messages.selectCollege)}
                 showSearch
                 value={college_id.toString()}
                 onChange={this.setCollege(key)}
@@ -975,7 +979,7 @@ class QualificationRegister extends Component {
               >
                 {this.getCollegesOption()}
               </Select>
-              <div className='form-headings'>Year</div>
+              <div className='form-headings'>{this.formatMessage(messages.year)}</div>
               {/* <Input
                 placeholder="Year"
                 className={"form-inputs"}
@@ -987,7 +991,7 @@ class QualificationRegister extends Component {
               </Select>
 
               {/* <DatePicker mode="year" value={moment(year,'YYYY')} format={'YYYY'} placeholder={'Select Year'} onChange={this.setYear}/> */}
-              <div className='form-headings'>Photo</div>
+              <div className='form-headings'>{this.formatMessage(messages.photo)}</div>
               <div className='qualification-photo-uploads'>
                 {photos.map(pic => {
                   return (
@@ -1053,7 +1057,7 @@ class QualificationRegister extends Component {
 
             <div key={key}>
               <div className='flex justify-space-between align-center direction-row'>
-                <div className='form-headings'>Registration Number</div>
+                <div className='form-headings'>{this.formatMessage(messages.regNo)}</div>
                 {registrationKeys.length > 1 ? (
                   <DeleteTwoTone
                     className={"pointer"}
@@ -1069,7 +1073,7 @@ class QualificationRegister extends Component {
                 className={"form-inputs"}
                 onChange={e => this.setRegNo(key, e)}
               />
-              <div className='form-headings'>Registration Council</div>
+              <div className='form-headings'>{this.formatMessage(messages.regCouncil)}</div>
               {/* <Input
                 placeholder="Registration council"
                 value={council}
@@ -1098,7 +1102,7 @@ class QualificationRegister extends Component {
               >
                 {this.getCouncilOption()}
               </Select>
-              <div className='form-headings'> Registration Year</div>
+              <div className='form-headings'>{this.formatMessage(messages.regYear)}</div>
               {/* <Input
                 placeholder="Year"
                 className={"form-inputs"}
@@ -1108,11 +1112,11 @@ class QualificationRegister extends Component {
               <Select className="form-inputs" placeholder="Select Year" value={year ? year : null} onChange={this.setRegYear(key)}>
                 {this.getYearOptions()}
               </Select>
-              <div className='form-headings'> Expiry Date</div>
+              <div className='form-headings'>{this.formatMessage(messages.expDate)}</div>
 
               <DatePicker value={expiryDate} disabledDate={this.disabledDate} onChange={this.setExpiryDate(key)} placeholder='Select Expiry Date' />
 
-              <div className='form-headings'>Photo</div>
+              <div className='form-headings'>{this.formatMessage(messages.photo)}</div>
               <div className='qualification-photo-uploads'>
                 {photos.map(pic => {
                   return (
@@ -1169,16 +1173,16 @@ class QualificationRegister extends Component {
     let newEducation = Object.values(education);
     let newRegistration = Object.values(registration);
     if (!speciality) {
-      message.error('Please enter you Speciality.')
+      message.error(this.formatMessage(messages.specialityError))
       return false;
     } else if (!gender) {
-      message.error('Please select your gender.')
+      message.error(this.formatMessage(messages.genderError))
       return false;
       // } else if (!registration_number) {
       //   message.error('Please enter your Registration number.')
       //   return false;
     } else if (!newEducation.length) {
-      message.error('Please enter your Education details.')
+      message.error(this.formatMessage(messages.eduDetError))
       return false;
       // }
       // else if (!registration_council) {
@@ -1192,12 +1196,12 @@ class QualificationRegister extends Component {
         let { degree_id = '', college_id = '', year = '', photos = [] } = edu;
         if (!degree_id || !college_id || !parseInt(year)) {
 
-          message.error('Please enter all Education details.')
+          message.error(this.formatMessage(messages.allEduDetError))
           return false;
         }
 
         if (!photos.length) {
-          message.error('Please add at least 1 photo for education.')
+          message.error(this.formatMessage(messages.add1PhotoEduError))
           return false;
         }
 
@@ -1205,16 +1209,16 @@ class QualificationRegister extends Component {
       for (let reg of newRegistration) {
         let { number = '', expiryDate = '', registration_council_id = '', year = '', photos = [] } = reg;
         if (year > moment(expiryDate).year() || moment(expiryDate).isBefore(moment())) {
-          message.error('Please select valid expiry date for registration.')
+          message.error(this.formatMessage(messages.expDateError))
           return false;
         }
         if (!number || !expiryDate || !parseInt(year) || !registration_council_id) {
 
-          message.error('Please enter all Registration details.')
+          message.error(this.formatMessage(messages.allRegDetails))
           return false;
         }
         if (!photos.length) {
-          message.error('Please add at least 1 photo for registration.')
+          message.error(this.formatMessage(messages.add1PhotoRegError))
           return false;
         }
       }
@@ -1238,7 +1242,7 @@ class QualificationRegister extends Component {
       let newRegistration = []
       for (let reg of Object.values(registration)) {
         let { expiryDate = '', registration_council_id = '', number = '', photos = [], year = '', id = '' } = reg;
-        let localReg = { expiry_date:expiryDate, registration_council_id: registration_council_id.toString(), id: id.toString(), number, photos, year };
+        let localReg = { expiry_date: expiryDate, registration_council_id: registration_council_id.toString(), id: id.toString(), number, photos, year };
         newRegistration.push(localReg);
       }
 
@@ -1255,7 +1259,7 @@ class QualificationRegister extends Component {
         if (status) {
           history.replace(PATH.REGISTER_CLINICS);
         } else {
-          message.error('Something went wrong');
+          message.error(this.formatMessage(messages.somethingWentWrong))
         }
       });
     } else {
@@ -1274,14 +1278,15 @@ class QualificationRegister extends Component {
     const { speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = '' } = this.state
     return (
       <div className='form-block'>
-        <div className='form-headings'>Speciality</div>
+        <div className='form-headings'>
+          {this.formatMessage(messages.speciality)}</div>
         <Input
           placeholder="Speciality"
           className={"form-inputs"}
           value={speciality}
           onChange={this.setSpeciality}
         />
-        <div className='form-headings'>Gender</div>
+        <div className='form-headings'>{this.formatMessage(messages.gender)}</div>
         <div className='wp100 mt6 mb18 flex justify-space-around'>
           <div className={gender === MALE ? 'gender-selected mr12' : 'gender-unselected mr12'} onClick={this.setGender(MALE)}>M</div>
 
@@ -1290,14 +1295,14 @@ class QualificationRegister extends Component {
           <div className={gender === OTHER ? 'gender-selected mr12' : 'gender-unselected mr12'} onClick={this.setGender(OTHER)}>O</div>
         </div>
         <div className='flex justify-space-between align-center direction-row'>
-          <div className='form-category-headings'>Education</div>
-          <div className='pointer fs16 medium theme-green' onClick={this.addEducation}>Add More</div>
+          <div className='form-category-headings'>{this.formatMessage(messages.education)}</div>
+          <div className='pointer fs16 medium theme-green' onClick={this.addEducation}>{this.formatMessage(messages.addMore)}</div>
         </div>
         {this.renderEducation()}
 
         <div className='flex justify-space-between align-center direction-row'>
-          <div className='form-category-headings'>Registration details</div>
-          <div className='pointer fs16 medium theme-green' onClick={this.addRegistration}>Add More</div>
+          <div className='form-category-headings'>{this.formatMessage(messages.regDetails)}</div>
+          <div className='pointer fs16 medium theme-green' onClick={this.addRegistration}>{this.formatMessage(messages.addMore)}</div>
         </div>
         {this.renderRegistration()}
       </div>
@@ -1311,7 +1316,7 @@ class QualificationRegister extends Component {
       <Fragment>
         {/* <SideMenu {...this.props} /> */}
         <div className='registration-container'>
-          <div className='header'>Create your Profile</div>
+          <div className='header'>{this.formatMessage(messages.createProfile)}</div>
           <div className='registration-body'>
             <div className='flex mt36'>
               <UploadSteps current={1} />
@@ -1322,9 +1327,10 @@ class QualificationRegister extends Component {
           </div>
           <div className='footer'>
             <div className={'footer-text-active'} onClick={this.onBackClick}>
-              Back
-                      </div>
-            <div className={'footer-text-active'} onClick={this.onNextClick}>Next</div></div>
+
+              {this.formatMessage(messages.back)}
+            </div>
+            <div className={'footer-text-active'} onClick={this.onNextClick}>{this.formatMessage(messages.next)}</div></div>
         </div>
       </Fragment>
     );

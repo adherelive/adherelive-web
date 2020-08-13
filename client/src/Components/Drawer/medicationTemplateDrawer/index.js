@@ -10,6 +10,7 @@ import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import uuid from 'react-uuid';
+import messages from "../../ChatFullScreen/messages";
 const { Option } = Select;
 
 const { TextArea } = Input;
@@ -67,7 +68,7 @@ class TemplateDrawer extends Component {
         return (
 
             <div className='form-block-ap'>
-                <div className='form-headings-ap flex align-center justify-start'>Medicine</div>
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.medicine)}</div>
                 <Input
                     className={"form-inputs-ap"}
                     placeholder="Medicine"
@@ -75,7 +76,7 @@ class TemplateDrawer extends Component {
                 // onChange={this.setTreatment}
                 />
 
-                <div className='form-headings-ap mt18 flex align-center justify-start'>Frequency</div>
+                <div className='form-headings-ap mt18 flex align-center justify-start'>{this.formatMessage(messages.frequency)}</div>
                 <Input
                     placeholder="Frequency"
                     value={frequency}
@@ -94,7 +95,7 @@ class TemplateDrawer extends Component {
         return (
 
             <div className='form-block-ap'>
-                <div className='form-headings-ap mt18 flex align-center justify-start'>Reason</div>
+                <div className='form-headings-ap mt18 flex align-center justify-start'>{this.formatMessage(messages.reason)}</div>
                 <Input
                     placeholder="Frequency"
                     value={reason}
@@ -104,13 +105,13 @@ class TemplateDrawer extends Component {
 
                 <div className='flex justify-space-between mb10'>
                     <div className='flex direction-column'>
-                        <div className='form-headings'>Start Time</div>
+                        <div className='form-headings'>{this.formatMessage(messages.startTime)}</div>
                         <TimePicker use12Hours minuteStep={15} format="h:mm A"
                         // onChange={this.setAppointmentStartTime(key)}
                         />
                     </div>
                     <div className='flex direction-column'>
-                        <div className='form-headings'>End Time</div>
+                        <div className='form-headings'>{this.formatMessage(messages.endTime)}</div>
                         <TimePicker use12Hours minuteStep={15} format="h:mm A"
                         // disabled={!Object.keys(startTime).length}  onChange={this.setAppointmentEndTime(key)}
                         />
@@ -118,7 +119,7 @@ class TemplateDrawer extends Component {
                 </div>
 
 
-                <div className='form-headings-ap mt18 flex align-center justify-start'>Notes</div>
+                <div className='form-headings-ap mt18 flex align-center justify-start'>{this.formatMessage(messages.notes)}</div>
 
                 <TextArea
                     autoFocus
@@ -181,8 +182,8 @@ class TemplateDrawer extends Component {
         return (
             <div className='template-block'>
                 <div className='wp100 flex align-center justify-space-between'>
-                    <div className='form-category-headings-ap '>Medications</div>
-                    <div className='add-more' onClick={this.showAddMedication}>Add More</div>
+                    <div className='form-category-headings-ap '>{this.formatMessage(messages.medications)}</div>
+                    <div className='add-more' onClick={this.showAddMedication}>{this.formatMessage(messages.addMore)}</div>
 
                 </div>
                 {medicationKeys.map(key => {
@@ -238,8 +239,8 @@ class TemplateDrawer extends Component {
 
 
                 <div className='wp100 flex align-center justify-space-between'>
-                    <div className='form-category-headings-ap align-self-start'>Appointments</div>
-                    <div className='add-more' onClick={this.showAddAppointment}>Add More</div>
+            <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.appointments)}</div>
+                    <div className='add-more' onClick={this.showAddAppointment}>{this.formatMessage(messages.addMore)}</div>
                 </div>
                 {
                     appointmentKeys.map(key => {
@@ -280,7 +281,7 @@ class TemplateDrawer extends Component {
 
             if (!medicine || !medicineType || !medicine_id || !quantity || !repeat || !repeat_days.length || !start_date
                 || !start_time || !strength || !unit || !when_to_take.length) {
-                message.error("Please fill all details of medications ");
+                message.error(this.formatMessage(messages.medicationError));
                 return false;
             }
         }
@@ -291,7 +292,7 @@ class TemplateDrawer extends Component {
 
             if (!reason || !date || !end_time || !start_time || !treatment_id) {
 
-                message.error("Please fill all details of appointments ");
+                message.error(this.formatMessage(messages.appointmentError));
 
                 return false;
             }
@@ -477,7 +478,7 @@ class TemplateDrawer extends Component {
 
 
         if (!date || !start_time || !end_time || !treatment_id) {
-            message.error('Please fill all appointment details.');
+            message.error(this.formatMessage(messages.appointmentError));
             return;
         }
 
@@ -520,7 +521,7 @@ class TemplateDrawer extends Component {
         return (
             <Fragment>
                 <Drawer
-                    title="Template"
+                    title={this.formatMessage(messages.template)}
                     placement="right"
                     // closable={false}
                     maskClosable={false}
@@ -545,10 +546,10 @@ class TemplateDrawer extends Component {
                     {showAddAppointmentInner && <EditAppointmentDrawer appointmentVisible={showAddAppointmentInner} addAppointment={this.addAppointment} hideAppointment={this.closeAddAppointment} patientId={patientId} patients={patients} carePlan={carePlan} />}
                     <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-                            Cancel
+                            {this.formatMessage(messages.cancel)}
                         </Button>
                         <Button onClick={this.onSubmit} type="primary">
-                            Submit
+                        {this.formatMessage(messages.submit)}
                         </Button>
                     </div>
                 </Drawer>

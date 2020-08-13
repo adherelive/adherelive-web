@@ -3,7 +3,6 @@ import ChatFullScreen from "../../Components/ChatFullScreen";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-    console.log("4658468456666666848653653465468");
     const { auth: { authPermissions = [], authenticated_user = 1 } = {}, users = {}, patients = {}, doctors = {} } = state;
     return {
         users,

@@ -538,13 +538,13 @@ class PatientDetails extends Component {
     return (
       <Menu>
         {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleMedicationReminder}>
-          <div>Medication</div>
+          <div>{this.formatMessage(messages.medications)}</div>
         </Menu.Item>)}
         {authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) && (<Menu.Item onClick={handleAppointment}>
-          <div>Appointments</div>
+          <div>{this.formatMessage(messages.appointments)}</div>
         </Menu.Item>)}
         {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
-          <div>Actions</div>
+          <div>{this.formatMessage(messages.actions)}</div>
         </Menu.Item>)}
       </Menu>
     );
@@ -620,7 +620,7 @@ class PatientDetails extends Component {
       if (status) {
         this.onCloseTemplate();
 
-        message.success("Care Plan updated successfully.");
+        message.success(this.formatMessage(messages.carePlanUpdated));
         getMedications(patient_id).then(() => {
           getAppointments(patient_id).then(() => {
             getPatientCarePlanDetails(patient_id);
@@ -628,9 +628,9 @@ class PatientDetails extends Component {
         })
       } else {
         if (statusCode === 422 && error_type == 'slot_present') {
-          message.error("Appointment slots already present for selected timings!")
+          message.error(this.formatMessage(messages.slotPresent))
         } else {
-          message.error("Something went wrong!")
+          message.error(this.formatMessage(messages.somethingWentWrong))
         }
       }
     });

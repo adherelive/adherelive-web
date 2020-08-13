@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 // import AppHeader from "../../Containers/Header";
 import "./style.less";
+import { injectIntl } from "react-intl";
+import messages from './messages';
 
-export default class BlankState extends Component {
+class BlankState extends Component {
   componentDidMount() {
     const {
       auth: { authenticated } = {},
@@ -16,6 +18,7 @@ export default class BlankState extends Component {
   goHome = e => {
     e.preventDefault();
     // this.props.resetUnauthorizedError();
+
     this.props.history.replace("/");
   };
 
@@ -24,15 +27,23 @@ export default class BlankState extends Component {
   // }
 
   render() {
+    const {
+      intl: { formatMessage } = {}
+    } = this.props;
     return (
       <div className="eror-page-container">
         <div
           className="dark medium fontsize14 go-home-btn pointer"
           onClick={this.goHome}
         >
-          Click Here to Go Home
+          {formatMessage(messages.description)}
         </div>
       </div>
     );
   }
 }
+
+
+
+
+export default injectIntl(BlankState);

@@ -23,7 +23,7 @@ class ValidationPage extends Component {
             //   .then(response=>{
             const { status, statusCode } = response;
             if (!status) {
-                if (statusCode == 422) {
+                if (statusCode === 422) {
 
                     message.error('This verification link has expired!');
                     this.props.history.replace('/');

@@ -9,6 +9,8 @@ import PaperClip from "../../Assets/images/attach.png";
 import ImagePlaceHolder from "../../Assets/images/image_placeholder.png";
 import Download from "../../Assets/images/down-arrow.png";
 import File from "../../Assets/images/file.png";
+import messages from './messages';
+import { injectIntl } from "react-intl";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
 
@@ -51,14 +53,12 @@ class ChatForm extends Component {
         if (this.state.newMessage.length > 0) {
             const message = this.state.newMessage;
             this.setState({ newMessage: "" });
-            console.log("23456782345678 sendMessage =================>  ", message)
             this.props.channel.sendMessage(message);
         }
         if (this.state.fileList.length > 0) {
             for (let i = 0; i < this.state.fileList.length; ++i) {
                 const formData = new FormData();
                 formData.append("file", this.state.fileList[i]);
-                console.log("23456782345678 file sendMessage =================>  ", this.state.fileList)
                 this.props.channel.sendMessage(formData);
             }
             this.setState({ fileList: [] });
@@ -78,6 +78,7 @@ class ChatForm extends Component {
     };
 
     render() {
+
         return (
             <Form
                 onSubmit={this.sendMessage}
@@ -89,7 +90,7 @@ class ChatForm extends Component {
                         type="text"
                         value={this.state.newMessage}
                         onChange={this.onMessageChanged}
-                        placeholder="Write message..."
+                        placeholder={this.props.formatMessage(messages.writeMessage)}
                         className='message-input'
                         suffix={<div className="form-button">
                             <Button htmlType="submit"><img src={Send} className='h20' /></Button>
@@ -169,7 +170,6 @@ class MediaComponent extends Component {
 
     getUrl = async () => {
         const { message } = this.state;
-        console.log('23452363451346134513461', message);
         const url = await message.media.getContentTemporaryUrl();
         this.setState({ url: url });
     };
@@ -280,7 +280,6 @@ class TwilioChat extends Component {
                 "test";
         // this.channelName = '1-adhere-3';
 
-        console.log("******** other user details: getToken");
         fetchChatAccessToken(authenticated_user).then(result => {
             this.setState((prevState, props) => {
                 return {
@@ -290,9 +289,10 @@ class TwilioChat extends Component {
         });
     };
 
-    initChat = () => {
 
-        console.log("******** other user details: initChat");
+    formatMessage = data => this.props.intl.formatMessage(data);
+
+    initChat = () => {
         this.chatClient = new Chat(this.state.token);
         this.chatClient.initialize().then(this.clientInitiated.bind(this));
     };
@@ -320,7 +320,6 @@ class TwilioChat extends Component {
                 .then(channel => {
                     this.channel = channel;
                     window.channel = channel;
-                    console.log("CHannel 5678 ------------------>  ", channel)
                     if (channel.channelState.status !== "joined") {
 
                         return this.channel.join();
@@ -330,8 +329,6 @@ class TwilioChat extends Component {
                 })
                 .then(async () => {
                     this.channel.getMessages().then(this.messagesLoaded);
-
-                    console.log("4567895678  8237897323 on MEssage Added------------->   ")
                     this.channel.on("messageAdded", this.messageAdded);
 
                     const members = await this.channel.getMembers();
@@ -377,7 +374,7 @@ class TwilioChat extends Component {
     };
 
     messagesLoaded = messagePage => {
-        console.log("4567895678  8237897323 on MEssage Loaded------------->   ")
+        console.log("4567895678  8237897323 on MEssage Added------------->   ", messagePage.items.length);
         let messages = this.updateMessageRecieved(messagePage.items);
         const { roomId, addMessageOfChat } = this.props
         addMessageOfChat(roomId, messages);
@@ -392,7 +389,6 @@ class TwilioChat extends Component {
     };
 
     messageAdded = (message) => {
-        console.log("4567895678  8237897323 on MEssage Added------------->   ")
         const { roomId, addMessageOfChat } = this.props
         addMessageOfChat(roomId, message);
         // this.setState((prevState, props) => {
@@ -405,15 +401,18 @@ class TwilioChat extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         const {
-            roomId
+            roomId,
+            chatMessages
         } = this.props;
         const {
             roomId: prevRoomId
         } = prevProps;
         if (roomId !== prevRoomId) {
 
-            // console.log("******** other user details: didUpdate");
-            this.setState({ messagesLoading: true });
+            // console.log("******** other user details: didUpdate", roomId, prevRoomId);
+            if (!chatMessages[roomId]) {
+                this.setState({ messagesLoading: true });
+            }
             this.getToken();
         }
         this.scrollToBottom();
@@ -438,10 +437,9 @@ class TwilioChat extends Component {
         if (messagesArray.length > 0) {
             // const messagesArray = this.state.messages;
             const messagesToRender = [];
-            // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", messagesArray);
+            // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", messagesArray, roomId, chatMessages);
             for (let i = 0; i < messagesArray.length; ++i) {
                 const message = messagesArray[i];
-                console.log("jskdjskjsd 37373 ------------> ", message);
                 const { state: { index = 1 } = {} } = message;
                 const user = users[message.state.author]
                     ? users[message.state.author]
@@ -509,7 +507,6 @@ class TwilioChat extends Component {
                     </Fragment>
                 );
             }
-            console.log("jskdjskjsd 23456789034567 messagesToRender ------------> ", messagesToRender);
             return messagesToRender;
         } else {
             return "";
@@ -527,7 +524,7 @@ class TwilioChat extends Component {
                     <div className="twilio-chat-body">
                         {messagesLoading ?
                             <div className='wp100 hp100 flex justify-center align-center'>
-                                <Spin size="medium" />
+                                <Spin />
                             </div>
                             : this.renderMessages()}
                         <div id="chatEnd" style={{ float: "left", clear: "both" }} />
@@ -544,7 +541,7 @@ class TwilioChat extends Component {
             /> */}
                     {/* </div> */}
                     <div className="footer-right wp100">
-                        <ChatForm messages={this.messages} channel={this.channel} />
+                        <ChatForm messages={this.messages} channel={this.channel} formatMessage={this.formatMessage} />
                     </div>
                 </div>
             </Fragment>
@@ -552,4 +549,4 @@ class TwilioChat extends Component {
     }
 }
 
-export default TwilioChat;
+export default injectIntl(TwilioChat);
