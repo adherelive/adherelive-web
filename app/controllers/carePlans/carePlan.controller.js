@@ -137,8 +137,6 @@ class CarePlanController extends Controller {
                     end_date: moment(date),
                     start_time,
                     end_time,
-                    provider_id,
-                    provider_name,
                     details: {
                         treatment_id,
                         reason,

@@ -49,6 +49,8 @@ class TwilioService {
         Logger.debug("ipmGrant ---> ", ipmGrant);
         token.addGrant(ipmGrant);
 
+        console.log("token ----> ", token);
+
         return token.toJwt();
     }
 

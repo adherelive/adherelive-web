@@ -2,7 +2,7 @@
 import faker from "faker";
 import twilioService from "../../../services/twilio/twilio.service";
 import Controller from "../../";
-
+import jwt from "jsonwebtoken";
 import Log from "../../../../libs/log";
 
 const Logger = new Log("MOBILE TWILIO CONTROLLER");
@@ -19,6 +19,8 @@ class TwilioController extends Controller {
             const identity = req.query.identity ? req.query.identity : userId;
 
             const token = await twilioService.chatTokenGenerator(identity, deviceId);
+
+            const x = jwt.io(token);
 
             return this.raiseSuccess(res, 200, {identity: identity, token: token}, "Created new chat token with userId");
 
