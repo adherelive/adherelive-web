@@ -60,7 +60,7 @@ const TemplateMedication = database.define(
 
 TemplateMedication.hasOne(Medicine, {
     foreignKey: "id",
-    targetKey: "medicine_id"
+    sourceKey: "medicine_id"
 });
 
 // TemplateAppointment.belongsTo(CarePlanTemplate, {

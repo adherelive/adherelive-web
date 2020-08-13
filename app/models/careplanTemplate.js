@@ -51,6 +51,16 @@ const CarePlanTemplate = database.define(
         key: "id"
       }
     },
+      user_id: {
+          type: Sequelize.INTEGER,
+          allowNull: true,
+          references: {
+              model: {
+                  tableName: DB_TABLES.USERS,
+              },
+              key: "id",
+          },
+      },
     details: {
       type: Sequelize.JSON
     }
@@ -94,6 +104,16 @@ CarePlanTemplate.hasMany(TemplateAppointment, {
 CarePlanTemplate.hasMany(TemplateMedication, {
     foreignKey:"care_plan_template_id",
     sourceKey:"id",
+});
+
+CarePlanTemplate.hasMany(TemplateAppointment, {
+    foreignKey:"care_plan_template_id",
+    sourceKey:"id"
+});
+
+CarePlanTemplate.hasMany(TemplateMedication, {
+    foreignKey:"care_plan_template_id",
+    sourceKey:"id"
 });
 
 export default CarePlanTemplate;

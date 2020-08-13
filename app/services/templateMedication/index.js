@@ -10,4 +10,9 @@ export default class TemplateMedication {
     getTemplateMedicineId() {
         return this._data.get("medicine_id");
     }
+
+    getMedicines = () => {
+        const {medicines} = this._data;
+        return medicines;
+    };
 }

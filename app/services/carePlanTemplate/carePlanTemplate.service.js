@@ -17,7 +17,21 @@ class CarePlanTemplateService {
         } catch (error) {
             throw error;
         }
-    };
+      };
+
+  create = async data => {
+    try {
+      const carePlanTemplate = await CarePlanTemplate.create(
+        data,
+        {
+            include: [TemplateAppointment, TemplateMedication]
+        }
+      );
+      return carePlanTemplate;
+    } catch (error) {
+      throw error;
+    }
+  };
 
     getCarePlanTemplateByData = async (treatment_id, severity_id, condition_id) => {
         try {
@@ -35,16 +49,14 @@ class CarePlanTemplateService {
         }
     };
 
-    addCarePlanTemplate = async data => {
-        try {
-            const carePlanTemplate = await CarePlanTemplate.create(data);
-            return carePlanTemplate;
-        } catch (error) {
-            throw error;
-        }
-    };
-
-
+  addCarePlanTemplate = async data => {
+    try {
+      const carePlanTemplate = await CarePlanTemplate.create(data);
+      return carePlanTemplate;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default new CarePlanTemplateService();
