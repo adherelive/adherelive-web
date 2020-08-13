@@ -16,11 +16,9 @@ class TwilioController extends Controller {
         try {
             const deviceId = req.query.device ? req.query.device : "application";
             const {userDetails: {userId}} = req;
-            const identity = req.query.identity ? req.query.identity : userId;
+            const identity = req.query.identity ? req.query.identity : `${userId}`;
 
             const token = await twilioService.chatTokenGenerator(identity, deviceId);
-
-            const x = jwt.io(token);
 
             return this.raiseSuccess(res, 200, {identity: identity, token: token}, "Created new chat token with userId");
 
