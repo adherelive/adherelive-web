@@ -554,19 +554,18 @@ class DoctorController extends Controller {
       const updatedPatientData = await PatientWrapper(null, patientData.getPatientId());
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateByData(
+      const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData({
         treatment_id,
         severity_id,
-        condition_id
-      );
+        condition_id,
+        user_id: userId
+      });
 
-      Logger.debug("careplanTemplate ----> ", carePlanTemplate);
+      Logger.debug("carePlanTemplate ---> ", carePlanTemplate);
 
 
       const patient_id = patient.get("id");
-      const care_plan_template_id = carePlanTemplate
-        ? carePlanTemplate.get("id")
-        : null;
+      const care_plan_template_id = null;
 
       const details = { treatment_id, severity_id, condition_id };
 
@@ -590,54 +589,54 @@ class DoctorController extends Controller {
 
       let carePlanTemplateData = null;
 
-      if (carePlanData.getCarePlanTemplateId()) {
-        const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(carePlanData.getCarePlanTemplateId());
-        carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
-        const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
-
-        for (const medication of medications) {
-          const medicationData = await TemplateMedicationWrapper(medication);
-          templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
-          template_medication_ids.push(medicationData.getTemplateMedicationId());
-          medicine_ids.push(medicationData.getTemplateMedicineId());
-        }
-
-        const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
-
-        for (const appointment of appointments) {
-          const appointmentData = await TemplateAppointmentWrapper(appointment);
-          templateAppointmentData[appointmentData.getTemplateAppointmentId()] = appointmentData.getBasicInfo();
-          template_appointment_ids.push(appointmentData.getTemplateAppointmentId());
-        }
-      }
-
-      const medicineData = await medicineService.getMedicineByData({
-        id: medicine_ids
-      });
+      // if (carePlanData.getCarePlanTemplateId()) {
+      //   const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(carePlanData.getCarePlanTemplateId());
+      //   carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
+      //   const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
+      //
+      //   for (const medication of medications) {
+      //     const medicationData = await TemplateMedicationWrapper(medication);
+      //     templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
+      //     template_medication_ids.push(medicationData.getTemplateMedicationId());
+      //     medicine_ids.push(medicationData.getTemplateMedicineId());
+      //   }
+      //
+      //   const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
+      //
+      //   for (const appointment of appointments) {
+      //     const appointmentData = await TemplateAppointmentWrapper(appointment);
+      //     templateAppointmentData[appointmentData.getTemplateAppointmentId()] = appointmentData.getBasicInfo();
+      //     template_appointment_ids.push(appointmentData.getTemplateAppointmentId());
+      //   }
+      // }
+      //
+      // const medicineData = await medicineService.getMedicineByData({
+      //   id: medicine_ids
+      // });
 
       let medicineApiData = {};
 
-      let carePlanTemplateDetails = {};
-      if (carePlanTemplate) {
-        const carePlanTemplateData = await CarePlanTemplateWrapper(
-          carePlanTemplate
-        );
-        carePlanTemplateDetails[carePlanTemplateData.getCarePlanTemplateId()] = {
-          ...carePlanTemplateData.getBasicInfo(),
-          template_appointment_ids,
-          template_medication_ids
-        };
-      }
+      // let carePlanTemplateDetails = {};
+      // if (carePlanTemplate) {
+      //   const carePlanTemplateData = await CarePlanTemplateWrapper(
+      //     carePlanTemplate
+      //   );
+      //   carePlanTemplateDetails[carePlanTemplateData.getCarePlanTemplateId()] = {
+      //     ...carePlanTemplateData.getBasicInfo(),
+      //     template_appointment_ids,
+      //     template_medication_ids
+      //   };
+      // }
 
       // Logger.debug(
       //   "medicineData",
       //   medicineData
       // );
 
-      for (const medicine of medicineData) {
-        const medicineWrapper = await MedicineApiWrapper(medicine);
-        medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
-      }
+      // for (const medicine of medicineData) {
+      //   const medicineWrapper = await MedicineApiWrapper(medicine);
+      //   medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
+      // }
 
       const link = uuidv4();
       const status = "pending";
@@ -682,6 +681,20 @@ class DoctorController extends Controller {
       //   Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
       // }
 
+      let otherCarePlanTemplates = {};
+
+      let carePlanTemplateIds = [];
+
+      for(const template of carePlanTemplate) {
+        carePlanTemplateData = await CarePlanTemplateWrapper(template);
+        const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
+        carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+        otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
+        templateAppointmentData = {...templateAppointmentData, ...template_appointments};
+        templateMedicationData = {...templateMedicationData, ...template_medications};
+        medicineApiData = {...medicineApiData, ...medicines};
+      }
+
 
       return this.raiseSuccess(
         res,
@@ -701,13 +714,16 @@ class DoctorController extends Controller {
             [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
           },
           care_plan_templates: {
-            ...carePlanTemplateDetails
+            ...otherCarePlanTemplates
           },
           template_appointments: {
             ...templateAppointmentData
           },
           template_medications: {
             ...templateMedicationData
+          },
+          medicines: {
+            ...medicineApiData
           },
           show: carePlanTemplate ? true : false,
         },

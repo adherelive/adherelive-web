@@ -283,6 +283,17 @@ class MPatientController extends Controller {
       let template_appointment_ids = [];
       let medicine_ids = [];
 
+      const {treatment_id, severity_id, condition_id} = carePlanData.getCarePlanDetails();
+
+      const carePlanTemplates = await carePlanTemplateService.getCarePlanTemplateData({
+        treatment_id,
+        severity_id,
+        condition_id,
+        user_id: userId
+      });
+
+      Logger.debug("carePlanTemplates ---> ", carePlanTemplates);
+
 
       let carePlanTemplateData = null;
 
@@ -372,7 +383,16 @@ class MPatientController extends Controller {
         medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
       }
 
-      Logger.debug("187631631623 here 3", 3);
+      let otherCarePlanTemplates = {};
+
+      for(const carePlanTemplate of carePlanTemplates) {
+        carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
+        const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
+        otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
+        templateAppointmentData = {...templateAppointmentData, ...template_appointments};
+        templateMedicationData = {...templateMedicationData, ...template_medications};
+        medicineApiData = {...medicineApiData, ...medicines};
+      }
 
       return this.raiseSuccess(res, 200, {
         // care_plans: { ...carePlanApiData },
@@ -389,7 +409,8 @@ class MPatientController extends Controller {
             ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
             template_appointment_ids,
             template_medication_ids
-          }
+          },
+          ...otherCarePlanTemplates
         },
         appointments: {
           ...appointmentApiDetails

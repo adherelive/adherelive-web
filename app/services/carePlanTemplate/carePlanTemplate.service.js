@@ -49,6 +49,18 @@ class CarePlanTemplateService {
         }
     };
 
+    getCarePlanTemplateData = async (data) => {
+        try {
+            const carePlanTemplate = await CarePlanTemplate.findAll({
+                where: data,
+                include: [Condition, Severity, Treatment, TemplateAppointment, TemplateMedication]
+            });
+            return carePlanTemplate;
+        } catch (error) {
+            throw error;
+        }
+    };
+
   addCarePlanTemplate = async data => {
     try {
       const carePlanTemplate = await CarePlanTemplate.create(data);
