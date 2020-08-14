@@ -375,17 +375,35 @@ class TwilioChat extends Component {
 
     messagesLoaded = messagePage => {
         console.log("4567895678  8237897323 on MEssage Added------------->   ", messagePage.items.length);
-        let messages = this.updateMessageRecieved(messagePage.items);
         const { roomId, addMessageOfChat } = this.props
-        addMessageOfChat(roomId, messages);
-        this.setState(
-            {
-                messagesLoading: false,
-                // messages: messagePage.items,
-                // messages
-            },
-            this.scrollToBottom
-        );
+        if (messagePage.items.length) {
+            let message = messagePage.items[0];
+            const { channel: { channelState: { uniqueName = '' } = {} } = {} } = message;
+            if(!uniqueName.localeCompare(roomId)){
+                let messages = this.updateMessageRecieved(messagePage.items);
+                addMessageOfChat(roomId, messages);
+                this.setState(
+                    {
+                        messagesLoading: false,
+                        // messages: messagePage.items,
+                        // messages
+                    },
+                    this.scrollToBottom
+                );
+            }else{
+                let messages = this.updateMessageRecieved(messagePage.items);
+                // addMessageOfChat(roomId, messages);
+                this.setState(
+                    {
+                        messagesLoading: false,
+                        // messages: messagePage.items,
+                        // messages
+                    },
+                    this.scrollToBottom
+                );
+            }
+        }
+        
     };
 
     messageAdded = (message) => {
@@ -437,7 +455,7 @@ class TwilioChat extends Component {
         if (messagesArray.length > 0) {
             // const messagesArray = this.state.messages;
             const messagesToRender = [];
-            // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", messagesArray, roomId, chatMessages);
+            // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", messagesArray);
             for (let i = 0; i < messagesArray.length; ++i) {
                 const message = messagesArray[i];
                 const { state: { index = 1 } = {} } = message;

@@ -612,6 +612,12 @@ class UserController extends Controller {
           permissions = await authUserDetails.getPermissions();
         }
 
+        // speciality temp todo
+        let referenceData = {};
+        if(category === USER_CATEGORY.DOCTOR && userCategoryApiWrapper) {
+          referenceData = await userCategoryApiWrapper.getReferenceInfo();
+        }
+
         /**** API wrapper for DOCTOR ****/
 
         return this.raiseSuccess(res, 200, {
@@ -636,6 +642,7 @@ class UserController extends Controller {
           conditions: {
             ...conditionApiDetails,
           },
+          ...referenceData,
           ...permissions,
           severity_ids: severityIds,
           treatment_ids: treatmentIds,

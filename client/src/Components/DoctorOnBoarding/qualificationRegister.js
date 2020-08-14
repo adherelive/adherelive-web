@@ -2,7 +2,9 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import { Select, Input, DatePicker, Upload, message, Spin } from "antd";
+import { Input, DatePicker, Upload, message, Spin } from "antd";
+
+import Select from "antd/es/select";
 import { REQUEST_TYPE, PATH } from '../../constant';
 import { getUploadQualificationDocumentUrl, getUploadRegistrationDocumentUrl } from '../../Helper/urls/doctor';
 import { doRequest } from '../../Helper/network';
@@ -53,6 +55,8 @@ class QualificationRegister extends Component {
 
     this.handleCollegeSearch = throttle(this.handleCollegeSearch.bind(this), 2000);
     this.handleCouncilSearch = throttle(this.handleCouncilSearch.bind(this), 2000);
+
+    this.handleSpecialitySearch = throttle(this.handleSpecialitySearch.bind(this), 2000);
   }
 
 
@@ -172,18 +176,15 @@ class QualificationRegister extends Component {
     }
 
     this.setState({
-      speciality: docSpeciality, gender: docGender,
+      speciality_id: docSpeciality, gender: docGender,
       registration, registrationKeys, education, educationKeys,
       degrees: degreeList, councils: councilList, colleges: collegeList
     });
   }
 
-  setSpeciality = e => {
-    const { value } = e.target;
-    const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-    if (reg.test(value) || value === '') {
-      this.setState({ speciality: e.target.value });
-    }
+  setSpeciality = value => {
+    console.log("1237129739 value --> ", value);
+    this.setState({ speciality_id: value });
   };
 
 
@@ -283,7 +284,7 @@ class QualificationRegister extends Component {
 
   onUploadComplete = async ({ files = [] }, key) => {
 
-    const { docs = [], speciality = '', gender = '' } = this.state;
+    const { docs = [], speciality_id = '', gender = '' } = this.state;
 
     this.setState({ docs: [...docs, ...files] }, async () => {
       //  async () => {
@@ -303,7 +304,7 @@ class QualificationRegister extends Component {
 
         let { degree_id = '', year = '', college_id = '', photos = [], id = 0 } = newEducation[key];
         let qualData = { degree_id: degree_id.toString(), year, college_id: college_id.toString(), photos, id: id.toString() };
-        let qualificationData = { speciality, gender, qualification: qualData };
+        let qualificationData = { speciality_id, gender, qualification: qualData };
         let response = await registerQualification(qualificationData)
         // .then(response => {
         const { status, statusCode, payload: { data: { qualification_id = 0 } = {} } = {} } = response;
@@ -343,7 +344,7 @@ class QualificationRegister extends Component {
 
   onUploadCompleteRegistration = async ({ files = [] }, key) => {
 
-    let { docsReg = [], speciality = '', gender = '' } = this.state;
+    let { docsReg = [], speciality_id = '', gender = '' } = this.state;
 
     this.setState({ docsReg: [...docsReg, ...files] }, async () => {
       //  async () => {
@@ -371,7 +372,7 @@ class QualificationRegister extends Component {
           let localEdu = { college_id: college_id.toString(), degree_id: degree_id.toString(), id: id.toString(), photos, year };
           newEdu.push(localEdu);
         }
-        let registrationData = { speciality, gender, qualification_details: newEdu, registration: regData };
+        let registrationData = { speciality_id, gender, qualification_details: newEdu, registration: regData };
         let response = await registerRegistration(registrationData, userId)
         // .then(response => {
         const { status, statusCode, payload: { data: { registration_id = 0 } = {} } = {} } = response;
@@ -796,6 +797,19 @@ class QualificationRegister extends Component {
     });
   };
 
+  getSpecialityOption = () => {
+    const { specialities = {} } = this.props;
+
+    return Object.keys(specialities).map(id => {
+      const { basic_info: { name } = {} } = specialities[id] || {};
+      return (
+        <Option key={id} value={id}>
+          {name}
+        </Option>
+      );
+    });
+  };
+
   getCollegesOption = () => {
     const { colleges = {} } = this.props;
 
@@ -847,6 +861,28 @@ class QualificationRegister extends Component {
       console.log("err", err);
       message.error(this.formatMessage(messages.somethingWentWrong))
       this.setState({ fetchingDegrees: false });
+    }
+  };
+
+  async handleSpecialitySearch(data = "") {
+    try {
+      // if (data) {
+      const { searchSpecialities } = this.props;
+      this.setState({ fetchingSpeciality: true });
+      const response = await searchSpecialities(data);
+      const { status } = response;
+      if (status) {
+        this.setState({ fetchingSpeciality: false });
+      } else {
+        this.setState({ fetchingSpeciality: false });
+      }
+      // } else {
+      //   this.setState({ fetchingSpeciality: false });
+      // }
+    } catch (err) {
+      console.log("err", err);
+      message.warn("Something wen't wrong. Please try again later");
+      this.setState({ fetchingSpeciality: false });
     }
   };
 
@@ -1166,13 +1202,13 @@ class QualificationRegister extends Component {
   }
 
   validateData = () => {
-    let { speciality = '',
+    let { speciality_id = '',
       gender = '',
       registration = {},
       education = {} } = this.state;
     let newEducation = Object.values(education);
     let newRegistration = Object.values(registration);
-    if (!speciality) {
+    if (!speciality_id) {
       message.error(this.formatMessage(messages.specialityError))
       return false;
     } else if (!gender) {
@@ -1230,7 +1266,7 @@ class QualificationRegister extends Component {
     const { history } = this.props;
     const validate = this.validateData();
     if (validate) {
-      const { speciality = '', gender = '', registration = {}, education = {} } = this.state;
+      const { speciality_id = '', gender = '', registration = {}, education = {} } = this.state;
       // let newEducation = Object.values(education);
       let newEducation = [];
       for (let edu of Object.values(education)) {
@@ -1252,7 +1288,7 @@ class QualificationRegister extends Component {
       newRegistration.forEach((reg, index) => {
         // delete reg.photo;
       })
-      const data = { speciality, gender, registration_details: newRegistration, qualification_details: newEducation };
+      const data = { speciality_id, gender, registration_details: newRegistration, qualification_details: newEducation };
       const { doctorQualificationRegister } = this.props;
       doctorQualificationRegister(data).then(response => {
         const { status } = response;
@@ -1275,17 +1311,41 @@ class QualificationRegister extends Component {
 
 
   renderQualificationForm = () => {
-    const { speciality = '', gender = '', registration_number = '', registration_council = '', registration_year = '' } = this.state
+    const { searchSpecialities } = this.props;
+    const { speciality_id = '', gender = '', registration_number = '', registration_council = '', registration_year = '' } = this.state
     return (
       <div className='form-block'>
-        <div className='form-headings'>
-          {this.formatMessage(messages.speciality)}</div>
-        <Input
-          placeholder="Speciality"
-          className={"form-inputs"}
-          value={speciality}
+        <div className='form-headings'>{this.formatMessage(messages.speciality)}</div>
+
+        <Select
+          onFocus={this.handleSpecialitySearch}
+          onSearch={this.handleSpecialitySearch}
+          notFoundContent={this.state.fetchingSpeciality ? <Spin size="small" /> : 'No match found'}
+          className="form-inputs"
+          placeholder="Select Speciality"
+          showSearch
+          value={speciality_id.toString()}
           onChange={this.setSpeciality}
-        />
+          // onFocus={() => handleMedicineSearch("")}
+          autoComplete="off"
+          // onFocus={() => handleMedicineSearch("")}
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option.props.children
+              .toLowerCase()
+              .indexOf(input.toLowerCase()) >= 0
+          }
+        // getPopupContainer={getParentNode}
+
+        >
+          {this.getSpecialityOption()}
+        </Select>
+        {/*<Input*/}
+        {/*  placeholder="Speciality"*/}
+        {/*  className={"form-inputs"}*/}
+        {/*  value={speciality}*/}
+        {/*  onChange={this.setSpeciality}*/}
+        {/*/>*/}
         <div className='form-headings'>{this.formatMessage(messages.gender)}</div>
         <div className='wp100 mt6 mb18 flex justify-space-around'>
           <div className={gender === MALE ? 'gender-selected mr12' : 'gender-unselected mr12'} onClick={this.setGender(MALE)}>M</div>

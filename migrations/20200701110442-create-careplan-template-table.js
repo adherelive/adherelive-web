@@ -46,6 +46,16 @@ module.exports = {
           key: "id",
         },
       },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: DB_TABLES.USERS,
+          },
+          key: "id",
+        },
+      },
       details: {
         type: Sequelize.JSON,
       },

@@ -71,6 +71,36 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Template"
     },
+    saveTempQues: {
+        id: "app.medicationTemplate.saveTempQues",
+        description: "",
+        defaultMessage: "Would you like to save this as a template?"
+    },
+    youModified: {
+        id: "app.medicationTemplate.youModified",
+        description: "",
+        defaultMessage: "You modified over the existing template,you can save it for future use and save up time."
+    },
+    giveName: {
+        id: "app.medicationTemplate.giveName",
+        description: "",
+        defaultMessage: "Give a name to this template"
+    },
+    saveTemplate: {
+        id: "app.medicationTemplate.saveTemplate",
+        description: "",
+        defaultMessage: "Save Template"
+    },
+    skip: {
+        id: "app.medicationTemplate.skip",
+        description: "",
+        defaultMessage: "Skip and dont save"
+    },
+    validNameError: {
+        id: "app.medicationTemplate.validNameError",
+        description: "",
+        defaultMessage: "Please enter template name."
+    },
 
 });
 

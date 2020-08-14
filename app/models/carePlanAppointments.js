@@ -58,10 +58,10 @@ CarePlanAppointment.hasOne(Appointment, {
   targetKey: "appointment_id"
 });
 
-CarePlanAppointment.belongsTo(CarePlan, {
-  foreignKey:"care_plan_id",
-  targetKey:"id"
-});
+// CarePlanAppointment.belongsTo(CarePlan, {
+//   foreignKey:"care_plan_id",
+//   targetKey:"id"
+// });
 
 
 

@@ -40,6 +40,7 @@ class SignIn extends Component {
                 try {
 
                     const response = await signIn({ email, password });
+                    console.log('1234567890------->', email, password, err, response);
                     const { status = false, statusCode } = response;
                     if (status) {
 

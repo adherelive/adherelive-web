@@ -21,33 +21,19 @@ module.exports = {
           key: 'id'
         }
       },
-      registration_number: {
-        type: Sequelize.STRING(1000),
-        allowNull: true,
-      },
-      registration_start_date: {
-        type: Sequelize.DATE,
-        allowNull: true,
-      },
-      registration_expiry_date: {
-        type: Sequelize.DATE,
-        allowNull: true,
-      },
-      registration_council: {
-        type: Sequelize.STRING(200),
-        allowNull: true,
-      },
-      registration_year: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-      },
        city: {
         type: Sequelize.STRING(100),
         allowNull: true,
       },
-      speciality: {
-        type: Sequelize.STRING(100),
+      speciality_id: {
+        type: Sequelize.INTEGER,
         allowNull: true,
+        references: {
+          model: {
+            tableName: DB_TABLES.SPECIALITIES,
+          },
+          key: 'id'
+        }
       },
       gender: {
         type: Sequelize.ENUM,

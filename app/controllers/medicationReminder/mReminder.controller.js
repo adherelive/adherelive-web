@@ -19,8 +19,8 @@ import {
 } from "../../../constant";
 import Log from "../../../libs/log";
 import {getCarePlanAppointmentIds,getCarePlanMedicationIds,getCarePlanSeverityDetails} from '../carePlans/carePlanHelper'
-import { Proxy_Sdk } from "../../proxySdk";
-// import medicineService from "../../services/medicines/medicine.service";
+import {RRule} from "rrule";
+import EventSchedule from "../../eventSchedules";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -99,6 +99,15 @@ class MReminderController extends Controller {
         }
       };
 
+      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_time).utc().toDate(),
+        until: moment(start_time).add(6,'months').utc().toDate()
+      });
+
+      Logger.debug("rrule ----> ", rrule.all());
+
       const mReminderDetails = await medicationReminderService.addMReminder(
         dataToSave
       );
@@ -111,6 +120,15 @@ class MReminderController extends Controller {
       //   start_time,
       //   end_time: start_time
       // };
+
+      EventSchedule.create({
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        event_id: mReminderDetails.getId,
+        details: mReminderDetails.getBasicInfo,
+        status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+      });
 
       return this.raiseSuccess(
         res,
@@ -225,6 +243,16 @@ class MReminderController extends Controller {
       //   start_time,
       //   end_time: start_time
       // };
+
+      EventSchedule.create({
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        event_id: mReminderDetails.getId,
+        details: mReminderDetails.getBasicInfo.details,
+        status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+        when_to_take
+      });
 
       return this.raiseSuccess(
         res,

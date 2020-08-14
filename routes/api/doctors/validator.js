@@ -27,7 +27,7 @@ const addPatientForm = Joi.object().keys({
 
 const addQualificationRegistrationForm = Joi.object().keys({
     gender: Joi.string().required().label("Gender is required"),
-    speciality: Joi.string().required().label("Speciality is required"),
+    speciality_id: Joi.number().required().label("Speciality is required"),
     qualification_details: Joi.array().items(
         Joi.object().keys({
             college_id: Joi.string().regex(/^\d+$/).required("College is required"),
@@ -53,7 +53,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
 
 const addQualificationStepForm = Joi.object().keys({
     gender: Joi.string().required().label("Gender is required"),
-    speciality: Joi.string().required().label("Speciality is required"),
+    speciality_id: Joi.number().required().label("Speciality is required"),
     qualification: Joi.object().keys({
        college_id: Joi.string().regex(/^\d+$/).required("College is required"),
        degree_id: Joi.string().regex(/^\d+$/).required("Degree is required"),
@@ -65,7 +65,7 @@ const addQualificationStepForm = Joi.object().keys({
 
 const addRegistrationStepForm = Joi.object().keys({
     gender: Joi.string().required().label("Gender is required"),
-    speciality: Joi.string().required().label("Speciality is required"),
+    speciality_id: Joi.number().required().label("Speciality is required"),
     qualification_details: Joi.array().items(
         Joi.object().keys({
             photo: Joi.array().optional().allow(""),

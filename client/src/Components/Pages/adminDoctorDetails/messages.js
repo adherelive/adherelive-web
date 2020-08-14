@@ -180,6 +180,11 @@ const messages = defineMessages({
         id: "app.admin.doctors.timings.text",
         description: "",
         defaultMessage: "Timings"
+    },
+    speciality_text: {
+        id: "app.admin.doctors.speciality.text",
+        description: "",
+        defaultMessage: "Speciality"
     }
 });
 

@@ -8,6 +8,11 @@ class Log {
       "------------------------------------------------------------------------------------------------------";
   }
 
+  fileName = (filename) => {
+    this.source = filename;
+    return this;
+  };
+
   getLogDate() {
     return moment().format(`D MMMM YYYY @ hh:mm A`);
   }

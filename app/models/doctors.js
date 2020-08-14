@@ -8,6 +8,7 @@ import {
   GENDER,
 } from "../../constant";
 import Users from "./users";
+import Specialities from "./specialities";
 
 const Doctors = database.define(
   DB_TABLES.DOCTORS,
@@ -28,33 +29,19 @@ const Doctors = database.define(
         key: "id",
       },
     },
-    registration_number: {
-      type: Sequelize.STRING(1000),
-      allowNull: true,
-    },
-    registration_start_date: {
-      type: Sequelize.DATE,
-      allowNull: true,
-    },
-    registration_expiry_date: {
-      type: Sequelize.DATE,
-      allowNull: true,
-    },
-    registration_council: {
-      type: Sequelize.STRING(200),
-      allowNull: true,
-    },
-    registration_year: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-    },
     city: {
       type: Sequelize.STRING(100),
       allowNull: true,
     },
-    speciality: {
-      type: Sequelize.STRING(100),
-      allowNull: true,
+    speciality_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+            model: {
+                tableName: DB_TABLES.SPECIALITIES,
+            },
+            key: 'id'
+        }
     },
     gender: {
       type: Sequelize.ENUM,
@@ -113,7 +100,12 @@ const Doctors = database.define(
 
 Doctors.hasOne(Users, {
     foreignKey: "id",
-    targetKey: "user_id"
+    sourceKey: "user_id"
+});
+
+Doctors.hasOne(Specialities, {
+    foreignKey: "id",
+    sourceKey:"speciality_id"
 });
 
 export default Doctors;

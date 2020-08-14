@@ -32,6 +32,9 @@ const ScheduleEvent = database.define(
                 EVENT_STATUS.CANCELLED
             ]
         },
+        date: {
+          type: Sequelize.DATEONLY,
+        },
         start_time: {
             type: Sequelize.DATE,
         },

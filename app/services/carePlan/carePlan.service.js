@@ -1,4 +1,8 @@
 import CarePlan from "../../models/carePlan";
+import CarePlanAppointment from "../../models/carePlanAppointments";
+import CarePlanMedication from "../../models/carePlanMedications";
+import Doctors from "../../models/doctors";
+import Patients from "../../models/patients";
 
 class CarePlanService {
 
@@ -6,7 +10,8 @@ class CarePlanService {
         try {
             console.log("careplan data --> ", data);
             const carePlan = await CarePlan.findAll({
-                where: data
+                where: data,
+                include: [Patients, Doctors, CarePlanAppointment, CarePlanMedication]
             });
             return carePlan;
         } catch(error) {
@@ -18,7 +23,8 @@ class CarePlanService {
         try {
             console.log("careplan data --> ", id);
             const carePlan = await CarePlan.findOne({
-                where: {id}
+                where: {id},
+                include: [Patients, Doctors, CarePlanAppointment, CarePlanMedication]
             });
             return carePlan;
         } catch(error) {
@@ -30,7 +36,8 @@ class CarePlanService {
         try {
             console.log("careplan data --> ", data);
             const carePlan = await CarePlan.findOne({
-                where: data
+                where: data,
+                include: [Patients, Doctors, CarePlanAppointment, CarePlanMedication]
             });
             return carePlan;
         } catch(error) {

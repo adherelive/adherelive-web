@@ -37,7 +37,7 @@ module.exports = {
       },
       {
         code: "1",
-        name: "UNCONFIRMED",
+        name: "Unconfirmed",
         created_at: "2020-07-28 09:49:15",
         updated_at: "2020-07-28 09:49:15"
       },

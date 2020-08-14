@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Button, Input, Form, message } from "antd";
 
 import { injectIntl } from "react-intl";
-import messages from "../ChatFullScreen/messages";
+import messages from "./message";
 
 const { Item: FormItem } = Form;
 const { Password } = Input;

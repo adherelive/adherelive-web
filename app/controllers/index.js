@@ -4,20 +4,20 @@ const Response = require("../helper/responseFormat");
 class Controller {
   constructor() {}
 
-  raiseSuccess(res, code = 200, data = {}, message) {
+  raiseSuccess = (res, code = 200, data = {}, message) => {
     const response = new Response(true, code);
     response.setMessage(message);
     response.setData(data);
     return res.status(code).json(response.getResponse());
   }
 
-  raiseServerError(res, code = 500, error = {}, message = "") {
+  raiseServerError = (res, code = 500, error = {}, message = "") => {
     const response = new Response(false, code);
     response.setMessage(errMessage.INTERNAL_SERVER_ERROR);
     return res.status(code).json(response.getResponse());
   }
 
-  raiseClientError(res, code = 422, error, message) {
+  raiseClientError = (res, code = 422, error, message) => {
     const payload = {
       code: code,
       error: error || errMessage.CLIENT_ERROR

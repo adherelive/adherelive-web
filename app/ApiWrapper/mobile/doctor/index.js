@@ -1,5 +1,7 @@
 import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
+
+import SpecialityWrapper from "../speciality";
 import {completePath} from "../../../helper/filePath";
 
 class MDoctorWrapper extends BaseDoctor {
@@ -7,8 +9,30 @@ class MDoctorWrapper extends BaseDoctor {
         super(data);
     }
 
-    getBasicInfo = () => {
+    getReferenceInfo = async () => {
         const {_data} = this;
+        const {speciality} = _data || {};
+
+        if(speciality) {
+            const specialityDetails = await SpecialityWrapper(speciality);
+
+            console.log("speciality ----> ", _data);
+
+            return {
+                // doctors: {
+                //   [getDoctorId()] : getBasicInfo()
+                // },
+                specialities: {
+                    [specialityDetails.getSpecialityId()]: specialityDetails.getBasicInfo()
+                }
+            }
+        } else {
+            return {};
+        }
+    };
+
+    getBasicInfo = () => {
+        const {_data, getReferenceInfo} = this;
         const {
             id,
             user_id,
@@ -21,7 +45,7 @@ class MDoctorWrapper extends BaseDoctor {
             activated_on,
             profile_pic,
             city,
-            speciality,
+            speciality_id,
         } = _data || {};
         return {
             basic_info: {
@@ -32,7 +56,7 @@ class MDoctorWrapper extends BaseDoctor {
                 middle_name,
                 last_name,
                 address,
-                speciality,
+                speciality_id,
                 profile_pic: completePath(profile_pic)
             },
             city,

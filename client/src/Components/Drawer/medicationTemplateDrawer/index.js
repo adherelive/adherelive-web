@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon, DatePicker, Select, Input, message, Button, TimePicker } from "antd";
+import { Drawer, Icon, DatePicker, Select, Input, message, Button, TimePicker, Modal } from "antd";
 
 import { MEDICATION_TIMING, EVENT_TYPE, MEDICINE_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES } from "../../../constant";
 import moment from "moment";
@@ -10,10 +10,35 @@ import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import uuid from 'react-uuid';
-import messages from "../../ChatFullScreen/messages";
+import messages from "./message";
 const { Option } = Select;
 
 const { TextArea } = Input;
+
+const TemplateNameModal = ({ visible, hideModal, changeTemplateName, saveTemplate, skip, formatMessage }) => {
+    return (
+        <Modal
+            title={formatMessage(messages.saveTempQues)}
+            visible={visible}
+            onCancel={hideModal}
+            cancelButtonProps={{ style: { display: 'none' } }}
+
+            okButtonProps={{ style: { display: 'none' } }}
+        >
+            <div className='template-name-modal-container'>
+                <div className='template-name-modal-text'>{formatMessage(messages.youModified)}</div>
+                <Input
+                    placeholder={formatMessage(messages.giveName)}
+                    onChange={changeTemplateName}
+                    className='template-name-modal-input'
+                />
+                <div className='template-name-modal-name-button' onClick={saveTemplate}><div className='template-name-modal-name-text'>{formatMessage(messages.saveTemplate)} </div></div>
+                <div className='template-name-modal-skip-button' onClick={skip}><div className='template-name-modal-skip-text'>{formatMessage(messages.skip)} </div></div>
+            </div>
+
+        </Modal>
+    );
+}
 
 class TemplateDrawer extends Component {
     constructor(props) {
@@ -26,8 +51,11 @@ class TemplateDrawer extends Component {
             appointmentKeys: [],
             innerFormKey: '',
             innerFormType: '',
+            name: '',
+            createTemplate: '',
             showAddMedicationInner: false,
             showAddAppointmentInner: false,
+            showTemplateNameModal: false
         };
     }
 
@@ -207,8 +235,8 @@ class TemplateDrawer extends Component {
                     nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
                     let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
                     return (
-                        <div className='flex wp100 flex-grow-1 align-center'>
-                            <div className='drawer-block' key={key}>
+                        <div className='flex wp100 flex-grow-1 align-center' key={key}>
+                            <div className='drawer-block' >
                                 <div className='flex direction-row justify-space-between align-center'>
                                     <div className='flex align-center'>
                                         <div className='form-headings-ap'>{medicine ? medicine : "MEDICINE"}</div>
@@ -239,7 +267,7 @@ class TemplateDrawer extends Component {
 
 
                 <div className='wp100 flex align-center justify-space-between'>
-            <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.appointments)}</div>
+                    <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.appointments)}</div>
                     <div className='add-more' onClick={this.showAddAppointment}>{this.formatMessage(messages.addMore)}</div>
                 </div>
                 {
@@ -248,8 +276,8 @@ class TemplateDrawer extends Component {
                         // let timeToShow = date && start_time ? `${moment(date).format('ll')} ${moment(date).format('hh:mm')}` : date ? moment(date).format('ll') : '';
                         return (
 
-                            <div className='flex wp100 flex-grow-1 align-center'>
-                                <div className='drawer-block' key={key}>
+                            <div className='flex wp100 flex-grow-1 align-center' key={key}>
+                                <div className='drawer-block' >
 
                                     <div className='flex direction-row justify-space-between align-center'>
                                         <div className='form-headings-ap'>{reason}</div>
@@ -276,7 +304,7 @@ class TemplateDrawer extends Component {
 
         for (let medication of medicationsData) {
             const { medicine = "", medicineType = "", medicine_id = "",
-                schedule_data: {  quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
+                schedule_data: { quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
                     start_time = moment(), strength = 0, unit = "", when_to_take = [] } = {} } = medication;
 
             if (!medicine || !medicineType || !medicine_id || !quantity || !repeat || !repeat_days.length || !start_date
@@ -301,17 +329,44 @@ class TemplateDrawer extends Component {
     }
 
 
+    onPreSubmit = () => {
+        this.setState({ showTemplateNameModal: true });
+    }
+
+    hideNameModal = () => {
+        this.setState({ showTemplateNameModal: false });
+    }
+
+    setTemplateName = (event) => {
+        this.setState({ name: event.target.value });
+    }
+
+
+    submitWithName = () => {
+        const { name } = this.state;
+        if (!name) {
+            message.error(this.formatMessage(messages.validNameError))
+        } else {
+            this.setState({ createTemplate: true }, () => { this.onSubmit() });
+        }
+    }
+
+
+    submitWithOutName = () => {
+        this.setState({ name: '', createTemplate: false }, () => { this.onSubmit() });
+    }
+
 
     onSubmit = () => {
         const { submit, patientId } = this.props;
-        let { medications = {}, appointments = {} } = this.state;
+        let { medications = {}, appointments = {}, name = '', createTemplate = false } = this.state;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
         for (let medication in medicationsData) {
             let newMed = medicationsData[medication];
-            let { 
-                schedule_data: { end_date = '',  start_date = '',
-                    start_time = '',  duration } = {} } = newMed;
+            let {
+                schedule_data: { end_date = '', start_date = '',
+                    start_time = '', duration } = {} } = newMed;
             if (!start_time && !start_date && !end_date) {
                 medicationsData[medication].schedule_data.start_time = moment();
                 medicationsData[medication].schedule_data.start_date = moment();
@@ -331,8 +386,8 @@ class TemplateDrawer extends Component {
         for (let appointment in appointmentsData) {
 
             let newAppointment = appointmentsData[appointment];
-            let { reason = '',  schedule_data: { date = '', 
-                end_time = '', start_time = '', treatment_id = '', type = '',  appointment_type = '' } = {}, time_gap = '' } = newAppointment;
+            let { reason = '', schedule_data: { date = '',
+                end_time = '', start_time = '', treatment_id = '', type = '', appointment_type = '' } = {}, time_gap = '' } = newAppointment;
             appointmentsData[appointment].schedule_data.type = appointment_type ? appointment_type : type;
             if (!date && !start_time && !end_time) {
                 // let currMinutes=moment().minutes();
@@ -365,7 +420,7 @@ class TemplateDrawer extends Component {
         }
         let validate = this.validateData(medicationsData, appointmentsData);
         if (validate) {
-            submit({ medicationsData, appointmentsData });
+            submit({ medicationsData, appointmentsData, name, createTemplate });
         }
     }
 
@@ -548,12 +603,13 @@ class TemplateDrawer extends Component {
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                             {this.formatMessage(messages.cancel)}
                         </Button>
-                        <Button onClick={this.onSubmit} type="primary">
-                        {this.formatMessage(messages.submit)}
+                        <Button onClick={this.onPreSubmit} type="primary">
+                            {this.formatMessage(messages.submit)}
                         </Button>
                     </div>
                 </Drawer>
-
+                <TemplateNameModal visible={this.state.showTemplateNameModal} hideModal={this.hideNameModal}
+                    changeTemplateName={this.setTemplateName} saveTemplate={this.submitWithName} skip={this.submitWithOutName} formatMessage={this.formatMessage} />
             </Fragment>
         );
     }

@@ -9,6 +9,7 @@ import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import moment from "moment";
+import EventSchedule from "../../eventSchedules";
 
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/helper";
@@ -20,6 +21,7 @@ import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import patientService from "../../services/patients/patients.service";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import {RRule} from "rrule";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -153,10 +155,20 @@ class AppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentApiData.getAppointmentId(),
         details: appointmentApiData.getBasicInfo(),
-        status: EVENT_STATUS.PENDING,
+        status: EVENT_STATUS.SCHEDULED,
         start_time,
         end_time,
       };
+
+      // RRule
+
+      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_time).utc().toDate(),
+      });
+
+      Logger.debug("rrule ----> ", rrule.all());
 
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
@@ -318,6 +330,24 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
       };
+
+      // RRule
+      await EventSchedule.create({
+        event_id: appointmentApiData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
+        start_time,
+        end_time,
+        details: appointmentApiData.getBasicInfo()
+      });
+
+      // Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      // const rrule = new RRule({
+      //   freq: RRule.WEEKLY,
+      //   dtstart: moment(start_time).utc().toDate(),
+      //   until: moment(start_time).add(6,'months').utc().toDate()
+      // });
+      //
+      // Logger.debug("rrule ----> ", rrule.all());
 
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
