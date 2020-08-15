@@ -55,14 +55,15 @@ class TemplateDrawer extends Component {
             createTemplate: '',
             showAddMedicationInner: false,
             showAddAppointmentInner: false,
-            showTemplateNameModal: false
+            showTemplateNameModal: false,
+            templateEdited: false
         };
     }
 
 
 
     componentDidMount() {
-        const { medications: newMedications = {}, appointments: newAppointments = {} } = this.props;
+        const { medications: newMedications = {}, appointments: newAppointments = {}, templateAppointmentIDs = [], templateMedicationIDs = [] } = this.props;
         let newMedicsKeys = [];
         let newAppointsKeys = [];
         let newMedics = {};
@@ -82,7 +83,13 @@ class TemplateDrawer extends Component {
                 newAppointsKeys.push(key);
             }
         }
-        this.setState({ medications: newMedics, appointments: newAppoints, appointmentKeys: newAppointsKeys, medicationKeys: newMedicsKeys })
+        this.setState({
+            medications: newMedics,
+            appointments: newAppoints,
+            appointmentKeys: newAppointsKeys,
+            medicationKeys: newMedicsKeys,
+            templateAppointmentIDs, templateMedicationIDs
+        })
     }
 
     showInnerForm = (innerFormType, innerFormKey) => () => {
@@ -201,7 +208,7 @@ class TemplateDrawer extends Component {
             appointmentKeys.splice(appointmentKeys.indexOf(innerFormKey), 1);
         }
 
-        this.setState({ appointments, appointmentKeys, medications, medicationKeys });
+        this.setState({ appointments, appointmentKeys, medications, medicationKeys, templateEdited: true });
         this.onCloseInner();
     }
 
@@ -330,7 +337,23 @@ class TemplateDrawer extends Component {
 
 
     onPreSubmit = () => {
-        this.setState({ showTemplateNameModal: true });
+        let { medications = {}, appointments = {}, templateMedicationIDs, templateAppointmentIDs, templateEdited } = this.state;
+        let templateDataExists = (Object.values(medications).length && Object.values(appointments).length) ? true : false;
+
+        if (templateDataExists) {
+            if (Object.values(medications).length === templateMedicationIDs && Object.values(appointments).length === templateAppointmentIDs) {
+
+                if (templateEdited) {
+                    this.setState({ showTemplateNameModal: true });
+                } else {
+                    this.onSubmit()
+                }
+            } else {
+                this.setState({ showTemplateNameModal: true });
+            }
+        } else {
+            message.error(this.formatMessage(messages.emptyTemplate))
+        }
     }
 
     hideNameModal = () => {
@@ -358,7 +381,8 @@ class TemplateDrawer extends Component {
 
 
     onSubmit = () => {
-        const { submit, patientId } = this.props;
+        const { submit, patientId, carePlan: { treatment_id = 1, severity_id = 1, condition_id = 1 } = {} } = this.props;
+        console.log('86875768685767686', treatment_id, severity_id, condition_id);
         let { medications = {}, appointments = {}, name = '', createTemplate = false } = this.state;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
@@ -420,7 +444,7 @@ class TemplateDrawer extends Component {
         }
         let validate = this.validateData(medicationsData, appointmentsData);
         if (validate) {
-            submit({ medicationsData, appointmentsData, name, createTemplate });
+            submit({ medicationsData, appointmentsData, name, createTemplate, treatment_id, severity_id, condition_id });
         }
     }
 
@@ -447,7 +471,7 @@ class TemplateDrawer extends Component {
             unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time)
         };
         medications[innerFormKey] = newMedication;
-        this.setState({ medications }, () => {
+        this.setState({ medications, templateEdited: true }, () => {
             this.onCloseInner();
             this.props.dispatchClose();
         });
@@ -479,7 +503,7 @@ class TemplateDrawer extends Component {
         medicationKeys.push(key);
         // let templateId = medications[medicationKeys[0]].care_plan_template_id;
         medications[key] = newMedication;
-        this.setState({ medications, medicationKeys }, () => {
+        this.setState({ medications, medicationKeys, templateEdited: true }, () => {
             this.closeAddMedication();
         });
     }
@@ -509,11 +533,12 @@ class TemplateDrawer extends Component {
         newAppointment.provider_name = provider_name;
         newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
         appointments[innerFormKey] = newAppointment;
-        this.setState({ appointments }, () => {
+        this.setState({ appointments, templateEdited: true }, () => {
             this.onCloseInner();
             // this.props.dispatchClose();
         });
     }
+
     addAppointment = (data) => {
         let { appointments = {}, appointmentKeys = [] } = this.state;
         let key = uuid();
@@ -545,7 +570,7 @@ class TemplateDrawer extends Component {
         newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
         appointments[key] = newAppointment;
         appointmentKeys.push(key);
-        this.setState({ appointments, appointmentKeys }, () => {
+        this.setState({ appointments, appointmentKeys, templateEdited: true }, () => {
             this.closeAddAppointment();
         });
     }

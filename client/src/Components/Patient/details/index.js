@@ -378,6 +378,7 @@ class PatientDetails extends Component {
     this.state = {
       loading: true,
       templateDrawerVisible: false,
+      carePlanTemplateExists: false
     };
   }
 
@@ -399,17 +400,19 @@ class PatientDetails extends Component {
       this.setState({ templateDrawerVisible: true });
     }
     if (!showTd) {
-      getPatientCarePlanDetails(patient_id);
-      // .then(response => {
-      //   let { status = false, payload = {} } = response;
-      //   if (status) {
-      //     let { data: { show = false, care_plan_templates = {} } = {} } = payload;
-      //     const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
+      getPatientCarePlanDetails(patient_id)
+        .then(response => {
+          let { status = false, payload = {} } = response;
+          if (status) {
+            let { data: { show = false, care_plan_templates = {} } = {} } = payload;
 
+            // const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
-      //     this.setState({ carePlanTemplateId });
-      //   }
-      // });
+            let carePlanTemplateExists = care_plan_templates && Object.values(care_plan_templates).length ? true : false;
+
+            this.setState({ carePlanTemplateId, carePlanTemplateExists });
+          }
+        });
       getMedications(patient_id);
       getAppointmentsDetails();
       getAppointments(patient_id);
@@ -654,7 +657,7 @@ class PatientDetails extends Component {
       authPermissions = [],
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {}, } = this.props;
-    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0 } = this.state;
+    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false } = this.state;
 
     const {
       formatMessage,
@@ -676,6 +679,8 @@ class PatientDetails extends Component {
 
     let templateAppointments = {};
     let templateMedications = {};
+    let templateAppointmentIDs = {};
+    let templateMedicationIDs = {};
 
     let { template_appointment_ids = [], template_medication_ids = [] } = care_plan_templates[carePlanTemplateId] || {};
 
@@ -846,16 +851,16 @@ class PatientDetails extends Component {
               <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
                 <img src={noMedication} className='w200 h200' />
                 <div className='fs20 fw700'>{formatMessage(messages.nothing_to_show)}</div>
-                {/* {showUseTemplate && carePlanTemplateId ? ( */}
-                <div className='use-template-button' onClick={this.showTemplateDrawer}>
-                  <div>{formatMessage(messages.use_template)}</div>
-                </div>
-                 {/* ) : 
-                 showUseTemplate ? (
-                 <div className='use-template-button' onClick={this.handleMedicationReminder}>
-                   <div>{formatMessage(messages.add_medication)}</div>
-                 </div>) : <div />} */}
-               </div>)}
+                {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? (
+                  <div className='use-template-button' onClick={this.showTemplateDrawer}>
+                    <div>{formatMessage(messages.use_template)}</div>
+                  </div>
+                ) :
+                  showUseTemplate ? (
+                    <div className='use-template-button' onClick={this.handleMedicationReminder}>
+                      <div>{formatMessage(messages.add_medication)}</div>
+                    </div>) : <div />}
+              </div>)}
             {showTabs && (
               <div className='flex-grow-1 direction-column align-center'>
                 {/* <PatientAlertCard
@@ -908,11 +913,14 @@ class PatientDetails extends Component {
           />
         </div>)}
         <AddAppointmentDrawer carePlanId={carePlanId} />
-        {templateDrawerVisible &&(<TemplateDrawer visible={templateDrawerVisible}
+        {templateDrawerVisible && (<TemplateDrawer visible={templateDrawerVisible}
           submit={this.handleSubmitTemplate}
           dispatchClose={close}
           close={onCloseTemplate} medications={templateMedications}
-          appointments={templateAppointments} medicines={medicines}
+          appointments={templateAppointments} 
+          templateAppointmentIDs={templateAppointmentIDs}
+          templateMedicationIDs={templateMedicationIDs}
+          medicines={medicines}
           patientId={patient_id} patients={patients} carePlan={carePlan} />)}
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
         <EditMedicationReminder carePlanId={carePlanId} />

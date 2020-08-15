@@ -101,6 +101,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Please enter template name."
     },
+    emptyTemplate: {
+        id: "app.medicationTemplate.emptyTemplate",
+        description: "",
+        defaultMessage: "Please add medications and appointments for template."
+    },
 
 });
 
