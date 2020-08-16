@@ -47,8 +47,8 @@
   padding: 8px;
   border: solid 1px #e7e7e7;
   border-radius: 4px;
-  margin: 10px;
-  margin-left: 0px;
+  margin-bottom: 10px;
+  // margin-left: 0px;
 }
 
 .drawer-block-description {
@@ -139,6 +139,18 @@
 
 .drawer-select {
   .ant-select-selection {
+    .ant-select-selection__rendered {
+      width: 75%;
+    }
+    .ant-select-selection__placeholder {
+      width: 75%;
+    }
+  }
+}
+
+.template-drawer-select {
+  .ant-select-selection {
+    width: 100%;
     .ant-select-selection__rendered {
       width: 75%;
     }
@@ -256,7 +268,7 @@
   border-radius: 4px;
   background-color: #528ff0;
   height: 50px;
-  cursor:pointer
+  cursor: pointer;
 }
 .template-name-modal-name-text {
   font-size: 16px;
@@ -270,9 +282,9 @@
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  height:50px;
-  border:1px solid #d9d9d9;
-  cursor:pointer
+  height: 50px;
+  border: 1px solid #d9d9d9;
+  cursor: pointer;
 }
 
 .template-name-modal-skip-text {

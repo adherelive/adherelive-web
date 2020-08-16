@@ -81,6 +81,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "You modified over the existing template,you can save it for future use and save up time."
     },
+    youCreated: {
+        id: "app.medicationTemplate.youCreated",
+        description: "",
+        defaultMessage: "You created a new template,you can save it for future use and save up time."
+    },
     giveName: {
         id: "app.medicationTemplate.giveName",
         description: "",
@@ -105,6 +110,22 @@ const messages = defineMessages({
         id: "app.medicationTemplate.emptyTemplate",
         description: "",
         defaultMessage: "Please add medications and appointments for template."
+    },
+
+    note: {
+        id: "app.medicationTemplate.note",
+        description: "",
+        defaultMessage: "Note"
+    },
+    changesLost: {
+        id: "app.medicationTemplate.changesLost",
+        description: "",
+        defaultMessage: ": All changes made in template will be lost."
+    },
+    changesMade: {
+        id: "app.medicationTemplate.changesMade",
+        description: "",
+        defaultMessage: "You have made some changes in current template, are you sure you want to select another one?"
     },
 
 });

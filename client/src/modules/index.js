@@ -32,6 +32,7 @@ import councils from "./councils";
 import specialities from "./specialities";
 import twilio from "./twilio";
 import chatMessages from "./chatMessages";
+import care_plan_template_ids from "./carePlanTemplateIds";
 
 const rootReducer = combineReducers({
   auth,
@@ -66,7 +67,8 @@ const rootReducer = combineReducers({
   static_templates,
   specialities,
   twilio,
-  chatMessages
+  chatMessages,
+  care_plan_template_ids
 });
 
 export default (state, action) => {

@@ -378,7 +378,8 @@ class PatientDetails extends Component {
     this.state = {
       loading: true,
       templateDrawerVisible: false,
-      carePlanTemplateExists: false
+      carePlanTemplateExists: false,
+      carePlanTemplateIds: []
     };
   }
 
@@ -404,7 +405,7 @@ class PatientDetails extends Component {
         .then(response => {
           let { status = false, payload = {} } = response;
           if (status) {
-            let { data: { show = false, care_plan_templates = {} } = {} } = payload;
+            let { data: { show = false, care_plan_templates = {}, care_plan_template_ids = [] } = {} } = payload;
 
             // const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
@@ -657,7 +658,7 @@ class PatientDetails extends Component {
       authPermissions = [],
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {}, } = this.props;
-    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false } = this.state;
+    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [] } = this.state;
 
     const {
       formatMessage,
@@ -851,15 +852,15 @@ class PatientDetails extends Component {
               <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
                 <img src={noMedication} className='w200 h200' />
                 <div className='fs20 fw700'>{formatMessage(messages.nothing_to_show)}</div>
-                {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? (
-                  <div className='use-template-button' onClick={this.showTemplateDrawer}>
-                    <div>{formatMessage(messages.use_template)}</div>
-                  </div>
-                ) :
+                {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
+                <div className='use-template-button' onClick={this.showTemplateDrawer}>
+                  <div>{formatMessage(messages.use_template)}</div>
+                </div>
+                {/* ) :
                   showUseTemplate ? (
                     <div className='use-template-button' onClick={this.handleMedicationReminder}>
                       <div>{formatMessage(messages.add_medication)}</div>
-                    </div>) : <div />}
+                    </div>) : <div />} */}
               </div>)}
             {showTabs && (
               <div className='flex-grow-1 direction-column align-center'>
@@ -916,12 +917,16 @@ class PatientDetails extends Component {
         {templateDrawerVisible && (<TemplateDrawer visible={templateDrawerVisible}
           submit={this.handleSubmitTemplate}
           dispatchClose={close}
-          close={onCloseTemplate} medications={templateMedications}
-          appointments={templateAppointments} 
-          templateAppointmentIDs={templateAppointmentIDs}
-          templateMedicationIDs={templateMedicationIDs}
-          medicines={medicines}
-          patientId={patient_id} patients={patients} carePlan={carePlan} />)}
+          closeTemplateDrawer={onCloseTemplate}
+          // medications={templateMedications}
+          // appointments={templateAppointments}
+          // templateAppointmentIDs={templateAppointmentIDs}
+          // templateMedicationIDs={templateMedicationIDs}
+          // medicines={medicines}
+          patientId={patient_id}
+          carePlanTemplateIds={carePlanTemplateIds}
+          // patients={patients} 
+          carePlan={carePlan} {...this.props} />)}
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
         <EditMedicationReminder carePlanId={carePlanId} />
       </div>
