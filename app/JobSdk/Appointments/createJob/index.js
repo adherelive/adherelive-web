@@ -5,7 +5,14 @@ class CreateJob extends AppointmentJob {
         super(data);
     }
 
-    getEmailTemplate = () => {};
+    getEmailTemplate = () => {
+        const {getAppointmentData} = this;
+        const {details: {} = {}} = getAppointmentData() || {};
+
+        const templateData = [];
+
+        return templateData;
+    };
 
     getSmsTemplate = () => {};
 
@@ -13,3 +20,5 @@ class CreateJob extends AppointmentJob {
 
     getInAppTemplate = () => {};
 }
+
+export default CreateJob;

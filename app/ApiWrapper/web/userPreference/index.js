@@ -31,10 +31,10 @@ class UserPreferenceWrapper extends BaseUserPreference {
     };
 }
 
-export default async (data = null, id = null) => {
+export default async (data = null, user_id = null) => {
     if (data) {
         return new UserPreferenceWrapper(data);
     }
-    const userPreference = await userPreferenceService.getPreferenceByData({id});
+    const userPreference = await userPreferenceService.getPreferenceByData({user_id});
     return new UserPreferenceWrapper(userPreference);
 };
