@@ -39,7 +39,7 @@ class TwilioController extends Controller {
         try {
             // const userId = req.query.userId ? req.query.userId : null;
             const {userDetails: {userId}} = req;
-            const identity = userId ? userId : faker.name.findName();
+            const identity = userId ? `${userId}` : faker.name.findName();
 
             const token = await twilioService.videoTokenGenerator(identity);
 

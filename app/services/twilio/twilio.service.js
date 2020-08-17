@@ -61,6 +61,8 @@ class TwilioService {
         const grant = new VideoGrant();
         token.addGrant(grant);
 
+        console.log("token ----> ", token);
+
         return token.toJwt();
     }
 
