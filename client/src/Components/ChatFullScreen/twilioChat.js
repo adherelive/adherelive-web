@@ -483,6 +483,7 @@ class TwilioChat extends Component {
         //     return ({ messages: newVal })
         // });
 
+        this.scrollToBottom();
         this.channel.setAllMessagesConsumed();
     };
 

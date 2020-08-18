@@ -484,6 +484,7 @@ class ChatPopUp extends Component {
         //     return ({ messages: newVal })
         // });
 
+        this.scrollToBottom();
         this.channel.setAllMessagesConsumed();
     };
 

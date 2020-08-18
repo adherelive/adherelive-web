@@ -857,15 +857,15 @@ class PatientDetails extends Component {
               <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
                 <img src={noMedication} className='w200 h200' />
                 <div className='fs20 fw700'>{formatMessage(messages.nothing_to_show)}</div>
-                {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
-                <div className='use-template-button' onClick={this.showTemplateDrawer}>
-                  <div>{formatMessage(messages.use_template)}</div>
-                </div>
-                {/* ) :
+                {showUseTemplate && carePlanTemplateId ? (
+                  <div className='use-template-button' onClick={this.showTemplateDrawer}>
+                    <div>{formatMessage(messages.use_template)}</div>
+                  </div>
+                ) :
                   showUseTemplate ? (
                     <div className='use-template-button' onClick={this.handleMedicationReminder}>
                       <div>{formatMessage(messages.add_medication)}</div>
-                    </div>) : <div />} */}
+                    </div>) : <div />}
               </div>)}
             {showTabs && (
               <div className='flex-grow-1 direction-column align-center'>
@@ -920,19 +920,28 @@ class PatientDetails extends Component {
           />
         </div>)}
         <AddAppointmentDrawer carePlanId={carePlanId} />
-        {templateDrawerVisible && (<TemplateDrawer visible={templateDrawerVisible}
-          submit={this.handleSubmitTemplate}
-          dispatchClose={close}
-          closeTemplateDrawer={onCloseTemplate}
-          // medications={templateMedications}
-          // appointments={templateAppointments}
-          // templateAppointmentIDs={templateAppointmentIDs}
-          // templateMedicationIDs={templateMedicationIDs}
-          // medicines={medicines}
-          patientId={patient_id}
-          carePlanTemplateIds={carePlanTemplateIds}
-          // patients={patients} 
-          carePlan={carePlan} {...this.props} />)}
+        {templateDrawerVisible && (
+          // <TemplateDrawer visible={templateDrawerVisible}
+          //   submit={this.handleSubmitTemplate}
+          //   dispatchClose={close}
+          //   closeTemplateDrawer={onCloseTemplate}
+          //   // medications={templateMedications}
+          //   // appointments={templateAppointments}
+          //   // templateAppointmentIDs={templateAppointmentIDs}
+          //   // templateMedicationIDs={templateMedicationIDs}
+          //   // medicines={medicines}
+          //   patientId={patient_id}
+          //   carePlanTemplateIds={carePlanTemplateIds}
+          //   // patients={patients} 
+          //   carePlan={carePlan} {...this.props} />
+          <TemplateDrawer visible={templateDrawerVisible}
+            submit={this.handleSubmitTemplate}
+            dispatchClose={close}
+            close={onCloseTemplate} medications={templateMedications}
+            appointments={templateAppointments} medicines={medicines}
+            patientId={patient_id} patients={patients} carePlan={carePlan} />
+
+        )}
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
         <EditMedicationReminder carePlanId={carePlanId} />
       </div>

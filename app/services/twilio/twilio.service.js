@@ -49,6 +49,8 @@ class TwilioService {
         Logger.debug("ipmGrant ---> ", ipmGrant);
         token.addGrant(ipmGrant);
 
+        console.log("token ----> ", token);
+
         return token.toJwt();
     }
 
@@ -58,6 +60,8 @@ class TwilioService {
 
         const grant = new VideoGrant();
         token.addGrant(grant);
+
+        console.log("token ----> ", token);
 
         return token.toJwt();
     }
