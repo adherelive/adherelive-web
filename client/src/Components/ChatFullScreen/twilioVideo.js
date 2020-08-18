@@ -472,7 +472,7 @@ class VideoComponent extends Component {
                         >
                             <img
                                 style={{ height: "40px", width: "40px", borderRadius: '50%' }}
-                                src={otherUserdata.profilePic}
+                                src={otherUserdata.profilePic||UserDpPlaceholder}
                                 alt="chatIcon"
                             />{" "}
                             <span
@@ -485,7 +485,7 @@ class VideoComponent extends Component {
                             <div className="flex column align-items-center justify-content-center WaitingForUser">
                                 <div className="mb10">
                                     <img
-                                        src={otherUserdata.profilePic}
+                                        src={otherUserdata.profilePic||UserDpPlaceholder}
                                         style={{
                                             cursor: "pointer",
                                             marginLeft: 24,
