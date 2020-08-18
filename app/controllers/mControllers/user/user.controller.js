@@ -115,6 +115,14 @@ class MobileUserController extends Controller {
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
+      const smsPayload = {
+        // countryCode: prefix,
+        phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
+        message: `Hello from Adhere! Your OTP for login is ${otp}`
+      };
+
+      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+
         // let permissions = {
         //   permissions: []
         // };
