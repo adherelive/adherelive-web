@@ -1,3 +1,6 @@
+import EmailManager from "../communications/email/emailManger";
+import SmsManager from "../communications/sms/smsManger";
+
 class EventExecutor {
     async sendMail(mailData, scheduledJobId) {
         try {
