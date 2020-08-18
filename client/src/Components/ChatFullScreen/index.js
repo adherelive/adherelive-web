@@ -43,7 +43,7 @@ class ChatFullScreen extends Component {
 
 
         let doctorUserId = '';   //user_id of doctor
-        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id];
+        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id] || {};
         for (let doc of Object.values(doctors)) {
             let { basic_info: { user_id, id = 1 } } = doc;
             if (parseInt(user_id) === parseInt(authenticated_user)) {
@@ -98,7 +98,7 @@ class ChatFullScreen extends Component {
         let { roomId, patientId, doctorUserId } = this.state;
         let { patients = {} } = this.props;
 
-        const { basic_info: { first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[patientId];
+        const { basic_info: { first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[patientId] || {};
         return (
             <div className="chat-screen-container">
                 {/* {placeCall

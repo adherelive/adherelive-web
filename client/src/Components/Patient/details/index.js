@@ -254,6 +254,7 @@ const PatientCard = ({
   formatMessage,
   openChat
 }) => {
+
   return (
     <div className="patient-card tac">
       <img
@@ -391,9 +392,11 @@ class PatientDetails extends Component {
       getAppointmentsDetails,
       patient_id,
       care_plans,
+      closePopUp,
       currentCarePlanId,
       show_template_drawer = {}
     } = this.props;
+    closePopUp();
     this.getData();
     const { show: showTd = false } = show_template_drawer;
     // let isCarePlanDataPresent = currentCarePlanId ? true : false;
@@ -770,13 +773,14 @@ class PatientDetails extends Component {
 
 
     const {
-      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456', user_id: patientUserId = '' }
+      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456', user_id: patientUserId = '' }, details: { profile_pic: patientDp = userDp } = {}
     } = patients[patient_id] || {};
 
 
     let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
 
     const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
+
 
 
     const {
@@ -790,6 +794,7 @@ class PatientDetails extends Component {
         profile_picture: patient_display_picture,
       } = {},
     } = this.props;
+
 
     const {
       treatment_details: {
@@ -816,7 +821,7 @@ class PatientDetails extends Component {
         <div className="flex">
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
             <PatientCard
-              patient_display_picture={patient_display_picture}
+              patient_display_picture={patientDp ? patientDp : userDp}
               patient_first_name={first_name}
               patient_middle_name={middle_name}
               patient_last_name={last_name}
@@ -911,6 +916,7 @@ class PatientDetails extends Component {
             placeVideoCall={this.openVideoChatTab(roomId)}
             patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''}
             maximizeChat={this.maximizeChat}
+            patientDp={patientDp}
           />
         </div>)}
         <AddAppointmentDrawer carePlanId={carePlanId} />

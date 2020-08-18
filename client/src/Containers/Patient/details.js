@@ -9,7 +9,7 @@ import { searchMedicine } from "../../modules/medicines";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
 import { DRAWER } from "../../constant";
-import { openPopUp } from "../../modules/chat";
+import { openPopUp, closePopUp } from "../../modules/chat";
 
 const mapStateToProps = (state, ownProps) => {
     const { users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}, treatments = {},
@@ -62,7 +62,8 @@ const mapDispatchToProps = dispatch => {
         addCarePlanMedicationsAndAppointments: (payload, carePlanId) => dispatch(addCarePlanMedicationsAndAppointments(payload, carePlanId)),
         openEditAppointmentDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_APPOINTMENT, payload })),
         openEditMedicationDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_MEDICATION, payload })),
-        openPopUp: () => dispatch(openPopUp())
+        openPopUp: () => dispatch(openPopUp()),
+        closePopUp: () => dispatch(closePopUp())
     };
 };
 

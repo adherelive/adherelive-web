@@ -141,7 +141,7 @@ class ClinicRegister extends Component {
                                         <div>{`${time.startTime ? moment(time.startTime).format('hh:mm a') : ''}-`}</div>
                                         <div>{time.endTime ? `${moment(time.endTime).format('hh:mm a')}${index < timings[day].length - 1 ? ', ' : ' '} ` : ''}</div>
                                     </div>)
-                            }) : this.formatMessage(messages.close)}</div>
+                            }) : this.formatMessage(messages.closed)}</div>
                     </div>
                 )
             }))

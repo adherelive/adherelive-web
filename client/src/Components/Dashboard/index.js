@@ -35,8 +35,9 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        const { searchMedicine, getGraphs, doctors = {}, authenticated_user } = this.props;
+        const { searchMedicine, getGraphs, doctors = {}, authenticated_user, closePopUp } = this.props;
         // getInitialData();
+        closePopUp();
         let doctorUserId = '';   //user_id of doctor
         for (let doc of Object.values(doctors)) {
             let { basic_info: { user_id, id = 1 } } = doc;
@@ -190,7 +191,7 @@ class Dashboard extends Component {
             drawer: { visible: drawerVisible = false } = {},
             twilio: { patientId: chatPatientId = 1 } } = this.props;
         const { formatMessage, renderChartTabs } = this;
-        let { basic_info: { user_id: patientUserId = '', first_name = '', middle_name = '', last_name = '' } = {} } = patients[chatPatientId] || {};
+        let { basic_info: { user_id: patientUserId = '', first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[chatPatientId] || {};
 
 
         const { visible, graphsToShow, visibleModal, doctorUserId } = this.state;
@@ -251,6 +252,7 @@ class Dashboard extends Component {
                         placeVideoCall={this.openVideoChatTab}
                         patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''}
                         maximizeChat={this.maximizeChat}
+                        patientDp={patientDp}
                     />
                 </div>)}
 

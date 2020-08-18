@@ -14,7 +14,7 @@ import { injectIntl } from "react-intl";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
 
-const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false }) => {
+const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, otherTyping = false, formatMessage }) => {
     let pic = patientName ?
         <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
     return (
@@ -24,7 +24,7 @@ const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false 
 
                 <div className='flex direction-column align-center justify-center'>
                     <div className='doctor-name-chat-header medium mt4'>{patientName}</div>
-                    <div className='doctor-name-chat-header-online'>{isOnline ? 'online' : ''}</div>
+                    <div className='doctor-name-chat-header-online'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : ''}</div>
                 </div>
             </div>
 
@@ -50,7 +50,8 @@ class ChatForm extends Component {
         if (event) {
             event.preventDefault();
         }
-        if (this.state.newMessage.length > 0) {
+        let trimmedMessage = this.state.newMessage.trim();
+        if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
             const message = this.state.newMessage;
             this.setState({ newMessage: "" });
             this.props.channel.sendMessage(message);
@@ -104,7 +105,7 @@ class ChatForm extends Component {
                     beforeUpload={this.beforeUpload}
                     showUploadList={false}
                     multiple={false}
-                    accept="image/*"
+                    accept=".jpg,.jpeg,.png,.pdf,.mp4"
                     className="chat-upload-component"
                 >
                     <div className="chat-upload-btn">
@@ -232,7 +233,7 @@ class MediaComponent extends Component {
             }
         }
 
-        return <div>Message Cannot be Displayed</div>;
+        return <div>{this.props.formatMessage(messages.cantDisplay)}</div>;
     };
 
     render() {
@@ -252,6 +253,7 @@ class TwilioChat extends Component {
             newMessage: "",
             other_user_online: false,
             otherUserLastConsumedMessageIndex: null,
+            other_typing: false
         };
         this.channelName = "test";
     }
@@ -265,7 +267,46 @@ class TwilioChat extends Component {
     componentDidMount() {
         this.getToken();
         this.scrollToBottom();
+
+        // console.log('didMount======================>');
+        this.intervalID = setInterval(() => this.tick(), 1000);
     }
+
+    componentWillUnmount() {
+
+        clearInterval(this.intervalID);
+    }
+
+    tick = async () => {
+        const { authenticated_user } = this.props;
+        const members = this.channel ? await this.channel.getMembers() : [];
+        let other_user_online = false;
+        let otherUserLastConsumedMessageIndex = 0;
+
+        await Promise.all(members.map(async mem => {
+            if (mem.identity !== `${authenticated_user}`) {
+                const other_user = await mem.getUser();
+
+                other_user_online = other_user.online;
+                otherUserLastConsumedMessageIndex = mem.lastConsumedMessageIndex;
+
+
+                other_user.on("updated", obj => {
+                    console.log("user_updated", obj);
+                });
+            }
+        }));
+        if (otherUserLastConsumedMessageIndex) {
+            this.setState({
+                other_user_online,
+                otherUserLastConsumedMessageIndex
+            });
+        } else {
+            this.setState({
+                other_user_online
+            });
+        }
+    };
 
     getToken = async () => {
         const {
@@ -280,8 +321,10 @@ class TwilioChat extends Component {
                 "test";
         // this.channelName = '1-adhere-3';
 
+        // console.log('didMount======================>getToken', roomId);
         fetchChatAccessToken(authenticated_user).then(result => {
             this.setState((prevState, props) => {
+                // console.log('didMount======================>getToken', props.twilio.chatToken);
                 return {
                     token: props.twilio.chatToken
                 };
@@ -293,13 +336,33 @@ class TwilioChat extends Component {
     formatMessage = data => this.props.intl.formatMessage(data);
 
     initChat = () => {
+        // console.log('didMount======================>initChat');
         this.chatClient = new Chat(this.state.token);
         this.chatClient.initialize().then(this.clientInitiated.bind(this));
     };
 
+    checkOtherTyping = (obj) => {
+        const { authenticated_user = 1 } = this.props
+        const { identity = null } = obj;
+        if (identity !== `${authenticated_user}`) {
+            // console.log("typing started:::::::::::::: 11");
+            this.setState({ other_typing: true });
+        }
+    }
+
+    otherTypingStopped = (obj) => {
+        const { authenticated_user = 1 } = this.props
+        const { identity = null } = obj;
+        if (identity !== `${authenticated_user}`) {
+            // console.log("typing stopped:::::::::::::: 11");
+            this.setState({ other_typing: false });
+        }
+    }
+
     clientInitiated = async () => {
         const { authenticated_user } = this.props;
 
+        // console.log('didMount======================>clientInitiated');
         this.setState({ chatReady: true }, () => {
             this.chatClient
                 .getChannelByUniqueName(this.channelName)
@@ -330,7 +393,19 @@ class TwilioChat extends Component {
                 .then(async () => {
                     this.channel.getMessages().then(this.messagesLoaded);
                     this.channel.on("messageAdded", this.messageAdded);
-
+                    this.channel.on("typingStarted", obj => {
+                        // console.log("typing started:::::::::::::: ", obj);
+                        this.checkOtherTyping(obj);
+                        // const { identity = null } = obj;
+                        // if (identity !== `${authenticated_user}`) {
+                        //     console.log("typing started:::::::::::::: 11");
+                        //     this.setState({ other_typing: true });
+                        // }
+                    });
+                    this.channel.on("typingEnded", obj => {
+                        // console.log("typing stopped: :::::: ", obj);
+                        this.otherTypingStopped(obj);
+                    });
                     const members = await this.channel.getMembers();
                     let other_user_online = false;
                     let otherUserLastConsumedMessageIndex = 0;
@@ -348,6 +423,7 @@ class TwilioChat extends Component {
                             });
                         }
                     }));
+                    // console.log('didMount======================>clientInitiatedlast');
                     this.setState({
                         other_user_online,
                         otherUserLastConsumedMessageIndex
@@ -374,36 +450,29 @@ class TwilioChat extends Component {
     };
 
     messagesLoaded = messagePage => {
-        console.log("4567895678  8237897323 on MEssage Added------------->   ", messagePage.items.length);
+        console.log('didMount======================>messagesLoaded', messagePage.length);
         const { roomId, addMessageOfChat } = this.props
         if (messagePage.items.length) {
             let message = messagePage.items[0];
             const { channel: { channelState: { uniqueName = '' } = {} } = {} } = message;
-            if(!uniqueName.localeCompare(roomId)){
+            if (!uniqueName.localeCompare(roomId)) {
                 let messages = this.updateMessageRecieved(messagePage.items);
                 addMessageOfChat(roomId, messages);
-                this.setState(
-                    {
-                        messagesLoading: false,
-                        // messages: messagePage.items,
-                        // messages
-                    },
-                    this.scrollToBottom
-                );
-            }else{
-                let messages = this.updateMessageRecieved(messagePage.items);
-                // addMessageOfChat(roomId, messages);
-                this.setState(
-                    {
-                        messagesLoading: false,
-                        // messages: messagePage.items,
-                        // messages
-                    },
-                    this.scrollToBottom
-                );
+                // this.setState(
+                //     {
+                //         messagesLoading: false
+                //     },
+                //     this.scrollToBottom
+                // );
             }
         }
-        
+        this.setState(
+            {
+                messagesLoading: false,
+            },
+            this.scrollToBottom
+        );
+
     };
 
     messageAdded = (message) => {
@@ -432,8 +501,8 @@ class TwilioChat extends Component {
                 this.setState({ messagesLoading: true });
             }
             this.getToken();
+            this.scrollToBottom();
         }
-        this.scrollToBottom();
     }
 
     logOut = event => {
@@ -449,7 +518,7 @@ class TwilioChat extends Component {
 
 
     renderMessages() {
-        const { authenticated_user, users, roomId, chatMessages } = this.props;
+        const { authenticated_user, users, roomId, chatMessages, patientDp, patientName } = this.props;
         const { otherUserLastConsumedMessageIndex } = this.state;
         const { messages: messagesArray = [] } = chatMessages[roomId] || {};
         if (messagesArray.length > 0) {
@@ -462,7 +531,7 @@ class TwilioChat extends Component {
                 const user = users[message.state.author]
                     ? users[message.state.author]
                     : {};
-                const { basicInfo: { profilePicLink: profilePic } = {} } = user;
+                // const { basicInfo: { profilePicLink: profilePic } = {} } = user;
                 messagesToRender.push(
                     <Fragment key={message.state.sid}>
                         {parseInt(message.state.author) !== parseInt(authenticated_user) ? (
@@ -475,7 +544,7 @@ class TwilioChat extends Component {
                     > */}
                                 <div className="chat-avatar">
                                     <span className="twilio-avatar">
-                                        <Avatar src={profilePic} />
+                                        <Avatar src={patientDp} />
                                     </span>
                                     {message.type === "media" ? (
                                         <div className="chat-text">
@@ -514,7 +583,7 @@ class TwilioChat extends Component {
                                         <div className="chat-time mr-4">
                                             {moment(message.state.timestamp).format("H:mm")}
                                         </div>
-                                        <img className={index < otherUserLastConsumedMessageIndex ? `h14 mt4` : `h12 mt4`} src={index < otherUserLastConsumedMessageIndex ? DoubleTick : SingleTick} />
+                                        <img className={index < otherUserLastConsumedMessageIndex ? `h14 mt4` : `h12 mt4`} src={index <= otherUserLastConsumedMessageIndex ? DoubleTick : SingleTick} />
                                     </div>
                                     {/* </div> */}
                                     {/* <div className="chat-avatar left">
@@ -533,11 +602,12 @@ class TwilioChat extends Component {
 
     render() {
         const { ChatForm } = this;
-        const { messagesLoading = false, other_user_online = false } = this.state;
+
+        const { messagesLoading = false, other_user_online = false, other_typing = false } = this.state;
         const { placeVideoCall, patientDp = '', patientName = '' } = this.props;
         return (
             <Fragment>
-                <Header placeVideoCall={placeVideoCall} patientName={patientName} patientDp={patientDp} isOnline={other_user_online} />
+                <Header placeVideoCall={placeVideoCall} patientName={patientName} patientDp={patientDp} isOnline={other_user_online} otherTyping={other_typing} formatMessage={this.formatMessage} />
                 <div className="twilio-chat-container">
                     <div className="twilio-chat-body">
                         {messagesLoading ?

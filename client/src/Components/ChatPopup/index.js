@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Form, Input, Button, Spin, Avatar, Upload } from "antd";
+import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
 import moment from 'moment';
 import Chat from "twilio-chat";
 import DoubleTick from "../../Assets/images/double-tick-indicator.png";
@@ -16,15 +16,15 @@ import { injectIntl } from "react-intl";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
 
-const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, onHeaderClick, close, maximizeChat }) => {
+const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, onHeaderClick, close, maximizeChat, otherTyping = false, formatMessage }) => {
     // let pic = patientName ?
     //     <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
     return (
-        <div className='chat-patientListheader-PopUp' >
-            <div className='flex direction-row align-center'>
+        <div className='chat-patientListheader-PopUp pt4 pb4' >
+            <div className='flex direction-row align-center '>
                 <div className='flex direction-column align-center justify-center'>
-                    <div className='doctor-name-chat-header mb2 pointer' onClick={onHeaderClick}>{patientName}</div>
-                    {/* <div className='doctor-name-chat-header-online'>{isOnline ? 'online' : ''}</div> */}
+                    <div className='doctor-name-chat-header-popup pointer' onClick={onHeaderClick}>{patientName}</div>
+                    <div className='doctor-name-chat-header-online-popup'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : ''}</div>
                 </div>
             </div>
             <div>
@@ -72,7 +72,8 @@ class ChatForm extends Component {
         if (event) {
             event.preventDefault();
         }
-        if (this.state.newMessage.length > 0) {
+        let trimmedMessage = this.state.newMessage.trim();
+        if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
             const message = this.state.newMessage;
             this.setState({ newMessage: "" });
             this.props.channel.sendMessage(message);
@@ -145,7 +146,8 @@ class MediaComponent extends Component {
         this.state = {
             url: "",
             blobUrl: "",
-            message: ""
+            message: "",
+            imageModalVisible: false
         };
     }
 
@@ -157,7 +159,36 @@ class MediaComponent extends Component {
 
     componentWillUnmount() { }
 
+    imageModal = () => {
+
+        return (
+            <Modal
+                className={"chat-media-modal"}
+                visible={this.state.imageModalVisible}
+                title={' '}
+                closable
+                mask
+                maskClosable
+                onCancel={this.closeModal}
+                wrapClassName={"chat-media-modal-dialog"}
+                width={`50%`}
+                footer={null}
+            >
+                <img src={this.state.url} alt="qualification document" className="wp100" />
+            </Modal>
+        );
+    };
+    closeModal = () => {
+
+        this.setState({ imageModalVisible: false });
+    }
+
+    openModal = () => {
+
+        this.setState({ imageModalVisible: true });
+    }
     onClickDownloader = e => {
+        console.log('378526387462378468923');
         e.preventDefault();
         const { url, message } = this.state;
         if (url && url.length > 0) {
@@ -193,10 +224,10 @@ class MediaComponent extends Component {
                     <Fragment>
                         {url.length > 0 ? (
                             <div
-                            // onClick={this.onClickDownloader}
+                                onClick={this.openModal}
                             >
                                 <img
-                                    className="chat-media-message-image"
+                                    className="chat-media-message-image pointer"
                                     src={url}
                                     alt="Uploaded Image"
                                 />
@@ -208,6 +239,7 @@ class MediaComponent extends Component {
                                     alt="Uploaded Image"
                                 />
                             )}
+                        {this.imageModal()}
                     </Fragment>
                 );
             } else {
@@ -222,7 +254,7 @@ class MediaComponent extends Component {
             }
         }
 
-        return <div>Message Cannot be Displayed</div>;
+        return <div>{this.props.formatMessage(messages.cantDisplay)}</div>;
     };
 
     render() {
@@ -242,6 +274,7 @@ class ChatPopUp extends Component {
             newMessage: "",
             other_user_online: false,
             otherUserLastConsumedMessageIndex: null,
+            other_typing: false
         };
         this.channelName = "test";
     }
@@ -260,7 +293,47 @@ class ChatPopUp extends Component {
     componentDidMount() {
         this.getToken();
         this.scrollToBottom();
+
+        this.intervalID = setInterval(() => this.tick(), 2000);
     }
+
+    componentWillUnmount() {
+
+        clearInterval(this.intervalID);
+    }
+
+
+    tick = async () => {
+        console.log('897987 tick called78934793');
+        const { authenticated_user } = this.props;
+        const members = this.channel ? await this.channel.getMembers() : [];
+        let other_user_online = false;
+        let otherUserLastConsumedMessageIndex = 0;
+
+        await Promise.all(members.map(async mem => {
+            if (mem.identity !== `${authenticated_user}`) {
+                const other_user = await mem.getUser();
+
+                other_user_online = other_user.online;
+                otherUserLastConsumedMessageIndex = mem.lastConsumedMessageIndex;
+
+
+                other_user.on("updated", obj => {
+                    console.log("user_updated", obj);
+                });
+            }
+        }));
+        if (otherUserLastConsumedMessageIndex) {
+            this.setState({
+                other_user_online,
+                otherUserLastConsumedMessageIndex
+            });
+        } else {
+            this.setState({
+                other_user_online
+            });
+        }
+    };
 
 
     formatMessage = data => this.props.intl.formatMessage(data);
@@ -291,6 +364,25 @@ class ChatPopUp extends Component {
         this.chatClient.initialize().then(this.clientInitiated.bind(this));
     };
 
+
+    checkOtherTyping = (obj) => {
+        const { authenticated_user = 1 } = this.props
+        const { identity = null } = obj;
+        if (identity !== `${authenticated_user}`) {
+            // console.log("typing started:::::::::::::: 11");
+            this.setState({ other_typing: true });
+        }
+    }
+
+    otherTypingStopped = (obj) => {
+        const { authenticated_user = 1 } = this.props
+        const { identity = null } = obj;
+        if (identity !== `${authenticated_user}`) {
+            // console.log("typing stopped:::::::::::::: 11");
+            this.setState({ other_typing: false });
+        }
+    }
+
     clientInitiated = async () => {
         const { authenticated_user } = this.props;
         this.setState({ chatReady: true }, () => {
@@ -320,7 +412,19 @@ class ChatPopUp extends Component {
                 .then(async () => {
                     this.channel.getMessages().then(this.messagesLoaded);
                     this.channel.on("messageAdded", this.messageAdded);
-
+                    this.channel.on("typingStarted", obj => {
+                        // console.log("typing started:::::::::::::: ", obj);
+                        this.checkOtherTyping(obj);
+                        // const { identity = null } = obj;
+                        // if (identity !== `${authenticated_user}`) {
+                        //     console.log("typing started:::::::::::::: 11");
+                        //     this.setState({ other_typing: true });
+                        // }
+                    });
+                    this.channel.on("typingEnded", obj => {
+                        // console.log("typing stopped: :::::: ", obj);
+                        this.otherTypingStopped(obj);
+                    });
                     const members = await this.channel.getMembers();
 
                     members.map(async mem => {
@@ -393,8 +497,8 @@ class ChatPopUp extends Component {
         if (roomId !== prevRoomId) {
             this.setState({ messagesLoading: true });
             this.getToken();
+            this.scrollToBottom();
         }
-        this.scrollToBottom();
     }
 
     logOut = event => {
@@ -410,7 +514,7 @@ class ChatPopUp extends Component {
 
 
     renderMessages() {
-        const { authenticated_user, users, roomId, chatMessages } = this.props;
+        const { authenticated_user, users, roomId, chatMessages, patientDp } = this.props;
         const { otherUserLastConsumedMessageIndex } = this.state;
         const { messages: messagesArray = [] } = chatMessages[roomId] || {};
         if (messagesArray.length > 0) {
@@ -422,7 +526,7 @@ class ChatPopUp extends Component {
                 const user = users[message.state.author]
                     ? users[message.state.author]
                     : {};
-                const { basicInfo: { profilePicLink: profilePic } = {} } = user;
+                // const { basicInfo: { profilePicLink: profilePic } = {} } = user;
                 messagesToRender.push(
                     <Fragment key={message.state.sid}>
                         {parseInt(message.state.author) !== parseInt(authenticated_user) ? (
@@ -435,7 +539,7 @@ class ChatPopUp extends Component {
                     > */}
                                 <div className="chat-avatar">
                                     <span className="twilio-avatar">
-                                        <Avatar src={profilePic} />
+                                        <Avatar src={patientDp} />
                                     </span>
                                     {message.type === "media" ? (
                                         <div className="chat-text">
@@ -493,7 +597,8 @@ class ChatPopUp extends Component {
 
     render() {
         const { ChatForm } = this;
-        const { messagesLoading = false, other_user_online = false } = this.state;
+        const { messagesLoading = false, other_user_online = false, other_typing = false } = this.state;
+        console.log('3545235235235234534532423523', this.props);
         const { placeVideoCall, patientName = '', chats: { minimized = false } = {}, minimizePopUp, maximizePopUp, closePopUp, maximizeChat } = this.props;
         if (minimized) {
             return (
@@ -504,7 +609,7 @@ class ChatPopUp extends Component {
         return (
             <Fragment>
                 <div className={'popup-chatWindow'}>
-                    <Header placeVideoCall={placeVideoCall} patientName={patientName} isOnline={other_user_online} onHeaderClick={minimizePopUp} close={closePopUp} maximizeChat={maximizeChat} />
+                    <Header placeVideoCall={placeVideoCall} patientName={patientName} isOnline={other_user_online} onHeaderClick={minimizePopUp} close={closePopUp} maximizeChat={maximizeChat} otherTyping={other_typing} formatMessage={this.formatMessage} />
                     <div className="twilio-chat-container-popUp">
                         <div className="twilio-chat-body">
                             {messagesLoading ?
