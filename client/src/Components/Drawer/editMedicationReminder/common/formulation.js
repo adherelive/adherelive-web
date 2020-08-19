@@ -1,8 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { Select, Form, Radio } from "antd";
 import { injectIntl } from "react-intl";
-import { MEDICINE_TYPE } from '../../../../constant';
+import { MEDICINE_TYPE, TABLET, SYRUP, SYRINGE, MEDICINE_UNITS } from '../../../../constant';
 import messages from "../message";
+
+import unitField from "./medicationStrengthUnit";
+import chooseMedicationField from "./medicationStage";
 
 const FIELD_NAME = "formulation";
 
@@ -35,16 +38,41 @@ class Formulation extends Component {
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
+    setUnitMg = () => {
+        const {
+            form: { setFieldsValue }
+        } = this.props;
+        setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.MG });
+    }
+
+    setUnitMl = () => {
+        const {
+            form: { setFieldsValue }
+        } = this.props;
+        setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.ML });
+    }
+
 
     render() {
-        const { form } = this.props;
+        const { form,
+            payload: { id: medication_id } = {},
+            medications ,
+            medicationData = {}} = this.props;
         const {
             getFieldDecorator,
             getFieldError,
-            isFieldTouched
+            isFieldTouched,
+            getFieldValue
         } = form;
         const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
+        let { basic_info: { details: { medicine_type = '1' } = {} } = {} } = medications[medication_id] || {};
+        const { schedule_data: { medicine_type: medType = '' } = {} } = medicationData;
 
+        if (medType) {
+            medicine_type = medType;
+        }
+
+        console.log('6757868758675887',medicine_type,medType,medicationData);
 
         return (
             <div className="mb20 select-days-form-content">
@@ -56,14 +84,16 @@ class Formulation extends Component {
                     validateStatus={error ? "error" : ""}
                     help={error || ""}
                 >
-                    {getFieldDecorator(FIELD_NAME, {})(
+                    {getFieldDecorator(FIELD_NAME, {
+                        initialValue: medicine_type
+                    })(
                         <RadioGroup
                             className="flex justify-content-end radio-formulation"
                             buttonStyle="solid"
                         >
-                            <RadioButton value={MEDICINE_TYPE.SYRUP} >{this.formatMessage(messages.syrup)}</RadioButton>
-                            <RadioButton value={MEDICINE_TYPE.TABLET} >{this.formatMessage(messages.tablet)}</RadioButton>
-                            <RadioButton value={MEDICINE_TYPE.INJECTION} >{this.formatMessage(messages.syringe)}</RadioButton>
+                            <RadioButton value={SYRUP} onClick={this.setUnitMl}>{this.formatMessage(messages.syrup)}</RadioButton>
+                            <RadioButton value={TABLET} onClick={this.setUnitMg}>{this.formatMessage(messages.tablet)}</RadioButton>
+                            <RadioButton value={SYRINGE} onClick={this.setUnitMl}>{this.formatMessage(messages.syringe)}</RadioButton>
                         </RadioGroup>
                     )}
                 </FormItem>

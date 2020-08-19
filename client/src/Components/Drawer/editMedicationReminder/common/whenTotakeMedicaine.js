@@ -358,7 +358,7 @@ class WhenToTakeMedication extends Component {
 
   onClickOd = () => {
 
-    const { form } = this.props;
+    const { form, enableSubmit } = this.props;
     const { selected_timing } = this.state;
     const keys = form.getFieldValue("keys");
     if (keys.length === 3) {
@@ -367,10 +367,11 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 2) {
       this.remove(keys[1]);
     }
+    enableSubmit();
   }
   onClickBd = () => {
 
-    const { form } = this.props;
+    const { form,enableSubmit } = this.props;
     const { selected_timing } = this.state;
     const keys = form.getFieldValue("keys");
     if (keys.length === 3) {
@@ -378,11 +379,12 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 1) {
       this.add();
     }
+    enableSubmit();
   }
 
   onClickTds = () => {
 
-    const { form } = this.props;
+    const { form,enableSubmit } = this.props;
     const { selected_timing } = this.state;
     const keys = form.getFieldValue("keys");
     if (keys.length === 2) {
@@ -391,6 +393,7 @@ class WhenToTakeMedication extends Component {
       this.add();
       this.add();
     }
+    enableSubmit();
   }
 
   add = () => {

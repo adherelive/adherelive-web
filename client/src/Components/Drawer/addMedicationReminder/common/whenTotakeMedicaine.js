@@ -404,10 +404,10 @@ class WhenToTakeMedication extends Component {
     const {
       isFieldTouched,
       getFieldError,
-      //getFieldValue
+      getFieldValue
     } = form;
+    const keys = getFieldValue("keys") || [];
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-    console.log('584845648465666666664', this.state.selected_timing, form.getFieldValue("keys"));
 
     // const { getInitialValue } = this;
 
@@ -440,9 +440,9 @@ class WhenToTakeMedication extends Component {
           className="flex justify-content-end radio-formulation mb10"
           buttonStyle="solid"
         >
-          <RadioButton value={1} onClick={onClickOd} >{this.formatMessage(messages.od)}</RadioButton>
-          <RadioButton value={2} onClick={onClickBd}>{this.formatMessage(messages.bd)}</RadioButton>
-          <RadioButton value={3} onClick={onClickTds}>{this.formatMessage(messages.tds)}</RadioButton>
+          <RadioButton value={1} checked={keys.length === 1} onClick={onClickOd} >{this.formatMessage(messages.od)}</RadioButton>
+          <RadioButton value={2} checked={keys.length === 2} onClick={onClickBd}>{this.formatMessage(messages.bd)}</RadioButton>
+          <RadioButton value={3} checked={keys.length === 3} onClick={onClickTds}>{this.formatMessage(messages.tds)}</RadioButton>
         </RadioGroup>
 
         {getFormItems()}

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, DatePicker, Select, Input, message, Button, TimePicker } from "antd";
 
-import { MEDICATION_TIMING, EVENT_TYPE, MEDICINE_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES } from "../../../constant";
+import { MEDICATION_TIMING, EVENT_TYPE, MEDICINE_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRINGE, SYRUP } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
@@ -187,7 +187,8 @@ class TemplateDrawer extends Component {
 
                 </div>
                 {medicationKeys.map(key => {
-                    let { medicine, medicineType, schedule_data: { when_to_take = '', start_date = moment() } = {} } = medications[key];
+                    let { medicine, medicineType, schedule_data: { when_to_take = '', start_date = moment(),medicine_type='1' } = {},  } = medications[key];
+                    console.log('64576574765758758',medicine_type,medications[key]);
                     when_to_take.sort();
                     let nextDueTime = moment().format('HH:MM A');
                     let closestWhenToTake = 0;
@@ -212,7 +213,7 @@ class TemplateDrawer extends Component {
                                 <div className='flex direction-row justify-space-between align-center'>
                                     <div className='flex align-center'>
                                         <div className='form-headings-ap'>{medicine ? medicine : "MEDICINE"}</div>
-                                        {medicineType && (<img src={medicineType == MEDICINE_TYPE.TABLET ? TabletIcon : InjectionIcon} className={'medication-image-tablet'} />)}
+                                        {medicineType && (<img src={medicine_type === TABLET ? TabletIcon : InjectionIcon} className={'medication-image-tablet'} />)}
                                     </div>
 
                                     <Icon type="edit" className='ml20' style={{ color: '#4a90e2' }} theme="filled" onClick={this.showInnerForm(EVENT_TYPE.MEDICATION_REMINDER, key)} />
@@ -239,7 +240,7 @@ class TemplateDrawer extends Component {
 
 
                 <div className='wp100 flex align-center justify-space-between'>
-            <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.appointments)}</div>
+                    <div className='form-category-headings-ap align-self-start'>{this.formatMessage(messages.appointments)}</div>
                     <div className='add-more' onClick={this.showAddAppointment}>{this.formatMessage(messages.addMore)}</div>
                 </div>
                 {
@@ -276,10 +277,10 @@ class TemplateDrawer extends Component {
 
         for (let medication of medicationsData) {
             const { medicine = "", medicineType = "", medicine_id = "",
-                schedule_data: {  quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
+                schedule_data: { quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
                     start_time = moment(), strength = 0, unit = "", when_to_take = [] } = {} } = medication;
 
-            if (!medicine || !medicineType || !medicine_id ||(unit !== 'ml' && !quantity) || !repeat || !repeat_days.length || !start_date
+            if (!medicine || !medicineType || !medicine_id || (unit !== 'ml' && !quantity) || !repeat || !repeat_days.length || !start_date
                 || !start_time || !strength || !unit || !when_to_take.length) {
                 message.error(this.formatMessage(messages.medicationError));
                 return false;
@@ -309,9 +310,9 @@ class TemplateDrawer extends Component {
         let appointmentsData = Object.values(appointments);
         for (let medication in medicationsData) {
             let newMed = medicationsData[medication];
-            let { 
-                schedule_data: { end_date = '',  start_date = '',
-                    start_time = '',  duration } = {} } = newMed;
+            let {
+                schedule_data: { end_date = '', start_date = '',
+                    start_time = '', duration } = {} } = newMed;
             if (!start_time && !start_date && !end_date) {
                 medicationsData[medication].schedule_data.start_time = moment();
                 medicationsData[medication].schedule_data.start_date = moment();
@@ -331,8 +332,8 @@ class TemplateDrawer extends Component {
         for (let appointment in appointmentsData) {
 
             let newAppointment = appointmentsData[appointment];
-            let { reason = '',  schedule_data: { date = '', 
-                end_time = '', start_time = '', treatment_id = '', type = '',  appointment_type = '' } = {}, time_gap = '' } = newAppointment;
+            let { reason = '', schedule_data: { date = '',
+                end_time = '', start_time = '', treatment_id = '', type = '', appointment_type = '' } = {}, time_gap = '' } = newAppointment;
             appointmentsData[appointment].schedule_data.type = appointment_type ? appointment_type : type;
             if (!date && !start_time && !end_time) {
                 // let currMinutes=moment().minutes();
@@ -382,6 +383,8 @@ class TemplateDrawer extends Component {
             start_time = '',
             strength = '',
             unit = "",
+            description='',
+            medicine_type = "",
             when_to_take = ["3"] } = data;
         const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
         newMedication.medicine_id = medicine_id;
@@ -389,7 +392,8 @@ class TemplateDrawer extends Component {
         newMedication.medicineType = type;
         newMedication.schedule_data = {
             end_date: moment(end_date), start_date: moment(start_date),
-            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time)
+            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time),
+            medicine_type,description
         };
         medications[innerFormKey] = newMedication;
         this.setState({ medications }, () => {
@@ -401,6 +405,7 @@ class TemplateDrawer extends Component {
     addMedication = (data) => {
         const { end_date = "",
             medicine_id = "",
+            medicine_type = "",
             quantity = 0,
             repeat = "",
             repeat_days = [],
@@ -408,6 +413,7 @@ class TemplateDrawer extends Component {
             start_time = '',
             strength = '',
             unit = "",
+            description='',
             when_to_take = ["3"] } = data;
         let { medications = {}, medicationKeys = [] } = this.state;
         let { medicines } = this.props;
@@ -418,7 +424,8 @@ class TemplateDrawer extends Component {
         newMedication.medicineType = type;
         newMedication.schedule_data = {
             end_date: moment(end_date), start_date: moment(start_date),
-            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time)
+            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time),
+            medicine_type,description
         };
         let key = uuid();
         medicationKeys.push(key);
@@ -549,7 +556,7 @@ class TemplateDrawer extends Component {
                             {this.formatMessage(messages.cancel)}
                         </Button>
                         <Button onClick={this.onSubmit} type="primary">
-                        {this.formatMessage(messages.submit)}
+                            {this.formatMessage(messages.submit)}
                         </Button>
                     </div>
                 </Drawer>

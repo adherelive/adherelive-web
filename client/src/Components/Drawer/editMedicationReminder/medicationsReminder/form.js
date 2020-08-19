@@ -25,7 +25,7 @@ import CalendarTimeSelection from "../calendarTimeSelection";
 
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
-import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER } from "../../../../constant";
+import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER, MEDICINE_UNITS } from "../../../../constant";
 const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
 
@@ -93,10 +93,8 @@ class EditMedicationReminderForm extends Component {
   setUnit = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue }
     } = this.props;
-
-    const currentValue = getFieldValue(UNIT_FIELD) || 0.0;
     setFieldsValue({ [UNIT_FIELD]: e.target.value });
   };
 
@@ -421,7 +419,8 @@ class EditMedicationReminderForm extends Component {
   setEndDateOneWeek = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue, getFieldValue },
+      enableSubmit
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
@@ -429,12 +428,14 @@ class EditMedicationReminderForm extends Component {
     setFieldsValue({
       [endDateField.field_name]: newEndDate
     });
+    enableSubmit();
   };
 
   setEndDateTwoWeek = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue, getFieldValue },
+      enableSubmit
     } = this.props;
 
     const startDate = getFieldValue(startDateField.field_name);
@@ -442,17 +443,20 @@ class EditMedicationReminderForm extends Component {
     setFieldsValue({
       [endDateField.field_name]: newEndDate
     });
+    enableSubmit();
   };
 
   setEndDateLongTime = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
+      enableSubmit
     } = this.props;
 
     setFieldsValue({
       [endDateField.field_name]: null
     });
+    enableSubmit();
   };
 
   getFooter = () => {
@@ -502,6 +506,7 @@ class EditMedicationReminderForm extends Component {
 
     const startTime = getFieldValue(startTimeField.field_name);
     let medicineUnit = getFieldValue(medicineStrengthUnitField.field_name);
+    console.log('765765467585785865875876', medicineUnit);
     let endTime;
 
     if (startTime && startTime.isValid) {
@@ -545,13 +550,12 @@ class EditMedicationReminderForm extends Component {
             </div> */}
             <div className="mg-ml-radio-group flex-grow-0">
               <RadioGroup
-
                 buttonStyle="solid"
                 size="small"
                 className="mg-ml flex justify-content-end"
               >
-                <RadioButton value={UNIT_ML} className={medicineUnit !== 'ml' ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit}>ml</RadioButton>
-                <RadioButton value={UNIT_MG} className={medicineUnit !== 'mg' ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit}>mg</RadioButton>
+                <RadioButton value={UNIT_ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML}>ml</RadioButton>
+                <RadioButton value={UNIT_MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG}>mg</RadioButton>
               </RadioGroup>
             </div>
           </div>

@@ -25,7 +25,6 @@ export const PATH = {
 };
 
 
-
 export const ROOM_ID_TEXT = '-adhere-';
 
 export const TEXT_KEY = "text";
@@ -429,6 +428,17 @@ export const CONDITIONS = {
 };
 
 export const TABLE_DEFAULT_BLANK_FIELD = "--";
+
+
+export const TABLET = "1";
+export const SYRUP = "2";
+export const SYRINGE = "3";
+
+export const MEDICINE_FORM_TYPE = {
+  [TABLET]: { name: "tablet" },
+  [SYRUP]: { name: "syrup" },
+  [SYRINGE]: { name: "syringe" }
+};
 
 export const MEDICINE_TYPE = {
   TABLET: "tablet",

@@ -63,6 +63,16 @@ class EventExecutor {
             Log.debug("sendPushNotification 500 error", err);
         }
     };
+
+    sendAppNotification = async (template) => {
+        try {
+            // TODO: add get stream rest api call code here
+
+            Log.debug("sendAppNotification Response", response);
+        } catch (err) {
+            Log.debug("sendAppNotification 500 error", err);
+        }
+    };
 }
 
 export default new EventExecutor();

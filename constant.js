@@ -644,3 +644,13 @@ export const BLANK_STATE = "";
 export const PASSWORD_LENGTH = 8;
 
 export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg","svg","png","pdf"];
+
+const TABLET = "1";
+const SYRUP = "2";
+const SYRINGE = "3";
+
+export const MEDICINE_FORM_TYPE = {
+  [TABLET]: {name:"tablet"},
+  [SYRUP]: {name :"syrup"},
+  [SYRINGE]: {name:"syringe"}
+};

@@ -1,8 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { Select, Form, Radio } from "antd";
 import { injectIntl } from "react-intl";
-import { MEDICINE_TYPE } from '../../../../constant';
+import { SYRINGE, SYRUP, TABLET, MEDICINE_UNITS } from '../../../../constant';
 import messages from "../message";
+import unitField from "./medicationStrengthUnit";
+
+import chooseMedicationField from "./medicationStage";
 
 const FIELD_NAME = "formulation";
 
@@ -35,12 +38,26 @@ class Formulation extends Component {
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
+    setUnitMg = () => {
+        const {
+            form: { setFieldsValue }
+        } = this.props;
+        setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.MG });
+    }
+
+    setUnitMl = () => {
+        const {
+            form: { setFieldsValue }
+        } = this.props;
+        setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.ML });
+    }
 
     render() {
         const { form } = this.props;
         const {
             getFieldDecorator,
             getFieldError,
+            getFieldValue,
             isFieldTouched
         } = form;
         const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -60,10 +77,11 @@ class Formulation extends Component {
                         <RadioGroup
                             className="flex justify-content-end radio-formulation"
                             buttonStyle="solid"
+                            disabled={!getFieldValue(chooseMedicationField.field_name)}
                         >
-                            <RadioButton value={MEDICINE_TYPE.SYRUP} >{this.formatMessage(messages.syrup)}</RadioButton>
-                            <RadioButton value={MEDICINE_TYPE.TABLET} >{this.formatMessage(messages.tablet)}</RadioButton>
-                            <RadioButton value={MEDICINE_TYPE.INJECTION} >{this.formatMessage(messages.syringe)}</RadioButton>
+                            <RadioButton value={SYRUP} onClick={this.setUnitMl}>{this.formatMessage(messages.syrup)}</RadioButton>
+                            <RadioButton value={TABLET} onClick={this.setUnitMg}>{this.formatMessage(messages.tablet)}</RadioButton>
+                            <RadioButton value={SYRINGE} onClick={this.setUnitMl}>{this.formatMessage(messages.syringe)}</RadioButton>
                         </RadioGroup>
                     )}
                 </FormItem>

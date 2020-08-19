@@ -126,7 +126,7 @@ class MedicationStage extends Component {
             className="drawer-select"
             placeholder="Choose Medicine"
             showSearch
-
+            // autoFocus={true}
             defaultActiveFirstOption={true}
             // onFocus={() => handleMedicineSearch("")}
             autoComplete="off"

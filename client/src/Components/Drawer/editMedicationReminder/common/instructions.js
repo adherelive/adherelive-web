@@ -28,7 +28,10 @@ class Formulation extends Component {
 
 
     render() {
-        const { form } = this.props;
+        const { form,
+            medicationData = {},
+            payload: { id: medication_id } = {},
+            medications } = this.props;
         const {
             getFieldDecorator,
             getFieldError,
@@ -36,6 +39,16 @@ class Formulation extends Component {
         } = form;
         const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
+
+        let { basic_info: { description = '' } = {} } = medications[medication_id] || {};
+
+        const { schedule_data: { description: des = '' } = {} } = medicationData;
+
+        if (des) {
+            description = des;
+        }
+
+        console.log('871236487126873412', medicationData.schedule_data);
 
         return (
             <div className="mb20 select-days-form-content">
@@ -45,7 +58,9 @@ class Formulation extends Component {
                     validateStatus={error ? "error" : ""}
                     help={error || ""}
                 >
-                    {getFieldDecorator(FIELD_NAME, {})(
+                    {getFieldDecorator(FIELD_NAME, {
+                        initialValue: description
+                    })(
                         <TextArea
                             autoFocus
                             className='mt10'
