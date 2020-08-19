@@ -17,6 +17,13 @@ router.post(
 );
 
 router.post(
+    "/upload",
+    Authenticate,
+    upload.single("files"),
+    DoctorController.uploadImage
+);
+
+router.post(
     "/details",
     validator.validateDoctorQualificationData,
     // todo :: wip

@@ -1926,6 +1926,54 @@ class DoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  uploadImage = async (req, res) => {
+    const { userDetails, body } = req;
+    const { userId = "3" } = userDetails || {};
+    const file = req.file;
+    Logger.debug("file ----> ", file);
+    // const fileExt= file.originalname.replace(/\s+/g, '');
+    try {
+      //   await minioService.createBucket();
+
+      //   const imageName = md5(`${userId}-education-pics`);
+
+      //   let hash = md5.create();
+
+      //   hash.hex();
+      //   hash = String(hash);
+
+      //   const folder = "adhere";
+      //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
+      //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
+
+      //   const metaData = {
+      //     "Content-Type":
+      //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      // };
+      // const fileUrl = folder+ "/" +file_name;
+      // await minioService.saveBufferObject(file.buffer, file_name, metaData);
+
+      // // console.log("file urlll: ", process.config.minio.MINI);
+      // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
+      // let files = [file_link];
+      // console.log("Uplaoded File Url ---------------------->  ", file_link);
+      // console.log("User Controllers =------------------->   ", files);
+      //const resume_link = process.config.BASE_DOC_URL + files[0]
+      let files = await uploadImageS3(userId, file);
+      return this.raiseSuccess(
+          res,
+          200,
+          {
+            files
+          },
+          "Profile pic uploaded successfully"
+      );
+    } catch (error) {
+      console.log("FILE UPLOAD CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
+    }
+  };
 }
 
 export default new DoctorController();
