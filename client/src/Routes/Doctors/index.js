@@ -67,7 +67,6 @@ class Doctors extends Component {
     const { redirecting = false } = this.state;
     let { location: { pathname = '' } = {} } = this.props;
     let isNotChatComponent = pathname.includes('patient-consulting') ? false : true;
-    console.log('78324687234687326487326', isNotChatComponent, this.props.location, this.props.location.pathname);
     const { authRedirection } = this.props;
     return (
       <Fragment>

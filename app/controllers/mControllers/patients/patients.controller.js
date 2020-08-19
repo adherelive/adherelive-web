@@ -384,10 +384,12 @@ class MPatientController extends Controller {
       }
 
       let otherCarePlanTemplates = {};
+      const carePlanTemplateIds = [];
 
       for(const carePlanTemplate of carePlanTemplates) {
         carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
         const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
+        carePlanTemplateIds.push(...Object.keys(care_plan_templates));
         otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
         templateAppointmentData = {...templateAppointmentData, ...template_appointments};
         templateMedicationData = {...templateMedicationData, ...template_medications};
@@ -404,6 +406,7 @@ class MPatientController extends Controller {
             medication_ids
           }
         },
+        care_plan_template_ids: [...carePlanTemplateIds],
         care_plan_templates: {
           [carePlanData.getCarePlanTemplateId()] : {
             ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},

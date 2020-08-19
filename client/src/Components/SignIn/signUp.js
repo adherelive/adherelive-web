@@ -2,6 +2,8 @@ import React, { Component } from "react";
 // import { injectIntl, FormattedMessage } from "react-intl";
 import { Button, Input, Form, message } from "antd";
 
+import { injectIntl } from "react-intl";
+import messages from "./message";
 
 const { Item: FormItem } = Form;
 const { Password } = Input;
@@ -24,6 +26,7 @@ class SignUp extends Component {
     }
 
 
+    formatMessage = data => this.props.intl.formatMessage(data);
 
     handleSignUp = e => {
         e.preventDefault();
@@ -36,7 +39,7 @@ class SignUp extends Component {
                     const { status } = response;
                     if (status) {
                         this.props.form.resetFields();
-                        message.success('Please go to your email to verify your account.')
+                        message.success(this.formatMessage(messages.verifyEmail))
                     } else {
                         let { payload: { error = {}, message: responseMessage = '' } = {}, statusCode = '' } = response;
 
@@ -44,7 +47,7 @@ class SignUp extends Component {
                             const { message: errorMessage = '' } = error;
                             message.error(statusCode === 400 ? errorMessage : responseMessage);
                         } else {
-                            message.error('Something went wrong.');
+                            message.error(this.formatMessage(messages.somethingWentWrong))
                         }
                     }
                 });
@@ -69,16 +72,16 @@ class SignUp extends Component {
                     validateStatus={fieldsError[EMAIL] ? "error" : ""}
                     help={fieldsError[EMAIL] || ""}
                 >
-                    <div className='fs16 medium tal mt8'>Your Work Email</div>
+                    <div className='fs16 medium tal mt8'>{this.formatMessage(messages.workEmail)}</div>
                     {getFieldDecorator(EMAIL, {
                         rules: [
                             {
                                 required: true,
-                                message: "Please enter email"
+                                message: this.formatMessage(messages.enterEmail)
                             },
                             {
                                 type: "email",
-                                message: "Please enter a valid email!"
+                                message: this.formatMessage(messages.enterValidEmail)
                             }
                         ]
                     })(
@@ -95,14 +98,14 @@ class SignUp extends Component {
                     validateStatus={fieldsError[PASSWORD] ? "error" : ""}
                     help={fieldsError[PASSWORD] || ""}
                 >
-                    <div className='fs16 medium tal'>Create a Password</div>
+                    <div className='fs16 medium tal'>{this.formatMessage(messages.createPassword)}</div>
                     {getFieldDecorator(PASSWORD, {
-                        rules: [{ required: true, message: "Enter your password" }]
+                        rules: [{ required: true, message: this.formatMessage(messages.enterPassword) }]
                     })(<Password placeholder="Password" className="h40" />)}
                 </FormItem>
 
                 {/* <div classname='fs12 medium dark-sky-blue mt4 tar'>Forgot Password?</div> */}
-                <div className='slate-grey mt-10 mb8 fs12 medium'> By signing up you agree to our privacy policy and terms of use.</div>
+                <div className='slate-grey mt-10 mb8 fs12 medium'> {this.formatMessage(messages.agreeText)}</div>
                 <FormItem >
                     <Button
                         type="primary"
@@ -111,7 +114,7 @@ class SignUp extends Component {
                         size={"large"}
                     // loading={loading}
                     >
-                        Create Account
+                        {this.formatMessage(messages.createAccount)}
 </Button>
                     <div className="flex justify-space-between direction-column mt10 align-end">
 
@@ -124,4 +127,4 @@ class SignUp extends Component {
     }
 }
 
-export default Form.create({ name: "signup_form" })(SignUp);
+export default Form.create({ name: "signup_form" })(injectIntl(SignUp));

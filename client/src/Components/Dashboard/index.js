@@ -35,8 +35,9 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        const { searchMedicine, getGraphs, doctors = {}, authenticated_user } = this.props;
+        const { searchMedicine, getGraphs, doctors = {}, authenticated_user, closePopUp } = this.props;
         // getInitialData();
+        closePopUp();
         let doctorUserId = '';   //user_id of doctor
         for (let doc of Object.values(doctors)) {
             let { basic_info: { user_id, id = 1 } } = doc;
@@ -64,10 +65,10 @@ class Dashboard extends Component {
         return (
             <Menu>
                 {authPermissions.includes(PERMISSIONS.ADD_PATIENT) && (<Menu.Item onClick={this.showAddPatientDrawer}>
-                    <div>Patients</div>
+                    <div>{this.formatMessage(messages.patients)}</div>
                 </Menu.Item>)}
                 {authPermissions.includes(PERMISSIONS.EDIT_GRAPH) && (<Menu.Item onClick={this.showEditGraphModal}>
-                    <div>Graphs</div>
+                    <div>{this.formatMessage(messages.graphs)}</div>
                 </Menu.Item>)}
             </Menu>
         );
@@ -89,7 +90,7 @@ class Dashboard extends Component {
         const chartBlocks = graphsToShow.map(id => {
             const { total, critical, name } = graphs[id] || {};
             return (
-                <Donut key={id} id={id} data={[critical, total - critical]} total={total} title={name} />
+                <Donut key={id} id={id} data={[critical, total - critical]} total={total} title={name} formatMessage={this.formatMessage} />
             );
 
         });
@@ -132,9 +133,9 @@ class Dashboard extends Component {
                 // })
             } else {
                 if (statusCode === 422) {
-                    message.error('Patient already exist with same number!');
+                    message.error(this.formatMessage(messages.patientExistError));
                 } else {
-                    message.error('Something went wrong');
+                    message.error(this.formatMessage(messages.somethingWentWrongError));
                 }
             }
         });
@@ -149,7 +150,7 @@ class Dashboard extends Component {
             if (status) {
                 this.setState({ graphsToShow: data, visibleModal: false })
             } else {
-                message.error('Something went wrong,please try again.')
+                message.error(this.formatMessage(messages.somethingWentWrongError))
             }
         })
     }
@@ -190,7 +191,7 @@ class Dashboard extends Component {
             drawer: { visible: drawerVisible = false } = {},
             twilio: { patientId: chatPatientId = 1 } } = this.props;
         const { formatMessage, renderChartTabs } = this;
-        let { basic_info: { user_id: patientUserId = '', first_name = '', middle_name = '', last_name = '' } = {} } = patients[chatPatientId] || {};
+        let { basic_info: { user_id: patientUserId = '', first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[chatPatientId] || {};
 
 
         const { visible, graphsToShow, visibleModal, doctorUserId } = this.state;
@@ -229,13 +230,13 @@ class Dashboard extends Component {
 
                     <Tabs tabPosition="top">
                         <TabPane
-                            tab={<span className="fs16 fw600">{SUMMARY}</span>}
+                            tab={<span className="fs16 fw600">{formatMessage(messages.summary)}</span>}
                             key="1"
                         >
                             <Patients />
                         </TabPane>
                         <TabPane
-                            tab={<span className="fs16 fw600">{WATCHLIST}</span>}
+                            tab={<span className="fs16 fw600">{formatMessage(messages.watchList)}</span>}
                             key="2"
                         >
                             <Patients />
@@ -251,6 +252,7 @@ class Dashboard extends Component {
                         placeVideoCall={this.openVideoChatTab}
                         patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''}
                         maximizeChat={this.maximizeChat}
+                        patientDp={patientDp}
                     />
                 </div>)}
 

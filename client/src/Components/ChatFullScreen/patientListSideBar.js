@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { Avatar, Input } from "antd";
-import throttle from "lodash-es/throttle";
+import { Avatar, Input, message } from "antd";
+import messages from './messages';
 
-const Header = ({ handleSearch }) => {
+const Header = ({ handleSearch, formatMessage }) => {
     return (
         <div className='chat-patientListheader'>
-            <Input className='patientSearch' placeholder='Search Patient' onChange={handleSearch} />
+            <Input className='patientSearch' placeholder={formatMessage(messages.searchPatient)} onChange={handleSearch} />
         </div>
     );
 }
@@ -64,6 +64,8 @@ class PatientListSideBar extends Component {
     };
 
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
     componentDidMount() {
 
         let { doctors = {}, authenticated_user = 1, patients = {} } = this.props;
@@ -98,7 +100,7 @@ class PatientListSideBar extends Component {
 
         return (
             <div className="patientList-component-container">
-                <Header handleSearch={this.handlePatientSearch} />
+                <Header handleSearch={this.handlePatientSearch} formatMessage={this.formatMessage} />
                 <div className='patientList-list-component-container'>
                     {this.renderPatients()}
                 </div>

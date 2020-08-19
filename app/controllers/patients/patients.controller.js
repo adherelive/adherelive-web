@@ -307,10 +307,12 @@ class PatientController extends Controller {
             }
 
             let otherCarePlanTemplates = {};
+            const carePlanTemplateIds = [];
 
             for(const carePlanTemplate of carePlanTemplates) {
                 carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
                 const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
+                carePlanTemplateIds.push(...Object.keys(care_plan_templates));
                 otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
                 templateAppointmentData = {...templateAppointmentData, ...template_appointments};
                 templateMedicationData = {...templateMedicationData, ...template_medications};
@@ -321,6 +323,7 @@ class PatientController extends Controller {
             return this.raiseSuccess(res, 200, {
                 // care_plans: { ...carePlanApiData },
                 // show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments, carePlanTemplateId,
+                care_plan_template_ids : [...carePlanTemplateIds],
                 care_plans: {
                     [carePlanData.getCarePlanId()]: {
                         ...carePlanData.getBasicInfo(),
