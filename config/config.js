@@ -9,7 +9,8 @@ module.exports = () => {
       mobile_verify_link: process.env.MOBILE_INVITE_LINK,
       reset_password: process.env.RESET_PASSWORD_LINK,
       developer_email: process.env.DEVELOPER_EMAIL,
-      verified_doctor: process.env.DASHBOARD_LINK
+      verified_doctor: process.env.DASHBOARD_LINK,
+      support_email: process.env.SUPPORT_EMAIL
     },
     db: {
       connection: process.env.DB_CONNECTION,

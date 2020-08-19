@@ -18,6 +18,8 @@ import medicineStrengthUnitField from "../common/medicationStrengthUnit";
 import medicineQuantityField from "../common/medicineQuantity";
 import whenToTakeMedicineField from "../common/whenTotakeMedicaine";
 import medicationReminderStageField from "../common/medicationStage";
+import instructions from "../common/instructions";
+import formulation from "../common/formulation";
 
 import CalendarTimeSelection from "../calendarTimeSelection";
 
@@ -93,7 +95,7 @@ class EditMedicationReminderForm extends Component {
     const {
       form: { setFieldsValue, getFieldValue }
     } = this.props;
-   
+
     const currentValue = getFieldValue(UNIT_FIELD) || 0.0;
     setFieldsValue({ [UNIT_FIELD]: e.target.value });
   };
@@ -415,6 +417,44 @@ class EditMedicationReminderForm extends Component {
   //   }
   // };
 
+
+  setEndDateOneWeek = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue }
+    } = this.props;
+
+    const startDate = getFieldValue(startDateField.field_name);
+    let newEndDate = moment(startDate).add(1, 'week');
+    setFieldsValue({
+      [endDateField.field_name]: newEndDate
+    });
+  };
+
+  setEndDateTwoWeek = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue }
+    } = this.props;
+
+    const startDate = getFieldValue(startDateField.field_name);
+    let newEndDate = moment(startDate).add(2, 'week');
+    setFieldsValue({
+      [endDateField.field_name]: newEndDate
+    });
+  };
+
+  setEndDateLongTime = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue }
+    } = this.props;
+
+    setFieldsValue({
+      [endDateField.field_name]: null
+    });
+  };
+
   getFooter = () => {
     const {
       form: { getFieldsError },
@@ -449,7 +489,9 @@ class EditMedicationReminderForm extends Component {
       adjustEventOnStartDateChange,
       onPatientChange,
       setUnit,
-      formatMessage
+      formatMessage,
+      setEndDateOneWeek,
+      setEndDateTwoWeek, setEndDateLongTime
     } = this;
 
     const {
@@ -484,6 +526,7 @@ class EditMedicationReminderForm extends Component {
 
           {chooseMedicationField.render({ ...this.props, otherUser })}
           {criticalMedicationField.render(this.props)}
+          {formulation.render(this.props)}
 
           <div className="flex align-items-end justify-content-space-between">
             <div className='flex direction-row flex-grow-1'>
@@ -523,11 +566,17 @@ class EditMedicationReminderForm extends Component {
 
           <RepeatFields
             {...this.props}
+            formatMessage={formatMessage}
             adjustEventOnStartDateChange={adjustEventOnStartDateChange}
             disabledEndDate={disabledEndDate}
             disabledStartDate={disabledStartDate}
             adjustEndDate={adjustEndDate}
+            setEndDateOneWeek={setEndDateOneWeek}
+            setEndDateTwoWeek={setEndDateTwoWeek}
+            setEndDateLongTime={setEndDateLongTime}
           />
+
+          {instructions.render(this.props)}
 
           {/*{getFooter()}*/}
         </Form>

@@ -5,6 +5,11 @@ import startDate from "../startDate";
 import endDate from "../endDate";
 import selectedDays from "../selectedDays";
 // import { REPEAT_TYPE } from "../../../../../constant";
+import { Radio } from "antd";
+import messages from '../../message';
+
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 export default props => {
   const {
@@ -22,6 +27,14 @@ export default props => {
 
         {endDate.render(props)}
       </div>
+      <RadioGroup
+        className="flex justify-content-end radio-formulation mt-20 mb24"
+        buttonStyle="solid"
+      >
+        <RadioButton value={1} onClick={props.setEndDateOneWeek} >{props.formatMessage(messages.oneWeek)}</RadioButton>
+        <RadioButton value={2} onClick={props.setEndDateTwoWeek}>{props.formatMessage(messages.twoWeeks)}</RadioButton>
+        <RadioButton value={3} onClick={props.setEndDateLongTime}>{props.formatMessage(messages.longterm)}</RadioButton>
+      </RadioGroup>
     </Fragment>
   );
 };

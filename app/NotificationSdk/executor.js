@@ -1,0 +1,68 @@
+import EmailManager from "../communications/email/emailManger";
+import SmsManager from "../communications/sms/smsManger";
+
+import fetch from "node-fetch";
+
+class EventExecutor {
+    async sendMail(mailData, scheduledJobId) {
+        try {
+            let isValid = await validateMailData(mailData);
+            let response = await EmailManager.sendEmail(mailData);
+            Object.assign(
+                mailData,
+                response ? { status: "SENT" } : { status: "FAILED" }
+            );
+            let logger = new Logger("email", mailData);
+            logger.log();
+            // if (scheduledJobId && response) {
+            //   let updatedJob = await Scheduler.updateScheduledJob(scheduledJobId, {
+            //     status: "completed"
+            //   });
+            // }
+        } catch (err) {
+            NotificationSdk.execute(EVENTS.EMAIL_ERROR, err, "mail_error");
+        }
+    }
+
+    async sendSms(smsData, scheduledJobId) {
+        try {
+            let response = SmsManager.sendSms(smsData);
+            Object.assign(
+                smsData,
+                response ? { status: "SENT" } : { status: "FAILED" }
+            );
+            let logger = new Logger("sms", smsData);
+            logger.log();
+            // if (scheduledJobId && response) {
+            //   let updatedJob = await Scheduler.updateScheduledJob(scheduledJobId, {
+            //     status: "completed"
+            //   });
+            // }
+        } catch (err) {
+            NotificationSdk.execute(EVENTS.SMS_ERROR, err);
+        }
+    }
+
+    sendPushNotification = async (template) => {
+        try {
+            // TODO: add one-signal rest api call code here
+            const response = await fetch(
+                "https://onesignal.com/api/v1/notifications",
+                {
+                    method:"POST",
+                    port: 443,
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                        Authorization: "Basic " + process.config.ONE_SIGNAL_KEY
+                    },
+                    body: template
+                }
+            );
+            Log.debug("sendPushNotification Response", response);
+        } catch (err) {
+            Log.debug("sendPushNotification 500 error", err);
+        }
+    };
+}
+
+export default new EventExecutor();
