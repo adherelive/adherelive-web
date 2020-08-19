@@ -124,12 +124,14 @@ class AddMedicationReminder extends Component {
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const { medicine_id, quantity, strength, unit, critical } = values || {};
+        const { medicine_id, quantity, strength, unit, critical,formulation: medicine_type, special_instruction: description } = values || {};
         data_to_submit = {
           medicine_id,
           quantity,
           strength,
           unit,
+          medicine_type,
+          description,
           critical,
           when_to_take: keys.map(id => when_to_take[id]) || [],
           // when_to_take: when_to_take.map(id => `${id}`),
