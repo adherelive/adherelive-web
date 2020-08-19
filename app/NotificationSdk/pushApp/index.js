@@ -1,7 +1,7 @@
 import EventExecutor from "../executor";
 import Log from "../../../libs/log_new";
 
-Log.filename("NOTIFICATION_SDK > PUSH_APP");
+Log.fileName("NOTIFICATION_SDK > PUSH_APP");
 
 class PushNotification {
     constructor() {
