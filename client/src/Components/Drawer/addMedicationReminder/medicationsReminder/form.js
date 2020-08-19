@@ -17,6 +17,8 @@ import criticalMedicationField from "../common/criticalMedication";
 import medicineStrengthUnitField from "../common/medicationStrengthUnit";
 import medicineQuantityField from "../common/medicineQuantity";
 import whenToTakeMedicineField from "../common/whenTotakeMedicaine";
+import instructions from "../common/instructions";
+import formulation from "../common/formulation";
 
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
@@ -130,7 +132,7 @@ class AddMedicationReminderForm extends Component {
 
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
 
-     }
+    }
 
 
     let newEndDate;
@@ -430,9 +432,59 @@ class AddMedicationReminderForm extends Component {
     const {
       form: { setFieldsValue }
     } = this.props;
-   
+
     setFieldsValue({ [UNIT_FIELD]: e.target.value });
   };
+
+  setEndDateOneWeek = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue }
+    } = this.props;
+
+    const startDate = getFieldValue(startDateField.field_name);
+    let newEndDate = moment(startDate).add(1, 'week');
+    setFieldsValue({
+      [endDateField.field_name]: newEndDate
+    });
+  };
+
+  setEndDateTwoWeek = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue }
+    } = this.props;
+
+    const startDate = getFieldValue(startDateField.field_name);
+    let newEndDate = moment(startDate).add(2, 'week');
+    setFieldsValue({
+      [endDateField.field_name]: newEndDate
+    });
+  };
+
+  setEndDateLongTime = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue }
+    } = this.props;
+
+    setFieldsValue({
+      [endDateField.field_name]: null
+    });
+  };
+
+  setFormulation = (value) => {
+    const {
+      form: { setFieldsValue },
+      medicines
+    } = this.props;
+    const { basic_info: { type = '' } = {} } = medicines[value] || {};
+    console.log('324543523452345234', value, type);
+    setFieldsValue({
+      [formulation.field_name]: type
+    });
+  };
+
 
   setUnitByMedicineType = unit => {
     const {
@@ -450,7 +502,10 @@ class AddMedicationReminderForm extends Component {
       adjustEventOnStartDateChange,
       onPatientChange,
       formatMessage,
+      setFormulation,
       setUnit,
+      setEndDateOneWeek,
+      setEndDateTwoWeek, setEndDateLongTime
     } = this;
 
     const {
@@ -465,7 +520,7 @@ class AddMedicationReminderForm extends Component {
     let medicineUnit = getFieldValue(medicineStrengthUnitField.field_name);
 
 
-   
+
     let endTime;
 
     if (startTime && startTime.isValid) {
@@ -488,8 +543,9 @@ class AddMedicationReminderForm extends Component {
             ...this.state
           })} */}
 
-          {chooseMedicationField.render({ ...this.props, otherUser })}
+          {chooseMedicationField.render({ ...this.props, otherUser, setFormulation })}
           {criticalMedicationField.render(this.props)}
+          {formulation.render(this.props)}
 
 
           {/* <div className="flex align-items-end justify-content-space-between">
@@ -519,7 +575,7 @@ class AddMedicationReminderForm extends Component {
             </div> */}
             <div className="mg-ml-radio-group flex-grow-0">
               <RadioGroup
-                 buttonStyle="solid"
+                buttonStyle="solid"
                 size="small"
                 className="mg-ml flex justify-content-end"
               >
@@ -540,12 +596,17 @@ class AddMedicationReminderForm extends Component {
 
           <RepeatFields
             {...this.props}
+            formatMessage={formatMessage}
             adjustEventOnStartDateChange={adjustEventOnStartDateChange}
             disabledEndDate={disabledEndDate}
             disabledStartDate={disabledStartDate}
             adjustEndDate={adjustEndDate}
+            setEndDateOneWeek={setEndDateOneWeek}
+            setEndDateTwoWeek={setEndDateTwoWeek}
+            setEndDateLongTime={setEndDateLongTime}
           />
 
+          {instructions.render(this.props)}
           {/*{getFooter()}*/}
         </Form>
       </Fragment>

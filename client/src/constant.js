@@ -24,6 +24,8 @@ export const PATH = {
   }
 };
 
+
+
 export const ROOM_ID_TEXT = '-adhere-';
 
 export const TEXT_KEY = "text";
@@ -430,7 +432,8 @@ export const TABLE_DEFAULT_BLANK_FIELD = "--";
 
 export const MEDICINE_TYPE = {
   TABLET: "tablet",
-  INJECTION: "injection"
+  INJECTION: "injection",
+  SYRUP: 'syrup'
 }
 
 export const MEDICINE_UNITS = {
