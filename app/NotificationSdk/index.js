@@ -1,5 +1,6 @@
-import UserPreferenceWrapper from "../ApiWrapper/web/userPreference";
-import Email from "./email";
+// import UserPreferenceWrapper from "../ApiWrapper/web/userPreference";
+// import Email from "./email";
+import PushApp from "./pushApp";
 // import {EVENT_TYPE} from "../../constant";
 
 class NotificationSdk {
@@ -9,26 +10,28 @@ class NotificationSdk {
     execute = async (job) => {
         const users = job.getUsers();
         for (const id of users) {
-            const userPreference = await UserPreferenceWrapper(null, id);
+            // const userPreference = await UserPreferenceWrapper(null, id);
 
-            // todo actor don't send notification
+            // todo actor don't send notification : manage in job
+            PushApp.notify(job.getPushAppTemplate());
 
-            if (job.isCritical()) {
-                Email.notify(job.getEmailTemplate());
-                // Sms.notify(job.getSmsTemplate());
-            } else {
-                if (userPreference.allowEmail()) {
-                    Email.notify(job.getEmailTemplate());
-                }
-
-                if (userPreference.allowSms()) {
-                    // Sms.notify(job.getSmsTemplate());
-                }
-            }
+            // todo: when user preferences relevant
+            // if (job.isCritical()) {
+            //     Email.notify(job.getEmailTemplate());
+            //     // Sms.notify(job.getSmsTemplate());
+            // } else {
+            //     if (userPreference.allowEmail()) {
+            //         Email.notify(job.getEmailTemplate());
+            //     }
+            //
+            //     if (userPreference.allowSms()) {
+            //         // Sms.notify(job.getSmsTemplate());
+            //     }
+            // }
 
             // more to come todo
         }
-    }
+    };
 }
 
 export default new NotificationSdk();

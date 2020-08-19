@@ -326,12 +326,13 @@ class AppointmentController extends Controller {
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
       const eventScheduleData = {
-        event_type: EVENT_TYPE.APPOINTMENT,
-        event_id: appointmentApiData.getAppointmentId(),
-        details: appointmentApiData.getBasicInfo(),
-        status: EVENT_STATUS.PENDING,
-        start_time,
-        end_time,
+        participants: [],
+        actor: {
+          id: userId,
+          details: {
+            category
+          }
+        }
       };
 
       // RRule

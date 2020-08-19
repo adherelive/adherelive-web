@@ -1,6 +1,8 @@
 import EmailManager from "../communications/email/emailManger";
 import SmsManager from "../communications/sms/smsManger";
 
+import fetch from "node-fetch";
+
 class EventExecutor {
     async sendMail(mailData, scheduledJobId) {
         try {
@@ -40,6 +42,27 @@ class EventExecutor {
             NotificationSdk.execute(EVENTS.SMS_ERROR, err);
         }
     }
+
+    sendPushNotification = async (template) => {
+        try {
+            // TODO: add one-signal rest api call code here
+            const response = await fetch(
+                "https://onesignal.com/api/v1/notifications",
+                {
+                    method:"POST",
+                    port: 443,
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                        Authorization: "Basic " + process.config.ONE_SIGNAL_KEY
+                    },
+                    body: template
+                }
+            );
+            Log.debug("sendPushNotification Response", response);
+        } catch (err) {
+            Log.debug("sendPushNotification 500 error", err);
+        }
+    };
 }
 
 export default new EventExecutor();
