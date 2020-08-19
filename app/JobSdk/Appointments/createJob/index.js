@@ -1,4 +1,5 @@
 import AppointmentJob from "../";
+import moment from "moment";
 import { USER_CATEGORY } from "../../../../constant";
 
 class CreateJob extends AppointmentJob {
@@ -48,7 +49,34 @@ class CreateJob extends AppointmentJob {
     return templateData;
   };
 
-  getInAppTemplate = () => {};
+  getInAppTemplate = () => {
+    const { getAppointmentData } = this;
+    const {
+      participants = [],
+      actor: {
+        id: actorId,
+        details: { name, category: actorCategory } = {}
+      } = {},
+      appointmentId
+    } = getAppointmentData() || {};
+
+    const templateData = [];
+    const currentTime = new moment().utc();
+    for (const participant of participants) {
+      if (participant !== actorId) {
+        templateData.push({
+          actor: actorId,
+          object: `${participant}`,
+          foreign_id: `appointment:${appointmentId}`,
+          verb: "appointment_create",
+          message: `${name}(${actorCategory}) has created an appointment with you`,
+          time: currentTime
+        });
+      }
+    }
+
+    return templateData;
+  };
 }
 
 export default CreateJob;

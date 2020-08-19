@@ -164,7 +164,7 @@ class MobileMReminderController extends Controller {
       const medicineDetails = await medicineService.getMedicineById(medicine_id);
 
 
-      const medicineApiWrapper = await MedicineWrapper(medicineDetails);
+      const medicineApiWrapper = await MedicineApiWrapper(medicineDetails);
 
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
