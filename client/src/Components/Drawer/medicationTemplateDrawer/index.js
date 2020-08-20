@@ -559,7 +559,7 @@ class TemplateDrawer extends Component {
 
     submitWithName = () => {
         const { name } = this.state;
-        if (!name) {
+        if (!name || !name.trim()) {
             message.error(this.formatMessage(messages.validNameError))
         } else {
             this.setState({ createTemplate: true }, () => { this.onSubmit() });
@@ -724,7 +724,7 @@ class TemplateDrawer extends Component {
             newAppointment.provider_id = provider_id;
         }
         newAppointment.provider_name = provider_name;
-        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
+        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, appointment_type: type, type_description };
         appointments[innerFormKey] = newAppointment;
         this.setState({ appointments, templateEdited: true }, () => {
             this.onCloseInner();
