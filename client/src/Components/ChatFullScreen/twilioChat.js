@@ -264,16 +264,46 @@ class TwilioChat extends Component {
         chatEndElement.scrollIntoView({ behavior: "smooth" });
     };
 
-    componentDidMount() {
-        this.getToken();
+    async componentDidMount() {
+
+        const {
+            fetchChatAccessToken,
+            authenticated_user
+        } = this.props;
+
+
+        const response = await fetchChatAccessToken(authenticated_user);
+        const { status = false, payload: { data: { token: chatToken = '' } = {} } = {} } = response;
+
+        if (status) {
+            this.setState({ token: chatToken }, () => {
+                this.getToken();
+            })
+        }
         this.scrollToBottom();
 
-        // console.log('didMount======================>');
-        this.intervalID = setInterval(() => this.tick(), 1000);
+        this.intervalID = setInterval(() => this.tick(), 2000);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const {
+            roomId,
+            chatMessages
+        } = this.props;
+        const {
+            roomId: prevRoomId
+        } = prevProps;
+        const { token } = prevState;
+        if (roomId !== prevRoomId && (token)) {
+            if (!chatMessages[roomId]) {
+                this.setState({ messagesLoading: true });
+            }
+            this.getToken();
+            this.scrollToBottom();
+        }
     }
 
     componentWillUnmount() {
-
         clearInterval(this.intervalID);
     }
 
@@ -308,36 +338,24 @@ class TwilioChat extends Component {
         }
     };
 
-    getToken = async () => {
+    getToken = () => {
         const {
-            // match: {
             roomId,
-            // },
-            fetchChatAccessToken,
-            authenticated_user
         } = this.props;
         this.channelName =
             roomId ? roomId :
                 "test";
-        // this.channelName = '1-adhere-3';
 
-        // console.log('didMount======================>getToken', roomId);
-        fetchChatAccessToken(authenticated_user).then(result => {
-            this.setState((prevState, props) => {
-                // console.log('didMount======================>getToken', props.twilio.chatToken);
-                return {
-                    token: props.twilio.chatToken
-                };
-            }, () => { this.initChat() });
-        });
+        console.log('didMount======================>getToken', moment());
+        this.initChat();
     };
 
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
     initChat = () => {
-        // console.log('didMount======================>initChat');
         this.chatClient = new Chat(this.state.token);
+
         this.chatClient.initialize().then(this.clientInitiated.bind(this));
     };
 
@@ -345,7 +363,6 @@ class TwilioChat extends Component {
         const { authenticated_user = 1 } = this.props
         const { identity = null } = obj;
         if (identity !== `${authenticated_user}`) {
-            // console.log("typing started:::::::::::::: 11");
             this.setState({ other_typing: true });
         }
     }
@@ -354,15 +371,12 @@ class TwilioChat extends Component {
         const { authenticated_user = 1 } = this.props
         const { identity = null } = obj;
         if (identity !== `${authenticated_user}`) {
-            // console.log("typing stopped:::::::::::::: 11");
             this.setState({ other_typing: false });
         }
     }
 
     clientInitiated = async () => {
         const { authenticated_user } = this.props;
-
-        // console.log('didMount======================>clientInitiated');
         this.setState({ chatReady: true }, () => {
             this.chatClient
                 .getChannelByUniqueName(this.channelName)
@@ -394,16 +408,9 @@ class TwilioChat extends Component {
                     this.channel.getMessages().then(this.messagesLoaded);
                     this.channel.on("messageAdded", this.messageAdded);
                     this.channel.on("typingStarted", obj => {
-                        // console.log("typing started:::::::::::::: ", obj);
                         this.checkOtherTyping(obj);
-                        // const { identity = null } = obj;
-                        // if (identity !== `${authenticated_user}`) {
-                        //     console.log("typing started:::::::::::::: 11");
-                        //     this.setState({ other_typing: true });
-                        // }
                     });
                     this.channel.on("typingEnded", obj => {
-                        // console.log("typing stopped: :::::: ", obj);
                         this.otherTypingStopped(obj);
                     });
                     const members = await this.channel.getMembers();
@@ -445,25 +452,17 @@ class TwilioChat extends Component {
                 messageData.sent = true;
             }
         }
-
         return messages;
     };
 
     messagesLoaded = messagePage => {
-        console.log('didMount======================>messagesLoaded', messagePage.length);
         const { roomId, addMessageOfChat } = this.props
         if (messagePage.items.length) {
             let message = messagePage.items[0];
             const { channel: { channelState: { uniqueName = '' } = {} } = {} } = message;
             if (!uniqueName.localeCompare(roomId)) {
-                let messages = this.updateMessageRecieved(messagePage.items);
-                addMessageOfChat(roomId, messages);
-                // this.setState(
-                //     {
-                //         messagesLoading: false
-                //     },
-                //     this.scrollToBottom
-                // );
+                // let messages = this.updateMessageRecieved(messagePage.items);
+                addMessageOfChat(roomId, messagePage.items);
             }
         }
         this.setState(
@@ -472,6 +471,7 @@ class TwilioChat extends Component {
             },
             this.scrollToBottom
         );
+        console.log('didMount======================>messagesLoaded', moment());
 
     };
 
@@ -487,24 +487,7 @@ class TwilioChat extends Component {
         this.channel.setAllMessagesConsumed();
     };
 
-    componentDidUpdate(prevProps, prevState) {
-        const {
-            roomId,
-            chatMessages
-        } = this.props;
-        const {
-            roomId: prevRoomId
-        } = prevProps;
-        if (roomId !== prevRoomId) {
 
-            // console.log("******** other user details: didUpdate", roomId, prevRoomId);
-            if (!chatMessages[roomId]) {
-                this.setState({ messagesLoading: true });
-            }
-            this.getToken();
-            this.scrollToBottom();
-        }
-    }
 
     logOut = event => {
         event.preventDefault();

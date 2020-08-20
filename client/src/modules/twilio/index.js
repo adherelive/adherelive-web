@@ -62,10 +62,11 @@ export const fetchVideoAccessToken = userId => {
 };
 
 export const fetchChatAccessToken = userId => {
+  let response = {};
   return async dispatch => {
     try {
       dispatch({ type: FETCHING_TWILIO_CHAT_ACCESS_TOKEN });
-      let response = await doRequest({
+       response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Twilio.getTwilioChatAccessToken(),
         params: { identity: userId, device: "browser" }
@@ -85,6 +86,7 @@ export const fetchChatAccessToken = userId => {
         });
       }
     } catch (error) { }
+    return response;
   };
 };
 
