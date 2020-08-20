@@ -392,7 +392,9 @@ class PatientDetails extends Component {
       getAppointmentsDetails,
       patient_id,
       care_plans,
+      authenticated_user,
       closePopUp,
+      fetchChatAccessToken,
       currentCarePlanId,
       show_template_drawer = {}
     } = this.props;
@@ -403,6 +405,8 @@ class PatientDetails extends Component {
     if (showTd) {
       this.setState({ templateDrawerVisible: true });
     }
+
+    fetchChatAccessToken(authenticated_user);
     if (!showTd) {
       getPatientCarePlanDetails(patient_id)
         .then(response => {

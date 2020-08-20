@@ -309,14 +309,24 @@ class PatientController extends Controller {
             let otherCarePlanTemplates = {};
             const carePlanTemplateIds = [];
 
-            for(const carePlanTemplate of carePlanTemplates) {
-                carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
-                const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
-                carePlanTemplateIds.push(...Object.keys(care_plan_templates));
-                otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
-                templateAppointmentData = {...templateAppointmentData, ...template_appointments};
-                templateMedicationData = {...templateMedicationData, ...template_medications};
-                medicineApiData = {...medicineApiData, ...medicines};
+            if(carePlanTemplateData || carePlanTemplates.length > 0) {
+                for(const carePlanTemplate of carePlanTemplates) {
+                    carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
+                    const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
+                    carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+                    otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
+                    templateAppointmentData = {...templateAppointmentData, ...template_appointments};
+                    templateMedicationData = {...templateMedicationData, ...template_medications};
+                    medicineApiData = {...medicineApiData, ...medicines};
+                }
+            } else {
+                carePlanTemplateIds.push("1");
+                otherCarePlanTemplates["1"] = {
+                    basic_info: {
+                        id: "1",
+                        name: "Blank Template"
+                    }
+                };
             }
 
 

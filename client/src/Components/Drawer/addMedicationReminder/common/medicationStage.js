@@ -95,7 +95,8 @@ class MedicationStage extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, getFieldError, isFieldTouched }
+      form: { getFieldDecorator, getFieldError, isFieldTouched },
+      setFormulation
     } = this.props;
 
     const { fetchingMedicines } = this.state;
@@ -106,7 +107,7 @@ class MedicationStage extends Component {
     //   return null;
     // }
 
-    
+
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (
@@ -125,12 +126,13 @@ class MedicationStage extends Component {
             className="drawer-select"
             placeholder="Choose Medicine"
             showSearch
-
+            // autoFocus={true}
             defaultActiveFirstOption={true}
             // onFocus={() => handleMedicineSearch("")}
             autoComplete="off"
             // onFocus={() => handleMedicineSearch("")}
             optionFilterProp="children"
+            onSelect={setFormulation}
             filterOption={(input, option) =>
               option.props.children
                 .toLowerCase()

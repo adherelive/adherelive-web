@@ -23,6 +23,9 @@ import patientService from "../../services/patients/patients.service";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import {RRule} from "rrule";
 
+import AppointmentJob from "../../JobSdk/Appointments/observer";
+import NotificationSdk from "../../NotificationSdk";
+
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
 const Logger = new Log(FILE_NAME);
@@ -323,12 +326,13 @@ class AppointmentController extends Controller {
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
       const eventScheduleData = {
-        event_type: EVENT_TYPE.APPOINTMENT,
-        event_id: appointmentApiData.getAppointmentId(),
-        details: appointmentApiData.getBasicInfo(),
-        status: EVENT_STATUS.PENDING,
-        start_time,
-        end_time,
+        participants: [],
+        actor: {
+          id: userId,
+          details: {
+            category
+          }
+        }
       };
 
       // RRule
@@ -340,17 +344,12 @@ class AppointmentController extends Controller {
         details: appointmentApiData.getBasicInfo()
       });
 
-      // Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
-      // const rrule = new RRule({
-      //   freq: RRule.WEEKLY,
-      //   dtstart: moment(start_time).utc().toDate(),
-      //   until: moment(start_time).add(6,'months').utc().toDate()
-      // });
-      //
-      // Logger.debug("rrule ----> ", rrule.all());
+      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
+      NotificationSdk.execute(appointmentJob);
 
-      // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
-      // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+      Logger.debug("appointmentJob ---> ", appointmentJob.getEmailTemplate());
+
+      // NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 
       // TODO: schedule event and notifications here
       await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });

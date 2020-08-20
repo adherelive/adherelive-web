@@ -193,6 +193,37 @@
   }
 }
 
+.ant-radio-group.radio-formulation {
+  display: flex;
+  width: 100%;
+  margin-left: -16px;
+  justify-content: flex-start;
+  .ant-radio-button-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: @deep-cyan;
+    font-size: 14px;
+    font-weight: 500;
+    height: 35px;
+    min-width: 80px;
+    margin-left: 16px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid @deep-cyan;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: #fff;
+    background: @deep-cyan;
+    border-color: @deep-cyan;
+    box-shadow: none !important;
+    border-radius: 4px;
+  }
+}
+
 .critical-checkbox {
   .ant-checkbox {
     color: @deep-cyan;

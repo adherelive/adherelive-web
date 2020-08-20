@@ -52,6 +52,10 @@ class EditMedicationReminder extends Component {
     return hasError;
   };
 
+  enableSubmit = () => {
+    this.setState({ disabledOk: false });
+  }
+
   onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
@@ -150,7 +154,7 @@ class EditMedicationReminder extends Component {
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const { medicine_id, quantity, strength, unit, critical } = values || {};
+        const { medicine_id, quantity, strength, unit, critical, formulation: medicine_type, special_instruction: description } = values || {};
         data_to_submit = {
           id: medication_id,
           medicine_id,
@@ -161,7 +165,8 @@ class EditMedicationReminder extends Component {
           when_to_take: keys.map((id) => when_to_take[id]) || [],
           // when_to_take: when_to_take.map(id => `${id}`),
           participant_id: patient_id,
-
+          medicine_type,
+          description,
           repeat: "weekly",
 
           [startTimeField.field_name]:
@@ -271,7 +276,7 @@ class EditMedicationReminder extends Component {
   getDeleteButton = () => {
     const { handleDelete } = this;
     const { loading, deleteMedicationOfTemplate, hideMedication, addMedication } = this.props;
-    
+
     if (addMedication) {
       return (
         <Button onClick={hideMedication} style={{ marginRight: 8 }}>
@@ -335,7 +340,7 @@ class EditMedicationReminder extends Component {
         className="ant-drawer"
         title={editMedication ? formatMessage(messages.medication) : addMedication ? 'Add Medication' : formatMessage(messages.title)}
       >
-        <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
+        <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
         <Footer
           className="flex justify-space-between"
           onSubmit={handleSubmit}

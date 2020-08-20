@@ -37,4 +37,8 @@ export default class User {
     getPermissionData = () => {
         return this._data.permissions;
     }
+
+    getPrefix = () => {
+        return this._data.prefix;
+    };
 }
