@@ -406,6 +406,14 @@ class MPatientController extends Controller {
         };
       }
 
+      if(carePlanData.getCarePlanTemplateId()) {
+        otherCarePlanTemplates[carePlanData.getCarePlanTemplateId()] = {
+          ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
+          template_appointment_ids,
+          template_medication_ids
+        };
+      }
+
 
 
       return this.raiseSuccess(res, 200, {
@@ -420,11 +428,6 @@ class MPatientController extends Controller {
         },
         care_plan_template_ids: [...carePlanTemplateIds],
         care_plan_templates: {
-          [carePlanData.getCarePlanTemplateId()] : {
-            ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
-            template_appointment_ids,
-            template_medication_ids
-          },
           ...otherCarePlanTemplates
         },
         appointments: {
