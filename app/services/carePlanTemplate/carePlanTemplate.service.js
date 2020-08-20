@@ -93,6 +93,17 @@ class CarePlanTemplateService {
     }
   };
 
+  getSingleTemplateByData = async (data) => {
+    try {
+      const carePlanTemplate = await CarePlanTemplate.findOne({
+        where: data,
+      });
+      return carePlanTemplate;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   addCarePlanTemplate = async data => {
     try {
       const carePlanTemplate = await CarePlanTemplate.create(data);
