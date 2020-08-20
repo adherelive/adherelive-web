@@ -38,6 +38,6 @@ export default async (data = null, id = null) => {
     if(data) {
         return new CarePlanWrapper(data);
     }
-    const carePlan = await carePlanService.getCarePlanByData({id});
+    const carePlan = await carePlanService.getSingleCarePlanByData({id});
     return new CarePlanWrapper(carePlan);
 };
