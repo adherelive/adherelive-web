@@ -262,6 +262,10 @@ class CarePlanController extends Controller {
                 carePlanTemplate = await CarePlanTemplateWrapper(
                     createCarePlanTemplate
                 );
+
+                const updateCarePlan = await carePlanService.updateCarePlan({care_plan_template_id: carePlanTemplate.getCarePlanTemplateId()}, care_plan_id);
+
+                carePlanData = await CarePlanWrapper(null, care_plan_id);
                 // await carePlanTemplate.getReferenceInfo();
                 Log.debug(
                     "appointmentsData --------------------->",
