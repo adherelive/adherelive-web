@@ -22,6 +22,10 @@ module.exports = () => {
       password: process.env.DB_PASSWORD,
       dialect: process.env.DB_DIALECT
     },
+    getstream: {
+      key: process.env.GETSTREAM_API_KEY,
+      secretKey: process.env.GETSTREAM_API_SECRET
+    },
     aws: {
       access_key: process.env.AWS_ACCESS_KEY,
       access_key_id: process.env.AWS_ACCESS_KEY_ID,

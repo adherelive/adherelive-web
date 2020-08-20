@@ -11,6 +11,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^2.14.0",
     "fullcalendar-reactwrapper": "^1.0.7",
+    "getstream": "^5.0.5",
     "install": "^0.13.0",
     "less": "3.9.0",
     "less-loader": "^4.1.0",
