@@ -8,14 +8,14 @@ const addDoctorForm = Joi.object().keys({
     name: Joi.string().optional().allow("", null),
     city: Joi.string().required().label("Please enter your city"),
     category: Joi.string().required().valid(USER_CATEGORY.DOCTOR).label("Please select correct category"),
-    mobile_number: Joi.string().length(10).regex(/^[1-9][0-9]*$/).optional().allow("", null).label("Please enter correct mobile number"),
+    mobile_number: Joi.string().min(6).max(20).regex(/^\d+$/).optional().allow("", null).label("Please enter correct mobile number"),
     prefix: Joi.string().regex(/^\d+$/).required().label("Please select correct prefix"),
     profile_pic: Joi.string().uri().label("Please check uploaded profile pic"),
     email: Joi.string().required().label("Email entered is not valid"),
 });
 
 const addPatientForm = Joi.object().keys({
-    mobile_number: Joi.string().length(10).regex(/^[1-9][0-9]*$/).required().label("Please enter correct mobile number"),
+    mobile_number: Joi.string().min(6).max(20).required().label("Please enter correct mobile number"),
     name: Joi.string().optional().allow("", null),
     gender: Joi.string().length(1).optional().allow("", null),
     date_of_birth: Joi.date().required().label("Please enter date of birth"),

@@ -386,15 +386,35 @@ class MPatientController extends Controller {
       let otherCarePlanTemplates = {};
       const carePlanTemplateIds = [];
 
-      for(const carePlanTemplate of carePlanTemplates) {
-        carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
-        const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
-        carePlanTemplateIds.push(...Object.keys(care_plan_templates));
-        otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
-        templateAppointmentData = {...templateAppointmentData, ...template_appointments};
-        templateMedicationData = {...templateMedicationData, ...template_medications};
-        medicineApiData = {...medicineApiData, ...medicines};
+      if(carePlanTemplateData || carePlanTemplates.length > 0) {
+        for(const carePlanTemplate of carePlanTemplates) {
+          carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
+          const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
+          carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+          otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
+          templateAppointmentData = {...templateAppointmentData, ...template_appointments};
+          templateMedicationData = {...templateMedicationData, ...template_medications};
+          medicineApiData = {...medicineApiData, ...medicines};
+        }
+      } else {
+        carePlanTemplateIds.push("1");
+        otherCarePlanTemplates["1"] = {
+          basic_info: {
+            id: "1",
+            name: "Blank Template"
+          }
+        };
       }
+
+      if(carePlanData.getCarePlanTemplateId()) {
+        otherCarePlanTemplates[carePlanData.getCarePlanTemplateId()] = {
+          ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
+          template_appointment_ids,
+          template_medication_ids
+        };
+      }
+
+
 
       return this.raiseSuccess(res, 200, {
         // care_plans: { ...carePlanApiData },
@@ -408,11 +428,6 @@ class MPatientController extends Controller {
         },
         care_plan_template_ids: [...carePlanTemplateIds],
         care_plan_templates: {
-          [carePlanData.getCarePlanTemplateId()] : {
-            ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
-            template_appointment_ids,
-            template_medication_ids
-          },
           ...otherCarePlanTemplates
         },
         appointments: {
