@@ -22,9 +22,9 @@ const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false,
     return (
         <div className='chat-patientListheader-PopUp pt4 pb4' >
             <div className='flex direction-row align-center '>
-                <div className='flex direction-column align-center justify-center'>
+                <div className='flex direction-column  justify-center'>
                     <div className='doctor-name-chat-header-popup pointer' onClick={onHeaderClick}>{patientName}</div>
-                    <div className='doctor-name-chat-header-online-popup'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : ''}</div>
+                    <div className='doctor-name-chat-header-online-popup ml10'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : ''}</div>
                 </div>
             </div>
             <div>
