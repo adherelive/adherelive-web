@@ -503,13 +503,13 @@ class VideoComponent extends Component {
                                         <span className="fs16 medium text-white white">
                                             {status !== "partcipantDisconnected"
                                                 ? `Waiting for ${otherUserdata.name}`
-                                                : `Reconnecting to ${otherUserdata.name}`}
+                                                : `${otherUserdata.name} left the call.`}
                                         </span>
                                     ) : (
                                             <span className="fs16 medium text-white white">
                                                 {status !== "partcipantDisconnected"
                                                     ? ` Waiting for ${otherUserdata.name}`
-                                                    : `Reconnecting to ${otherUserdata.name}`}
+                                                    : `${otherUserdata.name} left the call.`}
                                             </span>
                                         )}
                                 </div>
