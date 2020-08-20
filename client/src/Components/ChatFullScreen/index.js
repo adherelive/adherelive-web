@@ -5,22 +5,22 @@ import PatientList from './patientListSideBar';
 import TwilioChat from '../../Containers/ChatFullScreen/twilioChat';
 import CallIcon from '../../Assets/images/telephone.png';
 import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
-import {ROOM_ID_TEXT} from '../../constant';
+import { ROOM_ID_TEXT } from '../../constant';
 import config from "../../config";
 
-const Header = ({ placeVideoCall, patientName, patientDp = '' }) => {
-    let pic = patientName ?
-        <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
-    return (
-        <div className='chat-patientListheader-chatBoxPopUp'>
-            <div className='flex direction-row align-center wp90'>
-                {pic}
-                <div className='doctor-name-chat-header mt2'>{patientName}</div>
-            </div>
-            <img src={CallIcon} className='callIcon-header mr10' onClick={placeVideoCall} />
-        </div>
-    );
-}
+// const Header = ({ placeVideoCall, patientName, patientDp = '' }) => {
+//     let pic = patientName ?
+//         <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
+//     return (
+//         <div className='chat-patientListheader-chatBoxPopUp'>
+//             <div className='flex direction-row align-center wp90'>
+//                 {pic}
+//                 <div className='doctor-name-chat-header mt2'>{patientName}</div>
+//             </div>
+//             <img src={CallIcon} className='callIcon-header mr10' onClick={placeVideoCall} />
+//         </div>
+//     );
+// }
 
 
 class ChatFullScreen extends Component {
@@ -43,7 +43,7 @@ class ChatFullScreen extends Component {
 
 
         let doctorUserId = '';   //user_id of doctor
-        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id];
+        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id] || {};
         for (let doc of Object.values(doctors)) {
             let { basic_info: { user_id, id = 1 } } = doc;
             if (parseInt(user_id) === parseInt(authenticated_user)) {
@@ -98,7 +98,7 @@ class ChatFullScreen extends Component {
         let { roomId, patientId, doctorUserId } = this.state;
         let { patients = {} } = this.props;
 
-        const { basic_info: { first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[patientId];
+        const { basic_info: { first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[patientId] || {};
         return (
             <div className="chat-screen-container">
                 {/* {placeCall

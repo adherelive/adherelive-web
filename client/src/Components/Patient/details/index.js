@@ -254,6 +254,7 @@ const PatientCard = ({
   formatMessage,
   openChat
 }) => {
+
   return (
     <div className="patient-card tac">
       <img
@@ -378,6 +379,8 @@ class PatientDetails extends Component {
     this.state = {
       loading: true,
       templateDrawerVisible: false,
+      carePlanTemplateExists: false,
+      carePlanTemplateIds: []
     };
   }
 
@@ -389,9 +392,11 @@ class PatientDetails extends Component {
       getAppointmentsDetails,
       patient_id,
       care_plans,
+      closePopUp,
       currentCarePlanId,
       show_template_drawer = {}
     } = this.props;
+    closePopUp();
     this.getData();
     const { show: showTd = false } = show_template_drawer;
     // let isCarePlanDataPresent = currentCarePlanId ? true : false;
@@ -399,17 +404,19 @@ class PatientDetails extends Component {
       this.setState({ templateDrawerVisible: true });
     }
     if (!showTd) {
-      getPatientCarePlanDetails(patient_id);
-      // .then(response => {
-      //   let { status = false, payload = {} } = response;
-      //   if (status) {
-      //     let { data: { show = false, care_plan_templates = {} } = {} } = payload;
-      //     const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
+      getPatientCarePlanDetails(patient_id)
+        .then(response => {
+          let { status = false, payload = {} } = response;
+          if (status) {
+            let { data: { show = false, care_plan_templates = {}, care_plan_template_ids = [] } = {} } = payload;
 
+            // const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
-      //     this.setState({ carePlanTemplateId });
-      //   }
-      // });
+            let carePlanTemplateExists = care_plan_templates && Object.values(care_plan_templates).length ? true : false;
+
+            this.setState({ carePlanTemplateId, carePlanTemplateExists });
+          }
+        });
       getMedications(patient_id);
       getAppointmentsDetails();
       getAppointments(patient_id);
@@ -538,13 +545,13 @@ class PatientDetails extends Component {
     return (
       <Menu>
         {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleMedicationReminder}>
-          <div>Medication</div>
+          <div>{this.formatMessage(messages.medications)}</div>
         </Menu.Item>)}
         {authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) && (<Menu.Item onClick={handleAppointment}>
-          <div>Appointments</div>
+          <div>{this.formatMessage(messages.appointments)}</div>
         </Menu.Item>)}
         {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
-          <div>Actions</div>
+          <div>{this.formatMessage(messages.actions)}</div>
         </Menu.Item>)}
       </Menu>
     );
@@ -620,7 +627,7 @@ class PatientDetails extends Component {
       if (status) {
         this.onCloseTemplate();
 
-        message.success("Care Plan updated successfully.");
+        message.success(this.formatMessage(messages.carePlanUpdated));
         getMedications(patient_id).then(() => {
           getAppointments(patient_id).then(() => {
             getPatientCarePlanDetails(patient_id);
@@ -628,9 +635,9 @@ class PatientDetails extends Component {
         })
       } else {
         if (statusCode === 422 && error_type == 'slot_present') {
-          message.error("Appointment slots already present for selected timings!")
+          message.error(this.formatMessage(messages.slotPresent))
         } else {
-          message.error("Something went wrong!")
+          message.error(this.formatMessage(messages.somethingWentWrong))
         }
       }
     });
@@ -654,7 +661,7 @@ class PatientDetails extends Component {
       authPermissions = [],
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {}, } = this.props;
-    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0 } = this.state;
+    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [] } = this.state;
 
     const {
       formatMessage,
@@ -676,6 +683,8 @@ class PatientDetails extends Component {
 
     let templateAppointments = {};
     let templateMedications = {};
+    let templateAppointmentIDs = {};
+    let templateMedicationIDs = {};
 
     let { template_appointment_ids = [], template_medication_ids = [] } = care_plan_templates[carePlanTemplateId] || {};
 
@@ -764,13 +773,14 @@ class PatientDetails extends Component {
 
 
     const {
-      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456', user_id: patientUserId = '' }
+      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456', user_id: patientUserId = '' }, details: { profile_pic: patientDp = userDp } = {}
     } = patients[patient_id] || {};
 
 
     let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
 
     const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
+
 
 
     const {
@@ -784,6 +794,7 @@ class PatientDetails extends Component {
         profile_picture: patient_display_picture,
       } = {},
     } = this.props;
+
 
     const {
       treatment_details: {
@@ -810,7 +821,7 @@ class PatientDetails extends Component {
         <div className="flex">
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
             <PatientCard
-              patient_display_picture={patient_display_picture}
+              patient_display_picture={patientDp ? patientDp : userDp}
               patient_first_name={first_name}
               patient_middle_name={middle_name}
               patient_last_name={last_name}
@@ -846,11 +857,15 @@ class PatientDetails extends Component {
               <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
                 <img src={noMedication} className='w200 h200' />
                 <div className='fs20 fw700'>{formatMessage(messages.nothing_to_show)}</div>
-                {showUseTemplate && carePlanTemplateId ? (<div className='use-template-button' onClick={this.showTemplateDrawer}>
-                  <div>{formatMessage(messages.use_template)}</div>
-                </div>) : showUseTemplate ? (<div className='use-template-button' onClick={this.handleMedicationReminder}>
-                  <div>{formatMessage(messages.add_medication)}</div>
-                </div>) : <div />}
+                {showUseTemplate && carePlanTemplateId ? (
+                  <div className='use-template-button' onClick={this.showTemplateDrawer}>
+                    <div>{formatMessage(messages.use_template)}</div>
+                  </div>
+                ) :
+                  showUseTemplate ? (
+                    <div className='use-template-button' onClick={this.handleMedicationReminder}>
+                      <div>{formatMessage(messages.add_medication)}</div>
+                    </div>) : <div />}
               </div>)}
             {showTabs && (
               <div className='flex-grow-1 direction-column align-center'>
@@ -901,15 +916,32 @@ class PatientDetails extends Component {
             placeVideoCall={this.openVideoChatTab(roomId)}
             patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''}
             maximizeChat={this.maximizeChat}
+            patientDp={patientDp}
           />
         </div>)}
         <AddAppointmentDrawer carePlanId={carePlanId} />
-        <TemplateDrawer visible={templateDrawerVisible}
-          submit={this.handleSubmitTemplate}
-          dispatchClose={close}
-          close={onCloseTemplate} medications={templateMedications}
-          appointments={templateAppointments} medicines={medicines}
-          patientId={patient_id} patients={patients} carePlan={carePlan} />
+        {templateDrawerVisible && (
+          // <TemplateDrawer visible={templateDrawerVisible}
+          //   submit={this.handleSubmitTemplate}
+          //   dispatchClose={close}
+          //   closeTemplateDrawer={onCloseTemplate}
+          //   // medications={templateMedications}
+          //   // appointments={templateAppointments}
+          //   // templateAppointmentIDs={templateAppointmentIDs}
+          //   // templateMedicationIDs={templateMedicationIDs}
+          //   // medicines={medicines}
+          //   patientId={patient_id}
+          //   carePlanTemplateIds={carePlanTemplateIds}
+          //   // patients={patients} 
+          //   carePlan={carePlan} {...this.props} />
+          <TemplateDrawer visible={templateDrawerVisible}
+            submit={this.handleSubmitTemplate}
+            dispatchClose={close}
+            close={onCloseTemplate} medications={templateMedications}
+            appointments={templateAppointments} medicines={medicines}
+            patientId={patient_id} patients={patients} carePlan={carePlan} />
+
+        )}
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
         <EditMedicationReminder carePlanId={carePlanId} />
       </div>

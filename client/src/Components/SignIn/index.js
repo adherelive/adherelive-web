@@ -8,6 +8,8 @@ import rightArrow from '../../Assets/images/next.png';
 import CompanyIcon from '../../Assets/images/logo3x.png';
 import { PATH } from "../../constant";
 
+import { injectIntl } from "react-intl";
+import messages from "./message";
 
 
 class SignIn extends Component {
@@ -27,7 +29,7 @@ class SignIn extends Component {
             //   .then(response=>{
             const { status } = response;
             if (!status) {
-                message.error('This verification link has expired!');
+                message.error(this.formatMessage(messages.linkExpired));
 
             } else {
                 this.props.history.push('/register-profile');
@@ -35,6 +37,8 @@ class SignIn extends Component {
         }
     }
 
+
+    formatMessage = data => this.props.intl.formatMessage(data);
 
     toggleLogin = () => {
         let { login } = this.state;
@@ -44,7 +48,7 @@ class SignIn extends Component {
         this.setState({ login: newLogin });
     }
 
-  
+
 
     redirectToForgotPassword = () => {
 
@@ -52,10 +56,10 @@ class SignIn extends Component {
         history.push(PATH.FORGOT_PASSWORD);
     }
 
-    
+
 
     render() {
-        const { signIn, signUp,getInitialData } = this.props;
+        const { signIn, signUp, getInitialData } = this.props;
         const { login } = this.state;
         return (
             <div className="wp100 landing-background flex direction-column justify-center align-center">
@@ -65,7 +69,7 @@ class SignIn extends Component {
 
                         <div className="flex direction-row align-center">
                             <img alt="adhere-logo" src={CompanyIcon} className='company-logo' />
-                            <div className='text-white fs28 medium italic'>Adhere.Live</div>
+                            <div className='text-white fs28 medium italic'>{this.formatMessage(messages.appName)}</div>
                         </div>
 
                         <div className="flex direction-row align-center">
@@ -83,13 +87,13 @@ class SignIn extends Component {
                                 {props => (
                                     <div className='flex direction-column flex1 wp100 hp100' style={props}>
                                         <div className='login-description' >
-                                            <div className='now-available mb10'><div className='fs14 medium text-white'>NOW AVAILABLE</div></div>
-                                            <div className='fs18 medium text-white ml10'>Custom Dashboard</div>
+                                            <div className='now-available mb10'><div className='fs14 medium text-white'>{this.formatMessage(messages.nowAvailable)}</div></div>
+                                            <div className='fs18 medium text-white ml10'>{this.formatMessage(messages.customDashboard)}</div>
 
-                                            <div className='fs12 text-white mt4 ml10'>Now see the metrics that really helps you</div>
+                                            <div className='fs12 text-white mt4 ml10'>{this.formatMessage(messages.metrics)}</div>
                                         </div>
                                         <div className='login-text'><div className='fs16 medium'> Fusce vehicula dolor arcu, sit amet blandit dolor mollis nec. Donec viverra eleifend lacus, vitae ullamcorper metus. </div></div>
-                                        <div className='learn-more-text'><div className='dark-sky-blue fs18 medium mr4'>Learn More</div><img src={rightArrow} height={14} width={14} /></div>
+                                        <div className='learn-more-text'><div className='dark-sky-blue fs18 medium mr4'>{this.formatMessage(messages.learnMore)}</div><img src={rightArrow} height={14} width={14} /></div>
                                     </div>
                                 )
                                 }
@@ -100,8 +104,8 @@ class SignIn extends Component {
                             >
                                 {props => (
                                     <div className='flex direction-column justify-space-between mt32 pl20 flex1 wp100 hp100' style={props}>
-                                        <div className='wp100 flex justify-end'> <div className='wp60 tac fs16 fw600 slate-grey'>Why choose Adhere.live?</div></div>
-                                        <div className='wp100 flex mb40 justify-end'> <div className='wp60 tac fs14 fw600 brown-grey'>For any help or assistance, feel free to Contact Us</div></div>
+                                        <div className='wp100 flex justify-end'> <div className='wp60 tac fs16 fw600 slate-grey'>{this.formatMessage(messages.whyChoose)}</div></div>
+                                        <div className='wp100 flex mb40 justify-end'> <div className='wp60 tac fs14 fw600 brown-grey'>{this.formatMessage(messages.contactUs)}</div></div>
                                     </div>
                                 )
                                 }
@@ -116,11 +120,11 @@ class SignIn extends Component {
                                     // <div style={props}>
                                     <div className="form-container" style={props}>
                                         <div className="mb8 fs24 fw600 pt20 flex direction-column tal">
-                                            Login to Dashboard
-                    </div>
+                                            {this.formatMessage(messages.loginToDashboard)}
+                                        </div>
                                         <div className="mb12 fs14  flex direction-column tal">
-                                            Enter Your Credentials
-                    </div>
+                                            {this.formatMessage(messages.enterCredentials)}
+                                        </div>
 
                                         <SignInForm signIn={signIn} getInitialData={getInitialData} redirectToForgotPassword={this.redirectToForgotPassword} />
                                         <div className="flex direction-column justify-space-between align-center">
@@ -129,8 +133,8 @@ class SignIn extends Component {
 
                                         </div>
 
-                                        <div className='flex mt12 wp100 justify-center'><div className='medium fs12'>Facing an issue?</div></div>
-                                        <div className='flex wp100 justify-center'><div className='medium fs14 dark-sky-blue'>Contact Support</div></div>
+                                        <div className='flex mt12 wp100 justify-center'><div className='medium fs12'>{this.formatMessage(messages.issue)}</div></div>
+                                        <div className='flex wp100 justify-center'><div className='medium fs14 dark-sky-blue'>{this.formatMessage(messages.contactSupport)}</div></div>
                                     </div>
 
                                     // </div>
@@ -146,11 +150,11 @@ class SignIn extends Component {
                                         // <div style={props}>
                                         <div className="form-container" style={props}>
                                             <div className="mb8 fs24 fw600 pt20 flex direction-column tal">
-                                                Sign Up
-                    </div>
+                                                {this.formatMessage(messages.signUp)}
+                                            </div>
                                             <div className="mb12 fs14  flex direction-column tal">
-                                                Create a password to continue
-                    </div>
+                                                {this.formatMessage(messages.continue)}
+                                            </div>
 
 
                                             <SignUpForm signUp={signUp} />
@@ -172,4 +176,4 @@ class SignIn extends Component {
     }
 }
 
-export default SignIn;
+export default injectIntl(SignIn);

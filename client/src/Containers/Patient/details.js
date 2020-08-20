@@ -9,12 +9,12 @@ import { searchMedicine } from "../../modules/medicines";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
 import { DRAWER } from "../../constant";
-import { openPopUp } from "../../modules/chat";
+import { openPopUp, closePopUp } from "../../modules/chat";
 
 const mapStateToProps = (state, ownProps) => {
     const { users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}, treatments = {},
         conditions = {}, template_medications = {}, template_appointments = {}, care_plan_templates = {},
-        severity = {}, show_template_drawer = {}, auth: { authPermissions = [] } = {}, chats, drawer } = state;
+        severity = {}, show_template_drawer = {}, auth: { authPermissions = [] } = {}, chats, drawer, care_plan_template_ids = [] } = state;
     // const { id } = ownprops;
     const user_details = users["3"] || {};
     const {
@@ -44,7 +44,7 @@ const mapStateToProps = (state, ownProps) => {
         currentCarePlanId,
         authPermissions,
         chats,
-        drawer
+        drawer, care_plan_template_ids
     };
 };
 
@@ -62,7 +62,8 @@ const mapDispatchToProps = dispatch => {
         addCarePlanMedicationsAndAppointments: (payload, carePlanId) => dispatch(addCarePlanMedicationsAndAppointments(payload, carePlanId)),
         openEditAppointmentDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_APPOINTMENT, payload })),
         openEditMedicationDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_MEDICATION, payload })),
-        openPopUp: () => dispatch(openPopUp())
+        openPopUp: () => dispatch(openPopUp()),
+        closePopUp: () => dispatch(closePopUp())
     };
 };
 

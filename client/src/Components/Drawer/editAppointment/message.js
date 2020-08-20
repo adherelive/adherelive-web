@@ -143,6 +143,11 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Edit Appointment"
   },
+  chooseAppointmentType: {
+    id: "app.event.chooseAppointment",
+    description: "",
+    defaultMessage: "Choose Appointment Type"
+  },
   editReminder: {
     id: "app.event.EditReminder",
     description: "",
@@ -393,6 +398,26 @@ const message = defineMessages({
     id: "cancel.modal.reason",
     description: "",
     defaultMessage: "Write reason for cancelling this appointment"
+  },
+  chooseTypeDescription: {
+    id: "cancel.modal.chooseTypeDescription",
+    description: "",
+    defaultMessage: "Choose Type Description"
+  },
+  chooseProvider: {
+    id: "cancel.modal.chooseProvider",
+    description: "",
+    defaultMessage: "Choose Provider"
+  },
+  criticalAppointment: {
+    id: "cancel.modal.criticalAppointment",
+    description: "",
+    defaultMessage: "Critical Appointment"
+  },
+  noMatchFound: {
+    id: "cancel.modal.noMatchFound",
+    description: "",
+    defaultMessage: "No match found"
   },
 });
 

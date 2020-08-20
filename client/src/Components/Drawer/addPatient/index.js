@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import {Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker} from "antd";
+import { Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker } from "antd";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
 
@@ -17,6 +17,7 @@ import japan from '../../../Assets/images/japan.png';
 import china from '../../../Assets/images/china.png';
 import switzerland from '../../../Assets/images/switzerland.png';
 import france from '../../../Assets/images/france.png';
+import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
 const { Option } = Select;
 
@@ -173,7 +174,7 @@ class PatientDetailsDrawer extends Component {
             }
         } catch (err) {
             console.log("err", err);
-            message.warn("Something wen't wrong. Please try again later");
+            message.warn(this.formatMessage(messages.somethingWentWrong));
             this.setState({ fetchingCondition: false });
         }
     };
@@ -195,7 +196,7 @@ class PatientDetailsDrawer extends Component {
             }
         } catch (err) {
             console.log("err", err);
-            message.warn("Something wen't wrong. Please try again later");
+            message.warn(this.formatMessage(messages.somethingWentWrong));
             this.setState({ fetchingCondition: false });
         }
     };
@@ -217,7 +218,7 @@ class PatientDetailsDrawer extends Component {
             }
         } catch (err) {
             console.log("err", err);
-            message.warn("Something wen't wrong. Please try again later");
+            message.warn(this.formatMessage(messages.somethingWentWrong));
             this.setState({ fetchingSeverity: false });
         }
     };
@@ -230,13 +231,13 @@ class PatientDetailsDrawer extends Component {
         let day = dtToday.getDate();
         let year = dtToday.getFullYear();
 
-        if(day < 10) {
-            day = '0'+day;
-        } else if(month < 10) {
-            month = '0'+month;
+        if (day < 10) {
+            day = '0' + day;
+        } else if (month < 10) {
+            month = '0' + month;
         }
 
-            const { mobile_number = '', name = '', condition = '', prefix = '' } = this.state;
+        const { mobile_number = '', name = '', condition = '', prefix = '' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -274,23 +275,24 @@ class PatientDetailsDrawer extends Component {
 
         return (
             <div className='form-block-ap'>
-                <div className='form-headings flex align-center justify-start'>Phone number<div className="star-red">*</div></div>
+                <div className='form-headings flex align-center justify-start'>{this.formatMessage(messages.phoneNo)}<div className="star-red">*</div></div>
                 <Input
                     addonBefore={prefixSelector}
                     className={"form-inputs-ap"}
-                    placeholder="Phone number"
-                    maxLength={10}
+                    placeholder={this.formatMessage(messages.phoneNo)}
+                    minLength={6}
+                    maxLength={20}
                     value={mobile_number}
                     onChange={this.setNumber}
                 />
-                <div className='form-headings-ap '>Name</div>
+                <div className='form-headings-ap '>{this.formatMessage(messages.name)}</div>
                 <Input
-                    placeholder="Name"
+                    placeholder={this.formatMessage(messages.name)}
                     value={name}
                     className={"form-inputs-ap"}
                     onChange={this.setName}
                 />
-                <div className='form-headings-ap'>Gender</div>
+                <div className='form-headings-ap'>{this.formatMessage(messages.gender)}</div>
                 <div className='add-patient-radio wp100 mt6 mb18 flex'>
 
                     <Radio.Group buttonStyle="solid" >
@@ -300,14 +302,14 @@ class PatientDetailsDrawer extends Component {
                     </Radio.Group>
                 </div>
 
-                <div className='form-headings-ap flex align-center justify-start'>Date Of Birth<div className="star-red">*</div></div>
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.dob)}<div className="star-red">*</div></div>
 
                 <Input className={"form-inputs-ap"} type='date'
                     max={`${year}-${month}-${day}`}
                     onChange={this.setDOB} />
-                <div className='form-category-headings-ap'>Treatment Plan</div>
+                <div className='form-category-headings-ap'>{this.formatMessage(messages.treatmentPlan)}</div>
 
-                <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}<div className="star-red">*</div></div>
 
 
                 <Select
@@ -333,7 +335,7 @@ class PatientDetailsDrawer extends Component {
                     {this.getConditionOption()}
                 </Select>
 
-                <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
+                <div className='form-headings-ap  flex align-center justify-start'>{this.formatMessage(messages.severity)}<div className="star-red">*</div></div>
 
 
                 <Select
@@ -360,7 +362,7 @@ class PatientDetailsDrawer extends Component {
                 </Select>
 
 
-                <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.treatment)}<div className="star-red">*</div></div>
 
                 <Select
                     className="form-inputs-ap drawer-select"
@@ -395,30 +397,30 @@ class PatientDetailsDrawer extends Component {
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
         if (!prefix) {
-            message.error('Please select a prefix.')
+            message.error(this.formatMessage(messages.prefixError))
             return false;
-        } else if (mobile_number.length < 10 || !mobile_number) {
-            message.error('Please enter valid mobile number.')
+        } else if (mobile_number.length < 6 || mobile_number.length > 20 || !mobile_number) {
+            message.error(this.formatMessage(messages.mobNoError))
             return false;
         } else if (!date_of_birth) {
-            message.error('Please enter  Date of Birth .')
+            message.error(this.formatMessage(messages.dobError))
             return false;
         }
         else if (date_of_birth && (age < 0 || age > 140 || moment(date_of_birth).isAfter(moment()))) {  //handle case of newBorn
 
-            message.error('Please enter a valid Date of Birth .')
+            message.error(this.formatMessage(messages.validdobError))
             return false;
         }
         else if (!treatment) {
-            message.error('Please enter a treatment.')
+            message.error(this.formatMessage(messages.treatmentError))
             return false;
         }
         else if (!severity) {
-            message.error('Please enter a severity.')
+            message.error(this.formatMessage(messages.severityError))
             return false;
         }
         else if (!condition) {
-            message.error('Please enter a condition.')
+            message.error(this.formatMessage(messages.conditionError))
             return false;
         }
         return true;
@@ -465,7 +467,7 @@ class PatientDetailsDrawer extends Component {
         return (
             <Fragment>
                 <Drawer
-                    title="Add Patient"
+                    title={this.formatMessage(messages.addPatient)}
                     placement="right"
                     // closable={false}
                     // closeIcon={<img src={backArrow} />}
@@ -482,11 +484,11 @@ class PatientDetailsDrawer extends Component {
                     {renderAddPatient()}
                     <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-                            Cancel
-            </Button>
+                            {this.formatMessage(messages.cancel)}
+                        </Button>
                         <Button onClick={this.onSubmit} type="primary">
-                            Submit
-            </Button>
+                            {this.formatMessage(messages.submit)}
+                        </Button>
                     </div>
                 </Drawer>
 

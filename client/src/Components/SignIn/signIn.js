@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-// import { injectIntl, FormattedMessage } from "react-intl";
+import { injectIntl } from "react-intl";
 import { Button, Input, Form, message } from "antd";
+import messages from './message';
 
 
 const { Item: FormItem } = Form;
@@ -39,30 +40,33 @@ class SignIn extends Component {
                 try {
 
                     const response = await signIn({ email, password });
+                    console.log('1234567890------->', email, password, err, response);
                     const { status = false, statusCode } = response;
                     if (status) {
 
-                        message.success("LoggedIn successfully", 4);
+                        message.success(this.formatMessage(messages.loginSuccessfull), 4);
                         getInitialData();
                     } else {
                         if (statusCode === 422) {
-                            message.error("Email does not exist!", 4);
+                            message.error(this.formatMessage(messages.emailDoesNotxist), 4);
                         } else {
                             this.setState({ loading: false });
-                            message.error("Invalid Credentials", 4);
+                            message.error(this.formatMessage(messages.invalidCredentials), 4);
                         }
                     }
                 } catch (err) {
                     console.log("298293 err ----> ", err);
                     this.setState({ loading: false });
-                    message.error("Something went wrong, Please try again", 4);
+                    message.error(this.formatMessage(messages.somethingWentWrong), 4);
                 }
             } else {
                 this.setState({ loading: false });
-                message.error("Please fill both Username and Password", 4);
+                message.error(this.formatMessage(messages.pleaseFillDetails), 4);
             }
         });
     };
+
+    formatMessage = data => this.props.intl.formatMessage(data);
 
     render() {
         const { form: { getFieldDecorator, isFieldTouched,
@@ -81,16 +85,17 @@ class SignIn extends Component {
                     validateStatus={fieldsError[EMAIL] ? "error" : ""}
                     help={fieldsError[EMAIL] || ""}
                 >
-                    <div className='fs16 medium tal mt8'>Email</div>
+                    <div className='fs16 medium tal mt8'>
+                        {this.formatMessage(messages.email)}</div>
                     {getFieldDecorator(EMAIL, {
                         rules: [
                             {
                                 required: true,
-                                message: "Please enter email"
+                                message: this.formatMessage(messages.enterEmail)
                             },
                             {
                                 type: "email",
-                                message: "Please enter a valid email!"
+                                message: this.formatMessage(messages.enterValidEmail)
                             }
                         ]
                     })(
@@ -105,9 +110,9 @@ class SignIn extends Component {
                 <FormItem
                     validateStatus={fieldsError[PASSWORD] ? "error" : ""}
                     help={fieldsError[PASSWORD] || ""}>
-                    <div className='fs16 medium tal'>Password</div>
+                    <div className='fs16 medium tal'>{this.formatMessage(messages.password)}</div>
                     {getFieldDecorator(PASSWORD, {
-                        rules: [{ required: true, message: "Enter your password" }]
+                        rules: [{ required: true, message: this.formatMessage(messages.enterPassword) }]
                     })(<Password placeholder="Password" className="h40" />)}
                 </FormItem>
                 <div className='flex wp100 justify-end mt-20 mb16'><div className='Forgot-Password medium pointer ' onClick={redirectToForgotPassword}>Forgot Password?</div></div>
@@ -120,8 +125,8 @@ class SignIn extends Component {
                         size={"large"}
                     // loading={loading}
                     >
-                        Log in
-</Button>
+                        {this.formatMessage(messages.login)}
+                    </Button>
                     <div className="flex justify-space-between direction-column align-end">
                         {/* <span className="login-form-forgot inline-flex">
 <Link to="/forgot-password">Forgot password?</Link>
@@ -141,4 +146,4 @@ class SignIn extends Component {
     }
 }
 
-export default Form.create({ name: "signin_form" })(SignIn);
+export default Form.create({ name: "signin_form" })(injectIntl(SignIn));

@@ -458,7 +458,7 @@ class EditAppointmentForm extends Component {
           })(
             <Select
               className="drawer-select"
-              placeholder="Choose Appointment Type"
+              placeholder={formatMessage(message.chooseAppointmentType)}
               onSelect={this.handleTypeSelect}
 
 
@@ -494,9 +494,9 @@ class EditAppointmentForm extends Component {
           })(
             <Select
               // onSearch={handleMedicineSearch}
-              notFoundContent={'No match found'}
+              notFoundContent={formatMessage(message.noMatchFound)}
               className="drawer-select"
-              placeholder="Choose Type Descrition"
+              placeholder={formatMessage(message.chooseTypeDescription)}
               showSearch
               defaultActiveFirstOption={true}
               autoComplete="off"
@@ -536,7 +536,7 @@ class EditAppointmentForm extends Component {
             <Select
               notFoundContent={null}
               className="drawer-select"
-              placeholder="Choose Provider"
+              placeholder={formatMessage(message.chooseProvider)}
               showSearch
               // defaultActiveFirstOption={true}
               autoComplete="off"
@@ -564,7 +564,7 @@ class EditAppointmentForm extends Component {
             valuePropName: 'checked',
             initialValue: critical
           })(
-            <Checkbox className=''>Critical Appointment</Checkbox>)}
+            <Checkbox className=''>{formatMessage(message.criticalAppointment)}</Checkbox>)}
         </FormItem>
 
 
@@ -585,7 +585,7 @@ class EditAppointmentForm extends Component {
         >
           {getFieldDecorator(DATE, {
             rules: [
-              
+
             ],
             initialValue: moment(start_date),
           })(
@@ -626,7 +626,7 @@ class EditAppointmentForm extends Component {
               help={fieldsError[START_TIME] || ""}
             >
               {getFieldDecorator(START_TIME, {
-                
+
                 initialValue: moment(start_time),
               })(
                 <TimePicker
@@ -676,68 +676,68 @@ class EditAppointmentForm extends Component {
           </div>
         </div>
 
-          <FormItem
-            // label={formatMessage(message.treatment_text)}
-            // className="full-width ant-date-custom"
-            className='mb-24'
+        <FormItem
+          // label={formatMessage(message.treatment_text)}
+          // className="full-width ant-date-custom"
+          className='mb-24'
+        >
+          {getFieldDecorator(TREATMENT, {
+            initialValue: treatment_id ? treatment_id : null,
+          })(
+            <div />
+            // <Input
+            //   autoFocus
+            //   placeholder={formatMessage(message.treatment_text_placeholder)}
+            // />
+            // <Select
+            //   className="form-inputs-ap drawer-select"
+            //   autoComplete="off"
+            //   placeholder="Select Treatment"
+            //   disabled={treatment_id ? true : false}
+            //   // onSelect={this.setTreatment}
+            //   // onDeselect={handleDeselect}
+            //   suffixIcon={null}
+            // >
+            //   {this.getTreatmentOption()}
+            // </Select>
+          )}
+        </FormItem>
+
+
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="purpose"
+            className="form-label"
+            title={formatMessage(message.purpose_text)}
           >
-            {getFieldDecorator(TREATMENT, {
-              initialValue: treatment_id ? treatment_id : null,
-            })(
-              <div />
-              // <Input
-              //   autoFocus
-              //   placeholder={formatMessage(message.treatment_text_placeholder)}
-              // />
-              // <Select
-              //   className="form-inputs-ap drawer-select"
-              //   autoComplete="off"
-              //   placeholder="Select Treatment"
-              //   disabled={treatment_id ? true : false}
-              //   // onSelect={this.setTreatment}
-              //   // onDeselect={handleDeselect}
-              //   suffixIcon={null}
-              // >
-              //   {this.getTreatmentOption()}
-              // </Select>
-            )}
-          </FormItem>
+            {formatMessage(message.purpose_text)}
+          </label>
 
+          <div className="star-red">*</div>
+        </div>
+        <FormItem
+          // label={formatMessage(message.purpose_text)}
+          className="full-width ant-date-custom"
+        >
+          {getFieldDecorator(REASON, {
+            rules: [
 
-          <div className='flex mt24 direction-row flex-grow-1'>
-            <label
-              htmlFor="purpose"
-              className="form-label"
-              title={formatMessage(message.purpose_text)}
-            >
-              {formatMessage(message.purpose_text)}
-            </label>
+              {
+                pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
+                message: formatMessage(message.error_valid_purpose)
+              }
+            ],
+            initialValue: reason,
+          })(
+            <Input
+              autoFocus
+              className='mt4'
+              placeholder={formatMessage(message.purpose_text_placeholder)}
+            />
+          )}
+        </FormItem>
 
-            <div className="star-red">*</div>
-          </div>
-          <FormItem
-            // label={formatMessage(message.purpose_text)}
-            className="full-width ant-date-custom"
-          >
-            {getFieldDecorator(REASON, {
-              rules: [
-              
-                {
-                  pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
-                  message: formatMessage(message.error_valid_purpose)
-                }
-              ],
-              initialValue: reason,
-            })(
-              <Input
-                autoFocus
-                className='mt4'
-                placeholder={formatMessage(message.purpose_text_placeholder)}
-              />
-            )}
-          </FormItem>
-
-          <div className='flex mt24 direction-row flex-grow-1'>
+        <div className='flex mt24 direction-row flex-grow-1'>
           <label
             htmlFor="notes"
             className="form-label"
@@ -746,22 +746,22 @@ class EditAppointmentForm extends Component {
             {formatMessage(message.description_text)}
           </label>
         </div>
-          <FormItem
-            // label={formatMessage(message.description_text)}
-            className="full-width ant-date-custom"
-          >
-            {getFieldDecorator(DESCRIPTION, {
-              initialValue: description
-            })(
-              <TextArea
-                autoFocus
-                className='mt4'
-                maxLength={1000}
-                placeholder={formatMessage(message.description_text_placeholder)}
-                rows={4}
-              />
-            )}
-          </FormItem>
+        <FormItem
+          // label={formatMessage(message.description_text)}
+          className="full-width ant-date-custom"
+        >
+          {getFieldDecorator(DESCRIPTION, {
+            initialValue: description
+          })(
+            <TextArea
+              autoFocus
+              className='mt4'
+              maxLength={1000}
+              placeholder={formatMessage(message.description_text_placeholder)}
+              rows={4}
+            />
+          )}
+        </FormItem>
       </Form>
     );
   }

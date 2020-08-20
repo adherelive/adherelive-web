@@ -108,16 +108,14 @@ class VideoComponent extends Component {
         }
     }
 
-    showMessage = () => {
-        message.error("Cannot join the room. This event has passed.");
-    };
+
 
     joinRoom = async () => {
-        const {
-            match: {
-                params: { room_id }
-            }
-        } = this.props;
+        // const {
+        //     match: {
+        //         params: { room_id }
+        //     }
+        // } = this.props;
 
         this.setState({ status: "loading" });
 
@@ -137,7 +135,7 @@ class VideoComponent extends Component {
         if (this.state.previewTracks) {
             connectOptions.tracks = this.state.previewTracks;
         }
-        const { status } = this.state;
+        // const { status } = this.state;
 
         // if (status === PASSED || status === COMPLETED) {
         //   this.showMessage();
@@ -156,9 +154,15 @@ class VideoComponent extends Component {
     };
 
     attachTracks = (tracks, container) => {
+        console.log('73648723648723684723684==========>', tracks);
+
         tracks.forEach(track => {
-            container.appendChild(track.attach());
+            if (track.kind !== 'data') {
+                console.log('73648723648723684723684', track);
+                container.appendChild(track.attach());
+            }
         });
+
     };
 
     // Attaches a track to a specified DOM container
@@ -166,12 +170,26 @@ class VideoComponent extends Component {
         var tracks = Array.from(participant.tracks.values());
         this.attachTracks(tracks, container);
     };
+    // attachParticipantTracks(participant, container, isLocal) {
+    //     var tracks = this.getTracks(participant);
+    //     this.attachTracks(tracks, container, isLocal);
+    // }
+
+    // getTracks(participant) {
+    //     return Array.from(participant.tracks.values()).filter(function (publication) {
+    //         return publication.track;
+    //     }).map(function (publication) {
+    //         return publication.track;
+    //     });
+    // }
 
     detachTracks = tracks => {
         tracks.forEach(track => {
-            track.detach().forEach(detachedElement => {
-                detachedElement.remove();
-            });
+            if (track.kind !== 'data') {
+                track.detach().forEach(detachedElement => {
+                    detachedElement.remove();
+                });
+            }
         });
     };
 
@@ -313,7 +331,7 @@ class VideoComponent extends Component {
     }
 
     getOtherParticipantData = () => {
-        const { users, authenticated_user, match: {
+        const { users, match: {
             params: { room_id = '' }
         }, patients = {} } = this.props;
         let patientUserId = room_id.split('-')[room_id.split('-').length - 1];
@@ -324,13 +342,12 @@ class VideoComponent extends Component {
                 patientId = id;
             }
         }
-        console.log('83658713658791345', patientId, this.props);
-        const userIds = Object.keys(users);
+        // const userIds = Object.keys(users);
         // const otherUserId = userIds.filter(id => id !== authenticated_user)[0];
 
-        let { basic_info: { user_id: otherUserId = 1, first_name: name = '', profile_pic: profilePic = UserDpPlaceholder, gender = '' } = {}, dob = '' } = patients[patientId];
+        let { basic_info: { user_id: otherUserId = 1, first_name: name = '', gender = '' } = {}, dob = '', details: { profile_pic: profilePic = UserDpPlaceholder } } = patients[patientId];
         if (otherUserId) {
-            const { basic_info, category } = users[otherUserId] || {};
+            const { category } = users[otherUserId] || {};
             // const {
             //     // name,
             //     category
@@ -350,7 +367,8 @@ class VideoComponent extends Component {
 
     render() {
         const otherUserdata = this.getOtherParticipantData();
-        console.log('32524534534523425===>>', Video.version);
+        console.log('83658713658791345', otherUserdata);
+        console.log('73648723648723684723684===>>*****', Video.version);
         // Only show video track after user has joined a room
         let showLocalTrack = this.state.localMediaAvailable ? (
             <div className="videoWrapper" ref="localMedia" />
@@ -453,8 +471,8 @@ class VideoComponent extends Component {
                             }
                         >
                             <img
-                                style={{ height: "40px", width: "40px" }}
-                                src={profilePic}
+                                style={{ height: "40px", width: "40px", borderRadius: '50%' }}
+                                src={otherUserdata.profilePic||UserDpPlaceholder}
                                 alt="chatIcon"
                             />{" "}
                             <span
@@ -467,12 +485,13 @@ class VideoComponent extends Component {
                             <div className="flex column align-items-center justify-content-center WaitingForUser">
                                 <div className="mb10">
                                     <img
-                                        src={otherUserdata.profilePic}
+                                        src={otherUserdata.profilePic||UserDpPlaceholder}
                                         style={{
                                             cursor: "pointer",
                                             marginLeft: 24,
                                             height: "94px",
-                                            width: "96px"
+                                            width: "96px",
+                                            borderRadius:'50%'
                                         }}
                                         alt="userDp"
                                     />

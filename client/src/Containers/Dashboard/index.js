@@ -8,6 +8,7 @@ import { searchCondition } from "../../modules/conditions";
 import { searchSeverity } from "../../modules/severity";
 import { getGraphs, updateGraphs } from "../../modules/graphs";
 import { connect } from "react-redux";
+import { closePopUp } from "../../modules/chat";
 
 const mapStateToProps = state => {
     const { graphs, auth: { authPermissions = [] } = {},
@@ -39,6 +40,7 @@ const mapDispatchToProps = dispatch => {
         searchTreatment: value => dispatch(searchTreatment(value)),
         searchSeverity: value => dispatch(searchSeverity(value)),
         addPatient: (data) => dispatch(addPatient(data)),
+        closePopUp: () => dispatch(closePopUp()),
     };
 };
 

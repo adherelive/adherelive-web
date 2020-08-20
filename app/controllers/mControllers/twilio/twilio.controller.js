@@ -14,7 +14,7 @@ class TwilioController extends Controller {
         try {
             const deviceId = req.query.device ? req.query.device : "application";
             const {userDetails: {userId}} = req;
-            const identity = req.query.identity ? req.query.identity : userId;
+            const identity = req.query.identity ? req.query.identity : `${userId}`;
 
             const token = await twilioService.chatTokenGenerator(identity, deviceId);
 
@@ -37,7 +37,7 @@ class TwilioController extends Controller {
         try {
             // const userId = req.query.userId ? req.query.userId : null;
             const {userDetails: {userId}} = req;
-            const identity = userId ? userId : faker.name.findName();
+            const identity = userId ? `${userId}` : faker.name.findName();
 
             const token = await twilioService.videoTokenGenerator(identity);
 

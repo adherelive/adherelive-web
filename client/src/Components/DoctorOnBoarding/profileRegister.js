@@ -26,6 +26,7 @@ import japan from '../../Assets/images/japan.png';
 import china from '../../Assets/images/china.png';
 import switzerland from '../../Assets/images/switzerland.png';
 import france from '../../Assets/images/france.png';
+import messages from "./messages";
 
 
 
@@ -98,6 +99,8 @@ class Profileregister extends Component {
 
 
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
     setCity = e => {
         this.setState({ city: e.target.value });
     };
@@ -133,7 +136,7 @@ class Profileregister extends Component {
                 let { files = [] } = response.payload.data;
                 this.setState({ profile_pic_url: files[0] })
             } else {
-                message.error('Something went wrong.')
+                message.error(this.formatMessage(messages.somethingWentWrong))
             }
         });
         // file.status='done';
@@ -154,7 +157,7 @@ class Profileregister extends Component {
     beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
-            message.error('You can only upload JPG/PNG file!');
+            message.error(this.formatMessage(messages.imageTypeError));
         }
         return isJpgOrPng;
     }
@@ -181,29 +184,30 @@ class Profileregister extends Component {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
+
     validateData = () => {
         let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' } = this.state;
 
         if (!category) {
-            message.error('Please select a Profile type.')
+            message.error(this.formatMessage(messages.profileTypeError))
             return false;
         } else if (!profile_pic_url && !profile_pic_url_saved) {
-            message.error('Please select a Profile picture.')
+            message.error(this.formatMessage(messages.profilePicError))
             return false;
         } else if (!name) {
-            message.error('Please enter your name.')
+            message.error(this.formatMessage(messages.nameError))
             return false;
         } else if (!prefix) {
-            message.error('Please select a prefix.')
+            message.error(this.formatMessage(messages.prefixError))
             return false;
-        } else if (mobile_number.length < 10) {
-            message.error('Please enter valid mobile number.')
+        } else if (mobile_number && mobile_number.length < 10 || !mobile_number) {
+            message.error(this.formatMessage(messages.mobNoError))
             return false;
-        } else if (!this.validateEmail(email)) {
-            message.error('Please enter a valid email address.')
+        } else if (!email || !this.validateEmail(email)) {
+            message.error(this.formatMessage(messages.emailError))
             return false;
         } else if (!city) {
-            message.error('Please enter a city.')
+            message.error(this.formatMessage(messages.cityError))
             return false;
         }
         return true;
@@ -222,7 +226,7 @@ class Profileregister extends Component {
                 if (status) {
                     history.replace(PATH.REGISTER_QUALIFICATIONS);
                 } else {
-                    message.error('Something went wrong');
+                    message.error(this.formatMessage(messages.somethingWentWrong));
                 }
             });
         }
@@ -309,11 +313,11 @@ class Profileregister extends Component {
         const { profile_pic } = this.state;
         return (
             <div className='form-block'>
-                <div className='form-headings'>Profile Type</div>
+                <div className='form-headings'>{this.formatMessage(messages.profileType)}</div>
                 <Select className='form-inputs' onChange={this.setCategory} value={category} disabled={true}>
                     {this.getCategoryOptions()}
                 </Select>
-                <div className='form-headings mb6'>Profile Picture</div>
+                <div className='form-headings mb6'>{this.formatMessage(messages.profilePicture)}</div>
                 <Upload
                     name="avatar"
                     listType="picture-card"
@@ -324,35 +328,35 @@ class Profileregister extends Component {
                 >
                     {profile_pic ? <img src={profile_pic} alt="avatar" style={{ width: '100%' }} /> : profile_pic_url_saved ? <img src={profile_pic_url_saved} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                 </Upload>
-                <div className='form-headings mt18'>Name</div>
+                <div className='form-headings mt18'>{this.formatMessage(messages.name)}</div>
                 <Input
-                    placeholder="Name"
+                    placeholder={this.formatMessage(messages.name)}
                     value={name}
                     maxLength={200}
                     className={"form-inputs"}
                     onChange={this.setName}
                 />
 
-                <div className='form-headings'>Phone number</div>
+                <div className='form-headings'>{this.formatMessage(messages.phoneNo)}</div>
                 <Input
                     addonBefore={prefixSelector}
                     className={"form-inputs"}
-                    placeholder="Phone number"
+                    placeholder={this.formatMessage(messages.phoneNo)}
                     maxLength={10}
                     value={mobile_number}
                     onChange={this.setNumber}
                 />
 
-                <div className='form-headings'>Email</div>
+                <div className='form-headings'>{this.formatMessage(messages.email)}</div>
                 <Input
-                    placeholder="Email"
+                    placeholder={this.formatMessage(messages.email)}
                     value={email}
                     disabled={true}
                     className={"form-inputs"}
                     onChange={this.setEmail}
                 />
 
-                <div className='form-headings'>City</div>
+                <div className='form-headings'>{this.formatMessage(messages.city)}</div>
                 <PlacesAutocomplete
                     value={this.state.city}
                     onChange={this.handleChangeCity}
@@ -362,7 +366,7 @@ class Profileregister extends Component {
                         <div>
                             <Input
                                 {...getInputProps({
-                                    placeholder: 'Search City',
+                                    placeholder: this.formatMessage(messages.searchCity),
                                     className: 'form-inputs-google',
                                 })}
                             />
@@ -395,7 +399,7 @@ class Profileregister extends Component {
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
-                    <div className='header'>Create your Profile</div>
+                    <div className='header'>{this.formatMessage(messages.createProfile)}</div>
                     <div className='registration-body'>
                         <div className='flex mt36'>
                             <UploadSteps current={0} />
@@ -406,10 +410,10 @@ class Profileregister extends Component {
                     </div>
                     <div className='footer'>
                         <div className={'footer-text-inactive'} >
-                            Back
-                      </div>
+                            {this.formatMessage(messages.back)}
+                        </div>
 
-                        <div className={'footer-text-active'} onClick={this.onNextClick}>Next</div></div>
+                        <div className={'footer-text-active'} onClick={this.onNextClick}>{this.formatMessage(messages.next)}</div></div>
                 </div>
             </Fragment>
         );

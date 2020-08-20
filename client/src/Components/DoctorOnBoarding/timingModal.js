@@ -4,9 +4,9 @@ import { injectIntl } from "react-intl";
 // import {formatMessage} from "react-intl/src/format";
 import moment from 'moment';
 import uuid from 'react-uuid';
-import {  Button, Modal, TimePicker, Icon, message, Checkbox } from "antd";
-import {  FULL_DAYS } from '../../constant';
-
+import { Button, Modal, TimePicker, Icon, message, Checkbox } from "antd";
+import { FULL_DAYS } from '../../constant';
+import messages from './messages';
 
 // const Initial_State = {
 //     daySelected: {
@@ -79,6 +79,8 @@ class ClinicRegister extends Component {
 
     }
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
     toggleDaySelected = (day) => () => {
 
         let { daySelected, dayTimings = {} } = this.state;
@@ -130,14 +132,14 @@ class ClinicRegister extends Component {
                 {
                     Object.keys(daySelected).map((day) => {
                         const { timingsKeys = [], timings = {} } = dayTimings[day];
-                       return (
+                        return (
                             <div className='flex direction-column wp100 pt8 pb8'>
                                 <div className='flex justify-space-between wp100 mb8 mt4'>
                                     <div className='flex'>
                                         <Checkbox checked={daySelected[day]} onChange={this.toggleDaySelected(day)} />
                                         <div className='ml10 fs16 fw700'>{day}</div>
                                     </div>
-                                    {daySelected[day] && (<div className='pointer fs14 medium theme-green' onClick={this.addDayTimings(day)}>Add More</div>)}
+                                    {daySelected[day] && (<div className='pointer fs14 medium theme-green' onClick={this.addDayTimings(day)}>{this.formatMessage(messages.addMore)}</div>)}
                                 </div>
                                 {daySelected[day] && (
                                     <div className='flex direction-column wp100'>
@@ -147,7 +149,7 @@ class ClinicRegister extends Component {
                                             return (
                                                 <div key={tKey} className='flex mb10'>
                                                     <div className='flex direction-column flex-grow-1 mr24'>
-                                                        <div className='fs14 mt8 mb8 '>Start Time</div>
+                                                        <div className='fs14 mt8 mb8 '>{this.formatMessage(messages.startTime)}</div>
                                                         <TimePicker
                                                             className='wp100'
                                                             value={timings[tKey].startTime ? timings[tKey].startTime : null}
@@ -157,7 +159,7 @@ class ClinicRegister extends Component {
                                                     </div>
                                                     <div className='flex direction-row align-center flex-grow-1'>
                                                         <div className='flex direction-column wp100'>
-                                                            <div className='flex wp100 align-center justify-space-between fs14 mt8 mb8'>End Time   {index > 0 &&
+                                                            <div className='flex wp100 align-center justify-space-between fs14 mt8 mb8'>{this.formatMessage(messages.endTime)}   {index > 0 &&
                                                                 (<Icon
                                                                     className="ml10"
                                                                     type="minus-circle-o"
@@ -224,7 +226,7 @@ class ClinicRegister extends Component {
             newDayTimings[day].timings = timings;
             this.setState({ clinics: newDayTimings });
         } else {
-            message.error('Please select valid timings!')
+            message.error(this.formatMessage(messages.validTimings))
         }
     }
 
@@ -256,7 +258,7 @@ class ClinicRegister extends Component {
             newDayTimings[day].timings = timings;
             this.setState({ dayTimings: newDayTimings });
         } else {
-            message.error('Please select a valid End Time.')
+            message.error(this.formatMessage(messages.validEndTiming))
         }
     }
 
@@ -300,20 +302,20 @@ class ClinicRegister extends Component {
 
 
     render() {
-        const { visible} = this.props;
+        const { visible } = this.props;
         return (
             <Modal
                 visible={visible}
-                title={'Clinic Timings'}
+                title={this.formatMessage(messages.clinicTimings)}
                 onCancel={this.handleClose}
                 destroyOnClose={true}
                 onOk={this.handleSave}
                 footer={[
                     <Button key="back" onClick={this.handleClose}>
-                        Return
+                        {this.formatMessage(messages.return)}
                     </Button>,
                     <Button key="submit" type="primary" onClick={this.handleSave}>
-                        Submit
+                        {this.formatMessage(messages.submit)}
                     </Button>,
                 ]}
             >
