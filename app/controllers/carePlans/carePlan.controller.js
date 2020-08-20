@@ -35,7 +35,7 @@ class CarePlanController extends Controller {
             const id = parseInt(care_plan_id);
 
             const carePlan = await carePlanService.getCarePlanById(id);
-            const carePlanData = await CarePlanWrapper(carePlan);
+            let carePlanData = await CarePlanWrapper(carePlan);
 
             console.log("====================> ", care_plan_id, id, carePlan, userDetails);
             const patient_id = carePlan.get('patient_id');
