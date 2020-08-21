@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT } from "../../../constant";
+import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -18,6 +18,7 @@ import TemplateDrawer from '../../Drawer/medicationTemplateDrawer'
 import ChatPopup from "../../../Containers/ChatPopup";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
+import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from '../../../Helper/url/patients';
 import { getPatientConsultingUrl } from '../../../Helper/url/patients';
 // import messages from "../../Dashboard/message";
@@ -492,7 +493,7 @@ class PatientDetails extends Component {
           // organizer_id,
           // organizer_type = "doctor",
           end_date,
-          details: { medicine_id, repeat_days } = {},
+          details: { medicine_id, repeat_days,medicine_type = '1' } = {},
         } = {},
       } = medications[id] || {};
 
@@ -507,7 +508,7 @@ class PatientDetails extends Component {
           <div className="flex direction-row justify-space-around align-center">
             <img
               className="w20 mr10"
-              src={type === MEDICINE_TYPE.TABLET ? TabletIcon : InjectionIcon}
+              src={medicine_type === TABLET ? TabletIcon : medicine_type === SYRUP ? SyrupIcon : InjectionIcon}
               alt="medicine icon"
             />
             <p className="mb0">{name ? `${name}` : "--"}</p>
