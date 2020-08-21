@@ -67,17 +67,17 @@ class CarePlanTemplateService {
       const { user_id, treatment_id, severity_id, condition_id } = data;
       const carePlanTemplate = await CarePlanTemplate.findAll({
         where: {
-          treatment_id,
-          severity_id,
-          condition_id,
-          [Op.or]: [
-            {
-              user_id
-            },
-            {
-              user_id: null
-            }
-          ]
+            [Op.or]: [
+              {
+                treatment_id: {[Op.eq]: treatment_id},
+                severity_id:{[Op.eq]: severity_id},
+                condition_id: {[Op.eq]: condition_id},
+              },
+              {
+                condition_id: {[Op.eq]: condition_id},
+                user_id: {[Op.eq]: user_id},
+              },
+            ],
         },
         include: [
           Condition,
@@ -86,6 +86,17 @@ class CarePlanTemplateService {
           TemplateAppointment,
           TemplateMedication
         ]
+      });
+      return carePlanTemplate;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getSingleTemplateByData = async (data) => {
+    try {
+      const carePlanTemplate = await CarePlanTemplate.findOne({
+        where: data,
       });
       return carePlanTemplate;
     } catch (error) {

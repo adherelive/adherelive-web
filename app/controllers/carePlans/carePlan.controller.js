@@ -37,6 +37,17 @@ class CarePlanController extends Controller {
             const { userDetails } = req;
             const { userId, userData: { category } = {} } = userDetails || {};
 
+            const templateNameCheck = await carePlanTemplateService.getSingleTemplateByData({
+                name: newTemplateName,
+                user_id: userId
+            });
+
+            Log.debug("templateNameCheck ---> ", templateNameCheck);
+
+            if(templateNameCheck) {
+                return this.raiseClientError(res, 422, {}, `A template exists with name ${newTemplateName}`);
+            }
+
             const id = parseInt(care_plan_id);
 
             const carePlan = await carePlanService.getCarePlanById(id);
