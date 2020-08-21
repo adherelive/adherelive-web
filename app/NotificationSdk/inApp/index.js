@@ -1,7 +1,7 @@
 import EventExecutor from "../executor";
 import Log from "../../../libs/log_new";
 
-Log.filename("NOTIFICATION_SDK > IN_APP");
+Log.fileName("NOTIFICATION_SDK > IN_APP");
 
 class AppNotification {
     constructor() {
@@ -9,6 +9,7 @@ class AppNotification {
 
     notify = (templates = []) => {
         for(const template of templates) {
+            Log.debug("template data -->", template);
             EventExecutor.sendAppNotification(template).then(res => {
                 Log.debug("AppNotification notify response", res);
             });

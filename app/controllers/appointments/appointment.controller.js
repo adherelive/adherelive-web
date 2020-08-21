@@ -345,9 +345,9 @@ class AppointmentController extends Controller {
       });
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
-      NotificationSdk.execute(appointmentJob);
+      await NotificationSdk.execute(appointmentJob);
 
-      Logger.debug("appointmentJob ---> ", appointmentJob.getEmailTemplate());
+      Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
       // NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 

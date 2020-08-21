@@ -68,7 +68,7 @@ class EventExecutor {
     sendAppNotification = async (template) => {
         try {
             // TODO: add get stream rest api call code here
-
+            Log.debug("sendAppNotification --> ", template);
             const client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey);
             const userToken = client.createUserToken(
                 template.actor.toString()
