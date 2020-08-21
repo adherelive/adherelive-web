@@ -343,11 +343,7 @@ class PatientController extends Controller {
                     }
                 },
                 care_plan_templates: {
-                    [carePlanData.getCarePlanTemplateId()]: {
-                        ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
-                        template_appointment_ids,
-                        template_medication_ids
-                    },
+
                     ...otherCarePlanTemplates
                 },
                 appointments: {

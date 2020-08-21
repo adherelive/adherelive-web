@@ -321,7 +321,7 @@ class TwilioChat extends Component {
                 "test";
         // this.channelName = '1-adhere-3';
 
-        // console.log('didMount======================>getToken', roomId);
+        console.log('didMount======================>getToken', moment());
         fetchChatAccessToken(authenticated_user).then(result => {
             this.setState((prevState, props) => {
                 // console.log('didMount======================>getToken', props.twilio.chatToken);
@@ -473,6 +473,7 @@ class TwilioChat extends Component {
             this.scrollToBottom
         );
 
+        console.log('didMount======================>msgs loaded', moment());
     };
 
     messageAdded = (message) => {
