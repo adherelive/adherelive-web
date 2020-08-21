@@ -24,7 +24,7 @@ const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false,
             <div className='flex direction-row align-center '>
                 <div className='flex direction-column  justify-center'>
                     <div className='doctor-name-chat-header-popup pointer' onClick={onHeaderClick}>{patientName}</div>
-                    <div className='doctor-name-chat-header-online-popup ml10'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : ''}</div>
+                    <div className='doctor-name-chat-header-online-popup ml10'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : formatMessage(messages.offline)}</div>
                 </div>
             </div>
             <div>
@@ -44,7 +44,7 @@ const MinimizedHeader = ({ placeVideoCall, patientName, isOnline = false, onHead
             <div className='flex direction-row align-center'>
                 <div className='flex direction-column align-center justify-center'>
                     <div className='doctor-name-chat-header mb2 pointer' onClick={onHeaderClick}>{patientName}</div>
-                    <div className='doctor-name-chat-header-online'>{isOnline ? 'online' : ''}</div>
+                    {/* <div className='doctor-name-chat-header-online-popup ml10'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : formatMessage(messages.offline)}</div> */}
                 </div>
             </div>
             <div>

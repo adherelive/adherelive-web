@@ -26,6 +26,11 @@ const messages = defineMessages({
     id: "app.chatPopUp.cantDisplay",
     description: "Click Here to Go Home",
     defaultMessage: "Message Cannot be Displayed"
+  },
+  offline: {
+    id: "app.chatFullScreen.offline",
+    description: "Click Here to Go Home",
+    defaultMessage: "offline"
   }
 
 });

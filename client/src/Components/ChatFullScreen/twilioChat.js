@@ -24,7 +24,7 @@ const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false,
 
                 <div className='flex direction-column justify-center'>
                     <div className='doctor-name-chat-header medium mt4'>{patientName}</div>
-                    <div className='doctor-name-chat-header-online ml10'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : ''}</div>
+                    <div className='doctor-name-chat-header-online ml10'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : formatMessage(messages.offline)}</div>
                 </div>
             </div>
 
