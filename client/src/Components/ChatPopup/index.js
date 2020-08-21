@@ -370,7 +370,7 @@ class ChatPopUp extends Component {
         //         };
         //     },
         //         () => {
-                    this.initChat();
+        this.initChat();
         //         }
         //     );
         // });
@@ -527,6 +527,15 @@ class ChatPopUp extends Component {
             const messagesToRender = [];
             for (let i = 0; i < messagesArray.length; ++i) {
                 const message = messagesArray[i];
+                const prevMessage = i > 1 ? messagesArray[i - 1] : 1;
+                let sameDate = message && prevMessage && message.state && prevMessage.state ? moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp), 'date') : false;
+
+                // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", sameDate,message,prevMessage,message.state,prevMessage.state,moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp),'date'));
+                if (!sameDate) {
+                    messagesToRender.push(
+                        <div className='mt16 mb16 flex wp100 text-grey justify-center fs12'>{moment(message.state.timestamp).isSame(moment(), 'date') ? this.formatMessage(messages.today) : moment(message.state.timestamp).format('ll')}</div>
+                    )
+                }
                 const { state: { index = 1 } = {} } = message;
                 const user = users[message.state.author]
                     ? users[message.state.author]

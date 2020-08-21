@@ -31,6 +31,12 @@ const messages = defineMessages({
     id: "app.chatFullScreen.cantDisplay",
     description: "Click Here to Go Home",
     defaultMessage: "Message Cannot be Displayed"
+  },
+
+  today: {
+    id: "app.chatFullScreen.today",
+    description: "Click Here to Go Home",
+    defaultMessage: "Today"
   }
 
 });

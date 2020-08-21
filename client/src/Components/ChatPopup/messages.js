@@ -31,6 +31,12 @@ const messages = defineMessages({
     id: "app.chatFullScreen.offline",
     description: "Click Here to Go Home",
     defaultMessage: "offline"
+  },
+
+  today: {
+    id: "app.chatFullScreen.today",
+    description: "Click Here to Go Home",
+    defaultMessage: "Today"
   }
 
 });
