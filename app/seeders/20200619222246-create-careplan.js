@@ -18,7 +18,7 @@ module.exports = {
       {
         patient_id: 1,
         doctor_id: 1,
-        care_plan_template_id: 1,
+        care_plan_template_id: null,
         details: JSON.stringify({
           treatment_id: 1,
           severity_id: 1,

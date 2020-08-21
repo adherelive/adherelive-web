@@ -14,8 +14,9 @@ const updateDoctorSchema = Joi.object().keys({
     .required()
     .label("Category cannot be empty"),
   mobile_number: Joi.string()
-    .regex(/^\d+$/)
-    .length(10)
+      .min(6)
+    .max(20)
+      .regex(/^\d+$/)
     .required()
     .label("Mobile number cannot be empty"),
   prefix: Joi.string()
@@ -28,14 +29,14 @@ const updateDoctorSchema = Joi.object().keys({
 });
 
 const addPatientForm = Joi.object().keys({
-  mobile_number: Joi.string().length(10).regex(/^\d+$/).required().label("Please enter correct mobile number"),
+  mobile_number: Joi.string().min(6).max(20).required().label("Please enter correct mobile number"),
   name: Joi.string().optional().allow("", null),
   gender: Joi.string().length(1).optional().allow("", null),
   date_of_birth: Joi.date().required().label("Please enter date of birth"),
   prefix: Joi.string().regex(/^\d+$/).required().label("Please select prefix"),
-  treatment_id: Joi.string().regex(/^\d+$/).required().label("Incorrect Treatment value selected"),
-  severity_id: Joi.string().regex(/^\d+$/).required().label("Incorrect Severity value selected"),
-  condition_id: Joi.string().regex(/^\d+$/).required().label("Incorrect Condition value selected"),
+  treatment_id: Joi.number().required().label("Incorrect Treatment value selected"),
+  severity_id: Joi.number().required().label("Incorrect Severity value selected"),
+  condition_id: Joi.number().required().label("Incorrect Condition value selected"),
 });
 
 const validDOB = (date) => {
