@@ -22,9 +22,9 @@ const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false,
     return (
         <div className='chat-patientListheader-PopUp pt4 pb4' >
             <div className='flex direction-row align-center '>
-                <div className='flex direction-column align-center justify-center'>
+                <div className='flex direction-column  justify-center'>
                     <div className='doctor-name-chat-header-popup pointer' onClick={onHeaderClick}>{patientName}</div>
-                    <div className='doctor-name-chat-header-online-popup'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : ''}</div>
+                    <div className='doctor-name-chat-header-online-popup ml10'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : formatMessage(messages.offline)}</div>
                 </div>
             </div>
             <div>
@@ -44,7 +44,7 @@ const MinimizedHeader = ({ placeVideoCall, patientName, isOnline = false, onHead
             <div className='flex direction-row align-center'>
                 <div className='flex direction-column align-center justify-center'>
                     <div className='doctor-name-chat-header mb2 pointer' onClick={onHeaderClick}>{patientName}</div>
-                    <div className='doctor-name-chat-header-online'>{isOnline ? 'online' : ''}</div>
+                    {/* <div className='doctor-name-chat-header-online-popup ml10'>{otherTyping ? formatMessage(messages.typing) : isOnline ? formatMessage(messages.online) : formatMessage(messages.offline)}</div> */}
                 </div>
             </div>
             <div>
@@ -291,7 +291,9 @@ class ChatPopUp extends Component {
     };
 
     componentDidMount() {
-        this.getToken();
+        // this.getToken();
+        const { twilio: { chatToken = '' } } = this.props;
+        this.setState({ token: chatToken }, this.getToken)
         this.scrollToBottom();
 
         this.intervalID = setInterval(() => this.tick(), 2000);
@@ -302,7 +304,19 @@ class ChatPopUp extends Component {
         clearInterval(this.intervalID);
     }
 
-
+    componentDidUpdate(prevProps, prevState) {
+        const {
+            roomId
+        } = this.props;
+        const {
+            roomId: prevRoomId
+        } = prevProps;
+        if (roomId !== prevRoomId) {
+            this.setState({ messagesLoading: true });
+            this.getToken();
+            this.scrollToBottom();
+        }
+    }
     tick = async () => {
         console.log('897987 tick called78934793');
         const { authenticated_user } = this.props;
@@ -338,7 +352,7 @@ class ChatPopUp extends Component {
 
     formatMessage = data => this.props.intl.formatMessage(data);
 
-    getToken = async () => {
+    getToken = () => {
         const {
             // match: {
             roomId,
@@ -349,17 +363,21 @@ class ChatPopUp extends Component {
         this.channelName =
             roomId ? roomId :
                 "test";
-        // this.channelName = '1-adhere-3';
-        fetchChatAccessToken(authenticated_user).then(result => {
-            this.setState((prevState, props) => {
-                return {
-                    token: props.twilio.chatToken
-                };
-            }, this.initChat);
-        });
+        // fetchChatAccessToken(authenticated_user).then(result => {
+        //     this.setState((prevState, props) => {
+        //         return {
+        //             token: props.twilio.chatToken
+        //         };
+        //     },
+        //         () => {
+                    this.initChat();
+        //         }
+        //     );
+        // });
     };
 
     initChat = () => {
+        console.log('846328756839658932', this.channelName, this.state.token);
         this.chatClient = new Chat(this.state.token);
         this.chatClient.initialize().then(this.clientInitiated.bind(this));
     };
@@ -369,7 +387,6 @@ class ChatPopUp extends Component {
         const { authenticated_user = 1 } = this.props
         const { identity = null } = obj;
         if (identity !== `${authenticated_user}`) {
-            // console.log("typing started:::::::::::::: 11");
             this.setState({ other_typing: true });
         }
     }
@@ -378,7 +395,6 @@ class ChatPopUp extends Component {
         const { authenticated_user = 1 } = this.props
         const { identity = null } = obj;
         if (identity !== `${authenticated_user}`) {
-            // console.log("typing stopped:::::::::::::: 11");
             this.setState({ other_typing: false });
         }
     }
@@ -488,19 +504,7 @@ class ChatPopUp extends Component {
         this.channel.setAllMessagesConsumed();
     };
 
-    componentDidUpdate(prevProps, prevState) {
-        const {
-            roomId
-        } = this.props;
-        const {
-            roomId: prevRoomId
-        } = prevProps;
-        if (roomId !== prevRoomId) {
-            this.setState({ messagesLoading: true });
-            this.getToken();
-            this.scrollToBottom();
-        }
-    }
+
 
     logOut = event => {
         event.preventDefault();
@@ -579,7 +583,7 @@ class ChatPopUp extends Component {
                                         <div className="chat-time mr-4">
                                             {moment(message.state.timestamp).format("H:mm")}
                                         </div>
-                                        <img className={index < otherUserLastConsumedMessageIndex ? `h14 mt4` : `h12 mt4`} src={index < otherUserLastConsumedMessageIndex ? DoubleTick : SingleTick} />
+                                        <img className={index < otherUserLastConsumedMessageIndex ? `h14 mt4` : `h12 mt4`} src={index <= otherUserLastConsumedMessageIndex ? DoubleTick : SingleTick} />
                                     </div>
                                     {/* </div> */}
                                     {/* <div className="chat-avatar left">
@@ -599,7 +603,7 @@ class ChatPopUp extends Component {
     render() {
         const { ChatForm } = this;
         const { messagesLoading = false, other_user_online = false, other_typing = false } = this.state;
-        console.log('3545235235235234534532423523', this.props);
+        // console.log('3545235235235234534532423523', this.props);
         const { placeVideoCall, patientName = '', chats: { minimized = false } = {}, minimizePopUp, maximizePopUp, closePopUp, maximizeChat } = this.props;
         if (minimized) {
             return (

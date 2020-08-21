@@ -220,7 +220,7 @@ class VideoComponent extends Component {
         const { users, authenticated_user } = this.props;
 
         const userIds = Object.keys(users);
-        const otherUserId = userIds.filter(id => id !== authenticated_user)[0];
+        const otherUserId = userIds.filter(id => parseInt(id) !== parseInt(authenticated_user))[0];
 
         if (connectedParticipants[otherUserId] === "connected") {
             this.setState({
@@ -427,12 +427,14 @@ class VideoComponent extends Component {
                 }}
             >
                 <div ref="remoteMedia" id="remote-media" />
-                {(status === "loading" || status === "started") && (
-                    <Spin
-                        indicator={antIcon}
-                        className="loadingForUser flex align-items-center justify-content-center mlp49"
-                    />
-                )}
+                {(status === "loading" || status === "started")
+                    // && (
+                    // <Spin
+                    //     indicator={antIcon}
+                    //     className="loadingForUser loadingForUserSub flex align-items-center justify-center mlp49"
+                    // />
+                    // )
+                }
 
                 <div
                     style={{
@@ -472,7 +474,7 @@ class VideoComponent extends Component {
                         >
                             <img
                                 style={{ height: "40px", width: "40px", borderRadius: '50%' }}
-                                src={otherUserdata.profilePic||UserDpPlaceholder}
+                                src={otherUserdata.profilePic || UserDpPlaceholder}
                                 alt="chatIcon"
                             />{" "}
                             <span
@@ -482,16 +484,15 @@ class VideoComponent extends Component {
                             </span>
                         </div>
                         {showWaitngMsg && (
-                            <div className="flex column align-items-center justify-content-center WaitingForUser">
+                            <div className="flex direction-column text-white fs16 medium align-items-center justify-center WaitingForUser">
                                 <div className="mb10">
                                     <img
-                                        src={otherUserdata.profilePic||UserDpPlaceholder}
+                                        src={otherUserdata.profilePic || UserDpPlaceholder}
                                         style={{
                                             cursor: "pointer",
-                                            marginLeft: 24,
                                             height: "94px",
                                             width: "96px",
-                                            borderRadius:'50%'
+                                            borderRadius: '50%'
                                         }}
                                         alt="userDp"
                                     />
@@ -499,20 +500,16 @@ class VideoComponent extends Component {
 
                                 <div>
                                     {otherUserdata.category !== USER_CATEGORY.PATIENT ? (
-                                        <span className="fontsize14 white">
+                                        <span className="fs16 medium text-white white">
                                             {status !== "partcipantDisconnected"
                                                 ? `Waiting for ${otherUserdata.name}`
                                                 : `Reconnecting to ${otherUserdata.name}`}
                                         </span>
                                     ) : (
-                                            <span className="fontsize14 white">
+                                            <span className="fs16 medium text-white white">
                                                 {status !== "partcipantDisconnected"
-                                                    ? ` Waiting for ${otherUserdata.name} (${
-                                                    otherUserdata.age
-                                                    }, ${otherUserdata.gender})`
-                                                    : `Reconnecting to ${otherUserdata.name} (${
-                                                    otherUserdata.age
-                                                    }, ${otherUserdata.gender})`}
+                                                    ? ` Waiting for ${otherUserdata.name}`
+                                                    : `Reconnecting to ${otherUserdata.name}`}
                                             </span>
                                         )}
                                 </div>
@@ -561,15 +558,34 @@ class VideoComponent extends Component {
                 ) : (
                         <Fragment>
                             {/* <div className='wp100 hp10 flex justify-center mb20'> */}
-                            <img
+                            {!(status === "loading") && (<img
                                 src={StartCallIcon}
-                                style={{ position: "absolute", bottom: 32, right: "48%", cursor: "pointer" }}
+                                style={{ position: "absolute", bottom: 32, right: "46.5%", cursor: "pointer" }}
                                 onClick={this.joinRoom}
                                 alt="chatIcon"
-                            />
+                            />)}
                             {/* </div> */}
                         </Fragment>
                     )}
+                {(!(showWaitngMsg || video2connected)) && (<div className="flex column align-items-center justify-center WaitingForUser">
+                    <div className="mb10">
+                        <img
+                            src={otherUserdata.profilePic || UserDpPlaceholder}
+                            style={{
+                                cursor: "pointer",
+                                height: "94px",
+                                width: "96px",
+                                borderRadius: '50%'
+                            }}
+                            alt="userDp"
+                        />
+                    </div>
+                    <div>
+                        <span className="fs16 medium text-white">
+                            {(status === "loading" || status === "started") ? `Calling ${otherUserdata.name}` : `${otherUserdata.name}`}
+                        </span>
+                    </div>
+                </div>)}
             </div>
         );
     }

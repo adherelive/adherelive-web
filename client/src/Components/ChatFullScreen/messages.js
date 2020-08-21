@@ -17,6 +17,11 @@ const messages = defineMessages({
     description: "Click Here to Go Home",
     defaultMessage: "online"
   },
+  offline: {
+    id: "app.chatFullScreen.offline",
+    description: "Click Here to Go Home",
+    defaultMessage: "offline"
+  },
   typing: {
     id: "app.chatFullScreen.typing",
     description: "Click Here to Go Home",

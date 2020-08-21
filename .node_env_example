@@ -74,6 +74,11 @@ MINIO_REGION=us-east-1
 MINIO_ENDPOINT=minio1
 MINIO_BUCKET_NAME=adhere
 
+GETSTREAM_API_KEY=ywtzg5hdvp7t
+GETSTREAM_API_SECRET=zbrxan8wdzg3phz6qffj8jnx4jraxvxu7zc3zzkqqvzaumb6mwjqfxh6jf7fc42w
+GETSTREAM_REGION=us-east
+GETSTREAM_APP_ID=89900
+
 GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=KszeHfBloxPaTayEXB_y6WQg
 GOOGLE_REDIRECT_URI=postmessage

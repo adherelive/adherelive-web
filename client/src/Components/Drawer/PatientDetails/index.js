@@ -296,7 +296,7 @@ class PatientDetailsDrawer extends Component {
           onClose={onClose}
           visible={visible} // todo: change as per state, -- WIP --
           width={600}
-
+          className={'patient-detail-drawer'}
         >
           {getPatientDetailContent()}
         </Drawer>
