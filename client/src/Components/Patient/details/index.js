@@ -496,12 +496,11 @@ class PatientDetails extends Component {
           // organizer_id,
           // organizer_type = "doctor",
           end_date,
-          details: { medicine_id, repeat_days,medicine_type = '1' } = {},
+          details: { medicine_id, repeat_days, medicine_type = '1' } = {},
         } = {},
       } = medications[id] || {};
 
-      // const { basic_info: { user_name = "--" } = {} } =
-      //   users[organizer_id] || {};
+      console.log('435626546254724725757',medicine_type);
 
       const { basic_info: { name, type } = {} } = medicines[medicine_id] || {};
       return {
@@ -627,7 +626,7 @@ class PatientDetails extends Component {
 
     }
     addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
-      const { status = false, statusCode, payload: { error: { error_type = '' } = {} } = {} } = response;
+      const { status = false, statusCode, payload: { error: { error_type = '' } = {}, message: errorMessage = '' } = {} } = response;
       if (status) {
         this.onCloseTemplate();
 
@@ -640,6 +639,9 @@ class PatientDetails extends Component {
       } else {
         if (statusCode === 422 && error_type == 'slot_present') {
           message.error(this.formatMessage(messages.slotPresent))
+        } else if (statusCode === 422) {
+
+          message.error(errorMessage)
         } else {
           message.error(this.formatMessage(messages.somethingWentWrong))
         }
@@ -664,8 +666,8 @@ class PatientDetails extends Component {
       care_plan_templates = {},
       authPermissions = [],
       chats: { minimized = false, visible: popUpVisible = false },
-      drawer: { visible: drawerVisible = false } = {},care_plan_template_ids={} } = this.props;
-    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false,carePlanTemplateIds=[] } = this.state;
+      drawer: { visible: drawerVisible = false } = {}, care_plan_template_ids = {} } = this.props;
+    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [] } = this.state;
 
     const {
       formatMessage,
@@ -687,7 +689,7 @@ class PatientDetails extends Component {
 
 
     let { basic_info: { name: firstTemplateName = '' } = {} } = care_plan_templates[care_plan_template_ids[0]] || {};
-    console.log('37845782364872356847623784', firstTemplateName, care_plan_templates[care_plan_template_ids[0]],care_plan_template_ids[0],care_plan_template_ids)
+    console.log('37845782364872356847623784', firstTemplateName, care_plan_templates[care_plan_template_ids[0]], care_plan_template_ids[0], care_plan_template_ids)
 
 
     // todo: dummy careplan 
