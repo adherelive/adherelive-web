@@ -4,11 +4,14 @@ import CarePlanController from "../../../app/controllers/carePlans/carePlan.cont
 import multer from "multer";
 var storage = multer.memoryStorage();
 var upload = multer({ dest: "../app/public/", storage: storage });
+import * as validator from "./validator";
 
 const router = express.Router();
 
 // router.post('/create-medications-and-appointments/:carePlanId',
 router.post('/:carePlanId',
+    Authenticated,
+    validator.validateCreateCarePlanFromTemplate,
     CarePlanController.createCarePlanMedicationsAndAppointmentsByTemplateData
 );
 
