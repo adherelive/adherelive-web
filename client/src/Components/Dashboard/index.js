@@ -35,7 +35,7 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        const { searchMedicine, getGraphs, doctors = {}, authenticated_user, closePopUp } = this.props;
+        const { searchMedicine, getGraphs, doctors = {}, authenticated_user, closePopUp, fetchChatAccessToken } = this.props;
         // getInitialData();
         closePopUp();
         let doctorUserId = '';   //user_id of doctor
@@ -52,7 +52,7 @@ class Dashboard extends Component {
                 this.setState({ graphsToShow: [...charts], graphLoading: false });
             }
         });
-
+        fetchChatAccessToken(authenticated_user);
         searchMedicine("");
         // setTimeout(() => {
         //     drawChart(graphs);

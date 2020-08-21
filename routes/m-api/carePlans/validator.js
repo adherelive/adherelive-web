@@ -1,4 +1,4 @@
-import {validationError} from "../helper";
+import {validationError} from "../../helper";
 import Joi from "@hapi/joi";
 
 const templateCreateCarePlanForm = Joi.object().keys({
@@ -11,8 +11,8 @@ const templateCreateCarePlanForm = Joi.object().keys({
     name: Joi.string().when('createTemplate', {
         is: Joi.boolean().valid(true),
         then: Joi.string().trim().required().messages({
-            'string.empty' : "Template name cannot be empty"
-        }),
+                'string.empty' : "Template name cannot be empty"
+            }),
         otherwise: Joi.string().optional().allow("")
     }),
 });
