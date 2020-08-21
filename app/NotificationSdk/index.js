@@ -1,7 +1,9 @@
 // import UserPreferenceWrapper from "../ApiWrapper/web/userPreference";
 // import Email from "./email";
-import PushApp from "./pushApp";
+// import PushApp from "./pushApp";
 // import {EVENT_TYPE} from "../../constant";
+
+import InApp from "./inApp";
 
 class NotificationSdk {
     constructor() {
@@ -13,7 +15,8 @@ class NotificationSdk {
             // const userPreference = await UserPreferenceWrapper(null, id);
 
             // todo actor don't send notification : manage in job
-            PushApp.notify(job.getPushAppTemplate());
+            // PushApp.notify(job.getPushAppTemplate());
+            InApp.notify(job.getInAppTemplate());
 
             // todo: when user preferences relevant
             // if (job.isCritical()) {

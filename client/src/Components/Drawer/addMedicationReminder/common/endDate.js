@@ -105,9 +105,9 @@ class EndDate extends Component {
 
     return (
       <div className="flex flex-grow-1 row align-items-center">
-        <div className="pl8 wp100">
-          <span className="form-label">To</span>
-          <FormItem className="wp100">
+        <div className="pl8 wp100 ">
+          <span className="form-label ">To</span>
+          <FormItem className="wp100 mt-4">
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(

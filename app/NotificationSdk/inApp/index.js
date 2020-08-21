@@ -1,7 +1,7 @@
 import EventExecutor from "../executor";
 import Log from "../../../libs/log_new";
 
-Log.filename("NOTIFICATION_SDK > IN_APP");
+// Log.filename("NOTIFICATION_SDK > IN_APP");
 
 class AppNotification {
     constructor() {
