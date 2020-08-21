@@ -2,10 +2,10 @@
 // import Email from "./email";
 // import PushApp from "./pushApp";
 // import {EVENT_TYPE} from "../../constant";
-import Log from "../../libs/log_new";
+import Log from "../../libs/log";
 import InApp from "./inApp";
 
-Log.fileName("NOTIFICATION_SDK > INDEX");
+const Logger = new Log("NOTIFICATION_SDK > INDEX");
 
 class NotificationSdk {
     constructor() {
@@ -18,7 +18,7 @@ class NotificationSdk {
 
             // todo actor don't send notification : manage in job
             // PushApp.notify(job.getPushAppTemplate());
-            Log.debug("job ---> ", job.getInAppTemplate());
+            Logger.debug("job ---> ", job.getInAppTemplate());
             InApp.notify(job.getInAppTemplate());
 
             // todo: when user preferences relevant

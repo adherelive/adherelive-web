@@ -9,7 +9,6 @@ class Log {
 
     fileName = (filename) => {
         this.source = filename;
-        return this;
     };
 
     getLogDate() {

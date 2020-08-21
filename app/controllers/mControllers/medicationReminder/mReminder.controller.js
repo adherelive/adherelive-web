@@ -427,7 +427,7 @@ class MobileMReminderController extends Controller {
             }
           }
         },
-        "medication reminder updated successfully"
+        "Medication reminder updated successfully"
       );
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
