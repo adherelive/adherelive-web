@@ -38,6 +38,17 @@ class CarePlanController extends Controller {
 
             let userCategoryId = null;
 
+            const templateNameCheck = await carePlanTemplateService.getSingleTemplateByData({
+                name: newTemplateName,
+                user_id: userId
+            });
+
+            Log.debug("templateNameCheck ---> ", templateNameCheck);
+
+            if(templateNameCheck) {
+                return this.raiseClientError(res, 422, {}, `A template exists with name ${newTemplateName}`);
+            }
+
             switch (category) {
                 case USER_CATEGORY.DOCTOR:
                     const doctor = await doctorService.getDoctorByData({
@@ -184,7 +195,7 @@ class CarePlanController extends Controller {
             for (const medication of medicationsData) {
                 const { schedule_data: { end_date = '', description = "", start_date = '', unit = '', when_to_take = '',
                     repeat = '', quantity = '', repeat_days = [], strength = '', start_time = '', repeat_interval = '', medication_stage = '' } = {},
-                    medicine_id = '' } = medication;
+                    medicine_id = '', medicine_type = "1" } = medication;
                 const dataToSave = {
                     participant_id: patient_id,
                     organizer_type: category,
@@ -194,6 +205,7 @@ class CarePlanController extends Controller {
                     end_date,
                     details: {
                         medicine_id,
+                        medicine_type,
                         start_time: start_time ? start_time : moment(),
                         end_time: start_time ? start_time : moment(),
                         repeat,
@@ -234,6 +246,7 @@ class CarePlanController extends Controller {
                         repeat_days,
                         when_to_take,
                         repeat_interval,
+                        medicine_type,
                         duration: moment(start_date).diff(moment(end_date), "days")
                     }
                 });
