@@ -500,8 +500,7 @@ class PatientDetails extends Component {
         } = {},
       } = medications[id] || {};
 
-      // const { basic_info: { user_name = "--" } = {} } =
-      //   users[organizer_id] || {};
+      console.log('435626546254724725757',medicine_type);
 
       const { basic_info: { name, type } = {} } = medicines[medicine_id] || {};
       return {

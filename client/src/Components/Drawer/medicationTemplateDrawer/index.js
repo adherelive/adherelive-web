@@ -57,7 +57,7 @@ class TemplateDrawer extends Component {
             innerFormKey: '',
             innerFormType: '',
             name: '',
-            createTemplate: '',
+            createTemplate: false,
             carePlanTemplateId: 0,
             showAddMedicationInner: false,
             showAddAppointmentInner: false,
@@ -561,7 +561,7 @@ class TemplateDrawer extends Component {
 
 
     submitWithOutName = () => {
-        this.setState({ name: '', createTemplate: false }, () => { this.onSubmit() });
+        this.setState({ name: '', createTemplate: false,showTemplateNameModal:false }, () => { this.onSubmit() });
     }
 
 
