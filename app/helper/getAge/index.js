@@ -13,7 +13,7 @@ export default d1 => {
     return remainingDays ? `${months} m ${remainingDays} d` : `${months} m`;
   } else if(totalDays > 365 && totalDays < (365 * 5))  {
     const totalMonths = now.diff(then, 'months');
-    const years = totalMonths / 12;
+    const years = Math.floor(totalMonths / 12);
     const remainingMonths = totalMonths % 12;
     return remainingMonths ? `${years} y ${remainingMonths} m` : `${years} y`;
   } else {
