@@ -15,7 +15,7 @@ const updatedPasswordSchema = Joi.object().keys({
 });
 
 const signInSchema = Joi.object().keys({
-    mobile_number: Joi.string().length(10).regex(/^[0-9]*$/).required().label("Please enter a valid mobile number"),
+    mobile_number: Joi.string().min(6).max(20).regex(/^\d+$/).required().label("Please enter a valid mobile number"),
 });
 
 const otpSchema = Joi.object().keys({
