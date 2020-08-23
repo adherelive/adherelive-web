@@ -57,6 +57,8 @@ import careplanMedicationService from "../../services/carePlanMedication/carePla
 import { getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
+import AppNotification from "../../NotificationSdk/inApp";
+
 const Logger = new Log("WEB USER CONTROLLER");
 
 class UserController extends Controller {
@@ -211,20 +213,6 @@ class UserController extends Controller {
           httpOnly: true,
         });
 
-        console.log(
-          " Verify User --------------->  ",
-          link,
-          " 6uuu ",
-          userId,
-          " 90990",
-          user,
-          "            ",
-          updateVerification,
-          verifications
-        );
-
-
-
         return this.raiseSuccess(
           res,
           200,
@@ -251,9 +239,6 @@ class UserController extends Controller {
         email
       });
 
-      // console.log("MOMENT===========>", user.getBasicInfo);
-      // const userDetails = user[0];
-      // console.log("userDetails --> ", userDetails);
       if (!user) {
         return this.raiseClientError(res, 422, user, "Email doesn't exists");
       }
@@ -283,14 +268,14 @@ class UserController extends Controller {
           }
         );
 
+        const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
+        const feedId = atob(`${user.get("id")}`);
+
         const userRef = await userService.getUserData({id: user.get("id")});
-        // Logger.debug("userRef ---> ", userRef);
 
         const apiUserDetails = await UserWrapper(userRef.get());
 
         Logger.debug("userRef ----------------> ", apiUserDetails.getPermissionData());
-
-        console.log('ID OF USERRRRRRRR,', apiUserDetails);
 
         let permissions = {
           permissions: []
@@ -313,6 +298,20 @@ class UserController extends Controller {
         res.cookie("accessToken", accessToken, {
           expires: new Date(
             Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+          ),
+          httpOnly: true
+        });
+
+        res.cookie("notificationToken", notificationToken, {
+          expires: new Date(
+              Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+          ),
+          httpOnly: true
+        });
+
+        res.cookie("feedId", feedId, {
+          expires: new Date(
+              Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
           ),
           httpOnly: true
         });
