@@ -1,8 +1,8 @@
 import moment from "moment";
 
-export default d1 => {
+export default dob => {
   const now = moment();
-  const then = moment(d1);
+  const then = moment(dob);
 
   const totalDays = now.diff(then, 'd');
   if(totalDays < 30) {
