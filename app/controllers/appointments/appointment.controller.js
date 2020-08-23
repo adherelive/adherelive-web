@@ -182,8 +182,7 @@ class AppointmentController extends Controller {
 
       Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
-
-
+      
       // TODO: schedule event and notifications here
       await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
 

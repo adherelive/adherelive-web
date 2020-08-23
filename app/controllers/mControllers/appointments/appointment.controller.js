@@ -1,6 +1,6 @@
 import Controller from "../../index";
 import appointmentService from "../../../services/appointment/appointment.service";
-import {FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
+import {EVENT_STATUS, FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
 import moment from "moment";
 
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -17,6 +17,8 @@ import featureDetailService from "../../../services/featureDetails/featureDetail
 import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 import providerService from "../../../services/provider/provider.service";
 import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
+import AppointmentJob from "../../../JobSdk/Appointments/observer";
+import NotificationSdk from "../../../NotificationSdk";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLLER");
 
@@ -52,8 +54,6 @@ class MobileAppointmentController extends Controller {
 
       let userCategoryId = null;
 
-      Logger.debug("userDetails --------------------> ", userDetails);
-
       switch (category) {
         case USER_CATEGORY.DOCTOR:
           const doctor = await doctorService.getDoctorByData({
@@ -83,8 +83,6 @@ class MobileAppointmentController extends Controller {
             participant_two_type
           }
       );
-
-      Logger.debug("previousAppointments -------------------> ", previousAppointments);
 
       if (previousAppointments.length > 0) {
         return raiseClientError(
@@ -126,6 +124,23 @@ class MobileAppointmentController extends Controller {
         appointment_data
       );
       const appointmentData = await MAppointmentWrapper(appointment);
+
+      const eventScheduleData = {
+        participants: [userId, participant_two_id],
+        actor: {
+          id: userId,
+          details: {
+            category,
+            name: "test"
+          }
+        },
+        appointmentId: appointmentData.getAppointmentId()
+      };
+
+      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
+      await NotificationSdk.execute(appointmentJob);
+
+      Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
       // ADD CAREPLAN APPOINTMENT
       if (care_plan_id) {

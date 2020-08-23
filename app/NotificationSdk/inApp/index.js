@@ -34,12 +34,12 @@ class AppNotification {
             //     template.actor.toString()
             // );
 
-            Log.debug("client --> ", client);
+            // Log.debug("client --> ", client);
 
             let result = {};
-            const feed = client.feed("notification", template);
+            const feed = client.feed("notification", template.object);
 
-            Log.debug("feed --> ", feed);
+            Log.debug("feed --> ", template);
             const response = await feed.addActivity(template).catch(err => {
                 Log.debug("response err ------>", err);
             });
