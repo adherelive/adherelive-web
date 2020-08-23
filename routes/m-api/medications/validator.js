@@ -43,15 +43,5 @@ export const validateMedicationReminderData = (req, res, next) => {
     response.setMessage("please check filled details");
     return res.status(422).json(response.getResponse());
   }
-  if (!validateStartTime(start_date)) {
-    const response = new Response(false, 422);
-    response.setMessage("you can't create Medication on passed time.");
-    return res.status(422).json(response.getResponse());
-  }
-  if (end_date && !validateTimeInterval(start_date, end_date)) {
-    const response = new Response(false, 422);
-    response.setMessage("start date should be less than end date");
-    return res.status(422).json(response.getResponse());
-  }
   next();
 };
