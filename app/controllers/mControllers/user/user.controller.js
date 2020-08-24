@@ -4,6 +4,7 @@ const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
 import bcrypt from "bcrypt";
+import atob from "atob";
 
 import Log from "../../../../libs/log";
 

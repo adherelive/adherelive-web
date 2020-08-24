@@ -7,6 +7,7 @@ import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../ApiWrapper/web/medicine";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import PatientWrapper from "../../ApiWrapper/web/patient";
 import {
   CUSTOM_REPEAT_OPTIONS,
   DAYS,
@@ -260,6 +261,18 @@ class MReminderController extends Controller {
         end_date,
         when_to_take
       });
+
+      // to update later
+      const patient = await PatientWrapper(null, patient_id);
+      const eventData = {
+        participants: [userId, patient.getUserId()],
+        actor: {
+          id: userId,
+          details: {
+
+          }
+        }
+      };
 
       return this.raiseSuccess(
         res,
