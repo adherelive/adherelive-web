@@ -66,13 +66,17 @@ class MedicineQuantity extends Component {
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
-          <label
-            htmlFor="quantity"
-            className="form-label flex-grow-1"
-            title="Quantity"
-          >
-            {formatMessage(messages.quantity)}
-          </label>
+          <div className='flex direction-row flex-grow-1'>
+            <label
+              htmlFor="quantity"
+              className="form-label"
+              title="Quantity"
+            >
+              {formatMessage(messages.quantity)}
+            </label>
+
+            <div className="star-red">*</div>
+          </div>
           {/* <div className="label-color fontsize12 mb8">
               
             </div> */}
