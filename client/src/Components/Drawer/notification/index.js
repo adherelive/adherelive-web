@@ -23,6 +23,7 @@ class NotificationDrawer extends Component {
 
     componentDidMount() {
 
+        console.log('546768546468587587578',get("notificationToken") , get("feedId"));
         if (get("notificationToken") && get("feedId")) {
             let client = connect(
                 GETSTREAM_API_KEY,
