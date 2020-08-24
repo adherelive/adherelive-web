@@ -365,6 +365,7 @@ export const DB_TABLES = {
   OTP_VERIFICATIONS: "otp_verifications",
   TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
   FEATURE_DETAILS: 'feature_details',
+  USER_DEVICES: "user_devices"
 };
 
 export const ARTICLE_TYPE = {
