@@ -62,8 +62,8 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { mobile_number } = req.body;
-      const user = await userService.getUserByNumber({mobile_number});
+      const { prefix, mobile_number } = req.body;
+      const user = await userService.getUserByNumber({mobile_number, prefix});
 
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
