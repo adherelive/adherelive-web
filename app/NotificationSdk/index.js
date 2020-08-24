@@ -12,8 +12,8 @@ class NotificationSdk {
     }
 
     execute = async (job) => {
-        const users = job.getUsers();
-        for (const id of users) {
+        // const users = job.getUsers();
+        // for (const id of users) {
             // const userPreference = await UserPreferenceWrapper(null, id);
 
             // todo actor don't send notification : manage in job
@@ -36,7 +36,7 @@ class NotificationSdk {
             // }
 
             // more to come todo
-        }
+        // }
     };
 }
 

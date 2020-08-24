@@ -63,7 +63,7 @@ class CreateJob extends AppointmentJob {
     const templateData = [];
     const currentTime = new moment().utc();
     for (const participant of participants) {
-      if (participant !== actorId) {
+      // if (participant !== actorId) {
         templateData.push({
           actor: actorId,
           object: `${participant}`,
@@ -72,7 +72,7 @@ class CreateJob extends AppointmentJob {
           message: `${name}(${actorCategory}) has created an appointment with you`,
           time: currentTime
         });
-      }
+      // }
     }
 
     return templateData;

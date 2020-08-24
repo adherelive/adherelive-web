@@ -53,19 +53,20 @@ class MobileAppointmentController extends Controller {
         participant_two || {};
 
       let userCategoryId = null;
+      let userCategoryData = null;
 
       switch (category) {
         case USER_CATEGORY.DOCTOR:
           const doctor = await doctorService.getDoctorByData({
             user_id: userId
           });
-          const doctorData = await DoctorWrapper(doctor);
-          userCategoryId = doctorData.getDoctorId();
+          userCategoryData = await DoctorWrapper(doctor);
+          userCategoryId = userCategoryData.getDoctorId();
           break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientByUserId(userId);
-          const patientData = await PatientWrapper(patient);
-          userCategoryId = patientData.getPatientId();
+          userCategoryData = await PatientWrapper(patient);
+          userCategoryId = userCategoryData.getPatientId();
           break;
         default:
           break;
@@ -131,7 +132,7 @@ class MobileAppointmentController extends Controller {
           id: userId,
           details: {
             category,
-            name: "test"
+            name: userCategoryData.getName()
           }
         },
         appointmentId: appointmentData.getAppointmentId()
