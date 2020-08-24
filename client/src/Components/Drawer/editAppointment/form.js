@@ -460,7 +460,7 @@ class EditAppointmentForm extends Component {
               className="drawer-select"
               placeholder={formatMessage(message.chooseAppointmentType)}
               onSelect={this.handleTypeSelect}
-
+              autoFocus={true}
 
             >
               {this.getTypeOption()}

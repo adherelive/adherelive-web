@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT } from "../../../constant";
+import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -18,11 +18,13 @@ import TemplateDrawer from '../../Drawer/medicationTemplateDrawer'
 import ChatPopup from "../../../Containers/ChatPopup";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
+import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from '../../../Helper/url/patients';
 import { getPatientConsultingUrl } from '../../../Helper/url/patients';
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
 
+const BLANK_TEMPLATE = 'Blank Template'
 const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
 
@@ -254,7 +256,6 @@ const PatientCard = ({
   formatMessage,
   openChat
 }) => {
-
   return (
     <div className="patient-card tac">
       <img
@@ -398,7 +399,6 @@ class PatientDetails extends Component {
       currentCarePlanId,
       show_template_drawer = {}
     } = this.props;
-    closePopUp();
     this.getData();
     const { show: showTd = false } = show_template_drawer;
     // let isCarePlanDataPresent = currentCarePlanId ? true : false;
@@ -496,12 +496,11 @@ class PatientDetails extends Component {
           // organizer_id,
           // organizer_type = "doctor",
           end_date,
-          details: { medicine_id, repeat_days } = {},
+          details: { medicine_id, repeat_days, medicine_type = '1' } = {},
         } = {},
       } = medications[id] || {};
 
-      // const { basic_info: { user_name = "--" } = {} } =
-      //   users[organizer_id] || {};
+      console.log('435626546254724725757',medicine_type);
 
       const { basic_info: { name, type } = {} } = medicines[medicine_id] || {};
       return {
@@ -511,7 +510,7 @@ class PatientDetails extends Component {
           <div className="flex direction-row justify-space-around align-center">
             <img
               className="w20 mr10"
-              src={type === MEDICINE_TYPE.TABLET ? TabletIcon : InjectionIcon}
+              src={medicine_type === TABLET ? TabletIcon : medicine_type === SYRUP ? SyrupIcon : InjectionIcon}
               alt="medicine icon"
             />
             <p className="mb0">{name ? `${name}` : "--"}</p>
@@ -627,7 +626,7 @@ class PatientDetails extends Component {
 
     }
     addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
-      const { status = false, statusCode, payload: { error: { error_type = '' } = {} } = {} } = response;
+      const { status = false, statusCode, payload: { error: { error_type = '' } = {}, message: errorMessage = '' } = {} } = response;
       if (status) {
         this.onCloseTemplate();
 
@@ -640,6 +639,9 @@ class PatientDetails extends Component {
       } else {
         if (statusCode === 422 && error_type == 'slot_present') {
           message.error(this.formatMessage(messages.slotPresent))
+        } else if (statusCode === 422) {
+
+          message.error(errorMessage)
         } else {
           message.error(this.formatMessage(messages.somethingWentWrong))
         }
@@ -664,7 +666,7 @@ class PatientDetails extends Component {
       care_plan_templates = {},
       authPermissions = [],
       chats: { minimized = false, visible: popUpVisible = false },
-      drawer: { visible: drawerVisible = false } = {}, } = this.props;
+      drawer: { visible: drawerVisible = false } = {}, care_plan_template_ids = {} } = this.props;
     const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [] } = this.state;
 
     const {
@@ -685,40 +687,9 @@ class PatientDetails extends Component {
       );
     }
 
-    let templateAppointments = {};
-    let templateMedications = {};
-    let templateAppointmentIDs = {};
-    let templateMedicationIDs = {};
 
-    let { template_appointment_ids = [], template_medication_ids = [] } = care_plan_templates[carePlanTemplateId] || {};
-
-    for (let aId of template_appointment_ids) {
-      let newAppointment = {};
-      let { basic_info: { id = 0, care_plan_template_id = 0 } = {}, reason = '', time_gap = 0, details = {}, provider_id, provider_name = '' } = template_appointments[aId];
-      newAppointment.id = id;
-      newAppointment.schedule_data = details;
-      newAppointment.reason = reason;
-      newAppointment.time_gap = time_gap;
-      newAppointment.provider_id = provider_id;
-      newAppointment.provider_name = provider_name;
-      newAppointment.care_plan_template_id = care_plan_template_id;
-      templateAppointments[aId] = newAppointment;
-    }
-
-    for (let mId of template_medication_ids) {
-      let newMedication = {};
-      let { basic_info: { id = 0, care_plan_template_id = 0, medicine_id = 0 } = {}, schedule_data = {} } = template_medications[mId];
-      newMedication.id = id;
-      newMedication.schedule_data = schedule_data;
-      newMedication.care_plan_template_id = care_plan_template_id;
-      newMedication.medicine_id = medicine_id;
-      const { basic_info: { name: medName = '', type: medType = '' } = {} } = medicines[medicine_id] || {};
-
-
-      newMedication.medicine = medName;
-      newMedication.medicineType = medType;
-      templateMedications[mId] = newMedication;
-    }
+    let { basic_info: { name: firstTemplateName = '' } = {} } = care_plan_templates[care_plan_template_ids[0]] || {};
+    console.log('37845782364872356847623784', firstTemplateName, care_plan_templates[care_plan_template_ids[0]], care_plan_template_ids[0], care_plan_template_ids)
 
 
     // todo: dummy careplan 
@@ -777,14 +748,13 @@ class PatientDetails extends Component {
 
 
     const {
-      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456', user_id: patientUserId = '' }, details: { profile_pic: patientDp = userDp } = {}
+      basic_info: { first_name, middle_name, last_name, user_id, age, gender, uid = '123456', user_id: patientUserId = '' }
     } = patients[patient_id] || {};
 
 
     let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
 
     const { basic_info: { mobile_number = '', email, prefix = '' } = {} } = users[user_id] || {};
-
 
 
     const {
@@ -798,7 +768,6 @@ class PatientDetails extends Component {
         profile_picture: patient_display_picture,
       } = {},
     } = this.props;
-
 
     const {
       treatment_details: {
@@ -825,7 +794,7 @@ class PatientDetails extends Component {
         <div className="flex">
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
             <PatientCard
-              patient_display_picture={patientDp ? patientDp : userDp}
+              patient_display_picture={patient_display_picture}
               patient_first_name={first_name}
               patient_middle_name={middle_name}
               patient_last_name={last_name}
@@ -861,15 +830,15 @@ class PatientDetails extends Component {
               <div className='flex flex-grow-1 direction-column justify-center hp100 align-center'>
                 <img src={noMedication} className='w200 h200' />
                 <div className='fs20 fw700'>{formatMessage(messages.nothing_to_show)}</div>
-                {showUseTemplate && carePlanTemplateId ? (
-                  <div className='use-template-button' onClick={this.showTemplateDrawer}>
-                    <div>{formatMessage(messages.use_template)}</div>
-                  </div>
-                ) :
+                {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
+                <div className='use-template-button' onClick={this.showTemplateDrawer}>
+                  <div>{firstTemplateName === BLANK_TEMPLATE ? formatMessage(messages.create_template) : formatMessage(messages.use_template)}</div>
+                </div>
+                {/* ) :
                   showUseTemplate ? (
                     <div className='use-template-button' onClick={this.handleMedicationReminder}>
                       <div>{formatMessage(messages.add_medication)}</div>
-                    </div>) : <div />}
+                    </div>) : <div />} */}
               </div>)}
             {showTabs && (
               <div className='flex-grow-1 direction-column align-center'>
@@ -920,32 +889,22 @@ class PatientDetails extends Component {
             placeVideoCall={this.openVideoChatTab(roomId)}
             patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''}
             maximizeChat={this.maximizeChat}
-            patientDp={patientDp}
           />
         </div>)}
         <AddAppointmentDrawer carePlanId={carePlanId} />
-        {templateDrawerVisible && (
-          // <TemplateDrawer visible={templateDrawerVisible}
-          //   submit={this.handleSubmitTemplate}
-          //   dispatchClose={close}
-          //   closeTemplateDrawer={onCloseTemplate}
-          //   // medications={templateMedications}
-          //   // appointments={templateAppointments}
-          //   // templateAppointmentIDs={templateAppointmentIDs}
-          //   // templateMedicationIDs={templateMedicationIDs}
-          //   // medicines={medicines}
-          //   patientId={patient_id}
-          //   carePlanTemplateIds={carePlanTemplateIds}
-          //   // patients={patients} 
-          //   carePlan={carePlan} {...this.props} />
-          <TemplateDrawer visible={templateDrawerVisible}
-            submit={this.handleSubmitTemplate}
-            dispatchClose={close}
-            close={onCloseTemplate} medications={templateMedications}
-            appointments={templateAppointments} medicines={medicines}
-            patientId={patient_id} patients={patients} carePlan={carePlan} />
-
-        )}
+        {templateDrawerVisible && (<TemplateDrawer visible={templateDrawerVisible}
+          submit={this.handleSubmitTemplate}
+          dispatchClose={close}
+          closeTemplateDrawer={onCloseTemplate}
+          // medications={templateMedications}
+          // appointments={templateAppointments}
+          // templateAppointmentIDs={templateAppointmentIDs}
+          // templateMedicationIDs={templateMedicationIDs}
+          // medicines={medicines}
+          patientId={patient_id}
+          carePlanTemplateIds={carePlanTemplateIds}
+          // patients={patients} 
+          carePlan={carePlan} {...this.props} />)}
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
         <EditMedicationReminder carePlanId={carePlanId} />
       </div>

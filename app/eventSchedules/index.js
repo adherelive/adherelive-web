@@ -32,7 +32,7 @@ class EventSchedule {
       const rrule = new RRule({
         freq: RRule.WEEKLY,
         count: 1,
-        dtstart: moment(start_date)
+        dtstart: moment(start_time)
           .utc()
           .toDate()
       });

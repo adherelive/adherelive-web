@@ -17,6 +17,7 @@ const medicationReminderFormSchema = Joi.object().keys({
     end_date: Joi.date().optional().allow(null),
     medication_stage: Joi.string().optional(),
     medicine_id: Joi.number().required(),
+    medicine_type: Joi.number().required(),
     participant_id: Joi.string().optional().allow(""),
     critical: Joi.boolean().optional().allow(""),
     description: Joi.string().max(500, 'utf-8').optional().allow("")
@@ -40,16 +41,6 @@ export const validateMedicationReminderData = (req, res, next) => {
     const response = new Response(false, 422);
     response.setError(isValid.error);
     response.setMessage("please check filled details");
-    return res.status(422).json(response.getResponse());
-  }
-  if (!validateStartTime(start_date)) {
-    const response = new Response(false, 422);
-    response.setMessage("you can't create Medication on passed time.");
-    return res.status(422).json(response.getResponse());
-  }
-  if (end_date && !validateTimeInterval(start_date, end_date)) {
-    const response = new Response(false, 422);
-    response.setMessage("start date should be less than end date");
     return res.status(422).json(response.getResponse());
   }
   next();

@@ -2,20 +2,23 @@
 // import Email from "./email";
 // import PushApp from "./pushApp";
 // import {EVENT_TYPE} from "../../constant";
-
+import Log from "../../libs/log";
 import InApp from "./inApp";
+
+const Logger = new Log("NOTIFICATION_SDK > INDEX");
 
 class NotificationSdk {
     constructor() {
     }
 
     execute = async (job) => {
-        const users = job.getUsers();
-        for (const id of users) {
+        // const users = job.getUsers();
+        // for (const id of users) {
             // const userPreference = await UserPreferenceWrapper(null, id);
 
             // todo actor don't send notification : manage in job
             // PushApp.notify(job.getPushAppTemplate());
+            Logger.debug("job ---> ", job.getInAppTemplate());
             InApp.notify(job.getInAppTemplate());
 
             // todo: when user preferences relevant
@@ -33,7 +36,7 @@ class NotificationSdk {
             // }
 
             // more to come todo
-        }
+        // }
     };
 }
 

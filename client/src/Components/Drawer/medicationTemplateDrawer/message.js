@@ -99,7 +99,7 @@ const messages = defineMessages({
     skip: {
         id: "app.medicationTemplate.skip",
         description: "",
-        defaultMessage: "Skip and dont save"
+        defaultMessage: "Skip and don't save"
     },
     validNameError: {
         id: "app.medicationTemplate.validNameError",
