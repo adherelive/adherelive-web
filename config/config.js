@@ -73,6 +73,10 @@ module.exports = () => {
       key: process.env.BRANCH_IO_KEY,
       base_url: process.env.BRANCH_IO_BASE_URL
     },
+    one_signal: {
+      app_id: process.env.ONE_SIGNAL_APP_ID,
+      key: process.env.ONE_SIGNAL_KEY,
+    },
     cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,
     APP_URL: process.env.APP_URL,
