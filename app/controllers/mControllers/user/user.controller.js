@@ -190,12 +190,17 @@ class MobileUserController extends Controller {
             }
           );
 
+        const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
+        const feedId = atob(`${userData.getId()}`);
+
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
           res,
           200,
           {
             accessToken,
+            notificationToken,
+            feedId,
             users: {
               [userData.getId()]: {
                 ...userData.getBasicInfo()
@@ -246,6 +251,9 @@ class MobileUserController extends Controller {
             }
         );
 
+        const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
+        const feedId = atob(`${user.get("id")}`);
+
         const apiUserDetails = await MUserWrapper(user.get());
 
         let permissions = {
@@ -263,6 +271,8 @@ class MobileUserController extends Controller {
             200,
             {
               accessToken,
+              notificationToken,
+              feedId,
               users: {
                 [apiUserDetails.getId()]: {
                   ...apiUserDetails.getBasicInfo()
