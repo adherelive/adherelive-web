@@ -4,6 +4,7 @@
 // import {EVENT_TYPE} from "../../constant";
 import Log from "../../libs/log";
 import InApp from "./inApp";
+import PushApp from "./pushApp";
 
 const Logger = new Log("NOTIFICATION_SDK > INDEX");
 
@@ -17,9 +18,10 @@ class NotificationSdk {
             // const userPreference = await UserPreferenceWrapper(null, id);
 
             // todo actor don't send notification : manage in job
-            // PushApp.notify(job.getPushAppTemplate());
+            PushApp.notify(job.getPushAppTemplate());
+            // InApp.notify(job.getInAppTemplate());
+
             Logger.debug("job ---> ", job.getInAppTemplate());
-            InApp.notify(job.getInAppTemplate());
 
             // todo: when user preferences relevant
             // if (job.isCritical()) {

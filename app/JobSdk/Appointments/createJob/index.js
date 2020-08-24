@@ -31,19 +31,19 @@ class CreateJob extends AppointmentJob {
     const templateData = [];
 
     for (const participant of participants) {
-      if (participant !== actorId) {
+      // if (participant !== actorId) { // todo: add actor after testing (deployment)
         templateData.push({
-          // app_id: process.config.ONE_SIGNAL_APP_ID, // TODO: add the same in pushNotification handler in notificationSdk
+          app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
           headings: { en: `Appointment Created` },
           contents: {
             en: `${name}(${actorCategory}) has created an appointment with you`
           },
           // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
-          include_player_ids: [participant],
+          include_player_ids: [...participants],
           priority: 10,
-          data: { url: "/", params: "" }
+          // data: { url: "/", params: "" }
         });
-      }
+      // }
     }
 
     return templateData;

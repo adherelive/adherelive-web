@@ -4,7 +4,7 @@ const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
 import bcrypt from "bcrypt";
-import atob from "atob";
+import base64 from "js-base64";
 
 import Log from "../../../../libs/log";
 
@@ -190,12 +190,17 @@ class MobileUserController extends Controller {
             }
           );
 
+        const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
+        const feedId = base64.encode(`${userData.getId()}`);
+
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
           res,
           200,
           {
             accessToken,
+            notificationToken,
+            feedId,
             users: {
               [userData.getId()]: {
                 ...userData.getBasicInfo()
@@ -246,6 +251,11 @@ class MobileUserController extends Controller {
             }
         );
 
+        const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
+
+        const feedId = base64.encode(`${user.get("id")}`);
+        // const antiFeed = base64.atob(feedId);
+
         const apiUserDetails = await MUserWrapper(user.get());
 
         let permissions = {
@@ -263,6 +273,8 @@ class MobileUserController extends Controller {
             200,
             {
               accessToken,
+              notificationToken,
+              feedId,
               users: {
                 [apiUserDetails.getId()]: {
                   ...apiUserDetails.getBasicInfo()
@@ -357,7 +369,10 @@ class MobileUserController extends Controller {
       );
 
       const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-      const feedId = atob(`${user.get("id")}`);
+
+      Logger.debug("feedId ---> user id", user.get("id"));
+      const feedId = base64.encode(`${user.get("id")}`);
+      Logger.debug("feedId ---> ", feedId);
 
       const apiUserDetails = await MUserWrapper(user.get());
 
