@@ -73,7 +73,11 @@ class PatientDetailsDrawer extends Component {
     };
 
     setName = e => {
-        this.setState({ name: e.target.value });
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if (reg.test(value) || value === '') {
+            this.setState({ name: e.target.value });
+        }
     };
 
 

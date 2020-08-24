@@ -127,6 +127,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "You have made some changes in current template, are you sure you want to select another one?"
     },
+    medicationExist: {
+        id: "app.medicationTemplate.medicationExist",
+        description: "",
+        defaultMessage: "A medication for this medicine already exist in this template."
+    },
 
 });
 
