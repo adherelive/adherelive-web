@@ -24,6 +24,13 @@ router.post(
 );
 
 router.post(
+    "/:id",
+    Authenticate,
+    // validator.validateAddDoctorData,
+    DoctorController.updateDoctorDetails
+);
+
+router.post(
     "/details",
     validator.validateDoctorQualificationData,
     // todo :: wip

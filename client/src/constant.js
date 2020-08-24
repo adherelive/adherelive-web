@@ -2,6 +2,7 @@ export const PATH = {
   LANDING_PAGE: "/",
   DASHBOARD: "/dashboard",
   SIGN_IN: "/sign-in",
+  PROFILE: "/profile",
   VALIDATION_PAGE: "/validation/:link",
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",

@@ -55,3 +55,11 @@ export const getDoctorDetailsUrl = id => {
 export const getVerifyDoctorUrl = id => {
   return `/admin/doctors/${id}`;
 };
+
+export const getUploadURL = () => {
+  return `/doctors/upload`;
+};
+
+export const updateDoctorURL = (id) => {
+  return `/doctors/${id}`;
+};

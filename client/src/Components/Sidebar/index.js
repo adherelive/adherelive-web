@@ -8,11 +8,12 @@ import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
 
 
-const { Item: MenuItem } = Menu || {};
+const { Item: MenuItem, SubMenu } = Menu || {};
 
 const LOGO = "logo";
 const DASHBOARD = "dashboard";
 const LOG_OUT = "log_out";
+const PROFILE = "profile";
 
 class SideMenu extends Component {
   constructor(props) {
@@ -52,6 +53,9 @@ class SideMenu extends Component {
           }
         }
         break;
+      case PROFILE:
+        history.push(PATH.PROFILE);
+        break;
       case LOG_OUT:
         handleLogout();
         break;
@@ -65,10 +69,9 @@ class SideMenu extends Component {
   render() {
     const { selectedKeys } = this.state;
     const { handleItemSelect } = this;
-    const { authenticated_user = 0, users = {}, doctors = {} } = this.props;
+    const { authenticated_user = 0, users = {}, doctors = {}, authenticated_category } = this.props;
     let dp = '';
     let initials = '';
-
     for (let doctor of Object.values(doctors)) {
       let { basic_info: { user_id = 0, profile_pic = '', first_name = ' ', last_name = ' ' } = {} } = doctor;
 
@@ -108,18 +111,29 @@ class SideMenu extends Component {
             <img alt={"Dashboard Icon"} src={dashboardIcon} />
           </Tooltip>
         </MenuItem>
-
-        <MenuItem
-          className="flex direction-column justify-center align-center p0"
-          key={LOG_OUT}
-        >
-          <Tooltip placement="right" title={"Log Out"}>
-            {/* {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
-            (<UserOutlined className="sidebar-bottom-custom text-white"/>)} */}
-            {initials ?
-              <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
-          </Tooltip>
-        </MenuItem>
+        {
+          authenticated_category == USER_CATEGORY.DOCTOR ?
+          <SubMenu 
+            key="sub2" 
+            title={initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
+          >
+            <Menu.Item key={PROFILE}>Profile</Menu.Item>
+            <Menu.Item key={LOG_OUT}>Logout</Menu.Item>
+          </SubMenu>
+          :
+          <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={LOG_OUT}
+          >
+            <Tooltip placement="right" title={"Log Out"}>
+              {/* {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
+              (<UserOutlined className="sidebar-bottom-custom text-white"/>)} */}
+              {initials ?
+                <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
+            </Tooltip>
+          </MenuItem>
+        }
+        
       </Menu>
     );
   }

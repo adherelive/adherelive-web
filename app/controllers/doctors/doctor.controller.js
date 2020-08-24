@@ -501,6 +501,92 @@ class DoctorController extends Controller {
     }
   };
 
+  updateDoctorDetails = async (req, res) => {
+    // console.log("add patient controller ---> ");
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      Logger.debug("data d", req.body);
+      Logger.debug("data b", req.params);
+      Logger.debug("data c", req.userDetails);
+      const { id = 0 } = req.params;
+      const {
+        name=null,
+        city=null,
+        gender=null,
+        profile_pic=null,
+        speciality_id=null
+      } = req.body;
+      let doctorExist = await doctorService.getDoctorByData({
+        user_id: id
+      });
+      let doctor_data = {};
+      if(name){
+        const doctorName = name.split(" ");
+        let first_name = doctorName[0];
+        let middle_name = doctorName.length === 3 ? doctorName[1] : "";
+        let last_name =
+          doctorName.length === 3
+            ? doctorName[2]
+            : doctorName.length === 2
+              ? doctorName[1]
+              : "";
+        
+        doctor_data['first_name']=first_name;
+        doctor_data['middle_name']=middle_name;
+        doctor_data['last_name']=last_name;
+      }
+      if(profile_pic){
+        doctor_data['profile_pic']=profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1];
+      }
+      if(gender){
+        doctor_data['gender']=gender;
+      }
+      if(city){
+        doctor_data['city']=city;
+        doctor_data['address']=city;
+      }
+      if(speciality_id){
+        doctor_data['speciality_id']=speciality_id;
+      }
+      
+        
+
+      if (doctorExist) {
+        let doctor = {};
+        Logger.debug("datadddd", doctor_data);
+        let doctor_id = doctorExist.get("id");
+        doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
+
+        const updatedDoctor = await doctorService.getDoctorByData({
+          user_id: id
+        });
+        const doctorData = await DoctorWrapper(updatedDoctor);
+        return raiseSuccess(
+          res,
+          200,
+          {
+            doctors: {
+              [doctorData.getDoctorId()]: doctorData.getBasicInfo()
+            }
+          },
+          "Doctor profile updated successfully."
+        );
+      }else{
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Doctor Not Found."
+        );
+      }
+
+      
+    } catch (error) {
+      Logger.debug("update doctor 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
 
 
   addPatient = async (req, res) => {
