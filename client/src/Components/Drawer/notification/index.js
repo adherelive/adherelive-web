@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker } from "antd";
 import config from "../../../config";
-import { get } from "js-cookie";
+// import Cookies from 'js-cookie';
+import { get, set } from "js-cookie";
 import { connect } from "getstream";
 import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
@@ -23,62 +24,31 @@ class NotificationDrawer extends Component {
 
     componentDidMount() {
 
-        console.log('546768546468587587578',get("notificationToken") , get("feedId"));
-        if (get("notificationToken") && get("feedId")) {
+        const { auth: { notificationToken = '', feedId = '' } = {} } = this.props;
+        // if (get("notificationToken") && get("feedId")) {
+        if (notificationToken || feedId) {
             let client = connect(
                 GETSTREAM_API_KEY,
-                get("notificationToken"),
+                notificationToken,
                 GETSTREAM_APP_ID
             );
 
-            let clientFeed = client.feed("notification", btoa(get("feedId")));
+            // let clientFeed = client.feed("notification", btoa(feedId));
+            console.log('546768546468587587578', notificationToken, feedId, client);
 
-            this.setState({ clientFeed });
-            clientFeed.get({ limit: 7 }).then(data => {
-                this.getNotificationFromActivities(data);
-            });
+            // this.setState({ clientFeed });
+            // clientFeed.get({ limit: 7 }).then(data => {
+            //     this.getNotificationFromActivities(data);
+            // });
 
-            clientFeed.subscribe(data => {
-                clientFeed.get({ limit: 7 }).then(res => {
-                    this.getNotificationFromActivities(res);
-                });
-            });
+            // clientFeed.subscribe(data => {
+                // clientFeed.get({ limit: 7 }).then(res => {
+                //     this.getNotificationFromActivities(res);
+                // });
+            // });
         }
     }
 
-    getNotificationFromActivities(data) {
-        const { getNotification, updateUnseenNotification } = this.props;
-        let activities = [];
-        let activitiesId = [];
-        let groupId = {};
-        const { results = [], unseen } = data;
-        // console.log("unseen----------------->", unseen);
-        // updateUnseenNotification(unseen);
-
-        results.forEach(result => {
-            const { activities: response = [], is_read, id } = result;
-            let activityData = {};
-            activityData.activity = response;
-            activityData.is_read = is_read;
-
-            activities = activities.concat(activityData);
-            const { id: activity_id } = response[0] || {};
-            activitiesId = activitiesId.concat(activity_id);
-            groupId[activity_id] = id;
-        });
-
-        activities.sort((a, b) => {
-            if (a.time < b.time) {
-                return 1;
-            }
-            return -1;
-        });
-        this.setState({
-            notifications: activitiesId,
-            activityGroupId: groupId
-        });
-        // getNotification(activities);
-    }
 
 
     getNotificationFromActivities(data) {
@@ -116,38 +86,40 @@ class NotificationDrawer extends Component {
     }
 
     readNotification = (groupId, activity_id) => {
-        if (get("notificationToken") && get("feedId")) {
+        const { auth: { notificationToken = '', feedId = '' } = {} } = this.props;
+        if (notificationToken || feedId) {
             let client = connect(
                 GETSTREAM_API_KEY,
-                get("notificationToken"),
+                notificationToken,
                 GETSTREAM_APP_ID
             );
 
-            let clientFeed = client.feed("notification", btoa(get("feedId")));
-            clientFeed.get({ mark_read: [groupId], limit: 7 }).then(data => {
-                clientFeed.get({ limit: 7 }).then(data => {
+            // let clientFeed = client.feed("notification", btoa(feedId));
+            // clientFeed.get({ mark_read: [groupId], limit: 7 }).then(data => {
+                // clientFeed.get({ limit: 7 }).then(data => {
                     // console.log("data-=-=-=-=-=-=-=-=-=-=-==-=-=>", data);
-                    this.getNotificationFromActivities(data);
-                });
-            });
+            //         this.getNotificationFromActivities(data);
+            //     });
+            // });
         }
     };
 
     markAllSeen = e => {
         // console.log("mark all seen");
-        if (get("notificationToken") && get("feedId")) {
+        const { auth: { notificationToken = '', feedId = '' } = {} } = this.props;
+        if (notificationToken || feedId) {
             let client = connect(
                 GETSTREAM_API_KEY,
-                get("notificationToken"),
+                notificationToken,
                 GETSTREAM_APP_ID
             );
 
-            let clientFeed = client.feed("notification", btoa(get("feedId")));
-            clientFeed.get({ mark_seen: true }).then(data => {
-                clientFeed.get({ limit: 7 }).then(data => {
-                    this.getNotificationFromActivities(data);
-                });
-            });
+            // let clientFeed = client.feed("notification", btoa(feedId));
+            // clientFeed.get({ mark_seen: true }).then(data => {
+                // clientFeed.get({ limit: 7 }).then(data => {
+            //         this.getNotificationFromActivities(data);
+            //     });
+            // });
         }
     };
 
@@ -161,7 +133,7 @@ class NotificationDrawer extends Component {
             return null;
         }
 
-        console.log('47532684763846982364', this.state);
+        const { auth: { notificationToken = '', feedId = '' } = {} } = this.props;
         return (
             <Fragment>
                 <Drawer

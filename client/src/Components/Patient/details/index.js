@@ -689,7 +689,6 @@ class PatientDetails extends Component {
 
 
     let { basic_info: { name: firstTemplateName = '' } = {} } = care_plan_templates[care_plan_template_ids[0]] || {};
-    console.log('37845782364872356847623784', firstTemplateName, care_plan_templates[care_plan_template_ids[0]], care_plan_template_ids[0], care_plan_template_ids)
 
 
     // todo: dummy careplan 

@@ -10,7 +10,7 @@ import { getAppointments, addAppointment, addCarePlanAppointment } from "../../m
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
-        patients, treatments, care_plans, static_templates, providers, doctors
+        patients, treatments, care_plans, static_templates, providers, doctors,auth
     } = state
     return {
         visible: visible && type === DRAWER.NOTIFICATIONS,
@@ -21,7 +21,8 @@ const mapStateToProps = state => {
         care_plans,
         static_templates,
         providers,
-        doctors
+        doctors,
+        auth
     };
 };
 
