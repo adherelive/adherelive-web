@@ -43,9 +43,9 @@ class NotificationDrawer extends Component {
             });
 
             clientFeed.subscribe(data => {
-            clientFeed.get({ limit: 7 }).then(res => {
-                this.getNotificationFromActivities(res);
-            });
+                clientFeed.get({ limit: 7 }).then(res => {
+                    this.getNotificationFromActivities(res);
+                });
             });
         }
     }
@@ -83,7 +83,7 @@ class NotificationDrawer extends Component {
             notifications: activitiesId,
             activityGroupId: groupId
         });
-        // getNotification(activities);
+        getNotification(activities);
     }
 
     readNotification = (groupId, activity_id) => {
@@ -97,8 +97,8 @@ class NotificationDrawer extends Component {
 
             let clientFeed = client.feed("notification", feedId);
             clientFeed.get({ mark_read: [groupId], limit: 7 }).then(data => {
-            clientFeed.get({ limit: 7 }).then(data => {
-            console.log("data-=-=-=-=-=-=-=-=-=-=-==-=-=>", data);
+                clientFeed.get({ limit: 7 }).then(data => {
+                    console.log("data-=-=-=-=-=-=-=-=-=-=-==-=-=>", data);
                     this.getNotificationFromActivities(data);
                 });
             });
@@ -117,7 +117,7 @@ class NotificationDrawer extends Component {
 
             let clientFeed = client.feed("notification", btoa(feedId));
             clientFeed.get({ mark_seen: true }).then(data => {
-            clientFeed.get({ limit: 7 }).then(data => {
+                clientFeed.get({ limit: 7 }).then(data => {
                     this.getNotificationFromActivities(data);
                 });
             });

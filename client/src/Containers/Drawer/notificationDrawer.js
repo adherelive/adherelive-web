@@ -5,12 +5,13 @@ import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { open } from "../../modules/drawer";
 import { getMedications } from "../../modules/medications";
+import { getNotification } from "../../modules/notifications";
 import { getAppointments, addAppointment, addCarePlanAppointment } from "../../modules/appointments";
 
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
-        patients, treatments, care_plans, static_templates, providers, doctors,auth
+        patients, treatments, care_plans, static_templates, providers, doctors, auth
     } = state
     return {
         visible: visible && type === DRAWER.NOTIFICATIONS,
@@ -29,6 +30,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
+        getNotification: (activities) => dispatch(getNotification(activities))
     };
 };
 
