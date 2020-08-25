@@ -54,7 +54,7 @@ const errMessage = require("../../../config/messages.json").errMessages;
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 import careplanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-
+import atob from 'atob';
 import { getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
@@ -193,7 +193,7 @@ class UserController extends Controller {
         );
 
         const notificationToken = AppNotification.getUserToken(`${userId}`);
-        const feedId = atob(`${userId}`);
+        const feedId = base64.encode(`${userId}`);
 
         const apiUserDetails = await UserWrapper(userData.getBasicInfo);
 
@@ -204,7 +204,7 @@ class UserController extends Controller {
             }
           },
           notificationToken: notificationToken,
-          feedId: feedId,
+          feedId: `${userId}`,
           auth_user: apiUserDetails.getUserId(),
           auth_category: apiUserDetails.getCategory()
         };
@@ -296,7 +296,7 @@ class UserController extends Controller {
           ...await apiUserDetails.getReferenceData(),
           auth_user: apiUserDetails.getId(),
           notificationToken: notificationToken,
-          feedId: feedId,
+          feedId: `${user.get("id")}`,
           auth_category: apiUserDetails.getCategory()
         };
 
@@ -612,7 +612,7 @@ class UserController extends Controller {
         };
 
         const notificationToken = AppNotification.getUserToken(`${userId}`);
-        const feedId = atob(`${userId}`);
+        const feedId = base64.encode(`${userId}`);
 
 
         if (authUserDetails.isActivated()) {
@@ -641,7 +641,7 @@ class UserController extends Controller {
             ...carePlanApiData
           },
           notificationToken: notificationToken,
-          feedId: feedId,
+          feedId: `${userId}`,
           severity: {
             ...severityApiDetails,
           },
