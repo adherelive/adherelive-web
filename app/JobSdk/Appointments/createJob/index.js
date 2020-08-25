@@ -1,6 +1,6 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import { USER_CATEGORY } from "../../../../constant";
+import {EVENT_TYPE, USER_CATEGORY} from "../../../../constant";
 
 class CreateJob extends AppointmentJob {
   constructor(data) {
@@ -67,9 +67,10 @@ class CreateJob extends AppointmentJob {
         templateData.push({
           actor: actorId,
           object: `${participant}`,
-          foreign_id: `appointment:${appointmentId}`,
+          foreign_id: `${appointmentId}`,
           verb: "appointment_create",
           message: `${name}(${actorCategory}) has created an appointment with you`,
+          event: EVENT_TYPE.APPOINTMENT,
           time: currentTime
         });
       // }

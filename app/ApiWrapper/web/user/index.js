@@ -1,7 +1,15 @@
+import isEmpty from "lodash/isEmpty";
+
 import BaseUser from "../../../services/user";
+
+// SERVICES
 import userService from "../../../services/user/user.service";
 import userPermissionService from "../../../services/userPermission/userPermission.service";
 import permissionService from "../../../services/permission/permission.service";
+
+// WRAPPER
+import DoctorWrapper from "../doctor";
+import PatientWrapper from "../patient";
 
 import PermissionWrapper from "../permission";
 
@@ -87,6 +95,38 @@ class UserWrapper extends BaseUser {
         },
         permissions: userPermissions
     };
+  };
+
+  getReferenceInfo = async () => {
+      const {getId, getBasicInfo, _data} = this;
+
+      const {doctor, patient} = _data;
+
+      console.log("19031298 doctor, patient ----------->", doctor, patient);
+
+      const doctors = {};
+      const patients = {};
+
+      const patientData = await PatientWrapper(patient);
+
+      if(!isEmpty(doctor)) {
+          const doctorData = await DoctorWrapper(doctor);
+          doctors[doctorData.getDoctorId()] = doctorData.getBasicInfo();
+      }
+
+      if(!isEmpty(patient)) {
+          const patientData = await PatientWrapper(patient);
+          patients[patientData.getPatientId()] = patientData.getBasicInfo();
+      }
+
+      return {
+          users: {
+              [getId()]: getBasicInfo()
+          },
+          doctors,
+          patients
+      }
+
   };
 
 

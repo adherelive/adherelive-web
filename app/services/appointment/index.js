@@ -3,6 +3,15 @@ export default class Appointment {
         this._data = data;
     }
 
+    getData = () => {
+      return this._data.get();
+    };
+
+    getParticipants = () => {
+      const {participant_one_id, participant_two_id} = this._data || {};
+      return {participant_one_id, participant_two_id};
+    };
+
     getAppointmentId() {
         return this._data.get("id");
     }
