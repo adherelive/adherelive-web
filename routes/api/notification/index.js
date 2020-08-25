@@ -8,4 +8,6 @@ router.get(
     "/",
     Authenticate,
     NotificationController.getNotifications
-)
+);
+
+module.exports = router;

@@ -12,7 +12,7 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 // API WRAPPERS -------->
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import ScheduleEventWrapper from "../../ApiWrapper/web/scheduleEvents";
+// import ScheduleEventWrapper from "../../ApiWrapper/web/scheduleEvents";
 import UserWrapper from "../../ApiWrapper/web/user";
 
 const {
