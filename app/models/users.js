@@ -5,6 +5,7 @@ import { DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
 import Permissions from "./permissions";
 import UserCategoryPermissions from "./userCategoryPermissions";
+import UserDevices from "./userDevices";
 
 const Users = database.define(
     DB_TABLES.USERS,
@@ -103,6 +104,11 @@ Users.belongsToMany(Permissions, {
     through: DB_TABLES.USER_CATEGORY_PERMISSIONS,
     sourceKey:"category",
     foreignKey:"category"
+});
+
+Users.hasMany(UserDevices, {
+    sourceKey:"id",
+    foreignKey:"user_id"
 });
 
 export default Users;

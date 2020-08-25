@@ -5,7 +5,7 @@ const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
 const chalk = require("chalk");
-import atob from "atob";
+import base64 from "js-base64";
 import bcrypt from "bcrypt";
 
 import Log from "../../../libs/log";
@@ -274,13 +274,11 @@ class UserController extends Controller {
         );
 
         const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-        const feedId = atob(`${user.get("id")}`);
+        const feedId = base64.encode(`${user.get("id")}`);
 
         const userRef = await userService.getUserData({ id: user.get("id") });
 
         const apiUserDetails = await UserWrapper(userRef.get());
-
-        Logger.debug("userRef ----------------> ", apiUserDetails.getPermissionData());
 
         let permissions = {
           permissions: []
@@ -333,8 +331,8 @@ class UserController extends Controller {
         return this.raiseClientError(res, 401, {}, "Invalid Credentials");
       }
     } catch (error) {
-      console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.message);
+      Logger.debug("signIn 500 error ----> ", error);
+      return this.raiseServerError(res);
     }
   };
 
