@@ -93,6 +93,7 @@ class MReminderController extends Controller {
         description,
         start_date,
         end_date,
+        medicine_id,
         details: {
           medicine_id,
           medicine_type,
@@ -202,6 +203,7 @@ class MReminderController extends Controller {
         participant_id: patient_id, // todo: patient_id
         organizer_type: category,
         organizer_id: userId,
+        medicine_id,
         description,
         start_date,
         end_date,
@@ -355,6 +357,7 @@ class MReminderController extends Controller {
         participant_id, // todo: patient_id
         organizer_type: category,
         organizer_id: userId,
+        medicine_id,
         description,
         start_date,
         end_date,

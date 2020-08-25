@@ -7,6 +7,11 @@ export default class MedicationReminder {
         return this._data;
     }
 
+    getParticipants = () => {
+        const {participant_id, organizer_id} = this._data;
+        return {participant_id, organizer_id};
+    }
+
     getMReminderId = () => {
         return this._data.get("id");
     }

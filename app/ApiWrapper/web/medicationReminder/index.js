@@ -1,6 +1,9 @@
 import BaseMedicationReminder from "../../../services/medicationReminder";
 import mReminderService from "../../../services/medicationReminder/mReminder.service";
 
+// API WRAPPERS
+import MedicineWrapper from "../medicine";
+
 class MReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
     super(data);
@@ -34,6 +37,21 @@ class MReminderWrapper extends BaseMedicationReminder {
       participant_id,
       rr_rule,
     };
+  };
+
+  getReferenceInfo = async () => {
+    const {getBasicInfo, _data} = this;
+    const {medicine} = _data || {};
+    const medicineData = await MedicineWrapper(medicine);
+
+    return {
+      medications: {
+        [this.getMReminderId()]: getBasicInfo()
+      },
+      medicines: {
+        [medicineData.getMedicineId()]: medicineData.getBasicInfo()
+      }
+    }
   };
 }
 
