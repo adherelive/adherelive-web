@@ -67,7 +67,7 @@ class NotificationController extends Controller {
           notification_ids: Object.keys(notificationData),
           doctor_ids: Object.keys(doctorData),
           patient_ids: Object.keys(patientData),
-          event_ids: Object.keys(eventData),
+          appointment_ids: Object.keys(appointmentData),
           user_ids: Object.keys(userData),
             medicine_ids: Object.keys(medicineData),
           medication_ids: Object.keys(medicationData),
