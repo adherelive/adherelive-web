@@ -2,6 +2,7 @@
 import Sequelize from "sequelize";
 import { database } from "../../libs/mysql";
 import {DB_TABLES, USER_CATEGORY} from "../../constant";
+import Medicines from "./medicines";
 
 const MedicationReminders = database.define(
     DB_TABLES.MEDICATION_REMINDERS,
@@ -23,6 +24,16 @@ const MedicationReminders = database.define(
         organizer_id: {
             type: Sequelize.INTEGER,
             allowNull: false
+        },
+        medicine_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: {
+                    tableName: DB_TABLES.MEDICINES,
+                },
+                key: "id",
+            },
         },
         description: {
             type: Sequelize.STRING(1000)
@@ -63,5 +74,10 @@ const MedicationReminders = database.define(
         }
     }
 );
+
+MedicationReminders.hasOne(Medicines, {
+    sourceKey:"medicine_id",
+    foreignKey:"id"
+});
 
 export default MedicationReminders;

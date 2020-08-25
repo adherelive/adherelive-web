@@ -31,6 +31,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      medicine_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: DB_TABLES.MEDICINES,
+          },
+          key: "id",
+        },
+      },
       description: {
         type: Sequelize.STRING(1000)
       },

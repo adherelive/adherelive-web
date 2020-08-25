@@ -266,8 +266,6 @@ class MobileUserController extends Controller {
           permissions = await apiUserDetails.getPermissions();
         }
 
-        Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
-
         return this.raiseSuccess(
             res,
             200,

@@ -93,6 +93,7 @@ class MobileMReminderController extends Controller {
         participant_id: patient_id, // todo: patient_id
         organizer_type: category,
         organizer_id: userId,
+        medicine_id,
         description,
         start_date,
         end_date,
@@ -204,13 +205,13 @@ class MobileMReminderController extends Controller {
 
       const medicineDetails = await medicineService.getMedicineById(medicine_id);
 
-
       const medicineApiWrapper = await MedicineApiWrapper(medicineDetails);
 
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
         organizer_type: category,
         organizer_id: userId,
+        medicine_id,
         description,
         start_date,
         end_date,
@@ -422,6 +423,7 @@ class MobileMReminderController extends Controller {
         participant_id, // todo: patient_id
         organizer_type: category,
         organizer_id: userId,
+        medicine_id,
         description,
         start_date,
         end_date,
