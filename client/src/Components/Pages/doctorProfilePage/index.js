@@ -91,7 +91,6 @@ class DoctorProfilePage extends Component {
         edit_qualification_year[element]=false;
         edit_qualification_college[element]=false;
         edit_qualification_degree[element]=false;
-        edit_registration_council[element]=false;
     });
 
     let edit_registration_council = {};
