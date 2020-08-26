@@ -1,7 +1,7 @@
 
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
-import { getDoctorDetailsUrl, getAllDoctorsUrl, getVerifyDoctorUrl, updateDoctorURL } from "../../Helper/urls/doctor";
+import { getDoctorDetailsUrl, getAllDoctorsUrl, getVerifyDoctorUrl, updateDoctorURL, getDoctorProfileDetailsUrl } from "../../Helper/urls/doctor";
 
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
@@ -22,7 +22,6 @@ export const UPDATE_DOCTOR_FAILED = "UPDATE_DOCTOR_FAILED";
 
 
 export const updateDoctor = (user_id,updateData) => {
-  console.log("yoyo",user_id,updateData);
   let response = {};
   return async dispatch => {
     try {
@@ -114,6 +113,7 @@ export const getAllDoctors = () => {
 };
 
 export const getDoctorDetails = (id) => {
+  console.log("user_id",id);
   let response = {};
   return async dispatch => {
     try {
@@ -122,7 +122,35 @@ export const getDoctorDetails = (id) => {
         method: REQUEST_TYPE.GET,
         url: getDoctorDetailsUrl(id),
       });
-
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_DOCTOR_DETAILS_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: GET_DOCTOR_DETAILS_FAILED,
+          error,
+        });
+      }
+    } catch (error) {
+      console.log("GET DOCTOR DETAILS ERROR --> ", error);
+    }
+    return response;
+  }
+};
+export const getDoctorProfileDetails = () => {
+  console.log("hello");
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: GET_DOCTOR_DETAILS_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getDoctorProfileDetailsUrl(),
+      });
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({

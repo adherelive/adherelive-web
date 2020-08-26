@@ -505,17 +505,18 @@ class DoctorController extends Controller {
     // console.log("add patient controller ---> ");
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.debug("data d", req.body);
-      Logger.debug("data b", req.params);
-      Logger.debug("data c", req.userDetails);
       const { id = 0 } = req.params;
       const {
         name=null,
         city=null,
         gender=null,
         profile_pic=null,
-        speciality_id=null
+        speciality_id=null,
+        qualification_details = null,
+        registration_details = null,
+        clinic_details = null
       } = req.body;
+      Logger.debug("ererer",req.body);
       let doctorExist = await doctorService.getDoctorByData({
         user_id: id
       });
@@ -552,15 +553,172 @@ class DoctorController extends Controller {
         
 
       if (doctorExist) {
+
         let doctor = {};
-        Logger.debug("datadddd", doctor_data);
         let doctor_id = doctorExist.get("id");
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
 
         const updatedDoctor = await doctorService.getDoctorByData({
           user_id: id
         });
+
+        // basic information 
         const doctorData = await DoctorWrapper(updatedDoctor);
+
+        // qualification 
+
+        if (qualification_details) {
+
+          const qualificationsOfDoctor = await qualificationService.getQualificationsByDoctorId(
+            doctorData.getDoctorId()
+          );
+    
+          let newQualifications = [];
+          for (const item of qualification_details) {
+            const {
+              degree_id = null,
+              year = null,
+              college_id = null,
+              photos = [],
+              id = 0,
+              doctor_id = 0
+            } = item;
+            if (id && id !== "0") {
+              let qualification_data = {};
+              if(degree_id){
+                qualification_data['degree_id']=degree_id;
+              }
+              if(college_id){
+                qualification_data['college_id']=college_id;
+              }
+              if(degree_id){
+                qualification_data['degree_id']=degree_id;
+              }
+              if(year){
+                qualification_data['year']=year;
+              }
+              qualification_data['doctor_id']=doctor_id;
+              const qualification = await qualificationService.updateQualification(
+                qualification_data,
+                id
+              );
+              if (photos.length > 3) {
+                return this.raiseServerError(
+                  res,
+                  422,
+                  {},
+                  "Cannot add more than 3 documents"
+                );
+              };
+              for (const photo of photos) {
+                const docExist = await documentService.getDocumentByData(
+                  DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+                  id,
+                  getFilePath(photo)
+                );
+
+                if (!docExist) {
+                  const qualificationDoc = await documentService.addDocument({
+                    doctor_id: doctorData.getDoctorId(),
+                    parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+                    parent_id: id,
+                    document: getFilePath(photo)
+                  });
+                }
+              }
+            }
+          }
+
+        }
+        
+
+        // registration information
+
+        if(registration_details){
+          const registrationsOfDoctor = await registrationService.getRegistrationByDoctorId(
+            doctorData.getDoctorId()
+          );
+    
+          for (const item of registration_details) {
+            const {
+              number=null,
+              registration_council_id=null,
+              year=null,
+              expiryDate=null,
+              id = 0,
+              photos : registration_photos = []
+            } = item;
+            let updateDataRegistration = {};
+            if(number){
+              updateDataRegistration['number']=number;
+            }
+            if(registration_council_id){
+              updateDataRegistration['registration_council_id']=registration_council_id;
+            }
+            if(year){
+              updateDataRegistration['year']=year;
+            }
+            if(expiryDate){
+              updateDataRegistration['expiry_date']=moment(expiryDate);
+            }
+            updateDataRegistration['doctor_id']=doctorData.getDoctorId();
+            if (id && id !== "0") {
+              const registration = await registrationService.updateRegistration(
+                updateDataRegistration,
+                id
+              );
+            }
+            for (const registration_photo of registration_photos) {
+              let docExist = await documentService.getDocumentByData(
+                DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+                id,
+                getFilePath(registration_photo)
+              );
+    
+              if (!docExist) {
+                let qualificationDoc = await documentService.addDocument({
+                  doctor_id: doctorData.getDoctorId(),
+                  parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+                  parent_id: id,
+                  document: getFilePath(registration_photo)
+                });
+              }
+            }
+          }
+        }
+
+        if(clinic_details){
+          Logger.debug("inside");
+          for (const clinic of clinic_details) {
+            let clinicDetails = {};
+            const { 
+              name = null,
+              location = null,
+              time_slots = null,
+              id = 0,
+              doctor_id = null
+            } = clinic;
+            if(name){
+              clinicDetails['name']=name;
+            }
+            if(location){
+              clinicDetails['location']=location;
+            }
+            if(time_slots){
+              clinicDetails['details']={'time_slots':time_slots};
+            }
+            clinicDetails['doctor_id']=doctor_id;
+            Logger.debug("datatata",clinicDetails);
+            if (id && id !== "0") {
+              const newClinic = await clinicService.updateClinic(
+                clinicDetails,
+                id
+              );
+            }
+
+          }
+        }
+
         return raiseSuccess(
           res,
           200,

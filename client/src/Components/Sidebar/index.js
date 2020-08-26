@@ -69,6 +69,7 @@ class SideMenu extends Component {
   render() {
     const { selectedKeys } = this.state;
     const { handleItemSelect } = this;
+    
     const { authenticated_user = 0, users = {}, doctors = {}, authenticated_category } = this.props;
     let dp = '';
     let initials = '';
@@ -114,7 +115,7 @@ class SideMenu extends Component {
         {
           authenticated_category == USER_CATEGORY.DOCTOR ?
           <SubMenu 
-            key="sub2" 
+            key="profile" 
             title={initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
           >
             <Menu.Item key={PROFILE}>Profile</Menu.Item>

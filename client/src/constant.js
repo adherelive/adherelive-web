@@ -132,15 +132,18 @@ export const OTHER = "o";
 export const GENDER = {
   [MALE]: {
     value: "male",
-    view: "M"
+    view: "M",
+    label: "MALE"
   },
   [FEMALE]: {
     value: "female",
-    view: "F"
+    view: "F",
+    label: "FEMALE"
   },
   [OTHER]: {
     value: "other",
-    view: "O"
+    view: "O",
+    label: "OTHER"
   }
 };
 

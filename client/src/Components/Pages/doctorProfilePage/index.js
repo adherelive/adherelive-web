@@ -3,9 +3,12 @@ import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
 import Modal from "antd/es/modal";
-import { Avatar, Upload, Input, Select, Spin } from "antd";
+import { Avatar, Upload, Input, Select, Spin, DatePicker, Icon } from "antd";
 import throttle from "lodash-es/throttle";
 import { doRequest } from '../../../Helper/network';
+import LocationModal from '../../../Components/DoctorOnBoarding/locationmodal';
+import TimingModal from '../../../Components/DoctorOnBoarding/timingModal';
+import plus from '../../../Assets/images/plus.png';
 import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng,
@@ -17,12 +20,13 @@ import {
   FileTextOutlined,
   UserOutlined,
   EditOutlined,
-  CameraFilled
+  CameraFilled,
+  DeleteTwoTone
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
-import { getUploadURL, updateDoctorURL } from '../../../Helper/urls/doctor';
-import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM, REQUEST_TYPE } from "../../../constant";
+import { getUploadURL, updateDoctorURL, getUploadQualificationDocumentUrl, getUploadRegistrationDocumentUrl } from '../../../Helper/urls/doctor';
+import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM, REQUEST_TYPE, MALE, GENDER, FEMALE, OTHER, FULL_DAYS, FULL_DAYS_NUMBER } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 
@@ -31,7 +35,31 @@ const { Option } = Select;
 class DoctorProfilePage extends Component {
   constructor(props) {
     super(props);
-    const { auth: {authenticated_user=null}, doctors, users } = this.props;
+    const { 
+        auth: {authenticated_user=null,authPermissions=[]},
+        users,
+        doctors,
+        qualification_ids,
+        clinic_ids,
+        doctor_ids,
+        doctor_clinics,
+        doctor_qualifications,
+        upload_documents,
+        doctor_registrations,
+        degrees,
+        colleges,
+        councils,
+        specialities
+    } = props;
+    let doctor_user_id = 0;
+    for (let doctor of Object.values(doctors)) {
+        let { basic_info: { user_id = 0, id = 0 } = {} } = doctor;
+
+        if (user_id === authenticated_user) {
+            doctor_user_id = id;
+        }
+    }
+
     const {
         basic_info: {
             first_name="",
@@ -42,7 +70,10 @@ class DoctorProfilePage extends Component {
             address="",
             speciality_id=""
           } = {},
-    } = doctors[authenticated_user] || {};
+          doctor_qualification_ids=[],
+          doctor_registration_ids=[],
+          doctor_clinic_ids=[]
+    } = doctors[doctor_user_id] || {};
     const {
         basic_info: {
             email="",
@@ -51,8 +82,52 @@ class DoctorProfilePage extends Component {
           } = {},
         category= ""
     } = users[authenticated_user] || {};
+
+    let edit_qualification_year = {};
+    let edit_qualification_college = {};
+    let edit_qualification_degree = {};
+
+    doctor_qualification_ids.forEach(element => {
+        edit_qualification_year[element]=false;
+        edit_qualification_college[element]=false;
+        edit_qualification_degree[element]=false;
+        edit_registration_council[element]=false;
+    });
+
+    let edit_registration_council = {};
+    let edit_registration_number = {};
+    let edit_registration_year = {};
+    let edit_registration_expiry = {};
+
+    doctor_registration_ids.forEach(element => {
+        edit_registration_council[element]=false;
+        edit_registration_number[element]=false;
+        edit_registration_year[element]=false;
+        edit_registration_expiry[element]=false;
+    });
+
+    let edit_clinic_name = {};
+    let edit_clinic_location = {};
+    let edit_clinic_timings = {};
+    let modal_timing_visible = {};
+    let doctor_clinic_location = {};
+    doctor_clinic_ids.forEach(element => {
+        edit_clinic_name[element]=false;
+        edit_clinic_location[element]=false;
+        edit_clinic_timings[element]=false;
+        modal_timing_visible[element]=false;
+    });
+    let verified_doctor=false;
+
+    if(authPermissions.length){
+         verified_doctor=true;
+    }
     this.state = {
+        verified_doctor:verified_doctor,
         loading: false,
+        updateLoading: false,
+        doctors: doctors,
+        doctor_clinics: doctor_clinics,
         first_name: first_name,
         middle_name: middle_name,
         last_name: last_name,
@@ -70,44 +145,205 @@ class DoctorProfilePage extends Component {
         edit_gender: false,
         edit_specialities: false,
         edit_city:false,
-        fetchingSpeciality:false
+        fetchingSpeciality:false,
+        fetchingColleges: false,
+        fetchingCouncils: false,
+        doctor_user_id : doctor_user_id,
+        profilePicModalVisible: false,
+        doctor_qualification_ids: doctor_qualification_ids,
+        edit_qualification_year: edit_qualification_year,
+        edit_qualification_college: edit_qualification_college,
+        edit_qualification_degree: edit_qualification_degree,
+        edit_registration_council: edit_registration_council,
+        edit_registration_year: edit_registration_year,
+        edit_registration_number: edit_registration_number,
+        edit_registration_expiry: edit_registration_expiry,
+        edit_clinic_name: edit_clinic_name,
+        edit_clinic_location: edit_clinic_location,
+        edit_clinic_timings: edit_clinic_timings,
+        modal_timing_visible: modal_timing_visible,
+        doctor_clinic_location: doctor_clinic_location
     };
     this.handleSpecialitySearch = throttle(this.handleSpecialitySearch.bind(this), 2000);
-
   }
 
   componentDidMount() {
-
+    const { doctors } = this.state;
+    const { doctor_user_id } =this.state;
+    const { getInitialData } = this;
+    const { doctor_qualification_ids,doctor_registration_ids } = doctors[doctor_user_id] || {};
+    if (!doctor_qualification_ids || !doctor_registration_ids) {
+      getInitialData();
+    }
   }
 
+  getInitialData = async () => {
+    try {
+      this.setState({ loading: true });
+      const { getDoctorDetails } = this.props;
+      const response = await getDoctorDetails();
+      const {
+        status,
+        payload: { message: { message: responseMessage } = {} } = {}
+      } = response || {};
+
+      if (status === true) {
+        this.setState({
+          loading: false
+        });
+      } else {
+        this.setState({
+          loading: false
+        });
+        message.warn(responseMessage);
+      }
+    } catch (error) {
+      this.setState({
+        loading: false
+      });
+      message.warn("Somthing wen't wrong, please try again later");
+    }
+  };
   formatMessage = data => this.props.intl.formatMessage(data);
 
   updateProfileData = async (updateData) => {
     try {
-        this.setState({ loading: true });
+        this.setState({ edit_clinic_timings: true });
         const { auth: {authenticated_user=null}, doctors, users, updateDoctorBasicInfo } = this.props;
         const { id } = authenticated_user;
         let response = await updateDoctorBasicInfo(authenticated_user,updateData);
         const { status , payload : { message:respMessage }} = response;
         if(status){
             this.setState({
-                loading: false
+                edit_clinic_timings: false
             });
             message.success(respMessage);
+            this.getInitialData();
         }else{
             this.setState({
-                loading: false
+                edit_clinic_timings: false
             });
-            message.warn(respMessage);
+            message.error(respMessage);
         }
     } catch (error) {
       this.setState({
-        loading: false
+        edit_clinic_timings: false
       });
       console.log(error);
       message.warn("Somthing wen't wrong, please try again later");
     }
   };
+  getYearOptions = () => {
+    let currYear = moment().format("YYYY");
+    let curryearNum = parseInt(currYear);
+    let years = [];
+    for (let year = curryearNum - 100; year <= curryearNum+20; year++) {
+      years.push(<Option key={year} value={year} name={year}>
+        {year}
+      </Option>)
+    }
+    return years;
+  }
+  setQualificationYear = qualification_id => (value) => {
+    const { doctor_user_id, edit_qualification_year } = this.state;
+    let newQualificationYear = edit_qualification_year;
+    let updateData = {
+        qualification_details : [
+            {
+                year:value,
+                doctor_id: doctor_user_id,
+                id: qualification_id
+            }
+        ]
+    };
+    this.updateProfileData(updateData);
+    newQualificationYear[qualification_id]=false;
+    this.setState({edit_qualification_year:newQualificationYear});
+  }
+  setRegistrationExpiryDate = registration_id => (date, dateString) => {
+    if(date){
+        const { doctor_user_id, edit_registration_expiry } = this.state;
+        let newRegistrationExpiryDate = edit_registration_expiry;
+        let updateData = {
+            registration_details : [
+                {
+                    expiryDate:date,
+                    doctor_id: doctor_user_id,
+                    id: registration_id
+                }
+            ]
+        };
+        this.updateProfileData(updateData);
+        newRegistrationExpiryDate[registration_id]=false;
+        this.setState({edit_registration_expiry:newRegistrationExpiryDate});
+    }
+    
+  }
+  setRegistrationYear = registration_id => (value) => {
+    const { doctor_user_id, edit_registration_year } = this.state;
+    let newRegistrationYear = edit_registration_year;
+    let updateData = {
+        registration_details : [
+            {
+                year:value,
+                doctor_id: doctor_user_id,
+                id: registration_id
+            }
+        ]
+    };
+    this.updateProfileData(updateData);
+    newRegistrationYear[registration_id]=false;
+    this.setState({edit_registration_year:newRegistrationYear});
+  }
+  setCollege = (qualification_id) => value => {
+    const { doctor_user_id, edit_qualification_college } = this.state;
+    let newQualificationCollege = edit_qualification_college;
+    let updateData = {
+        qualification_details : [
+            {
+                college_id:value,
+                doctor_id: doctor_user_id,
+                id: qualification_id
+            }
+        ]
+    };
+    this.updateProfileData(updateData);
+    newQualificationCollege[qualification_id]=false;
+    this.setState({edit_qualification_college:newQualificationCollege});
+  }
+  setDegree = (qualification_id) => value => {
+    const { doctor_user_id, edit_qualification_degree } = this.state;
+    let newQualificationDegree = edit_qualification_degree;
+    let updateData = {
+        qualification_details : [
+            {
+                degree_id:value,
+                doctor_id: doctor_user_id,
+                id: qualification_id
+            }
+        ]
+    };
+    this.updateProfileData(updateData);
+    newQualificationDegree[qualification_id]=false;
+    this.setState({edit_qualification_degree:newQualificationDegree});
+  }
+
+  setRegCouncil = (registration_id) => value => {
+    const { doctor_user_id, edit_registration_council } = this.state;
+    let newRegistrationCouncil = edit_registration_council;
+    let updateData = {
+        registration_details : [
+            {
+                registration_council_id:value,
+                doctor_id: doctor_user_id,
+                id: registration_id
+            }
+        ]
+    };
+    this.updateProfileData(updateData);
+    newRegistrationCouncil[registration_id]=false;
+    this.setState({edit_registration_council:newRegistrationCouncil});
+  }
 
   handleBack = e => {
     e.preventDefault();
@@ -131,9 +367,482 @@ class DoctorProfilePage extends Component {
             );
       }
   }
+    renderRegistrationNumber = (registration_id) => {
+        const { edit_registration_number, verified_doctor, doctor_user_id } =this.state;
+        const { doctor_registrations, doctors } = this.props;
+        const {
+            basic_info: {
+                number
+            }
+        } = doctor_registrations[registration_id];
+        const {
+            doctor_registration_ids
+        } = doctors[doctor_user_id];
+        if(edit_registration_number[registration_id]){
+        return (
+            <Input defaultValue={number} onPressEnter={this.updateRegistrationNumber} data-id={registration_id}></Input>
+        );
+        }else{
+            return (
+                <>
+                    <span>{number}</span>
+                    {!verified_doctor?
+                    <span style={{marginLeft:"5px"}}>
+                        <EditOutlined onClick={ () => this.editRegistrationNumber(registration_id)} title={"Edit Registration Number"}/>
+                    </span>:null
+                    }
+                </>
+            );
+        }
+    }
+
+    renderClinicName = (clinic_id) => {
+        const { edit_clinic_name, verified_doctor } =this.state;
+        const { doctor_clinics, doctors } = this.props;
+        const {
+            basic_info: {
+                name
+            }
+        } = doctor_clinics[clinic_id];
+        if(edit_clinic_name[clinic_id]){
+        return (
+            <Input defaultValue={name} onPressEnter={this.updateClinicName} data-id={clinic_id}></Input>
+        );
+        }else{
+            return (
+                <>
+                    <span>{name}</span>
+                    {!verified_doctor?
+                    <span style={{marginLeft:"5px"}}>
+                        <EditOutlined onClick={ () => this.editClinicName(clinic_id)} title={"Edit Clinic Name"}/>
+                    </span>:null
+                    }
+                </>
+            );
+        }
+    }
+    handleCancelTiming = (clinic_id) => {
+        const { modal_timing_visible } = this.state;
+        let newModalVisibleTimings = modal_timing_visible;
+        newModalVisibleTimings[clinic_id] = false;
+        this.setState({ modal_timing_visible: newModalVisibleTimings });
+    }
+    handleOkTiming = clinic_id => (timing, selectedDays) => {
+
+        const { edit_clinic_timings, modal_timing_visible, doctor_user_id } =this.state;
+        let time_slots = {
+            [FULL_DAYS_NUMBER.MON]: timing[FULL_DAYS.MON],
+            [FULL_DAYS_NUMBER.TUE]: timing[FULL_DAYS.TUE],
+            [FULL_DAYS_NUMBER.WED]: timing[FULL_DAYS.WED],
+            [FULL_DAYS_NUMBER.THU]: timing[FULL_DAYS.THU],
+            [FULL_DAYS_NUMBER.FRI]: timing[FULL_DAYS.FRI],
+            [FULL_DAYS_NUMBER.SAT]: timing[FULL_DAYS.SAT],
+            [FULL_DAYS_NUMBER.SUN]: timing[FULL_DAYS.SUN],
+        }
+        const updateData = {
+            clinic_details:[
+                {
+                    time_slots:time_slots,
+                    doctor_id: doctor_user_id,
+                    id: clinic_id
+                }
+            ]
+        }
+        this.updateProfileData(updateData);
+        let editClinicTimings=edit_clinic_timings;
+        let newModalTimings=modal_timing_visible;
+        newModalTimings[clinic_id]=false;
+        editClinicTimings[clinic_id]=false;
+        this.setState({modal_timing_visible:newModalTimings,edit_clinic_timings:editClinicTimings});
+
+    };
+    setModalTimingVisible = clinic_id => () => {
+        const { modal_timing_visible } = this.state;
+        let newModalVisibleTimings = modal_timing_visible;
+        newModalVisibleTimings[clinic_id] = true;
+        this.setState({ modal_timing_visible: newModalVisibleTimings });
+    }
+    renderClinicTimings = (time_slots,clinic_id) => {
+        const { edit_clinic_timings, verified_doctor } =this.state;
+        const { doctor_clinics, doctors } = this.props;
+        const {
+            basic_info: {
+                name
+            }
+        } = doctor_clinics[clinic_id];
+        if(!edit_clinic_timings[clinic_id]){
+            return (Object.keys(time_slots).map((day, index) => {
+                // todo: add DAY[day] later from constants
+                return (
+                  <Fragment>
+                    {time_slots[day].length > 0 && <div className="wp100 flex">
+                      <div className="fs14 fw700 mt16 mb10 mr16">{this.getFullDayText(day)}</div>
+                      <div
+                        className="wp100 mt16 mb10 mr16 flex"
+                        key={`ts-${index}`}
+                      >
+                        {time_slots[day].map((time_slot, i) => {
+                          const { startTime: start_time, endTime: end_time } =
+                            time_slot || {};
+
+                          return (
+                            <div className="fs14 fw500 wp100" key={`ts/${index}/${i}`}>
+                              {start_time
+                                ? `${moment(start_time).format(
+                                    "LT"
+                                  )} - ${moment(end_time).format("LT")}`
+                                : "CLOSED"}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>}
+                  </Fragment>
+                );
+              }))
+        }else{
+            let isClinicOpen = false;
+            Object.keys(time_slots).map((day) => {
+                if (time_slots[day].length) {
+                    isClinicOpen = true;
+                }
+            });
+            return (
+                Object.keys(time_slots).length && isClinicOpen? (
+                    <div className={`form-input-timing active-grey `} >
+                        <div className={'active-grey'}>
+                            <div className='flex justify-end wp100'>
+                                <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.setModalTimingVisible(clinic_id)} />
+                            </div>
+                            {this.renderTimings(time_slots)}
+                        </div>
+                    </div>) :
+                    (
+                        <div className={`form-input-timing default-grey pointer`} onClick={this.setModalTimingVisible(clinic_id)}>
+                            <div className={'default-grey'}>
+                                {this.formatMessage(messages.timings)}</div>
+                            {<Icon type="clock-circle" />}
+                        </div>
+                    )
+            );
+        }
+    }
+
+    renderTimings = (timings) => {
+        return (
+            (Object.keys(timings).map((day) => {
+                return (
+                    <div className='wp100 flex flex-start'>
+                        <div className='fs14 medium wp30'>{`${this.getFullDayText(day)} :`}</div>
+                        <div className='wp80 flex-start'>{
+                            timings[day].length && timings[day][0].startTime != '' && timings[day][0].endTime != '' ? timings[day].map((time, index) => {
+                                return (
+                                    <div className='flex justify-start'>
+                                        <div>{`${time.startTime ? moment(time.startTime).format('hh:mm a') : ''}-`}</div>
+                                        <div>{time.endTime ? `${moment(time.endTime).format('hh:mm a')}${index < timings[day].length - 1 ? ', ' : ' '} ` : ''}</div>
+                                    </div>)
+                            }) : this.formatMessage(messages.closed)}</div>
+                    </div>
+                )
+            }))
+        );
+
+    }
+
+    renderClinicLocation = (clinic_id) => {
+        
+        const { edit_clinic_location, verified_doctor,doctor_clinic_location } =this.state;
+        const { doctor_clinics } = this.props;
+        const {
+            location
+        } = doctor_clinics[clinic_id];
+        let render_location = location;
+        if(doctor_clinic_location[clinic_id]){
+            render_location = doctor_clinic_location[clinic_id];
+        }
+        if(edit_clinic_location[clinic_id]){
+        return (
+            <PlacesAutocomplete
+                    value={render_location}
+                    onChange={this.onChangeClinicLocation(clinic_id)}
+                    onSelect={this.handleSelect}
+                >
+                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                        <div>
+                            <Input
+                                {...getInputProps({
+                                    // placeholder: this.formatMessage(messages.searchCity),
+                                    className: 'form-inputs-google',
+                                })}
+                                onPressEnter={this.updateClinicLocation}
+                                data-id={clinic_id}
+                                style={{width:"400px",height:"auto",margin:"0",marginBottom:"10px"}}
+
+                            />
+                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute"}}>
+                                {loading && <div>Loading...</div>}
+                                {suggestions.map(suggestion => {
+                                    const className = "google-places-autocomplete__suggestion";
+                                    // inline style for demonstration purpose
+                                    return (
+                                        <div
+                                            {...getSuggestionItemProps(suggestion, {
+                                                className,
+
+                                            })}
+                                        >
+                                            <span>{suggestion.description}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+                </PlacesAutocomplete>
+            );
+        }else{
+            return (
+                <>
+                    <span>{render_location}</span>
+                    {!verified_doctor?
+                    <span style={{marginLeft:"5px"}}>
+                        <EditOutlined onClick={ () => this.editClinicLocation(clinic_id)} title={"Edit Clinic Location"}/>
+                    </span>:null
+                    }
+                </>
+            );
+        }
+    }
+    
+    renderQualificationYear = (qualification_id) => {
+        const { edit_qualification_year, verified_doctor } =this.state;
+        const { doctor_qualifications = {} } = this.props;
+
+        if(edit_qualification_year[qualification_id]){
+          return (
+                <Select size={"small"} style={{width:"100px",height:"auto",margin:"0"}} className="form-inputs" placeholder="Select Year" value={doctor_qualifications[qualification_id].basic_info.year ? doctor_qualifications[qualification_id].basic_info.year : null} onChange={this.setQualificationYear(qualification_id)}>
+                    {this.getYearOptions()}
+                </Select>
+          );
+        }else{
+              return (
+                  <>
+                      <span>{doctor_qualifications[qualification_id].basic_info.year}</span>
+                      {!verified_doctor?
+                          <span style={{marginLeft:"5px"}}>
+                            <EditOutlined onClick={()=> this.editQualificationYear(qualification_id)} title={"Edit Year"}/>
+                        </span>
+                        :
+                        null
+                      }
+                  </>
+              );
+        }
+    }
+
+    renderRegistrationYear = (registration_id) => {
+        const { edit_registration_year, verified_doctor } =this.state;
+        const { doctor_registrations = {} } = this.props;
+
+        if(edit_registration_year[registration_id]){
+          return (
+                <Select size={"small"} style={{width:"100px",height:"auto",margin:"0"}} className="form-inputs" placeholder="Select Year" value={doctor_registrations[registration_id].basic_info.year ? doctor_registrations[registration_id].basic_info.year : null} onChange={this.setRegistrationYear(registration_id)}>
+                    {this.getYearOptions()}
+                </Select>
+          );
+        }else{
+              return (
+                  <>
+                      <span>{doctor_registrations[registration_id].basic_info.year}</span>
+                      {!verified_doctor?
+                      <span style={{marginLeft:"5px"}}>
+                          <EditOutlined onClick={()=> this.editRegistrationYear(registration_id)} title={"Edit Year"}/>
+                      </span>:null
+                      }
+                  </>
+              );
+        }
+    }
+
+    renderRegistrationExpiryDate = (registration_id) => {
+        const { edit_registration_expiry, verified_doctor } =this.state;
+        const { doctor_registrations = {} } = this.props;
+        const expiryDate = moment(doctor_registrations[registration_id].expiry_date).format('MMMM DD, YYYY');
+        if(edit_registration_expiry[registration_id]){
+          return (
+            <DatePicker  style={{margin:"0",height:"auto"}} size={"small"} defaultValue={moment(doctor_registrations[registration_id].expiry_date)} onChange={this.setRegistrationExpiryDate(registration_id)} placeholder='Select Expiry Date' />
+          );
+        }else{
+              return (
+                  <>
+                      <span>{expiryDate}</span>
+                      {!verified_doctor?
+                      <span style={{marginLeft:"5px"}}>
+                          <EditOutlined onClick={()=> this.editRegistrationExpiryDate(registration_id)} title={"Edit Expiry Date"}/>
+                      </span>:null
+                      }
+                  </>
+              );
+        }
+    }
+
+    renderQualificationCollege = (qualification_id) => {
+        const { edit_qualification_college, verified_doctor } =this.state;
+        const { doctor_qualifications = {}, colleges = {} } = this.props;
+        const {
+            basic_info:{
+                college_id
+            }
+        } = doctor_qualifications[qualification_id];
+        if(edit_qualification_college[qualification_id]){
+          return (
+            <Select
+                size={"small"}
+                style={{margin:"0",height:"auto"}}
+                onSearch={this.handleCollegeSearch}
+                className="form-inputs"
+                placeholder={"Select College"}
+                showSearch
+                value={college_id.toString()}
+                onChange={this.setCollege(qualification_id)}
+                // onFocus={() => handleMedicineSearch("")}
+                autoComplete="off"
+                // onFocus={() => handleMedicineSearch("")}
+                filterOption={(input, option) =>
+                option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+            // getPopupContainer={getParentNode}
+
+            >
+                {this.getCollegesOption()}
+          </Select>
+          );
+        }else{
+              return (
+                  <>
+                      <span>{college_id? colleges[college_id].basic_info.name: TABLE_DEFAULT_BLANK_FIELD}</span>
+                      {!verified_doctor?
+                        <span style={{marginLeft:"5px"}}>
+                            <EditOutlined onClick={()=> this.editQualificationCollege(qualification_id)} title={"Edit College"}/>
+                        </span>
+                        :
+                        null
+                      }
+                  </>
+              );
+        }
+    }
+    renderQualificationDegree = (qualification_id) => {
+        const { edit_qualification_degree, verified_doctor } =this.state;
+        const { doctor_qualifications = {}, degrees = {} } = this.props;
+        const {
+            basic_info:{
+                degree_id
+            }
+        } = doctor_qualifications[qualification_id];
+        if(edit_qualification_degree[qualification_id]){
+          return (
+            <Select
+                size={"small"}
+                onSearch={this.handleDegreeSearch}
+                className="form-inputs"
+                placeholder={"Select Degree"}
+                showSearch
+                value={degree_id.toString()}
+                onChange={this.setDegree(qualification_id)}
+                // onFocus={() => handleMedicineSearch("")}
+                autoComplete="off"
+                // onFocus={() => handleMedicineSearch("")}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+                style={{width:"250px",height:"auto",margin:"0"}}
+              // getPopupContainer={getParentNode}
+
+              >
+                {this.getDegreesOption()}
+              </Select>
+          );
+        }else{
+              return (
+                  <>
+                      <span>{degree_id? degrees[degree_id].basic_info.name: TABLE_DEFAULT_BLANK_FIELD}</span>
+                      {!verified_doctor ?
+                        <span style={{marginLeft:"5px"}}>
+                            <EditOutlined onClick={()=> this.editQualificationDegree(qualification_id)} title={"Edit Degree"}/>
+                        </span>
+                        :
+                        null
+                      }
+                  </>
+              );
+        }
+    }
+    renderRegistrationCouncil = (registration_id) => {
+        const { edit_registration_council, verified_doctor } =this.state;
+        const { doctor_registrations = {}, councils = {} } = this.props;
+        const {
+            basic_info:{
+                registration_council_id
+            }
+        } = doctor_registrations[registration_id];
+        if(edit_registration_council[registration_id]){
+          return (
+            <Select
+                size={"small"}
+                onSearch={this.handleCouncilSearch}
+                notFoundContent={this.state.fetchingCouncils ? <Spin size="small" /> : 'No match found'}
+                className="form-inputs"
+                placeholder="Select Council"
+                showSearch
+                value={registration_council_id.toString()}
+                onChange={this.setRegCouncil(registration_id)}
+                // onFocus={() => handleMedicineSearch("")}
+                autoComplete="off"
+                // onFocus={() => handleMedicineSearch("")}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+                style={{width:"150px",height:"auto",margin:"0"}}
+              // getPopupContainer={getParentNode}
+
+              >
+                {this.getCouncilOption()}
+              </Select>
+          );
+        }else{
+              return (
+                  <>
+                      <span>{registration_council_id? councils[registration_council_id].basic_info.name: TABLE_DEFAULT_BLANK_FIELD}</span>
+                      {!verified_doctor?
+                      <span style={{marginLeft:"5px"}}>
+                          <EditOutlined onClick={()=> this.editRegistrationCouncil(registration_id)} title={"Edit Council"}/>
+                      </span>:null
+                      }
+                  </>
+              );
+        }
+    }
   onChangeCity = address => {
 
     this.setState({ address: address });
+
+};
+onChangeClinicLocation = clinic_id => (value) => {
+    
+    const { doctor_clinic_location } = this.state;
+    let newClinicLocation = doctor_clinic_location;
+    delete newClinicLocation[clinic_id];
+    newClinicLocation[clinic_id] = value;
+    this.setState({doctor_clinic_location:newClinicLocation});
 
 };
   renderCity = () => {
@@ -153,6 +862,7 @@ class DoctorProfilePage extends Component {
                                     className: 'form-inputs-google',
                                 })}
                                 onPressEnter={this.updateCity}
+                                style={{width:"400px",height:"auto",margin:"0",marginBottom:"10px"}}
                             />
                             <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute"}}>
                                 {loading && <div>Loading...</div>}
@@ -215,11 +925,129 @@ class DoctorProfilePage extends Component {
       this.setState({ fetchingSpeciality: false });
     }
   };
+  async handleCollegeSearch(data) {
+    try {
+      if (data) {
+        const { searchCollege } = this.props;
+        this.setState({ fetchingColleges: true });
+        const response = await searchCollege(data);
+        const { status } = response;
+        if (status) {
+          // const { colleges = {} } = responseData;
+          // const collegeList = {};
+          this.setState({ fetchingColleges: false });
+          // Object.keys(colleges).forEach(id => {
+          //   collegeList[id] = colleges[id];
+          // });
+          // this.setState({ colleges: collegeList, fetchingColleges: false });
+        } else {
+          this.setState({ fetchingColleges: false });
+        }
+      } else {
+        this.setState({ fetchingColleges: false });
+      }
+    } catch (err) {
+      console.log("err", err);
+      message.error(this.formatMessage(messages.somethingWentWrong))
+      this.setState({ fetchingColleges: false });
+    }
+  };
+  async handleDegreeSearch(data) {
+    try {
+      if (data) {
+        const { searchDegree } = this.props;
+        this.setState({ fetchingDegrees: true });
+        const response = await searchDegree(data);
+        const { status } = response;
+        if (status) {
+          // const { degrees = {} } = responseData;
+          // const degreeList = {};
+          // Object.keys(degrees).forEach(id => {
+          //   degreeList[id] = degrees[id];
+          // });
+          // this.setState({ degrees: degreeList, fetchingDegrees: false });
+          this.setState({ fetchingDegrees: false });
+        } else {
+          this.setState({ fetchingDegrees: false });
+        }
+      } else {
+        this.setState({ fetchingDegrees: false });
+      }
+    } catch (err) {
+      console.log("err", err);
+      message.error(this.formatMessage(messages.somethingWentWrong))
+      this.setState({ fetchingDegrees: false });
+    }
+  };
+  async handleCouncilSearch(data) {
+    try {
+      if (data) {
+        const { searchCouncil } = this.props;
+        this.setState({ fetchingCouncils: true });
+        const response = await searchCouncil(data);
+        const { status } = response;
+        if (status) {
+          // const { registration_councils = {} } = responseData;
+          // const councilList = {};
+          // Object.keys(registration_councils).forEach(id => {
+          //   councilList[id] = registration_councils[id];
+          // });
+          // this.setState({ councils: councilList, fetchingCouncils: false });
+
+          this.setState({ fetchingCouncils: false });
+        } else {
+          this.setState({ fetchingCouncils: false });
+        }
+      } else {
+        this.setState({ fetchingCouncils: false });
+      }
+    } catch (err) {
+      console.log("err", err);
+      message.error(this.formatMessage(messages.somethingWentWrong))
+      this.setState({ fetchingCouncils: false });
+    }
+  };
   getSpecialityOption = () => {
     const { specialities = {} } = this.props;
 
     return Object.keys(specialities).map(id => {
       const { basic_info: { name } = {} } = specialities[id] || {};
+      return (
+        <Option key={id} value={id}>
+          {name}
+        </Option>
+      );
+    });
+  };
+  getCollegesOption = () => {
+    const { colleges = {} } = this.props;
+
+    return Object.keys(colleges).map(id => {
+      const { basic_info: { name } = {} } = colleges[id] || {};
+      return (
+        <Option key={id} value={id}>
+          {name}
+        </Option>
+      );
+    });
+  };
+  getDegreesOption = () => {
+    const { degrees = {} } = this.props;
+
+    return Object.keys(degrees).map(id => {
+      const { basic_info: { name, type } = {} } = degrees[id] || {};
+      return (
+        <Option key={id} value={id}>
+          {name}
+        </Option>
+      );
+    });
+  };
+  getCouncilOption = () => {
+    const { councils = {} } = this.props;
+
+    return Object.keys(councils).map(id => {
+      const { basic_info: { name } = {} } = councils[id] || {};
       return (
         <Option key={id} value={id}>
           {name}
@@ -238,6 +1066,7 @@ class DoctorProfilePage extends Component {
     if(edit_specialities){
     return (
         <Select
+        size={"small"}
         onFocus={this.handleSpecialitySearch}
         onSearch={this.handleSpecialitySearch}
         notFoundContent={this.state.fetchingSpeciality ? <Spin size="small" /> : 'No match found'}
@@ -250,7 +1079,7 @@ class DoctorProfilePage extends Component {
         autoComplete="off"
         // onFocus={() => handleMedicineSearch("")}
         optionFilterProp="children"
-        style={{width:"250px"}} 
+        style={{width:"250px",height:"auto",margin:"0"}} 
 
         filterOption={(input, option) =>
             option.props.children
@@ -284,23 +1113,27 @@ class DoctorProfilePage extends Component {
             <Select
               className="form-inputs"
               placeholder="Select Gender"
-              value={gender.toUpperCase()}
+              value={GENDER[gender].label}
               onChange={this.setGender}
               autoComplete="off"   
-              style={{width:"100px"}} 
+              style={{width:"100px",height:"auto",margin:"0"}} 
+              size={"small"}
             >
                 <Option key={0} value={'m'}>
-                    Male
+                    {GENDER[MALE].label}
                 </Option>
                 <Option key={1} value={'f'}>
-                    Female
+                    {GENDER[FEMALE].label}
+                </Option>
+                <Option key={2} value={'o'}>
+                    {GENDER[OTHER].label}
                 </Option>
             </Select>
           );
         }else{
             return (
               <>
-                  <span>{gender ? gender.toUpperCase() : TABLE_DEFAULT_BLANK_FIELD}</span>
+                  <span>{gender ? GENDER[gender].label : TABLE_DEFAULT_BLANK_FIELD}</span>
                   <span style={{marginLeft:"5px"}}>
                       <EditOutlined onClick={this.editGender} title={"Edit Gender"}/>
                   </span>
@@ -311,6 +1144,60 @@ class DoctorProfilePage extends Component {
 
   editName = () => {
       this.setState({edit_name:true});
+  }
+  editRegistrationNumber = (registration_id) => {
+    const { edit_registration_number } =this.state;
+    let newRegistrationNumber = edit_registration_number;
+    newRegistrationNumber[registration_id]=true;
+    this.setState({edit_registration_number:newRegistrationNumber});
+  }
+  editClinicName = (clinic_id) => {
+    const { edit_clinic_name } =this.state;
+    let newClinicName = edit_clinic_name;
+    newClinicName[clinic_id]=true;
+    this.setState({edit_clinic_name:newClinicName});
+  }
+  editClinicTimings = (clinic_id) => {
+    const { edit_clinic_timings } =this.state;
+    let newClinicTimings = edit_clinic_timings;
+    newClinicTimings[clinic_id]=true;
+    this.setState({edit_clinic_timings:newClinicTimings});
+  }
+  editClinicLocation = (clinic_id) => {
+    const { edit_clinic_location } =this.state;
+    let newClinicLocation = edit_clinic_location;
+    newClinicLocation[clinic_id]=true;
+    this.setState({edit_clinic_location:newClinicLocation});
+  }
+  editQualificationYear = (qualification_id) => {
+    let newQualificationYear = this.state.edit_qualification_year;
+    newQualificationYear[qualification_id]=true;
+    this.setState({edit_qualification_year:newQualificationYear});
+  }
+  editRegistrationYear = (registration_id) => {
+    let newRegistrationYear = this.state.edit_registration_year;
+    newRegistrationYear[registration_id]=true;
+    this.setState({edit_registration_year:newRegistrationYear});
+  }
+  editRegistrationExpiryDate = (registration_id) => {
+    let newRegistrationExpiryDate = this.state.edit_registration_expiry;
+    newRegistrationExpiryDate[registration_id]=true;
+    this.setState({edit_registration_expiry:newRegistrationExpiryDate});
+  }
+  editQualificationCollege = (qualification_id) => {
+    let newQualificationCollege = this.state.edit_qualification_college;
+    newQualificationCollege[qualification_id]=true;
+    this.setState({edit_qualification_college:newQualificationCollege});
+  }
+  editQualificationDegree = (qualification_id) => {
+    let newQualificationDegree = this.state.edit_qualification_degree;
+    newQualificationDegree[qualification_id]=true;
+    this.setState({edit_qualification_degree:newQualificationDegree});
+  }
+  editRegistrationCouncil = (registration_id) => {
+    let newRegistrationCouncil= this.state.edit_registration_council;
+    newRegistrationCouncil[registration_id]=true;
+    this.setState({edit_qualification_degree:newRegistrationCouncil});
   }
   editCity = () => {
     this.setState({edit_city:true});
@@ -331,6 +1218,57 @@ class DoctorProfilePage extends Component {
       this.updateProfileData({'name':name});
       this.setState({edit_name:false});
   }
+    updateRegistrationNumber = (e) => {
+        const { doctor_user_id, edit_registration_number } = this.state;
+        let newRegistrationCouncil = edit_registration_number;
+        let registration_id = e.target.dataset.id;
+        let updateData = {
+            registration_details : [
+                {
+                    number:e.target.value,
+                    doctor_id: doctor_user_id,
+                    id: registration_id
+                }
+            ]
+        };
+        this.updateProfileData(updateData);
+        newRegistrationCouncil[registration_id]=false;
+        this.setState({edit_registration_number:newRegistrationCouncil});
+    }
+    updateClinicName = (e) => {
+        const { doctor_user_id, edit_clinic_name } = this.state;
+        let newClinicName = edit_clinic_name;
+        let clinic_id = e.target.dataset.id;
+        let updateData = {
+            clinic_details : [
+                {
+                    name:e.target.value,
+                    doctor_id: doctor_user_id,
+                    id: clinic_id
+                }
+            ]
+        };
+        this.updateProfileData(updateData);
+        newClinicName[clinic_id]=false;
+        this.setState({edit_clinic_name:newClinicName});
+    }
+    updateClinicLocation = (e) => {
+        const { doctor_user_id, edit_clinic_location } = this.state;
+        let newClinicLocation = edit_clinic_location;
+        let clinic_id = e.target.dataset.id;
+        let updateData = {
+            clinic_details : [
+                {
+                    location:e.target.value,
+                    doctor_id: doctor_user_id,
+                    id: clinic_id
+                }
+            ]
+        };
+        this.updateProfileData(updateData);
+        newClinicLocation[clinic_id]=false;
+        this.setState({edit_clinic_location:newClinicLocation});
+    }
     updateCity = () => {
         const { 
             city
@@ -381,7 +1319,11 @@ class DoctorProfilePage extends Component {
         return isJpgOrPng;
     }
     handleChange = info => {
-
+        const { file } = info;
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            return;
+        }
         this.getBase64(info.file.originFileObj, profile_pic =>
             this.setState({
                 profile_pic,
@@ -389,11 +1331,13 @@ class DoctorProfilePage extends Component {
             })
         );
     };
+    handleChangeLocation =() => {
+
+    }
     getDoctorBasicDetails = () => {
         const { auth: {authenticated_user=null}, doctors, users, specialities } = this.props;
         const current_doctor = doctors[authenticated_user];
-        const { profile_pic_url, edit_name } = this.state;
-        // const { id, doctors, users, specialities } = this.props;
+        const { profile_pic_url, edit_name, doctor_user_id } = this.state;
         const { formatMessage, handleProfilePicModalOpen } = this;
         const {
         basic_info: {
@@ -402,7 +1346,7 @@ class DoctorProfilePage extends Component {
             speciality_id
         } = {},
         city,
-        } = doctors[authenticated_user] || {};
+        } = doctors[doctor_user_id] || {};
         const {
         basic_info: {  email, mobile_number, prefix } = {},
         onboarded,
@@ -419,7 +1363,7 @@ class DoctorProfilePage extends Component {
             <div className="wp100 p20 flex direction-row justify-space-between align-center border-box">
                 <div className="w200">
                     {profile_pic_url ? (
-                    <Avatar style={{border:"5px solid lightgrey"}} gap={"4"} src={profile_pic_url} size={164} icon={<UserOutlined/>} />
+                    <Avatar onClick={handleProfilePicModalOpen} style={{border:"5px solid lightgrey",cursor:"pointer"}} gap={"4"} src={profile_pic_url} size={164} icon={<UserOutlined/>} />
                     ) : (
                     <Avatar size={164} icon={<UserOutlined />} />
                     )}
@@ -549,16 +1493,21 @@ class DoctorProfilePage extends Component {
   };
 
   getDoctorRegistrationDetails = () => {
+    const uploadButton = (
+        <div>
+            <img src={plus} className={"w22 h22"} />
+        </div>
+    );
     const {
-      id,
       doctors,
       doctor_registrations,
       upload_documents,
       councils = {}
     } = this.props;
+    const { doctor_user_id, verified_doctor } = this.state;
     const { formatMessage, handlePictureModal } = this;
 
-    const { doctor_registration_ids = [] } = doctors[id] || {};
+    const { doctor_registration_ids = [] } = doctors[doctor_user_id] || {};
 
     return doctor_registration_ids.map((registration_id, index) => {
       const {
@@ -588,7 +1537,7 @@ class DoctorProfilePage extends Component {
                 {formatMessage(messages.registration_number_text)}
               </div>
               <div className="fs14 fw500">
-                {number ? number : TABLE_DEFAULT_BLANK_FIELD}
+              {this.renderRegistrationNumber(registration_id)}
               </div>
             </div>
 
@@ -598,9 +1547,7 @@ class DoctorProfilePage extends Component {
                 {formatMessage(messages.registration_council_text)}
               </div>
               <div className="fs14 fw500">
-                {registration_council_id
-                  ? registrationCouncilName
-                  : TABLE_DEFAULT_BLANK_FIELD}
+                {this.renderRegistrationCouncil(registration_id)}
               </div>
             </div>
 
@@ -610,7 +1557,7 @@ class DoctorProfilePage extends Component {
                 {formatMessage(messages.registration_year_text)}
               </div>
               <div className="fs14 fw500">
-                {year ? year : TABLE_DEFAULT_BLANK_FIELD}
+                {this.renderRegistrationYear(registration_id)}
               </div>
             </div>
 
@@ -620,9 +1567,7 @@ class DoctorProfilePage extends Component {
                 {formatMessage(messages.registration_expiry_date_text)}
               </div>
               <div className="fs14 fw500">
-                {expiry_date
-                  ? moment(expiry_date).format("LL")
-                  : TABLE_DEFAULT_BLANK_FIELD}
+                {this.renderRegistrationExpiryDate(registration_id)}
               </div>
             </div>
 
@@ -633,44 +1578,70 @@ class DoctorProfilePage extends Component {
               </div>
 
               <div className="flex align-center flex-wrap">
-                {upload_document_ids.map(id => {
-                  const { basic_info: { document } = {} } =
+              {upload_document_ids.map(id => {
+                    const { basic_info: { document,parent_id } = {} } =
                     upload_documents[id] || {};
-
-                  const documentType = document.substring(document.length - 3) || null;
-                  if (documentType) {
-                    if (documentType !== "jpg" && documentType !== "png") {
-                      return (
-                        <a
-                          key={`q-${id}`}
-                          className="w100 h100 mr6 mt6 mb6 pointer"
-                          href={document}
-                          target="_blank"
-                          // onClick={handleDocumentDownload(id)}
-                        >
-                          <div className="w100 h100 br5 flex direction-column align-center justify-center br-black black-85">
-                            <FileTextOutlined />
-                            {documentType.toUpperCase()}
-                          </div>
-                        </a>
-                      );
-                    } else {
-                      return (
-                        <div
-                          key={`q-${id}`}
-                          className="w100 h100 mr6 mt6 mb6 pointer"
-                          onClick={handlePictureModal(id)}
-                        >
-                          <img
-                            src={document}
-                            className="w100 h100 br5"
-                            alt={`registration document ${id}`}
-                          />
-                        </div>
-                      );
+                    if(verified_doctor){
+                        const documentType = document.substring(document.length - 3) || null;
+                        if (documentType) {
+                          if (documentType !== "jpg" && documentType !== "png") {
+                            return (
+                              <a
+                                key={`q-${id}`}
+                                className="w100 h100 mr6 mt6 mb6 pointer"
+                                href={document}
+                                target="_blank"
+                                // onClick={handleDocumentDownload(id)}
+                              >
+                                <div className="w100 h100 br5 flex align-center justify-center">
+                                  {documentType.toUpperCase()}
+                                </div>
+                              </a>
+                            );
+                          } else {
+                            return (
+                              <div
+                                key={`q-${id}`}
+                                className="w100 h100 mr6 mt6 mb6 pointer"
+                                onClick={handlePictureModal(id)}
+                              >
+                                <img
+                                  src={document}
+                                  className="w100 h100 br5"
+                                  alt={`qualification document ${id}`}
+                                />
+                              </div>
+                            );
+                          }
+                        }
+                    }else{
+                        return (
+                            <div key={document} className={"qualification-avatar-uploader"}>
+                            <img src={document} className='wp100 hp100 br4' />
+                            <div className="overlay"></div>
+                            <div className="button"> <DeleteTwoTone
+                                className={"del"}
+                                onClick={this.handleRemoveListRegistration(parent_id, document)}
+                                twoToneColor="#fff"
+                            /> </div>
+                            </div>
+                        );
                     }
-                  }
+                    
                 })}
+                { !verified_doctor && upload_document_ids.length < 3 && (<Upload
+                    multiple={true}
+                    // beforeUpload={this.handleBeforeUpload(key)}
+                    showUploadList={false}
+                    customRequest={this.customRequestRegistration(registration_id)}
+                    listType="picture-card"
+                    className={"doctor-profile-uploader"}
+                    // onPreview={this.handlePreview}
+                    style={{ width: 128, height: 128, margin: 6,display: "contents" }}
+                    >
+                    {uploadButton}
+                    </Upload>)
+                }
               </div>
             </div>
           </div>
@@ -683,18 +1654,126 @@ class DoctorProfilePage extends Component {
     e.preventDefault();
   };
 
+  handleRemoveList = (qualificationId, pic) => () => {
+
+    let { deleteDoctorQualificationImage } = this.props;
+    deleteDoctorQualificationImage(qualificationId, pic).then(response => {
+      let { status = false } = response;
+      if (status) {
+        const { payload: { message:successMessage} } = response;
+        message.success(successMessage);
+        this.getInitialData();
+      } else {
+        message.error(this.formatMessage(messages.somethingWentWrong))
+      }
+    })
+
+  };
+  handleRemoveListRegistration = (registrationId, pic) => () => {
+
+    let { deleteDoctorRegistrationImage } = this.props;
+
+    deleteDoctorRegistrationImage(registrationId, pic).then(response => {
+        let { status = false } = response;
+        if (status) {
+          const { payload: { message:successMessage} } = response;
+          message.success(successMessage);
+          this.getInitialData();
+        } else {
+          message.error(this.formatMessage(messages.somethingWentWrong))
+        }
+    })
+
+  };
+  customRequest = (qualification_id) => async ({ file, filename, onError, onProgress, onSuccess }) => {
+
+
+    let data = new FormData();
+    data.append("files", file, file.name);
+    // data.append("qualification", JSON.stringify(qualificationData));
+
+    let uploadResponse = await doRequest({
+      method: REQUEST_TYPE.POST,
+      data: data,
+      url: getUploadQualificationDocumentUrl()
+    })
+
+    let { status = false } = uploadResponse;
+    if (status) {
+        const { doctor_user_id } = this.state;
+        let updateData = {
+            qualification_details : [
+                {
+                    photos:uploadResponse.payload.data.files,
+                    doctor_id: doctor_user_id,
+                    id: qualification_id
+                }
+            ]
+        };
+        this.updateProfileData(updateData);
+    } else {
+      message.error(this.formatMessage(messages.somethingWentWrong))
+    }
+
+
+
+    return {
+      abort() { }
+    };
+  };
+  customRequestRegistration = (registration_id) => async ({ file, filename, onError, onProgress, onSuccess }) => {
+
+
+    let data = new FormData();
+    data.append("files", file, file.name);
+    // data.append("qualification", JSON.stringify(qualificationData));
+
+    let uploadResponse = await doRequest({
+      method: REQUEST_TYPE.POST,
+      data: data,
+      url: getUploadQualificationDocumentUrl()
+    })
+
+    let { status = false } = uploadResponse;
+    if (status) {
+        const { doctor_user_id } = this.state;
+        let updateData = {
+            registration_details : [
+                {
+                    photos:uploadResponse.payload.data.files,
+                    doctor_id: doctor_user_id,
+                    id: registration_id
+                }
+            ]
+        };
+        this.updateProfileData(updateData);
+    } else {
+      message.error(this.formatMessage(messages.somethingWentWrong))
+    }
+
+
+
+    return {
+      abort() { }
+    };
+  };
   getDoctorQualificationDetails = () => {
+    const uploadButton = (
+        <div>
+            <img src={plus} className={"w22 h22"} />
+        </div>
+    );
     const {
-      id,
       doctors,
       doctor_qualifications,
       upload_documents,
       degrees = {},
       colleges = {}
     } = this.props;
+    const { doctor_user_id, verified_doctor } =this.state;
     const { formatMessage, handlePictureModal } = this;
 
-    const { doctor_qualification_ids = [] } = doctors[id] || {};
+    const { doctor_qualification_ids = [] } = doctors[doctor_user_id] || {};
 
     return doctor_qualification_ids.map((qualification_id, index) => {
       const {
@@ -719,12 +1798,12 @@ class DoctorProfilePage extends Component {
           )}
           <div className="wp100 flex direction-row align-center flex-wrap">
             {/*degree_name*/}
-            <div className="wp20 mt16 mb16 mr16">
+            <div className="wp30 mt16 mb16 mr16">
               <div className="fs16 fw700">
                 {formatMessage(messages.degree_text)}
               </div>
               <div className="fs14 fw500">
-                {degree_id ? degreeName : TABLE_DEFAULT_BLANK_FIELD}
+                {this.renderQualificationDegree(qualification_id)}
               </div>
             </div>
 
@@ -734,7 +1813,7 @@ class DoctorProfilePage extends Component {
                 {formatMessage(messages.college_text)}
               </div>
               <div className="fs14 fw500">
-                {college_id ? collegeName : TABLE_DEFAULT_BLANK_FIELD}
+                {this.renderQualificationCollege(qualification_id)}
               </div>
             </div>
 
@@ -744,7 +1823,7 @@ class DoctorProfilePage extends Component {
                 {formatMessage(messages.year_text)}
               </div>
               <div className="fs14 fw500">
-                {year ? year : TABLE_DEFAULT_BLANK_FIELD}
+                {this.renderQualificationYear(qualification_id)}
               </div>
             </div>
 
@@ -757,42 +1836,68 @@ class DoctorProfilePage extends Component {
               {/*qualification_documents*/}
               <div className="flex align-center flex-wrap">
                 {upload_document_ids.map(id => {
-                  const { basic_info: { document } = {} } =
+                    const { basic_info: { document,parent_id } = {} } =
                     upload_documents[id] || {};
-
-                  const documentType = document.substring(document.length - 3) || null;
-                  if (documentType) {
-                    if (documentType !== "jpg" && documentType !== "png") {
-                      return (
-                        <a
-                          key={`q-${id}`}
-                          className="w100 h100 mr6 mt6 mb6 pointer"
-                          href={document}
-                          target="_blank"
-                          // onClick={handleDocumentDownload(id)}
-                        >
-                          <div className="w100 h100 br5 flex align-center justify-center">
-                            {documentType.toUpperCase()}
-                          </div>
-                        </a>
-                      );
-                    } else {
-                      return (
-                        <div
-                          key={`q-${id}`}
-                          className="w100 h100 mr6 mt6 mb6 pointer"
-                          onClick={handlePictureModal(id)}
-                        >
-                          <img
-                            src={document}
-                            className="w100 h100 br5"
-                            alt={`qualification document ${id}`}
-                          />
-                        </div>
-                      );
+                    if(!verified_doctor){
+                        return (
+                            <div key={document} className={"qualification-avatar-uploader"}>
+                            <img src={document} className='wp100 hp100 br4' />
+                            <div className="overlay"></div>
+                            <div className="button"> <DeleteTwoTone
+                                className={"del"}
+                                onClick={this.handleRemoveList(parent_id, document)}
+                                twoToneColor="#fff"
+                            /> </div>
+                            </div>
+                        );
+                    }else{
+                        const documentType = document.substring(document.length - 3) || null;
+                        if (documentType) {
+                            if (documentType !== "jpg" && documentType !== "png") {
+                            return (
+                                <a
+                                key={`q-${id}`}
+                                className="w100 h100 mr6 mt6 mb6 pointer"
+                                href={document}
+                                target="_blank"
+                                // onClick={handleDocumentDownload(id)}
+                                >
+                                <div className="w100 h100 br5 flex align-center justify-center">
+                                    {documentType.toUpperCase()}
+                                </div>
+                                </a>
+                            );
+                            } else {
+                            return (
+                                <div
+                                key={`q-${id}`}
+                                className="w100 h100 mr6 mt6 mb6 pointer"
+                                onClick={handlePictureModal(id)}
+                                >
+                                <img
+                                    src={document}
+                                    className="w100 h100 br5"
+                                    alt={`qualification document ${id}`}
+                                />
+                                </div>
+                            );
+                            }
+                        }
                     }
-                  }
                 })}
+                {!verified_doctor && upload_document_ids.length < 3 && (<Upload
+                    multiple={true}
+                    // beforeUpload={this.handleBeforeUpload(key)}
+                    showUploadList={false}
+                    customRequest={this.customRequest(qualification_id)}
+                    listType="picture-card"
+                    className={"doctor-profile-uploader"}
+                    // onPreview={this.handlePreview}
+                    style={{ width: 128, height: 128, margin: 6,display: "contents" }}
+                    >
+                    {uploadButton}
+                    </Upload>)
+                }
               </div>
             </div>
           </div>
@@ -809,10 +1914,20 @@ class DoctorProfilePage extends Component {
   };
 
   getDoctorClinicDetails = () => {
+    
+    const numberToDay = {
+        "1": FULL_DAYS.MON,
+        "2": FULL_DAYS.TUE,
+        "3": FULL_DAYS.WED,
+        "4": FULL_DAYS.THU,
+        "5": FULL_DAYS.FRI,
+        "6": FULL_DAYS.SAT,
+        "7": FULL_DAYS.SUN
+    }
     const { id, doctors, doctor_clinics } = this.props;
     const { formatMessage, getFullDayText } = this;
-
-    const { doctor_clinic_ids = [] } = doctors[id] || {};
+    const { doctor_user_id, verified_doctor, edit_clinic_timings, modal_timing_visible } = this.state;
+    const { doctor_clinic_ids = [] } = doctors[doctor_user_id] || {};
 
     return doctor_clinic_ids.map((clinic_id, index) => {
       const {
@@ -820,7 +1935,29 @@ class DoctorProfilePage extends Component {
         location,
         details: { time_slots = [] } = {}
       } = doctor_clinics[clinic_id] || {};
-
+      let timeForModal = {};
+      let daySelected = {
+        [FULL_DAYS.MON]: false,
+        [FULL_DAYS.TUE]: false,
+        [FULL_DAYS.WED]: false,
+        [FULL_DAYS.THU]: false,
+        [FULL_DAYS.FRI]: false,
+        [FULL_DAYS.SAT]: false,
+        [FULL_DAYS.SUN]: false,
+        
+      }
+      for(const time in time_slots){
+          for(const i in time_slots[time]){
+              if(time_slots[time][i]){
+                time_slots[time][i].startTime=moment(time_slots[time][i].startTime);
+                time_slots[time][i].endTime=moment(time_slots[time][i].endTime);
+              }
+          }
+          if(time_slots[time].length){
+              daySelected[numberToDay[time]]=true;
+          }
+          timeForModal[numberToDay[time]]=time_slots[time];
+      }
       return (
         <div
           className="wp100 p20 flex direction-column"
@@ -838,7 +1975,7 @@ class DoctorProfilePage extends Component {
                 {formatMessage(messages.name_text)}
               </div>
               <div className="fs14 fw500">
-                {name ? name : TABLE_DEFAULT_BLANK_FIELD}
+                {this.renderClinicName(clinic_id)}
               </div>
             </div>
 
@@ -848,7 +1985,7 @@ class DoctorProfilePage extends Component {
                 {formatMessage(messages.location_text)}
               </div>
               <div className="fs14 fw500">
-                {location ? location : TABLE_DEFAULT_BLANK_FIELD}
+                {this.renderClinicLocation(clinic_id)}
               </div>
             </div>
 
@@ -856,37 +1993,17 @@ class DoctorProfilePage extends Component {
             <div className="wp40 mt16 mb16 mr16">
               <div className="fs16 fw700">
                 {formatMessage(messages.timings_text)}
+                {!verified_doctor && !edit_clinic_timings[clinic_id]?
+                    <span style={{marginLeft:"5px"}}>
+                        <EditOutlined onClick={ () => this.editClinicTimings(clinic_id)} title={"Edit Clinic Timings"}/>
+                    </span>:null
+                }
               </div>
-              {Object.keys(time_slots).map((day, index) => {
-                // todo: add DAY[day] later from constants
-
-                return (
-                  <Fragment>
-                    {time_slots[day].length > 0 && <div className="wp100 flex">
-                      <div className="fs14 fw700 mt16 mb10 mr16">{getFullDayText(day)}</div>
-                      <div
-                        className="wp100 mt16 mb10 mr16 flex"
-                        key={`ts-${index}`}
-                      >
-                        {time_slots[day].map((time_slot, i) => {
-                          const { startTime: start_time, endTime: end_time } =
-                            time_slot || {};
-
-                          return (
-                            <div className="fs14 fw500 wp100" key={`ts/${index}/${i}`}>
-                              {start_time
-                                ? `${moment(start_time).format(
-                                    "LT"
-                                  )} - ${moment(end_time).format("LT")}`
-                                : "CLOSED"}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>}
-                  </Fragment>
-                );
-              })}
+              {this.renderClinicTimings(time_slots,clinic_id)}
+              {modal_timing_visible[clinic_id] && <TimingModal data-id={clinic_id} visible={modal_timing_visible[clinic_id]} handleCancel={()=>this.handleCancelTiming(clinic_id)} handleOk={this.handleOkTiming(clinic_id)}
+                    timings={timeForModal}
+                    daySelected={daySelected}
+                />}
             </div>
           </div>
         </div>
@@ -985,11 +2102,12 @@ class DoctorProfilePage extends Component {
   };
 
   getProfilePicModal = () => {
-    const { doctors, id } = this.props;
+    const { doctors } = this.props;
+    const { doctor_user_id } =this.state;
     const { profilePicModalVisible } = this.state;
     const { formatMessage, handleProfilePicModalClose } = this;
 
-    const { basic_info: { profile_pic } = {} } = doctors[id] || {};
+    const { basic_info: { profile_pic } = {} } = doctors[doctor_user_id] || {};
 
     return (
       <Modal
@@ -1008,10 +2126,10 @@ class DoctorProfilePage extends Component {
   };
 
   render() {
-    
+    const { doctor_user_id } = this.state;
     const { auth: {authenticated_user=null}, doctors } = this.props;
     const current_doctor = doctors[authenticated_user];
-    const { loading } = this.state;
+    const { loading, updateLoading } = this.state;
     const {
       formatMessage,
       getDoctorDetailsHeader,
@@ -1020,16 +2138,15 @@ class DoctorProfilePage extends Component {
       getDoctorQualificationDetails,
       getDoctorClinicDetails,
     //   getFooter,
-    //   getModalDetails,
-    //   getProfilePicModal
+      getModalDetails,
+      getProfilePicModal
     } = this;
 
     const {
       doctor_clinic_ids = [],
       doctor_qualification_ids = [],
       doctor_registration_ids = []
-    } = doctors[authenticated_user] || {};
-
+    } = doctors[doctor_user_id] || {};
 
     if (loading) {
       return <PageLoading />;
@@ -1092,9 +2209,9 @@ class DoctorProfilePage extends Component {
           {/* {getFooter()} */}
         </div>
 
-        {/* {getModalDetails()} */}
+        {getModalDetails()}
 
-        {/* {getProfilePicModal()} */}
+        {getProfilePicModal()}
       </Fragment>
     );
   }

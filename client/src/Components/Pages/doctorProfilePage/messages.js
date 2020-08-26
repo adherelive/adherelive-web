@@ -6,10 +6,25 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Doctor Details"
     },
+    somethingWentWrong: {
+        id: "app.doctorOnBoarding.somethingWentWrong",
+        description: "",
+        defaultMessage: "Something went wrong."
+    },
     basic_details_text: {
         id: "app.admin.doctors.details.basic.details.text",
         description: "",
         defaultMessage: "Basic Details"
+    },
+    timings: {
+        id: "app.doctorOnBoarding.timings",
+        description: "",
+        defaultMessage: 'Timings'
+    },
+    closed: {
+        id: "app.doctorOnBoarding.closed",
+        description: "",
+        defaultMessage: 'Closed'
     },
     profile_pic_text: {
         id: "app.admin.doctors.details.profile.pic.text",
