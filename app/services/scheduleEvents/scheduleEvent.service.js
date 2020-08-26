@@ -21,6 +21,17 @@ class ScheduleEventService {
             throw error;
         }
     };
+
+    getAllEventByData = async (data) => {
+        try {
+            const scheduleEvent = await ScheduleEvent.findAll({
+                where: data
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new ScheduleEventService();
