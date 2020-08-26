@@ -1,5 +1,6 @@
 import ScheduleEvent from "../../models/scheduleEvents";
-
+import {Op} from "sequelize";
+import {EVENT_STATUS} from "../../../constant";
 
 class ScheduleEventService {
     create = async (data) => {
@@ -15,6 +16,22 @@ class ScheduleEventService {
         try {
             const scheduleEvent = await ScheduleEvent.findOne({
                 where: data
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    getPriorEventByData = async (time) => {
+        try {
+            const scheduleEvent = await ScheduleEvent.findAll({
+                where: {
+                    start_time: {
+                        [Op.lte]: time
+                    },
+                    status: EVENT_STATUS.SCHEDULED
+                }
             });
             return scheduleEvent;
         } catch(error) {
