@@ -84,7 +84,7 @@ class NotificationDrawer extends Component {
             activityGroupId: groupId
         });
         console.log('activities765863563865356886', data, activities);
-        getNotification(activities);
+        getNotification({activities});
     }
 
     readNotification = (groupId, activity_id) => {
