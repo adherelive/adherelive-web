@@ -1,7 +1,11 @@
 import EmailManager from "../communications/email/emailManger";
 import SmsManager from "../communications/sms/smsManger";
 
+import Logger from "../../libs/log";
 import fetch from "node-fetch";
+import stream from "getstream";
+
+const Log = new Logger("NOTIFICATION_SDK > EXECUTOR");
 
 class EventExecutor {
     async sendMail(mailData, scheduledJobId) {
@@ -67,8 +71,29 @@ class EventExecutor {
     sendAppNotification = async (template) => {
         try {
             // TODO: add get stream rest api call code here
+            Log.debug("sendAppNotification --> ", template.actor.toString());
+            const client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey);
+            const userToken = client.createUserToken(
+                template.actor.toString()
+            );
+
+            Log.debug("userToken --> ", userToken);
+            Log.debug("client --> ", client);
+
+            let result = {};
+            // console.log("notification payload=>>>>>>>>>>>>>>>>>", data);
+            const feed = client.feed("notification", template);
+
+            Log.debug("feed --> ", feed);
+            // console.log("Data....OBBBjeeeect: ", data.object);
+            // console.log("FFFFFEeeeeeedddddd: ", feed);
+            const response = await feed.addActivity(template).catch(err => {
+                Log.debug("response err ------>", err);
+            });
 
             Log.debug("sendAppNotification Response", response);
+
+            return result;
         } catch (err) {
             Log.debug("sendAppNotification 500 error", err);
         }

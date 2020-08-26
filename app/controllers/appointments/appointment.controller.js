@@ -76,6 +76,7 @@ class AppointmentController extends Controller {
       * */
 
       let userCategoryId = null;
+      let userCategoryData = null;
 
       Logger.debug("userDetails --------------------> ", userDetails);
 
@@ -84,13 +85,13 @@ class AppointmentController extends Controller {
           const doctor = await doctorService.getDoctorByData({
             user_id: userId
           });
-          const doctorData = await DoctorWrapper(doctor);
-          userCategoryId = doctorData.getDoctorId();
+          userCategoryData = await DoctorWrapper(doctor);
+          userCategoryId = userCategoryData.getDoctorId();
           break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientByUserId(userId);
-          const patientData = await PatientWrapper(patient);
-          userCategoryId = patientData.getPatientId();
+          userCategoryData = await PatientWrapper(patient);
+          userCategoryId = userCategoryData.getPatientId();
           break;
         default:
           break;
@@ -126,7 +127,7 @@ class AppointmentController extends Controller {
 
       const appointment_data = {
         participant_one_type: category,
-        participant_one_id: userCategoryId,
+        participant_one_id: userId,
         participant_two_type,
         participant_two_id,
         organizer_type:
@@ -154,15 +155,6 @@ class AppointmentController extends Controller {
 
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
-      const eventScheduleData = {
-        event_type: EVENT_TYPE.APPOINTMENT,
-        event_id: appointmentApiData.getAppointmentId(),
-        details: appointmentApiData.getBasicInfo(),
-        status: EVENT_STATUS.SCHEDULED,
-        start_time,
-        end_time,
-      };
-
       // RRule
 
       Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
@@ -175,6 +167,23 @@ class AppointmentController extends Controller {
 
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+
+      const eventScheduleData = {
+        participants: [userId, participant_two_id],
+        actor: {
+          id: userId,
+          details: {
+            category,
+            name: userCategoryData.getName()
+          }
+        }
+      };
+
+      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
+      await NotificationSdk.execute(appointmentJob);
+
+      Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
+
 
       // TODO: schedule event and notifications here
       await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
@@ -277,7 +286,7 @@ class AppointmentController extends Controller {
 
       const appointment_data = {
         participant_one_type: category,
-        participant_one_id: userId,
+        participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
         organizer_type:
@@ -325,14 +334,34 @@ class AppointmentController extends Controller {
 
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
+      let participantTwoId = null;
+
+      switch (participant_two_type) {
+        case USER_CATEGORY.DOCTOR:
+          const doctor = await doctorService.getDoctorByData({
+            id: participant_two_id
+          });
+          const doctorData = await DoctorWrapper(doctor);
+          participantTwoId = doctorData.getUserId();
+          break;
+        case USER_CATEGORY.PATIENT:
+          const patient = await patientService.getPatientById({id: participant_two_id});
+          const patientData = await PatientWrapper(patient);
+          participantTwoId = patientData.getUserId();
+          break;
+        default:
+          break;
+      }
+
       const eventScheduleData = {
-        participants: [],
+        participants: [userId, participantTwoId],
         actor: {
           id: userId,
           details: {
             category
           }
-        }
+        },
+        appointmentId: appointmentApiData.getAppointmentId()
       };
 
       // RRule
@@ -345,14 +374,29 @@ class AppointmentController extends Controller {
       });
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
-      NotificationSdk.execute(appointmentJob);
+      await NotificationSdk.execute(appointmentJob);
 
-      Logger.debug("appointmentJob ---> ", appointmentJob.getEmailTemplate());
+      Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
+
+      /*
+      * DATA being sent to getstream
+      * { actor: '1',
+        duration: '10.95ms',
+        event: 'appointment',
+        foreign_id: '2',
+        id: 'e0f8ee07-e757-11ea-a12c-128a130028af',
+        object: '1',
+        origin: null,
+        target: '',
+        time: '2020-08-26T04:52:01.080270',
+        verb: 'appointment_create' }
+      *
+      * */
 
       // NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 
       // TODO: schedule event and notifications here
-      await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
+      // await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
 
       // response
       return this.raiseSuccess(

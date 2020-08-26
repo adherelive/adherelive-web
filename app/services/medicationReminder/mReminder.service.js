@@ -1,5 +1,5 @@
 import MedicationReminder from "../../models/medicationReminders";
-import { Op } from "sequelize";
+import Medicines from "../../models/medicines";
 
 class MReminderService {
   async addMReminder(data) {
@@ -28,6 +28,7 @@ class MReminderService {
     try {
       const medication = await MedicationReminder.findOne({
         where: data,
+        include: [Medicines]
       });
       return medication;
     } catch (err) {

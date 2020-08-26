@@ -365,6 +365,7 @@ export const DB_TABLES = {
   OTP_VERIFICATIONS: "otp_verifications",
   TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
   FEATURE_DETAILS: 'feature_details',
+  USER_DEVICES: "user_devices"
 };
 
 export const ARTICLE_TYPE = {
@@ -644,3 +645,13 @@ export const BLANK_STATE = "";
 export const PASSWORD_LENGTH = 8;
 
 export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg","svg","png","pdf"];
+
+const TABLET = "1";
+const SYRUP = "2";
+const SYRINGE = "3";
+
+export const MEDICINE_FORM_TYPE = {
+  [TABLET]: {name:"tablet"},
+  [SYRUP]: {name :"syrup"},
+  [SYRINGE]: {name:"syringe"}
+};

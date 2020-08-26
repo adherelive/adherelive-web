@@ -1,7 +1,9 @@
 import EventExecutor from "../executor";
-import Log from "../../../libs/log_new";
+import Logger from "../../../libs/log";
+import fetch from "node-fetch";
 
-Log.fileName("NOTIFICATION_SDK > PUSH_APP");
+const Log = new Logger("NOTIFICATION_SDK > PUSH_APP");
+// Log.filename("NOTIFICATION_SDK > PUSH_APP");
 
 class PushNotification {
     constructor() {
@@ -9,11 +11,37 @@ class PushNotification {
 
     notify = (templates = []) => {
         for(const template of templates) {
-            EventExecutor.sendPushNotification(template).then(res => {
+            this.sendPushNotification(template).then(res => {
                 Log.debug("PushNotification notify response", res);
             });
         }
     }
+
+    sendPushNotification = async (template) => {
+        try {
+            // TODO: add one-signal rest api call code here
+            Log.debug("sendPushNotification template", template);
+            await fetch(
+                "https://onesignal.com/api/v1/notifications",
+                {
+                    method:"POST",
+                    port: 443,
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                        Authorization: "Basic " + process.config.one_signal.key
+                    },
+                    body: template
+                }
+            ).then(res => {
+                Log.debug("sendPushNotification res", res.json());
+            }).catch(err => {
+                Log.debug("sendPushNotification err fetch", err);
+            });
+            // Log.debug("sendPushNotification Response", response);
+        } catch (err) {
+            Log.debug("sendPushNotification 500 error", err);
+        }
+    };
 }
 
 export default new PushNotification();

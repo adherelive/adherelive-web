@@ -89,9 +89,4 @@ const Patients = database.define(
   }
 );
 
-Patients.belongsTo(Users, {
-  foreignKey: "user_id",
-  targetKey: "id"
-});
-
 export default Patients;

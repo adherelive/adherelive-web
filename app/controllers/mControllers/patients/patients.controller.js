@@ -406,8 +406,6 @@ class MPatientController extends Controller {
         };
       }
 
-
-
       return this.raiseSuccess(res, 200, {
         // care_plans: { ...carePlanApiData },
         // show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments, carePlanTemplateId,
@@ -420,11 +418,6 @@ class MPatientController extends Controller {
         },
         care_plan_template_ids: [...carePlanTemplateIds],
         care_plan_templates: {
-          [carePlanData.getCarePlanTemplateId()] : {
-            ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
-            template_appointment_ids,
-            template_medication_ids
-          },
           ...otherCarePlanTemplates
         },
         appointments: {

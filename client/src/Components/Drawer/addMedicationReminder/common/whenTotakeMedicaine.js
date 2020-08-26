@@ -63,7 +63,7 @@ class WhenToTakeMedication extends Component {
     const { medication_details } = this.props;
     const { medication_details: prev_medication_details } = prevProps;
 
-   
+
     if (
       Object.keys(medication_details).length !==
       Object.keys(prev_medication_details).length
@@ -94,7 +94,7 @@ class WhenToTakeMedication extends Component {
       selected_timing_overall = [],
     } = this.state;
 
-    
+
     let current_status = [];
 
     Object.keys(selected_timing).forEach((id) => {
@@ -124,7 +124,7 @@ class WhenToTakeMedication extends Component {
   };
 
   getUnitOption = (k) => {
-    const {  status } = this.state;
+    const { status } = this.state;
     const { getUpdatedList } = this;
     const getList = getUpdatedList(k);
 
@@ -192,7 +192,7 @@ class WhenToTakeMedication extends Component {
   // };
 
   handleSelect = (value, select_box_id) => {
-    const {  selected_timing = {} } = this.state;
+    const { selected_timing = {} } = this.state;
     // const keys = new Set([...selected_timing_overall, value]);
     const updatedSelectTiming = {
       ...selected_timing,
@@ -204,7 +204,7 @@ class WhenToTakeMedication extends Component {
         selected_timing: updatedSelectTiming,
       },
       () => {
-      
+
       }
     );
   };
@@ -251,7 +251,7 @@ class WhenToTakeMedication extends Component {
     const { total_status } = this.state;
     // const value = status[k+1];
     return total_status[k];
-    };
+  };
 
   getFormItems = () => {
     const { form } = this.props;
@@ -269,7 +269,7 @@ class WhenToTakeMedication extends Component {
       getFieldValue,
     } = form;
 
-    
+
 
     getFieldDecorator("keys", {
       initialValue: count.map((id, index) => id),
@@ -314,22 +314,57 @@ class WhenToTakeMedication extends Component {
                 )}
               </FormItem>
             </div>
-            {keys.length > 1 && (
+            {/* {keys.length > 1 && (
               <div className="wp20 hp100 flex justify-center align-center">
-                {/* <Tooltip mouseEnterDelay={0.5} placement="bottom" title={formatMessage(messages.delete_text)}> */}
                 <Icon
                   className="hp100"
                   type="minus-circle-o"
                   onClick={() => this.remove(k)}
                 />
-                {/* </Tooltip> */}
               </div>
-            )}
+            )} */}
           </div>
         </Fragment>
       );
     });
   };
+
+  onClickOd = () => {
+
+    const { form } = this.props;
+    const { selected_timing } = this.state;
+    const keys = form.getFieldValue("keys");
+    if (keys.length === 3) {
+      this.remove(keys[2]);
+      this.remove(keys[1]);
+    } else if (keys.length === 2) {
+      this.remove(keys[1]);
+    }
+  }
+  onClickBd = () => {
+
+    const { form } = this.props;
+    const { selected_timing } = this.state;
+    const keys = form.getFieldValue("keys");
+    if (keys.length === 3) {
+      this.remove(keys[2]);
+    } else if (keys.length === 1) {
+      this.add();
+    }
+  }
+
+  onClickTds = () => {
+
+    const { form } = this.props;
+    const { selected_timing } = this.state;
+    const keys = form.getFieldValue("keys");
+    if (keys.length === 2) {
+      this.add();
+    } else if (keys.length === 1) {
+      this.add();
+      this.add();
+    }
+  }
 
   add = () => {
     const { form } = this.props;
@@ -362,14 +397,17 @@ class WhenToTakeMedication extends Component {
     const {
       getFormItems,
       formatMessage,
+      onClickOd,
+      onClickBd,
+      onClickTds
     } = this;
     const {
       isFieldTouched,
       getFieldError,
-      //getFieldValue
+      getFieldValue
     } = form;
+    const keys = getFieldValue("keys") || [];
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-
 
     // const { getInitialValue } = this;
 
@@ -390,14 +428,22 @@ class WhenToTakeMedication extends Component {
           {/* <div className="label-color fontsize12 mb8">
               
             </div> */}
-          <div className="flex-grow-0">
+          {/* <div className="flex-grow-0">
             <RadioGroup size="small" className="flex justify-content-end">
               <RadioButton value={1} onClick={this.add}>
                 {formatMessage(messages.add_more_text)}
               </RadioButton>
             </RadioGroup>
-          </div>
+          </div> */}
         </div>
+        <RadioGroup
+          className="flex justify-content-end radio-formulation mb10"
+          buttonStyle="solid"
+        >
+          <RadioButton value={1} checked={keys.length === 1} onClick={onClickOd} >{this.formatMessage(messages.od)}</RadioButton>
+          <RadioButton value={2} checked={keys.length === 2} onClick={onClickBd}>{this.formatMessage(messages.bd)}</RadioButton>
+          <RadioButton value={3} checked={keys.length === 3} onClick={onClickTds}>{this.formatMessage(messages.tds)}</RadioButton>
+        </RadioGroup>
 
         {getFormItems()}
       </Fragment>

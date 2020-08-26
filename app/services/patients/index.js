@@ -15,4 +15,8 @@ export default class Patient {
     getDetails = () => {
         return this._data.get("details");
     };
+
+    getName = () => {
+        return this._data.get("first_name");
+    }
 }

@@ -22,6 +22,10 @@ module.exports = () => {
       password: process.env.DB_PASSWORD,
       dialect: process.env.DB_DIALECT
     },
+    getstream: {
+      key: process.env.GETSTREAM_API_KEY,
+      secretKey: process.env.GETSTREAM_API_SECRET
+    },
     aws: {
       access_key: process.env.AWS_ACCESS_KEY,
       access_key_id: process.env.AWS_ACCESS_KEY_ID,
@@ -68,6 +72,10 @@ module.exports = () => {
     branch_io: {
       key: process.env.BRANCH_IO_KEY,
       base_url: process.env.BRANCH_IO_BASE_URL
+    },
+    one_signal: {
+      app_id: process.env.ONE_SIGNAL_APP_ID,
+      key: process.env.ONE_SIGNAL_KEY,
     },
     cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,

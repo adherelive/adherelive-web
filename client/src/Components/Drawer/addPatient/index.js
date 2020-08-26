@@ -73,7 +73,11 @@ class PatientDetailsDrawer extends Component {
     };
 
     setName = e => {
-        this.setState({ name: e.target.value });
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if (reg.test(value) || value === '') {
+            this.setState({ name: e.target.value });
+        }
     };
 
 
@@ -280,7 +284,8 @@ class PatientDetailsDrawer extends Component {
                     addonBefore={prefixSelector}
                     className={"form-inputs-ap"}
                     placeholder={this.formatMessage(messages.phoneNo)}
-                    maxLength={10}
+                    minLength={6}
+                    maxLength={20}
                     value={mobile_number}
                     onChange={this.setNumber}
                 />
@@ -398,7 +403,7 @@ class PatientDetailsDrawer extends Component {
         if (!prefix) {
             message.error(this.formatMessage(messages.prefixError))
             return false;
-        } else if (mobile_number.length < 10 || !mobile_number) {
+        } else if (mobile_number.length < 6 || mobile_number.length > 20 || !mobile_number) {
             message.error(this.formatMessage(messages.mobNoError))
             return false;
         } else if (!date_of_birth) {

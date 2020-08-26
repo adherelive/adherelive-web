@@ -98,11 +98,6 @@ const Doctors = database.define(
   }
 );
 
-Doctors.hasOne(Users, {
-    foreignKey: "id",
-    sourceKey: "user_id"
-});
-
 Doctors.hasOne(Specialities, {
     foreignKey: "id",
     sourceKey:"speciality_id"

@@ -1,6 +1,6 @@
 import Controller from "../../index";
 import appointmentService from "../../../services/appointment/appointment.service";
-import {FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
+import {EVENT_STATUS, FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
 import moment from "moment";
 
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -17,6 +17,8 @@ import featureDetailService from "../../../services/featureDetails/featureDetail
 import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 import providerService from "../../../services/provider/provider.service";
 import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
+import AppointmentJob from "../../../JobSdk/Appointments/observer";
+import NotificationSdk from "../../../NotificationSdk";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLLER");
 
@@ -51,21 +53,20 @@ class MobileAppointmentController extends Controller {
         participant_two || {};
 
       let userCategoryId = null;
-
-      Logger.debug("userDetails --------------------> ", userDetails);
+      let userCategoryData = null;
 
       switch (category) {
         case USER_CATEGORY.DOCTOR:
           const doctor = await doctorService.getDoctorByData({
             user_id: userId
           });
-          const doctorData = await DoctorWrapper(doctor);
-          userCategoryId = doctorData.getDoctorId();
+          userCategoryData = await DoctorWrapper(doctor);
+          userCategoryId = userCategoryData.getDoctorId();
           break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientByUserId(userId);
-          const patientData = await PatientWrapper(patient);
-          userCategoryId = patientData.getPatientId();
+          userCategoryData = await PatientWrapper(patient);
+          userCategoryId = userCategoryData.getPatientId();
           break;
         default:
           break;
@@ -83,8 +84,6 @@ class MobileAppointmentController extends Controller {
             participant_two_type
           }
       );
-
-      Logger.debug("previousAppointments -------------------> ", previousAppointments);
 
       if (previousAppointments.length > 0) {
         return raiseClientError(
@@ -126,6 +125,42 @@ class MobileAppointmentController extends Controller {
         appointment_data
       );
       const appointmentData = await MAppointmentWrapper(appointment);
+
+      let participantTwoId = null;
+
+      switch (participant_two_type) {
+        case USER_CATEGORY.DOCTOR:
+          const doctor = await doctorService.getDoctorByData({
+            id: participant_two_id
+          });
+          const doctorData = await DoctorWrapper(doctor);
+          participantTwoId = doctorData.getUserId();
+          break;
+        case USER_CATEGORY.PATIENT:
+          const patient = await patientService.getPatientById({id: participant_two_id});
+          const patientData = await PatientWrapper(patient);
+          participantTwoId = patientData.getUserId();
+          break;
+        default:
+          break;
+      }
+
+      const eventScheduleData = {
+        participants: [userId, participantTwoId],
+        actor: {
+          id: userId,
+          details: {
+            category,
+            name: userCategoryData.getName()
+          }
+        },
+        appointmentId: appointmentData.getAppointmentId()
+      };
+
+      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
+      await NotificationSdk.execute(appointmentJob);
+
+      Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
       // ADD CAREPLAN APPOINTMENT
       if (care_plan_id) {

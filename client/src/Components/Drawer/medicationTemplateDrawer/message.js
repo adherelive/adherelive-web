@@ -99,7 +99,7 @@ const messages = defineMessages({
     skip: {
         id: "app.medicationTemplate.skip",
         description: "",
-        defaultMessage: "Skip and dont save"
+        defaultMessage: "Skip and don't save"
     },
     validNameError: {
         id: "app.medicationTemplate.validNameError",
@@ -126,6 +126,11 @@ const messages = defineMessages({
         id: "app.medicationTemplate.changesMade",
         description: "",
         defaultMessage: "You have made some changes in current template, are you sure you want to select another one?"
+    },
+    medicationExist: {
+        id: "app.medicationTemplate.medicationExist",
+        description: "",
+        defaultMessage: "A medication for this medicine already exist in this template."
     },
 
 });

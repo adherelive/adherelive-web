@@ -4,6 +4,7 @@ const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
 import bcrypt from "bcrypt";
+import base64 from "js-base64";
 
 import Log from "../../../../libs/log";
 
@@ -51,6 +52,7 @@ import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
 
 import generateOTP from "../../../helper/generateOtp";
+import AppNotification from "../../../NotificationSdk/inApp";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -61,8 +63,8 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { mobile_number } = req.body;
-      const user = await userService.getUserByNumber({mobile_number});
+      const { prefix, mobile_number } = req.body;
+      const user = await userService.getUserByNumber({mobile_number, prefix});
 
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
@@ -188,12 +190,17 @@ class MobileUserController extends Controller {
             }
           );
 
+        const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
+        const feedId = base64.encode(`${userData.getId()}`);
+
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
           res,
           200,
           {
             accessToken,
+            notificationToken,
+            feedId,
             users: {
               [userData.getId()]: {
                 ...userData.getBasicInfo()
@@ -244,6 +251,11 @@ class MobileUserController extends Controller {
             }
         );
 
+        const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
+
+        const feedId = base64.encode(`${user.get("id")}`);
+        // const antiFeed = base64.atob(feedId);
+
         const apiUserDetails = await MUserWrapper(user.get());
 
         let permissions = {
@@ -254,13 +266,13 @@ class MobileUserController extends Controller {
           permissions = await apiUserDetails.getPermissions();
         }
 
-        Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
-
         return this.raiseSuccess(
             res,
             200,
             {
               accessToken,
+              notificationToken,
+              feedId,
               users: {
                 [apiUserDetails.getId()]: {
                   ...apiUserDetails.getBasicInfo()
@@ -354,6 +366,12 @@ class MobileUserController extends Controller {
         }
       );
 
+      const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
+
+      Logger.debug("feedId ---> user id", user.get("id"));
+      const feedId = base64.encode(`${user.get("id")}`);
+      Logger.debug("feedId ---> ", feedId);
+
       const apiUserDetails = await MUserWrapper(user.get());
 
       return this.raiseSuccess(
@@ -361,6 +379,8 @@ class MobileUserController extends Controller {
         200,
         {
           accessToken,
+          notificationToken,
+          feedId,
           users: {
             [apiUserDetails.getId()]: {
               ...apiUserDetails.getBasicInfo()

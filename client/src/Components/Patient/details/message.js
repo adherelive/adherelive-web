@@ -86,6 +86,11 @@ const messages = defineMessages({
         description: "Patient Profile Header",
         defaultMessage: "Use Template"
     },
+    create_template: {
+        id: "app.patient_profile.create_template",
+        description: "Patient Profile Header",
+        defaultMessage: "Create Template"
+    },
     add_medication: {
         id: "app.patient_profile.addMedication",
         description: "Patient Profile Header",
@@ -110,6 +115,11 @@ const messages = defineMessages({
         id: "app.patient_profile.slotPresent",
         description: "Patient Profile Header",
         defaultMessage: "Appointment slots already present for selected timings!"
+    },
+    symptoms: {
+        id: "app.patient_profile.symptoms",
+        description: "Patient Profile Header",
+        defaultMessage: "Symptoms"
     }
 
 });

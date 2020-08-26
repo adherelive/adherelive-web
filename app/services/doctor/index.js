@@ -11,4 +11,8 @@ export default class Doctor {
     getDoctorId = () => {
         return this._data.get("id");
     }
+
+    getName = () => {
+        return this._data.get("first_name");
+    };
 }
