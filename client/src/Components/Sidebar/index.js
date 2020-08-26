@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Menu, Tooltip, message, Avatar } from "antd";
-import { PATH, USER_CATEGORY,PERMISSIONS } from "../../constant";
+import { PATH, USER_CATEGORY, PERMISSIONS } from "../../constant";
+
+import Dropdown from "antd/es/dropdown";
 
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
-
 
 const { Item: MenuItem, SubMenu } = Menu || {};
 
@@ -33,12 +34,15 @@ class SideMenu extends Component {
       } else {
         message.warn("something went wrong. Please try again later");
       }
-    } catch (error) {
-    }
-  }
+    } catch (error) {}
+  };
 
   handleItemSelect = ({ key }) => {
-    const { history, authenticated_category, authPermissions = [] } = this.props;
+    const {
+      history,
+      authenticated_category,
+      authPermissions = []
+    } = this.props;
     const { handleLogout } = this;
     switch (key) {
       case LOGO:
@@ -66,27 +70,63 @@ class SideMenu extends Component {
     this.setState({ selectedKeys: key });
   };
 
+  menu = () => {
+    const { handleLogOut, handleProfile } = this;
+    // const { auth, users, clients, permissions } = this.props;
+    // const { user_id } = auth || {};
+    // const { basic_info: { client_id } = {} } = users[user_id] || {};
+    // const { basic_info: { client_name } = {} } = clients[client_id] || {};
+    return (
+      <Menu className="l70 b10 position fixed">
+        <Menu.Item className="pl24 pr80">
+          <div onClick={this.handleProfile}>Profile</div>
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item className="pl24 pr80">
+          <div onClick={handleLogOut}>Logout</div>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
+  handleProfile = e => {
+    e.preventDefault();
+    console.log("to profile");
+  }
+
   render() {
     const { selectedKeys } = this.state;
     const { handleItemSelect } = this;
-    
-    const { authenticated_user = 0, users = {}, doctors = {}, authenticated_category } = this.props;
-    let dp = '';
-    let initials = '';
+
+    const {
+      authenticated_user = 0,
+      users = {},
+      doctors = {},
+      authenticated_category
+    } = this.props;
+    let dp = "";
+    let initials = "";
     for (let doctor of Object.values(doctors)) {
-      let { basic_info: { user_id = 0, profile_pic = '', first_name = ' ', last_name = ' ' } = {} } = doctor;
+      let {
+        basic_info: {
+          user_id = 0,
+          profile_pic = "",
+          first_name = " ",
+          last_name = " "
+        } = {}
+      } = doctor;
 
       if (user_id === authenticated_user) {
         dp = profile_pic;
-        initials = `${first_name[0]}${last_name[0]}`
+        initials = `${first_name[0]}${last_name[0]}`;
       }
-
     }
-    let { basic_info: { user_name = '' } = {} } = users[authenticated_user] || {};
+    let { basic_info: { user_name = "" } = {} } =
+      users[authenticated_user] || {};
     if (user_name) {
       initials = user_name
         .split(" ")
-        .map(n => n && n.length > 0 && n[0] ? n[0].toUpperCase() : "")
+        .map(n => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
         .join("");
     }
 
@@ -112,16 +152,26 @@ class SideMenu extends Component {
             <img alt={"Dashboard Icon"} src={dashboardIcon} />
           </Tooltip>
         </MenuItem>
-        {
-          authenticated_category == USER_CATEGORY.DOCTOR ?
-          <SubMenu 
-            key="profile" 
-            title={initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
+        {authenticated_category == USER_CATEGORY.DOCTOR ? (
+          // <SubMenu
+          //   key="profile"
+          //   title={initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
+          // >
+          //   <Menu.Item key={PROFILE}>Profile</Menu.Item>
+          //   <Menu.Item key={LOG_OUT}>Logout</Menu.Item>
+          // </SubMenu>
+
+          <MenuItem
+            key={"profile"}
+            className="flex direction-column justify-center align-center p0 logout_button"
           >
-            <Menu.Item key={PROFILE}>Profile</Menu.Item>
-            <Menu.Item key={LOG_OUT}>Logout</Menu.Item>
-          </SubMenu>
-          :
+            <Dropdown overlay={this.menu} overlayClassName="relative">
+              <div className="flex direction-column justify-center align-center wp250 hp100">
+                {initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
+              </div>
+            </Dropdown>
+          </MenuItem>
+        ) : (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={LOG_OUT}
@@ -129,12 +179,14 @@ class SideMenu extends Component {
             <Tooltip placement="right" title={"Log Out"}>
               {/* {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
               (<UserOutlined className="sidebar-bottom-custom text-white"/>)} */}
-              {initials ?
-                <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
+              {initials ? (
+                <Avatar src={dp}>{initials}</Avatar>
+              ) : (
+                <Avatar icon="user" />
+              )}
             </Tooltip>
           </MenuItem>
-        }
-        
+        )}
       </Menu>
     );
   }
