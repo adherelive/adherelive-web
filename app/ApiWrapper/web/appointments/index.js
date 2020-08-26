@@ -59,8 +59,8 @@ export default async (data = null, id = null) => {
   if (data !== null) {
     return new AppointmentWrapper(data);
   }
-  const appointment = await appointmentService.getAppointment({ id });
-  return new AppointmentWrapper(appointment.get());
+  const appointment = await appointmentService.getAppointmentById({ id });
+  return new AppointmentWrapper(appointment);
 };
 
 
