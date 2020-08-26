@@ -501,6 +501,250 @@ class DoctorController extends Controller {
     }
   };
 
+  updateDoctorDetails = async (req, res) => {
+    // console.log("add patient controller ---> ");
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { id = 0 } = req.params;
+      const {
+        name=null,
+        city=null,
+        gender=null,
+        profile_pic=null,
+        speciality_id=null,
+        qualification_details = null,
+        registration_details = null,
+        clinic_details = null
+      } = req.body;
+      Logger.debug("ererer",req.body);
+      let doctorExist = await doctorService.getDoctorByData({
+        user_id: id
+      });
+      let doctor_data = {};
+      if(name){
+        const doctorName = name.split(" ");
+        let first_name = doctorName[0];
+        let middle_name = doctorName.length === 3 ? doctorName[1] : "";
+        let last_name =
+          doctorName.length === 3
+            ? doctorName[2]
+            : doctorName.length === 2
+              ? doctorName[1]
+              : "";
+        
+        doctor_data['first_name']=first_name;
+        doctor_data['middle_name']=middle_name;
+        doctor_data['last_name']=last_name;
+      }
+      if(profile_pic){
+        doctor_data['profile_pic']=profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1];
+      }
+      if(gender){
+        doctor_data['gender']=gender;
+      }
+      if(city){
+        doctor_data['city']=city;
+        doctor_data['address']=city;
+      }
+      if(speciality_id){
+        doctor_data['speciality_id']=speciality_id;
+      }
+      
+        
+
+      if (doctorExist) {
+
+        let doctor = {};
+        let doctor_id = doctorExist.get("id");
+        doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
+
+        const updatedDoctor = await doctorService.getDoctorByData({
+          user_id: id
+        });
+
+        // basic information 
+        const doctorData = await DoctorWrapper(updatedDoctor);
+
+        // qualification 
+
+        if (qualification_details) {
+
+          const qualificationsOfDoctor = await qualificationService.getQualificationsByDoctorId(
+            doctorData.getDoctorId()
+          );
+    
+          let newQualifications = [];
+          for (const item of qualification_details) {
+            const {
+              degree_id = null,
+              year = null,
+              college_id = null,
+              photos = [],
+              id = 0,
+              doctor_id = 0
+            } = item;
+            if (id && id !== "0") {
+              let qualification_data = {};
+              if(degree_id){
+                qualification_data['degree_id']=degree_id;
+              }
+              if(college_id){
+                qualification_data['college_id']=college_id;
+              }
+              if(degree_id){
+                qualification_data['degree_id']=degree_id;
+              }
+              if(year){
+                qualification_data['year']=year;
+              }
+              qualification_data['doctor_id']=doctor_id;
+              const qualification = await qualificationService.updateQualification(
+                qualification_data,
+                id
+              );
+              if (photos.length > 3) {
+                return this.raiseServerError(
+                  res,
+                  422,
+                  {},
+                  "Cannot add more than 3 documents"
+                );
+              };
+              for (const photo of photos) {
+                const docExist = await documentService.getDocumentByData(
+                  DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+                  id,
+                  getFilePath(photo)
+                );
+
+                if (!docExist) {
+                  const qualificationDoc = await documentService.addDocument({
+                    doctor_id: doctorData.getDoctorId(),
+                    parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
+                    parent_id: id,
+                    document: getFilePath(photo)
+                  });
+                }
+              }
+            }
+          }
+
+        }
+        
+
+        // registration information
+
+        if(registration_details){
+          const registrationsOfDoctor = await registrationService.getRegistrationByDoctorId(
+            doctorData.getDoctorId()
+          );
+    
+          for (const item of registration_details) {
+            const {
+              number=null,
+              registration_council_id=null,
+              year=null,
+              expiryDate=null,
+              id = 0,
+              photos : registration_photos = []
+            } = item;
+            let updateDataRegistration = {};
+            if(number){
+              updateDataRegistration['number']=number;
+            }
+            if(registration_council_id){
+              updateDataRegistration['registration_council_id']=registration_council_id;
+            }
+            if(year){
+              updateDataRegistration['year']=year;
+            }
+            if(expiryDate){
+              updateDataRegistration['expiry_date']=moment(expiryDate);
+            }
+            updateDataRegistration['doctor_id']=doctorData.getDoctorId();
+            if (id && id !== "0") {
+              const registration = await registrationService.updateRegistration(
+                updateDataRegistration,
+                id
+              );
+            }
+            for (const registration_photo of registration_photos) {
+              let docExist = await documentService.getDocumentByData(
+                DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+                id,
+                getFilePath(registration_photo)
+              );
+    
+              if (!docExist) {
+                let qualificationDoc = await documentService.addDocument({
+                  doctor_id: doctorData.getDoctorId(),
+                  parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+                  parent_id: id,
+                  document: getFilePath(registration_photo)
+                });
+              }
+            }
+          }
+        }
+
+        if(clinic_details){
+          Logger.debug("inside");
+          for (const clinic of clinic_details) {
+            let clinicDetails = {};
+            const { 
+              name = null,
+              location = null,
+              time_slots = null,
+              id = 0,
+              doctor_id = null
+            } = clinic;
+            if(name){
+              clinicDetails['name']=name;
+            }
+            if(location){
+              clinicDetails['location']=location;
+            }
+            if(time_slots){
+              clinicDetails['details']={'time_slots':time_slots};
+            }
+            clinicDetails['doctor_id']=doctor_id;
+            Logger.debug("datatata",clinicDetails);
+            if (id && id !== "0") {
+              const newClinic = await clinicService.updateClinic(
+                clinicDetails,
+                id
+              );
+            }
+
+          }
+        }
+
+        return raiseSuccess(
+          res,
+          200,
+          {
+            doctors: {
+              [doctorData.getDoctorId()]: doctorData.getBasicInfo()
+            }
+          },
+          "Doctor profile updated successfully."
+        );
+      }else{
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Doctor Not Found."
+        );
+      }
+
+      
+    } catch (error) {
+      Logger.debug("update doctor 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
 
 
   addPatient = async (req, res) => {
@@ -1977,6 +2221,54 @@ class DoctorController extends Controller {
         error
       );
       return raiseServerError(res);
+    }
+  };
+
+  uploadImage = async (req, res) => {
+    const { userDetails, body } = req;
+    const { userId = "3" } = userDetails || {};
+    const file = req.file;
+    Logger.debug("file ----> ", file);
+    // const fileExt= file.originalname.replace(/\s+/g, '');
+    try {
+      //   await minioService.createBucket();
+
+      //   const imageName = md5(`${userId}-education-pics`);
+
+      //   let hash = md5.create();
+
+      //   hash.hex();
+      //   hash = String(hash);
+
+      //   const folder = "adhere";
+      //   // const file_name = hash.substring(4) + "_Education_"+fileExt;
+      //   const file_name = hash.substring(4) + "/" + imageName + "." + fileExt;
+
+      //   const metaData = {
+      //     "Content-Type":
+      //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      // };
+      // const fileUrl = folder+ "/" +file_name;
+      // await minioService.saveBufferObject(file.buffer, file_name, metaData);
+
+      // // console.log("file urlll: ", process.config.minio.MINI);
+      // const file_link = process.config.minio.MINIO_S3_HOST +"/" + fileUrl;
+      // let files = [file_link];
+      // console.log("Uplaoded File Url ---------------------->  ", file_link);
+      // console.log("User Controllers =------------------->   ", files);
+      //const resume_link = process.config.BASE_DOC_URL + files[0]
+      let files = await uploadImageS3(userId, file);
+      return this.raiseSuccess(
+          res,
+          200,
+          {
+            files
+          },
+          "Profile pic uploaded successfully"
+      );
+    } catch (error) {
+      console.log("FILE UPLOAD CATCH ERROR ", error);
+      return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
 }
