@@ -115,6 +115,11 @@ const messages = defineMessages({
         id: "app.patient_profile.slotPresent",
         description: "Patient Profile Header",
         defaultMessage: "Appointment slots already present for selected timings!"
+    },
+    symptoms: {
+        id: "app.patient_profile.symptoms",
+        description: "Patient Profile Header",
+        defaultMessage: "Symptoms"
     }
 
 });

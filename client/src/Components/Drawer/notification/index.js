@@ -83,6 +83,7 @@ class NotificationDrawer extends Component {
             notifications: activitiesId,
             activityGroupId: groupId
         });
+        console.log('activities765863563865356886', data, activities);
         getNotification(activities);
     }
 
@@ -168,3 +169,6 @@ class NotificationDrawer extends Component {
 }
 
 export default injectIntl(NotificationDrawer);
+
+
+
