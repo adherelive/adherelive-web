@@ -1,5 +1,6 @@
 import MedicationJob from "../";
 import moment from "moment";
+import {EVENT_TYPE} from "../../../../constant";
 
 class CreateJob extends MedicationJob {
     constructor(data) {
@@ -24,9 +25,10 @@ class CreateJob extends MedicationJob {
             templateData.push({
                 actor: actorId,
                 object: `${participant}`,
-                foreign_id: `medication:${medicationId}`,
+                foreign_id: `${medicationId}`,
                 verb: "medication_create",
-                message: `${name}(${actorCategory}) has created a medication reminder`,
+                event: EVENT_TYPE.MEDICATION_REMINDER,
+                // message: `${name}(${actorCategory}) has created a medication reminder`,
                 time: currentTime
             });
             // }

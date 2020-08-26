@@ -69,7 +69,7 @@ class CreateJob extends AppointmentJob {
           object: `${participant}`,
           foreign_id: `${appointmentId}`,
           verb: "appointment_create",
-          message: `${name}(${actorCategory}) has created an appointment with you`,
+          // message: `${name}(${actorCategory}) has created an appointment with you`,
           event: EVENT_TYPE.APPOINTMENT,
           time: currentTime
         });

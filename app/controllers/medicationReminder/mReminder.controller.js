@@ -4,6 +4,7 @@ import medicationReminderService from "../../services/medicationReminder/mRemind
 import medicineService from "../../services/medicine/medicine.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import doctorService from "../../services/doctor/doctor.service";
+import patientService from "../../services/patients/patients.service";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../ApiWrapper/web/medicine";
 import carePlanService from "../../services/carePlan/carePlan.service";
@@ -195,7 +196,6 @@ class MReminderController extends Controller {
       const { userId, userData: { category } = {} } = userDetails || {};
 
       const medicineDetails = await medicineService.getMedicineById(medicine_id);
-
 
       const medicineApiWrapper = await MedicineWrapper(medicineDetails);
 
