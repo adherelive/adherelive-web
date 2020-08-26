@@ -25,6 +25,8 @@ class NotificationController extends Controller {
       let medicineData = {};
       for (let key in activities) {
         const { activity: activityData, is_read } = activities[key];
+
+        Log.debug("activityData", activityData[0]);
         const { id, verb } = activityData[0] || {};
         notificationIds.push(id);
 
@@ -33,6 +35,8 @@ class NotificationController extends Controller {
           loggedInUser: userId,
           is_read: is_read
         });
+
+        Log.debug("details", details);
 
         const {
           notifications = {},
@@ -45,7 +49,7 @@ class NotificationController extends Controller {
         } = details || {};
         notificationData = { ...notificationData, ...notifications };
         userData = { ...userData, ...users };
-        doctorData = { ...doctorData, doctors };
+        doctorData = { ...doctorData, ...doctors };
         patientData = { ...patientData, ...patients };
         appointmentData = { ...appointmentData, ...appointments };
         medicationData = {...medicationData, ...medications};

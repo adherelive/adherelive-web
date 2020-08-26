@@ -148,7 +148,8 @@ class MobileMReminderController extends Controller {
             name: categoryData.getName(),
             category
           }
-        }
+        },
+        medicationId: mReminderApiWrapper.getMReminderId()
       };
 
       const medicationJob = MedicationJob.execute(EVENT_STATUS.SCHEDULED, eventData);

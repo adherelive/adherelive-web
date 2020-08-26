@@ -44,6 +44,9 @@ const medicationNotification = async (data) => {
 
         let eventData = {};
         let medicineData = {};
+        let userData = {};
+        let doctorData = {};
+        let patientData = {};
         let participants = [];
 
         if(verb === MEDICATION_CREATE) {
@@ -52,11 +55,11 @@ const medicationNotification = async (data) => {
             eventData = {...eventData, ...medications};
             medicineData = {...medicineData, medicines};
             participants = event.getParticipants();
-        } else {
-            const events = await ScheduleEventService.getEventByData({id: foreign_id});
-            const event = await ScheduleEventWrapper(events);
-            eventData = event.getData();
-            participants = event.getParticipants();
+        // } else {
+        //     const events = await ScheduleEventService.getEventByData({id: foreign_id});
+        //     const event = await ScheduleEventWrapper(events);
+        //     eventData = event.getData();
+        //     participants = event.getParticipants();
         }
 
         if (eventData && eventData === null) {
@@ -75,7 +78,6 @@ const medicationNotification = async (data) => {
         }
 
         let notification_data = {};
-        let userData = [];
 
         switch(verb) {
             case MEDICATION_CREATE:
@@ -93,14 +95,19 @@ const medicationNotification = async (data) => {
 
                 for(const id of Object.keys(participants)) {
                     const user = await UserWrapper(null, participants[id]);
-                    userData.push(await user.getReferenceInfo());
+                    const {users, doctors, patients} = await user.getReferenceInfo();
+                    userData = {...userData, ...users};
+                    doctorData = {...doctorData, ...doctors};
+                    patientData = {...patientData, ...patients};
                 }
 
                 return {
                     notifications: notification_data,
                     medications: eventData,
                     medicines: medicineData,
-                    ...userData
+                    users: userData,
+                    doctors: doctorData,
+                    patients: patientData
                 }
         }
     } catch(error) {
@@ -111,6 +118,7 @@ const medicationNotification = async (data) => {
 
 const appointmentNotification = async (data) => {
     try {
+        Log.debug("appointmentNotification data", data);
         const {
             data: {
                 actor,
@@ -128,18 +136,22 @@ const appointmentNotification = async (data) => {
         } = data;
 
         let eventData = {};
+
+        let userData = {};
+        let doctorData = {};
+        let patientData = {};
         let participants = [];
 
-        if(verb === APPOINTMENT_CREATE) {
+        if(verb.toUpperCase() === APPOINTMENT_CREATE) {
             const events = await AppointmentService.getAppointmentById(foreign_id);
             const event = await AppointmentWrapper(events);
             eventData = event.getBasicInfo();
             participants = event.getParticipants();
-        } else {
-            const events = await ScheduleEventService.getEventByData({id: foreign_id});
-            const event = await ScheduleEventWrapper(events);
-            eventData = event.getData();
-            participants = event.getParticipants();
+        // } else {
+        //     const events = await ScheduleEventService.getEventByData({id: foreign_id});
+        //     const event = await ScheduleEventWrapper(events);
+        //     eventData = event.getData();
+        //     participants = event.getParticipants();
         }
 
         if (eventData && eventData === null) {
@@ -158,9 +170,8 @@ const appointmentNotification = async (data) => {
         }
 
         let notification_data = {};
-        let userData = [];
 
-        switch(verb) {
+        switch(verb.toUpperCase()) {
             case APPOINTMENT_CREATE:
                 notification_data = {
                     [`${id}`]: {
@@ -175,13 +186,21 @@ const appointmentNotification = async (data) => {
                 };
 
                 for(const id of Object.keys(participants)) {
+                    Log.debug("id of participants", participants[id]);
                     const user = await UserWrapper(null, participants[id]);
-                    userData.push(await user.getReferenceInfo());
+                    const {users, doctors, patients} = await user.getReferenceInfo();
+                    userData = {...userData, ...users};
+                    doctorData = {...doctorData, ...doctors};
+                    patientData = {...patientData, ...patients};
                 }
+
+                Log.debug("userData", {...userData});
                 return {
                     notifications: notification_data,
                     appointments: { [foreign_id]: eventData },
-                    ...userData
+                    users: userData,
+                    doctors: doctorData,
+                    patients: patientData
                 };
         }
     } catch(error) {
@@ -197,6 +216,8 @@ export const getDataForNotification = async (data) => {
                 event,
             } = {},
         } = data;
+
+        Log.debug("event", event);
 
         switch(event) {
             case APPOINTMENT:
