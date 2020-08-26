@@ -126,8 +126,27 @@ class MobileAppointmentController extends Controller {
       );
       const appointmentData = await MAppointmentWrapper(appointment);
 
+      let participantTwoId = null;
+
+      switch (participant_two_type) {
+        case USER_CATEGORY.DOCTOR:
+          const doctor = await doctorService.getDoctorByData({
+            id: participant_two_id
+          });
+          const doctorData = await DoctorWrapper(doctor);
+          participantTwoId = doctorData.getUserId();
+          break;
+        case USER_CATEGORY.PATIENT:
+          const patient = await patientService.getPatientById({id: participant_two_id});
+          const patientData = await PatientWrapper(patient);
+          participantTwoId = patientData.getUserId();
+          break;
+        default:
+          break;
+      }
+
       const eventScheduleData = {
-        participants: [userId, participant_two_id],
+        participants: [userId, participantTwoId],
         actor: {
           id: userId,
           details: {
