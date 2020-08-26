@@ -127,7 +127,7 @@ class AppointmentController extends Controller {
 
       const appointment_data = {
         participant_one_type: category,
-        participant_one_id: userCategoryId,
+        participant_one_id: userId,
         participant_two_type,
         participant_two_id,
         organizer_type:
@@ -286,7 +286,7 @@ class AppointmentController extends Controller {
 
       const appointment_data = {
         participant_one_type: category,
-        participant_one_id: userId,
+        participant_one_id: userCategoryId,
         participant_two_type,
         participant_two_id,
         organizer_type:
@@ -334,14 +334,34 @@ class AppointmentController extends Controller {
 
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
+      let participantTwoId = null;
+
+      switch (participant_two_type) {
+        case USER_CATEGORY.DOCTOR:
+          const doctor = await doctorService.getDoctorByData({
+            id: participant_two_id
+          });
+          const doctorData = await DoctorWrapper(doctor);
+          participantTwoId = doctorData.getUserId();
+          break;
+        case USER_CATEGORY.PATIENT:
+          const patient = await patientService.getPatientById({id: participant_two_id});
+          const patientData = await PatientWrapper(patient);
+          participantTwoId = patientData.getUserId();
+          break;
+        default:
+          break;
+      }
+
       const eventScheduleData = {
-        participants: [userId, participant_two_id],
+        participants: [userId, participantTwoId],
         actor: {
           id: userId,
           details: {
             category
           }
-        }
+        },
+        appointmentId: appointmentApiData.getAppointmentId()
       };
 
       // RRule
@@ -357,6 +377,21 @@ class AppointmentController extends Controller {
       await NotificationSdk.execute(appointmentJob);
 
       Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
+
+      /*
+      * DATA being sent to getstream
+      * { actor: '1',
+        duration: '10.95ms',
+        event: 'appointment',
+        foreign_id: '2',
+        id: 'e0f8ee07-e757-11ea-a12c-128a130028af',
+        object: '1',
+        origin: null,
+        target: '',
+        time: '2020-08-26T04:52:01.080270',
+        verb: 'appointment_create' }
+      *
+      * */
 
       // NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 
