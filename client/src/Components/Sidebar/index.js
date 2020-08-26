@@ -56,7 +56,7 @@ class SideMenu extends Component {
         break;
       case PROFILE:
         history.push(PATH.PROFILE);
-
+        break;
       case NOTIFICATIONS:
         if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
           openAppointmentDrawer({ doctorUserId: authenticated_user });
@@ -180,27 +180,27 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         )}
-        <MenuItem
-          className="flex direction-column justify-center align-center p0"
-          key={NOTIFICATIONS}
-        >
-          <Tooltip placement="right" title={"Notifications"}>
-            {/* <img alt={"Notification Icon"} className={'w22'} src={notificationIcon} /> */}
-            <Icon type="bell" theme="twoTone" twoToneColor='white' />
-          </Tooltip>
-        </MenuItem>
+        {/*<MenuItem*/}
+        {/*  className="flex direction-column justify-center align-center p0"*/}
+        {/*  key={NOTIFICATIONS}*/}
+        {/*>*/}
+        {/*  <Tooltip placement="right" title={"Notifications"}>*/}
+        {/*    /!* <img alt={"Notification Icon"} className={'w22'} src={notificationIcon} /> *!/*/}
+        {/*    <Icon type="bell" theme="twoTone" twoToneColor='white' />*/}
+        {/*  </Tooltip>*/}
+        {/*</MenuItem>*/}
 
-        <MenuItem
-          className="flex direction-column justify-center align-center p0"
-          key={LOG_OUT}
-        >
-          <Tooltip placement="right" title={"Log Out"}>
-            {/* {profile_pic ? (<img src={profile_pic} className='sidebar-dp' />) :
-              (<UserOutlined className="sidebar-bottom-custom text-white" />)}  */}
-         {initials ?
-              <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
-          </Tooltip>
-        </MenuItem>
+        {/*<MenuItem*/}
+        {/*  className="flex direction-column justify-center align-center p0"*/}
+        {/*  key={LOG_OUT}*/}
+        {/*>*/}
+        {/*  <Tooltip placement="right" title={"Log Out"}>*/}
+        {/*    /!* {profile_pic ? (<img src={profile_pic} className='sidebar-dp' />) :*/}
+        {/*      (<UserOutlined className="sidebar-bottom-custom text-white" />)}  *!/*/}
+        {/* {initials ?*/}
+        {/*      <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}*/}
+        {/*  </Tooltip>*/}
+        {/*</MenuItem>*/}
 
       </Menu>
     );
