@@ -54,7 +54,7 @@ const errMessage = require("../../../config/messages.json").errMessages;
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 import careplanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-
+import atob from 'atob';
 import { getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
@@ -192,6 +192,8 @@ class UserController extends Controller {
           }
         );
 
+        const notificationToken = AppNotification.getUserToken(`${userId}`);
+        const feedId = base64.encode(`${userId}`);
 
         const apiUserDetails = await UserWrapper(userData.getBasicInfo);
 
@@ -201,6 +203,8 @@ class UserController extends Controller {
               ...apiUserDetails.getBasicInfo()
             }
           },
+          notificationToken: notificationToken,
+          feedId: `${userId}`,
           auth_user: apiUserDetails.getUserId(),
           auth_category: apiUserDetails.getCategory()
         };
@@ -272,7 +276,7 @@ class UserController extends Controller {
         const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
         const feedId = base64.encode(`${user.get("id")}`);
 
-        const userRef = await userService.getUserData({id: user.get("id")});
+        const userRef = await userService.getUserData({ id: user.get("id") });
 
         const apiUserDetails = await UserWrapper(userRef.get());
 
@@ -291,6 +295,8 @@ class UserController extends Controller {
           // ...permissions,
           ...await apiUserDetails.getReferenceData(),
           auth_user: apiUserDetails.getId(),
+          notificationToken: notificationToken,
+          feedId: `${user.get("id")}`,
           auth_category: apiUserDetails.getCategory()
         };
 
@@ -303,14 +309,14 @@ class UserController extends Controller {
 
         res.cookie("notificationToken", notificationToken, {
           expires: new Date(
-              Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
           ),
           httpOnly: true
         });
 
         res.cookie("feedId", feedId, {
           expires: new Date(
-              Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
           ),
           httpOnly: true
         });
@@ -496,7 +502,7 @@ class UserController extends Controller {
                 doctor_id: userCategoryId
               });
 
-              for(const carePlan of careplanData) {
+              for (const carePlan of careplanData) {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 const carePlanId = carePlanApiWrapper.getCarePlanId();
@@ -505,20 +511,20 @@ class UserController extends Controller {
 
                 let medicationIds = [];
 
-                for(const medication of medicationDetails) {
+                for (const medication of medicationDetails) {
                   medicationIds.push(medication.get("medication_id"));
                 }
 
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
 
-                const {treatment_id, severity_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
+                const { treatment_id, severity_id, condition_id } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
                 carePlanApiData[
-                    carePlanApiWrapper.getCarePlanId()
-                    ] =
-                    // carePlanApiWrapper.getBasicInfo();
-                    { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: medicationIds };
+                  carePlanApiWrapper.getCarePlanId()
+                ] =
+                  // carePlanApiWrapper.getBasicInfo();
+                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: medicationIds };
               }
             }
             break;
@@ -568,7 +574,7 @@ class UserController extends Controller {
 
         // treatments
         let treatmentApiDetails = {};
-        const treatmentDetails = await treatmentService.getAll({id: treatmentIds});
+        const treatmentDetails = await treatmentService.getAll({ id: treatmentIds });
         treatmentIds = [];
         for (const treatment of treatmentDetails) {
 
@@ -590,7 +596,7 @@ class UserController extends Controller {
 
         // conditions
         let conditionApiDetails = {};
-        const conditionDetails = await conditionService.getAllByData({id: conditionIds});
+        const conditionDetails = await conditionService.getAllByData({ id: conditionIds });
         conditionIds = [];
         for (const condition of conditionDetails) {
           const conditionWrapper = await ConditionWrapper(condition);
@@ -605,6 +611,9 @@ class UserController extends Controller {
           permissions: []
         };
 
+        const notificationToken = AppNotification.getUserToken(`${userId}`);
+        const feedId = base64.encode(`${userId}`);
+
 
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
@@ -612,7 +621,7 @@ class UserController extends Controller {
 
         // speciality temp todo
         let referenceData = {};
-        if(category === USER_CATEGORY.DOCTOR && userCategoryApiWrapper) {
+        if (category === USER_CATEGORY.DOCTOR && userCategoryApiWrapper) {
           referenceData = await userCategoryApiWrapper.getReferenceInfo();
         }
 
@@ -631,6 +640,8 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
+          notificationToken: notificationToken,
+          feedId: `${userId}`,
           severity: {
             ...severityApiDetails,
           },

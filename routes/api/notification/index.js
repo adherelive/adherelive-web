@@ -4,7 +4,7 @@ import NotificationController from "../../../app/controllers/notification/notifi
 
 const router = express.Router();
 
-router.get(
+router.post(
     "/",
     Authenticate,
     NotificationController.getNotifications

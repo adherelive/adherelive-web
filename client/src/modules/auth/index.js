@@ -107,7 +107,7 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     onboarding_status = "",
     category = USER_CATEGORY.DOCTOR,
   } = user;
-  
+
   let authRedirect = '/';
   if (!onboarded && category == USER_CATEGORY.DOCTOR) {
     if (onboarding_status == ONBOARDING_STATUS.PROFILE_REGISTERED) {
@@ -149,10 +149,11 @@ export const signIn = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { users = {}, auth_user = "", auth_category = "", permissions = [] } = data;
+        const { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '',
+          feedId = '' } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users[auth_user]);
-        
+
         dispatch({
           type: SIGNING_COMPLETED,
           payload: {
@@ -160,7 +161,8 @@ export const signIn = (payload) => {
             authenticatedUser: auth_user,
             authRedirection,
             authCategory: auth_category,
-            authPermissions: permissions
+            authPermissions: permissions, notificationToken,
+            feedId
           },
           data,
         });
@@ -310,9 +312,9 @@ export const verifyUser = (link) => {
       } else if (status === true) {
         let { users = {}, auth_user = '', auth_category = '', permissions = [] } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
-        
+
         let authRedirection = setAuthRedirect(users[auth_user]);
-        
+
         dispatch({
           type: VALIDATING_LINK_COMPLETED,
           payload: {
@@ -496,7 +498,7 @@ export const getInitialData = () => {
         // const {lastUrl = false} = data;
         // const {  users } = response.payload.data;
 
-        let { users = {}, auth_user = "", auth_category = "", permissions = [] } = data;
+        let { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '', feedId = '' } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user], true);
@@ -509,7 +511,9 @@ export const getInitialData = () => {
             authenticatedUser: auth_user,
             authRedirection,
             authCategory: auth_category,
-            authPermissions: permissions
+            authPermissions: permissions,
+            notificationToken,
+            feedId
           },
           data,
         });
@@ -536,7 +540,9 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated_category: payload.authCategory,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
-        authPermissions: payload.authPermissions
+        authPermissions: payload.authPermissions,
+        notificationToken: payload.notificationToken,
+        feedId: payload.feedId,
       };
 
     case VALIDATING_LINK_COMPLETED:
@@ -587,7 +593,9 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated_category: payload.authCategory,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
-        authPermissions: payload.authPermissions
+        authPermissions: payload.authPermissions,
+        notificationToken: payload.notificationToken,
+        feedId: payload.feedId,
       };
     default:
       return state;

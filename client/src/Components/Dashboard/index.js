@@ -10,7 +10,8 @@ import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
 import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
-import Donut from '../Common/graphs/donut'
+import Donut from '../Common/graphs/donut';
+import NotificationDrawer from '../../Containers/Drawer/notificationDrawer'
 import GraphsModal from "./graphsModal";
 import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
 import { getPatientConsultingUrl } from '../../Helper/url/patients';
@@ -262,6 +263,7 @@ class Dashboard extends Component {
                     searchSeverity={this.props.searchSeverity}
                     treatments={treatments} conditions={conditions} severity={severity} close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
                 {visibleModal && (<GraphsModal visible={visibleModal} handleCancel={this.hideEditGraphModal} handleOk={this.editDisplayGraphs} selectedGraphs={graphsToShow} />)}
+                <NotificationDrawer />
             </Fragment>
         );
     }
