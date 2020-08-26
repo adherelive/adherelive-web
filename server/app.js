@@ -1,10 +1,13 @@
 import express from "express";
 import mysql from "../libs/mysql";
 import path from "path";
+import schedule from "node-schedule";
 
 import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
 // import NotificationObserver from "../app/notificationSdk/notificationObeserver";
+
+import {getPriorEvents} from "../app/Crons/prior";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
@@ -18,6 +21,10 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const app = express();
+
+const cron = schedule.scheduleJob("*/1 * * * *", async () => {
+    await getPriorEvents();
+});
 
 app.use(express.json({ limit: "50mb" }));
 app.use(
