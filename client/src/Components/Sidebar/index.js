@@ -15,6 +15,7 @@ const LOGO = "logo";
 const DASHBOARD = "dashboard";
 const LOG_OUT = "log_out";
 const PROFILE = "profile";
+const SUB_MENU = "sub-menu"
 
 class SideMenu extends Component {
   constructor(props) {
@@ -63,6 +64,8 @@ class SideMenu extends Component {
       case LOG_OUT:
         handleLogout();
         break;
+      case SUB_MENU:
+        break;
       default:
         history.push(PATH.LANDING_PAGE);
         break;
@@ -71,28 +74,17 @@ class SideMenu extends Component {
   };
 
   menu = () => {
-    const { handleLogOut, handleProfile } = this;
-    // const { auth, users, clients, permissions } = this.props;
-    // const { user_id } = auth || {};
-    // const { basic_info: { client_id } = {} } = users[user_id] || {};
-    // const { basic_info: { client_name } = {} } = clients[client_id] || {};
     return (
-      <Menu className="l70 b10 position fixed">
-        <Menu.Item className="pl24 pr80">
-          <div onClick={this.handleProfile}>Profile</div>
+      <Menu className="l70 b10 position fixed" key={"sub"} onClick={this.handleItemSelect}>
+        <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item className="pl24 pr80">
-          <div onClick={handleLogOut}>Logout</div>
+        <Menu.Item className="pl24 pr80" key={LOG_OUT}>Logout
         </Menu.Item>
       </Menu>
     );
   };
 
-  handleProfile = e => {
-    e.preventDefault();
-    console.log("to profile");
-  }
 
   render() {
     const { selectedKeys } = this.state;
@@ -162,7 +154,7 @@ class SideMenu extends Component {
           // </SubMenu>
 
           <MenuItem
-            key={"profile"}
+            key={SUB_MENU}
             className="flex direction-column justify-center align-center p0 logout_button"
           >
             <Dropdown overlay={this.menu} overlayClassName="relative">
