@@ -1,30 +1,41 @@
 'use strict';
 
-import { DB_TABLES } from "../constant";
+import {DB_TABLES} from "../constant";
 import Sequelize from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.UPLOAD_DOCUMENTS, {
+    return queryInterface.createTable(DB_TABLES.SYMPTOMS, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      parent_type: {
-        type: Sequelize.STRING(200),
+      patient_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: {
+            tableName: DB_TABLES.PATIENTS,
+          },
+          key: 'id'
+        }
       },
-      parent_id:{
-        allowNull: false,
-        type: Sequelize.INTEGER
+      care_plan_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: DB_TABLES.CARE_PLANS,
+          },
+          key: 'id'
+        }
       },
-      document: {
-        type: Sequelize.STRING(1000),
-        allowNull: false,
+      config: {
+        type: Sequelize.JSON
       },
-      name: {
+      text: {
         type: Sequelize.STRING(1000)
       },
       created_at: {
@@ -40,9 +51,9 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    },
+  },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.UPLOAD_DOCUMENTS);
+    return queryInterface.dropTable(DB_TABLES.SYMPTOMS);
   }
 };

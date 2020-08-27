@@ -15,10 +15,12 @@ class MobileUploadDocumentWrapper extends BaseUploadDocument {
             parent_type,
             parent_id,
             document,
+            name
         } = _data || {};
         return {
             basic_info: {
                 id,
+                name,
                 parent_type,
                 parent_id,
                 document: completePath(document)

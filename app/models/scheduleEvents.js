@@ -36,7 +36,8 @@ const ScheduleEvent = database.define(
                 EVENT_STATUS.COMPLETED,
                 EVENT_STATUS.EXPIRED,
                 EVENT_STATUS.CANCELLED
-            ]
+            ],
+            defaultValue: EVENT_STATUS.PENDING
         },
         date: {
           type: Sequelize.DATEONLY,

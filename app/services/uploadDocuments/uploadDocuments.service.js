@@ -75,6 +75,16 @@ class UploadDocumentService {
         }
     };
 
+    getDocumentByName = async (data) => {
+        try {
+            const document = await uploadDocumentsModel.findOne({
+                where: data
+            });
+            return document;
+        } catch(error) {
+            throw error;
+        }
+    };
    
 }
 
