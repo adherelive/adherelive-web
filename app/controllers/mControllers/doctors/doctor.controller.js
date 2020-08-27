@@ -113,7 +113,6 @@ class MobileDoctorController extends Controller {
           first_name,
           middle_name,
           last_name,
-          address: city
         };
         let doctor_id = doctorExist.get("id");
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
@@ -125,7 +124,6 @@ class MobileDoctorController extends Controller {
           first_name,
           middle_name,
           last_name,
-          address: city
         };
         doctor = await doctorService.addDoctor(doctor_data);
       }
