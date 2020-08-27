@@ -578,7 +578,7 @@ class DoctorProfilePage extends Component {
                                 style={{width:"400px",height:"auto",margin:"0",marginBottom:"10px"}}
 
                             />
-                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute"}}>
+                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute",backgroundColor:"white"}}>
                                 {loading && <div>Loading...</div>}
                                 {suggestions.map(suggestion => {
                                     const className = "google-places-autocomplete__suggestion";
@@ -863,7 +863,7 @@ onChangeClinicLocation = clinic_id => (value) => {
                                 onPressEnter={this.updateCity}
                                 style={{width:"400px",height:"auto",margin:"0",marginBottom:"10px"}}
                             />
-                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute"}}>
+                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute",backgroundColor:"white"}}>
                                 {loading && <div>Loading...</div>}
                                 {suggestions.map(suggestion => {
                                     const className = "google-places-autocomplete__suggestion";
