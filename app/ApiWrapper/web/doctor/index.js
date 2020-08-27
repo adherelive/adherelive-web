@@ -40,7 +40,7 @@ class DoctorWrapper extends BaseDoctor {
             first_name,
             middle_name,
             last_name,
-            address,
+            city,
             speciality_id,
             qualifications,
             activated_on,
@@ -54,7 +54,7 @@ class DoctorWrapper extends BaseDoctor {
                 first_name,
                 middle_name,
                 last_name,
-                address,
+                city,
                 speciality_id,
                 profile_pic: completePath(profile_pic)
             },

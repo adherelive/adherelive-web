@@ -93,10 +93,9 @@ class AdminDoctorDetails extends Component {
         user_id,
         profile_pic,
         gender,
-          address,
+        city,
           speciality_id
       } = {},
-      city,
     } = doctors[id] || {};
     const {
       basic_info: {  email, mobile_number, prefix } = {},
@@ -202,7 +201,7 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.address_text)}
               </div>
               <div className="fs14 fw500">
-                {address ? address : city ? city : TABLE_DEFAULT_BLANK_FIELD}
+                {city ? city : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
