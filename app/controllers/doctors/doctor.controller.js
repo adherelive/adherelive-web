@@ -453,7 +453,6 @@ class DoctorController extends Controller {
           first_name,
           middle_name,
           last_name,
-          address: city
         };
         let doctor_id = doctorExist.get("id");
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
@@ -465,7 +464,6 @@ class DoctorController extends Controller {
           first_name,
           middle_name,
           last_name,
-          address: city
         };
         doctor = await doctorService.addDoctor(doctor_data);
       }
@@ -544,7 +542,6 @@ class DoctorController extends Controller {
       }
       if(city){
         doctor_data['city']=city;
-        doctor_data['address']=city;
       }
       if(speciality_id){
         doctor_data['speciality_id']=speciality_id;

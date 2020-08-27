@@ -21,7 +21,7 @@ module.exports = {
                 gender: "m",
                 first_name: "John",
                 last_name: "Doe",
-                address: "delhi",
+                city: "delhi",
                 speciality_id:"1",
                 created_at: new Date(),
                 updated_at: new Date()
@@ -31,7 +31,7 @@ module.exports = {
                 gender: "m",
                 first_name: "google",
                 last_name: "user",
-                address: "delhi",
+                city: "delhi",
                 speciality_id:"2",
                 created_at: new Date(),
                 updated_at: new Date()
