@@ -7,11 +7,15 @@ import UploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 // WRAPPERS ----------
 import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 import DocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
+import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
+import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import {uploadAudio, uploadImage} from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
 import {DOCUMENT_PARENT_TYPE} from "../../../../constant";
 import {getFilePath} from "../../../helper/filePath";
+import twilioService from "../../../services/twilio/twilio.service";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
 
@@ -82,6 +86,16 @@ class SymptomController extends Controller {
                     imageDocumentIds.push(addDocument.get("id"));
                 }
             }
+
+            const carePlan = await CarePlanWrapper(null, care_plan_id);
+
+            const doctorId = carePlan.getDoctorId();
+            const doctorData = await DoctorWrapper(null, doctorId);
+            const patientData = await PatientWrapper(null, patient_id);
+
+            const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), "test");
+
+
 
             return raiseSuccess(res, 200, {
                 symptoms: {

@@ -83,6 +83,28 @@ class TwilioService {
             }
         });
     }
+
+    addSymptomMessage = async (doctor, patient, message) => {
+      try {
+          const client = require("twilio")(accountSid, authToken);
+          const channel = await client.chat.services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+              .channels(`${doctor}-adhere-${patient}`);
+
+          channel.messages.create({
+              from: "Adhere Bot",
+              body: message
+          }).then(response => {
+              console.log('Bot message sent!', response);
+          }).catch(err => {
+              console.error('Failed to send message');
+              console.error(err);
+          });
+
+          Logger.debug("channel -> ", channel);
+      } catch(error) {
+          Logger.debug("addSymptom message 500 error", error);
+      }
+    };
 }
 
 export default new TwilioService();
