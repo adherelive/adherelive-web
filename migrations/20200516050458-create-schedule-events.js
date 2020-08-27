@@ -18,6 +18,12 @@ module.exports = {
             event_id: {
                 type: Sequelize.INTEGER,
             },
+            participant_one: {
+                type: Sequelize.INTEGER,
+            },
+            participant_two: {
+                type: Sequelize.INTEGER,
+            },
             details: {
                 type: Sequelize.JSON,
             },

@@ -8,6 +8,7 @@ import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.servi
 
 // WRAPPERS ---------------
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
+import AppointmentWrapper from "../ApiWrapper/web/appointments";
 
 import AppointmentJob from "../JobSdk/Appointments/observer";
 
@@ -39,7 +40,18 @@ class PriorCron {
         }
     };
 
-    handleAppointmentPrior = (event) => {
+    handleAppointmentPrior = async (event) => {
+
+        const data = {
+            participants: event.getParticipants(),
+            actor: {
+                id: "",
+                details: {
+                    category: ""
+                }
+            },
+            appointmentId: event.getEventId()
+        }
         const job = AppointmentJob.execute(EVENT_STATUS.PRIOR, event);
     };
 

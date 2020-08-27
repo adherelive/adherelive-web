@@ -258,6 +258,7 @@ class MReminderController extends Controller {
       //   start_time,
       //   end_time: start_time
       // };
+      const patient = await PatientWrapper(null, patient_id);
 
       EventSchedule.create({
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -266,11 +267,12 @@ class MReminderController extends Controller {
         status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-        when_to_take
+        when_to_take,
+        participant_one: patient.getUserId(),
+        participant_two: userId
       });
 
       // to update later
-      const patient = await PatientWrapper(null, patient_id);
 
       let categoryData = null;
       if(category === USER_CATEGORY.DOCTOR) {
@@ -287,7 +289,7 @@ class MReminderController extends Controller {
             category
           }
         },
-        medicationId: mReminderDetails.get("id")
+        medicationId: mReminderDetails.get("id"),
       };
 
       const medicationJob = MedicationJob.execute(EVENT_STATUS.SCHEDULED, eventData);
