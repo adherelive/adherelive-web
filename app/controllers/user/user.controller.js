@@ -276,6 +276,9 @@ class UserController extends Controller {
         const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
         const feedId = base64.encode(`${user.get("id")}`);
 
+        Logger.debug("notificationToken --> ", notificationToken);
+        Logger.debug("feedId --> ", feedId);
+
         const userRef = await userService.getUserData({ id: user.get("id") });
 
         const apiUserDetails = await UserWrapper(userRef.get());

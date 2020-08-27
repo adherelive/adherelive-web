@@ -30,9 +30,9 @@ class AppNotification {
             // TODO: add get stream rest api call code here
             Log.debug("sendAppNotification --> ", template.actor.toString());
             const client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey);
-            // const userToken = client.createUserToken(
-            //     template.actor.toString()
-            // );
+            const userToken = client.createUserToken(
+                template.actor.toString()
+            );
 
             // Log.debug("client --> ", client);
 
