@@ -2,6 +2,8 @@
 import Sequelize from "sequelize";
 import { database } from "../../libs/mysql";
 import { DB_TABLES } from "../../constant";
+import Patients from "./patients";
+import CarePlan from "./carePlan";
 
 const Symptoms = database.define(
     DB_TABLES.SYMPTOMS,
@@ -43,5 +45,15 @@ const Symptoms = database.define(
         paranoid: true,
     }
 );
+
+Symptoms.hasOne(Patients, {
+    foreignKey: "id",
+    sourceKey: "patient_id"
+});
+
+Symptoms.hasOne(CarePlan, {
+    foreignKey: "id",
+    sourceKey: "care_plan_id"
+});
 
 export default Symptoms;

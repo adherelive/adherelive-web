@@ -29,4 +29,10 @@ router.post(
     SymptomController.create
 );
 
+router.get(
+    "/:id",
+    Authenticate,
+    SymptomController.getSymptomDetails
+);
+
 export default router;

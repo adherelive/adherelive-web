@@ -90,6 +90,9 @@ class TwilioService {
           const channel = await client.chat.services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
               .channels(`${doctor}-adhere-${patient}`);
 
+
+          // issue: http for development
+          // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues
           channel.messages.create({
               from: "Adhere Bot",
               body: message

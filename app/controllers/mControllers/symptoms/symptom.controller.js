@@ -165,6 +165,29 @@ class SymptomController extends Controller {
             return raiseServerError(res);
         }
     };
+
+    getSymptomDetails = async (req, res) => {
+        const {raiseSuccess, raiseServerError} = this;
+        try {
+            Log.debug("req.body ----> ", req.body);
+            Log.debug("req.params ----> ", req.params);
+            const {params: {id} = {}} = req;
+
+            const symptomData = await SymptomWrapper({id});
+
+            Log.debug("symptomData --> ", symptomData._data);
+
+            return raiseSuccess(
+                res,
+                200,
+                {},
+                "Symptom details fetched successfully"
+            );
+        } catch(error) {
+            Log.debug("symptoms getSymptomDetails 500 error", error);
+            return raiseServerError(res);
+        }
+    };
 }
 
 export default new SymptomController();
