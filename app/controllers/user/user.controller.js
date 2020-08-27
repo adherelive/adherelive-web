@@ -614,8 +614,8 @@ class UserController extends Controller {
           permissions: []
         };
 
-        const notificationToken = AppNotification.getUserToken(`${userId}`);
-        const feedId = base64.encode(`${userId}`);
+        // const notificationToken = AppNotification.getUserToken(`${userId}`);
+        // const feedId = base64.encode(`${userId}`);
 
 
         if (authUserDetails.isActivated()) {
@@ -643,8 +643,8 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
-          notificationToken: notificationToken,
-          feedId: `${userId}`,
+          // notificationToken: notificationToken,
+          // feedId: `${userId}`,
           severity: {
             ...severityApiDetails,
           },
