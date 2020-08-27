@@ -7,7 +7,7 @@ import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
 // import NotificationObserver from "../app/notificationSdk/notificationObeserver";
 
-import {getPriorEvents} from "../app/Crons/prior";
+// import Prior from "../app/Crons/prior";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
@@ -23,7 +23,7 @@ const cors = require("cors");
 const app = express();
 
 // const cron = schedule.scheduleJob("*/1 * * * *", async () => {
-//     await getPriorEvents();
+//     await Prior.getPriorEvents();
 // });
 
 app.use(express.json({ limit: "50mb" }));
