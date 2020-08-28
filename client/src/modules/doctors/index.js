@@ -142,7 +142,6 @@ export const getDoctorDetails = (id) => {
   }
 };
 export const getDoctorProfileDetails = () => {
-  console.log("hello");
   let response = {};
   return async dispatch => {
     try {

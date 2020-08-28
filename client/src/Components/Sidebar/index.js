@@ -39,8 +39,10 @@ class SideMenu extends Component {
   };
 
   handleItemSelect = ({ key }) => {
-    const { history, authenticated_category, authenticated_user, authPermissions = [], openAppointmentDrawer } = this.props;
+    const { users, history, authenticated_category, authenticated_user, authPermissions = [], openAppointmentDrawer } = this.props;
     const { handleLogout } = this;
+    const current_user = users[authenticated_user];
+    const { onboarded } = current_user;
     switch (key) {
       case LOGO:
       case DASHBOARD:
@@ -49,13 +51,15 @@ class SideMenu extends Component {
             history.push(PATH.ADMIN.DOCTORS.ROOT);
           }
         } else {
-          if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+          if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) || onboarded) {
             history.push(PATH.LANDING_PAGE);
           }
         }
         break;
       case PROFILE:
-        history.push(PATH.PROFILE);
+        if(onboarded){
+          history.push(PATH.PROFILE);
+        }
         break;
       case NOTIFICATIONS:
         if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
