@@ -67,7 +67,7 @@ class DoctorProfilePage extends Component {
             last_name="",
             profile_pic="",
             gender="",
-            address="",
+            city="",
             speciality_id=""
           } = {},
           doctor_qualification_ids=[],
@@ -134,7 +134,7 @@ class DoctorProfilePage extends Component {
         email: email,
         gender: gender,
         speciality_id: speciality_id,
-        address: address,
+        city: city,
         mobile_number: mobile_number,
         category: category,
         prefix: prefix,
@@ -578,7 +578,7 @@ class DoctorProfilePage extends Component {
                                 style={{width:"400px",height:"auto",margin:"0",marginBottom:"10px"}}
 
                             />
-                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute"}}>
+                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute",backgroundColor:"white"}}>
                                 {loading && <div>Loading...</div>}
                                 {suggestions.map(suggestion => {
                                     const className = "google-places-autocomplete__suggestion";
@@ -830,9 +830,9 @@ class DoctorProfilePage extends Component {
               );
         }
     }
-  onChangeCity = address => {
+  onChangeCity = city => {
 
-    this.setState({ address: address });
+    this.setState({ city: city });
 
 };
 onChangeClinicLocation = clinic_id => (value) => {
@@ -845,11 +845,11 @@ onChangeClinicLocation = clinic_id => (value) => {
 
 };
   renderCity = () => {
-      const { edit_city, address, city } = this.state;
+      const { edit_city, city } = this.state;
       if(edit_city){
         return (
             <PlacesAutocomplete
-                    value={this.state.address}
+                    value={city}
                     onChange={this.onChangeCity}
                     onSelect={this.handleSelect}
                 >
@@ -863,7 +863,7 @@ onChangeClinicLocation = clinic_id => (value) => {
                                 onPressEnter={this.updateCity}
                                 style={{width:"400px",height:"auto",margin:"0",marginBottom:"10px"}}
                             />
-                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute"}}>
+                            <div className="google-places-autocomplete__suggestions-container" style={{position:"absolute",backgroundColor:"white"}}>
                                 {loading && <div>Loading...</div>}
                                 {suggestions.map(suggestion => {
                                     const className = "google-places-autocomplete__suggestion";
@@ -887,7 +887,7 @@ onChangeClinicLocation = clinic_id => (value) => {
       }else{
           return (
             <>
-                <span>{address ? address : TABLE_DEFAULT_BLANK_FIELD}</span>
+                <span>{city ? city : TABLE_DEFAULT_BLANK_FIELD}</span>
                 <span style={{marginLeft:"5px"}}>
                     <EditOutlined onClick={this.editCity} title={"Edit City"}/>
                 </span>
@@ -1057,7 +1057,7 @@ onChangeClinicLocation = clinic_id => (value) => {
 
 
     renderSpecialities = () => {
-    const { edit_specialities, address, speciality_id } = this.state;
+    const { edit_specialities, speciality_id } = this.state;
     const { specialities } = this.props;
     const {basic_info: {name : specialityName} = {}} = specialities[speciality_id] || {};
 
@@ -1339,12 +1339,11 @@ onChangeClinicLocation = clinic_id => (value) => {
         const { profile_pic_url, edit_name, doctor_user_id } = this.state;
         const { formatMessage, handleProfilePicModalOpen } = this;
         const {
-        basic_info: {
-            gender,
-            address,
-            speciality_id
-        } = {},
-        city,
+            basic_info: {
+                gender,
+                city,
+                speciality_id
+            } = {}
         } = doctors[doctor_user_id] || {};
         const {
         basic_info: {  email, mobile_number, prefix } = {},
