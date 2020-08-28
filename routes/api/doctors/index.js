@@ -1,37 +1,36 @@
 // const express = require("express");
 import express from "express";
-import Authenticate from "../../m-api/middleware/auth";
+import Authenticate from "../../api/middleware/auth";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
-const router = express.Router();
+import * as validator from "./validator";
 
+const router = express.Router();
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.post(
     "/",
-    // Authenticate,
-    // validator.validateAddDoctorData,
+    Authenticate,
+    validator.validateAddDoctorData,
     DoctorController.addDoctor
 );
 
 router.post(
     "/details",
-    // validator.validateDoctorQualificationData,
+    validator.validateDoctorQualificationData,
     // todo :: wip
     DoctorController.updateDoctorQualificationRegistration
 );
 
 router.post(
     "/qualifications",
-    // validator.validateDoctorQualificationData,
-    // todo :: wip
+    validator.validateQualificationStepData,
     DoctorController.updateQualificationStep
 );
 
 router.post(
     "/qualifications/docs",
-    // validator.validateDoctorQualificationData,
     // todo :: wip
     upload.single("files"),
     DoctorController.updateQualificationDocs
@@ -39,7 +38,7 @@ router.post(
 
 router.post(
     "/registrations",
-    // validator.validateDoctorQualificationData,
+    validator.validateRegistrationStepData,
     // todo :: wip
     DoctorController.updateRegistrationStep
 );
@@ -55,7 +54,7 @@ router.post(
 router.post(
     "/clinics",
     // Authenticate,
-    // validator.validateDoctorQualificationData,
+    validator.validateClinicData,
     // todo :: wip
     DoctorController.updateDoctorClinics
 );
@@ -75,7 +74,7 @@ router.delete(
 router.post(
     "/patients",
     // Authenticate,
-    // validator.verifyAddPatientData,
+    validator.validateAddPatientData,
     DoctorController.addPatient
 );
 

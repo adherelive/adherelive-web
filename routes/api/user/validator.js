@@ -1,22 +1,40 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import { USER_CATEGORY } from "../../../constant";
+import {validationError} from "../helper";
+import {PASSWORD_LENGTH} from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
 
 const credentialsFormSchema = Joi.object().keys({
   email: Joi.string()
     .email()
     .required()
-    .label("Email entered is not a valid email"),
+    .label("Please enter valid email"),
   password: Joi.string()
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/)
+      .min(PASSWORD_LENGTH)
     .required()
       .label("Password must contain atleast 1 uppercase, lowercase, number & special character")
-    // .error(() => {
-    //     return {
-    //         message: "Password must contain atleast 1 uppercase, lowercase, number & special character"
-    //     };
-    // })
+});
+
+const signInSchema = Joi.object().keys({
+  email: Joi.string()
+      .email()
+      .required()
+      .label("Please enter valid email"),
+  password: Joi.string()
+      .required()
+      .label("Password must contain atleast 1 uppercase, lowercase, number & special character")
+});
+
+const forgotPasswordSchema = Joi.object().keys({
+  email: Joi.string()
+      .email()
+      .required()
+      .label("Please enter valid email"),
+});
+
+const verifyLinkSchema = Joi.object().keys({
+  link: Joi.string().guid({version: 'uuidv4'}).required().label("Verification link is not correct")
 });
 
 const matchPassword = (value, helpers) => {
@@ -55,6 +73,7 @@ const validateTimeInterval = (startTime, endTime) => {
 export const validateCredentialsData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = credentialsFormSchema.validate(data);
+  console.log("18923718923 isValid ---> ", isValid);
   if (isValid && isValid.error != null) {
       const {error: {details} = {}} = isValid || {};
       const {context: {label} = {}} = details[0] || {};
@@ -70,15 +89,36 @@ export const validateCredentialsData = (req, res, next) => {
 export const validateUpdatePasswordData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = updatePasswordSchema.validate(data);
-  console.log("3718293 isValid --> ", isValid.error);
   if (isValid && isValid.error != null) {
-    const {error: {details} = {}} = isValid || {};
-    const {context: {label} = {}} = details[0] || {};
-    // return raiseClientError(res, 422, isValid.error, "please check filled details");
-    const response = new Response(false, 422);
-    response.setError(isValid.error);
-    response.setMessage(label);
-    return res.status(422).json(response.getResponse());
+    return validationError(res, isValid);
+  }
+  next();
+};
+
+export const forgotPasswordForm = (req, res, next) => {
+  const { body: data = {} } = req;
+  const isValid = forgotPasswordSchema.validate(data);
+  if (isValid && isValid.error != null) {
+    return validationError(res, isValid);
+  }
+  next();
+};
+
+export const verifyLinkValidation = (req, res, next) => {
+  const {params: data = {}} = req;
+  const isValid = verifyLinkSchema.validate(data);
+  if (isValid && isValid.error != null) {
+    return validationError(res, isValid);
+  }
+  next();
+};
+
+export const validateSignInData = (req, res, next) => {
+  const { body: data = {} } = req;
+  const isValid = signInSchema.validate(data);
+  console.log("18923718923 isValid ---> ", isValid);
+  if (isValid && isValid.error != null) {
+    return validationError(res, isValid);
   }
   next();
 };

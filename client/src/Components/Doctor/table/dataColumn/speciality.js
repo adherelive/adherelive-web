@@ -2,12 +2,13 @@ import React from "react";
 import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
 
 export default props => {
-    const { doctorData } = props || {};
-    const { basic_info: {speciality} = {} } = doctorData || {};
+    const { specialityData } = props || {};
+    console.log("937129738 props --> ", props);
+    const {basic_info: {name} = {}} = specialityData || {};
 
     return (
         <div>
-            {speciality ? speciality : TABLE_DEFAULT_BLANK_FIELD}
+            {name ? name : TABLE_DEFAULT_BLANK_FIELD}
         </div>
     );
 };

@@ -28,7 +28,6 @@ app.use(
 );
 app.use(cookieParser());
 app.use(cors());
-console.log("123893y 1", JSON.parse(process.config.cookieKey));
 app.use(
     cookieSession({
      maxAge: 30 * 24 * 60 * 60 * 1000,

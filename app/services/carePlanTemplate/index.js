@@ -4,7 +4,7 @@ export default class CarePlanTemplate {
     }
 
     getCarePlanTemplateId = () => {
-        return this._data.get("id");
+        return `${this._data.get("id")}`;
     };
 
     getCarePlanTreatmentId = () => {
@@ -17,5 +17,15 @@ export default class CarePlanTemplate {
 
     getCarePlanConditionId = () => {
         return this._data.get("condition_id");
+    };
+
+    getTemplateAppointments = () => {
+        const {template_appointments} = this._data;
+        return template_appointments;
+    };
+
+    getTemplateMedications = () => {
+        const {template_medications} = this._data;
+        return template_medications;
     };
 }

@@ -11,9 +11,7 @@ import Validation from "../../Containers/Validation";
 import ForgotPassword from "../../Containers/forgotPassword";
 import ResetPassword from "../../Containers/forgotPassword/resetPassword";
 //import SignIn from "../../Components/SignIn";
-import BlankState from "../../Containers/BlankState";
 import { PATH } from "../../constant";
-import { resetPassword } from "../../modules/auth";
 
 
 
@@ -60,7 +58,6 @@ export default class Global extends Component {
   render() {
     const { authRedirection } = this.props;
     const { redirecting } = this.state;
-    console.log("179236 redirecting -> DOCTORRRRR ROUTERRR ", redirecting);
     return (
       <BrowserRouter>
         <Switch>

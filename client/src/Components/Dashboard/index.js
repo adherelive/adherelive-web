@@ -1,16 +1,20 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
-import { GRAPH_COLORS, PERMISSIONS } from "../../constant";
+import { GRAPH_COLORS, PERMISSIONS, ROOM_ID_TEXT } from "../../constant";
 import Tabs from "antd/es/tabs";
 import { Button, Menu, Dropdown, Spin, message } from "antd";
 import Patients from "../../Containers/Patient/table";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
+import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
 import Loading from "../Common/Loading";
 import { withRouter } from "react-router-dom";
 import Donut from '../Common/graphs/donut'
 import GraphsModal from "./graphsModal";
+import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
+import { getPatientConsultingUrl } from '../../Helper/url/patients';
+import config from "../../config";
 
 
 
@@ -25,23 +29,31 @@ class Dashboard extends Component {
         this.state = {
             visible: false,
             visibleModal: false,
-            graphsToShow: []
+            graphsToShow: [],
+            doctorUserId: 1
         };
     }
 
     componentDidMount() {
-        const { graphs, getInitialData, searchMedicine, getGraphs } = this.props;
-        getInitialData();
+        const { searchMedicine, getGraphs, doctors = {}, authenticated_user, closePopUp, fetchChatAccessToken } = this.props;
+        // getInitialData();
+        closePopUp();
+        let doctorUserId = '';   //user_id of doctor
+        for (let doc of Object.values(doctors)) {
+            let { basic_info: { user_id, id = 1 } } = doc;
+            if (parseInt(user_id) === parseInt(authenticated_user)) {
+                doctorUserId = user_id;
+            }
+        }
+        this.setState({ graphLoading: true, doctorUserId: 1 });
         getGraphs().then(response => {
-            console.log('19273 reponse OF GET GRAPHSSS', response)
             const { status, payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {} } = response;
-            console.log('19273 reponse OF GET GRAPHSSS111', status, charts)
             if (status) {
-                this.setState({ graphsToShow: [...charts] });
+                this.setState({ graphsToShow: [...charts], graphLoading: false });
             }
         });
+        fetchChatAccessToken(authenticated_user);
         searchMedicine("");
-        console.log("DashBoard Did MOunt DOCTORRRRR ROUTERRR ----------------->   ")
         // setTimeout(() => {
         //     drawChart(graphs);
         // }, 500);
@@ -50,14 +62,13 @@ class Dashboard extends Component {
     getMenu = () => {
 
         const { authPermissions = [] } = this.props;
-        console.log("12312 getMenu");
         return (
             <Menu>
                 {authPermissions.includes(PERMISSIONS.ADD_PATIENT) && (<Menu.Item onClick={this.showAddPatientDrawer}>
-                    <div>Patients</div>
+                    <div>{this.formatMessage(messages.patients)}</div>
                 </Menu.Item>)}
                 {authPermissions.includes(PERMISSIONS.EDIT_GRAPH) && (<Menu.Item onClick={this.showEditGraphModal}>
-                    <div>Graphs</div>
+                    <div>{this.formatMessage(messages.graphs)}</div>
                 </Menu.Item>)}
             </Menu>
         );
@@ -68,27 +79,26 @@ class Dashboard extends Component {
     renderChartTabs = () => {
         const { graphs } = this.props;
 
-        const { graphsToShow } = this.state;
-        const { formatMessage } = this;
-        const { missed_report = [] } = graphs || {};
+        const { graphsToShow, graphLoading } = this.state;
 
-        // console.log("3897127312893 missed_report --> ", missed_report);
+        // initial loading phase
+        if (graphLoading) {
+            return (<div className='flex flex-grow-1 wp100 align-center justify-center'><Spin /></div>);
+        }
+
 
         const chartBlocks = graphsToShow.map(id => {
-            // const { id, data } = report || {};
             const { total, critical, name } = graphs[id] || {};
-            const { className } = GRAPH_COLORS[id] || {};
-            // if (graphsToShow.includes(id)) {
             return (
-
-                <Donut id={id} data={[critical, total - critical]} total={total} title={name} />
+                <Donut key={id} id={id} data={[critical, total - critical]} total={total} title={name} formatMessage={this.formatMessage} />
             );
-            // } else {
-            //     return (null);
-            // }
+
         });
-        if (graphsToShow.length == 0) {
-            return <div className='flex flex-grow-1 wp100 align-center justify-center'><Spin /></div>
+        // no graph selected to show phase
+        if (graphsToShow.length === 0) {
+            return (
+                <div className="flex justify-center align-center fs20 fw600 wp100 bg-grey br5">{this.formatMessage(messages.no_graph_text)}</div>
+            );
         } else {
             return chartBlocks;
         }
@@ -111,7 +121,6 @@ class Dashboard extends Component {
             let showTemplateDrawer = carePlanTemplateId ? true : false;
             let currentCarePlanId = care_plan_ids[0];
             let patient_id = patient_ids ? patient_ids[0] : 0;
-            console.log('currentCarePlanId after adding patient', currentCarePlanId);
             if (status) {
                 // getInitialData().then(() => {
 
@@ -124,9 +133,9 @@ class Dashboard extends Component {
                 // })
             } else {
                 if (statusCode === 422) {
-                    message.error('Patient already exist with same number!');
+                    message.error(this.formatMessage(messages.patientExistError));
                 } else {
-                    message.error('Something went wrong');
+                    message.error(this.formatMessage(messages.somethingWentWrongError));
                 }
             }
         });
@@ -141,7 +150,7 @@ class Dashboard extends Component {
             if (status) {
                 this.setState({ graphsToShow: data, visibleModal: false })
             } else {
-                message.error('Something went wrong,please try again.')
+                message.error(this.formatMessage(messages.somethingWentWrongError))
             }
         })
     }
@@ -152,16 +161,42 @@ class Dashboard extends Component {
     hideEditGraphModal = () => {
         this.setState({ visibleModal: false });
     }
+
+
+    openVideoChatTab = () => {
+        const {
+            patients,
+            twilio: { patientId: chatPatientId = 1 } } = this.props;
+        const { doctorUserId } = this.state;
+        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[chatPatientId];
+        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+
+        window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
+    }
+
+    maximizeChat = () => {
+        const {
+            patients,
+            twilio: { patientId: chatPatientId = 1 } } = this.props;
+        window.open(`${config.WEB_URL}${getPatientConsultingUrl(chatPatientId)}`, '_blank');
+    }
     render() {
         const { graphs,
             treatments,
             conditions,
             severity,
-            authPermissions = [] } = this.props;
+            patients,
+            authPermissions = [],
+            chats: { minimized = false, visible: popUpVisible = false },
+            drawer: { visible: drawerVisible = false } = {},
+            twilio: { patientId: chatPatientId = 1 } } = this.props;
         const { formatMessage, renderChartTabs } = this;
+        let { basic_info: { user_id: patientUserId = '', first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[chatPatientId] || {};
 
-        const { visible, graphsToShow, visibleModal } = this.state;
-        console.log("19273 here  DOCTORRRRR ROUTERRR  --> dashboard", graphsToShow, this.state);
+
+        const { visible, graphsToShow, visibleModal, doctorUserId } = this.state;
+
+        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
         if (Object.keys(graphs).length === 0) {
             return (
                 <Loading className={"wp100 mt20"} />
@@ -180,12 +215,12 @@ class Dashboard extends Component {
                                 trigger={["click"]}
                                 placement="bottomRight"
                             >
-                                <Button type="primary">Add</Button>
+                                <Button type="primary" className='add-button'>Add</Button>
                             </Dropdown>)}
                     </div>
 
                     {/* <div className="mt10 flex align-center"> */}
-                    <section className='horizontal-scroll-wrapper pr20 mt10'>
+                    <section className='horizontal-scroll-wrapper pr10 mt10'>
                         {renderChartTabs()}
                     </section>
 
@@ -195,21 +230,31 @@ class Dashboard extends Component {
 
                     <Tabs tabPosition="top">
                         <TabPane
-                            tab={<span className="fs16 fw600">{SUMMARY}</span>}
+                            tab={<span className="fs16 fw600">{formatMessage(messages.summary)}</span>}
                             key="1"
                         >
                             <Patients />
                         </TabPane>
                         <TabPane
-                            tab={<span className="fs16 fw600">{WATCHLIST}</span>}
+                            tab={<span className="fs16 fw600">{formatMessage(messages.watchList)}</span>}
                             key="2"
                         >
                             <Patients />
                             {/*add watchlist table here*/}
                         </TabPane>
                     </Tabs>
+
                 </div>
                 <PatientDetailsDrawer />
+                {popUpVisible && (<div className={drawerVisible && minimized ? 'chat-popup-minimized' : drawerVisible && !minimized ? 'chat-popup' : minimized ? 'chat-popup-minimized-closedDrawer' : 'chat-popup-closedDrawer'}>
+                    <ChatPopup
+                        roomId={roomId}
+                        placeVideoCall={this.openVideoChatTab}
+                        patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''}
+                        maximizeChat={this.maximizeChat}
+                        patientDp={patientDp}
+                    />
+                </div>)}
 
                 <AddPatientDrawer
                     searchCondition={this.props.searchCondition}

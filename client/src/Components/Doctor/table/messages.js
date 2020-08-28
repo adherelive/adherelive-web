@@ -39,7 +39,7 @@ const messages = defineMessages({
   address: {
     id: "app.appointment.table.address",
     description: "",
-    defaultMessage: "Address"
+    defaultMessage: "City"
   },
   contact_details: {
     id: "app.appointment.table.contact_details",

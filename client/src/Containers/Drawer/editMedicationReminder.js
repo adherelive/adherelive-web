@@ -17,12 +17,6 @@ const mapStateToProps = state => {
     patients,
   } = state;
 
-  console.log(
-    "123124 visible, type --> ",
-    visible,
-    type,
-    type === DRAWER.EDIT_MEDICATION
-  );
 
   return {
     visible: visible && type === DRAWER.EDIT_MEDICATION,

@@ -51,13 +51,13 @@ export const THU = "Thu";
 export const FRI = "Fri";
 export const SAT = "Sat";
 
-export const SUNDAY = "Sunday";
-export const MONDAY = "Monday";
-export const TUESDAY = "Tuesday";
-export const WEDNESDAY = "Wednesday";
-export const THURSDAY = "Thursday";
-export const FRIDAY = "Friday";
-export const SATURDAY = "Saturday";
+export const SUNDAY = "Sun";
+export const MONDAY = "Mon";
+export const TUESDAY = "Tue";
+export const WEDNESDAY = "Wed";
+export const THURSDAY = "Thu";
+export const FRIDAY = "Fri";
+export const SATURDAY = "Sat";
 
 export const DAYS = [SUN, MON, TUE, WED, THU, FRI, SAT];
 export const DAYS_MOBILE = [
@@ -361,7 +361,10 @@ export const DB_TABLES = {
   COURSE:"courses",
   DEGREE:"degrees",
   QUALIFICATION:"qualifications",
-  REGISTRATION_COUNCIL:"registration_councils"
+  REGISTRATION_COUNCIL:"registration_councils",
+  OTP_VERIFICATIONS: "otp_verifications",
+  TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
+  FEATURE_DETAILS: 'feature_details',
 };
 
 export const ARTICLE_TYPE = {
@@ -416,6 +419,7 @@ export const EMAIL_TEMPLATE_NAME = {
   FORGOT_PASSWORD: "forgotPassword",
   INVITATION:"invitation",
   VERIFIED_DOCTOR: "verifiedDoctor",
+  OTP_VERIFICATION:"otpVerification",
 };
 
 export const OBJECT_NAME = {
@@ -596,4 +600,57 @@ export const AGE_TYPE = {
   [DAY]: "d",
   [MONTH]: "m",
   [YEAR]: "y"
+};
+
+/*------------------------------- APPOINTMENT DETAILS ---------------------------------*/
+
+const MEDICAL_TEST = "1";
+const CONSULTATION = "2";
+const RADIOLOGY = "3";
+
+export const APPOINTMENT_TYPE = {
+  [MEDICAL_TEST]: {
+    title: "Medical Test",
+  },
+  [CONSULTATION]: {
+    title: "Consultation",
+  },
+  [RADIOLOGY]: {
+    title: "Radiology",
+  },
+};
+
+export const APPOINTMENT_TYPE_DESCRIPTION = {
+  [MEDICAL_TEST]: {
+    options: [
+      {}
+    ],
+  },
+  [CONSULTATION]: {
+    title: "Consultation",
+  },
+  [RADIOLOGY]: {
+    title: "Radiology",
+  },
+};
+
+export const FEATURE_TYPE = {
+  APPOINTMENT:"appointment",
+  MEDICATION:"medication",
+};
+
+export const BLANK_STATE = "";
+
+export const PASSWORD_LENGTH = 8;
+
+export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg","svg","png","pdf"];
+
+const TABLET = "1";
+const SYRUP = "2";
+const SYRINGE = "3";
+
+export const MEDICINE_FORM_TYPE = {
+  [TABLET]: {name:"tablet"},
+  [SYRUP]: {name :"syrup"},
+  [SYRINGE]: {name:"syringe"}
 };

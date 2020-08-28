@@ -2,16 +2,13 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
-import Spin from "antd/es/spin";
 import Select from "antd/es/select";
 import DatePicker from "antd/es/date-picker";
 import TimePicker from "antd/es/time-picker";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
-
+import { Checkbox } from "antd";
 import message from "./message";
-import { doRequest } from "../../../Helper/network";
-import seperator from "../../../Assets/images/seperator.svg";
 import moment from "moment";
 import calendar from "../../../Assets/images/calendar1.svg";
 
@@ -20,19 +17,25 @@ const { Option } = Select;
 
 const PATIENT = "patient";
 const DATE = "date";
+const CRITICAL = 'critical';
 const START_TIME = "start_time";
 const END_TIME = "end_time";
 const TREATMENT = "treatment";
 const DESCRIPTION = "description";
-
+const APPOINTMENT_TYPE = "type";
+const APPOINTMENT_TYPE_DESCRIPTION = "type_description";
+const PROVIDER_ID = "provider_id";
 const REASON = "reason";
-const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION];
+
+const FIELDS = [PATIENT, DATE, START_TIME, END_TIME, TREATMENT, DESCRIPTION, APPOINTMENT_TYPE, APPOINTMENT_TYPE_DESCRIPTION, PROVIDER_ID];
 
 class AddAppointmentForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fetchingPatients: false,
+      fetchingTypes: false,
+      typeDescription: []
     };
   }
 
@@ -118,7 +121,6 @@ class AddAppointmentForm extends Component {
 
   handleDateSelect = date => () => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", date);
     const startDate = getFieldValue(DATE);
 
     if (!date || !startDate) {
@@ -154,10 +156,9 @@ class AddAppointmentForm extends Component {
     setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
   };
 
-  handleStartTimeChange = (time, str) => {
+  handleStartTimeChange = (time) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", time, str);
-    const startTime = getFieldValue(START_TIME);
+    // const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
       const newMonth = startDate.get("month");
@@ -169,17 +170,14 @@ class AddAppointmentForm extends Component {
         .clone()
         .set({ month: newMonth, year: newYear, date: newDate }) : null;
       newEventEndTime = newEventStartTime ? moment(newEventStartTime).add('minutes', 30) : null;
-      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
       setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
     } else {
-      console.log("298467232894 moment(startTime).add(1, h) ", time);
       setFieldsValue({ [END_TIME]: time ? moment(time).add('minutes', 30) : null });
     }
   };
 
-  handleEndTimeChange = (time, str) => {
+  handleEndTimeChange = (time) => {
     const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-    console.log("312983u193812 values, value ", time, str);
     const startTime = getFieldValue(START_TIME);
     const startDate = getFieldValue(DATE);
     if (startDate) {
@@ -194,10 +192,8 @@ class AddAppointmentForm extends Component {
       newEventEndTime = time ? time
         .clone()
         .set({ month: newMonth, year: newYear, date: newDate }) : null;
-      console.log("00000298467232894 moment(startTime).add(1, h) ", time, startTime, newEventStartTime, newEventEndTime);
       setFieldsValue({ [START_TIME]: newEventStartTime, [END_TIME]: newEventEndTime });
     } else {
-      console.log("298467232894 moment(startTime).add(1, h) ", moment(startTime), moment(startTime).add(1, "h"));
       setFieldsValue({ [END_TIME]: moment(time) });
     }
   };
@@ -212,11 +208,11 @@ class AddAppointmentForm extends Component {
   };
 
   getTreatment = () => {
-    const { patients, payload: { patient_id } = {}, care_plans } = this.props;
+    const { payload: { patient_id } = {}, care_plans } = this.props;
     let treatmentId = 0;
 
     for (let carePlan of Object.values(care_plans)) {
-      let { basic_info: { id = 1, patient_id: patientId = 1 }, treatment_id = 0 } = carePlan;
+      let { basic_info: { patient_id: patientId = 1 }, treatment_id = 0 } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         treatmentId = treatment_id;
       }
@@ -232,11 +228,6 @@ class AddAppointmentForm extends Component {
     );
   };
 
-  // disabledDate = (current) => {
-  //   // Can not select days before today and today
-  //   return current && current < moment().startOf("day");
-  // };
-
   getTreatmentOption = () => {
     let { treatments = {} } = this.props;
     let newTreatments = [];
@@ -249,27 +240,97 @@ class AddAppointmentForm extends Component {
     return newTreatments;
   }
 
+  handleTypeSelect = (value) => {
+
+    const {
+      form: { setFieldsValue } = {}
+    } = this.props;
+
+    // resetFields([APPOINTMENT_TYPE_DESCRIPTION]);
+    setFieldsValue({ [APPOINTMENT_TYPE_DESCRIPTION]: null });
+    let { static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
+    let descArray = type_description[value] ? type_description[value] : [];
+
+    this.setState({ typeDescription: descArray });
+  }
+
+  getTypeOption = () => {
+    let { static_templates: { appointments: { appointment_type = {} } = {} } = {} } = this.props;
+    let newTypes = [];
+    for (let type of Object.keys(appointment_type)) {
+      let { title = '' } = appointment_type[type] || {};
+      newTypes.push(
+        <Option key={type} value={type}>
+          {title}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
+
+  getTypeDescriptionOption = () => {
+    let { typeDescription = [] } = this.state;
+    let newTypes = [];
+    for (let desc of typeDescription) {
+      newTypes.push(
+        <Option key={desc} value={desc}>
+          {desc}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
+
+  handleProviderSearch = (data) => {
+    try {
+      const { form: { setFieldsValue } = {} } = this.props;
+      if (data) {
+
+        setFieldsValue({ [PROVIDER_ID]: data });
+      }
+    } catch (err) {
+      console.log("err", err);
+      // message.warn("Something wen't wrong. Please try again later");
+      // this.setState({ fetchingMedicines: false });
+    }
+  };
+
+  getProviderOption = () => {
+    let { providers = [] } = this.props;
+    let newTypes = [];
+    for (let provider of Object.values(providers)) {
+
+      let { basic_info: { id = 0, name = '' } = {} } = provider;
+      newTypes.push(
+        <Option key={id} value={parseInt(id)}>
+          {name}
+        </Option>
+      )
+    }
+    return newTypes;
+  };
+
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
     } = this.props;
-    const { fetchingPatients } = this.state;
+    // const { fetchingPatients, typeDescription } = this.state;
     const {
       formatMessage,
       getInitialValue,
-      getPatientOptions,
-      calendarComp,
+      // getPatientOptions,
+      // calendarComp,
       disabledDate,
       handleDateSelect,
       handleStartTimeChange,
       handleEndTimeChange,
-      getPatientName,
+      // getPatientName,
       getTreatment
     } = this;
 
     const currentDate = moment(getFieldValue(DATE));
+    let appointmentType = getFieldValue(APPOINTMENT_TYPE);
 
-    console.log("1289313192 ", currentDate, getFieldValue(START_TIME));
 
     let fieldsError = {};
     FIELDS.forEach((value) => {
@@ -277,7 +338,6 @@ class AddAppointmentForm extends Component {
       fieldsError = { ...fieldsError, [value]: error };
     });
 
-    console.log("appointment form props --> ", this.props);
     return (
       <Form className="fw700 wp100 pb30">
         <FormItem
@@ -287,7 +347,7 @@ class AddAppointmentForm extends Component {
           {getFieldDecorator(PATIENT, {
             initialValue: getInitialValue(),
           })(
-            <div/>
+            <div />
             //   <Select
             //     className="user-select drawer-select"
             //     // onSearch={fetchPatients}
@@ -306,17 +366,145 @@ class AddAppointmentForm extends Component {
           )}
         </FormItem>
 
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="type"
+            className="form-label"
+            title={formatMessage(message.appointmentType)}
+          >
+            {formatMessage(message.appointmentType)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
+
         <FormItem
-          label={formatMessage(message.start_date)}
-          className="full-width mt16 ant-date-custom-ap-date"
+        // label={formatMessage(message.appointmentType)}
+        // className='mt24'
+        >
+          {getFieldDecorator(APPOINTMENT_TYPE, {
+          })(
+            <Select
+              className="drawer-select"
+              placeholder="Choose Appointment Type"
+              onSelect={this.handleTypeSelect}
+
+
+            >
+              {this.getTypeOption()}
+            </Select>
+          )}
+        </FormItem>
+
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="type description"
+            className="form-label"
+            // title={formatMessage(message.appointmentTypeDescription)}
+          >
+            {formatMessage(message.appointmentTypeDescription)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
+        <FormItem
+        // label={formatMessage(message.appointmentTypeDescription)}
+        // className='mt24'
+        >
+          {getFieldDecorator(APPOINTMENT_TYPE_DESCRIPTION, {
+          })(
+            <Select
+              disabled={!appointmentType}
+              notFoundContent={'No match found'}
+              className="drawer-select"
+              placeholder="Choose Type Descrition"
+              showSearch
+              defaultActiveFirstOption={true}
+              autoComplete="off"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+
+            >
+              {this.getTypeDescriptionOption()}
+            </Select>
+          )}
+        </FormItem>
+
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="provider"
+            className="form-label"
+            title={formatMessage(message.provider)}
+          >
+            {formatMessage(message.provider)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
+        <FormItem
+        // label={formatMessage(message.provider)}
+        // className='mt24'
+        >
+          {getFieldDecorator(PROVIDER_ID, {
+          })(
+            <Select
+              notFoundContent={null}
+              className="drawer-select"
+              placeholder="Choose Provider"
+              showSearch
+              // defaultActiveFirstOption={true}
+              autoComplete="off"
+              onSearch={this.handleProviderSearch}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+
+            >
+              {this.getProviderOption()}
+            </Select>
+          )}
+        </FormItem>
+
+
+        <FormItem
+          className="flex-1 wp100 critical-checkbox"
+
+        >
+          {getFieldDecorator(CRITICAL, {
+          })(
+            <Checkbox className=''>Critical Appointment</Checkbox>)}
+        </FormItem>
+
+        <div className='flex mt24 direction-row flex-grow-1 mt-6'>
+          <label
+            htmlFor="date"
+            className="form-label"
+            title={formatMessage(message.start_date)}
+          >
+            {formatMessage(message.start_date)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
+
+        <FormItem
+          // label={formatMessage(message.start_date)}
+          className="full-width mt-10 ant-date-custom-ap-date"
         >
           {getFieldDecorator(DATE, {
-            rules: [
-              {
-                required: true,
-                message: formatMessage(message.error_select_date),
-              },
-            ],
+            // rules: [
+            //   {
+            //     required: true,
+            //     message: formatMessage(message.error_select_date),
+            //   },
+            // ],
             initialValue: moment(),
           })(
             <DatePicker
@@ -335,64 +523,70 @@ class AddAppointmentForm extends Component {
           {/*/>*/}
         </FormItem>
 
-        <div className="wp100 flex justify-space-between align-center flex-1">
-          <FormItem
-            label={formatMessage(message.start_time)}
-            className="flex-grow-1 mr16"
-            validateStatus={fieldsError[START_TIME] ? "error" : ""}
-            help={fieldsError[START_TIME] || ""}
-          >
-            {getFieldDecorator(START_TIME, {
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage(message.error_select_start_time),
-                },
-              ],
-            })(
-              <TimePicker
-                use12Hours
-                onChange={handleStartTimeChange}
-                minuteStep={15}
-                format="h:mm a"
-                className="wp100 ant-time-custom"
-              // getPopupContainer={this.getParentNode}
-              />
-            )}
-          </FormItem>
+        <div className="wp100 mt-6 flex justify-space-between align-center flex-1">
+          <div className='flex flex-1 direction-column mr16'>
+            <div className='flex mt24 direction-row flex-grow-1'>
+              <label
+                htmlFor="start_time"
+                className="form-label"
+                title={formatMessage(message.start_time)}
+              >
+                {formatMessage(message.start_time)}
+              </label>
 
-          {/* <div className="w200 text-center mt8">
-            <img
-              src={seperator}
-              alt="between seperator"
-              className="mr16 ml16"
-            />
-          </div> */}
+              <div className="star-red">*</div>
+            </div>
+            <FormItem
+              // label={formatMessage(message.start_time)}
+              className="flex-grow-1 mt-4"
+              validateStatus={fieldsError[START_TIME] ? "error" : ""}
+              help={fieldsError[START_TIME] || ""}
+            >
+              {getFieldDecorator(START_TIME, {
+              })(
+                <TimePicker
+                  use12Hours
+                  onChange={handleStartTimeChange}
+                  minuteStep={15}
+                  format="h:mm a"
+                  className="wp100 ant-time-custom"
+                // getPopupContainer={this.getParentNode}
+                />
+              )}
+            </FormItem>
+          </div>
 
-          <FormItem
-            label={formatMessage(message.end_time)}
-            className="flex-grow-1"
-            validateStatus={fieldsError[END_TIME] ? "error" : ""}
-            help={fieldsError[END_TIME] || ""}
-          >
-            {getFieldDecorator(END_TIME, {
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage(message.error_select_end_time),
-                },
-              ],
-            })(
-              <TimePicker
-                use12Hours
-                minuteStep={15}
-                onChange={handleEndTimeChange}
-                format="h:mm a"
-                className="wp100 ant-time-custom"
-              // getPopupContainer={this.getParentNode}
-              />
-            )}
-          </FormItem>
+          <div className='flex flex-1 direction-column'>
+            <div className='flex mt24 direction-row flex-grow-1'>
+              <label
+                htmlFor="end_time"
+                className="form-label"
+                title={formatMessage(message.end_time)}
+              >
+                {formatMessage(message.end_time)}
+              </label>
+
+              <div className="star-red">*</div>
+            </div>
+            <FormItem
+              // label={formatMessage(message.end_time)}
+              className="flex-grow-1 mt-4"
+              validateStatus={fieldsError[END_TIME] ? "error" : ""}
+              help={fieldsError[END_TIME] || ""}
+            >
+              {getFieldDecorator(END_TIME, {
+              })(
+                <TimePicker
+                  use12Hours
+                  minuteStep={15}
+                  onChange={handleEndTimeChange}
+                  format="h:mm a"
+                  className="wp100 ant-time-custom"
+                // getPopupContainer={this.getParentNode}
+                />
+              )}
+            </FormItem>
+          </div>
         </div>
 
         <FormItem
@@ -404,7 +598,7 @@ class AddAppointmentForm extends Component {
             initialValue: getTreatment(),
           }
           )(
-            <div/>
+            <div />
             // <Select
             //   className="form-inputs-ap drawer-select"
             //   autoComplete="off"
@@ -419,16 +613,25 @@ class AddAppointmentForm extends Component {
           )}
         </FormItem>
 
+
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="purpose"
+            className="form-label"
+            title={formatMessage(message.purpose_text)}
+          >
+            {formatMessage(message.purpose_text)}
+          </label>
+
+          <div className="star-red">*</div>
+        </div>
+
         <FormItem
-          label={formatMessage(message.purpose_text)}
-          className="full-width mt16 ant-date-custom"
+          // label={formatMessage(message.purpose_text)}
+          className="full-width ant-date-custom"
         >
           {getFieldDecorator(REASON, {
             rules: [
-              {
-                required: true,
-                message: formatMessage(message.error_purpose),
-              },
               {
                 pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
                 message: formatMessage(message.error_valid_purpose)
@@ -444,8 +647,18 @@ class AddAppointmentForm extends Component {
           )}
         </FormItem>
 
+
+        <div className='flex mt24 direction-row flex-grow-1'>
+          <label
+            htmlFor="notes"
+            className="form-label"
+            title={formatMessage(message.description_text)}
+          >
+            {formatMessage(message.description_text)}
+          </label>
+        </div>
         <FormItem
-          label={formatMessage(message.description_text)}
+          // label={formatMessage(message.description_text)}
           className="full-width ant-date-custom"
         >
           {getFieldDecorator(DESCRIPTION)(

@@ -17,6 +17,7 @@ class MPatientWrapper extends BasePatient {
             middle_name,
             last_name,
             age,
+            dob,
             address,
             activated_on,
             details,
@@ -26,7 +27,7 @@ class MPatientWrapper extends BasePatient {
 
         const updatedDetails =  {
             ...details,
-            profile_pic: completePath(profile_pic)
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
         };
 
         return {
@@ -42,6 +43,7 @@ class MPatientWrapper extends BasePatient {
                 uid
             },
             activated_on,
+            dob,
             details: updatedDetails
         };
     };

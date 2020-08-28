@@ -2,12 +2,11 @@ import * as Chart from "chart.js";
 import { GRAPH_COLORS } from "../constant";
 
 export default data => {
-  const { missed_report = [] } = data || {};
-  missed_report.forEach(report => {
+  const { dashboard_report = [] } = data || {};
+  dashboard_report.forEach(report => {
     const { id, data: graphContent } = report || {};
     const { total, critical } = graphContent || {};
     const { dark, light } = GRAPH_COLORS[id] || {};
-    console.log("234723", GRAPH_COLORS, dark, light, id);
     const elementId = `myChart-${id}`;
     const ctx = document.getElementById(elementId).getContext("2d");
     const myChart = new Chart(ctx, {

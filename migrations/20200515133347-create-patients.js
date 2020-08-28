@@ -1,6 +1,6 @@
 'use strict';
 
-import {DB_TABLES, GENDER} from "../constant";
+import {DB_TABLES, GENDER, BLANK_STATE} from "../constant";
 import Sequelize from "sequelize";
 
 module.exports = {
@@ -24,8 +24,8 @@ module.exports = {
           },
           gender: {
               type: Sequelize.ENUM,
-              values: [GENDER.MALE, GENDER.FEMALE, GENDER.OTHER],
-              allowNull: true
+              values: [GENDER.MALE, GENDER.FEMALE, GENDER.OTHER, BLANK_STATE],
+              defaultValue: BLANK_STATE,
           },
           first_name: {
               type: Sequelize.STRING(100),
@@ -42,7 +42,7 @@ module.exports = {
           age: {
             type: Sequelize.STRING,
           },
-          birth_date: {
+          dob: {
             type: Sequelize.DATE,
             allowNull: true,
           },

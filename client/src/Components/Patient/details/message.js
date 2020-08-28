@@ -8,8 +8,23 @@ const messages = defineMessages({
     },
     profile_chat: {
         id: "app.patient_profile.profile_chat",
-        description : "Chat button in Patient Card",
+        description: "Chat button in Patient Card",
         defaultMessage: "Chat"
+    },
+    medications: {
+        id: "app.patient_profile.medications",
+        description: "Header in treatment Details",
+        defaultMessage: "Medications"
+    },
+    appointments: {
+        id: "app.patient_profile.appointments",
+        description: "Header in treatment Details",
+        defaultMessage: "Appointments"
+    },
+    actions: {
+        id: "app.patient_profile.actions",
+        description: "Header in treatment Details",
+        defaultMessage: "Actions"
     },
     treatment_details: {
         id: "app.patient_profile.treatment_details",
@@ -71,6 +86,11 @@ const messages = defineMessages({
         description: "Patient Profile Header",
         defaultMessage: "Use Template"
     },
+    create_template: {
+        id: "app.patient_profile.create_template",
+        description: "Patient Profile Header",
+        defaultMessage: "Create Template"
+    },
     add_medication: {
         id: "app.patient_profile.addMedication",
         description: "Patient Profile Header",
@@ -80,6 +100,21 @@ const messages = defineMessages({
         id: "app.patient_profile.nothing_to_show",
         description: "Patient Profile Header",
         defaultMessage: "No Medications or Appointments to Show"
+    },
+    somethingWentWrong: {
+        id: "app.patient_profile.somethingWentWrong",
+        description: "Patient Profile Header",
+        defaultMessage: "Something went wrong."
+    },
+    carePlanUpdated: {
+        id: "app.patient_profile.carePlanUpdated",
+        description: "Patient Profile Header",
+        defaultMessage: "Care Plan updated successfully."
+    },
+    slotPresent: {
+        id: "app.patient_profile.slotPresent",
+        description: "Patient Profile Header",
+        defaultMessage: "Appointment slots already present for selected timings!"
     }
 
 });

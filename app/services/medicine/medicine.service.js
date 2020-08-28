@@ -20,7 +20,7 @@ class MedicineService {
       const medicine = await Medicine.findAll({
         where: {
           name: {
-            [Op.like]: `%${data}%`,
+            [Op.like]: `${data}%`,
           },
         },
       });

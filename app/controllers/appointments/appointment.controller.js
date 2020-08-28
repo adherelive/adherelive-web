@@ -1,21 +1,30 @@
 import Controller from "../index";
 import appointmentService from "../../services/appointment/appointment.service";
-import scheduleService from "../../services/events/event.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
+import featureDetailService from "../../services/featureDetails/featureDetails.service";
+import providerService from "../../services/provider/provider.service";
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper'
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
-import {EVENT_STATUS, EVENT_TYPE, USER_CATEGORY} from "../../../constant";
+import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import moment from "moment";
+import EventSchedule from "../../eventSchedules";
 
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/helper";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
+import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
+import ProviderWrapper from "../../ApiWrapper/web/provider";
+
 import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import patientService from "../../services/patients/patients.service";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import {RRule} from "rrule";
+
+import AppointmentJob from "../../JobSdk/Appointments/observer";
+import NotificationSdk from "../../NotificationSdk";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -39,6 +48,12 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         treatment_id = "",
+          reason = "",
+          type = null,
+          type_description = null,
+          provider_id = null,
+          provider_name = null,
+          critical = false
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -124,7 +139,13 @@ class AppointmentController extends Controller {
         end_time,
         details: {
           treatment_id,
+          reason,
+          type,
+          type_description,
+          critical,
         },
+        provider_id,
+        provider_name
       };
 
       const appointment = await appointmentService.addAppointment(
@@ -137,10 +158,20 @@ class AppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentApiData.getAppointmentId(),
         details: appointmentApiData.getBasicInfo(),
-        status: EVENT_STATUS.PENDING,
+        status: EVENT_STATUS.SCHEDULED,
         start_time,
         end_time,
       };
+
+      // RRule
+
+      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_time).utc().toDate(),
+      });
+
+      Logger.debug("rrule ----> ", rrule.all());
 
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
@@ -180,7 +211,12 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         treatment_id = "",
-        reason = ''
+        reason = '',
+        type = null,
+        type_description = null,
+        provider_id = null,
+        provider_name = null,
+        critical = false
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -252,9 +288,14 @@ class AppointmentController extends Controller {
         end_date: moment(date),
         start_time,
         end_time,
+        provider_id,
+        provider_name,
         details: {
           treatment_id,
-          reason
+          reason,
+          type,
+          type_description,
+          critical
         },
       };
 
@@ -285,16 +326,30 @@ class AppointmentController extends Controller {
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
       const eventScheduleData = {
-        event_type: EVENT_TYPE.APPOINTMENT,
-        event_id: appointmentApiData.getAppointmentId(),
-        details: appointmentApiData.getBasicInfo(),
-        status: EVENT_STATUS.PENDING,
-        start_time,
-        end_time,
+        participants: [],
+        actor: {
+          id: userId,
+          details: {
+            category
+          }
+        }
       };
 
-      // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
-      // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+      // RRule
+      await EventSchedule.create({
+        event_id: appointmentApiData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
+        start_time,
+        end_time,
+        details: appointmentApiData.getBasicInfo()
+      });
+
+      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
+      NotificationSdk.execute(appointmentJob);
+
+      Logger.debug("appointmentJob ---> ", appointmentJob.getEmailTemplate());
+
+      // NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 
       // TODO: schedule event and notifications here
       await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
@@ -331,7 +386,12 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         treatment_id = "",
-        reason = ''
+        reason = '',
+        type = null,
+        type_description = null,
+        provider_id = null,
+        provider_name = null,
+        critical = false
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -420,9 +480,14 @@ class AppointmentController extends Controller {
         end_date: moment(date),
         start_time,
         end_time,
+        provider_id,
+        provider_name,
         details: {
           treatment_id,
-          reason
+          reason,
+          type,
+          type_description,
+          critical,
         },
       };
 
@@ -535,6 +600,60 @@ class AppointmentController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  getAppointmentDetails = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const appointmentDetails = await featureDetailService.getDetailsByData({feature_type: FEATURE_TYPE.APPOINTMENT});
+
+      const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+
+      let providerData = {};
+
+      const providerDetails = await providerService.getAll();
+
+      Logger.debug("providerDetails ---->", providerDetails);
+
+      for(const provider of providerDetails) {
+        const providerDetail = await ProviderWrapper(provider);
+        providerData[providerDetail.getProviderId()] = providerDetail.getBasicInfo();
+      }
+
+
+      return raiseSuccess(res, 200, {
+        static_templates: {
+          appointments: {...appointmentData.getFeatureDetails()},
+        },
+        providers: {
+          ...providerData
+        }
+      },
+          "Appointment details fetched successfully");
+      
+    } catch(error) {
+      Logger.debug("getAppointmentDetails 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  // getTypeDescription = async (req, res) => {
+  //   const {raiseSuccess, raiseServerError} = this;
+  //   try {
+  //     const {id} = req.query || {};
+  //     const appointmentDetails = await featureDetailService.getDetailsByData({feature_type: FEATURE_TYPE.APPOINTMENT});
+  //
+  //     const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+  //
+  //     return raiseSuccess(res, 200, {
+  //           ...appointmentData.getAppointmentTypeDescription(id),
+  //         },
+  //         "Appointment type description details fetched successfully");
+  //
+  //   } catch(error) {
+  //     Logger.debug("getTypeDescription 500 error ", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
 }
 
 export default new AppointmentController();

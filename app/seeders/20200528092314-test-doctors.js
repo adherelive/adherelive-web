@@ -22,7 +22,7 @@ module.exports = {
                 first_name: "John",
                 last_name: "Doe",
                 address: "delhi",
-                registration_number: "1234",
+                speciality_id:"1",
                 created_at: new Date(),
                 updated_at: new Date()
             },
@@ -32,7 +32,7 @@ module.exports = {
                 first_name: "google",
                 last_name: "user",
                 address: "delhi",
-                registration_number: "5678",
+                speciality_id:"2",
                 created_at: new Date(),
                 updated_at: new Date()
             }

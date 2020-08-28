@@ -1,5 +1,6 @@
 import BasePatient from "../../../services/patients";
 import patientService from "../../../services/patients/patients.service";
+import {completePath} from "../../../helper/filePath";
 
 
 class PatientWrapper extends BasePatient {
@@ -20,8 +21,15 @@ class PatientWrapper extends BasePatient {
             address,
             activated_on,
             details,
+            dob,
             uid
         } = _data || {};
+        const {profile_pic = ""} = details || {};
+
+        const updatedDetails =  {
+            ...details,
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
+        };
         return {
             basic_info: {
                 id,
@@ -32,10 +40,11 @@ class PatientWrapper extends BasePatient {
                 middle_name,
                 last_name,
                 address,
-                uid
+                uid,
             },
             activated_on,
-            details
+            details: updatedDetails,
+            dob,
         };
     };
 }

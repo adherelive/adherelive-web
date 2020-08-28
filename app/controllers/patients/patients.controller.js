@@ -202,8 +202,6 @@ class PatientController extends Controller {
             const { id: patient_id = 1 } = req.params;
             const { userDetails: { userId } = {} } = req;
 
-            let show = false;
-
             let carePlan = await carePlanService.getSingleCarePlanByData({ patient_id });
             const carePlanData = await CarePlanWrapper(carePlan);
 
@@ -213,6 +211,19 @@ class PatientController extends Controller {
             let templateAppointmentData = {};
             let template_appointment_ids = [];
             let medicine_ids = [];
+
+            const {treatment_id, severity_id, condition_id} = carePlanData.getCarePlanDetails();
+
+
+
+            const carePlanTemplates = await carePlanTemplateService.getCarePlanTemplateData({
+                treatment_id,
+                severity_id,
+                condition_id,
+                user_id: userId
+            });
+
+            Logger.debug("carePlanTemplates ---> ", carePlanTemplates);
 
 
             let carePlanTemplateData = null;
@@ -237,7 +248,6 @@ class PatientController extends Controller {
                     template_appointment_ids.push(appointmentData.getTemplateAppointmentId());
                 }
             }
-            console.log("ON LINE 236================>>>>>>>>>>>>>>>>>>>>>>>>>");
             let carePlanAppointmentData = {};
             let appointment_ids = [];
 
@@ -250,7 +260,6 @@ class PatientController extends Controller {
                 appointment_ids.push(carePlanAppointment.get("appointment_id"));
             }
 
-            console.log("ON LINE 250================>>>>>>>>>>>>>>>>>>>>>>>>>");
             let appointmentApiDetails = {};
             const appointments = await appointmentService.getAppointmentByData({ id: appointment_ids });
             if (appointments) {
@@ -260,7 +269,6 @@ class PatientController extends Controller {
                 }
             }
 
-            console.log("ON LINE 258================>>>>>>>>>>>>>>>>>>>>>>>>>");
             const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanData.getCarePlanId());
 
             for (const carePlanMedication of carePlanMedications) {
@@ -298,10 +306,34 @@ class PatientController extends Controller {
                 medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
             }
 
+            let otherCarePlanTemplates = {};
+            const carePlanTemplateIds = [];
+
+            if(carePlanTemplateData || carePlanTemplates.length > 0) {
+                for(const carePlanTemplate of carePlanTemplates) {
+                    carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
+                    const {care_plan_templates, template_appointments, template_medications, medicines} = await carePlanTemplateData.getReferenceInfo();
+                    carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+                    otherCarePlanTemplates = {...otherCarePlanTemplates, ...care_plan_templates};
+                    templateAppointmentData = {...templateAppointmentData, ...template_appointments};
+                    templateMedicationData = {...templateMedicationData, ...template_medications};
+                    medicineApiData = {...medicineApiData, ...medicines};
+                }
+            } else {
+                carePlanTemplateIds.push("1");
+                otherCarePlanTemplates["1"] = {
+                    basic_info: {
+                        id: "1",
+                        name: "Blank Template"
+                    }
+                };
+            }
+
 
             return this.raiseSuccess(res, 200, {
                 // care_plans: { ...carePlanApiData },
                 // show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments, carePlanTemplateId,
+                care_plan_template_ids : [...carePlanTemplateIds],
                 care_plans: {
                     [carePlanData.getCarePlanId()]: {
                         ...carePlanData.getBasicInfo(),
@@ -311,11 +343,8 @@ class PatientController extends Controller {
                     }
                 },
                 care_plan_templates: {
-                    [carePlanData.getCarePlanTemplateId()]: {
-                        ...carePlanTemplateData ? carePlanTemplateData.getBasicInfo() : {},
-                        template_appointment_ids,
-                        template_medication_ids
-                    }
+
+                    ...otherCarePlanTemplates
                 },
                 appointments: {
                     ...appointmentApiDetails
@@ -332,12 +361,12 @@ class PatientController extends Controller {
                 medicines: {
                     ...medicineApiData
                 },
-                show: false
+                show: false,
             }, "Patient care plan details fetched successfully");
 
         } catch (error) {
             // Logger.debug("get careplan 500 error ---> ", error);
-            console.log("GET PATIENT DETAILS ERROR --> ", error);
+            console.log("GET PATIENT DETAILS ERROR careplan --> ", error);
             return this.raiseServerError(res);
         }
     };

@@ -9,7 +9,7 @@ export default class User {
         return this._data;
     }
 
-    getId() {
+    getId = () => {
         return this._data.id;
     }
 
@@ -32,5 +32,13 @@ export default class User {
     isActivated = () => {
         const {verified, activated_on} = this._data || {};
         return verified && activated_on !== null;
+    };
+
+    getPermissionData = () => {
+        return this._data.permissions;
+    }
+
+    getPrefix = () => {
+        return this._data.prefix;
     };
 }

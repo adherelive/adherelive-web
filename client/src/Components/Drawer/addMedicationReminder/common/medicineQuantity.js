@@ -55,14 +55,13 @@ class MedicineQuantity extends Component {
 
     const { onRadioChange, formatMessage, getInitialValue } = this;
 
-    // console.log("act,", activityType, activityModeOption, activityMode);
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     return (
       <Fragment>
         <div className="flex align-items-end justify-content-space-between">
           <label
-            for="quantity"
+            htmlFor="quantity"
             className="form-label flex-grow-1"
             title="Quantity"
           >

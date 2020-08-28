@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
-import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT, DAYS_TEXT_NUM } from "../../../constant";
+import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 
@@ -66,12 +66,11 @@ class AdminDoctorDetails extends Component {
   handleBack = e => {
     e.preventDefault();
     const { history } = this.props;
-    console.log("1827318723 props --> ", this.props);
     history.goBack();
   };
 
   getDoctorDetailsHeader = () => {
-    const { id, doctors, users } = this.props;
+    // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
@@ -83,7 +82,7 @@ class AdminDoctorDetails extends Component {
   };
 
   getDoctorBasicDetails = () => {
-    const { id, doctors, users } = this.props;
+    const { id, doctors, users, specialities } = this.props;
     const { formatMessage, handleProfilePicModalOpen } = this;
 
     const {
@@ -95,16 +94,18 @@ class AdminDoctorDetails extends Component {
         profile_pic,
         gender,
           address,
+          speciality_id
       } = {},
       city,
     } = doctors[id] || {};
     const {
-      basic_info: { user_name, email, mobile_number, prefix } = {},
-      sign_in_type,
+      basic_info: {  email, mobile_number, prefix } = {},
       onboarded,
       onboarding_status,
       activated_on
     } = users[user_id] || {};
+
+    const {basic_info: {name : specialityName} = {}} = specialities[speciality_id] || {};
 
     return (
       <div className="mt20 mb20 wp100 flex direction-column">
@@ -151,15 +152,15 @@ class AdminDoctorDetails extends Component {
               </div>
             </div>
 
-            {/*/!*age*!/*/}
-            {/*<div className="wp20 hp20 mt16 mb16 mr16">*/}
-            {/*  <div className="fs16 fw700">*/}
-            {/*    {formatMessage(messages.age_text)}*/}
-            {/*  </div>*/}
-            {/*  <div className="fs14 fw500">*/}
-            {/*    {age ? age : TABLE_DEFAULT_BLANK_FIELD}*/}
-            {/*  </div>*/}
-            {/*</div>*/}
+            {/*speciality*/}
+            <div className="wp20 hp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.speciality_text)}
+              </div>
+              <div className="fs14 fw500">
+                {speciality_id ? specialityName : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
 
             {/*mobile_number*/}
             <div className="wp20 mt16 mb16 mr16">
@@ -331,7 +332,6 @@ class AdminDoctorDetails extends Component {
                     upload_documents[id] || {};
 
                   const documentType = document.substring(document.length - 3) || null;
-                  console.log("13971923788 registration --> ", documentType);
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -386,7 +386,7 @@ class AdminDoctorDetails extends Component {
       degrees = {},
       colleges = {}
     } = this.props;
-    const { formatMessage, handlePictureModal, handleDocumentDownload } = this;
+    const { formatMessage, handlePictureModal } = this;
 
     const { doctor_qualification_ids = [] } = doctors[id] || {};
 
@@ -455,7 +455,6 @@ class AdminDoctorDetails extends Component {
                     upload_documents[id] || {};
 
                   const documentType = document.substring(document.length - 3) || null;
-                  console.log("13971923788 qualification --> ", documentType);
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -497,7 +496,6 @@ class AdminDoctorDetails extends Component {
   };
 
   getFullDayText = day => {
-    console.log("137163 day --> ", day);
     if(day.length === 1) {
       return DAYS_TEXT_NUM[day].toLocaleUpperCase();
     }
@@ -623,7 +621,6 @@ class AdminDoctorDetails extends Component {
   };
 
   handleVerify = async e => {
-    console.log("12983712893721 here");
     e.preventDefault();
     const { verifyDoctor, id } = this.props;
     try {
@@ -725,7 +722,6 @@ class AdminDoctorDetails extends Component {
       doctor_registration_ids = []
     } = doctors[id] || {};
 
-    console.log("1982317923 loading --> ", this.props);
 
     if (loading) {
       return <PageLoading />;

@@ -1,8 +1,12 @@
 import Controller from "../../index";
 import moment from "moment";
 import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
+import carePlanService from "../../../services/carePlan/carePlan.service";
+
 import MobileMReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
+import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
+
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import {
   EVENT_STATUS,
@@ -12,11 +16,12 @@ import {
   MEDICATION_TIMING,
   DOSE_AMOUNT,
   DOSE_UNIT,
-  CUSTOM_REPEAT_OPTIONS
+  CUSTOM_REPEAT_OPTIONS, MEDICINE_FORM_TYPE
 } from "../../../../constant";
 import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
 import medicineService from "../../../services/medicine/medicine.service";
+import {getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails} from "../../carePlans/carePlanHelper";
 
 const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -27,6 +32,7 @@ const KEY_TIMING = "timings";
 const KEY_DOSE = "dose";
 const KEY_UNIT = "dose_unit";
 const KEY_CUSTOM_REPEAT_OPTIONS = "custom_repeat_options";
+const KEY_MEDICINE_TYPE = "medicine_type";
 
 const medicationReminderDetails = {
   [KEY_REPEAT_TYPE]: REPEAT_TYPE,
@@ -34,7 +40,8 @@ const medicationReminderDetails = {
   [KEY_TIMING]: MEDICATION_TIMING,
   [KEY_DOSE]: DOSE_AMOUNT,
   [KEY_UNIT]: DOSE_UNIT,
-  [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS
+  [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
+  [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
 };
 
 class MobileMReminderController extends Controller {
@@ -53,6 +60,7 @@ class MobileMReminderController extends Controller {
         repeat_days = [],
         repeat_interval = 0,
         medicine_id,
+          medicine_type,
         quantity,
         strength,
         unit,
@@ -60,7 +68,8 @@ class MobileMReminderController extends Controller {
         medication_stage = "",
         description,
         start_time,
-          critical = false
+          critical = false,
+        care_plan_id = null,
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
@@ -84,6 +93,7 @@ class MobileMReminderController extends Controller {
         end_date,
         details: {
           medicine_id,
+          medicine_type,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat: REPEAT_TYPE[repeat] || "weekly",
@@ -115,6 +125,15 @@ class MobileMReminderController extends Controller {
         end_time: start_time
       };
 
+      if(care_plan_id) {
+        const data_to_create = {
+          care_plan_id,
+          medication_id: mReminderDetails.get('id')
+        }
+
+        let newMedication = await carePlanMedicationService.addCarePlanMedication(data_to_create);
+      }
+
       return this.raiseSuccess(
         res,
         200,
@@ -139,9 +158,8 @@ class MobileMReminderController extends Controller {
 
   createCarePlanMedication = async (req, res) => {
     try {
-      const { body, userDetails, params: { patient_id,carePlanId:care_plan_id=0 } = {} } = req;
+      const { body, userDetails, params: { patient_id } = {} } = req;
 
-      console.log("medicineDetails **********--------> ",care_plan_id,typeof(care_plan_id));
       // todo: get patient_id from url
       const {
         start_date,
@@ -150,6 +168,7 @@ class MobileMReminderController extends Controller {
         repeat_days,
         repeat_interval = 0,
         medicine_id,
+        medicine_type,
         quantity,
         strength,
         unit,
@@ -157,14 +176,15 @@ class MobileMReminderController extends Controller {
         medication_stage = "",
         description,
         start_time,
-          critical = false
+          critical = false,
+        care_plan_id= 0
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
 
       const medicineDetails = await medicineService.getMedicineById(medicine_id);
 
 
-      const medicineApiWrapper = await MedicineWrapper(medicineDetails);
+      const medicineApiWrapper = await MedicineApiWrapper(medicineDetails);
 
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
@@ -175,6 +195,7 @@ class MobileMReminderController extends Controller {
         end_date,
         details: {
           medicine_id,
+          medicine_type,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat,
@@ -193,26 +214,26 @@ class MobileMReminderController extends Controller {
         dataToSave
       );
 
-      const data_to_create = {
-        care_plan_id:parseInt(care_plan_id),
-        medication_id: mReminderDetails.get('id')
-    }
+      let carePlanApiData = {};
 
-    let newMedication = await carePlanMedicationService.addCarePlanMedication(data_to_create);
+      if(care_plan_id) {
+        const data_to_create = {
+          care_plan_id,
+          medication_id: mReminderDetails.get('id')
+        }
 
+        const newMedication = await carePlanMedicationService.addCarePlanMedication(data_to_create);
+        const carePlan= await carePlanService.getCarePlanById(care_plan_id);
 
+        const carePlanAppointmentIds= await getCarePlanAppointmentIds(care_plan_id);
+        const carePlanMedicationIds = await getCarePlanMedicationIds(care_plan_id);
+        const carePlanSeverityDetails = await getCarePlanSeverityDetails(care_plan_id);
+        const carePlanApiWrapper = await CarePlanWrapper(carePlan);
 
-    let carePlan= await carePlanService.getCarePlanById(care_plan_id);
-
-    let carePlanAppointmentIds= await getCarePlanAppointmentIds(care_plan_id);
-    let carePlanMedicationIds = await getCarePlanMedicationIds(care_plan_id);
-    let carePlanSeverityDetails = await getCarePlanSeverityDetails(care_plan_id);
-    const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-    let carePlanApiData = {};
-
-    carePlanApiData[
-      carePlanApiWrapper.getCarePlanId()
-    ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,carePlanMedicationIds,carePlanAppointmentIds};
+        carePlanApiData[
+            carePlanApiWrapper.getCarePlanId()
+            ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,carePlanMedicationIds,carePlanAppointmentIds};
+      }
 
 
       // const eventScheduleData = {
@@ -341,6 +362,7 @@ class MobileMReminderController extends Controller {
         repeat_days,
         repeat_interval = 0,
         medicine_id,
+        medicine_type,
         quantity,
         strength,
         unit,
@@ -367,6 +389,7 @@ class MobileMReminderController extends Controller {
         end_date,
         details: {
           medicine_id,
+          medicine_type,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat,

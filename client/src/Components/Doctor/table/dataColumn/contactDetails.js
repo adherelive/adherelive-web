@@ -6,7 +6,6 @@ export default props => {
     const { userData } = props || {};
     const { basic_info: { mobile_number, email } = {} } = userData || {};
 
-    console.log("971979178 mobile_number, email --> ", props);
 
     return (
         <div className="flex direction-column">

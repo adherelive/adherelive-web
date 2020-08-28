@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
-import { Select, Form, Radio, Icon, Tooltip } from "antd";
-import { MinusCircleOutlined } from "@ant-design/icons";
+import { Select, Form, Radio, Icon } from "antd";
+// import { MinusCircleOutlined } from "@ant-design/icons";
 import { injectIntl } from "react-intl";
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 import messages from "../message";
@@ -10,16 +10,16 @@ import { MEDICATION_TIMING } from "../../../../constant";
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
-const { Item: FormItem, List: FormList } = Form;
-const when = [
-  { key: "Before BreakFast", value: "Before BreakFast" },
-  { key: "After BreakFast", value: "After BreakFast" },
-  { key: "Before Lunch", value: "Before Lunch" },
-  { key: "After Lunch", value: "After Lunch" },
-  { key: "Before Dinner", value: "Before Dinner" },
-  { key: "After Dinner", value: "After Dinner" },
-];
+// const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
+const { Item: FormItem } = Form;
+// const when = [
+//   { key: "Before BreakFast", value: "Before BreakFast" },
+//   { key: "After BreakFast", value: "After BreakFast" },
+//   { key: "Before Lunch", value: "Before Lunch" },
+//   { key: "After Lunch", value: "After Lunch" },
+//   { key: "Before Dinner", value: "Before Dinner" },
+//   { key: "After Dinner", value: "After Dinner" },
+// ];
 const { Option } = Select;
 
 const FIELD_NAME = "when_to_take";
@@ -50,7 +50,7 @@ class WhenToTakeMedication extends Component {
   componentDidMount() {
     const {
       form: { validateFields },
-      medication_details: { timings = {} } = {},
+      // medication_details: { timings = {} } = {},
     } = this.props;
     validateFields();
     this.setState({
@@ -63,7 +63,6 @@ class WhenToTakeMedication extends Component {
     const { medication_details } = this.props;
     const { medication_details: prev_medication_details } = prevProps;
 
-    console.log("18273123 medication_details  ---> ", medication_details);
 
     if (
       Object.keys(medication_details).length !==
@@ -95,7 +94,6 @@ class WhenToTakeMedication extends Component {
       selected_timing_overall = [],
     } = this.state;
 
-    console.log("93182392 selected_timing ", selected_timing);
 
     let current_status = [];
 
@@ -106,8 +104,8 @@ class WhenToTakeMedication extends Component {
       }
     });
 
-    const { getFieldValue } = this.props.form;
-    const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
+    // const { getFieldValue } = this.props.form;
+    // const selected = getFieldValue(`${FIELD_NAME}[${k}]`) || [];
 
     const remaining_status = total_status.filter(
       (s) => !selected_timing_overall.includes(s)
@@ -122,24 +120,16 @@ class WhenToTakeMedication extends Component {
       }
     });
 
-    console.log("12093138 uniqueTimings ----> ", selected_timing, total_status, selected_timing_overall);
     return uniqueTimings;
   };
 
   getUnitOption = (k) => {
-    const { selected_timing, status, total_status } = this.state;
+    const { status } = this.state;
     const { getUpdatedList } = this;
     const getList = getUpdatedList(k);
 
-    console.log("18982731273 getList ---> ", selected_timing);
     return getList.map((id) => {
       const text = status[id];
-      console.log(
-        "1238791382 id, typeof id ----> ",
-        total_status,
-        id,
-        typeof id
-      );
       return (
         <Option key={`s-${k}.${id}`} value={id}>
           {text}
@@ -152,20 +142,12 @@ class WhenToTakeMedication extends Component {
   //   e.preventDefault();
   //   const { medication_details: { timings } = {} } = this.props;
   //   const { count, remaining_timing, selected_timing } = this.state;
-  //   console.log("91276391 selected_timing --> ", selected_timing);
   //   if (count.length === Object.keys(timings).length) {
   //     return null;
   //   }
 
   //   let updatedOptions = {};
   //   Object.keys(remaining_timing).forEach((id) => {
-  //     console.log(
-  //       "127831273 updatedOptions --> ",
-  //       selected_timing,
-  //       id,
-  //       typeof selected_timing,
-  //       typeof id
-  //     );
   //     if (parseInt(id) !== selected_timing) {
   //       updatedOptions[id] = { ...timings[id] };
   //     }
@@ -179,12 +161,10 @@ class WhenToTakeMedication extends Component {
 
   // deleteOnClick = (e) => {
   //   e.preventDefault();
-  //   console.log("892379132 e.target.value, e.currentTarget ", e.target.value);
   //   const id = e.target.value;
   //   const { medication_details: { timings = {} } = {} } = this.props;
   //   const { count, remaining_timing } = this.state;
   //   const updatedCount = count.filter((id, index) => {
-  //     console.log("91723189 delete_id, index --> ", e.target.value, index);
   //   });
   //   this.setState({
   //     // count: [...updatedCount],
@@ -212,8 +192,8 @@ class WhenToTakeMedication extends Component {
   // };
 
   handleSelect = (value, select_box_id) => {
-    const { selected_timing_overall = [], selected_timing = {} } = this.state;
-    const keys = new Set([...selected_timing_overall, value]);
+    const { selected_timing = {} } = this.state;
+    // const keys = new Set([...selected_timing_overall, value]);
     const updatedSelectTiming = {
       ...selected_timing,
       [select_box_id]: value,
@@ -224,19 +204,16 @@ class WhenToTakeMedication extends Component {
         selected_timing: updatedSelectTiming,
       },
       () => {
-        console.log(
-          "712831 this.state.selected_timing_overall ---> ",
-          this.state.selected_timing
-        );
+
       }
     );
   };
 
   handleDeselect = (value) => {
-    const { selected_timing_overall } = this.state;
-    const updateField = selected_timing_overall.filter(
-      (field) => field !== value
-    );
+    // const { selected_timing_overall } = this.state;
+    // const updateField = selected_timing_overall.filter(
+    //   (field) => field !== value
+    // );
     this.setState({
       // selected_timing_overall: updateField
     });
@@ -250,17 +227,14 @@ class WhenToTakeMedication extends Component {
 
     let updatedSelectedTimings = {};
     Object.keys(selected_timing).forEach(id => {
-      // console.log("12983719283 id, k ---> ", id, typeof id, k, typeof k);
       if (id !== `${k}`) {
         updatedSelectedTimings[id] = selected_timing[id];
       }
     });
 
-    console.log("18371239 updatedSelectedTimings --> ", selected_timing, updatedSelectedTimings);
     this.setState({
       selected_timing_overall: selected_timing_overall.filter(
         (field) => {
-          console.log("98738912 selected, field --> ", selected, typeof selected, field, typeof field);
           return selected === field;
         }
       ),
@@ -277,15 +251,13 @@ class WhenToTakeMedication extends Component {
     const { total_status } = this.state;
     // const value = status[k+1];
     return total_status[k];
-    // console.log("891237183189 ", k, status, );
   };
 
   getFormItems = () => {
-    const { form, medication_details: { timings } = {} } = this.props;
+    const { form } = this.props;
     const { count } = this.state;
     const {
       handleSelect,
-      getUnitOption,
       handleDeselect,
       getInitialValue,
       formatMessage,
@@ -297,17 +269,12 @@ class WhenToTakeMedication extends Component {
       getFieldValue,
     } = form;
 
-    console.log(
-      "81723681238 --> ",
-      count.map((id, index) => id)
-    );
+
 
     getFieldDecorator("keys", {
       initialValue: count.map((id, index) => id),
     });
     const keys = getFieldValue("keys");
-
-    console.log("912312837 getUnitOption ", this.getUnitOption(0));
 
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
     return keys.map((k, index) => {
@@ -347,22 +314,57 @@ class WhenToTakeMedication extends Component {
                 )}
               </FormItem>
             </div>
-            {keys.length > 1 && (
+            {/* {keys.length > 1 && (
               <div className="wp20 hp100 flex justify-center align-center">
-                {/* <Tooltip mouseEnterDelay={0.5} placement="bottom" title={formatMessage(messages.delete_text)}> */}
                 <Icon
                   className="hp100"
                   type="minus-circle-o"
                   onClick={() => this.remove(k)}
                 />
-                {/* </Tooltip> */}
               </div>
-            )}
+            )} */}
           </div>
         </Fragment>
       );
     });
   };
+
+  onClickOd = () => {
+
+    const { form } = this.props;
+    const { selected_timing } = this.state;
+    const keys = form.getFieldValue("keys");
+    if (keys.length === 3) {
+      this.remove(keys[2]);
+      this.remove(keys[1]);
+    } else if (keys.length === 2) {
+      this.remove(keys[1]);
+    }
+  }
+  onClickBd = () => {
+
+    const { form } = this.props;
+    const { selected_timing } = this.state;
+    const keys = form.getFieldValue("keys");
+    if (keys.length === 3) {
+      this.remove(keys[2]);
+    } else if (keys.length === 1) {
+      this.add();
+    }
+  }
+
+  onClickTds = () => {
+
+    const { form } = this.props;
+    const { selected_timing } = this.state;
+    const keys = form.getFieldValue("keys");
+    if (keys.length === 2) {
+      this.add();
+    } else if (keys.length === 1) {
+      this.add();
+      this.add();
+    }
+  }
 
   add = () => {
     const { form } = this.props;
@@ -372,9 +374,7 @@ class WhenToTakeMedication extends Component {
     keys.forEach(id => {
       whenToTakeValues[id] = form.getFieldValue(`${FIELD_NAME}[${id}]`);
     });
-    console.log("391309 keys :", keys, whenToTakeValues);
     const nextKeys = keys.concat(key_field);
-    console.log("391309 nextKeys :", nextKeys);
     form.setFieldsValue({
       keys: nextKeys,
       // [`Fields[${id_checklist_field}]`]: null,
@@ -396,20 +396,18 @@ class WhenToTakeMedication extends Component {
     const { form } = this.props;
     const {
       getFormItems,
-      onAddMoreClick,
-      getSelectRender,
       formatMessage,
+      onClickOd,
+      onClickBd,
+      onClickTds
     } = this;
     const {
-      getFieldDecorator,
-      getFieldError,
       isFieldTouched,
-      //getFieldValue
+      getFieldError,
+      getFieldValue
     } = form;
-    // console.log("act,", activityType, activityModeOption, activityMode);
-    const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
-
-    console.log("627868362783 selected_timing ---. ", this.state.selected_timing);
+    const keys = getFieldValue("keys") || [];
+    // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     // const { getInitialValue } = this;
 
@@ -418,7 +416,7 @@ class WhenToTakeMedication extends Component {
         <div className="flex align-items-end justify-content-space-between">
           <div className='flex row flex-grow-1'>
             <label
-              for="quantity"
+              htmlFor="quantity"
               className="form-label "
               title="Quantity"
             >
@@ -430,14 +428,22 @@ class WhenToTakeMedication extends Component {
           {/* <div className="label-color fontsize12 mb8">
               
             </div> */}
-          <div className="flex-grow-0">
+          {/* <div className="flex-grow-0">
             <RadioGroup size="small" className="flex justify-content-end">
               <RadioButton value={1} onClick={this.add}>
                 {formatMessage(messages.add_more_text)}
               </RadioButton>
             </RadioGroup>
-          </div>
+          </div> */}
         </div>
+        <RadioGroup
+          className="flex justify-content-end radio-formulation mb10"
+          buttonStyle="solid"
+        >
+          <RadioButton value={1} checked={keys.length === 1} onClick={onClickOd} >{this.formatMessage(messages.od)}</RadioButton>
+          <RadioButton value={2} checked={keys.length === 2} onClick={onClickBd}>{this.formatMessage(messages.bd)}</RadioButton>
+          <RadioButton value={3} checked={keys.length === 3} onClick={onClickTds}>{this.formatMessage(messages.tds)}</RadioButton>
+        </RadioGroup>
 
         {getFormItems()}
       </Fragment>

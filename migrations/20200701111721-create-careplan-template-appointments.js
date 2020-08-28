@@ -33,6 +33,20 @@ module.exports = {
         type: Sequelize.JSON,
         allowNull: true
       },
+      provider_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: DB_TABLES.PROVIDERS,
+          },
+          key: 'id'
+        },
+        allowNull: true,
+      },
+      provider_name: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

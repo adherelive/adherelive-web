@@ -41,7 +41,6 @@ class SignIn extends Component {
         validateFields(async (err, { email, password }) => {
             if (!err) {
                 try {
-                    console.log("email, password --> ", email, password);
 
                     const response = await signIn({ email, password });
                     const { status = false } = response;

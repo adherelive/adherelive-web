@@ -9,6 +9,8 @@ export const PATH = {
   REGISTER_PROFILE: '/register-profile',
   REGISTER_QUALIFICATIONS: '/register-qualifications',
   REGISTER_CLINICS: '/register-clinics',
+  PATIENT_CONSULTING: '/patient-consulting/:patient_id',
+  PATIENT_CONSULTING_VIDEO: '/patient-consulting-video/:room_id',
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",
@@ -21,6 +23,9 @@ export const PATH = {
     }
   }
 };
+
+
+export const ROOM_ID_TEXT = '-adhere-';
 
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
@@ -424,9 +429,21 @@ export const CONDITIONS = {
 
 export const TABLE_DEFAULT_BLANK_FIELD = "--";
 
+
+export const TABLET = "1";
+export const SYRUP = "2";
+export const SYRINGE = "3";
+
+export const MEDICINE_FORM_TYPE = {
+  [TABLET]: { name: "tablet" },
+  [SYRUP]: { name: "syrup" },
+  [SYRINGE]: { name: "syringe" }
+};
+
 export const MEDICINE_TYPE = {
   TABLET: "tablet",
-  INJECTION: "injection"
+  INJECTION: "injection",
+  SYRUP: 'syrup'
 }
 
 export const MEDICINE_UNITS = {
@@ -442,6 +459,16 @@ export const FULL_DAYS = {
   THU: "Thu",
   FRI: "Fri",
   SAT: "Sat",
+};
+
+export const FULL_DAYS_NUMBER = {
+  SUN: "1",
+  MON: "2",
+  TUE: "3",
+  WED: "4",
+  THU: "5",
+  FRI: "6",
+  SAT: "7",
 };
 
 export const DAYS_LIST = [

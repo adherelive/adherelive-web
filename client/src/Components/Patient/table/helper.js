@@ -43,7 +43,6 @@ export const formatPatientTableData = data => {
   let { id, patients, doctors, providers, treatments={},severity:severities={},conditions={}, chats, chat_ids, users, care_plans } =
     data || {};
 
-    console.log('CARE PLANSSSSS=================>',id,patients,care_plans);
 
   let patientData = patients[id] || {};
   let treatment='';
@@ -54,7 +53,6 @@ export const formatPatientTableData = data => {
   for(let carePlan of Object.values(care_plans)){
     let{basic_info={}}=carePlan||{};
     let{patient_id:patientId=1,id:carePlanId=1}=basic_info;
-    console.log('CARE PLANSSSSS222=================>',patientId,patientId==id,carePlan);
     if(patientId==id){
     let{treatment_id:cTreatment='',condition_id:cCondition='',severity_id:cSeverity=''}=carePlan||{};
     let {basic_info:{name:treatmentName=''}={}}=treatments[cTreatment]||{};
@@ -65,17 +63,14 @@ export const formatPatientTableData = data => {
     condition=conditionName;
     severity=severityName;
 
-    console.log('CARE PLANSSSSS3333=================>',treatmentName,severityName,conditionName,treatment,condition,severity);
     carePlanData={...care_plans[carePlanId],treatment,condition,severity};
     }
   }
 
   patientData = {...patients[id],treatment,condition,severity};
-  console.log('CARE PLANSSSSS3333=================>111',treatment,condition,severity,patientData);
-
+  
   const {basic_info: {doctor_id, name: carePlanName} = {}, activated_on} = care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized
 
-  console.log("2363645 patientData --> ", patientData);
   const { basic_info: {user_id}, treatment_id, provider_id, chats: patientChatIds = [] } =
     patientData || {};
 
@@ -84,12 +79,6 @@ export const formatPatientTableData = data => {
     const {} = users[user_id] || {};
   let chatData = {};
 
-  console.log(
-    "293423 chats, chat_ids, patientChatIds --> ",
-    chats,
-    chat_ids,
-    patientChatIds
-  );
 
   chat_ids.forEach(id => {
     const { doctor_id: chatDoctorId } = chats[id] || {};

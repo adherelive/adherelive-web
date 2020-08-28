@@ -2,22 +2,16 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
-import { Tabs, Button, Steps, Col, Select, Input, Upload, Modal, TimePicker, Icon, message } from "antd";
-import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH, FULL_DAYS } from '../../constant';
+import { Input, Icon, message } from "antd";
+import { PATH, FULL_DAYS, FULL_DAYS_NUMBER } from '../../constant';
 import UploadSteps from './steps';
-import { getUploadURL } from '../../Helper/urls/user';
-import { doRequest } from '../../Helper/network';
-import plus from '../../Assets/images/plus.png';
 import LocationModal from './locationmodal';
 import TimingModal from './timingModal';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { withRouter } from "react-router-dom";
 import moment from 'moment';
+import messages from './messages';
 
 
-
-const { Option } = Select;
 
 const dayTimings = {
     [FULL_DAYS.MON]: [{ startTime: "", endTime: '' }],
@@ -73,7 +67,6 @@ class ClinicRegister extends Component {
 
         const { value } = e.target;
         const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        console.log('8423907492837589723859325', value, reg.test(value));
         if (reg.test(value) || value === '') {
             newClinics[key].name = e.target.value;
             this.setState({ clinics: newClinics });
@@ -88,13 +81,15 @@ class ClinicRegister extends Component {
     }
 
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
 
     addClinic = () => {
         let key = uuid();
-        let key1 = uuid();
+        // let key1 = uuid();
         let { clinics = {}, clinicsKeys = [] } = this.state;
 
-        let timings = [];
+        // let timings = [];
 
         let newClinics = clinics;
         let newclinicsKeys = clinicsKeys;
@@ -111,7 +106,6 @@ class ClinicRegister extends Component {
             }
         };
         newclinicsKeys.unshift(key);
-        // console.log("NEWWWWWWWWWW AFTER ADDDDD",key,newClinics[key],newclinicsKeys);
         this.setState({ clinics: newClinics, clinicsKeys: newclinicsKeys });
     }
 
@@ -147,7 +141,7 @@ class ClinicRegister extends Component {
                                         <div>{`${time.startTime ? moment(time.startTime).format('hh:mm a') : ''}-`}</div>
                                         <div>{time.endTime ? `${moment(time.endTime).format('hh:mm a')}${index < timings[day].length - 1 ? ', ' : ' '} ` : ''}</div>
                                     </div>)
-                            }) : 'Closed'}</div>
+                            }) : this.formatMessage(messages.closed)}</div>
                     </div>
                 )
             }))
@@ -156,16 +150,8 @@ class ClinicRegister extends Component {
     }
 
     renderClinics = () => {
-        console.log("Render Education is ==============> 23829823 ===========>  ", this.state);
         let { clinics = {}, clinicsKeys = [] } = this.state;
-        console.log(" 23829823  ------------------>  ", JSON.stringify(clinics, null, 4));
-        console.log(" 23829823 Keys  ------------------>  ", clinicsKeys);
 
-        const uploadButton = (
-            <div>
-                Upload
-            </div>
-        );
         return (
             <div className='flex direction-column'>
                 {
@@ -184,7 +170,7 @@ class ClinicRegister extends Component {
 
                                 <div className='flex justify-space-between align-center direction-row'>
 
-                                    <div className='form-headings'>Name</div>
+                                    <div className='form-headings'>{this.formatMessage(messages.name)}</div>
                                     {clinicsKeys.length > 1 ? (
                                         <div className='wp100 flex justify-end'>
                                             <DeleteTwoTone
@@ -196,19 +182,19 @@ class ClinicRegister extends Component {
                                     ) : <div />}
                                 </div>
                                 <Input
-                                    placeholder="Clinic name"
+                                    placeholder={this.formatMessage(messages.clinicName)}
                                     className={"form-inputs"}
                                     value={name}
                                     onChange={e => this.setClinicName(key, e)}
                                 />
-                                <div className='form-headings'>Location</div>
+                                <div className='form-headings'>{this.formatMessage(messages.location)}</div>
                                 <div className={`form-input-border ${locationToDisplay ? 'active-grey-location' : 'default-grey'} pointer`} onClick={this.setModalVisible(key)}>
                                     <div className={locationToDisplay ? 'active-grey-location' : 'default-grey'}>{locationToDisplay ? locationToDisplay : 'Location'}</div>
                                     <Icon type="environment" theme="filled" />
                                 </div>
 
                                 <div className='flex justify-space-between align-center direction-row'>
-                                    <div className='form-headings'>Timings</div>
+                                    <div className='form-headings'>{this.formatMessage(messages.timings)}</div>
                                     {/* <div className='pointer fs16 medium ' onClick={this.addClinicTimings(key)}>Add More</div> */}
                                 </div>
 
@@ -224,7 +210,7 @@ class ClinicRegister extends Component {
                                     (
                                         <div className={`form-input-timing default-grey pointer`} onClick={this.setModalTimingVisible(key)}>
                                             <div className={'default-grey'}>
-                                                {'Timings'}</div>
+                                                {this.formatMessage(messages.timings)}</div>
                                             {<Icon type="clock-circle" />}
                                         </div>)}
                                 {/* <div className={`form-input-timing ${Object.keys(timings).length ? 'active-grey' : 'default-grey'} pointer`} onClick={this.setModalTimingVisible(key)}>
@@ -247,8 +233,8 @@ class ClinicRegister extends Component {
         return (
             <div className='form-block'>
                 <div className='flex justify-space-between align-center direction-row'>
-                    <div className='form-category-headings'>Clinic</div>
-                    <div className='pointer fs16 medium theme-green' onClick={this.addClinic}>Add More</div>
+                    <div className='form-category-headings'>{this.formatMessage(messages.clinic)}</div>
+                    <div className='pointer fs16 medium theme-green' onClick={this.addClinic}>{this.formatMessage(messages.addMore)}</div>
                 </div>
                 {this.renderClinics()}
             </div>
@@ -258,14 +244,12 @@ class ClinicRegister extends Component {
     validateClinics = newClinics => {
         for (let edu of newClinics) {
 
-            console.log('NEW CLINICSSSS============>222222', edu);
             let { name = '', location = '', timings = [] } = edu;
 
             if (!Object.keys(timings).length) {
                 return false;
             }
 
-            console.log('NEW CLINICSSSS============>3333333', name, location);
             if (!name || !location) {
                 return false;
             }
@@ -279,14 +263,11 @@ class ClinicRegister extends Component {
             let { name = '' } = newClinics[edu];
 
 
-            console.log('NEW CLINICSSSS============>222222  0', edu, name);
             for (let nEdu in newClinics) {
 
-                console.log('NEW CLINICSSSS============>222222  1', edu, nEdu, edu !== nEdu);
 
                 if (edu !== nEdu) {
                     let { name: newname = '' } = newClinics[nEdu];
-                    console.log('NEW CLINICSSSS============>222222 2', newname, name);
                     if (!newname.localeCompare(name)) {
                         return false;
                     }
@@ -298,42 +279,50 @@ class ClinicRegister extends Component {
     validateData = () => {
         let { clinics = {} } = this.state;
         let newClinics = Object.values(clinics);
-        console.log('NEW CLINICSSSS============>1111111', newClinics);
         if (!newClinics.length) {
-            message.error('Please enter your Clinic details.')
+            message.error(this.formatMessage(messages.clinicDetails))
             return false;
         } else if (!this.validateClinics(newClinics)) {
-            message.error('Please enter all Clinic details.')
+            message.error(this.formatMessage(messages.allClinicDetails))
             return false;
         } else if (!this.duplicateClinics(newClinics)) {
 
-            message.error('Please do not add duplicate clinics.')
+            message.error(this.formatMessage(messages.duplicateClinics))
             return false;
         }
         return true;
     }
 
     onNextClick = () => {
-        const { history, authenticated_user } = this.props;
-        console.log('ONCLICKKKKKK');
+        const { history } = this.props;
         const validate = this.validateData();
         if (validate) {
-            const { basic_info: { id = 1 } = {} } = authenticated_user || {};
             const { clinics = {} } = this.state;
             let newClinics = Object.values(clinics);
             for (let clinic of newClinics) {
-                clinic.time_slots = clinic.timings;
+                let { timings = {} } = clinic;
+                let time_slots = {
+                    [FULL_DAYS_NUMBER.MON]: timings[FULL_DAYS.MON],
+                    [FULL_DAYS_NUMBER.TUE]: timings[FULL_DAYS.TUE],
+                    [FULL_DAYS_NUMBER.WED]: timings[FULL_DAYS.WED],
+                    [FULL_DAYS_NUMBER.THU]: timings[FULL_DAYS.THU],
+                    [FULL_DAYS_NUMBER.FRI]: timings[FULL_DAYS.FRI],
+                    [FULL_DAYS_NUMBER.SAT]: timings[FULL_DAYS.SAT],
+                    [FULL_DAYS_NUMBER.SUN]: timings[FULL_DAYS.SUN],
+                }
+                clinic.time_slots = time_slots;
                 delete clinic.timings;
                 delete clinic.timingsKeys;
+                delete clinic.daySelected;
             }
             const data = { clinics: newClinics };
             const { doctorClinicRegister } = this.props;
             doctorClinicRegister(data).then(response => {
-                const { status } = response;
+                const { status, message: errorMessage } = response;
                 if (status) {
                     history.replace(PATH.DASHBOARD);
                 } else {
-                    message.error('Something went wrong');
+                    message.error(errorMessage);
                 };
             });
         }
@@ -379,12 +368,11 @@ class ClinicRegister extends Component {
         }
         let timingForModal = clinicKeyOfModalTiming && Object.keys(currClinicTimings).length ? currClinicTimings : dayTimings;
         let daySelectForModal = clinicKeyOfModalTiming && Object.keys(currClinicDaySelect).length ? currClinicDaySelect : daySelected;
-        console.log("STATEEEEEEEEEEE of Clinic register 234324234324234", clinicKeyOfModalTiming, clinicKeyOfModalTiming ? Object.keys(clinics[clinicKeyOfModalTiming].daySelected).length : -1, daySelectForModal, this.state);
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
-                    <div className='header'>Create your Profile</div>
+                    <div className='header'>{this.formatMessage(messages.createProfile)}</div>
                     <div className='registration-body'>
                         <div className='flex mt36'>
                             <UploadSteps current={2} />
@@ -396,9 +384,11 @@ class ClinicRegister extends Component {
                     </div>
                     <div className='footer'>
                         <div className={'footer-text-active'} onClick={this.onBackClick}>
-                            Back
+                            
+                        {this.formatMessage(messages.back)}
                       </div>
-                        <div className={'footer-text-active'} onClick={this.onNextClick}>Finish</div></div>
+                        <div className={'footer-text-active'} onClick={this.onNextClick}>
+                            {this.formatMessage(messages.finish)}</div></div>
                 </div>
 
                 <LocationModal visible={visible} handleCancel={this.handleCancel} handleOk={this.handleOk} location={clinicKeyOfModal && clinics[clinicKeyOfModal] ? clinics[clinicKeyOfModal].location : ''} />

@@ -44,7 +44,6 @@ export const REGISTER_REGISTRATION_COMPLETED_WITH_ERROR = "REGISTER_REGISTRATION
 
 export const doctorProfileRegister = (payload) => {
   let response = {};
-  console.log("DOCTORRR PROFILE REGISTERR");
   return async (dispatch) => {
     try {
       dispatch({ type: DOCTOR_PROFILE_UPDATE });
@@ -54,8 +53,6 @@ export const doctorProfileRegister = (payload) => {
         url: Doctor.getdoctorProfileRegisterUrl(),
         data: payload,
       });
-
-      console.log("SIGN IN response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -83,7 +80,6 @@ export const doctorProfileRegister = (payload) => {
 
 export const doctorQualificationRegister = (payload) => {
   let response = {};
-  console.log("DOCTORRR QUALIFICATION REGISTERR");
   return async (dispatch) => {
     try {
       dispatch({ type: DOCTOR_QUALIFICATION_UPDATE });
@@ -93,8 +89,6 @@ export const doctorQualificationRegister = (payload) => {
         url: Doctor.getdoctorQualificationRegisterUrl(),
         data: payload,
       });
-
-      console.log("Doctor qualification response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -122,7 +116,6 @@ export const doctorQualificationRegister = (payload) => {
 
 export const doctorClinicRegister = (payload) => {
   let response = {};
-  console.log("DOCTORRR ClINIC REGISTERR");
   return async (dispatch) => {
     try {
       dispatch({ type: DOCTOR_CLINIC_UPDATE });
@@ -133,9 +126,7 @@ export const doctorClinicRegister = (payload) => {
         data: payload,
       });
 
-      console.log("Doctor clinic response --> ", response);
-
-      const { status, payload: { error = "", data = {} } = {} } =
+      const { status, payload: { error = "" } = {} } =
         response || {};
 
       if (status === false) {
@@ -163,7 +154,6 @@ export const doctorClinicRegister = (payload) => {
 
 export const getDoctorProfileRegisterData = (userId) => {
   let response = {};
-  console.log("DOCTORRR PROFILE REGISTERR DATA");
   return async (dispatch) => {
     try {
       dispatch({ type: GET_DOCTOR_PROFILE_DATA });
@@ -172,8 +162,6 @@ export const getDoctorProfileRegisterData = (userId) => {
         method: REQUEST_TYPE.GET,
         url: Doctor.getdoctorProfileRegisterDataUrl(userId),
       });
-
-      console.log("DOCTORRR PROFILE REGISTERR DATA response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -203,7 +191,6 @@ export const getDoctorProfileRegisterData = (userId) => {
 
 export const getDoctorQualificationRegisterData = () => {
   let response = {};
-  console.log("DOCTORRR QUALIFICATION REGISTERR DATA");
   return async (dispatch) => {
     try {
       dispatch({ type: GET_DOCTOR_QUALIFICATION_DATA });
@@ -212,8 +199,6 @@ export const getDoctorQualificationRegisterData = () => {
         method: REQUEST_TYPE.GET,
         url: Doctor.getdoctorQualificationRegisterDataUrl(),
       });
-
-      console.log("DOCTORRR QUALIFICATION REGISTERR DATA response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -241,7 +226,6 @@ export const getDoctorQualificationRegisterData = () => {
 
 export const registerQualification = (payload) => {
   let response = {};
-  console.log("REGISTER QUALIFICATION IMAGE DATA");
   return async (dispatch) => {
     try {
       dispatch({ type: REGISTER_QUALIFICATION });
@@ -250,8 +234,6 @@ export const registerQualification = (payload) => {
         url: Doctor.getRegisterQualificationUrl(),
         data: payload
       });
-
-      console.log("REGISTER QUALIFICATION IMAGE response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -262,7 +244,7 @@ export const registerQualification = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { qualification_id } = data;
+        // const { qualification_id } = data;
         dispatch({
           type: REGISTER_QUALIFICATION_COMPLETED,
           data: data,
@@ -280,7 +262,6 @@ export const registerQualification = (payload) => {
 
 export const registerRegistration = (payload) => {
   let response = {};
-  console.log("REGISTER QUALIFICATION IMAGE DATA");
   return async (dispatch) => {
     try {
       dispatch({ type: REGISTER_REGISTRATION });
@@ -289,8 +270,6 @@ export const registerRegistration = (payload) => {
         url: Doctor.getRegisterRegistrationUrl(),
         data: payload
       });
-
-      console.log("REGISTER QUALIFICATION IMAGE response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -301,7 +280,7 @@ export const registerRegistration = (payload) => {
           payload: { error },
         });
       } else if (status === true) {
-        const { qualification_id } = data;
+        // const { qualification_id } = data;
         dispatch({
           type: REGISTER_REGISTRATION_COMPLETED,
           data: data,
@@ -318,7 +297,6 @@ export const registerRegistration = (payload) => {
 
 export const deleteDoctorQualificationImage = (qualificationId, document) => {
   let response = {};
-  console.log("DELETE QUALIFICATION IMAGE DATA");
   return async (dispatch) => {
     try {
       dispatch({ type: DELETE_QUALIFICATION_IMAGE });
@@ -328,8 +306,6 @@ export const deleteDoctorQualificationImage = (qualificationId, document) => {
         url: Doctor.getDeleteQualificationDocumentUrl(qualificationId),
         data: { document },
       });
-
-      console.log("DELETE QUALIFICATION IMAGE response --> ", response);
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
@@ -358,7 +334,6 @@ export const deleteDoctorQualificationImage = (qualificationId, document) => {
 
 export const deleteDoctorRegistrationImage = (registrationId, document) => {
   let response = {};
-  console.log("DELETE REGISTRATION IMAGE DATA");
   return async (dispatch) => {
     try {
       dispatch({ type: DELETE_REGISTRATION_IMAGE });
@@ -369,9 +344,7 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
         data: { document },
       });
 
-      console.log("DELETE REGISTRATION IMAGE response --> ", response);
-
-      const { status, payload: { error = "", data = {} } = {} } =
+      const { status, payload: { error = "" } = {} } =
         response || {};
 
       if (status === false) {

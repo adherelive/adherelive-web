@@ -1,6 +1,6 @@
 import Controller from "../../index";
 import appointmentService from "../../../services/appointment/appointment.service";
-import { USER_CATEGORY } from "../../../../constant";
+import {FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
 import moment from "moment";
 
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -13,6 +13,10 @@ import doctorService from "../../../services/doctor/doctor.service";
 import patientService from "../../../services/patients/patients.service";
 
 import Log from "../../../../libs/log";
+import featureDetailService from "../../../services/featureDetails/featureDetails.service";
+import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
+import providerService from "../../../services/provider/provider.service";
+import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLLER");
 
@@ -35,7 +39,12 @@ class MobileAppointmentController extends Controller {
         end_time,
         treatment_id = "",
         care_plan_id = null,
-        reason = ""
+        reason = "",
+        type = null,
+        type_description = null,
+        provider_id = null,
+        provider_name = null,
+        critical = false
       } = body;
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
@@ -102,9 +111,14 @@ class MobileAppointmentController extends Controller {
         end_date: moment(date),
         start_time,
         end_time,
+        provider_id,
+        provider_name,
         details: {
           treatment_id,
-          reason
+          reason,
+          type,
+          type_description,
+          critical
         }
       };
 
@@ -205,9 +219,12 @@ class MobileAppointmentController extends Controller {
         start_time,
         end_time,
         treatment_id = "",
-        reason = ""
-        // participant_one_type = "",
-        // participant_one_id = "",
+        reason = "",
+        type = null,
+        type_description = null,
+        provider_id = null,
+        provider_name = null,
+        critical = false
       } = body;
         Logger.debug("CONDITION CHECK ---> ",  moment(date));
       const { userId, userData: { category } = {} } = userDetails || {};
@@ -291,9 +308,14 @@ class MobileAppointmentController extends Controller {
         end_date: moment(date),
         start_time,
         end_time,
+        provider_id,
+        provider_name,
         details: {
           treatment_id,
-          reason
+          reason,
+          type,
+          type_description,
+          critical,
         }
       };
 
@@ -364,6 +386,60 @@ class MobileAppointmentController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  getAppointmentDetails = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const appointmentDetails = await featureDetailService.getDetailsByData({feature_type: FEATURE_TYPE.APPOINTMENT});
+
+      const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+
+      let providerData = {};
+
+      const providerDetails = await providerService.getAll();
+
+      Logger.debug("providerDetails ---->", providerDetails);
+
+      for(const provider of providerDetails) {
+        const providerDetail = await ProviderWrapper(provider);
+        providerData[providerDetail.getProviderId()] = providerDetail.getBasicInfo();
+      }
+
+
+      return raiseSuccess(res, 200, {
+            static_templates: {
+              appointments: {...appointmentData.getFeatureDetails()},
+            },
+            providers: {
+              ...providerData
+            }
+          },
+          "Appointment details fetched successfully");
+
+    } catch(error) {
+      Logger.debug("getAppointmentDetails 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  // getTypeDescription = async (req, res) => {
+  //   const {raiseSuccess, raiseServerError} = this;
+  //   try {
+  //     const {id} = req.query || {};
+  //     const appointmentDetails = await featureDetailService.getDetailsByData({feature_type: FEATURE_TYPE.APPOINTMENT});
+  //
+  //     const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+  //
+  //     return raiseSuccess(res, 200, {
+  //           ...appointmentData.getAppointmentTypeDescription(id),
+  //         },
+  //         "Appointment type description details fetched successfully");
+  //
+  //   } catch(error) {
+  //     Logger.debug("getTypeDescription 500 error ", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
 }
 
 export default new MobileAppointmentController();

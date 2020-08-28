@@ -13,12 +13,7 @@ const mapStateToProps = state => {
     other_details: { medication_details = {} } = {}, medicines
   } = state;
 
-  console.log(
-    "123124 visible, type --> ",
-    visible,
-    type,
-    type === DRAWER.ADD_MEDICATION_REMINDER
-  );
+  
 
   return {
     visible: visible && type === DRAWER.ADD_MEDICATION_REMINDER,

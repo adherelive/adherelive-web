@@ -32,5 +32,5 @@ export default async (data = null, id = null) => {
         return new DoctorQualificationWrapper(data);
     }
     const doctorQualification = await doctorQualificationService.getQualificationById(id);
-    return new DoctorQualificationWrapper(doctorQualification.get());
+    return new DoctorQualificationWrapper(doctorQualification);
 };

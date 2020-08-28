@@ -62,10 +62,5 @@ CarePlanMedication.hasOne(Medication, {
     targetKey: "medication_id"
 });
 
-CarePlanMedication.belongsTo(CarePlan, {
-    foreignKey:"care_plan_id",
-    targetKey:"id"
-});
-
 
 export default CarePlanMedication;

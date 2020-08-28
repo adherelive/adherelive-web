@@ -3,8 +3,6 @@ const fs = require("fs");
 
 const Log = require("../../../libs/log")("minioService");
 
-console.log("__dirname --> ", __dirname);
-
 class MinioService {
   constructor() {
     this.minioClient = new Minio.Client({

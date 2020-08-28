@@ -50,14 +50,13 @@ import {
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
-import minioService from "../../../app/services/minio/minio.service";
-import md5 from "js-md5";
-import UserVerifications from "../../models/userVerifications";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
+import careplanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 
-import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
+import { getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
+
 const Logger = new Log("WEB USER CONTROLLER");
 
 class UserController extends Controller {
@@ -256,7 +255,7 @@ class UserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "Invalid Credentials ");
+        return this.raiseClientError(res, 422, user, "Email doesn't exists");
       }
 
       // let verified = user.get("verified");
@@ -284,7 +283,12 @@ class UserController extends Controller {
           }
         );
 
-        const apiUserDetails = await UserWrapper(user.get());
+        const userRef = await userService.getUserData({id: user.get("id")});
+        // Logger.debug("userRef ---> ", userRef);
+
+        const apiUserDetails = await UserWrapper(userRef.get());
+
+        Logger.debug("userRef ----------------> ", apiUserDetails.getPermissionData());
 
         console.log('ID OF USERRRRRRRR,', apiUserDetails);
 
@@ -297,10 +301,11 @@ class UserController extends Controller {
         }
 
         const dataToSend = {
-          users: {
-            [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
-          },
-          ...permissions,
+          // users: {
+          //   [apiUserDetails.getId()]: apiUserDetails.getBasicInfo(),
+          // },
+          // ...permissions,
+          ...await apiUserDetails.getReferenceData(),
           auth_user: apiUserDetails.getId(),
           auth_category: apiUserDetails.getCategory()
         };
@@ -472,7 +477,9 @@ class UserController extends Controller {
         let userIds = [userId];
         let careplanData = [];
 
-        console.log("GET USER CATEGORY DATA", category, userId);
+        let treatmentIds = [];
+        let conditionIds = [];
+
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
@@ -491,18 +498,30 @@ class UserController extends Controller {
                 doctor_id: userCategoryId
               });
 
-              await careplanData.forEach(async carePlan => {
+              for(const carePlan of careplanData) {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 const carePlanId = carePlanApiWrapper.getCarePlanId();
+
+                const medicationDetails = await careplanMedicationService.getMedicationsByCarePlanId(carePlanId);
+
+                let medicationIds = [];
+
+                for(const medication of medicationDetails) {
+                  medicationIds.push(medication.get("medication_id"));
+                }
+
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
 
+                const {treatment_id, severity_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
+                treatmentIds.push(treatment_id);
+                conditionIds.push(condition_id);
                 carePlanApiData[
-                  carePlanApiWrapper.getCarePlanId()
-                ] =
-                  // carePlanApiWrapper.getBasicInfo();
-                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails };
-              });
+                    carePlanApiWrapper.getCarePlanId()
+                    ] =
+                    // carePlanApiWrapper.getBasicInfo();
+                    { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: medicationIds };
+              }
             }
             break;
           default:
@@ -517,7 +536,6 @@ class UserController extends Controller {
         // });
 
         // todo: as of now, get all patients
-        console.log("PATIENT IDSSSSSSSSSS========>", patientIds);
         const patientsData = await patientService.getPatientByData({
           id: patientIds
         });
@@ -552,10 +570,10 @@ class UserController extends Controller {
 
         // treatments
         let treatmentApiDetails = {};
-        let treatmentIds = [];
-        const treatmentDetails = await treatmentService.getAll();
-
+        const treatmentDetails = await treatmentService.getAll({id: treatmentIds});
+        treatmentIds = [];
         for (const treatment of treatmentDetails) {
+
           const treatmentWrapper = await TreatmentWrapper(treatment);
           treatmentIds.push(treatmentWrapper.getTreatmentId());
           treatmentApiDetails[treatmentWrapper.getTreatmentId()] = treatmentWrapper.getBasicInfo();
@@ -574,30 +592,35 @@ class UserController extends Controller {
 
         // conditions
         let conditionApiDetails = {};
-        let conditionIds = [];
-        const conditionDetails = await conditionService.getAll();
-
+        const conditionDetails = await conditionService.getAllByData({id: conditionIds});
+        conditionIds = [];
         for (const condition of conditionDetails) {
           const conditionWrapper = await ConditionWrapper(condition);
           conditionIds.push(conditionWrapper.getConditionId());
           conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
         }
 
+        Logger.debug("conditionWrapper.getConditionId() --> ", treatmentIds);
+
+
         let permissions = {
           permissions: []
         };
 
-        Logger.debug("permissions check --> ", authUserDetails.getPermissions());
 
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
         }
 
-        Logger.debug("permissions value --> ", permissions);
+        // speciality temp todo
+        let referenceData = {};
+        if(category === USER_CATEGORY.DOCTOR && userCategoryApiWrapper) {
+          referenceData = await userCategoryApiWrapper.getReferenceInfo();
+        }
 
         /**** API wrapper for DOCTOR ****/
 
-        const dataToSend = {
+        return this.raiseSuccess(res, 200, {
           users: {
             ...userApiData
           },
@@ -610,24 +633,23 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
-          treatments: {
-            ...treatmentApiDetails,
-          },
           severity: {
             ...severityApiDetails,
+          },
+          treatments: {
+            ...treatmentApiDetails,
           },
           conditions: {
             ...conditionApiDetails,
           },
+          ...referenceData,
           ...permissions,
-          treatment_ids: treatmentIds,
           severity_ids: severityIds,
+          treatment_ids: treatmentIds,
           condition_ids: conditionIds,
           auth_user: userId,
           auth_category: category
-        };
-
-        return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
+        }, "basic info");
       } else {
         console.log("userExists --->>> ", req.userDetails.exists);
         // throw new Error(constants.COOKIES_NOT_SET);

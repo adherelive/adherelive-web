@@ -12,7 +12,6 @@ import confirm from "antd/es/modal/confirm";
 import messages from "./message";
 import EditAppointmentForm from "./form";
 import Footer from "../footer";
-import CalendarTimeSelecton from "./calender";
 
 class EditAppointment extends Component {
   constructor(props) {
@@ -28,20 +27,16 @@ class EditAppointment extends Component {
   }
 
   componentDidMount = () => {
-
-    // console.log("COMPONENT DID MOUNT========>8697857668975675976465467", this.state);
   }
 
-  onFormFieldChanges = (props, allvalues) => {
+  onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
     } = props;
     const isError = hasErrors(getFieldsError());
     const { disabledSubmit } = this.state;
 
-    console.log("COMPONENT DID MOUNT========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
     if (disabledSubmit !== isError && isFieldsTouched()) {
-      console.log("INSIDE IFFFF========>8697857668975675976465467", isFieldsTouched(), isError, JSON.stringify(this.state));
       this.setState({ disabledSubmit: isError });
     }
   };
@@ -66,23 +61,39 @@ class EditAppointment extends Component {
     } = formRef;
 
     let pId = patientId ? patientId : patient_id;
-    const { basic_info: { user_id } = {} } = patients[pId] || {};
+    // const { basic_info: { user_id } = {} } = patients[pId] || {};
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("VALUES --> ", values);
-        const {
+        let {
           patient = {},
           date,
+          type,
+          type_description,
+          provider_id,
+          critical = false,
           start_time,
+          reason,
           end_time,
-          description,
-
-          treatment,
-          reason
+          description = "",
+          treatment = "",
         } = values;
+        let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
 
-        const data = {
+        let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
+
+
+        const startDate = date ? moment(date) : moment();
+        const newMonth = date ? startDate.get("month") : moment().get("month");
+        const newDate = date ? startDate.get("date") : moment().get("date");
+        const newYear = date ? startDate.get("year") : moment().get("year");
+        let newEventStartTime = date ? moment(start_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : start_time;
+        let newEventEndTime = date ? moment(end_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : end_time;
+        const data = newProvider_id ? {
           // todo: change participant one with patient from store
           id,
           participant_two: {
@@ -90,14 +101,38 @@ class EditAppointment extends Component {
             category: "patient",
           },
           date,
-          start_time,
-          end_time,
+          start_time: newEventStartTime,
+          end_time: newEventEndTime,
+          reason,
           description,
+          type,
+          type_description,
+          provider_id: newProvider_id,
+          provider_name,
+          critical,
           treatment_id: treatment,
-          reason
-        };
+        } : {
+            // todo: change participant one with patient from store
+            id,
+            participant_two: {
+              id: pId,
+              category: "patient",
+            },
+            date,
+            start_time: newEventStartTime,
+            end_time: newEventEndTime,
+            reason,
+            description,
+            type,
+            type_description,
+            provider_name,
+            critical,
+            treatment_id: treatment,
+          };
 
-        if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
+        if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
+          message.error('Please fill all mandatory details.')
+        } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
@@ -120,7 +155,6 @@ class EditAppointment extends Component {
               statusCode: code,
               payload: {
                 message: errorMessage = "",
-                error,
                 error: { error_type = "" } = {},
               },
             } = response || {};
@@ -140,7 +174,6 @@ class EditAppointment extends Component {
               message.warn('Something went wrong, Please try again!');
             }
 
-            console.log("add appointment response -----> ", response);
           } catch (error) {
             console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }
@@ -153,7 +186,6 @@ class EditAppointment extends Component {
 
   onClose = () => {
     const { close } = this.props;
-    console.log('8697857668975675976465467 ON CLOSE CALLED----->');
     this.setState({ disabledSubmit: true });
     close();
   };
@@ -167,9 +199,9 @@ class EditAppointment extends Component {
 
   warnNote = () => {
     return (
-      <div className="pt50">
-        <p>
-          <span className="red">{"Note"}</span>
+      <div className="pt16">
+        <p className="red">
+          <span className="fw600">{"Note"}</span>
           {" : This delete is irreversible"}
         </p>
       </div>
@@ -181,7 +213,7 @@ class EditAppointment extends Component {
     const { payload: { id, patient_id } = {}, patients } = this.props;
     const { warnNote } = this;
 
-    const { basic_info: { first_name, middle_name, last_name, user_id } = {} } = patients[patient_id] || {};
+    const { basic_info: { first_name, middle_name, last_name } = {} } = patients[patient_id] || {};
 
     confirm({
       title: `Are you sure you want to delete the appointment with ${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? last_name : ""}?`,
@@ -207,7 +239,6 @@ class EditAppointment extends Component {
   getDeleteButton = () => {
     const { handleDelete } = this;
     const { loading, deleteAppointmentOfTemplate, addAppointment, hideAppointment } = this.props;
-    console.log("DELETE APPOINTMENT IN DELETE FUNCTIONNN", typeof (deleteAppointmentOfTemplate), deleteAppointmentOfTemplate ? deleteAppointmentOfTemplate : handleDelete);
     if (addAppointment) {
       return (
         <Button onClick={hideAppointment} style={{ marginRight: 8 }}>
@@ -246,7 +277,6 @@ class EditAppointment extends Component {
       getDeleteButton,
     } = this;
 
-    console.log("PROPSSS OFF APPOINTMENT========>8697857668975675976465467", JSON.stringify(this.state));
     const submitButtonProps = {
       disabled: disabledSubmit,
       // loading: loading && !deleteLoading
@@ -261,6 +291,7 @@ class EditAppointment extends Component {
         <Drawer
           placement="right"
           // closable={false}
+          maskClosable={false}
           headerStyle={{
             position: "sticky",
             zIndex: "9999",

@@ -5,9 +5,11 @@ const Op = Sequelize.Op;
 
 class TreatmentService {
 
-    getAll = async () => {
+    getAll = async (data) => {
         try {
-            const treatment = await Treatment.findAll();
+            const treatment = await Treatment.findAll({
+                where: data
+            });
             return treatment;
         } catch(error) {
             throw error;
@@ -19,7 +21,7 @@ class TreatmentService {
             const treatment = await Treatment.findAll({
                 where: {
                     name: {
-                        [Op.like]: `%${data}%`,
+                        [Op.like]: `${data}%`,
                     },
                 },
             });

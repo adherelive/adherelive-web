@@ -1,32 +1,62 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon } from "antd";
+import { Drawer } from "antd";
 import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
 import messages from "./message";
 import moment from "moment";
-
 import ShareIcon from "../../../Assets/images/redirect3x.png";
+import MsgIcon from "../../../Assets/images/chat.png";
+// import config from "../../../config/config";
+
+
+// const { WEB_URL } = config;
 
 class PatientDetailsDrawer extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      carePlanId: 1,
+      carePlanMedicationIds: []
+    };
   }
 
   componentDidMount() {
-    const { getMedications, payload: { patient_id } = {} } = this.props;
-    console.log("19283791273 patient_id --> ", patient_id);
+    const { getMedications, payload: { patient_id } = {}, care_plans = {} } = this.props;
+    let carePlanId = 1;
+    let carePlanMedicationIds = [];
+    for (let carePlan of Object.values(care_plans)) {
+
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId)) {
+        carePlanId = id;
+        carePlanMedicationIds = medication_ids;
+      }
+
+    }
+    this.setState({ carePlanId, carePlanMedicationIds });
     if (patient_id) {
       getMedications(patient_id);
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { payload: { patient_id } = {}, getMedications } = this.props;
+    const { payload: { patient_id } = {}, getMedications, care_plans = {} } = this.props;
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
+    let carePlanId = 1;
+    let carePlanMedicationIds = [];
+    for (let carePlan of Object.values(care_plans)) {
+
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] } = carePlan;
+      if (parseInt(patient_id) === parseInt(patientId)) {
+        carePlanId = id;
+        carePlanMedicationIds = medication_ids;
+      }
+
+    }
 
     if (patient_id !== prev_patient_id) {
       getMedications(patient_id);
+      this.setState({ carePlanId, carePlanMedicationIds });
     }
   }
 
@@ -41,10 +71,10 @@ class PatientDetailsDrawer extends Component {
   };
 
   getMedicationList = () => {
-    const { patients, id = "1", medications = {}, medicines = {} } = this.props;
-    const { getFormattedDays } = this;
+    const { medications = {}, medicines = {} } = this.props;
+    const { carePlanMedicationIds } = this.state;
     // const { medications: medication_ids = [] } = patients[id] || {};
-    const medicationList = Object.keys(medications).map(id => {
+    const medicationList = carePlanMedicationIds.map(id => {
       const {
         basic_info: {
           start_date,
@@ -56,21 +86,30 @@ class PatientDetailsDrawer extends Component {
       const { basic_info: { type, name = '' } = {} } = medicines[medicine_id] || {};
       // const { repeat_type, doses, date = [] } = schedule || {};
       return (
-        <div className="flex justify-space-between align-center mb10">
+        <div key={id} className="flex justify-space-between align-center mb10">
           <div className="pointer tab-color fw600 wp35 tooltip">{name.length > 20 ? name.substring(0, 21) + '...' : name}
 
-            <span class="tooltiptext">{name}</span></div>
-          <div className="wp35 tal">{`${repeat_days.join(", ")}`}</div>
+            <span className="tooltiptext">{name}</span></div>
+          <div className="wp35 tal">{repeat_days ? `${repeat_days.join(", ")}` : '--'}</div>
 
           <div className="wp20 tar">{end_date ? moment(end_date).format("DD MMM") : "--"}</div>
         </div>
       );
     });
 
-    console.log("123781232 here");
 
     return medicationList;
   };
+
+  openChatTab = () => {
+
+    const { payload: { patient_id } = {}, setPatientForChat, openPopUp } = this.props;
+    setPatientForChat(patient_id).then(() => {
+      openPopUp()
+    }
+    );
+    // window.open(`http://localhost:3000${getPatientConsultingUrl(patient_id)}`, '_blank');
+  }
 
   handlePatientDetailsRedirect = e => {
     e.preventDefault();
@@ -85,7 +124,8 @@ class PatientDetailsDrawer extends Component {
     const {
       formatMessage,
       getMedicationList,
-      handlePatientDetailsRedirect
+      handlePatientDetailsRedirect,
+      openChatTab
     } = this;
 
     let { patient_id: id = "" } = payload || {};
@@ -97,7 +137,6 @@ class PatientDetailsDrawer extends Component {
 
         let { basic_info: { id: cpId = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
 
-        console.log('73284782734783274982347', carePlanId, id, patientId);
         if (parseInt(id) === parseInt(patientId)) {
           carePlanId = cpId;
         }
@@ -111,17 +150,14 @@ class PatientDetailsDrawer extends Component {
       const {
         basic_info: { first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
         reports = [],
-        details = {},
         provider_id,
       } = patients[id] || {};
 
-      let { age_type = '' } = details || {};
 
       const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
       const { basic_info: { name: providerName = "--" } = {} } =
         providers[provider_id] || {};
 
-      console.log("3912739 gender --> ", patients[id]);
       return (
         <Fragment>
           {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
@@ -131,8 +167,14 @@ class PatientDetailsDrawer extends Component {
           <div className="wp100 flex justify-space-between align-center mt20">
             <div className="flex justify-space-around align-center">
               <div className="pr10 fs24 fw600">{`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name}`}</div>
-              <div className="pr10 fs20 fw500">{`(${gender ? `${GENDER[gender].view} ` : ''}${age ? age + `${age_type === '2' && age > 1 ? ' months' : age_type === '2' ? ' month' : age_type === '1' && age > 1 ? ' days' : age_type === '1' ? ' day' : ''}` : '--'})`}</div>
+              <div className="pr10 fs20 fw500">{`(${gender ? `${GENDER[gender].view} ` : ''}${age ? age : '--'})`}</div>
               {/* <Icon type="wechat" width={20} /> */}
+              <img
+                src={MsgIcon}
+                alt="share icon"
+                className="pointer w25"
+                onClick={openChatTab}
+              />
             </div>
             <img
               src={ShareIcon}
@@ -150,6 +192,7 @@ class PatientDetailsDrawer extends Component {
               const { total = "1", critical = "0" } = reports[id] || {};
               return (
                 <div
+                  key={id}
                   className={`mt10 ${id === MISSED_MEDICATION || id === MISSED_ACTIONS ? "ml16" : ""} mwp45 maxwp48 h100 br5 bg-${PATIENT_BOX_CONTENT[id]["background_color"]} br-${PATIENT_BOX_CONTENT[id]["border_color"]} float-l flex flex-1 direction-column justify-space-between`}
                 >
                   <div className="ml10 mt10 fs16 fw600">
@@ -220,8 +263,6 @@ class PatientDetailsDrawer extends Component {
         </Fragment>
       );
     }
-
-    console.log("2873618312 payload --> ", payload);
   };
 
   formatMessage = data => this.props.intl.formatMessage(data);
@@ -235,16 +276,18 @@ class PatientDetailsDrawer extends Component {
     const { visible } = this.props;
     const { onClose, getPatientDetailContent } = this;
 
+
     if (visible !== true) {
       return null;
     }
     return (
       <Fragment>
         <Drawer
-
+          mask={false}
           title="   "
           placement="right"
           // closable={false}
+          maskClosable={false}
           headerStyle={{
             position: "sticky",
             zIndex: "9999",
@@ -253,7 +296,7 @@ class PatientDetailsDrawer extends Component {
           onClose={onClose}
           visible={visible} // todo: change as per state, -- WIP --
           width={600}
-
+          className={'patient-detail-drawer'}
         >
           {getPatientDetailContent()}
         </Drawer>

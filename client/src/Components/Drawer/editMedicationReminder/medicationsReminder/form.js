@@ -18,12 +18,14 @@ import medicineStrengthUnitField from "../common/medicationStrengthUnit";
 import medicineQuantityField from "../common/medicineQuantity";
 import whenToTakeMedicineField from "../common/whenTotakeMedicaine";
 import medicationReminderStageField from "../common/medicationStage";
+import instructions from "../common/instructions";
+import formulation from "../common/formulation";
 
 import CalendarTimeSelection from "../calendarTimeSelection";
 
 import messages from "../message";
 import { hasErrors, isNumber } from "../../../../Helper/validation";
-import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER } from "../../../../constant";
+import { REPEAT_TYPE, USER_CATEGORY, DAYS_NUMBER, MEDICINE_UNITS } from "../../../../constant";
 const InputGroup = Input.Group;
 const { Item: FormItem } = Form;
 
@@ -91,11 +93,8 @@ class EditMedicationReminderForm extends Component {
   setUnit = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue }
     } = this.props;
-    console.log('738467386587346578234625834 called', getFieldValue(UNIT_FIELD), e.target.value);
-
-    const currentValue = getFieldValue(UNIT_FIELD) || 0.0;
     setFieldsValue({ [UNIT_FIELD]: e.target.value });
   };
 
@@ -126,7 +125,6 @@ class EditMedicationReminderForm extends Component {
 
     // }
 
-    // console.log('3647823651783265818347========>', selectedDays, repeat);
     const startDate = getFieldValue(startDateField.field_name);
     let startDateDay = startDate ? moment(startDate).format('ddd') : moment().format('ddd');
     let startDayNumber = DAYS_NUMBER[startDateDay];
@@ -148,7 +146,6 @@ class EditMedicationReminderForm extends Component {
 
       daysToAdd = dayDiffPos ? dayDiffPos : 7 + dayDiffNeg;
 
-      console.log('3647823651783265818347========>', selectedDays, dayDiffPos, dayDiffNeg, daysToAdd);
     }
 
 
@@ -327,7 +324,6 @@ class EditMedicationReminderForm extends Component {
     } = this.props;
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("9127619237 values ---> ", values);
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
@@ -419,6 +415,50 @@ class EditMedicationReminderForm extends Component {
   //   }
   // };
 
+
+  setEndDateOneWeek = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue },
+      enableSubmit
+    } = this.props;
+
+    const startDate = getFieldValue(startDateField.field_name);
+    let newEndDate = moment(startDate).add(1, 'week');
+    setFieldsValue({
+      [endDateField.field_name]: newEndDate
+    });
+    enableSubmit();
+  };
+
+  setEndDateTwoWeek = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue },
+      enableSubmit
+    } = this.props;
+
+    const startDate = getFieldValue(startDateField.field_name);
+    let newEndDate = moment(startDate).add(2, 'week');
+    setFieldsValue({
+      [endDateField.field_name]: newEndDate
+    });
+    enableSubmit();
+  };
+
+  setEndDateLongTime = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue },
+      enableSubmit
+    } = this.props;
+
+    setFieldsValue({
+      [endDateField.field_name]: null
+    });
+    enableSubmit();
+  };
+
   getFooter = () => {
     const {
       form: { getFieldsError },
@@ -447,20 +487,15 @@ class EditMedicationReminderForm extends Component {
 
   render() {
     const {
-      getFooter,
       disabledEndDate,
       disabledStartDate,
       adjustEndDate,
-      onChangeEventStartTime,
       adjustEventOnStartDateChange,
-      onEventDurationChange,
-      onPrev,
-      onNext,
-      onStartDateChange,
-      addMedicationReminder,
       onPatientChange,
       setUnit,
-      formatMessage
+      formatMessage,
+      setEndDateOneWeek,
+      setEndDateTwoWeek, setEndDateLongTime
     } = this;
 
     const {
@@ -471,13 +506,13 @@ class EditMedicationReminderForm extends Component {
 
     const startTime = getFieldValue(startTimeField.field_name);
     let medicineUnit = getFieldValue(medicineStrengthUnitField.field_name);
+    console.log('765765467585785865875876', medicineUnit);
     let endTime;
 
     if (startTime && startTime.isValid) {
       endTime = startTime.clone().add("minutes", 3);
     }
 
-    console.log("PROPSSS OF FORMMMMMM=====>", this.props);
     const startDate = getFieldValue(startDateField.field_name);
 
     return (
@@ -496,11 +531,12 @@ class EditMedicationReminderForm extends Component {
 
           {chooseMedicationField.render({ ...this.props, otherUser })}
           {criticalMedicationField.render(this.props)}
+          {formulation.render(this.props)}
 
           <div className="flex align-items-end justify-content-space-between">
             <div className='flex direction-row flex-grow-1'>
               <label
-                for="dose"
+                htmlFor="dose"
                 className="form-label"
                 title="Dose"
               >
@@ -514,13 +550,12 @@ class EditMedicationReminderForm extends Component {
             </div> */}
             <div className="mg-ml-radio-group flex-grow-0">
               <RadioGroup
-
                 buttonStyle="solid"
                 size="small"
                 className="mg-ml flex justify-content-end"
               >
-                <RadioButton value={UNIT_ML} className={medicineUnit !== 'ml' ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit}>ml</RadioButton>
-                <RadioButton value={UNIT_MG} className={medicineUnit !== 'mg' ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit}>mg</RadioButton>
+                <RadioButton value={UNIT_ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML}>ml</RadioButton>
+                <RadioButton value={UNIT_MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG}>mg</RadioButton>
               </RadioGroup>
             </div>
           </div>
@@ -535,11 +570,17 @@ class EditMedicationReminderForm extends Component {
 
           <RepeatFields
             {...this.props}
+            formatMessage={formatMessage}
             adjustEventOnStartDateChange={adjustEventOnStartDateChange}
             disabledEndDate={disabledEndDate}
             disabledStartDate={disabledStartDate}
             adjustEndDate={adjustEndDate}
+            setEndDateOneWeek={setEndDateOneWeek}
+            setEndDateTwoWeek={setEndDateTwoWeek}
+            setEndDateLongTime={setEndDateLongTime}
           />
+
+          {instructions.render(this.props)}
 
           {/*{getFooter()}*/}
         </Form>

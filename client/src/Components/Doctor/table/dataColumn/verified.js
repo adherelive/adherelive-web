@@ -6,7 +6,6 @@ export default props => {
     const { userData } = props || {};
     const { activated_on } = userData || {};
 
-    console.log("9768686786 props --> ", props);
 
     return (
         <div>

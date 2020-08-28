@@ -28,6 +28,7 @@ import documentService from "../../../services/uploadDocuments/uploadDocuments.s
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import patientsService from "../../../services/patients/patients.service";
@@ -49,6 +50,8 @@ import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
 
+import generateOTP from "../../../helper/generateOtp";
+
 const Logger = new Log("MOBILE USER CONTROLLER");
 
 class MobileUserController extends Controller {
@@ -58,68 +61,156 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { user_name, password } = req.body;
-      const user = await userService.getUserByUsername(user_name);
+      const { mobile_number } = req.body;
+      const user = await userService.getUserByNumber({mobile_number});
 
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "Invalid Credentials");
+        return this.raiseClientError(res, 422, user, "Mobile Number doesn't exists");
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.get("password")
-      );
-      if (passwordMatch) {
-        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+      // const passwordMatch = await bcrypt.compare(
+      //   password,
+      //   user.get("password")
+      // );
+      // if (passwordMatch) {
+      //   const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+      //
+      //   const secret = process.config.TOKEN_SECRET_KEY;
+      //   const accessToken = await jwt.sign(
+      //     {
+      //       userId: user.get("id")
+      //     },
+      //     secret,
+      //     {
+      //       expiresIn
+      //     }
+      //   );
+      const apiUserDetails = await MUserWrapper(user.get());
+      const otp = generateOTP();
 
-        const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userId: user.get("id")
-          },
-          secret,
-          {
-            expiresIn
-          }
-        );
+      // delete previous generated otp if generated within time limit
+      const previousOtp = await otpVerificationService.delete({
+        user_id: apiUserDetails.getId()
+      });
 
-        const apiUserDetails = await MUserWrapper(user.get());
+      const patientOtpVerification = await otpVerificationService.create({
+        user_id: apiUserDetails.getId(),
+        otp,
+      });
 
-        let permissions = {
-          permissions: []
-        };
-
-        if(apiUserDetails.isActivated()) {
-          permissions = await apiUserDetails.getPermissions();
+      const emailPayload = {
+        title: "OTP Verification for patient",
+        toAddress: process.config.app.developer_email,
+        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+        templateData: {
+          title: "Patient",
+          mainBodyText: "OTP for adhere patient login is",
+          subBodyText: otp,
+          host: process.config.WEB_URL,
+          contactTo: "patientEngagement@adhere.com"
         }
+      };
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
-        Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
+      const smsPayload = {
+        // countryCode: prefix,
+        phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
+        message: `Hello from Adhere! Your OTP for login is ${otp}`
+      };
+
+      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+
+        // let permissions = {
+        //   permissions: []
+        // };
+        //
+        // if(apiUserDetails.isActivated()) {
+        //   permissions = await apiUserDetails.getPermissions();
+        // }
+        //
+        // Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
 
         return this.raiseSuccess(
           res,
           200,
           {
+            user_id: apiUserDetails.getId()
+          },
+          "OTP sent successfully"
+        );
+      // } else {
+      //   return this.raiseClientError(res, 422, {}, "Invalid Credentials");
+      // }
+    } catch (error) {
+      console.log("error sign in  --> ", error);
+      return this.raiseServerError(res);
+    }
+  };
+
+  verifyOtp = async (req, res) => {
+    const {raiseServerError, raiseSuccess} = this;
+    try {
+      const {otp, user_id} = req.body;
+
+      const otpDetails = await otpVerificationService.getOtpByData({
+        otp,
+        user_id
+      });
+
+      Logger.debug("otpDetails --> ", otpDetails);
+
+      if(otpDetails.length > 0) {
+        const destroyOtp = await otpVerificationService.delete({user_id});
+        const userDetails = await userService.getUserById(otpDetails[0].get("user_id"));
+
+        const userData = await UserWrapper(userDetails.get());
+        let permissions = {
+          permissions: []
+        };
+
+        if(userData.isActivated()) {
+          permissions = await userData.getPermissions();
+        }
+
+          const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+          const secret = process.config.TOKEN_SECRET_KEY;
+          const accessToken = await jwt.sign(
+            {
+              userId: userData.getId()
+            },
+            secret,
+            {
+              expiresIn
+            }
+          );
+
+        Logger.debug("userData ----> ", userData.isActivated());
+        return raiseSuccess(
+          res,
+          200,
+          {
             accessToken,
             users: {
-              [apiUserDetails.getId()]: {
-                ...apiUserDetails.getBasicInfo()
+              [userData.getId()]: {
+                ...userData.getBasicInfo()
               }
             },
-            auth_user: apiUserDetails.getId(),
-            auth_category: apiUserDetails.getCategory(),
-            ...permissions,
+            auth_user: userData.getId(),
+            auth_category: userData.getCategory(),
+            ...permissions
           },
           "Signed in successfully"
         );
       } else {
-        return this.raiseClientError(res, 422, {}, "Invalid Credentials");
+        return this.raiseClientError(res, 422, {}, "OTP not correct. Please try again");
       }
-    } catch (error) {
-      console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.message);
+    } catch(error) {
+      Logger.debug("verifyOtp 500 error", error);
+      raiseServerError(res);
     }
   };
 
@@ -131,7 +222,7 @@ class MobileUserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, {}, "Invalid Credentials");
+        return this.raiseClientError(res, 422, {}, "Email doesn't exists");
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
@@ -427,6 +518,9 @@ class MobileUserController extends Controller {
         let patientIds = [];
         let userIds = [userId];
 
+        let treatmentIds = [];
+        let conditionIds = [];
+
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
@@ -450,11 +544,16 @@ class MobileUserController extends Controller {
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
+
+                const {severity_id, treatment_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
+                treatmentIds.push(treatment_id);
+                conditionIds.push(condition_id);
               });
             }
             break;
           case USER_CATEGORY.DOCTOR:
             userCategoryData = await doctorService.getDoctorByUserId(userId);
+
             // Logger.debug("----DOCTOR-----", userCategoryData);
             if (userCategoryData) {
               userCategoryApiData = await MDoctorWrapper(userCategoryData);
@@ -476,6 +575,10 @@ class MobileUserController extends Controller {
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
+
+                const {severity_id, treatment_id, condition_id} = carePlanApiWrapper.getCarePlanDetails();
+                treatmentIds.push(treatment_id);
+                conditionIds.push(condition_id);
               });
             }
             break;
@@ -521,8 +624,6 @@ class MobileUserController extends Controller {
           });
         }
 
-        Logger.debug("userIds --> ", userIds);
-
         let apiUserDetails = {};
 
         if (userIds.length > 1) {
@@ -540,8 +641,8 @@ class MobileUserController extends Controller {
 
         // treatments
         let treatmentApiDetails = {};
-        let treatmentIds = [];
-        const treatmentDetails = await treatmentService.getAll();
+        const treatmentDetails = await treatmentService.getAll({id: treatmentIds});
+        treatmentIds = [];
 
         for (const treatment of treatmentDetails) {
           const treatmentWrapper = await MTreatmentWrapper(treatment);
@@ -566,8 +667,8 @@ class MobileUserController extends Controller {
 
         // conditions
         let conditionApiDetails = {};
-        let conditionIds = [];
-        const conditionDetails = await conditionService.getAll();
+        const conditionDetails = await conditionService.getAllByData({id: conditionIds});
+        conditionIds = [];
 
         for (const condition of conditionDetails) {
           const conditionWrapper = await MConditionWrapper(condition);
@@ -581,11 +682,17 @@ class MobileUserController extends Controller {
           permissions: []
         };
 
-        Logger.debug("apiUserDetails ---> ", userApiWrapper);
-
         if(userApiWrapper.isActivated()) {
           permissions = await userApiWrapper.getPermissions();
         }
+
+        // speciality temp todo
+        let referenceData = {};
+        if(userCategoryApiData && category === USER_CATEGORY.DOCTOR) {
+          referenceData = await userCategoryApiData.getReferenceInfo();
+        }
+
+        Logger.debug("Reference data ---> ", referenceData);
 
         const dataToSend = {
           users: {
@@ -601,19 +708,20 @@ class MobileUserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
-          treatments: {
-            ...treatmentApiDetails
-          },
           severity: {
             ...severityApiDetails
           },
           conditions: {
-            ...conditionApiDetails
+            ...conditionApiDetails,
           },
+          treatments: {
+            ...treatmentApiDetails,
+          },
+          ...referenceData,
           ...permissions,
-          treatment_ids: treatmentIds,
           severity_ids: severityIds,
           condition_ids: conditionIds,
+          treatment_ids: treatmentIds,
           auth_user: userId,
           auth_category: category
         };

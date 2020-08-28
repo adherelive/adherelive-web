@@ -19,12 +19,23 @@ class ConditionService {
             const condition = await Condition.findAll({
                 where: {
                     name: {
-                        [Op.like]: `%${data}%`,
+                        [Op.like]: `${data}%`,
                     },
                 },
             });
             return condition;
         } catch (error) {
+            throw error;
+        }
+    };
+
+    getAllByData = async data => {
+        try {
+            const condition = await Condition.findAll({
+                where: data
+            });
+            return condition;
+        } catch(error) {
             throw error;
         }
     };

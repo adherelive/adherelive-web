@@ -1,4 +1,3 @@
-import { MEDICATION_INITIAL_STATE } from "../../data";
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 import {
@@ -8,52 +7,51 @@ import {
   updateMedicationUrl,
   deleteMedicationUrl,
 } from "../../Helper/urls/mReminders";
-import moment from "moment";
 
-const INITIAL_STATE = {
-  "100": {
-    basic_info: {
-      id: "1",
-      participant_id: "2", // seed test-patient
-      organizer_id: "1",
-      organizer_type: "doctor",
-      description: "",
-      start_date: moment(),
-      end_date: moment().add(2, "w"),
-      details: {
-        medicine_id: "1",
-        start_time: moment(),
-        end_time: moment(),
-        repeat_days: ["Mon", "Fri"],
-        quantity: "10",
-        strength: "250",
-        unit: "mg",
-        when_to_take: "before breakfast",
-      },
-    },
-  },
-  "101": {
-    basic_info: {
-      id: "2",
-      participant_id: "2", // seed test-patient
-      organizer_id: "1",
-      organizer_type: "doctor",
-      description: "",
-      start_date: moment(),
-      end_date: moment().add(2, "m"),
-      details: {
-        medicine_id: "3",
-        start_time: moment(),
-        end_time: moment(),
-        repeat_days: ["Tue", "Wed", "Thu"],
-        quantity: "5",
-        strength: "300",
-        unit: "mg",
-        when_to_take: "before dinner",
-      },
-    },
-  },
-};
+// const INITIAL_STATE = {
+//   "100": {
+//     basic_info: {
+//       id: "1",
+//       participant_id: "2", // seed test-patient
+//       organizer_id: "1",
+//       organizer_type: "doctor",
+//       description: "",
+//       start_date: moment(),
+//       end_date: moment().add(2, "w"),
+//       details: {
+//         medicine_id: "1",
+//         start_time: moment(),
+//         end_time: moment(),
+//         repeat_days: ["Mon", "Fri"],
+//         quantity: "10",
+//         strength: "250",
+//         unit: "mg",
+//         when_to_take: "before breakfast",
+//       },
+//     },
+//   },
+//   "101": {
+//     basic_info: {
+//       id: "2",
+//       participant_id: "2", // seed test-patient
+//       organizer_id: "1",
+//       organizer_type: "doctor",
+//       description: "",
+//       start_date: moment(),
+//       end_date: moment().add(2, "m"),
+//       details: {
+//         medicine_id: "3",
+//         start_time: moment(),
+//         end_time: moment(),
+//         repeat_days: ["Tue", "Wed", "Thu"],
+//         quantity: "5",
+//         strength: "300",
+//         unit: "mg",
+//         when_to_take: "before dinner",
+//       },
+//     },
+//   },
+// };
 
 export const ADD_MEDICATION_REMINDER_START = "ADD_MEDICATION_REMINDER_START";
 export const ADD_MEDICATION_REMINDER_COMPLETE =

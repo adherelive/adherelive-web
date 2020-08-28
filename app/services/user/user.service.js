@@ -1,7 +1,10 @@
-import userModel from "../../models/users";
+import User from "../../models/users";
 import {database} from "../../../libs/mysql";
 import {USER_CATEGORY} from "../../../constant";
 import {Op} from "sequelize";
+
+import Permissions from "../../models/permissions";
+import UserCategoryPermissions from "../../models/userCategoryPermissions";
 
 class UserService {
     constructor() {
@@ -9,7 +12,7 @@ class UserService {
 
     async getAll() {
         try {
-            const user = await userModel.findAll();
+            const user = await User.findAll();
             return user;
         } catch (err) {
             console.log(err);
@@ -19,7 +22,7 @@ class UserService {
 
     getUser = async (id) => {
         try {
-            const user = await userModel.findOne({
+            const user = await User.findOne({
                 where: {
                     id
                 }
@@ -34,7 +37,7 @@ class UserService {
     async getUserByEmail(data) {
         try {
             const {email} = data;
-            const user = await userModel.findOne({
+            const user = await User.findOne({
                 where: {
                     email
                 }
@@ -47,8 +50,11 @@ class UserService {
 
     getUserByNumber = async (data) => {
         try {
-            const user = await userModel.findOne({
-                where: data
+            const user = await User.findOne({
+                where: {
+                    ...data,
+                    category: USER_CATEGORY.PATIENT
+                }
             });
             return user;
         } catch (error) {
@@ -58,7 +64,7 @@ class UserService {
 
     getUserById = async id => {
         try {
-            const user = await userModel.findOne({
+            const user = await User.findOne({
                 where: {
                     id
                 }
@@ -71,7 +77,7 @@ class UserService {
 
     getUserByData = async data => {
         try {
-            const user = await userModel.findAll({
+            const user = await User.findAll({
                 where: data
             });
             return user;
@@ -83,7 +89,7 @@ class UserService {
     async addUser(data) {
         const transaction = await database.transaction();
         try {
-            const response = await userModel.create(data, {transaction});
+            const response = await User.create(data, {transaction});
             await transaction.commit();
             return response;
         } catch (err) {
@@ -95,7 +101,7 @@ class UserService {
     updateEmail = async (data, id) => {
         const transaction = await database.transaction();
         try {
-            const user = await userModel.update(data, {
+            const user = await User.update(data, {
                 where: {
                     id
                 },
@@ -112,7 +118,7 @@ class UserService {
     updateUser = async (data, id) => {
         const transaction = await database.transaction();
         try {
-            const user = await userModel.update(data, {
+            const user = await User.update(data, {
                 where: {
                     id
                 },
@@ -128,7 +134,7 @@ class UserService {
 
     getPatientByMobile = async (mobile_number) => {
         try {
-            const user = await userModel.findAll({
+            const user = await User.findAll({
                 where: {
                     category: USER_CATEGORY.PATIENT,
                     mobile_number,
@@ -142,7 +148,7 @@ class UserService {
 
     getUserByUsername = async (user_name) => {
         try {
-            const user = await userModel.findOne({
+            const user = await User.findOne({
                 where: {
                     // category: USER_CATEGORY.PATIENT,
                     [Op.or]: [
@@ -161,6 +167,18 @@ class UserService {
         }
     };
 
+
+    getUserData = async (data) => {
+      try {
+          const user = await User.findOne({
+              where: data,
+              include: Permissions
+          });
+          return user;
+      } catch(error) {
+          throw error;
+      }
+    };
 }
 
 export default new UserService();

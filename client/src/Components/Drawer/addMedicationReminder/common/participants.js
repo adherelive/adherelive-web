@@ -25,68 +25,68 @@ const { Item: FormItem } = Form;
 
 const FIELD_NAME = "participantTwo";
 
-class RemindMyCareCoach extends Component {
-  constructor(props) {
-    super(props);
-    const { purpose, otherUser: { basicInfo: { _id } = {} } = {} } = this.props;
-    this.state = {
-      remindCareCoach: purpose && _id ? true : false
-    };
-  }
+// class RemindMyCareCoach extends Component {
+//   constructor(props) {
+//     super(props);
+//     const { purpose, otherUser: { basicInfo: { _id } = {} } = {} } = this.props;
+//     this.state = {
+//       remindCareCoach: purpose && _id ? true : false
+//     };
+//   }
 
-  setRemindCareCoachAlso = () => {
-    const {
-      currentUser: { programIds = [] } = {},
-      form: { setFieldsValue }
-    } = this.props;
+//   setRemindCareCoachAlso = () => {
+//     const {
+//       currentUser: { programIds = [] } = {},
+//       form: { setFieldsValue }
+//     } = this.props;
 
-    const { careCoach } = programIds[0] || {};
+//     const { careCoach } = programIds[0] || {};
 
-    const { remindCareCoach, random } = this.state;
+//     const { remindCareCoach, random } = this.state;
 
-    if (remindCareCoach) {
-      setFieldsValue({ [FIELD_NAME]: careCoach });
-    } else {
-      setFieldsValue({ [FIELD_NAME]: random });
-    }
-  };
+//     if (remindCareCoach) {
+//       setFieldsValue({ [FIELD_NAME]: careCoach });
+//     } else {
+//       setFieldsValue({ [FIELD_NAME]: random });
+//     }
+//   };
 
-  onChangeRemindCareCoach = e => {
-    this.setState(
-      { remindCareCoach: e.target.checked },
-      this.setRemindCareCoachAlso
-    );
-  };
+//   onChangeRemindCareCoach = e => {
+//     this.setState(
+//       { remindCareCoach: e.target.checked },
+//       this.setRemindCareCoachAlso
+//     );
+//   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+//   formatMessage = data => this.props.intl.formatMessage(data);
 
-  render() {
-    const { remindCareCoach } = this.state;
-    const {
-      form: { getFieldDecorator },
-      purpose
-    } = this.props;
-    const { onChangeRemindCareCoach, formatMessage } = this;
-    return (
-      <Fragment>
-        <FormItem style={{ display: "none" }}>
-          {getFieldDecorator(FIELD_NAME, {})(<Input />)}
-        </FormItem>
+//   render() {
+//     const { remindCareCoach } = this.state;
+//     const {
+//       form: { getFieldDecorator },
+//       purpose
+//     } = this.props;
+//     const { onChangeRemindCareCoach, formatMessage } = this;
+//     return (
+//       <Fragment>
+//         <FormItem style={{ display: "none" }}>
+//           {getFieldDecorator(FIELD_NAME, {})(<Input />)}
+//         </FormItem>
 
-        <div className="flex justify-content-space-between mb24">
-          <div className="fontsize14 black">
-            {formatMessage(messages.remindMyCareCoach)}
-          </div>
-          <Checkbox
-            defaultChecked={remindCareCoach}
-            disabled={!!purpose}
-            onChange={onChangeRemindCareCoach}
-          />
-        </div>
-      </Fragment>
-    );
-  }
-}
+//         <div className="flex justify-content-space-between mb24">
+//           <div className="fontsize14 black">
+//             {formatMessage(messages.remindMyCareCoach)}
+//           </div>
+//           <Checkbox
+//             defaultChecked={remindCareCoach}
+//             disabled={!!purpose}
+//             onChange={onChangeRemindCareCoach}
+//           />
+//         </div>
+//       </Fragment>
+//     );
+//   }
+// }
 
 class Participants extends Component {
   componentDidMount() {
@@ -140,7 +140,6 @@ class Participants extends Component {
 
   getParticipantOption = () => {
     const { members = [] } = this.props;
-    // console.log(" ---- members", members);
     let options = [];
     const doctors = members.filter(member => {
       const { basicInfo: { category } = {} } = member || {};

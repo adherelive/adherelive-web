@@ -10,7 +10,6 @@ import message from "antd/es/message";
 import messages from "./message";
 import AddAppointmentForm from "./form";
 import Footer from "../footer";
-import CalendarTimeSelecton from "./calender";
 
 class AddAppointment extends Component {
   constructor(props) {
@@ -25,7 +24,7 @@ class AddAppointment extends Component {
     );
   }
 
-  onFormFieldChanges = (props, allvalues) => {
+  onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
     } = props;
@@ -38,45 +37,84 @@ class AddAppointment extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { addCarePlanAppointment, getAppointments, payload: { patient_id }, patients, carePlanId } = this.props;
+    const { addCarePlanAppointment, payload: { patient_id }, carePlanId } = this.props;
     const { formRef = {}, formatMessage } = this;
 
-    const { basic_info: { user_id } = {} } = patients[patient_id] || {};
+    // const { basic_info: { user_id } = {} } = patients[patient_id] || {};
     const {
       props: {
-        form: { validateFields },
+        form: { validateFields, resetFields },
       },
     } = formRef;
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("VALUES --> ", values);
-        const {
-          patient = {},
+        let {
           date,
+          type,
+          type_description,
+          provider_id,
+          critical = false,
           start_time,
           reason,
           end_time,
           description = "",
           treatment = "",
         } = values;
+        let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
 
-        const data = {
+        let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
+
+
+        const startDate = date ? moment(date) : moment();
+        const newMonth = date ? startDate.get("month") : moment().get("month");
+        const newDate = date ? startDate.get("date") : moment().get("date");
+        const newYear = date ? startDate.get("year") : moment().get("year");
+        let newEventStartTime = date ? moment(start_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : start_time;
+        let newEventEndTime = date ? moment(end_time)
+          .clone()
+          .set({ month: newMonth, year: newYear, date: newDate }) : end_time;
+
+        const data = newProvider_id ? {
           // todo: change participant one with patient from store
           participant_two: {
             id: patient_id,
             category: "patient",
           },
           date,
-          start_time,
-          end_time,
+          start_time: newEventStartTime,
+          end_time: newEventEndTime,
           reason,
           description,
+          type,
+          type_description,
+          provider_id: newProvider_id,
+          provider_name,
+          critical,
           treatment_id: treatment,
-        };
+        } : {
+            // todo: change participant one with patient from store
+            participant_two: {
+              id: patient_id,
+              category: "patient",
+            },
+            date,
+            start_time: newEventStartTime,
+            end_time: newEventEndTime,
+            reason,
+            description,
+            type,
+            type_description,
+            provider_name,
+            critical,
+            treatment_id: treatment,
+          };
 
-        // console.log('6797867076878678978768',data);
-        if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
+        if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
+          message.error('Please fill all mandatory details.')
+        } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
           message.error('Cannot create appointment for past time.')
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
@@ -87,7 +125,7 @@ class AddAppointment extends Component {
             const {
               status,
               statusCode: code,
-              payload: { message: errorMessage = "", error, error: { error_type = "" } = {} },
+              payload: { message: errorMessage = "", error: { error_type = "" } = {} },
             } = response || {};
 
             if (code === 422 && error_type === "slot_present") {
@@ -97,6 +135,7 @@ class AddAppointment extends Component {
                 )} - ${moment(end_time).format("LT")}`
               );
             } else if (status === true) {
+              resetFields();
               message.success(formatMessage(messages.add_appointment_success));
               // getAppointments(patient_id);
             } else {
@@ -108,7 +147,6 @@ class AddAppointment extends Component {
             }
 
           } catch (error) {
-            console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }
         }
       }
@@ -120,6 +158,13 @@ class AddAppointment extends Component {
 
   onClose = () => {
     const { close } = this.props;
+    const { formRef } = this;
+    const {
+      props: {
+        form: { resetFields },
+      },
+    } = formRef;
+    resetFields();
     close();
   };
 
@@ -138,7 +183,6 @@ class AddAppointment extends Component {
     const { disabledSubmit } = this.state;
 
 
-    console.log('STATE OF DRAWER==========>IN APPOINTMENT', editAppointment ? appointmentVisible : visible, visible, appointmentVisible, hideAppointment, editAppointment);
     const {
       onClose,
       formatMessage,
@@ -161,6 +205,7 @@ class AddAppointment extends Component {
         <Drawer
           placement="right"
           // closable={false}
+          maskClosable={false}
           headerStyle={{
             position: "sticky",
             zIndex: "9999",

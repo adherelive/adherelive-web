@@ -15,12 +15,13 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   MEDICATION_TIMING,
-  REPEAT_TYPE
+  REPEAT_TYPE,
+  MEDICINE_FORM_TYPE
 } from "../../../constant";
 import Log from "../../../libs/log";
 import {getCarePlanAppointmentIds,getCarePlanMedicationIds,getCarePlanSeverityDetails} from '../carePlans/carePlanHelper'
-import { Proxy_Sdk } from "../../proxySdk";
-// import medicineService from "../../services/medicines/medicine.service";
+import {RRule} from "rrule";
+import EventSchedule from "../../eventSchedules";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -31,6 +32,7 @@ const KEY_TIMING = "timings";
 const KEY_DOSE = "dose";
 const KEY_UNIT = "dose_unit";
 const KEY_CUSTOM_REPEAT_OPTIONS = "custom_repeat_options";
+const KEY_MEDICINE_TYPE = "medicine_type";
 
 const medicationReminderDetails = {
   [KEY_REPEAT_TYPE]: REPEAT_TYPE,
@@ -38,7 +40,8 @@ const medicationReminderDetails = {
   [KEY_TIMING]: MEDICATION_TIMING,
   [KEY_DOSE]: DOSE_AMOUNT,
   [KEY_UNIT]: DOSE_UNIT,
-  [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS
+  [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
+  [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
 };
 
 class MReminderController extends Controller {
@@ -57,6 +60,7 @@ class MReminderController extends Controller {
         repeat_days,
         repeat_interval = 0,
         medicine_id,
+        medicine_type,
         quantity,
         strength,
         unit,
@@ -85,6 +89,7 @@ class MReminderController extends Controller {
         end_date,
         details: {
           medicine_id,
+          medicine_type,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat,
@@ -99,6 +104,15 @@ class MReminderController extends Controller {
         }
       };
 
+      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_time).utc().toDate(),
+        until: moment(start_time).add(6,'months').utc().toDate()
+      });
+
+      Logger.debug("rrule ----> ", rrule.all());
+
       const mReminderDetails = await medicationReminderService.addMReminder(
         dataToSave
       );
@@ -111,6 +125,15 @@ class MReminderController extends Controller {
       //   start_time,
       //   end_time: start_time
       // };
+
+      EventSchedule.create({
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        event_id: mReminderDetails.getId,
+        details: mReminderDetails.getBasicInfo,
+        status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+      });
 
       return this.raiseSuccess(
         res,
@@ -152,6 +175,7 @@ class MReminderController extends Controller {
         repeat_days,
         repeat_interval = 0,
         medicine_id,
+          medicine_type,
         quantity,
         strength,
         unit,
@@ -177,6 +201,7 @@ class MReminderController extends Controller {
         end_date,
         details: {
           medicine_id,
+          medicine_type,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat,
@@ -226,6 +251,16 @@ class MReminderController extends Controller {
       //   end_time: start_time
       // };
 
+      EventSchedule.create({
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        event_id: mReminderDetails.getId,
+        details: mReminderDetails.getBasicInfo.details,
+        status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+        when_to_take
+      });
+
       return this.raiseSuccess(
         res,
         200,
@@ -265,6 +300,7 @@ class MReminderController extends Controller {
         repeat_days,
         repeat_interval = 0,
         medicine_id,
+        medicine_type,
         quantity,
         strength,
         unit,
@@ -292,6 +328,7 @@ class MReminderController extends Controller {
         end_date,
         details: {
           medicine_id,
+          medicine_type,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
           repeat,

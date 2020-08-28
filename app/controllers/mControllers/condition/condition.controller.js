@@ -11,7 +11,7 @@ class ConditionController extends Controller {
         super();
     }
 
-    getAll = async (req, res) => {
+    search = async (req, res) => {
         const {raiseSuccess, raiseClientError, raiseServerError} = this;
         try {
             const {query} = req;

@@ -7,12 +7,14 @@ const mapStateToProps = state => {
   const {
     doctors = {},
     users = {},
-      pages: {doctor_ids = [], user_ids = []} = {}
+      pages: {doctor_ids = [], user_ids = []} = {},
+      specialities = {},
   } = state;
 
   return {
     doctors,
     users,
+    specialities,
     doctor_ids,
     user_ids,
   };

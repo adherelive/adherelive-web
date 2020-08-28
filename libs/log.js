@@ -8,6 +8,11 @@ class Log {
       "------------------------------------------------------------------------------------------------------";
   }
 
+  fileName = (filename) => {
+    this.source = filename;
+    return this;
+  };
+
   getLogDate() {
     return moment().format(`D MMMM YYYY @ hh:mm A`);
   }
@@ -24,7 +29,15 @@ class Log {
       )}] \n\nMESSAGE: ${msg}\n\n`,
       code
     );
-    console.log(`\n${this._dashString}\n`);
+  }
+
+  request(data) {
+    console.log(
+        `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
+            this.source
+        )}] \n\n--- REQUEST ---\n\n`,
+        data
+    );
   }
 
   warn(msg) {

@@ -18,6 +18,8 @@ import councilRouter from "./council";
 import conditionRouter from "./condition";
 import severityRouter from "./severity";
 import treatmentRouter from "./treatment";
+import specialityRouter from "./speciality";
+import carePlanTemplateRouter from "./carePlanTemplate";
 
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
@@ -99,5 +101,7 @@ router.use("/councils", councilRouter);
 router.use("/conditions", conditionRouter);
 router.use("/severity", severityRouter);
 router.use("/treatments", treatmentRouter);
+router.use("/specialities", specialityRouter);
+router.use("/care-plan-templates", carePlanTemplateRouter);
 
 module.exports = router;

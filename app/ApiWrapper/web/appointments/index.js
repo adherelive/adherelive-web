@@ -18,6 +18,8 @@ class AppointmentWrapper extends BaseAppointment {
       organizer_type,
       description,
       details,
+        provider_id,
+        provider_name,
       start_date,
       end_date,
       rr_rule = "",
@@ -47,6 +49,8 @@ class AppointmentWrapper extends BaseAppointment {
         category: organizer_type,
       },
       rr_rule,
+      provider_id,
+      provider_name,
     };
   };
 }

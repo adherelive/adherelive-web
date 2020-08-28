@@ -6,6 +6,7 @@ import {
   getAppointmentForParticipantUrl,
   updateAppointmentUrl,
   deleteAppointmentUrl,
+  getAppointmentsDetailsUrl
 } from "../../Helper/urls/appointments";
 
 export const ADD_APPOINTMENT_START = "ADD_APPOINTMENT_START";
@@ -25,6 +26,11 @@ export const GET_APPOINTMENTS_START = "GET_APPOINTMENTS_START";
 export const GET_APPOINTMENTS_COMPLETE = "GET_APPOINTMENTS_COMPLETE";
 export const GET_APPOINTMENTS_FAILED = "GET_APPOINTMENTS_FAILED";
 
+
+export const GET_APPOINTMENTS_DETAILS = "GET_APPOINTMENTS_DETAILS";
+export const GET_APPOINTMENTS_DETAILS_COMPLETE = "GET_APPOINTMENTS_DETAILS_COMPLETE";
+export const GET_APPOINTMENTS_DETAILS_FAILED = "GET_APPOINTMENTS_DETAILS_FAILED";
+
 export const DELETE_APPOINTMENTS_START = "DELETE_APPOINTMENTS_START";
 export const DELETE_APPOINTMENTS_COMPLETE = "DELETE_APPOINTMENTS_COMPLETE";
 export const DELETE_APPOINTMENTS_FAILED = "DELETE_APPOINTMENTS_FAILED";
@@ -41,14 +47,12 @@ export const addAppointment = (payload) => {
         data: payload,
       });
 
-      console.log("728136182 response --> ", response);
-
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
       if (status === true) {
         dispatch({
           type: ADD_APPOINTMENT_COMPLETE,
-           data,
+          data,
         });
       } else {
         dispatch({
@@ -63,7 +67,7 @@ export const addAppointment = (payload) => {
   };
 };
 
-export const addCarePlanAppointment = (payload,carePlanId) => {
+export const addCarePlanAppointment = (payload, carePlanId) => {
   let response = {};
   return async (dispatch) => {
     try {
@@ -75,14 +79,13 @@ export const addCarePlanAppointment = (payload,carePlanId) => {
         data: payload,
       });
 
-      console.log("728136182 response --> ", response);
 
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
       if (status === true) {
         dispatch({
           type: ADD_CARE_PLAN_APPOINTMENT_COMPLETE,
-           data,
+          data,
         });
       } else {
         dispatch({
@@ -110,7 +113,6 @@ export const updateAppointment = (payload) => {
         data: rest,
       });
 
-      console.log("7281361824 response --> ", response);
 
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
@@ -151,6 +153,36 @@ export const getAppointments = (id) => {
       } else {
         dispatch({
           type: GET_APPOINTMENTS_FAILED,
+          error,
+        });
+      }
+    } catch (error) {
+      console.log("GET APPOINTMENTS FOR PATIENT ERROR", error);
+    }
+    return response;
+  };
+};
+
+
+export const getAppointmentsDetails = () => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GET_APPOINTMENTS_DETAILS });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getAppointmentsDetailsUrl(),
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_APPOINTMENTS_DETAILS_COMPLETE,
+          data,
+        });
+      } else {
+        dispatch({
+          type: GET_APPOINTMENTS_DETAILS_FAILED,
           error,
         });
       }

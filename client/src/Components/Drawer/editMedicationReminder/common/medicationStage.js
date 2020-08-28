@@ -8,16 +8,11 @@ import Select from "antd/es/select";
 import Spin from "antd/es/spin";
 import message from "antd/es/message";
 
-import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 
 const { Item: FormItem } = Form;
 const { Option } = Select;
 
 const FIELD_NAME = "medicine_id";
-const DEFAULT = "DEFAULT";
-
-const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
-
 class MedicationStage extends Component {
   constructor(props) {
     super(props);
@@ -31,8 +26,6 @@ class MedicationStage extends Component {
   }
 
   componentDidMount() {
-    const { medicines } = this.props;
-    // this.setState({medicines});
   }
 
   getStagesOption = () => {
@@ -40,10 +33,9 @@ class MedicationStage extends Component {
     let medicationStagesOption = [];
     const { medicines } = this.props;
 
-    const { basic_info: { details: { medicine_id } = {} } = {} } = medications[medication_id] || {};
+    // const { basic_info: { details: { medicine_id } = {} } = {} } = medications[medication_id] || {};
 
-    console.log("918239813 medicines --> ", medicines);
-
+    
     return Object.keys(medicines).map(id => {
       const { basic_info: { name, type } = {} } = medicines[id] || {};
       return (
@@ -86,15 +78,8 @@ class MedicationStage extends Component {
       const { searchMedicine } = this.props;
       this.setState({ fetchingMedicines: true });
       const response = await searchMedicine(data);
-      const { status, payload: { data: responseData, message } = {} } = response;
+      const{status}=response;
       if (status) {
-        // const { medicines = {} } = responseData;
-        // const medicineList = {};
-        // Object.keys(medicines).forEach(id => {
-        //   medicineList[id] = medicines[id];
-        // });
-        // this.setState({ medicines: medicineList, fetchingMedicines: false });
-
         this.setState({ fetchingMedicines: false });
       } else {
         this.setState({ fetchingMedicines: false });
@@ -109,8 +94,6 @@ class MedicationStage extends Component {
   render() {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
-      program_has_medication_stage,
-      purpose,
       medications,
       medicationData,
       payload: { id: medication_id } = {},
@@ -123,8 +106,7 @@ class MedicationStage extends Component {
     if (medicineId) {
       medicine_id = medicineId.toString();
     }
-    console.log("2387128371923 medicine_id --> ", medicine_id, typeof (medication_id));
-
+   
     const { fetchingMedicines } = this.state;
 
     const { getStagesOption, getInitialValue, getParentNode, handleMedicineSearch } = this;

@@ -11,6 +11,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^2.14.0",
     "fullcalendar-reactwrapper": "^1.0.7",
+    "getstream": "^5.0.5",
     "install": "^0.13.0",
     "less": "3.9.0",
     "less-loader": "^4.1.0",
@@ -25,6 +26,7 @@
     "react-app-rewire-react-intl": "^2.4.0",
     "react-app-rewired": "1.6.2",
     "react-chartjs-2": "^2.9.0",
+    "react-chat-widget": "^3.0.5",
     "react-datepicker": "^3.0.0",
     "react-dom": "^16.11.0",
     "react-facebook-login": "^4.1.1",
@@ -43,7 +45,9 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.5",
     "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "twilio-chat": "^4.0.0",
+    "twilio-video": "1.20.0"
   },
   "scripts": {
     "start": "react-app-rewired start",

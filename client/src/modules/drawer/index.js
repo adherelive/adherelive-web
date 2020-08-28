@@ -1,7 +1,5 @@
-import { DRAWER } from "../../constant";
 import {
   ADD_APPOINTMENT_COMPLETE,
-  ADD_APPOINTMENT_FAILED,
   ADD_CARE_PLAN_APPOINTMENT_COMPLETE,
   UPDATE_APPOINTMENT_COMPLETE,
   DELETE_APPOINTMENTS_COMPLETE,
@@ -22,7 +20,6 @@ const intial_state = {
 };
 
 export const open = (data) => {
-  console.log("12312 here module");
   return {
     type: OPEN_DRAWER,
     data,

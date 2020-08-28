@@ -47,7 +47,6 @@ class AddMedicationReminder extends Component {
     const isError = this.hasErrors(getFieldsError());
     const { disabledOk } = this.state;
     if (disabledOk !== isError && isFieldsTouched()) {
-      console.log("[1234] this.state.fieldChanged ", this.state.fieldChanged);
       this.setState({ disabledOk: isError, fieldChanged: true });
     }
   };
@@ -118,19 +117,21 @@ class AddMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("131231 values ----> ", values);
+        console.log('8326589623895723956832', values);
         const { when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const { medicine_id, quantity, strength, unit, critical } = values || {};
+        const { medicine_id, quantity, strength, unit, critical,formulation: medicine_type, special_instruction: description } = values || {};
         data_to_submit = {
           medicine_id,
           quantity,
           strength,
           unit,
+          medicine_type,
+          description,
           critical,
           when_to_take: keys.map(id => when_to_take[id]) || [],
           // when_to_take: when_to_take.map(id => `${id}`),
@@ -173,7 +174,6 @@ class AddMedicationReminder extends Component {
           message.error('Please select valid dates for medication')
         } else {
           try {
-            console.log('CAREPLAN ID IN MEDICATION REMINDERRRRRRRRRR', carePlanId);
             const response = await addCarePlanMedicationReminder(data_to_submit, carePlanId);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
@@ -204,14 +204,13 @@ class AddMedicationReminder extends Component {
     } = this.props;
     const { onClose, setFormRef, FormWrapper, handleSubmit } = this;
     const { disabledSubmit } = this.state;
-    const submitButtonProps = {
-      disabled: disabledSubmit,
-      loading: loading
-    };
+    // const submitButtonProps = {
+    //   disabled: disabledSubmit,
+    //   loading: loading
+    // };
     const { members } = this.state;
 
-    console.log("12313 visible --> ", visible);
-
+    
     return (
       <Drawer
         width={'35%'}
@@ -229,6 +228,7 @@ class AddMedicationReminder extends Component {
           zIndex: "9999",
           top: "0px"
         }}
+        maskClosable={false}
         destroyOnClose={true}
         className="ant-drawer"
         title={formatMessage(messages.title)}

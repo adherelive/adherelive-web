@@ -8,18 +8,26 @@ import { searchCondition } from "../../modules/conditions";
 import { searchSeverity } from "../../modules/severity";
 import { getGraphs, updateGraphs } from "../../modules/graphs";
 import { connect } from "react-redux";
+import { closePopUp } from "../../modules/chat";
+import { fetchChatAccessToken } from "../../modules/twilio";
 
 const mapStateToProps = state => {
-    const { graphs, auth: { authPermissions = [] } = {},
+    const { graphs, auth: { authPermissions = [], authenticated_user = 1 } = {},
         treatments = {},
         conditions = {},
-        severity = {} } = state;
+        severity = {}, chats, drawer, twilio, patients, doctors } = state;
     return {
         graphs,
         treatments,
         conditions,
         severity,
-        authPermissions
+        authPermissions,
+        chats,
+        drawer,
+        twilio,
+        patients,
+        doctors,
+        authenticated_user
     };
 };
 
@@ -34,6 +42,8 @@ const mapDispatchToProps = dispatch => {
         searchTreatment: value => dispatch(searchTreatment(value)),
         searchSeverity: value => dispatch(searchSeverity(value)),
         addPatient: (data) => dispatch(addPatient(data)),
+        closePopUp: () => dispatch(closePopUp()),
+        fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
     };
 };
 

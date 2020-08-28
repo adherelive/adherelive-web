@@ -7,7 +7,8 @@ import Condition from "../../../app/controllers/condition/condition.controller";
 router.get(
     "/",
     Authenticate,
-    Condition.getAll
+    // validator.validateConditionSearch
+    Condition.search
 );
 
 module.exports = router;

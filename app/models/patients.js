@@ -48,7 +48,7 @@ const Patients = database.define(
     age: {
       type: Sequelize.STRING,
     },
-    birth_date: {
+    dob: {
       type: Sequelize.DATE,
       allowNull: true,
     },

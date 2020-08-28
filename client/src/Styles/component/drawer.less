@@ -35,7 +35,7 @@
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
-  margin-top: 20px;
+  // margin-top: 20px;
   width: 100%;
 }
 
@@ -47,8 +47,8 @@
   padding: 8px;
   border: solid 1px #e7e7e7;
   border-radius: 4px;
-  margin: 10px;
-  margin-left: 0px;
+  margin-bottom: 10px;
+  // margin-left: 0px;
 }
 
 .drawer-block-description {
@@ -148,11 +148,23 @@
   }
 }
 
+.template-drawer-select {
+  .ant-select-selection {
+    width: 100%;
+    .ant-select-selection__rendered {
+      width: 75%;
+    }
+    .ant-select-selection__placeholder {
+      width: 75%;
+    }
+  }
+}
+
 .add-patient-radio {
   .ant-radio-group {
     display: flex;
     width: 100%;
-    margin-left:-16px;
+    margin-left: -16px;
     justify-content: flex-start;
     .ant-radio-button-wrapper {
       position: relative;
@@ -165,7 +177,7 @@
       font-weight: 500;
       height: 45px;
       width: 80px;
-      margin-left:16px;
+      margin-left: 16px;
       border-radius: 4px;
       border: 1px solid @deep-cyan;
     }
@@ -173,6 +185,37 @@
 
   .ant-radio-group-solid
     .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: #fff;
+    background: @deep-cyan;
+    border-color: @deep-cyan;
+    box-shadow: none !important;
+    border-radius: 4px;
+  }
+}
+
+.ant-radio-group.radio-formulation {
+  display: flex;
+  width: 100%;
+  margin-left: -16px;
+  justify-content: flex-start;
+  .ant-radio-button-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: @deep-cyan;
+    font-size: 14px;
+    font-weight: 500;
+    height: 35px;
+    min-width: 80px;
+    margin-left: 16px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid @deep-cyan;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
     color: #fff;
     background: @deep-cyan;
     border-color: @deep-cyan;
@@ -231,4 +274,62 @@
 
 .ant-drawer-header {
   min-height: 55px;
+}
+
+.template-name-modal-container {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.template-name-modal-text {
+  margin-bottom: 20px;
+}
+
+.template-name-modal-input {
+  margin-bottom: 20px;
+  height: 50px;
+}
+
+.template-name-modal-name-button {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  background-color: #528ff0;
+  height: 50px;
+  cursor: pointer;
+}
+.template-name-modal-name-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.template-name-modal-skip-button {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  height: 50px;
+  border: 1px solid #d9d9d9;
+  cursor: pointer;
+}
+
+.template-name-modal-skip-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #58666e;
+}
+
+.patient-detail-drawer{
+  .ant-drawer-content-wrapper{
+    .ant-drawer-content{
+      .ant-drawer-wrapper-body{
+        overflow: unset;
+      }
+    }
+  }
 }

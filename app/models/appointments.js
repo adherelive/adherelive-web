@@ -33,6 +33,20 @@ const Appointments = database.define(
         organizer_id: {
             type: Sequelize.INTEGER,
         },
+        provider_id: {
+            type: Sequelize.INTEGER,
+            references: {
+                model: {
+                    tableName: DB_TABLES.PROVIDERS,
+                },
+                key: 'id'
+            },
+            allowNull: true,
+        },
+        provider_name: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+        },
         description: {
             type: Sequelize.STRING(1000)
         },

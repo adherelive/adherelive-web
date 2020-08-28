@@ -19,6 +19,8 @@ import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
+import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
+import Log from "../../../../libs/log_new";
 const moment = require("moment");
 
 class CarePlanController extends Controller {
@@ -29,12 +31,23 @@ class CarePlanController extends Controller {
     createCarePlanMedicationsAndAppointmentsByTemplateData = async (req, res) => {
         try {
             const { carePlanId: care_plan_id = 1 } = req.params;
-            const { medicationsData, appointmentsData } = req.body;
+            const { medicationsData, appointmentsData, treatment_id, condition_id, severity_id, name: newTemplateName, createTemplate = false  } = req.body;
 
             const { userDetails } = req;
             const { userId, userData: { category } = {} } = userDetails || {};
 
             let userCategoryId = null;
+
+            const templateNameCheck = await carePlanTemplateService.getSingleTemplateByData({
+                name: newTemplateName,
+                user_id: userId
+            });
+
+            Log.debug("templateNameCheck ---> ", templateNameCheck);
+
+            if(templateNameCheck) {
+                return this.raiseClientError(res, 422, {}, `A template exists with name ${newTemplateName}`);
+            }
 
             switch (category) {
                 case USER_CATEGORY.DOCTOR:
@@ -56,7 +69,7 @@ class CarePlanController extends Controller {
             const id = parseInt(care_plan_id);
 
             const carePlan = await carePlanService.getCarePlanById(id);
-            const carePlanData = await CarePlanWrapper(carePlan);
+            let carePlanData = await CarePlanWrapper(carePlan);
 
             console.log("====================> ", care_plan_id, id, carePlan, userDetails);
             const patient_id = carePlan.get('patient_id');
@@ -96,10 +109,13 @@ class CarePlanController extends Controller {
             let appointmentApiDetails = {};
             let appointment_ids = [];
 
+            let appointmentsArr = [];
+            let medicationsArr = [];
+
             for (const appointment of appointmentsData) {
                 const {
                     schedule_data: { description = '', end_time = '', organizer = {}, treatment_id = '', participant_two = {}, start_time = '', date = '' } = {},
-                    reason = '', time_gap = '' } = appointment;
+                    reason = '', time_gap = '', provider_id = null, provider_name = null, type = "", type_description = "", critical = false } = appointment;
 
                 const { id: participant_two_id, category: participant_two_type } =
                     participant_two || {};
@@ -130,13 +146,18 @@ class CarePlanController extends Controller {
                         Object.keys(organizer).length > 0 ? organizer.category : category,
                     organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
                     description,
-                    start_date: moment(date),
-                    end_date: moment(date),
+                    start_date: date,
+                    end_date: date,
                     start_time,
                     end_time,
+                    provider_id,
+                    provider_name,
                     details: {
                         treatment_id,
-                        reason
+                        reason,
+                        type,
+                        type_description,
+                        critical
                     },
                 };
 
@@ -152,6 +173,20 @@ class CarePlanController extends Controller {
                 const appointmentData = await AppointmentWrapper(baseAppointment);
                 appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
                 appointment_ids.push(appointmentData.getAppointmentId());
+
+                appointmentsArr.push({
+                    reason,
+                    time_gap,
+                    provider_id,
+                    // care_plan_template_id: carePlanTemplate.getCarePlanTemplateId(),
+                    details: {
+                        date,
+                        description,
+                        type_description,
+                        critical,
+                        appointment_type: type
+                    }
+                });
             }
 
             let medicationApiDetails = {};
@@ -160,7 +195,7 @@ class CarePlanController extends Controller {
             for (const medication of medicationsData) {
                 const { schedule_data: { end_date = '', description = "", start_date = '', unit = '', when_to_take = '',
                     repeat = '', quantity = '', repeat_days = [], strength = '', start_time = '', repeat_interval = '', medication_stage = '' } = {},
-                    medicine_id = '' } = medication;
+                    medicine_id = '', medicine_type = "1" } = medication;
                 const dataToSave = {
                     participant_id: patient_id,
                     organizer_type: category,
@@ -170,6 +205,7 @@ class CarePlanController extends Controller {
                     end_date,
                     details: {
                         medicine_id,
+                        medicine_type,
                         start_time: start_time ? start_time : moment(),
                         end_time: start_time ? start_time : moment(),
                         repeat,
@@ -198,10 +234,53 @@ class CarePlanController extends Controller {
                 const medicationData = await MedicationWrapper(mReminderDetails);
                 medicationApiDetails[medicationData.getMReminderId()] = medicationData.getBasicInfo();
                 medication_ids.push(medicationData.getMReminderId());
+
+                medicationsArr.push({
+                    medicine_id,
+                    // care_plan_template_id: carePlanTemplate.getCarePlanTemplateId(),
+                    schedule_data: {
+                        unit,
+                        repeat,
+                        quantity,
+                        strength,
+                        repeat_days,
+                        when_to_take,
+                        repeat_interval,
+                        medicine_type,
+                        duration: moment(start_date).diff(moment(end_date), "days")
+                    }
+                });
             }
 
 
             console.log("BODYYY OF REQUESTTTTT=======>", carePlan, patient_id, care_plan_id);
+
+            let carePlanTemplate = null;
+
+            if(createTemplate) {
+                const createCarePlanTemplate = await carePlanTemplateService.create({
+                    name: newTemplateName,
+                    treatment_id,
+                    severity_id,
+                    condition_id,
+                    user_id: userId,
+                    template_appointments: [...appointmentsArr],
+                    template_medications: [...medicationsArr]
+                });
+
+                carePlanTemplate = await CarePlanTemplateWrapper(
+                    createCarePlanTemplate
+                );
+
+                const updateCarePlan = await carePlanService.updateCarePlan({care_plan_template_id: carePlanTemplate.getCarePlanTemplateId()}, care_plan_id);
+
+                carePlanData = await CarePlanWrapper(null, care_plan_id);
+                // await carePlanTemplate.getReferenceInfo();
+                Log.debug(
+                    "appointmentsData --------------------->",
+                    createCarePlanTemplate
+                );
+            }
 
 
             return this.raiseSuccess(res, 200, {
@@ -217,7 +296,8 @@ class CarePlanController extends Controller {
                 },
                 medications: {
                     ...medicationApiDetails
-                }
+                },
+                ...carePlanTemplate ? await carePlanTemplate.getReferenceInfo() : {},
             }, "Care plan medications, appointments and actions added successfully");
         } catch (error) {
             console.log("Create Care Plan Medications And Appointments Error --> ", error);

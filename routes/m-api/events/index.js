@@ -21,15 +21,15 @@ router.get(
     MobileMedicationReminder.getMedicationDetails
 );
 
-router.post(
-    "/medication/:patient_id",
-    Authenticate,
-    validator.validateMedicationReminderData,
-    MobileMedicationReminder.create
-);
+// router.post(
+//     "/medication/:patient_id",
+//     Authenticate,
+//     validator.validateMedicationReminderData,
+//     MobileMedicationReminder.create
+// );
 
 router.post(
-    "/medication/:patient_id/:carePlanId",
+    "/medication/:patient_id",
     Authenticate,
     validator.validateMedicationReminderData,
     MobileMedicationReminder.createCarePlanMedication

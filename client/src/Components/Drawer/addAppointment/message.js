@@ -7,15 +7,21 @@ const message = defineMessages({
     description: "",
     defaultMessage: "New Appointment"
   },
-  appointment: {
-    id: "app.drawer.appointment.title",
-    description: "",
-    defaultMessage: "Appointment"
-  },
   patient: {
     id: "app.drawer.add.appointment.patient",
     description: "",
     defaultMessage: "Patient"
+  },
+  appointmentType: {
+    id: "app.drawer.add.appointment.appointmentType",
+    description: "",
+    defaultMessage: "Type"
+  },
+  appointmentTypeDescription:{
+    id: "app.drawer.add.appointment.appointmentTypeDescription",
+    description: "",
+    defaultMessage: "Description"
+
   },
   select_patient: {
     id: "app.drawer.add.appointment.select.patient",
@@ -61,6 +67,21 @@ const message = defineMessages({
     id: "app.drawer.add.appointment.error.select.date",
     description: "",
     defaultMessage: "Please select date"
+  },
+  error_provider: {
+    id: "app.drawer.add.appointment.error.select.provider",
+    description: "",
+    defaultMessage: "Please select provider"
+  },
+  error_appointment_type_description: {
+    id: "app.drawer.add.appointment.error.select.type.description",
+    description: "",
+    defaultMessage: "Please select type description"
+  },
+  error_appointment_type: {
+    id: "app.drawer.add.appointment.error.select.type",
+    description: "",
+    defaultMessage: "Please select appointment type"
   },
   error_select_start_time: {
     id: "app.drawer.add.appointment.error.select.start.time",
@@ -127,6 +148,11 @@ const message = defineMessages({
     id: "app.event.addProduct",
     description: "",
     defaultMessage: "Add Product"
+  },
+  provider: {
+    id: "app.event.provider",
+    description: "",
+    defaultMessage: "Provider"
   },
   addReminder: {
     id: "app.event.addReminder",
@@ -218,11 +244,11 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Repeats Yearly"
   },
-  appointmentType: {
-    id: "add.event.appointmentType",
-    description: "",
-    defaultMessage: "Appointment Type"
-  },
+  // appointmentType: {
+  //   id: "add.event.appointmentType",
+  //   description: "",
+  //   defaultMessage: "Appointment Type"
+  // },
   repeatIntervalError: {
     id: "add.event.repeatIntervalError",
     description: "",

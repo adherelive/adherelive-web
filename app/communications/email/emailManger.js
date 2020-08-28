@@ -112,6 +112,13 @@ class EmailManger {
               {}
           );
           break;
+        case "otpVerification":
+          templateString = await this.genrateEmailTemplateString(
+              "otpVerification",
+              payload.templateData,
+              {}
+          );
+          break;
         case "BookingStatusSubmittedUser":
           templateString = await this.genrateEmailTemplateString(
             "general",
@@ -279,7 +286,7 @@ class EmailManger {
       if (isValid && isValid.error == 1) return isValid;
       Log.success("email payload is valid!!");
       Log.info("Transforming email payload to aws payload!!");
-      console.log("payload ===>", payload.error);
+      console.log("payload ===>", payload);
       if (payload.error && payload.error == 1) return payload;
 
       Log.info("Email payload transformed successfully!!");

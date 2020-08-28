@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon, Select, Input, message, Button, Spin, Radio } from "antd";
+import { Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker } from "antd";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
 
@@ -17,6 +17,7 @@ import japan from '../../../Assets/images/japan.png';
 import china from '../../../Assets/images/china.png';
 import switzerland from '../../../Assets/images/switzerland.png';
 import france from '../../../Assets/images/france.png';
+import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
 const { Option } = Select;
 
@@ -96,8 +97,17 @@ class PatientDetailsDrawer extends Component {
         this.setState({ severity: value });
     };
 
-    setCondition = value => {
+    setCondition = async value => {
+
+        const { searchTreatment } = this.props;
         this.setState({ condition: value });
+
+        const response = await searchTreatment(value);
+
+        const { status, payload: { data: { treatments = {} } = {}, message } = {} } = response;
+        if (status) {
+            this.setState({ treatments, treatment: '' });
+        }
     };
 
     setGender = value => () => {
@@ -106,12 +116,11 @@ class PatientDetailsDrawer extends Component {
 
     setDOB = e => {
         // (date) => {
-        console.log('DATEEEEEEEEEEE', e.target.value, e);
         this.setState({ date_of_birth: moment(e.target.value) });
     }
 
     getTreatmentOption = () => {
-        let { treatments = {} } = this.props;
+        let { treatments = {} } = this.state;
         let newTreatments = [];
         for (let treatment of Object.values(treatments)) {
             let { basic_info: { id = 0, name = '' } = {} } = treatment;
@@ -155,7 +164,6 @@ class PatientDetailsDrawer extends Component {
                 this.setState({ fetchingCondition: true });
                 const response = await searchCondition(data);
                 const { status, payload: { data: responseData, message } = {} } = response;
-                console.log("82398923892382398 00000000==============>  ", response);
                 if (status) {
                     this.setState({ fetchingCondition: false });
                 } else {
@@ -166,7 +174,7 @@ class PatientDetailsDrawer extends Component {
             }
         } catch (err) {
             console.log("err", err);
-            message.warn("Something wen't wrong. Please try again later");
+            message.warn(this.formatMessage(messages.somethingWentWrong));
             this.setState({ fetchingCondition: false });
         }
     };
@@ -177,8 +185,7 @@ class PatientDetailsDrawer extends Component {
                 const { searchTreatment } = this.props;
                 this.setState({ fetchingTreatment: true });
                 const response = await searchTreatment(data);
-                const { status, payload: { data: responseData, message } = {} } = response;
-                console.log("82398923892382398 treatment 00000000==============>  ", response);
+                const { status } = response;
                 if (status) {
                     this.setState({ fetchingTreatment: false });
                 } else {
@@ -189,7 +196,7 @@ class PatientDetailsDrawer extends Component {
             }
         } catch (err) {
             console.log("err", err);
-            message.warn("Something wen't wrong. Please try again later");
+            message.warn(this.formatMessage(messages.somethingWentWrong));
             this.setState({ fetchingCondition: false });
         }
     };
@@ -200,8 +207,7 @@ class PatientDetailsDrawer extends Component {
                 const { searchSeverity } = this.props;
                 this.setState({ fetchingSeverity: true });
                 const response = await searchSeverity(data);
-                const { status, payload: { data: responseData, message } = {} } = response;
-                console.log("82398923892382398 Severity 00000000==============>  ", response);
+                const { status } = response;
                 if (status) {
                     this.setState({ fetchingSeverity: false });
                 } else {
@@ -212,7 +218,7 @@ class PatientDetailsDrawer extends Component {
             }
         } catch (err) {
             console.log("err", err);
-            message.warn("Something wen't wrong. Please try again later");
+            message.warn(this.formatMessage(messages.somethingWentWrong));
             this.setState({ fetchingSeverity: false });
         }
     };
@@ -225,10 +231,13 @@ class PatientDetailsDrawer extends Component {
         let day = dtToday.getDate();
         let year = dtToday.getFullYear();
 
-        let maxDate = year + '-0' + month + '-' + day;
-        console.log('DATE OF PATIENTTTT', maxDate);
+        if (day < 10) {
+            day = '0' + day;
+        } else if (month < 10) {
+            month = '0' + month;
+        }
 
-        const { mobile_number = '', name = '', gender = '', date_of_birth = {}, treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+        const { mobile_number = '', name = '', condition = '', prefix = '' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -266,29 +275,25 @@ class PatientDetailsDrawer extends Component {
 
         return (
             <div className='form-block-ap'>
-                <div className='form-headings flex align-center justify-start'>Phone number<div className="star-red">*</div></div>
+                <div className='form-headings flex align-center justify-start'>{this.formatMessage(messages.phoneNo)}<div className="star-red">*</div></div>
                 <Input
                     addonBefore={prefixSelector}
                     className={"form-inputs-ap"}
-                    placeholder="Phone number"
-                    maxLength={10}
+                    placeholder={this.formatMessage(messages.phoneNo)}
+                    minLength={6}
+                    maxLength={20}
                     value={mobile_number}
                     onChange={this.setNumber}
                 />
-                <div className='form-headings-ap '>Name</div>
+                <div className='form-headings-ap '>{this.formatMessage(messages.name)}</div>
                 <Input
-                    placeholder="Name"
+                    placeholder={this.formatMessage(messages.name)}
                     value={name}
                     className={"form-inputs-ap"}
                     onChange={this.setName}
                 />
-                <div className='form-headings-ap'>Gender</div>
+                <div className='form-headings-ap'>{this.formatMessage(messages.gender)}</div>
                 <div className='add-patient-radio wp100 mt6 mb18 flex'>
-                    {/* <div className={gender === MALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(MALE)}>M</div>
-
-                    <div className={gender === FEMALE ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(FEMALE)}>F</div>
-
-                    <div className={gender === OTHER ? 'gender-selected' : 'gender-unselected'} role="button" tab-index='0' aria-pressed="true" onClick={this.setGender(OTHER)}>O</div> */}
 
                     <Radio.Group buttonStyle="solid" >
                         <Radio.Button value={MALE} onClick={this.setGender(MALE)}>M</Radio.Button>
@@ -297,37 +302,20 @@ class PatientDetailsDrawer extends Component {
                     </Radio.Group>
                 </div>
 
-                <div className='form-headings-ap flex align-center justify-start'>Date Of Birth<div className="star-red">*</div></div>
-                {/* <DatePicker className='form-inputs-ap' onChange={this.setDOB} /> */}
-                {/* <DatePicker
-                    className='form-inputs-dp'
-                    placeholder='Select Date Of Birth'
-                    selected={date_of_birth}
-                    onChange={this.setDOB}
-                    peekNextMonth
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select"
-                /> */}
-                <Input className={"form-inputs-ap"} type='date'
-                    max={maxDate}
-                    onChange={this.setDOB} />
-                <div className='form-category-headings-ap'>Treatment Plan</div>
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.dob)}<div className="star-red">*</div></div>
 
-                <div className='form-headings-ap flex align-center justify-start'>Condition<div className="star-red">*</div></div>
-                {/* <Select
-                    className="form-inputs-ap drawer-select"
-                    placeholder='Select Condition'
-                    onSelect={this.setCondition}
-                    // onDeselect={handleDeselect}
-                    suffixIcon={null}
-                >
-                    {this.getConditionOption()}
-                </Select> */}
+                <Input className={"form-inputs-ap"} type='date'
+                    max={`${year}-${month}-${day}`}
+                    onChange={this.setDOB} />
+                <div className='form-category-headings-ap'>{this.formatMessage(messages.treatmentPlan)}</div>
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}<div className="star-red">*</div></div>
+
 
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Condition"
+                    value={this.state.condition}
                     onChange={this.setCondition}
                     onSearch={this.handleConditionSearch}
                     notFoundContent={this.state.fetchingCondition ? <Spin size="small" /> : 'No match found'}
@@ -347,21 +335,13 @@ class PatientDetailsDrawer extends Component {
                     {this.getConditionOption()}
                 </Select>
 
-                <div className='form-headings-ap  flex align-center justify-start'>Severity<div className="star-red">*</div></div>
-                {/* <Select
-                    className="form-inputs-ap drawer-select"
-                    autoComplete="off"
-                    placeholder='Select Severity'
-                    onSelect={this.setSeverity}
-                    // onDeselect={handleDeselect}
-                    suffixIcon={null}
-                >
-                    {this.getSeverityOption()}
-                </Select> */}
+                <div className='form-headings-ap  flex align-center justify-start'>{this.formatMessage(messages.severity)}<div className="star-red">*</div></div>
+
 
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Severity"
+                    value={this.state.severity}
                     onChange={this.setSeverity}
                     onSearch={this.handleSeveritySearch}
                     notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : 'No match found'}
@@ -382,25 +362,17 @@ class PatientDetailsDrawer extends Component {
                 </Select>
 
 
-                <div className='form-headings-ap flex align-center justify-start'>Treatment<div className="star-red">*</div></div>
-                {/* <Select
-                    className="form-inputs-ap drawer-select"
-                    autoComplete="off"
-                    placeholder='Select Treatment'
-                    onSelect={this.setTreatment}
-                    // onDeselect={handleDeselect}
-                    suffixIcon={null}
-                >
-                    {this.getTreatmentOption()}
-                </Select> */}
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.treatment)}<div className="star-red">*</div></div>
+
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Treatment"
+                    value={this.state.treatment}
                     onChange={this.setTreatment}
-                    onSearch={this.handleTreatmentSearch}
+                    // onSearch={this.handleTreatmentSearch}
                     notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : 'No match found'}
                     showSearch
-                    // onFocus={() => handleMedicineSearch("")}
+                    disabled={!condition}
                     autoComplete="off"
                     // onFocus={() => handleMedicineSearch("")}
                     optionFilterProp="children"
@@ -421,34 +393,34 @@ class PatientDetailsDrawer extends Component {
 
 
     validateData = () => {
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+        const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
         if (!prefix) {
-            message.error('Please select a prefix.')
+            message.error(this.formatMessage(messages.prefixError))
             return false;
-        } else if (mobile_number.length < 10 || !mobile_number) {
-            message.error('Please enter valid mobile number.')
+        } else if (mobile_number.length < 6 || mobile_number.length > 20 || !mobile_number) {
+            message.error(this.formatMessage(messages.mobNoError))
             return false;
         } else if (!date_of_birth) {
-            message.error('Please enter  Date of Birth .')
+            message.error(this.formatMessage(messages.dobError))
             return false;
         }
         else if (date_of_birth && (age < 0 || age > 140 || moment(date_of_birth).isAfter(moment()))) {  //handle case of newBorn
 
-            message.error('Please enter a valid Date of Birth .')
+            message.error(this.formatMessage(messages.validdobError))
             return false;
         }
         else if (!treatment) {
-            message.error('Please enter a treatment.')
+            message.error(this.formatMessage(messages.treatmentError))
             return false;
         }
         else if (!severity) {
-            message.error('Please enter a severity.')
+            message.error(this.formatMessage(messages.severityError))
             return false;
         }
         else if (!condition) {
-            message.error('Please enter a condition.')
+            message.error(this.formatMessage(messages.conditionError))
             return false;
         }
         return true;
@@ -469,11 +441,23 @@ class PatientDetailsDrawer extends Component {
 
     onClose = () => {
         const { close } = this.props;
+        this.setState({
+            mobile_number: '',
+            name: '',
+            gender: '',
+            date_of_birth: '',
+            treatment: '',
+            severity: '',
+            condition: '',
+            prefix: "91",
+            fetchingCondition: false,
+            fetchingTreatment: false,
+            fetchingSeverity: false
+        });
         close();
     };
 
     render() {
-        console.log("STATEEEEEEE 6472483256784358623545", this.state);
         const { visible } = this.props;
         const { onClose, renderAddPatient } = this;
 
@@ -483,10 +467,11 @@ class PatientDetailsDrawer extends Component {
         return (
             <Fragment>
                 <Drawer
-                    title="Add Patient"
+                    title={this.formatMessage(messages.addPatient)}
                     placement="right"
                     // closable={false}
                     // closeIcon={<img src={backArrow} />}
+                    maskClosable={false}
                     headerStyle={{
                         position: "sticky",
                         zIndex: "9999",
@@ -499,11 +484,11 @@ class PatientDetailsDrawer extends Component {
                     {renderAddPatient()}
                     <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-                            Cancel
-            </Button>
+                            {this.formatMessage(messages.cancel)}
+                        </Button>
                         <Button onClick={this.onSubmit} type="primary">
-                            Submit
-            </Button>
+                            {this.formatMessage(messages.submit)}
+                        </Button>
                     </div>
                 </Drawer>
 

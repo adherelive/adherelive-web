@@ -143,10 +143,10 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Edit Appointment"
   },
-  appointment: {
-    id: "app.event.Appointment",
+  chooseAppointmentType: {
+    id: "app.event.chooseAppointment",
     description: "",
-    defaultMessage: "Appointment"
+    defaultMessage: "Choose Appointment Type"
   },
   editReminder: {
     id: "app.event.EditReminder",
@@ -222,11 +222,6 @@ const message = defineMessages({
     id: "add.event.repeatsYearly",
     description: "",
     defaultMessage: "Repeats Yearly"
-  },
-  appointmentType: {
-    id: "add.event.appointmentType",
-    description: "",
-    defaultMessage: "Appointment Type"
   },
   repeatIntervalError: {
     id: "add.event.repeatIntervalError",
@@ -363,6 +358,37 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Follow Up appointment"
   },
+  appointmentType: {
+    id: "app.drawer.add.appointment.appointmentType",
+    description: "",
+    defaultMessage: "Type"
+  },
+  error_provider: {
+    id: "app.drawer.add.appointment.error.select.provider",
+    description: "",
+    defaultMessage: "Please select provider"
+  },
+  provider: {
+    id: "app.event.provider",
+    description: "",
+    defaultMessage: "Provider"
+  },
+  error_appointment_type_description: {
+    id: "app.drawer.add.appointment.error.select.type.description",
+    description: "",
+    defaultMessage: "Please select type description"
+  },
+  error_appointment_type: {
+    id: "app.drawer.add.appointment.error.select.type",
+    description: "",
+    defaultMessage: "Please select appointment type"
+  },
+  appointmentTypeDescription: {
+    id: "app.drawer.add.appointment.appointmentTypeDescription",
+    description: "",
+    defaultMessage: "Description"
+
+  },
   econsulting: {
     id: "add.event.econsulting",
     description: "",
@@ -372,6 +398,26 @@ const message = defineMessages({
     id: "cancel.modal.reason",
     description: "",
     defaultMessage: "Write reason for cancelling this appointment"
+  },
+  chooseTypeDescription: {
+    id: "cancel.modal.chooseTypeDescription",
+    description: "",
+    defaultMessage: "Choose Type Description"
+  },
+  chooseProvider: {
+    id: "cancel.modal.chooseProvider",
+    description: "",
+    defaultMessage: "Choose Provider"
+  },
+  criticalAppointment: {
+    id: "cancel.modal.criticalAppointment",
+    description: "",
+    defaultMessage: "Critical Appointment"
+  },
+  noMatchFound: {
+    id: "cancel.modal.noMatchFound",
+    description: "",
+    defaultMessage: "No match found"
   },
 });
 

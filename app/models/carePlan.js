@@ -4,6 +4,8 @@ import {database} from "../../libs/mysql";
 import {DB_TABLES} from "../../constant";
 import Doctors from "./doctors";
 import Patients from "./patients";
+import CarePlanAppointment from "./carePlanAppointments";
+import CarePlanMedication from "./carePlanMedications";
 
 const CarePlan = database.define(
     DB_TABLES.CARE_PLANS,
@@ -119,18 +121,22 @@ const CarePlan = database.define(
 
 CarePlan.hasOne(Patients, {
     foreignKey: "id",
-    targetKey: "patient_id"
+    sourceKey: "patient_id"
 });
 
 CarePlan.hasOne(Doctors, {
     foreignKey: "id",
-    targetKey: "doctor_id"
+    sourceKey: "doctor_id"
 });
 
-CarePlan.associate = (model) => {
-    CarePlan.hasMany(model.CarePlanAppointment, {
-        foreignKey: "id",
-    });
-};
+CarePlan.hasMany(CarePlanAppointment, {
+    foreignKey:"care_plan_id",
+    sourceKey:"id"
+});
+
+CarePlan.hasMany(CarePlanMedication, {
+    foreignKey:"care_plan_id",
+    sourceKey:"id"
+});
 
 export default CarePlan;

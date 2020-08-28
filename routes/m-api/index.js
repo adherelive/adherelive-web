@@ -19,7 +19,9 @@ import councilRouter from "./council";
 import conditionRouter from "./condition";
 import severityRouter from "./severity";
 import treatmentRouter from "./treatment";
-// import twilioRouter from "./twilio";
+import twilioRouter from "./twilio";
+import specialityRouter from "./speciality";
+import carePlanTemplateRouter from "./carePlanTemplate";
 
 router.use(async (req, res, next) => {
     try {
@@ -77,6 +79,7 @@ router.use("/doctors", mDoctorRouter);
 router.use("/care-plans", mCarePlanRouter);
 router.use("/medicines", mMedicineRouter);
 router.use("/charts", chartRouter);
+router.use("/twilio", twilioRouter);
 
 router.use("/colleges", collegeRouter);
 router.use("/degrees", degreeRouter);
@@ -84,5 +87,7 @@ router.use("/councils", councilRouter);
 router.use("/conditions", conditionRouter);
 router.use("/severity", severityRouter);
 router.use("/treatments", treatmentRouter);
+router.use("/specialities", specialityRouter);
+router.use("/care-plan-templates", carePlanTemplateRouter);
 
 module.exports = router;

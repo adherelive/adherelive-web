@@ -9,7 +9,8 @@ module.exports = () => {
       mobile_verify_link: process.env.MOBILE_INVITE_LINK,
       reset_password: process.env.RESET_PASSWORD_LINK,
       developer_email: process.env.DEVELOPER_EMAIL,
-      verified_doctor: process.env.DASHBOARD_LINK
+      verified_doctor: process.env.DASHBOARD_LINK,
+      support_email: process.env.SUPPORT_EMAIL
     },
     db: {
       connection: process.env.DB_CONNECTION,
@@ -20,6 +21,10 @@ module.exports = () => {
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       dialect: process.env.DB_DIALECT
+    },
+    getstream: {
+      key: process.env.GETSTREAM_API_KEY,
+      secretKey: process.env.GETSTREAM_API_SECRET
     },
     aws: {
       access_key: process.env.AWS_ACCESS_KEY,

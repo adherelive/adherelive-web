@@ -1,10 +1,10 @@
 import React from "react";
-import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
+// import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
 
 export default props => {
   const {
     patientData: { basic_info: { first_name, middle_name, last_name } = {} } = {},
-    openPatientDrawer,
+    // openPatientDrawer,
     chatData: { messages: { unread = "0" } = {} } = {}
   } = props || {};
 

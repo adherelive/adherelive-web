@@ -18,6 +18,7 @@ import other_details from "./otherDetails";
 import onBoarding from "./onBoarding";
 import care_plans from "./carePlans";
 import doctor_clinics from "./doctorClinics";
+import static_templates from "./staticTemplates";
 import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
@@ -28,6 +29,10 @@ import show_template_drawer from "./showDrawer";
 import colleges from "./colleges";
 import degrees from "./degrees";
 import councils from "./councils";
+import specialities from "./specialities";
+import twilio from "./twilio";
+import chatMessages from "./chatMessages";
+import care_plan_template_ids from "./carePlanTemplateIds";
 
 const rootReducer = combineReducers({
   auth,
@@ -58,7 +63,12 @@ const rootReducer = combineReducers({
   show_template_drawer,
   colleges,
   degrees,
-  councils
+  councils,
+  static_templates,
+  specialities,
+  twilio,
+  chatMessages,
+  care_plan_template_ids
 });
 
 export default (state, action) => {

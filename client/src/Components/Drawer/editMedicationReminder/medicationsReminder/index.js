@@ -52,26 +52,25 @@ class EditMedicationReminder extends Component {
     return hasError;
   };
 
-  onFormFieldChanges = (props, allvalues) => {
+  enableSubmit = () => {
+    this.setState({ disabledOk: false });
+  }
+
+  onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
     } = props;
-    const isError = this.hasErrors(getFieldsError());
     const { disabledOk } = this.state;
 
-    if(isFieldsTouched()) {
-      console.log("89698876879856784654675798 ON FORMS FIELS CHANGE", isFieldsTouched(), isError, JSON.stringify(this.state));
+    if (isFieldsTouched()) {
+      const isError = this.hasErrors(getFieldsError());
+
       if (disabledOk !== isError && isFieldsTouched()) {
-        console.log("89698876879856784654675798 INSIDE IFFF", isFieldsTouched(), isError, JSON.stringify(this.state));
-        this.setState({ disabledOk: isError, fieldChanged: true });
+        this.setState({ disabledOk: isError });
       }
     } else {
-      this.setState({disabledOk: true});
+      this.setState({ disabledOk: true });
     }
-
-    // console.log('89698876879856784654675798 called onclose', this.state);
-
-
   };
 
   handleCancel = (e) => {
@@ -119,14 +118,13 @@ class EditMedicationReminder extends Component {
 
   onClose = () => {
     const { close } = this.props;
-    // console.log('89698876879856784654675798 called onclose', this.state);
     this.setState({
       disabledOk: true,
-      fieldChanged: false,
+    }, () => {
+      close();
+
     });
-    close();
-
-
+    // close();
   };
 
   handleSubmit = async () => {
@@ -150,14 +148,13 @@ class EditMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        console.log("131231 values ----> ", values);
         const { when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const { medicine_id, quantity, strength, unit, critical } = values || {};
+        const { medicine_id, quantity, strength, unit, critical, formulation: medicine_type, special_instruction: description } = values || {};
         data_to_submit = {
           id: medication_id,
           medicine_id,
@@ -168,7 +165,8 @@ class EditMedicationReminder extends Component {
           when_to_take: keys.map((id) => when_to_take[id]) || [],
           // when_to_take: when_to_take.map(id => `${id}`),
           participant_id: patient_id,
-
+          medicine_type,
+          description,
           repeat: "weekly",
 
           [startTimeField.field_name]:
@@ -190,8 +188,6 @@ class EditMedicationReminder extends Component {
                 .toISOString()
               : endDate,
         };
-
-        console.log("131231 values ----> ", data_to_submit);
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
@@ -215,7 +211,7 @@ class EditMedicationReminder extends Component {
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
 
-              this.setState({ disabledOk: true });
+              // this.setState({ disabledOk: true });
               message.success(msg);
               getMedications(pId);
             } else {
@@ -233,9 +229,9 @@ class EditMedicationReminder extends Component {
 
   warnNote = () => {
     return (
-      <div className="pt50">
-        <p>
-          <span className="red">{"Note"}</span>
+      <div className="pt16">
+        <p className="red">
+          <span className="fw600">{"Note"}</span>
           {" : This delete is irreversible"}
         </p>
       </div>
@@ -280,7 +276,7 @@ class EditMedicationReminder extends Component {
   getDeleteButton = () => {
     const { handleDelete } = this;
     const { loading, deleteMedicationOfTemplate, hideMedication, addMedication } = this.props;
-    console.log('HIDE MEDICATIONNN', hideMedication, addMedication);
+
     if (addMedication) {
       return (
         <Button onClick={hideMedication} style={{ marginRight: 8 }}>
@@ -324,13 +320,10 @@ class EditMedicationReminder extends Component {
     } = this;
     const { disabledOk } = this.state;
 
-    console.log('89698876879856784654675798  RENDERRRRRR', JSON.stringify(this.state));
     const submitButtonProps = {
       disabled: disabledOk,
       loading: loading,
     };
-
-    console.log("8749234 visible --> ", visible);
 
     return (
       <Drawer
@@ -338,6 +331,7 @@ class EditMedicationReminder extends Component {
         onClose={editMedication || addMedication ? hideMedication : onClose}
         visible={editMedication || addMedication ? medicationVisible : visible}
         destroyOnClose={true}
+        maskClosable={false}
         headerStyle={{
           position: "sticky",
           zIndex: "9999",
@@ -346,7 +340,7 @@ class EditMedicationReminder extends Component {
         className="ant-drawer"
         title={editMedication ? formatMessage(messages.medication) : addMedication ? 'Add Medication' : formatMessage(messages.title)}
       >
-        <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
+        <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
         <Footer
           className="flex justify-space-between"
           onSubmit={handleSubmit}

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { injectIntl, FormattedMessage } from "react-intl";
-import {  message } from "antd";
+import { injectIntl } from "react-intl";
+import { message } from "antd";
 import Loading from '../Common/Loading'
-
+import messages from './message'
 import { withRouter } from "react-router-dom";
 
 
@@ -20,26 +20,26 @@ class ValidationPage extends Component {
         if (link) {
             const { verifyUser } = this.props;
             let response = await verifyUser(link);
-            console.log("RESPONSE OF VERIFY USERRR12312312312312", response);
             //   .then(response=>{
             const { status, statusCode } = response;
             if (!status) {
-                if (statusCode == 422) {
+                if (statusCode === 422) {
 
-                    message.error('This verification link has expired!');
+                    message.error(this.formatMessage(messages.linkExpired));
                     this.props.history.replace('/');
                 } else {
 
-                    message.error('Something went wrong, please try again.');
+                    message.error(this.formatMessage(messages.somethingWentWrong));
                     this.props.history.replace('/');
                 }
             } else {
-                message.success('Account verified successfully.');
+                message.success(this.formatMessage(messages.accountVerified));
             }
         }
     }
 
 
+    formatMessage = data => this.props.intl.formatMessage(data);
 
 
 
