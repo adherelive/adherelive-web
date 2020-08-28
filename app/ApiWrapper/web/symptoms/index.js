@@ -10,6 +10,9 @@ import PatientWrapper from "../patient";
 import CarePlanWrapper from "../carePlan";
 
 import Logger from "../../../../libs/log";
+import DocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import {DOCUMENT_PARENT_TYPE} from "../../../../constant";
+import DocumentWrapper from "../uploadDocument";
 const Log = new Logger("API_WRAPPER > WEB > SYMPTOMS");
 
 class SymptomWrapper extends BaseSymptom {
@@ -38,8 +41,38 @@ class SymptomWrapper extends BaseSymptom {
         };
     };
 
+    getAllInfo = async () => {
+      const {getBasicInfo, getSymptomId} = this;
+
+        const audios = await DocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
+            getSymptomId()
+        ) || [];
+
+        const photos = await DocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
+            getSymptomId()
+        ) || [];
+
+        const audioDocumentIds = audios.map(audio => audio.get("id"));
+        const imageDocumentIds = photos.map(photo => photo.get("id"));
+
+        return {
+            symptoms: {
+                [getSymptomId()]: {
+                    ...getBasicInfo(),
+                    image_document_ids: imageDocumentIds,
+                    audio_document_ids: audioDocumentIds,
+                    snapshot: "",
+                },
+            }
+        }
+    };
+
     getReferenceInfo = async () => {
-        const {getSymptomId, getBasicInfo, _data} = this;
+        const {getSymptomId, _data} = this;
+
+        const documentData = {};
 
         const {patient = {}, care_plan = {}} = _data || {};
         const {doctor} = care_plan || {};
@@ -55,12 +88,29 @@ class SymptomWrapper extends BaseSymptom {
         userData[`${doctors.getUserId()}`] = doctorUser.getBasicInfo();
         userData[`${patients.getUserId()}`] = patientUser.getBasicInfo();
 
+        const audios = await DocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
+            getSymptomId()
+        ) || [];
+
+        const photos = await DocumentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
+            getSymptomId()
+        ) || [];
+
+        for(const docs of [...audios, ...photos]) {
+            const doc = await DocumentWrapper(docs);
+            documentData[doc.getUploadDocumentId()] = doc.getBasicInfo();
+        }
+
+
+
         return {
-            symptoms: {
-                [getSymptomId()]: getBasicInfo()
-            },
             users: {
                 ...userData
+            },
+            upload_documents: {
+                ...documentData
             },
             patients: {
                 [patients.getPatientId()]: patients.getBasicInfo()

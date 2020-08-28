@@ -97,19 +97,9 @@ class SymptomController extends Controller {
 
             const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), `symptom:${symptom.getSymptomId()}`);
 
-
-
             return raiseSuccess(res, 200, {
-                symptoms: {
-                    [symptom.getSymptomId()]: {
-                        ...symptom.getBasicInfo(),
-                    }
-                },
-                upload_documents: {
-                    ...uploadDocumentData
-                },
-                image_document_ids: imageDocumentIds,
-                audio_document_ids: audioDocumentIds,
+                ...await symptom.getAllInfo(),
+                ...await symptom.getReferenceInfo(),
                 symptom_ids : [symptom.getSymptomId()]
             }, "Symptom added successfully");
         } catch(error) {
@@ -178,38 +168,12 @@ class SymptomController extends Controller {
 
             const symptomData = await SymptomWrapper({id});
 
-            const audios = await UploadDocumentService.getDoctorQualificationDocuments(
-                DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
-                symptomData.getSymptomId()
-            ) || [];
-
-            const photos = await UploadDocumentService.getDoctorQualificationDocuments(
-                DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
-                symptomData.getSymptomId()
-            ) || [];
-
-            const audioDocumentIds = audios.map(audio => audio.get("id"));
-            const imageDocumentIds = photos.map(photo => photo.get("id"));
-
-            for(const docs of [...audios, ...photos]) {
-                const doc = await DocumentWrapper(docs);
-                documentData[doc.getUploadDocumentId()] = doc.getBasicInfo();
-            }
-            // const {symptoms, users, doctors, patients, care_plans} = await symptomData.getReferenceInfo();
-
-            // Log.debug("symptomData --> ", symptomData._data);
-
             return raiseSuccess(
                 res,
                 200,
                 {
+                    ...await symptomData.getAllInfo(),
                     ...await symptomData.getReferenceInfo(),
-                    upload_documents: {
-                        ...documentData
-                    },
-                    snapshot: "",
-                    image_document_ids: imageDocumentIds,
-                    audio_document_ids: audioDocumentIds,
                 },
                 "Symptom details fetched successfully"
             );
