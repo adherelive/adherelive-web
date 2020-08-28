@@ -3,6 +3,8 @@ import Controller from "../../";
 // SERVICES ----------
 import SymptomService from "../../../services/symptom/symptom.service";
 import UploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import twilioService from "../../../services/twilio/twilio.service";
+
 
 // WRAPPERS ----------
 import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
@@ -15,7 +17,6 @@ import {uploadAudio, uploadImage} from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
 import {DOCUMENT_PARENT_TYPE} from "../../../../constant";
 import {getFilePath} from "../../../helper/filePath";
-import twilioService from "../../../services/twilio/twilio.service";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
 
@@ -31,7 +32,7 @@ class SymptomController extends Controller {
             Log.debug("req params---> ", req.params);
 
             const {body, params: {patient_id} = {}, userDetails: {userId} = {}} = req;
-            const {care_plan_id, duration = "", parts = [], text = "", audios = [], photos = []} = body || {};
+            const {care_plan_id, duration = "", side = "", parts = [], text = "", audios = [], photos = []} = body || {};
 
             const symptomData = await SymptomService.create({
                 patient_id,
@@ -39,6 +40,7 @@ class SymptomController extends Controller {
                 config: {
                     duration,
                     parts,
+                    side,
                 },
                 text
             });
@@ -169,18 +171,46 @@ class SymptomController extends Controller {
     getSymptomDetails = async (req, res) => {
         const {raiseSuccess, raiseServerError} = this;
         try {
-            Log.debug("req.body ----> ", req.body);
             Log.debug("req.params ----> ", req.params);
             const {params: {id} = {}} = req;
 
+            const documentData = {};
+
             const symptomData = await SymptomWrapper({id});
 
-            Log.debug("symptomData --> ", symptomData._data);
+            const audios = await UploadDocumentService.getDoctorQualificationDocuments(
+                DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
+                symptomData.getSymptomId()
+            ) || [];
+
+            const photos = await UploadDocumentService.getDoctorQualificationDocuments(
+                DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
+                symptomData.getSymptomId()
+            ) || [];
+
+            const audioDocumentIds = audios.map(audio => audio.get("id"));
+            const imageDocumentIds = photos.map(photo => photo.get("id"));
+
+            for(const docs of [...audios, ...photos]) {
+                const doc = await DocumentWrapper(docs);
+                documentData[doc.getUploadDocumentId()] = doc.getBasicInfo();
+            }
+            // const {symptoms, users, doctors, patients, care_plans} = await symptomData.getReferenceInfo();
+
+            // Log.debug("symptomData --> ", symptomData._data);
 
             return raiseSuccess(
                 res,
                 200,
-                {},
+                {
+                    ...await symptomData.getReferenceInfo(),
+                    upload_documents: {
+                        ...documentData
+                    },
+                    snapshot: "",
+                    image_document_ids: imageDocumentIds,
+                    audio_document_ids: audioDocumentIds,
+                },
                 "Symptom details fetched successfully"
             );
         } catch(error) {

@@ -2,6 +2,7 @@ import Symptoms from "../../models/symptoms";
 import Patients from "../../models/patients";
 import CarePlan from "../../models/carePlan";
 import Doctors from "../../models/doctors";
+import Users from "../../models/users";
 
 class SymptomService {
     create = async (data) => {
@@ -17,7 +18,9 @@ class SymptomService {
         try {
             const symptom = await Symptoms.findOne({
                 where: data,
-                include: [Patients, {
+                include: [{
+                    model: Patients,
+                }, {
                     model: CarePlan,
                     include: [Doctors]
                 }]

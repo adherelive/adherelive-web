@@ -10,7 +10,7 @@ import PatientWrapper from "../patient";
 import CarePlanWrapper from "../carePlan";
 
 import Logger from "../../../../libs/log";
-const Log = new Logger("API_WRAPPER > MOBILE > SYMPTOMS");
+const Log = new Logger("API_WRAPPER > WEB > SYMPTOMS");
 
 class SymptomWrapper extends BaseSymptom {
     constructor(data) {
