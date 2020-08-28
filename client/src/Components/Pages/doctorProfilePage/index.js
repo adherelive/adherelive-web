@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
 import Modal from "antd/es/modal";
+import uuid from 'react-uuid';
 import { Avatar, Upload, Input, Select, Spin, DatePicker, Icon } from "antd";
 import throttle from "lodash-es/throttle";
 import { doRequest } from '../../../Helper/network';
@@ -207,26 +208,26 @@ class DoctorProfilePage extends Component {
 
   updateProfileData = async (updateData) => {
     try {
-        this.setState({ edit_clinic_timings: true });
+        this.setState({ updateLoading: true });
         const { auth: {authenticated_user=null}, doctors, users, updateDoctorBasicInfo } = this.props;
         const { id } = authenticated_user;
         let response = await updateDoctorBasicInfo(authenticated_user,updateData);
         const { status , payload : { message:respMessage }} = response;
         if(status){
             this.setState({
-                edit_clinic_timings: false
+                updateLoading: false
             });
             message.success(respMessage);
             this.getInitialData();
         }else{
             this.setState({
-                edit_clinic_timings: false
+                updateLoading: false
             });
             message.error(respMessage);
         }
     } catch (error) {
       this.setState({
-        edit_clinic_timings: false
+        updateLoading: false
       });
       console.log(error);
       message.warn("Somthing wen't wrong, please try again later");
@@ -421,13 +422,12 @@ class DoctorProfilePage extends Component {
         }
     }
     handleCancelTiming = (clinic_id) => {
-        const { modal_timing_visible } = this.state;
-        let newModalVisibleTimings = modal_timing_visible;
+        const { edit_clinic_timings } = this.state;
+        let newModalVisibleTimings = edit_clinic_timings;
         newModalVisibleTimings[clinic_id] = false;
-        this.setState({ modal_timing_visible: newModalVisibleTimings });
+        this.setState({ edit_clinic_timings: newModalVisibleTimings });
     }
     handleOkTiming = clinic_id => (timing, selectedDays) => {
-
         const { edit_clinic_timings, modal_timing_visible, doctor_user_id } =this.state;
         let time_slots = {
             [FULL_DAYS_NUMBER.MON]: timing[FULL_DAYS.MON],
@@ -469,62 +469,37 @@ class DoctorProfilePage extends Component {
                 name
             }
         } = doctor_clinics[clinic_id];
-        if(!edit_clinic_timings[clinic_id]){
-            return (Object.keys(time_slots).map((day, index) => {
-                // todo: add DAY[day] later from constants
-                return (
-                  <Fragment>
-                    {time_slots[day].length > 0 && <div className="wp100 flex">
-                      <div className="fs14 fw700 mt16 mb10 mr16">{this.getFullDayText(day)}</div>
-                      <div
-                        className="wp100 mt16 mb10 mr16 flex"
-                        key={`ts-${index}`}
-                      >
-                        {time_slots[day].map((time_slot, i) => {
-                          const { startTime: start_time, endTime: end_time } =
-                            time_slot || {};
-
-                          return (
-                            <div className="fs14 fw500 wp100" key={`ts/${index}/${i}`}>
-                              {start_time
-                                ? `${moment(start_time).format(
-                                    "LT"
-                                  )} - ${moment(end_time).format("LT")}`
-                                : "CLOSED"}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>}
-                  </Fragment>
-                );
-              }))
-        }else{
-            let isClinicOpen = false;
-            Object.keys(time_slots).map((day) => {
-                if (time_slots[day].length) {
-                    isClinicOpen = true;
-                }
-            });
+        
+        return (Object.keys(time_slots).map((day, index) => {
+            // todo: add DAY[day] later from constants
             return (
-                Object.keys(time_slots).length && isClinicOpen? (
-                    <div className={`form-input-timing active-grey `} >
-                        <div className={'active-grey'}>
-                            <div className='flex justify-end wp100'>
-                                <Icon type="edit" style={{ color: '#4a90e2' }} theme="filled" onClick={this.setModalTimingVisible(clinic_id)} />
-                            </div>
-                            {this.renderTimings(time_slots)}
+                <Fragment>
+                {time_slots[day].length > 0 && time_slots[day][0].startTime != '' && time_slots[day][0].endTime != '' && <div className="wp100 flex">
+                    <div className="fs14 fw700 mt16 mb10 mr16">{this.getFullDayText(day)}</div>
+                    <div
+                    className="wp100 mt16 mb10 mr16 flex"
+                    key={`ts-${index}`}
+                    >
+                    {time_slots[day].map((time_slot, i) => {
+                        const { startTime: start_time, endTime: end_time } =
+                        time_slot || {};
+
+                        return (
+                        <div className="fs14 fw500 wp100" key={`ts/${index}/${i}`}>
+                            {start_time
+                            ? `${moment(start_time).format(
+                                "LT"
+                                )} - ${moment(end_time).format("LT")}`
+                            : "CLOSED"}
                         </div>
-                    </div>) :
-                    (
-                        <div className={`form-input-timing default-grey pointer`} onClick={this.setModalTimingVisible(clinic_id)}>
-                            <div className={'default-grey'}>
-                                {this.formatMessage(messages.timings)}</div>
-                            {<Icon type="clock-circle" />}
-                        </div>
-                    )
+                        );
+                    })}
+                    </div>
+                </div>}
+                </Fragment>
             );
-        }
+        }))
+        
     }
 
     renderTimings = (timings) => {
@@ -1914,17 +1889,17 @@ onChangeClinicLocation = clinic_id => (value) => {
   getDoctorClinicDetails = () => {
     
     const numberToDay = {
-        "1": FULL_DAYS.MON,
-        "2": FULL_DAYS.TUE,
-        "3": FULL_DAYS.WED,
-        "4": FULL_DAYS.THU,
-        "5": FULL_DAYS.FRI,
-        "6": FULL_DAYS.SAT,
-        "7": FULL_DAYS.SUN
+        "1": FULL_DAYS.SUN,
+        "2": FULL_DAYS.MON,
+        "3": FULL_DAYS.TUE,
+        "4": FULL_DAYS.WED,
+        "5": FULL_DAYS.THU,
+        "6": FULL_DAYS.FRI,
+        "7": FULL_DAYS.SAT,   
     }
     const { id, doctors, doctor_clinics } = this.props;
     const { formatMessage, getFullDayText } = this;
-    const { doctor_user_id, verified_doctor, edit_clinic_timings, modal_timing_visible } = this.state;
+    const { doctor_user_id, verified_doctor, edit_clinic_timings } = this.state;
     const { doctor_clinic_ids = [] } = doctors[doctor_user_id] || {};
 
     return doctor_clinic_ids.map((clinic_id, index) => {
@@ -1941,21 +1916,32 @@ onChangeClinicLocation = clinic_id => (value) => {
         [FULL_DAYS.THU]: false,
         [FULL_DAYS.FRI]: false,
         [FULL_DAYS.SAT]: false,
-        [FULL_DAYS.SUN]: false,
-        
+        [FULL_DAYS.SUN]: false
       }
-      for(const time in time_slots){
-          for(const i in time_slots[time]){
-              if(time_slots[time][i]){
-                time_slots[time][i].startTime=moment(time_slots[time][i].startTime);
-                time_slots[time][i].endTime=moment(time_slots[time][i].endTime);
-              }
-          }
-          if(time_slots[time].length){
-              daySelected[numberToDay[time]]=true;
-          }
-          timeForModal[numberToDay[time]]=time_slots[time];
+      if(edit_clinic_timings[clinic_id]){
+        for(const time in time_slots){
+            for(const i in time_slots[time]){
+                console.log(i,time_slots[time],time,numberToDay[time]);
+                if(time_slots[time][i] && time_slots[time][i].startTime!='' && time_slots[time][i].endTime!=''){
+                    time_slots[time][i].startTime=moment(time_slots[time][i].startTime);
+                    time_slots[time][i].endTime=moment(time_slots[time][i].endTime);
+                }
+            }
+            if(time_slots[time].length && time_slots[time][0].startTime != '' && time_slots[time][0].endTime != ''){
+                daySelected[numberToDay[time]]=true;
+            }
+            timeForModal[numberToDay[time]]=time_slots[time];
+        }
+        for(const time in timeForModal){
+            if(!timeForModal[time].length){
+              timeForModal[time].push({
+                  'startTime':'',
+                  'endTime':''
+              });
+            }
+        }
       }
+      console.log(timeForModal,daySelected);
       return (
         <div
           className="wp100 p20 flex direction-column"
@@ -1998,7 +1984,7 @@ onChangeClinicLocation = clinic_id => (value) => {
                 }
               </div>
               {this.renderClinicTimings(time_slots,clinic_id)}
-              {modal_timing_visible[clinic_id] && <TimingModal data-id={clinic_id} visible={modal_timing_visible[clinic_id]} handleCancel={()=>this.handleCancelTiming(clinic_id)} handleOk={this.handleOkTiming(clinic_id)}
+              {edit_clinic_timings[clinic_id] && <TimingModal data-id={clinic_id} visible={edit_clinic_timings[clinic_id]} handleCancel={()=>this.handleCancelTiming(clinic_id)} handleOk={this.handleOkTiming(clinic_id)}
                     timings={timeForModal}
                     daySelected={daySelected}
                 />}

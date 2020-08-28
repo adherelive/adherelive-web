@@ -268,6 +268,15 @@ class ClinicRegister extends Component {
 
         for (let day of Object.keys(dayTimings)) {
             let { timings: newTimings = {} } = dayTimings[day];
+            for(let time of Object.keys(newTimings)){
+                if(newTimings[time].startTime == null){
+                    message.error(this.formatMessage(messages.startTimingEmpty));
+                    return;
+                }else if(newTimings[time].endTime == null){
+                    message.error(this.formatMessage(messages.endTimingEmpty));
+                    return;
+                }
+            }
             dayTimings[day] = Object.values(newTimings);
             delete dayTimings[day].timingsKeys;
         }

@@ -288,13 +288,13 @@ export const DAYS_NUMBER = {
 };
 
 export const DAYS_TEXT_NUM = {
-  "1": "monday",
-  "2": "tuesday",
-  "3": "wednesday",
-  "4": "thursday",
-  "5": "friday",
-  "6": "saturday",
-  "7": "sunday",
+  "1": "sunday",
+  "2": "monday",
+  "3": "tuesday",
+  "4": "wednesday",
+  "5": "thursday",
+  "6": "friday",
+  "7": "saturday"
 }
 
 export const HOST = "/api";
