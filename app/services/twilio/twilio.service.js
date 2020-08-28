@@ -94,7 +94,7 @@ class TwilioService {
           // issue: http for development
           // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues
           channel.messages.create({
-              from: "Adhere Bot",
+              from: "adhere_bot",
               body: message
           }).then(response => {
               console.log('Bot message sent!', response);
