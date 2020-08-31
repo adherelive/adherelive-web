@@ -143,9 +143,9 @@ class SymptomWrapper extends BaseSymptom {
       doctors: {
         [doctors.getDoctorId()]: doctors.getBasicInfo()
       },
-      care_plans: {
-        [carePlans.getCarePlanId()]: carePlans.getBasicInfo()
-      }
+      // care_plans: {
+      //   [carePlans.getCarePlanId()]: carePlans.getBasicInfo()
+      // }
     };
 
     // Log.debug("patient", patient);
