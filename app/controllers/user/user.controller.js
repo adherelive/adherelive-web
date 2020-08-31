@@ -273,8 +273,11 @@ class UserController extends Controller {
           }
         );
 
-        const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-        const feedId = base64.encode(`${user.get("id")}`);
+        // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
+        // const feedId = base64.encode(`${user.get("id")}`);
+        //
+        // Logger.debug("notificationToken --> ", notificationToken);
+        // Logger.debug("feedId --> ", feedId);
 
         const userRef = await userService.getUserData({ id: user.get("id") });
 
@@ -295,8 +298,8 @@ class UserController extends Controller {
           // ...permissions,
           ...await apiUserDetails.getReferenceData(),
           auth_user: apiUserDetails.getId(),
-          notificationToken: notificationToken,
-          feedId: `${user.get("id")}`,
+          // notificationToken: notificationToken,
+          // feedId: `${user.get("id")}`,
           auth_category: apiUserDetails.getCategory()
         };
 
@@ -307,19 +310,19 @@ class UserController extends Controller {
           httpOnly: true
         });
 
-        res.cookie("notificationToken", notificationToken, {
-          expires: new Date(
-            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
-          ),
-          httpOnly: true
-        });
-
-        res.cookie("feedId", feedId, {
-          expires: new Date(
-            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
-          ),
-          httpOnly: true
-        });
+        // res.cookie("notificationToken", notificationToken, {
+        //   expires: new Date(
+        //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+        //   ),
+        //   httpOnly: true
+        // });
+        //
+        // res.cookie("feedId", feedId, {
+        //   expires: new Date(
+        //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+        //   ),
+        //   httpOnly: true
+        // });
 
         return this.raiseSuccess(
           res,
@@ -611,8 +614,8 @@ class UserController extends Controller {
           permissions: []
         };
 
-        const notificationToken = AppNotification.getUserToken(`${userId}`);
-        const feedId = base64.encode(`${userId}`);
+        // const notificationToken = AppNotification.getUserToken(`${userId}`);
+        // const feedId = base64.encode(`${userId}`);
 
 
         if (authUserDetails.isActivated()) {
@@ -640,8 +643,8 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
-          notificationToken: notificationToken,
-          feedId: `${userId}`,
+          // notificationToken: notificationToken,
+          // feedId: `${userId}`,
           severity: {
             ...severityApiDetails,
           },

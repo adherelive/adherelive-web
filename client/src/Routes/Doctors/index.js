@@ -10,7 +10,6 @@ import SideMenu from "../../Components/Sidebar";
 // import BlankState from "../../Containers/BlankState";
 import { PATH } from "../../constant";
 
-
 const PatientDetails = lazy(() =>
   import(
     /* webpackChunkName: "PatientDetails" */ "../../Containers/Patient/details"
@@ -39,6 +38,10 @@ const ChatFullScreen = lazy(() =>
 
 const TwilioVideo = lazy(() =>
   import(/* webpackChunkName: "ChatFullScreen" */ "../../Containers/ChatFullScreen/twilioVideo")
+);
+
+const DoctorProfilePage = lazy(() =>
+  import(/* webpackChunkName: "AdminDoctorTable" */ "../../Containers/Pages/doctorProfilePage")
 );
 
 const PatientDetailsComp = props => {
@@ -113,6 +116,11 @@ class Doctors extends Component {
                   exact
                   path={PATH.REGISTER_CLINICS}
                   component={RegisterClinics}
+                />
+                <Route
+                  exact
+                  path={PATH.PROFILE}
+                  component={DoctorProfilePage}
                 />
                 {/* <Route
                   exact

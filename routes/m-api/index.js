@@ -22,6 +22,7 @@ import treatmentRouter from "./treatment";
 import twilioRouter from "./twilio";
 import specialityRouter from "./speciality";
 import carePlanTemplateRouter from "./carePlanTemplate";
+import symptomRouter from "./symptoms";
 
 router.use(async (req, res, next) => {
     try {
@@ -35,7 +36,7 @@ router.use(async (req, res, next) => {
             }
         }
 
-        console.log("ACCESS TOKEN -----------------> ", accessToken);
+        console.log("ACCESS TOKEN -----------------> ", accessToken,req.headers);
 
         if (accessToken) {
             console.log("2 ACCESS TOKEN -----------------> ", accessToken);
@@ -89,5 +90,6 @@ router.use("/severity", severityRouter);
 router.use("/treatments", treatmentRouter);
 router.use("/specialities", specialityRouter);
 router.use("/care-plan-templates", carePlanTemplateRouter);
+router.use("/symptoms", symptomRouter);
 
 module.exports = router;

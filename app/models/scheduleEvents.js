@@ -19,6 +19,12 @@ const ScheduleEvent = database.define(
         event_id: {
             type: Sequelize.INTEGER,
         },
+        participant_one: {
+            type: Sequelize.INTEGER,
+        },
+        participant_two: {
+            type: Sequelize.INTEGER,
+        },
         details: {
             type: Sequelize.JSON,
         },
@@ -30,7 +36,8 @@ const ScheduleEvent = database.define(
                 EVENT_STATUS.COMPLETED,
                 EVENT_STATUS.EXPIRED,
                 EVENT_STATUS.CANCELLED
-            ]
+            ],
+            defaultValue: EVENT_STATUS.PENDING
         },
         date: {
           type: Sequelize.DATEONLY,

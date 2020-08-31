@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP } from "../../../constant";
+import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP,PARTS } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -98,6 +98,31 @@ const columns_medication = [
       </div>
     ),
   },
+];
+
+const columns_symptoms = [
+  {
+    title: "Body Part",
+    dataIndex: "body_part",
+    key: "body_part",
+    width: '30%',
+    ellipsis: true,
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+  },
+  // {
+  //   title: "",
+  //   dataIndex: "edit",
+  //   key: "edit",
+  //   render: () => (
+  //     <div className="edit-medication">
+  //       <img src={edit_image} className="edit-medication-icon" />
+  //     </div>
+  //   ),
+  // },
 ];
 
 const columns_medication_non_editable = [
@@ -382,7 +407,8 @@ class PatientDetails extends Component {
       loading: true,
       templateDrawerVisible: false,
       carePlanTemplateExists: false,
-      carePlanTemplateIds: []
+      carePlanTemplateIds: [],
+      symptoms: [{ body_part: PARTS.HEAD, description: 'werwerewrwer' }, { body_part: PARTS.CHEST, description: '342342352343' }]
     };
   }
 
@@ -481,6 +507,30 @@ class PatientDetails extends Component {
     return formattedAppointments;
   };
 
+  getSymptomsData = (symptoms = {}) => {
+    const {
+      appointments,
+      users = {},
+      // doctors = {},
+      // patients = {},
+    } = this.props;
+
+    let formattedAppointments = symptoms.map((symptom, index) => {
+      // todo: changes based on care-plan || appointment-repeat-type,  etc.,
+      const {
+        body_part = '',
+        description = ''
+      } = symptom || {};
+      return {
+        // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
+        key: index,
+        body_part: body_part,
+        description: description ? description : "--",
+      };
+    });
+    return formattedAppointments;
+  };
+
   getMedicationData = (carePlan = {}) => {
     const {
       medications = {},
@@ -552,9 +602,9 @@ class PatientDetails extends Component {
         {authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) && (<Menu.Item onClick={handleAppointment}>
           <div>{this.formatMessage(messages.appointments)}</div>
         </Menu.Item>)}
-        <Menu.Item onClick={handleSymptoms}>
+        {/* <Menu.Item onClick={handleSymptoms}>
           <div>{this.formatMessage(messages.symptoms)}</div>
-        </Menu.Item>
+        </Menu.Item> */}
         {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
           <div>{this.formatMessage(messages.actions)}</div>
         </Menu.Item>)}
@@ -624,6 +674,19 @@ class PatientDetails extends Component {
     };
   };
 
+  onRowClickSymptoms = record => event => {
+    const { openSymptomsDrawer, patient_id } = this.props;
+    openSymptomsDrawer({ data: record, patient_id });
+    //this.props.history.push(getGetFacilitiesUrl(key));
+  };
+
+  onRowSymptoms = (record, rowIndex) => {
+    const { onRowClickSymptoms } = this;
+    // const { key } = record;
+    return {
+      onClick: onRowClickSymptoms(record)
+    };
+  };
   handleSubmitTemplate = (data) => {
     const { addCarePlanMedicationsAndAppointments, getMedications, getAppointments, care_plans, patient_id, getPatientCarePlanDetails } = this.props;
     let carePlanId = 1;
@@ -676,7 +739,7 @@ class PatientDetails extends Component {
       authPermissions = [],
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {}, care_plan_template_ids = {} } = this.props;
-    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [] } = this.state;
+    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [],symptoms=[] } = this.state;
 
     const {
       formatMessage,
@@ -686,6 +749,7 @@ class PatientDetails extends Component {
       onCloseTemplate,
       onRowAppointment,
       onRowMedication,
+      onRowSymptoms
     } = this;
 
     if (loading) {
@@ -880,6 +944,14 @@ class PatientDetails extends Component {
                       <div className="wp100">
                         {/* <AppointmentTable /> */}
                       </div>
+                    </TabPane>
+
+                    <TabPane tab="Symptoms" key="4">
+                      <Table
+                        columns={columns_symptoms}
+                        dataSource={this.getSymptomsData(symptoms)}
+                        onRow={onRowSymptoms}
+                      />
                     </TabPane>
                     {/* <TabPane tab="Actions" key="4">
                   Content of Actions Tab

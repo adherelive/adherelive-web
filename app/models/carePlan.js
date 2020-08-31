@@ -138,5 +138,10 @@ CarePlan.hasMany(CarePlanMedication, {
     foreignKey:"care_plan_id",
     sourceKey:"id"
 });
+//
+// CarePlan.hasMany(Symptoms, {
+//     foreignKey:"cae_plan_id",
+//     sourceKey:"id"
+// });
 
 export default CarePlan;

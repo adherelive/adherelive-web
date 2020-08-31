@@ -7,7 +7,6 @@ import {
   SIGN_IN_CATEGORY,
   GENDER
 } from "../../constant";
-import Users from "./users";
 
 const Patients = database.define(
   DB_TABLES.PATIENTS,

@@ -17,6 +17,13 @@ router.post(
 );
 
 router.post(
+    "/upload",
+    Authenticate,
+    upload.single("files"),
+    DoctorController.uploadImage
+);
+
+router.post(
     "/details",
     validator.validateDoctorQualificationData,
     // todo :: wip
@@ -82,6 +89,13 @@ router.get(
     "/",
     // Authenticate,
     DoctorController.getAllDoctorDetails
+);
+
+router.post(
+    "/:id",
+    Authenticate,
+    // validator.validateAddDoctorData,
+    DoctorController.updateDoctorDetails
 );
 
 module.exports = router;

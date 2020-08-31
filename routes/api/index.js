@@ -21,6 +21,7 @@ import treatmentRouter from "./treatment";
 import specialityRouter from "./speciality";
 import carePlanTemplateRouter from "./carePlanTemplate";
 import notificationRouter from "./notification";
+import symptomRouter from "./symptoms";
 
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
@@ -106,5 +107,6 @@ router.use("/specialities", specialityRouter);
 router.use("/care-plan-templates", carePlanTemplateRouter);
 
 router.use("/notifications", notificationRouter);
+router.use("/symptoms", symptomRouter);
 
 module.exports = router;
