@@ -8,7 +8,8 @@ export const ACTION_TYPE = {
 
 export const ACTIVITY_TYPE = {
   FOLLOWUP: "followup",
-  MEDICATION: "medication"
+  MEDICATION: "medication",
+  SYMPTOM:"symptom"
 };
 
 export const EVENT_TYPE = {
