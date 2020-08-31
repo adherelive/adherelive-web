@@ -11,7 +11,7 @@ import PatientWrapper from "../patient";
 import CarePlanWrapper from "../carePlan";
 import DocumentWrapper from "../uploadDocument";
 
-import {DOCUMENT_PARENT_TYPE} from "../../../../constant";
+import {ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE} from "../../../../constant";
 
 import Logger from "../../../../libs/log";
 
@@ -40,6 +40,35 @@ class SymptomWrapper extends BaseSymptom {
             },
             config,
             text
+        };
+    };
+
+    getDateWiseInfo = async () => {
+        const { getSymptomId, getUnformattedCreateDate } = this;
+
+        const audios =
+            (await DocumentService.getDoctorQualificationDocuments(
+                DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
+                getSymptomId()
+            )) || [];
+
+        const photos =
+            (await DocumentService.getDoctorQualificationDocuments(
+                DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
+                getSymptomId()
+            )) || [];
+
+        const audioDocumentIds = audios.map(audio => audio.get("id"));
+        const imageDocumentIds = photos.map(photo => photo.get("id"));
+
+        return {
+            data: {
+                ...await this.getBasicInfo(),
+                image_document_ids: imageDocumentIds,
+                audio_document_ids: audioDocumentIds
+            },
+            type: ACTIVITY_TYPE.SYMPTOM,
+            createdAt: getUnformattedCreateDate()
         };
     };
 
@@ -120,9 +149,9 @@ class SymptomWrapper extends BaseSymptom {
             doctors: {
                 [doctors.getDoctorId()]: doctors.getBasicInfo()
             },
-            care_plans: {
-                [carePlans.getCarePlanId()]: carePlans.getBasicInfo()
-            }
+            // care_plans: {
+            //     [carePlans.getCarePlanId()]: carePlans.getBasicInfo()
+            // }
         };
 
         // Log.debug("patient", patient);

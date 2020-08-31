@@ -39,6 +39,9 @@ const Symptoms = database.define(
         text: {
             type: Sequelize.STRING(1000)
         },
+        created_at: {
+            type: Sequelize.DATE
+        }
     },
     {
         underscored: true,

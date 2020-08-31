@@ -32,6 +32,7 @@ import templateMedicationService from "../../../services/templateMedication/temp
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import SymptomService from "../../../services/symptom/symptom.service";
+import moment from "moment";
 
 const Logger  = new Log("mobile patient controller");
 
@@ -469,31 +470,67 @@ class MPatientController extends Controller {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       Logger.debug("req.params ----->", req.params);
-      const {params: {patient_id} = {}, userDetails: {userId} = {}, body: {care_plan_id} = {}} = req;
+      const {params: {patient_id} = {}, userDetails: {userId} = {}} = req;
 
-      const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id});
+      const carePlanData = await carePlanService.getSingleCarePlanByData({ patient_id });
+      const carePlan = await CarePlanWrapper(carePlanData);
 
-      let symptomDetails = {};
+      const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id: carePlan.getCarePlanId()});
+
       let uploadDocumentData = {};
+      const dateWiseSymptoms = {};
+      let symptomDates = [];
 
       if(symptomData.length > 0) {
         for(const data of symptomData) {
           const symptom = await SymptomWrapper({data});
-          const {symptoms} = await symptom.getAllInfo();
+
+          Logger.debug("symptom created date ---> ", symptom.getCreatedDate());
+          const symptomDetails = await symptom.getDateWiseInfo();
+          if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
+            dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+          } else {
+            dateWiseSymptoms[symptom.getCreatedDate()] = [];
+            dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+          }
           const {upload_documents} = await symptom.getReferenceInfo();
-          symptomDetails = {...symptomDetails, ...symptoms};
           uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+          symptomDates.push(symptom.getCreatedDate());
         }
+
+        symptomDates.sort((a, b) => {
+          if (moment(a).isBefore(moment(b))) return 1;
+
+          if (moment(a).isAfter(moment(b))) return -1;
+
+          return 0;
+        });
+        // console.log("incident=============>", incidentLogs);
+        // console.log("medicationLogs=============>", medicationLogs);
+        symptomDates.forEach(date => {
+          const data = dateWiseSymptoms[date] || [];
+          data.sort((activityA, activityB) => {
+            const {createdAt: a} = activityA;
+            const {createdAt: b} = activityB;
+            if (moment(a).isBefore(moment(b))) return 1;
+
+            if (moment(a).isAfter(moment(b))) return -1;
+
+            return 0;
+          });
+        });
+
         return raiseSuccess(
             res,
             200,
             {
-              symptoms: {
-                ...symptomData
+              timeline_symptoms: {
+                ...dateWiseSymptoms
               },
               upload_documents: {
                 ...uploadDocumentData
-              }
+              },
+              symptom_dates: symptomDates
             },
             "Symptoms data fetched successfully"
         );
