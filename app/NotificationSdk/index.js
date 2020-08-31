@@ -18,10 +18,10 @@ class NotificationSdk {
             // const userPreference = await UserPreferenceWrapper(null, id);
 
             // todo actor don't send notification : manage in job
-            // PushApp.notify(job.getPushAppTemplate());
-            InApp.notify(job.getInAppTemplate());
+            PushApp.notify(await job.getPushAppTemplate());
+            // InApp.notify(job.getInAppTemplate());
 
-            Logger.debug("job ---> ", job.getInAppTemplate());
+            // Logger.debug("job ---> ", job.getInAppTemplate());
 
             // todo: when user preferences relevant
             // if (job.isCritical()) {
