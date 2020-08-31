@@ -19,21 +19,19 @@ import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
-// import {
-//   getCarePlanAppointmentIds,
-//   getCarePlanMedicationIds,
-//   getCarePlanSeverityDetails
-// } from "../../carePlans/carePlanHelper";
+
 import UserWrapper from "../../../ApiWrapper/mobile/user";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
+import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
+import SymptomService from "../../../services/symptom/symptom.service";
 
 const Logger  = new Log("mobile patient controller");
 
@@ -406,6 +404,23 @@ class MPatientController extends Controller {
         };
       }
 
+      const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id: carePlanData.getCarePlanId()});
+
+      let symptomDetails = {};
+      let uploadDocumentData = {};
+
+      if(symptomData.length > 0) {
+        for(const data of symptomData) {
+          const symptom = await SymptomWrapper({data});
+          const {symptoms} = await symptom.getAllInfo();
+          const {upload_documents} = await symptom.getReferenceInfo();
+          symptomDetails = {...symptomDetails, ...symptoms};
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+        }
+      }
+
+
+
       return this.raiseSuccess(res, 200, {
         // care_plans: { ...carePlanApiData },
         // show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments, carePlanTemplateId,
@@ -426,6 +441,12 @@ class MPatientController extends Controller {
         medications: {
           ...medicationApiDetails
         },
+        symptoms: {
+          ...symptomDetails,
+        },
+        upload_documents: {
+          ...uploadDocumentData
+        },
         template_appointments: {
           ...templateAppointmentData
         },
@@ -441,6 +462,47 @@ class MPatientController extends Controller {
       Logger.debug("get careplan 500 error ---> ", error);
       console.log("GET PATIENT DETAILS ERROR --> ", error);
       return this.raiseServerError(res);
+    }
+  };
+
+  getPatientSymptoms = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      Logger.debug("req.params ----->", req.params);
+      const {params: {patient_id} = {}, userDetails: {userId} = {}, body: {care_plan_id} = {}} = req;
+
+      const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id});
+
+      let symptomDetails = {};
+      let uploadDocumentData = {};
+
+      if(symptomData.length > 0) {
+        for(const data of symptomData) {
+          const symptom = await SymptomWrapper({data});
+          const {symptoms} = await symptom.getAllInfo();
+          const {upload_documents} = await symptom.getReferenceInfo();
+          symptomDetails = {...symptomDetails, ...symptoms};
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+        }
+        return raiseSuccess(
+            res,
+            200,
+            {
+              symptoms: {
+                ...symptomData
+              },
+              upload_documents: {
+                ...uploadDocumentData
+              }
+            },
+            "Symptoms data fetched successfully"
+        );
+      } else {
+        return raiseClientError(res, 422, {}, "Patient has not updated any symptoms yet for the treatment");
+      }
+    } catch(error) {
+      Logger.debug("getPatientSymptoms 500 error", error);
+      return raiseServerError(res);
     }
   };
 }
