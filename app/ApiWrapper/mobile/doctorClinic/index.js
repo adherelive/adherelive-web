@@ -32,5 +32,5 @@ export default async (data = null, id = null) => {
         return new DoctorClinicWrapper(data);
     }
     const doctorClinic = await doctorClinicsService.getClinicById(id);
-    return new DoctorClinicWrapper(doctorClinic.get());
+    return new DoctorClinicWrapper(doctorClinic);
 };

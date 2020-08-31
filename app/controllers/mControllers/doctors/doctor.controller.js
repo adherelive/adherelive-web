@@ -1049,22 +1049,35 @@ class MobileDoctorController extends Controller {
       let doctor_clinic_ids = [];
 
       for (const clinic of clinics) {
-        const { name = "", location = "", time_slots = {} } = clinic;
+        const { id: clinic_id = "", name = "", location = "", time_slots = {} } = clinic;
 
         const details = {
           time_slots
         };
 
-        const newClinic = await clinicService.addClinic({
-          doctor_id: doctorData.getDoctorId(),
-          name,
-          location,
-          details
-        });
+        if(clinic_id) {
+          const existingClinic = await clinicService.updateClinic({
+            name,
+            location,
+            details
+          }, clinic_id);
 
-        const clinicData = await ClinicWrapper(newClinic);
-        clinicDetails[clinicData.getDoctorClinicId()] = clinicData.getBasicInfo();
-        doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+          const clinicData = await ClinicWrapper(null, clinic_id);
+          clinicDetails[clinicData.getDoctorClinicId()] = clinicData.getBasicInfo();
+          doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+
+        } else {
+          const newClinic = await clinicService.addClinic({
+            doctor_id: doctorData.getDoctorId(),
+            name,
+            location,
+            details
+          });
+
+          const clinicData = await ClinicWrapper(newClinic);
+          clinicDetails[clinicData.getDoctorClinicId()] = clinicData.getBasicInfo();
+          doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+        }
       }
 
       const userUpdate = await userService.updateUser(
