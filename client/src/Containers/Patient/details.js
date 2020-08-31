@@ -15,7 +15,7 @@ import { fetchChatAccessToken } from "../../modules/twilio";
 const mapStateToProps = (state, ownProps) => {
     const { users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}, treatments = {},
         conditions = {}, template_medications = {}, template_appointments = {}, care_plan_templates = {},
-        severity = {}, show_template_drawer = {}, auth: { authPermissions = [], authenticated_user = 1 } = {}, chats, drawer, care_plan_template_ids = [], twilio = {} } = state;
+        severity = {}, show_template_drawer = {}, auth: { authPermissions = [], authenticated_user = 1 } = {}, chats, drawer, care_plan_template_ids = [], twilio = {}, symptoms = {} } = state;
     // const { id } = ownprops;
     const user_details = users["3"] || {};
     const {
@@ -47,6 +47,7 @@ const mapStateToProps = (state, ownProps) => {
         chats,
         twilio,
         drawer,
+        symptoms,
         care_plan_template_ids,
         authenticated_user
     };

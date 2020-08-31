@@ -8,20 +8,26 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
+import SymptomService from "../../services/symptom/symptom.service";
+
+
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import MReminderWrapper from "../../ApiWrapper/web/medicationReminder";
-import MedicineWrapper from "../../ApiWrapper/web/medicine";
+// import MedicineWrapper from "../../ApiWrapper/web/medicine";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../ApiWrapper/mobile/medicine";
-import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
+import SymptomWrapper from "../../ApiWrapper/web/symptoms";
+import { getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 
 import Log from "../../../libs/log";
+
+
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
 class PatientController extends Controller {
@@ -329,6 +335,21 @@ class PatientController extends Controller {
                 };
             }
 
+            const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id: carePlanData.getCarePlanId()});
+
+            let symptomDetails = {};
+            let uploadDocumentData = {};
+
+            if(symptomData.length > 0) {
+                for(const data of symptomData) {
+                    const symptom = await SymptomWrapper({data});
+                    const {symptoms} = await symptom.getAllInfo();
+                    const {upload_documents} = await symptom.getReferenceInfo();
+                    symptomDetails = {...symptomDetails, ...symptoms};
+                    uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+                }
+            }
+
 
             return this.raiseSuccess(res, 200, {
                 // care_plans: { ...carePlanApiData },
@@ -351,6 +372,12 @@ class PatientController extends Controller {
                 },
                 medications: {
                     ...medicationApiDetails
+                },
+                symptoms: {
+                    ...symptomDetails,
+                },
+                upload_documents: {
+                    ...uploadDocumentData
                 },
                 template_appointments: {
                     ...templateAppointmentData

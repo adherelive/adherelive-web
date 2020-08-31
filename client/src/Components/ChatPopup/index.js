@@ -461,17 +461,22 @@ class ChatPopUp extends Component {
         });
     };
 
-    updateMessageRecieved = messages => {
+    updateMessageRecieved = async (messages) => {
         const { otherUserLastConsumedMessageIndex } = this.state;
-        const { authenticated_user } = this.props;
+        const { authenticated_user, getSymptomDetails } = this.props;
 
         for (let messageData of messages) {
+
             if (
                 messageData.state.index <= otherUserLastConsumedMessageIndex &&
                 messageData.state.author === `${authenticated_user}`
             ) {
                 messageData.received = true;
                 messageData.sent = true;
+            }
+            if (messageData.state.body && messageData.state.body.includes('symptom')) {
+                let symptomId = messageData.state.body.split(':')[1] || {};
+                await getSymptomDetails(symptomId);
             }
         }
 
@@ -516,8 +521,61 @@ class ChatPopUp extends Component {
         this.chatClient.shutdown();
         this.channel = null;
     };
-
-
+    onClickDownloader = (link, name) => () => {
+        // e.preventDefault();
+        // const { url, message } = this.state;
+        if (link && link.length > 0) {
+            fetch(link, {
+                method: "GET"
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    const blobUrl = window.URL.createObjectURL(new Blob([blob]));
+                    const downloader = document.createElement("a");
+                    downloader.href = blobUrl;
+                    downloader.download = name;
+                    downloader.target = "_blank";
+                    document.body.appendChild(downloader);
+                    downloader.click();
+                    document.body.removeChild(downloader);
+                });
+        }
+    };
+    renderSymptomMessage = (message) => {
+        let symptomId = parseInt(message.split(':')[1]);
+        const { symptoms = {}, upload_documents = {} } = this.props;
+        const { text = '', config: { parts = [] } = {}, audio_document_ids = [], image_document_ids = [] } = symptoms[symptomId] || {};
+        let mediaLinkIndex = audio_document_ids.length ? audio_document_ids[0] : image_document_ids.length ? image_document_ids[0] : '';
+        let mediaLink = '';
+        let mediaName = '';
+        if (mediaLinkIndex) {
+            const { basic_info: { document = '', name = '' } = {} } = upload_documents[mediaLinkIndex] || {};
+            mediaLink = document;
+            mediaName = name;
+        }
+        console.log('ryutduruytxud===================>', symptomId, text, parts[0], symptoms[symptomId], symptoms);
+        return (
+            <div className='flex direction-column'>
+                <div className={'fs14'}>{parts.length ? parts[0] : ''}</div>
+                <div className={'fs12'}>{text}</div>
+                {image_document_ids.length ? (<div
+                // onClick={this.openModal}
+                >
+                    <img
+                        className="chat-media-message-image pointer"
+                        src={mediaLink}
+                        alt="Uploaded Image"
+                    />
+                </div>) : audio_document_ids.length ? (
+                    <div className='downloadable-file'>
+                        <img src={File} className='h20 mr10' />
+                        <div className='fs14 mr10'>{mediaName}</div>
+                        <img src={Download} className='h20 mr10 pointer' onClick={this.onClickDownloader(mediaLink, mediaName)} />
+                    </div>
+                ) : null}
+            </div>
+        );
+    }
     renderMessages() {
         const { authenticated_user, users, roomId, chatMessages, patientDp } = this.props;
         const { otherUserLastConsumedMessageIndex } = this.state;
@@ -561,9 +619,11 @@ class ChatPopUp extends Component {
                                                 <MediaComponent message={message}></MediaComponent>
                                             </div>
                                         </div>
+                                    ) : message.state.body.includes('symptom') ? (
+                                        <div className="chat-text">{this.renderSymptomMessage(message.state.body)}</div>
                                     ) : (
-                                            <div className="chat-text">{message.state.body}</div>
-                                        )}
+                                                <div className="chat-text">{message.state.body}</div>
+                                            )}
                                 </div>
                                 <div className="chat-time start">
                                     {moment(message.state.timestamp).format("H:mm")}

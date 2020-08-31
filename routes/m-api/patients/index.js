@@ -28,6 +28,12 @@ router.get(
     "/:id/careplan-details",
     Authenticated,
     PatientController.getPatientCarePlanDetails
-)
+);
+
+router.get(
+  "/:patient_id/symptoms",
+  Authenticated,
+  PatientController.getPatientSymptoms
+);
 
 module.exports = router;

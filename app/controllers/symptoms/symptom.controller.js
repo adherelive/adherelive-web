@@ -37,8 +37,6 @@ class SymptomController extends Controller {
                 symptomData.getSymptomId()
             ) || [];
 
-            const audioDocumentIds = audios.map(audio => audio.get("id"));
-            const imageDocumentIds = photos.map(photo => photo.get("id"));
 
             for(const docs of [...audios, ...photos]) {
                 const doc = await DocumentWrapper(docs);
@@ -49,13 +47,8 @@ class SymptomController extends Controller {
                 res,
                 200,
                 {
+                    ...await symptomData.getAllInfo(),
                     ...await symptomData.getReferenceInfo(),
-                    upload_documents: {
-                        ...documentData
-                    },
-                    snapshot: "",
-                    image_document_ids: imageDocumentIds,
-                    audio_document_ids: audioDocumentIds,
                 },
                 "Symptom details fetched successfully"
             );

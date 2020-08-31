@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP,PARTS } from "../../../constant";
+import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP, PARTS } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -515,17 +515,17 @@ class PatientDetails extends Component {
       // patients = {},
     } = this.props;
 
-    let formattedAppointments = symptoms.map((symptom, index) => {
+    let formattedAppointments = Object.values(symptoms).map((symptom, index) => {
       // todo: changes based on care-plan || appointment-repeat-type,  etc.,
       const {
-        body_part = '',
-        description = ''
+        text = '',
+        config: { parts = [] } = {}
       } = symptom || {};
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: index,
-        body_part: body_part,
-        description: description ? description : "--",
+        body_part: parts[0] ? parts[0] : PARTS.HEAD,
+        description: text ? text : "--",
       };
     });
     return formattedAppointments;
@@ -738,8 +738,8 @@ class PatientDetails extends Component {
       care_plan_templates = {},
       authPermissions = [],
       chats: { minimized = false, visible: popUpVisible = false },
-      drawer: { visible: drawerVisible = false } = {}, care_plan_template_ids = {} } = this.props;
-    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [],symptoms=[] } = this.state;
+      drawer: { visible: drawerVisible = false } = {}, care_plan_template_ids = {}, symptoms = {} } = this.props;
+    const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [] } = this.state;
 
     const {
       formatMessage,
@@ -803,6 +803,7 @@ class PatientDetails extends Component {
     const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
 
 
+    console.log('5876556456rutueerteuu=========>>>>>>>>>>', cPAppointmentIds, cPMedicationIds, carePlanId, care_plans, patient_id);
     let carePlan = care_plans[carePlanId] || {};
     let { details: { condition_id: cId = 0, severity_id: sId = 0, treatment_id: tId = 0 } = {} } = carePlan;
     if (carePlanTemplateId) {

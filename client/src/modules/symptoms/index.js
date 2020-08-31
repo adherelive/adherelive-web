@@ -1,46 +1,46 @@
 import { TREATMENT_INITIAL_STATE } from "../../data";
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
-import { searchTreatments } from "../../Helper/urls/treatments";
+import { gettSymptomDetailsUrl } from "../../Helper/urls/symptoms";
 
-export const SEARCH_TREATMENTS_START = "SEARCH_TREATMENTS_START";
-export const SEARCH_TREATMENTS_COMPLETED = "SEARCH_TREATMENTS_COMPLETED";
-export const SEARCH_TREATMENTS_FAILED = "SEARCH_TREATMENTS_FAILED";
+export const GET_SYMPTOM_DETAILS = "GET_SYMPTOM_DETAILS";
+export const GET_SYMPTOM_DETAILS_COMPLETED = "GET_SYMPTOM_DETAILS_COMPLETED";
+export const GET_SYMPTOM_DETAILS_FAILED = "GET_SYMPTOM_DETAILS_FAILED";
 
-export const searchTreatment = value => {
+export const getSymptomDetails = value => {
   let response = {};
   return async dispatch => {
     try {
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: searchTreatments(value),
+        url: gettSymptomDetailsUrl(value),
       });
 
       const { status, payload: { data, message = "" } = {} } = response || {};
       if (status === true) {
         dispatch({
-          type: SEARCH_TREATMENTS_COMPLETED,
+          type: GET_SYMPTOM_DETAILS_COMPLETED,
           data
         });
       } else {
         dispatch({
-          type: SEARCH_TREATMENTS_FAILED,
+          type: GET_SYMPTOM_DETAILS_FAILED,
           message
         });
       }
     } catch (error) {
-      console.log("SEARCH TREATMENTS MODULE catch error -> ", error);
+      console.log("GET_SYMPTOM_DETAILS MODULE catch error -> ", error);
     }
     return response;
   }
 };
 
-function treatmentReducer(state, data) {
-  const { treatments } = data || {};
-  if (treatments) {
+function symptomReducer(state, data) {
+  const { symptoms } = data || {};
+  if (symptoms) {
     return {
       ...state,
-      ...treatments,
+      ...symptoms,
     };
   } else {
     return {
@@ -49,12 +49,15 @@ function treatmentReducer(state, data) {
   }
 }
 
-export default (state = TREATMENT_INITIAL_STATE, action) => {
+export default (state = {}, action) => {
   const { type, data } = action;
   switch (type) {
-    case SEARCH_TREATMENTS_COMPLETED:
-      return treatmentReducer(state, data);
+    case GET_SYMPTOM_DETAILS_COMPLETED:
+      return symptomReducer(state, data);
+
+    case GET_SYMPTOM_DETAILS_FAILED:
+      return state;
     default:
-      return treatmentReducer(state, data);
+      return symptomReducer(state, data);
   }
 };
