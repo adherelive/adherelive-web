@@ -25,6 +25,8 @@ export const PATH = {
   }
 };
 
+export const HTTP_CODE_SERVER_ERROR = 500;
+
 
 export const ROOM_ID_TEXT = '-adhere-';
 
