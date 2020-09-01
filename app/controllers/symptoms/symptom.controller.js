@@ -2,7 +2,8 @@ import Controller from "../";
 import Logger from "../../../libs/log";
 
 // SERVICES
-import DocumentService from "../../services/uploadDocuments/uploadDocuments.service";
+import SymptomService from "../../services/symptom/symptom.service";
+// import DocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 // WRAPPERS
 import SymptomWrapper from "../../ApiWrapper/web/symptoms";
@@ -30,14 +31,18 @@ class SymptomController extends Controller {
             let doctorData = {};
 
             for(const id of symptom_ids) {
-                const symptom = await SymptomWrapper({id});
-                const {symptoms} = await symptom.getAllInfo();
-                const {users, upload_documents, patients, doctors} = await symptom.getReferenceInfo();
-                symptomData = {...symptomData, ...symptoms};
-                userData = {...userData, ...users};
-                documentData = {...documentData, ...upload_documents};
-                patientData = {...patientData, ...patients};
-                doctorData = {...doctorData, ...doctors};
+                const symptomExists = await SymptomService.getByData({id});
+
+                if(symptomExists) {
+                    const symptom = await SymptomWrapper({data: symptomExists});
+                    const {symptoms} = await symptom.getAllInfo();
+                    const {users, upload_documents, patients, doctors} = await symptom.getReferenceInfo();
+                    symptomData = {...symptomData, ...symptoms};
+                    userData = {...userData, ...users};
+                    documentData = {...documentData, ...upload_documents};
+                    patientData = {...patientData, ...patients};
+                    doctorData = {...doctorData, ...doctors};
+                }
             }
 
             return raiseSuccess(
