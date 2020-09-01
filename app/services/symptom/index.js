@@ -32,6 +32,11 @@ export default class Symptom {
       return parts;
     };
 
+    getSide = () => {
+      const {config: {side} = {}} = this._data;
+      return side;
+    };
+
     getUnformattedCreateDate = () => {
         return this._data.get("created_at");
     }

@@ -9,7 +9,7 @@ export const ACTION_TYPE = {
 export const ACTIVITY_TYPE = {
   FOLLOWUP: "followup",
   MEDICATION: "medication",
-  SYMPTOM:"symptom"
+  SYMPTOM: "symptom"
 };
 
 export const EVENT_TYPE = {
@@ -344,30 +344,30 @@ export const DB_TABLES = {
   ADHERENCE: "adherence",
   DISEASE: "disease",
   USER_VERIFICATIONS: "user_verifications",
-  EMAIL_LOGGER: 'email_loggers',
-  DOCTOR_QUALIFICATIONS: 'doctor_qualifications',
-  DOCTOR_CLINICS: 'doctor_clinics',
-  UPLOAD_DOCUMENTS: 'upload_documents',
-  TEMPLATE_MEDICATIONS: 'template_medications',
-  TEMPLATE_APPOINTMENTS: 'template_appointments',
-  CARE_PLAN_MEDICATIONS: 'care_plan_medications',
-  CARE_PLAN_APPOINTMENTS: 'care_plan_appointments',
+  EMAIL_LOGGER: "email_loggers",
+  DOCTOR_QUALIFICATIONS: "doctor_qualifications",
+  DOCTOR_CLINICS: "doctor_clinics",
+  UPLOAD_DOCUMENTS: "upload_documents",
+  TEMPLATE_MEDICATIONS: "template_medications",
+  TEMPLATE_APPOINTMENTS: "template_appointments",
+  CARE_PLAN_MEDICATIONS: "care_plan_medications",
+  CARE_PLAN_APPOINTMENTS: "care_plan_appointments",
   DOCTOR_REGISTRATIONS: "doctor_registrations",
   TREATMENTS: "treatments",
   SEVERITY: "severity",
   USER_PREFERENCES: "user_preferences",
   PERMISSIONS: "permissions",
   USER_CATEGORY_PERMISSIONS: "user_category_permissions",
-  COLLEGE:"colleges",
-  COURSE:"courses",
-  DEGREE:"degrees",
-  QUALIFICATION:"qualifications",
-  REGISTRATION_COUNCIL:"registration_councils",
+  COLLEGE: "colleges",
+  COURSE: "courses",
+  DEGREE: "degrees",
+  QUALIFICATION: "qualifications",
+  REGISTRATION_COUNCIL: "registration_councils",
   OTP_VERIFICATIONS: "otp_verifications",
   TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
-  FEATURE_DETAILS: 'feature_details',
+  FEATURE_DETAILS: "feature_details",
   USER_DEVICES: "user_devices",
-  SYMPTOMS:"symptoms"
+  SYMPTOMS: "symptoms"
 };
 
 export const ARTICLE_TYPE = {
@@ -386,7 +386,7 @@ export const DOCUMENT_PARENT_TYPE = {
   DOCTOR_QUALIFICATION: "doctor_qualification",
   DOCTOR_REGISTRATION: "doctor_registration",
   SYMPTOM_AUDIO: "symptom_audio",
-  SYMPTOM_PHOTO:"symptom_photo"
+  SYMPTOM_PHOTO: "symptom_photo"
 };
 
 export const ONBOARDING_STATUS = {
@@ -396,7 +396,7 @@ export const ONBOARDING_STATUS = {
   PATIENT: {
     PASSWORD_UPDATE: "password_update",
     PROFILE_REGISTERED: "profile_registration"
-  },
+  }
 };
 
 export const SIGN_IN_CATEGORY = {
@@ -422,9 +422,9 @@ export const EVENT_STATUS = {
 export const EMAIL_TEMPLATE_NAME = {
   WELCOME: "welcome",
   FORGOT_PASSWORD: "forgotPassword",
-  INVITATION:"invitation",
+  INVITATION: "invitation",
   VERIFIED_DOCTOR: "verifiedDoctor",
-  OTP_VERIFICATION:"otpVerification",
+  OTP_VERIFICATION: "otpVerification"
 };
 
 export const OBJECT_NAME = {
@@ -580,7 +580,7 @@ export const CHART_DETAILS = {
     name: "Test Two",
     critical: 10,
     total: 60
-  },
+  }
 };
 
 export const PERMISSIONS = {
@@ -615,106 +615,136 @@ const RADIOLOGY = "3";
 
 export const APPOINTMENT_TYPE = {
   [MEDICAL_TEST]: {
-    title: "Medical Test",
+    title: "Medical Test"
   },
   [CONSULTATION]: {
-    title: "Consultation",
+    title: "Consultation"
   },
   [RADIOLOGY]: {
-    title: "Radiology",
-  },
+    title: "Radiology"
+  }
 };
 
 export const APPOINTMENT_TYPE_DESCRIPTION = {
   [MEDICAL_TEST]: {
-    options: [
-      {}
-    ],
+    options: [{}]
   },
   [CONSULTATION]: {
-    title: "Consultation",
+    title: "Consultation"
   },
   [RADIOLOGY]: {
-    title: "Radiology",
-  },
+    title: "Radiology"
+  }
 };
 
 export const FEATURE_TYPE = {
-  APPOINTMENT:"appointment",
-  MEDICATION:"medication",
+  APPOINTMENT: "appointment",
+  MEDICATION: "medication"
 };
 
 export const BLANK_STATE = "";
 
 export const PASSWORD_LENGTH = 8;
 
-export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg","svg","png","pdf"];
+export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg", "svg", "png", "pdf"];
 
 const TABLET = "1";
 const SYRUP = "2";
 const SYRINGE = "3";
 
 export const MEDICINE_FORM_TYPE = {
-  [TABLET]: {name:"tablet"},
-  [SYRUP]: {name :"syrup"},
-  [SYRINGE]: {name:"syringe"}
+  [TABLET]: { name: "tablet" },
+  [SYRUP]: { name: "syrup" },
+  [SYRINGE]: { name: "syringe" }
 };
 
 const HEAD = "1";
+const RIGHT_EYE = "2";
+const LEFT_EYE = "3";
+const RIGHT_EAR = "4";
+const LEFT_EAR = "5";
+const NOSE = "6";
+const MOUTH = "7";
+const NECK = "8";
+const RIGHT_SHOULDER = "9";
+const LEFT_SHOULDER = "10";
+const CHEST = "11";
+const RIGHT_ARM = "12";
+const LEFT_ARM = "13";
+const RIGHT_ELBOW = "14";
+const LEFT_ELBOW = "15";
+const STOMACH = "16";
+const ABDOMEN = "17";
+const RIGHT_FOREARM = "18";
+const LEFT_FOREARM = "19";
+const RIGHT_WRIST = "20";
+const LEFT_WRIST = "21";
+const RIGHT_HAND = "22";
+const LEFT_HAND = "23";
+const RIGHT_HAND_FINGER = "24";
+const LEFT_HAND_FINGER = "25";
+const RIGHT_HIP = "26";
+const LEFT_HIP = "27";
+const RIGHT_THIGH = "28";
+const LEFT_THIGH = "29";
+const RIGHT_KNEE = "30";
+const LEFT_KNEE = "31";
+const RIGHT_SHIN = "32";
+const LEFT_SHIN = "33";
+const RIGHT_ANKLE = "34";
+const LEFT_ANKLE = "35";
+const RIGHT_FOOT = "36";
+const LEFT_FOOT = "37";
+const RIGHT_TOE = "38";
+const LEFT_TOE = "39";
+const RECTUM = "40";
+const URINARY_BLADDER = "41";
 
 export const PARTS_GRAPH = {
-  [HEAD]: {
-    name: "Head",
-  },
-  [RIGHT_EYE]: {
-    name: "Right Eye",
-  },
-  [LEFT_EYE]: {
-    name: "Left Eye",
-  },
-  [RIGHT_EAR]: {
-    name: "Right Ear",
-  },
-  HEAD: "Head",
-  RIGHT_EYE: "Right Eye",
-  LEFT_EYE: "Left Eye",
-  RIGHT_EAR: "Right Ear",
-  
-  LEFT_EAR: "Left Ear",
-  NOSE: "Nose",
-  MOUTH: "Mouth",
-  NECK: "Neck",
-  RIGHT_SHOULDER: "Right Shoulder",
-  LEFT_SHOULDER: "Left Shoulder",
-  CHEST: "Chest",
-  RIGHT_ARM: "Right Arm",
-  LEFT_ARM: "Left Arm",
-  RIGHT_ELBOW: "Right Elbow",
-  LEFT_ELBOW: "Left Elbow",
-  STOMACH: "Stomach",
-  ABDOMEN: "Abdomen",
-  RIGHT_FOREARM: "Right Forearm",
-  LEFT_FOREARM: "Left Forearm",
-  RIGHT_WRIST: "Right Wrist",
-  LEFT_WRIST: "Left Wrist",
-  RIGHT_HAND: "Right Hand",
-  LEFT_HAND: "Left Hand",
-  RIGHT_HAND_FINGER: "Right Hand Finger",
-  LEFT_HAND_FINGER: "Left Hand Finger",
-  RIGHT_HIP: "Right Hip",
-  LEFT_HIP: "Left Hip",
-  RIGHT_THIGH: "Right Thigh",
-  LEFT_THIGH: "Left Thigh",
-  RIGHT_KNEE: "Right Knee",
-  LEFT_KNEE: "Left Knee",
-  RIGHT_SHIN: "Right Shin",
-  LEFT_SHIN: "Left Shin",
-  RIGHT_ANKLE: "Right Ankle",
-  LEFT_ANKLE: "Left Ankle",
-  RIGHT_FOOT: "Right Foot",
-  LEFT_FOOT: "Left Foot",
-  RIGHT_TOE: "Right Toe",
-  LEFT_TOE: "Left Toe",
-  RECTUM: "Rectum",
-  URINARY_BLADDER: "Urinary Bladder"
+  [HEAD]: { name: "Head" },
+  [RIGHT_EYE]: { name: "Right Eye" },
+  [LEFT_EYE]: { name: "Left Eye" },
+  [RIGHT_EAR]: { name: "Right Ear" },
+  [LEFT_EAR]: { name: "Left Ear" },
+  [NOSE]: { name: "Nose" },
+  [MOUTH]: { name: "Mouth" },
+  [NECK]: { name: "Neck" },
+  [RIGHT_SHOULDER]: { name: "Right Shoulder" },
+  [LEFT_SHOULDER]: { name: "Left Shoulder" },
+  [CHEST]: { name: "Chest" },
+  [RIGHT_ARM]: { name: "Right Arm" },
+  [LEFT_ARM]: { name: "Left Arm" },
+  [RIGHT_ELBOW]: { name: "Right Elbow" },
+  [LEFT_ELBOW]: { name: "Left Elbow" },
+  [STOMACH]: { name: "Stomach" },
+  [ABDOMEN]: { name: "Abdomen" },
+  [RIGHT_FOREARM]: { name: "Right Forearm" },
+  [LEFT_FOREARM]: { name: "Left Forearm" },
+  [RIGHT_WRIST]: { name: "Right Wrist" },
+  [LEFT_WRIST]: { name: "Left Wrist" },
+  [RIGHT_HAND]: { name: "Right Hand" },
+  [LEFT_HAND]: { name: "Left Hand" },
+  [RIGHT_HAND_FINGER]: { name: "Right Hand Finger" },
+  [LEFT_HAND_FINGER]: { name: "Left Hand Finger" },
+  [RIGHT_HIP]: { name: "Right Hip" },
+  [LEFT_HIP]: { name: "Left Hip" },
+  [RIGHT_THIGH]: { name: "Right Thigh" },
+  [LEFT_THIGH]: { name: "Left Thigh" },
+  [RIGHT_KNEE]: { name: "Right Knee" },
+  [LEFT_KNEE]: { name: "Left Knee" },
+  [RIGHT_SHIN]: { name: "Right Shin" },
+  [LEFT_SHIN]: { name: "Left Shin" },
+  [RIGHT_ANKLE]: { name: "Right Ankle" },
+  [LEFT_ANKLE]: { name: "Left Ankle" },
+  [RIGHT_FOOT]: { name: "Right Foot" },
+  [LEFT_FOOT]: { name: "Left Foot" },
+  [RIGHT_TOE]: { name: "Right Toe" },
+  [LEFT_TOE]: { name: "Left Toe" },
+  [RECTUM]: { name: "Rectum" },
+  [URINARY_BLADDER]: { name: "Urinary Bladder" }
+};
+
+export const BODY_VIEW = {
+  FRONT: "1",
+  BACK: "2"
 };
