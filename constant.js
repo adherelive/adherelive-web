@@ -8,7 +8,8 @@ export const ACTION_TYPE = {
 
 export const ACTIVITY_TYPE = {
   FOLLOWUP: "followup",
-  MEDICATION: "medication"
+  MEDICATION: "medication",
+  SYMPTOM:"symptom"
 };
 
 export const EVENT_TYPE = {
@@ -365,7 +366,8 @@ export const DB_TABLES = {
   OTP_VERIFICATIONS: "otp_verifications",
   TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
   FEATURE_DETAILS: 'feature_details',
-  USER_DEVICES: "user_devices"
+  USER_DEVICES: "user_devices",
+  SYMPTOMS:"symptoms"
 };
 
 export const ARTICLE_TYPE = {
@@ -382,7 +384,9 @@ export const CURRENCY = {
 
 export const DOCUMENT_PARENT_TYPE = {
   DOCTOR_QUALIFICATION: "doctor_qualification",
-  DOCTOR_REGISTRATION: "doctor_registration"
+  DOCTOR_REGISTRATION: "doctor_registration",
+  SYMPTOM_AUDIO: "symptom_audio",
+  SYMPTOM_PHOTO:"symptom_photo"
 };
 
 export const ONBOARDING_STATUS = {

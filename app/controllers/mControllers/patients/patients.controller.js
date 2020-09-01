@@ -19,21 +19,20 @@ import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
-// import {
-//   getCarePlanAppointmentIds,
-//   getCarePlanMedicationIds,
-//   getCarePlanSeverityDetails
-// } from "../../carePlans/carePlanHelper";
+
 import UserWrapper from "../../../ApiWrapper/mobile/user";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
+import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
+import SymptomService from "../../../services/symptom/symptom.service";
+import moment from "moment";
 
 const Logger  = new Log("mobile patient controller");
 
@@ -406,6 +405,23 @@ class MPatientController extends Controller {
         };
       }
 
+      const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id: carePlanData.getCarePlanId()});
+
+      let symptomDetails = {};
+      let uploadDocumentData = {};
+
+      if(symptomData.length > 0) {
+        for(const data of symptomData) {
+          const symptom = await SymptomWrapper({data});
+          const {symptoms} = await symptom.getAllInfo();
+          const {upload_documents} = await symptom.getReferenceInfo();
+          symptomDetails = {...symptomDetails, ...symptoms};
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+        }
+      }
+
+
+
       return this.raiseSuccess(res, 200, {
         // care_plans: { ...carePlanApiData },
         // show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments, carePlanTemplateId,
@@ -426,6 +442,12 @@ class MPatientController extends Controller {
         medications: {
           ...medicationApiDetails
         },
+        symptoms: {
+          ...symptomDetails,
+        },
+        upload_documents: {
+          ...uploadDocumentData
+        },
         template_appointments: {
           ...templateAppointmentData
         },
@@ -441,6 +463,83 @@ class MPatientController extends Controller {
       Logger.debug("get careplan 500 error ---> ", error);
       console.log("GET PATIENT DETAILS ERROR --> ", error);
       return this.raiseServerError(res);
+    }
+  };
+
+  getPatientSymptoms = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      Logger.debug("req.params ----->", req.params);
+      const {params: {patient_id} = {}, userDetails: {userId} = {}} = req;
+
+      const carePlanData = await carePlanService.getSingleCarePlanByData({ patient_id });
+      const carePlan = await CarePlanWrapper(carePlanData);
+
+      const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id: carePlan.getCarePlanId()});
+
+      let uploadDocumentData = {};
+      const dateWiseSymptoms = {};
+      let symptomDates = [];
+
+      if(symptomData.length > 0) {
+        for(const data of symptomData) {
+          const symptom = await SymptomWrapper({data});
+
+          Logger.debug("symptom created date ---> ", symptom.getCreatedDate());
+          const symptomDetails = await symptom.getDateWiseInfo();
+          if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
+            dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+          } else {
+            dateWiseSymptoms[symptom.getCreatedDate()] = [];
+            dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+          }
+          const {upload_documents} = await symptom.getReferenceInfo();
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+          symptomDates.push(symptom.getCreatedDate());
+        }
+
+        symptomDates.sort((a, b) => {
+          if (moment(a).isBefore(moment(b))) return 1;
+
+          if (moment(a).isAfter(moment(b))) return -1;
+
+          return 0;
+        });
+        // console.log("incident=============>", incidentLogs);
+        // console.log("medicationLogs=============>", medicationLogs);
+        symptomDates.forEach(date => {
+          const data = dateWiseSymptoms[date] || [];
+          data.sort((activityA, activityB) => {
+            const {createdAt: a} = activityA;
+            const {createdAt: b} = activityB;
+            if (moment(a).isBefore(moment(b))) return 1;
+
+            if (moment(a).isAfter(moment(b))) return -1;
+
+            return 0;
+          });
+        });
+
+        return raiseSuccess(
+            res,
+            200,
+            {
+              timeline_symptoms: {
+                ...dateWiseSymptoms
+              },
+              upload_documents: {
+                ...uploadDocumentData
+              },
+              symptom_dates: symptomDates
+            },
+            "Symptoms data fetched successfully"
+        );
+      } else {
+        return raiseClientError(res, 422, {}, "Patient has not updated any symptoms yet for the treatment");
+      }
+    } catch(error) {
+      Logger.debug("getPatientSymptoms 500 error", error);
+      return raiseServerError(res);
     }
   };
 }

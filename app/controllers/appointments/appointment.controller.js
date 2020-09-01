@@ -370,7 +370,9 @@ class AppointmentController extends Controller {
         event_type: EVENT_TYPE.APPOINTMENT,
         start_time,
         end_time,
-        details: appointmentApiData.getBasicInfo()
+        details: appointmentApiData.getBasicInfo(),
+        participant_one: userId,
+        participant_two: participantTwoId
       });
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
