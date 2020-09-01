@@ -5,6 +5,7 @@ import Doctors from "../../models/doctors";
 import Users from "../../models/users";
 
 class SymptomService {
+
   create = async data => {
     try {
       const symptom = await Symptoms.create(data);
