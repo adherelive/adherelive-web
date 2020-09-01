@@ -659,3 +659,62 @@ export const MEDICINE_FORM_TYPE = {
   [SYRUP]: {name :"syrup"},
   [SYRINGE]: {name:"syringe"}
 };
+
+const HEAD = "1";
+
+export const PARTS_GRAPH = {
+  [HEAD]: {
+    name: "Head",
+  },
+  [RIGHT_EYE]: {
+    name: "Right Eye",
+  },
+  [LEFT_EYE]: {
+    name: "Left Eye",
+  },
+  [RIGHT_EAR]: {
+    name: "Right Ear",
+  },
+  HEAD: "Head",
+  RIGHT_EYE: "Right Eye",
+  LEFT_EYE: "Left Eye",
+  RIGHT_EAR: "Right Ear",
+  
+  LEFT_EAR: "Left Ear",
+  NOSE: "Nose",
+  MOUTH: "Mouth",
+  NECK: "Neck",
+  RIGHT_SHOULDER: "Right Shoulder",
+  LEFT_SHOULDER: "Left Shoulder",
+  CHEST: "Chest",
+  RIGHT_ARM: "Right Arm",
+  LEFT_ARM: "Left Arm",
+  RIGHT_ELBOW: "Right Elbow",
+  LEFT_ELBOW: "Left Elbow",
+  STOMACH: "Stomach",
+  ABDOMEN: "Abdomen",
+  RIGHT_FOREARM: "Right Forearm",
+  LEFT_FOREARM: "Left Forearm",
+  RIGHT_WRIST: "Right Wrist",
+  LEFT_WRIST: "Left Wrist",
+  RIGHT_HAND: "Right Hand",
+  LEFT_HAND: "Left Hand",
+  RIGHT_HAND_FINGER: "Right Hand Finger",
+  LEFT_HAND_FINGER: "Left Hand Finger",
+  RIGHT_HIP: "Right Hip",
+  LEFT_HIP: "Left Hip",
+  RIGHT_THIGH: "Right Thigh",
+  LEFT_THIGH: "Left Thigh",
+  RIGHT_KNEE: "Right Knee",
+  LEFT_KNEE: "Left Knee",
+  RIGHT_SHIN: "Right Shin",
+  LEFT_SHIN: "Left Shin",
+  RIGHT_ANKLE: "Right Ankle",
+  LEFT_ANKLE: "Left Ankle",
+  RIGHT_FOOT: "Right Foot",
+  LEFT_FOOT: "Left Foot",
+  RIGHT_TOE: "Right Toe",
+  LEFT_TOE: "Left Toe",
+  RECTUM: "Rectum",
+  URINARY_BLADDER: "Urinary Bladder"
+};

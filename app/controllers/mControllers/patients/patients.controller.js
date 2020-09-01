@@ -479,7 +479,9 @@ class MPatientController extends Controller {
 
       let uploadDocumentData = {};
       const dateWiseSymptoms = {};
+      const partWiseSymptoms = {};
       let symptomDates = [];
+      let symptomParts = [];
 
       if(symptomData.length > 0) {
         for(const data of symptomData) {
@@ -493,9 +495,17 @@ class MPatientController extends Controller {
             dateWiseSymptoms[symptom.getCreatedDate()] = [];
             dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
           }
+
+          if(partWiseSymptoms.hasOwnProperty(symptom.getPart())) {
+            partWiseSymptoms[symptom.getPart()].push(symptomDetails);
+          } else {
+            partWiseSymptoms[symptom.getPart()] = [];
+            partWiseSymptoms[symptom.getPart()].push(symptomDetails);
+          }
           const {upload_documents} = await symptom.getReferenceInfo();
           uploadDocumentData = {...uploadDocumentData, ...upload_documents};
           symptomDates.push(symptom.getCreatedDate());
+          symptomParts.push(symptom.getPart());
         }
 
         symptomDates.sort((a, b) => {
@@ -527,10 +537,14 @@ class MPatientController extends Controller {
               timeline_symptoms: {
                 ...dateWiseSymptoms
               },
+              symptom_parts: {
+                ...partWiseSymptoms
+              },
               upload_documents: {
                 ...uploadDocumentData
               },
-              symptom_dates: symptomDates
+              symptom_dates: symptomDates,
+              symptom_part_ids: symptomParts
             },
             "Symptoms data fetched successfully"
         );
