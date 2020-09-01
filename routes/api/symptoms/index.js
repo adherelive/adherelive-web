@@ -29,10 +29,10 @@ const router  = express.Router();
 //     SymptomController.create
 // );
 
-router.get(
-    "/:id",
+router.post(
+    "/",
     Authenticate,
-    SymptomController.getSymptomDetails
+    SymptomController.getBatchSymptomDetails
 );
 
 export default router;

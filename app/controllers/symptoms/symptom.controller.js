@@ -17,39 +17,48 @@ class SymptomController extends Controller {
         super();
     }
 
-    getSymptomDetails = async (req, res) => {
+    getBatchSymptomDetails = async (req, res) => {
         const {raiseSuccess, raiseServerError} = this;
         try {
-            Log.debug("req.params ----> ", req.params);
-            const {params: {id} = {}} = req;
+            Log.debug("req.body ----> ", req.body);
+            const {body: {symptom_ids = []} = {}} = req;
 
-            const documentData = {};
+            let documentData = {};
+            let symptomData = {};
+            let userData = {};
+            let patientData = {};
+            let doctorData = {};
 
-            const symptomData = await SymptomWrapper({id});
-
-            const audios = await DocumentService.getDoctorQualificationDocuments(
-                DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
-                symptomData.getSymptomId()
-            ) || [];
-
-            const photos = await DocumentService.getDoctorQualificationDocuments(
-                DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
-                symptomData.getSymptomId()
-            ) || [];
-
-
-
-            for(const docs of [...audios, ...photos]) {
-                const doc = await DocumentWrapper(docs);
-                documentData[doc.getUploadDocumentId()] = doc.getBasicInfo();
+            for(const id of symptom_ids) {
+                const symptom = await SymptomWrapper({id});
+                const {symptoms} = await symptom.getAllInfo();
+                const {users, upload_documents, patients, doctors} = await symptom.getReferenceInfo();
+                symptomData = {...symptomData, ...symptoms};
+                userData = {...userData, ...users};
+                documentData = {...documentData, ...upload_documents};
+                patientData = {...patientData, ...patients};
+                doctorData = {...doctorData, ...doctors};
             }
 
             return raiseSuccess(
                 res,
                 200,
                 {
-                    ...await symptomData.getAllInfo(),
-                    ...await symptomData.getReferenceInfo(),
+                    symptoms: {
+                        ...symptomData
+                    },
+                    upload_documents: {
+                        ...documentData
+                    },
+                    users: {
+                        ...userData
+                    },
+                    doctors: {
+                        ...doctorData
+                    },
+                    patients: {
+                        ...patientData
+                    }
                 },
                 "Symptom details fetched successfully"
             );
