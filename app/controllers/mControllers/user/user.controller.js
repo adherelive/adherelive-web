@@ -52,7 +52,7 @@ import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
 
 import generateOTP from "../../../helper/generateOtp";
-import AppNotification from "../../../NotificationSdk/inApp";
+// import AppNotification from "../../../NotificationSdk/inApp";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -190,8 +190,8 @@ class MobileUserController extends Controller {
             }
           );
 
-        const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
-        const feedId = base64.encode(`${userData.getId()}`);
+        // const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
+        // const feedId = base64.encode(`${userData.getId()}`);
 
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
@@ -199,8 +199,8 @@ class MobileUserController extends Controller {
           200,
           {
             accessToken,
-            notificationToken,
-            feedId,
+            // notificationToken,
+            // feedId,
             users: {
               [userData.getId()]: {
                 ...userData.getBasicInfo()
@@ -251,9 +251,9 @@ class MobileUserController extends Controller {
             }
         );
 
-        const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-
-        const feedId = base64.encode(`${user.get("id")}`);
+        // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
+        //
+        // const feedId = base64.encode(`${user.get("id")}`);
         // const antiFeed = base64.atob(feedId);
 
         const apiUserDetails = await MUserWrapper(user.get());
@@ -271,8 +271,8 @@ class MobileUserController extends Controller {
             200,
             {
               accessToken,
-              notificationToken,
-              feedId,
+              // notificationToken,
+              // feedId,
               users: {
                 [apiUserDetails.getId()]: {
                   ...apiUserDetails.getBasicInfo()
@@ -366,11 +366,11 @@ class MobileUserController extends Controller {
         }
       );
 
-      const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-
-      Logger.debug("feedId ---> user id", user.get("id"));
-      const feedId = base64.encode(`${user.get("id")}`);
-      Logger.debug("feedId ---> ", feedId);
+      // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
+      //
+      // Logger.debug("feedId ---> user id", user.get("id"));
+      // const feedId = base64.encode(`${user.get("id")}`);
+      // Logger.debug("feedId ---> ", feedId);
 
       const apiUserDetails = await MUserWrapper(user.get());
 
@@ -379,8 +379,8 @@ class MobileUserController extends Controller {
         200,
         {
           accessToken,
-          notificationToken,
-          feedId,
+          // notificationToken,
+          // feedId,
           users: {
             [apiUserDetails.getId()]: {
               ...apiUserDetails.getBasicInfo()
