@@ -13,8 +13,11 @@ import Download from "../../Assets/images/down-arrow.png";
 import File from "../../Assets/images/file.png";
 import messages from './messages';
 import { injectIntl } from "react-intl";
+import bodyImage from "../../../src/Assets/images/body.jpg";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
+import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE } from "../../constant";
+import ChatMessageDetails from "./chatMessageDetails";
 
 const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, onHeaderClick, close, maximizeChat, otherTyping = false, formatMessage }) => {
     // let pic = patientName ?
@@ -140,128 +143,6 @@ class ChatForm extends Component {
     }
 }
 
-class MediaComponent extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            url: "",
-            blobUrl: "",
-            message: "",
-            imageModalVisible: false
-        };
-    }
-
-    componentDidMount() {
-        const { message } = this.props;
-        this.setState({ message: message }, this.getUrl);
-        // this.getUrl(message);
-    }
-
-    componentWillUnmount() { }
-
-    imageModal = () => {
-
-        return (
-            <Modal
-                className={"chat-media-modal"}
-                visible={this.state.imageModalVisible}
-                title={' '}
-                closable
-                mask
-                maskClosable
-                onCancel={this.closeModal}
-                wrapClassName={"chat-media-modal-dialog"}
-                width={`50%`}
-                footer={null}
-            >
-                <img src={this.state.url} alt="qualification document" className="wp100" />
-            </Modal>
-        );
-    };
-    closeModal = () => {
-
-        this.setState({ imageModalVisible: false });
-    }
-
-    openModal = () => {
-
-        this.setState({ imageModalVisible: true });
-    }
-    onClickDownloader = e => {
-        console.log('378526387462378468923');
-        e.preventDefault();
-        const { url, message } = this.state;
-        if (url && url.length > 0) {
-            fetch(url, {
-                method: "GET"
-            })
-                .then(response => response.blob())
-                .then(blob => {
-                    const blobUrl = window.URL.createObjectURL(new Blob([blob]));
-                    const downloader = document.createElement("a");
-                    downloader.href = blobUrl;
-                    downloader.download = message.media.filename;
-                    downloader.target = "_blank";
-                    document.body.appendChild(downloader);
-                    downloader.click();
-                    document.body.removeChild(downloader);
-                });
-        }
-    };
-
-    getUrl = async () => {
-        const { message } = this.state;
-        const url = await message.media.getContentTemporaryUrl();
-        this.setState({ url: url });
-    };
-
-    getMedia = () => {
-        const { message } = this.props;
-        if (message && message.media) {
-            const { url = "", blobUrl = "" } = this.state;
-            if (message.media.contentType.indexOf("image") !== -1) {
-                return (
-                    <Fragment>
-                        {url.length > 0 ? (
-                            <div
-                                onClick={this.openModal}
-                            >
-                                <img
-                                    className="chat-media-message-image pointer"
-                                    src={url}
-                                    alt="Uploaded Image"
-                                />
-                            </div>
-                        ) : (
-                                <img
-                                    className="chat-media-message-image"
-                                    src={ImagePlaceHolder}
-                                    alt="Uploaded Image"
-                                />
-                            )}
-                        {this.imageModal()}
-                    </Fragment>
-                );
-            } else {
-                return (
-                    // <div onClick={this.onClickDownloader}>{message.media.filename}</div>
-                    <div className='downloadable-file'>
-                        <img src={File} className='h20 mr10' />
-                        <div className='fs14 mr10'>{message.media.filename.length <= 12 ? message.media.filename : `${message.media.filename.substring(0, 13)}...`}</div>
-                        <img src={Download} className='h20 mr10 pointer' onClick={this.onClickDownloader} />
-                    </div>
-                );
-            }
-        }
-
-        return <div>{this.props.formatMessage(messages.cantDisplay)}</div>;
-    };
-
-    render() {
-        return <Fragment>{this.getMedia()}</Fragment>;
-    }
-}
-
 class ChatPopUp extends Component {
     constructor(props) {
         super(props);
@@ -274,7 +155,11 @@ class ChatPopUp extends Component {
             newMessage: "",
             other_user_online: false,
             otherUserLastConsumedMessageIndex: null,
-            other_typing: false
+            other_typing: false,
+            loadSymptoms:true,
+            loadingMessageDetails: false,
+            message_numbers: 0
+
         };
         this.channelName = "test";
     }
@@ -294,7 +179,7 @@ class ChatPopUp extends Component {
         // this.getToken();
         const { twilio: { chatToken = '' } } = this.props;
         this.setState({ token: chatToken }, this.getToken)
-        this.scrollToBottom();
+        // this.scrollToBottom();
 
         this.intervalID = setInterval(() => this.tick(), 2000);
     }
@@ -306,8 +191,17 @@ class ChatPopUp extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         const {
-            roomId
+            roomId,
+            chatMessages
         } = this.props;
+        const {
+            message_numbers,
+            loadSymptoms
+        } = this.state;
+        const { messageIds = [] } = chatMessages[roomId] || {};
+        if(chatMessages[roomId] !=undefined && messageIds.length > 0 && message_numbers != messageIds.length && !loadSymptoms){
+            this.setState({loadSymptoms:true,message_numbers:messageIds.length});
+        }
         const {
             roomId: prevRoomId
         } = prevProps;
@@ -518,101 +412,11 @@ class ChatPopUp extends Component {
     };
 
 
-    renderMessages() {
-        const { authenticated_user, users, roomId, chatMessages, patientDp } = this.props;
-        const { otherUserLastConsumedMessageIndex } = this.state;
-        const { messages: messagesArray = [] } = chatMessages[roomId] || {};
-        if (messagesArray.length > 0) {
-            // const messagesArray = this.state.messages;
-            const messagesToRender = [];
-            for (let i = 0; i < messagesArray.length; ++i) {
-                const message = messagesArray[i];
-                const prevMessage = i > 1 ? messagesArray[i - 1] : 1;
-                let sameDate = message && prevMessage && message.state && prevMessage.state ? moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp), 'date') : false;
-
-                // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", sameDate,message,prevMessage,message.state,prevMessage.state,moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp),'date'));
-                if (!sameDate) {
-                    messagesToRender.push(
-                        <div className='mt16 mb16 flex wp100 text-grey justify-center fs12'>{moment(message.state.timestamp).isSame(moment(), 'date') ? this.formatMessage(messages.today) : moment(message.state.timestamp).format('ll')}</div>
-                    )
-                }
-                const { state: { index = 1 } = {} } = message;
-                const user = users[message.state.author]
-                    ? users[message.state.author]
-                    : {};
-                // const { basicInfo: { profilePicLink: profilePic } = {} } = user;
-                messagesToRender.push(
-                    <Fragment key={message.state.sid}>
-                        {parseInt(message.state.author) !== parseInt(authenticated_user) ? (
-                            <div className="chat-messages">
-                                {/* <div
-                      className={
-                        "chat-message-box other " +
-                        (message.type === "media" ? "media-text-width" : "")
-                      }
-                    > */}
-                                <div className="chat-avatar">
-                                    <span className="twilio-avatar">
-                                        <Avatar src={patientDp} />
-                                    </span>
-                                    {message.type === "media" ? (
-                                        <div className="chat-text">
-                                            <div className="clickable white chat-media-message-text">
-                                                <MediaComponent message={message}></MediaComponent>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                            <div className="chat-text">{message.state.body}</div>
-                                        )}
-                                </div>
-                                <div className="chat-time start">
-                                    {moment(message.state.timestamp).format("H:mm")}
-                                </div>
-                                {/* </div> */}
-                            </div>
-                        ) : (
-                                <div className="chat-messages end">
-                                    {/* <div
-                      className={
-                        "chat-message-box " +
-                        (message.type === "media" ? "media-text-width" : "")
-                      }
-                    > */}
-                                    {message.type === "media" ? (
-                                        <div className="chat-text end">
-                                            <div className="clickable white chat-media-message-text">
-                                                <MediaComponent message={message}></MediaComponent>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                            <div className="chat-text end">{message.state.body}</div>
-                                        )}
-                                    {/* <div className="chat-text end">{message.state.body}</div> */}
-                                    <div className="flex justify-end">
-                                        <div className="chat-time mr-4">
-                                            {moment(message.state.timestamp).format("H:mm")}
-                                        </div>
-                                        <img className={index < otherUserLastConsumedMessageIndex ? `h14 mt4` : `h12 mt4`} src={index <= otherUserLastConsumedMessageIndex ? DoubleTick : SingleTick} />
-                                    </div>
-                                    {/* </div> */}
-                                    {/* <div className="chat-avatar left">
-                    <Avatar src={profilePic} />
-                  </div> */}
-                                </div>
-                            )}
-                    </Fragment>
-                );
-            }
-            return messagesToRender;
-        } else {
-            return "";
-        }
-    }
-
     render() {
         const { ChatForm } = this;
-        const { messagesLoading = false, other_user_online = false, other_typing = false } = this.state;
-        // console.log('3545235235235234534532423523', this.props);
+        const { chatMessages, roomId } =this.props;
+        const { messagesLoading = false, other_user_online = false, other_typing = false, otherUserLastConsumedMessageIndex } = this.state;
+        const { ...props} = this.props;
         const { placeVideoCall, patientName = '', chats: { minimized = false } = {}, minimizePopUp, maximizePopUp, closePopUp, maximizeChat } = this.props;
         if (minimized) {
             return (
@@ -630,7 +434,7 @@ class ChatPopUp extends Component {
                                 <div className='wp100 hp100 flex justify-center align-center'>
                                     <Spin size="medium" />
                                 </div>
-                                : this.renderMessages()}
+                                : <ChatMessageDetails {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
                             <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                         </div>
                     </div>

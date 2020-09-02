@@ -27,6 +27,13 @@ export const PATH = {
 
 export const HTTP_CODE_SERVER_ERROR = 500;
 
+export const CHAT_MESSAGE_DETAILS = {
+  SYMPTOMS: "symptoms"
+};
+ export const USER_ADHERE_BOT = 'adhere_bot';
+ export const CHAT_MESSAGE_TYPE = {
+   SYMPTOM:'symptom'
+ }
 
 export const ROOM_ID_TEXT = '-adhere-';
 

@@ -13,6 +13,7 @@ import messages from './messages';
 import { injectIntl } from "react-intl";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
+import ChatMessageDetails from "../ChatPopup/chatMessageDetails";
 
 const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, otherTyping = false, formatMessage }) => {
     let pic = patientName ?
@@ -119,128 +120,6 @@ class ChatForm extends Component {
     }
 }
 
-class MediaComponent extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            url: "",
-            blobUrl: "",
-            message: "",
-            imageModalVisible: false
-        };
-    }
-
-    componentDidMount() {
-        const { message } = this.props;
-        this.setState({ message: message }, this.getUrl);
-        // this.getUrl(message);
-    }
-
-    componentWillUnmount() { }
-
-    onClickDownloader = e => {
-        e.preventDefault();
-        const { url, message } = this.state;
-        if (url && url.length > 0) {
-            fetch(url, {
-                method: "GET"
-            })
-                .then(response => response.blob())
-                .then(blob => {
-                    const blobUrl = window.URL.createObjectURL(new Blob([blob]));
-                    const downloader = document.createElement("a");
-                    downloader.href = blobUrl;
-                    downloader.download = message.media.filename;
-                    downloader.target = "_blank";
-                    document.body.appendChild(downloader);
-                    downloader.click();
-                    document.body.removeChild(downloader);
-                });
-        }
-    };
-
-    closeModal = () => {
-
-        this.setState({ imageModalVisible: false });
-    }
-
-    openModal = () => {
-
-        this.setState({ imageModalVisible: true });
-    }
-
-    getUrl = async () => {
-        const { message } = this.state;
-        const url = await message.media.getContentTemporaryUrl();
-        this.setState({ url: url });
-    };
-
-    imageModal = () => {
-
-        return (
-            <Modal
-                className={"chat-media-modal"}
-                visible={this.state.imageModalVisible}
-                title={' '}
-                closable
-                mask
-                maskClosable
-                onCancel={this.closeModal}
-                wrapClassName={"chat-media-modal-dialog"}
-                width={`50%`}
-                footer={null}
-            >
-                <img src={this.state.url} alt="qualification document" className="wp100" />
-            </Modal>
-        );
-    };
-
-    getMedia = () => {
-        const { message } = this.props;
-        if (message && message.media) {
-            const { url = "", blobUrl = "" } = this.state;
-            if (message.media.contentType.indexOf("image") !== -1) {
-                return (
-                    <Fragment>
-                        {url.length > 0 ? (
-                            <div
-                                onClick={this.openModal}
-                            >
-                                <img
-                                    className="chat-media-message-image pointer"
-                                    src={url}
-                                    alt="Uploaded Image"
-                                />
-                            </div>
-                        ) : (
-                                <img
-                                    className="chat-media-message-image"
-                                    src={ImagePlaceHolder}
-                                    alt="Uploaded Image"
-                                />
-                            )}
-                        {this.imageModal()}
-                    </Fragment>
-                );
-            } else {
-                return (
-                    <div className='downloadable-file'>
-                        <img src={File} className='w20 mr10' />
-                        <div className='fs14 mr10'>{message.media.filename}</div>
-                        <img src={Download} className='w20 mr10 pointer' onClick={this.onClickDownloader} />
-                    </div>
-                );
-            }
-        }
-
-        return <div>{this.props.formatMessage(messages.cantDisplay)}</div>;
-    };
-
-    render() {
-        return <Fragment>{this.getMedia()}</Fragment>;
-    }
-}
-
 class TwilioChat extends Component {
     constructor(props) {
         super(props);
@@ -253,7 +132,10 @@ class TwilioChat extends Component {
             newMessage: "",
             other_user_online: false,
             otherUserLastConsumedMessageIndex: null,
-            other_typing: false
+            other_typing: false,
+            loadSymptoms:true,
+            loadingMessageDetails: false,
+            message_numbers: 0
         };
         this.channelName = "test";
     }
@@ -500,103 +382,13 @@ class TwilioChat extends Component {
         this.channel = null;
     };
 
-
-    renderMessages() {
-        const { authenticated_user, users, roomId, chatMessages, patientDp, patientName } = this.props;
-        const { otherUserLastConsumedMessageIndex } = this.state;
-        const { messages: messagesArray = [] } = chatMessages[roomId] || {};
-        if (messagesArray.length > 0) {
-            // const messagesArray = this.state.messages;
-            const messagesToRender = [];
-            for (let i = 0; i < messagesArray.length; ++i) {
-                const message = messagesArray[i];
-                const prevMessage = i>1?messagesArray[i - 1]:1;
-                let sameDate =message&&prevMessage&&message.state&&prevMessage.state? moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp),'date'):false;
-
-                // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", sameDate,message,prevMessage,message.state,prevMessage.state,moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp),'date'));
-                if(!sameDate){
-                    messagesToRender.push(
-                    <div className='mt16 mb16 flex wp100 text-grey justify-center fs12'>{moment(message.state.timestamp).isSame(moment(),'date')?this.formatMessage(messages.today):moment(message.state.timestamp).format('ll')}</div>
-                    )
-                }
-                const { state: { index = 1 } = {} } = message;
-                const user = users[message.state.author]
-                    ? users[message.state.author]
-                    : {};
-                // const { basicInfo: { profilePicLink: profilePic } = {} } = user;
-                messagesToRender.push(
-                    <Fragment key={message.state.sid}>
-                        {parseInt(message.state.author) !== parseInt(authenticated_user) ? (
-                            <div className="chat-messages">
-                                {/* <div
-                      className={
-                        "chat-message-box other " +
-                        (message.type === "media" ? "media-text-width" : "")
-                      }
-                    > */}
-                                <div className="chat-avatar">
-                                    <span className="twilio-avatar">
-                                        <Avatar src={patientDp} />
-                                    </span>
-                                    {message.type === "media" ? (
-                                        <div className="chat-text">
-                                            <div className="clickable white chat-media-message-text">
-                                                <MediaComponent message={message}></MediaComponent>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                            <div className="chat-text">{message.state.body}</div>
-                                        )}
-                                </div>
-                                <div className="chat-time start">
-                                    {moment(message.state.timestamp).format("H:mm")}
-                                </div>
-                                {/* </div> */}
-                            </div>
-                        ) : (
-                                <div className="chat-messages end">
-                                    {/* <div
-                      className={
-                        "chat-message-box " +
-                        (message.type === "media" ? "media-text-width" : "")
-                      }
-                    > */}
-                                    {message.type === "media" ? (
-                                        <div className="chat-text end">
-                                            <div className="clickable white chat-media-message-text">
-                                                <MediaComponent message={message}></MediaComponent>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                            <div className="chat-text end">{message.state.body}</div>
-                                        )}
-                                    {/* <div className="chat-text end">{message.state.body}</div> */}
-                                    <div className="flex justify-end">
-                                        <div className="chat-time mr-4">
-                                            {moment(message.state.timestamp).format("H:mm")}
-                                        </div>
-                                        <img className={index < otherUserLastConsumedMessageIndex ? `h14 mt4` : `h12 mt4`} src={index <= otherUserLastConsumedMessageIndex ? DoubleTick : SingleTick} />
-                                    </div>
-                                    {/* </div> */}
-                                    {/* <div className="chat-avatar left">
-                    <Avatar src={profilePic} />
-                  </div> */}
-                                </div>
-                            )}
-                    </Fragment>
-                );
-            }
-            return messagesToRender;
-        } else {
-            return "";
-        }
-    }
-
     render() {
         const { ChatForm } = this;
 
-        const { messagesLoading = false, other_user_online = false, other_typing = false } = this.state;
+        const { messagesLoading = false, other_user_online = false, other_typing = false, otherUserLastConsumedMessageIndex } = this.state;
         const { placeVideoCall, patientDp = '', patientName = '' } = this.props;
+        const { ...props} = this.props;
+
         return (
             <Fragment>
                 <Header placeVideoCall={placeVideoCall} patientName={patientName} patientDp={patientDp} isOnline={other_user_online} otherTyping={other_typing} formatMessage={this.formatMessage} />
@@ -606,7 +398,7 @@ class TwilioChat extends Component {
                             <div className='wp100 hp100 flex justify-center align-center'>
                                 <Spin />
                             </div>
-                            : this.renderMessages()}
+                            : <ChatMessageDetails {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
                         <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                     </div>
                 </div>
