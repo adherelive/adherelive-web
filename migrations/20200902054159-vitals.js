@@ -1,12 +1,10 @@
 'use strict';
 
-import {VITALS} from "../app/models/vitals";
-import {VITAL_TEMPLATES} from "../app/models/vitalTemplates";
-import {CARE_PLANS} from "../app/models/carePlan";
+import {DB_TABLES} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(VITALS, {
+    return queryInterface.createTable(DB_TABLES.VITALS, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,7 +16,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: VITAL_TEMPLATES,
+            tableName: DB_TABLES.VITAL_TEMPLATES,
           },
           key: 'id'
         }
@@ -28,7 +26,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: CARE_PLANS,
+            tableName: DB_TABLES.CARE_PLANS,
           },
           key: 'id'
         }
@@ -52,6 +50,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(VITALS);
+    return queryInterface.dropTable(DB_TABLES.VITALS);
   }
 };

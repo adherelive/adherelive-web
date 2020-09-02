@@ -16,6 +16,9 @@ const VitalTemplates = database.define(
             type: Sequelize.STRING,
             allowNull: false,
         },
+        unit: {
+            type: Sequelize.STRING,
+        },
         details: {
             type: Sequelize.JSON
         },

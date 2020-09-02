@@ -1,10 +1,10 @@
 'use strict';
 
-import {VITAL_TEMPLATES} from "../app/models/vitalTemplates";
+import {DB_TABLES} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(VITAL_TEMPLATES, {
+    return queryInterface.createTable(DB_TABLES.VITAL_TEMPLATES, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,6 +14,9 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      unit: {
+        type: Sequelize.STRING,
       },
       details: {
         type: Sequelize.JSON
@@ -34,6 +37,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(VITAL_TEMPLATES);
+    return queryInterface.dropTable(DB_TABLES.VITAL_TEMPLATES);
   }
 };

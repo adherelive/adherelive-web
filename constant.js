@@ -367,7 +367,9 @@ export const DB_TABLES = {
   TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
   FEATURE_DETAILS: "feature_details",
   USER_DEVICES: "user_devices",
-  SYMPTOMS: "symptoms"
+  SYMPTOMS: "symptoms",
+  VITAL_TEMPLATES: "vital_templates",
+  VITALS: "vitals"
 };
 
 export const ARTICLE_TYPE = {
