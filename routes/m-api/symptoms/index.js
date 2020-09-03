@@ -9,6 +9,12 @@ const upload = multer({ dest: "../../../app/public/", storage: storage });
 const router  = express.Router();
 
 router.post(
+    "/",
+    Authenticate,
+    SymptomController.getSymptomDetails
+);
+
+router.post(
   "/audio",
   Authenticate,
     upload.single("files"),
@@ -27,12 +33,6 @@ router.post(
     Authenticate,
     // validator.ValidateSymptomData,
     SymptomController.create
-);
-
-router.get(
-    "/:id",
-    Authenticate,
-    SymptomController.getSymptomDetails
 );
 
 export default router;

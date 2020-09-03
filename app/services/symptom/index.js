@@ -27,6 +27,16 @@ export default class Symptom {
         return moment(createDate).utc().format("YYYY-MM-DD")
     }
 
+    getPart = () => {
+      const {config : {parts} = {}} = this._data;
+      return parts;
+    };
+
+    getSide = () => {
+      const {config: {side} = {}} = this._data;
+      return side;
+    };
+
     getUnformattedCreateDate = () => {
         return this._data.get("created_at");
     }

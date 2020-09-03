@@ -161,19 +161,49 @@ class SymptomController extends Controller {
     getSymptomDetails = async (req, res) => {
         const {raiseSuccess, raiseServerError} = this;
         try {
-            Log.debug("req.params ----> ", req.params);
-            const {params: {id} = {}} = req;
+            Log.debug("req.body ----> ", req.body);
+            const {body: {symptom_ids = []} = {}} = req;
 
-            const documentData = {};
+            let documentData = {};
+            let symptomData = {};
+            let userData = {};
+            let patientData = {};
+            let doctorData = {};
 
-            const symptomData = await SymptomWrapper({id});
+            for(const id of symptom_ids) {
+                const symptomExists = await SymptomService.getByData({id});
+
+                if(symptomExists) {
+                    const symptom = await SymptomWrapper({data: symptomExists});
+                    const {symptoms} = await symptom.getAllInfo();
+                    const {users, upload_documents, patients, doctors} = await symptom.getReferenceInfo();
+                    symptomData = {...symptomData, ...symptoms};
+                    userData = {...userData, ...users};
+                    documentData = {...documentData, ...upload_documents};
+                    patientData = {...patientData, ...patients};
+                    doctorData = {...doctorData, ...doctors};
+                }
+            }
 
             return raiseSuccess(
                 res,
                 200,
                 {
-                    ...await symptomData.getAllInfo(),
-                    ...await symptomData.getReferenceInfo(),
+                    symptoms: {
+                        ...symptomData
+                    },
+                    upload_documents: {
+                        ...documentData
+                    },
+                    users: {
+                        ...userData
+                    },
+                    doctors: {
+                        ...doctorData
+                    },
+                    patients: {
+                        ...patientData
+                    }
                 },
                 "Symptom details fetched successfully"
             );

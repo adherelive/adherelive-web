@@ -2,13 +2,14 @@ import Controller from "../";
 import Logger from "../../../libs/log";
 
 // SERVICES
-import DocumentService from "../../services/uploadDocuments/uploadDocuments.service";
+import SymptomService from "../../services/symptom/symptom.service";
+// import DocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 // WRAPPERS
 import SymptomWrapper from "../../ApiWrapper/web/symptoms";
 import DocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 
-import {DOCUMENT_PARENT_TYPE} from "../../../constant";
+import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLERS > SYMPTOMS");
 
@@ -17,42 +18,56 @@ class SymptomController extends Controller {
         super();
     }
 
-    getSymptomDetails = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
+    getBatchSymptomDetails = async (req, res) => {
+        const { raiseSuccess, raiseServerError } = this;
         try {
-            Log.debug("req.params ----> ", req.params);
-            const {params: {id} = {}} = req;
+            Log.debug("req.body ----> ", req.body);
+            const { body: { symptom_ids = [] } = {} } = req;
 
-            const documentData = {};
+            let documentData = {};
+            let symptomData = {};
+            let userData = {};
+            let patientData = {};
+            let doctorData = {};
 
-            const symptomData = await SymptomWrapper({id});
+            for (const id of symptom_ids) {
+                const symptomExists = await SymptomService.getByData({ id });
 
-            const audios = await DocumentService.getDoctorQualificationDocuments(
-                DOCUMENT_PARENT_TYPE.SYMPTOM_AUDIO,
-                symptomData.getSymptomId()
-            ) || [];
-
-            const photos = await DocumentService.getDoctorQualificationDocuments(
-                DOCUMENT_PARENT_TYPE.SYMPTOM_PHOTO,
-                symptomData.getSymptomId()
-            ) || [];
-
-
-            for(const docs of [...audios, ...photos]) {
-                const doc = await DocumentWrapper(docs);
-                documentData[doc.getUploadDocumentId()] = doc.getBasicInfo();
+                if (symptomExists) {
+                    const symptom = await SymptomWrapper({ data: symptomExists });
+                    const { symptoms } = await symptom.getAllInfo();
+                    const { users, upload_documents, patients, doctors } = await symptom.getReferenceInfo();
+                    symptomData = { ...symptomData, ...symptoms };
+                    userData = { ...userData, ...users };
+                    documentData = { ...documentData, ...upload_documents };
+                    patientData = { ...patientData, ...patients };
+                    doctorData = { ...doctorData, ...doctors };
+                }
             }
 
             return raiseSuccess(
                 res,
                 200,
                 {
-                    ...await symptomData.getAllInfo(),
-                    ...await symptomData.getReferenceInfo(),
+                    symptoms: {
+                        ...symptomData
+                    },
+                    upload_documents: {
+                        ...documentData
+                    },
+                    users: {
+                        ...userData
+                    },
+                    doctors: {
+                        ...doctorData
+                    },
+                    patients: {
+                        ...patientData
+                    }
                 },
                 "Symptom details fetched successfully"
             );
-        } catch(error) {
+        } catch (error) {
             Log.debug("symptoms getSymptomDetails 500 error", error);
             return raiseServerError(res);
         }
