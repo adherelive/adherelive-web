@@ -13,7 +13,7 @@ module.exports = {
       },
       feature_type: {
         type: Sequelize.ENUM,
-        values: [FEATURE_TYPE.APPOINTMENT, FEATURE_TYPE.MEDICATION]
+        values: [...Object.values(FEATURE_TYPE)]
       },
       details: {
         type: Sequelize.JSON,

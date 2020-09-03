@@ -10,4 +10,17 @@ router.get(
     VitalController.search
 );
 
+router.get(
+    "/details",
+    Authenticate,
+    VitalController.getVitalFormDetails
+);
+
+router.post(
+  "/",
+  Authenticate,
+  // validator.validateVitalsForm,
+    VitalController.create
+);
+
 export default router;

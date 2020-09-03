@@ -48,11 +48,13 @@ const Vitals = database.define(
 );
 
 Vitals.hasOne(VitalTemplates, {
-
+    foreignKey: "id",
+    sourceKey: "vital_template_id"
 });
 
-Vitals.belongsTo(CarePlan, {
-
+Vitals.hasOne(CarePlan, {
+    foreignKey: "id",
+    sourceKey: "care_plan_id"
 });
 
 export default Vitals;
