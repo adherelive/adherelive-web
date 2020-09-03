@@ -113,8 +113,6 @@ class SideMenu extends Component {
         } = {}
       } = doctor;
 
-      console.log("9829181392831 first_name, last_name --> ", first_name, last_name);
-
       if (user_id === authenticated_user) {
         dp = profile_pic;
         initials = `${first_name ? first_name[0] : ""}${last_name ? last_name[0] : ""}`;
