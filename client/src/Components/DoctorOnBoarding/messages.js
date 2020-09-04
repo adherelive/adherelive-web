@@ -352,10 +352,25 @@ const messages = defineMessages({
     description: "",
     defaultMessage: 'Please select valid timings!'
   },
+  timeClashing: {
+    id: "app.doctorOnBoarding.timeClashing",
+    description: "",
+    defaultMessage: 'Time slot for the same day are already taken!'
+  },
   validEndTiming: {
     id: "app.doctorOnBoarding.validEndTiming",
     description: "",
     defaultMessage: 'Please select a valid End Time.'
+  },
+  startTimingEmpty:{
+    id: "app.doctorOnBoarding.startTimingEmpty",
+    description: "",
+    defaultMessage: 'Start Time is Empty'
+  },
+  endTimingEmpty:{
+    id: "app.doctorOnBoarding.endTimingEmpty",
+    description: "",
+    defaultMessage: 'End Time is Empty'
   },
   clinicTimings: {
     id: "app.doctorOnBoarding.clinicTimings",

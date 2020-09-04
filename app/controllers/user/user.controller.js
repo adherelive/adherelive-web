@@ -192,8 +192,8 @@ class UserController extends Controller {
           }
         );
 
-        const notificationToken = AppNotification.getUserToken(`${userId}`);
-        const feedId = base64.encode(`${userId}`);
+        // const notificationToken = AppNotification.getUserToken(`${userId}`);
+        // const feedId = base64.encode(`${userId}`);
 
         const apiUserDetails = await UserWrapper(userData.getBasicInfo);
 
@@ -203,8 +203,8 @@ class UserController extends Controller {
               ...apiUserDetails.getBasicInfo()
             }
           },
-          notificationToken: notificationToken,
-          feedId: `${userId}`,
+          // notificationToken: notificationToken,
+          // feedId: `${userId}`,
           auth_user: apiUserDetails.getUserId(),
           auth_category: apiUserDetails.getCategory()
         };

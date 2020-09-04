@@ -11,6 +11,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Basic Details"
     },
+    noUploadQualificationDocuments: {
+        id: "app.admin.doctors.details.noUploadQualificationDocuments",
+        description: "",
+        defaultMessage: "No Qualification documents uploaded."
+    },
+    noUploadRegsitrationDocuments: {
+        id: "app.admin.doctors.details.noUploadRegsitrationDocuments",
+        description: "",
+        defaultMessage: "No Registration documents uploaded."
+    },
     profile_pic_text: {
         id: "app.admin.doctors.details.profile.pic.text",
         description: "",

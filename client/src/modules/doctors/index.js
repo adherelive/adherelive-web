@@ -113,7 +113,6 @@ export const getAllDoctors = () => {
 };
 
 export const getDoctorDetails = (id) => {
-  console.log("user_id",id);
   let response = {};
   return async dispatch => {
     try {
@@ -142,7 +141,6 @@ export const getDoctorDetails = (id) => {
   }
 };
 export const getDoctorProfileDetails = () => {
-  console.log("hello");
   let response = {};
   return async dispatch => {
     try {

@@ -6,6 +6,31 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Doctor Details"
     },
+    cityError: {
+        id: "app.doctorProfileUpdate.cityError",
+        description: "",
+        defaultMessage: 'City cannot be empty.'
+    },
+    clincLocationError: {
+        id: "app.doctorProfileUpdate.clincLocationError",
+        description: "",
+        defaultMessage: 'Clinic Location cannot be empty.'
+    },
+    nameError: {
+        id: "app.doctorProfileUpdate.nameError",
+        description: "",
+        defaultMessage: 'Name cannot be empty.'
+    },
+    clincNameError: {
+        id: "app.doctorProfileUpdate.clincNameError",
+        description: "",
+        defaultMessage: 'Clinic Name cannot be empty.'
+    },
+    registrationNumberError: {
+        id: "app.doctorProfileUpdate.registrationNumberError",
+        description: "",
+        defaultMessage: 'Registration Number cannot be empty.'
+    },
     somethingWentWrong: {
         id: "app.doctorOnBoarding.somethingWentWrong",
         description: "",

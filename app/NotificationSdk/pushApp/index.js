@@ -11,33 +11,41 @@ class PushNotification {
 
     notify = (templates = []) => {
         for(const template of templates) {
-            this.sendPushNotification(template).then(res => {
-                Log.debug("PushNotification notify response", res);
-            });
+            Log.debug("templates push app--> ", template);
+            this.sendPushNotification(template);
         }
     }
 
-    sendPushNotification = async (template) => {
+    sendPushNotification = (template) => {
         try {
-            // TODO: add one-signal rest api call code here
-            Log.debug("sendPushNotification template", template);
-            await fetch(
-                "https://onesignal.com/api/v1/notifications",
-                {
-                    method:"POST",
-                    port: 443,
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                        Authorization: "Basic " + process.config.one_signal.key
-                    },
-                    body: template
-                }
-            ).then(res => {
-                Log.debug("sendPushNotification res", res.json());
-            }).catch(err => {
-                Log.debug("sendPushNotification err fetch", err);
+            const headers = {
+                "Content-Type": "application/json; charset=utf-8",
+                Authorization: "Basic " + process.config.one_signal.key
+            };
+
+            const options = {
+                host: "onesignal.com",
+                port: 443,
+                path: "/api/v1/notifications",
+                method: "POST",
+                headers: headers
+            };
+
+            const https = require("https");
+            const req = https.request(options, function(res) {
+                res.on("data", function(data) {
+                    console.log("Response:");
+                    console.log(JSON.parse(data));
+                });
             });
-            // Log.debug("sendPushNotification Response", response);
+
+            req.on("error", function(e) {
+                console.log("ERROR:");
+                console.log(e);
+            });
+
+            req.write(JSON.stringify(template));
+            req.end();
         } catch (err) {
             Log.debug("sendPushNotification 500 error", err);
         }
