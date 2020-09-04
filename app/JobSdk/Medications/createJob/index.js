@@ -7,6 +7,39 @@ class CreateJob extends MedicationJob {
         super(data);
     }
 
+    getPushAppTemplate = () => {
+        const { getMedicationData } = this;
+        const {
+            participants = [],
+            actor: {
+                id: actorId,
+                details: { name, category: actorCategory } = {}
+            } = {},
+            medicationId = null
+        } = getMedicationData() || {};
+
+        const templateData = [];
+
+        for (const participant of participants) {
+            if (participant !== actorId) { // todo: add actor after testing (deployment)
+
+            templateData.push({
+                app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+                headings: { en: `Appointment Created` },
+                contents: {
+                    en: `${name}(${actorCategory}) has created a medication reminder with you`
+                },
+                // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
+                include_player_ids: [...participants],
+                priority: 10,
+                data: { url: "/medications", params: getMedicationData() }
+            });
+            }
+        }
+
+        return templateData;
+    };
+
     getInAppTemplate = () => {
         const { getMedicationData } = this;
         const {

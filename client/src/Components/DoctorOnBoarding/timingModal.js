@@ -211,7 +211,9 @@ class ClinicRegister extends Component {
                         if ((time.isAfter(moment(startTime)) && time.isBefore(moment(endTime)))
                             || (newEndTime.isAfter(moment(startTime)) && newEndTime.isBefore(moment(endTime)))
                             || moment(time).isSame(moment(startTime)) || moment(time).isSame(moment(endTime))
-                            || moment(newEndTime).isSame(moment(startTime)) || moment(newEndTime).isSame(moment(endTime))
+                            || moment(newEndTime).isSame(moment(startTime)) || moment(newEndTime).isSame(moment(endTime)
+                            || (time.isBefore(moment(startTime)) && newEndTime.isBefore(moment(endTime)) && newEndTime.isBefore(moment(startTime)))
+                            || (time.isAfter(moment(startTime)) && time.isBefore(moment(endTime)) && newEndTime.isAfter(moment(endTime))))
                         ) {
                             wrongHours = true;
                         }
@@ -226,7 +228,7 @@ class ClinicRegister extends Component {
             newDayTimings[day].timings = timings;
             this.setState({ clinics: newDayTimings });
         } else {
-            message.error(this.formatMessage(messages.validTimings))
+            message.error(this.formatMessage(messages.timeClashing))
         }
     }
 
@@ -246,7 +248,8 @@ class ClinicRegister extends Component {
                     let { startTime = '', endTime = '' } = timings[tkey];
                     if (startTime && endTime) {
                         if ((time.isAfter(moment(startTime)) && time.isBefore(moment(endTime)))
-                            || moment(time).isSame(moment(startTime)) || moment(time).isSame(moment(endTime))) {
+                            || moment(time).isSame(moment(startTime)) || moment(time).isSame(moment(endTime))
+                            || (time.isBefore(moment(startTime)) && time.isAfter(moment(endTime)))) {
                             wrongHours = true;
                         }
                     }
@@ -258,7 +261,7 @@ class ClinicRegister extends Component {
             newDayTimings[day].timings = timings;
             this.setState({ dayTimings: newDayTimings });
         } else {
-            message.error(this.formatMessage(messages.validEndTiming))
+            message.error(this.formatMessage(messages.timeClashing))
         }
     }
 
@@ -268,6 +271,15 @@ class ClinicRegister extends Component {
 
         for (let day of Object.keys(dayTimings)) {
             let { timings: newTimings = {} } = dayTimings[day];
+            for(let time of Object.keys(newTimings)){
+                if(newTimings[time].startTime == null){
+                    message.error(this.formatMessage(messages.startTimingEmpty));
+                    return;
+                }else if(newTimings[time].endTime == null){
+                    message.error(this.formatMessage(messages.endTimingEmpty));
+                    return;
+                }
+            }
             dayTimings[day] = Object.values(newTimings);
             delete dayTimings[day].timingsKeys;
         }
