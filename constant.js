@@ -699,6 +699,20 @@ const RIGHT_TOE = "38";
 const LEFT_TOE = "39";
 const RECTUM = "40";
 const URINARY_BLADDER = "41";
+const HEAD_BACK = "42";
+const NECK_BACK = "43";
+const RIGHT_SHOULDER_BACK = "44";
+const LEFT_SHOULDER_BACK = "45";
+const BACK = "46";
+const LOWER_BACK = "47";
+const LEFT_TRICEP = "48";
+const RIGHT_TRICEP = "49";
+const LEFT_FOREARM_BACK = "50";
+const RIGHT_FOREARM_BACK = "51";
+const LEFT_HAMSTRING = "52";
+const RIGHT_HAMSTRING = "53";
+const LEFT_CALF = "54";
+const RIGHT_CALF = "55";
 
 export const PARTS_GRAPH = {
   [HEAD]: { name: "Head" },
@@ -741,7 +755,21 @@ export const PARTS_GRAPH = {
   [RIGHT_TOE]: { name: "Right Toe" },
   [LEFT_TOE]: { name: "Left Toe" },
   [RECTUM]: { name: "Rectum" },
-  [URINARY_BLADDER]: { name: "Urinary Bladder" }
+  [URINARY_BLADDER]: { name: "Urinary Bladder" },
+  [HEAD_BACK]: { name: "Head" },
+  [NECK_BACK]: { name: "Neck" },
+  [RIGHT_SHOULDER_BACK]: { name: "Right Shoulder" },
+  [LEFT_SHOULDER_BACK]: { name: "Left Shoulder" },
+  [BACK]: { name: "Back" },
+  [LOWER_BACK]: { name: "Lower Back" },
+  [LEFT_TRICEP]: { name: "Left Tricep" },
+  [RIGHT_TRICEP]: { name: "Right Tricep" },
+  [LEFT_FOREARM_BACK]: { name: "Left  Forearm" },
+  [RIGHT_FOREARM_BACK]: { name: "Right Forearm" },
+  [LEFT_HAMSTRING]: { name: "Left Hamstring" },
+  [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
+  [LEFT_CALF]: { name: "Left Calf" },
+  [RIGHT_CALF]: { name: "Right Calf" },
 };
 
 export const BODY_VIEW = {
