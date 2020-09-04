@@ -494,6 +494,9 @@ class MPatientController extends Controller {
 
           // DATA FORMATTED FOR DATE ORDER
           const symptomDetails = await symptom.getDateWiseInfo();
+          const {upload_documents} = await symptom.getReferenceInfo();
+          symptomDates.push(symptom.getCreatedDate());
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
           if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
             dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
           } else {
