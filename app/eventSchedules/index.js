@@ -27,7 +27,7 @@ class EventSchedule {
 
   createAppointmentSchedule = async appointment => {
     try {
-      const { event_id, start_time, end_time, details, participant_one, participant_two } = appointment || {};
+      const { event_id, start_time, end_time, details, participant_one, participant_two, critical } = appointment || {};
 
       const rrule = new RRule({
         freq: RRule.WEEKLY,
@@ -42,11 +42,11 @@ class EventSchedule {
       // create schedule for the date
       const scheduleData = {
         event_id,
+          critical,
         date: moment(start_time).toISOString(),
         start_time: moment(start_time).toISOString(),
         end_time: moment(end_time).toISOString(),
         event_type: EVENT_TYPE.APPOINTMENT,
-        status: EVENT_STATUS.SCHEDULED,
           participant_one,
           participant_two,
         details

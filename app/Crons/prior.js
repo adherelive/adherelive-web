@@ -21,14 +21,16 @@ class PriorCron {
             Log.debug("currentTime ---> ", currentTime);
             const scheduleEvents = await ScheduleEventService.getPriorEventByData(currentTime);
 
+            Log.debug("scheduleEvents ---> ", scheduleEvents);
+
             for (const scheduleEvent of scheduleEvents) {
                 const event = await ScheduleEventWrapper(scheduleEvent);
                 switch (event.getEventType()) {
                     case EVENT_TYPE.APPOINTMENT:
-                        this.handleAppointmentPrior(event);
+                        await this.handleAppointmentPrior(event);
                         break;
                     case EVENT_TYPE.MEDICATION_REMINDER:
-                        this.handleMedicationPrior(event);
+                        // this.handleMedicationPrior(event);
                         break;
                     default:
                         break;

@@ -20,7 +20,7 @@ import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
-const Logger = new Log("MOBILE APPOINTMENT CONTROLLLER");
+const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
 class MobileAppointmentController extends Controller {
   constructor() {
@@ -162,7 +162,7 @@ class MobileAppointmentController extends Controller {
 
       Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
-      // ADD CAREPLAN APPOINTMENT
+      // ADD CARE_PLAN APPOINTMENT
       if (care_plan_id) {
         const carePlanAppointment = await carePlanAppointmentService.addCarePlanAppointment(
           {
