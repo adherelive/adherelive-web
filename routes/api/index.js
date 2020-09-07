@@ -22,10 +22,10 @@ import specialityRouter from "./speciality";
 import carePlanTemplateRouter from "./carePlanTemplate";
 import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
+import vitalRouter from "./vitals";
 
 import userService from "../../app/services/user/user.service";
 import jwt from "jsonwebtoken";
-import Log from "../../libs/log";
 
 
 router.use(async function(req, res, next) {
@@ -108,5 +108,6 @@ router.use("/care-plan-templates", carePlanTemplateRouter);
 
 router.use("/notifications", notificationRouter);
 router.use("/symptoms", symptomRouter);
+router.use("/vitals", vitalRouter);
 
 module.exports = router;

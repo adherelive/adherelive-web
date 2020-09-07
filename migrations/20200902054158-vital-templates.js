@@ -1,22 +1,25 @@
 'use strict';
 
-import {DB_TABLES, FEATURE_TYPE} from "../constant";
+import {DB_TABLES} from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.FEATURE_DETAILS, {
+    return queryInterface.createTable(DB_TABLES.VITAL_TEMPLATES, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      feature_type: {
-        type: Sequelize.ENUM,
-        values: [...Object.values(FEATURE_TYPE)]
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      unit: {
+        type: Sequelize.STRING,
       },
       details: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSON
       },
       created_at: {
         allowNull: false,
@@ -34,6 +37,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.FEATURE_DETAILS);
+    return queryInterface.dropTable(DB_TABLES.VITAL_TEMPLATES);
   }
 };

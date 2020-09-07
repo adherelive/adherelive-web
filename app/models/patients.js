@@ -8,6 +8,8 @@ import {
   GENDER
 } from "../../constant";
 
+export const PATIENTS = "patients";
+
 const Patients = database.define(
   DB_TABLES.PATIENTS,
   {

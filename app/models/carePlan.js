@@ -7,6 +7,8 @@ import Patients from "./patients";
 import CarePlanAppointment from "./carePlanAppointments";
 import CarePlanMedication from "./carePlanMedications";
 
+export const CARE_PLANS = "care_plans";
+
 const CarePlan = database.define(
     DB_TABLES.CARE_PLANS,
     {

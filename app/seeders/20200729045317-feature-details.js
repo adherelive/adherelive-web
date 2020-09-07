@@ -1,6 +1,6 @@
 'use strict';
 
-import {DB_TABLES, FEATURE_TYPE} from "../../constant";
+import {DB_TABLES, FEATURE_TYPE, REPEAT_INTERVAL} from "../../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -32,6 +32,46 @@ module.exports = {
         feature_type: FEATURE_TYPE.MEDICATION,
         details: JSON.stringify({
 
+        }),
+        created_at:new Date(),
+        updated_at: new Date()
+      },
+      {
+        feature_type: FEATURE_TYPE.VITAL,
+        details: JSON.stringify({
+          repeat_interval_ids: ["1","2","3","4", "5"],
+          repeat_intervals: {
+            1: {
+              text:"Once",
+              unit: "h",
+              value: 0,
+              key: REPEAT_INTERVAL.ONCE
+            },
+            2: {
+              text: "Every hour",
+              unit: "h",
+              value: 1,
+              key: REPEAT_INTERVAL.ONE_HOUR
+            },
+            3: {
+              text: "Every 2 hour",
+              unit: "h",
+              value: 2,
+              key: REPEAT_INTERVAL.TWO_HOUR
+            },
+            4: {
+              text: "Every 4 hour",
+              unit: "h",
+              value: 4,
+              key: REPEAT_INTERVAL.FOUR_HOUR
+            },
+            5: {
+              text: "Every 6 hour",
+              unit: "h",
+              value: 6,
+              key: REPEAT_INTERVAL.SIX_HOUR
+            }
+          },
         }),
         created_at:new Date(),
         updated_at: new Date()

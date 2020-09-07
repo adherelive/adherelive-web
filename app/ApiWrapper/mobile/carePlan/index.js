@@ -39,6 +39,17 @@ class CarePlanWrapper extends BaseCarePlan {
         };
     };
 
+    getAllInfo = async () => {
+        const {_data, getBasicInfo} = this;
+        const {care_plan_appointments = [], care_plan_medications = []} = _data || {};
+
+        return {
+            ...getBasicInfo(),
+            appointment_ids: care_plan_appointments.map(appointment => appointment.get("appointment_id")),
+            medication_ids: care_plan_medications.map(medication => medication.get("medication_id")),
+        }
+    };
+
     getReferenceInfo = async () => {
         const {_data, getBasicInfo, getCarePlanId} = this;
         const carePlanAppointments = await carePlanAppointmentService.getAllByData({care_plan_id: getCarePlanId()});
