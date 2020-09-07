@@ -499,6 +499,129 @@ export const DAYS_KEYS = [
 ];
 
 
+
+
+const HEAD = "1";
+const RIGHT_EYE = "2";
+const LEFT_EYE = "3";
+const RIGHT_EAR = "4";
+const LEFT_EAR = "5";
+const NOSE = "6";
+const MOUTH = "7";
+const NECK = "8";
+const RIGHT_SHOULDER = "9";
+const LEFT_SHOULDER = "10";
+const CHEST = "11";
+const RIGHT_ARM = "12";
+const LEFT_ARM = "13";
+const RIGHT_ELBOW = "14";
+const LEFT_ELBOW = "15";
+const STOMACH = "16";
+const ABDOMEN = "17";
+const RIGHT_FOREARM = "18";
+const LEFT_FOREARM = "19";
+const RIGHT_WRIST = "20";
+const LEFT_WRIST = "21";
+const RIGHT_HAND = "22";
+const LEFT_HAND = "23";
+const RIGHT_HAND_FINGER = "24";
+const LEFT_HAND_FINGER = "25";
+const RIGHT_HIP = "26";
+const LEFT_HIP = "27";
+const RIGHT_THIGH = "28";
+const LEFT_THIGH = "29";
+const RIGHT_KNEE = "30";
+const LEFT_KNEE = "31";
+const RIGHT_SHIN = "32";
+const LEFT_SHIN = "33";
+const RIGHT_ANKLE = "34";
+const LEFT_ANKLE = "35";
+const RIGHT_FOOT = "36";
+const LEFT_FOOT = "37";
+const RIGHT_TOE = "38";
+const LEFT_TOE = "39";
+const RECTUM = "40";
+const URINARY_BLADDER = "41";
+const HEAD_BACK = "42";
+const NECK_BACK = "43";
+const RIGHT_SHOULDER_BACK = "44";
+const LEFT_SHOULDER_BACK = "45";
+const BACK = "46";
+const LOWER_BACK = "47";
+const LEFT_TRICEP = "48";
+const RIGHT_TRICEP = "49";
+const LEFT_FOREARM_BACK = "50";
+const RIGHT_FOREARM_BACK = "51";
+const LEFT_HAMSTRING = "52";
+const RIGHT_HAMSTRING = "53";
+const LEFT_CALF = "54";
+const RIGHT_CALF = "55";
+
+
+export const PARTS_GRAPH = {
+  [HEAD]: { name: "Head" },
+  [RIGHT_EYE]: { name: "Right Eye" },
+  [LEFT_EYE]: { name: "Left Eye" },
+  [RIGHT_EAR]: { name: "Right Ear" },
+  [LEFT_EAR]: { name: "Left Ear" },
+  [NOSE]: { name: "Nose" },
+  [MOUTH]: { name: "Mouth" },
+  [NECK]: { name: "Neck" },
+  [RIGHT_SHOULDER]: { name: "Right Shoulder" },
+  [LEFT_SHOULDER]: { name: "Left Shoulder" },
+  [CHEST]: { name: "Chest" },
+  [RIGHT_ARM]: { name: "Right Arm" },
+  [LEFT_ARM]: { name: "Left Arm" },
+  [RIGHT_ELBOW]: { name: "Right Elbow" },
+  [LEFT_ELBOW]: { name: "Left Elbow" },
+  [STOMACH]: { name: "Stomach" },
+  [ABDOMEN]: { name: "Abdomen" },
+  [RIGHT_FOREARM]: { name: "Right Forearm" },
+  [LEFT_FOREARM]: { name: "Left Forearm" },
+  [RIGHT_WRIST]: { name: "Right Wrist" },
+  [LEFT_WRIST]: { name: "Left Wrist" },
+  [RIGHT_HAND]: { name: "Right Hand" },
+  [LEFT_HAND]: { name: "Left Hand" },
+  [RIGHT_HAND_FINGER]: { name: "Right Hand Finger" },
+  [LEFT_HAND_FINGER]: { name: "Left Hand Finger" },
+  [RIGHT_HIP]: { name: "Right Hip" },
+  [LEFT_HIP]: { name: "Left Hip" },
+  [RIGHT_THIGH]: { name: "Right Thigh" },
+  [LEFT_THIGH]: { name: "Left Thigh" },
+  [RIGHT_KNEE]: { name: "Right Knee" },
+  [LEFT_KNEE]: { name: "Left Knee" },
+  [RIGHT_SHIN]: { name: "Right Shin" },
+  [LEFT_SHIN]: { name: "Left Shin" },
+  [RIGHT_ANKLE]: { name: "Right Ankle" },
+  [LEFT_ANKLE]: { name: "Left Ankle" },
+  [RIGHT_FOOT]: { name: "Right Foot" },
+  [LEFT_FOOT]: { name: "Left Foot" },
+  [RIGHT_TOE]: { name: "Right Toe" },
+  [LEFT_TOE]: { name: "Left Toe" },
+  [RECTUM]: { name: "Rectum" },
+  [URINARY_BLADDER]: { name: "Urinary Bladder" },
+
+  [HEAD_BACK]: { name: "Head" },
+  [NECK_BACK]: { name: "Neck" },
+  [RIGHT_SHOULDER_BACK]: { name: "Right Shoulder" },
+  [LEFT_SHOULDER_BACK]: { name: "Left Shoulder" },
+  [BACK]: { name: "Back" },
+  [LOWER_BACK]: { name: "Lower Back" },
+  [LEFT_TRICEP]: { name: "Left Tricep" },
+  [RIGHT_TRICEP]: { name: "Right Tricep" },
+  [LEFT_FOREARM_BACK]: { name: "Left  Forearm" },
+  [RIGHT_FOREARM_BACK]: { name: "Right Forearm" },
+  [LEFT_HAMSTRING]: { name: "Left Hamstring" },
+  [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
+  [LEFT_CALF]: { name: "Left Calf" },
+  [RIGHT_CALF]: { name: "Right Calf" },
+};
+
+export const BODY_VIEW = {
+  FRONT: "1",
+  BACK: "2"
+};
+
 export const PARTS = {
   HEAD: "HEAD",
   RIGHT_EYE: "RIGHT_EYE",
@@ -544,146 +667,292 @@ export const PARTS = {
 };
 
 export const PART_LIST = [
-  PARTS.HEAD,
-  PARTS.RIGHT_EYE,
-  PARTS.LEFT_EYE,
-  PARTS.RIGHT_EAR,
-  PARTS.LEFT_EAR,
-  PARTS.NOSE,
-  PARTS.MOUTH,
-  PARTS.NECK,
-  PARTS.RIGHT_SHOULDER,
-  PARTS.LEFT_SHOULDER,
-  PARTS.CHEST,
-  PARTS.RIGHT_ARM,
-  PARTS.LEFT_ARM,
-  PARTS.RIGHT_ELBOW,
-  PARTS.LEFT_ELBOW,
-  PARTS.STOMACH,
-  PARTS.ABDOMEN,
-  PARTS.RIGHT_FOREARM,
-  PARTS.LEFT_FOREARM,
-  PARTS.RIGHT_WRIST,
-  PARTS.LEFT_WRIST,
-  PARTS.RIGHT_HAND,
-  PARTS.LEFT_HAND,
-  PARTS.RIGHT_HAND_FINGER,
-  PARTS.LEFT_HAND_FINGER,
-  PARTS.RIGHT_HIP,
-  PARTS.LEFT_HIP,
-  PARTS.RIGHT_THIGH,
-  PARTS.LEFT_THIGH,
-  PARTS.RIGHT_KNEE,
-  PARTS.LEFT_KNEE,
-  PARTS.RIGHT_SHIN,
-  PARTS.LEFT_SHIN,
-  PARTS.RIGHT_ANKLE,
-  PARTS.LEFT_ANKLE,
-  PARTS.RIGHT_FOOT,
-  PARTS.LEFT_FOOT,
-  PARTS.RIGHT_TOE,
-  PARTS.LEFT_TOE,
-  PARTS.RECTUM,
-  PARTS.URINARY_BLADDER
+  HEAD,
+  RIGHT_EYE,
+  LEFT_EYE,
+  RIGHT_EAR,
+  LEFT_EAR,
+  NOSE,
+  MOUTH,
+  NECK,
+  RIGHT_SHOULDER,
+  LEFT_SHOULDER,
+  CHEST,
+  RIGHT_ARM,
+  LEFT_ARM,
+  RIGHT_ELBOW,
+  LEFT_ELBOW,
+  STOMACH,
+  ABDOMEN,
+  RIGHT_FOREARM,
+  LEFT_FOREARM,
+  RIGHT_WRIST,
+  LEFT_WRIST,
+  RIGHT_HAND,
+  LEFT_HAND,
+  RIGHT_HAND_FINGER,
+  LEFT_HAND_FINGER,
+  RIGHT_THIGH,
+  LEFT_THIGH,
+  RIGHT_KNEE,
+  LEFT_KNEE,
+  RIGHT_SHIN,
+  LEFT_SHIN,
+  RIGHT_ANKLE,
+  LEFT_ANKLE,
+  RIGHT_FOOT,
+  LEFT_FOOT,
+  RIGHT_TOE,
+  LEFT_TOE,
+  RECTUM,
+  URINARY_BLADDER,
+  RIGHT_HIP,
+  LEFT_HIP,
+  HEAD_BACK,
+  NECK_BACK,
+  RIGHT_SHOULDER_BACK,
+  LEFT_SHOULDER_BACK,
+  BACK,
+  LOWER_BACK,
+  LEFT_TRICEP,
+  RIGHT_TRICEP,
+  LEFT_FOREARM_BACK,
+  RIGHT_FOREARM_BACK,
+  LEFT_HAMSTRING,
+  RIGHT_HAMSTRING,
+  LEFT_CALF,
+  RIGHT_CALF,
 ];
 
+export const PART_LIST_CODES = {
+  HEAD: HEAD,
+  RIGHT_EYE: RIGHT_EYE,
+  LEFT_EYE: LEFT_EYE,
+  RIGHT_EAR: RIGHT_EAR,
+  LEFT_EAR: LEFT_EAR,
+  NOSE: NOSE,
+  MOUTH: MOUTH,
+  NECK: NECK,
+  RIGHT_SHOULDER: RIGHT_SHOULDER,
+  LEFT_SHOULDER: LEFT_SHOULDER,
+  CHEST: CHEST,
+  RIGHT_ARM: RIGHT_ARM,
+  LEFT_ARM: LEFT_ARM,
+  RIGHT_ELBOW: RIGHT_ELBOW,
+  LEFT_ELBOW: LEFT_ELBOW,
+  STOMACH: STOMACH,
+  ABDOMEN: ABDOMEN,
+  RIGHT_FOREARM: RIGHT_FOREARM,
+  LEFT_FOREARM: LEFT_FOREARM,
+  RIGHT_WRIST: RIGHT_WRIST,
+  LEFT_WRIST: LEFT_WRIST,
+  RIGHT_HAND: RIGHT_HAND,
+  LEFT_HAND: LEFT_HAND,
+  RIGHT_HAND_FINGER: RIGHT_HAND_FINGER,
+  LEFT_HAND_FINGER: LEFT_HAND_FINGER,
+  RIGHT_THIGH: RIGHT_THIGH,
+  LEFT_THIGH: LEFT_THIGH,
+  RIGHT_KNEE: RIGHT_KNEE,
+  LEFT_KNEE: LEFT_KNEE,
+  RIGHT_SHIN: RIGHT_SHIN,
+  LEFT_SHIN: LEFT_SHIN,
+  RIGHT_ANKLE: RIGHT_ANKLE,
+  LEFT_ANKLE: LEFT_ANKLE,
+  RIGHT_FOOT: RIGHT_FOOT,
+  LEFT_FOOT: LEFT_FOOT,
+  RIGHT_TOE: RIGHT_TOE,
+  LEFT_TOE: LEFT_TOE,
+  RECTUM: RECTUM,
+  URINARY_BLADDER: URINARY_BLADDER,
+  RIGHT_HIP: RIGHT_HIP,
+  LEFT_HIP: LEFT_HIP,
+  HEAD_BACK: HEAD_BACK,
+  NECK_BACK: NECK_BACK,
+  RIGHT_SHOULDER_BACK: RIGHT_SHOULDER_BACK,
+  LEFT_SHOULDER_BACK: LEFT_SHOULDER_BACK,
+  BACK: BACK,
+  LOWER_BACK: LOWER_BACK,
+  LEFT_TRICEP: LEFT_TRICEP,
+  RIGHT_TRICEP: RIGHT_TRICEP,
+  LEFT_FOREARM_BACK: LEFT_FOREARM_BACK,
+  RIGHT_FOREARM_BACK: RIGHT_FOREARM_BACK,
+  LEFT_HAMSTRING: LEFT_HAMSTRING,
+  RIGHT_HAMSTRING: RIGHT_HAMSTRING,
+  LEFT_CALF: LEFT_CALF,
+  RIGHT_CALF: RIGHT_CALF
+}
+
+export const PART_LIST_FRONT = [
+  HEAD,
+  RIGHT_EYE,
+  LEFT_EYE,
+  RIGHT_EAR,
+  LEFT_EAR,
+  NOSE,
+  MOUTH,
+  NECK,
+  RIGHT_SHOULDER,
+  LEFT_SHOULDER,
+  CHEST,
+  RIGHT_ARM,
+  LEFT_ARM,
+  RIGHT_ELBOW,
+  LEFT_ELBOW,
+  STOMACH,
+  ABDOMEN,
+  RIGHT_FOREARM,
+  LEFT_FOREARM,
+  RIGHT_WRIST,
+  LEFT_WRIST,
+  RIGHT_HAND,
+  LEFT_HAND,
+  RIGHT_HAND_FINGER,
+  LEFT_HAND_FINGER,
+  RIGHT_THIGH,
+  LEFT_THIGH,
+  RIGHT_KNEE,
+  LEFT_KNEE,
+  RIGHT_SHIN,
+  LEFT_SHIN,
+  RIGHT_ANKLE,
+  LEFT_ANKLE,
+  RIGHT_FOOT,
+  LEFT_FOOT,
+  RIGHT_TOE,
+  LEFT_TOE,
+  RECTUM,
+  URINARY_BLADDER
+];
+
+export const PART_LIST_BACK = [
+  RIGHT_HIP,
+  LEFT_HIP,
+  HEAD_BACK,
+  NECK_BACK,
+  RIGHT_SHOULDER_BACK,
+  LEFT_SHOULDER_BACK,
+  BACK,
+  LOWER_BACK,
+  LEFT_TRICEP,
+  RIGHT_TRICEP,
+  LEFT_FOREARM_BACK,
+  RIGHT_FOREARM_BACK,
+  LEFT_HAMSTRING,
+  RIGHT_HAMSTRING,
+  LEFT_CALF,
+  RIGHT_CALF,
+]
+
 export const BODY = {
-  [PARTS.HEAD]: {
-    key: PARTS.HEAD,
+  [HEAD]: {
+    key: HEAD,
     areaStyle: {
       height: 30,
       width: 68,
-      top: 0,
-      left: 110
+      top: 5,
+      left: 90,
     },
     dotStyle: {
       top: 14,
       left: 28
     }
   },
-  [PARTS.RIGHT_EYE]: {
-    key: PARTS.RIGHT_EYE,
+  [HEAD_BACK]: {
+    key: HEAD_BACK,
+    areaStyle: {
+      height: 30,
+      width: 68,
+      top: 5,
+      left: 90,
+    },
+    dotStyle: {
+      top: 14,
+      left: 28
+    }
+  },
+  [RIGHT_EYE]: {
+    key: RIGHT_EYE,
     areaStyle: {
       top: 30,
-      left: 110,
+      left: 92,
       height: 18,
-      width: 35
+      width: 35,
     },
     dotStyle: {
       top: 6,
-      left: 12
+      left: 14
     }
   },
-  [PARTS.LEFT_EYE]: {
-    key: PARTS.LEFT_EYE,
+  [LEFT_EYE]: {
+    key: LEFT_EYE,
     areaStyle: {
       top: 30,
-      left: 145,
+      left: 125,
       height: 18,
-      width: 35
+      width: 35,
     },
     dotStyle: {
       top: 6,
-      left: 10
+      left: 4
     }
   },
-  [PARTS.RIGHT_EAR]: {
-    key: PARTS.RIGHT_EAR,
+  [RIGHT_EAR]: {
+    key: RIGHT_EAR,
     areaStyle: {
-      top: 48,
-      left: 98,
+      top: 38,
+      left: 78,
       height: 22,
       width: 30
-    },
-    dotStyle: {
-      top: 4,
-      left: 8
-    }
-  },
-  [PARTS.LEFT_EAR]: {
-    key: PARTS.LEFT_EAR,
-    areaStyle: {
-      top: 48,
-      left: 160,
-      height: 22,
-      width: 30
-    },
-    dotStyle: {
-      top: 4,
-      left: 8
-    }
-  },
-  [PARTS.NOSE]: {
-    key: PARTS.NOSE,
-    areaStyle: {
-      top: 48,
-      left: 128,
-      height: 24,
-      width: 32
     },
     dotStyle: {
       top: 4,
       left: 10
     }
   },
-  [PARTS.MOUTH]: {
-    key: PARTS.MOUTH,
+  [LEFT_EAR]: {
+    key: LEFT_EAR,
     areaStyle: {
-      top: 72,
-      left: 118,
-      height: 24,
-      width: 52
+      top: 38,
+      left: 140,
+      height: 22,
+      width: 30,
     },
     dotStyle: {
       top: 4,
-      left: 18
+      left: 6
     }
   },
-  [PARTS.NECK]: {
-    key: PARTS.NECK,
+  [NOSE]: {
+    key: NOSE,
     areaStyle: {
-      top: 96,
-      left: 120,
+      top: 44,
+      left: 113,
+      height: 15,
+      width: 22,
+    },
+    dotStyle: {
+      top: 2,
+      left: 4
+    }
+  },
+  [MOUTH]: {
+    key: MOUTH,
+    areaStyle: {
+      top: 56,
+      left: 105,
+      height: 18,
+      width: 42
+    },
+    dotStyle: {
+      top: 4,
+      left: 14
+    }
+  },
+  [NECK]: {
+    key: NECK,
+    areaStyle: {
+      top: 70,
+      left: 100,
       height: 34,
       width: 48
     },
@@ -692,13 +961,27 @@ export const BODY = {
       left: 18
     }
   },
-  [PARTS.RIGHT_SHOULDER]: {
-    key: PARTS.RIGHT_SHOULDER,
+
+  [NECK_BACK]: {
+    key: NECK_BACK,
     areaStyle: {
-      top: 130,
-      left: 50,
+      top: 70,
+      left: 100,
+      height: 34,
+      width: 48
+    },
+    dotStyle: {
+      top: 6,
+      left: 18
+    }
+  },
+  [RIGHT_SHOULDER]: {
+    key: RIGHT_SHOULDER,
+    areaStyle: {
+      top: 95,
+      left: 40,
       height: 40,
-      width: 40
+      width: 40,
     },
     dotStyle: {
       top: 8,
@@ -706,68 +989,138 @@ export const BODY = {
     }
     //areaStyle: { top: 144, left: 66 }
   },
-  [PARTS.LEFT_SHOULDER]: {
-    key: PARTS.LEFT_SHOULDER,
+  [LEFT_SHOULDER]: {
+    key: LEFT_SHOULDER,
     areaStyle: {
-      top: 130,
-      left: 198,
+      top: 95,
+      left: 158,
       height: 40,
-      width: 40
+      width: 40,
     },
     dotStyle: {
       top: 8,
-      right: 20
+      right: 10
     }
     //areaStyle: { top: 144, left: 210 }
   },
-  [PARTS.CHEST]: {
-    key: PARTS.CHEST,
+  [LEFT_SHOULDER_BACK]: {
+    key: LEFT_SHOULDER_BACK,
     areaStyle: {
-      top: 130,
-      left: 90,
-      height: 100,
-      width: 108
+      top: 95,
+      left: 40,
+      height: 40,
+      width: 40,
     },
     dotStyle: {
-      top: 45,
-      left: 46
+      top: 8,
+      left: 20
+    }
+    //areaStyle: { top: 144, left: 66 }
+  },
+  [RIGHT_SHOULDER_BACK]: {
+    key: RIGHT_SHOULDER_BACK,
+    areaStyle: {
+      top: 95,
+      left: 158,
+      height: 40,
+      width: 40,
+    },
+    dotStyle: {
+      top: 8,
+      right: 10
+    }
+    //areaStyle: { top: 144, left: 210 }
+  },
+  [CHEST]: {
+    key: CHEST,
+    areaStyle: {
+      top: 100,
+      left: 80,
+      height: 50,
+      width: 88,
+    },
+    dotStyle: {
+      top: 20,
+      left: 36
     }
     //areaStyle: { top: 180, left: 138 }
   },
-  [PARTS.RIGHT_ARM]: {
-    key: PARTS.RIGHT_ARM,
+  [BACK]: {
+    key: BACK,
     areaStyle: {
-      top: 170,
-      left: 50,
+      top: 100,
+      left: 80,
+      height: 50,
+      width: 88,
+    },
+    dotStyle: {
+      top: 20,
+      left: 36
+    }
+    //areaStyle: { top: 180, left: 138 }
+  },
+  [RIGHT_ARM]: {
+    key: RIGHT_ARM,
+    areaStyle: {
+      top: 120,
+      left: 45,
       height: 60,
       width: 40
     },
     dotStyle: {
       top: 30,
-      left: 10
+      left: 15
     }
     //areaStyle: { top: 200, left: 60 }
   },
-  [PARTS.LEFT_ARM]: {
-    key: PARTS.LEFT_ARM,
+  [LEFT_ARM]: {
+    key: LEFT_ARM,
     areaStyle: {
-      top: 170,
-      left: 200,
+      top: 120,
+      left: 165,
       height: 60,
       width: 40
     },
     dotStyle: {
       top: 30,
-      right: 10
+      right: 15
     }
     //areaStyle: { top: 200, left: 216 }
   },
-  [PARTS.RIGHT_ELBOW]: {
-    key: PARTS.RIGHT_ELBOW,
+  [LEFT_TRICEP]: {
+    key: LEFT_TRICEP,
     areaStyle: {
-      top: 230,
-      left: 40,
-      height: 50,
+      top: 120,
+      left: 45,
+      height: 60,
+      width: 40
+    },
+    dotStyle: {
+      top: 30,
+      left: 15
+    }
+    //areaStyle: { top: 200, left: 60 }
+  },
+  [RIGHT_TRICEP]: {
+    key: RIGHT_TRICEP,
+    areaStyle: {
+      top: 120,
+      left: 165,
+      height: 60,
+      width: 40
+    },
+    dotStyle: {
+      top: 30,
+      right: 15
+    }
+    //areaStyle: { top: 200, left: 216 }
+  },
+  [RIGHT_ELBOW]: {
+    key: RIGHT_ELBOW,
+    areaStyle: {
+      top: 160,
+      left: 45,
+      height: 40,
       width: 40
     },
     dotStyle: {
@@ -776,12 +1129,12 @@ export const BODY = {
     }
     //areaStyle: { top: 252, left: 54 }
   },
-  [PARTS.LEFT_ELBOW]: {
-    key: PARTS.LEFT_ELBOW,
+  [LEFT_ELBOW]: {
+    key: LEFT_ELBOW,
     areaStyle: {
-      top: 230,
-      left: 206,
-      height: 50,
+      top: 160,
+      left: 166,
+      height: 40,
       width: 40
     },
     dotStyle: {
@@ -790,70 +1143,113 @@ export const BODY = {
     }
     //areaStyle: { top: 252, left: 220 }
   },
-  [PARTS.STOMACH]: {
-    key: PARTS.STOMACH,
+  [STOMACH]: {
+    key: STOMACH,
     areaStyle: {
-      top: 230,
+      top: 170,
       left: 90,
-      height: 80,
-      width: 108
-    },
-    dotStyle: {
-      top: 45,
-      left: 46
-    }
-    //areaStyle: { top: 275, left: 138 }
-  },
-  [PARTS.ABDOMEN]: {
-    key: PARTS.ABDOMEN,
-    areaStyle: {
-      top: 310,
-      left: 84,
+      height: 40,
+      width: 70,
       // backgroundColor: "blue",
-      height: 50,
-      width: 120
     },
     dotStyle: {
       top: 20,
-      left: 52
+      left: 30
+    }
+    //areaStyle: { top: 275, left: 138 }
+  },
+  [ABDOMEN]: {
+    key: ABDOMEN,
+    areaStyle: {
+      top: 210,
+      left: 90,
+      height: 40,
+      width: 70
+    },
+    dotStyle: {
+      top: 15,
+      left: 28
     }
     //areaStyle: { top: 330, left: 138 }
   },
-  [PARTS.RIGHT_FOREARM]: {
-    key: PARTS.RIGHT_FOREARM,
+
+  [LOWER_BACK]: {
+    key: LOWER_BACK,
     areaStyle: {
-      top: 280,
+      top: 210,
+      left: 90,
+      height: 40,
+      width: 70
+    },
+    dotStyle: {
+      top: 15,
+      left: 28
+    }
+    //areaStyle: { top: 330, left: 138 }
+  },
+  [RIGHT_FOREARM]: {
+    key: RIGHT_FOREARM,
+    areaStyle: {
+      top: 200,
       left: 30,
-      height: 70,
+      height: 50,
       width: 40
     },
     dotStyle: {
-      top: 30,
+      top: 20,
       left: 14
     }
     //areaStyle: { top: 310, left: 44 }
   },
-  [PARTS.LEFT_FOREARM]: {
-    key: PARTS.LEFT_FOREARM,
+  [LEFT_FOREARM]: {
+    key: LEFT_FOREARM,
     areaStyle: {
-      top: 280,
-      left: 218,
-      height: 70,
+      top: 200,
+      left: 180,
+      height: 50,
       width: 40
     },
     dotStyle: {
-      top: 30,
+      top: 20,
       right: 14
     }
     //areaStyle: { top: 310, left: 230 }
   },
-  [PARTS.RIGHT_WRIST]: {
-    key: PARTS.RIGHT_WRIST,
+  [LEFT_FOREARM_BACK]: {
+    key: LEFT_FOREARM_BACK,
     areaStyle: {
-      top: 350,
+      top: 200,
+      left: 30,
+      height: 50,
+      width: 40
+    },
+    dotStyle: {
+      top: 20,
+      left: 14
+    }
+    //areaStyle: { top: 310, left: 44 }
+  },
+  [RIGHT_FOREARM_BACK]: {
+    key: RIGHT_FOREARM_BACK,
+    areaStyle: {
+      top: 200,
+      left: 180,
+      height: 50,
+      width: 40
+    },
+    dotStyle: {
+      top: 20,
+      right: 14
+    }
+    //areaStyle: { top: 310, left: 230 }
+  },
+  [RIGHT_WRIST]: {
+    key: RIGHT_WRIST,
+    areaStyle: {
+      top: 240,
       left: 25,
       height: 28,
-      width: 30
+      width: 30,
     },
     dotStyle: {
       top: 10,
@@ -861,11 +1257,11 @@ export const BODY = {
     }
     //areaStyle: { top: 360, left: 32 }
   },
-  [PARTS.LEFT_WRIST]: {
-    key: PARTS.LEFT_WRIST,
+  [LEFT_WRIST]: {
+    key: LEFT_WRIST,
     areaStyle: {
-      top: 350,
-      left: 232,
+      top: 240,
+      left: 200,
       height: 28,
       width: 30
     },
@@ -875,10 +1271,10 @@ export const BODY = {
     }
     //areaStyle: { top: 360, left: 242 }
   },
-  [PARTS.RIGHT_HAND]: {
-    key: PARTS.RIGHT_HAND,
+  [RIGHT_HAND]: {
+    key: RIGHT_HAND,
     areaStyle: {
-      top: 378,
+      top: 270,
       left: 10,
       height: 25,
       width: 40
@@ -889,11 +1285,11 @@ export const BODY = {
     }
     //areaStyle: { top: 384, left: 26 }
   },
-  [PARTS.LEFT_HAND]: {
-    key: PARTS.LEFT_HAND,
+  [LEFT_HAND]: {
+    key: LEFT_HAND,
     areaStyle: {
-      top: 378,
-      left: 238,
+      top: 270,
+      left: 200,
       height: 25,
       width: 40
     },
@@ -903,13 +1299,14 @@ export const BODY = {
     }
     //areaStyle: { top: 384, left: 248 }
   },
-  [PARTS.RIGHT_HAND_FINGER]: {
-    key: PARTS.RIGHT_HAND_FINGER,
+  [RIGHT_HAND_FINGER]: {
+    key: RIGHT_HAND_FINGER,
     areaStyle: {
-      top: 403,
+      top: 295,
       left: 10,
       height: 40,
-      width: 40
+      width: 40,
+      // backgroundColor: "blue",
     },
     dotStyle: {
       top: 4,
@@ -917,13 +1314,13 @@ export const BODY = {
     }
     //areaStyle: { top: 408, left: 24 }
   },
-  [PARTS.LEFT_HAND_FINGER]: {
-    key: PARTS.LEFT_HAND_FINGER,
+  [LEFT_HAND_FINGER]: {
+    key: LEFT_HAND_FINGER,
     areaStyle: {
-      top: 403,
-      left: 238,
+      top: 295,
+      left: 200,
       height: 40,
-      width: 40
+      width: 40,
     },
     dotStyle: {
       top: 4,
@@ -931,41 +1328,39 @@ export const BODY = {
     }
     //areaStyle: { top: 408, left: 250 }
   },
-  [PARTS.RIGHT_HIP]: {
-    key: PARTS.RIGHT_HIP,
+  [LEFT_HIP]: {
+    key: LEFT_HIP,
     areaStyle: {
-      top: 360,
-      // backgroundColor: "red",
+      top: 235,
       left: 70,
-      height: 60,
+      height: 50,
       width: 50
     },
     dotStyle: {
       top: 20,
-      left: 38
+      left: 30
     }
     //areaStyle: { top: 390, left: 104 }
   },
-  [PARTS.RECTUM]: {
-    key: PARTS.RECTUM,
+  [RECTUM]: {
+    key: RECTUM,
     areaStyle: {
-      top: 360,
-      left: 120,
-      height: 30,
-      // backgroundColor: "purple",
+      top: 240,
+      left: 100,
+      height: 20,
       width: 50
     },
     dotStyle: {
-      top: 8,
-      right: 20
+      top: 6,
+      right: 18
     }
     //areaStyle: { top: 390, left: 172 }
   },
-  [PARTS.URINARY_BLADDER]: {
-    key: PARTS.URINARY_BLADDER,
+  [URINARY_BLADDER]: {
+    key: URINARY_BLADDER,
     areaStyle: {
-      top: 390,
-      left: 120,
+      top: 260,
+      left: 100,
       height: 30,
       // backgroundColor: "green",
       width: 50
@@ -976,140 +1371,196 @@ export const BODY = {
     }
     //areaStyle: { top: 390, left: 172 }
   },
-  [PARTS.LEFT_HIP]: {
-    key: PARTS.LEFT_HIP,
+  [RIGHT_HIP]: {
+    key: RIGHT_HIP,
     areaStyle: {
-      top: 360,
-      left: 170,
-      height: 60,
-      // backgroundColor: "grey",
+      top: 235,
+      left: 125,
+      height: 50,
       width: 50
     },
     dotStyle: {
       top: 20,
-      right: 34
+      right: 25
     }
     //areaStyle: { top: 390, left: 172 }
   },
-  [PARTS.RIGHT_THIGH]: {
-    key: PARTS.RIGHT_THIGH,
+  [RIGHT_THIGH]: {
+    key: RIGHT_THIGH,
     areaStyle: {
-      top: 420,
-      left: 80,
-      height: 100,
+      top: 285,
+      left: 70,
+      height: 80,
       width: 60
     },
     dotStyle: {
-      top: 50,
-      left: 20
+      top: 35,
+      left: 25
     }
     //areaStyle: { top: 470, left: 104 }
   },
-  [PARTS.LEFT_THIGH]: {
-    key: PARTS.LEFT_THIGH,
+  [LEFT_THIGH]: {
+    key: LEFT_THIGH,
     areaStyle: {
-      top: 420,
-      left: 150,
-      height: 100,
-      width: 60
+      top: 285,
+      left: 130,
+      height: 80,
+      width: 60,
     },
     dotStyle: {
-      top: 50,
-      right: 20
+      top: 35,
+      right: 30
     }
     //areaStyle: { top: 470, left: 172 }
   },
-  [PARTS.RIGHT_KNEE]: {
-    key: PARTS.RIGHT_KNEE,
+  [LEFT_HAMSTRING]: {
+    key: LEFT_HAMSTRING,
     areaStyle: {
-      top: 520,
-      left: 90,
-      height: 60,
+      top: 285,
+      left: 70,
+      height: 80,
+      width: 60
+    },
+    dotStyle: {
+      top: 35,
+      left: 25
+    }
+    //areaStyle: { top: 470, left: 104 }
+  },
+  [RIGHT_HAMSTRING]: {
+    key: RIGHT_HAMSTRING,
+    areaStyle: {
+      top: 285,
+      left: 130,
+      height: 80,
+      width: 60,
+    },
+    dotStyle: {
+      top: 35,
+      right: 30
+    }
+    //areaStyle: { top: 470, left: 172 }
+  },
+  [RIGHT_KNEE]: {
+    key: RIGHT_KNEE,
+    areaStyle: {
+      top: 365,
+      left: 80,
+      height: 50,
       width: 45
     },
     dotStyle: {
-      top: 28,
+      top: 15,
       left: 18
     }
     //areaStyle: { top: 548, left: 104 }
   },
-  [PARTS.LEFT_KNEE]: {
-    key: PARTS.LEFT_KNEE,
+  [LEFT_KNEE]: {
+    key: LEFT_KNEE,
     areaStyle: {
-      top: 520,
-      left: 154,
-      height: 60,
+      top: 365,
+      left: 130,
+      height: 50,
       width: 45
     },
     dotStyle: {
-      top: 28,
+      top: 15,
       right: 18
     }
     //areaStyle: { top: 548, left: 172 }
   },
-  [PARTS.RIGHT_SHIN]: {
-    key: PARTS.RIGHT_SHIN,
+  [RIGHT_SHIN]: {
+    key: RIGHT_SHIN,
     areaStyle: {
-      top: 580,
-      left: 90,
-      height: 100,
+      top: 415,
+      left: 80,
+      height: 60,
       width: 45
     },
     dotStyle: {
-      top: 58,
-      left: 18
+      top: 20,
+      left: 22
     }
     //areaStyle: { top: 640, left: 104 }
   },
-  [PARTS.LEFT_SHIN]: {
-    key: PARTS.LEFT_SHIN,
+  [LEFT_SHIN]: {
+    key: LEFT_SHIN,
     areaStyle: {
-      top: 580,
-      left: 154,
-      height: 100,
+      top: 415,
+      left: 130,
+      height: 60,
       width: 45
     },
     dotStyle: {
-      top: 58,
-      right: 18
+      top: 20,
+      right: 22
     }
     //areaStyle: { top: 640, left: 172 }
   },
-  [PARTS.RIGHT_ANKLE]: {
-    key: PARTS.RIGHT_ANKLE,
+  [LEFT_CALF]: {
+    key: LEFT_CALF,
     areaStyle: {
-      top: 680,
-      left: 102,
-      height: 33,
-      width: 30
+      top: 415,
+      left: 80,
+      height: 60,
+      width: 45
     },
     dotStyle: {
-      top: 14,
+      top: 20,
+      left: 22
+    }
+    //areaStyle: { top: 640, left: 104 }
+  },
+  [RIGHT_CALF]: {
+    key: RIGHT_CALF,
+    areaStyle: {
+      top: 415,
+      left: 130,
+      height: 60,
+      width: 45
+    },
+    dotStyle: {
+      top: 20,
+      right: 22
+    }
+    //areaStyle: { top: 640, left: 172 }
+  },
+  [RIGHT_ANKLE]: {
+    key: RIGHT_ANKLE,
+    areaStyle: {
+      top: 470,
+      left: 102,
+      height: 25,
+      width: 30,
+    },
+    dotStyle: {
+      top: 10,
       left: 8
     }
     //areaStyle: { top: 700, left: 108 }
   },
-  [PARTS.LEFT_ANKLE]: {
-    key: PARTS.LEFT_ANKLE,
+  [LEFT_ANKLE]: {
+    key: LEFT_ANKLE,
     areaStyle: {
-      top: 680,
-      left: 156,
-      height: 33,
+      top: 470,
+      left: 132,
+      height: 25,
       width: 30
     },
     dotStyle: {
-      top: 14,
-      right: 8
+      top: 10,
+      right: 12
     }
     //areaStyle: { top: 700, left: 168 }
   },
-  [PARTS.RIGHT_FOOT]: {
-    key: PARTS.RIGHT_FOOT,
+  [RIGHT_FOOT]: {
+    key: RIGHT_FOOT,
     areaStyle: {
-      top: 713,
+      top: 490,
       left: 94,
       height: 20,
-      width: 35
+      width: 35,
+      // backgroundColor: "blue",
     },
     dotStyle: {
       top: 4,
@@ -1117,13 +1568,14 @@ export const BODY = {
     }
     //areaStyle: { top: 720, left: 108 }
   },
-  [PARTS.LEFT_FOOT]: {
-    key: PARTS.LEFT_FOOT,
+  [LEFT_FOOT]: {
+    key: LEFT_FOOT,
     areaStyle: {
-      top: 713,
-      left: 160,
+      top: 490,
+      left: 130,
       height: 20,
-      width: 35
+      width: 35,
+      // backgroundColor: "blue",
     },
     dotStyle: {
       top: 4,
@@ -1131,8 +1583,8 @@ export const BODY = {
     }
     //areaStyle: { top: 720, left: 168 }
   },
-  [PARTS.RIGHT_TOE]: {
-    key: PARTS.RIGHT_TOE,
+  [RIGHT_TOE]: {
+    key: RIGHT_TOE,
     areaStyle: {
       top: 733,
       left: 84,
@@ -1145,8 +1597,8 @@ export const BODY = {
     }
     //areaStyle: { top: 740, left: 108 }
   },
-  [PARTS.LEFT_TOE]: {
-    key: PARTS.LEFT_TOE,
+  [LEFT_TOE]: {
+    key: LEFT_TOE,
     areaStyle: {
       top: 733,
       left: 165,
