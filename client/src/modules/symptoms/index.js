@@ -1,46 +1,52 @@
-import { TREATMENT_INITIAL_STATE } from "../../data";
+
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
-import { gettSymptomDetailsUrl } from "../../Helper/urls/symptoms";
+import { getSymptomsDetailsUrl } from "../../Helper/urls/symptoms";
 
-export const GET_SYMPTOM_DETAILS = "GET_SYMPTOM_DETAILS";
-export const GET_SYMPTOM_DETAILS_COMPLETED = "GET_SYMPTOM_DETAILS_COMPLETED";
+
+export const GET_SYMPTOM_DETAILS_START = "GET_SYMPTOM_DETAILS_START";
+export const GET_SYMPTOM_DETAILS_COMPLETE = "GET_SYMPTOM_DETAILS_COMPLETE";
 export const GET_SYMPTOM_DETAILS_FAILED = "GET_SYMPTOM_DETAILS_FAILED";
 
-export const getSymptomDetails = value => {
+
+export const getSymptomDetails = (ids = []) => {
   let response = {};
   return async dispatch => {
     try {
+      dispatch({ type: GET_SYMPTOM_DETAILS_START });
       response = await doRequest({
-        method: REQUEST_TYPE.GET,
-        url: gettSymptomDetailsUrl(value),
+        method: REQUEST_TYPE.POST,
+        url: getSymptomsDetailsUrl(),
+        data: {
+          symptom_ids: ids
+        }
       });
-
-      const { status, payload: { data, message = "" } = {} } = response || {};
+      const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
         dispatch({
-          type: GET_SYMPTOM_DETAILS_COMPLETED,
-          data
+          type: GET_SYMPTOM_DETAILS_COMPLETE,
+          data: data,
+          payload: data
         });
       } else {
         dispatch({
           type: GET_SYMPTOM_DETAILS_FAILED,
-          message
+          error,
         });
       }
     } catch (error) {
-      console.log("GET_SYMPTOM_DETAILS MODULE catch error -> ", error);
+      console.log("GET SYMPTOM DETAILS ERROR --> ", error);
     }
     return response;
   }
 };
 
-function symptomReducer(state, data) {
+function symptomsReducer(state, data) {
   const { symptoms } = data || {};
   if (symptoms) {
     return {
       ...state,
-      ...symptoms,
+      ...symptoms
     };
   } else {
     return {
@@ -52,12 +58,7 @@ function symptomReducer(state, data) {
 export default (state = {}, action) => {
   const { type, data } = action;
   switch (type) {
-    case GET_SYMPTOM_DETAILS_COMPLETED:
-      return symptomReducer(state, data);
-
-    case GET_SYMPTOM_DETAILS_FAILED:
-      return state;
     default:
-      return symptomReducer(state, data);
+      return symptomsReducer(state, data);
   }
 };

@@ -22,6 +22,7 @@ import treatmentRouter from "./treatment";
 import twilioRouter from "./twilio";
 import specialityRouter from "./speciality";
 import carePlanTemplateRouter from "./carePlanTemplate";
+import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
 
 router.use(async (req, res, next) => {
@@ -90,6 +91,7 @@ router.use("/severity", severityRouter);
 router.use("/treatments", treatmentRouter);
 router.use("/specialities", specialityRouter);
 router.use("/care-plan-templates", carePlanTemplateRouter);
+router.use("/notifications", notificationRouter);
 router.use("/symptoms", symptomRouter);
 
 module.exports = router;

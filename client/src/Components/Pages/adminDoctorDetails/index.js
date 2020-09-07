@@ -93,10 +93,9 @@ class AdminDoctorDetails extends Component {
         user_id,
         profile_pic,
         gender,
-          address,
+        city,
           speciality_id
       } = {},
-      city,
     } = doctors[id] || {};
     const {
       basic_info: {  email, mobile_number, prefix } = {},
@@ -202,7 +201,7 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.address_text)}
               </div>
               <div className="fs14 fw500">
-                {address ? address : city ? city : TABLE_DEFAULT_BLANK_FIELD}
+                {city ? city : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
@@ -589,7 +588,7 @@ class AdminDoctorDetails extends Component {
   };
 
   getFooter = () => {
-    const { id, doctors, users } = this.props;
+    const { id, doctors, users, doctor_qualifications, doctor_registrations } = this.props;
     const { formatMessage, handleVerify } = this;
 
     const {
@@ -600,17 +599,35 @@ class AdminDoctorDetails extends Component {
     } = doctors[id] || {};
 
     const {activated_on} = users[user_id] || {};
-
     const disabled =
       doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
       doctor_registration_ids.length === 0 || activated_on !== null;
-
+    let no_qualification_docs = 0;
+    let no_registration_docs = 0;
+    if(doctor_qualification_ids.length){
+      for(const i in doctor_qualification_ids){
+        let { upload_document_ids } = doctor_qualifications[doctor_qualification_ids[i]];
+        if(upload_document_ids.length == 0){
+          no_qualification_docs = 1;
+        }
+      }
+    }
+    if(doctor_registration_ids.length){
+      for(const i in doctor_registration_ids){
+        let { upload_document_ids } = doctor_registrations[doctor_registration_ids[i]];
+        if(upload_document_ids.length == 0){
+          no_registration_docs = 1;
+        }
+      }
+    }
     return (
       <div className="mt20 wi flex justify-end">
         <Button
           disabled={disabled}
           type="primary"
+          data-q={no_qualification_docs}
+          data-r={no_registration_docs}
           className="mb10 mr10"
           onClick={handleVerify}
         >
@@ -620,8 +637,17 @@ class AdminDoctorDetails extends Component {
     );
   };
 
-  handleVerify = async e => {
+  handleVerify = async (e) => {
     e.preventDefault();
+    if(parseInt(e.target.dataset.q)){
+      message.warn(this.formatMessage(messages.noUploadQualificationDocuments));
+      return;
+    }
+    if(parseInt(e.target.dataset.r)){
+      message.warn(this.formatMessage(messages.noUploadRegsitrationDocuments));
+      return;
+    }
+
     const { verifyDoctor, id } = this.props;
     try {
       const response = await verifyDoctor(id);

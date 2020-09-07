@@ -21,7 +21,7 @@ class NotificationSdk {
             // PushApp.notify(job.getPushAppTemplate());
             // InApp.notify(job.getInAppTemplate());
 
-            Logger.debug("job ---> ", job.getInAppTemplate());
+            // Logger.debug("job ---> ", job.getInAppTemplate());
 
             // todo: when user preferences relevant
             // if (job.isCritical()) {

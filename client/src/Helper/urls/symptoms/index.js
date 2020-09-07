@@ -1,3 +1,3 @@
-export const gettSymptomDetailsUrl = (symptomId) => {
-    return `/symptoms/${symptomId}`;
+export const getSymptomsDetailsUrl = () => {
+  return `/symptoms`;
 };

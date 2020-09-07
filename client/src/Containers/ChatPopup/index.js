@@ -8,7 +8,7 @@ import { addMessageOfChat } from "../../modules/chatMessages";
 import { closePopUp, minimizePopUp, maximizePopUp } from "../../modules/chat";
 
 const mapStateToProps = state => {
-    const { twilio, users, auth: { authenticated_user = 1 } = {}, chats, chatMessages, symptoms = {}, upload_documents = {} } = state;
+    const { twilio, users, auth: { authenticated_user = 1 } = {}, chats, chatMessages, symptoms, upload_documents } = state;
     return { twilio, users, authenticated_user, chats, chatMessages, symptoms, upload_documents };
 };
 
@@ -19,6 +19,7 @@ const mapDispatchToProps = dispatch => {
         closePopUp: () => dispatch(closePopUp()),
         getSymptomDetails: (id) => dispatch(getSymptomDetails(id)),
         maximizePopUp: () => dispatch(maximizePopUp()),
+        getSymptomDetails: (data) => dispatch(getSymptomDetails(data)),
         addMessageOfChat: (roomId, messages) => dispatch(addMessageOfChat(roomId, messages))
     };
 };

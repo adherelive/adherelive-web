@@ -26,6 +26,7 @@ const Log = new Logger("WEB > NOTIFICATION > CONTROLLER > HELPER");
 
 const medicationNotification = async (data) => {
     try {
+        Log.debug("In medication notification with data", data);
         const {
             data: {
                 actor,
@@ -49,9 +50,11 @@ const medicationNotification = async (data) => {
         let patientData = {};
         let participants = [];
 
-        if(verb === MEDICATION_CREATE) {
+        if(verb.toUpperCase() === MEDICATION_CREATE) {
             const event = await MedicationWrapper(null, foreign_id);
             const {medications, medicines} = await event.getReferenceInfo();
+
+            Log.debug("medications, medicines ---> ", medications);
             eventData = {...eventData, ...medications};
             medicineData = {...medicineData, medicines};
             participants = event.getParticipants();
@@ -79,7 +82,7 @@ const medicationNotification = async (data) => {
 
         let notification_data = {};
 
-        switch(verb) {
+        switch(verb.toUpperCase()) {
             case MEDICATION_CREATE:
                 notification_data = {
                     [`${id}`]: {

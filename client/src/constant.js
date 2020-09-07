@@ -25,6 +25,15 @@ export const PATH = {
   }
 };
 
+export const HTTP_CODE_SERVER_ERROR = 500;
+
+export const CHAT_MESSAGE_DETAILS = {
+  SYMPTOMS: "symptoms"
+};
+ export const USER_ADHERE_BOT = 'adhere_bot';
+ export const CHAT_MESSAGE_TYPE = {
+   SYMPTOM:'symptom'
+ }
 
 export const ROOM_ID_TEXT = '-adhere-';
 
@@ -288,13 +297,13 @@ export const DAYS_NUMBER = {
 };
 
 export const DAYS_TEXT_NUM = {
-  "1": "monday",
-  "2": "tuesday",
-  "3": "wednesday",
-  "4": "thursday",
-  "5": "friday",
-  "6": "saturday",
-  "7": "sunday",
+  "1": "sunday",
+  "2": "monday",
+  "3": "tuesday",
+  "4": "wednesday",
+  "5": "thursday",
+  "6": "friday",
+  "7": "saturday"
 }
 
 export const HOST = "/api";

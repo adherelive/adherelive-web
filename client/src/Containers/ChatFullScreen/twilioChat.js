@@ -6,15 +6,15 @@ import { fetchChatAccessToken } from "../../modules/twilio";
 import { addMessageOfChat } from "../../modules/chatMessages";
 
 const mapStateToProps = state => {
-  const { twilio, users, auth: { authenticated_user = 1 } = {}, chatMessages, upload_documents = {}, symptoms = {} } = state;
-  return { twilio, users, authenticated_user, chatMessages, upload_documents, symptoms };
+  const { twilio, users, auth: { authenticated_user = 1 } = {}, chatMessages, symptoms, upload_documents } = state;
+  return { twilio, users, authenticated_user, chatMessages, symptoms, upload_documents };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
-    getSymptomDetails: (id) => dispatch(getSymptomDetails(id)),
-    addMessageOfChat: (roomId, messages) => dispatch(addMessageOfChat(roomId, messages))
+    addMessageOfChat: (roomId, messages) => dispatch(addMessageOfChat(roomId, messages)),
+    getSymptomDetails: (data) => dispatch(getSymptomDetails(data))
   };
 };
 
