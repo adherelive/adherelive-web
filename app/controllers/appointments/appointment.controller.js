@@ -354,27 +354,21 @@ class AppointmentController extends Controller {
       }
 
       const eventScheduleData = {
-        participants: [userId, participantTwoId],
-        actor: {
-          id: userId,
-          details: {
-            category
-          }
-        },
-        appointmentId: appointmentApiData.getAppointmentId()
-      };
-
-      // RRule
-      await EventSchedule.create({
         event_id: appointmentApiData.getAppointmentId(),
         event_type: EVENT_TYPE.APPOINTMENT,
         critical,
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participant_one: userId,
-        participant_two: participantTwoId
-      });
+        participants: [userId, participantTwoId],
+        actor: {
+          id: userId,
+          category
+        }
+      };
+
+      // RRule
+      await EventSchedule.create(eventScheduleData);
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
       await NotificationSdk.execute(appointmentJob);

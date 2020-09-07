@@ -1,6 +1,6 @@
 import Controller from "../../index";
 import appointmentService from "../../../services/appointment/appointment.service";
-import {EVENT_STATUS, FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
+import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
 import moment from "moment";
 
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -146,15 +146,21 @@ class MobileAppointmentController extends Controller {
       }
 
       const eventScheduleData = {
+        event_id: appointmentData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
+        critical,
+        start_time,
+        end_time,
+        details: appointmentData.getBasicInfo(),
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
+          category,
           details: {
             category,
             name: userCategoryData.getName()
           }
         },
-        appointmentId: appointmentData.getAppointmentId()
       };
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);

@@ -28,7 +28,7 @@ class CreateJob extends AppointmentJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
-        appointmentId = null
+        event_id = null
     } = getAppointmentData() || {};
 
     const templateData = [];

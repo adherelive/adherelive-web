@@ -463,8 +463,10 @@ class UserController extends Controller {
         const {
           userId,
           userData,
-          userData: { category } = {}
+          userData: { category } = {},
+            userCategoryData : uC = {}
         } = req.userDetails;
+
         // const user = await userService.getUserById(userId);
 
         // Logger.debug("user data in request", userData);

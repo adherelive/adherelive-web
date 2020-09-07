@@ -8,11 +8,8 @@ import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.servi
 
 // WRAPPERS ---------------
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
-import AppointmentWrapper from "../ApiWrapper/web/appointments";
 
 import JobSdk from "../JobSdk";
-
-import AppointmentJob from "../JobSdk/Appointments/observer";
 import NotificationSdk from "../NotificationSdk";
 
 const Log = new Logger("CRON > PRIOR");
@@ -53,6 +50,7 @@ class PriorCron {
 
     handleAppointmentPrior = async (event) => {
         try {
+            const eventId = event.getEventId();
             const data = {
                 participants: event.getParticipants(),
                 actor: {

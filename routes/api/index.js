@@ -1,6 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
+import jwt from "jsonwebtoken";
+
+import userService from "../../app/services/user/user.service";
+import UserWrapper from "../../app/ApiWrapper/web/user";
+
+import Logger from "../../libs/log";
+const Log = new Logger("API > INDEX");
+
 import userRouter from "./user";
 import appointmentRouter from "./appointments";
 import eventRouter from "./events";
@@ -23,9 +31,6 @@ import carePlanTemplateRouter from "./carePlanTemplate";
 import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
-
-import userService from "../../app/services/user/user.service";
-import jwt from "jsonwebtoken";
 
 
 router.use(async function(req, res, next) {
@@ -57,13 +62,17 @@ router.use(async function(req, res, next) {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {userId = null} = decodedAccessToken || {};
-      let user = await userService.getUser(userId);
-      // console.log("------------------+++++++++++++++++++++------------------", userId, user);
+
+      const userData = await userService.getUser(userId);
+      const user = await UserWrapper(userData);
+      const {userCategoryData, userCategoryId} = user.getCategoryInfo();
       if (user) {
         req.userDetails = {
           exists: true,
           userId: userId,
-          userData: user.getBasicInfo
+          userData: user.getBasicInfo(),
+          userCategoryData,
+          userCategoryId
         };
       } else {
         req.userDetails = {
