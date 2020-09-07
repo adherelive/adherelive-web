@@ -22,9 +22,9 @@ const cors = require("cors");
 
 const app = express();
 
-// const cron = schedule.scheduleJob("*/1 * * * *", async () => {
-//     await Prior.getPriorEvents();
-// });
+const cron = schedule.scheduleJob("*/1 * * * *", async () => {
+    await Prior.getPriorEvents();
+});
 
 app.use(express.json({ limit: "50mb" }));
 app.use(
