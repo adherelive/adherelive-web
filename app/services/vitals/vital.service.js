@@ -35,7 +35,7 @@ class VitalService {
         }
     };
 
-    getAllByData = async () => {
+    getAllByData = async (data) => {
         try {
             const vitals = await Vitals.findAll({
                 where: data,
