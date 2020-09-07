@@ -27,6 +27,7 @@ import { getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 
 import Log from "../../../libs/log";
 import moment from "moment";
+import {BODY_VIEW} from "../../../constant";
 
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
@@ -472,6 +473,111 @@ class PatientController extends Controller {
             }
         } catch(error) {
             Logger.debug("getPatientSymptoms 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    getPatientPartSymptoms = async (req, res) => {
+        const { raiseSuccess, raiseServerError, raiseClientError } = this;
+        try {
+            Logger.debug("req.params ----->", req.params);
+            const {query: {duration = "5"} = {}, params: {patient_id} = {}, userDetails: {userId} = {}} = req;
+
+            const currentTime = moment().utc().toISOString();
+            const historyTime = moment().subtract(duration, "days").utc().toISOString();
+
+            const symptomData = await SymptomService.getFilteredData({patient_id, start_time: historyTime, end_time: currentTime});
+
+            let uploadDocumentData = {};
+
+            const sideWiseParts = {};
+
+            const frontPart = {};
+            const backPart = {};
+
+            if(symptomData.length > 0) {
+                for(const data of symptomData) {
+                    const symptom = await SymptomWrapper({data});
+                    const symptomDetails = await symptom.getDateWiseInfo();
+
+                    // DATA FORMATTED FOR SIDE AND PART WISE ORDER
+
+                    if(symptom.getSide() === BODY_VIEW.FRONT) {
+                        if (frontPart.hasOwnProperty(symptom.getPart())) {
+                            frontPart[symptom.getPart()].push(symptomDetails);
+                        } else {
+                            frontPart[symptom.getPart()] = [];
+                            frontPart[symptom.getPart()].push(symptomDetails);
+                        }
+                    } else {
+                        if (backPart.hasOwnProperty(symptom.getPart())) {
+                            backPart[symptom.getPart()].push(symptomDetails);
+                        } else {
+                            backPart[symptom.getPart()] = [];
+                            backPart[symptom.getPart()].push(symptomDetails);
+                        }
+                    }
+
+                    const {upload_documents} = await symptom.getReferenceInfo();
+                    uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+                }
+
+                for(const side of Object.values(BODY_VIEW)) {
+                    if(side === BODY_VIEW.FRONT) {
+                        sideWiseParts[side] = {...frontPart};
+                    } else {
+                        sideWiseParts[side] = {...backPart};
+                    }
+                }
+
+                Object.values(BODY_VIEW).forEach(side => {
+                    const sideData = sideWiseParts[side] || {};
+                    if(sideData) {
+                        Object.keys(sideData).forEach(part => {
+                            const data = sideData[part] || [];
+                            data.sort((activityA, activityB) => {
+                                const {createdAt: a} = activityA;
+                                const {createdAt: b} = activityB;
+                                if (moment(a).isBefore(moment(b))) return 1;
+
+                                if (moment(a).isAfter(moment(b))) return -1;
+
+                                return 0;
+                            });
+                        });
+                    } else {
+                        sideWiseParts[side] = [];
+                    }
+                });
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        symptom_parts: {
+                            ...sideWiseParts
+                        },
+                        upload_documents: {
+                            ...uploadDocumentData
+                        },
+                    },
+                    "Symptoms data fetched successfully"
+                );
+            } else {
+                Object.values(BODY_VIEW).forEach(side => {
+                    sideWiseParts[side] = [];
+                });
+                return raiseSuccess(res, 200, {
+                    symptom_parts: {
+                        ...sideWiseParts,
+                    },
+                    upload_documents: {
+                        ...uploadDocumentData
+                    },
+                }, "Patient has not updated any symptoms yet for the treatment");
+            }
+        } catch(error) {
+            Logger.debug("getPatientPartSymptoms 500 error", error);
             return raiseServerError(res);
         }
     };
