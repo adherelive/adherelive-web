@@ -14,4 +14,9 @@ export default class Vitals {
     getCarePlanId = () => {
         return this._data.get("care_plan_id");
     };
+
+    getResponseValues = () => {
+      const {values = []} = this._data.get("response") || {};
+      return values;
+    };
 }

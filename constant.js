@@ -13,6 +13,7 @@ export const ACTIVITY_TYPE = {
 };
 
 export const EVENT_TYPE = {
+  VITALS: "vitals",
   APPOINTMENT: "appointment",
   REMINDER: "reminder",
   ADVERSE_EVENT: "adverse",

@@ -16,7 +16,7 @@ module.exports = {
             },
             event_type: {
                 type: Sequelize.ENUM,
-                values: [EVENT_TYPE.APPOINTMENT, EVENT_TYPE.REMINDER, EVENT_TYPE.MEDICATION_REMINDER]
+                values: [EVENT_TYPE.APPOINTMENT, EVENT_TYPE.REMINDER, EVENT_TYPE.MEDICATION_REMINDER, EVENT_TYPE.VITALS]
             },
             event_id: {
                 type: Sequelize.INTEGER,
