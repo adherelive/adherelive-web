@@ -56,10 +56,6 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: true,
       },
-      address: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       activated_on: {
         type: Sequelize.DATE
       },

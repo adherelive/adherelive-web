@@ -204,6 +204,7 @@ class CarePlanController extends Controller {
                     participant_id: patient_id,
                     organizer_type: category,
                     organizer_id: userId,
+                    medicine_id,
                     description,
                     start_date,
                     end_date,

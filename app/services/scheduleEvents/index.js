@@ -1,0 +1,10 @@
+
+class ScheduleEvent {
+    constructor(data) {
+        this._data = data;
+    }
+
+    getEventType = () => {
+        return this._data.get("event_type");
+    };
+}

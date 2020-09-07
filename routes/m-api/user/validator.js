@@ -15,6 +15,7 @@ const updatedPasswordSchema = Joi.object().keys({
 });
 
 const signInSchema = Joi.object().keys({
+    prefix: Joi.string().max(5).regex(/^\d+$/).required().label("Please select correct country code"),
     mobile_number: Joi.string().min(6).max(20).regex(/^\d+$/).required().label("Please enter a valid mobile number"),
 });
 

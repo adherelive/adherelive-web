@@ -64,10 +64,6 @@ const Doctors = database.define(
       type: Sequelize.STRING(100),
       allowNull: true,
     },
-    address: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
     activated_on: {
       type: Sequelize.DATE,
     },
@@ -97,11 +93,6 @@ const Doctors = database.define(
     },
   }
 );
-
-Doctors.hasOne(Users, {
-    foreignKey: "id",
-    sourceKey: "user_id"
-});
 
 Doctors.hasOne(Specialities, {
     foreignKey: "id",

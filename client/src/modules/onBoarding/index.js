@@ -47,7 +47,7 @@ export const doctorProfileRegister = (payload) => {
   return async (dispatch) => {
     try {
       dispatch({ type: DOCTOR_PROFILE_UPDATE });
-
+      console.log(payload);
       response = await doRequest({
         method: REQUEST_TYPE.POST,
         url: Doctor.getdoctorProfileRegisterUrl(),

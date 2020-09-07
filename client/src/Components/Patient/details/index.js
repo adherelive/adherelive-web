@@ -15,6 +15,7 @@ import EditMedicationReminder from "../../../Containers/Drawer/editMedicationRem
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 import noMedication from "../../../Assets/images/no_medication@3x.png";
 import TemplateDrawer from '../../Drawer/medicationTemplateDrawer'
+import SymptomsDrawer from '../../../Containers/Drawer/symptomsDrawer'
 import ChatPopup from "../../../Containers/ChatPopup";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
@@ -500,8 +501,6 @@ class PatientDetails extends Component {
         } = {},
       } = medications[id] || {};
 
-      console.log('435626546254724725757',medicine_type);
-
       const { basic_info: { name, type } = {} } = medicines[medicine_id] || {};
       return {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
@@ -543,7 +542,7 @@ class PatientDetails extends Component {
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getMenu = () => {
-    const { handleAppointment, handleMedicationReminder } = this;
+    const { handleAppointment, handleMedicationReminder, handleSymptoms } = this;
     const { authPermissions = [] } = this.props;
     return (
       <Menu>
@@ -553,6 +552,9 @@ class PatientDetails extends Component {
         {authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) && (<Menu.Item onClick={handleAppointment}>
           <div>{this.formatMessage(messages.appointments)}</div>
         </Menu.Item>)}
+        <Menu.Item onClick={handleSymptoms}>
+          <div>{this.formatMessage(messages.symptoms)}</div>
+        </Menu.Item>
         {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
           <div>{this.formatMessage(messages.actions)}</div>
         </Menu.Item>)}
@@ -576,6 +578,13 @@ class PatientDetails extends Component {
   handleMedicationReminder = (e) => {
     const { openMReminderDrawer, patient_id } = this.props;
     openMReminderDrawer({
+      patient_id,
+    });
+  };
+
+  handleSymptoms = (e) => {
+    const { openSymptomsDrawer, patient_id } = this.props;
+    openSymptomsDrawer({
       patient_id,
     });
   };
@@ -689,7 +698,6 @@ class PatientDetails extends Component {
 
 
     let { basic_info: { name: firstTemplateName = '' } = {} } = care_plan_templates[care_plan_template_ids[0]] || {};
-    console.log('37845782364872356847623784', firstTemplateName, care_plan_templates[care_plan_template_ids[0]], care_plan_template_ids[0], care_plan_template_ids)
 
 
     // todo: dummy careplan 
@@ -907,6 +915,7 @@ class PatientDetails extends Component {
           carePlan={carePlan} {...this.props} />)}
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
         <EditMedicationReminder carePlanId={carePlanId} />
+        <SymptomsDrawer />
       </div>
     );
   }

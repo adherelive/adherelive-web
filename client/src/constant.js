@@ -2,6 +2,7 @@ export const PATH = {
   LANDING_PAGE: "/",
   DASHBOARD: "/dashboard",
   SIGN_IN: "/sign-in",
+  PROFILE: "/profile",
   VALIDATION_PAGE: "/validation/:link",
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
@@ -23,6 +24,8 @@ export const PATH = {
     }
   }
 };
+
+export const HTTP_CODE_SERVER_ERROR = 500;
 
 
 export const ROOM_ID_TEXT = '-adhere-';
@@ -132,15 +135,18 @@ export const OTHER = "o";
 export const GENDER = {
   [MALE]: {
     value: "male",
-    view: "M"
+    view: "M",
+    label: "MALE"
   },
   [FEMALE]: {
     value: "female",
-    view: "F"
+    view: "F",
+    label: "FEMALE"
   },
   [OTHER]: {
     value: "other",
-    view: "O"
+    view: "O",
+    label: "OTHER"
   }
 };
 
@@ -178,6 +184,8 @@ export const DRAWER = {
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
   EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
   PATIENT_DETAILS: "PATIENT_DETAILS",
+  SYMPTOMS: 'SYMPTOMS',
+  NOTIFICATIONS: "NOTIFICATIONS",
 };
 
 export const USER_CATEGORY = {
@@ -282,13 +290,13 @@ export const DAYS_NUMBER = {
 };
 
 export const DAYS_TEXT_NUM = {
-  "1": "monday",
-  "2": "tuesday",
-  "3": "wednesday",
-  "4": "thursday",
-  "5": "friday",
-  "6": "saturday",
-  "7": "sunday",
+  "1": "sunday",
+  "2": "monday",
+  "3": "tuesday",
+  "4": "wednesday",
+  "5": "thursday",
+  "6": "friday",
+  "7": "saturday"
 }
 
 export const HOST = "/api";

@@ -5,6 +5,9 @@ import {Op} from "sequelize";
 
 import Permissions from "../../models/permissions";
 import UserCategoryPermissions from "../../models/userCategoryPermissions";
+import UserDevices from "../../models/userDevices";
+import Doctors from "../../models/doctors";
+import Patients from "../../models/patients";
 
 class UserService {
     constructor() {
@@ -67,7 +70,8 @@ class UserService {
             const user = await User.findOne({
                 where: {
                     id
-                }
+                },
+                include: [Doctors, Patients]
             });
             return user;
         } catch (err) {
@@ -178,6 +182,18 @@ class UserService {
       } catch(error) {
           throw error;
       }
+    };
+
+    getUserByDevices = async (data) => {
+        try {
+            const user = await User.findOne({
+                where: data,
+                include: [UserDevices]
+            });
+            return user;
+        } catch(error) {
+            throw error;
+        }
     };
 }
 

@@ -1,6 +1,6 @@
 import {AFTER_BREAKFAST, BEFORE_BREAKFAST, EVENT_STATUS, EVENT_TYPE, MEDICATION_TIMING} from "../../constant";
 import Log from "../../libs/log";
-import { RRule } from "rrule";
+import {RRule} from "rrule";
 import moment from "moment";
 
 import * as eventHelper from "./helper";
@@ -32,7 +32,7 @@ class EventSchedule {
       const rrule = new RRule({
         freq: RRule.WEEKLY,
         count: 1,
-        dtstart: moment(start_date)
+        dtstart: moment(start_time)
           .utc()
           .toDate()
       });

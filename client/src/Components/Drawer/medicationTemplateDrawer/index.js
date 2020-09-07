@@ -691,12 +691,23 @@ class TemplateDrawer extends Component {
             medicine_type, description
         };
         let key = uuid();
-        medicationKeys.push(key);
-        // let templateId = medications[medicationKeys[0]].care_plan_template_id;
-        medications[key] = newMedication;
-        this.setState({ medications, medicationKeys, templateEdited: true }, () => {
-            this.closeAddMedication();
-        });
+        let medicineExist = false;
+        for (let medication of Object.values(medications)) {
+            let { medicine_id: medId = 1 } = medication;
+            if (parseInt(medicine_id) === parseInt(medId)) {
+                medicineExist = true;
+            }
+        }
+
+        if (medicineExist) {
+            message.error(this.formatMessage(messages.medicationExist));
+        } else {
+            medicationKeys.push(key);
+            medications[key] = newMedication;
+            this.setState({ medications, medicationKeys, templateEdited: true }, () => {
+                this.closeAddMedication();
+            });
+        }
     }
 
 

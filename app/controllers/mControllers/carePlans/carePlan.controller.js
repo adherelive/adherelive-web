@@ -203,6 +203,7 @@ class CarePlanController extends Controller {
                     description,
                     start_date,
                     end_date,
+                    medicine_id,
                     details: {
                         medicine_id,
                         medicine_type,
