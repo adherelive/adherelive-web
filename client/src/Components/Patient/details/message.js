@@ -16,6 +16,11 @@ const messages = defineMessages({
         description: "Header in treatment Details",
         defaultMessage: "Medications"
     },
+    vitals: {
+        id: "app.patient_profile.vitals",
+        description: "Header in treatment Details",
+        defaultMessage: "Vitals"
+    },
     appointments: {
         id: "app.patient_profile.appointments",
         description: "Header in treatment Details",
