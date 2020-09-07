@@ -34,6 +34,22 @@ class VitalService {
             throw error;
         }
     };
+
+    getAllByData = async () => {
+        try {
+            const vitals = await Vitals.findAll({
+                where: data,
+                include: [
+                    {
+                        model: VitalTemplates
+                    },
+                ]
+            });
+            return vitals;
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new VitalService();
