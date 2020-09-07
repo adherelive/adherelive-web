@@ -45,7 +45,7 @@ class VitalController extends Controller {
                     details: {
                         repeat_interval_id,
                         repeat_days,
-                    }
+                    },
                 });
 
                 const vitals = await VitalWrapper({id: vitalData.get("id")});

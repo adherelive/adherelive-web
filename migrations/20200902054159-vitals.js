@@ -1,6 +1,7 @@
 'use strict';
 
 import {DB_TABLES} from "../constant";
+import Sequelize from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -32,6 +33,9 @@ module.exports = {
         }
       },
       details: {
+        type: Sequelize.JSON
+      },
+      response: {
         type: Sequelize.JSON
       },
       created_at: {

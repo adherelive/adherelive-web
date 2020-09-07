@@ -609,9 +609,6 @@ class UserController extends Controller {
           conditionApiDetails[conditionWrapper.getConditionId()] = conditionWrapper.getBasicInfo();
         }
 
-        Logger.debug("conditionWrapper.getConditionId() --> ", treatmentIds);
-
-
         let permissions = {
           permissions: []
         };
@@ -623,6 +620,9 @@ class UserController extends Controller {
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
         }
+
+        Logger.debug("authUserDetails.isActivated() --> ", authUserDetails.isActivated());
+        Logger.debug("permissions --> ", permissions);
 
         // speciality temp todo
         let referenceData = {};

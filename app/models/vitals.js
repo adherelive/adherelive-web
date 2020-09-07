@@ -40,6 +40,9 @@ const Vitals = database.define(
         details: {
             type: Sequelize.JSON
         },
+        response: {
+            type: Sequelize.JSON
+        }
     },
     {
         underscored: true,

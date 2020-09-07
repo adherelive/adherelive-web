@@ -70,7 +70,7 @@ router.use(async function(req, res, next) {
         req.userDetails = {
           exists: true,
           userId: userId,
-          userData: user.getBasicInfo(),
+          userData: userData.getBasicInfo,
           userCategoryData,
           userCategoryId
         };
