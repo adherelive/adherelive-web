@@ -20,7 +20,7 @@ class VitalController extends Controller {
         super();
     }
 
-    create = async (req, res) => {
+    createVital = async (req, res) => {
         const {raiseSuccess, raiseClientError, raiseServerError} = this;
         Log.debug("req.body --->", req.body);
         try {
@@ -31,7 +31,8 @@ class VitalController extends Controller {
                     repeat_interval_id,
                     start_date,
                     end_date,
-                    repeat_days
+                    repeat_days,
+                    description
                 } = {}} = req;
 
             const doesVitalExists = await VitalService.getByData({care_plan_id, vital_template_id});
@@ -45,7 +46,8 @@ class VitalController extends Controller {
                     details: {
                         repeat_interval_id,
                         repeat_days,
-                    }
+                    },
+                    description
                 });
 
                 const vitals = await VitalWrapper({id: vitalData.get("id")});

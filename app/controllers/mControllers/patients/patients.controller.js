@@ -673,14 +673,16 @@ class MPatientController extends Controller {
 
       let vitalDetails = {};
       let vitalTemplateDetails = {};
+      let carePlanTemplateDetails = {};
 
       if(vitals.length > 0) {
         for(const vitalData of vitals) {
           const vital = await VitalWrapper(vitalData);
           vitalDetails[vital.getVitalId()] = vital.getBasicInfo();
-          const {vital_templates} = await vital.getReferenceInfo();
+          const {vital_templates, care_plans} = await vital.getReferenceInfo();
 
           vitalTemplateDetails = {...vitalTemplateDetails, ...vital_templates};
+          carePlanTemplateDetails = {...carePlanTemplateDetails, ...care_plans};
         }
 
         return raiseSuccess(
@@ -692,6 +694,9 @@ class MPatientController extends Controller {
               },
               vital_templates: {
                 ...vitalTemplateDetails
+              },
+              care_plans: {
+                ...carePlanTemplateDetails,
               }
             },
             "Vitals fetched successfully for the patient"

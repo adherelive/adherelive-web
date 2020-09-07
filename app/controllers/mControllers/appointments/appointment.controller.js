@@ -19,6 +19,7 @@ import providerService from "../../../services/provider/provider.service";
 import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
+import EventSchedule from "../../../eventSchedules";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
@@ -162,6 +163,9 @@ class MobileAppointmentController extends Controller {
           }
         },
       };
+
+      // RRule
+      await EventSchedule.create(eventScheduleData);
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
       await NotificationSdk.execute(appointmentJob);

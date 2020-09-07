@@ -20,7 +20,7 @@ router.post(
     "/",
     Authenticate,
     // validator.validateVitalsForm,
-    VitalController.create
+    VitalController.createVital
 );
 
 export default router;

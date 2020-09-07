@@ -34,7 +34,7 @@ class VitalWrapper extends BaseVital {
 
     getReferenceInfo = async () => {
         const {_data} = this;
-        const {vital_template, care_plan} = _data || {};
+        const {getVitalId, vital_template, care_plan} = _data || {};
 
         const vitalTemplateData = {};
         const carePlanData = {};

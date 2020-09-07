@@ -2,6 +2,7 @@ import BaseCarePlan from "../../../services/carePlan";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
+import VitalService from "../../../services/vitals/vital.service";
 
 import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
 
@@ -40,13 +41,22 @@ class CarePlanWrapper extends BaseCarePlan {
     };
 
     getAllInfo = async () => {
-        const {_data, getBasicInfo} = this;
+        const {_data, getBasicInfo, getCarePlanId} = this;
         const {care_plan_appointments = [], care_plan_medications = []} = _data || {};
 
+        const vitals = await VitalService.getAllByData({care_plan_id: getCarePlanId()});
+
+        const vitalIds = [];
+        if(vitals.length > 0) {
+            vitals.forEach(vital => {
+               vitalIds.push(vital.get("id"));
+            });
+        }
         return {
             ...getBasicInfo(),
             appointment_ids: care_plan_appointments.map(appointment => appointment.get("appointment_id")),
             medication_ids: care_plan_medications.map(medication => medication.get("medication_id")),
+            vital_ids: vitalIds
         }
     };
 

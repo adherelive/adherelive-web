@@ -33,7 +33,15 @@ class EventSchedule {
 
   createAppointmentSchedule = async appointment => {
     try {
-      const { event_id, start_time, end_time, details, critical, participants, actor } = appointment || {};
+      const {
+        event_id,
+        start_time,
+        end_time,
+        details,
+        critical,
+        participants,
+        actor
+      } = appointment || {};
 
       const rrule = new RRule({
         freq: RRule.WEEKLY,
@@ -48,7 +56,7 @@ class EventSchedule {
       // create schedule for the date
       const scheduleData = {
         event_id,
-          critical,
+        critical,
         date: moment(start_time).toISOString(),
         start_time: moment(start_time).toISOString(),
         end_time: moment(end_time).toISOString(),
@@ -78,7 +86,9 @@ class EventSchedule {
         start_date,
         end_date,
         details,
-        details: { when_to_take, repeat_days } = {},
+        details: { when_to_take, repeat_days, critical = false } = {},
+        participants = [],
+        actors = {}
       } = medication || {};
 
       const rrule = new RRule({
@@ -91,7 +101,7 @@ class EventSchedule {
               .utc()
               .toDate()
           : moment(start_date)
-              .add(5, "y")
+              .add(1, "month")
               .utc()
               .toDate(),
         byweekday: eventHelper.repeatDays(repeat_days)
@@ -111,11 +121,16 @@ class EventSchedule {
 
           const scheduleData = {
             event_id,
+            critical,
             date: moment(allDays[i]).toISOString(),
             start_time: moment(startTime).toISOString(),
             end_time: moment(startTime).toISOString(),
             event_type: EVENT_TYPE.MEDICATION_REMINDER,
-            details,
+            details: {
+              ...details,
+              participants,
+              actors
+            }
           };
 
           const schedule = await scheduleService.create(scheduleData);

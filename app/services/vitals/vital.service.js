@@ -43,6 +43,9 @@ class VitalService {
                     {
                         model: VitalTemplates
                     },
+                    {
+                        model: CarePlan
+                    }
                 ]
             });
             return vitals;
