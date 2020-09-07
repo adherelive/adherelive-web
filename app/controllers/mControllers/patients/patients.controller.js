@@ -644,7 +644,17 @@ class MPatientController extends Controller {
             "Symptoms data fetched successfully"
         );
       } else {
-        return raiseClientError(res, 422, {}, "Patient has not updated any symptoms yet for the treatment");
+        Object.values(BODY_VIEW).forEach(side => {
+          sideWiseParts[side] = [];
+        });
+        return raiseSuccess(res, 200, {
+          symptom_parts: {
+            ...sideWiseParts
+          },
+          upload_documents: {
+            ...uploadDocumentData
+          },
+        }, "Patient has not updated any symptoms yet for the treatment");
       }
     } catch(error) {
       Logger.debug("getPatientPartSymptoms 500 error", error);

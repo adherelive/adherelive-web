@@ -43,4 +43,10 @@ router.get(
     PatientController.getPatientVitals
 );
 
+router.get(
+    "/:patient_id/parts/symptoms",
+    Authenticated,
+    PatientController.getPatientPartSymptoms
+);
+
 module.exports = router;
