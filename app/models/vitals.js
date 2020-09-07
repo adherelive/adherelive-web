@@ -45,7 +45,13 @@ const Vitals = database.define(
         },
         description: {
             type: Sequelize.STRING(1000),
-        }
+        },
+        start_date: {
+            type: Sequelize.DATE
+        },
+        end_date: {
+            type: Sequelize.DATE
+        },
     },
     {
         underscored: true,

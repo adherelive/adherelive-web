@@ -31,7 +31,8 @@ class VitalController extends Controller {
                     repeat_interval_id,
                     start_date,
                     end_date,
-                    repeat_days
+                    repeat_days,
+                    description
             } = {}} = req;
 
             const doesVitalExists = await VitalService.getByData({care_plan_id, vital_template_id});
@@ -46,6 +47,7 @@ class VitalController extends Controller {
                         repeat_interval_id,
                         repeat_days,
                     },
+                    description
                 });
 
                 const vitals = await VitalWrapper({id: vitalData.get("id")});
@@ -55,10 +57,9 @@ class VitalController extends Controller {
                     200,
                     {
                         vitals: {
-                            ...vitals.getBasicInfo()
+                            [vitals.getVitalId()]: vitals.getBasicInfo()
                         },
                         ... await vitals.getReferenceInfo(),
-                        vital_ids: [vitals.getVitalId()]
                     },
                     "Vital added successfully"
                 );

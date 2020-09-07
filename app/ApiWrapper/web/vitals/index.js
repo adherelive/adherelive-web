@@ -18,7 +18,7 @@ class VitalWrapper extends BaseVital {
 
     getBasicInfo = () => {
         const {_data} = this;
-        const {id, vital_template_id, care_plan_id, start_date, end_date, details} = _data || {};
+        const {id, vital_template_id, care_plan_id, start_date, end_date, details, description} = _data || {};
 
         return {
             basic_info: {
@@ -28,7 +28,8 @@ class VitalWrapper extends BaseVital {
             },
             details,
             start_date,
-            end_date
+            end_date,
+            description
         };
     };
 

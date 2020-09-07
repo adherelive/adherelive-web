@@ -41,6 +41,12 @@ module.exports = {
       description: {
         type: Sequelize.STRING(1000),
       },
+      start_date: {
+        type: Sequelize.DATE
+      },
+      end_date: {
+        type: Sequelize.DATE
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
