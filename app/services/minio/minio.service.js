@@ -114,6 +114,25 @@ class MinioService {
       throw err;
     }
   }
+
+  saveAudioObject = async (buffer, file, metaData = null) => {
+    try {
+      if (metaData === null || metaData === undefined) {
+        metaData = { "Content-Type": "audio/mpeg" };
+      }
+      let result = await this.minioClient.putObject(
+          this.bucket,
+          file,
+          buffer,
+          metaData
+      );
+
+      return result;
+    } catch (err) {
+      Log.debug("saveAudioObject error", err);
+      // throw err;
+    }
+  };
 }
 
 module.exports = new MinioService();

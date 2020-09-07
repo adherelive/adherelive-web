@@ -8,20 +8,27 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
+import SymptomService from "../../services/symptom/symptom.service";
+
+
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import MReminderWrapper from "../../ApiWrapper/web/medicationReminder";
-import MedicineWrapper from "../../ApiWrapper/web/medicine";
+// import MedicineWrapper from "../../ApiWrapper/web/medicine";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../ApiWrapper/mobile/medicine";
-import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
+import SymptomWrapper from "../../ApiWrapper/web/symptoms";
+import { getCarePlanSeverityDetails } from '../carePlans/carePlanHelper';
 
 import Log from "../../../libs/log";
+import moment from "moment";
+
+
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
 class PatientController extends Controller {
@@ -329,6 +336,21 @@ class PatientController extends Controller {
                 };
             }
 
+            const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id: carePlanData.getCarePlanId()});
+
+            let symptomDetails = {};
+            let uploadDocumentData = {};
+
+            if(symptomData.length > 0) {
+                for(const data of symptomData) {
+                    const symptom = await SymptomWrapper({data});
+                    const {symptoms} = await symptom.getAllInfo();
+                    const {upload_documents} = await symptom.getReferenceInfo();
+                    symptomDetails = {...symptomDetails, ...symptoms};
+                    uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+                }
+            }
+
 
             return this.raiseSuccess(res, 200, {
                 // care_plans: { ...carePlanApiData },
@@ -352,6 +374,12 @@ class PatientController extends Controller {
                 medications: {
                     ...medicationApiDetails
                 },
+                symptoms: {
+                    ...symptomDetails,
+                },
+                upload_documents: {
+                    ...uploadDocumentData
+                },
                 template_appointments: {
                     ...templateAppointmentData
                 },
@@ -368,6 +396,83 @@ class PatientController extends Controller {
             // Logger.debug("get careplan 500 error ---> ", error);
             console.log("GET PATIENT DETAILS ERROR careplan --> ", error);
             return this.raiseServerError(res);
+        }
+    };
+
+    getPatientSymptoms = async (req, res) => {
+        const { raiseSuccess, raiseServerError, raiseClientError } = this;
+        try {
+            Logger.debug("req.params ----->", req.params);
+            const {params: {patient_id} = {}, userDetails: {userId} = {}} = req;
+
+            const carePlanData = await carePlanService.getSingleCarePlanByData({ patient_id });
+            const carePlan = await CarePlanWrapper(carePlanData);
+
+            const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id: carePlan.getCarePlanId()});
+
+            let uploadDocumentData = {};
+            const dateWiseSymptoms = {};
+            let symptomDates = [];
+
+            if(symptomData.length > 0) {
+                for(const data of symptomData) {
+                    const symptom = await SymptomWrapper({data});
+
+                    Logger.debug("symptom created date ---> ", symptom.getCreatedDate());
+                    const symptomDetails = await symptom.getDateWiseInfo();
+                    if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
+                        dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+                    } else {
+                        dateWiseSymptoms[symptom.getCreatedDate()] = [];
+                        dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+                    }
+                    const {upload_documents} = await symptom.getReferenceInfo();
+                    uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+                    symptomDates.push(symptom.getCreatedDate());
+                }
+
+                symptomDates.sort((a, b) => {
+                    if (moment(a).isBefore(moment(b))) return 1;
+
+                    if (moment(a).isAfter(moment(b))) return -1;
+
+                    return 0;
+                });
+                // console.log("incident=============>", incidentLogs);
+                // console.log("medicationLogs=============>", medicationLogs);
+                symptomDates.forEach(date => {
+                    const data = dateWiseSymptoms[date] || [];
+                    data.sort((activityA, activityB) => {
+                        const {createdAt: a} = activityA;
+                        const {createdAt: b} = activityB;
+                        if (moment(a).isBefore(moment(b))) return 1;
+
+                        if (moment(a).isAfter(moment(b))) return -1;
+
+                        return 0;
+                    });
+                });
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        timeline_symptoms: {
+                          ...dateWiseSymptoms
+                        },
+                        upload_documents: {
+                            ...uploadDocumentData
+                        },
+                        symptom_dates: symptomDates
+                    },
+                    "Symptoms data fetched successfully"
+                );
+            } else {
+                return raiseClientError(res, 422, {}, "Patient has not updated any symptoms yet for the treatment");
+            }
+        } catch(error) {
+            Logger.debug("getPatientSymptoms 500 error", error);
+            return raiseServerError(res);
         }
     };
 }
