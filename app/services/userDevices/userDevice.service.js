@@ -23,6 +23,17 @@ class UserDeviceService {
         }
     };
 
+    getAllDeviceByData = async (data) => {
+        try {
+            const userDevice = await UserDevices.findAll({
+                where: data
+            });
+            return userDevice;
+        } catch(error) {
+            throw error;
+        }
+    };
+
     deleteDevice = async (data) => {
         try {
             const userDevice = await UserDevices.destroy({
