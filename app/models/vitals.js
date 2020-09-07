@@ -42,6 +42,9 @@ const Vitals = database.define(
         },
         response: {
             type: Sequelize.JSON
+        },
+        description: {
+            type: Sequelize.STRING(1000),
         }
     },
     {

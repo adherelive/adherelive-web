@@ -38,6 +38,9 @@ module.exports = {
       response: {
         type: Sequelize.JSON
       },
+      description: {
+        type: Sequelize.STRING(1000),
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
