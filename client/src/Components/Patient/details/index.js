@@ -22,6 +22,7 @@ import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from '../../../Helper/url/patients';
 import { getPatientConsultingUrl } from '../../../Helper/url/patients';
+import SymptomTabs from '../../../Containers/Symptoms'
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
 
@@ -1071,11 +1072,12 @@ class PatientDetails extends Component {
                     </TabPane>
 
                     <TabPane tab="Symptoms" key="4">
-                      <Table
+                      {/* <Table
                         columns={columns_symptoms}
                         dataSource={this.getSymptomsData(symptoms)}
                         onRow={onRowSymptoms}
-                      />
+                      /> */}
+                      <SymptomTabs patientId={patient_id} />
                     </TabPane>
                     {/* <TabPane tab="Actions" key="4">
                   Content of Actions Tab

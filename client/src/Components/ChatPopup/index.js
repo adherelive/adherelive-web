@@ -587,7 +587,7 @@ class ChatPopUp extends Component {
                                 <div className='wp100 hp100 flex justify-center align-center'>
                                     <Spin size="medium" />
                                 </div>
-                                : <ChatMessageDetails {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
+                                : <ChatMessageDetails scrollToBottom={this.scrollToBottom} {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
                             <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                         </div>
                     </div>

@@ -163,6 +163,7 @@ class ChatMessageDetails extends Component {
 
     scrollToBottom = () => {
         const { chats: { minimized = false } = {} } = this.props;
+        this.props.scrollToBottom();
         // if (!minimized) {
         //     const chatEndElement = document.getElementById("chatEnd");
         //     chatEndElement.focus();
