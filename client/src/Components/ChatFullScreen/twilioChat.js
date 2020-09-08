@@ -398,7 +398,7 @@ class TwilioChat extends Component {
                             <div className='wp100 hp100 flex justify-center align-center'>
                                 <Spin />
                             </div>
-                            : <ChatMessageDetails {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
+                            : <ChatMessageDetails {...props} scrollToBottom={this.scrollToBottom} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
                         <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                     </div>
                 </div>

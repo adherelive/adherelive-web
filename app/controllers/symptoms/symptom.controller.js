@@ -9,7 +9,7 @@ import SymptomService from "../../services/symptom/symptom.service";
 import SymptomWrapper from "../../ApiWrapper/web/symptoms";
 import DocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 
-import {DOCUMENT_PARENT_TYPE} from "../../../constant";
+import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLERS > SYMPTOMS");
 
@@ -19,10 +19,10 @@ class SymptomController extends Controller {
     }
 
     getBatchSymptomDetails = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
+        const { raiseSuccess, raiseServerError } = this;
         try {
             Log.debug("req.body ----> ", req.body);
-            const {body: {symptom_ids = []} = {}} = req;
+            const { body: { symptom_ids = [] } = {} } = req;
 
             let documentData = {};
             let symptomData = {};
@@ -30,18 +30,18 @@ class SymptomController extends Controller {
             let patientData = {};
             let doctorData = {};
 
-            for(const id of symptom_ids) {
-                const symptomExists = await SymptomService.getByData({id});
+            for (const id of symptom_ids) {
+                const symptomExists = await SymptomService.getByData({ id });
 
-                if(symptomExists) {
-                    const symptom = await SymptomWrapper({data: symptomExists});
-                    const {symptoms} = await symptom.getAllInfo();
-                    const {users, upload_documents, patients, doctors} = await symptom.getReferenceInfo();
-                    symptomData = {...symptomData, ...symptoms};
-                    userData = {...userData, ...users};
-                    documentData = {...documentData, ...upload_documents};
-                    patientData = {...patientData, ...patients};
-                    doctorData = {...doctorData, ...doctors};
+                if (symptomExists) {
+                    const symptom = await SymptomWrapper({ data: symptomExists });
+                    const { symptoms } = await symptom.getAllInfo();
+                    const { users, upload_documents, patients, doctors } = await symptom.getReferenceInfo();
+                    symptomData = { ...symptomData, ...symptoms };
+                    userData = { ...userData, ...users };
+                    documentData = { ...documentData, ...upload_documents };
+                    patientData = { ...patientData, ...patients };
+                    doctorData = { ...doctorData, ...doctors };
                 }
             }
 
@@ -67,7 +67,7 @@ class SymptomController extends Controller {
                 },
                 "Symptom details fetched successfully"
             );
-        } catch(error) {
+        } catch (error) {
             Log.debug("symptoms getSymptomDetails 500 error", error);
             return raiseServerError(res);
         }

@@ -184,15 +184,15 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         )}
-        {/*<MenuItem*/}
-        {/*  className="flex direction-column justify-center align-center p0"*/}
-        {/*  key={NOTIFICATIONS}*/}
-        {/*>*/}
-        {/*  <Tooltip placement="right" title={"Notifications"}>*/}
-        {/*    /!* <img alt={"Notification Icon"} className={'w22'} src={notificationIcon} /> *!/*/}
-        {/*    <Icon type="bell" theme="twoTone" twoToneColor='white' />*/}
-        {/*  </Tooltip>*/}
-        {/*</MenuItem>*/}
+        <MenuItem
+         className="flex direction-column justify-center align-center p0"
+         key={NOTIFICATIONS}
+        >
+         <Tooltip placement="right" title={"Notifications"}>
+            {/* <img alt={"Notification Icon"} className={'w22'} src={notificationIcon} />  */}
+           <Icon type="bell" theme="twoTone" twoToneColor='white' />
+         </Tooltip>
+        </MenuItem>
 
         {/*<MenuItem*/}
         {/*  className="flex direction-column justify-center align-center p0"*/}

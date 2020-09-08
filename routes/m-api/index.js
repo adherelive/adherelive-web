@@ -38,7 +38,7 @@ router.use(async (req, res, next) => {
             }
         }
 
-        console.log("ACCESS TOKEN -----------------> ", accessToken);
+        console.log("ACCESS TOKEN -----------------> ", accessToken,req.headers);
 
         if (accessToken) {
             console.log("2 ACCESS TOKEN -----------------> ", accessToken);

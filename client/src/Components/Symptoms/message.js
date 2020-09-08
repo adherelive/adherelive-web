@@ -31,6 +31,16 @@ const messages = defineMessages({
     description: "Body parts",
     defaultMessage: "Nose"
   },
+  now: {
+    id: "app.bodyParts.now",
+    description: "Body parts",
+    defaultMessage: "Now"
+  },
+  yearAgo: {
+    id: "app.bodyParts.yearAgo",
+    description: "Body parts",
+    defaultMessage: "1 year ago"
+  },
   mouth: {
     id: "app.bodyParts.mouth",
     description: "Body parts",
@@ -280,6 +290,16 @@ const messages = defineMessages({
     id: "app.bleedArea.right",
     description: "Bleed Area Screen",
     defaultMessage: "Right"
+  },
+  timeline: {
+    id: "app.bleedArea.timeline",
+    description: "Bleed Area Screen",
+    defaultMessage: "Timeline"
+  },
+  summary: {
+    id: "app.bleedArea.summary",
+    description: "Bleed Area Screen",
+    defaultMessage: "Summary"
   }
 });
 

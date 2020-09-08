@@ -4,7 +4,7 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
-  MEDICATION_TIMING
+  MEDICATION_TIMING, REPEAT_INTERVAL
 } from "../../constant";
 import Log from "../../libs/log";
 import { RRule } from "rrule";
@@ -60,7 +60,7 @@ class EventSchedule {
 
       const vitalDetails = await FeatureDetailWrapper(vitalData);
       const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
-      const { value } = repeat_intervals[repeat_interval_id] || {};
+      const { value, key } = repeat_intervals[repeat_interval_id] || {};
 
       // Logger.debug("13098120312 here", {});
 
@@ -77,45 +77,79 @@ class EventSchedule {
               .add(1, "month")
               .utc()
               .toDate(),
-        byhour: value,
         byweekday: eventHelper.repeatDays(repeat_days)
       });
-
-      Logger.debug("13098120312 here", {});
 
       // create schedule for the date
       const allDays = rrule.all();
 
       Logger.debug("allDays ----> ", allDays);
 
-      for (let i = 0; i < allDays.length; i++) {
-        const scheduleData = {
-          event_id,
-          critical,
-          date: moment(allDays[i])
-            .utc()
-            .toISOString(),
-          start_time: moment(allDays[i])
-            .utc()
-            .toISOString(),
-          end_time: moment(allDays[i])
-            .utc()
-            .toISOString(),
-          event_type: EVENT_TYPE.VITALS,
-          details: {
-            ...details,
-            participants,
-            actors
-          }
-        };
+      // if(key !== REPEAT_INTERVAL.ONCE) {
+      //   for (let i = 0; i < allDays.length; i++) {
+      //     const currentTime = moment(allDays[i]).utc().startOf('day');
+      //     const endTime = moment(allDays[i]).utc().endOf('day');
+      //
+      //     let ongoingTime = currentTime;
+      //     Logger.debug("moment(ongoingTime).diff(endTime)", moment(endTime).diff(ongoingTime, 'h'));
+      //     while(moment(endTime).diff(ongoingTime, 'h') > 0) {
+      //       ongoingTime = moment(ongoingTime).add(value, 'h').utc().toISOString();
+      //       const scheduleData = {
+      //         event_id,
+      //         critical,
+      //         date: moment(allDays[i])
+      //             .utc()
+      //             .toISOString(),
+      //         start_time: ongoingTime,
+      //         end_time: ongoingTime,
+      //         event_type: EVENT_TYPE.VITALS,
+      //         details: {
+      //           ...details,
+      //           participants,
+      //           actors
+      //         }
+      //       };
+      //
+      //       const schedule = await scheduleService.create(scheduleData);
+      //       if (schedule) {
+      //         Logger.debug("schedule events created for vitals", true);
+      //       } else {
+      //         Logger.debug("schedule events failed for vitals", false);
+      //       }
+      //     }
+      //
+      //
+      //     // const scheduleData = {
+      //     //   event_id,
+      //     //   critical,
+      //     //   date: moment(allDays[i])
+      //     //       .utc()
+      //     //       .toISOString(),
+      //     //   start_time: moment(allDays[i])
+      //     //       .utc()
+      //     //       .toISOString(),
+      //     //   end_time: moment(allDays[i])
+      //     //       .utc()
+      //     //       .toISOString(),
+      //     //   event_type: EVENT_TYPE.VITALS,
+      //     //   details: {
+      //     //     ...details,
+      //     //     participants,
+      //     //     actors
+      //     //   }
+      //     // };
+      //   }
+      // } else {
+      //
+      // }
 
-        const schedule = await scheduleService.create(scheduleData);
-        if (schedule) {
-          Logger.debug("schedule events created for vitals", true);
-        } else {
-          Logger.debug("schedule events failed for vitals", false);
-        }
-      }
+        // const schedule = await scheduleService.create(scheduleData);
+        // if (schedule) {
+        //   Logger.debug("schedule events created for vitals", true);
+        // } else {
+        //   Logger.debug("schedule events failed for vitals", false);
+        // }
+      // }
     } catch (error) {
       Logger.debug("schedule events vitals 500 error", error);
     }

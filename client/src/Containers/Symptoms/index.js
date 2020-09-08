@@ -1,20 +1,12 @@
 import { connect } from "react-redux";
-import SymptomsDrawer from "../../Components/Drawer/symptoms";
+import Symptoms from "../../Components/Symptoms";
 import { DRAWER } from "../../constant";
-import { close } from "../../modules/drawer";
-import { getMedications, addMedicationReminder, addCarePlanMedicationReminder } from "../../modules/medications";
-import { getMedicationDetails } from "../../modules/otherDetails";
-import { getAppointments } from "../../modules/appointments";
-import { searchMedicine } from "../../modules/medicines";
-// import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
+import { getSymptomTimeLine, getHistorySymptom } from "../../modules/symptoms";
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
         other_details: { medication_details = {} } = {}, medicines, upload_documents = {}
     } = state;
-
-
-
     return {
         visible: visible && type === DRAWER.SYMPTOMS,
         loading,
@@ -27,11 +19,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        close: () => dispatch(close())
+        getSymptomTimeLine: (patientId) => dispatch(getSymptomTimeLine(patientId)),
+        getHistorySymptom: (patientId, days) => dispatch(getHistorySymptom(patientId, days))
     };
 };
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(SymptomsDrawer);
+)(Symptoms);

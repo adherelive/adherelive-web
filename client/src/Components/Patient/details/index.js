@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP } from "../../../constant";
+import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -23,6 +23,7 @@ import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from '../../../Helper/url/patients';
 import { getPatientConsultingUrl } from '../../../Helper/url/patients';
+import SymptomTabs from '../../../Containers/Symptoms'
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
 
@@ -99,6 +100,31 @@ const columns_medication = [
       </div>
     ),
   },
+];
+
+const columns_symptoms = [
+  {
+    title: "Body Part",
+    dataIndex: "body_part",
+    key: "body_part",
+    width: '30%',
+    ellipsis: true,
+  },
+  {
+    title: "Description",
+    dataIndex: "description",
+    key: "description",
+  },
+  // {
+  //   title: "",
+  //   dataIndex: "edit",
+  //   key: "edit",
+  //   render: () => (
+  //     <div className="edit-medication">
+  //       <img src={edit_image} className="edit-medication-icon" />
+  //     </div>
+  //   ),
+  // },
 ];
 
 const columns_medication_non_editable = [
@@ -383,7 +409,8 @@ class PatientDetails extends Component {
       loading: true,
       templateDrawerVisible: false,
       carePlanTemplateExists: false,
-      carePlanTemplateIds: []
+      carePlanTemplateIds: [],
+      symptoms: [{ body_part: PARTS.HEAD, description: 'werwerewrwer' }, { body_part: PARTS.CHEST, description: '342342352343' }]
     };
   }
 
@@ -482,6 +509,36 @@ class PatientDetails extends Component {
     return formattedAppointments;
   };
 
+  getSymptomsData = (symptoms = {}) => {
+    const {
+      appointments,
+      users = {},
+      // doctors = {},
+      // patients = {},
+    } = this.props;
+
+    let formattedSymptoms = Object.values(symptoms).map((symptom, index) => {
+      // todo: changes based on care-plan || appointment-repeat-type,  etc.,
+      const {
+        text = '',
+        config: { side = '1', parts = [] } = {},
+        image_document_ids = [],
+        audio_document_ids = []
+      } = symptom || {};
+      return {
+        // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
+        side: side,
+        key: index,
+        body_part_key: parts[0] ? parts[0] : '',
+        body_part: parts[0] ? this.getBodyPartName(parts[0]) : '--',
+        description: text,
+        image_document_ids,
+        audio_document_ids
+      };
+    });
+    return formattedSymptoms;
+  };
+
   getMedicationData = (carePlan = {}) => {
     const {
       medications = {},
@@ -553,9 +610,9 @@ class PatientDetails extends Component {
         {authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) && (<Menu.Item onClick={handleAppointment}>
           <div>{this.formatMessage(messages.appointments)}</div>
         </Menu.Item>)}
-        <Menu.Item onClick={handleSymptoms}>
+        {/* <Menu.Item onClick={handleSymptoms}>
           <div>{this.formatMessage(messages.symptoms)}</div>
-        </Menu.Item>
+        </Menu.Item> */}
         {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
           <div>{this.formatMessage(messages.actions)}</div>
         </Menu.Item>)}
@@ -600,6 +657,121 @@ class PatientDetails extends Component {
     });
   };
 
+  getBodyPartName = (selected_part) => {
+    const { formatMessage } = this;
+    if (selected_part === PART_LIST_CODES.HEAD) {
+      return formatMessage(messages.head);
+    } else if (selected_part === PART_LIST_CODES.LEFT_EYE) {
+      return formatMessage(messages.leftEye);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_EYE) {
+      return formatMessage(messages.rightEye);
+    } else if (selected_part === PART_LIST_CODES.LEFT_EAR) {
+      return formatMessage(messages.leftEar);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_EAR) {
+      return formatMessage(messages.rightEar);
+    } else if (selected_part === PART_LIST_CODES.NOSE) {
+      return formatMessage(messages.nose);
+    } else if (selected_part === PART_LIST_CODES.MOUTH) {
+      return formatMessage(messages.mouth);
+    } else if (selected_part === PART_LIST_CODES.NECK) {
+      return formatMessage(messages.neck);
+    } else if (selected_part === PART_LIST_CODES.LEFT_SHOULDER) {
+      return formatMessage(messages.leftShoulder);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_SHOULDER) {
+      return formatMessage(messages.rightShoulder);
+    } else if (selected_part === PART_LIST_CODES.CHEST) {
+      return formatMessage(messages.chest);
+    } else if (selected_part === PART_LIST_CODES.LEFT_ARM) {
+      return formatMessage(messages.leftArm);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_ARM) {
+      return formatMessage(messages.rightArm);
+    } else if (selected_part === PART_LIST_CODES.LEFT_ELBOW) {
+      return formatMessage(messages.leftElbow);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_ELBOW) {
+      return formatMessage(messages.rightElbow);
+    } else if (selected_part === PART_LIST_CODES.STOMACH) {
+      return formatMessage(messages.stomach);
+    } else if (selected_part === PART_LIST_CODES.ABDOMEN) {
+      return formatMessage(messages.abdomen);
+    } else if (selected_part === PART_LIST_CODES.LEFT_FOREARM) {
+      return formatMessage(messages.leftForearm);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_FOREARM) {
+      return formatMessage(messages.rightForearm);
+    } else if (selected_part === PART_LIST_CODES.LEFT_WRIST) {
+      return formatMessage(messages.leftWrist);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_WRIST) {
+      return formatMessage(messages.rightWrist);
+    } else if (selected_part === PART_LIST_CODES.LEFT_HAND) {
+      return formatMessage(messages.leftHand);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_HAND) {
+      return formatMessage(messages.rightHand);
+    } else if (selected_part === PART_LIST_CODES.LEFT_HAND_FINGER) {
+      return formatMessage(messages.leftHandFingers);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_HAND_FINGER) {
+      return formatMessage(messages.rightHandFingers);
+    } else if (selected_part === PART_LIST_CODES.LEFT_HIP) {
+      return formatMessage(messages.leftHip);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_HIP) {
+      return formatMessage(messages.rightHip);
+    } else if (selected_part === PART_LIST_CODES.LEFT_THIGH) {
+      return formatMessage(messages.leftThigh);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_THIGH) {
+      return formatMessage(messages.rightThigh);
+    } else if (selected_part === PART_LIST_CODES.LEFT_KNEE) {
+      return formatMessage(messages.leftKnee);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_KNEE) {
+      return formatMessage(messages.rightKnee);
+    } else if (selected_part === PART_LIST_CODES.LEFT_SHIN) {
+      return formatMessage(messages.leftShin);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_SHIN) {
+      return formatMessage(messages.rightShin);
+    } else if (selected_part === PART_LIST_CODES.LEFT_ANKLE) {
+      return formatMessage(messages.leftAnkle);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_ANKLE) {
+      return formatMessage(messages.rightAnkle);
+    } else if (selected_part === PART_LIST_CODES.LEFT_FOOT) {
+      return formatMessage(messages.leftFoot);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_FOOT) {
+      return formatMessage(messages.rightFoot);
+    } else if (selected_part === PART_LIST_CODES.LEFT_TOE) {
+      return formatMessage(messages.leftToe);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_TOE) {
+      return formatMessage(messages.rightToe);
+    } else if (selected_part === PART_LIST_CODES.RECTUM) {
+      return formatMessage(messages.rectum);
+    } else if (selected_part === PART_LIST_CODES.URINARY_BLADDER) {
+      return formatMessage(messages.urinary);
+    } else if (selected_part === PART_LIST_CODES.HEAD_BACK) {
+      return formatMessage(messages.head);
+    } else if (selected_part === PART_LIST_CODES.NECK_BACK) {
+      return formatMessage(messages.neck);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_SHOULDER_BACK) {
+      return formatMessage(messages.rightShoulder);
+    } else if (selected_part === PART_LIST_CODES.LEFT_SHOULDER_BACK) {
+      return formatMessage(messages.leftShoulder);
+    } else if (selected_part === PART_LIST_CODES.BACK) {
+      return formatMessage(messages.back);
+    } else if (selected_part === PART_LIST_CODES.LOWER_BACK) {
+      return formatMessage(messages.lowerBack);
+    } else if (selected_part === PART_LIST_CODES.LEFT_TRICEP) {
+      return formatMessage(messages.leftTricep);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_TRICEP) {
+      return formatMessage(messages.rightTricep);
+    } else if (selected_part === PART_LIST_CODES.LEFT_FOREARM_BACK) {
+      return formatMessage(messages.leftForearm);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_FOREARM_BACK) {
+      return formatMessage(messages.rightForearm);
+    } else if (selected_part === PART_LIST_CODES.LEFT_HAMSTRING) {
+      return formatMessage(messages.leftHamString);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_HAMSTRING) {
+      return formatMessage(messages.rightHamString);
+    } else if (selected_part === PART_LIST_CODES.LEFT_CALF) {
+      return formatMessage(messages.leftCalf);
+    } else if (selected_part === PART_LIST_CODES.RIGHT_CALF) {
+      return formatMessage(messages.rightCalf);
+    };
+  };
+
   onCloseTemplate = () => {
     this.setState({ templateDrawerVisible: false });
   }
@@ -632,6 +804,21 @@ class PatientDetails extends Component {
     const { key } = record;
     return {
       onClick: onRowClickMedication(key)
+    };
+  };
+
+  onRowClickSymptoms = record => event => {
+    const { openSymptomsDrawer, patient_id } = this.props;
+    openSymptomsDrawer({ data: record, patient_id });
+    //this.props.history.push(getGetFacilitiesUrl(key));
+  };
+
+  onRowSymptoms = (record, rowIndex) => {
+    console.log('utsdiyqwtdyyqwfduyqwfudydqwd=======>', record)
+    const { onRowClickSymptoms } = this;
+    // const { key } = record;
+    return {
+      onClick: onRowClickSymptoms(record)
     };
   };
 
@@ -686,7 +873,7 @@ class PatientDetails extends Component {
       care_plan_templates = {},
       authPermissions = [],
       chats: { minimized = false, visible: popUpVisible = false },
-      drawer: { visible: drawerVisible = false } = {}, care_plan_template_ids = {} } = this.props;
+      drawer: { visible: drawerVisible = false } = {}, care_plan_template_ids = {}, symptoms = {} } = this.props;
     const { loading, templateDrawerVisible = false, carePlanTemplateId = 0, carePlanTemplateExists = false, carePlanTemplateIds = [] } = this.state;
 
     const {
@@ -697,6 +884,7 @@ class PatientDetails extends Component {
       onCloseTemplate,
       onRowAppointment,
       onRowMedication,
+      onRowSymptoms
     } = this;
 
     if (loading) {
@@ -750,6 +938,7 @@ class PatientDetails extends Component {
     const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
 
 
+    // console.log('5876556456rutueerteuu=========>>>>>>>>>>', cPAppointmentIds, cPMedicationIds, carePlanId, care_plans, patient_id);
     let carePlan = care_plans[carePlanId] || {};
     let { details: { condition_id: cId = 0, severity_id: sId = 0, treatment_id: tId = 0 } = {} } = carePlan;
     if (carePlanTemplateId) {
@@ -891,6 +1080,15 @@ class PatientDetails extends Component {
                       <div className="wp100">
                         {/* <AppointmentTable /> */}
                       </div>
+                    </TabPane>
+
+                    <TabPane tab="Symptoms" key="4">
+                      {/* <Table
+                        columns={columns_symptoms}
+                        dataSource={this.getSymptomsData(symptoms)}
+                        onRow={onRowSymptoms}
+                      /> */}
+                      <SymptomTabs patientId={patient_id} />
                     </TabPane>
                     {/* <TabPane tab="Actions" key="4">
                   Content of Actions Tab

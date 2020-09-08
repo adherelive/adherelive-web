@@ -156,5 +156,6 @@ export default async (data = null, userId = null) => {
     return new UserWrapper(data);
   }
   const user = await userService.getUserById(userId);
-  return new UserWrapper(user.get());
+  console.log("912381098312 user ---> ", user);
+  return new UserWrapper(user.get(""));
 };

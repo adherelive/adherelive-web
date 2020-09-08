@@ -355,17 +355,22 @@ class ChatPopUp extends Component {
         });
     };
 
-    updateMessageRecieved = messages => {
+    updateMessageRecieved = async (messages) => {
         const { otherUserLastConsumedMessageIndex } = this.state;
-        const { authenticated_user } = this.props;
+        const { authenticated_user, getSymptomDetails } = this.props;
 
         for (let messageData of messages) {
+
             if (
                 messageData.state.index <= otherUserLastConsumedMessageIndex &&
                 messageData.state.author === `${authenticated_user}`
             ) {
                 messageData.received = true;
                 messageData.sent = true;
+            }
+            if (messageData.state.body && messageData.state.body.includes('symptom')) {
+                let symptomId = messageData.state.body.split(':')[1] || {};
+                await getSymptomDetails(symptomId);
             }
         }
 
@@ -411,6 +416,154 @@ class ChatPopUp extends Component {
         this.channel = null;
     };
 
+    // onClickDownloader = (link, name) => () => {
+    //     // e.preventDefault();
+    //     // const { url, message } = this.state;
+    //     if (link && link.length > 0) {
+    //         fetch(link, {
+    //             method: "GET"
+    //         })
+    //             .then(response => response.blob())
+    //             .then(blob => {
+    //                 const blobUrl = window.URL.createObjectURL(new Blob([blob]));
+    //                 const downloader = document.createElement("a");
+    //                 downloader.href = blobUrl;
+    //                 downloader.download = name;
+    //                 downloader.target = "_blank";
+    //                 document.body.appendChild(downloader);
+    //                 downloader.click();
+    //                 document.body.removeChild(downloader);
+    //             });
+    //     }
+    // };
+    // renderSymptomMessage = (message) => {
+    //     let symptomId = parseInt(message.split(':')[1]);
+    //     const { symptoms = {}, upload_documents = {} } = this.props;
+    //     const { text = '', config: { parts = [] } = {}, audio_document_ids = [], image_document_ids = [] } = symptoms[symptomId] || {};
+    //     let mediaLinkIndex = audio_document_ids.length ? audio_document_ids[0] : image_document_ids.length ? image_document_ids[0] : '';
+    //     let mediaLink = '';
+    //     let mediaName = '';
+    //     if (mediaLinkIndex) {
+    //         const { basic_info: { document = '', name = '' } = {} } = upload_documents[mediaLinkIndex] || {};
+    //         mediaLink = document;
+    //         mediaName = name;
+    //     }
+    //     console.log('ryutduruytxud===================>', symptomId, text, parts[0], symptoms[symptomId], symptoms);
+    //     return (
+    //         <div className='flex direction-column'>
+    //             <div className={'fs14'}>{parts.length ? parts[0] : ''}</div>
+    //             <div className={'fs12'}>{text}</div>
+    //             {image_document_ids.length ? (<div
+    //             // onClick={this.openModal}
+    //             >
+    //                 <img
+    //                     className="chat-media-message-image pointer"
+    //                     src={mediaLink}
+    //                     alt="Uploaded Image"
+    //                 />
+    //             </div>) : audio_document_ids.length ? (
+    //                 <div className='downloadable-file'>
+    //                     <img src={File} className='h20 mr10' />
+    //                     <div className='fs14 mr10'>{mediaName}</div>
+    //                     <img src={Download} className='h20 mr10 pointer' onClick={this.onClickDownloader(mediaLink, mediaName)} />
+    //                 </div>
+    //             ) : null}
+    //         </div>
+    //     );
+    // }
+    // renderMessages() {
+    //     const { authenticated_user, users, roomId, chatMessages, patientDp } = this.props;
+    //     const { otherUserLastConsumedMessageIndex } = this.state;
+    //     const { messages: messagesArray = [] } = chatMessages[roomId] || {};
+    //     if (messagesArray.length > 0) {
+    //         // const messagesArray = this.state.messages;
+    //         const messagesToRender = [];
+    //         for (let i = 0; i < messagesArray.length; ++i) {
+    //             const message = messagesArray[i];
+    //             const prevMessage = i > 1 ? messagesArray[i - 1] : 1;
+    //             let sameDate = message && prevMessage && message.state && prevMessage.state ? moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp), 'date') : false;
+
+    //             // console.log("jskdjskjsd 23456789034567 messagesArray ------------> ", sameDate,message,prevMessage,message.state,prevMessage.state,moment(message.state.timestamp).isSame(moment(prevMessage.state.timestamp),'date'));
+    //             if (!sameDate) {
+    //                 messagesToRender.push(
+    //                     <div className='mt16 mb16 flex wp100 text-grey justify-center fs12'>{moment(message.state.timestamp).isSame(moment(), 'date') ? this.formatMessage(messages.today) : moment(message.state.timestamp).format('ll')}</div>
+    //                 )
+    //             }
+    //             const { state: { index = 1 } = {} } = message;
+    //             const user = users[message.state.author]
+    //                 ? users[message.state.author]
+    //                 : {};
+    //             // const { basicInfo: { profilePicLink: profilePic } = {} } = user;
+    //             messagesToRender.push(
+    //                 <Fragment key={message.state.sid}>
+    //                     {parseInt(message.state.author) !== parseInt(authenticated_user) ? (
+    //                         <div className="chat-messages">
+    //                             {/* <div
+    //                   className={
+    //                     "chat-message-box other " +
+    //                     (message.type === "media" ? "media-text-width" : "")
+    //                   }
+    //                 > */}
+    //                             <div className="chat-avatar">
+    //                                 <span className="twilio-avatar">
+    //                                     <Avatar src={patientDp} />
+    //                                 </span>
+    //                                 {message.type === "media" ? (
+    //                                     <div className="chat-text">
+    //                                         <div className="clickable white chat-media-message-text">
+    //                                             <MediaComponent message={message}></MediaComponent>
+    //                                         </div>
+    //                                     </div>
+    //                                 ) : message.state.body.includes('symptom') ? (
+    //                                     <div className="chat-text">{this.renderSymptomMessage(message.state.body)}</div>
+    //                                 ) : (
+    //                                             <div className="chat-text">{message.state.body}</div>
+    //                                         )}
+    //                             </div>
+    //                             <div className="chat-time start">
+    //                                 {moment(message.state.timestamp).format("H:mm")}
+    //                             </div>
+    //                             {/* </div> */}
+    //                         </div>
+    //                     ) : (
+    //                             <div className="chat-messages end">
+    //                                 {/* <div
+    //                   className={
+    //                     "chat-message-box " +
+    //                     (message.type === "media" ? "media-text-width" : "")
+    //                   }
+    //                 > */}
+    //                                 {message.type === "media" ? (
+    //                                     <div className="chat-text end">
+    //                                         <div className="clickable white chat-media-message-text">
+    //                                             <MediaComponent message={message}></MediaComponent>
+    //                                         </div>
+    //                                     </div>
+    //                                 ) : (
+    //                                         <div className="chat-text end">{message.state.body}</div>
+    //                                     )}
+    //                                 {/* <div className="chat-text end">{message.state.body}</div> */}
+    //                                 <div className="flex justify-end">
+    //                                     <div className="chat-time mr-4">
+    //                                         {moment(message.state.timestamp).format("H:mm")}
+    //                                     </div>
+    //                                     <img className={index < otherUserLastConsumedMessageIndex ? `h14 mt4` : `h12 mt4`} src={index <= otherUserLastConsumedMessageIndex ? DoubleTick : SingleTick} />
+    //                                 </div>
+    //                                 {/* </div> */}
+    //                                 {/* <div className="chat-avatar left">
+    //                 <Avatar src={profilePic} />
+    //               </div> */}
+    //                             </div>
+    //                         )}
+    //                 </Fragment>
+    //             );
+    //         }
+    //         return messagesToRender;
+    //     } else {
+    //         return "";
+    //     }
+    // }
+
 
     render() {
         const { ChatForm } = this;
@@ -434,7 +587,7 @@ class ChatPopUp extends Component {
                                 <div className='wp100 hp100 flex justify-center align-center'>
                                     <Spin size="medium" />
                                 </div>
-                                : <ChatMessageDetails {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
+                                : <ChatMessageDetails scrollToBottom={this.scrollToBottom} {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
                             <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                         </div>
                     </div>

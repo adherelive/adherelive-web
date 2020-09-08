@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 import TwilioChat from "../../Components/ChatFullScreen/twilioChat";
+import { getSymptomDetails } from "../../modules/symptoms";
 
 import { fetchChatAccessToken } from "../../modules/twilio";
-import { getSymptomDetails } from "../../modules/symptoms";
 import { addMessageOfChat } from "../../modules/chatMessages";
 
 const mapStateToProps = state => {

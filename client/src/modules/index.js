@@ -31,9 +31,10 @@ import degrees from "./degrees";
 import councils from "./councils";
 import specialities from "./specialities";
 import twilio from "./twilio";
+import symptoms from "./symptoms";
 import chatMessages from "./chatMessages";
 import care_plan_template_ids from "./carePlanTemplateIds";
-import symptoms from "./symptoms";
+import notifications from "./notifications";
 
 const rootReducer = combineReducers({
   auth,
@@ -70,6 +71,7 @@ const rootReducer = combineReducers({
   twilio,
   chatMessages,
   care_plan_template_ids,
+  notifications,
   symptoms
 });
 
