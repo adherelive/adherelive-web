@@ -616,9 +616,9 @@ class PatientDetails extends Component {
         {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
           <div>{this.formatMessage(messages.actions)}</div>
         </Menu.Item>)}
-        {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleVitals}>
-          <div>{this.formatMessage(messages.vitals)}</div>
-        </Menu.Item>)}
+        {/*{authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleVitals}>*/}
+        {/*  <div>{this.formatMessage(messages.vitals)}</div>*/}
+        {/*</Menu.Item>)}*/}
       </Menu>
     );
   };

@@ -39,7 +39,7 @@ module.exports = {
       {
         feature_type: FEATURE_TYPE.VITAL,
         details: JSON.stringify({
-          repeat_interval_ids: ["1","2","3","4", "5"],
+          repeat_interval_ids: ["1","2","3","4", "5", "6"],
           repeat_intervals: {
             1: {
               text:"Once",
@@ -70,6 +70,12 @@ module.exports = {
               unit: "h",
               value: 6,
               key: REPEAT_INTERVAL.SIX_HOUR
+            },
+            6: {
+              text: "Every 12 hour",
+              unit: "h",
+              value: 12,
+              key: REPEAT_INTERVAL.TWELVE_HOUR
             }
           },
         }),

@@ -43,7 +43,7 @@ module.exports = {
                 category: "patient",
                 verified:1,
                 onboarded:1,
-                mobile_number: "9234623472",
+                mobile_number: "123456",
                 prefix:"91",
                 activated_on: new Date(),
                 created_at: new Date(),

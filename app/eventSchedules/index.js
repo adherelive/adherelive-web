@@ -62,7 +62,7 @@ class EventSchedule {
       const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
       const { value, key } = repeat_intervals[repeat_interval_id] || {};
 
-      // Logger.debug("13098120312 here", {});
+      Logger.debug("13098120312 here", value);
 
       const rrule = new RRule({
         freq: RRule.WEEKLY,
@@ -87,58 +87,61 @@ class EventSchedule {
 
       // if(key !== REPEAT_INTERVAL.ONCE) {
       //   for (let i = 0; i < allDays.length; i++) {
-      //     const currentTime = moment(allDays[i]).utc().startOf('day');
-      //     const endTime = moment(allDays[i]).utc().endOf('day');
+      //     const currentTime = moment(allDays[i]).utc().startOf('day').toISOString();
+      //     const endTime = moment(allDays[i]).utc().endOf('day').toISOString();
       //
       //     let ongoingTime = currentTime;
+      //     Logger.debug("ongoingTime --> ", ongoingTime);
       //     Logger.debug("moment(ongoingTime).diff(endTime)", moment(endTime).diff(ongoingTime, 'h'));
-      //     while(moment(endTime).diff(ongoingTime, 'h') > 0) {
-      //       ongoingTime = moment(ongoingTime).add(value, 'h').utc().toISOString();
-      //       const scheduleData = {
-      //         event_id,
-      //         critical,
-      //         date: moment(allDays[i])
-      //             .utc()
-      //             .toISOString(),
-      //         start_time: ongoingTime,
-      //         end_time: ongoingTime,
-      //         event_type: EVENT_TYPE.VITALS,
-      //         details: {
-      //           ...details,
-      //           participants,
-      //           actors
-      //         }
-      //       };
-      //
-      //       const schedule = await scheduleService.create(scheduleData);
-      //       if (schedule) {
-      //         Logger.debug("schedule events created for vitals", true);
-      //       } else {
-      //         Logger.debug("schedule events failed for vitals", false);
-      //       }
-      //     }
-      //
-      //
-      //     // const scheduleData = {
-      //     //   event_id,
-      //     //   critical,
-      //     //   date: moment(allDays[i])
-      //     //       .utc()
-      //     //       .toISOString(),
-      //     //   start_time: moment(allDays[i])
-      //     //       .utc()
-      //     //       .toISOString(),
-      //     //   end_time: moment(allDays[i])
-      //     //       .utc()
-      //     //       .toISOString(),
-      //     //   event_type: EVENT_TYPE.VITALS,
-      //     //   details: {
-      //     //     ...details,
-      //     //     participants,
-      //     //     actors
-      //     //   }
-      //     // };
-      //   }
+         //   while(moment(endTime).diff(ongoingTime, 'h') > 0) {
+        //     Logger.debug("ongoingTime after --> ", value);
+        //     ongoingTime = moment(ongoingTime).add(value, 'hours').toISOString();
+        //     Logger.debug("ongoingTime after --> ", ongoingTime);
+        //     const scheduleData = {
+        //       event_id,
+        //       critical,
+        //       date: moment(allDays[i])
+        //           .utc()
+        //           .toISOString(),
+        //       start_time: ongoingTime,
+        //       end_time: ongoingTime,
+        //       event_type: EVENT_TYPE.VITALS,
+        //       details: {
+        //         ...details,
+        //         participants,
+        //         actors
+        //       }
+        //     };
+        //
+        //     // const schedule = await scheduleService.create(scheduleData);
+        //     // if (schedule) {
+        //     //   Logger.debug("schedule events created for vitals", true);
+        //     // } else {
+        //     //   Logger.debug("schedule events failed for vitals", false);
+        //     // }
+        //   }
+        //
+        //
+        //   // const scheduleData = {
+        //   //   event_id,
+        //   //   critical,
+        //   //   date: moment(allDays[i])
+        //   //       .utc()
+        //   //       .toISOString(),
+        //   //   start_time: moment(allDays[i])
+        //   //       .utc()
+        //   //       .toISOString(),
+        //   //   end_time: moment(allDays[i])
+        //   //       .utc()
+        //   //       .toISOString(),
+        //   //   event_type: EVENT_TYPE.VITALS,
+        //   //   details: {
+        //   //     ...details,
+        //   //     participants,
+        //   //     actors
+        //   //   }
+        //   // };
+        // }
       // } else {
       //
       // }
