@@ -56,6 +56,7 @@ const mapDispatchToProps = dispatch => {
     return {
         openAppointmentDrawer: (payload) => dispatch(open({ type: DRAWER.ADD_APPOINTMENT, payload })),
         openMReminderDrawer: (payload) => dispatch(open({ type: DRAWER.ADD_MEDICATION_REMINDER, payload })),
+        openVitalsDrawer: (payload) => dispatch(open({ type: DRAWER.ADD_VITALS, payload })),
         openSymptomsDrawer: (payload) => dispatch(open({ type: DRAWER.SYMPTOMS, payload })),
         getMedications: (id) => dispatch(getMedications(id)),
         close: () => dispatch(close()),

@@ -9,6 +9,7 @@ import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
+import AddVitals from "../../../Containers/Drawer/addVitals";
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
@@ -542,7 +543,7 @@ class PatientDetails extends Component {
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getMenu = () => {
-    const { handleAppointment, handleMedicationReminder, handleSymptoms } = this;
+    const { handleAppointment, handleMedicationReminder, handleSymptoms, handleVitals } = this;
     const { authPermissions = [] } = this.props;
     return (
       <Menu>
@@ -557,6 +558,9 @@ class PatientDetails extends Component {
         </Menu.Item>
         {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
           <div>{this.formatMessage(messages.actions)}</div>
+        </Menu.Item>)}
+        {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleVitals}>
+          <div>{this.formatMessage(messages.vitals)}</div>
         </Menu.Item>)}
       </Menu>
     );
@@ -578,6 +582,13 @@ class PatientDetails extends Component {
   handleMedicationReminder = (e) => {
     const { openMReminderDrawer, patient_id } = this.props;
     openMReminderDrawer({
+      patient_id,
+    });
+  };
+
+  handleVitals = (e) => {
+    const { openVitalsDrawer, patient_id } = this.props;
+    openVitalsDrawer({
       patient_id,
     });
   };
@@ -891,6 +902,7 @@ class PatientDetails extends Component {
           </div>
         </div>
         <AddMedicationReminder carePlanId={carePlanId} />
+        <AddVitals carePlanId={carePlanId} />
         {popUpVisible && (<div className={(drawerVisible || templateDrawerVisible) && minimized ? 'chat-popup-minimized' : (drawerVisible || templateDrawerVisible) && !minimized ? 'chat-popup' : minimized ? 'chat-popup-minimized-closedDrawer' : 'chat-popup-closedDrawer'}>
           <ChatPopup
             roomId={roomId}
