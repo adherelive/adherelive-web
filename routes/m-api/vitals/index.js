@@ -16,6 +16,12 @@ router.get(
     VitalController.getVitalFormDetails
 );
 
+router.get(
+  "/:id",
+  Authenticate,
+  VitalController.getVitalResponse
+);
+
 router.post(
     "/",
     Authenticate,

@@ -210,6 +210,30 @@ class VitalController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  getVitalResponse = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      Log.debug("req.params ----> ",req.params);
+      const {params: {id} = {}} = req;
+
+      const vital = await VitalWrapper({id});
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            vital_responses: {
+              [vital.getVitalId()]: vital.getResponseValues()
+            }
+          },
+          "Vital responses fetched successfully"
+      )                                                  ;
+    } catch(error) {
+      Log.debug("getVitalResponse 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new VitalController();
