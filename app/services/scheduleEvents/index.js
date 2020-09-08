@@ -11,4 +11,12 @@ export default class ScheduleEvent {
     getEventId = () => {
         return this._data.get("event_id");
     };
+
+    getScheduleEventId = () => {
+        return this._data.get("id");
+    };
+
+    getStatus = () => {
+        return this._data.get("status");
+    };
 }

@@ -23,6 +23,17 @@ class ScheduleEventService {
         }
     };
 
+    getAllByData = async (data) => {
+        try {
+            const scheduleEvent = await ScheduleEvent.findAll({
+                where: data
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
     getPriorEventByData = async (time) => {
         try {
             const scheduleEvent = await ScheduleEvent.findAll({
