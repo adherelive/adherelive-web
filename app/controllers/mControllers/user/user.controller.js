@@ -112,18 +112,18 @@ class MobileUserController extends Controller {
           mainBodyText: "OTP for adhere patient login is",
           subBodyText: otp,
           host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com"
+          contactTo: process.config.app.support_email
         }
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
-      const smsPayload = {
-        // countryCode: prefix,
-        phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
-        message: `Hello from Adhere! Your OTP for login is ${otp}`
-      };
-
-      Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      // const smsPayload = {
+      //   // countryCode: prefix,
+      //   phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
+      //   message: `Hello from Adhere! Your OTP for login is ${otp}`
+      // };
+      //
+      // Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
 
       // let permissions = {
       //   permissions: []

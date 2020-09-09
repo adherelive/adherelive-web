@@ -1,6 +1,7 @@
 import ScheduleEvent from "../../models/scheduleEvents";
 import {Op} from "sequelize";
 import {EVENT_STATUS} from "../../../constant";
+import {database} from "../../../libs/mysql";
 
 class ScheduleEventService {
     create = async (data) => {
@@ -10,6 +11,23 @@ class ScheduleEventService {
       } catch(error) {
           throw error;
       }
+    };
+
+    update = async (data, id) => {
+        const transaction = await database.transaction();
+        try {
+            const scheduleEvents = await ScheduleEvent.update(data, {
+                where: {
+                    id
+                },
+                transaction
+            });
+            await transaction.commit();
+            return scheduleEvents;
+        } catch(error) {
+            await transaction.rollback();
+            throw error;
+        }
     };
 
     getEventByData = async (data) => {
@@ -23,10 +41,42 @@ class ScheduleEventService {
         }
     };
 
-    getAllByData = async (data) => {
+    getAllPreviousByData = async (data = {}) => {
         try {
+            const {event_id, date} = data;
             const scheduleEvent = await ScheduleEvent.findAll({
-                where: data
+                where: {
+                    event_id,
+                    date: {
+                        [Op.lte]: date
+                    },
+                },
+                order: [
+                    ['date','ASC']
+                ]
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    getAllPassedByData = async (data = {}) => {
+        try {
+            const {event_id, date, sort = 'ASC'} = data;
+            const scheduleEvent = await ScheduleEvent.findAll({
+                where: {
+                    event_id,
+                    date: {
+                        [Op.lte]: date
+                    },
+                    status: {
+                        [Op.not]: EVENT_STATUS.PENDING
+                    }
+                },
+                order: [
+                    ['date',sort]
+                ]
             });
             return scheduleEvent;
         } catch(error) {

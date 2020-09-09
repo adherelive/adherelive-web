@@ -76,7 +76,7 @@ class VitalController extends Controller {
                 };
 
                 // RRule
-                await EventSchedule.create(eventScheduleData);
+                EventSchedule.create(eventScheduleData);
 
                 return raiseSuccess(
                     res,

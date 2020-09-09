@@ -20,6 +20,7 @@ class OtpVerificationService {
             const otpDetails = await OtpVerification.findAll({
                 limit: 1,
                 where: {
+                    // TODO: change on deployment
                     otp,
                     user_id,
                     updated_at: {

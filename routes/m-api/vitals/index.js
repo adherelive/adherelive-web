@@ -19,7 +19,7 @@ router.get(
 router.get(
   "/:id",
   Authenticate,
-  VitalController.getVitalResponse
+  VitalController.getVitalResponseTimeline
 );
 
 router.post(

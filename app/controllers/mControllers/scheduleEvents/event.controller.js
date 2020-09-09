@@ -21,30 +21,43 @@ class EventController extends Controller {
         const {raiseSuccess, raiseServerError} = this;
       try {
         Log.debug("req.params", req.params);
-        const {params: {care_plan_id} = {}} = req;
+        const {params: {id} = {}} = req;
 
         const currentDate = moment().utc().toDate();
 
-        const vitals = await VitalService.getAllByData({care_plan_id});
+        const events = await EventService.getAllPassedByData({
+           event_id: id,
+           date: currentDate
+        });
+
+        let scheduleEvents = {};
+
+        for(const eventData of events) {
+            const event = await EventWrapper(eventData);
+            scheduleEvents[event.getScheduleEventId()] = event.getAllInfo();
+        }
 
         let vitalEvents = {};
-
         let scheduleEventData = {};
 
         if(vitals.length > 0) {
             for(const vital of vitals) {
 
-                const scheduleEvents = await EventService.getAllByData({
+                const scheduleEvents = await EventService.getAllPreviousByData({
                     event_id: vital.get("id"),
                     date: currentDate
                 });
 
                 let remaining = 0;
+                let latestPendingEventId = null;
 
                 const scheduleEventIds = [];
                 for(const events of scheduleEvents) {
                     const scheduleEvent = await EventWrapper(events);
                     if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING) {
+                        if(!latestPendingEventId) {
+                            latestPendingEventId = scheduleEvent.getScheduleEventId();
+                        }
                         remaining++;
                     }
                     scheduleEventIds.push(scheduleEvent.getScheduleEventId());
@@ -54,7 +67,8 @@ class EventController extends Controller {
                 vitalEvents[vital.get("id")] = {
                     remaining,
                     total: scheduleEvents.length,
-                    schedule_event_ids: scheduleEventIds
+                    schedule_event_ids: scheduleEventIds,
+                    upcoming_event_id: latestPendingEventId
                 };
             }
 

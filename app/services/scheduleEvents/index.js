@@ -19,4 +19,12 @@ export default class ScheduleEvent {
     getStatus = () => {
         return this._data.get("status");
     };
+
+    getDetails = () => {
+        return this._data.get("details");
+    };
+
+    getDate = () => {
+      return this._data.get("date");
+    };
 }

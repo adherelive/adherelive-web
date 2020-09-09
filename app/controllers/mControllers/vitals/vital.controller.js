@@ -6,13 +6,15 @@ import moment from "moment";
 import VitalService from "../../../services/vitals/vital.service";
 import VitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
+import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
 import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 import FeatureDetailWrapper from "../../../ApiWrapper/mobile/featureDetails";
+import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
 
-import { DAYS, FEATURE_TYPE } from "../../../../constant";
+import {DAYS, EVENT_STATUS, FEATURE_TYPE} from "../../../../constant";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
@@ -150,16 +152,39 @@ class VitalController extends Controller {
   };
 
   addVitalResponse = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params --->", req.params);
       const { params: { id } = {}, body: { response = {} } = {} } = req;
 
-      const vital = await VitalWrapper({ data: null, id });
+      const createdTime = moment().utc().toISOString();
+
+      const event = await EventWrapper(null, id);
+
+      const vital = await VitalWrapper({ id: event.getEventId() });
       const vitalTemplate = await VitalTemplateWrapper({
-        data: null,
         id: vital.getVitalTemplateId()
       });
+
+      if(event.getStatus() === EVENT_STATUS.PENDING) {
+        const updateEvent = await EventService.update({
+          details: {
+            ...event.getDetails(),
+            response: {
+              value: response,
+              createdTime
+            }
+          },
+          status: EVENT_STATUS.COMPLETED
+        }, id);
+      } else {
+        return raiseClientError(
+            res,
+            422,
+            {},
+            "Cannot update response for the vital which has passed or has been missed"
+        );
+      }
 
       const carePlan = await CarePlanWrapper(null, vital.getCarePlanId());
 
@@ -180,25 +205,6 @@ class VitalController extends Controller {
         customMessage
       );
 
-      const updateVitalResponse = await VitalService.update(
-        {
-          response: {
-            vitals: [
-              ...vital.getResponseValues(),
-              {
-                values: response,
-                responseTime: moment()
-                  .utc()
-                  .toDate()
-              }
-            ]
-          }
-        },
-        id
-      );
-
-      Log.debug("updateVitalResponse -->", updateVitalResponse);
-
       return raiseSuccess(
         res,
         200,
@@ -211,24 +217,56 @@ class VitalController extends Controller {
     }
   };
 
-  getVitalResponse = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+  getVitalResponseTimeline = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params ----> ",req.params);
+      Log.debug("req.params vital id---->", req.params);
       const {params: {id} = {}} = req;
 
-      const vital = await VitalWrapper({id});
+      const today = moment().utc().toDate();
 
-      return raiseSuccess(
-          res,
-          200,
-          {
-            vital_responses: {
-              [vital.getVitalId()]: vital.getResponseValues()
-            }
-          },
-          "Vital responses fetched successfully"
-      )                                                  ;
+      const completeEvents = await EventService.getAllPassedByData({
+        event_id: id,
+        date: today,
+        sort: 'DESC'
+      });
+
+      let dateWiseVitalData = {};
+
+      const timelineDates = [];
+
+      if(completeEvents.length > 0) {
+        for(const scheduleEvent of completeEvents) {
+          const event = await EventWrapper(scheduleEvent);
+          if (dateWiseVitalData.hasOwnProperty(event.getDate())) {
+            dateWiseVitalData[event.getDate()].push(event.getAllInfo());
+          } else {
+            dateWiseVitalData[event.getDate()] = [];
+            dateWiseVitalData[event.getDate()].push(event.getAllInfo());
+            timelineDates.push(event.getDate());
+          }
+        }
+
+
+        return raiseSuccess(
+            res,
+            200,
+            {
+              symptom_timeline: {
+                ...dateWiseVitalData
+              },
+              symptom_date_ids: timelineDates
+            },
+            "Vital responses fetched successfully"
+        );
+      } else {
+        return raiseSuccess(
+            res,
+            200,
+            {},
+            "No response updated yet for the vital"
+        );
+      }
     } catch(error) {
       Log.debug("getVitalResponse 500 error", error);
       return raiseServerError(res);

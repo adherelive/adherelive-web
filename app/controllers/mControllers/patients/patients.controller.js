@@ -669,17 +669,19 @@ class MPatientController extends Controller {
       const {params: {patient_id} = {}} = req;
 
       const carePlan = await carePlanService.getSingleCarePlanByData({patient_id});
-      const vitals = await VitalService.getAllByData({care_plan_id: carePlan.get("id")});
+      const allVitals = await VitalService.getAllByData({care_plan_id: carePlan.get("id")});
 
       let vitalDetails = {};
       let vitalTemplateDetails = {};
       let carePlanTemplateDetails = {};
 
-      if(vitals.length > 0) {
-        for(const vitalData of vitals) {
+      if(allVitals.length > 0) {
+        for(const vitalData of allVitals) {
           const vital = await VitalWrapper(vitalData);
-          vitalDetails[vital.getVitalId()] = vital.getBasicInfo();
+          const {vitals} = await vital.getAllInfo();
           const {vital_templates, care_plans} = await vital.getReferenceInfo();
+
+          vitalDetails = {...vitalDetails, ...vitals};
 
           vitalTemplateDetails = {...vitalTemplateDetails, ...vital_templates};
           carePlanTemplateDetails = {...carePlanTemplateDetails, ...care_plans};
@@ -697,7 +699,8 @@ class MPatientController extends Controller {
               },
               care_plans: {
                 ...carePlanTemplateDetails,
-              }
+              },
+              vital_ids: Object.keys(vitalDetails)
             },
             "Vitals fetched successfully for the patient"
         );

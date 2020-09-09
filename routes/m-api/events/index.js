@@ -38,7 +38,7 @@ router.post(
 );
 
 router.get(
-  "/vitals/:care_plan_id",
+  "/vitals/:id",
   Authenticate,
   EventController.getVitalEvent
 );
