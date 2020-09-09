@@ -56,6 +56,7 @@ class VitalController extends Controller {
                 });
 
                 const vitals = await VitalWrapper({id: vitalData.get("id")});
+                const vitalTemplates = await VitalTemplateWrapper({id: vitals.getVitalTemplateId()});
                 const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
 
                 const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
@@ -72,7 +73,8 @@ class VitalController extends Controller {
                     actor: {
                         id: userId,
                         category
-                    }
+                    },
+                    vital_templates: vitalTemplates.getBasicInfo()
                 };
 
                 // RRule

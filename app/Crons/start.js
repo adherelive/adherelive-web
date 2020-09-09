@@ -29,9 +29,9 @@ class StartCron {
     getStartEvents = async () => {
         try {
             const {getScheduleData} = this;
-            const scheduleEvent = await getScheduleData();
-            if(scheduleEvent.length > 0) {
-                for (const scheduleEvent of _data) {
+            const scheduleEvents = await getScheduleData();
+            if(scheduleEvents.length > 0) {
+                for (const scheduleEvent of scheduleEvents) {
                     const event = await ScheduleEventWrapper(scheduleEvent);
                     switch (event.getEventType()) {
                         case EVENT_TYPE.VITALS:
@@ -55,7 +55,7 @@ class StartCron {
             const eventId = event.getEventId();
 
             const updateEventStatus = await ScheduleEventService.update({
-                status: NOTIFICATION_STAGES.START
+                status: EVENT_STATUS.COMPLETED
             }, event.getScheduleEventId());
 
             const job = JobSdk.execute({
