@@ -26,7 +26,7 @@ class StartCron {
         return scheduleEvents;
     };
 
-    getStartEvents = async () => {
+    runObserver = async () => {
         try {
             const {getScheduleData} = this;
             const scheduleEvents = await getScheduleData();
@@ -55,7 +55,7 @@ class StartCron {
             const eventId = event.getEventId();
 
             const updateEventStatus = await ScheduleEventService.update({
-                status: EVENT_STATUS.COMPLETED
+                status: EVENT_STATUS.SCHEDULED
             }, event.getScheduleEventId());
 
             const job = JobSdk.execute({
