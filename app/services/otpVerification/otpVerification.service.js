@@ -21,7 +21,7 @@ class OtpVerificationService {
                 limit: 1,
                 where: {
                     // TODO: change on deployment
-                    otp,
+                    // otp,
                     user_id,
                     updated_at: {
                         [Op.gte]: moment().subtract(2, 'minutes').toDate()

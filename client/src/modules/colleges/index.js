@@ -42,9 +42,7 @@ function collegeReducer(state, data) {
             ...colleges
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 

@@ -5,9 +5,7 @@ function conditionPageReducer(state, data) {
       ...condition_ids
     ];
   } else {
-    return [
-      ...state
-    ];
+    return state;
   }
 }
 

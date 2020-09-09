@@ -42,9 +42,7 @@ function medicineReducer(state, data) {
             ...medicines
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 

@@ -42,9 +42,7 @@ function degreeReducer(state, data) {
             ...degrees
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 

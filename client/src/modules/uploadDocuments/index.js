@@ -6,9 +6,7 @@ function uploadDocumentReducer(state, data) {
             ...upload_documents,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

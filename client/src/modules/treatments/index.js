@@ -43,9 +43,7 @@ function treatmentReducer(state, data) {
       ...treatments,
     };
   } else {
-    return {
-      ...state,
-    };
+    return state;
   }
 }
 

@@ -6,9 +6,7 @@ function userPageReducer(state, data) {
             ...user_ids
         ];
     } else {
-        return [
-            ...state
-        ];
+        return state;
     }
 }
 

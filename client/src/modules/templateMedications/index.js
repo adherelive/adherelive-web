@@ -8,9 +8,7 @@ function templateMedicationsReducer(state, data) {
             ...template_medications,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

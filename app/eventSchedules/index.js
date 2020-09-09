@@ -51,7 +51,8 @@ class EventSchedule {
           },
         } = {},
         participants = [],
-        actors = {}
+        actor = {},
+        vital_templates = {}
       } = vital || {};
 
       const vitalData = await FeatureDetailService.getDetailsByData({
@@ -61,8 +62,6 @@ class EventSchedule {
       const vitalDetails = await FeatureDetailWrapper(vitalData);
       const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
       const { value, key } = repeat_intervals[repeat_interval_id] || {};
-
-      Logger.debug("13098120312 here", repeat_interval_id);
 
       const rrule = new RRule({
         freq: RRule.WEEKLY,
@@ -104,7 +103,9 @@ class EventSchedule {
               details: {
                 ...details,
                 participants,
-                actors
+                actor,
+                vital_templates,
+                eventId: event_id
               }
             };
 

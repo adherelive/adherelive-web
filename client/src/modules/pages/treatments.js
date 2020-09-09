@@ -5,9 +5,7 @@ function treatmentPageReducer(state, data) {
       ...treatment_ids
     ];
   } else {
-    return [
-      ...state
-    ];
+    return state;
   }
 }
 

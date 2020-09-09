@@ -43,9 +43,7 @@ function specialityReducer(state, data) {
             ...specialities,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

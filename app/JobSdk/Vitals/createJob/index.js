@@ -20,7 +20,7 @@ class CreateJob extends VitalJob {
         details: { name, category: actorCategory } = {}
       } = {},
       vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
-      event_id = null
+      eventId = null
     } = getData() || {};
 
     const templateData = [];
@@ -66,7 +66,7 @@ class CreateJob extends VitalJob {
       actor: {
         id: actorId,
       } = {},
-      vitalId = null
+      eventId = null
     } = getData() || {};
 
     const templateData = [];
@@ -76,7 +76,7 @@ class CreateJob extends VitalJob {
       templateData.push({
         actor: actorId,
         object: `${participant}`,
-        foreign_id: `${vitalId}`,
+        foreign_id: `${eventId}`,
         verb: "vital_create",
         event: EVENT_TYPE.VITALS,
         time: currentTime

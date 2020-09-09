@@ -8,9 +8,7 @@ function templateAppointmentsReducer(state, data) {
             ...template_appointments,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

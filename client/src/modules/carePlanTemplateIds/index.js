@@ -7,9 +7,7 @@ function carePlanTemplateIds(state, data) {
             ...care_plan_template_ids,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

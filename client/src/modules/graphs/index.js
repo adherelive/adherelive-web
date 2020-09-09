@@ -29,9 +29,7 @@ function graphReducer(state, data) {
       ...charts
     };
   } else {
-    return {
-      ...state,
-    };
+    return state;
   }
 }
 

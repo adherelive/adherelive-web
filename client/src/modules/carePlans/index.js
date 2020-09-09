@@ -31,9 +31,7 @@ function carePlanReducer(state, data) {
             ...care_plans
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

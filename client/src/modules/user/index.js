@@ -33,9 +33,7 @@ function userReducer(state, data) {
             ...users
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 

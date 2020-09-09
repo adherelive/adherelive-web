@@ -44,9 +44,7 @@ function eventReducer(state, data) {
             ...schedule_events
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 

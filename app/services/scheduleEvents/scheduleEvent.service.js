@@ -99,6 +99,20 @@ class ScheduleEventService {
             throw error;
         }
     };
+
+    getStartEventByData = async (time) => {
+        try {
+            const scheduleEvent = await ScheduleEvent.findAll({
+                where: {
+                    start_time: time,
+                    status: EVENT_STATUS.PENDING
+                }
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new ScheduleEventService();

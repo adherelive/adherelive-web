@@ -5,9 +5,7 @@ function severityPageReducer(state, data) {
       ...severity_ids
     ];
   } else {
-    return [
-      ...state
-    ];
+    return state;
   }
 }
 

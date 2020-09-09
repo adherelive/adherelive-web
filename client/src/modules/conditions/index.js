@@ -45,9 +45,7 @@ function conditionReducer(state, data) {
       ...conditions,
     };
   } else {
-    return {
-      ...state,
-    };
+    return state;
   }
 }
 
