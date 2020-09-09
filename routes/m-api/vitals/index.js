@@ -26,7 +26,7 @@ router.post(
     "/",
     Authenticate,
     // validator.validateVitalsForm,
-    VitalController.createVital
+    VitalController.addVital
 );
 
 router.post(
