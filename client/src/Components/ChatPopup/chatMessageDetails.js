@@ -59,12 +59,10 @@ class MediaComponent extends Component {
         );
     };
     closeModal = () => {
-
         this.setState({ imageModalVisible: false });
     }
 
     openModal = () => {
-
         this.setState({ imageModalVisible: true });
     }
     onClickDownloader = e => {

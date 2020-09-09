@@ -11,17 +11,14 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
+            critical: {
+              type: Sequelize.BOOLEAN,
+            },
             event_type: {
                 type: Sequelize.ENUM,
-                values: [EVENT_TYPE.APPOINTMENT, EVENT_TYPE.REMINDER, EVENT_TYPE.MEDICATION_REMINDER]
+                values: [EVENT_TYPE.APPOINTMENT, EVENT_TYPE.REMINDER, EVENT_TYPE.MEDICATION_REMINDER, EVENT_TYPE.VITALS]
             },
             event_id: {
-                type: Sequelize.INTEGER,
-            },
-            participant_one: {
-                type: Sequelize.INTEGER,
-            },
-            participant_two: {
                 type: Sequelize.INTEGER,
             },
             details: {

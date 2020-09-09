@@ -3,6 +3,7 @@ import {
   BEFORE_BREAKFAST,
   EVENT_STATUS,
   EVENT_TYPE,
+  FEATURE_TYPE,
   MEDICATION_TIMING
 } from "../../constant";
 import Log from "../../libs/log";
@@ -12,6 +13,8 @@ import moment from "moment";
 import * as eventHelper from "./helper";
 
 import scheduleService from "../services/scheduleEvents/scheduleEvent.service";
+import FeatureDetailService from "../services/featureDetails/featureDetails.service";
+import FeatureDetailWrapper from "../ApiWrapper/web/featureDetails";
 
 const Logger = new Log("EVENT SCHEDULE CREATOR");
 
@@ -26,8 +29,95 @@ class EventSchedule {
       case EVENT_TYPE.MEDICATION_REMINDER:
         await this.createMedicationSchedule(data);
         break;
+      case EVENT_TYPE.VITALS:
+        await this.createVitalSchedule(data);
       default:
         Logger.debug("eventType --->", event_type);
+    }
+  };
+
+  createVitalSchedule = async vital => {
+    try {
+      const {
+        event_id,
+        start_date,
+        end_date,
+        details,
+        details: {
+          details: {
+            repeat_days
+          },
+          critical = false,
+          repeat_interval_id
+        } = {},
+        participants = [],
+        actors = {}
+      } = vital || {};
+
+      const vitalData = await FeatureDetailService.getDetailsByData({
+        feature_type: FEATURE_TYPE.VITAL
+      });
+
+      const vitalDetails = await FeatureDetailWrapper(vitalData);
+      const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
+      const { value } = repeat_intervals[repeat_interval_id] || {};
+
+      // Logger.debug("13098120312 here", {});
+
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_date)
+          .utc()
+          .toDate(),
+        until: end_date
+          ? moment(end_date)
+              .utc()
+              .toDate()
+          : moment(start_date)
+              .add(1, "month")
+              .utc()
+              .toDate(),
+        byhour: value,
+        byweekday: eventHelper.repeatDays(repeat_days)
+      });
+
+      Logger.debug("13098120312 here", {});
+
+      // create schedule for the date
+      const allDays = rrule.all();
+
+      Logger.debug("allDays ----> ", allDays);
+
+      for (let i = 0; i < allDays.length; i++) {
+        const scheduleData = {
+          event_id,
+          critical,
+          date: moment(allDays[i])
+            .utc()
+            .toISOString(),
+          start_time: moment(allDays[i])
+            .utc()
+            .toISOString(),
+          end_time: moment(allDays[i])
+            .utc()
+            .toISOString(),
+          event_type: EVENT_TYPE.VITALS,
+          details: {
+            ...details,
+            participants,
+            actors
+          }
+        };
+
+        const schedule = await scheduleService.create(scheduleData);
+        if (schedule) {
+          Logger.debug("schedule events created for vitals", true);
+        } else {
+          Logger.debug("schedule events failed for vitals", false);
+        }
+      }
+    } catch (error) {
+      Logger.debug("schedule events vitals 500 error", error);
     }
   };
 
@@ -38,8 +128,9 @@ class EventSchedule {
         start_time,
         end_time,
         details,
-        participant_one,
-        participant_two
+        critical,
+        participants,
+        actor
       } = appointment || {};
 
       const rrule = new RRule({
@@ -55,13 +146,16 @@ class EventSchedule {
       // create schedule for the date
       const scheduleData = {
         event_id,
+        critical,
         date: moment(start_time).toISOString(),
         start_time: moment(start_time).toISOString(),
         end_time: moment(end_time).toISOString(),
         event_type: EVENT_TYPE.APPOINTMENT,
-        participant_one,
-        participant_two,
-        details
+        details: {
+          ...details,
+          participants,
+          actor
+        }
       };
 
       const schedule = await scheduleService.create(scheduleData);
@@ -82,9 +176,9 @@ class EventSchedule {
         start_date,
         end_date,
         details,
-        details: { when_to_take, repeat_days } = {},
-        participant_one,
-        participant_two
+        details: { when_to_take, repeat_days, critical = false } = {},
+        participants = [],
+        actors = {}
       } = medication || {};
 
       const rrule = new RRule({
@@ -97,7 +191,7 @@ class EventSchedule {
               .utc()
               .toDate()
           : moment(start_date)
-              .add(5, "y")
+              .add(1, "month")
               .utc()
               .toDate(),
         byweekday: eventHelper.repeatDays(repeat_days)
@@ -117,13 +211,16 @@ class EventSchedule {
 
           const scheduleData = {
             event_id,
+            critical,
             date: moment(allDays[i]).toISOString(),
             start_time: moment(startTime).toISOString(),
             end_time: moment(startTime).toISOString(),
             event_type: EVENT_TYPE.MEDICATION_REMINDER,
-            details,
-            participant_one,
-            participant_two
+            details: {
+              ...details,
+              participants,
+              actors
+            }
           };
 
           const schedule = await scheduleService.create(scheduleData);

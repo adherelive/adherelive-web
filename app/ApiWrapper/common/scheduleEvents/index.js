@@ -6,6 +6,11 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
     constructor(data) {
         super(data);
     }
+
+    getAllInfo = () => {
+      const {_data} = this;
+      const {} = _data || {};
+    };
 }
 
 export default async (data = null, id = null) => {

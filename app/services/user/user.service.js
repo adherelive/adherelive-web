@@ -4,7 +4,6 @@ import {USER_CATEGORY} from "../../../constant";
 import {Op} from "sequelize";
 
 import Permissions from "../../models/permissions";
-import UserCategoryPermissions from "../../models/userCategoryPermissions";
 import UserDevices from "../../models/userDevices";
 import Doctors from "../../models/doctors";
 import Patients from "../../models/patients";
@@ -28,7 +27,8 @@ class UserService {
             const user = await User.findOne({
                 where: {
                     id
-                }
+                },
+                include: [Doctors, Patients]
             });
             return user;
         } catch (err) {

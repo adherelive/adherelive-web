@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from "../../constant";
-import { Timeline, message, Button, Spin } from "antd";
+import { Timeline, message, Button, Spin, Modal } from "antd";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -24,7 +24,8 @@ class TimelineTab extends Component {
         this.state = {
             currentTab: TABS.TIMELINE,
             timelineSymptoms: {},
-            loading: false
+            loading: false,
+            imageModalVisible: false
         };
     }
 
@@ -44,6 +45,33 @@ class TimelineTab extends Component {
 
     }
 
+    imageModal = () => {
+        return (
+            <Modal
+                className={"chat-media-modal"}
+                visible={this.state.imageModalVisible}
+                title={' '}
+                closable
+                mask
+                maskClosable
+                onCancel={this.closeModal}
+                wrapClassName={"chat-media-modal-dialog"}
+                width={`50%`}
+                footer={null}
+            >
+                <img src={this.state.imageToShow} alt="qualification document" className="wp100" />
+            </Modal>
+        );
+    };
+    closeModal = () => {
+
+        this.setState({ imageModalVisible: false });
+    }
+
+    openModal = url => () => {
+
+        this.setState({ imageToShow: url }, () => this.setState({ imageModalVisible: true }));
+    }
 
     onRowSymptoms = (record, rowIndex) => {
         const { onRowClickSymptoms } = this;
@@ -238,7 +266,25 @@ class TimelineTab extends Component {
 
         return data;
     }
-
+    onClickDownloader = (url, filename) => () => {
+        console.log('ONCLICK DOWNLOADER CALLED', url, filename);
+        if (url && url.length > 0) {
+            fetch(url, {
+                method: "GET"
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    const blobUrl = window.URL.createObjectURL(new Blob([blob]));
+                    const downloader = document.createElement("a");
+                    downloader.href = blobUrl;
+                    downloader.download = filename;
+                    downloader.target = "_blank";
+                    document.body.appendChild(downloader);
+                    downloader.click();
+                    document.body.removeChild(downloader);
+                });
+        }
+    };
     renderTimelineBody = (data) => {
         const { upload_documents = {} } = this.props;
         let dataTorender = [];
@@ -298,16 +344,22 @@ class TimelineTab extends Component {
                             </div>
                         ) : null}
                         {imageUrl && imageUrl.length ? (
-                            <img
-                                src={imageUrl}
-                                style={{ width: 300, height: 200, borderRadius: 2 }}
-                            />
+                            <div
+                                className='pointer'
+                                onClick={this.openModal(imageUrl)}
+                            >
+                                <img
+                                    src={imageUrl}
+                                    style={{ width: 300, height: 200, borderRadius: 2 }}
+                                />
+                            </div>
                         ) : null}
 
                         {audioUrl && audioUrl.length ? (
                             <div
+                                className='pointer'
                                 style={{ height: 40, width: 250, marginTop: 5 }}
-                            // onPress={this.downloadDocument(audioUrl, audioName)}
+                                onClick={this.onClickDownloader(audioUrl, audioName)}
                             >
                                 <div
                                     style={{
@@ -372,6 +424,7 @@ class TimelineTab extends Component {
                     {this.renderTimelineBody(data)}
                 </Timeline>
 
+                {this.imageModal()}
             </div>
         );
     }

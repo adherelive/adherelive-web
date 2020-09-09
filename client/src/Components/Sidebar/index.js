@@ -115,7 +115,7 @@ class SideMenu extends Component {
 
       if (user_id === authenticated_user) {
         dp = profile_pic;
-        initials = `${first_name[0]}${last_name[0]}`;
+        initials = `${first_name ? first_name[0] : ""}${last_name ? last_name[0] : ""}`;
       }
     }
     let { basic_info: { user_name = "" } = {} } =

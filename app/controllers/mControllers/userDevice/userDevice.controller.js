@@ -15,18 +15,16 @@ class UserDeviceController extends Controller {
     create = async (req, res) => {
         const {raiseSuccess, raiseClientError, raiseServerError} = this;
       try {
+          Log.debug("userDevice create req.body ---> ", req.body);
           const { userId } = req.userDetails;
           const { platform, one_signal_user_id, push_token } = req.body || {};
+          const userExists = await UserService.getUserData({id: userId});
 
-          const userExists = await UserService.getUserData({user_id: userId});
-
-          Log.debug("userExists ---> ", userExists);
           if(userExists) {
               const deviceExists = await UserDeviceService.getDeviceByData({
                   one_signal_user_id: one_signal_user_id,
                   user_id: userId
               });
-              Log.debug("deviceExists ---> ", deviceExists);
               if(!deviceExists) {
                   const userDeviceData = await UserDeviceService.addDevice({
                       user_id: userId,

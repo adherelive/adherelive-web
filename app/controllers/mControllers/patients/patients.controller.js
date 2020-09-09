@@ -3,6 +3,11 @@ import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
 import minioService from "../../../services/minio/minio.service";
 
+// SERVICES ------------
+import VitalService from "../../../services/vitals/vital.service";
+
+// WRAPPERS ------------
+import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import { randomString } from "../../../../libs/helper";
@@ -556,7 +561,7 @@ class MPatientController extends Controller {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       Logger.debug("req.params ----->", req.params);
-      const {query: {duration = "5"} = {}, params: {patient_id} = {}, userDetails: {userId} = {}} = req;
+      const {query: {duration = "5"} = {}, params: {patient_id} = {}} = req;
 
       const currentTime = moment().utc().toISOString();
       const historyTime = moment().subtract(duration, "days").utc().toISOString();
@@ -653,6 +658,54 @@ class MPatientController extends Controller {
       }
     } catch(error) {
       Logger.debug("getPatientPartSymptoms 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getPatientVitals = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      Logger.debug("req.params ----->", req.params);
+      const {params: {patient_id} = {}} = req;
+
+      const carePlan = await carePlanService.getSingleCarePlanByData({patient_id});
+      const vitals = await VitalService.getAllByData({care_plan_id: carePlan.get("id")});
+
+      let vitalDetails = {};
+      let vitalTemplateDetails = {};
+      let carePlanTemplateDetails = {};
+
+      if(vitals.length > 0) {
+        for(const vitalData of vitals) {
+          const vital = await VitalWrapper(vitalData);
+          vitalDetails[vital.getVitalId()] = vital.getBasicInfo();
+          const {vital_templates, care_plans} = await vital.getReferenceInfo();
+
+          vitalTemplateDetails = {...vitalTemplateDetails, ...vital_templates};
+          carePlanTemplateDetails = {...carePlanTemplateDetails, ...care_plans};
+        }
+
+        return raiseSuccess(
+            res,
+            200,
+            {
+              vitals: {
+                ...vitalDetails
+              },
+              vital_templates: {
+                ...vitalTemplateDetails
+              },
+              care_plans: {
+                ...carePlanTemplateDetails,
+              }
+            },
+            "Vitals fetched successfully for the patient"
+        );
+      } else {
+        return raiseSuccess(res, 200, {}, "There are no added vitals for the patient");
+      }
+    } catch(error) {
+      Logger.debug("getPatientVitals 500 error", error);
       return raiseServerError(res);
     }
   };

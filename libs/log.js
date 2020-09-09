@@ -18,11 +18,6 @@ class Log {
   }
 
   debug(msg, code) {
-    // console.log(
-    //   `\n ${chalk.yellow(this.getLogDate())}  ${chalk.yellow(
-    //     "( " + this.source + " )"
-    //   )} : ${msg} \n`
-    // );
     console.log(
       `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
         this.source
@@ -30,6 +25,15 @@ class Log {
       code
     );
   }
+
+  objectInfo = (msg, obj) => {
+    let data = "";
+    Object.keys(obj).forEach(prop => {
+      data += `${prop} : ${obj[prop]}\n`;
+    });
+
+    console.log(`${this.source} ${this.getLogDate()} \n\n${msg} -> \n\n ${data} \n`);
+  };
 
   request(data) {
     console.log(

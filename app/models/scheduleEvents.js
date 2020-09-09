@@ -1,7 +1,7 @@
 "use strict";
 import Sequelize from "sequelize";
 import {database} from "../../libs/mysql";
-import {DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY, GENDER, EVENT_TYPE, EVENT_STATUS} from "../../constant";
+import {DB_TABLES, EVENT_TYPE, EVENT_STATUS} from "../../constant";
 
 const ScheduleEvent = database.define(
     DB_TABLES.SCHEDULE_EVENTS,
@@ -12,17 +12,14 @@ const ScheduleEvent = database.define(
             primaryKey: true,
             type: Sequelize.INTEGER
         },
+        critical: {
+            type: Sequelize.BOOLEAN,
+        },
         event_type: {
             type: Sequelize.ENUM,
-            values: [EVENT_TYPE.APPOINTMENT, EVENT_TYPE.REMINDER, EVENT_TYPE.MEDICATION_REMINDER]
+            values: [EVENT_TYPE.APPOINTMENT, EVENT_TYPE.REMINDER, EVENT_TYPE.MEDICATION_REMINDER, EVENT_TYPE.VITALS]
         },
         event_id: {
-            type: Sequelize.INTEGER,
-        },
-        participant_one: {
-            type: Sequelize.INTEGER,
-        },
-        participant_two: {
             type: Sequelize.INTEGER,
         },
         details: {

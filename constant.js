@@ -13,6 +13,7 @@ export const ACTIVITY_TYPE = {
 };
 
 export const EVENT_TYPE = {
+  VITALS: "vitals",
   APPOINTMENT: "appointment",
   REMINDER: "reminder",
   ADVERSE_EVENT: "adverse",
@@ -70,12 +71,6 @@ export const DAYS_MOBILE = [
   FRIDAY,
   SATURDAY
 ];
-export const USER_STATUS = {
-  ENROLLED: "ENROLLED",
-  DISCHARGED: "DISCHARGED",
-  INACTIVE: "INACTIVE",
-  DROPPED: "DROPPED"
-};
 
 export const SEVERITY = {
   MILD: "MILD",
@@ -124,32 +119,6 @@ export const ACTIVITY_LOG_STATUS = {
 };
 
 export const DEFAULT = "default";
-
-export const PARTICIPANTS_SURVEY_STATUS = {
-  COMPLETED: "COMPLETED"
-};
-
-export const RESOURCE = {
-  DOCTORS: "doctors",
-  PATIENTS: "patients",
-  CARE_COACHS: "careCoachs",
-  PROGRAM_ADMINS: "programAdmins",
-  EVENTS: "events",
-  PROGRAMS: "programs",
-  SURVEYS: "surveyS"
-};
-//
-// export const PERMISSIONS = {
-//   CREATE: "create",
-//   UPDATE: "update",
-//   VIEW: "view",
-//   INVITE: "invite",
-//   CANCEL: "cancel",
-//   VERIFY: "verify",
-//   SEND: "send",
-//   END: "end",
-//   DISCHARGE: "discharge"
-// };
 
 export const GRANTS = {
   PROGRAM: {
@@ -367,7 +336,9 @@ export const DB_TABLES = {
   TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
   FEATURE_DETAILS: "feature_details",
   USER_DEVICES: "user_devices",
-  SYMPTOMS: "symptoms"
+  SYMPTOMS: "symptoms",
+  VITAL_TEMPLATES: "vital_templates",
+  VITALS: "vitals"
 };
 
 export const ARTICLE_TYPE = {
@@ -639,7 +610,8 @@ export const APPOINTMENT_TYPE_DESCRIPTION = {
 
 export const FEATURE_TYPE = {
   APPOINTMENT: "appointment",
-  MEDICATION: "medication"
+  MEDICATION: "medication",
+  VITAL: "vital",
 };
 
 export const BLANK_STATE = "";
@@ -775,4 +747,12 @@ export const PARTS_GRAPH = {
 export const BODY_VIEW = {
   FRONT: "1",
   BACK: "2"
+};
+
+export const REPEAT_INTERVAL = {
+  ONCE:"ONCE",
+  ONE_HOUR:"ONE_HOUR",
+  TWO_HOUR:"TWO_HOUR",
+  FOUR_HOUR:"FOUR_HOUR",
+  SIX_HOUR:"SIX_HOUR,"
 };

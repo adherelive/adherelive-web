@@ -30,7 +30,7 @@ class ScheduleEventService {
                     start_time: {
                         [Op.lte]: time
                     },
-                    status: EVENT_STATUS.SCHEDULED
+                    status: EVENT_STATUS.PENDING
                 }
             });
             return scheduleEvent;
