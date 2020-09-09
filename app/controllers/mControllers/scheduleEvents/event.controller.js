@@ -8,7 +8,8 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 
 // WRAPPERS -------------------
 import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import {EVENT_STATUS} from "../../../../constant";
+import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
+import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 
 const Log = new Logger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 
@@ -18,72 +19,47 @@ class EventController extends Controller {
     }
 
     getVitalEvent = async (req, res) => {
-        const {raiseSuccess, raiseServerError} = this;
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
       try {
         Log.debug("req.params", req.params);
         const {params: {id} = {}} = req;
 
-        const currentDate = moment().utc().toDate();
-
-        const events = await EventService.getAllPassedByData({
-           event_id: id,
-           date: currentDate
+        const events = await EventService.getEventByData({
+           id,
         });
 
-        let scheduleEvents = {};
+        if(events) {
+            const event = await EventWrapper(events);
+            if(event.getEventType() === EVENT_TYPE.VITALS) {
+                const vitals = await VitalWrapper({id: event.getEventId()});
+                const {vital_templates} = await vitals.getReferenceInfo();
 
-        for(const eventData of events) {
-            const event = await EventWrapper(eventData);
-            scheduleEvents[event.getScheduleEventId()] = event.getAllInfo();
-        }
-
-        let vitalEvents = {};
-        let scheduleEventData = {};
-
-        if(vitals.length > 0) {
-            for(const vital of vitals) {
-
-                const scheduleEvents = await EventService.getAllPreviousByData({
-                    event_id: vital.get("id"),
-                    date: currentDate
-                });
-
-                let remaining = 0;
-                let latestPendingEventId = null;
-
-                const scheduleEventIds = [];
-                for(const events of scheduleEvents) {
-                    const scheduleEvent = await EventWrapper(events);
-                    if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING) {
-                        if(!latestPendingEventId) {
-                            latestPendingEventId = scheduleEvent.getScheduleEventId();
-                        }
-                        remaining++;
-                    }
-                    scheduleEventIds.push(scheduleEvent.getScheduleEventId());
-                    scheduleEventData[scheduleEvent.getScheduleEventId()] = scheduleEvent.getAllInfo();
-                }
-
-                vitalEvents[vital.get("id")] = {
-                    remaining,
-                    total: scheduleEvents.length,
-                    schedule_event_ids: scheduleEventIds,
-                    upcoming_event_id: latestPendingEventId
-                };
-            }
-
-            return raiseSuccess(
-                res,
-                200,
-                {
-                    vital_events_per_day: {
-                        ...vitalEvents
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        vital_templates: {
+                            ...vital_templates
+                        },
+                        vital_template_id: vitals.getVitalTemplateId()
                     },
-                    schedule_events: {
-                        ...scheduleEventData
-                    }
-                }
-            )
+                    "Vital template fetched successfully"
+                );
+            } else {
+                return raiseClientError(
+                    res,
+                    422,
+                    {},
+                    "Invalid vital type event"
+                );
+            }
+        } else {
+            return raiseClientError(
+                res,
+                422,
+                {},
+                "No scheduled vital reminder exists for the event"
+            );
         }
       } catch(error) {
           Log.debug("getVitalEvent 500 error", error);

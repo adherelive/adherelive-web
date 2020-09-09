@@ -33,6 +33,6 @@ router.post(
     "/:id",
     Authenticate,
     VitalController.addVitalResponse
-)
+);
 
 export default router;
