@@ -177,8 +177,12 @@ class VitalController extends Controller {
 
         Log.debug("eventScheduleData", eventScheduleData);
 
+        const deletedEvents = await EventService.deleteBatch(vitals.getVitalId());
+
+        Log.debug("deletedEvents", deletedEvents);
+
         // RRule
-        // EventSchedule.create(eventScheduleData);
+        EventSchedule.create(eventScheduleData);
 
         return raiseSuccess(
             res,

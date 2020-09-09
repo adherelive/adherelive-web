@@ -8,6 +8,10 @@ import VitalService from "../../../services/vitals/vital.service";
 // WRAPPERS
 import VitalTemplateWrapper from "../../../ApiWrapper/web/vitalTemplates";
 import CarePlanWrapper from "../../../ApiWrapper/web/carePlan";
+import moment from "moment";
+import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import EventWrapper from "../../common/scheduleEvents";
+import {EVENT_STATUS} from "../../../../constant";
 
 const Log = new Logger("SERVICES > VITALS");
 
@@ -30,6 +34,42 @@ class VitalWrapper extends BaseVital {
             start_date,
             end_date,
             description
+        };
+    };
+
+    getAllInfo = async () => {
+        const {getBasicInfo, getVitalId} = this;
+
+        const currentDate = moment().utc().toDate();
+
+        const scheduleEvents = await EventService.getAllPreviousByData({
+            event_id: getVitalId(),
+            date: currentDate
+        });
+
+        let vitalEvents = {};
+        let remaining = 0;
+        let latestPendingEventId;
+
+        const scheduleEventIds = [];
+        for(const events of scheduleEvents) {
+            const scheduleEvent = await EventWrapper(events);
+            if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING) {
+                if(!latestPendingEventId) {
+                    latestPendingEventId = scheduleEvent.getScheduleEventId();
+                }
+                remaining++;
+            }
+        }
+
+        return {
+            vitals: {
+                [getVitalId()]: {
+                    ...getBasicInfo(),
+                    remaining,
+                    total: scheduleEvents.length,
+                },
+            },
         };
     };
 

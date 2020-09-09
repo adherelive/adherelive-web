@@ -19,23 +19,26 @@ class StartCron {
     }
 
     getScheduleData = async () => {
-        const currentTime = moment().utc().set('seconds', 0).toDate();
-        Log.debug("currentTime ---> ", currentTime);
+        const currentTime = moment().utc().toDate();
         const scheduleEvents = await ScheduleEventService.getStartEventByData(currentTime);
-        Log.debug("scheduleEvents ---> ", scheduleEvents);
         return scheduleEvents;
     };
 
     runObserver = async () => {
         try {
+            Log.info("running START cron");
             const {getScheduleData} = this;
             const scheduleEvents = await getScheduleData();
+            let count = 0;
             if(scheduleEvents.length > 0) {
+
                 for (const scheduleEvent of scheduleEvents) {
+                    count++;
                     const event = await ScheduleEventWrapper(scheduleEvent);
                     switch (event.getEventType()) {
                         case EVENT_TYPE.VITALS:
-                            return this.handleVitalStart(event);
+                            await this.handleVitalStart(event);
+                            break;
                         case EVENT_TYPE.MEDICATION_REMINDER:
                             // this.handleMedicationPrior(event);
                             break;
@@ -43,7 +46,9 @@ class StartCron {
                             break;
                     }
                 }
+
             }
+            Log.info(`START count : ${count} / ${scheduleEvents.length}`);
         } catch (error) {
             Log.debug("scheduleEvents 500 error ---->", error);
             // Log.errLog(500, "getPriorEvents", error.getMessage());
@@ -63,9 +68,9 @@ class StartCron {
                 eventStage: NOTIFICATION_STAGES.START,
                 event: event.getDetails()
             });
-            await NotificationSdk.execute(job);
+            NotificationSdk.execute(job);
         } catch(error) {
-            throw error;
+            Log.debug("handleVitalStart 500 error ---->", error);
         }
     };
 }

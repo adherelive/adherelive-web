@@ -118,39 +118,10 @@ class EventSchedule {
 
              ongoingTime = moment(ongoingTime).add(value, 'hours').toISOString();
            }
-
-
-          // const scheduleData = {
-          //   event_id,
-          //   critical,
-          //   date: moment(allDays[i])
-          //       .utc()
-          //       .toISOString(),
-          //   start_time: moment(allDays[i])
-          //       .utc()
-          //       .toISOString(),
-          //   end_time: moment(allDays[i])
-          //       .utc()
-          //       .toISOString(),
-          //   event_type: EVENT_TYPE.VITALS,
-          //   details: {
-          //     ...details,
-          //     participants,
-          //     actors
-          //   }
-          // };
         }
       } else {
 
       }
-
-        // const schedule = await scheduleService.create(scheduleData);
-        // if (schedule) {
-        //   Logger.debug("schedule events created for vitals", true);
-        // } else {
-        //   Logger.debug("schedule events failed for vitals", false);
-        // }
-      // }
     } catch (error) {
       Logger.debug("schedule events vitals 500 error", error);
     }

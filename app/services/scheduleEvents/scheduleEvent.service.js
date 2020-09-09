@@ -106,7 +106,7 @@ class ScheduleEventService {
             const scheduleEvent = await ScheduleEvent.findAll({
                 where: {
                     start_time: {
-                        [Op.between]: [moment(time).startOf('day'), time]
+                        [Op.between]: [time, moment(time).add(1,'minutes')]
                     },
                     status: EVENT_STATUS.PENDING
                 }
@@ -124,8 +124,22 @@ class ScheduleEventService {
                     start_time: {
                         [Op.between]: [moment(time).startOf('day'), time]
                     },
-                    status: EVENT_STATUS.SCHEDULED
+                    status: [EVENT_STATUS.SCHEDULED, EVENT_STATUS.PENDING]
                 }
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    deleteBatch = async (event_id) => {
+        try {
+            const scheduleEvent = await ScheduleEvent.destroy({
+                where: {
+                    event_id
+                },
+                force: true
             });
             return scheduleEvent;
         } catch(error) {

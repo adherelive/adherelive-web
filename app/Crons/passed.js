@@ -9,8 +9,8 @@ import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.servi
 // WRAPPERS ---------------
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
 
-import JobSdk from "../JobSdk";
-import NotificationSdk from "../NotificationSdk";
+// import JobSdk from "../JobSdk";
+// import NotificationSdk from "../NotificationSdk";
 import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../ApiWrapper/mobile/featureDetails";
 
@@ -22,6 +22,7 @@ class PassedCron {
 
     getScheduleData = async () => {
         const currentTime = moment().utc().toDate();
+        Log.info(`currentTime : ${currentTime}`);
         const scheduleEvents = await ScheduleEventService.getPassedEventData(currentTime);
         return scheduleEvents;
     };
@@ -31,8 +32,11 @@ class PassedCron {
             Log.info("running passed cron");
             const {getScheduleData} = this;
             const scheduleEvents = await getScheduleData();
+            let count = 0;
+
             if(scheduleEvents.length > 0) {
                 for (const scheduleEvent of scheduleEvents) {
+                    count++;
                     const event = await ScheduleEventWrapper(scheduleEvent);
                     switch (event.getEventType()) {
                         case EVENT_TYPE.VITALS:
@@ -42,7 +46,10 @@ class PassedCron {
                             break;
                     }
                 }
+
+
             }
+            Log.info(`92313 count : ${count} / ${scheduleEvents.length}`);
         } catch (error) {
             Log.debug("scheduleEvents 500 error ---->", error);
         }
@@ -63,14 +70,16 @@ class PassedCron {
 
             const {value = 0} = repeat_intervals[repeatIntervalId] || {};
 
-            if(moment(currentTime).diff(event.getStartTime(), 'hours') > value) {
+            Log.info(`value: ${value} | difference -> ${moment(currentTime).diff(event.getStartTime(), 'hours')}`);
+
+            if(moment(currentTime).diff(event.getStartTime(), 'hours') >= value) {
                 const updateEventStatus = await ScheduleEventService.update({
                     status: EVENT_STATUS.EXPIRED
                 }, event.getScheduleEventId());
             }
 
         } catch(error) {
-            throw error;
+            Log.debug("handleVitalPassed 500 error ---->", error);
         }
     };
 }
