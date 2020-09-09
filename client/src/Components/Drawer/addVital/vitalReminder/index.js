@@ -3,13 +3,16 @@ import { Drawer, Form, message } from "antd";
 import { injectIntl } from "react-intl";
 
 import moment from "moment";
-import { getRelatedMembersURL } from "../../../../Helper/urls/user";
-import { doRequest } from "../../../../Helper/network";
-import { USER_CATEGORY, MEDICATION_TIMING, MEDICINE_UNITS } from "../../../../constant";
 import AddVitalsForm from "./form";
 import messages from "../message";
 import Footer from "../../footer";
-import { getInitialData } from "../../../../Helper/urls/auth";
+import startDateField from "../common/startDate";
+import repeatDaysField from "../common/selectedDays";
+import endDateField from "../common/endDate";
+
+import instructions from "../../addMedicationReminder/common/instructions";
+import vitalName from "../common/vitalName";
+import vitalOccurence from "../common/vitalOccurence";
 
 class AddVitals extends Component {
   constructor(props) {
@@ -67,9 +70,9 @@ class AddVitals extends Component {
 
   handleSubmit = async () => {
     const {
-      // form: { validateFields },
+      addVital,
       carePlanId,
-      payload: { patient_id } = {}
+      close
     } = this.props;
 
     const { formRef = {}, formatMessage } = this;
@@ -78,6 +81,79 @@ class AddVitals extends Component {
         form: { validateFields }
       }
     } = formRef;
+
+    validateFields(async (err, values) => {
+      if (!err) {
+        console.log('8326589623895723956832', values);
+        let data_to_submit = {};
+        const startDate = values[startDateField.field_name];
+        const endDate = values[endDateField.field_name];
+        const vital_template_id = values[vitalName.field_name];
+        const repeat_interval_id = values[vitalOccurence.field_name];
+        const repeatDays = values[repeatDaysField.field_name];
+        const description = values[instructions.field_name];
+        const care_plan_id =  carePlanId;
+        data_to_submit = {
+          care_plan_id,
+          vital_template_id,
+          repeat_interval_id,
+          [startDateField.field_name]:
+            startDate && startDate !== null
+              ? startDate
+                .clone()
+                .startOf("day")
+                .toISOString()
+              : startDate,
+          [endDateField.field_name]:
+            endDate && endDate !== null
+              ? endDate
+                .clone()
+                .endOf("day")
+                .toISOString()
+              : endDate
+        };
+
+        if (repeatDays) {
+          data_to_submit = {
+            ...data_to_submit,
+            [repeatDaysField.field_name]: repeatDays
+          };
+
+        }
+        if (description) {
+          data_to_submit = {
+            ...data_to_submit,
+            description
+          };
+
+        }
+        if (!startDate || !repeat_interval_id || !vital_template_id || !repeatDays) {
+
+          message.error('Please fill all details.');
+        }
+        if(!care_plan_id){
+          message.error('Care Plan Id not present');
+        }
+        else if (endDate && moment(endDate).isBefore(moment(startDate))) {
+          message.error('Please select valid dates for vital')
+        } else {
+          try {
+            const response = await addVital(data_to_submit);
+            const { status, payload: { message: msg } = {} } = response;
+            if (status === true) {
+              message.success(msg);
+              close();
+            } else {
+              message.error(msg);
+            }
+          } catch (error) {
+            console.log("add vital ui error -----> ", error);
+          }
+        }
+      } else {
+        message.warn("Please fill all the mandatory fields");
+      }
+    });
   };
 
   render() {

@@ -287,6 +287,8 @@ export const DAYS_TEXT = {
   "Sun": "sunday",
 };
 
+export const ALTERNATE_DAYS = ["Sun", "Tue", "Thu", "Sat"];
+
 export const DAYS_NUMBER = {
   "Mon": 1,
   "Tue": 2,
