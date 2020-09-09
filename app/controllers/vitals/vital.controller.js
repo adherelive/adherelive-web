@@ -113,13 +113,15 @@ class VitalController extends Controller {
                 params: {id} = {}
             } = req;
 
-            const dataToUpdate = vitalHelper.getVitalUpdateData(body);
 
             const doesVitalExists = await VitalService.getByData({id});
 
             if(!doesVitalExists) {
                     return raiseClientError(res, 422, {}, "Vital does not exists for the mentioned id");
             } else {
+                const previousVital = await VitalWrapper({data: doesVitalExists});
+                const dataToUpdate = vitalHelper.getVitalUpdateData({...body, previousVital});
+
                 const vitalData = await VitalService.update(dataToUpdate, id);
 
                 Log.debug("vitalData", vitalData);

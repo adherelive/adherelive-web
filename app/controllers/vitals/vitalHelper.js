@@ -1,8 +1,6 @@
 import {isEmpty} from "lodash";
 
 export const getVitalUpdateData = ({
-  care_plan_id,
-  vital_template_id,
   start_date,
   end_date,
   repeat_interval_id,
@@ -13,14 +11,6 @@ export const getVitalUpdateData = ({
 
     let prevDetails = {...previousVital.getDetails()};
     let dataToUpdate = {};
-
-    if(!isEmpty(care_plan_id)) {
-        dataToUpdate["care_plan_id"] = care_plan_id;
-    }
-
-    if(!isEmpty(vital_template_id)) {
-        dataToUpdate["vital_template_id"] = vital_template_id;
-    }
 
     if(!isEmpty(start_date)) {
         dataToUpdate["start_date"] = start_date;
