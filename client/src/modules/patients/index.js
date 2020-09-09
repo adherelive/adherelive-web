@@ -62,10 +62,7 @@ function patientReducer(state, data) {
       ...patients
     };
   } else {
-    return {
-      // ...PATIENT_INITIAL_STATE,
-      ...state,
-    };
+    return state;
   }
 }
 

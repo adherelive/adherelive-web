@@ -49,9 +49,7 @@ function otherDetailsReducer(state, data) {
             medication_details
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 

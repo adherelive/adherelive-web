@@ -230,9 +230,7 @@ function appointmentReducer(state, data) {
       ...appointments,
     };
   } else {
-    return {
-      ...state,
-    };
+    return state;
   }
 }
 

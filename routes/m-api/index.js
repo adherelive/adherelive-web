@@ -27,50 +27,50 @@ import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
 
 router.use(async (req, res, next) => {
-    try {
-        const { query: { m } = {} } = req;
-        let accessToken;
-        if (m) {
-            const { authorization = "" } = req.headers || {};
-            const bearer = authorization.split(" ");
-            if (bearer.length === 2) {
-                accessToken = bearer[1];
-            }
-        }
-
-        console.log("ACCESS TOKEN -----------------> ", accessToken,req.headers);
-
-        if (accessToken) {
-            console.log("2 ACCESS TOKEN -----------------> ", accessToken);
-            const secret = process.config.TOKEN_SECRET_KEY;
-            const decodedAccessToken = await jwt.verify(accessToken, secret);
-            console.log("3 decodedAccessToken -----------------> ", decodedAccessToken);
-            let user = await userService.getUser(decodedAccessToken.userId);
-            console.log("USER M-API ROUTE START ------> ", );
-            if (user) {
-                req.userDetails = {
-                    exists: true,
-                    userId: decodedAccessToken.userId,
-                    userData: user
-                };
-            } else {
-                req.userDetails = {
-                    exists: false
-                };
-            }
-        } else {
-            req.userDetails = {
-                exists: false
-            };
-        }
-        next();
-    } catch (err) {
-        console.log("89127381723 err -->", err);
-        req.userDetails = {
-            exists: false
-        };
-        next();
+  try {
+    let accessToken;
+    const { authorization = "" } = req.headers || {};
+    const bearer = authorization.split(" ");
+    if (bearer.length === 2) {
+      accessToken = bearer[1];
     }
+
+    console.log("ACCESS TOKEN -----------------> ", accessToken, req.headers);
+
+    if (accessToken) {
+      console.log("2 ACCESS TOKEN -----------------> ", accessToken);
+      const secret = process.config.TOKEN_SECRET_KEY;
+      const decodedAccessToken = await jwt.verify(accessToken, secret);
+      console.log(
+        "3 decodedAccessToken -----------------> ",
+        decodedAccessToken
+      );
+      let user = await userService.getUser(decodedAccessToken.userId);
+      console.log("USER M-API ROUTE START ------> ");
+      if (user) {
+        req.userDetails = {
+          exists: true,
+          userId: decodedAccessToken.userId,
+          userData: user
+        };
+      } else {
+        req.userDetails = {
+          exists: false
+        };
+      }
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+    }
+    next();
+  } catch (err) {
+    console.log("89127381723 err -->", err);
+    req.userDetails = {
+      exists: false
+    };
+    next();
+  }
 });
 
 router.use("/auth", mUserRouter);

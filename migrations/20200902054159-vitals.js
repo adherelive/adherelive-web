@@ -35,9 +35,6 @@ module.exports = {
       details: {
         type: Sequelize.JSON
       },
-      response: {
-        type: Sequelize.JSON
-      },
       description: {
         type: Sequelize.STRING(1000),
       },

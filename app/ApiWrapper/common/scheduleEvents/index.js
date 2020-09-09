@@ -9,7 +9,29 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
 
     getAllInfo = () => {
       const {_data} = this;
-      const {} = _data || {};
+      const {
+          id,
+          critical,
+          event_id,
+          event_type,
+          details,
+          status,
+          date,
+          start_time,
+          end_time
+      } = _data || {};
+
+      return {
+          id,
+          critical,
+          event_id,
+          event_type,
+          details,
+          status,
+          date,
+          start_time,
+          end_time,
+      };
     };
 }
 

@@ -20,7 +20,8 @@ class OtpVerificationService {
             const otpDetails = await OtpVerification.findAll({
                 limit: 1,
                 where: {
-                    otp,
+                    // TODO: change on deployment
+                    // otp,
                     user_id,
                     updated_at: {
                         [Op.gte]: moment().subtract(2, 'minutes').toDate()

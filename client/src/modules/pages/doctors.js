@@ -6,9 +6,7 @@ function doctorPageReducer(state, data) {
       ...doctor_ids
     ];
   } else {
-    return [
-      ...state
-    ];
+    return state;
   }
 }
 

@@ -43,9 +43,7 @@ function severityReducer(state, data) {
       ...severity,
     };
   } else {
-    return {
-      ...state,
-    };
+    return state;
   }
 }
 

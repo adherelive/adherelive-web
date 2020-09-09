@@ -1,6 +1,7 @@
 import {NOTIFICATION_STAGES, EVENT_TYPE} from "../../constant";
 import Appointment from "./Appointments/observer";
 import Medication from "./Medications/observer";
+import Vital from "./Vitals/observer";
 
 class JobSdk {
     execute = ({eventType, eventStage, event}) => {
@@ -9,6 +10,8 @@ class JobSdk {
                 return this.handleAppointmentPayload({eventStage, event});
             case EVENT_TYPE.MEDICATION_REMINDER:
                 return this.handleMedicationPayload({eventStage, event});
+            case EVENT_TYPE.VITALS:
+                return Vital.execute(eventStage, event);
             default:
                 break;
         }
@@ -32,7 +35,7 @@ class JobSdk {
             case NOTIFICATION_STAGES.CREATE:
                 return Medication.execute(NOTIFICATION_STAGES.CREATE, event);
             default:
-                return {default:"0", type: "appointment"};
+                return {default:"0", type: "medication"};
         }
     };
 }

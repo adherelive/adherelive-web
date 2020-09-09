@@ -16,7 +16,7 @@ export default class Vitals {
     };
 
     getResponseValues = () => {
-      const {values = []} = this._data.get("response") || {};
-      return values;
+      const {vitals = []} = this._data.get("response") || {};
+      return vitals;
     };
 }

@@ -177,9 +177,7 @@ function doctorReducer(state, data) {
       ...doctors,
     };
   } else {
-    return {
-      ...state,
-    };
+    return state;
   }
 }
 

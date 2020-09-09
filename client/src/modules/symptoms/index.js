@@ -107,9 +107,7 @@ function symptomsReducer(state, data) {
       ...symptoms
     };
   } else {
-    return {
-      ...state,
-    };
+    return state;
   }
 }
 

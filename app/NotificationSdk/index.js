@@ -18,7 +18,7 @@ class NotificationSdk {
             // const userPreference = await UserPreferenceWrapper(null, id);
 
             // todo actor don't send notification : manage in job
-            // PushApp.notify(await job.getPushAppTemplate());
+            PushApp.notify(await job.getPushAppTemplate());
             // InApp.notify(job.getInAppTemplate());
 
             // Logger.debug("job ---> ", job.getInAppTemplate());
