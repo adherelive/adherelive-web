@@ -355,26 +355,19 @@ class ChatPopUp extends Component {
         });
     };
 
-    updateMessageRecieved = (messages) => {
-        const { otherUserLastConsumedMessageIndex } = this.state;
-        const { authenticated_user, getSymptomDetails } = this.props;
-
-        for (let messageData of messages) {
-
-            if (
-                messageData.state.index <= otherUserLastConsumedMessageIndex &&
-                messageData.state.author === `${authenticated_user}`
-            ) {
-                messageData.received = true;
-                messageData.sent = true;
-            }
-            if (messageData.state.body && messageData.state.body.includes('symptom')) {
-                let symptomId = messageData.state.body.split(':')[1] || {};
-                // await getSymptomDetails(symptomId);
-            }
-        }
-
-        return messages;
+    updateMessageRecieved = messages => {	
+        const { otherUserLastConsumedMessageIndex } = this.state;	
+        const { authenticated_user } = this.props;	
+        for (let messageData of messages) {	
+            if (	
+                messageData.state.index <= otherUserLastConsumedMessageIndex &&	
+                messageData.state.author === `${authenticated_user}`	
+            ) {	
+                messageData.received = true;	
+                messageData.sent = true;	
+            }	
+        }	
+        return messages;	
     };
 
     messagesLoaded = messagePage => {
