@@ -1,6 +1,6 @@
 import VitalJob from "../";
 import moment from "moment";
-import { EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import { EVENT_TYPE } from "../../../../constant";
 
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
@@ -26,6 +26,8 @@ class CreateJob extends VitalJob {
         const templateData = [];
         const playerIds = [];
         const userIds = [];
+
+        console.log("1289317932  participants, actorId", participants, actorId);
 
         participants.forEach(participant => {
             if (participant !== actorId) {

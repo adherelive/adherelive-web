@@ -9,6 +9,7 @@ import Activity from "../app/activitySdk/activityObserver";
 
 // import Prior from "../app/Crons/prior";
 import Start from "../app/Crons/start";
+import Passed from "../app/Crons/passed";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
@@ -25,7 +26,8 @@ const app = express();
 
 const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     // await Prior.getPriorEvents();
-    await Start.getStartEvents();
+    await Start.runObserver();
+    await Passed.runObserver();
 });
 
 app.use(express.json({ limit: "50mb" }));

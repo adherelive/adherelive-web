@@ -32,6 +32,13 @@ router.post(
 router.post(
     "/:id",
     Authenticate,
+    // validator.validateVitalsForm,
+    VitalController.updateVital
+);
+
+router.post(
+    "/:id/response",
+    Authenticate,
     VitalController.addVitalResponse
 );
 

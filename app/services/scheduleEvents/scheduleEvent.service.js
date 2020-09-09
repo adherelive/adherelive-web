@@ -2,6 +2,7 @@ import ScheduleEvent from "../../models/scheduleEvents";
 import {Op} from "sequelize";
 import {EVENT_STATUS} from "../../../constant";
 import {database} from "../../../libs/mysql";
+import moment from "moment";
 
 class ScheduleEventService {
     create = async (data) => {
@@ -104,9 +105,41 @@ class ScheduleEventService {
         try {
             const scheduleEvent = await ScheduleEvent.findAll({
                 where: {
-                    start_time: time,
+                    start_time: {
+                        [Op.between]: [time, moment(time).add(1,'minutes')]
+                    },
                     status: EVENT_STATUS.PENDING
                 }
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    getPassedEventData = async (time) => {
+        try {
+            const scheduleEvent = await ScheduleEvent.findAll({
+                where: {
+                    start_time: {
+                        [Op.between]: [moment(time).startOf('day'), time]
+                    },
+                    status: [EVENT_STATUS.SCHEDULED, EVENT_STATUS.PENDING]
+                }
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    deleteBatch = async (event_id) => {
+        try {
+            const scheduleEvent = await ScheduleEvent.destroy({
+                where: {
+                    event_id
+                },
+                force: true
             });
             return scheduleEvent;
         } catch(error) {

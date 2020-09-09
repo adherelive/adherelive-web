@@ -16,11 +16,24 @@ router.get(
     VitalController.getVitalFormDetails
 );
 
+router.get(
+    "/:id/timeline",
+    Authenticate,
+    VitalController.getVitalResponseTimeline
+);
+
 router.post(
   "/",
   Authenticate,
   // validator.validateVitalsForm,
     VitalController.create
+);
+
+router.post(
+    "/:id",
+    Authenticate,
+    // validator.validateVitalsForm,
+    VitalController.updateVital
 );
 
 export default router;

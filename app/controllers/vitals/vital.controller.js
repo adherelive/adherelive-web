@@ -1,5 +1,6 @@
 import Controller from "../";
 import Logger from "../../../libs/log";
+import * as vitalHelper from "./vitalHelper";
 
 // SERVICES
 import VitalTemplateService from "../../services/vitalTemplates/vitalTemplate.service";
@@ -16,6 +17,9 @@ import PatientWrapper from "../../ApiWrapper/web/patient";
 
 import {DAYS, EVENT_TYPE, FEATURE_TYPE} from "../../../constant";
 import EventSchedule from "../../eventSchedules";
+import moment from "moment";
+import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
 const Log = new Logger("WEB > VITALS > CONTROLLER");
 
@@ -56,6 +60,7 @@ class VitalController extends Controller {
                 });
 
                 const vitals = await VitalWrapper({id: vitalData.get("id")});
+                const vitalTemplates = await VitalTemplateWrapper({id: vitals.getVitalTemplateId()});
                 const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
 
                 const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
@@ -72,7 +77,8 @@ class VitalController extends Controller {
                     actor: {
                         id: userId,
                         category
-                    }
+                    },
+                    vital_templates: vitalTemplates.getBasicInfo()
                 };
 
                 // RRule
@@ -91,6 +97,156 @@ class VitalController extends Controller {
                 );
             } else {
                 return raiseClientError(res, 422, {}, "Vital already added for the patient");
+            }
+        } catch(error) {
+            Log.debug("vitals create 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    updateVital = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        Log.debug("req.body --->", req.body);
+        Log.debug("req.params --->", req.params);
+        try {
+            const {
+                userDetails: {userId, userData: {category} = {}} = {},
+                body,
+                body: {start_date, end_date} = {},
+                params: {id} = {}
+            } = req;
+
+
+            const doesVitalExists = await VitalService.getByData({id});
+
+            if(!doesVitalExists) {
+                    return raiseClientError(res, 422, {}, "Vital does not exists for the mentioned id");
+            } else {
+                const previousVital = await VitalWrapper({data: doesVitalExists});
+                const dataToUpdate = vitalHelper.getVitalUpdateData({...body, previousVital});
+
+                const vitalData = await VitalService.update(dataToUpdate, id);
+
+                Log.debug("vitalData", vitalData);
+
+
+                const vitals = await VitalWrapper({id});
+                const vitalTemplates = await VitalTemplateWrapper({id: vitals.getVitalTemplateId()});
+                const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
+
+                const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
+                const patient = await PatientWrapper(null, carePlan.getPatientId());
+
+                const eventScheduleData = {
+                    event_id: vitals.getVitalId(),
+                    event_type: EVENT_TYPE.VITALS,
+                    critical: false,
+                    start_date,
+                    end_date,
+                    details: vitals.getBasicInfo(),
+                    participants: [doctor.getUserId(), patient.getUserId()],
+                    actor: {
+                        id: userId,
+                        category
+                    },
+                    vital_templates: vitalTemplates.getBasicInfo()
+                };
+
+                Log.debug("eventScheduleData", eventScheduleData);
+
+                // Delete previously scheduled events
+                const deletedEvents = await EventService.deleteBatch(vitals.getVitalId());
+
+                Log.debug("deletedEvents", deletedEvents);
+
+                // RRule
+                EventSchedule.create(eventScheduleData);
+
+                // todo notification
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        vitals: {
+                            [vitals.getVitalId()]: vitals.getBasicInfo()
+                        },
+                        ... await vitals.getReferenceInfo(),
+                        vital_id: vitals.getVitalId()
+                    },
+                    "Vital added successfully"
+                );
+            }
+        } catch(error) {
+            Log.debug("vitals create 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    updateVital = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        Log.debug("req.body --->", req.body);
+        Log.debug("req.params --->", req.params);
+        try {
+            const {
+                userDetails: {userId, userData: {category} = {}} = {},
+                body,
+                body: {start_date, end_date} = {},
+                params: {id} = {}
+            } = req;
+
+            const doesVitalExists = await VitalService.getByData({id});
+
+            if(!doesVitalExists) {
+                return raiseClientError(res, 422, {}, "Vital does not exists");
+            } else {
+
+                const previousVital = await VitalWrapper({data: doesVitalExists});
+                const dataToUpdate = vitalHelper.getVitalUpdateData({...body, previousVital});
+                const vitalData = await VitalService.update(dataToUpdate, id);
+
+                Log.debug("vitalData", vitalData);
+
+
+                const vitals = await VitalWrapper({id});
+                const vitalTemplates = await VitalTemplateWrapper({id: vitals.getVitalTemplateId()});
+                const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
+
+                const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
+                const patient = await PatientWrapper(null, carePlan.getPatientId());
+
+                const eventScheduleData = {
+                    event_id: vitals.getVitalId(),
+                    event_type: EVENT_TYPE.VITALS,
+                    critical: false,
+                    start_date,
+                    end_date,
+                    details: vitals.getBasicInfo(),
+                    participants: [doctor.getUserId(), patient.getUserId()],
+                    actor: {
+                        id: userId,
+                        category
+                    },
+                    vital_templates: vitalTemplates.getBasicInfo()
+                };
+
+                Log.debug("eventScheduleData", eventScheduleData);
+
+                // RRule
+                // EventSchedule.create(eventScheduleData);
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        vitals: {
+                            [vitals.getVitalId()]: vitals.getBasicInfo()
+                        },
+                        ... await vitals.getReferenceInfo(),
+                        vital_id: vitals.getVitalId()
+                    },
+                    "Vital updated successfully"
+                );
             }
         } catch(error) {
             Log.debug("vitals create 500 error", error);
@@ -156,6 +312,63 @@ class VitalController extends Controller {
           Log.debug("vitals search 500 error", error);
           return raiseServerError(res);
       }
+    };
+
+    getVitalResponseTimeline = async (req, res) => {
+        const { raiseSuccess, raiseClientError, raiseServerError } = this;
+        try {
+            Log.debug("req.params vital id---->", req.params);
+            const { params: { id } = {} } = req;
+
+            const today = moment()
+                .utc()
+                .toDate();
+
+            const completeEvents = await EventService.getAllPassedByData({
+                event_id: id,
+                date: today,
+                sort: "DESC"
+            });
+
+            let dateWiseVitalData = {};
+
+            const timelineDates = [];
+
+            if (completeEvents.length > 0) {
+                for (const scheduleEvent of completeEvents) {
+                    const event = await EventWrapper(scheduleEvent);
+                    if (dateWiseVitalData.hasOwnProperty(event.getDate())) {
+                        dateWiseVitalData[event.getDate()].push(event.getAllInfo());
+                    } else {
+                        dateWiseVitalData[event.getDate()] = [];
+                        dateWiseVitalData[event.getDate()].push(event.getAllInfo());
+                        timelineDates.push(event.getDate());
+                    }
+                }
+
+                return raiseSuccess(
+                    res,
+                    200,
+                    {
+                        symptom_timeline: {
+                            ...dateWiseVitalData
+                        },
+                        symptom_date_ids: timelineDates
+                    },
+                    "Vital responses fetched successfully"
+                );
+            } else {
+                return raiseSuccess(
+                    res,
+                    200,
+                    {},
+                    "No response updated yet for the vital"
+                );
+            }
+        } catch (error) {
+            Log.debug("getVitalResponse 500 error", error);
+            return raiseServerError(res);
+        }
     };
 }
 
