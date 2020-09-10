@@ -277,6 +277,8 @@ class VitalController extends Controller {
       Log.debug("req.params --->", req.params);
       const { params: { id } = {}, body: { response = {}, response : {event_id} = {} } = {} } = req;
 
+      Log.info(`event_id ${event_id}`);
+
       const createdTime = moment()
         .utc()
         .toISOString();
@@ -284,9 +286,13 @@ class VitalController extends Controller {
       const event = await EventWrapper(null, event_id);
 
       const vital = await VitalWrapper({ id });
+
+      Log.info(`vital ${vital.getVitalId()} ${vital.getVitalTemplateId()}`);
       const vitalTemplate = await VitalTemplateWrapper({
         id: vital.getVitalTemplateId()
       });
+
+      Log.info(`event.getStatus() ${event.getStatus()}`);
 
       if (event.getStatus() === EVENT_STATUS.SCHEDULED) {
         const updateEvent = await EventService.update(
@@ -306,7 +312,9 @@ class VitalController extends Controller {
         return raiseClientError(
           res,
           422,
-          {},
+          {
+
+          },
           "Cannot update response for the vital which has passed or has been missed"
         );
       }
@@ -333,7 +341,9 @@ class VitalController extends Controller {
       return raiseSuccess(
         res,
         200,
-        {},
+        {
+          ...await vital.getAllInfo()
+        },
         `${vitalTemplate.getName().toUpperCase()} vital updated successfully`
       );
     } catch (error) {

@@ -6,6 +6,7 @@ import * as vitalHelper from "./vitalHelper";
 import VitalTemplateService from "../../services/vitalTemplates/vitalTemplate.service";
 import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
+import CarePlanService from "../../services/carePlan/carePlan.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
@@ -15,7 +16,7 @@ import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 
-import {DAYS, EVENT_TYPE, FEATURE_TYPE} from "../../../constant";
+import {DAYS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import EventSchedule from "../../eventSchedules";
 import moment from "moment";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";

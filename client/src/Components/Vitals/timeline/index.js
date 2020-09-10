@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import messages from "../messages";
+import messages from "./messages";
 
-class VitalTimelineDrawer extends Component {
+class VitalTimeline extends Component {
     constructor(props) {
         super(props);
     }
@@ -20,4 +20,4 @@ class VitalTimelineDrawer extends Component {
     }
 }
 
-export default injectIntl(VitalTimelineDrawer);
+export default injectIntl(VitalTimeline);

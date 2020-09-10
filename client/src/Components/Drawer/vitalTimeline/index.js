@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {injectIntl} from "react-intl";
 import Drawer from "antd/es/drawer";
 
-import VitalTimeline from "./timeline";
+import VitalTimeline from "../../../Containers/Vitals/timeline";
 import messages from "./messages";
 
 class VitalTimelineDrawer extends Component {

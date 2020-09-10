@@ -67,7 +67,7 @@ class StartCron {
             const job = JobSdk.execute({
                 eventType: EVENT_TYPE.VITALS,
                 eventStage: NOTIFICATION_STAGES.START,
-                event: event.getDetails()
+                event
             });
             NotificationSdk.execute(job);
         } catch(error) {

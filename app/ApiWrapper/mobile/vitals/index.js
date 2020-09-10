@@ -54,7 +54,7 @@ class VitalWrapper extends BaseVital {
         const scheduleEventIds = [];
         for(const events of scheduleEvents) {
             const scheduleEvent = await EventWrapper(events);
-            if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING) {
+            if(scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
                 if(!latestPendingEventId) {
                     latestPendingEventId = scheduleEvent.getScheduleEventId();
                 }

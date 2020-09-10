@@ -5,6 +5,7 @@ import { EVENT_TYPE } from "../../../../constant";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
 import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
+import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 
 class CreateJob extends VitalJob {
     constructor(data) {
@@ -12,20 +13,24 @@ class CreateJob extends VitalJob {
     }
 
     getPushAppTemplate = async () => {
-        const { getData } = this;
+        const {_data} = this;
         const {
             participants = [],
             actor: {
                 id: actorId,
                 details: { name, category: actorCategory } = {}
             } = {},
+            vital_templates,
             vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
             eventId = null
-        } = getData() || {};
+        } = _data.getDetails() || {};
 
         const templateData = [];
         const playerIds = [];
         const userIds = [];
+
+        const vitals = await VitalWrapper({id: _data.getEventId()});
+        const {vitals: latestVital} = await vitals.getAllInfo();
 
         console.log("1289317932  participants, actorId", participants, actorId);
 
@@ -55,7 +60,7 @@ class CreateJob extends VitalJob {
             // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
             include_player_ids: [...playerIds],
             priority: 10,
-            data: { url: "/vitals", params: getData(), eventId }
+            data: { url: "/vitals", vital: latestVital[_data.getEventId()], vital_template: vital_templates, type: "modal"}
         });
 
         return templateData;

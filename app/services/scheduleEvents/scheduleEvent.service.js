@@ -72,7 +72,7 @@ class ScheduleEventService {
                         [Op.between]: [moment(date).startOf('day'),moment().utc().toISOString()]
                     },
                     status: {
-                        [Op.not]: EVENT_STATUS.PENDING
+                        [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED]
                     }
                 },
                 order: [
