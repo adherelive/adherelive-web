@@ -1,5 +1,3 @@
-import {getUserDetails} from "../../../Helper/userDetails";
-
 export const TABLE_COLUMN = {
   VITAL: {
     key: "VITAL",

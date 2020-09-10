@@ -37,6 +37,7 @@ import care_plan_template_ids from "./carePlanTemplateIds";
 import notifications from "./notifications";
 import vital_templates from "./vital_templates";
 import repeat_intervals from "./vital_occurence";
+import vitals from "./vitals";
 
 
 const rootReducer = combineReducers({
@@ -77,6 +78,7 @@ const rootReducer = combineReducers({
   notifications,
   symptoms,
   vital_templates,
+  vitals,
   repeat_intervals
 });
 

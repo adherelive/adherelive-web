@@ -63,6 +63,7 @@ export const getVitals = (carePlanId) => {
 
       const { status, payload: { data = {}, error = {} } = {} } =
       response || {};
+      console.log("3912312789 response -> ", response);
       if (status === true) {
         dispatch({ type: GET_VITALS_COMPLETE, payload: data });
       } else {
@@ -130,6 +131,7 @@ export const updateVital = (payload) => {
 
 function vitalsReducer(state, payload) {
   const { vitals = {} } = payload || {};
+  console.log("3917378123 vitals --> ", vitals);
   if (Object.keys(vitals).length > 0) {
     return {
       ...state,
@@ -141,7 +143,7 @@ function vitalsReducer(state, payload) {
 }
 
 function vitalTimelineReducer(state, data) {
-  const { vital_timeline = {}, vital_date_ids = [] } = payload || {};
+  const { vital_timeline = {}, vital_date_ids = [] } = data || {};
   if (vital_date_ids.length > 0) {
     return {
       ...state,
@@ -158,12 +160,12 @@ function vitalTimelineReducer(state, data) {
 }
 
 export default (state = {}, action) => {
-  const { type, data } = action || {};
+  const { type, payload } = action || {};
   switch (type) {
     case GET_VITALS_TIMELINE_COMPLETE:
-      return vitalTimelineReducer(state, data);
+      return vitalTimelineReducer(state, payload);
     default:
-      return vitalsReducer(state, data);
+      return vitalsReducer(state, payload);
   }
 };
 

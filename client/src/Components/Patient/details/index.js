@@ -1105,7 +1105,7 @@ class PatientDetails extends Component {
                     </TabPane>
                     <TabPane tab={PATIENT_TABS.ACTIONS["name"]} key={PATIENT_TABS.ACTIONS["key"]}>
                       <div>{formatMessage(messages.vitals)}</div>
-                      <VitalTable />
+                      <VitalTable patientId={patient_id}/>
                     </TabPane>
                   </Tabs>
                 </div>

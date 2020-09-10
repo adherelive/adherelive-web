@@ -6,6 +6,13 @@ class VitalTable extends Component {
         super(props);
     }
 
+    componentDidMount() {
+        const {vital_ids, getPatientVitals} = this.props;
+        if(vital_ids.length === 0) {
+            getPatientVitals();
+        }
+    }
+
     render() {
         return <div>vitals table</div>
     }
