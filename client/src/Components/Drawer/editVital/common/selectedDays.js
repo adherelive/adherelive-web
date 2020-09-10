@@ -51,9 +51,11 @@ class SelectedDays extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator,getFieldValue }
+      form: { getFieldDecorator }
     } = this.props;
+
     const  {selectedDays} = this.state;
+
     const { handleCheckDays, formatMessage } = this;
     return (
       <div className="select-days-form-content">
