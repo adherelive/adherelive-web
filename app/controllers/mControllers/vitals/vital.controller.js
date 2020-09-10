@@ -93,7 +93,7 @@ class VitalController extends Controller {
         };
 
         // RRule
-        // EventSchedule.create(eventScheduleData);
+        EventSchedule.create(eventScheduleData);
 
         const vitalJob = JobSdk.execute({
           eventType: EVENT_TYPE.VITALS,
@@ -270,20 +270,20 @@ class VitalController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params --->", req.params);
-      const { params: { id } = {}, body: { response = {} } = {} } = req;
+      const { params: { id } = {}, body: { response = {}, response : {event_id} = {} } = {} } = req;
 
       const createdTime = moment()
         .utc()
         .toISOString();
 
-      const event = await EventWrapper(null, id);
+      const event = await EventWrapper(null, event_id);
 
-      const vital = await VitalWrapper({ id: event.getEventId() });
+      const vital = await VitalWrapper({ id });
       const vitalTemplate = await VitalTemplateWrapper({
         id: vital.getVitalTemplateId()
       });
 
-      if (event.getStatus() === EVENT_STATUS.PENDING) {
+      if (event.getStatus() === EVENT_STATUS.SCHEDULED) {
         const updateEvent = await EventService.update(
           {
             details: {
@@ -345,7 +345,7 @@ class VitalController extends Controller {
 
       const today = moment()
         .utc()
-        .toDate();
+        .toISOString();
 
       const completeEvents = await EventService.getAllPassedByData({
         event_id: id,
