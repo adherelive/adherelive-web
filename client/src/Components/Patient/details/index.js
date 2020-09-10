@@ -3,8 +3,14 @@ import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import chat_image from "../../../Assets/images/chat.svg";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from "../../../constant";
+import { GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
+
+// DRAWERS
+
+// TABLES
+import VitalTable from "../../../Containers/Vitals/table";
+import AppointmentTable from "../../../Containers/Appointments/table";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -30,6 +36,13 @@ import config from "../../../config";
 const BLANK_TEMPLATE = 'Blank Template'
 const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
+
+const PATIENT_TABS = {
+  ACTIONS: {
+    name: "Actions",
+    key: "4"
+  }
+}
 
 function callback(key) {
 }
@@ -616,9 +629,9 @@ class PatientDetails extends Component {
         {authPermissions.includes(PERMISSIONS.ADD_ACTION) && (<Menu.Item>
           <div>{this.formatMessage(messages.actions)}</div>
         </Menu.Item>)}
-        {/*{authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleVitals}>*/}
-        {/*  <div>{this.formatMessage(messages.vitals)}</div>*/}
-        {/*</Menu.Item>)}*/}
+        {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleVitals}>
+         <div>{this.formatMessage(messages.vitals)}</div>
+        </Menu.Item>)}
       </Menu>
     );
   };
@@ -931,7 +944,7 @@ class PatientDetails extends Component {
     }
 
 
-    let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
+    let showTabs = true;//(cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
     const { basic_info: { doctor_id = 1 } = {}, activated_on: treatment_start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
     const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};
     const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
@@ -1064,25 +1077,25 @@ class PatientDetails extends Component {
                     dataSource={data_symptoms}
                   />
                 </TabPane> */}
-                    <TabPane tab="Medication" key="2">
+                    <TabPane tab="Medication" key="1">
                       <Table
                         columns={authPermissions.includes(PERMISSIONS.EDIT_MEDICATION) ? columns_medication : columns_medication_non_editable}
                         dataSource={getMedicationData(carePlan)}
                         onRow={authPermissions.includes(PERMISSIONS.EDIT_MEDICATION) ? onRowMedication : null}
                       />
                     </TabPane>
-                    <TabPane tab="Appointments" key="3">
+                    <TabPane tab="Appointments" key="2">
                       <Table
                         columns={authPermissions.includes(PERMISSIONS.EDIT_APPOINTMENT) ? columns_appointments : columns_appointments_non_editable}
                         dataSource={getAppointmentsData(carePlan, docName)}
                         onRow={authPermissions.includes(PERMISSIONS.EDIT_APPOINTMENT) ? onRowAppointment : null}
                       />
-                      <div className="wp100">
-                        {/* <AppointmentTable /> */}
-                      </div>
+                      {/*<div className="wp100">*/}
+                      {/*  /!* <AppointmentTable /> *!/*/}
+                      {/*</div>*/}
                     </TabPane>
 
-                    <TabPane tab="Symptoms" key="4">
+                    <TabPane tab="Symptoms" key="3">
                       {/* <Table
                         columns={columns_symptoms}
                         dataSource={this.getSymptomsData(symptoms)}
@@ -1090,9 +1103,10 @@ class PatientDetails extends Component {
                       /> */}
                       <SymptomTabs patientId={patient_id} />
                     </TabPane>
-                    {/* <TabPane tab="Actions" key="4">
-                  Content of Actions Tab
-                </TabPane> */}
+                    <TabPane tab={PATIENT_TABS.ACTIONS["name"]} key={PATIENT_TABS.ACTIONS["key"]}>
+                      <div>{formatMessage(messages.vitals)}</div>
+                      <VitalTable patientId={patient_id}/>
+                    </TabPane>
                   </Tabs>
                 </div>
               </div>
@@ -1114,14 +1128,8 @@ class PatientDetails extends Component {
           submit={this.handleSubmitTemplate}
           dispatchClose={close}
           closeTemplateDrawer={onCloseTemplate}
-          // medications={templateMedications}
-          // appointments={templateAppointments}
-          // templateAppointmentIDs={templateAppointmentIDs}
-          // templateMedicationIDs={templateMedicationIDs}
-          // medicines={medicines}
           patientId={patient_id}
           carePlanTemplateIds={carePlanTemplateIds}
-          // patients={patients} 
           carePlan={carePlan} {...this.props} />)}
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
         <EditMedicationReminder carePlanId={carePlanId} />

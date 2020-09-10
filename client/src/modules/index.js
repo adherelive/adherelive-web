@@ -35,6 +35,10 @@ import symptoms from "./symptoms";
 import chatMessages from "./chatMessages";
 import care_plan_template_ids from "./carePlanTemplateIds";
 import notifications from "./notifications";
+import vital_templates from "./vital_templates";
+import repeat_intervals from "./vital_occurence";
+import vitals from "./vitals";
+
 
 const rootReducer = combineReducers({
   auth,
@@ -72,7 +76,10 @@ const rootReducer = combineReducers({
   chatMessages,
   care_plan_template_ids,
   notifications,
-  symptoms
+  symptoms,
+  vital_templates,
+  vitals,
+  repeat_intervals
 });
 
 export default (state, action) => {

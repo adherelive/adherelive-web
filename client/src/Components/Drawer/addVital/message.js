@@ -126,6 +126,16 @@ export default defineMessages({
     description: "",
     defaultMessage: "Repeat Interval is required"
   },
+  vitals: {
+    id: "app.patient_profile.vitals",
+    description: "Header in Vitals",
+    defaultMessage: "Vitals"
+  },
+  occurence: {
+    id: "app.patient_profile.occurence",
+    description: "Header in Occurence",
+    defaultMessage: "Occurence"
+  },
   activity: {
     id: "add.event.activity",
     description: "",
@@ -365,6 +375,16 @@ export default defineMessages({
     id: "medication_reminder.drawer.tds",
     description: "",
     defaultMessage: "TDS",
+  },
+  everyday: {
+    id: "medication_reminder.drawer.everyday",
+    description: "",
+    defaultMessage: "Everyday",
+  },
+  alternate: {
+    id: "medication_reminder.drawer.alternate",
+    description: "",
+    defaultMessage: "Alternate",
   },
   oneWeek: {
     id: "medication_reminder.drawer.oneWeek",

@@ -21,7 +21,7 @@ class PassedCron {
     }
 
     getScheduleData = async () => {
-        const currentTime = moment().utc().toDate();
+        const currentTime = moment().utc().toISOString();
         Log.info(`currentTime : ${currentTime}`);
         const scheduleEvents = await ScheduleEventService.getPassedEventData(currentTime);
         return scheduleEvents;

@@ -7,6 +7,7 @@ import chat_ids from "./chats";
 import doctor_ids from "./doctors";
 import provider_ids from "./providers";
 import user_ids from "./users";
+import vital_ids from "./vitals";
 
 const rootReducer = combineReducers({
   patient_ids,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   doctor_ids,
   provider_ids,
   chat_ids,
-  user_ids
+  user_ids,
+  vital_ids
 });
 
 export default (state, action) => {
