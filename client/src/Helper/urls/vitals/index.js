@@ -7,3 +7,11 @@ export const getVitalOccurenceUrl = () => {
 export const getAddVitalURL = () => {
     return `/vitals`;
 };
+
+export const getVitalTimelineURL = (id) => {
+    return `/vitals/${id}/timeline`;
+};
+
+export const getUpdateVitalURL = (id) => {
+    return `/vitals/${id}`;
+};

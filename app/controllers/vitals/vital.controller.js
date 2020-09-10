@@ -350,10 +350,10 @@ class VitalController extends Controller {
                     res,
                     200,
                     {
-                        symptom_timeline: {
+                        vital_timeline: {
                             ...dateWiseVitalData
                         },
-                        symptom_date_ids: timelineDates
+                        vital_date_ids: timelineDates
                     },
                     "Vital responses fetched successfully"
                 );
