@@ -44,6 +44,7 @@ import { getPatientConsultingUrl } from "../../../Helper/url/patients";
 import SymptomTabs from "../../../Containers/Symptoms";
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
+import EditVitals from "../../../Containers/Drawer/editVitals";
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
@@ -1278,6 +1279,7 @@ class PatientDetails extends Component {
         </div>
         <AddMedicationReminder carePlanId={carePlanId} />
         <AddVitals carePlanId={carePlanId} />
+        <EditVitals/>
         {popUpVisible && (
           <div
             className={
