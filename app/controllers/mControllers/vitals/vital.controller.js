@@ -51,7 +51,7 @@ class VitalController extends Controller {
           repeat_days,
           description
         } = {},
-        userDetails: { userId, userData: { category } = {} } = {}
+        userDetails: { userId, userData: { category } = {}, userCategoryData = {} } = {},
       } = req;
 
       const doesVitalExists = await VitalService.getByData({
@@ -73,6 +73,8 @@ class VitalController extends Controller {
         });
 
         const vitals = await VitalWrapper({ id: vitalData.get("id") });
+        const {vital_templates, ...rest} = await vitals.getReferenceInfo();
+
         const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
 
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
@@ -88,8 +90,10 @@ class VitalController extends Controller {
           participants: [doctor.getUserId(), patient.getUserId()],
           actor: {
             id: userId,
-            category
-          }
+            category,
+            userCategoryData
+          },
+          vital_templates: vital_templates[vitals.getVitalTemplateId()]
         };
 
         // RRule
@@ -110,7 +114,8 @@ class VitalController extends Controller {
             vitals: {
               [vitals.getVitalId()]: vitals.getBasicInfo()
             },
-            ...(await vitals.getReferenceInfo())
+            ...rest,
+            vital_templates,
           },
           "Vital added successfully"
         );
@@ -347,9 +352,11 @@ class VitalController extends Controller {
         .utc()
         .toISOString();
 
+      const vital = await VitalWrapper({id});
+
       const completeEvents = await EventService.getAllPassedByData({
         event_id: id,
-        date: today,
+        date: vital.getStartDate(),
         sort: "DESC"
       });
 
@@ -373,10 +380,10 @@ class VitalController extends Controller {
           res,
           200,
           {
-            symptom_timeline: {
+            vital_timeline: {
               ...dateWiseVitalData
             },
-            symptom_date_ids: timelineDates
+            vital_date_ids: timelineDates
           },
           "Vital responses fetched successfully"
         );

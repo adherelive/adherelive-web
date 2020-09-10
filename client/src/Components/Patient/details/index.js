@@ -19,10 +19,10 @@ import {
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
 // DRAWERS
+import VitalTimelineDrawer from "../../../Containers/Drawer/vitalTimeline";
 
 // TABLES
 import VitalTable from "../../../Containers/Vitals/table";
-import AppointmentTable from "../../../Containers/Appointments/table";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -1320,6 +1320,7 @@ class PatientDetails extends Component {
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
         <EditMedicationReminder carePlanId={carePlanId} />
         <SymptomsDrawer />
+        <VitalTimelineDrawer />
       </div>
     );
   }

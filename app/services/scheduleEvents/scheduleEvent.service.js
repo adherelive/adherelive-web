@@ -69,14 +69,14 @@ class ScheduleEventService {
                 where: {
                     event_id,
                     start_time: {
-                        [Op.between]: [moment(date).startOf('day'),date]
+                        [Op.between]: [moment(date).startOf('day'),moment().utc().toISOString()]
                     },
                     status: {
                         [Op.not]: EVENT_STATUS.PENDING
                     }
                 },
                 order: [
-                    ['date',sort]
+                    ['start_time',sort]
                 ]
             });
             return scheduleEvent;

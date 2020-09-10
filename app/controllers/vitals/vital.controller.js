@@ -323,11 +323,13 @@ class VitalController extends Controller {
 
             const today = moment()
                 .utc()
-                .toDate();
+                .toISOString();
+
+            const vital = await VitalWrapper({id});
 
             const completeEvents = await EventService.getAllPassedByData({
                 event_id: id,
-                date: today,
+                date: vital.getStartDate(),
                 sort: "DESC"
             });
 

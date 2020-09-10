@@ -1,3 +1,5 @@
+import UserWrapper from "../../app/ApiWrapper/mobile/user";
+
 const express = require("express");
 const router = express.Router();
 import mUserRouter from "./user";
@@ -35,23 +37,21 @@ router.use(async (req, res, next) => {
       accessToken = bearer[1];
     }
 
-    console.log("ACCESS TOKEN -----------------> ", accessToken, req.headers);
-
     if (accessToken) {
-      console.log("2 ACCESS TOKEN -----------------> ", accessToken);
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      console.log(
-        "3 decodedAccessToken -----------------> ",
-        decodedAccessToken
-      );
-      let user = await userService.getUser(decodedAccessToken.userId);
-      console.log("USER M-API ROUTE START ------> ");
+      const {userId = null} = decodedAccessToken || {};
+
+      const userData = await userService.getUser(userId);
+      const user = await UserWrapper(userData);
+      const {userCategoryData, userCategoryId} = user.getCategoryInfo();
       if (user) {
         req.userDetails = {
           exists: true,
           userId: decodedAccessToken.userId,
-          userData: user
+          userData: userData.getBasicInfo,
+          userCategoryData,
+          userCategoryId
         };
       } else {
         req.userDetails = {

@@ -35,20 +35,11 @@ import vitalRouter from "./vitals";
 
 router.use(async function(req, res, next) {
   try {
-    const { query: { m } = {} } = req;
     let accessToken;
-    if (m) {
-      const { authorization = "" } = req.headers || {};
-      const bearer = authorization.split(" ");
-      if (bearer.length === 2) {
-        accessToken = bearer[1];
-      }
-    } else {
       const { cookies = {} } = req;
       if (cookies.accessToken) {
         accessToken = cookies.accessToken;
       }
-    }
 
     //  ----- FOR API TEST POSTMAN ------
 
