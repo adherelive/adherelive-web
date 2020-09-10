@@ -32,6 +32,7 @@ import { getPatientConsultingUrl } from '../../../Helper/url/patients';
 import SymptomTabs from '../../../Containers/Symptoms'
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
+import EditVitals from "../../../Containers/Drawer/editVitals";
 
 const BLANK_TEMPLATE = 'Blank Template'
 const { TabPane } = Tabs;
@@ -613,7 +614,7 @@ class PatientDetails extends Component {
   formatMessage = (data) => this.props.intl.formatMessage(data);
 
   getMenu = () => {
-    const { handleAppointment, handleMedicationReminder, handleSymptoms, handleVitals } = this;
+    const { handleAppointment, handleMedicationReminder, handleSymptoms, handleVitals, handleEditVitals } = this;
     const { authPermissions = [] } = this.props;
     return (
       <Menu>
@@ -630,6 +631,9 @@ class PatientDetails extends Component {
           <div>{this.formatMessage(messages.actions)}</div>
         </Menu.Item>)}
         {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleVitals}>
+         <div>{this.formatMessage(messages.vitals)}</div>
+        </Menu.Item>)}
+        {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (<Menu.Item onClick={handleEditVitals}>
          <div>{this.formatMessage(messages.vitals)}</div>
         </Menu.Item>)}
       </Menu>
@@ -662,6 +666,16 @@ class PatientDetails extends Component {
       patient_id,
     });
   };
+
+  handleEditVitals = (e) => {
+    const { openEditVitalsDrawer, patient_id } = this.props;
+    console.log("patient_id",patient_id);
+    openEditVitalsDrawer({
+      vital_id:5
+    });
+  };
+
+
 
   handleSymptoms = (e) => {
     const { openSymptomsDrawer, patient_id } = this.props;
@@ -1115,6 +1129,7 @@ class PatientDetails extends Component {
         </div>
         <AddMedicationReminder carePlanId={carePlanId} />
         <AddVitals carePlanId={carePlanId} />
+        <EditVitals carePlanId={carePlanId} />
         {popUpVisible && (<div className={(drawerVisible || templateDrawerVisible) && minimized ? 'chat-popup-minimized' : (drawerVisible || templateDrawerVisible) && !minimized ? 'chat-popup' : minimized ? 'chat-popup-minimized-closedDrawer' : 'chat-popup-closedDrawer'}>
           <ChatPopup
             roomId={roomId}
