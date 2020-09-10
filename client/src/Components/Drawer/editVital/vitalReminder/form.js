@@ -344,44 +344,6 @@ class EditVitalForm extends Component {
     });
   };
 
-  // onPatientChange = () => {
-  //   const {
-  //     form: { setFieldsValue },
-  //     fetchProgramProducts,
-  //     fetchMedicationStages
-  //   } = this.props;
-
-  //   const otherUser = this.getOtherUser();
-
-  //   if (otherUser) {
-  //     const {
-  //       basicInfo: { _id },
-  //       programId = []
-  //     } = otherUser;
-  //     fetchProgramProducts(programId[0]);
-  //     fetchMedicationStages(_id).then(response => {
-  //       const { status, payload } = response;
-  //       if (status) {
-  //         const {
-  //           data: { medicationStages = [], program_has_medication_stage } = {}
-  //         } = payload;
-  //         if (medicationStages.length > 0) {
-  //           this.setState({
-  //             medicationStages: medicationStages,
-  //             program_has_medication_stage
-  //           });
-  //         } else {
-  //           this.setState({
-  //             medicationStages: [],
-  //             program_has_medication_stage
-  //           });
-  //         }
-  //       }
-  //     });
-  //     setFieldsValue({ [chooseMedicationField.field_name]: null });
-  //   }
-  // };
-
 
   setEndDateOneWeek = e => {
     e.preventDefault();
@@ -429,21 +391,25 @@ class EditVitalForm extends Component {
   setRepeatEveryDay = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
+      enableSubmit
     } = this.props;
     setFieldsValue({
       [repeatDaysField.field_name]: DAYS
     });
+    enableSubmit();
   };
 
   setRepeatAlternateDay = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue }
+      form: { setFieldsValue },
+      enableSubmit
     } = this.props;
     setFieldsValue({
       [repeatDaysField.field_name]: ALTERNATE_DAYS
     });
+    enableSubmit();
   };
 
   getFooter = () => {

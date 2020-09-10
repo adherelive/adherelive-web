@@ -11,7 +11,7 @@ const FIELD_NAME = "repeat_days";
 class SelectedDays extends Component {
   constructor(props) {
     super(props);
-    const { vitals, payload : { vital_id } = {} } = props;
+    const { vitals, payload : { id: vital_id } = {} } = props;
     let { details: { repeat_days = [] } = {} } = vitals[vital_id] || {};
     this.state = {
       selectedDays: repeat_days
@@ -40,6 +40,7 @@ class SelectedDays extends Component {
     const nextSelectedTags = checked
       ? [...selectedDays, tag]
       : selectedDays.filter(t => t !== tag);
+
     this.setState({ selectedDays: nextSelectedTags });
     const {
       form: { setFieldsValue, validateFields }
@@ -52,7 +53,7 @@ class SelectedDays extends Component {
     const {
       form: { getFieldDecorator,getFieldValue }
     } = this.props;
-    const { selectedDays }  = this.state;
+    const  {selectedDays} = this.state;
     const { handleCheckDays, formatMessage } = this;
     return (
       <div className="select-days-form-content">

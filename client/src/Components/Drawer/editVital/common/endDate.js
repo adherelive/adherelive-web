@@ -98,18 +98,23 @@ class EndDate extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, getFieldError },
-      disabledEndDate
+      form: { getFieldDecorator, getFieldValue, getFieldError },
+      disabledEndDate,
+      purpose,
+      vitals,
+      payload: { id: vital_id } = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
+    let { end_date = '' } = vitals[vital_id] || {};
+    const value = getFieldValue(FIELD_NAME);
 
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pl8 wp100 ">
           <span className="form-label ">To</span>
-          <FormItem className="wp100 mt-4">
+          <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
-              initialValue: getInitialValue()
+              initialValue: end_date ? moment(end_date) : getInitialValue()
             })(
               <DatePicker
                 className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}

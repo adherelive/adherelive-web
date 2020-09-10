@@ -2,9 +2,10 @@ import React from "react";
 
 import { TABLE_COLUMN } from "../helper";
 import messages from "../messages";
-import Organizer from "../dataColumn/organizer";
-import AppointmentDate from "../dataColumn/appointmentDate";
-import Timing from "../dataColumn/timing";
+import Vital from "../dataColumn/vital";
+import Taken from "../dataColumn/taken";
+import TimelineButton from "../dataColumn/timelineButton";
+import EditButton from "../dataColumn/editButton";
 import Description from "../dataColumn/description";
 
 export default props => {
@@ -12,37 +13,37 @@ export default props => {
 
   return [
     {
-      title: formatMessage(messages.organizer),
+      title: formatMessage(messages.vital_name),
       ...TABLE_COLUMN.VITAL,
       render: data => {
         const { vitalTemplateData } = data || {};
         return (
-          <Name vitalTemplateData={vitalTemplateData} />
+          <Vital vitalTemplateData={vitalTemplateData} />
         );
       }
     },
     {
-      title: formatMessage(messages.appointment_date),
+      title: formatMessage(messages.taken_vs_total),
       ...TABLE_COLUMN.TAKEN,
 
-      render: vitalData => <Taken vitalData={vitalData} />
+      render: ({vitalData}) => <Taken vitalData={vitalData} />
     },
     {
-      title: formatMessage(messages.timing_text),
+      title: formatMessage(messages.description),
       ...TABLE_COLUMN.DESCRIPTION,
-      render: vitalData => <Description vitalData={vitalData} />
+      render: ({vitalData}) => <Description vitalData={vitalData} />
     },
     {
       title: "",
       ...TABLE_COLUMN.TIMELINE,
 
-      render: ({openResponseDrawer}) => <TimelineButton openResponseDrawer={openResponseDrawer} />
+      render: ({openResponseDrawer, formatMessage, id}) => <TimelineButton formatMessage={formatMessage} action={openResponseDrawer} id={id}/>
     },
     {
       title: "",
       ...TABLE_COLUMN.EDIT,
 
-      render: ({id}) => <EditButton id={id} />
+      render: ({openEditDrawer, formatMessage, id}) => <EditButton formatMessage={formatMessage} id={id} action={openEditDrawer}/>
     }
   ];
 };

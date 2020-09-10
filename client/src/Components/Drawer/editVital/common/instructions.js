@@ -30,7 +30,7 @@ class Formulation extends Component {
     render() {
         const { form,
             vitals = {},
-            payload: { vital_id } = {},
+            payload: { id:vital_id } = {},
             } = this.props;
         const {
             getFieldDecorator,

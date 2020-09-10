@@ -46,9 +46,11 @@ class VitalOccurence extends Component {
   render() {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
-      repeat_intervals
+      repeat_intervals,
+      payload: { id:vital_id}={},
+      vitals
     } = this.props;
-
+    const { details : { repeat_interval_id } = {} } = vitals[vital_id] || {};
     const { fetchingVitals } = this.state;
 
     const { getStagesOption, getParentNode, handleVitalSearch } = this;
@@ -72,12 +74,7 @@ class VitalOccurence extends Component {
     return (
       <FormItem>
         {getFieldDecorator(FIELD_NAME, {
-          // rules: [
-          //   {
-          //     required: true,
-          //     message: "Select a vital"
-          //   }
-          // ]
+          initialValue:repeat_interval_id
         })(
           <Select
             notFoundContent={!fetchingVitals ? <Spin size="small" /> : 'No match found'}
@@ -93,7 +90,6 @@ class VitalOccurence extends Component {
                 .indexOf(input.toLowerCase()) >= 0
             }
             getPopupContainer={getParentNode}
-
           >
             {options}
           </Select>

@@ -26,8 +26,8 @@ const app = express();
 
 const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     // await Prior.getPriorEvents();
-    await Start.runObserver();
     await Passed.runObserver();
+    await Start.runObserver();
 });
 
 app.use(express.json({ limit: "50mb" }));

@@ -17,6 +17,8 @@ import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import repeatDaysField from "../common/selectedDays";
 import moment from "moment";
+import instructions from "../common/instructions";
+import vitalOccurence from "../common/vitalOccurence";
 
 class EditVital extends Component {
   constructor(props) {
@@ -33,9 +35,9 @@ class EditVital extends Component {
   }
 
   componentDidMount() {
-    const { getVitals, carePlanId, payload } = this.props;
-    console.log("payload",payload);
-    getVitals(carePlanId);
+    // const { getVitals, carePlanId, payload } = this.props;
+    // console.log("payload",payload);
+    // getVitals(carePlanId);
   }
 
   enableSubmit = () => {
@@ -73,15 +75,14 @@ class EditVital extends Component {
   handleSubmit = async () => {
     const {
       // form: { validateFields },
-      updateMedicationReminder,
+      updateVital,
       getMedications,
       addMedication,
       patientId,
       editMedication,
-      payload: { id: medication_id, patient_id } = {},
+      close,
+      payload: { id: vital_id } = {},
     } = this.props;
-    let pId = patientId ? patientId : patient_id;
-
     const { formRef = {}, formatMessage } = this;
     const {
       props: {
@@ -93,29 +94,15 @@ class EditVital extends Component {
       if (!err) {
         const { when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
-        const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const { medicine_id, quantity, strength, unit, critical, formulation: medicine_type, special_instruction: description } = values || {};
+        const description = values[instructions.field_name];
+        const repeat_interval_id = values[vitalOccurence.field_name];
         data_to_submit = {
-          id: medication_id,
-          medicine_id,
-          quantity,
-          strength,
-          unit,
-          critical,
-          when_to_take: keys.map((id) => when_to_take[id]) || [],
-          // when_to_take: when_to_take.map(id => `${id}`),
-          participant_id: patient_id,
-          medicine_type,
+          id: vital_id,
+          repeat_interval_id,
           description,
-          repeat: "weekly",
-
-          [startTimeField.field_name]:
-            startTime && startTime !== null
-              ? startTime.startOf("minute").toISOString()
-              : startTime,
           [startDateField.field_name]:
             startDate && startDate !== null
               ? startDate
@@ -134,36 +121,29 @@ class EditVital extends Component {
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
-            [repeatDaysField.field_name]: repeatDays.split(","),
+            [repeatDaysField.field_name]: repeatDays,
           };
         }
-        if (!medicine_id || !unit || (unit === MEDICINE_UNITS.MG && !quantity) || !strength || !when_to_take || !startDate) {
+        if (!startDate || !repeat_interval_id || !repeatDays) {
 
           message.error('Please fill all details.')
         }
         else if (endDate && moment(endDate).isBefore(moment(startDate))) {
-          message.error('Please select valid dates for medication')
-        } else if (editMedication) {
-          editMedication(data_to_submit);
-        } else if (addMedication) {
-
-          addMedication(data_to_submit);
-        } else {
-          try {
-            const response = await updateMedicationReminder(data_to_submit);
-            const { status, payload: { message: msg } = {} } = response;
-            if (status === true) {
-
-              // this.setState({ disabledOk: true });
-              message.success(msg);
-              getMedications(pId);
-            } else {
-              message.error(msg);
-            }
-          } catch (error) {
-            console.log("add medication reminder ui error -----> ", error);
-          }
+          message.error('Please select valid dates for vitals')
         }
+        try {
+          const response = await updateVital(data_to_submit);
+          const { status, payload: { message: msg } = {} } = response;
+          if (status === true) {
+            message.success(msg);
+            close();
+          } else {
+            message.error(msg);
+          }
+        } catch (error) {
+          console.log("add medication reminder ui error -----> ", error);
+        }
+        
       } else {
         message.error(formatMessage(messages.fill_all_details));
       }

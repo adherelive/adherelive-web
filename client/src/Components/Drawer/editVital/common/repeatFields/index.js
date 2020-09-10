@@ -32,6 +32,7 @@ export default props => {
     }
     if(selectedDaysArray.length == 7){
       selectedDaysRadio = 1;
+      
     }else if(selectedDaysArray.length == 4){
       ALTERNATE_DAYS.map(value=>{
         if(!selectedDaysArray.includes(value)){

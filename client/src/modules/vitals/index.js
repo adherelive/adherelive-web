@@ -52,7 +52,6 @@ export const addVital = (payload) => {
 };
 
 export const getVitals = (carePlanId) => {
-  console.log("get values",carePlanId);
   return async (dispatch) => {
     try {
       dispatch({ type: GET_VITALS_START });

@@ -4,7 +4,7 @@ import { DRAWER } from "../../constant";
 import { close } from "../../modules/drawer";
 import { searchVital } from "../../modules/vital_templates";
 import { getVitalOccurence } from "../../modules/vital_occurence";
-import { getVitals, addVital } from "../../modules/vitals";
+import { updateVital, getVitals } from "../../modules/vitals";
 
 
 
@@ -30,7 +30,7 @@ const mapDispatchToProps = dispatch => {
   return {
     close: () => dispatch(close()),
     getVitals: id => dispatch(getVitals(id)),
-    addVital: data => dispatch(addVital(data)),
+    updateVital: data => dispatch(updateVital(data)),
     searchVital: data => dispatch(searchVital(data)),
     getVitalOccurence: () => dispatch(getVitalOccurence())
   };

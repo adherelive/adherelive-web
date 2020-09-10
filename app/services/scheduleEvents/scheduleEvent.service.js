@@ -122,7 +122,7 @@ class ScheduleEventService {
             const scheduleEvent = await ScheduleEvent.findAll({
                 where: {
                     start_time: {
-                        [Op.between]: [moment(time).startOf('day'), time]
+                        [Op.between]: [moment(time).subtract(1, 'day').startOf('day'), time]
                     },
                     status: [EVENT_STATUS.SCHEDULED, EVENT_STATUS.PENDING]
                 }
@@ -140,6 +140,24 @@ class ScheduleEventService {
                     event_id
                 },
                 force: true
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    getAllPastData = async (data) => {
+        try {
+            const {event_id, startDate, date, sort = 'ASC'} = data;
+            console.log("2897172391289 diff ", moment(startDate).startOf('day').diff(date));
+            const scheduleEvent = await ScheduleEvent.findAll({
+                where: {
+                    event_id,
+                    start_time: {
+                        [Op.between]: [moment(startDate).startOf('day'), date]
+                    },
+                }
             });
             return scheduleEvent;
         } catch(error) {

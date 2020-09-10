@@ -59,10 +59,11 @@ class StartDate extends Component {
       form: { getFieldDecorator, getFieldValue },
       disabledStartDate,
       purpose,
+      vitals,
+      payload: { id: vital_id } = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
-    const repeat = getFieldValue(repeatTypeField.field_name);
-
+    let { start_date = '' } = vitals[vital_id] || {};
     const value = getFieldValue(FIELD_NAME);
 
     return (
@@ -74,16 +75,10 @@ class StartDate extends Component {
           </div>
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
-              rules: [
-                {
-                  required: true,
-                  message: "Please enter start date"
-                }
-              ],
-              initialValue: getInitialValue(),
+              initialValue: start_date ? moment(start_date) : getInitialValue(),
             })(
               <DatePicker
-                className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}
+                className={`full-width ${FIELD_NAME} ant-date-custom-med wp100 edit-apoint-start-date`}
                 format="DD/MM/YYYY, ddd"
                 showToday={false}
                 disabled={purpose === EVENT_ACTION.EDIT_NOTES}

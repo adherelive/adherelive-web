@@ -64,8 +64,12 @@ class VitalName extends Component {
   render() {
     const {
       form: { getFieldDecorator, getFieldError, isFieldTouched },
-      setFormulation
+      setFormulation,
+      payload: { id:vital_id}={},
+      vitals,
+      vital_templates
     } = this.props;
+    const { basic_info : { vital_template_id } = {} } = vitals[vital_id] || {};
 
     const { fetchingVitals } = this.state;
 
@@ -74,6 +78,7 @@ class VitalName extends Component {
     // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
     //   return null;
     // }
+    const { basic_info:{name = ''}={} } = vital_templates[vital_template_id] || {};
 
 
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -81,12 +86,7 @@ class VitalName extends Component {
     return (
       <FormItem>
         {getFieldDecorator(FIELD_NAME, {
-          // rules: [
-          //   {
-          //     required: true,
-          //     message: "Select a vital"
-          //   }
-          // ]
+          initialValue:name
         })(
           <Select
             onSearch={handleVitalSearch}
@@ -103,9 +103,9 @@ class VitalName extends Component {
                 .indexOf(input.toLowerCase()) >= 0
             }
             getPopupContainer={getParentNode}
-
+            disabled={true}
           >
-            {getVitalsOption()}
+            {null}
           </Select>
         )}
       </FormItem>

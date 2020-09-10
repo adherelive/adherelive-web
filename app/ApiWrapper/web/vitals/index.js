@@ -38,11 +38,12 @@ class VitalWrapper extends BaseVital {
     };
 
     getAllInfo = async () => {
-        const {getBasicInfo, getVitalId} = this;
+        const {getBasicInfo, getVitalId, getStartDate} = this;
 
         const currentDate = moment().utc().toDate();
 
-        const scheduleEvents = await EventService.getAllPreviousByData({
+        const scheduleEvents = await EventService.getAllPastData({
+            startDate: getStartDate(),
             event_id: getVitalId(),
             date: currentDate
         });
@@ -51,10 +52,12 @@ class VitalWrapper extends BaseVital {
         let remaining = 0;
         let latestPendingEventId;
 
+        Log.debug("7761283 scheduleEvents --> ", scheduleEvents);
+
         const scheduleEventIds = [];
         for(const events of scheduleEvents) {
             const scheduleEvent = await EventWrapper(events);
-            if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING) {
+            if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
                 if(!latestPendingEventId) {
                     latestPendingEventId = scheduleEvent.getScheduleEventId();
                 }
