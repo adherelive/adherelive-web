@@ -295,7 +295,7 @@ class VitalController extends Controller {
             },
             status: EVENT_STATUS.COMPLETED
           },
-          id
+            event_id
         );
       } else {
         return raiseClientError(
