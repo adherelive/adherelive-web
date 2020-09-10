@@ -19,7 +19,8 @@ class StartCron {
     }
 
     getScheduleData = async () => {
-        const currentTime = moment().utc().toDate();
+        const currentTime = moment().utc().toISOString();
+        Log.info(`currentTime : ${currentTime}`);
         const scheduleEvents = await ScheduleEventService.getStartEventByData(currentTime);
         return scheduleEvents;
     };

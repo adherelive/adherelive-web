@@ -106,7 +106,7 @@ class ScheduleEventService {
             const scheduleEvent = await ScheduleEvent.findAll({
                 where: {
                     start_time: {
-                        [Op.between]: [time, moment(time).add(1,'minutes')]
+                        [Op.between]: [moment(time).startOf('day'), time]
                     },
                     status: EVENT_STATUS.PENDING
                 }
