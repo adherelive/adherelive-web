@@ -2,31 +2,30 @@ export const TABLE_COLUMN = {
   VITAL: {
     key: "VITAL",
     dataIndex: "VITAL",
-    // width: 100
   },
   TAKEN: {
     key: "TAKEN",
     dataIndex: "TAKEN",
-    // width: 100
   },
   DESCRIPTION: {
     key: "DESCRIPTION",
     dataIndex: "DESCRIPTION",
-    // width: 100
+    ellipsis: true
   },
   TIMELINE: {
     key: "TIMELINE",
     dataIndex: "TIMELINE",
-    // width: 100
+    width: 100
   },
   EDIT: {
     key: "EDIT",
     dataIndex: "EDIT",
+    width: 100
   }
 };
 
 export const formatAppointmentTableData = data => {
-  const { vitals, id, vital_templates } = data || {};
+  const { vitals, id, vital_templates} = data || {};
 
   const {basic_info: {vital_template_id} = {}} = vitals[id] || {};
 
@@ -34,6 +33,6 @@ export const formatAppointmentTableData = data => {
 
   return {
     vitalTemplateData,
-    vitalData: vitals[id]
+    vitalData: vitals[id],
   };
 };

@@ -19,4 +19,8 @@ export default class Vitals {
         return this._data.get("details");
     };
 
+    getStartDate = () => {
+        return this._data.get("start_date");
+    };
+
 }

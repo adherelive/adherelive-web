@@ -41,7 +41,7 @@ class VitalName extends Component {
 
   async handleVitalSearch(data) {
     try {
-      if (data) {
+      // if (data) {
         const { searchVital } = this.props;
         this.setState({ fetchingVitals: true });
         const response = await searchVital(data);
@@ -51,14 +51,19 @@ class VitalName extends Component {
         } else {
           this.setState({ fetchingVitals: false });
         }
-      } else {
-        this.setState({ fetchingVitals: false });
-      }
+      // } else {
+      //   this.setState({ fetchingVitals: false });
+      // }
     } catch (err) {
       console.log("err", err);
       message.warn("Something wen't wrong. Please try again later");
       this.setState({ fetchingVitals: false });
     }
+  };
+
+  handleVitals = () => {
+    const {searchVital} = this.props;
+    searchVital("");
   };
 
   render() {
@@ -69,14 +74,7 @@ class VitalName extends Component {
 
     const { fetchingVitals } = this.state;
 
-    const { getVitalsOption, getParentNode, handleVitalSearch } = this;
-
-    // if (!program_has_medication_stage || (!!purpose && !!!getInitialValue())) {
-    //   return null;
-    // }
-
-
-    // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
+    const { getVitalsOption, getParentNode, handleVitalSearch, handleVitals } = this;
 
     return (
       <FormItem>
@@ -89,6 +87,7 @@ class VitalName extends Component {
           // ]
         })(
           <Select
+              onFocus={handleVitals}
             onSearch={handleVitalSearch}
             notFoundContent={fetchingVitals ? <Spin size="small" /> : 'No match found'}
             className="drawer-select"

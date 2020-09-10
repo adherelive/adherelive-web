@@ -92,6 +92,7 @@ class VitalController extends Controller {
                             [vitals.getVitalId()]: vitals.getBasicInfo()
                         },
                         ... await vitals.getReferenceInfo(),
+                        vital_id: vitals.getVitalId()
                     },
                     "Vital added successfully"
                 );

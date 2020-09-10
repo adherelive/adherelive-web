@@ -19,7 +19,7 @@ export const searchVital = value => {
             if(status === true) {
                 dispatch({
                     type: SEARCH_VITAL_COMPLETED,
-                    data
+                    payload:data
                 });
             } else {
                 dispatch({
@@ -42,18 +42,16 @@ function vitalReducer(state, data) {
             ...vital_templates
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 
-export default (state = {}, payload) => {
-  const { type, data } = payload || {};
+export default (state = {}, action) => {
+  const { type, payload } = action || {};
   switch (type) {
     case SEARCH_VITAL_COMPLETED:
-      return vitalReducer(state, data);
+      return vitalReducer(state, payload);
     default:
-      return vitalReducer(state, data);
+      return vitalReducer(state, payload);
   }
 };
