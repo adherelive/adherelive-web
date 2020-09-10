@@ -13,6 +13,15 @@ export const TABLE_COLUMN = {
     key: "DESCRIPTION",
     dataIndex: "DESCRIPTION",
     // width: 100
+  },
+  TIMELINE: {
+    key: "TIMELINE",
+    dataIndex: "TIMELINE",
+    // width: 100
+  },
+  EDIT: {
+    key: "EDIT",
+    dataIndex: "EDIT",
   }
 };
 

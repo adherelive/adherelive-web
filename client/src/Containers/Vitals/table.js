@@ -23,7 +23,8 @@ const mapDispatchToProps = dispatch => {
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const {
         vitals,
-        vital_templates
+        vital_templates,
+        vital_ids
     } = stateProps;
 
     const {getPatientVitals} = dispatchProps;
@@ -32,6 +33,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     return {
         vitals,
         vital_templates,
+        vital_ids,
         getPatientVitals: getPatientVitals(patientId)
     };
 };

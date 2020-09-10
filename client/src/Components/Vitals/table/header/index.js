@@ -13,32 +13,36 @@ export default props => {
   return [
     {
       title: formatMessage(messages.organizer),
-      ...TABLE_COLUMN.ORGANIZER,
+      ...TABLE_COLUMN.VITAL,
       render: data => {
-        const { appointmentData, userData } = data || {};
+        const { vitalTemplateData } = data || {};
         return (
-          <Organizer appointmentData={appointmentData} userData={userData} />
+          <Name vitalTemplateData={vitalTemplateData} />
         );
       }
     },
     {
       title: formatMessage(messages.appointment_date),
-      ...TABLE_COLUMN.DATE,
+      ...TABLE_COLUMN.TAKEN,
 
-      ellipsis: true,
-      render: appointmentData => <AppointmentDate {...appointmentData} />
+      render: vitalData => <Taken vitalData={vitalData} />
     },
     {
       title: formatMessage(messages.timing_text),
-      ...TABLE_COLUMN.TIMING,
-      render: appointmentData => <Timing appointmentData={appointmentData} />
+      ...TABLE_COLUMN.DESCRIPTION,
+      render: vitalData => <Description vitalData={vitalData} />
     },
     {
-      title: formatMessage(messages.description),
-      ...TABLE_COLUMN.DESCRIPTION,
+      title: "",
+      ...TABLE_COLUMN.TIMELINE,
 
-      ellipsis: true,
-      render: appointmentData => <Description {...appointmentData} />
+      render: ({openResponseDrawer}) => <TimelineButton openResponseDrawer={openResponseDrawer} />
+    },
+    {
+      title: "",
+      ...TABLE_COLUMN.EDIT,
+
+      render: ({id}) => <EditButton id={id} />
     }
   ];
 };
