@@ -1030,7 +1030,7 @@ class PatientDetails extends Component {
       showUseTemplate = false;
     }
 
-    let showTabs = true; //(cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
+    let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
     const {
       basic_info: { doctor_id = 1 } = {},
       activated_on: treatment_start_date,
@@ -1215,7 +1215,7 @@ class PatientDetails extends Component {
               missed_appointment={missed_appointment}
             /> */}
                 <div className="patient-tab mt20">
-                  <Tabs defaultActiveKey="4" onChange={callback}>
+                  <Tabs defaultActiveKey="1" onChange={callback}>
                     {/* <TabPane tab="Symptoms" key="1">
                   <Table
                     columns={columns_symptoms}

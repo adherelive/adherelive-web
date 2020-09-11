@@ -7,12 +7,12 @@ export default props => {
   const { action, id, formatMessage } = props || {};
 
   return (
-    <div onClick={action(id)}>
-      <Tooltip placement="bottom" title={formatMessage(messages.edit)}>
-          <div className="flex align-center justify-center">
-              <img src={edit_image} alt="edit button" />
-          </div>
-      </Tooltip>
-    </div>
+    <Tooltip placement="bottom" title={formatMessage(messages.edit)}>
+      <div className="p10" onClick={action(id)}>
+        <div className="flex align-center justify-center">
+          <img src={edit_image} alt="edit button" />
+        </div>
+      </div>
+    </Tooltip>
   );
 };
