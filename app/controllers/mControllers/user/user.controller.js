@@ -63,7 +63,7 @@ class MobileUserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { prefix='91', mobile_number } = req.body;
+      const { prefix, mobile_number } = req.body;
       const user = await userService.getUserByNumber({ mobile_number, prefix });
 
       // const userDetails = user[0];
@@ -284,6 +284,7 @@ class MobileUserController extends Controller {
             },
           "Signed in successfully"
         );
+
       } else {
         return this.raiseClientError(res, 422, {}, "Invalid Credentials");
       }

@@ -31,6 +31,8 @@ class SummaryTab extends Component {
             symptomsModalKey: "",
             showFront: true,
             sliderDays: 10,
+            imageModalVisible: false,
+            imageToShow: ''
 
         };
     }
@@ -477,10 +479,15 @@ class SummaryTab extends Component {
                             </div>
                         ) : null}
                         {imageUrl && imageUrl.length ? (
-                            <img
-                                src={imageUrl}
-                                style={{ width: 300, height: 200, borderRadius: 2, marginTop: 10 }}
-                            />
+                            <div
+                                className='pointer'
+                                onClick={this.openModalImage(imageUrl)}
+                            >
+                                <img
+                                    src={imageUrl}
+                                    style={{ width: 300, height: 200, borderRadius: 2, marginTop: 10 }}
+                                />
+                            </div>
                         ) : null}
 
                         {audioUrl && audioUrl.length ? (
@@ -531,6 +538,34 @@ class SummaryTab extends Component {
         return dataTorender;
 
 
+    }
+
+    imageModal = () => {
+        return (
+            <Modal
+                className={"chat-media-modal"}
+                visible={this.state.imageModalVisible}
+                title={' '}
+                closable
+                mask
+                maskClosable
+                onCancel={this.closeModalImage}
+                wrapClassName={"chat-media-modal-dialog"}
+                width={`50%`}
+                footer={null}
+            >
+                <img src={this.state.imageToShow} alt="qualification document" className="wp100" />
+            </Modal>
+        );
+    };
+    closeModalImage = () => {
+
+        this.setState({ imageModalVisible: false });
+    }
+
+    openModalImage = url => () => {
+
+        this.setState({ imageToShow: url }, () => this.setState({ imageModalVisible: true }));
     }
 
     setSliderDays = value => {
@@ -614,7 +649,7 @@ class SummaryTab extends Component {
                                             position: "absolute",
                                             height: partsWithSymptoms.includes(key) ? 12 : 0,
                                             width: partsWithSymptoms.includes(key) ? 12 : 0,
-                                            backgroundColor: partsWithSymptoms.includes(key) ? "rgba(0, 129, 138, 0.41)" : 'rgba(0,0,0,0)',
+                                            backgroundColor: partsWithSymptoms.includes(key) ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
                                             borderRadius: '50%',
                                         }
                                         }
@@ -643,7 +678,7 @@ class SummaryTab extends Component {
                                                 position: "absolute",
                                                 height: partsWithSymptoms.includes(key) ? 12 : 0,
                                                 width: partsWithSymptoms.includes(key) ? 12 : 0,
-                                                backgroundColor: partsWithSymptoms.includes(key) ? "rgba(0, 129, 138, 0.41)" : 'rgba(0,0,0,0)',
+                                                backgroundColor: partsWithSymptoms.includes(key) ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
                                                 // cursor: partsWithSymptoms.includes(key) ? "pointer" : '',
                                                 borderRadius: '50%',
                                             }
@@ -674,6 +709,8 @@ class SummaryTab extends Component {
                         {this.renderModalBody()}
                     </div>
                 </Modal>
+
+                {this.imageModal()}
             </div>
         );
     }

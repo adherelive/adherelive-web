@@ -236,13 +236,15 @@ class VitalController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.query --->", req.query);
+
       const { query: { value } = {} } = req;
+
 
       const vitalTemplates = await VitalTemplateService.searchByData(value);
       const templateDetails = {};
       const templateIds = [];
 
-      if (vitalTemplates.length > 0) {
+      if (Object.keys(vitalTemplates).length > 0) {
         for (const data of vitalTemplates) {
           const vitalData = await VitalTemplateWrapper({ data });
           templateDetails[
@@ -331,7 +333,7 @@ class VitalController extends Controller {
       for (const template of vitalTemplate.getTemplate()) {
         customMessage += `${template["label"]}: ${
           response[template["id"]] ? response[template["id"]] : "--"
-        }${vitalTemplate.getUnit()}   `;
+          }${vitalTemplate.getUnit()}   `;
       }
 
       const twilioMsg = await twilioService.addSymptomMessage(

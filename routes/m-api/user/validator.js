@@ -1,8 +1,8 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import {PASSWORD_LENGTH, USER_CATEGORY} from "../../../constant";
+import { PASSWORD_LENGTH, USER_CATEGORY } from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
-import {validationError} from "../../api/helper";
+import { validationError } from "../../api/helper";
 
 const credentialsFormSchema = Joi.object().keys({
     email: Joi.string().email().required(),
@@ -10,8 +10,8 @@ const credentialsFormSchema = Joi.object().keys({
 });
 
 const updatedPasswordSchema = Joi.object().keys({
-   new_password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).min(PASSWORD_LENGTH).required().label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
-   confirm_password: Joi.when('password', {is: Joi.string(), then: Joi.string().allow(Joi.ref("new_password"))})
+    new_password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).min(PASSWORD_LENGTH).required().label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
+    confirm_password: Joi.when('password', { is: Joi.string(), then: Joi.string().allow(Joi.ref("new_password")) })
 });
 
 const signInSchema = Joi.object().keys({
@@ -25,16 +25,16 @@ const otpSchema = Joi.object().keys({
 });
 
 const doctorSignInSchema = Joi.object().keys({
-   email:  Joi.string().email().required().label("Please enter valid email"),
+    email: Joi.string().email().required().label("Please enter valid email"),
     password: Joi.string().required()
 });
 
 const forgotPasswordSchema = Joi.object().keys({
-    email:  Joi.string().email().required().label("Please enter valid email"),
+    email: Joi.string().email().required().label("Please enter valid email"),
 });
 
 const verifyLinkSchema = Joi.object().keys({
-    link: Joi.string().guid({version: 'uuidv4'}).required().label("Verification link is not correct")
+    link: Joi.string().guid({ version: 'uuidv4' }).required().label("Verification link is not correct")
 });
 
 const validateStartTime = (startTime) => {
@@ -53,26 +53,26 @@ export const validateCredentialsData = (req, res, next) => {
     if (isValid && isValid.error != null) {
         console.log("00000000000000 isValid ---> ", isValid, isValid.error);
         let errorMessage = "Please check filled details";
-        const {error : {details} = {} } = isValid || {};
-        const {type} = details[0] || {};
-        switch(type) {
+        const { error: { details } = {} } = isValid || {};
+        const { type } = details[0] || {};
+        switch (type) {
             case "string.empty":
-                const {context: {label} = {}} = details[0] || {};
-                if(label === "email") {
+                const { context: { label } = {} } = details[0] || {};
+                if (label === "email") {
                     errorMessage = "Email cannot be empty";
                 } else {
                     errorMessage = "Password cannot be empty";
                 }
                 break;
             case "string.pattern.base":
-                const {context: {label : passwordLabel} = {}} = details[0] || {};
-                if(passwordLabel === "password") {
+                const { context: { label: passwordLabel } = {} } = details[0] || {};
+                if (passwordLabel === "password") {
                     errorMessage = "Password must contain at least 1 uppercase, lowercase, number & special character";
                 }
                 break;
             case "string.min":
-                const {context: {label : passwordLengthLabel} = {}} = details[0] || {};
-                if(passwordLengthLabel === "password") {
+                const { context: { label: passwordLengthLabel } = {} } = details[0] || {};
+                if (passwordLengthLabel === "password") {
                     errorMessage = "Password must be at least 12 characters long";
                 }
                 break;
@@ -91,8 +91,8 @@ export const validateSignInData = (req, res, next) => {
     const { body: data = {} } = req;
     const isValid = signInSchema.validate(data);
     if (isValid && isValid.error != null) {
-        const {error: {details} = {}} = isValid || {};
-        const {context: {label} = {}} = details[0] || {};
+        const { error: { details } = {} } = isValid || {};
+        const { context: { label } = {} } = details[0] || {};
         // return raiseClientError(res, 422, isValid.error, "please check filled details");
         const response = new Response(false, 422);
         response.setError(isValid.error);
@@ -106,11 +106,11 @@ export const validateOtpData = (req, res, next) => {
     const { body: data = {} } = req;
     const isValid = otpSchema.validate(data);
     if (isValid && isValid.error != null) {
-        const {error: {details} = {}} = isValid || {};
-        const {type, context: {label} = {}} = details[0] || {};
+        const { error: { details } = {} } = isValid || {};
+        const { type, context: { label } = {} } = details[0] || {};
         // return raiseClientError(res, 422, isValid.error, "please check filled details");
         let errorMessage = label;
-        switch(type) {
+        switch (type) {
             case "string.pattern.base":
                 errorMessage = "OTP must contain only numbers";
                 break;
@@ -131,8 +131,8 @@ export const validateDoctorSignInData = (req, res, next) => {
     const { body: data = {} } = req;
     const isValid = doctorSignInSchema.validate(data);
     if (isValid && isValid.error != null) {
-        const {error: {details} = {}} = isValid || {};
-        const {context: {label} = {}} = details[0] || {};
+        const { error: { details } = {} } = isValid || {};
+        const { context: { label } = {} } = details[0] || {};
         // return raiseClientError(res, 422, isValid.error, "please check filled details");
         const response = new Response(false, 422);
         response.setError(isValid.error);

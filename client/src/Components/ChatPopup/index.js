@@ -156,7 +156,7 @@ class ChatPopUp extends Component {
             other_user_online: false,
             otherUserLastConsumedMessageIndex: null,
             other_typing: false,
-            loadSymptoms:true,
+            loadSymptoms: true,
             loadingMessageDetails: false,
             message_numbers: 0
 
@@ -199,8 +199,8 @@ class ChatPopUp extends Component {
             loadSymptoms
         } = this.state;
         const { messageIds = [] } = chatMessages[roomId] || {};
-        if(chatMessages[roomId] !=undefined && messageIds.length > 0 && message_numbers != messageIds.length && !loadSymptoms){
-            this.setState({loadSymptoms:true,message_numbers:messageIds.length});
+        if (chatMessages[roomId] != undefined && messageIds.length > 0 && message_numbers != messageIds.length && !loadSymptoms) {
+            this.setState({ loadSymptoms: true, message_numbers: messageIds.length });
         }
         const {
             roomId: prevRoomId
@@ -355,26 +355,19 @@ class ChatPopUp extends Component {
         });
     };
 
-    updateMessageRecieved = async (messages) => {
-        const { otherUserLastConsumedMessageIndex } = this.state;
-        const { authenticated_user, getSymptomDetails } = this.props;
-
-        for (let messageData of messages) {
-
-            if (
-                messageData.state.index <= otherUserLastConsumedMessageIndex &&
-                messageData.state.author === `${authenticated_user}`
-            ) {
-                messageData.received = true;
-                messageData.sent = true;
-            }
-            if (messageData.state.body && messageData.state.body.includes('symptom')) {
-                let symptomId = messageData.state.body.split(':')[1] || {};
-                await getSymptomDetails(symptomId);
-            }
-        }
-
-        return messages;
+    updateMessageRecieved = messages => {	
+        const { otherUserLastConsumedMessageIndex } = this.state;	
+        const { authenticated_user } = this.props;	
+        for (let messageData of messages) {	
+            if (	
+                messageData.state.index <= otherUserLastConsumedMessageIndex &&	
+                messageData.state.author === `${authenticated_user}`	
+            ) {	
+                messageData.received = true;	
+                messageData.sent = true;	
+            }	
+        }	
+        return messages;	
     };
 
     messagesLoaded = messagePage => {
@@ -567,9 +560,9 @@ class ChatPopUp extends Component {
 
     render() {
         const { ChatForm } = this;
-        const { chatMessages, roomId } =this.props;
+        const { chatMessages, roomId } = this.props;
         const { messagesLoading = false, other_user_online = false, other_typing = false, otherUserLastConsumedMessageIndex } = this.state;
-        const { ...props} = this.props;
+        const { ...props } = this.props;
         const { placeVideoCall, patientName = '', chats: { minimized = false } = {}, minimizePopUp, maximizePopUp, closePopUp, maximizeChat } = this.props;
         if (minimized) {
             return (
@@ -587,7 +580,7 @@ class ChatPopUp extends Component {
                                 <div className='wp100 hp100 flex justify-center align-center'>
                                     <Spin size="medium" />
                                 </div>
-                                : <ChatMessageDetails scrollToBottom={this.scrollToBottom} {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
+                                : <ChatMessageDetails scrollToBottom={this.scrollToBottom} {...props} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex} />}
                             <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                         </div>
                     </div>
