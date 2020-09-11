@@ -281,7 +281,7 @@ class ChatMessageDetails extends Component {
                                                                             position: "absolute",
                                                                             height: parts[0] === key ? 12 : 0,
                                                                             width: parts[0] === key ? 12 : 0,
-                                                                            backgroundColor: parts[0] === key ? "rgba(0, 129, 138, 0.41)" : 'rgba(0,0,0,0)',
+                                                                            backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
                                                                             borderRadius: '50%',
 
                                                                             // height:  12,
@@ -313,7 +313,7 @@ class ChatMessageDetails extends Component {
                                                                                 position: "absolute",
                                                                                 height: parts[0] === key ? 12 : 0,
                                                                                 width: parts[0] === key ? 12 : 0,
-                                                                                backgroundColor: parts[0] === key ? "rgba(0, 129, 138, 0.41)" : 'rgba(0,0,0,0)',
+                                                                                backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
                                                                                 borderRadius: '50%',
 
                                                                                 // height:  12,

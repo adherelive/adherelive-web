@@ -649,7 +649,7 @@ class SummaryTab extends Component {
                                             position: "absolute",
                                             height: partsWithSymptoms.includes(key) ? 12 : 0,
                                             width: partsWithSymptoms.includes(key) ? 12 : 0,
-                                            backgroundColor: partsWithSymptoms.includes(key) ? "rgba(0, 129, 138, 0.41)" : 'rgba(0,0,0,0)',
+                                            backgroundColor: partsWithSymptoms.includes(key) ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
                                             borderRadius: '50%',
                                         }
                                         }
@@ -678,7 +678,7 @@ class SummaryTab extends Component {
                                                 position: "absolute",
                                                 height: partsWithSymptoms.includes(key) ? 12 : 0,
                                                 width: partsWithSymptoms.includes(key) ? 12 : 0,
-                                                backgroundColor: partsWithSymptoms.includes(key) ? "rgba(0, 129, 138, 0.41)" : 'rgba(0,0,0,0)',
+                                                backgroundColor: partsWithSymptoms.includes(key) ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
                                                 // cursor: partsWithSymptoms.includes(key) ? "pointer" : '',
                                                 borderRadius: '50%',
                                             }
