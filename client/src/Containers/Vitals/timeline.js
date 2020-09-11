@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import VitalTimelineDrawer from "../../Components/Vitals/timeline";
-import {getVitals} from "../../modules/vitals";
+import {getVitalTimeline} from "../../modules/vitals";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
@@ -15,13 +15,14 @@ const mapStateToProps = state => {
     return {
         id,
         vitals,
+        vital_templates,
         schedule_events,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        getPatientVitals: (id) => () => dispatch(getVitals(id)),
+        getVitalTimeline: (id) => () => dispatch(getVitalTimeline(id))
     };
 };
 
@@ -33,23 +34,27 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     } = stateProps;
 
     const {
-        getPatientVitals,
+        getVitalTimeline,
         vitalResponseDrawer,
         editVitalDrawer
     } = dispatchProps;
-    const {patientId} = ownProps;
+    const {id} = ownProps;
+
+    console.log("87391283 patientId", id);
 
     return {
+        id,
         vitals,
         vital_templates,
         vital_ids,
         vitalResponseDrawer,
         editVitalDrawer,
-        getPatientVitals: getPatientVitals(patientId)
+        getVitalTimeline: getVitalTimeline(id)
     };
 };
 
 export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps,
+    mergeProps,
 )(VitalTimelineDrawer));

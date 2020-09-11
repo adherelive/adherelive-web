@@ -77,11 +77,12 @@ export const getVitals = (carePlanId) => {
 };
 
 export const getVitalTimeline = (vitalId) => {
+  let response = {};
   return async (dispatch) => {
     try {
       dispatch({ type: GET_VITALS_TIMELINE_START });
 
-      const response = await doRequest({
+      response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getVitalTimelineURL(vitalId),
       });
@@ -97,6 +98,7 @@ export const getVitalTimeline = (vitalId) => {
       console.log("getVitalTimeline error ----> ", error);
       dispatch({ type: GET_VITALS_TIMELINE_FAILED });
     }
+    return response;
   };
 };
 
