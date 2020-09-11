@@ -8,7 +8,7 @@ import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
     const {
-        drawer: { visible, data: { type, payload : {id} = {} } = {} },
+        drawer: { visible, data: { type, payload : {id, loading} = {} } = {} },
         vitals = {},
         vital_templates = {},
         schedule_events = {}
@@ -16,6 +16,7 @@ const mapStateToProps = state => {
 
     return {
         id,
+        loading,
         vitals,
         vital_templates,
         schedule_events,
@@ -30,33 +31,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export const mergeProps = (stateProps, dispatchProps, ownProps) => {
-    const {
-        id,
-        vitals,
-        vital_templates,
-        schedule_events,
-        visible
-    } = stateProps;
-
-    const {
-        close,
-        getVitalTimeline
-    } = dispatchProps;
-
-    return {
-        id,
-        vitals,
-        vital_templates,
-        schedule_events,
-        visible,
-        close,
-        getVitalTimeline: getVitalTimeline(id)
-    };
-};
-
 export default withRouter(connect(
     mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
+    mapDispatchToProps
 )(VitalTimelineDrawer));

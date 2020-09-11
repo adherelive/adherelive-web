@@ -44,13 +44,13 @@ class VitalTable extends Component {
     openResponseDrawer = (id) => (e) => {
         e.preventDefault();
         const {vitalResponseDrawer} = this.props;
-        vitalResponseDrawer({id});
+        vitalResponseDrawer({id, loading: true});
     };
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
         const {editVitalDrawer} = this.props;
-        editVitalDrawer({id});
+        editVitalDrawer({id, loading: true});
     };
 
     render() {

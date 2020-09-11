@@ -10,24 +10,6 @@ class VitalTimelineDrawer extends Component {
         super(props);
     }
 
-    // componentDidMount() {
-    //     this.getTimelineData();
-    // }
-    //
-    // getTimelineData = async () => {
-    //     const {getVitalTimeline} = this.props;
-    //     try {
-    //         this.setState({loading: true});
-    //         const response = await getVitalTimeline();
-    //         const {status, data} = response || {};
-    //         console.log("1761867 response", response);
-    //         this.setState({loading: false});
-    //     } catch(error) {
-    //         this.setState({loading: false});
-    //         console.log("1761867 error", error);
-    //     }
-    // };
-
     onClose = () => {
         const { close } = this.props;
         close();

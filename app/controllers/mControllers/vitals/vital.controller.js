@@ -275,7 +275,9 @@ class VitalController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params --->", req.params);
-      const { params: { id } = {}, body: { response = {}, response : {event_id} = {} } = {} } = req;
+      const { params: { id } = {}, body: { response } = {} } = req;
+
+      const {event_id, ...rest} = response || {};
 
       Log.info(`event_id ${event_id}`);
 
@@ -300,7 +302,7 @@ class VitalController extends Controller {
             details: {
               ...event.getDetails(),
               response: {
-                value: response,
+                value: rest,
                 createdTime
               }
             },
