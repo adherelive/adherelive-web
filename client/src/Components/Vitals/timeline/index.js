@@ -108,19 +108,19 @@ class VitalTimeline extends Component {
               key={id}
               dot={TIMELINE_STATUS[status].dot}
               color={TIMELINE_STATUS[status].color}
+              className="pl10"
             >
-              <div className="mb6 fs16 fw500">{formatMessage(messages.completed)}</div>
+              <div className="mb6 fs16 fw500">{moment(currentTime).format("LT")}</div>
               {Object.keys(value).map((fieldId, index) => {
                 const { label, placeholder } = getVitalTemplate(fieldId, event);
 
                 return (
                   <div
                     key={`${id}-${fieldId}-${index}`}
-                    className="pl8 mb4 fs14 fw500"
+                    className="mb4 fs14 fw500"
                   >{`${label}: ${value[fieldId]} ${placeholder}`}</div>
                 );
               })}
-              <div className="pl8 mb4 fs12">{`updated at: ${moment(currentTime).format("LT")}`}</div>
             </TimelineItem>
           );
         case EXPIRED:
@@ -129,9 +129,10 @@ class VitalTimeline extends Component {
               key={id}
               dot={TIMELINE_STATUS[status].dot}
               color={TIMELINE_STATUS[status].color}
+              className="pl10"
             >
-              <div className="mb6 fs16 fw500">{formatMessage(messages.expired)}</div>
-              <div className="pl8 mb4 fs12">{moment(end_time).format("LT")}</div>
+              <div className="fs16 fw500">{moment(end_time).format("LT")}</div>
+              <div className="fs12">{formatMessage(messages.not_recorded)}</div>
             </TimelineItem>
           );
       }

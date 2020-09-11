@@ -10,6 +10,11 @@ const messages = defineMessages({
         id: "app.vital.timeline.expired.text",
         description: "",
         defaultMessage: "Expired"
+    },
+    not_recorded: {
+        id: "app.vital.timeline.not.recorded.text",
+        description: "",
+        defaultMessage: "Not Recorded"
     }
 });
 
