@@ -1,0 +1,98 @@
+import VitalJob from "../";
+import moment from "moment";
+import { EVENT_TYPE } from "../../../../constant";
+
+import UserDeviceService from "../../../services/userDevices/userDevice.service";
+
+import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
+import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
+
+class CreateJob extends VitalJob {
+    constructor(data) {
+        super(data);
+    }
+
+    getPushAppTemplate = async () => {
+        const {_data} = this;
+        const {
+            participants = [],
+            actor: {
+                id: actorId,
+                details: { name, category: actorCategory } = {}
+            } = {},
+            vital_templates,
+            vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
+            eventId = null
+        } = _data.getDetails() || {};
+
+        const templateData = [];
+        const playerIds = [];
+        const userIds = [];
+
+        const vitals = await VitalWrapper({id: _data.getEventId()});
+        const {vitals: latestVital} = await vitals.getAllInfo();
+
+        console.log("1289317932  participants, actorId", participants, actorId);
+
+        participants.forEach(participant => {
+            if (participant !== actorId) {
+                userIds.push(participant);
+            }
+        });
+
+        const userDevices = await UserDeviceService.getAllDeviceByData({
+            user_id: userIds
+        });
+
+        if (userDevices.length > 0) {
+            for (const device of userDevices) {
+                const userDevice = await UserDeviceWrapper({ data: device });
+                playerIds.push(userDevice.getOneSignalDeviceId());
+            }
+        }
+
+        templateData.push({
+            app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+            headings: { en: `${vitalName} Reminder` },
+            contents: {
+                en: `Please update ${vitalName} vital`
+            },
+            // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
+            include_player_ids: [...playerIds],
+            priority: 10,
+            data: { url: "/vitals", vital: latestVital[_data.getEventId()], vital_template: vital_templates, type: "modal"}
+        });
+
+        return templateData;
+    };
+
+    getInAppTemplate = () => {
+        const { getData } = this;
+        const {
+            participants = [],
+            actor: {
+                id: actorId,
+            } = {},
+            eventId = null
+        } = getData() || {};
+
+        const templateData = [];
+        const currentTime = new moment().utc();
+        for (const participant of participants) {
+            if (participant !== actorId) {
+                templateData.push({
+                    actor: actorId,
+                    object: `${participant}`,
+                    foreign_id: `${eventId}`,
+                    verb: "vital_create",
+                    event: EVENT_TYPE.VITALS,
+                    time: currentTime
+                });
+            }
+        }
+
+        return templateData;
+    };
+}
+
+export default CreateJob;
