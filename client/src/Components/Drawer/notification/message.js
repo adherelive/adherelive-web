@@ -6,11 +6,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Notifications"
     },
-    // submit: {
-    //     id: "app.notifications.submit",
-    //     description: "",
-    //     defaultMessage: "Submit"
-    // },
+    appointmentHeading: {
+        id: "app.notifications.appointmentHeading",
+        description: "",
+        defaultMessage: "Appointment"
+    },
+    medicationHeading: {
+        id: "app.notifications.medicationHeading",
+        description: "",
+        defaultMessage: "Medication"
+    }
     // notifications: {
     //     id: "app.notifications.notifications",
     //     description: "",

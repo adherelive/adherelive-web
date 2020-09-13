@@ -13,7 +13,7 @@ class NotificationController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body: { activities } = {}, userDetails: { userId } = {} } = req;
-
+       console.log('43756464865745348=========>>',activities);
       const notificationIds = [];
 
       let notificationData = {};

@@ -8,9 +8,7 @@ function staticTemplatesReducer(state, data) {
             ...static_templates,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

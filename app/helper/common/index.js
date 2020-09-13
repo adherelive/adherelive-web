@@ -14,3 +14,7 @@ export const getSeparateName = (name) => {
             return {first_name: nameArr[0], middle_name: nameArr[2], last_name: nameArr.slice(2, nameArr.length)};
     }
 };
+
+export const getFullName = ({first_name, middle_name, last_name}) => {
+    return `${first_name}${middle_name ? ` ${middle_name}` : ""}${last_name ? ` ${last_name}` : ""}`;
+};

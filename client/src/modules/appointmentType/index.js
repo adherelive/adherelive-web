@@ -8,9 +8,7 @@ function appointmentsTypeReducer(state, data) {
             ...appointment_type,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

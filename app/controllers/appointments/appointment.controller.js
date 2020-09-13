@@ -354,44 +354,26 @@ class AppointmentController extends Controller {
       }
 
       const eventScheduleData = {
+        event_id: appointmentApiData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
+        critical,
+        start_time,
+        end_time,
+        details: appointmentApiData.getBasicInfo(),
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
-          details: {
-            category
-          }
-        },
-        appointmentId: appointmentApiData.getAppointmentId()
+          category
+        }
       };
 
       // RRule
-      await EventSchedule.create({
-        event_id: appointmentApiData.getAppointmentId(),
-        event_type: EVENT_TYPE.APPOINTMENT,
-        start_time,
-        end_time,
-        details: appointmentApiData.getBasicInfo()
-      });
+      await EventSchedule.create(eventScheduleData);
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
       await NotificationSdk.execute(appointmentJob);
 
       Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
-
-      /*
-      * DATA being sent to getstream
-      * { actor: '1',
-        duration: '10.95ms',
-        event: 'appointment',
-        foreign_id: '2',
-        id: 'e0f8ee07-e757-11ea-a12c-128a130028af',
-        object: '1',
-        origin: null,
-        target: '',
-        time: '2020-08-26T04:52:01.080270',
-        verb: 'appointment_create' }
-      *
-      * */
 
       // NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 

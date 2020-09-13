@@ -42,9 +42,7 @@ function councilReducer(state, data) {
             ...registration_councils
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 

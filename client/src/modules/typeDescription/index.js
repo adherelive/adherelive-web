@@ -8,9 +8,7 @@ function typeDescriptionReducer(state, data) {
             ...type_description,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

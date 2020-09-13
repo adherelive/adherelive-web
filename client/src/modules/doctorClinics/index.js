@@ -6,9 +6,7 @@ function doctorClinicReducer(state, data) {
             ...doctor_clinics,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

@@ -225,9 +225,7 @@ function medicationReducer(state, payload) {
       ...medications,
     };
   } else {
-    return {
-      ...state,
-    };
+    return state;
   }
 }
 

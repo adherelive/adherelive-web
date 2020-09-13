@@ -27,6 +27,13 @@ export const PATH = {
 
 export const HTTP_CODE_SERVER_ERROR = 500;
 
+export const CHAT_MESSAGE_DETAILS = {
+  SYMPTOMS: "symptoms"
+};
+ export const USER_ADHERE_BOT = 'adhere_bot';
+ export const CHAT_MESSAGE_TYPE = {
+   SYMPTOM:'symptom'
+ }
 
 export const ROOM_ID_TEXT = '-adhere-';
 
@@ -180,12 +187,15 @@ export const PATIENT_BOX_CONTENT = {
 
 export const DRAWER = {
   ADD_MEDICATION_REMINDER: "ADD_MEDICATION_REMINDER",
+  ADD_VITALS: "ADD_VITALS",
   EDIT_MEDICATION: "EDIT_MEDICATION",
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
   EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
   PATIENT_DETAILS: "PATIENT_DETAILS",
   SYMPTOMS: 'SYMPTOMS',
   NOTIFICATIONS: "NOTIFICATIONS",
+  EDIT_VITALS:"EDIT_VITALS",
+  VITAL_RESPONSE_TIMELINE: "VITAL_RESPONSE_TIMELINE"
 };
 
 export const USER_CATEGORY = {
@@ -278,6 +288,8 @@ export const DAYS_TEXT = {
   "Sat": "saturday",
   "Sun": "sunday",
 };
+
+export const ALTERNATE_DAYS = ["Sun", "Tue", "Thu", "Sat"];
 
 export const DAYS_NUMBER = {
   "Mon": 1,
@@ -499,3 +511,1119 @@ export const DAYS_KEYS = [
   'SAT',
   'SUN'
 ];
+
+
+
+
+const HEAD = "1";
+const RIGHT_EYE = "2";
+const LEFT_EYE = "3";
+const RIGHT_EAR = "4";
+const LEFT_EAR = "5";
+const NOSE = "6";
+const MOUTH = "7";
+const NECK = "8";
+const RIGHT_SHOULDER = "9";
+const LEFT_SHOULDER = "10";
+const CHEST = "11";
+const RIGHT_ARM = "12";
+const LEFT_ARM = "13";
+const RIGHT_ELBOW = "14";
+const LEFT_ELBOW = "15";
+const STOMACH = "16";
+const ABDOMEN = "17";
+const RIGHT_FOREARM = "18";
+const LEFT_FOREARM = "19";
+const RIGHT_WRIST = "20";
+const LEFT_WRIST = "21";
+const RIGHT_HAND = "22";
+const LEFT_HAND = "23";
+const RIGHT_HAND_FINGER = "24";
+const LEFT_HAND_FINGER = "25";
+const RIGHT_HIP = "26";
+const LEFT_HIP = "27";
+const RIGHT_THIGH = "28";
+const LEFT_THIGH = "29";
+const RIGHT_KNEE = "30";
+const LEFT_KNEE = "31";
+const RIGHT_SHIN = "32";
+const LEFT_SHIN = "33";
+const RIGHT_ANKLE = "34";
+const LEFT_ANKLE = "35";
+const RIGHT_FOOT = "36";
+const LEFT_FOOT = "37";
+const RIGHT_TOE = "38";
+const LEFT_TOE = "39";
+const RECTUM = "40";
+const URINARY_BLADDER = "41";
+const HEAD_BACK = "42";
+const NECK_BACK = "43";
+const RIGHT_SHOULDER_BACK = "44";
+const LEFT_SHOULDER_BACK = "45";
+const BACK = "46";
+const LOWER_BACK = "47";
+const LEFT_TRICEP = "48";
+const RIGHT_TRICEP = "49";
+const LEFT_FOREARM_BACK = "50";
+const RIGHT_FOREARM_BACK = "51";
+const LEFT_HAMSTRING = "52";
+const RIGHT_HAMSTRING = "53";
+const LEFT_CALF = "54";
+const RIGHT_CALF = "55";
+
+
+export const PARTS_GRAPH = {
+  [HEAD]: { name: "Head" },
+  [RIGHT_EYE]: { name: "Right Eye" },
+  [LEFT_EYE]: { name: "Left Eye" },
+  [RIGHT_EAR]: { name: "Right Ear" },
+  [LEFT_EAR]: { name: "Left Ear" },
+  [NOSE]: { name: "Nose" },
+  [MOUTH]: { name: "Mouth" },
+  [NECK]: { name: "Neck" },
+  [RIGHT_SHOULDER]: { name: "Right Shoulder" },
+  [LEFT_SHOULDER]: { name: "Left Shoulder" },
+  [CHEST]: { name: "Chest" },
+  [RIGHT_ARM]: { name: "Right Arm" },
+  [LEFT_ARM]: { name: "Left Arm" },
+  [RIGHT_ELBOW]: { name: "Right Elbow" },
+  [LEFT_ELBOW]: { name: "Left Elbow" },
+  [STOMACH]: { name: "Stomach" },
+  [ABDOMEN]: { name: "Abdomen" },
+  [RIGHT_FOREARM]: { name: "Right Forearm" },
+  [LEFT_FOREARM]: { name: "Left Forearm" },
+  [RIGHT_WRIST]: { name: "Right Wrist" },
+  [LEFT_WRIST]: { name: "Left Wrist" },
+  [RIGHT_HAND]: { name: "Right Hand" },
+  [LEFT_HAND]: { name: "Left Hand" },
+  [RIGHT_HAND_FINGER]: { name: "Right Hand Finger" },
+  [LEFT_HAND_FINGER]: { name: "Left Hand Finger" },
+  [RIGHT_HIP]: { name: "Right Hip" },
+  [LEFT_HIP]: { name: "Left Hip" },
+  [RIGHT_THIGH]: { name: "Right Thigh" },
+  [LEFT_THIGH]: { name: "Left Thigh" },
+  [RIGHT_KNEE]: { name: "Right Knee" },
+  [LEFT_KNEE]: { name: "Left Knee" },
+  [RIGHT_SHIN]: { name: "Right Shin" },
+  [LEFT_SHIN]: { name: "Left Shin" },
+  [RIGHT_ANKLE]: { name: "Right Ankle" },
+  [LEFT_ANKLE]: { name: "Left Ankle" },
+  [RIGHT_FOOT]: { name: "Right Foot" },
+  [LEFT_FOOT]: { name: "Left Foot" },
+  [RIGHT_TOE]: { name: "Right Toe" },
+  [LEFT_TOE]: { name: "Left Toe" },
+  [RECTUM]: { name: "Rectum" },
+  [URINARY_BLADDER]: { name: "Urinary Bladder" },
+
+  [HEAD_BACK]: { name: "Head" },
+  [NECK_BACK]: { name: "Neck" },
+  [RIGHT_SHOULDER_BACK]: { name: "Right Shoulder" },
+  [LEFT_SHOULDER_BACK]: { name: "Left Shoulder" },
+  [BACK]: { name: "Back" },
+  [LOWER_BACK]: { name: "Lower Back" },
+  [LEFT_TRICEP]: { name: "Left Tricep" },
+  [RIGHT_TRICEP]: { name: "Right Tricep" },
+  [LEFT_FOREARM_BACK]: { name: "Left  Forearm" },
+  [RIGHT_FOREARM_BACK]: { name: "Right Forearm" },
+  [LEFT_HAMSTRING]: { name: "Left Hamstring" },
+  [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
+  [LEFT_CALF]: { name: "Left Calf" },
+  [RIGHT_CALF]: { name: "Right Calf" },
+};
+
+export const BODY_VIEW = {
+  FRONT: "1",
+  BACK: "2"
+};
+
+export const PARTS = {
+  HEAD: "HEAD",
+  RIGHT_EYE: "RIGHT_EYE",
+  LEFT_EYE: "LEFT_EYE",
+  RIGHT_EAR: "RIGHT_EAR",
+  LEFT_EAR: "LEFT_EAR",
+  NOSE: "NOSE",
+  MOUTH: "MOUTH",
+  NECK: "NECK",
+  RIGHT_SHOULDER: "RIGHT_SHOULDER",
+  LEFT_SHOULDER: "LEFT_SHOULDER",
+  CHEST: "CHEST",
+  RIGHT_ARM: "RIGHT_ARM",
+  LEFT_ARM: "LEFT_ARM",
+  RIGHT_ELBOW: "RIGHT_ELBOW",
+  LEFT_ELBOW: "LEFT_ELBOW",
+  STOMACH: "STOMACH",
+  ABDOMEN: "ABDOMEN",
+  RIGHT_FOREARM: "RIGHT_FOREARM",
+  LEFT_FOREARM: "LEFT_FOREARM",
+  RIGHT_WRIST: "RIGHT_WRIST",
+  LEFT_WRIST: "LEFT_WRIST",
+  RIGHT_HAND: "RIGHT_HAND",
+  LEFT_HAND: "LEFT_HAND",
+  RIGHT_HAND_FINGER: "RIGHT_HAND_FINGER",
+  LEFT_HAND_FINGER: "LEFT_HAND_FINGER",
+  RIGHT_HIP: "RIGHT_HIP",
+  LEFT_HIP: "LEFT_HIP",
+  RIGHT_THIGH: "RIGHT_THIGH",
+  LEFT_THIGH: "LEFT_THIGH",
+  RIGHT_KNEE: "RIGHT_KNEE",
+  LEFT_KNEE: "LEFT_KNEE",
+  RIGHT_SHIN: "RIGHT_SHIN",
+  LEFT_SHIN: "LEFT_SHIN",
+  RIGHT_ANKLE: "RIGHT_ANKLE",
+  LEFT_ANKLE: "LEFT_ANKLE",
+  RIGHT_FOOT: "RIGHT_FOOT",
+  LEFT_FOOT: "LEFT_FOOT",
+  RIGHT_TOE: "RIGHT_TOE",
+  LEFT_TOE: "LEFT_TOE",
+  RECTUM: "RECTUM",
+  URINARY_BLADDER: "URINARY_BLADDER"
+};
+
+export const PART_LIST = [
+  HEAD,
+  RIGHT_EYE,
+  LEFT_EYE,
+  RIGHT_EAR,
+  LEFT_EAR,
+  NOSE,
+  MOUTH,
+  NECK,
+  RIGHT_SHOULDER,
+  LEFT_SHOULDER,
+  CHEST,
+  RIGHT_ARM,
+  LEFT_ARM,
+  RIGHT_ELBOW,
+  LEFT_ELBOW,
+  STOMACH,
+  ABDOMEN,
+  RIGHT_FOREARM,
+  LEFT_FOREARM,
+  RIGHT_WRIST,
+  LEFT_WRIST,
+  RIGHT_HAND,
+  LEFT_HAND,
+  RIGHT_HAND_FINGER,
+  LEFT_HAND_FINGER,
+  RIGHT_THIGH,
+  LEFT_THIGH,
+  RIGHT_KNEE,
+  LEFT_KNEE,
+  RIGHT_SHIN,
+  LEFT_SHIN,
+  RIGHT_ANKLE,
+  LEFT_ANKLE,
+  RIGHT_FOOT,
+  LEFT_FOOT,
+  RIGHT_TOE,
+  LEFT_TOE,
+  RECTUM,
+  URINARY_BLADDER,
+  RIGHT_HIP,
+  LEFT_HIP,
+  HEAD_BACK,
+  NECK_BACK,
+  RIGHT_SHOULDER_BACK,
+  LEFT_SHOULDER_BACK,
+  BACK,
+  LOWER_BACK,
+  LEFT_TRICEP,
+  RIGHT_TRICEP,
+  LEFT_FOREARM_BACK,
+  RIGHT_FOREARM_BACK,
+  LEFT_HAMSTRING,
+  RIGHT_HAMSTRING,
+  LEFT_CALF,
+  RIGHT_CALF,
+];
+
+export const PART_LIST_CODES = {
+  HEAD: HEAD,
+  RIGHT_EYE: RIGHT_EYE,
+  LEFT_EYE: LEFT_EYE,
+  RIGHT_EAR: RIGHT_EAR,
+  LEFT_EAR: LEFT_EAR,
+  NOSE: NOSE,
+  MOUTH: MOUTH,
+  NECK: NECK,
+  RIGHT_SHOULDER: RIGHT_SHOULDER,
+  LEFT_SHOULDER: LEFT_SHOULDER,
+  CHEST: CHEST,
+  RIGHT_ARM: RIGHT_ARM,
+  LEFT_ARM: LEFT_ARM,
+  RIGHT_ELBOW: RIGHT_ELBOW,
+  LEFT_ELBOW: LEFT_ELBOW,
+  STOMACH: STOMACH,
+  ABDOMEN: ABDOMEN,
+  RIGHT_FOREARM: RIGHT_FOREARM,
+  LEFT_FOREARM: LEFT_FOREARM,
+  RIGHT_WRIST: RIGHT_WRIST,
+  LEFT_WRIST: LEFT_WRIST,
+  RIGHT_HAND: RIGHT_HAND,
+  LEFT_HAND: LEFT_HAND,
+  RIGHT_HAND_FINGER: RIGHT_HAND_FINGER,
+  LEFT_HAND_FINGER: LEFT_HAND_FINGER,
+  RIGHT_THIGH: RIGHT_THIGH,
+  LEFT_THIGH: LEFT_THIGH,
+  RIGHT_KNEE: RIGHT_KNEE,
+  LEFT_KNEE: LEFT_KNEE,
+  RIGHT_SHIN: RIGHT_SHIN,
+  LEFT_SHIN: LEFT_SHIN,
+  RIGHT_ANKLE: RIGHT_ANKLE,
+  LEFT_ANKLE: LEFT_ANKLE,
+  RIGHT_FOOT: RIGHT_FOOT,
+  LEFT_FOOT: LEFT_FOOT,
+  RIGHT_TOE: RIGHT_TOE,
+  LEFT_TOE: LEFT_TOE,
+  RECTUM: RECTUM,
+  URINARY_BLADDER: URINARY_BLADDER,
+  RIGHT_HIP: RIGHT_HIP,
+  LEFT_HIP: LEFT_HIP,
+  HEAD_BACK: HEAD_BACK,
+  NECK_BACK: NECK_BACK,
+  RIGHT_SHOULDER_BACK: RIGHT_SHOULDER_BACK,
+  LEFT_SHOULDER_BACK: LEFT_SHOULDER_BACK,
+  BACK: BACK,
+  LOWER_BACK: LOWER_BACK,
+  LEFT_TRICEP: LEFT_TRICEP,
+  RIGHT_TRICEP: RIGHT_TRICEP,
+  LEFT_FOREARM_BACK: LEFT_FOREARM_BACK,
+  RIGHT_FOREARM_BACK: RIGHT_FOREARM_BACK,
+  LEFT_HAMSTRING: LEFT_HAMSTRING,
+  RIGHT_HAMSTRING: RIGHT_HAMSTRING,
+  LEFT_CALF: LEFT_CALF,
+  RIGHT_CALF: RIGHT_CALF
+}
+
+export const PART_LIST_FRONT = [
+  HEAD,
+  RIGHT_EYE,
+  LEFT_EYE,
+  RIGHT_EAR,
+  LEFT_EAR,
+  NOSE,
+  MOUTH,
+  NECK,
+  RIGHT_SHOULDER,
+  LEFT_SHOULDER,
+  CHEST,
+  RIGHT_ARM,
+  LEFT_ARM,
+  RIGHT_ELBOW,
+  LEFT_ELBOW,
+  STOMACH,
+  ABDOMEN,
+  RIGHT_FOREARM,
+  LEFT_FOREARM,
+  RIGHT_WRIST,
+  LEFT_WRIST,
+  RIGHT_HAND,
+  LEFT_HAND,
+  RIGHT_HAND_FINGER,
+  LEFT_HAND_FINGER,
+  RIGHT_THIGH,
+  LEFT_THIGH,
+  RIGHT_KNEE,
+  LEFT_KNEE,
+  RIGHT_SHIN,
+  LEFT_SHIN,
+  RIGHT_ANKLE,
+  LEFT_ANKLE,
+  RIGHT_FOOT,
+  LEFT_FOOT,
+  RIGHT_TOE,
+  LEFT_TOE,
+  RECTUM,
+  URINARY_BLADDER
+];
+
+export const PART_LIST_BACK = [
+  RIGHT_HIP,
+  LEFT_HIP,
+  HEAD_BACK,
+  NECK_BACK,
+  RIGHT_SHOULDER_BACK,
+  LEFT_SHOULDER_BACK,
+  BACK,
+  LOWER_BACK,
+  LEFT_TRICEP,
+  RIGHT_TRICEP,
+  LEFT_FOREARM_BACK,
+  RIGHT_FOREARM_BACK,
+  LEFT_HAMSTRING,
+  RIGHT_HAMSTRING,
+  LEFT_CALF,
+  RIGHT_CALF,
+]
+
+export const BODY = {
+  [HEAD]: {
+    key: HEAD,
+    areaStyle: {
+      height: 30,
+      width: 68,
+      top: 5,
+      left: 90,
+    },
+    dotStyle: {
+      top: 14,
+      left: 28
+    }
+  },
+  [HEAD_BACK]: {
+    key: HEAD_BACK,
+    areaStyle: {
+      height: 30,
+      width: 68,
+      top: 5,
+      left: 90,
+    },
+    dotStyle: {
+      top: 14,
+      left: 28
+    }
+  },
+  [RIGHT_EYE]: {
+    key: RIGHT_EYE,
+    areaStyle: {
+      top: 30,
+      left: 92,
+      height: 18,
+      width: 35,
+    },
+    dotStyle: {
+      top: 6,
+      left: 14
+    }
+  },
+  [LEFT_EYE]: {
+    key: LEFT_EYE,
+    areaStyle: {
+      top: 30,
+      left: 125,
+      height: 18,
+      width: 35,
+    },
+    dotStyle: {
+      top: 6,
+      left: 4
+    }
+  },
+  [RIGHT_EAR]: {
+    key: RIGHT_EAR,
+    areaStyle: {
+      top: 38,
+      left: 78,
+      height: 22,
+      width: 30
+    },
+    dotStyle: {
+      top: 4,
+      left: 10
+    }
+  },
+  [LEFT_EAR]: {
+    key: LEFT_EAR,
+    areaStyle: {
+      top: 38,
+      left: 140,
+      height: 22,
+      width: 30,
+    },
+    dotStyle: {
+      top: 4,
+      left: 6
+    }
+  },
+  [NOSE]: {
+    key: NOSE,
+    areaStyle: {
+      top: 44,
+      left: 113,
+      height: 15,
+      width: 22,
+    },
+    dotStyle: {
+      top: 2,
+      left: 4
+    }
+  },
+  [MOUTH]: {
+    key: MOUTH,
+    areaStyle: {
+      top: 56,
+      left: 105,
+      height: 18,
+      width: 42
+    },
+    dotStyle: {
+      top: 4,
+      left: 14
+    }
+  },
+  [NECK]: {
+    key: NECK,
+    areaStyle: {
+      top: 70,
+      left: 100,
+      height: 34,
+      width: 48
+    },
+    dotStyle: {
+      top: 6,
+      left: 18
+    }
+  },
+
+  [NECK_BACK]: {
+    key: NECK_BACK,
+    areaStyle: {
+      top: 70,
+      left: 100,
+      height: 34,
+      width: 48
+    },
+    dotStyle: {
+      top: 6,
+      left: 18
+    }
+  },
+  [RIGHT_SHOULDER]: {
+    key: RIGHT_SHOULDER,
+    areaStyle: {
+      top: 95,
+      left: 40,
+      height: 40,
+      width: 40,
+    },
+    dotStyle: {
+      top: 8,
+      left: 20
+    }
+    //areaStyle: { top: 144, left: 66 }
+  },
+  [LEFT_SHOULDER]: {
+    key: LEFT_SHOULDER,
+    areaStyle: {
+      top: 95,
+      left: 158,
+      height: 40,
+      width: 40,
+    },
+    dotStyle: {
+      top: 8,
+      right: 10
+    }
+    //areaStyle: { top: 144, left: 210 }
+  },
+  [LEFT_SHOULDER_BACK]: {
+    key: LEFT_SHOULDER_BACK,
+    areaStyle: {
+      top: 95,
+      left: 40,
+      height: 40,
+      width: 40,
+    },
+    dotStyle: {
+      top: 8,
+      left: 20
+    }
+    //areaStyle: { top: 144, left: 66 }
+  },
+  [RIGHT_SHOULDER_BACK]: {
+    key: RIGHT_SHOULDER_BACK,
+    areaStyle: {
+      top: 95,
+      left: 158,
+      height: 40,
+      width: 40,
+    },
+    dotStyle: {
+      top: 8,
+      right: 10
+    }
+    //areaStyle: { top: 144, left: 210 }
+  },
+  [CHEST]: {
+    key: CHEST,
+    areaStyle: {
+      top: 100,
+      left: 80,
+      height: 50,
+      width: 88,
+    },
+    dotStyle: {
+      top: 20,
+      left: 36
+    }
+    //areaStyle: { top: 180, left: 138 }
+  },
+  [BACK]: {
+    key: BACK,
+    areaStyle: {
+      top: 100,
+      left: 80,
+      height: 50,
+      width: 88,
+    },
+    dotStyle: {
+      top: 20,
+      left: 36
+    }
+    //areaStyle: { top: 180, left: 138 }
+  },
+  [RIGHT_ARM]: {
+    key: RIGHT_ARM,
+    areaStyle: {
+      top: 120,
+      left: 45,
+      height: 60,
+      width: 40
+    },
+    dotStyle: {
+      top: 30,
+      left: 15
+    }
+    //areaStyle: { top: 200, left: 60 }
+  },
+  [LEFT_ARM]: {
+    key: LEFT_ARM,
+    areaStyle: {
+      top: 120,
+      left: 165,
+      height: 60,
+      width: 40
+    },
+    dotStyle: {
+      top: 30,
+      right: 15
+    }
+    //areaStyle: { top: 200, left: 216 }
+  },
+  [LEFT_TRICEP]: {
+    key: LEFT_TRICEP,
+    areaStyle: {
+      top: 120,
+      left: 45,
+      height: 60,
+      width: 40
+    },
+    dotStyle: {
+      top: 30,
+      left: 15
+    }
+    //areaStyle: { top: 200, left: 60 }
+  },
+  [RIGHT_TRICEP]: {
+    key: RIGHT_TRICEP,
+    areaStyle: {
+      top: 120,
+      left: 165,
+      height: 60,
+      width: 40
+    },
+    dotStyle: {
+      top: 30,
+      right: 15
+    }
+    //areaStyle: { top: 200, left: 216 }
+  },
+  [RIGHT_ELBOW]: {
+    key: RIGHT_ELBOW,
+    areaStyle: {
+      top: 160,
+      left: 45,
+      height: 40,
+      width: 40
+    },
+    dotStyle: {
+      top: 15,
+      left: 14
+    }
+    //areaStyle: { top: 252, left: 54 }
+  },
+  [LEFT_ELBOW]: {
+    key: LEFT_ELBOW,
+    areaStyle: {
+      top: 160,
+      left: 166,
+      height: 40,
+      width: 40
+    },
+    dotStyle: {
+      top: 15,
+      right: 14
+    }
+    //areaStyle: { top: 252, left: 220 }
+  },
+  [STOMACH]: {
+    key: STOMACH,
+    areaStyle: {
+      top: 170,
+      left: 90,
+      height: 40,
+      width: 70,
+      // backgroundColor: "blue",
+    },
+    dotStyle: {
+      top: 20,
+      left: 30
+    }
+    //areaStyle: { top: 275, left: 138 }
+  },
+  [ABDOMEN]: {
+    key: ABDOMEN,
+    areaStyle: {
+      top: 210,
+      left: 90,
+      height: 40,
+      width: 70
+    },
+    dotStyle: {
+      top: 15,
+      left: 28
+    }
+    //areaStyle: { top: 330, left: 138 }
+  },
+
+  [LOWER_BACK]: {
+    key: LOWER_BACK,
+    areaStyle: {
+      top: 210,
+      left: 90,
+      height: 40,
+      width: 70
+    },
+    dotStyle: {
+      top: 15,
+      left: 28
+    }
+    //areaStyle: { top: 330, left: 138 }
+  },
+  [RIGHT_FOREARM]: {
+    key: RIGHT_FOREARM,
+    areaStyle: {
+      top: 200,
+      left: 30,
+      height: 50,
+      width: 40
+    },
+    dotStyle: {
+      top: 20,
+      left: 14
+    }
+    //areaStyle: { top: 310, left: 44 }
+  },
+  [LEFT_FOREARM]: {
+    key: LEFT_FOREARM,
+    areaStyle: {
+      top: 200,
+      left: 180,
+      height: 50,
+      width: 40
+    },
+    dotStyle: {
+      top: 20,
+      right: 14
+    }
+    //areaStyle: { top: 310, left: 230 }
+  },
+  [LEFT_FOREARM_BACK]: {
+    key: LEFT_FOREARM_BACK,
+    areaStyle: {
+      top: 200,
+      left: 30,
+      height: 50,
+      width: 40
+    },
+    dotStyle: {
+      top: 20,
+      left: 14
+    }
+    //areaStyle: { top: 310, left: 44 }
+  },
+  [RIGHT_FOREARM_BACK]: {
+    key: RIGHT_FOREARM_BACK,
+    areaStyle: {
+      top: 200,
+      left: 180,
+      height: 50,
+      width: 40
+    },
+    dotStyle: {
+      top: 20,
+      right: 14
+    }
+    //areaStyle: { top: 310, left: 230 }
+  },
+  [RIGHT_WRIST]: {
+    key: RIGHT_WRIST,
+    areaStyle: {
+      top: 240,
+      left: 25,
+      height: 28,
+      width: 30,
+    },
+    dotStyle: {
+      top: 10,
+      left: 8
+    }
+    //areaStyle: { top: 360, left: 32 }
+  },
+  [LEFT_WRIST]: {
+    key: LEFT_WRIST,
+    areaStyle: {
+      top: 240,
+      left: 200,
+      height: 28,
+      width: 30
+    },
+    dotStyle: {
+      top: 10,
+      right: 8
+    }
+    //areaStyle: { top: 360, left: 242 }
+  },
+  [RIGHT_HAND]: {
+    key: RIGHT_HAND,
+    areaStyle: {
+      top: 270,
+      left: 10,
+      height: 25,
+      width: 40
+    },
+    dotStyle: {
+      top: 4,
+      left: 18
+    }
+    //areaStyle: { top: 384, left: 26 }
+  },
+  [LEFT_HAND]: {
+    key: LEFT_HAND,
+    areaStyle: {
+      top: 270,
+      left: 200,
+      height: 25,
+      width: 40
+    },
+    dotStyle: {
+      top: 4,
+      right: 18
+    }
+    //areaStyle: { top: 384, left: 248 }
+  },
+  [RIGHT_HAND_FINGER]: {
+    key: RIGHT_HAND_FINGER,
+    areaStyle: {
+      top: 295,
+      left: 10,
+      height: 40,
+      width: 40,
+      // backgroundColor: "blue",
+    },
+    dotStyle: {
+      top: 4,
+      left: 14
+    }
+    //areaStyle: { top: 408, left: 24 }
+  },
+  [LEFT_HAND_FINGER]: {
+    key: LEFT_HAND_FINGER,
+    areaStyle: {
+      top: 295,
+      left: 200,
+      height: 40,
+      width: 40,
+    },
+    dotStyle: {
+      top: 4,
+      right: 14
+    }
+    //areaStyle: { top: 408, left: 250 }
+  },
+  [LEFT_HIP]: {
+    key: LEFT_HIP,
+    areaStyle: {
+      top: 235,
+      left: 70,
+      height: 50,
+      width: 50
+    },
+    dotStyle: {
+      top: 20,
+      left: 30
+    }
+    //areaStyle: { top: 390, left: 104 }
+  },
+  [RECTUM]: {
+    key: RECTUM,
+    areaStyle: {
+      top: 240,
+      left: 100,
+      height: 20,
+      width: 50
+    },
+    dotStyle: {
+      top: 6,
+      right: 18
+    }
+    //areaStyle: { top: 390, left: 172 }
+  },
+  [URINARY_BLADDER]: {
+    key: URINARY_BLADDER,
+    areaStyle: {
+      top: 260,
+      left: 100,
+      height: 30,
+      // backgroundColor: "green",
+      width: 50
+    },
+    dotStyle: {
+      top: 8,
+      right: 20
+    }
+    //areaStyle: { top: 390, left: 172 }
+  },
+  [RIGHT_HIP]: {
+    key: RIGHT_HIP,
+    areaStyle: {
+      top: 235,
+      left: 125,
+      height: 50,
+      width: 50
+    },
+    dotStyle: {
+      top: 20,
+      right: 25
+    }
+    //areaStyle: { top: 390, left: 172 }
+  },
+  [RIGHT_THIGH]: {
+    key: RIGHT_THIGH,
+    areaStyle: {
+      top: 285,
+      left: 70,
+      height: 80,
+      width: 60
+    },
+    dotStyle: {
+      top: 35,
+      left: 25
+    }
+    //areaStyle: { top: 470, left: 104 }
+  },
+  [LEFT_THIGH]: {
+    key: LEFT_THIGH,
+    areaStyle: {
+      top: 285,
+      left: 130,
+      height: 80,
+      width: 60,
+    },
+    dotStyle: {
+      top: 35,
+      right: 30
+    }
+    //areaStyle: { top: 470, left: 172 }
+  },
+  [LEFT_HAMSTRING]: {
+    key: LEFT_HAMSTRING,
+    areaStyle: {
+      top: 285,
+      left: 70,
+      height: 80,
+      width: 60
+    },
+    dotStyle: {
+      top: 35,
+      left: 25
+    }
+    //areaStyle: { top: 470, left: 104 }
+  },
+  [RIGHT_HAMSTRING]: {
+    key: RIGHT_HAMSTRING,
+    areaStyle: {
+      top: 285,
+      left: 130,
+      height: 80,
+      width: 60,
+    },
+    dotStyle: {
+      top: 35,
+      right: 30
+    }
+    //areaStyle: { top: 470, left: 172 }
+  },
+  [RIGHT_KNEE]: {
+    key: RIGHT_KNEE,
+    areaStyle: {
+      top: 365,
+      left: 80,
+      height: 50,
+      width: 45
+    },
+    dotStyle: {
+      top: 15,
+      left: 18
+    }
+    //areaStyle: { top: 548, left: 104 }
+  },
+  [LEFT_KNEE]: {
+    key: LEFT_KNEE,
+    areaStyle: {
+      top: 365,
+      left: 130,
+      height: 50,
+      width: 45
+    },
+    dotStyle: {
+      top: 15,
+      right: 18
+    }
+    //areaStyle: { top: 548, left: 172 }
+  },
+  [RIGHT_SHIN]: {
+    key: RIGHT_SHIN,
+    areaStyle: {
+      top: 415,
+      left: 80,
+      height: 60,
+      width: 45
+    },
+    dotStyle: {
+      top: 20,
+      left: 22
+    }
+    //areaStyle: { top: 640, left: 104 }
+  },
+  [LEFT_SHIN]: {
+    key: LEFT_SHIN,
+    areaStyle: {
+      top: 415,
+      left: 130,
+      height: 60,
+      width: 45
+    },
+    dotStyle: {
+      top: 20,
+      right: 22
+    }
+    //areaStyle: { top: 640, left: 172 }
+  },
+  [LEFT_CALF]: {
+    key: LEFT_CALF,
+    areaStyle: {
+      top: 415,
+      left: 80,
+      height: 60,
+      width: 45
+    },
+    dotStyle: {
+      top: 20,
+      left: 22
+    }
+    //areaStyle: { top: 640, left: 104 }
+  },
+  [RIGHT_CALF]: {
+    key: RIGHT_CALF,
+    areaStyle: {
+      top: 415,
+      left: 130,
+      height: 60,
+      width: 45
+    },
+    dotStyle: {
+      top: 20,
+      right: 22
+    }
+    //areaStyle: { top: 640, left: 172 }
+  },
+  [RIGHT_ANKLE]: {
+    key: RIGHT_ANKLE,
+    areaStyle: {
+      top: 470,
+      left: 102,
+      height: 25,
+      width: 30,
+    },
+    dotStyle: {
+      top: 10,
+      left: 8
+    }
+    //areaStyle: { top: 700, left: 108 }
+  },
+  [LEFT_ANKLE]: {
+    key: LEFT_ANKLE,
+    areaStyle: {
+      top: 470,
+      left: 132,
+      height: 25,
+      width: 30
+    },
+    dotStyle: {
+      top: 10,
+      right: 12
+    }
+    //areaStyle: { top: 700, left: 168 }
+  },
+  [RIGHT_FOOT]: {
+    key: RIGHT_FOOT,
+    areaStyle: {
+      top: 490,
+      left: 94,
+      height: 20,
+      width: 35,
+      // backgroundColor: "blue",
+    },
+    dotStyle: {
+      top: 4,
+      left: 12
+    }
+    //areaStyle: { top: 720, left: 108 }
+  },
+  [LEFT_FOOT]: {
+    key: LEFT_FOOT,
+    areaStyle: {
+      top: 490,
+      left: 130,
+      height: 20,
+      width: 35,
+      // backgroundColor: "blue",
+    },
+    dotStyle: {
+      top: 4,
+      right: 12
+    }
+    //areaStyle: { top: 720, left: 168 }
+  },
+  [RIGHT_TOE]: {
+    key: RIGHT_TOE,
+    areaStyle: {
+      top: 733,
+      left: 84,
+      height: 20,
+      width: 40
+    },
+    dotStyle: {
+      top: 4,
+      left: 20
+    }
+    //areaStyle: { top: 740, left: 108 }
+  },
+  [LEFT_TOE]: {
+    key: LEFT_TOE,
+    areaStyle: {
+      top: 733,
+      left: 165,
+      height: 20,
+      width: 40
+    },
+    dotStyle: {
+      top: 4,
+      right: 20
+    }
+    //areaStyle: { top: 740, left: 168 }
+  }
+};
+

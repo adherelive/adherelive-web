@@ -1,6 +1,6 @@
 import Controller from "../../index";
 import appointmentService from "../../../services/appointment/appointment.service";
-import {EVENT_STATUS, FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
+import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
 import moment from "moment";
 
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -19,8 +19,9 @@ import providerService from "../../../services/provider/provider.service";
 import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
+import EventSchedule from "../../../eventSchedules";
 
-const Logger = new Log("MOBILE APPOINTMENT CONTROLLLER");
+const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
 class MobileAppointmentController extends Controller {
   constructor() {
@@ -146,23 +147,32 @@ class MobileAppointmentController extends Controller {
       }
 
       const eventScheduleData = {
+        event_id: appointmentData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
+        critical,
+        start_time,
+        end_time,
+        details: appointmentData.getBasicInfo(),
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
+          category,
           details: {
             category,
             name: userCategoryData.getName()
           }
         },
-        appointmentId: appointmentData.getAppointmentId()
       };
+
+      // RRule
+      await EventSchedule.create(eventScheduleData);
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
       await NotificationSdk.execute(appointmentJob);
 
       Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
-      // ADD CAREPLAN APPOINTMENT
+      // ADD CARE_PLAN APPOINTMENT
       if (care_plan_id) {
         const carePlanAppointment = await carePlanAppointmentService.addCarePlanAppointment(
           {

@@ -43,9 +43,7 @@ function notificationReducer(state, data) {
             ...notifications
         };
     } else {
-        return {
-            ...state
-        };
+        return state;
     }
 }
 

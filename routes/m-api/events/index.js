@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 import Authenticate from "../middleware/auth";
 import MobileAppointment from "../../../app/controllers/mControllers/appointments/appointment.controller";
+import EventController from "../../../app/controllers/mControllers/scheduleEvents/event.controller";
+
 import MobileMedicationReminder from "../../../app/controllers/mControllers/medicationReminder/mReminder.controller";
 import * as validator from "./validator";
 
@@ -33,6 +35,12 @@ router.post(
     Authenticate,
     validator.validateMedicationReminderData,
     MobileMedicationReminder.createCarePlanMedication
+);
+
+router.get(
+  "/vitals/:id",
+  Authenticate,
+  EventController.getVitalEvent
 );
 
 module.exports = router;

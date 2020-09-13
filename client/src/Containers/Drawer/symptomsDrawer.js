@@ -10,7 +10,7 @@ import { searchMedicine } from "../../modules/medicines";
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
-        other_details: { medication_details = {} } = {}, medicines
+        other_details: { medication_details = {} } = {}, medicines, upload_documents = {}
     } = state;
 
 
@@ -20,7 +20,8 @@ const mapStateToProps = state => {
         loading,
         payload,
         medication_details,
-        medicines
+        medicines,
+        upload_documents
     };
 };
 

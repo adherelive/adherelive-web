@@ -1,3 +1,16 @@
 node_modules
 client/node_modules
+client/build
+!client/.env
 dump
+.idea
+.git
+emails
+!public/.gitkeep
+public
+.node_env
+.env
+docker-compose.yaml
+docker-compose.prod.yaml
+output.log
+README.md

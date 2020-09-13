@@ -150,6 +150,7 @@ const appointmentNotification = async (data) => {
             const event = await AppointmentWrapper(events);
             eventData = event.getBasicInfo();
             participants = event.getParticipants();
+            Log.debug("participants --> ", participants);
         // } else {
         //     const events = await ScheduleEventService.getEventByData({id: foreign_id});
         //     const event = await ScheduleEventWrapper(events);
@@ -190,11 +191,13 @@ const appointmentNotification = async (data) => {
 
                 for(const id of Object.keys(participants)) {
                     Log.debug("id of participants", participants[id]);
-                    const user = await UserWrapper(null, participants[id]);
-                    const {users, doctors, patients} = await user.getReferenceInfo();
-                    userData = {...userData, ...users};
-                    doctorData = {...doctorData, ...doctors};
-                    patientData = {...patientData, ...patients};
+                    if(participants[id]) {
+                        const user = await UserWrapper(null, participants[id]);
+                        const {users, doctors, patients} = await user.getReferenceInfo();
+                        userData = {...userData, ...users};
+                        doctorData = {...doctorData, ...doctors};
+                        patientData = {...patientData, ...patients};
+                    }
                 }
 
                 Log.debug("userData", {...userData});

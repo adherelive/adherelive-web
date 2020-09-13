@@ -3,6 +3,11 @@ import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
 import minioService from "../../../services/minio/minio.service";
 
+// SERVICES ------------
+import VitalService from "../../../services/vitals/vital.service";
+
+// WRAPPERS ------------
+import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import { randomString } from "../../../../libs/helper";
@@ -19,21 +24,21 @@ import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
-// import {
-//   getCarePlanAppointmentIds,
-//   getCarePlanMedicationIds,
-//   getCarePlanSeverityDetails
-// } from "../../carePlans/carePlanHelper";
+
 import UserWrapper from "../../../ApiWrapper/mobile/user";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
+import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
+import SymptomService from "../../../services/symptom/symptom.service";
+import moment from "moment";
+import {BODY_VIEW} from "../../../../constant";
 
 const Logger  = new Log("mobile patient controller");
 
@@ -406,6 +411,23 @@ class MPatientController extends Controller {
         };
       }
 
+      const symptomData = await SymptomService.getAllByData({patient_id, care_plan_id: carePlanData.getCarePlanId()});
+
+      let symptomDetails = {};
+      let uploadDocumentData = {};
+
+      if(symptomData.length > 0) {
+        for(const data of symptomData) {
+          const symptom = await SymptomWrapper({data});
+          const {symptoms} = await symptom.getAllInfo();
+          const {upload_documents} = await symptom.getReferenceInfo();
+          symptomDetails = {...symptomDetails, ...symptoms};
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+        }
+      }
+
+
+
       return this.raiseSuccess(res, 200, {
         // care_plans: { ...carePlanApiData },
         // show, medicationsOfTemplate, appointmentsOfTemplate, carePlanMedications, carePlanAppointments, carePlanTemplateId,
@@ -426,6 +448,12 @@ class MPatientController extends Controller {
         medications: {
           ...medicationApiDetails
         },
+        symptoms: {
+          ...symptomDetails,
+        },
+        upload_documents: {
+          ...uploadDocumentData
+        },
         template_appointments: {
           ...templateAppointmentData
         },
@@ -441,6 +469,247 @@ class MPatientController extends Controller {
       Logger.debug("get careplan 500 error ---> ", error);
       console.log("GET PATIENT DETAILS ERROR --> ", error);
       return this.raiseServerError(res);
+    }
+  };
+
+  getPatientSymptoms = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      Logger.debug("req.params ----->", req.params);
+      const {params: {patient_id} = {}, userDetails: {userId} = {}} = req;
+
+      const symptomData = await SymptomService.getAllByData({patient_id});
+
+      let uploadDocumentData = {};
+      const dateWiseSymptoms = {};
+      let partWiseSymptoms = {};
+
+      const sideWiseParts = {};
+      let symptomDates = [];
+      let symptomParts = [];
+
+      const frontPart = {};
+      const backPart = {};
+
+      if(symptomData.length > 0) {
+        for(const data of symptomData) {
+          const symptom = await SymptomWrapper({data});
+
+          Logger.debug("symptom created date ---> ", symptom.getCreatedDate());
+
+          // DATA FORMATTED FOR DATE ORDER
+          const symptomDetails = await symptom.getDateWiseInfo();
+          const {upload_documents} = await symptom.getReferenceInfo();
+          symptomDates.push(symptom.getCreatedDate());
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+          if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
+            dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+          } else {
+            dateWiseSymptoms[symptom.getCreatedDate()] = [];
+            dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);
+          }
+        }
+
+        symptomDates.sort((a, b) => {
+          if (moment(a).isBefore(moment(b))) return 1;
+
+          if (moment(a).isAfter(moment(b))) return -1;
+
+          return 0;
+        });
+        symptomDates.forEach(date => {
+          const data = dateWiseSymptoms[date] || [];
+          data.sort((activityA, activityB) => {
+            const {createdAt: a} = activityA;
+            const {createdAt: b} = activityB;
+            if (moment(a).isBefore(moment(b))) return 1;
+
+            if (moment(a).isAfter(moment(b))) return -1;
+
+            return 0;
+          });
+        });
+
+        return raiseSuccess(
+            res,
+            200,
+            {
+              timeline_symptoms: {
+                ...dateWiseSymptoms
+              },
+              // symptom_parts: {
+              //   ...sideWiseParts
+              // },
+              upload_documents: {
+                ...uploadDocumentData
+              },
+              symptom_dates: symptomDates,
+              // symptom_part_ids: symptomParts
+            },
+            "Symptoms data fetched successfully"
+        );
+      } else {
+        return raiseClientError(res, 422, {}, "Patient has not updated any symptoms yet for the treatment");
+      }
+    } catch(error) {
+      Logger.debug("getPatientSymptoms 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getPatientPartSymptoms = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      Logger.debug("req.params ----->", req.params);
+      const {query: {duration = "5"} = {}, params: {patient_id} = {}} = req;
+
+      const currentTime = moment().utc().toISOString();
+      const historyTime = moment().subtract(duration, "days").utc().toISOString();
+
+      const symptomData = await SymptomService.getFilteredData({patient_id, start_time: historyTime, end_time: currentTime});
+
+      let uploadDocumentData = {};
+
+      const sideWiseParts = {};
+      let symptomDates = [];
+      let symptomParts = [];
+
+      const frontPart = {};
+      const backPart = {};
+
+      if(symptomData.length > 0) {
+        for(const data of symptomData) {
+          const symptom = await SymptomWrapper({data});
+          const symptomDetails = await symptom.getDateWiseInfo();
+
+          // DATA FORMATTED FOR SIDE AND PART WISE ORDER
+
+          if(symptom.getSide() === BODY_VIEW.FRONT) {
+            if (frontPart.hasOwnProperty(symptom.getPart())) {
+              frontPart[symptom.getPart()].push(symptomDetails);
+            } else {
+              frontPart[symptom.getPart()] = [];
+              frontPart[symptom.getPart()].push(symptomDetails);
+            }
+          } else {
+            if (backPart.hasOwnProperty(symptom.getPart())) {
+              backPart[symptom.getPart()].push(symptomDetails);
+            } else {
+              backPart[symptom.getPart()] = [];
+              backPart[symptom.getPart()].push(symptomDetails);
+            }
+          }
+
+          const {upload_documents} = await symptom.getReferenceInfo();
+          uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+          symptomDates.push(symptom.getCreatedDate());
+          symptomParts.push(symptom.getPart());
+        }
+
+        for(const side of Object.values(BODY_VIEW)) {
+          if(side === BODY_VIEW.FRONT) {
+            sideWiseParts[side] = {...frontPart};
+          } else {
+            sideWiseParts[side] = {...backPart};
+          }
+        }
+
+        Object.values(BODY_VIEW).forEach(side => {
+          const sideData = sideWiseParts[side] || {};
+          Object.keys(sideData).forEach(part => {
+            const data = sideData[part] || [];
+            data.sort((activityA, activityB) => {
+              const {createdAt: a} = activityA;
+              const {createdAt: b} = activityB;
+              if (moment(a).isBefore(moment(b))) return 1;
+
+              if (moment(a).isAfter(moment(b))) return -1;
+
+              return 0;
+            });
+          });
+        });
+
+        return raiseSuccess(
+            res,
+            200,
+            {
+              symptom_parts: {
+                ...sideWiseParts
+              },
+              upload_documents: {
+                ...uploadDocumentData
+              },
+            },
+            "Symptoms data fetched successfully"
+        );
+      } else {
+        Object.values(BODY_VIEW).forEach(side => {
+          sideWiseParts[side] = [];
+        });
+        return raiseSuccess(res, 200, {
+          symptom_parts: {
+            ...sideWiseParts
+          },
+          upload_documents: {
+            ...uploadDocumentData
+          },
+        }, "Patient has not updated any symptoms yet for the treatment");
+      }
+    } catch(error) {
+      Logger.debug("getPatientPartSymptoms 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getPatientVitals = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      Logger.debug("req.params ----->", req.params);
+      const {params: {patient_id} = {}} = req;
+
+      const carePlan = await carePlanService.getSingleCarePlanByData({patient_id});
+      const allVitals = await VitalService.getAllByData({care_plan_id: carePlan.get("id")});
+
+      let vitalDetails = {};
+      let vitalTemplateDetails = {};
+      let carePlanTemplateDetails = {};
+
+      if(allVitals.length > 0) {
+        for(const vitalData of allVitals) {
+          const vital = await VitalWrapper(vitalData);
+          const {vitals} = await vital.getAllInfo();
+          const {vital_templates, care_plans} = await vital.getReferenceInfo();
+
+          vitalDetails = {...vitalDetails, ...vitals};
+
+          vitalTemplateDetails = {...vitalTemplateDetails, ...vital_templates};
+          carePlanTemplateDetails = {...carePlanTemplateDetails, ...care_plans};
+        }
+
+        return raiseSuccess(
+            res,
+            200,
+            {
+              vitals: {
+                ...vitalDetails
+              },
+              vital_templates: {
+                ...vitalTemplateDetails
+              },
+              care_plans: {
+                ...carePlanTemplateDetails,
+              },
+              vital_ids: Object.keys(vitalDetails)
+            },
+            "Vitals fetched successfully for the patient"
+        );
+      } else {
+        return raiseSuccess(res, 200, {}, "There are no added vitals for the patient");
+      }
+    } catch(error) {
+      Logger.debug("getPatientVitals 500 error", error);
+      return raiseServerError(res);
     }
   };
 }

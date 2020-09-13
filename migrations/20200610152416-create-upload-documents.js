@@ -1,6 +1,7 @@
 'use strict';
 
 import { DB_TABLES } from "../constant";
+import Sequelize from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -22,6 +23,9 @@ module.exports = {
       document: {
         type: Sequelize.STRING(1000),
         allowNull: false,
+      },
+      name: {
+        type: Sequelize.STRING(1000)
       },
       created_at: {
         allowNull: false,

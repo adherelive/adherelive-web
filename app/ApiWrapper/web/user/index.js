@@ -48,6 +48,25 @@ class UserWrapper extends BaseUser {
         };
     };
 
+    getCategoryInfo = async () => {
+      const {_data} = this;
+      const {doctor = null, patient = null} = _data || {};
+
+      if(doctor) {
+          const doctorData = await DoctorWrapper(doctor);
+          return {
+              userCategoryData: doctorData.getBasicInfo(),
+              userCategoryId: doctorData.getDoctorId()
+          };
+      } else if(patient) {
+          const patientData = await PatientWrapper(patient);
+          return {
+              userCategoryData: patientData.getBasicInfo(),
+              userCategoryId: patientData.getPatientId()
+          }
+      }
+    };
+
   getPermissions = async () => {
       const {getCategory} = this;
       try {
@@ -137,5 +156,6 @@ export default async (data = null, userId = null) => {
     return new UserWrapper(data);
   }
   const user = await userService.getUserById(userId);
-  return new UserWrapper(user.get());
+  console.log("912381098312 user ---> ", user);
+  return new UserWrapper(user.get(""));
 };

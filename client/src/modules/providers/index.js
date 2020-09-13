@@ -8,9 +8,7 @@ function providersReducer(state, data) {
           ...providers,
       };
   } else {
-      return {
-          ...state,
-      };
+      return state;
   }
 }
 

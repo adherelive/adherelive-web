@@ -1,6 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
+import jwt from "jsonwebtoken";
+
+import userService from "../../app/services/user/user.service";
+import UserWrapper from "../../app/ApiWrapper/web/user";
+
+import Logger from "../../libs/log";
+const Log = new Logger("API > INDEX");
+
 import userRouter from "./user";
 import appointmentRouter from "./appointments";
 import eventRouter from "./events";
@@ -21,28 +29,17 @@ import treatmentRouter from "./treatment";
 import specialityRouter from "./speciality";
 import carePlanTemplateRouter from "./carePlanTemplate";
 import notificationRouter from "./notification";
-
-import userService from "../../app/services/user/user.service";
-import jwt from "jsonwebtoken";
-import Log from "../../libs/log";
+import symptomRouter from "./symptoms";
+import vitalRouter from "./vitals";
 
 
 router.use(async function(req, res, next) {
   try {
-    const { query: { m } = {} } = req;
     let accessToken;
-    if (m) {
-      const { authorization = "" } = req.headers || {};
-      const bearer = authorization.split(" ");
-      if (bearer.length === 2) {
-        accessToken = bearer[1];
-      }
-    } else {
       const { cookies = {} } = req;
       if (cookies.accessToken) {
         accessToken = cookies.accessToken;
       }
-    }
 
     //  ----- FOR API TEST POSTMAN ------
 
@@ -56,13 +53,17 @@ router.use(async function(req, res, next) {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {userId = null} = decodedAccessToken || {};
-      let user = await userService.getUser(userId);
-      // console.log("------------------+++++++++++++++++++++------------------", userId, user);
+
+      const userData = await userService.getUser(userId);
+      const user = await UserWrapper(userData);
+      const {userCategoryData, userCategoryId} = user.getCategoryInfo();
       if (user) {
         req.userDetails = {
           exists: true,
           userId: userId,
-          userData: user.getBasicInfo
+          userData: userData.getBasicInfo,
+          userCategoryData,
+          userCategoryId
         };
       } else {
         req.userDetails = {
@@ -106,5 +107,7 @@ router.use("/specialities", specialityRouter);
 router.use("/care-plan-templates", carePlanTemplateRouter);
 
 router.use("/notifications", notificationRouter);
+router.use("/symptoms", symptomRouter);
+router.use("/vitals", vitalRouter);
 
 module.exports = router;

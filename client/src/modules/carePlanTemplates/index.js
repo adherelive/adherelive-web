@@ -8,9 +8,7 @@ function carePlanTemplatesReducer(state, data) {
             ...care_plan_templates,
         };
     } else {
-        return {
-            ...state,
-        };
+        return state;
     }
 }
 

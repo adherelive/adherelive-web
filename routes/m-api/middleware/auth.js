@@ -7,10 +7,9 @@ import doRequest from "../../../app/controllers/helper/doRequest";
 
 export default async (req, res, next) => {
     try{
-        const { query: { m } = {} } = req;
         let accessToken;
-        if (m) {
-            const { authorization = "" } = req.headers || {};
+        const { authorization = "" } = req.headers || {};
+        if (authorization) {
             const bearer = authorization.split(" ");
             if (bearer.length === 2) {
                 accessToken = bearer[1];
