@@ -37,7 +37,8 @@ class UserDeviceService {
     deleteDevice = async (data) => {
         try {
             const userDevice = await UserDevices.destroy({
-                where: data
+                where: data,
+                force: true
             });
             return userDevice;
         } catch(error) {
