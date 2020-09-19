@@ -98,6 +98,8 @@ class AddMedicationReminder extends Component {
     const { close } = this.props;
     close();
   };
+  
+ 
 
   handleSubmit = async () => {
     const {
@@ -125,6 +127,9 @@ class AddMedicationReminder extends Component {
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
         const { medicine_id, quantity, strength, unit, critical,formulation: medicine_type, special_instruction: description } = values || {};
+       
+       
+       
         data_to_submit = {
           medicine_id,
           quantity,
@@ -139,33 +144,88 @@ class AddMedicationReminder extends Component {
 
           repeat: "weekly",
 
-          [startTimeField.field_name]:
-            startTime && startTime !== null
-              ? startTime.startOf("minute").toISOString()
-              : startTime,
-          [startDateField.field_name]:
-            startDate && startDate !== null
-              ? startDate
-                .clone()
-                .startOf("day")
-                .toISOString()
-              : startDate,
-          [endDateField.field_name]:
-            endDate && endDate !== null
-              ? endDate
-                .clone()
-                .endOf("day")
-                .toISOString()
-              : endDate
+          [startTimeField.field_name]:startTime && startTime !== null ? startTime.startOf("minute").toISOString(): startTime,
+          
+          [startDateField.field_name]:startDate && startDate !== null ? startDate.clone().startOf("day").toISOString():startDate,
+          
+          [endDateField.field_name]:endDate && endDate !== null? endDate.clone().endOf("day").toISOString():endDate
         };
 
         if (repeatDays) {
+          
           data_to_submit = {
             ...data_to_submit,
             [repeatDaysField.field_name]: repeatDays.split(",")
           };
 
         }
+        
+       // ---------------------------------->>
+       // to check if after selecting dates and then days, if days fall within the dates
+         
+        // if(repeatDays && startDate && endDate) {
+         
+        //   console.log(typeof(repeatDays));
+        //   const daysArray=[];
+        //   let day="";
+        //   for(let i=0;i<repeatDays.length;i++){
+           
+        //     if(repeatDays[i]=="," || i==repeatDays.length-1){
+        //       daysArray.push(day);
+        //       day="";
+        //     }
+        //     else{
+        //       day =day+repeatDays[i];
+        //     }
+        //   }
+         
+        //   const findDayNumber={
+        //     "Mon":1,
+        //     "Tue":2,
+        //     "Wed":3,
+        //     "Thu":4,
+        //     "Fri":5,
+        //     "Sat":6,
+        //     "Sun":7,
+        //   }
+         
+        //   let flag =true;
+         
+        //   for(let i=0;i<daysArray.length;i++){
+           
+        //       let repeatDaysNumber = findDayNumber[daysArray[i]];
+        //       const startDateNumber = startDate._d.getDay();
+        //       const endDateNumber = endDate._d.getDay();
+             
+        //       if(repeatDaysNumber<startDateNumber && repeatDaysNumber>=startDateNumber && repeatDaysNumber <=endDateNumber )
+        //       {
+        //         continue;
+        //       }
+        //       else if(repeatDaysNumber>startDateNumber && (repeatDaysNumber>=startDateNumber || repeatDaysNumber <=endDateNumber) )
+        //       {
+        //         continue;
+        //       }
+        //       else if(startDateNumber  ==  endDateNumber){
+               
+        //         continue;
+               
+        //       }else{
+               
+        //         flag = false;
+        //         break;
+        //       }
+        //   }
+        //   if(flag == false){
+        //     message.warn('Please select valid dates for medication');
+        //   }
+        // }
+       
+      // ------------------------ <<<<<<<<<<<<<<<<<<<<<<<
+  
+      
+    
+      
+        
         if (!medicine_id || !unit || (unit === MEDICINE_UNITS.MG && !quantity) || !strength || !when_to_take || !startDate) {
 
           message.error('Please fill all details.')

@@ -109,9 +109,11 @@ class EndDate extends Component {
     const value = getFieldValue(FIELD_NAME);
 
     return (
-      <div className="flex flex-grow-1 row align-items-center">
+      <div className="wp100 flex align-center">
         <div className="pl8 wp100 ">
-          <span className="form-label ">To</span>
+          <div className='flex row'>
+            <span className="form-label">To</span>
+          </div>
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
               initialValue: end_date ? moment(end_date) : getInitialValue()

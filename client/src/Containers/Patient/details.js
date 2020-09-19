@@ -11,6 +11,8 @@ import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
 import { DRAWER } from "../../constant";
 import { openPopUp, closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
+import {getLastVisitAlerts} from "../../modules/scheduleEvents/index";
+
 
 const mapStateToProps = (state, ownProps) => {
     const { users = {}, appointments, medications, medicines = {}, patients = {}, care_plans = {}, doctors = {}, treatments = {},
@@ -65,6 +67,7 @@ const mapDispatchToProps = dispatch => {
         getAppointments: (id) => dispatch(getAppointments(id)),
         getAppointmentsDetails: () => dispatch(getAppointmentsDetails()),
         getPatientCarePlanDetails: (patientId) => dispatch(getPatientCarePlanDetails(patientId)),
+        getLastVisitAlerts:(patientId) => dispatch(getLastVisitAlerts(patientId)),
         searchMedicine: value => dispatch(searchMedicine(value)),
         addCarePlanMedicationsAndAppointments: (payload, carePlanId) => dispatch(addCarePlanMedicationsAndAppointments(payload, carePlanId)),
         openEditAppointmentDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_APPOINTMENT, payload })),

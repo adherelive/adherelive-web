@@ -81,6 +81,30 @@ class SymptomService {
       throw error;
     }
   };
+
+  getLastUpdatedData = async (data) => {
+    try {
+      const symptom = await Symptoms.findAll({
+        where: data,
+        limit: 1,
+        order: [
+            ['updated_at', 'DESC']
+        ],
+        include: [
+          {
+            model: Patients
+          },
+          {
+            model: CarePlan,
+            include: [Doctors]
+          }
+        ]
+      });
+      return symptom;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default new SymptomService();

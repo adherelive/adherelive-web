@@ -43,6 +43,12 @@ class PassedCron {
                         case EVENT_TYPE.VITALS:
                             await this.handleVitalPassed(event);
                             break;
+                        case EVENT_TYPE.MEDICATION_REMINDER:
+                            await this.handleMedicationPassed(event);
+                            break;
+                        case EVENT_TYPE.APPOINTMENT:
+                            await this.handleAppointmentPassed(event);
+                            break;
                         default:
                             break;
                     }
@@ -81,6 +87,36 @@ class PassedCron {
 
         } catch(error) {
             Log.debug("handleVitalPassed 500 error ---->", error);
+        }
+    };
+
+    handleMedicationPassed = async (event) => {
+        try {
+            const currentTime = moment().utc().toDate();
+
+            if(moment(currentTime).diff(event.getStartTime(), 'hours') >= 1) {
+                const updateEventStatus = await ScheduleEventService.update({
+                    status: EVENT_STATUS.EXPIRED
+                }, event.getScheduleEventId());
+            }
+
+        } catch(error) {
+            Log.debug("handleMedicationPassed 500 error ---->", error);
+        }
+    };
+
+    handleAppointmentPassed = async (event) => {
+        try {
+            const currentTime = moment().utc().toDate();
+
+            if(moment(currentTime).diff(event.getStartTime(), 'hours') >= 1) {
+                const updateEventStatus = await ScheduleEventService.update({
+                    status: EVENT_STATUS.EXPIRED
+                }, event.getScheduleEventId());
+            }
+
+        } catch(error) {
+            Log.debug("handleMedicationPassed 500 error ---->", error);
         }
     };
 }

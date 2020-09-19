@@ -22,6 +22,13 @@ router.post(
 );
 
 router.post(
+    "/videos",
+    Authenticate,
+    upload.single("files"),
+    SymptomController.uploadVideo
+);
+
+router.post(
     "/photo",
     Authenticate,
     upload.single("files"),

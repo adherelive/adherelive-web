@@ -89,7 +89,6 @@ class VitalTimeline extends Component {
         currentTemplate = data;
       }
     });
-
     return currentTemplate;
   };
 
@@ -99,7 +98,7 @@ class VitalTimeline extends Component {
 
     return events.map(event => {
       const { id, status, end_time, details = {} } = event || {};
-      const { response: { value, currentTime } = {} } = details;
+      const { response: { value = {}, currentTime } = {} } = details;
 
       switch (status) {
         case COMPLETED:
@@ -113,7 +112,7 @@ class VitalTimeline extends Component {
               <div className="mb6 fs16 fw500">{moment(currentTime).format("LT")}</div>
               {Object.keys(value).map((fieldId, index) => {
                 const { label, placeholder } = getVitalTemplate(fieldId, event);
-
+                
                 return (
                   <div
                     key={`${id}-${fieldId}-${index}`}

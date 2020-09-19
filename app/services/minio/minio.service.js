@@ -133,6 +133,25 @@ class MinioService {
       // throw err;
     }
   };
+
+  saveVideoObject = async (buffer, file, metaData = null) => {
+    try {
+      if (metaData === null || metaData === undefined) {
+        metaData = { "Content-Type": "video/mp4" };
+      }
+      let result = await this.minioClient.putObject(
+          this.bucket,
+          file,
+          buffer,
+          metaData
+      );
+
+      return result;
+    } catch (err) {
+      Log.debug("saveVideoObject error", err);
+      // throw err;
+    }
+  };
 }
 
 module.exports = new MinioService();

@@ -12,6 +12,14 @@ module.exports = () => {
       verified_doctor: process.env.DASHBOARD_LINK,
       support_email: process.env.SUPPORT_EMAIL
     },
+    event: {
+      count: process.env.EVENT_FETCH_COUNT
+    },
+    email: {
+      USER: process.env.SENDGRID_USER,
+      KEY: process.env.SENDGRID_PASSWORD,
+      FROM: process.env.SENDGRID_FROM_ADDRESS
+    },
     db: {
       connection: process.env.DB_CONNECTION,
       name: process.env.DB_DATABASE_NAME,

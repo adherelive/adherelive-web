@@ -34,7 +34,7 @@ export default props => {
       render: ({vitalData}) => <Description vitalData={vitalData} />
     },
     {
-      title: "",
+      title: "Adherence",
       ...TABLE_COLUMN.TIMELINE,
 
       render: ({openResponseDrawer, formatMessage, id}) => <TimelineButton formatMessage={formatMessage} action={openResponseDrawer} id={id}/>

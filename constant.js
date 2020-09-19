@@ -357,7 +357,8 @@ export const DOCUMENT_PARENT_TYPE = {
   DOCTOR_QUALIFICATION: "doctor_qualification",
   DOCTOR_REGISTRATION: "doctor_registration",
   SYMPTOM_AUDIO: "symptom_audio",
-  SYMPTOM_PHOTO: "symptom_photo"
+  SYMPTOM_PHOTO: "symptom_photo",
+  SYMPTOM_VIDEO: "symptom_video",
 };
 
 export const ONBOARDING_STATUS = {
@@ -518,25 +519,25 @@ export const CHART_LIMIT = 4;
 export const CHART_DETAILS = {
   [NO_ADHERENCE]: {
     type: "no_adherence",
-    name: "Non Adherence",
+    name: "Missed Adherence",
     critical: 19,
     total: 100
   },
   [NO_MEDICATION]: {
     type: "no_medication",
-    name: "Non Medication",
+    name: "Missed Medication",
     critical: 25,
     total: 80
   },
   [NO_APPOINTMENT]: {
     type: "no_appointment",
-    name: "Non Appointment",
+    name: "Missed Appointment",
     critical: 5,
     total: 40
   },
   [NO_ACTION]: {
     type: "no_action",
-    name: "Non Action",
+    name: "Missed Action",
     critical: 30,
     total: 120
   },
@@ -757,3 +758,6 @@ export const REPEAT_INTERVAL = {
   SIX_HOUR:"SIX_HOUR",
   TWELVE_HOUR: "TWELVE_HOUR",
 };
+
+export const MP4 = "mp4";
+export const ALLOWED_VIDEO_EXTENSIONS = [MP4];

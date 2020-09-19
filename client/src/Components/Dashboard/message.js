@@ -1,10 +1,10 @@
 import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
-  report: {
-    id: "app.dashboard.header.report",
+  dashboard: {
+    id: "app.dashboard.header.dashboard",
     description: "",
-    defaultMessage: "Report"
+    defaultMessage: "Dashboard"
   },
   patients: {
     id: "app.dashboard.content.patients",
