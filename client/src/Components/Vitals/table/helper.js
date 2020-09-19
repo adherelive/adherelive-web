@@ -15,7 +15,7 @@ export const TABLE_COLUMN = {
   TIMELINE: {
     key: "TIMELINE",
     dataIndex: "TIMELINE",
-    width: 100
+    width: 120
   },
   EDIT: {
     key: "EDIT",

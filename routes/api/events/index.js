@@ -1,3 +1,5 @@
+import EventController from "../../../app/controllers/scheduleEvents/event.controller";
+
 const express = require("express");
 const router = express.Router();
 
@@ -6,12 +8,17 @@ import Appointment from "../../../app/controllers/appointments/appointment.contr
 import MedicationReminder from "../../../app/controllers/medicationReminder/mReminder.controller";
 import * as validator from "./validator";
 
-// router.post(
-//     "/appointments",
-//     Authenticate,
-//     validator.validateAppointmentFormData,
-//     Appointment.create
-// );
+router.get(
+    "/medication-details",
+    Authenticate,
+    MedicationReminder.getMedicationDetails
+);
+
+router.get(
+    "/:patient_id",
+    Authenticate,
+    EventController.getAllEvents
+);
 
 router.post(
     "/medication-reminder/:patient_id",
@@ -25,12 +32,6 @@ router.post(
     Authenticate,
     validator.validateMedicationReminderData,
     MedicationReminder.createCarePlanMedication
-);
-
-router.get(
-    "/medication-details",
-    Authenticate,
-    MedicationReminder.getMedicationDetails
 );
 
 module.exports = router;

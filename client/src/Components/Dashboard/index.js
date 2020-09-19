@@ -208,7 +208,7 @@ class Dashboard extends Component {
             <Fragment>
                 <div className="dashboard p20">
                     <div className="flex direction-row justify-space-between align-center">
-                        <div className="fs28 fw700">{formatMessage(messages.report)}</div>
+                        <div className="fs28 fw700">{formatMessage(messages.dashboard)}</div>
                         {(authPermissions.includes(PERMISSIONS.ADD_PATIENT) || authPermissions.includes(PERMISSIONS.EDIT_GRAPH)) &&
                             (<Dropdown
                                 className={'mr10'}

@@ -1,4 +1,5 @@
 import UserDevices from "../../models/userDevices";
+import {database} from "../../../libs/mysql";
 
 
 class UserDeviceService {
@@ -42,6 +43,23 @@ class UserDeviceService {
             });
             return userDevice;
         } catch(error) {
+            throw error;
+        }
+    };
+
+    updateDevice = async (data, id) => {
+        const transaction = await database.transaction();
+        try {
+            const userDevice = await UserDevices.update(data, {
+                where: {
+                    id
+                },
+                transaction
+            });
+            await transaction.commit();
+            return userDevice;
+        } catch(error) {
+            await transaction.rollback();
             throw error;
         }
     };

@@ -2,6 +2,7 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {getAddPatientUrl} from '../../Helper/urls/patients'
+// import {getPatientLastVisitAlertUrl} from '../../Helper/url/patients'
 
 // todo: remove patient initial state after updating tables for patient with defaults
 
@@ -11,6 +12,8 @@ export const ADD_PATIENT = "ADD_PATIENT";
 export const ADD_PATIENT_COMPLETED = "ADD_PATIENT_COMPLETED";
 export const ADD_PATIENT_COMPLETED_WITH_ERROR =
   "ADD_PATIENT_COMPLETED_WITH_ERROR";
+  
+  
 
 
 export const addPatient =(payload)=>{
@@ -48,9 +51,6 @@ export const addPatient =(payload)=>{
     return response;
   };
 }
-
-
-
 
 
 function patientReducer(state, data) {

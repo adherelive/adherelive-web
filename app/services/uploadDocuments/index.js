@@ -6,5 +6,9 @@ export default class UploadDocument {
 
     getUploadDocumentId = () => {
         return this._data.get("id");
-    }
+    };
+
+    getParentType = () => {
+        return this._data.get("parent_type");
+    };
 }

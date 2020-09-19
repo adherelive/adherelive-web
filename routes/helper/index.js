@@ -1,22 +1,6 @@
 import Response from "../../app/helper/responseFormat";
 
-export const raiseSuccess = (res, code = 200, data = {}, message) => {
-    const response = new Response(true, code);
-    response.setMessage(message);
-    response.setData(data);
-    return res.status(code).json(response.getResponse());
-};
-
-export const raiseServerError = (res, code = 500, error, message) => {
-    const payload = {
-        code: code,
-        error: errMessage.INTERNAL_SERVER_ERROR
-    };
-    const response = new Response(false, payload.code);
-    response.setError(payload.error);
-    response.setMessage("Something went wrong, try again.");
-    return res.status(payload.code).json(response.getResponse());
-};
+// todo: to delete this file
 
 export const raiseClientError = (res, code = 422, error, message) => {
     const payload = {
