@@ -13,7 +13,7 @@ import templateMedicationService from "../../../services/templateMedication/temp
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../../services/medicine/medicine.service";
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from './carePlanHelper'
-import {USER_CATEGORY} from "../../../../constant";
+import {EVENT_STATUS, EVENT_TYPE, USER_CATEGORY} from "../../../../constant";
 import doctorService from "../../../services/doctor/doctor.service";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
@@ -21,6 +21,7 @@ import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import Log from "../../../../libs/log_new";
+import EventSchedule from "../../../eventSchedules";
 const moment = require("moment");
 
 class CarePlanController extends Controller {
@@ -121,17 +122,20 @@ class CarePlanController extends Controller {
                     participant_two || {};
 
                 let userCategoryId = null;
+                let participantTwoId = null;
 
                 switch(category) {
                     case USER_CATEGORY.DOCTOR:
                         const doctor = await doctorService.getDoctorByData({user_id: userId});
                         const doctorData = await DoctorWrapper(doctor);
                         userCategoryId = doctorData.getDoctorId();
+                        participantTwoId = doctorData.getUserId();
                         break;
                     case USER_CATEGORY.PATIENT:
                         const patient = await patientService.getPatientByUserId(userId);
                         const patientData = await PatientWrapper(patient);
                         userCategoryId = patientData.getPatientId();
+                        participantTwoId = patientData.getUserId();
                         break;
                     default:
                         break;
@@ -187,6 +191,23 @@ class CarePlanController extends Controller {
                         appointment_type: type
                     }
                 });
+
+                const eventScheduleData = {
+                    event_id: appointmentData.getAppointmentId(),
+                    event_type: EVENT_TYPE.APPOINTMENT,
+                    critical,
+                    start_time,
+                    end_time,
+                    details: appointmentData.getBasicInfo(),
+                    participants: [userId, participantTwoId],
+                    actor: {
+                        id: userId,
+                        category
+                    }
+                };
+
+                // RRule
+                await EventSchedule.create(eventScheduleData);
             }
 
             let medicationApiDetails = {};
@@ -250,6 +271,15 @@ class CarePlanController extends Controller {
                         medicine_type,
                         duration: moment(start_date).diff(moment(end_date), "days")
                     }
+                });
+
+                EventSchedule.create({
+                    event_type: EVENT_TYPE.MEDICATION_REMINDER,
+                    event_id: mReminderDetails.getId,
+                    details: mReminderDetails.getBasicInfo,
+                    status: EVENT_STATUS.SCHEDULED,
+                    start_date,
+                    end_date,
                 });
             }
 

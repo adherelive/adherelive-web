@@ -554,8 +554,8 @@ class EditMedicationReminderForm extends Component {
                 size="small"
                 className="mg-ml flex justify-content-end"
               >
-                <RadioButton value={UNIT_ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML}>ml</RadioButton>
-                <RadioButton value={UNIT_MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG}>mg</RadioButton>
+                <RadioButton value={UNIT_ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML}  >ml</RadioButton>
+                <RadioButton value={UNIT_MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >mg</RadioButton>
               </RadioGroup>
             </div>
           </div>

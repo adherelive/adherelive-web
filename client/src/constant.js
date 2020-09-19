@@ -322,10 +322,16 @@ export const EVENT_TYPE = {
   SURVEY: "survey",
   ARTICLE: "article",
   MEDICATION_REMINDER: "medication-reminder",
-  BENEFIT_DOCS_VERIFIED: "BENEFIT_DOCS_VERIFIED",
-  CHARITY_APPROVAL: "CHARITY_APPROVAL",
-  MRL_GENERATION: "MRL_GENERATION",
-  CHARITY_APPLIED: "CHARITY_APPLIED"
+  SYMPTOMS: "symptoms",
+  VITALS:"vitals",
+};
+
+export const EVENT_STATUS = {
+  SCHEDULED: "scheduled",
+  PENDING: "pending",
+  COMPLETED: "completed",
+  EXPIRED: "expired",
+  CANCELLED: "cancelled"
 };
 
 //request type

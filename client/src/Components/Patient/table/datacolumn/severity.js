@@ -12,7 +12,7 @@ export default props => {
       <div
         className={`w10 h10 br50 bg-${severity?severity : ""}`}
       ></div>
-      <div className="ml10">
+      <div className="ml0">
         {severity
           ? severity
           : TABLE_DEFAULT_BLANK_FIELD}

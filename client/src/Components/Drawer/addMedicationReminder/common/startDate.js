@@ -66,10 +66,10 @@ class StartDate extends Component {
     const value = getFieldValue(FIELD_NAME);
 
     return (
-      <div className="flex flex-grow-1 row align-items-center">
-        <div className="pr8 wp100">
+      <div className="flex align-center">
+        <div className="wp100">
           <div className='flex  row mb-4'>
-            <span className="form-label-from">From</span>
+            <span className="form-label">From</span>
             <div className="star-red">*</div>
           </div>
           <FormItem className="wp100">

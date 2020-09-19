@@ -34,7 +34,7 @@ export default props => {
         <div className="repeats wp100">{selectedDays.render(props)}</div>
       </div>
       
-      <div className="flex align-items-center justify-content-space-between">
+      <div className="flex align-center justify-space-between">
         {startDate.render(props)}
 
         {endDate.render(props)}

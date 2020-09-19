@@ -21,9 +21,11 @@ class EmailManger {
     this.smtpTransporter = nodemailer.createTransport(
       smtpTransport({
         auth: {
-          api_user: 'nishchay-1',
-          api_key: 'tripock@123'
-          
+          api_user:process.config.email.USER,
+          api_key:process.config.email.KEY,
+          // api_user: 'adhere-tripock',
+          // api_key: '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'
+
         }
       })
     );
@@ -267,7 +269,7 @@ class EmailManger {
         .createEmailBodyTemplate()
         .createEmailTitle()
         .createEmailBodyTemplate(templateString)
-        .createSourceAddress("patientEngagement@adhere.com")
+        .createSourceAddress(process.config.email.FROM)
         .createReplyToAddress(process.config.REPLY_TO_ADDRESS)
         .build();
       console.log("Transformer Returning ====================>    ", content);

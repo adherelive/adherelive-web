@@ -24,6 +24,8 @@ import VitalTimelineDrawer from "../../../Containers/Drawer/vitalTimeline";
 // TABLES
 import VitalTable from "../../../Containers/Vitals/table";
 
+import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
+
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
@@ -45,6 +47,7 @@ import SymptomTabs from "../../../Containers/Symptoms";
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
 import EditVitals from "../../../Containers/Drawer/editVitals";
+
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
@@ -314,6 +317,7 @@ const PatientCard = ({
   formatMessage,
   openChat
 }) => {
+  
   return (
     <div className="patient-card tac">
       <img
@@ -440,6 +444,9 @@ const PatientAlertCard = ({
 class PatientDetails extends Component {
   constructor(props) {
     super(props);
+    
+    console.log("PATEINT DETAILS PROPS =========>",this.props);
+    
     this.state = {
       loading: true,
       templateDrawerVisible: false,
@@ -464,9 +471,9 @@ class PatientDetails extends Component {
       closePopUp,
       fetchChatAccessToken,
       currentCarePlanId,
+      getLastVisitAlerts,
       show_template_drawer = {}
     } = this.props;
-    this.getData();
     const { show: showTd = false } = show_template_drawer;
     // let isCarePlanDataPresent = currentCarePlanId ? true : false;
     if (showTd) {
@@ -474,6 +481,7 @@ class PatientDetails extends Component {
     }
 
     fetchChatAccessToken(authenticated_user);
+    
     if (!showTd) {
       getPatientCarePlanDetails(patient_id).then(response => {
         let { status = false, payload = {} } = response;
@@ -493,12 +501,14 @@ class PatientDetails extends Component {
               ? true
               : false;
 
-          this.setState({ carePlanTemplateId, carePlanTemplateExists });
+          this.setState({ carePlanTemplateId, carePlanTemplateExists, loading: false });
         }
       });
+      
       getMedications(patient_id);
       getAppointmentsDetails();
       getAppointments(patient_id);
+      
     }
     // searchMedicine("");
     let carePlanTemplateId = 0;
@@ -645,10 +655,6 @@ class PatientDetails extends Component {
     }
     this.setState({ selectedKeys: selectedKeys[0] });
   };
-
-  async getData() {
-    setTimeout(() => this.setState({ loading: false }), 2000);
-  }
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
@@ -887,6 +893,37 @@ class PatientDetails extends Component {
       onClick: onRowClickSymptoms(record)
     };
   };
+  
+  handlePatientLastVisitAlert = () => {
+    const {getLastVisitAlerts,patient_id} = this.props;
+ 
+    getLastVisitAlerts(patient_id).then(response => {
+      const {
+        status = false,
+        statusCode,
+        payload: {
+          error: { error_type = "" } = {},
+          message: errorMessage = ""
+        } = {}
+      } = response;
+      
+      if(status){
+        let data = response.payload.data;
+        console.log("------>",data);
+        
+        // let obj = Object.values(data["last_visit"]);
+        // console.log(obj);
+        
+      }else {
+          message.error(this.formatMessage(messages.somethingWentWrong));
+        }
+      }
+      
+    );
+    
+  }
+  
+  
 
   handleSubmitTemplate = data => {
     const {
@@ -897,6 +934,7 @@ class PatientDetails extends Component {
       patient_id,
       getPatientCarePlanDetails
     } = this.props;
+    
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let {
@@ -949,6 +987,93 @@ class PatientDetails extends Component {
       "_blank"
     );
   };
+
+  handleSymptoms = (e) => {
+    const { openSymptomsDrawer, patient_id } = this.props;
+    openSymptomsDrawer({
+      patient_id,
+    });
+  };
+
+  onCloseTemplate = () => {
+    this.setState({ templateDrawerVisible: false });
+  }
+
+  showTemplateDrawer = () => {
+    this.setState({ templateDrawerVisible: true });
+  }
+  onRowClickAppointment = key => event => {
+    const { openEditAppointmentDrawer, patient_id } = this.props;
+    openEditAppointmentDrawer({ id: key, patient_id });
+    //this.props.history.push(getGetFacilitiesUrl(key));
+  };
+
+  onRowAppointment = (record, rowIndex) => {
+    const { onRowClickAppointment } = this;
+    const { key } = record;
+    return {
+      onClick: onRowClickAppointment(key)
+    };
+  };
+
+  onRowClickMedication = key => event => {
+    const { openEditMedicationDrawer, patient_id } = this.props;
+    openEditMedicationDrawer({ id: key, patient_id });
+    //this.props.history.push(getGetFacilitiesUrl(key));
+  };
+
+  onRowMedication = (record, rowIndex) => {
+    const { onRowClickMedication } = this;
+    const { key } = record;
+    return {
+      onClick: onRowClickMedication(key)
+    };
+  };
+
+  handleSubmitTemplate = (data) => {
+    const { addCarePlanMedicationsAndAppointments, getMedications, getAppointments, care_plans, patient_id, getPatientCarePlanDetails } = this.props;
+    let carePlanId = 1;
+    for (let carePlan of Object.values(care_plans)) {
+      let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
+      if (patient_id == patientId) {
+        carePlanId = id;
+      }
+
+    }
+    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+      const { status = false, statusCode, payload: { error: { error_type = '' } = {}, message: errorMessage = '' } = {} } = response;
+      if (status) {
+        this.onCloseTemplate();
+
+        message.success(this.formatMessage(messages.carePlanUpdated));
+        getMedications(patient_id).then(() => {
+          getAppointments(patient_id).then(() => {
+            getPatientCarePlanDetails(patient_id);
+          })
+        })
+      } else {
+        if (statusCode === 422 && error_type == 'slot_present') {
+          message.error(this.formatMessage(messages.slotPresent))
+        } else if (statusCode === 422) {
+
+          message.error(errorMessage)
+        } else {
+          message.error(this.formatMessage(messages.somethingWentWrong))
+        }
+      }
+    });
+  }
+  openVideoChatTab = (roomId) => () => {
+
+    window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
+  }
+
+  maximizeChat = () => {
+    const {
+      patient_id } = this.props;
+    window.open(`${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`, '_blank');
+  }
+
 
   render() {
     let {
@@ -1017,20 +1142,6 @@ class PatientDetails extends Component {
       }
     }
 
-    if (loading) {
-      return (
-        <div className="page-loader hp100 wp100 flex align-center justify-center ">
-          <Spin size="large"></Spin>
-        </div>
-      );
-    }
-
-    let showUseTemplate = true;
-    if (cPAppointmentIds.length || cPMedicationIds.length) {
-      showUseTemplate = false;
-    }
-
-    let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
     const {
       basic_info: { doctor_id = 1 } = {},
       activated_on: treatment_start_date,
@@ -1079,6 +1190,12 @@ class PatientDetails extends Component {
       } = {}
     } = doctors[doctor_id] || {};
 
+    let showUseTemplate = true;
+    if (cPAppointmentIds.length || cPMedicationIds.length) {
+      showUseTemplate = false;
+    }
+
+    let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
     const {
       basic_info: {
         first_name,
@@ -1136,14 +1253,19 @@ class PatientDetails extends Component {
     //   new_symptoms.length > 0 ? new_symptoms.map((e) => e).join(", ") : "";
 
     return (
+      
       <div className="pt10 pr10 pb10 pl10">
+      
         <PatientProfileHeader
           formatMessage={formatMessage}
           getMenu={getMenu}
           showAddButton={showAddButton}
         />
+        
         <div className="flex">
+        
           <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
+          
             <PatientCard
               patient_display_picture={patient_display_picture}
               patient_first_name={first_name}
@@ -1159,7 +1281,9 @@ class PatientDetails extends Component {
               formatMessage={formatMessage}
               openChat={openPopUp}
             />
+            
             <PatientTreatmentCard
+            
               formatMessage={formatMessage}
               treatment_name={treatment ? treatment : "--"}
               treatment_condition={condition ? condition : "--"}
@@ -1180,8 +1304,29 @@ class PatientDetails extends Component {
               }
               treatment_severity_status={severity ? severity : "--"}
             />
+            
           </div>
-          <div className="flex-grow-1 direction-column align-center pt20 pr24 pb20 pl24">
+          
+          
+           
+          
+          <div className="flex-grow-1 direction-column align-center pt20 pr24 pb20 pl24 ola123">
+
+            {<PatientAlerts patientId={patient_id}/>}
+            
+            
+           {/* <div className="last-visit-alerts" >*/}
+           {/*   <div className="last-visit-h-container" >*/}
+           {/*     <span >Alerts from last visit</span>  */}
+           {/*   </div>*/}
+           {/*   */}
+           {/*   <div className="last-visit-details">*/}
+           {/*    */}
+           {/*   </div>*/}
+           {/*       */}
+           {/*</div>*/}
+           
+           
             {!showTabs && (
               <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
                 <img src={noMedication} className="w200 h200" />

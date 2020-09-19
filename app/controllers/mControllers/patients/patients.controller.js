@@ -24,7 +24,6 @@ import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
-
 import UserWrapper from "../../../ApiWrapper/mobile/user";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";

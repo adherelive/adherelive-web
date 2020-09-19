@@ -23,13 +23,6 @@ router.get(
     MobileMedicationReminder.getMedicationDetails
 );
 
-// router.post(
-//     "/medication/:patient_id",
-//     Authenticate,
-//     validator.validateMedicationReminderData,
-//     MobileMedicationReminder.create
-// );
-
 router.post(
     "/medication/:patient_id",
     Authenticate,
@@ -37,10 +30,19 @@ router.post(
     MobileMedicationReminder.createCarePlanMedication
 );
 
+// VITALS
+
 router.get(
   "/vitals/:id",
   Authenticate,
   EventController.getVitalEvent
+);
+
+// --------------- GET ALL RECENT EVENTS PATIENT DASHBOARD
+router.get(
+    "/",
+    Authenticate,
+    EventController.getAllEvents
 );
 
 module.exports = router;

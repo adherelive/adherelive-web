@@ -38,6 +38,7 @@ import notifications from "./notifications";
 import vital_templates from "./vital_templates";
 import repeat_intervals from "./vital_occurence";
 import vitals from "./vitals";
+import schedule_events from "./scheduleEvents";
 
 
 const rootReducer = combineReducers({
@@ -79,7 +80,8 @@ const rootReducer = combineReducers({
   symptoms,
   vital_templates,
   vitals,
-  repeat_intervals
+  repeat_intervals,
+  schedule_events
 });
 
 export default (state, action) => {

@@ -427,6 +427,7 @@ class PatientDetailsDrawer extends Component {
             message.error(this.formatMessage(messages.conditionError))
             return false;
         }
+        
         return true;
     }
 

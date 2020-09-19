@@ -10,7 +10,7 @@ import templateMedicationService from "../../services/templateMedication/templat
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from './carePlanHelper';
-import { USER_CATEGORY } from "../../../constant";
+import {EVENT_STATUS, EVENT_TYPE, USER_CATEGORY} from "../../../constant";
 import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
@@ -20,6 +20,7 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import CarePlanTemplateWrapper from "../../ApiWrapper/mobile/carePlanTemplate";
 import Log from "../../../libs/log_new";
 import moment from "moment";
+import EventSchedule from "../../eventSchedules";
 
 Log.fileName("WEB > CAREPLAN > CONTROLLER");
 
@@ -125,17 +126,14 @@ class CarePlanController extends Controller {
                     participant_two || {};
 
                 let userCategoryId = null;
+                let participantTwoId = null;
 
                 switch (category) {
                     case USER_CATEGORY.DOCTOR:
                         const doctor = await doctorService.getDoctorByData({ user_id: userId });
                         const doctorData = await DoctorWrapper(doctor);
                         userCategoryId = doctorData.getDoctorId();
-                        break;
-                    case USER_CATEGORY.PATIENT:
-                        const patient = await patientService.getPatientByUserId(userId);
-                        const patientData = await PatientWrapper(patient);
-                        userCategoryId = patientData.getPatientId();
+                        participantTwoId = doctorData.getUserId();
                         break;
                     default:
                         break;
@@ -191,6 +189,23 @@ class CarePlanController extends Controller {
                         appointment_type: type
                     }
                 });
+
+                const eventScheduleData = {
+                    event_id: appointmentData.getAppointmentId(),
+                    event_type: EVENT_TYPE.APPOINTMENT,
+                    critical,
+                    start_time,
+                    end_time,
+                    details: appointmentData.getBasicInfo(),
+                    participants: [userId, participantTwoId],
+                    actor: {
+                        id: userId,
+                        category
+                    }
+                };
+
+                // RRule
+                await EventSchedule.create(eventScheduleData);
             }
 
             let medicationApiDetails = {};
@@ -254,6 +269,15 @@ class CarePlanController extends Controller {
                         medicine_type,
                         duration: moment(start_date).diff(moment(end_date), "days")
                     }
+                });
+
+                EventSchedule.create({
+                    event_type: EVENT_TYPE.MEDICATION_REMINDER,
+                    event_id: mReminderDetails.getId,
+                    details: mReminderDetails.getBasicInfo,
+                    status: EVENT_STATUS.SCHEDULED,
+                    start_date,
+                    end_date,
                 });
             }
 

@@ -4,7 +4,7 @@ const messages = defineMessages({
     vital_timeline: {
         id: "app.drawer.vital.timeline",
         description: "",
-        defaultMessage: "{name} Timeline"
+        defaultMessage: "{name} Adherence"
     }
 });
 
