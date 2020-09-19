@@ -85,6 +85,17 @@ class UploadDocumentService {
             throw error;
         }
     };
+
+    getAllByData = async (data) => {
+        try {
+            const documents = await uploadDocumentsModel.findAll({
+                where: data
+            });
+            return documents;
+        } catch(error) {
+            throw error;
+        }
+    };
    
 }
 

@@ -9,6 +9,9 @@ import {
   getAppointmentsDetailsUrl
 } from "../../Helper/urls/appointments";
 
+
+
+
 export const ADD_APPOINTMENT_START = "ADD_APPOINTMENT_START";
 export const ADD_APPOINTMENT_COMPLETE = "ADD_APPOINTMENT_COMPLETE";
 export const ADD_APPOINTMENT_FAILED = "ADD_APPOINTMENT_FAILED";
@@ -221,6 +224,9 @@ export const deleteAppointment = (id) => {
     return response;
   };
 };
+
+
+
 
 function appointmentReducer(state, data) {
   const { appointments = {} } = data || {};

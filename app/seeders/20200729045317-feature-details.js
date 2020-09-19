@@ -20,7 +20,28 @@ module.exports = {
             },
           },
           type_description: {
-            "1": ["GGT","LFT","ESR","GST"],
+            "1": [
+                "Blood test",
+                "Urine tests",
+                "COMPLETE BLOOD COUNT",
+                "Liver Function Tests (LFT)",
+                "Imaging tests",
+                "Kidney Biopsy",
+                "KIDNEY FUNCTION TEST",
+                "Lipid profile (Cholesterol and triglycerides)",
+                "BLOOD SUGAR TEST",
+                "HbA1c Blood Test",
+                "CARDIAC BLOOD TESTS",
+                "THYROID FUNCTION TEST",
+                "Blood Tests for Infertility",
+                "SEMAN ANALYSIS",
+                "Tumor marker",
+                "BLOOD TEST FOR ARTHRITIS",
+                "WIDAL TEST",
+                "Dengue Serology",
+                "Chikungunya",
+                "HIV -1 & HIV-2"
+            ],
             "2": ["At Clinic", "At Home", "Telephone"],
             "3": ["MRI", "CT Scan", "Ultrasound"]
           }

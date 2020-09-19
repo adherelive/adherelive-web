@@ -1,0 +1,51 @@
+import { defineMessages } from "react-intl";
+
+const messages = defineMessages({
+    alert_header: {
+        id: "app.patients.common.alert.header",
+        description: "",
+        defaultMessage: "Alerts From Last Visit"
+    },
+    missed_medication: {
+        id: "app.patients.common.alert.missed.medication",
+        description: "",
+        defaultMessage: "Missed Medication"
+    },
+    taken_medication: {
+        id: "app.patients.common.alert.taken.medication",
+        description: "",
+        defaultMessage: "Taken Medication"
+    },
+    missed_appointment: {
+        id: "app.patients.common.alert.missed.appointment",
+        description: "",
+        defaultMessage: "Missed Appointment"
+    },
+    completed_appointment: {
+        id: "app.patients.common.alert.completed.appointment",
+        description: "",
+        defaultMessage: "Completed Appointment"
+    },
+    missed_vital: {
+        id: "app.patients.common.alert.missed.vital",
+        description: "",
+        defaultMessage: "Missed Vital"
+    },
+    completed_vital: {
+        id: "app.patients.common.alert.completed.vital",
+        description: "",
+        defaultMessage: "Completed Vital"
+    },
+    symptom_added_text: {
+        id: "app.patients.common.alert.symptom.added.text",
+        description: "",
+        defaultMessage: "New Symptom"
+    },
+    blank_state_text: {
+        id: "app.patients.common.alert.blank.text",
+        description: "",
+        defaultMessage: "No events updated recently"
+    }
+});
+
+export default messages;

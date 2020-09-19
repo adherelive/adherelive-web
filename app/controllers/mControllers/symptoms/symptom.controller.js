@@ -13,9 +13,9 @@ import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
-import {uploadAudio, uploadImage} from "./symptom.controller.helper";
+import {uploadAudio, uploadImage, uploadVideo} from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
-import {DOCUMENT_PARENT_TYPE} from "../../../../constant";
+import {DOCUMENT_PARENT_TYPE, USER_CATEGORY, ALLOWED_VIDEO_EXTENSIONS} from "../../../../constant";
 import {getFilePath} from "../../../helper/filePath";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
@@ -31,8 +31,8 @@ class SymptomController extends Controller {
             Log.debug("req body---> ", req.body);
             Log.debug("req params---> ", req.params);
 
-            const {body, params: {patient_id} = {}, userDetails: {userId} = {}} = req;
-            const {care_plan_id, duration = "", side = "", parts = [], text = "", audios = [], photos = []} = body || {};
+            const {body, params: {patient_id} = {}} = req;
+            const {care_plan_id, duration = "", side = "", parts = [], text = "", audios = [], photos = [], videos = []} = body || {};
 
             const symptomData = await SymptomService.create({
                 patient_id,
@@ -89,6 +89,24 @@ class SymptomController extends Controller {
                 }
             }
 
+            for(const video of videos) {
+                const {name, file} = video || {};
+                const videoExists = await UploadDocumentService.getDocumentByName({
+                    name,
+                    parent_id: symptom.getSymptomId()
+                });
+                if(!videoExists) {
+                    const addDocument = await UploadDocumentService.addDocument({
+                        parent_type: DOCUMENT_PARENT_TYPE.SYMPTOM_VIDEO,
+                        parent_id: symptom.getSymptomId(),
+                        document: getFilePath(file),
+                        name,
+                    });
+                    const document = await DocumentWrapper(addDocument);
+                    uploadDocumentData[document.getUploadDocumentId()] = document.getBasicInfo();
+                }
+            }
+
             const carePlan = await CarePlanWrapper(null, care_plan_id);
 
             const doctorId = carePlan.getDoctorId();
@@ -128,6 +146,40 @@ class SymptomController extends Controller {
             );
         } catch(error) {
             Log.debug("symptom uploadAudio 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    uploadVideo = async (req, res) => {
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        try {
+            Log.debug("req.file ----> ", req.file);
+
+            const {file: videoFile, userDetails: {userId, userData: {category} = {}} = {}} = req;
+
+            if(category === USER_CATEGORY.PATIENT) {
+                const fileExt= videoFile.originalname.replace(/\s+/g, '').split(".")[1];
+                Log.info(`fileExt : ${fileExt}`);
+                if(ALLOWED_VIDEO_EXTENSIONS.includes(fileExt)) {
+                    const {file, name} = await uploadVideo({userId, file: videoFile});
+
+                    return raiseSuccess(
+                        res,
+                        200,
+                        {
+                            file,
+                            name
+                        },
+                        "Symptom video added successfully"
+                    );
+                } else {
+                    return raiseClientError(res, 422, {}, `${fileExt.toUpperCase()} type not supported`);
+                }
+            } else {
+                return raiseClientError(res, 422, {}, "Only patients can upload video of symptom");
+            }
+        } catch(error) {
+            Log.debug("symptom uploadVideo 500 error", error);
             return raiseServerError(res);
         }
     };

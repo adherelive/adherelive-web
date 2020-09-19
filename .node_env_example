@@ -98,3 +98,9 @@ BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
 
 DEVELOPER_EMAIL=
 SUPPORT_EMAIL=support@adhere.live
+
+EVENT_FETCH_COUNT=7
+
+SENDGRID_USER=atish.kumar@tripock.com
+SENDGRID_PASSWORD-Password@123
+SENDGRID_FROM_ADDRESS=atish.kumar@tripock.com

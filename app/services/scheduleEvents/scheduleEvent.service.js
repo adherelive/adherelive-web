@@ -66,6 +66,7 @@ class ScheduleEventService {
         try {
             const {event_id, date, sort = 'ASC'} = data;
             const scheduleEvent = await ScheduleEvent.findAll({
+                limit: 4,
                 where: {
                     event_id,
                     start_time: {
@@ -158,6 +159,26 @@ class ScheduleEventService {
                         [Op.between]: [moment(startDate).startOf('day'), date]
                     },
                 }
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    getPageEventByData = async (data) => {
+        try {
+            const {eventIds, startLimit, endLimit} = data;
+            console.log("11239883 startLimit, endLimit", startLimit, endLimit);
+            const scheduleEvent = await ScheduleEvent.findAll({
+                offset: startLimit,
+                limit: endLimit,
+                where: {
+                    event_id: eventIds,
+                },
+                order: [
+                    ['start_time','ASC']
+                ]
             });
             return scheduleEvent;
         } catch(error) {

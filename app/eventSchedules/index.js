@@ -1,10 +1,10 @@
 import {
-  AFTER_BREAKFAST,
-  BEFORE_BREAKFAST,
+  AFTER_BREAKFAST, AFTER_DINNER, AFTER_EVENING_SNACK, AFTER_LUNCH,
+  BEFORE_BREAKFAST, BEFORE_DINNER, BEFORE_EVENING_SNACK, BEFORE_LUNCH, BEFORE_SLEEP,
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
-  MEDICATION_TIMING, REPEAT_INTERVAL
+  MEDICATION_TIMING, NOON, REPEAT_INTERVAL
 } from "../../constant";
 import Log from "../../libs/log";
 import { RRule } from "rrule";
@@ -205,13 +205,14 @@ class EventSchedule {
   };
 
   createMedicationSchedule = async medication => {
+    Logger.debug("213971203 createMedicationSchedule -->", medication);
     try {
       const {
         event_id,
         start_date,
         end_date,
-        details,
-        details: { when_to_take, repeat_days, critical = false } = {},
+        details: {details = {}} = {},
+        details: { details: {when_to_take, repeat_days, critical = false } = {} } = {},
         participants = [],
         actors = {}
       } = medication || {};
@@ -281,6 +282,38 @@ class EventSchedule {
         return moment(date)
           .set("hours", 9)
           .set("minutes", 0);
+      case NOON:
+        return moment(date)
+            .set("hours", 12)
+            .set("minutes", 0);
+      case BEFORE_LUNCH:
+        return moment(date)
+            .set("hours", 12)
+            .set("minutes", 30);
+      case AFTER_LUNCH:
+        return moment(date)
+            .set("hours", 13)
+            .set("minutes", 30);
+      case BEFORE_EVENING_SNACK:
+        return moment(date)
+            .set("hours", 17)
+            .set("minutes", 30);
+      case AFTER_EVENING_SNACK:
+        return moment(date)
+            .set("hours", 18)
+            .set("minutes", 0);
+      case BEFORE_DINNER:
+        return moment(date)
+            .set("hours", 19)
+            .set("minutes", 30);
+      case AFTER_DINNER:
+        return moment(date)
+            .set("hours", 20)
+            .set("minutes", 30);
+      case BEFORE_SLEEP:
+        return moment(date)
+            .set("hours", 22)
+            .set("minutes", 30);
       default:
         return moment(date);
     }

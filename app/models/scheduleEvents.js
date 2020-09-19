@@ -45,23 +45,16 @@ const ScheduleEvent = database.define(
         end_time: {
             type: Sequelize.DATE,
         },
+        created_at: {
+            type: Sequelize.DATE,
+        },
+        updated_at: {
+            type: Sequelize.DATE,
+        }
     },
     {
         underscored: true,
         paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    event_type: this.event_type,
-                    event_id: this.event_id,
-                    details: this.details,
-                    status: this.status,
-                    start_time: this.start_time,
-                    end_time: this.end_time,
-                };
-            }
-        }
     }
 );
 

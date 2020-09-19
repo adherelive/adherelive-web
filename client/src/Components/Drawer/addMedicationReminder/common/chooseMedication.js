@@ -109,6 +109,7 @@ class ChooseMedication extends Component {
               className="full-width"
               placeholder="Choose Medication"
               disabled={!!purpose}
+              autoFocus="true"
               showSearch
               autoComplete="off"
               optionFilterProp="children"

@@ -25,7 +25,7 @@ const messages = defineMessages({
     id: "app.vital.table.edit",
     description: "",
     defaultMessage: "Edit"
-  },
+  }
 });
 
 export default messages;
