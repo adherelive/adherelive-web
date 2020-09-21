@@ -466,6 +466,7 @@ class PatientDetails extends Component {
       templateDrawerVisible: false,
       carePlanTemplateExists: false,
       carePlanTemplateIds: [],
+      appointmentsListIds:[],
       symptoms: [
         { body_part: PARTS.HEAD, description: "werwerewrwer" },
         { body_part: PARTS.CHEST, description: "342342352343" }
