@@ -49,7 +49,7 @@ const mapDispatchToProps = (dispatch) => {
     setPatientForChat: (patient_id) => dispatch(setPatientForChat(patient_id)),
     openPopUp: () => dispatch(openPopUp()),
     getAppointments :(id) => dispatch(getAppointments(id)),
-    getAppointmentsDetails: () => dispatch(getAppointmentsDetails())
+    getAppointmentsDetails : () => dispatch(getAppointmentsDetails())
   };
 };
 

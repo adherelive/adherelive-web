@@ -17,15 +17,13 @@ class PatientDetailsDrawer extends Component {
     this.state = {
       carePlanId: 1,
       carePlanMedicationIds: [],
-      appointmentsListIds:[],
-      count:0
+      appointmentsListIds:[]
     };
   }
 
   componentDidMount() {
     const { getMedications, payload: { patient_id } = {}, care_plans = {},getAppointments, appointments={}  } = this.props;
     let carePlanId = 1;
-    let appointmentId=1;
     let carePlanMedicationIds = [];
     let appointmentsListIds = [];
     
@@ -47,9 +45,9 @@ class PatientDetailsDrawer extends Component {
         
       }
     }
-    let c = this.state.count;
-    let newC = c+1;
-    this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds,count:newC});
+    this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:[...appointmentsListIds]});
+    // this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds});
+
     
     if (patient_id) {
       getMedications(patient_id);
@@ -82,20 +80,15 @@ class PatientDetailsDrawer extends Component {
       }
     }
     
-    // console.log(appointmentsListIds,"  ",carePlanId,"  ",carePlanMedicationIds);
-    
-    // console.log(patient_id," ",prev_patient_id," ",appointmentsListIds);
     
     if (patient_id !== prev_patient_id) {
-      let c = this.state.count;
-      let newC = c+1;
       getMedications(patient_id);
       getAppointments(patient_id);
-      this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds,count:newC});
+      this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:[...appointmentsListIds]});
+      // this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds});
+
     }
     
-    console.log("appointmentsListIds",appointmentsListIds);
-    console.log("this.state",this.state);
   }
   
   
@@ -144,8 +137,32 @@ class PatientDetailsDrawer extends Component {
   };
   
   getAppointmentList = () => {
-    const { appointmentsListIds  } = this.state;
-    const { medications = {}, medicines = {} } = this.props;
+    
+    const { appointmentsListIds } = this.state;
+    const { appointments = {} } = this.props;
+    const appointmentList = appointmentsListIds.map(id => {
+      const {
+        basic_info: {
+          start_date,
+          start_time,
+          end_time,
+          details: { type_description = ""  } = {}
+        } = {}
+      } = appointments[id] || {};
+      let td = moment(start_time);
+       return (
+        <div key={id} className="flex justify-space-between align-center mb10">
+          <div className="pointer tab-color fw600 wp35 tooltip">{type_description.length > 0 ? type_description : " "}
+
+            <span className="tooltiptext">{start_date}</span></div>
+          <div className="wp35 tal">{start_time ? td.utc().format('HH:mm') : '--' }</div>
+
+          <div className="wp20 tar">{ start_date ? moment( start_date).format("DD MMM") : "--"}</div>
+        </div>
+      );
+      
+    });
+    return appointmentList;
    
   }
 
