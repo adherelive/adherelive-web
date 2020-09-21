@@ -255,6 +255,29 @@ class ScheduleEventService {
             throw error;
         }
     };
+
+    getPendingEventsData = async data => {
+      try {
+        const { eventIds } = data;
+        const scheduleEvent = await ScheduleEvent.findAll({
+          where: {
+            event_id: eventIds,
+            start_time: {
+              [Op.gt]: [
+                moment()
+                  .utc()
+                  .toISOString()
+              ]
+            },
+            status: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED]
+          },
+          order: [["start_time", "ASC"]]
+        });
+        return scheduleEvent;
+      } catch (error) {
+        throw error;
+      }
+    };
 }
 
 export default ScheduleEventService;

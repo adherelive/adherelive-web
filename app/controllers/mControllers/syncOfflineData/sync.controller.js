@@ -81,38 +81,6 @@ class SyncController extends Controller {
     );
   };
 
-  // syncMedicationReminderStatus = async (event_data, event_id, res) => {
-  //   const { raiseSuccess, raiseClientError, raiseServerError } = this;
-  //     const { status } = event_data;
-  //     let medicationDetails = await medicationReminderService.getMedication({id: event_id});
-  //     let { details = {}} = medicationDetails;
-
-  //     details = {...details, ...{status}}
-  //     medicationDetails = {...medicationDetails, ...{details}}
-  //     const mReminderDetails = await medicationReminderService.updateMedication(
-  //         medicationDetails,
-  //         event_id
-  //     );
-  //     const updatedMedicationDetails = await medicationReminderService.getMedication({id: event_id});
-
-  //     const medicationApiDetails = await MobileMReminderWrapper(
-  //         updatedMedicationDetails
-  //     );
-
-  //     return raiseSuccess(
-  //         res,
-  //         200,
-  //         {
-  //             medications: {
-  //               [medicationApiDetails.getMReminderId()]: {
-  //                 ...medicationApiDetails.getBasicInfo()
-  //               }
-  //             }
-  //         },
-  //         "Medication status updated successfully"
-  //     );
-  // }
-
   syncVitalsResponseData = async (event_data, createdTime, res) => {
     try {
       Log.debug("Going to sync vitals response data: ", event_data);
@@ -122,10 +90,6 @@ class SyncController extends Controller {
       const { event_id, ...rest } = data || {};
 
       Log.info(`event_id ${event_id}`);
-
-      // const createdTime = moment() // todo: take this time from API data.
-      //   .utc()
-      //   .toISOString();
 
       const event = await EventWrapper(null, event_id);
 
@@ -139,28 +103,19 @@ class SyncController extends Controller {
 
       Log.info(`event.getStatus() ${event.getStatus()}`);
 
-      if (event.getStatus() === EVENT_STATUS.SCHEDULED) {
-        const updateEvent = await EventService.update(
-          {
-            details: {
-              ...event.getDetails(),
-              response: {
-                value: rest,
-                createdTime
-              }
-            },
-            status: EVENT_STATUS.COMPLETED
+      const updateEvent = await EventService.update(
+        {
+          details: {
+            ...event.getDetails(),
+            response: {
+              value: rest,
+              createdTime
+            }
           },
-          event_id
-        );
-      } else {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Cannot update response for the vital which has passed or has been missed"
-        );
-      }
+          status: EVENT_STATUS.COMPLETED
+        },
+        event_id
+      );
 
       Log.info("above the careplan extraction part:;:");
 
@@ -185,11 +140,22 @@ class SyncController extends Controller {
         customMessage
       );
 
+      const updatedEventDetails = await EventService.getEventByData({
+        id: event_id
+      });
+
+      const eventApiDetails = await EventWrapper(updatedEventDetails);
+
       return raiseSuccess(
         res,
         200,
         {
-          ...(await vital.getAllInfo())
+          ...(await vital.getAllInfo()),
+          events: {
+            [eventApiDetails.getEventId()]: {
+              ...eventApiDetails.getAllInfo()
+            }
+          }
         },
         `${vitalTemplate.getName().toUpperCase()} vital updated successfully`
       );
