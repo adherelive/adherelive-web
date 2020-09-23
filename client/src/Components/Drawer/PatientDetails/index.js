@@ -29,6 +29,7 @@ class PatientDetailsDrawer extends Component {
     
     
     for (let appointment of Object.values(appointments)){
+      
       let {basic_info:{id} ,participant_one : {id : participant_one_Id = 1} , participant_two : {id: participant_two_Id = 1}} = appointment;
       
       if (parseInt(patient_id) === parseInt(participant_two_Id)) {
@@ -45,8 +46,8 @@ class PatientDetailsDrawer extends Component {
         
       }
     }
-    this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:[...appointmentsListIds]});
-    // this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds});
+    // this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:[...appointmentsListIds]});
+    this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds});
 
     
     if (patient_id) {
@@ -66,13 +67,17 @@ class PatientDetailsDrawer extends Component {
     
 
     for (let appointment of Object.values(appointments)){
-      let {basic_info:{id} ,participant_one : {id : participant_one_Id = 1} , participant_two : {id: participant_two_Id = 1}} = appointment;
-      if (parseInt(patient_id) === parseInt(participant_two_Id)) {
+      // console.log("appointments id for loop");
+      let {basic_info:{id} ,participant_one : {id : participant_one_Id = 1,category :participant_one_category=""} , participant_two : {id: participant_two_Id = 1 ,category : participant_two_category = ""}} = appointment;
+      let required_id=1;
+      participant_one_category === 'patient' ? required_id = participant_one_Id : required_id = participant_two_Id;
+      if (parseInt(patient_id) === parseInt(required_id)) {
         appointmentsListIds.push(id);
       }
     }
     
     for (let carePlan of Object.values(care_plans)) {
+      // console.log("careplan id for loop");
       let { basic_info: { id = 1, patient_id : patientId = 1 }, medication_ids = [] } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
@@ -84,8 +89,8 @@ class PatientDetailsDrawer extends Component {
     if (patient_id !== prev_patient_id) {
       getMedications(patient_id);
       getAppointments(patient_id);
-      this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:[...appointmentsListIds]});
-      // this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds});
+      // this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:[...appointmentsListIds]});
+      this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds});
 
     }
     
