@@ -14,7 +14,6 @@ import MsgIcon from "../../../Assets/images/chat.png";
 class PatientDetailsDrawer extends Component {
   constructor(props) {
     super(props);
-    console.log("THIS PROPS",this.props);
     this.state = {
       carePlanId: 1,
       carePlanMedicationIds: [],
@@ -98,7 +97,6 @@ class PatientDetailsDrawer extends Component {
 
   getMedicationList = () => {
     const { carePlanMedicationIds } = this.state;
-    console.log("carePlanMedicationIds",carePlanMedicationIds);
     const { medications = {}, medicines = {} } = this.props;
     
     // const { medications: medication_ids = [] } = patients[id] || {};
@@ -132,7 +130,6 @@ class PatientDetailsDrawer extends Component {
   getAppointmentList = () => {
 
     const { appointmentsListIds } = this.state;
-    console.log("appointmentsListIds",appointmentsListIds);
 
     const { appointments = {} } = this.props;
     const appointmentList = appointmentsListIds.map(id => {
