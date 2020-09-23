@@ -14,6 +14,7 @@ import MsgIcon from "../../../Assets/images/chat.png";
 class PatientDetailsDrawer extends Component {
   constructor(props) {
     super(props);
+    console.log("THIS PROPS",this.props);
     this.state = {
       carePlanId: 1,
       carePlanMedicationIds: [],
@@ -27,27 +28,25 @@ class PatientDetailsDrawer extends Component {
     let carePlanMedicationIds = [];
     let appointmentsListIds = [];
     
-    
-    for (let appointment of Object.values(appointments)){
+    // for (let appointment of Object.values(appointments)){
       
-      let {basic_info:{id} ,participant_one : {id : participant_one_Id = 1} , participant_two : {id: participant_two_Id = 1}} = appointment;
+    //   let {basic_info:{id} ,participant_one : {id : participant_one_Id = 1} , participant_two : {id: participant_two_Id = 1}} = appointment;
       
-      if (parseInt(patient_id) === parseInt(participant_two_Id)) {
-        appointmentsListIds.push(id);
-      }
+    //   if (parseInt(patient_id) === parseInt(participant_two_Id)) {
+    //     appointmentsListIds.push(id);
+    //   }
       
-    }
+    // }
     
     for (let carePlan of Object.values(care_plans)) {
-      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] } = carePlan;
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] , appointment_ids=[] } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
         carePlanMedicationIds = medication_ids;
-        
+        appointmentsListIds = appointment_ids; 
       }
     }
-    // this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:[...appointmentsListIds]});
-    this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds});
+    this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds});
 
     
     if (patient_id) {
@@ -63,25 +62,15 @@ class PatientDetailsDrawer extends Component {
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
-    let appointmentsListIds = [];
-    
-
-    for (let appointment of Object.values(appointments)){
-      // console.log("appointments id for loop");
-      let {basic_info:{id} ,participant_one : {id : participant_one_Id = 1,category :participant_one_category=""} , participant_two : {id: participant_two_Id = 1 ,category : participant_two_category = ""}} = appointment;
-      let required_id=1;
-      participant_one_category === 'patient' ? required_id = participant_one_Id : required_id = participant_two_Id;
-      if (parseInt(patient_id) === parseInt(required_id)) {
-        appointmentsListIds.push(id);
-      }
-    }
+    let appointmentsListIds = []; 
     
     for (let carePlan of Object.values(care_plans)) {
       // console.log("careplan id for loop");
-      let { basic_info: { id = 1, patient_id : patientId = 1 }, medication_ids = [] } = carePlan;
+      let { basic_info: { id = 1, patient_id : patientId = 1 }, medication_ids = [], appointment_ids = [] } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
         carePlanMedicationIds = medication_ids;
+        appointmentsListIds = appointment_ids;
       }
     }
     
@@ -89,8 +78,7 @@ class PatientDetailsDrawer extends Component {
     if (patient_id !== prev_patient_id) {
       getMedications(patient_id);
       getAppointments(patient_id);
-      // this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:[...appointmentsListIds]});
-      this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds:appointmentsListIds});
+      this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds});
 
     }
     
@@ -110,7 +98,7 @@ class PatientDetailsDrawer extends Component {
 
   getMedicationList = () => {
     const { carePlanMedicationIds } = this.state;
-  
+    console.log("carePlanMedicationIds",carePlanMedicationIds);
     const { medications = {}, medicines = {} } = this.props;
     
     // const { medications: medication_ids = [] } = patients[id] || {};
@@ -142,8 +130,10 @@ class PatientDetailsDrawer extends Component {
   };
   
   getAppointmentList = () => {
-    
+
     const { appointmentsListIds } = this.state;
+    console.log("appointmentsListIds",appointmentsListIds);
+
     const { appointments = {} } = this.props;
     const appointmentList = appointmentsListIds.map(id => {
       const {
