@@ -1,7 +1,12 @@
 import Controller from "../../index";
 import Logger from "../../../../libs/log";
 
-import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import {
+  EVENT_STATUS,
+  EVENT_TYPE,
+  USER_CATEGORY,
+  OFFLINE_SYNC_DATA_TASKS
+} from "../../../../constant";
 import {
   syncMedicationReminderStatus,
   syncVitalsResponseData
@@ -18,7 +23,9 @@ class SyncController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body } = req;
-      const { event_sync_data = {} } = body;
+      const {
+        [OFFLINE_SYNC_DATA_TASKS.SYNC_EVENTS_DATA]: event_sync_data = {}
+      } = body;
       Log.debug("data got from body is: ", event_sync_data);
 
       if (event_sync_data && Object.keys(event_sync_data).length) {
@@ -54,7 +61,7 @@ class SyncController extends Controller {
           res,
           200,
           {
-            events: {
+            schedule_events: {
               [eventApiDetails.getEventId()]: {
                 ...eventApiDetails.getAllInfo()
               }
@@ -74,7 +81,7 @@ class SyncController extends Controller {
           200,
           {
             ...(await vitalApiDetails.getAllInfo()),
-            events: {
+            schedule_events: {
               [syncEventApiDetails.getEventId()]: {
                 ...syncEventApiDetails.getAllInfo()
               }

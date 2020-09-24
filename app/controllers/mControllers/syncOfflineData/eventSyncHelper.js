@@ -28,7 +28,7 @@ export const syncMedicationReminderStatus = async (
     let eventDetails = await EventService.getEventByData({ id: event_id });
     let { details = {} } = eventDetails;
 
-    details = { ...details, ...{ status } };
+    details = { ...details, status };
     eventDetails = { ...eventDetails, ...{ details } };
 
     const mEventDetails = await EventService.update(eventDetails, event_id);
