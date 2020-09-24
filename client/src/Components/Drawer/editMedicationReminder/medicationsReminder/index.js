@@ -338,6 +338,7 @@ class EditMedicationReminder extends Component {
           top: "0px"
         }}
         className="ant-drawer"
+        
         title={editMedication ? formatMessage(messages.medication) : addMedication ? 'Add Medication' : formatMessage(messages.title)}
       >
         <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />

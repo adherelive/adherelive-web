@@ -77,21 +77,12 @@ class EditVitalForm extends Component {
       });
     }
   }
-  
-   scrollToTop = () => {
-     let F = document.getElementsByClassName('Form');
-     console.log("vvv FFFFF",F);
+  scrollToTop = () => {
     let antForm= document.getElementsByClassName('Form')[0];
     let antDrawerBody = antForm.parentNode;
     let antDrawerWrapperBody=antDrawerBody.parentNode;
     antDrawerBody.scrollIntoView(true);
-    console.log("antForm",antForm);
-    console.log("antDrawerBody",antDrawerBody);
-    console.log("antDrawerWrapperBody",antDrawerWrapperBody);
-    // antDrawerWrapperBody.scrollTop -= 200;
-    console.log("vit",antDrawerWrapperBody.scrollHeight);
-    
-   
+    antDrawerWrapperBody.scrollTop -= 200;
   }
 
 
