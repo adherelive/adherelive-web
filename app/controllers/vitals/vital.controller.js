@@ -6,7 +6,7 @@ import * as vitalHelper from "./vitalHelper";
 import VitalTemplateService from "../../services/vitalTemplates/vitalTemplate.service";
 import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
-import CarePlanService from "../../services/carePlan/carePlan.service";
+import SqsQueueService from "../../services/awsQueue/queue.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
@@ -68,6 +68,8 @@ class VitalController extends Controller {
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
                 const eventScheduleData = {
+                    type: EVENT_TYPE.VITALS,
+                    patient_id: patient.getUserId(),
                     event_id: vitals.getVitalId(),
                     event_type: EVENT_TYPE.VITALS,
                     critical: false,
@@ -82,6 +84,10 @@ class VitalController extends Controller {
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
+
+                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+                //
+                // Log.debug("sqsResponse ---> ", sqsResponse);
 
                 // RRule
                 EventSchedule.create(eventScheduleData);

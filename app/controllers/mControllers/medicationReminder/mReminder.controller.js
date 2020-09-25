@@ -28,6 +28,8 @@ import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import MedicationJob from "../../../JobSdk/Medications/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
+import EventSchedule from "../../../eventSchedules";
+
 const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
 
@@ -151,6 +153,21 @@ class MobileMReminderController extends Controller {
         },
         medicationId: mReminderApiWrapper.getMReminderId()
       };
+
+      const eventScheduleData = {
+        patient_id: patient.getUserId(),
+        type: EVENT_TYPE.MEDICATION_REMINDER,
+        event_id: mReminderDetails.getId,
+        details: mReminderDetails.getBasicInfo.details,
+        status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+        when_to_take,
+        participant_one: patient.getUserId(),
+        participant_two: userId
+      };
+
+      EventSchedule.create(eventScheduleData);
 
       const medicationJob = MedicationJob.execute(EVENT_STATUS.SCHEDULED, eventData);
       await NotificationSdk.execute(medicationJob);
@@ -278,6 +295,23 @@ class MobileMReminderController extends Controller {
         },
         medicationId: mReminderDetails.get("id")
       };
+
+      const eventScheduleData = {
+        patient_id: patient.getUserId(),
+        type: EVENT_TYPE.MEDICATION_REMINDER,
+        event_id: mReminderDetails.getId,
+        details: mReminderDetails.getBasicInfo.details,
+        status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+        when_to_take,
+        participant_one: patient.getUserId(),
+        participant_two: userId
+      };
+
+      EventSchedule.create(eventScheduleData);
+
+
 
       const medicationJob = MedicationJob.execute(EVENT_STATUS.SCHEDULED, eventData);
       await NotificationSdk.execute(medicationJob);

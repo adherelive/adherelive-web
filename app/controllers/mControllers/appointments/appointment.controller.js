@@ -20,6 +20,7 @@ import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
 import EventSchedule from "../../../eventSchedules";
+import SqsQueueService from "../../../services/awsQueue/queue.service";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
@@ -147,6 +148,7 @@ class MobileAppointmentController extends Controller {
       }
 
       const eventScheduleData = {
+        type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentData.getAppointmentId(),
         event_type: EVENT_TYPE.APPOINTMENT,
         critical,
@@ -163,6 +165,10 @@ class MobileAppointmentController extends Controller {
           }
         },
       };
+
+      // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+      //
+      // Logger.debug("sqsResponse ---> ", sqsResponse);
 
       // RRule
       await EventSchedule.create(eventScheduleData);

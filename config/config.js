@@ -20,6 +20,10 @@ module.exports = () => {
       KEY: process.env.SENDGRID_PASSWORD,
       FROM: process.env.SENDGRID_FROM_ADDRESS
     },
+    sqs: {
+      domain_url: process.env.SQS_DOMAIN_URL,
+      account_id: process.env.AWS_ACCCOUNT_ID
+    },
     db: {
       connection: process.env.DB_CONNECTION,
       name: process.env.DB_DATABASE_NAME,

@@ -11,15 +11,15 @@ import documentService from "../../services/uploadDocuments/uploadDocuments.serv
 import registrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-import medicineService from "../../services/medicine/medicine.service";
-import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+// import medicineService from "../../services/medicine/medicine.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import degreeService from "../../services/degree/degree.service";
 import collegeService from "../../services/college/college.service";
 import councilService from "../../services/council/council.service";
 
-import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
-import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
+// import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
+// import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -30,7 +30,7 @@ import QualificationWrapper from "../../ApiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
-import MedicineApiWrapper from "../../ApiWrapper/web/medicine";
+// import MedicineApiWrapper from "../../ApiWrapper/web/medicine";
 import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
@@ -43,7 +43,8 @@ import {
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
-  VERIFICATION_TYPE
+  VERIFICATION_TYPE,
+  PATIENT_MEAL_TIMINGS
 } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
@@ -54,6 +55,7 @@ import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
+import UserPreferenceService from "../../services/userPreferences/userPreference.service";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 
@@ -819,6 +821,13 @@ class DoctorController extends Controller {
         age,
         dob: moment(date_of_birth).toISOString()
         // uid
+      });
+
+      const addTimingPreference = await UserPreferenceService.addUserPreference({
+        user_id: newUserId,
+        details: {
+          timings: PATIENT_MEAL_TIMINGS
+        }
       });
 
       const patientData = await PatientWrapper(patient);
