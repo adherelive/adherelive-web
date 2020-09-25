@@ -292,7 +292,7 @@ export default defineMessages({
     defaultMessage: "Please Fill All Details"
   },
   title: {
-    id: "medication_reminder.modal.title",
+    id: "edit.medication_reminder.modal.title",
     description: "",
     defaultMessage: "Edit Medication"
   },

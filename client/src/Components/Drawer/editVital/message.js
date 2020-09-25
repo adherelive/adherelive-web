@@ -302,7 +302,7 @@ export default defineMessages({
     defaultMessage: "Save"
   },
   title: {
-    id: "medication_reminder.modal.title",
+    id: "edit.vital.modal.title",
     description: "",
     defaultMessage: "Edit Vital"
   },

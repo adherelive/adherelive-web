@@ -287,7 +287,7 @@ export default defineMessages({
     defaultMessage: "Save"
   },
   title: {
-    id: "medication_reminder.modal.title",
+    id: "add.medication_reminder.modal.title",
     description: "",
     defaultMessage: "New Medication"
   },
