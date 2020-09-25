@@ -64,11 +64,12 @@ class ScheduleEventService {
 
     getLastVisitData = async (data = {}) => {
         try {
-            const {event_id, date, sort = 'ASC'} = data;
+            const {event_id, event_type, date, sort = 'ASC'} = data;
             const scheduleEvent = await ScheduleEvent.findAll({
-                limit: 4,
+                limit: 3,
                 where: {
                     event_id,
+                    event_type,
                     start_time: {
                         [Op.between]: [moment(date).startOf('day'),moment().utc().toISOString()]
                     },
