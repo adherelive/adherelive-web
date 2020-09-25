@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,Fragment } from "react";
 import { Drawer, Form, message } from "antd";
 import { injectIntl } from "react-intl";
 
@@ -169,23 +169,23 @@ class AddVitals extends Component {
 
     
     return (
-      <Drawer
+      <Fragment>
+        <Drawer
+        placement="right"
+        maskClosable={false}
+        headerStyle={{
+          position: "sticky",
+          zIndex: "9999",
+          top: "0px"
+        }}
+       
         width={'35%'}
         onClose={onClose}
         visible={visible}
 
         // closeIcon={<img src={backArrow} />}
-        headerStyle={{
-          position: "sticky",
-          zIndex: "9999",
-          top: "0px"
-        }}
-        headerStyle={{
-          position: "sticky",
-          zIndex: "9999",
-          top: "0px"
-        }}
-        maskClosable={false}
+        
+        
         destroyOnClose={true}
         className="ant-drawer"
         title={formatMessage(messages.title)}
@@ -202,6 +202,7 @@ class AddVitals extends Component {
           cancelComponent={null}
         />
       </Drawer>
+      </Fragment>
     );
   }
 }

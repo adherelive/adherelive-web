@@ -67,7 +67,7 @@ class StartDate extends Component {
 
     return (
       <div className="flex align-center">
-        <div className="wp100">
+        <div className="pr8 wp100">
           <div className='flex  row mb-4'>
             <span className="form-label">From</span>
             <div className="star-red">*</div>
