@@ -58,7 +58,8 @@
     "build": "react-app-rewired build && cp -R build/* ../public/",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
-    "extract": "NODE_ENV=development babel src"
+    "extract": "NODE_ENV=development babel src",
+    "manage:translations": "node translationManager.js"
   },
   "eslintConfig": {
     "extends": "react-app"

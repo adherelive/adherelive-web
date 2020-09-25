@@ -2,7 +2,7 @@ import userController from "../../../app/controllers/user/user.controller";
 
 const express = require("express");
 const router = express.Router();
-import Authenticate from "../middleware/auth";
+import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
 const multer = require("multer");
 const storage = multer.memoryStorage();

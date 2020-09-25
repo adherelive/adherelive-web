@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 import twilioController from "../../../app/controllers/mControllers/twilio/twilio.controller";
-import Authenticated from "../middleware/auth";
+import Authenticated from "../middlewares/auth";
 
 router.get(
   "/getTwilioVideoAccessToken",

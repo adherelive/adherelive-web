@@ -5,6 +5,7 @@ import schedule from "node-schedule";
 
 import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
+// import Events from "../events";
 // import NotificationObserver from "../app/notificationSdk/notificationObeserver";
 
 // import Prior from "../app/Crons/prior";
@@ -24,7 +25,7 @@ const cors = require("cors");
 
 const app = express();
 
-const cron = schedule.scheduleJob("*/5 * * * *", async () => {
+const cron = schedule.scheduleJob("*/2 * * * *", async () => {
     // await Prior.getPriorEvents();
     await Passed.runObserver();
     await Start.runObserver();
