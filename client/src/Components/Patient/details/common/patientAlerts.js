@@ -108,7 +108,7 @@ class PatientAlerts extends Component {
                     <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_vital)}</div>
                 )}
                 <div className="wp75 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
-                <div className="wp15 fw500">{`(${name})`}</div>
+                <div className="wp20 fw500 word-wrap">{`(${name})`}</div>
             </div>
         );
     };
@@ -160,7 +160,7 @@ class PatientAlerts extends Component {
             <div className="br10 p10 wp100 bg-rosy-pink">
                 <div className="wp100 pl6 pt10 pb10 flex align-center bb-light-grey">
                     <div className="fs20 fw700">{formatMessage(messages.alert_header)}</div>
-                    <div className="fs20 fw500 warm-grey ml4">{`(${last_visit.length}}`}</div>
+                    <div className="fs20 fw500 warm-grey ml4">{`(${last_visit.length})`}</div>
                 </div>
                 {!areEvents ? getBlankState() : getEvents()}
             </div>

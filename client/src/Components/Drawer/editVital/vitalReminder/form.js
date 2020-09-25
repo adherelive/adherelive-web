@@ -397,29 +397,29 @@ class EditVitalForm extends Component {
     enableSubmit();
   };
 
-  setRepeatEveryDay = e => {
-    e.preventDefault();
-    const {
-      form: { setFieldsValue },
-      enableSubmit
-    } = this.props;
-    setFieldsValue({
-      [repeatDaysField.field_name]: DAYS
-    });
-    enableSubmit();
-  };
+  // setRepeatEveryDay = e => {
+  //   e.preventDefault();
+  //   const {
+  //     form: { setFieldsValue },
+  //     enableSubmit
+  //   } = this.props;
+  //   setFieldsValue({
+  //     [repeatDaysField.field_name]: DAYS
+  //   });
+  //   enableSubmit();
+  // };
 
-  setRepeatAlternateDay = e => {
-    e.preventDefault();
-    const {
-      form: { setFieldsValue },
-      enableSubmit
-    } = this.props;
-    setFieldsValue({
-      [repeatDaysField.field_name]: ALTERNATE_DAYS
-    });
-    enableSubmit();
-  };
+  // setRepeatAlternateDay = e => {
+  //   e.preventDefault();
+  //   const {
+  //     form: { setFieldsValue },
+  //     enableSubmit
+  //   } = this.props;
+  //   setFieldsValue({
+  //     [repeatDaysField.field_name]: ALTERNATE_DAYS
+  //   });
+  //   enableSubmit();
+  // };
 
   getFooter = () => {
     const {
@@ -510,9 +510,9 @@ class EditVitalForm extends Component {
             disabledStartDate={disabledStartDate}
             adjustEndDate={adjustEndDate}
             setEndDateOneWeek={setEndDateOneWeek}
-            setRepeatEveryDay={setRepeatEveryDay}
+            // setRepeatEveryDay={setRepeatEveryDay}
             setEndDateTwoWeek={setEndDateTwoWeek}
-            setRepeatAlternateDay={setRepeatAlternateDay}
+            // setRepeatAlternateDay={setRepeatAlternateDay}
             setEndDateLongTime={setEndDateLongTime}
           />
           {instructions.render(this.props)}
