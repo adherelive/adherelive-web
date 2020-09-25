@@ -16,49 +16,74 @@ class PatientDetailsDrawer extends Component {
     super(props);
     this.state = {
       carePlanId: 1,
-      carePlanMedicationIds: []
+      carePlanMedicationIds: [],
+      appointmentsListIds:[]
     };
   }
 
   componentDidMount() {
-    const { getMedications, payload: { patient_id } = {}, care_plans = {} } = this.props;
+    const { getMedications, payload: { patient_id } = {}, care_plans = {},getAppointments, appointments={}  } = this.props;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
+    let appointmentsListIds = [];
+    
+    // for (let appointment of Object.values(appointments)){
+      
+    //   let {basic_info:{id} ,participant_one : {id : participant_one_Id = 1} , participant_two : {id: participant_two_Id = 1}} = appointment;
+      
+    //   if (parseInt(patient_id) === parseInt(participant_two_Id)) {
+    //     appointmentsListIds.push(id);
+    //   }
+      
+    // }
+    
     for (let carePlan of Object.values(care_plans)) {
-
-      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] } = carePlan;
+      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] , appointment_ids=[] } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
         carePlanMedicationIds = medication_ids;
+        appointmentsListIds = appointment_ids; 
       }
-
     }
-    this.setState({ carePlanId, carePlanMedicationIds });
+    this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds});
+
+    
     if (patient_id) {
       getMedications(patient_id);
+      getAppointments(patient_id);
     }
+    
   }
 
   componentDidUpdate(prevProps) {
-    const { payload: { patient_id } = {}, getMedications, care_plans = {} } = this.props;
+   
+    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments, appointments={} } = this.props;
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
+    let appointmentsListIds = []; 
+    
     for (let carePlan of Object.values(care_plans)) {
-
-      let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] } = carePlan;
+      // console.log("careplan id for loop");
+      let { basic_info: { id = 1, patient_id : patientId = 1 }, medication_ids = [], appointment_ids = [] } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
         carePlanMedicationIds = medication_ids;
+        appointmentsListIds = appointment_ids;
       }
-
     }
-
+    
+    
     if (patient_id !== prev_patient_id) {
       getMedications(patient_id);
-      this.setState({ carePlanId, carePlanMedicationIds });
+      getAppointments(patient_id);
+      this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds});
+
     }
+    
   }
+  
+  
 
   getFormattedDays = dates => {
     let dayString = [];
@@ -71,8 +96,9 @@ class PatientDetailsDrawer extends Component {
   };
 
   getMedicationList = () => {
-    const { medications = {}, medicines = {} } = this.props;
     const { carePlanMedicationIds } = this.state;
+    const { medications = {}, medicines = {} } = this.props;
+    
     // const { medications: medication_ids = [] } = patients[id] || {};
     const medicationList = carePlanMedicationIds.map(id => {
       const {
@@ -100,6 +126,37 @@ class PatientDetailsDrawer extends Component {
 
     return medicationList;
   };
+  
+  getAppointmentList = () => {
+
+    const { appointmentsListIds } = this.state;
+
+    const { appointments = {} } = this.props;
+    const appointmentList = appointmentsListIds.map(id => {
+      const {
+        basic_info: {
+          start_date,
+          start_time,
+          end_time,
+          details: { type_description = ""  } = {}
+        } = {}
+      } = appointments[id] || {};
+      let td = moment(start_time);
+       return (
+        <div key={id} className="flex justify-space-between align-center mb10">
+          <div className="pointer tab-color fw600 wp35 tooltip">{type_description.length > 0 ? type_description : " "}
+
+            <span className="tooltiptext">{start_date}</span></div>
+          <div className="wp35 tal">{start_time ? td.utc().format('HH:mm') : '--' }</div>
+
+          <div className="wp20 tar">{ start_date ? moment( start_date).format("DD MMM") : "--"}</div>
+        </div>
+      );
+      
+    });
+    return appointmentList;
+   
+  }
 
   openChatTab = () => {
 
@@ -125,7 +182,8 @@ class PatientDetailsDrawer extends Component {
       formatMessage,
       getMedicationList,
       handlePatientDetailsRedirect,
-      openChatTab
+      openChatTab,
+      getAppointmentList
     } = this;
 
     let { patient_id: id = "" } = payload || {};
@@ -260,6 +318,18 @@ class PatientDetailsDrawer extends Component {
 
             {getMedicationList()}
           </div>
+          
+          {/*appointments*/}
+
+          <div className="mt20 black-85 wp100">
+            <div className="mt10 mb10 fs18 fw600">
+              {formatMessage(messages.appointments)}
+            </div>
+
+            {getAppointmentList()}
+          </div>
+          
+          
         </Fragment>
       );
     }

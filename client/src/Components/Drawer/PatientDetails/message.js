@@ -50,6 +50,11 @@ const messages = defineMessages({
     id: "app.drawer.patient.details.medications",
     description: "",
     defaultMessage: "Medications"
+  },
+  appointments: {
+    id: "app.drawer.patient.details.appointments",
+    description: "",
+    defaultMessage: "Appointments"
   }
 });
 

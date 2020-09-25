@@ -38,6 +38,19 @@ class AddAppointmentForm extends Component {
       typeDescription: []
     };
   }
+  
+  componentDidMount(){
+    this.scrollToTop();
+  }
+ 
+  scrollToTop = () => {
+    let antForm= document.getElementsByClassName('Form')[0];
+    let antDrawerBody = antForm.parentNode;
+    let antDrawerWrapperBody=antDrawerBody.parentNode;
+    antDrawerBody.scrollIntoView(true);
+    antDrawerWrapperBody.scrollTop -= 200;
+  }
+  
 
   openCalendar = (e) => {
     e.preventDefault();
@@ -339,7 +352,7 @@ class AddAppointmentForm extends Component {
     });
 
     return (
-      <Form className="fw700 wp100 pb30">
+      <Form className="fw700 wp100 pb30 Form">
         <FormItem
           // label={formatMessage(message.patient)}
           className='mb-24'

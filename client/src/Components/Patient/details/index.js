@@ -205,6 +205,13 @@ const columns_appointments = [
     ellipsis: true
   },
   {
+    title: "Adherence",
+    dataIndex: "Adherence",
+    key: "adherence",
+    width: "30%",
+    ellipsis: true
+  },
+  {
     title: "",
     dataIndex: "edit",
     key: "edit",
@@ -242,6 +249,13 @@ const columns_appointments_non_editable = [
     title: "Description",
     dataIndex: "description",
     key: "description",
+    width: "30%",
+    ellipsis: true
+  },
+  {
+    title: "Adherence",
+    dataIndex: "Adherence",
+    key: "adherence",
     width: "30%",
     ellipsis: true
   }
@@ -452,6 +466,7 @@ class PatientDetails extends Component {
       templateDrawerVisible: false,
       carePlanTemplateExists: false,
       carePlanTemplateIds: [],
+      appointmentsListIds:[],
       symptoms: [
         { body_part: PARTS.HEAD, description: "werwerewrwer" },
         { body_part: PARTS.CHEST, description: "342342352343" }
