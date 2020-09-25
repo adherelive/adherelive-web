@@ -442,6 +442,8 @@ export const DOSE_UNIT = {
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
 
+
+
 export const BEFORE_BREAKFAST = "1";
 export const AFTER_BREAKFAST = "2";
 export const NOON = "3";
@@ -761,3 +763,31 @@ export const REPEAT_INTERVAL = {
 
 export const MP4 = "mp4";
 export const ALLOWED_VIDEO_EXTENSIONS = [MP4];
+
+export const WAKE_UP = "1";
+export const BREAKFAST = "2";
+export const LUNCH = "3";
+export const EVENING = "4";
+export const DINNER = "5";
+export const SLEEP = "6";
+
+export const PATIENT_MEAL_TIMINGS =  {
+  [WAKE_UP]:{
+    "value":"2020-09-24T08:00:00+05:30"
+  },
+  [BREAKFAST]:{
+    "value":"2020-09-24T09:00:00+05:30"
+  },
+  [LUNCH]:{
+    "value":"2020-09-24T13:00:00+05:30"
+  },
+  [EVENING]:{
+    "value":"2020-09-24T16:00:00+05:30"
+  },
+  [DINNER]:{
+    "value":"2020-09-24T20:00:00+05:30"
+  },
+  [SLEEP]:{
+    "value":"2020-09-24T23:00:00+05:30"
+  }
+}

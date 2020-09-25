@@ -4,7 +4,7 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
-  MEDICATION_TIMING, NOON, REPEAT_INTERVAL
+  MEDICATION_TIMING, NOON, REPEAT_INTERVAL, SLEEP, WAKE_UP
 } from "../../constant";
 import Log from "../../libs/log";
 import { RRule } from "rrule";
@@ -13,16 +13,17 @@ import moment from "moment";
 import * as eventHelper from "./helper";
 
 import scheduleService from "../services/scheduleEvents/scheduleEvent.service";
+
 import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../ApiWrapper/web/featureDetails";
+import UserPreferenceService from "../services/userPreferences/userPreference.service";
 
 const Logger = new Log("EVENT SCHEDULE CREATOR");
 
 class EventSchedule {
   create = async (data = {}) => {
-    const { event_type } = data || {};
-    Logger.debug("data -----> ===== -----> ", data);
-    switch (event_type) {
+    const { type } = data || {};
+    switch (type) {
       case EVENT_TYPE.APPOINTMENT:
         await this.createAppointmentSchedule(data);
         break;
@@ -32,13 +33,24 @@ class EventSchedule {
       case EVENT_TYPE.VITALS:
         await this.createVitalSchedule(data);
       default:
-        Logger.debug("eventType --->", event_type);
+        Logger.debug("eventType --->", type);
+    }
+  };
+
+  getUserPreferences = async (user_id) => {
+    try {
+      const userPreference = await UserPreferenceService.getPreferenceByData({user_id});
+      const {timings = {}} = userPreference.get("details") || {};
+      return timings;
+    } catch(error) {
+      Logger.debug("userPreferences catch error", error);
     }
   };
 
   createVitalSchedule = async vital => {
     try {
       const {
+        patient_id,
         event_id,
         start_date,
         end_date,
@@ -55,6 +67,11 @@ class EventSchedule {
         vital_templates = {}
       } = vital || {};
 
+      const timings = await this.getUserPreferences(patient_id);
+
+      Logger.debug("start_date 8318293 ", moment(start_date)
+          .toDate());
+
       const vitalData = await FeatureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.VITAL
       });
@@ -65,40 +82,80 @@ class EventSchedule {
 
       const rrule = new RRule({
         freq: RRule.WEEKLY,
-        dtstart: moment(start_date)
-          .utc()
-          .toDate(),
+        dtstart: moment(start_date).toDate(),
         until: end_date
-          ? moment(end_date)
-              .utc()
-              .toDate()
-          : moment(start_date)
-              .add(1, "month")
-              .utc()
-              .toDate(),
+            ? moment(end_date)
+                .toDate()
+            : moment(start_date)
+                .add(1, "month")// TODO: drive from env
+                .toDate(),
         byweekday: eventHelper.repeatDays(repeat_days)
       });
-
-      // create schedule for the date
       const allDays = rrule.all();
 
       Logger.debug("allDays ----> ", allDays);
 
-      if(key !== REPEAT_INTERVAL.ONCE) {
+      if(key === REPEAT_INTERVAL.ONCE) {
         for (let i = 0; i < allDays.length; i++) {
-          const currentTime = moment(allDays[i]).utc().startOf('day').toISOString();
-          const endTime = moment(allDays[i]).utc().endOf('day').toISOString();
+          // **** TAKING WAKE UP TIME AS TIME FOR REPEAT INTERVAL = ONCE ****
 
-          let ongoingTime = currentTime;
-           while(moment(endTime).diff(ongoingTime, 'h') > 0) {
+          const {value: wakeUpTime} = timings[WAKE_UP];
+
+          const hours = moment(wakeUpTime).utc().get('hours');
+          const minutes = moment(wakeUpTime).utc().get('minutes');
+
+          const scheduleData = {
+            event_id,
+            critical,
+            date: moment(allDays[i])
+                .utc()
+                .toISOString(),
+            start_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).utc().toISOString(),
+            end_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).utc().toISOString(),
+            event_type: EVENT_TYPE.VITALS,
+            details: {
+              ...details,
+              participants,
+              actor,
+              vital_templates,
+              eventId: event_id
+            }
+          };
+
+          const schedule = await scheduleService.create(scheduleData);
+          if (schedule) {
+            Logger.debug("schedule events created for vitals", true);
+          } else {
+            Logger.debug("schedule events failed for vitals", false);
+          }
+        }
+      } else {
+        for (let i = 0; i < allDays.length; i++) {
+          Logger.info(`moment(allDays[i]) : ${moment(allDays[i]).format()}`);
+          const {value: wakeUpTime} = timings[WAKE_UP];
+          const {value: sleepTime} = timings[SLEEP];
+
+          const startHours = moment(wakeUpTime).get('hours');
+          const startMinutes = moment(wakeUpTime).get('minutes');
+          const startOfDay = moment(allDays[i]).set("hours", startHours).set("minutes", startMinutes).utc().toISOString();
+
+          const endHours = moment(sleepTime).get('hours');
+          const endMinutes = moment(sleepTime).get('minutes');
+          const endOfDay = moment(allDays[i]).set("hours", endHours).set("minutes", endMinutes).utc().toISOString();
+
+          let ongoingTime = startOfDay;
+
+          while(moment(endOfDay).diff(moment(ongoingTime), "minutes") > 0) {
+            const hours = moment(ongoingTime).get("hours");
+            const minutes = moment(ongoingTime).get("minutes");
             const scheduleData = {
               event_id,
               critical,
               date: moment(allDays[i])
                   .utc()
                   .toISOString(),
-              start_time: ongoingTime,
-              end_time: ongoingTime,
+              start_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
+              end_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
               event_type: EVENT_TYPE.VITALS,
               details: {
                 ...details,
@@ -116,38 +173,7 @@ class EventSchedule {
               Logger.debug("schedule events failed for vitals", false);
             }
 
-             ongoingTime = moment(ongoingTime).add(value, 'hours').toISOString();
-           }
-        }
-      } else {
-        for (let i = 0; i < allDays.length; i++) {
-          const currentHour = moment(start_date).get('hour');
-          const currentMinute = moment(start_date).get('minute');
-
-          const ongoingTime = moment(allDays[i]).set('hours', currentHour).set('minutes', currentMinute).utc().toISOString();
-          const scheduleData = {
-            event_id,
-            critical,
-            date: moment(allDays[i])
-                .utc()
-                .toISOString(),
-            start_time: ongoingTime,
-            end_time: ongoingTime,
-            event_type: EVENT_TYPE.VITALS,
-            details: {
-              ...details,
-              participants,
-              actor,
-              vital_templates,
-              eventId: event_id
-            }
-          };
-
-          const schedule = await scheduleService.create(scheduleData);
-          if (schedule) {
-            Logger.debug("schedule events created for vitals", true);
-          } else {
-            Logger.debug("schedule events failed for vitals", false);
+            ongoingTime = moment(ongoingTime).add(value, "hours")
           }
         }
       }
@@ -172,8 +198,8 @@ class EventSchedule {
         freq: RRule.WEEKLY,
         count: 1,
         dtstart: moment(start_time)
-          .utc()
-          .toDate()
+            .utc()
+            .toDate()
       });
 
       Logger.debug("rrule ----> ", rrule.all());
@@ -208,11 +234,12 @@ class EventSchedule {
     Logger.debug("213971203 createMedicationSchedule -->", medication);
     try {
       const {
+        patient_id,
         event_id,
         start_date,
         end_date,
-        details: {details = {}} = {},
-        details: { details: {when_to_take, repeat_days, critical = false } = {} } = {},
+        details,
+        details: {when_to_take, repeat_days, critical = false } = {},
         participants = [],
         actors = {}
       } = medication || {};
@@ -220,30 +247,28 @@ class EventSchedule {
       const rrule = new RRule({
         freq: RRule.WEEKLY,
         dtstart: moment(start_date)
-          .utc()
-          .toDate(),
+            .utc()
+            .toDate(),
         until: end_date
-          ? moment(end_date)
-              .utc()
-              .toDate()
-          : moment(start_date)
-              .add(1, "month")
-              .utc()
-              .toDate(),
+            ? moment(end_date)
+                .utc()
+                .toDate()
+            : moment(start_date)
+                .add(1, "month")
+                .utc()
+                .toDate(),
         byweekday: eventHelper.repeatDays(repeat_days)
       });
 
-      Logger.debug("rrule ----> ", rrule.all());
-
-      let scheduleData = {};
-
       const allDays = rrule.all();
 
-      Logger.debug("allDays ----> ", allDays);
+      const patientPreference = await this.getUserPreferences(patient_id);
+
+      Logger.debug("when_to_take ---> ", when_to_take);
 
       for (let i = 0; i < allDays.length; i++) {
         for (const timing of when_to_take) {
-          const startTime = this.updateMedicationTiming(allDays[i], timing);
+          const startTime = eventHelper.updateMedicationTiming(allDays[i], timing, patientPreference);
 
           const scheduleData = {
             event_id,
@@ -269,53 +294,6 @@ class EventSchedule {
       }
     } catch (error) {
       Logger.debug("schedule events medication 500 error", error);
-    }
-  };
-
-  updateMedicationTiming = (date, timing) => {
-    switch (timing) {
-      case BEFORE_BREAKFAST:
-        return moment(date)
-          .set("hours", 8)
-          .set("minutes", 0);
-      case AFTER_BREAKFAST:
-        return moment(date)
-          .set("hours", 9)
-          .set("minutes", 0);
-      case NOON:
-        return moment(date)
-            .set("hours", 12)
-            .set("minutes", 0);
-      case BEFORE_LUNCH:
-        return moment(date)
-            .set("hours", 12)
-            .set("minutes", 30);
-      case AFTER_LUNCH:
-        return moment(date)
-            .set("hours", 13)
-            .set("minutes", 30);
-      case BEFORE_EVENING_SNACK:
-        return moment(date)
-            .set("hours", 17)
-            .set("minutes", 30);
-      case AFTER_EVENING_SNACK:
-        return moment(date)
-            .set("hours", 18)
-            .set("minutes", 0);
-      case BEFORE_DINNER:
-        return moment(date)
-            .set("hours", 19)
-            .set("minutes", 30);
-      case AFTER_DINNER:
-        return moment(date)
-            .set("hours", 20)
-            .set("minutes", 30);
-      case BEFORE_SLEEP:
-        return moment(date)
-            .set("hours", 22)
-            .set("minutes", 30);
-      default:
-        return moment(date);
     }
   };
 }

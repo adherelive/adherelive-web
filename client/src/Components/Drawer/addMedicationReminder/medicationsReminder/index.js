@@ -146,9 +146,9 @@ class AddMedicationReminder extends Component {
 
           [startTimeField.field_name]:startTime && startTime !== null ? startTime.startOf("minute").toISOString(): startTime,
           
-          [startDateField.field_name]:startDate && startDate !== null ? startDate.clone().startOf("day").toISOString():startDate,
+          [startDateField.field_name]:startDate && startDate !== null ? startDate.clone().toISOString():startDate,
           
-          [endDateField.field_name]:endDate && endDate !== null? endDate.clone().endOf("day").toISOString():endDate
+          [endDateField.field_name]:endDate && endDate !== null? endDate.clone().toISOString():endDate
         };
 
         if (repeatDays) {

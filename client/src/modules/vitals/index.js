@@ -53,10 +53,11 @@ export const addVital = (payload) => {
 
 export const getVitals = (carePlanId) => {
   return async (dispatch) => {
+    let response = {};
     try {
       dispatch({ type: GET_VITALS_START });
 
-      const response = await doRequest({
+      response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getPatientVitalsURL(carePlanId),
       });
@@ -73,6 +74,7 @@ export const getVitals = (carePlanId) => {
       console.log("getVitals error ----> ", error);
       dispatch({ type: GET_VITALS_FAILED });
     }
+    return response;
   };
 };
 

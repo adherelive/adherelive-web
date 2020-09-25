@@ -40,7 +40,7 @@ class VitalWrapper extends BaseVital {
     getAllInfo = async () => {
         const {getBasicInfo, getVitalId, getStartDate} = this;
 
-        const currentDate = moment().utc().toDate();
+        const currentDate = moment().endOf('day').utc().toDate();
 
         const scheduleEvents = await EventService.getAllPastData({
             startDate: getStartDate(),

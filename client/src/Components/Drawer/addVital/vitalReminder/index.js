@@ -100,16 +100,13 @@ class AddVitals extends Component {
           [startDateField.field_name]:
             startDate && startDate !== null
               ? startDate
-                .clone()
-                .startOf("day")
-                .toISOString()
+                    .clone().format()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
               ? endDate
                 .clone()
-                .endOf("day")
-                .toISOString()
+                .format()
               : endDate
         };
 

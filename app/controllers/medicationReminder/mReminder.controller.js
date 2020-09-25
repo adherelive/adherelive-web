@@ -28,6 +28,7 @@ import {RRule} from "rrule";
 import EventSchedule from "../../eventSchedules";
 import MedicationJob from "../../JobSdk/Medications/observer";
 import NotificationSdk from "../../NotificationSdk";
+import SqsQueueService from "../../services/awsQueue/queue.service";
 
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
@@ -125,23 +126,25 @@ class MReminderController extends Controller {
         dataToSave
       );
 
-      // const eventScheduleData = {
-      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
-      //   event_id: mReminderDetails.id,
-      //   data: mReminderDetails.getBasicInfo,
-      //   status: EVENT_STATUS.PENDING,
-      //   start_time,
-      //   end_time: start_time
-      // };
+      const patient = await PatientWrapper(null, patient_id);
 
-      EventSchedule.create({
-        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      const eventScheduleData = {
+        patient_id: patient.getUserId(),
+        type: EVENT_TYPE.MEDICATION_REMINDER,
         event_id: mReminderDetails.getId,
-        details: mReminderDetails.getBasicInfo,
+        details: mReminderDetails.getBasicInfo.details,
         status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
-      });
+        when_to_take,
+        participant_one: patient.getUserId(),
+        participant_two: userId
+      };
+
+      // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+      //
+      // Logger.debug("sqsResponse ---> ", sqsResponse);
+      EventSchedule.create(eventScheduleData);
 
       return this.raiseSuccess(
         res,
@@ -249,19 +252,11 @@ class MReminderController extends Controller {
       carePlanApiWrapper.getCarePlanId()
     ] = {...carePlanApiWrapper.getBasicInfo(),...carePlanSeverityDetails,medication_ids:carePlanMedicationIds,appointment_ids:carePlanAppointmentIds};
 
-
-      // const eventScheduleData = {
-      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
-      //   event_id: mReminderDetails.id,
-      //   data: mReminderDetails.getBasicInfo,
-      //   status: EVENT_STATUS.PENDING,
-      //   start_time,
-      //   end_time: start_time
-      // };
       const patient = await PatientWrapper(null, patient_id);
 
-      EventSchedule.create({
-        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      const eventScheduleData = {
+        patient_id: patient.getUserId(),
+        type: EVENT_TYPE.MEDICATION_REMINDER,
         event_id: mReminderDetails.getId,
         details: mReminderDetails.getBasicInfo.details,
         status: EVENT_STATUS.SCHEDULED,
@@ -270,7 +265,12 @@ class MReminderController extends Controller {
         when_to_take,
         participant_one: patient.getUserId(),
         participant_two: userId
-      });
+      };
+
+      // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+      //
+      // Logger.debug("sqsResponse ---> ", sqsResponse);
+      EventSchedule.create(eventScheduleData);
 
       // to update later
 

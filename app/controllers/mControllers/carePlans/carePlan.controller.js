@@ -22,6 +22,7 @@ import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import Log from "../../../../libs/log_new";
 import EventSchedule from "../../../eventSchedules";
+// import SqsQueueService from "../../../services/awsQueue/queue.service";
 const moment = require("moment");
 
 class CarePlanController extends Controller {
@@ -193,8 +194,8 @@ class CarePlanController extends Controller {
                 });
 
                 const eventScheduleData = {
+                    type: EVENT_TYPE.APPOINTMENT,
                     event_id: appointmentData.getAppointmentId(),
-                    event_type: EVENT_TYPE.APPOINTMENT,
                     critical,
                     start_time,
                     end_time,
@@ -206,7 +207,10 @@ class CarePlanController extends Controller {
                     }
                 };
 
-                // RRule
+                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+                //
+                // Log.debug("sqsResponse ---> ", sqsResponse);
+
                 await EventSchedule.create(eventScheduleData);
             }
 
@@ -273,14 +277,26 @@ class CarePlanController extends Controller {
                     }
                 });
 
-                EventSchedule.create({
-                    event_type: EVENT_TYPE.MEDICATION_REMINDER,
+                const patient = await PatientWrapper(null, patient_id);
+
+                const eventScheduleData = {
+                    patient_id: patient.getUserId(),
+                    type: EVENT_TYPE.MEDICATION_REMINDER,
                     event_id: mReminderDetails.getId,
-                    details: mReminderDetails.getBasicInfo,
+                    details: mReminderDetails.getBasicInfo.details,
                     status: EVENT_STATUS.SCHEDULED,
                     start_date,
                     end_date,
-                });
+                    when_to_take,
+                    participant_one: patient.getUserId(),
+                    participant_two: userId
+                };
+
+                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+                //
+                // Log.debug("sqsResponse ---> ", sqsResponse);
+
+                await EventSchedule.create(eventScheduleData);
             }
 
 

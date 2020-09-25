@@ -31,7 +31,7 @@ class SymptomController extends Controller {
             Log.debug("req body---> ", req.body);
             Log.debug("req params---> ", req.params);
 
-            const {body, params: {patient_id} = {}} = req;
+            const {body, params: {patient_id} = {}, userDetails: {userId} = {}} = req;
             const {care_plan_id, duration = "", side = "", parts = [], text = "", audios = [], photos = [], videos = []} = body || {};
 
             const symptomData = await SymptomService.create({
@@ -158,7 +158,8 @@ class SymptomController extends Controller {
             const {file: videoFile, userDetails: {userId, userData: {category} = {}} = {}} = req;
 
             if(category === USER_CATEGORY.PATIENT) {
-                const fileExt= videoFile.originalname.replace(/\s+/g, '').split(".")[1];
+                const fullFileName = videoFile.originalname.replace(/\s+/g, '');
+                const fileExt = fullFileName.substring(fullFileName.length - 3, fullFileName.length);
                 Log.info(`fileExt : ${fileExt}`);
                 if(ALLOWED_VIDEO_EXTENSIONS.includes(fileExt)) {
                     const {file, name} = await uploadVideo({userId, file: videoFile});

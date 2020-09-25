@@ -1,5 +1,5 @@
 import express from "express";
-import Authenticated from "../middleware/auth";
+import Authenticated from "../middlewares/auth";
 import CarePlanController from "../../../app/controllers/mControllers/carePlans/carePlan.controller";
 import multer from "multer";
 var storage = multer.memoryStorage();

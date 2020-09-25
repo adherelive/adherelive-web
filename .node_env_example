@@ -104,3 +104,6 @@ EVENT_FETCH_COUNT=7
 SENDGRID_USER=atish.kumar@tripock.com
 SENDGRID_PASSWORD-Password@123
 SENDGRID_FROM_ADDRESS=atish.kumar@tripock.com
+
+AWS_ACCCOUNT_ID=832280438605
+SQS_DOMAIN_URL=https://sqs.ap-south-1.amazonaws.com
