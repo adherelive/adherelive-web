@@ -7,12 +7,13 @@ import {getVitals} from "../../modules/vitals";
 import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
-  const {vitals = {}, vital_templates = {}, pages: {vital_ids = []} = {}} = state;
+  const {vitals = {}, vital_templates = {}, pages: {vital_ids = []} = {}, care_plans = {}} = state;
 
   return {
       vitals,
       vital_templates,
-      vital_ids
+      vital_ids,
+      care_plans,
   };
 };
 
@@ -28,7 +29,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const {
         vitals,
         vital_templates,
-        vital_ids
+        vital_ids,
+        care_plans,
     } = stateProps;
 
     const {
@@ -36,12 +38,13 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         vitalResponseDrawer,
         editVitalDrawer
     } = dispatchProps;
-    const {patientId} = ownProps;
+    const {patientId, carePlanId} = ownProps;
 
     return {
         vitals,
         vital_templates,
         vital_ids,
+        care_plans: care_plans[carePlanId],
         vitalResponseDrawer,
         editVitalDrawer,
         getPatientVitals: getPatientVitals(patientId)
