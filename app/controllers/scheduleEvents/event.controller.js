@@ -11,6 +11,7 @@ import SymptomService from "../../services/symptom/symptom.service";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import SymptomWrapper from "../../ApiWrapper/web/symptoms";
+import {EVENT_TYPE} from "../../../constant";
 
 const Log = new Logger("WEB > EVENT > CONTROLLER");
 
@@ -44,11 +45,30 @@ class EventController extends Controller {
                 }
             }
 
-            const scheduleEvents = await EventService.getLastVisitData({
-                event_id: [...vital_ids, ...appointment_ids, ...medication_ids],
+            // TODO: need to rethink logic for latest events from last visit to include all types
+
+            const vitalEvents = await EventService.getLastVisitData({
+                event_id: vital_ids,
+                event_type: EVENT_TYPE.VITALS,
                 date: moment().subtract(7,'days').utc().toISOString(),
                 sort:"DESC"
             });
+
+            const appointmentEvents = await EventService.getLastVisitData({
+                event_id: appointment_ids,
+                event_type: EVENT_TYPE.APPOINTMENT,
+                date: moment().subtract(7,'days').utc().toISOString(),
+                sort:"DESC"
+            });
+
+            const medicationEvents = await EventService.getLastVisitData({
+                event_id: medication_ids,
+                event_type: EVENT_TYPE.MEDICATION_REMINDER,
+                date: moment().subtract(7,'days').utc().toISOString(),
+                sort:"DESC"
+            });
+
+            let scheduleEvents = [...vitalEvents, ...appointmentEvents, ...medicationEvents];
 
             if(scheduleEvents.length > 0) {
                 const allIds = [];
@@ -59,14 +79,18 @@ class EventController extends Controller {
                     scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
                     allIds.push(event.getScheduleEventId());
                 }
-                
-                for(const event of [...scheduleEvents, ...latestSymptom]) {
-                    Log.info(`event.get("updated_at") : ${event.get("updated_at")}`);
+
+                for(const [key, event] of [...scheduleEvents, ...latestSymptom].entries()) {
+
                     lastVisitData.push({
                         event_type: event.get("event_type") ? "schedule_events" : "symptoms",
                         id: event.get("id"),
                         updatedAt: event.get("start_time")
                     });
+
+                    if(key === 3) {
+                        break;
+                    }
                 }
 
                 lastVisitData.sort((activityA, activityB) => {
