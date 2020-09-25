@@ -39,6 +39,7 @@ class EditVitalForm extends Component {
   }
 
   componentDidMount() {
+    this.scrollToTop();
     const {
       form: { validateFields },
       // currentUser: {
@@ -76,6 +77,14 @@ class EditVitalForm extends Component {
       });
     }
   }
+  scrollToTop = () => {
+    let antForm= document.getElementsByClassName('Form')[0];
+    let antDrawerBody = antForm.parentNode;
+    let antDrawerWrapperBody=antDrawerBody.parentNode;
+    antDrawerBody.scrollIntoView(true);
+    antDrawerWrapperBody.scrollTop -= 200;
+  }
+
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
@@ -468,7 +477,7 @@ class EditVitalForm extends Component {
 
     return (
       <Fragment>
-        <Form className="event-form pb80 wp100">
+        <Form className="event-form pb80 wp100 Form">
           <div className='flex direction-row flex-grow-1'>
             <label
               htmlFor="vital_template"

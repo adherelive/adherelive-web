@@ -283,11 +283,7 @@ class AddMedicationReminder extends Component {
           zIndex: "9999",
           top: "0px"
         }}
-        headerStyle={{
-          position: "sticky",
-          zIndex: "9999",
-          top: "0px"
-        }}
+     
         maskClosable={false}
         destroyOnClose={true}
         className="ant-drawer"

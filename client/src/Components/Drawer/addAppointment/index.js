@@ -23,7 +23,9 @@ class AddAppointment extends Component {
       AddAppointmentForm
     );
   }
-
+ 
+ 
+  
   onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
@@ -211,6 +213,8 @@ class AddAppointment extends Component {
             zIndex: "9999",
             top: "0px"
           }}
+          destroyOnClose={true}
+
           onClose={editAppointment ? hideAppointment : onClose}
           visible={editAppointment ? appointmentVisible : visible}
           width={'35%'}
