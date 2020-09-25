@@ -377,6 +377,7 @@ class VitalController extends Controller {
 
       const completeEvents = await EventService.getAllPassedByData({
         event_id: id,
+        event_type: EVENT_TYPE.VITALS,
         date: vital.getStartDate(),
         sort: "DESC"
       });

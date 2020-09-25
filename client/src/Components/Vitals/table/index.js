@@ -21,8 +21,8 @@ class VitalTable extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const {vital_ids = []} = this.props;
-        const {vital_ids: prev_vital_ids = []} = prevProps;
+        const {care_plans: {vital_ids = []} = {}} = this.props;
+        const {care_plans: {vital_ids: prev_vital_ids = []} = {}} = prevProps;
 
         if(vital_ids.length !== prev_vital_ids.length) {
             this.setState({vital_ids});

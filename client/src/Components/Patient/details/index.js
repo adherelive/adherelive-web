@@ -1429,7 +1429,7 @@ class PatientDetails extends Component {
                       key={PATIENT_TABS.ACTIONS["key"]}
                     >
                       {/*<div>{formatMessage(messages.vitals)}</div>*/}
-                      <VitalTable patientId={patient_id} />
+                      <VitalTable patientId={patient_id} carePlanId={carePlanId}/>
                     </TabPane>
                   </Tabs>
                 </div>
