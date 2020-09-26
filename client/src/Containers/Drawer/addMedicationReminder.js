@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => {
     close: () => dispatch(close()),
     addMedicationReminder: data => dispatch(addMedicationReminder(data)),
     addCarePlanMedicationReminder: (data, carePlanId) => dispatch(addCarePlanMedicationReminder(data, carePlanId)),
-    getMedicationDetails: () => dispatch(getMedicationDetails()),
+    getMedicationDetails: (patientId) => dispatch(getMedicationDetails(patientId)),
     searchMedicine: data => dispatch(searchMedicine(data)),
     getMedications: (id) => dispatch(getMedications(id)),
     getAppointments: (id) => dispatch(getAppointments(id)),
