@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 import MobileAppointment from "../../../app/controllers/mControllers/appointments/appointment.controller";
-import Authenticate from "../middleware/auth";
+import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
 
 router.get(

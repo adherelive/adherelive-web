@@ -1,7 +1,6 @@
 export default class FeatureDetails {
     constructor(data) {
         this._data = data;
-        console.log("this._data ---> ", this._data);
     }
 
     getFeatureType = () => {

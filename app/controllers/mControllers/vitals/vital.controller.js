@@ -29,6 +29,7 @@ import {
   NOTIFICATION_STAGES
 } from "../../../../constant";
 import EventSchedule from "../../../eventSchedules";
+import SqsQueueService from "../../../services/awsQueue/queue.service";
 
 const Log = new Logger("MOBILE > VITALS > CONTROLLER");
 
@@ -81,6 +82,8 @@ class VitalController extends Controller {
         const patient = await PatientWrapper(null, carePlan.getPatientId());
 
         const eventScheduleData = {
+          type: EVENT_TYPE.VITALS,
+          patient_id: patient.getUserId(),
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
           critical: false,
@@ -97,6 +100,10 @@ class VitalController extends Controller {
         };
 
         // RRule
+        // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+        //
+        // Log.debug("sqsResponse ---> ", sqsResponse);
+
         EventSchedule.create(eventScheduleData);
 
         const vitalJob = JobSdk.execute({
@@ -370,6 +377,7 @@ class VitalController extends Controller {
 
       const completeEvents = await EventService.getAllPassedByData({
         event_id: id,
+        event_type: EVENT_TYPE.VITALS,
         date: vital.getStartDate(),
         sort: "DESC"
       });

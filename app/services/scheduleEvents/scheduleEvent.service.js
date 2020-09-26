@@ -62,13 +62,38 @@ class ScheduleEventService {
         }
     };
 
-    getAllPassedByData = async (data = {}) => {
+    getLastVisitData = async (data = {}) => {
         try {
-            const {event_id, date, sort = 'ASC'} = data;
+            const {event_id, event_type, date, sort = 'ASC'} = data;
             const scheduleEvent = await ScheduleEvent.findAll({
-                limit: 4,
+                limit: 3,
                 where: {
                     event_id,
+                    event_type,
+                    start_time: {
+                        [Op.between]: [moment(date).startOf('day'),moment().utc().toISOString()]
+                    },
+                    status: {
+                        [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED]
+                    }
+                },
+                order: [
+                    ['start_time',sort]
+                ]
+            });
+            return scheduleEvent;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    getAllPassedByData = async (data = {}) => {
+        try {
+            const {event_id, event_type = "", date, sort = 'ASC'} = data;
+            const scheduleEvent = await ScheduleEvent.findAll({
+                where: {
+                    event_id,
+                    event_type,
                     start_time: {
                         [Op.between]: [moment(date).startOf('day'),moment().utc().toISOString()]
                     },

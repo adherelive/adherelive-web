@@ -6,7 +6,7 @@ import * as vitalHelper from "./vitalHelper";
 import VitalTemplateService from "../../services/vitalTemplates/vitalTemplate.service";
 import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
-import CarePlanService from "../../services/carePlan/carePlan.service";
+import SqsQueueService from "../../services/awsQueue/queue.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
@@ -68,6 +68,8 @@ class VitalController extends Controller {
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
                 const eventScheduleData = {
+                    type: EVENT_TYPE.VITALS,
+                    patient_id: patient.getUserId(),
                     event_id: vitals.getVitalId(),
                     event_type: EVENT_TYPE.VITALS,
                     critical: false,
@@ -83,8 +85,12 @@ class VitalController extends Controller {
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
 
+                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+                //
+                // Log.debug("sqsResponse ---> ", sqsResponse);
+
                 // RRule
-                EventSchedule.create(eventScheduleData);
+                await EventSchedule.create(eventScheduleData);
 
                 return raiseSuccess(
                     res,
@@ -113,7 +119,7 @@ class VitalController extends Controller {
         Log.debug("req.params --->", req.params);
         try {
             const {
-                userDetails: {userId, userData: {category} = {}} = {},
+                userDetails: {userId, userData: {category} = {}, userCategoryData = {}} = {},
                 body,
                 body: {start_date, end_date} = {},
                 params: {id} = {}
@@ -141,6 +147,8 @@ class VitalController extends Controller {
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
                 const eventScheduleData = {
+                    type: EVENT_TYPE.VITALS,
+                    patient_id: patient.getUserId(),
                     event_id: vitals.getVitalId(),
                     event_type: EVENT_TYPE.VITALS,
                     critical: false,
@@ -150,7 +158,8 @@ class VitalController extends Controller {
                     participants: [doctor.getUserId(), patient.getUserId()],
                     actor: {
                         id: userId,
-                        category
+                        category,
+                        userCategoryData
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
@@ -262,6 +271,7 @@ class VitalController extends Controller {
 
             const completeEvents = await EventService.getAllPassedByData({
                 event_id: id,
+                event_type: EVENT_TYPE.VITALS,
                 date: vital.getStartDate(),
                 sort: "DESC"
             });

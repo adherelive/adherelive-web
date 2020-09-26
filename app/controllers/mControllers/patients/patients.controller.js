@@ -5,6 +5,7 @@ import minioService from "../../../services/minio/minio.service";
 
 // SERVICES ------------
 import VitalService from "../../../services/vitals/vital.service";
+import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
 
 // WRAPPERS ------------
 import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
@@ -48,13 +49,27 @@ class MPatientController extends Controller {
 
   mUpdatePatient = async (req, res) => {
     try {
-      console.log("-------------- req.body ------------", req.body);
+      // console.log("-------------- req.body ------------", req.body);
       const { userDetails, body } = req;
-      const { profile_pic, name, email } = body || {};
+      const { profile_pic, name, email, timings = {} } = body || {};
       const { userId = "3" } = userDetails || {};
 
       if (email) {
         const updateUserDetails = await userService.updateEmail(email, userId);
+      }
+
+      if(Object.keys(timings).length > 0) {
+        const {value} = timings["1"];
+        Logger.debug("update timing pref 1", moment(value).format());
+        Logger.debug("update timing pref 2", moment.utc(value).format());
+        Logger.debug("update timing pref 3", moment.timezone);
+        const addTimingPreference = await UserPreferenceService.addUserPreference({
+          user_id: userId,
+          details: {
+            timings
+          }
+        });
+        // Logger.debug("addTimingPreference", addTimingPreference);
       }
 
       const patientDetails = await patientService.getPatientByUserId(userId);
@@ -63,8 +78,6 @@ class MPatientController extends Controller {
       const splitName = name.split(" ");
 
       let profilePic = "";
-
-      Logger.debug("error cause --> ", profile_pic.indexOf(";base64"));
 
       if (profile_pic.startsWith("data")) {
         const extension = profile_pic.substring(
@@ -86,7 +99,7 @@ class MPatientController extends Controller {
         const file_path = imgSync(profile_pic, "/tmp", file_name);
         const file = fs.readFileSync(file_path);
 
-        console.log("file ------> ", file);
+        // console.log("file ------> ", file);
 
         if (userId) {
           if (profile_pic) {
@@ -120,7 +133,7 @@ class MPatientController extends Controller {
 
       const profilePicUrl = `/${profilePic}`;
 
-      Logger.debug("18371823 profilePicUrl ---> ", profilePicUrl);
+      // Logger.debug("18371823 profilePicUrl ---> ", profilePicUrl);
 
       // todo minio configure here
 

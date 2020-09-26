@@ -25,6 +25,7 @@ import {RRule} from "rrule";
 
 import AppointmentJob from "../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../NotificationSdk";
+import SqsQueueService from "../../services/awsQueue/queue.service";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -76,7 +77,7 @@ class AppointmentController extends Controller {
       * */
 
       let userCategoryId = null;
-      let userCategoryData = null;
+      let participantTwoId = null;
 
       Logger.debug("userDetails --------------------> ", userDetails);
 
@@ -85,13 +86,15 @@ class AppointmentController extends Controller {
           const doctor = await doctorService.getDoctorByData({
             user_id: userId
           });
-          userCategoryData = await DoctorWrapper(doctor);
-          userCategoryId = userCategoryData.getDoctorId();
+          const doctorData = await DoctorWrapper(doctor);
+          userCategoryId = doctorData.getDoctorId();
+          participantTwoId = doctorData.getUserId();
           break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientByUserId(userId);
-          userCategoryData = await PatientWrapper(patient);
-          userCategoryId = userCategoryData.getPatientId();
+          const patientData = await PatientWrapper(patient);
+          userCategoryId = patientData.getPatientId();
+          participantTwoId = patientData.getUserId();
           break;
         default:
           break;
@@ -169,15 +172,21 @@ class AppointmentController extends Controller {
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
 
       const eventScheduleData = {
-        participants: [userId, participant_two_id],
+        type: EVENT_TYPE.APPOINTMENT,
+        event_id: appointmentApiData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
+        critical,
+        start_time,
+        end_time,
+        details: appointmentApiData.getBasicInfo(),
+        participants: [userId, participantTwoId],
         actor: {
           id: userId,
-          details: {
-            category,
-            name: userCategoryData.getName()
-          }
+          category
         }
       };
+
+      await EventSchedule.create(eventScheduleData);
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
       await NotificationSdk.execute(appointmentJob);
@@ -236,6 +245,7 @@ class AppointmentController extends Controller {
         participant_two || {};
 
       let userCategoryId = null;
+      let participantTwoId = null;
 
       Logger.debug("userDetails --------------------> ", userDetails);
 
@@ -246,11 +256,13 @@ class AppointmentController extends Controller {
           });
           const doctorData = await DoctorWrapper(doctor);
           userCategoryId = doctorData.getDoctorId();
+          participantTwoId = doctorData.getUserId();
           break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientByUserId(userId);
           const patientData = await PatientWrapper(patient);
           userCategoryId = patientData.getPatientId();
+          participantTwoId = patientData.getUserId();
           break;
         default:
           break;
@@ -334,26 +346,8 @@ class AppointmentController extends Controller {
 
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
-      let participantTwoId = null;
-
-      switch (participant_two_type) {
-        case USER_CATEGORY.DOCTOR:
-          const doctor = await doctorService.getDoctorByData({
-            id: participant_two_id
-          });
-          const doctorData = await DoctorWrapper(doctor);
-          participantTwoId = doctorData.getUserId();
-          break;
-        case USER_CATEGORY.PATIENT:
-          const patient = await patientService.getPatientById({id: participant_two_id});
-          const patientData = await PatientWrapper(patient);
-          participantTwoId = patientData.getUserId();
-          break;
-        default:
-          break;
-      }
-
       const eventScheduleData = {
+        type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentApiData.getAppointmentId(),
         event_type: EVENT_TYPE.APPOINTMENT,
         critical,
@@ -366,6 +360,10 @@ class AppointmentController extends Controller {
           category
         }
       };
+
+      // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+      //
+      // Logger.debug("sqsResponse ---> ", sqsResponse);
 
       // RRule
       await EventSchedule.create(eventScheduleData);

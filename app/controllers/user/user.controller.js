@@ -546,13 +546,13 @@ class UserController extends Controller {
         let patientApiDetails = {};
 
         if (patientsData) {
-          await patientsData.forEach(async patient => {
+          for(const patient of patientsData) {
             const patientWrapper = await PatientWrapper(patient);
             patientApiDetails[
-              patientWrapper.getPatientId()
-            ] = patientWrapper.getBasicInfo();
+                patientWrapper.getPatientId()
+                ] = patientWrapper.getBasicInfo();
             userIds.push(patientWrapper.getUserId());
-          });
+          }
         }
         // Logger.debug("userIds --> ", userIds);
 

@@ -1,5 +1,5 @@
 import express from "express";
-import Authenticated from "../middleware/auth";
+import Authenticated from "../middlewares/auth";
 import GraphController from "../../../app/controllers/mControllers/graphs/graph.controller";
 
 import {param} from "express-validator";

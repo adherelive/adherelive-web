@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-import Authenticate from "../middleware/auth";
+import Authenticate from "../middlewares/auth";
 import Degree from "../../../app/controllers/mControllers/degree/degree.controller";
 
 router.get(

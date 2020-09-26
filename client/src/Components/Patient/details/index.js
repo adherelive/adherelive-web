@@ -497,7 +497,7 @@ class PatientDetails extends Component {
 
     fetchChatAccessToken(authenticated_user);
     
-    if (!showTd) {
+    // if (showTd) {
       getPatientCarePlanDetails(patient_id).then(response => {
         let { status = false, payload = {} } = response;
         if (status) {
@@ -524,7 +524,7 @@ class PatientDetails extends Component {
       getAppointmentsDetails();
       getAppointments(patient_id);
       
-    }
+    // }
     // searchMedicine("");
     let carePlanTemplateId = 0;
     for (let carePlan of Object.values(care_plans)) {
@@ -1429,7 +1429,7 @@ class PatientDetails extends Component {
                       key={PATIENT_TABS.ACTIONS["key"]}
                     >
                       {/*<div>{formatMessage(messages.vitals)}</div>*/}
-                      <VitalTable patientId={patient_id} />
+                      <VitalTable patientId={patient_id} carePlanId={carePlanId}/>
                     </TabPane>
                   </Tabs>
                 </div>
