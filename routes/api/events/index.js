@@ -9,7 +9,7 @@ import MedicationReminder from "../../../app/controllers/medicationReminder/mRem
 import * as validator from "./validator";
 
 router.get(
-    "/medication-details",
+    "/medication/:patient_id/details",
     Authenticate,
     MedicationReminder.getMedicationDetails
 );

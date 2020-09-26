@@ -1,16 +1,24 @@
 import Controller from "../index";
 import moment from "moment";
+
+// SERVICES --------------------------------------------------
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import medicineService from "../../services/medicine/medicine.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import doctorService from "../../services/doctor/doctor.service";
-import patientService from "../../services/patients/patients.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
+// import patientService from "../../services/patients/patients.service";
+
+// API WRAPPERS ----------------------------------------------
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../ApiWrapper/web/medicine";
-import carePlanService from "../../services/carePlan/carePlan.service";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
+
+
 import {
   CUSTOM_REPEAT_OPTIONS,
   DAYS,
@@ -20,7 +28,7 @@ import {
   EVENT_TYPE,
   MEDICATION_TIMING,
   REPEAT_TYPE,
-  MEDICINE_FORM_TYPE, USER_CATEGORY
+  MEDICINE_FORM_TYPE, USER_CATEGORY, WAKE_UP, SLEEP, BREAKFAST, LUNCH, EVENING, DINNER
 } from "../../../constant";
 import Log from "../../../libs/log";
 import {getCarePlanAppointmentIds,getCarePlanMedicationIds,getCarePlanSeverityDetails} from '../carePlans/carePlanHelper'
@@ -28,7 +36,7 @@ import {RRule} from "rrule";
 import EventSchedule from "../../eventSchedules";
 import MedicationJob from "../../JobSdk/Medications/observer";
 import NotificationSdk from "../../NotificationSdk";
-import SqsQueueService from "../../services/awsQueue/queue.service";
+
 
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
@@ -430,6 +438,98 @@ class MReminderController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       // Logger.debug("test", medicationReminderDetails);
+      const {params: {patient_id} = {}, userDetails: {userId} = {}} = req;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const timingPreference = await userPreferenceService.getPreferenceByData({
+        user_id: patient.getUserId()
+      });
+      const options = await UserPreferenceWrapper(timingPreference);
+      const {timings: userTimings} = options.getAllDetails();
+
+      Logger.debug("timings9728313 ", timings);
+
+      const medicationTimings = [];
+      let timings = {};
+
+      Object.keys(userTimings).forEach(id => {
+        const {value} = userTimings[id] || {};
+
+        switch(id) {
+          case WAKE_UP:
+            medicationTimings.push({
+              "text": "After Wake Up",
+              "time": moment(value).toISOString()
+            });
+            break;
+          case SLEEP:
+            medicationTimings.push({
+              "text": "Before Sleep",
+              "time": moment(value).toISOString()
+            });
+            break;
+          case BREAKFAST:
+            medicationTimings.push({
+              "text": "Before Breakfast",
+              "time": moment(value).subtract(30, "minutes").toISOString()
+            }, {
+              "text": "After Breakfast",
+              "time": moment(value).add(30, "minutes").toISOString()
+            });
+            break;
+          case LUNCH:
+            medicationTimings.push({
+              "text": "Before Lunch",
+              "time": moment(value).subtract(30, "minutes").toISOString()
+            }, {
+              "text": "After Lunch",
+              "time": moment(value).add(30, "minutes").toISOString()
+            });
+            break;
+          case EVENING:
+            medicationTimings.push({
+              "text": "Before Evening Tea",
+              "time": moment(value).subtract(30, "minutes").toISOString()
+            }, {
+              "text": "After Evening Tea",
+              "time": moment(value).add(30, "minutes").toISOString()
+            });
+            break;
+          case DINNER:
+            medicationTimings.push({
+              "text": "Before Dinner",
+              "time": moment(value).subtract(30, "minutes").toISOString()
+            }, {
+              "text": "After Dinner",
+              "time": moment(value).add(30, "minutes").toISOString()
+            });
+            break;
+        }
+      });
+
+      medicationTimings.sort((activityA, activityB) => {
+        const {time: a} = activityA || {};
+        const {time : b} = activityB || {};
+        if (moment(a).isBefore(moment(b))) return -1;
+
+        if (moment(a).isAfter(moment(b))) return 1;
+      });
+
+      medicationTimings.forEach((timing, index) => {
+        timings[`${index+1}`] = timing;
+      });
+
+      const medicationReminderDetails = {
+        [KEY_REPEAT_TYPE]: REPEAT_TYPE,
+        [KEY_DAYS]: DAYS,
+        [KEY_TIMING]: timings,
+        [KEY_DOSE]: DOSE_AMOUNT,
+        [KEY_UNIT]: DOSE_UNIT,
+        [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
+        [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
+      };
+
+
       return raiseSuccess(
         res,
         200,

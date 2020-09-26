@@ -1437,7 +1437,7 @@ class PatientDetails extends Component {
             )}
           </div>
         </div>
-        <AddMedicationReminder carePlanId={carePlanId} />
+        <AddMedicationReminder patientId={patient_id} carePlanId={carePlanId} />
         <AddVitals carePlanId={carePlanId} />
         <EditVitals/>
         {popUpVisible && (
