@@ -4,8 +4,8 @@ import { Select, Form, Radio, Icon } from "antd";
 import { injectIntl } from "react-intl";
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 import messages from "../message";
-import { MEDICATION_TIMING } from "../../../../constant";
 // import WhenToTakeForm from "./whenToTakeSelectForm";
+import moment from "moment";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -29,12 +29,12 @@ let key_field = 1;
 class WhenToTakeMedication extends Component {
   constructor(props) {
     super(props);
-    // const { medication_details } = props;
-    // const { timings } = medication_details || {};
+    const { medication_details } = props;
+    const { timings } = medication_details || {};
     let statusList = {};
-    Object.keys(MEDICATION_TIMING).forEach((id) => {
-      const { text, time } = MEDICATION_TIMING[id];
-      statusList[id] = `${text} (${time})`;
+    Object.keys(timings).forEach((id) => {
+      const { text, time } = timings[id];
+      statusList[id] = `${text} (${moment(time).format("hh:mm A")})`;
     });
 
     let total_status = Object.keys(statusList);
