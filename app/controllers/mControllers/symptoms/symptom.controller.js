@@ -113,7 +113,15 @@ class SymptomController extends Controller {
             const doctorData = await DoctorWrapper(null, doctorId);
             const patientData = await PatientWrapper(null, patient_id);
 
-            const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), `symptom:${symptom.getSymptomId()}`);
+            const chatJSON = JSON.stringify({
+                ...await symptom.getAllInfo(),
+                upload_documents: {
+                   ...uploadDocumentData
+                },
+                symptom_id: symptom.getSymptomId()
+            });
+
+            const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), chatJSON);
 
             return raiseSuccess(res, 200, {
                 ...await symptom.getAllInfo(),

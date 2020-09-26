@@ -1,3 +1,5 @@
+import MedicationReminder from "../../../app/controllers/medicationReminder/mReminder.controller";
+
 const express = require("express");
 const router = express.Router();
 
@@ -9,6 +11,12 @@ router.get(
     "/:id",
     Authenticate,
     Medication.getMedicationForId
+);
+
+router.get(
+    "/:patient_id/details",
+    Authenticate,
+    Medication.getMedicationDetails
 );
 
 router.post(

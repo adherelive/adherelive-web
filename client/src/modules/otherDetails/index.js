@@ -7,13 +7,13 @@ const GET_MEDICATION_DETAILS_COMPLETE = "GET_MEDICATION_DETAILS_COMPLETE";
 const GET_MEDICATION_DETAILS_FAILED = "GET_MEDICATION_DETAILS_FAILED";
 
 
-export const getMedicationDetails = () => {
+export const getMedicationDetails = (patientId) => {
     return async dispatch => {
         try {
             dispatch({type: GET_MEDICATION_DETAILS_START});
             const response = await doRequest({
                 method: REQUEST_TYPE.GET,
-                url: getMedicationDetailsUrl(),
+                url: getMedicationDetailsUrl(patientId),
             });
             const {status, payload: {data} = {}} = response || {};
             if(status === true) {
