@@ -244,6 +244,10 @@ class EventSchedule {
         actors = {}
       } = medication || {};
 
+      Logger.info(`TIME - TIMEZONE - UTC :: ${moment(start_date).toDate()}`);
+      Logger.info(`TIME - TIMEZONE + UTC :: ${moment(start_date).utc().toDate()}`);
+      Logger.info(`TIME + TIMEZONE - UTC :: ${moment(start_date).tz("Asia/Kolkata").toDate()}`);
+
       const rrule = new RRule({
         freq: RRule.WEEKLY,
         dtstart: moment(start_date)
