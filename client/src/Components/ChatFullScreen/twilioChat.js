@@ -237,7 +237,9 @@ class TwilioChat extends Component {
     initChat = () => {
         this.chatClient = new Chat(this.state.token);
 
-        this.chatClient.initialize().then(this.clientInitiated.bind(this));
+        this.chatClient.initialize().then(this.clientInitiated.bind(this)).catch(err => {
+            console.log("chatClient AUTH error", err);
+        });
     };
 
     checkOtherTyping = (obj) => {
