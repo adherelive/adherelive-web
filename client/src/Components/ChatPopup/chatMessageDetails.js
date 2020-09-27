@@ -18,7 +18,9 @@ import humanBodyBack from '../../Assets/images/humanBodyBack.jpeg';
 import bodyImage from "../../../src/Assets/images/body.jpg";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
-import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from "../../constant";
+import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
+
+// import symptomMessage from './symptomMessages';
 
 class MediaComponent extends Component {
     constructor(props) {
@@ -97,7 +99,9 @@ class MediaComponent extends Component {
         }
 
     };
-
+    
+   
+    
     getMedia = () => {
         const { message } = this.props;
         if (message && message.media) {
@@ -211,11 +215,46 @@ class ChatMessageDetails extends Component {
                 this.scrollToBottom();
             }
         });
+        
 
 
 
 
     }
+    
+     getSymptomMessage = (side = '', parts=[]) => {
+        if(side == '' || parts.length == 0){
+            return null;
+        }
+        
+        const part = PARTS_GRAPH[7].name;
+        const body_side = BODY_SIDE[side];
+       
+        return (
+            <Fragment>
+                <div className="symptom-detail-container" >
+                    <span className="symptom-h ">
+                        Symptom
+                    </span>
+                    
+                    <div className="symptom-details" >
+                        <span className="fs14 fw500  ">
+                            {part}
+                        </span> 
+                        <span className="dot" >&bull;</span>
+                        <span className="side">
+                            {part}
+                        </span>
+                    </div>
+                    
+                </div>
+            </Fragment>
+            )
+        
+    }
+    
+     
+     
     render() {
         const { authenticated_user, users, roomId, chatMessages, patientDp, symptoms, upload_documents, otherUserLastConsumedMessageIndex } = this.props;
         const { messageIds = [] } = chatMessages[roomId] || {};
@@ -242,158 +281,241 @@ class ChatMessageDetails extends Component {
                     : {};
                 let mess = '';
                 const body = message.state.body;
-                if (message.state.author == USER_ADHERE_BOT && body.split(':')[0] == CHAT_MESSAGE_TYPE.SYMPTOM) {
-                    const symptom_id = body.split(':')[1];
-                    if (symptoms[symptom_id] != undefined) {
-                        const { config: { duration = '', side = '1', parts = [] }, text = '', image_document_ids = [], audio_document_ids = [] } = symptoms[symptom_id] || {};
-                        mess = (
-                            <Fragment key={message.state.sid}>
-                                <div className="chat-messages">
-                                    <div className="chat-avatar">
-                                        <span className="twilio-avatar">
-                                            <Avatar src={patientDp} />
-                                        </span>
-                                        <>
-                                            <div className="chat-text" style={{ display: "inline-block" }}>
-                                                {(side && parts[0]) ?
-                                                    (<div className='humanBodyWrapper'>
-                                                        <img
-                                                            src={side === '1' ? humanBody : humanBodyBack}
-                                                            className={'wp100 hp100'}
-                                                        />
-                                                        {side === '1' ? (PART_LIST_FRONT.map(part => {
-                                                            const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
-                                                            const { top: bpTop = 0,
-                                                                left: bpLeft = 0,
-                                                                height: bpHeight = 0,
-                                                                width: bpWidth = 0 } = areaStyle || {};
-                                                            const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
-                                                            // console.log('isSAMEEEEEEEE============>', body_part, key, body_part === key);
-                                                            return (
-                                                                <div
-                                                                    key={key}
-                                                                    style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
-                                                                >
-                                                                    <div
-                                                                        style={{
-                                                                            top: `${dotTop}px`,
-                                                                            left: `${dotLeft}px`,
-                                                                            position: "absolute",
-                                                                            height: parts[0] === key ? 12 : 0,
-                                                                            width: parts[0] === key ? 12 : 0,
-                                                                            backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
-                                                                            borderRadius: '50%',
-
-                                                                            // height:  12,
-                                                                            // width:  12 ,
-                                                                            // backgroundColor: "red",
-                                                                            // borderRadius: '50%'
-                                                                        }
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                            );
-                                                        })) :
-                                                            (PART_LIST_BACK.map(part => {
-                                                                const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
-                                                                const { top: bpTop = 0,
-                                                                    left: bpLeft = 0,
-                                                                    height: bpHeight = 0,
-                                                                    width: bpWidth = 0 } = areaStyle || {};
-                                                                const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
-                                                                return (
-                                                                    <div
-                                                                        key={key}
-                                                                        style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
-                                                                    >
-                                                                        <div
-                                                                            style={{
-                                                                                top: `${dotTop}px`,
-                                                                                left: `${dotLeft}px`,
-                                                                                position: "absolute",
-                                                                                height: parts[0] === key ? 12 : 0,
-                                                                                width: parts[0] === key ? 12 : 0,
-                                                                                backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
-                                                                                borderRadius: '50%',
-
-                                                                                // height:  12,
-                                                                                // width:  12 ,
-                                                                                // backgroundColor: "red",
-                                                                                // borderRadius: '50%'
-                                                                            }
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                );
-                                                            }))}
-                                                        {/* <img src={bodyImage} height={260} width={200}></img> */}
-
-                                                    </div>) : null}
-                                                {text.length ? (
-                                                    <Fragment>
-                                                        <div className='mt5 mb5'>Description :</div>
-                                                        <div>{text}</div>
-                                                    </Fragment>) : null}
-                                                {/* <div>{`Duration: `+duration}</div> */}
-                                                {audio_document_ids.length ? <div>Description :</div> : null}
-                                                {audio_document_ids.length ? (
-                                                    Object.values(audio_document_ids).map(id => {
-                                                        if (upload_documents[id] != undefined) {
-                                                            const { basic_info: { name = '', document = '' } } = upload_documents[id];
-                                                            let mediaData = {
-                                                                media: {
-                                                                    contentType: '',
-                                                                    filename: name,
-                                                                    document: document
-                                                                }
-                                                            }
-                                                            return (
-                                                                <div className="clickable white chat-media-message-text">
-                                                                    <MediaComponent message={mediaData}></MediaComponent>
-                                                                </div>);
-                                                        } else {
-                                                            return null;
-                                                        }
-                                                    })
-                                                ) : (
-                                                        null
-                                                    )}
-                                                {image_document_ids.length ? <div>Description :</div> : null}
-                                                {image_document_ids.length ? (
-                                                    Object.values(image_document_ids).map(id => {
-                                                        if (upload_documents[id] != undefined) {
-                                                            const { basic_info: { name = '', document = '' } } = upload_documents[id];
-                                                            let mediaData = {
-                                                                media: {
-                                                                    contentType: 'image',
-                                                                    filename: name,
-                                                                    document: document
-                                                                }
-                                                            }
-                                                            return (
-                                                                <div className="clickable white chat-media-message-text">
-                                                                    <MediaComponent message={mediaData}></MediaComponent>
-                                                                </div>);
-                                                        } else {
-                                                            return null;
-                                                        }
-                                                    })
-                                                ) : (
-                                                        null
-                                                    )}
+                if (message.state.author == USER_ADHERE_BOT && body.split(':')[0].slice(2,10) == CHAT_MESSAGE_TYPE.SYMPTOM) {
+                    
+                    const bodyObj = JSON.parse(body);
+                    // console.log(bodyObj);
+                    const symptom_id = bodyObj.symptom_id;
+                    if (symptom_id != undefined) {
+                       
+                      
+                        const {upload_documents = {} }  = bodyObj;
+                        const { audio_document_ids = [], image_document_ids=[] ,video_document_ids = [], config : {side = '1' , parts = [] , duration='' }} = {} = bodyObj.symptoms[symptom_id] || {};
+                   
+                   
+                   
+                for(let  document_Id in upload_documents){
+                     let newMediaMessage ='';
+                    if(image_document_ids.includes(parseInt(document_Id))){
+                        // console.log("upload_documents[image_document_ids]",)
+                       let {basic_info :{ document : img_src  = ''}} = upload_documents[image_document_ids];
+                    //   console.log("img_src",img_src);
+                         let  imageMess = (
+                                  <Fragment>
+                                      <div className="symptom-message-container" >
+                                            <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                                            <div className="symptom-image-container" >
+                                                <div>Image</div>
                                             </div>
-                                            {/* <div className="chat-text">
+                                            
+                                      </div>
+                                       
+                                    </Fragment>
+                           
+                            // <img src={img_src} alt="symptom image" className="symptom-image" ></img>
+                            )
+                            messagesToRender.push(imageMess);
+                    }else if(audio_document_ids.includes(parseInt(document_Id))){
+                        // newMediaMessage="Audio";
+                          let audioMess = (
+                                  <Fragment>
+                                      <div className="symptom-message-container" >
+                                            <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                                            <div className="symptom-image-container" >
+                                                <div>Audio</div>
+                                            </div>
+                                             
+                                      </div>
+                                       
+                                    </Fragment>
+                           
+                            // <img src={img_src} alt="symptom image" className="symptom-image" ></img>
+                            )
+                            messagesToRender.push(audioMess);
+                    }else if(video_document_ids.includes(parseInt(document_Id))){
+                            // newMediaMessage="Video";
+                              let videoMess = (
+                                  <Fragment>
+                                      <div className="symptom-message-container" >
+                                            <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                                            <div className="symptom-image-container" >
+                                                <div>Video</div>
+                                            </div>
+                                            
+                                      </div>
+                                       
+                                    </Fragment>
+                           
+                            // <img src={img_src} alt="symptom image" className="symptom-image" ></img>
+                            )
+                            
+                            messagesToRender.push(videoMess);
+                       
+                    }
+                    
+                    
+                            
+                }
+                
+               
+                   mess= null;
+                            // mess = (
+                            //     <Fragment>
+                            //         <div>{this.getUploadDocument(image_document_ids,audio_document_ids,video_document_ids,upload_documents,side,parts)}</div>
+                            //     </Fragment>
+                            //     )
+                            
+                           
+                        
+                        
+                        // mess = (
+                        //     <Fragment key={message.state.sid}>
+                        //         <div className="chat-messages">
+                        //             <div className="chat-avatar">
+                        //                 <span className="twilio-avatar">
+                        //                     <Avatar src={patientDp} />
+                        //                 </span>
+                        //                 <>
+                        //                     <div className="chat-text" style={{ display: "inline-block" }}>
+                        //                         { (side && parts[0]) ?
+                        //                             (<div className='humanBodyWrapper'>
+                        //                                 <img
+                        //                                     src={side === '1' ? humanBody : humanBodyBack}
+                        //                                     className={'wp100 hp100'}
+                        //                                 />
+                        //                                 {side === '1' ? (PART_LIST_FRONT.map(part => {
+                        //                                     const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
+                        //                                     const { top: bpTop = 0,
+                        //                                         left: bpLeft = 0,
+                        //                                         height: bpHeight = 0,
+                        //                                         width: bpWidth = 0 } = areaStyle || {};
+                        //                                     const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+                        //                                     // console.log('isSAMEEEEEEEE============>', body_part, key, body_part === key);
+                        //                                     return (
+                        //                                         <div
+                        //                                             key={key}
+                        //                                             style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
+                        //                                         >
+                        //                                             <div
+                        //                                                 style={{
+                        //                                                     top: `${dotTop}px`,
+                        //                                                     left: `${dotLeft}px`,
+                        //                                                     position: "absolute",
+                        //                                                     height: parts[0] === key ? 12 : 0,
+                        //                                                     width: parts[0] === key ? 12 : 0,
+                        //                                                     backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
+                        //                                                     borderRadius: '50%',
+
+                        //                                                     // height:  12,
+                        //                                                     // width:  12 ,
+                        //                                                     // backgroundColor: "red",
+                        //                                                     // borderRadius: '50%'
+                        //                                                 }
+                        //                                                 }
+                        //                                             />
+                        //                                         </div>
+                        //                                     );
+                        //                                 })) :
+                        //                                     (PART_LIST_BACK.map(part => {
+                        //                                         const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
+                        //                                         const { top: bpTop = 0,
+                        //                                             left: bpLeft = 0,
+                        //                                             height: bpHeight = 0,
+                        //                                             width: bpWidth = 0 } = areaStyle || {};
+                        //                                         const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+                        //                                         return (
+                        //                                             <div
+                        //                                                 key={key}
+                        //                                                 style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
+                        //                                             >
+                        //                                                 <div
+                        //                                                     style={{
+                        //                                                         top: `${dotTop}px`,
+                        //                                                         left: `${dotLeft}px`,
+                        //                                                         position: "absolute",
+                        //                                                         height: parts[0] === key ? 12 : 0,
+                        //                                                         width: parts[0] === key ? 12 : 0,
+                        //                                                         backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
+                        //                                                         borderRadius: '50%',
+
+                        //                                                         // height:  12,
+                        //                                                         // width:  12 ,
+                        //                                                         // backgroundColor: "red",
+                        //                                                         // borderRadius: '50%'
+                        //                                                     }
+                        //                                                     }
+                        //                                                 />
+                        //                                             </div>
+                        //                                         );
+                        //                                     }))}
+                        //                                 {/* <img src={bodyImage} height={260} width={200}></img> */}
+
+                        //                             </div>) : null}
+                        //                         {text.length ? (
+                        //                             <Fragment>
+                        //                                 <div className='mt5 mb5'>Description :</div>
+                        //                                 <div>{text}</div>
+                        //                             </Fragment>) : null}
+                        //                         {/* <div>{`Duration: `+duration}</div> */}
+                        //                         {audio_document_ids.length ? <div>Description :</div> : null}
+                        //                         {audio_document_ids.length ? (
+                        //                             Object.values(audio_document_ids).map(id => {
+                        //                                 if (upload_documents[id] != undefined) {
+                        //                                     const { basic_info: { name = '', document = '' } } = upload_documents[id];
+                        //                                     let mediaData = {
+                        //                                         media: {
+                        //                                             contentType: '',
+                        //                                             filename: name,
+                        //                                             document: document
+                        //                                         }
+                        //                                     }
+                        //                                     return (
+                        //                                         <div className="clickable white chat-media-message-text">
+                        //                                             <MediaComponent message={mediaData}></MediaComponent>
+                        //                                         </div>);
+                        //                                 } else {
+                        //                                     return null;
+                        //                                 }
+                        //                             })
+                        //                         ) : (
+                        //                                 null
+                        //                             )}
+                        //                         {image_document_ids.length ? <div>Description :</div> : null}
+                        //                         {image_document_ids.length ? (
+                        //                             Object.values(image_document_ids).map(id => {
+                        //                                 if (upload_documents[id] != undefined) {
+                        //                                     const { basic_info: { name = '', document = '' } } = upload_documents[id];
+                        //                                     let mediaData = {
+                        //                                         media: {
+                        //                                             contentType: 'image',
+                        //                                             filename: name,
+                        //                                             document: document
+                        //                                         }
+                        //                                     }
+                        //                                     return (
+                        //                                         <div className="clickable white chat-media-message-text">
+                        //                                             <MediaComponent message={mediaData}></MediaComponent>
+                        //                                         </div>);
+                        //                                 } else {
+                        //                                     return null;
+                        //                                 }
+                        //                             })
+                        //                         ) : (
+                        //                                 null
+                        //                             )}
+                        //                     </div>
+                        //                     {/* <div className="chat-text">
                                                     
-                                                </div> */}
-                                        </>
-                                    </div>
-                                    <div className="chat-time start">
-                                        {moment(message.state.timestamp).format("H:mm")}
-                                    </div>
-                                    {/* </div> */}
-                                </div>
-                            </Fragment >
-                        );
+                        //                         </div> */}
+                        //                 </>
+                        //             </div>
+                        //             <div className="chat-time start">
+                        //                 {moment(message.state.timestamp).format("H:mm")}
+                        //             </div>
+                        //             {/* </div> */}
+                        //         </div>
+                        //     </Fragment >
+                        // );
                     } else {
                         mess = (
                             <Fragment key={message.state.sid}>

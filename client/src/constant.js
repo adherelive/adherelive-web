@@ -32,7 +32,7 @@ export const CHAT_MESSAGE_DETAILS = {
 };
  export const USER_ADHERE_BOT = 'adhere_bot';
  export const CHAT_MESSAGE_TYPE = {
-   SYMPTOM:'symptom'
+   SYMPTOM:'symptoms'
  }
 
 export const ROOM_ID_TEXT = '-adhere-';
@@ -642,6 +642,10 @@ export const BODY_VIEW = {
   BACK: "2"
 };
 
+export const BODY_SIDE = {
+  1:"FRONT",
+  2:"BACK"
+};
 export const PARTS = {
   HEAD: "HEAD",
   RIGHT_EYE: "RIGHT_EYE",
