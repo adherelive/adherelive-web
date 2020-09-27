@@ -1,10 +1,11 @@
 'use strict';
 
-import {DB_TABLES, EVENT_STATUS, EVENT_TYPE} from "../constant";
+import {EVENT_STATUS, EVENT_TYPE} from "../constant";
+import {TABLE_NAME} from "../app/models/scheduleEvents";
 
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable(DB_TABLES.SCHEDULE_EVENTS, {
+        return queryInterface.createTable(TABLE_NAME, {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -58,6 +59,6 @@ module.exports = {
     },
 
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable(DB_TABLES.SCHEDULE_EVENTS);
+        return queryInterface.dropTable(TABLE_NAME);
     }
 };

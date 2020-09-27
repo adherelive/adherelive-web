@@ -1,33 +1,35 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
+import {DataTypes} from "sequelize";
 
-import Users from "./users";
-import UserCategoryPermissions from "./userCategoryPermissions";
+export const PERMISSIONS = "permissions";
 
-const Permissions = database.define(
-    DB_TABLES.PERMISSIONS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const db = (database) => {
+    database.define(
+        PERMISSIONS,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            type: {
+                type: DataTypes.STRING(100),
+            },
         },
-        type: {
-            type: Sequelize.STRING(100),
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
+        {
+            underscored: true,
+            paranoid: true,
+        }
+    );
+};
 
-// Permissions.belongsToMany(Users, {
-//     through: DB_TABLES.USER_CATEGORY_PERMISSIONS,
-//     targetKey:"category"
-// });
+export const associate = (database) => {
+    // const {<TABLE_NAME>} = database.models || {};
 
-export default Permissions;
+    // associations here (if any) ...
+    // Permissions.belongsToMany(Users, {
+    //     through: DB_TABLES.USER_CATEGORY_PERMISSIONS,
+    //     targetKey:"category"
+    // });
+};

@@ -3,7 +3,7 @@ import Logger from "../../../libs/log";
 
 const Log = new Logger("QUEUE > SERVICE");
 
-class QueueService {
+export default class QueueService {
   constructor() {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
@@ -107,5 +107,3 @@ class QueueService {
     }
   };
 }
-
-export default new QueueService();

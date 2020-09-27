@@ -18,6 +18,26 @@ import mApiRouter from "../routes/m-api";
 const Config = require("../config/config");
 Config();
 
+async function assertDatabaseConnectionOk() {
+    console.log(`Checking database connection...`);
+    try {
+        await mysql.authenticate();
+        console.log('Database connection OK!');
+    } catch (error) {
+        console.log('Unable to connect to the database:');
+        console.log(error.message);
+        process.exit(1);
+    }
+}
+
+async function init() {
+    await assertDatabaseConnectionOk();
+
+    console.log(`Starting Sequelize + Express example on port`);
+}
+
+init();
+
 
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
@@ -48,8 +68,6 @@ app.use(
  );
 
 app.use(express.static(path.join(__dirname, "../public")));
-
-mysql();
 
 EventObserver.runObservers();
 Activity.runObservers();

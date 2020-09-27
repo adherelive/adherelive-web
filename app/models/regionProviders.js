@@ -1,63 +1,68 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
-import Providers from "./providers";
-import Regions from "./regions";
+import {DataTypes} from "sequelize";
+import {REGIONS} from "./regions";
+import {PROVIDERS} from "./providers";
 
-const RegionProviders = database.define(
-    DB_TABLES.CONDITIONS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const REGION_PROVIDERS = "region_providers";
+
+export const db = (database) => {
+    database.define(
+        REGION_PROVIDERS,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            region_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: REGIONS,
+                    },
+                    key: 'id'
+                }
+            },
+            provider_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: PROVIDERS,
+                    },
+                    key: 'id'
+                }
+            },
         },
-        region_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.REGIONS,
-                },
-                key: 'id'
-            }
-        },
-        provider_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.PROVIDERS,
-                },
-                key: 'id'
-            }
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    region_id: this.region_id,
-                    provider_id: this.provider_id,
-                };
+        {
+            underscored: true,
+            paranoid: true,
+            getterMethods: {
+                getBasicInfo() {
+                    return {
+                        id: this.id,
+                        region_id: this.region_id,
+                        provider_id: this.provider_id,
+                    };
+                }
             }
         }
-    }
-);
+    );
+};
 
-RegionProviders.hasOne(Regions, {
-    foreignKey: "region_id",
-    targetKey: "id"
-});
+export const associate = (database) => {
+    const {region_providers, regions, providers} = database.models || {};
 
-RegionProviders.hasOne(Providers, {
-    foreignKey: "provider_id",
-    targetKey: "id"
-});
+    // associations here (if any) ...
+    region_providers.hasOne(regions, {
+        foreignKey: "region_id",
+        targetKey: "id"
+    });
 
-export default RegionProviders;
+    region_providers.hasOne(providers, {
+        foreignKey: "provider_id",
+        targetKey: "id"
+    });
+};

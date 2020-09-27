@@ -1,8 +1,18 @@
-import Sequelize from "sequelize";
+import {Sequelize} from "sequelize";
 import Log from "./log";
 const Logger = new Log("SEQUELIZE QUERY");
 
-export const database = new Sequelize(
+// MODELS
+import * as ActionDetails from "../app/models/actionDetails";
+import * as Actions from "../app/models/actions";
+import * as Adherence from "../app/models/adherence";
+import * as Appointments from "../app/models/appointments";
+
+import * as CarePlans from "../app/models/carePlan";
+import * as ScheduleEvents from "../app/models/scheduleEvents";
+import * as EmailLogger from "../app/models/emailLogger";
+
+const database = new Sequelize(
   process.config.db.name,
   process.config.db.username,
   process.config.db.password,
@@ -22,13 +32,25 @@ export const database = new Sequelize(
   }
 );
 
-export default () => {
-  database
-    .authenticate()
-    .then(() => {
-      console.log("Db and tables have been created...");
-    })
-    .catch(err => {
-      console.log("Db connect error is: ", err);
-    });
-};
+// Models List...
+const modelList = [
+    ActionDetails,
+    Actions,
+    Adherence,
+    Appointments,
+    ScheduleEvents,
+    EmailLogger,
+    CarePlans,
+];
+
+// MODEL INIT...
+for (const model of modelList) {
+    model.db(database);
+}
+
+// ASSOCIATIONS...
+// for(const model of modelList) {
+//     model.associate(database);
+// }
+
+export default database;
