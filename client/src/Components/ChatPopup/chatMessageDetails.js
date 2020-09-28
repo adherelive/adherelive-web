@@ -280,6 +280,8 @@ class ChatMessageDetails extends Component {
                     : {};
                 let mess = '';
                 const body = message.state.body;
+                // console.log("Body ==========>",body);
+
                 if (message.state.author == USER_ADHERE_BOT && body.split(':')[0].slice(2,10) == CHAT_MESSAGE_TYPE.SYMPTOM) {
                     
                     const bodyObj = JSON.parse(body);
@@ -288,11 +290,33 @@ class ChatMessageDetails extends Component {
                        
                       
                         const {upload_documents = {} }  = bodyObj;
-                        const { audio_document_ids = [], image_document_ids=[] ,video_document_ids = [], config : {side = '1' , parts = [] , duration='' }} = {} = bodyObj.symptoms[symptom_id] || {};
+                        const { text : symptom_text = '' , audio_document_ids = [], image_document_ids=[] ,video_document_ids = [], config : {side = '1' , parts = [] , duration='' }} = {} = bodyObj.symptoms[symptom_id] || {};
                    
-                   
-                   
+                
+                    let textMessage ;
+                    {
+                        symptom_text
+                        ?
+                        textMessage = (
+                            <Fragment>
+                                <div className="symptom-message-container" >
+                                <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                                <div className="text-msg-container" >
+                                    <span>{symptom_text}</span>
+                                </div>
+
+                                </div>
+                            </Fragment>
+                        )
+                        :
+                        textMessage = null;
+                    }
+                    
+                    messagesToRender.push(textMessage);
+
                 for(let  document_Id in upload_documents){
+
+
                     if(image_document_ids.includes(parseInt(document_Id))){
                        let  imageMess = null;
                        let {basic_info :{ document : img_src  = ''}} = upload_documents[image_document_ids];
@@ -301,6 +325,7 @@ class ChatMessageDetails extends Component {
                                       <div className="symptom-message-container" >
                                             <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                                             <div className="symptom-image-container" >
+                                                
                                                 <img  className="symptom-image" src={img_src} alt="Symptom Image" ></img>
                                             </div>
                                             
