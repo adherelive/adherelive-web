@@ -1,5 +1,6 @@
 "use strict";
 import {DataTypes} from "sequelize";
+import {USER_CATEGORY_PERMISSIONS} from "./userCategoryPermissions";
 
 export const PERMISSIONS = "permissions";
 
@@ -25,11 +26,11 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-    // const {<TABLE_NAME>} = database.models || {};
+    const {permissions, users} = database.models || {};
 
     // associations here (if any) ...
-    // Permissions.belongsToMany(Users, {
-    //     through: DB_TABLES.USER_CATEGORY_PERMISSIONS,
+    // permissions.belongsToMany(users, {
+    //     through: USER_CATEGORY_PERMISSIONS,
     //     targetKey:"category"
     // });
 };

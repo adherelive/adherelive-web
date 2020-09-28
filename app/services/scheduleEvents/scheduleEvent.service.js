@@ -1,8 +1,12 @@
-import ScheduleEvent from "../../models/scheduleEvents";
 import {Op} from "sequelize";
 import {EVENT_STATUS} from "../../../constant";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
 import moment from "moment";
+
+console.log("71398123 here in schedule_events");
+
+// model...
+const {schedule_events : ScheduleEvent} = database.models;
 
 class ScheduleEventService {
     create = async (data) => {
@@ -212,4 +216,4 @@ class ScheduleEventService {
     };
 }
 
-export default new ScheduleEventService();
+export default ScheduleEventService;

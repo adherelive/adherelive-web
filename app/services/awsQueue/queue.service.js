@@ -83,7 +83,7 @@ export default class QueueService {
       const response = await this.sqs.receiveMessage(params).promise();
       Log.debug("receiveMessage response", response);
 
-      return response.Messages;
+      return response.Messages || [];
     } catch (error) {
       console.log("receiveMessage 500 error", error);
     }

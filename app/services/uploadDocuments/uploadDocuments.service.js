@@ -1,5 +1,6 @@
-import uploadDocumentsModel from "../../models/uploadDocuments";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
+
+const {upload_documents: uploadDocumentsModel} = database.models;
 
 class UploadDocumentService {
     constructor() {}

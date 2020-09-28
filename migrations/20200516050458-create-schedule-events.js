@@ -1,11 +1,11 @@
 'use strict';
 
 import {EVENT_STATUS, EVENT_TYPE} from "../constant";
-import {TABLE_NAME} from "../app/models/scheduleEvents";
+import {SCHEDULE_EVENTS} from "../app/models/scheduleEvents";
 
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable(TABLE_NAME, {
+        return queryInterface.createTable(SCHEDULE_EVENTS, {
             id: {
                 allowNull: false,
                 autoIncrement: true,

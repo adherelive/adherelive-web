@@ -45,7 +45,7 @@ const cors = require("cors");
 
 const app = express();
 
-const cron = schedule.scheduleJob("*/2 * * * *", async () => {
+const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     // await Prior.getPriorEvents();
     await Passed.runObserver();
     await Start.runObserver();

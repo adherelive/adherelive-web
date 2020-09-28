@@ -1,4 +1,6 @@
-import TemplateAppointments from "../../models/templateAppointments";
+import database from "../../../libs/mysql";
+
+const {template_appointments: TemplateAppointments} = database.models;
 
 class TemplateAppointmentService {
 

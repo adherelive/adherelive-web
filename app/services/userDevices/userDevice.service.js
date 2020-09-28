@@ -1,6 +1,6 @@
-import UserDevices from "../../models/userDevices";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
 
+const {user_devices: UserDevices} = database.models;
 
 class UserDeviceService {
 

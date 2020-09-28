@@ -1,6 +1,6 @@
-import Doctor from "../../models/doctors";
-import {database} from "../../../libs/mysql";
-import Specialities from "../../models/specialities";
+import database from "../../../libs/mysql";
+
+const {doctors: Doctor, speciality: Speciality} = database.models;
 
 class DoctorService {
 
@@ -8,7 +8,7 @@ class DoctorService {
         try {
             const doctor = await Doctor.findOne({
                 where: data,
-                include: Specialities
+                include: Speciality
             });
             return doctor;
         } catch(error) {
@@ -49,7 +49,7 @@ class DoctorService {
     getAllDoctors = async () => {
         try {
             const doctors = await Doctor.findAll({
-                include: Specialities
+                include: Speciality
             });
             return doctors;
         } catch(err) {

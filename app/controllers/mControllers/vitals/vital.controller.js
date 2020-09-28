@@ -7,8 +7,9 @@ import * as vitalHelper from "../../vitals/vitalHelper";
 import VitalService from "../../../services/vitals/vital.service";
 import VitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
-import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import twilioService from "../../../services/twilio/twilio.service";
+
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
@@ -32,6 +33,7 @@ import EventSchedule from "../../../eventSchedules";
 import SqsQueueService from "../../../services/awsQueue/queue.service";
 
 const Log = new Logger("MOBILE > VITALS > CONTROLLER");
+const EventService = new eventService();
 
 class VitalController extends Controller {
   constructor() {

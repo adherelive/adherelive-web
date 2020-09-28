@@ -1,12 +1,10 @@
-
 import Logger from "../libs/log";
-// import queueService from "../app/services/awsQueue/queue.service";
 import {EVENT_TYPE} from "../constant";
 import {handleAppointments, handleMedications, handleVitals} from "./helper";
 
 const Log = new Logger("EVENTS > SQS_OBSERVER");
 
-class SqsObserver {
+export default class SqsObserver {
     constructor() {
     }
 
@@ -42,11 +40,11 @@ class SqsObserver {
                     Log.info(`response ${response}`);
                     Log.info(`message.ReceiptHandle ${message.ReceiptHandle}`);
 
-                    if(response === true) {
-                        const deleteMessage = await service.deleteMessage(message.ReceiptHandle);
-
-                        Log.debug("deleteMessage 81723912 ", deleteMessage);
-                    }
+                    // if(response === true) {
+                    //     const deleteMessage = await service.deleteMessage(message.ReceiptHandle);
+                    //
+                    //     Log.debug("deleteMessage 81723912 ", deleteMessage);
+                    // }
                 }
 
 
@@ -58,5 +56,3 @@ class SqsObserver {
         }
     };
 }
-
-export default new SqsObserver();

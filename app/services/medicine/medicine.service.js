@@ -1,7 +1,7 @@
-import Medicine from "../../models/medicines";
-import Sequelize from "sequelize";
+import {Op} from "sequelize";
+import database from "../../../libs/mysql";
 
-const Op = Sequelize.Op;
+const {medicines: Medicine} = database.models;
 
 class MedicineService {
   constructor() {}

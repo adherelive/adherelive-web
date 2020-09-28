@@ -1,7 +1,7 @@
-import Severity from "../../models/severity";
-import Sequelize from "sequelize";
+import {Op} from "sequelize";
+import database from "../../../libs/mysql";
 
-const Op = Sequelize.Op;
+const {severity: Severity} = database.models;
 
 class SeverityService {
 

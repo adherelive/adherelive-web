@@ -1,5 +1,7 @@
-import VitalTemplates from "../../models/vitalTemplates";
 import {Op} from "sequelize";
+import database from "../../../libs/mysql";
+
+const {vital_templates: VitalTemplates} = database.models;
 
 class VitalTemplateService {
 
