@@ -20,7 +20,6 @@ import bodyImage from "../../../src/Assets/images/body.jpg";
 import CallIcon from '../../Assets/images/telephone.png';
 import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
 
-// import symptomMessage from './symptomMessages';
 
 class MediaComponent extends Component {
     constructor(props) {
@@ -284,7 +283,6 @@ class ChatMessageDetails extends Component {
                 if (message.state.author == USER_ADHERE_BOT && body.split(':')[0].slice(2,10) == CHAT_MESSAGE_TYPE.SYMPTOM) {
                     
                     const bodyObj = JSON.parse(body);
-                    // console.log(bodyObj);
                     const symptom_id = bodyObj.symptom_id;
                     if (symptom_id != undefined) {
                        
@@ -295,79 +293,79 @@ class ChatMessageDetails extends Component {
                    
                    
                 for(let  document_Id in upload_documents){
-                     let newMediaMessage ='';
                     if(image_document_ids.includes(parseInt(document_Id))){
-                        // console.log("upload_documents[image_document_ids]",)
+                       let  imageMess = null;
                        let {basic_info :{ document : img_src  = ''}} = upload_documents[image_document_ids];
-                    //   console.log("img_src",img_src);
-                         let  imageMess = (
+                         imageMess = (
                                   <Fragment>
                                       <div className="symptom-message-container" >
                                             <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                                             <div className="symptom-image-container" >
-                                                <div>Image</div>
+                                                <img  className="symptom-image" src={img_src} alt="Symptom Image" ></img>
                                             </div>
                                             
                                       </div>
                                        
                                     </Fragment>
                            
-                            // <img src={img_src} alt="symptom image" className="symptom-image" ></img>
+                           
                             )
                             messagesToRender.push(imageMess);
                     }else if(audio_document_ids.includes(parseInt(document_Id))){
-                        // newMediaMessage="Audio";
-                          let audioMess = (
+                        let audioMess = null;
+                        let {basic_info :{ document : audio_src = ''}} = upload_documents[audio_document_ids];
+
+                          audioMess = (
                                   <Fragment>
                                       <div className="symptom-message-container" >
                                             <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
-                                            <div className="symptom-image-container" >
-                                                <div>Audio</div>
+                                            <div className="symptom-audio-container" >
+                                                <audio controls className="symptom-audio" >
+                                                    <source src={audio_src} alt="symptom audio"   type="audio/ogg"></source>
+                                                    <source src={audio_src} alt="symptom audio"  type="audio/mpeg" ></source>
+                                                    Your browser does not support the audio element.
+                                                </audio>
                                             </div>
                                              
                                       </div>
                                        
                                     </Fragment>
                            
-                            // <img src={img_src} alt="symptom image" className="symptom-image" ></img>
                             )
                             messagesToRender.push(audioMess);
                     }else if(video_document_ids.includes(parseInt(document_Id))){
-                            // newMediaMessage="Video";
-                              let videoMess = (
+                        let videoMess = null ;
+                        let {basic_info :{ document : video_src = ''}} = upload_documents[video_document_ids];
+
+                              videoMess = (
                                   <Fragment>
                                       <div className="symptom-message-container" >
                                             <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
-                                            <div className="symptom-image-container" >
-                                                <div>Video</div>
+                                            <div className="symptom-video-container" >
+                                               <video controls className="sympom-video" width="100%" height="100%" >
+                                                <source src={video_src} type="video/mp4"></source>
+                                                <source src={video_src} type="video/ogg"></source>
+                                                    Your browser does not support the video element.
+                                               </video>
                                             </div>
                                             
                                       </div>
                                        
                                     </Fragment>
                            
-                            // <img src={img_src} alt="symptom image" className="symptom-image" ></img>
                             )
                             
                             messagesToRender.push(videoMess);
                        
+                    }else{
+                        mess=null;
                     }
                     
                     
                             
                 }
-                
-               
-                   mess= null;
-                            // mess = (
-                            //     <Fragment>
-                            //         <div>{this.getUploadDocument(image_document_ids,audio_document_ids,video_document_ids,upload_documents,side,parts)}</div>
-                            //     </Fragment>
-                            //     )
+                mess= null;
                             
-                           
-                        
-                        
                         // mess = (
                         //     <Fragment key={message.state.sid}>
                         //         <div className="chat-messages">

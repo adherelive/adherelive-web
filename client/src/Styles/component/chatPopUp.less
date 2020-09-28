@@ -268,17 +268,17 @@
 .symptom-message-container{
   margin:20px;
   padding:10px 0px;
-  min-height:300px;
+  min-height:200px;
   height:auto;
   min-width:255px;
-  width:300px;
+  width:450px;
   background-color:whitesmoke;
 }
 
 .symptom-detail-container{
   margin:0px auto !important;
   background-color:#e8e8e8;
-  width:269px;
+  width:90%;
   min-height:90px;
   height:auto;
   border-left:4px solid #a4a4a4;
@@ -307,14 +307,39 @@
   
 }
 
-.symptom-image-container{
-  background-color:lightgrey;
-  height:200px;
-  width:269px;
-  margin:10px auto;
+.symptom-image-container, .symptom-video-container{
+  background-color:inherit;
+  min-height:300px;
+  height: auto;
+  width:90%;
+  min-width: 400px;
+  margin:20px auto;
   .symptom-image{
-    height:100%;
-    width:100%;
-    
+    min-width: 100%; 
+    min-height: 300px;
+    height: auto;
+    object-fit: fill;
+    margin: 0px;
 }
+}
+
+
+.symptom-audio-container{
+  background-color:inherit;
+  min-height:50px;
+  height: auto;
+  width:90%;
+  min-width: 400px;
+  margin:20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  
+  
+}
+
+.symptom-video-container{
+  min-height:200px;
+  
 }
