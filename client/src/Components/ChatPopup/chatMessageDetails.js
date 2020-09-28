@@ -227,7 +227,7 @@ class ChatMessageDetails extends Component {
         }
         
         const part = PARTS_GRAPH[7].name;
-        const body_side = BODY_SIDE[side];
+        const body_side = BODY_SIDE[side] || '';
        
         return (
             <Fragment>
@@ -238,7 +238,7 @@ class ChatMessageDetails extends Component {
                     
                     <div className="symptom-details" >
                         <span className="fs14 fw500  ">
-                            {part}
+                            {body_side}
                         </span> 
                         <span className="dot" >&bull;</span>
                         <span className="side">
