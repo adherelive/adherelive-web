@@ -29,8 +29,8 @@ export const associate = (database) => {
     const {permissions, users} = database.models || {};
 
     // associations here (if any) ...
-    // permissions.belongsToMany(users, {
-    //     through: USER_CATEGORY_PERMISSIONS,
-    //     targetKey:"category"
-    // });
+    permissions.belongsToMany(users, {
+        through: USER_CATEGORY_PERMISSIONS,
+        foreignKey:"category"
+    });
 };

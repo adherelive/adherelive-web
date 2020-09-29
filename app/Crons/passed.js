@@ -15,17 +15,17 @@ import FeatureDetailService from "../services/featureDetails/featureDetails.serv
 import FeatureDetailWrapper from "../ApiWrapper/mobile/featureDetails";
 
 const Log = new Logger("CRON > PASSED");
-const scheduleEventService = new ScheduleEventService();
 
 class PassedCron {
     constructor() {
     }
 
     getScheduleData = async () => {
+        const scheduleEventService = new ScheduleEventService();
+
         const currentTime = moment().utc().toISOString();
         Log.info(`currentTime : ${currentTime}`);
         const scheduleEvents = await scheduleEventService.getPassedEventData(currentTime);
-        Log.debug("1892312937 scheduleEvents", scheduleEvents);
         return scheduleEvents;
     };
 
@@ -40,6 +40,7 @@ class PassedCron {
                 for (const scheduleEvent of scheduleEvents) {
                     count++;
                     const event = await ScheduleEventWrapper(scheduleEvent);
+
                     switch (event.getEventType()) {
                         case EVENT_TYPE.VITALS:
                             await this.handleVitalPassed(event);
@@ -65,6 +66,7 @@ class PassedCron {
 
     handleVitalPassed = async (event) => {
         try {
+            const scheduleEventService = new ScheduleEventService();
             const currentTime = moment().utc().toDate();
             const eventId = event.getEventId();
             const {details: {repeat_interval_id: repeatIntervalId = ""} = {}} = event.getDetails();
@@ -93,6 +95,7 @@ class PassedCron {
 
     handleMedicationPassed = async (event) => {
         try {
+            const scheduleEventService = new ScheduleEventService();
             const currentTime = moment().utc().toDate();
 
             if(moment(currentTime).diff(event.getStartTime(), 'hours') >= 1) {
@@ -108,6 +111,7 @@ class PassedCron {
 
     handleAppointmentPassed = async (event) => {
         try {
+            const scheduleEventService = new ScheduleEventService();
             const currentTime = moment().utc().toDate();
 
             if(moment(currentTime).diff(event.getEndTime(), 'minutes') > 0) {
