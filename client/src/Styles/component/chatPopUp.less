@@ -354,3 +354,32 @@
 
   }
 }
+
+ .vital-container{
+  margin:0px;
+  padding:10px ;
+  min-height:80px;
+  height:auto;
+  min-width:100px;
+  width:auto;
+  background-color: @rosy-pink-10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  &>div{
+    border-left:4px solid pink;
+    border-radius: 2px;
+  }
+    span{
+      margin: 0px 10px;
+      font-size:17px;
+      font-weight:600;
+      letter-spacing:0.05rem;
+      color:#212b36;
+    }
+    .v-label{
+      text-transform: capitalize;
+    }
+}

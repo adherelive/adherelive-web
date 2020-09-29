@@ -3,6 +3,7 @@ import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CO
 import messages from './messages';
 import { injectIntl } from "react-intl";
 import SymptomBotMessage from './symptomBotMessage';
+import VitalBotMessage from './vitalBotMessages';
 import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
 import moment from 'moment';
 
@@ -35,6 +36,11 @@ class botMessage extends Component{
             return (
                 <SymptomBotMessage body={body} message={message} patientDp={patientDp} />
             )
+        }
+        else if (type == CHAT_MESSAGE_TYPE.VITAL){
+              return (
+                <VitalBotMessage body={body} message={message} patientDp={patientDp} />
+              )
         }
         else{
             return (
