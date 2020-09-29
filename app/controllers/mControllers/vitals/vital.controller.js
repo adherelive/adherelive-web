@@ -9,7 +9,7 @@ import VitalTemplateService from "../../../services/vitalTemplates/vitalTemplate
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import twilioService from "../../../services/twilio/twilio.service";
-
+import queueService from "../../../services/awsQueue/queue.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
@@ -57,6 +57,8 @@ class VitalController extends Controller {
         userDetails: { userId, userData: { category } = {}, userCategoryData = {} } = {},
       } = req;
 
+      const QueueService = new queueService();
+
       const doesVitalExists = await VitalService.getByData({
         care_plan_id,
         vital_template_id
@@ -102,11 +104,11 @@ class VitalController extends Controller {
         };
 
         // RRule
-        // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-        //
-        // Log.debug("sqsResponse ---> ", sqsResponse);
+        const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
 
-        EventSchedule.create(eventScheduleData);
+        Log.debug("sqsResponse ---> ", sqsResponse);
+
+        // EventSchedule.create(eventScheduleData);
 
         const vitalJob = JobSdk.execute({
           eventType: EVENT_TYPE.VITALS,
@@ -194,6 +196,8 @@ class VitalController extends Controller {
         const deletedEvents = await EventService.deleteBatch(vitals.getVitalId());
 
         Log.debug("deletedEvents", deletedEvents);
+
+
 
         // RRule
         EventSchedule.create(eventScheduleData);

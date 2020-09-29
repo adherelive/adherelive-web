@@ -110,7 +110,7 @@ class PassedCron {
         try {
             const currentTime = moment().utc().toDate();
 
-            if(moment(currentTime).diff(event.getStartTime(), 'hours') >= 1) {
+            if(moment(currentTime).diff(event.getEndTime(), 'minutes') > 0) {
                 const updateEventStatus = await scheduleEventService.update({
                     status: EVENT_STATUS.EXPIRED
                 }, event.getScheduleEventId());

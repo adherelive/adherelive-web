@@ -18,6 +18,15 @@ class ScheduleEventService {
       }
     };
 
+    bulkCreate = async (data) => {
+      try {
+          const scheduleEvents = await ScheduleEvent.bulkCreate(data);
+          return scheduleEvents;
+      } catch(error) {
+          throw error;
+      }
+    };
+
     update = async (data, id) => {
         const transaction = await database.transaction();
         try {
@@ -152,7 +161,7 @@ class ScheduleEventService {
             const scheduleEvent = await ScheduleEvent.findAll({
                 where: {
                     start_time: {
-                        [Op.between]: [moment(time).subtract(1, 'day').startOf('day'), time]
+                        [Op.between]: [moment(time).subtract(1, 'year'), time]
                     },
                     status: [EVENT_STATUS.SCHEDULED, EVENT_STATUS.PENDING]
                 }

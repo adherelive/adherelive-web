@@ -5,7 +5,7 @@ import schedule from "node-schedule";
 
 import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
-// import Events from "../events";
+import Events from "../events";
 // import NotificationObserver from "../app/notificationSdk/notificationObeserver";
 
 // import Prior from "../app/Crons/prior";

@@ -40,11 +40,11 @@ export default class SqsObserver {
                     Log.info(`response ${response}`);
                     Log.info(`message.ReceiptHandle ${message.ReceiptHandle}`);
 
-                    // if(response === true) {
-                    //     const deleteMessage = await service.deleteMessage(message.ReceiptHandle);
-                    //
-                    //     Log.debug("deleteMessage 81723912 ", deleteMessage);
-                    // }
+                    if(response === true) {
+                        const deleteMessage = await service.deleteMessage(message.ReceiptHandle);
+
+                        Log.debug("deleteMessage 81723912 ", deleteMessage);
+                    }
                 }
 
 

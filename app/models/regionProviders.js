@@ -61,8 +61,8 @@ export const associate = (database) => {
         targetKey: "id"
     });
 
-    region_providers.hasOne(providers, {
-        foreignKey: "provider_id",
-        targetKey: "id"
-    });
+    // region_providers.hasOne(providers, {
+    //     foreignKey: "provider_id",
+    //     targetKey: "id"
+    // });
 };

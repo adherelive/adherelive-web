@@ -459,8 +459,6 @@ class PatientDetails extends Component {
   constructor(props) {
     super(props);
     
-    console.log("PATEINT DETAILS PROPS =========>",this.props);
-    
     this.state = {
       loading: true,
       templateDrawerVisible: false,
@@ -901,7 +899,6 @@ class PatientDetails extends Component {
   };
 
   onRowSymptoms = (record, rowIndex) => {
-    console.log("utsdiyqwtdyyqwfduyqwfudydqwd=======>", record);
     const { onRowClickSymptoms } = this;
     // const { key } = record;
     return {
@@ -924,10 +921,6 @@ class PatientDetails extends Component {
       
       if(status){
         let data = response.payload.data;
-        console.log("------>",data);
-        
-        // let obj = Object.values(data["last_visit"]);
-        // console.log(obj);
         
       }else {
           message.error(this.formatMessage(messages.somethingWentWrong));
@@ -1171,7 +1164,6 @@ class PatientDetails extends Component {
     const { basic_info: { name: severity = "" } = {} } =
       severities[severity_id] || {};
 
-    // console.log('5876556456rutueerteuu=========>>>>>>>>>>', cPAppointmentIds, cPMedicationIds, carePlanId, care_plans, patient_id);
     let carePlan = care_plans[carePlanId] || {};
     let {
       details: {
@@ -1480,7 +1472,7 @@ class PatientDetails extends Component {
           />
         )}
         <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
-        <EditMedicationReminder carePlanId={carePlanId} />
+        <EditMedicationReminder patientId={patient_id} carePlanId={carePlanId} />
         <SymptomsDrawer />
         <VitalTimelineDrawer />
       </div>
