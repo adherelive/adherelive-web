@@ -1,4 +1,6 @@
-import CarePlanAppointments from "../../models/carePlanAppointments";
+import database from "../../../libs/mysql";
+
+const {care_plan_appointments: CarePlanAppointments} = database.models;
 
 class CarePlanAppointmentService {
 

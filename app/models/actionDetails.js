@@ -1,60 +1,55 @@
 "use strict";
-import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES} from "../../constant";
+import {DataTypes} from "sequelize";
+import {ACTIONS} from "./actions";
 
-const ActionDetails = database.define(
-    DB_TABLES.ACTION_DETAILS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const ACTION_DETAILS = "action_details";
+
+export const db =  (database) => {
+    database.define(
+        ACTION_DETAILS,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            action_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: ACTIONS,
+                    },
+                    key: 'id'
+                }
+            },
+            type: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            dosage: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            time: {
+                type: DataTypes.DATE,
+                allowNull: false
+            },
         },
-        action_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.ACTIONS,
-                },
-                key: 'id'
-            }
-        },
-        type: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        dosage: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        time: {
-            type: Sequelize.DATE,
-            allowNull: false
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    action_id: this.action_id,
-                    type: this.type,
-                    dosage: this.dosage,
-                    time: this.time,
-                };
-            }
+        {
+            underscored: true,
+            paranoid: true,
         }
-    }
-);
+    );
+}
 
-// ActionDetails.belongsTo(Actions, {
-//     foreignKey: "action_id",
-//     targetKey: "id"
-// });
+export const associate = (database) => {
+    const {action_details, actions} = database.models || {};
+    console.log("database.models", database.models);
 
-export default ActionDetails;
+    // action_details.belongsTo(actions, {
+    //     foreignKey: "action_id",
+    //     targetKey: "id"
+    // });
+};

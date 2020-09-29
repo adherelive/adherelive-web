@@ -24,9 +24,14 @@ import medicineService from "../../../services/medicine/medicine.service";
 import {getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails} from "../../carePlans/carePlanHelper";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import doctorService from "../../../services/doctor/doctor.service";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import MedicationJob from "../../../JobSdk/Medications/observer";
 import NotificationSdk from "../../../NotificationSdk";
+
+// SERVICES...
+import queueService from "../../../services/awsQueue/queue.service";
+
+// WRAPPERS...
+import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 
 import EventSchedule from "../../../eventSchedules";
 
@@ -167,7 +172,11 @@ class MobileMReminderController extends Controller {
         participant_two: userId
       };
 
-      EventSchedule.create(eventScheduleData);
+      const QueueService = new queueService();
+
+      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+      Logger.debug("sqsResponse ---> ", sqsResponse);
 
       const medicationJob = MedicationJob.execute(EVENT_STATUS.SCHEDULED, eventData);
       await NotificationSdk.execute(medicationJob);
@@ -309,15 +318,14 @@ class MobileMReminderController extends Controller {
         participant_two: userId
       };
 
-      EventSchedule.create(eventScheduleData);
+      const QueueService = new queueService();
 
+      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
 
+      Logger.debug("sqsResponse ---> ", sqsResponse);
 
       const medicationJob = MedicationJob.execute(EVENT_STATUS.SCHEDULED, eventData);
       await NotificationSdk.execute(medicationJob);
-
-      Logger.debug("medicationJob ---> ", medicationJob.getInAppTemplate());
-
 
       return this.raiseSuccess(
         res,

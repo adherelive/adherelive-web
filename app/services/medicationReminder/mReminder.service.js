@@ -1,5 +1,6 @@
-import MedicationReminder from "../../models/medicationReminders";
-import Medicines from "../../models/medicines";
+import database from "../../../libs/mysql";
+
+const {medications: MedicationReminder, medicines: Medicines} = database.models;
 
 class MReminderService {
   async addMReminder(data) {

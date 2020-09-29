@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon, DatePicker, Select, Input, message, Button, TimePicker, Modal } from "antd";
+import { Drawer, Icon, Select, Input, message, Button, TimePicker, Modal } from "antd";
 
-import { MEDICATION_TIMING, EVENT_TYPE, MEDICINE_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRINGE, SYRUP } from "../../../constant";
+import { MEDICATION_TIMING, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
@@ -13,7 +13,6 @@ import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from 'react-uuid';
 import messages from "./message";
-import carePlanTemplateIds from "../../../modules/carePlanTemplateIds";
 const { Option } = Select;
 const BLANK_TEMPLATE = 'Blank Template'
 
@@ -77,7 +76,6 @@ class TemplateDrawer extends Component {
         let newMedics = {};
         let newAppoints = {};
 
-        console.log('5987236487236487234 did Mount', carePlanTemplateIds, care_plan_templates);
         let carePlanTemplateId = Object.keys(carePlanTemplateIds).length ? parseInt(carePlanTemplateIds[0]) : 0;
 
 
@@ -404,7 +402,6 @@ class TemplateDrawer extends Component {
                 </div>
                 {medicationKeys.map(key => {
                     let { medicine, medicineType, schedule_data: { when_to_take = '', start_date = moment(), medicine_type = '1' } = {}, } = medications[key];
-                    console.log('64576574765758758', medicine_type, medications[key]);
                     when_to_take.sort();
                     let nextDueTime = moment().format('HH:MM A');
                     let closestWhenToTake = 0;
@@ -524,9 +521,6 @@ class TemplateDrawer extends Component {
         let { medications = {}, appointments = {}, templateMedicationIDs, templateAppointmentIDs, templateEdited } = this.state;
         let templateDataExists = (Object.values(medications).length && Object.values(appointments).length) ? true : false;
 
-        console.log('67812365124637128', templateDataExists, templateEdited,
-            Object.values(medications).length, templateMedicationIDs, Object.values(appointments).length, templateAppointmentIDs);
-
         if (templateDataExists) {
             if (Object.values(medications).length === templateMedicationIDs.length && Object.values(appointments).length === templateAppointmentIDs.length) {
 
@@ -569,7 +563,6 @@ class TemplateDrawer extends Component {
 
     onSubmit = () => {
         const { submit, patientId, carePlan: { treatment_id = 1, severity_id = 1, condition_id = 1 } = {} } = this.props;
-        console.log('86875768685767686', treatment_id, severity_id, condition_id);
         let { medications = {}, appointments = {}, name = '', createTemplate = false } = this.state;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
@@ -798,7 +791,6 @@ class TemplateDrawer extends Component {
         const { onClose, renderTemplateDetails } = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
 
-        console.log('5987236487236487234 render', this.props.carePlanTemplateIds, this.props.care_plan_templates);
         let appointmentData = innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT ? appointments[innerFormKey] : {};
 
         if (visible !== true) {

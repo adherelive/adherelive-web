@@ -1,5 +1,5 @@
-import doctorClinicModel from "../../models/doctorClinics";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
+const {doctor_clinics: doctorClinicModel} = database.models;
 
 class DoctorClinicService {
   constructor() {}

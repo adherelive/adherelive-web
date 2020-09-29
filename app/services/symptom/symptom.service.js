@@ -1,12 +1,14 @@
-import Symptoms from "../../models/symptoms";
-import Patients from "../../models/patients";
-import CarePlan from "../../models/carePlan";
-import Doctors from "../../models/doctors";
+import { Op } from "sequelize";
+import database from "../../../libs/mysql";
 
-import {Op} from "sequelize";
+const {
+  symptoms: Symptoms,
+  patients: Patients,
+  doctors: Doctors,
+  care_plans: CarePlan
+} = database.models;
 
 class SymptomService {
-
   create = async data => {
     try {
       const symptom = await Symptoms.create(data);
@@ -58,7 +60,7 @@ class SymptomService {
 
   getFilteredData = async data => {
     try {
-      const {patient_id, start_time, end_time} = data || {};
+      const { patient_id, start_time, end_time } = data || {};
       const symptom = await Symptoms.findAll({
         where: {
           patient_id,
@@ -82,14 +84,12 @@ class SymptomService {
     }
   };
 
-  getLastUpdatedData = async (data) => {
+  getLastUpdatedData = async data => {
     try {
       const symptom = await Symptoms.findAll({
         where: data,
         limit: 1,
-        order: [
-            ['updated_at', 'DESC']
-        ],
+        order: [["updated_at", "DESC"]],
         include: [
           {
             model: Patients

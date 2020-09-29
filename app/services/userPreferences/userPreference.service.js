@@ -1,5 +1,6 @@
-import UserPreference from "../../models/userPreferences";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
+
+const {user_preferences: UserPreference} = database.models;
 
 class UserPreferenceService {
     constructor() {

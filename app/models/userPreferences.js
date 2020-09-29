@@ -1,34 +1,41 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
+import {DataTypes} from "sequelize";
+import {USERS} from "./users";
 
-const UserPreferences = database.define(
-    DB_TABLES.USER_PREFERENCES,
-    {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        user_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.USERS,
-                },
-                key: 'id'
-            }
-        },
-        details: {
-            type: Sequelize.JSON,
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
+export const USER_PREFERENCES = "user_preferences";
 
-export default UserPreferences;
+export const db = (database) => {
+    database.define(
+        USER_PREFERENCES,
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            user_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: USERS,
+                    },
+                    key: 'id'
+                }
+            },
+            details: {
+                type: DataTypes.JSON,
+            },
+        },
+        {
+            underscored: true,
+            paranoid: true,
+        }
+    );
+};
+
+export const associate = (database) => {
+    // const {upload_documents} = database.models || {};
+
+    // associations here (if any) ...
+};

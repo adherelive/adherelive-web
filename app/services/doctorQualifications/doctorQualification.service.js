@@ -1,5 +1,6 @@
-import doctorQualificationModel from "../../models/doctorQualifications";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
+
+const {doctor_qualifications: doctorQualificationModel} = database.models;
 
 class DoctorQualificationService {
     constructor() {}

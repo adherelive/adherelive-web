@@ -1,5 +1,6 @@
-import doctorRegistrationModel from "../../models/doctorRegistrations";
-import { defaultEventBridgePolicies } from "twilio/lib/jwt/taskrouter/util";
+import database from "../../../libs/mysql";
+
+const {doctor_registrations: doctorRegistrationModel} = database.models;
 
 class DoctorRegistrationService {
     constructor() {}

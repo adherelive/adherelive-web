@@ -1,4 +1,6 @@
-import Providers from "../../models/providers";
+import database from "../../../libs/mysql";
+
+const {providers: Providers} = database.models;
 
 class ProviderService {
     getAll = async () => {

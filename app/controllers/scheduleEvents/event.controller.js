@@ -4,7 +4,7 @@ import moment from "moment";
 
 // SERVICES
 import CarePlanService from "../../services/carePlan/carePlan.service";
-import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import SymptomService from "../../services/symptom/symptom.service";
 
 // WRAPPER
@@ -14,6 +14,8 @@ import SymptomWrapper from "../../ApiWrapper/web/symptoms";
 import {EVENT_TYPE} from "../../../constant";
 
 const Log = new Logger("WEB > EVENT > CONTROLLER");
+
+const EventService = new eventService();
 
 class EventController extends Controller {
     constructor() {

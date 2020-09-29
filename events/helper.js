@@ -25,13 +25,15 @@ import Logger from "../libs/log";
 
 // SERVICES
 import FeatureDetailService from "../app/services/featureDetails/featureDetails.service";
-import scheduleService from "../app/services/scheduleEvents/scheduleEvent.service";
+import ScheduleService from "../app/services/scheduleEvents/scheduleEvent.service";
 import UserPreferenceService from "../app/services/userPreferences/userPreference.service";
 
 // WRAPPERS
 
 
 const Log = new Logger("EVENT > HELPER");
+
+const scheduleService = new ScheduleService();
 
 const getUserPreferences = async (user_id) => {
     try {
@@ -65,6 +67,8 @@ export const handleAppointments = async (appointment) => {
         });
 
         Log.debug("rrule ----> ", rrule.all());
+
+
 
         // create schedule for the date
         const scheduleData = {
@@ -130,11 +134,13 @@ export const handleMedications = async (medication) => {
 
         Log.debug("when_to_take ---> ", when_to_take);
 
+        const scheduleEventArr = [];
+
         for (let i = 0; i < allDays.length; i++) {
             for (const timing of when_to_take) {
                 const startTime = updateMedicationTiming(allDays[i], timing, patientPreference);
 
-                const scheduleData = {
+                scheduleEventArr.push({
                     event_id,
                     critical,
                     date: moment(allDays[i]).toISOString(),
@@ -146,15 +152,15 @@ export const handleMedications = async (medication) => {
                         participants,
                         actors
                     }
-                };
-
-                const schedule = await scheduleService.create(scheduleData);
-                if (schedule) {
-                    Log.debug("schedule events created for appointment", true);
-                } else {
-                    Log.debug("schedule events failed for appointment", false);
-                }
+                });
             }
+        }
+
+        const schedule = await scheduleService.bulkCreate(scheduleEventArr);
+        if (schedule) {
+            Log.debug("schedule events created for appointment", true);
+        } else {
+            Log.debug("schedule events failed for appointment", false);
         }
 
         return true;
@@ -213,6 +219,8 @@ export const handleVitals = async (vital) => {
 
         console.log("371387123 value, key", {value, key});
 
+        const scheduleEventArr = [];
+
         if(key === REPEAT_INTERVAL.ONCE) {
             for (let i = 0; i < allDays.length; i++) {
                 // **** TAKING WAKE UP TIME AS TIME FOR REPEAT INTERVAL = ONCE ****
@@ -223,7 +231,7 @@ export const handleVitals = async (vital) => {
                 const hours = moment(wakeUpTime).utc().get('hours');
                 const minutes = moment(wakeUpTime).utc().get('minutes');
 
-                    const scheduleData = {
+                scheduleEventArr.push({
                         event_id,
                         critical,
                         date: moment(allDays[i])
@@ -239,14 +247,14 @@ export const handleVitals = async (vital) => {
                             vital_templates,
                             eventId: event_id
                         }
-                    };
+                    });
 
-                    const schedule = await scheduleService.create(scheduleData);
-                    if (schedule) {
-                        Log.debug("schedule events created for vitals", true);
-                    } else {
-                        Log.debug("schedule events failed for vitals", false);
-                    }
+                    // const schedule = await scheduleService.create(scheduleData);
+                    // if (schedule) {
+                    //     Log.debug("schedule events created for vitals", true);
+                    // } else {
+                    //     Log.debug("schedule events failed for vitals", false);
+                    // }
             }
         } else {
             for (let i = 0; i < allDays.length; i++) {
@@ -263,10 +271,11 @@ export const handleVitals = async (vital) => {
 
                 let ongoingTime = startOfDay;
 
+
                 while(moment(endOfDay).diff(moment(ongoingTime), "minutes") > 0) {
                     const hours = moment(ongoingTime).get("hours");
                     const minutes = moment(ongoingTime).get("minutes");
-                    const scheduleData = {
+                    scheduleEventArr.push({
                         event_id,
                         critical,
                         date: moment(allDays[i])
@@ -282,17 +291,34 @@ export const handleVitals = async (vital) => {
                             vital_templates,
                             eventId: event_id
                         }
-                    };
-
-                    const schedule = await scheduleService.create(scheduleData);
-                    if (schedule) {
-                        Log.debug("schedule events created for vitals", true);
-                    } else {
-                        Log.debug("schedule events failed for vitals", false);
-                    }
+                    });
+                    // const scheduleData = {
+                    //     event_id,
+                    //     critical,
+                    //     date: moment(allDays[i])
+                    //         .utc()
+                    //         .toISOString(),
+                    //     start_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
+                    //     end_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
+                    //     event_type: EVENT_TYPE.VITALS,
+                    //     details: {
+                    //         ...details,
+                    //         participants,
+                    //         actor,
+                    //         vital_templates,
+                    //         eventId: event_id
+                    //     }
+                    // };
 
                     ongoingTime = moment(ongoingTime).add(value, "hours")
                 }
+            }
+
+            const schedule = await scheduleService.bulkCreate(scheduleEventArr);
+            if (schedule) {
+                Log.debug("schedule events created for vitals", true);
+            } else {
+                Log.debug("schedule events failed for vitals", false);
             }
         }
 

@@ -1,4 +1,6 @@
-import CarePlanMedication from "../../models/carePlanMedications";
+import database from "../../../libs/mysql";
+
+const {care_plan_medications: CarePlanMedication} = database.models;
 
 class CarePlanMedicationService {
 

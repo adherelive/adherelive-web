@@ -15,6 +15,7 @@ import FeatureDetailService from "../services/featureDetails/featureDetails.serv
 import FeatureDetailWrapper from "../ApiWrapper/mobile/featureDetails";
 
 const Log = new Logger("CRON > PASSED");
+const scheduleEventService = new ScheduleEventService();
 
 class PassedCron {
     constructor() {
@@ -23,7 +24,7 @@ class PassedCron {
     getScheduleData = async () => {
         const currentTime = moment().utc().toISOString();
         Log.info(`currentTime : ${currentTime}`);
-        const scheduleEvents = await ScheduleEventService.getPassedEventData(currentTime);
+        const scheduleEvents = await scheduleEventService.getPassedEventData(currentTime);
         Log.debug("1892312937 scheduleEvents", scheduleEvents);
         return scheduleEvents;
     };
@@ -80,7 +81,7 @@ class PassedCron {
             Log.info(`value: ${value} | difference -> ${moment(currentTime).diff(event.getStartTime(), 'hours')}`);
 
             if(moment(currentTime).diff(event.getStartTime(), 'hours') >= value) {
-                const updateEventStatus = await ScheduleEventService.update({
+                const updateEventStatus = await scheduleEventService.update({
                     status: EVENT_STATUS.EXPIRED
                 }, event.getScheduleEventId());
             }
@@ -95,7 +96,7 @@ class PassedCron {
             const currentTime = moment().utc().toDate();
 
             if(moment(currentTime).diff(event.getStartTime(), 'hours') >= 1) {
-                const updateEventStatus = await ScheduleEventService.update({
+                const updateEventStatus = await scheduleEventService.update({
                     status: EVENT_STATUS.EXPIRED
                 }, event.getScheduleEventId());
             }
@@ -109,8 +110,8 @@ class PassedCron {
         try {
             const currentTime = moment().utc().toDate();
 
-            if(moment(currentTime).diff(event.getStartTime(), 'hours') >= 1) {
-                const updateEventStatus = await ScheduleEventService.update({
+            if(moment(currentTime).diff(event.getEndTime(), 'minutes') > 0) {
+                const updateEventStatus = await scheduleEventService.update({
                     status: EVENT_STATUS.EXPIRED
                 }, event.getScheduleEventId());
             }

@@ -12,13 +12,15 @@ import moment from "moment";
 
 import * as eventHelper from "./helper";
 
-import scheduleService from "../services/scheduleEvents/scheduleEvent.service";
+import ScheduleService from "../services/scheduleEvents/scheduleEvent.service";
 
 import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../ApiWrapper/web/featureDetails";
 import UserPreferenceService from "../services/userPreferences/userPreference.service";
 
 const Logger = new Log("EVENT SCHEDULE CREATOR");
+
+const scheduleService = new ScheduleService();
 
 class EventSchedule {
   create = async (data = {}) => {

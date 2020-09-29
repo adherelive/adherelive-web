@@ -236,9 +236,6 @@ class PatientController extends Controller {
                 user_id: userId
             });
 
-            Logger.debug("carePlanTemplates ---> ", carePlanTemplates);
-
-
             let carePlanTemplateData = null;
 
             if (carePlanData.getCarePlanTemplateId()) {
