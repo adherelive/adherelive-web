@@ -31,4 +31,8 @@ export default class ScheduleEvent {
     getStartTime = () => {
         return this._data.get("start_time");
     };
+
+    getEndTime = () => {
+        return this._data.get("end_time");
+    };
 }
