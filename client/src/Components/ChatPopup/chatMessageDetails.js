@@ -280,7 +280,6 @@ class ChatMessageDetails extends Component {
                     : {};
                 let mess = '';
                 const body = message.state.body;
-                // console.log("Body ==========>",body);
 
                 if (message.state.author == USER_ADHERE_BOT && body.split(':')[0].slice(2,10) == CHAT_MESSAGE_TYPE.SYMPTOM) {
                     
@@ -292,19 +291,33 @@ class ChatMessageDetails extends Component {
                         const {upload_documents = {} }  = bodyObj;
                         const { text : symptom_text = '' , audio_document_ids = [], image_document_ids=[] ,video_document_ids = [], config : {side = '1' , parts = [] , duration='' }} = {} = bodyObj.symptoms[symptom_id] || {};
                    
-                
                     let textMessage ;
                     {
                         symptom_text
                         ?
                         textMessage = (
-                            <Fragment>
-                                <div className="symptom-message-container" >
-                                <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
-                                <div className="text-msg-container" >
-                                    <span>{symptom_text}</span>
-                                </div>
 
+                            <Fragment key={`${message.state.sid}-text-msg`} >
+                                <div className="chat-messages">
+                                    <div className="chat-avatar">
+                                        <span className="twilio-avatar">
+                                            <Avatar src={patientDp} />
+                                        </span>
+                                        
+                                        <Fragment>
+                                            <div className="symptom-message-container" >
+                                            <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                                            <div className="text-msg-container" >
+                                                <span>{symptom_text}</span>
+                                            </div>
+
+                                            </div>
+                                        </Fragment>
+
+                                    </div>
+                                    <div className="chat-time start">
+                                        {moment(message.state.timestamp).format("H:mm")}
+                                    </div>
                                 </div>
                             </Fragment>
                         )
@@ -321,7 +334,15 @@ class ChatMessageDetails extends Component {
                        let  imageMess = null;
                        let {basic_info :{ document : img_src  = ''}} = upload_documents[image_document_ids];
                          imageMess = (
-                                  <Fragment>
+
+                            <Fragment key={`${message.state.sid}-image`} >
+                            <div className="chat-messages">
+                                <div className="chat-avatar">
+                                    <span className="twilio-avatar">
+                                        <Avatar src={patientDp} />
+                                    </span>
+                                    
+                                    <Fragment>
                                       <div className="symptom-message-container" >
                                             <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                                             <div className="symptom-image-container" >
@@ -332,6 +353,16 @@ class ChatMessageDetails extends Component {
                                       </div>
                                        
                                     </Fragment>
+                                    
+                                </div>
+                                <div className="chat-time start">
+                                    {moment(message.state.timestamp).format("H:mm")}
+                                </div>
+                            </div>
+                        </Fragment>
+
+
+                                 
                            
                            
                             )
@@ -341,7 +372,14 @@ class ChatMessageDetails extends Component {
                         let {basic_info :{ document : audio_src = ''}} = upload_documents[audio_document_ids];
 
                           audioMess = (
-                                  <Fragment>
+                            <Fragment key={`${message.state.sid}-audio`} >
+                            <div className="chat-messages">
+                                <div className="chat-avatar">
+                                    <span className="twilio-avatar">
+                                        <Avatar src={patientDp} />
+                                    </span>
+                                    
+                                    <Fragment>
                                       <div className="symptom-message-container" >
                                             <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                                             <div className="symptom-audio-container" >
@@ -355,6 +393,15 @@ class ChatMessageDetails extends Component {
                                       </div>
                                        
                                     </Fragment>
+                                    
+                                </div>
+                                <div className="chat-time start">
+                                    {moment(message.state.timestamp).format("H:mm")}
+                                </div>
+                            </div>
+                        </Fragment>
+
+                                  
                            
                             )
                             messagesToRender.push(audioMess);
@@ -363,7 +410,14 @@ class ChatMessageDetails extends Component {
                         let {basic_info :{ document : video_src = ''}} = upload_documents[video_document_ids];
 
                               videoMess = (
-                                  <Fragment>
+                                <Fragment  key={`${message.state.sid}-video`} >
+                            <div className="chat-messages">
+                                <div className="chat-avatar">
+                                    <span className="twilio-avatar">
+                                        <Avatar src={patientDp} />
+                                    </span>
+                                    
+                                    <Fragment>
                                       <div className="symptom-message-container" >
                                             <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                                             <div className="symptom-video-container" >
@@ -377,6 +431,15 @@ class ChatMessageDetails extends Component {
                                       </div>
                                        
                                     </Fragment>
+                                    
+                                </div>
+                                <div className="chat-time start">
+                                    {moment(message.state.timestamp).format("H:mm")}
+                                </div>
+                            </div>
+                        </Fragment>  
+
+                                  
                            
                             )
                             
