@@ -3,7 +3,7 @@ import Logger from "../../../libs/log";
 
 const Log = new Logger("QUEUE > SERVICE");
 
-class QueueService {
+export default class QueueService {
   constructor() {
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
@@ -40,7 +40,7 @@ class QueueService {
       const stringData = JSON.stringify(data);
 
       const params = {
-        DelaySeconds: 10,
+        DelaySeconds: 30,
         MessageAttributes: {
         //     Title: {
         //         DataType: "String",
@@ -83,7 +83,7 @@ class QueueService {
       const response = await this.sqs.receiveMessage(params).promise();
       Log.debug("receiveMessage response", response);
 
-      return response.Messages;
+      return response.Messages || [];
     } catch (error) {
       console.log("receiveMessage 500 error", error);
     }
@@ -107,5 +107,3 @@ class QueueService {
     }
   };
 }
-
-export default new QueueService();

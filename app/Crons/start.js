@@ -14,6 +14,8 @@ import NotificationSdk from "../NotificationSdk";
 
 const Log = new Logger("CRON > START");
 
+const scheduleEventService = new ScheduleEventService();
+
 class StartCron {
     constructor() {
     }
@@ -21,7 +23,7 @@ class StartCron {
     getScheduleData = async () => {
         const currentTime = moment().utc().toISOString();
         Log.info(`currentTime : ${currentTime}`);
-        const scheduleEvents = await ScheduleEventService.getStartEventByData(currentTime);
+        const scheduleEvents = await scheduleEventService.getStartEventByData(currentTime);
         return scheduleEvents;
     };
 
@@ -60,7 +62,7 @@ class StartCron {
         try {
             const eventId = event.getEventId();
 
-            const updateEventStatus = await ScheduleEventService.update({
+            const updateEventStatus = await scheduleEventService.update({
                 status: EVENT_STATUS.SCHEDULED
             }, event.getScheduleEventId());
 

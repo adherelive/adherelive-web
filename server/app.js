@@ -5,7 +5,7 @@ import schedule from "node-schedule";
 
 import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
-// import Events from "../events";
+import Events from "../events";
 // import NotificationObserver from "../app/notificationSdk/notificationObeserver";
 
 // import Prior from "../app/Crons/prior";
@@ -18,6 +18,26 @@ import mApiRouter from "../routes/m-api";
 const Config = require("../config/config");
 Config();
 
+async function assertDatabaseConnectionOk() {
+    console.log(`Checking database connection...`);
+    try {
+        await mysql.authenticate();
+        console.log('Database connection OK!');
+    } catch (error) {
+        console.log('Unable to connect to the database:');
+        console.log(error.message);
+        process.exit(1);
+    }
+}
+
+async function init() {
+    await assertDatabaseConnectionOk();
+
+    console.log(`Starting Sequelize + Express example on port`);
+}
+
+init();
+
 
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
@@ -25,7 +45,7 @@ const cors = require("cors");
 
 const app = express();
 
-const cron = schedule.scheduleJob("*/2 * * * *", async () => {
+const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     // await Prior.getPriorEvents();
     await Passed.runObserver();
     await Start.runObserver();
@@ -48,8 +68,6 @@ app.use(
  );
 
 app.use(express.static(path.join(__dirname, "../public")));
-
-mysql();
 
 EventObserver.runObservers();
 Activity.runObservers();

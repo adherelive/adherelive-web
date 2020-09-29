@@ -1,42 +1,49 @@
 "use strict";
-import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {ARTICLE_TYPE, DB_TABLES} from "../../constant";
+import {DataTypes} from "sequelize";
+import {ARTICLE_TYPE} from "../../constant";
 
-const Articles = database.define(
-    DB_TABLES.ARTICLES,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const ARTICLES = "articles";
+
+export const db = (database) => {
+    database.define(
+        ARTICLES,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            type: {
+                type: DataTypes.ENUM,
+                values: [ARTICLE_TYPE.VIDEO, ARTICLE_TYPE.IMAGE, ARTICLE_TYPE.PDF]
+            },
+            description: {
+                type: DataTypes.STRING(1000),
+            },
+            url: {
+                type: DataTypes.STRING(1000),
+            },
         },
-        type: {
-            type: Sequelize.ENUM,
-            values: [ARTICLE_TYPE.VIDEO, ARTICLE_TYPE.IMAGE, ARTICLE_TYPE.PDF]
-        },
-        description: {
-            type: Sequelize.STRING(1000),
-        },
-        url: {
-            type: Sequelize.STRING(1000),
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    type: this.type,
-                    description: this.description,
-                    url: this.url,
-                };
+        {
+            underscored: true,
+            paranoid: true,
+            getterMethods: {
+                getBasicInfo() {
+                    return {
+                        id: this.id,
+                        type: this.type,
+                        description: this.description,
+                        url: this.url,
+                    };
+                }
             }
         }
-    }
-);
+    );
+};
 
-export default Articles;
+export const associate = (database) => {
+    // const {TABLE_NAME} = database.models || {};
+
+    // associations here (if any) ...
+};

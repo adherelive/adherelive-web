@@ -1,13 +1,26 @@
-import ScheduleEvent from "../../models/scheduleEvents";
 import {Op} from "sequelize";
 import {EVENT_STATUS} from "../../../constant";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
 import moment from "moment";
+
+console.log("71398123 here in schedule_events");
+
+// model...
+const {schedule_events : ScheduleEvent} = database.models;
 
 class ScheduleEventService {
     create = async (data) => {
       try {
           const scheduleEvents = await ScheduleEvent.create(data);
+          return scheduleEvents;
+      } catch(error) {
+          throw error;
+      }
+    };
+
+    bulkCreate = async (data) => {
+      try {
+          const scheduleEvents = await ScheduleEvent.bulkCreate(data);
           return scheduleEvents;
       } catch(error) {
           throw error;
@@ -148,7 +161,7 @@ class ScheduleEventService {
             const scheduleEvent = await ScheduleEvent.findAll({
                 where: {
                     start_time: {
-                        [Op.between]: [moment(time).subtract(1, 'day').startOf('day'), time]
+                        [Op.between]: [moment(time).subtract(1, 'year'), time]
                     },
                     status: [EVENT_STATUS.SCHEDULED, EVENT_STATUS.PENDING]
                 }
@@ -212,4 +225,4 @@ class ScheduleEventService {
     };
 }
 
-export default new ScheduleEventService();
+export default ScheduleEventService;

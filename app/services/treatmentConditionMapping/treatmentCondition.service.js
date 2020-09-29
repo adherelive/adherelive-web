@@ -1,4 +1,6 @@
-import TreatmentConditionMapping from "../../models/treatmentConditionMapping";
+import database from "../../../libs/mysql";
+
+const {treatment_condition_mappings: TreatmentConditionMapping} = database.models;
 
 class TreatmentConditionService {
 

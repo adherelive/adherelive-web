@@ -1,7 +1,7 @@
-import Treatment from "../../models/treatments";
-import Sequelize from "sequelize";
+import {Op} from "sequelize";
+import database from "../../../libs/mysql";
 
-const Op = Sequelize.Op;
+const {treatments: Treatment} = database.models;
 
 class TreatmentService {
 

@@ -1,119 +1,120 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
-import Treatment from "./treatments";
-import Severity from "./severity";
-import Conditions from "./conditions";
-import TemplateAppointment from "./templateAppointments";
-import TemplateMedication from "./templateMedications";
+import {DataTypes} from "sequelize";
+import {TREATMENTS} from "./treatments";
+import {SEVERITY} from "./severity";
+import {CONDITIONS} from "./conditions";
+import {USERS} from "./users";
 
-const CarePlanTemplate = database.define(
-  DB_TABLES.CARE_PLAN_TEMPLATE,
-  {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: Sequelize.INTEGER
-    },
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    treatment_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: {
-          tableName: DB_TABLES.TREATMENTS
-        },
-        key: "id"
-      }
-    },
-    severity_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: {
-          tableName: DB_TABLES.SEVERITY
-        },
-        key: "id"
-      }
-    },
-    condition_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: {
-          tableName: DB_TABLES.CONDITIONS
-        },
-        key: "id"
-      }
-    },
-      user_id: {
-          type: Sequelize.INTEGER,
-          allowNull: true,
-          references: {
-              model: {
-                  tableName: DB_TABLES.USERS,
-              },
-              key: "id",
-          },
+export const CARE_PLAN_TEMPLATES = "care_plan_templates";
+
+export const db = database => {
+  database.define(
+    CARE_PLAN_TEMPLATES,
+    {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER
       },
-    details: {
-      type: Sequelize.JSON
-    }
-  },
-  {
-    underscored: true,
-    paranoid: true,
-    getterMethods: {
-      getBasicInfo() {
-        return {
-          id: this.id,
-          type: this.type,
-          severity: this.severity,
-          condition: this.condition,
-          details: this.details
-        };
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      treatment_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: TREATMENTS
+          },
+          key: "id"
+        }
+      },
+      severity_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: SEVERITY
+          },
+          key: "id"
+        }
+      },
+      condition_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: CONDITIONS
+          },
+          key: "id"
+        }
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: USERS
+          },
+          key: "id"
+        }
+      },
+      details: {
+        type: DataTypes.JSON
+      }
+    },
+    {
+      underscored: true,
+      paranoid: true,
+      getterMethods: {
+        getBasicInfo() {
+          return {
+            id: this.id,
+            type: this.type,
+            severity: this.severity,
+            condition: this.condition,
+            details: this.details
+          };
+        }
       }
     }
-  }
-);
+  );
+};
 
-CarePlanTemplate.hasOne(Treatment, {
+export const associate = database => {
+  const {
+    care_plan_templates,
+    treatments,
+    severity,
+    conditions,
+    template_appointments,
+    template_medications
+  } = database.models || {};
+
+  // associations here (if any) ...
+  care_plan_templates.hasOne(treatments, {
     foreignKey: "id",
     sourceKey: "treatment_id"
-});
+  });
 
-CarePlanTemplate.hasOne(Severity, {
+  care_plan_templates.hasOne(severity, {
     foreignKey: "id",
     sourceKey: "severity_id"
-});
+  });
 
-CarePlanTemplate.hasOne(Conditions, {
+  care_plan_templates.hasOne(conditions, {
     foreignKey: "id",
     sourceKey: "condition_id"
-});
+  });
 
-CarePlanTemplate.hasMany(TemplateAppointment, {
-    foreignKey:"care_plan_template_id",
-    sourceKey:"id",
-});
-CarePlanTemplate.hasMany(TemplateMedication, {
-    foreignKey:"care_plan_template_id",
-    sourceKey:"id",
-});
-
-CarePlanTemplate.hasMany(TemplateAppointment, {
-    foreignKey:"care_plan_template_id",
-    sourceKey:"id"
-});
-
-CarePlanTemplate.hasMany(TemplateMedication, {
-    foreignKey:"care_plan_template_id",
-    sourceKey:"id"
-});
-
-export default CarePlanTemplate;
+  care_plan_templates.hasMany(template_appointments, {
+    foreignKey: "care_plan_template_id",
+    sourceKey: "id"
+  });
+  care_plan_templates.hasMany(template_medications, {
+    foreignKey: "care_plan_template_id",
+    sourceKey: "id"
+  });
+};

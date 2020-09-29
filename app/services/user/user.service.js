@@ -1,12 +1,8 @@
-import User from "../../models/users";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
 import {USER_CATEGORY} from "../../../constant";
 import {Op} from "sequelize";
 
-import Permissions from "../../models/permissions";
-import UserDevices from "../../models/userDevices";
-import Doctors from "../../models/doctors";
-import Patients from "../../models/patients";
+const {users: User, permissions : Permissions, user_devices : UserDevices, doctors : Doctors, patients : Patients} = database.models;
 
 class UserService {
     constructor() {
