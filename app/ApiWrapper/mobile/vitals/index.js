@@ -4,16 +4,17 @@ import BaseVital from "../../../services/vitals";
 
 // SERVICES
 import VitalService from "../../../services/vitals/vital.service";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../common/scheduleEvents";
 import {EVENT_STATUS} from "../../../../constant";
 import moment from "moment";
 
 const Log = new Logger("MOBILE > API_WRAPPER > VITALS");
+const EventService = new eventService();
 
 class VitalWrapper extends BaseVital {
     constructor(data) {

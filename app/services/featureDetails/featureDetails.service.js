@@ -1,4 +1,6 @@
-import FeatureDetails from "../../models/featureDetails";
+import database from "../../../libs/mysql";
+
+const {feature_details: FeatureDetails} = database.models;
 
 class FeatureDetailsService {
 

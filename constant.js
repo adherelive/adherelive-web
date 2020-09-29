@@ -333,7 +333,7 @@ export const DB_TABLES = {
   QUALIFICATION: "qualifications",
   REGISTRATION_COUNCIL: "registration_councils",
   OTP_VERIFICATIONS: "otp_verifications",
-  TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
+  TREATMENT_CONDITION_MAPPING: "",
   FEATURE_DETAILS: "feature_details",
   USER_DEVICES: "user_devices",
   SYMPTOMS: "symptoms",

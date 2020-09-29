@@ -1,35 +1,42 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
+import {DataTypes} from "sequelize";
 
-const Severity = database.define(
-    DB_TABLES.SEVERITY,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const SEVERITY = "severity";
+
+export const db = (database) => {
+    database.define(
+        SEVERITY,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
         },
-        name: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        freezeTableName: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    name:this.name,
-                };
+        {
+            underscored: true,
+            paranoid: true,
+            freezeTableName: true,
+            getterMethods: {
+                getBasicInfo() {
+                    return {
+                        id: this.id,
+                        name:this.name,
+                    };
+                }
             }
         }
-    }
-);
+    );
 
-export default Severity;
+};
+
+export const associate = (database) => {
+    // const {<TABLE_NAME>} = database.models || {};
+
+    // associations here (if any) ...
+};

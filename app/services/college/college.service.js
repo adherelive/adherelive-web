@@ -1,7 +1,7 @@
-import College from "../../models/college";
-import Sequelize from "sequelize";
+import {Op} from "sequelize";
+import database from "../../../libs/mysql";
 
-const Op = Sequelize.Op;
+const {colleges: College} = database.models;
 
 class CollegeService {
 

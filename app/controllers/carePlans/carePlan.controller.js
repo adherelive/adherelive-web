@@ -20,8 +20,7 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import CarePlanTemplateWrapper from "../../ApiWrapper/mobile/carePlanTemplate";
 import Logger from "../../../libs/log";
 import moment from "moment";
-import EventSchedule from "../../eventSchedules";
-// import SqsQueueService from "../../services/awsQueue/queue.service";
+import queueService from "../../services/awsQueue/queue.service";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 
@@ -121,8 +120,6 @@ class CarePlanController extends Controller {
                     reason = '', time_gap = '', provider_id = null, provider_name = null, critical = false } = appointment;
 
 
-                console.log('38748917239857893745917345891347051=====>', date);
-
                 const { id: participant_two_id, category: participant_two_type } =
                     participant_two || {};
 
@@ -205,12 +202,11 @@ class CarePlanController extends Controller {
                     }
                 };
 
-                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-                //
-                // Log.debug("sqsResponse ---> ", sqsResponse);
+                const QueueService = new queueService();
 
-                // // RRule
-                await EventSchedule.create(eventScheduleData);
+                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+                Log.debug("sqsResponse ---> ", sqsResponse);
             }
 
             let medicationApiDetails = {};
@@ -289,11 +285,11 @@ class CarePlanController extends Controller {
                     participant_two: userId
                 };
 
-                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-                //
-                // Log.debug("sqsResponse ---> ", sqsResponse);
+                const QueueService = new queueService();
 
-                await EventSchedule.create(eventScheduleData);
+                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+                Log.debug("sqsResponse ---> ", sqsResponse);
             }
 
 

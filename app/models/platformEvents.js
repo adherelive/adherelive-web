@@ -1,29 +1,35 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
+import {DataTypes} from "sequelize";
 
-const PlatformEvents = database.define(
-    DB_TABLES.PLATFORM_EVENTS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const PLATFORM_EVENTS = "platform_events";
+
+export const db = database => {
+    database.define(
+        PLATFORM_EVENTS,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
         },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                };
+        {
+            underscored: true,
+            paranoid: true,
+            getterMethods: {
+                getBasicInfo() {
+                    return {
+                        id: this.id,
+                    };
+                }
             }
         }
-    }
-);
+    );
+};
 
-export default PlatformEvents;
+export const associate = (database) => {
+    // const {TABLE_NAME} = database.models || {};
+
+    // associations here (if any) ...
+};

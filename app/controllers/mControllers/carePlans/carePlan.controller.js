@@ -22,6 +22,7 @@ import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import Log from "../../../../libs/log_new";
 import EventSchedule from "../../../eventSchedules";
+import queueService from "../../../services/awsQueue/queue.service";
 // import SqsQueueService from "../../../services/awsQueue/queue.service";
 const moment = require("moment");
 
@@ -207,11 +208,11 @@ class CarePlanController extends Controller {
                     }
                 };
 
-                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-                //
-                // Log.debug("sqsResponse ---> ", sqsResponse);
+                const QueueService = new queueService();
 
-                await EventSchedule.create(eventScheduleData);
+                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+                Log.debug("sqsResponse ---> ", sqsResponse);
             }
 
             let medicationApiDetails = {};
@@ -292,15 +293,12 @@ class CarePlanController extends Controller {
                     participant_two: userId
                 };
 
-                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-                //
-                // Log.debug("sqsResponse ---> ", sqsResponse);
+                const QueueService = new queueService();
 
-                await EventSchedule.create(eventScheduleData);
+                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+                Log.debug("sqsResponse ---> ", sqsResponse);
             }
-
-
-            console.log("BODYYY OF REQUESTTTTT=======>", carePlan, patient_id, care_plan_id);
 
             let carePlanTemplate = null;
 
@@ -323,10 +321,6 @@ class CarePlanController extends Controller {
 
                 carePlanData = await CarePlanWrapper(null, care_plan_id);
                 // await carePlanTemplate.getReferenceInfo();
-                Log.debug(
-                    "appointmentsData --------------------->",
-                    createCarePlanTemplate
-                );
             }
 
 

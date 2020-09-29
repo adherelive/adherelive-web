@@ -1,26 +1,32 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
+import {DataTypes} from "sequelize";
 
-const Conditions = database.define(
-    DB_TABLES.CONDITIONS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
-        },
-        name: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
+export const CONDITIONS = "conditions";
 
-export default Conditions;
+export const db = (database) => {
+    database.define(
+        CONDITIONS,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+        },
+        {
+            underscored: true,
+            paranoid: true,
+        }
+    );
+};
+
+export const associate = (database) => {
+    // const {TABLE_NAME} = database.models || {};
+
+    // associations here (if any) ...
+};

@@ -41,6 +41,7 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
+    queryInterface.query();
     return queryInterface.dropTable(DB_TABLES.PERMISSIONS);
   }
 };

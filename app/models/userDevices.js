@@ -1,43 +1,50 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
+import {DataTypes} from "sequelize";
+import {USERS} from "./users";
 
-const UserDevices = database.define(
-    DB_TABLES.USER_DEVICES,
-    {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        user_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.USERS,
-                },
-                key: 'id'
-            }
-        },
-        platform: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-        one_signal_user_id: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-        push_token: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
+export const USER_DEVICES = "user_devices";
 
-export default UserDevices;
+export const db = (database) => {
+    database.define(
+        USER_DEVICES,
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            user_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: USERS,
+                    },
+                    key: 'id'
+                }
+            },
+            platform: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            one_signal_user_id: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            push_token: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+        },
+        {
+            underscored: true,
+            paranoid: true,
+        }
+    );
+};
+
+export const associate = (database) => {
+    // const {<TABLE_NAME>} = database.models || {};
+
+    // associations here (if any) ...
+};

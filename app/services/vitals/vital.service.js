@@ -1,9 +1,6 @@
-import Vitals from "../../models/vitals";
-import VitalTemplates from "../../models/vitalTemplates";
-import CarePlan from "../../models/carePlan";
-import CarePlanAppointment from "../../models/carePlanAppointments";
-import CarePlanMedication from "../../models/carePlanMedications";
-import { database } from "../../../libs/mysql";
+import database from "../../../libs/mysql";
+
+const {vitals: Vitals, vital_templates: VitalTemplates, care_plans: CarePlan, care_plan_appointments: CarePlanAppointment, care_plan_medications: CarePlanMedication} = database.models;
 
 class VitalService {
   addVital = async data => {

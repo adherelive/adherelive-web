@@ -1,7 +1,7 @@
-import Condition from "../../models/conditions";
-import Sequelize from "sequelize";
+import {Op} from "sequelize";
+import database from "../../../libs/mysql";
 
-const Op = Sequelize.Op;
+const {conditions: Condition} = database.models;
 
 class ConditionService {
 
