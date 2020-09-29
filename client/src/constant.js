@@ -32,7 +32,8 @@ export const CHAT_MESSAGE_DETAILS = {
 };
  export const USER_ADHERE_BOT = 'adhere_bot';
  export const CHAT_MESSAGE_TYPE = {
-   SYMPTOM:'symptoms'
+   SYMPTOM:'symptoms',
+   VITAL:'vitals'
  }
 
 export const ROOM_ID_TEXT = '-adhere-';
