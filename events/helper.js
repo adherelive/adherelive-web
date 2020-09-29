@@ -85,14 +85,16 @@ export const handleAppointments = async (appointment) => {
             }
         };
 
+        let response = false;
         const schedule = await scheduleService.create(scheduleData);
         if (schedule) {
             Log.debug("schedule events created for appointment", true);
+            response = true;
         } else {
             Log.debug("schedule events failed for appointment", false);
         }
 
-        return true;
+        return response;
     } catch (error) {
         Log.debug("schedule events appointment 500 error", error);
     }
@@ -132,7 +134,7 @@ export const handleMedications = async (medication) => {
 
         const patientPreference = await getUserPreferences(patient_id);
 
-        Log.debug("when_to_take ---> ", when_to_take);
+        const scheduleEventArr = [];
 
         const scheduleEventArr = [];
 
@@ -157,13 +159,15 @@ export const handleMedications = async (medication) => {
         }
 
         const schedule = await scheduleService.bulkCreate(scheduleEventArr);
+        let response = false;
         if (schedule) {
             Log.debug("schedule events created for appointment", true);
+            response = true;
         } else {
             Log.debug("schedule events failed for appointment", false);
         }
 
-        return true;
+        return response;
     } catch (error) {
         Log.debug("schedule events medication 500 error", error);
     }
@@ -191,8 +195,6 @@ export const handleVitals = async (vital) => {
 
         const timings = await getUserPreferences(patient_id);
 
-        Log.debug("handleVitals 8318293 ", timings);
-
         const vitalData = await FeatureDetailService.getDetailsByData({
             feature_type: FEATURE_TYPE.VITAL
         });
@@ -215,9 +217,7 @@ export const handleVitals = async (vital) => {
         });
         const allDays = rrule.all();
 
-        Log.debug("allDays ----> ", allDays);
-
-        console.log("371387123 value, key", {value, key});
+        const scheduleEventArr = [];
 
         const scheduleEventArr = [];
 
@@ -227,7 +227,6 @@ export const handleVitals = async (vital) => {
 
                 const {value: wakeUpTime} = timings[WAKE_UP];
 
-                console.log("371387123 wakeUpTime", moment.utc(wakeUpTime).format() ,moment(wakeUpTime).format());
                 const hours = moment(wakeUpTime).utc().get('hours');
                 const minutes = moment(wakeUpTime).utc().get('minutes');
 
@@ -248,13 +247,6 @@ export const handleVitals = async (vital) => {
                             eventId: event_id
                         }
                     });
-
-                    // const schedule = await scheduleService.create(scheduleData);
-                    // if (schedule) {
-                    //     Log.debug("schedule events created for vitals", true);
-                    // } else {
-                    //     Log.debug("schedule events failed for vitals", false);
-                    // }
             }
         } else {
             for (let i = 0; i < allDays.length; i++) {
@@ -314,15 +306,18 @@ export const handleVitals = async (vital) => {
                 }
             }
 
-            const schedule = await scheduleService.bulkCreate(scheduleEventArr);
-            if (schedule) {
-                Log.debug("schedule events created for vitals", true);
-            } else {
-                Log.debug("schedule events failed for vitals", false);
-            }
         }
 
-        return true;
+        let response = false;
+        const schedule = await scheduleService.bulkCreate(scheduleEventArr);
+        if (schedule) {
+            Log.debug("schedule events created for vitals", true);
+            response = true;
+        } else {
+            Log.debug("schedule events failed for vitals", false);
+        }
+
+        return response;
     } catch (error) {
         Log.debug("schedule events vitals 500 error", error);
     }

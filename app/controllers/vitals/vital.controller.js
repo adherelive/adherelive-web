@@ -19,10 +19,11 @@ import PatientWrapper from "../../ApiWrapper/web/patient";
 import {DAYS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import EventSchedule from "../../eventSchedules";
 import moment from "moment";
-import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
 const Log = new Logger("WEB > VITALS > CONTROLLER");
+const EventService = new eventService();
 
 class VitalController extends Controller {
     constructor() {
