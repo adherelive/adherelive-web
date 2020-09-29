@@ -136,6 +136,8 @@ export const handleMedications = async (medication) => {
 
         const scheduleEventArr = [];
 
+        const scheduleEventArr = [];
+
         for (let i = 0; i < allDays.length; i++) {
             for (const timing of when_to_take) {
                 const startTime = updateMedicationTiming(allDays[i], timing, patientPreference);
@@ -214,6 +216,8 @@ export const handleVitals = async (vital) => {
             byweekday: repeatDays(repeat_days)
         });
         const allDays = rrule.all();
+
+        const scheduleEventArr = [];
 
         const scheduleEventArr = [];
 

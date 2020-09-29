@@ -42,7 +42,7 @@ export default class QueueService {
       const stringData = JSON.stringify(data);
 
       const params = {
-        DelaySeconds: 10,
+        DelaySeconds: 30,
         MessageAttributes: {
         //     Title: {
         //         DataType: "String",
