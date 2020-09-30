@@ -265,6 +265,160 @@ class ChatMessageDetails extends Component {
 
                                 null
 
+
+
+                                // Human wrapper code ------>>>>>>>
+
+                                    // mess = (
+                                        // <Fragment key={message.state.sid}>
+                                        // <div className="chat-messages">
+                                        // <div className="chat-avatar">
+                                        // <span className="twilio-avatar">
+                                        // <Avatar src={patientDp} />
+                                        // </span>
+                                        // <>
+                                        // <div className="chat-text" style={{ display: "inline-block" }}>
+                                        // { (side && parts[0]) ?
+                                        // (<div className='humanBodyWrapper'>
+                                        // <img
+                                        // src={side === '1' ? humanBody : humanBodyBack}
+                                        // className={'wp100 hp100'}
+                                        // />
+                                        // {side === '1' ? (PART_LIST_FRONT.map(part => {
+                                        // const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
+                                        // const { top: bpTop = 0,
+                                        // left: bpLeft = 0,
+                                        // height: bpHeight = 0,
+                                        // width: bpWidth = 0 } = areaStyle || {};
+                                        // const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+                                        // // console.log('isSAMEEEEEEEE============>', body_part, key, body_part === key);
+                                        // return (
+                                        // <div
+                                        // key={key}
+                                        // style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
+                                        // >
+                                        // <div
+                                        // style={{
+                                        // top: `${dotTop}px`,
+                                        // left: `${dotLeft}px`,
+                                        // position: "absolute",
+                                        // height: parts[0] === key ? 12 : 0,
+                                        // width: parts[0] === key ? 12 : 0,
+                                        // backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
+                                        // borderRadius: '50%',
+
+                                        // // height: 12,
+                                        // // width: 12 ,
+                                        // // backgroundColor: "red",
+                                        // // borderRadius: '50%'
+                                        // }
+                                        // }
+                                        // />
+                                        // </div>
+                                        // );
+                                        // })) :
+                                        // (PART_LIST_BACK.map(part => {
+                                        // const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
+                                        // const { top: bpTop = 0,
+                                        // left: bpLeft = 0,
+                                        // height: bpHeight = 0,
+                                        // width: bpWidth = 0 } = areaStyle || {};
+                                        // const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+                                        // return (
+                                        // <div
+                                        // key={key}
+                                        // style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
+                                        // >
+                                        // <div
+                                        // style={{
+                                        // top: `${dotTop}px`,
+                                        // left: `${dotLeft}px`,
+                                        // position: "absolute",
+                                        // height: parts[0] === key ? 12 : 0,
+                                        // width: parts[0] === key ? 12 : 0,
+                                        // backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
+                                        // borderRadius: '50%',
+
+                                        // // height: 12,
+                                        // // width: 12 ,
+                                        // // backgroundColor: "red",
+                                        // // borderRadius: '50%'
+                                        // }
+                                        // }
+                                        // />
+                                        // </div>
+                                        // );
+                                        // }))}
+                                        // {/* <img src={bodyImage} height={260} width={200}></img> */}
+
+                                        // </div>) : null}
+                                        // {text.length ? (
+                                        // <Fragment>
+                                        // <div className='mt5 mb5'>Description :</div>
+                                        // <div>{text}</div>
+                                        // </Fragment>) : null}
+                                        // {/* <div>{`Duration: `+duration}</div> */}
+                                        // {audio_document_ids.length ? <div>Description :</div> : null}
+                                        // {audio_document_ids.length ? (
+                                        // Object.values(audio_document_ids).map(id => {
+                                        // if (upload_documents[id] != undefined) {
+                                        // const { basic_info: { name = '', document = '' } } = upload_documents[id];
+                                        // let mediaData = {
+                                        // media: {
+                                        // contentType: '',
+                                        // filename: name,
+                                        // document: document
+                                        // }
+                                        // }
+                                        // return (
+                                        // <div className="clickable white chat-media-message-text">
+                                        // <MediaComponent message={mediaData}></MediaComponent>
+                                        // </div>);
+                                        // } else {
+                                        // return null;
+                                        // }
+                                        // })
+                                        // ) : (
+                                        // null
+                                        // )}
+                                        // {image_document_ids.length ? <div>Description :</div> : null}
+                                        // {image_document_ids.length ? (
+                                        // Object.values(image_document_ids).map(id => {
+                                        // if (upload_documents[id] != undefined) {
+                                        // const { basic_info: { name = '', document = '' } } = upload_documents[id];
+                                        // let mediaData = {
+                                        // media: {
+                                        // contentType: 'image',
+                                        // filename: name,
+                                        // document: document
+                                        // }
+                                        // }
+                                        // return (
+                                        // <div className="clickable white chat-media-message-text">
+                                        // <MediaComponent message={mediaData}></MediaComponent>
+                                        // </div>);
+                                        // } else {
+                                        // return null;
+                                        // }
+                                        // })
+                                        // ) : (
+                                        // null
+                                        // )}
+                                        // </div>
+                                        // {/* <div className="chat-text">
+                                        // </div> */}
+                                        // </>
+                                        // </div>
+                                        // <div className="chat-time start">
+                                        // {moment(message.state.timestamp).format("H:mm")}
+                                        // </div>
+                                        // {/* </div> */}
+                                        // </div>
+                                        // </Fragment >
+                                    // );
+                                // <<<<<<< ---------------------<<<<<
+
+
                                 // <div className="chat-messages">
                                   
                                 //     <div className="chat-avatar">
@@ -324,4 +478,7 @@ class ChatMessageDetails extends Component {
 }
 
 export default injectIntl(ChatMessageDetails);
+
+
+
 
