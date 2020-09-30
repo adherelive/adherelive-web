@@ -46,7 +46,7 @@ class PatientDetailsDrawer extends Component {
             comorbidities:'',
             allergies:'',
             clinical_notes:'',
-            diagnosis:'',
+            diagnosis_description:'',
             diagnosis_type:''
         };
 
@@ -116,7 +116,7 @@ class PatientDetailsDrawer extends Component {
         const { value } = e.target;
         const reg =  /^[a-zA-Z][a-zA-Z\s]*$/;
         if (reg.test(value) || value === '') {
-            this.setState({ diagnosis: e.target.value });
+            this.setState({ diagnosis_description: e.target.value });
         }
     }
 
@@ -287,7 +287,7 @@ class PatientDetailsDrawer extends Component {
             month = '0' + month;
         }
 
-        const { mobile_number = '', name = '', condition = '', prefix = '',allergies='',comorbidities='',diagnosis='',clinical_notes='',diagnosis_type='' } = this.state;
+        const { mobile_number = '', name = '', condition = '', prefix = '',allergies='',comorbidities='',diagnosis_description='',clinical_notes='',diagnosis_type='' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -417,7 +417,7 @@ class PatientDetailsDrawer extends Component {
 
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
-                    value={diagnosis}
+                    value={diagnosis_description}
                     className={"form-textarea-ap"}
                     onChange={this.setDiagnosis}
                 />
@@ -507,7 +507,7 @@ class PatientDetailsDrawer extends Component {
 
     validateData = () => {
 
-        const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis='',diagnosis_type= '' } = this.state;
+        const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type= '' } = this.state;
         // console.log("diagnosis_type =========>",diagnosis_type);
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
@@ -538,7 +538,7 @@ class PatientDetailsDrawer extends Component {
             message.error(this.formatMessage(messages.conditionError))
             return false;
         }
-        else if(!diagnosis){
+        else if(!diagnosis_description){
             message.error(this.formatMessage(messages.diagnosisError))
             return false;
         }
@@ -551,11 +551,11 @@ class PatientDetailsDrawer extends Component {
     }
 
     onSubmit = () => {
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes=''} = this.state;
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes=''} = this.state;
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
-            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis,diagnosis_type,comorbidities,clinical_notes})
+            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes})
         }
     }
 
@@ -580,7 +580,7 @@ class PatientDetailsDrawer extends Component {
             comorbidities:'',
             allergies:'',
             clinical_notes:'',
-            diagnosis:'',
+            diagnosis_description:'',
             diagnosis_type:''
         });
         close();
