@@ -3,8 +3,8 @@ import schedule from "node-schedule";
 const Logger = new Log("EVENT SCHEDULE CREATOR");
 
 // FOR TEST...
-// const Config = require("../config/config");
-// Config();
+const Config = require("../config/config");
+Config();
 
 import queueService from "../app/services/awsQueue/queue.service";
 
