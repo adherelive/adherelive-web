@@ -72,13 +72,13 @@ class VitalWrapper extends BaseVital {
             const scheduleEvent = await EventWrapper(events);
             if(scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
               scheduleEventIds.push(scheduleEvent.getScheduleEventId());
-            }
 
-            if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
+              if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
                 if(!latestPendingEventId) {
-                    latestPendingEventId = scheduleEvent.getScheduleEventId();
+                  latestPendingEventId = scheduleEvent.getScheduleEventId();
                 }
                 remaining++;
+              }
             }
         }
 
