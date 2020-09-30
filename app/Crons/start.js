@@ -43,7 +43,10 @@ class StartCron {
                             await this.handleVitalStart(event);
                             break;
                         case EVENT_TYPE.MEDICATION_REMINDER:
-                            // this.handleMedicationPrior(event);
+                            await this.handleMedicationStart(event);
+                            break;
+                        case EVENT_TYPE.APPOINTMENT:
+                            await this.handleAppointmentStart(event);
                             break;
                         default:
                             break;
@@ -72,6 +75,44 @@ class StartCron {
                 event
             });
             NotificationSdk.execute(job);
+        } catch(error) {
+            Log.debug("handleVitalStart 500 error ---->", error);
+        }
+    };
+
+    handleAppointmentStart = async (event) => {
+        try {
+            const eventId = event.getEventId();
+
+            const updateEventStatus = await scheduleEventService.update({
+                status: EVENT_STATUS.SCHEDULED
+            }, event.getScheduleEventId());
+
+            // const job = JobSdk.execute({
+            //     eventType: EVENT_TYPE.APPOINTMENT,
+            //     eventStage: NOTIFICATION_STAGES.START,
+            //     event
+            // });
+            // NotificationSdk.execute(job);
+        } catch(error) {
+            Log.debug("handleVitalStart 500 error ---->", error);
+        }
+    };
+
+    handleMedicationStart = async (event) => {
+        try {
+            const eventId = event.getEventId();
+
+            const updateEventStatus = await scheduleEventService.update({
+                status: EVENT_STATUS.SCHEDULED
+            }, event.getScheduleEventId());
+
+            // const job = JobSdk.execute({
+            //     eventType: EVENT_TYPE.MEDICATION_REMINDER,
+            //     eventStage: NOTIFICATION_STAGES.START,
+            //     event
+            // });
+            // NotificationSdk.execute(job);
         } catch(error) {
             Log.debug("handleVitalStart 500 error ---->", error);
         }
