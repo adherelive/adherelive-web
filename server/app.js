@@ -14,9 +14,6 @@ import Passed from "../app/Crons/passed";
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 
-const Config = require("../config/config");
-Config();
-
 const Events  = import("../events").then(module => {}).catch(err => {console.log("event module error", err)});
 
 async function assertDatabaseConnectionOk() {

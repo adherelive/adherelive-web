@@ -47,7 +47,7 @@ class PatientDetailsDrawer extends Component {
             allergies:'',
             clinical_notes:'',
             diagnosis_description:'',
-            diagnosis_type:''
+            diagnosis_type:'2'
         };
 
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
@@ -399,7 +399,7 @@ class PatientDetailsDrawer extends Component {
                         <div className="star-red">*</div>
                     </div>
                     <div>
-                        <Select placeholder="Final" key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType} >
+                        <Select placeholder="Final" key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType}>
 
                             <Option 
                             value={DIAGNOSIS_TYPE[FINAL].diagnosis_type}
