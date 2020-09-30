@@ -1,6 +1,8 @@
-import OtpVerification from "../../models/otpVerifications";
 import {Op} from "sequelize";
 import moment from "moment";
+import database from "../../../libs/mysql";
+
+const {otp_verifications: OtpVerification} = database.models;
 
 class OtpVerificationService {
 

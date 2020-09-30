@@ -1,11 +1,5 @@
 import Controller from "../index";
-import appointmentService from "../../services/appointment/appointment.service";
-import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-import carePlanService from "../../services/carePlan/carePlan.service";
-import featureDetailService from "../../services/featureDetails/featureDetails.service";
-import providerService from "../../services/provider/provider.service";
 import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper'
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import moment from "moment";
@@ -13,19 +7,28 @@ import EventSchedule from "../../eventSchedules";
 
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/helper";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
-
-import doctorService from "../../services/doctor/doctor.service";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import patientService from "../../services/patients/patients.service";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import {RRule} from "rrule";
 
 import AppointmentJob from "../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../NotificationSdk";
-import SqsQueueService from "../../services/awsQueue/queue.service";
+
+// SERVICES...
+import queueService from "../../services/awsQueue/queue.service";
+import doctorService from "../../services/doctor/doctor.service";
+import patientService from "../../services/patients/patients.service";
+import appointmentService from "../../services/appointment/appointment.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
+import featureDetailService from "../../services/featureDetails/featureDetails.service";
+import providerService from "../../services/provider/provider.service";
+import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+
+// WRAPPERS...
+import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
+import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
+import ProviderWrapper from "../../ApiWrapper/web/provider";
+import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import PatientWrapper from "../../ApiWrapper/web/patient";
+
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -58,7 +61,6 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      console.log("====================> ", organizer);
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
@@ -78,8 +80,6 @@ class AppointmentController extends Controller {
 
       let userCategoryId = null;
       let participantTwoId = null;
-
-      Logger.debug("userDetails --------------------> ", userDetails);
 
       switch (category) {
         case USER_CATEGORY.DOCTOR:
@@ -114,8 +114,6 @@ class AppointmentController extends Controller {
             participant_two_type
           }
       );
-
-      Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot.length);
 
       if (getAppointmentForTimeSlot.length > 0) {
         return raiseClientError(
@@ -158,16 +156,6 @@ class AppointmentController extends Controller {
 
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
-      // RRule
-
-      Logger.debug("startdate ---> ", moment(start_time).utc().toDate());
-      const rrule = new RRule({
-        freq: RRule.WEEKLY,
-        dtstart: moment(start_time).utc().toDate(),
-      });
-
-      Logger.debug("rrule ----> ", rrule.all());
-
       // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
       // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
 
@@ -186,13 +174,14 @@ class AppointmentController extends Controller {
         }
       };
 
-      await EventSchedule.create(eventScheduleData);
+      const QueueService = new queueService();
+
+      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+      Logger.debug("sqsResponse ---> ", sqsResponse);
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
       await NotificationSdk.execute(appointmentJob);
-
-      Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
-
 
       // TODO: schedule event and notifications here
       await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
@@ -238,16 +227,12 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      console.log("====================> ", organizer);
-      console.log("[ APPOINTMENTS ] appointments &&&&&&&&&&&&***", care_plan_id, typeof (care_plan_id));
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
       let userCategoryId = null;
       let participantTwoId = null;
-
-      Logger.debug("userDetails --------------------> ", userDetails);
 
       switch (category) {
         case USER_CATEGORY.DOCTOR:
@@ -282,8 +267,6 @@ class AppointmentController extends Controller {
             participant_two_type
           }
       );
-
-      // Logger.debug("getAppointmentForTimeSlot", getAppointmentForTimeSlot);
 
       if (getAppointmentForTimeSlot.length > 0) {
         return raiseClientError(
@@ -361,12 +344,11 @@ class AppointmentController extends Controller {
         }
       };
 
-      // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-      //
-      // Logger.debug("sqsResponse ---> ", sqsResponse);
+      const QueueService = new queueService();
 
-      // RRule
-      await EventSchedule.create(eventScheduleData);
+      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+      Logger.debug("sqsResponse ---> ", sqsResponse);
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
       await NotificationSdk.execute(appointmentJob);
@@ -419,7 +401,6 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      console.log("UPDATEEEEEEEEEEEEE====================> ", date, appointment_id, start_time, end_time, userDetails);
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
@@ -447,11 +428,6 @@ class AppointmentController extends Controller {
           break;
       }
 
-      Logger.debug("CONDITION CHECK ---> 1",  moment(date));
-      Logger.debug("CONDITION CHECK ---> 2", moment(oldAppointmentData.getStartDate()));
-
-      Logger.debug("12378939832 getting here 88888888888888888888888", moment(date).diff(moment(oldAppointmentData.getStartDate())));
-
       if (
           moment(date).diff(moment(oldAppointmentData.getStartDate()), 'd') !== 0 ||
           moment(start_time).diff(moment(oldAppointmentData.getStartTime()), 'm') !==
@@ -473,11 +449,8 @@ class AppointmentController extends Controller {
         );
 
         const filteredAppointments = previousAppointments.filter(appointment => {
-          console.log("appointment id", typeof appointment_id,typeof appointment.get("id"));
           return `${appointment.get("id")}` !== appointment_id;
         });
-
-        console.log("appointment id", filteredAppointments);
 
         if (filteredAppointments.length > 0) {
           return raiseClientError(
@@ -523,21 +496,6 @@ class AppointmentController extends Controller {
 
       const appointmentApiData = await AppointmentWrapper(updatedAppointmentDetails);
 
-      // const eventScheduleData = {
-      //   event_type: EVENT_TYPE.APPOINTMENT,
-      //   event_id: appointmentApiData.getAppointmentId(),
-      //   details: appointmentApiData.getExistingData(),
-      //   status: EVENT_STATUS.PENDING,
-      //   start_time,
-      //   end_time,
-      // };
-
-      // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
-      // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
-
-      // TODO: schedule event and notifications here
-      // await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
-
       // response
       return this.raiseSuccess(
         res,
@@ -568,7 +526,6 @@ class AppointmentController extends Controller {
         id
       );
 
-      console.log('PATIENT IDDD OF GET APPOINTMENT11111111', appointmentList);
       // Logger.debug("appointmentList", appointmentList);
 
       // if (appointmentList.length > 0) {
@@ -577,7 +534,6 @@ class AppointmentController extends Controller {
       for(const appointment of appointmentList) {
         const appointmentWrapper = await AppointmentWrapper(appointment);
 
-        console.log('DETAILSSSSS in API WRAPPER', appointmentWrapper.getBasicInfo());
         appointmentApiData[
             appointmentWrapper.getAppointmentId()
             ] = appointmentWrapper.getBasicInfo();
@@ -596,7 +552,7 @@ class AppointmentController extends Controller {
       // } else {
       // }
     } catch (error) {
-      Logger.debug("500 error", error);
+      Logger.debug("getAppointmentForPatient 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -635,8 +591,6 @@ class AppointmentController extends Controller {
       let providerData = {};
 
       const providerDetails = await providerService.getAll();
-
-      Logger.debug("providerDetails ---->", providerDetails);
 
       for(const provider of providerDetails) {
         const providerDetail = await ProviderWrapper(provider);

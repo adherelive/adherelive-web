@@ -1,77 +1,84 @@
 "use strict";
-import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY, GENDER} from "../../constant";
-import Doctors from "./doctors";
+import {DataTypes} from "sequelize";
+import {DOCTORS} from "./doctors";
+import {DEGREES} from "./degree";
+import {COLLEGES} from "./college";
 
-const DoctorQualifications = database.define(
-    DB_TABLES.DOCTOR_QUALIFICATIONS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
-          },
-          doctor_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-              model: {
-                tableName: DB_TABLES.DOCTORS,
-              },
-              key: 'id'
-            }
-          },
-        degree_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.DEGREE,
-                },
-                key: 'id'
-            }
+export const DOCTOR_QUALIFICATIONS = "doctor_qualifications";
+
+export const db = (database) => {
+    database.define(
+        DOCTOR_QUALIFICATIONS,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            doctor_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: DOCTORS,
+                    },
+                    key: 'id'
+                }
+            },
+            degree_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: DEGREES,
+                    },
+                    key: 'id'
+                }
+            },
+            college_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: COLLEGES,
+                    },
+                    key: 'id'
+                }
+            },
+            year: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            // photos:{
+            //   type: DataTypes.JSON
+            // }
         },
-          college_id: {
-              type: Sequelize.INTEGER,
-              allowNull: false,
-              references: {
-                  model: {
-                      tableName: DB_TABLES.COLLEGE,
-                  },
-                  key: 'id'
-              }
-          },
-          year: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-          },
-          // photos:{
-          //   type: Sequelize.JSON
-          // }
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    doctor_id: this.doctor_id,
-                    degree: this.degree,
-                    year: this.year,
-                    college: this.college,
-                    // photos: this.photos
-                };
+        {
+            underscored: true,
+            paranoid: true,
+            getterMethods: {
+                getBasicInfo() {
+                    return {
+                        id: this.id,
+                        doctor_id: this.doctor_id,
+                        degree: this.degree,
+                        year: this.year,
+                        college: this.college,
+                        // photos: this.photos
+                    };
+                }
             }
         }
-    }
-);
+    );
+};
 
-DoctorQualifications.belongsTo(Doctors, {
-   foreignKey:"doctor_id",
-    targetKey:"id"
-});
+export const associate = (database) => {
+    const {doctors, doctor_qualifications} = database.models || {};
 
-export default DoctorQualifications;
+    // associations here (if any) ...
+    doctor_qualifications.belongsTo(doctors, {
+        foreignKey:"doctor_id",
+        targetKey:"id"
+    });
+};

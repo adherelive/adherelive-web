@@ -8,7 +8,7 @@ import medicineService from "../../services/medicine/medicine.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import doctorService from "../../services/doctor/doctor.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-// import patientService from "../../services/patients/patients.service";
+import queueService from "../../services/awsQueue/queue.service";
 
 // API WRAPPERS ----------------------------------------------
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
@@ -33,7 +33,6 @@ import {
 import Log from "../../../libs/log";
 import {getCarePlanAppointmentIds,getCarePlanMedicationIds,getCarePlanSeverityDetails} from '../carePlans/carePlanHelper'
 import {RRule} from "rrule";
-import EventSchedule from "../../eventSchedules";
 import MedicationJob from "../../JobSdk/Medications/observer";
 import NotificationSdk from "../../NotificationSdk";
 
@@ -149,10 +148,11 @@ class MReminderController extends Controller {
         participant_two: userId
       };
 
-      // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-      //
-      // Logger.debug("sqsResponse ---> ", sqsResponse);
-      EventSchedule.create(eventScheduleData);
+      const QueueService = new queueService();
+
+      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+      Logger.debug("sqsResponse ---> ", sqsResponse);
 
       return this.raiseSuccess(
         res,
@@ -171,7 +171,7 @@ class MReminderController extends Controller {
             }
           }
         },
-        "medication reminder added successfully"
+        "Medication Reminder added successfully"
       );
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
@@ -275,10 +275,11 @@ class MReminderController extends Controller {
         participant_two: userId
       };
 
-      // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-      //
-      // Logger.debug("sqsResponse ---> ", sqsResponse);
-      EventSchedule.create(eventScheduleData);
+      const QueueService = new queueService();
+
+      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+      Logger.debug("sqsResponse ---> ", sqsResponse);
 
       // to update later
 

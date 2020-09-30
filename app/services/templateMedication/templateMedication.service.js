@@ -1,4 +1,6 @@
-import TemplateMedications from "../../models/templateMedications";
+import database from "../../../libs/mysql";
+
+const {template_medications: TemplateMedications} = database.models;
 
 class TemplateMedicationService {
 

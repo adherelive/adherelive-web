@@ -1,10 +1,14 @@
-import CarePlanTemplate from "../../models/careplanTemplate";
-import TemplateAppointment from "../../models/templateAppointments";
-import TemplateMedication from "../../models/templateMedications";
-import Condition from "../../models/conditions";
-import Severity from "../../models/severity";
-import Treatment from "../../models/treatments";
 import { Op } from "sequelize";
+import database from "../../../libs/mysql";
+
+const {
+  care_plan_templates: CarePlanTemplate,
+  template_appointments: TemplateAppointment,
+  template_medications: TemplateMedication,
+  conditions: Condition,
+  severity: Severity,
+  treatments: Treatment
+} = database.models;
 
 class CarePlanTemplateService {
   getCarePlanTemplateById = async id => {
@@ -67,17 +71,17 @@ class CarePlanTemplateService {
       const { user_id, treatment_id, severity_id, condition_id } = data;
       const carePlanTemplate = await CarePlanTemplate.findAll({
         where: {
-            [Op.or]: [
-              {
-                treatment_id: {[Op.eq]: treatment_id},
-                severity_id:{[Op.eq]: severity_id},
-                condition_id: {[Op.eq]: condition_id},
-              },
-              {
-                condition_id: {[Op.eq]: condition_id},
-                user_id: {[Op.eq]: user_id},
-              },
-            ],
+          [Op.or]: [
+            {
+              treatment_id: { [Op.eq]: treatment_id },
+              severity_id: { [Op.eq]: severity_id },
+              condition_id: { [Op.eq]: condition_id }
+            },
+            {
+              condition_id: { [Op.eq]: condition_id },
+              user_id: { [Op.eq]: user_id }
+            }
+          ]
         },
         include: [
           Condition,
@@ -93,10 +97,10 @@ class CarePlanTemplateService {
     }
   };
 
-  getSingleTemplateByData = async (data) => {
+  getSingleTemplateByData = async data => {
     try {
       const carePlanTemplate = await CarePlanTemplate.findOne({
-        where: data,
+        where: data
       });
       return carePlanTemplate;
     } catch (error) {

@@ -6,7 +6,7 @@ import * as vitalHelper from "./vitalHelper";
 import VitalTemplateService from "../../services/vitalTemplates/vitalTemplate.service";
 import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
-import SqsQueueService from "../../services/awsQueue/queue.service";
+import queueService from "../../services/awsQueue/queue.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
@@ -19,10 +19,11 @@ import PatientWrapper from "../../ApiWrapper/web/patient";
 import {DAYS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import EventSchedule from "../../eventSchedules";
 import moment from "moment";
-import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
 const Log = new Logger("WEB > VITALS > CONTROLLER");
+const EventService = new eventService();
 
 class VitalController extends Controller {
     constructor() {
@@ -44,6 +45,8 @@ class VitalController extends Controller {
                     repeat_days,
                     description
             } = {}} = req;
+
+            const QueueService = new queueService();
 
             const doesVitalExists = await VitalService.getByData({care_plan_id, vital_template_id});
 
@@ -85,12 +88,12 @@ class VitalController extends Controller {
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
 
-                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
-                //
-                // Log.debug("sqsResponse ---> ", sqsResponse);
+                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+                Log.debug("sqsResponse ---> ", sqsResponse);
 
                 // RRule
-                await EventSchedule.create(eventScheduleData);
+                // await EventSchedule.create(eventScheduleData);
 
                 return raiseSuccess(
                     res,

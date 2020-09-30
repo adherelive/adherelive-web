@@ -20,8 +20,7 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import CarePlanTemplateWrapper from "../../ApiWrapper/mobile/carePlanTemplate";
 import Logger from "../../../libs/log";
 import moment from "moment";
-import EventSchedule from "../../eventSchedules";
-// import SqsQueueService from "../../services/awsQueue/queue.service";
+import queueService from "../../services/awsQueue/queue.service";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 
@@ -39,12 +38,12 @@ class CarePlanController extends Controller {
             const { userDetails } = req;
             const { userId, userData: { category } = {} } = userDetails || {};
 
+            const QueueService = new queueService();
+
             const templateNameCheck = await carePlanTemplateService.getSingleTemplateByData({
                 name: newTemplateName,
                 user_id: userId
             });
-
-            Log.debug("templateNameCheck ---> ", templateNameCheck);
 
             if(templateNameCheck) {
                 return this.raiseClientError(res, 422, {}, `A template exists with name ${newTemplateName}`);
@@ -55,13 +54,14 @@ class CarePlanController extends Controller {
             const carePlan = await carePlanService.getCarePlanById(id);
             let carePlanData = await CarePlanWrapper(carePlan);
 
-            console.log("====================> ", care_plan_id, id, carePlan, userDetails);
             const patient_id = carePlan.get('patient_id');
 
             let userCategoryId = null;
 
             let appointmentsArr = [];
             let medicationsArr = [];
+            const eventScheduleData = [];
+
 
             switch (category) {
                 case USER_CATEGORY.DOCTOR:
@@ -120,8 +120,6 @@ class CarePlanController extends Controller {
                     schedule_data: { description = '', end_time = '', organizer = {}, type = "", type_description = "", treatment_id = '', participant_two = {}, start_time = '', date = '' } = {},
                     reason = '', time_gap = '', provider_id = null, provider_name = null, critical = false } = appointment;
 
-
-                console.log('38748917239857893745917345891347051=====>', date);
 
                 const { id: participant_two_id, category: participant_two_type } =
                     participant_two || {};
@@ -191,7 +189,7 @@ class CarePlanController extends Controller {
                     }
                 });
 
-                const eventScheduleData = {
+                eventScheduleData.push({
                     type: EVENT_TYPE.APPOINTMENT,
                     event_id: appointmentData.getAppointmentId(),
                     critical,
@@ -203,14 +201,26 @@ class CarePlanController extends Controller {
                         id: userId,
                         category
                     }
-                };
+                });
 
-                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+
+                //     type: EVENT_TYPE.APPOINTMENT,
+                //     event_id: appointmentData.getAppointmentId(),
+                //     critical,
+                //     start_time,
+                //     end_time,
+                //     details: appointmentData.getBasicInfo(),
+                //     participants: [userId, participantTwoId],
+                //     actor: {
+                //         id: userId,
+                //         category
+                //     }
+                // };
+
+
+                // const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
                 //
                 // Log.debug("sqsResponse ---> ", sqsResponse);
-
-                // // RRule
-                await EventSchedule.create(eventScheduleData);
             }
 
             let medicationApiDetails = {};
@@ -276,7 +286,7 @@ class CarePlanController extends Controller {
 
                 const patient = await PatientWrapper(null, patient_id);
 
-                const eventScheduleData = {
+                eventScheduleData.push({
                     patient_id: patient.getUserId(),
                     type: EVENT_TYPE.MEDICATION_REMINDER,
                     event_id: mReminderDetails.getId,
@@ -287,13 +297,25 @@ class CarePlanController extends Controller {
                     when_to_take,
                     participant_one: patient.getUserId(),
                     participant_two: userId
-                };
+                });
 
-                // const sqsResponse = await SqsQueueService.sendMessage("test_queue", eventScheduleData);
+
+                // const eventScheduleData = {
+                //     patient_id: patient.getUserId(),
+                //     type: EVENT_TYPE.MEDICATION_REMINDER,
+                //     event_id: mReminderDetails.getId,
+                //     details: mReminderDetails.getBasicInfo.details,
+                //     status: EVENT_STATUS.SCHEDULED,
+                //     start_date,
+                //     end_date,
+                //     when_to_take,
+                //     participant_one: patient.getUserId(),
+                //     participant_two: userId
+                // };
+                //
+                // const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
                 //
                 // Log.debug("sqsResponse ---> ", sqsResponse);
-
-                await EventSchedule.create(eventScheduleData);
             }
 
 
@@ -318,6 +340,10 @@ class CarePlanController extends Controller {
 
                 carePlanData = await CarePlanWrapper(null, care_plan_id);
             }
+
+            const sqsResponse = await QueueService.sendBatchMessage("test_queue", eventScheduleData);
+
+            Log.debug("sqsResponse ---> ", sqsResponse);
 
 
             return this.raiseSuccess(res, 200, {

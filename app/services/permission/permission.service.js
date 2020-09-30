@@ -1,5 +1,6 @@
-import Permissions from "../../models/permissions";
+import database from "../../../libs/mysql";
 
+const {permissions: Permissions} = database.models;
 
 class PermissionService {
     constructor() {

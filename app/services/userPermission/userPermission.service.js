@@ -1,5 +1,6 @@
-import UserCategoryPermissions from "../../models/userCategoryPermissions";
+import database from "../../../libs/mysql";
 
+const {user_category_permissions: UserCategoryPermissions} = database.models;
 
 class UserPermissionService {
     constructor() {

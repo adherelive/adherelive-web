@@ -1,8 +1,8 @@
-import schedulerModel from "../../models/scheduleEvents";
-// const eventModel = require("../../models/event");
 import moment from "moment";
-// import { ObjectId } from "mongodb";
-import { REPEAT_TYPE, EVENT_TYPE } from "../../../constant";
+import { EVENT_TYPE } from "../../../constant";
+import database from "../../../libs/mysql";
+
+const {schedule_events: schedulerModel} = database.models;
 
 //SCHEDULER STATUSES
 const COMPLETED = "completed";

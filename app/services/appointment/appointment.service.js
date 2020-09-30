@@ -1,6 +1,7 @@
-import Appointments from "../../models/appointments";
 import { Op } from "sequelize";
-import {database} from "../../../libs/mysql";
+import database from "../../../libs/mysql";
+
+const {appointments : Appointments} = database.models;
 
 class AppointmentService {
   async addAppointment(data) {

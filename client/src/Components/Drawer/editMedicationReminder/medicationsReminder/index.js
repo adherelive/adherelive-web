@@ -35,8 +35,8 @@ class EditMedicationReminder extends Component {
   }
 
   componentDidMount() {
-    const { getMedicationDetails } = this.props;
-    getMedicationDetails();
+    const { getMedicationDetails, patientId } = this.props;
+    getMedicationDetails(patientId);
   }
 
   hasErrors = (fieldsError) => {

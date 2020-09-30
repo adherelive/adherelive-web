@@ -1,5 +1,6 @@
+import database from "../../../libs/mysql";
 
-import UserVerifications from "../../models/userVerifications";
+const {user_verifications: UserVerifications} = database.models;
 
 class UserVerificationsService {
     async addRequest(data) {

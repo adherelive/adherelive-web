@@ -1,61 +1,68 @@
 "use strict";
-import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES, EVENT_TYPE, EVENT_STATUS} from "../../constant";
+import {DataTypes} from "sequelize";
+import {EVENT_TYPE, EVENT_STATUS} from "../../constant";
 
-const ScheduleEvent = database.define(
-    DB_TABLES.SCHEDULE_EVENTS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const SCHEDULE_EVENTS = "schedule_events";
+
+export const db = (database) => {
+    database.define(
+        SCHEDULE_EVENTS,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            critical: {
+                type: DataTypes.BOOLEAN,
+            },
+            event_type: {
+                type: DataTypes.ENUM,
+                values: [EVENT_TYPE.APPOINTMENT, EVENT_TYPE.REMINDER, EVENT_TYPE.MEDICATION_REMINDER, EVENT_TYPE.VITALS]
+            },
+            event_id: {
+                type: DataTypes.INTEGER,
+            },
+            details: {
+                type: DataTypes.JSON,
+            },
+            status: {
+                type: DataTypes.ENUM,
+                values: [
+                    EVENT_STATUS.SCHEDULED,
+                    EVENT_STATUS.PENDING,
+                    EVENT_STATUS.COMPLETED,
+                    EVENT_STATUS.EXPIRED,
+                    EVENT_STATUS.CANCELLED
+                ],
+                defaultValue: EVENT_STATUS.PENDING
+            },
+            date: {
+                type: DataTypes.DATEONLY,
+            },
+            start_time: {
+                type: DataTypes.DATE,
+            },
+            end_time: {
+                type: DataTypes.DATE,
+            },
+            created_at: {
+                type: DataTypes.DATE,
+            },
+            updated_at: {
+                type: DataTypes.DATE,
+            }
         },
-        critical: {
-            type: Sequelize.BOOLEAN,
-        },
-        event_type: {
-            type: Sequelize.ENUM,
-            values: [EVENT_TYPE.APPOINTMENT, EVENT_TYPE.REMINDER, EVENT_TYPE.MEDICATION_REMINDER, EVENT_TYPE.VITALS]
-        },
-        event_id: {
-            type: Sequelize.INTEGER,
-        },
-        details: {
-            type: Sequelize.JSON,
-        },
-        status: {
-            type: Sequelize.ENUM,
-            values: [
-                EVENT_STATUS.SCHEDULED,
-                EVENT_STATUS.PENDING,
-                EVENT_STATUS.COMPLETED,
-                EVENT_STATUS.EXPIRED,
-                EVENT_STATUS.CANCELLED
-            ],
-            defaultValue: EVENT_STATUS.PENDING
-        },
-        date: {
-          type: Sequelize.DATEONLY,
-        },
-        start_time: {
-            type: Sequelize.DATE,
-        },
-        end_time: {
-            type: Sequelize.DATE,
-        },
-        created_at: {
-            type: Sequelize.DATE,
-        },
-        updated_at: {
-            type: Sequelize.DATE,
+        {
+            underscored: true,
+            paranoid: true,
         }
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
+    );
+};
 
-export default ScheduleEvent;
+export const associate = (database) => {
+    // const {<TABLE_NAME>} = database.models || {};
+
+    // associations here (if any) ...
+};
