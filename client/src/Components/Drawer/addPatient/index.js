@@ -19,6 +19,7 @@ import switzerland from '../../../Assets/images/switzerland.png';
 import france from '../../../Assets/images/france.png';
 import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
+import TextArea from "antd/lib/input/TextArea";
 const { Option } = Select;
 
 const MALE = 'm';
@@ -227,6 +228,7 @@ class PatientDetailsDrawer extends Component {
         }
     };
 
+
     renderAddPatient = () => {
 
         let dtToday = new Date();
@@ -277,6 +279,8 @@ class PatientDetailsDrawer extends Component {
             </Select>
         );
 
+       
+
         return (
             <div className='form-block-ap'>
                 <div className='form-headings flex align-center justify-start'>{this.formatMessage(messages.phoneNo)}<div className="star-red">*</div></div>
@@ -311,7 +315,59 @@ class PatientDetailsDrawer extends Component {
                 <Input className={"form-inputs-ap"} type='date'
                     max={`${year}-${month}-${day}`}
                     onChange={this.setDOB} />
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.comorbidities)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    // value={name}
+                    className={"form-textarea-ap"}
+                    // onChange={this.setName}
+                />
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    // value={name}
+                    className={"form-textarea-ap"}
+                    // onChange={this.setName}
+                />
+
+                
+
                 <div className='form-category-headings-ap'>{this.formatMessage(messages.treatmentPlan)}</div>
+
+                
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.clinicalNotes)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    // value={name}
+                    className={"form-textarea-ap "}
+                    // onChange={this.setName}
+                />
+
+                <div className='form-headings-ap flex  justify-space-between'>
+                    <div className="flex direction-row " >
+                        {this.formatMessage(messages.diagnosis)}
+                        <div className="star-red">*</div>
+                    </div>
+                    <div>
+                        <Select placeholder="Final" className="form-diagnosis-ap" >
+                            <Option value="Final">{this.formatMessage(messages.final)}</Option>
+                            <Option value="Probable">{this.formatMessage(messages.probable)}</Option>
+                        </Select>
+                    </div>
+
+                </div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    // value={name}
+                    className={"form-textarea-ap"}
+                    // onChange={this.setName}
+                />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}<div className="star-red">*</div></div>
 

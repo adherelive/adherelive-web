@@ -95,6 +95,41 @@ const messages = defineMessages({
         id: "app.addPatient.conditionError",
         description: "",
         defaultMessage: 'Please enter a condition.'
+    },
+    comorbidities: {
+        id: "app.addPatient.comorbidities",
+        description: "",
+        defaultMessage: "Comorbidities"
+    },
+    allergies: {
+        id: "app.addPatient.allergies",
+        description: "",
+        defaultMessage: "Allergies"
+    },
+    writeHere:{
+        id: "app.addPatient.writeHere",
+        description: "",
+        defaultMessage: "Write here"
+    },
+    clinicalNotes:{
+        id: "app.addPatient.clinicalNotes",
+        description: "",
+        defaultMessage: "Clinical Notes"
+    },
+    diagnosis:{
+        id: "app.addPatient.diagnosis",
+        description: "",
+        defaultMessage: "Diagnosis"
+    },
+    probable:{
+        id: "app.addPatient.probable",
+        description: "",
+        defaultMessage: "Probable"
+    },
+    final:{
+        id: "app.addPatient.final",
+        description: "",
+        defaultMessage: "Final"
     }
       
     
