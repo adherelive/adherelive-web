@@ -121,15 +121,14 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Diagnosis"
     },
-    probable:{
-        id: "app.addPatient.probable",
+    diagnosisError:{
+        id: "app.addPatient.diagnosisError",
         description: "",
-        defaultMessage: "Probable"
-    },
-    final:{
-        id: "app.addPatient.final",
+        defaultMessage: "Please enter Diagnosis"
+    },diagnosisTypeError:{
+        id: "app.addPatient.diagnosisTypeError",
         description: "",
-        defaultMessage: "Final"
+        defaultMessage: "Please enter Diagnosis Type"
     }
       
     
