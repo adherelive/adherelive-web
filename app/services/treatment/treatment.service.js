@@ -7,9 +7,7 @@ class TreatmentService {
 
     getAll = async (data) => {
         try {
-            const treatment = await Treatment.findAll({
-                where: data
-            });
+            const treatment = await Treatment.findAll();
             return treatment;
         } catch(error) {
             throw error;

@@ -3,7 +3,7 @@ import Logger from "../../../../libs/log";
 import moment from "moment";
 
 // SERVICES -------------------
-import VitalService from "../../../services/vitals/vital.service";
+// import VitalService from "../../../services/vitals/vital.service";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import CarePlanService from "../../../services/carePlan/carePlan.service";
 
@@ -26,8 +26,9 @@ class EventController extends Controller {
     try {
       Log.debug("req.params", req.params);
       const { params: { id } = {} } = req;
+        const eventService = new EventService();
 
-      const events = await EventService.getEventByData({
+      const events = await eventService.getEventByData({
         id
       });
 
@@ -74,6 +75,8 @@ class EventController extends Controller {
       } = req;
       Log.info(`query : key = ${key}`);
 
+      const eventService = new EventService();
+
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(
           res,
@@ -97,7 +100,7 @@ class EventController extends Controller {
         parseInt(process.config.event.count) * (parseInt(key) - 1);
       const endLimit = parseInt(process.config.event.count);
 
-      const events = await EventService.getPageEventByData({
+      const events = await eventService.getPageEventByData({
         startLimit,
         endLimit,
         eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
