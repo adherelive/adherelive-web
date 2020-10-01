@@ -265,7 +265,7 @@
 }
 
 
-.symptom-message-container{
+.bot-message-container{
   margin:0px;
   padding:10px 0px;
   min-height:200px;
@@ -275,7 +275,7 @@
   background-color:whitesmoke;
 }
 
-.symptom-detail-container{
+.bot-msg-detail-container{
   margin:0px auto !important;
   background-color:#e8e8e8;
   width:90%;
@@ -288,12 +288,12 @@
   flex-direction:column;
   justify-content:space-between;
   color:#212b36;
-  .symptom-h{
+  .bot-m-h{
     font-size:17px;
     font-weight:600;
     letter-spacing:0.05rem;
   }
-  .symptom-details{
+  .bot-msg-details{
       .dot{
         color:#a6a8a9;
       }
@@ -307,7 +307,7 @@
   
 }
 
-.symptom-image-container, .symptom-video-container, .text-msg-container{
+.media-container{
   background-color:inherit;
   min-height:300px;
   height: auto;
@@ -346,40 +346,11 @@
 
 .text-msg-container{
   min-height:100px;
-  
+  padding: 10px;
   &>span{
     font-size: 20px;
     color: #212b36;
     text-align: left;
 
   }
-}
-
- .vital-container{
-  margin:0px;
-  padding:10px ;
-  min-height:80px;
-  height:auto;
-  min-width:100px;
-  width:auto;
-  background-color: @rosy-pink-10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  &>div{
-    border-left:4px solid pink;
-    border-radius: 2px;
-  }
-    span{
-      margin: 0px 10px;
-      font-size:17px;
-      font-weight:600;
-      letter-spacing:0.05rem;
-      color:#212b36;
-    }
-    .v-label{
-      text-transform: capitalize;
-    }
 }

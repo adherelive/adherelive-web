@@ -4,6 +4,8 @@ import messages from './messages';
 import { injectIntl } from "react-intl";
 import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
 import moment from 'moment';
+import {REPEAT_INTERVAL_VITALS} from '../../constant';
+
 
 class vitalBotMessage extends Component{
     constructor(props){
@@ -18,11 +20,9 @@ class vitalBotMessage extends Component{
 
     render(){
         const{message,patientDp} = this.props;
-        console.log("this.body.props",this.props.body);
         const {vitals, vital_id, vital_templates, response} = this.props.body;
         const vitalsMessageArray = [];
-        const {basic_info: {vital_template_id} = {}} = vitals[vital_id] || {};
-        console.log("vital_templates[vital_template_id] =====> ",vital_templates[vital_template_id]);
+        const {basic_info: {vital_template_id} = {} ,details:{repeat_days = [] , repeat_interval_id =''}={}} = vitals[vital_id] || {};
         const {basic_info: {name} = {}, details: {template = [] } = {}} = vital_templates[vital_template_id] || {};
 
         // console.log("template",template);
@@ -31,31 +31,50 @@ class vitalBotMessage extends Component{
             let vitalMessage = '';
             const {id, label, placeholder} = eachTemplate || {};
             // console.log("EachTemplate",eachTemplate);
-            console.log("{`${message.state.sid}-${id}`}",`${message.state.sid}-${id}`);
+            const occurence = REPEAT_INTERVAL_VITALS[repeat_interval_id]
             vitalMessage = (
 
+                <Fragment key={`${message.state.sid}-vital-response`} >
 
-                <Fragment
-                //  key={`${message.state.sid}-${id}`}
-                  >
-                    <div className="chat-messages">
-                        <div className="chat-avatar">
-                                <span className="twilio-avatar">
-                                    <Avatar src={patientDp} />
-                                </span>
-                            <Fragment>
-                                <div className="vital-container" >
-                                   <div>
-                                        <span className="v-label" >{label}</span> : <span>{response[id]}</span> <span>{placeholder}</span>
-                                   </div>
-                                 </div>
-                            </Fragment>
-                            </div>
-                            <div className="chat-time start">
-                                <span>{moment(message.state.timestamp).format("H:mm")}</span>
-                            </div>
+                <div className="chat-messages">
+                    <div className="chat-avatar">
+                        <span className="twilio-avatar">
+                            <Avatar src={patientDp} />
+                        </span>
+                        <Fragment>
+                <div className="bot-message-container  relative " >
+                    <div className="bot-msg-detail-container" >
+                        <span className="bot-m-h ">
+                            Vital
+                        </span>
+                        
+                        <div className="bot-msg-details" >
+                            <span className="fs14 fw500  ">
+                                {name}
+                            </span> 
+                            <span className="dot" >&bull;</span>
+                            <span className="side">
+                                {occurence}
+                            </span>
                         </div>
-                </Fragment>
+                        
+                        <div className="add-medication-button" >
+                        
+                        </div>
+                   
+                    </div>
+                    <Button  className="wp100 color-white bg-ocean-green position absolute h40 b0 fs20 " >
+                    {/* <img src={} className="edit-medication-icon"/> */}
+                     Add Medication/Pres
+                    </Button>
+                </div>
+            </Fragment>
+                    </div>
+                    <div className="chat-time start">
+                        {moment(message.state.timestamp).format("H:mm")}
+                    </div>
+                </div>
+            </Fragment> 
 
                 
             )

@@ -10,25 +10,14 @@ import moment from 'moment';
 class botMessage extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            mess:'',
-            updated:false
-        }
+        // this.state = {
+        //     mess:'',
+        //     updated:false
+        // }
     }
 
     componentDidMount(){
-        const { body : this_body ,message,patientDp} = this.props;
-        const { updated } = this.state;
-        const body = JSON.parse(this_body);
-        // console.log("body",body);
-        const tempType = this_body.split(':')[0];
-        const type = tempType.slice(2,tempType.length-1);
-        console.log("type",type);
-        const newBotMessage = this.getBotMessageByType(type,body,message,patientDp);
-        this.setState({
-            mess:newBotMessage
-        });
-
+        
     }
 
     getBotMessageByType(type,body,message,patientDp){
@@ -70,8 +59,21 @@ class botMessage extends Component{
         }
     }
 
+    getBotMessage = () => {
+        const { body : this_body ,message,patientDp} = this.props;
+        const body = JSON.parse(this_body);
+        // console.log("body",body);
+        const tempType = this_body.split(':')[0];
+        const type = tempType.slice(2,tempType.length-1);
+        // console.log("type",type);
+        const newBotMessage = this.getBotMessageByType(type,body,message,patientDp);
+        return newBotMessage;
+
+    }
+
     render(){
-        const {mess} = this.state;
+        const mess = this.getBotMessage();
+        // const {mess} = this.state;
         return(
             <Fragment>
                 <div>

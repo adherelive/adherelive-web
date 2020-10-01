@@ -257,14 +257,12 @@ class ChatMessageDetails extends Component {
                         
                        <BotMessage body={body} message={message} patientDp={patientDp} {...this.props} />
                     )
-                    messagesToRender.push(mess);
                 } else {
                     mess = (
                         <Fragment key={message.state.sid}>
                             {parseInt(message.state.author) !== parseInt(authenticated_user) ? (
 
                                 null
-
 
 
                                 // Human wrapper code ------>>>>>>>
