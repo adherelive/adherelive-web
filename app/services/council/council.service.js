@@ -1,7 +1,7 @@
 import {Op} from "sequelize";
 import database from "../../../libs/mysql";
 
-const {councils: Council} = database.models;
+const {registration_councils: Council} = database.models;
 
 class CouncilService {
 
