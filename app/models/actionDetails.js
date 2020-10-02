@@ -46,7 +46,6 @@ export const db =  (database) => {
 
 export const associate = (database) => {
     const {action_details, actions} = database.models || {};
-    console.log("database.models", database.models);
 
     // action_details.belongsTo(actions, {
     //     foreignKey: "action_id",
