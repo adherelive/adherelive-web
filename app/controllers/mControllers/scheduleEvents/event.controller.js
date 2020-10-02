@@ -100,19 +100,36 @@ class EventController extends Controller {
         parseInt(process.config.event.count) * (parseInt(key) - 1);
       const endLimit = parseInt(process.config.event.count);
 
-      const events = await eventService.getPageEventByData({
+      const vitalEvents = await eventService.getPageEventByData({
         startLimit,
         endLimit,
-        eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
+        event_type: EVENT_TYPE.VITALS,
+        eventIds: vital_ids
       });
 
-      Log.debug("21237193721 events --> ", events.length);
+      const appointmentEvents = await eventService.getPageEventByData({
+        startLimit,
+        endLimit,
+        event_type: EVENT_TYPE.APPOINTMENT,
+        eventIds: appointment_ids
+      });
 
-      if (events.length > 0) {
+      const medicationEvents = await eventService.getPageEventByData({
+        startLimit,
+        endLimit,
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        eventIds: medication_ids
+      });
+
+      let scheduleEvents = [...vitalEvents, ...appointmentEvents, ...medicationEvents];
+
+      Log.debug("21237193721 events --> ", scheduleEvents.length);
+
+      if (scheduleEvents.length > 0) {
         const dateWiseEventData = {};
         const scheduleEventData = {};
         const dates = [];
-        for (const eventData of events) {
+        for (const eventData of scheduleEvents) {
           const event = await EventWrapper(eventData);
           scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
           if (dateWiseEventData.hasOwnProperty(event.getDate())) {

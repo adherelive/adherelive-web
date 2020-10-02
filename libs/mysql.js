@@ -96,8 +96,6 @@ const database = new Sequelize(
   }
 );
 
-console.log("procees:::::::::::::",process.config);
-
 // Models List...
 const modelList = [
     ActionDetails,
