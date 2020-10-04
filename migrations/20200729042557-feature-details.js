@@ -1,10 +1,11 @@
 'use strict';
 
-import {DB_TABLES, FEATURE_TYPE} from "../constant";
+import {FEATURE_TYPE} from "../constant";
+import {TABLE_NAME} from "../app/models/featureDetails";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.FEATURE_DETAILS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -34,6 +35,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.FEATURE_DETAILS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

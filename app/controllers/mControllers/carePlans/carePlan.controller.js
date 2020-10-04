@@ -21,7 +21,6 @@ import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import Log from "../../../../libs/log_new";
-import EventSchedule from "../../../eventSchedules";
 import queueService from "../../../services/awsQueue/queue.service";
 // import SqsQueueService from "../../../services/awsQueue/queue.service";
 const moment = require("moment");

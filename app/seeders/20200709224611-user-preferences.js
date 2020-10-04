@@ -1,10 +1,10 @@
 'use strict';
 
-import {DB_TABLES} from "../../constant";
+import {TABLE_NAME} from "../models/userPreferences";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(DB_TABLES.USER_PREFERENCES, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         user_id: "1",
         details: JSON.stringify({
@@ -52,6 +52,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(DB_TABLES.USER_PREFERENCES, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

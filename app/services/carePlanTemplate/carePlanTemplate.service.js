@@ -1,26 +1,24 @@
 import { Op } from "sequelize";
-import database from "../../../libs/mysql";
+import Database from "../../../libs/mysql";
 
-const {
-  care_plan_templates: CarePlanTemplate,
-  template_appointments: TemplateAppointment,
-  template_medications: TemplateMedication,
-  conditions: Condition,
-  severity: Severity,
-  treatments: Treatment
-} = database.models;
+import {TABLE_NAME} from "../../models/careplanTemplate";
+import {TABLE_NAME as appointmentTemplateTableName} from "../../models/templateAppointments";
+import {TABLE_NAME as medicationTemplateTableName} from "../../models/templateMedications";
+import {TABLE_NAME as conditionTableName} from "../../models/conditions";
+import {TABLE_NAME as severityTableName} from "../../models/severity";
+import {TABLE_NAME as treatmentTableName} from "../../models/treatments";
 
 class CarePlanTemplateService {
   getCarePlanTemplateById = async id => {
     try {
-      const carePlanTemplate = await CarePlanTemplate.findOne({
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).findOne({
         where: id,
         include: [
-          Condition,
-          Severity,
-          Treatment,
-          TemplateAppointment,
-          TemplateMedication
+          Database.getModel(conditionTableName),
+          Database.getModel(severityTableName),
+          Database.getModel(treatmentTableName),
+          Database.getModel(appointmentTemplateTableName),
+          Database.getModel(medicationTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -31,8 +29,11 @@ class CarePlanTemplateService {
 
   create = async data => {
     try {
-      const carePlanTemplate = await CarePlanTemplate.create(data, {
-        include: [TemplateAppointment, TemplateMedication]
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).create(data, {
+        include: [
+          Database.getModel(appointmentTemplateTableName),
+          Database.getModel(medicationTemplateTableName),
+        ]
       });
       return carePlanTemplate;
     } catch (error) {
@@ -46,18 +47,18 @@ class CarePlanTemplateService {
     condition_id
   ) => {
     try {
-      const carePlanTemplate = await CarePlanTemplate.findOne({
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).findOne({
         where: {
           treatment_id,
           severity_id,
           condition_id
         },
         include: [
-          Condition,
-          Severity,
-          Treatment,
-          TemplateAppointment,
-          TemplateMedication
+          Database.getModel(conditionTableName),
+          Database.getModel(severityTableName),
+          Database.getModel(treatmentTableName),
+          Database.getModel(appointmentTemplateTableName),
+          Database.getModel(medicationTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -69,7 +70,7 @@ class CarePlanTemplateService {
   getCarePlanTemplateData = async data => {
     try {
       const { user_id, treatment_id, severity_id, condition_id } = data;
-      const carePlanTemplate = await CarePlanTemplate.findAll({
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
@@ -84,11 +85,11 @@ class CarePlanTemplateService {
           ]
         },
         include: [
-          Condition,
-          Severity,
-          Treatment,
-          TemplateAppointment,
-          TemplateMedication
+          Database.getModel(conditionTableName),
+          Database.getModel(severityTableName),
+          Database.getModel(treatmentTableName),
+          Database.getModel(appointmentTemplateTableName),
+          Database.getModel(medicationTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -99,7 +100,7 @@ class CarePlanTemplateService {
 
   getSingleTemplateByData = async data => {
     try {
-      const carePlanTemplate = await CarePlanTemplate.findOne({
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).findOne({
         where: data
       });
       return carePlanTemplate;
@@ -110,7 +111,7 @@ class CarePlanTemplateService {
 
   addCarePlanTemplate = async data => {
     try {
-      const carePlanTemplate = await CarePlanTemplate.create(data);
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).create(data);
       return carePlanTemplate;
     } catch (error) {
       throw error;

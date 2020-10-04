@@ -29,11 +29,9 @@ import {
   FEATURE_TYPE,
   NOTIFICATION_STAGES, USER_CATEGORY
 } from "../../../../constant";
-import EventSchedule from "../../../eventSchedules";
 import SqsQueueService from "../../../services/awsQueue/queue.service";
 
 const Log = new Logger("MOBILE > VITALS > CONTROLLER");
-const EventService = new eventService();
 
 class VitalController extends Controller {
   constructor() {
@@ -155,6 +153,8 @@ class VitalController extends Controller {
         body: {start_date, end_date} = {},
         params: {id} = {}
       } = req;
+      const EventService = new eventService();
+
 
       const doesVitalExists = await VitalService.getByData({id});
 
@@ -291,6 +291,7 @@ class VitalController extends Controller {
     try {
       Log.debug("req.params --->", req.params);
       const { params: { id } = {}, userDetails: {userData: {category} = {}} = {}, body: { response } = {} } = req;
+      const EventService = new eventService();
 
       if(category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(res, 401, {}, "Unauthorized");
@@ -377,6 +378,7 @@ class VitalController extends Controller {
     try {
       Log.debug("req.params vital id---->", req.params);
       const { params: { id } = {} } = req;
+      const EventService = new eventService();
 
       const today = moment()
         .utc()

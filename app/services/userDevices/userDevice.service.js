@@ -1,12 +1,11 @@
-import database from "../../../libs/mysql";
-
-const {user_devices: UserDevices} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/userDevices";
 
 class UserDeviceService {
 
     addDevice = async (data) => {
       try {
-          const userDevice = await UserDevices.create(data);
+          const userDevice = await Database.getModel(TABLE_NAME).create(data);
           return userDevice;
       } catch(error) {
           throw error;
@@ -15,7 +14,7 @@ class UserDeviceService {
 
     getDeviceByData = async (data) => {
         try {
-            const userDevice = await UserDevices.findOne({
+            const userDevice = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return userDevice;
@@ -26,7 +25,7 @@ class UserDeviceService {
 
     getAllDeviceByData = async (data) => {
         try {
-            const userDevice = await UserDevices.findAll({
+            const userDevice = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return userDevice;
@@ -37,7 +36,7 @@ class UserDeviceService {
 
     deleteDevice = async (data) => {
         try {
-            const userDevice = await UserDevices.destroy({
+            const userDevice = await Database.getModel(TABLE_NAME).destroy({
                 where: data,
                 force: true
             });
@@ -48,9 +47,9 @@ class UserDeviceService {
     };
 
     updateDevice = async (data, id) => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
-            const userDevice = await UserDevices.update(data, {
+            const userDevice = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
                     id
                 },

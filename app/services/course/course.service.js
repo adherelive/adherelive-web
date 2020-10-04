@@ -1,13 +1,12 @@
 import {Op} from "sequelize";
-import database from "../../../libs/mysql";
-
-const {courses: Course} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/course";
 
 class CourseService {
 
     getAll = async () => {
         try {
-            const course = await Course.findAll();
+            const course = await Database.getModel(TABLE_NAME).findAll();
             return course;
         } catch(error) {
             throw error;
@@ -16,7 +15,7 @@ class CourseService {
 
     search = async (data) => {
         try {
-            const course = await Course.findAll({
+            const course = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     name: {
                         [Op.like]: `%${data}%`,
@@ -31,7 +30,7 @@ class CourseService {
 
     getByData = async data => {
         try {
-            const course = await Course.findOne({
+            const course = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return course;

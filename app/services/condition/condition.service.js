@@ -1,13 +1,12 @@
 import {Op} from "sequelize";
-import database from "../../../libs/mysql";
-
-const {conditions: Condition} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/conditions";
 
 class ConditionService {
 
     getAll = async () => {
       try {
-          const condition = await Condition.findAll();
+          const condition = await Database.getModel(TABLE_NAME).findAll();
           return condition;
       } catch(error) {
           throw error;
@@ -16,7 +15,7 @@ class ConditionService {
 
     search = async (data) => {
         try {
-            const condition = await Condition.findAll({
+            const condition = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     name: {
                         [Op.like]: `${data}%`,
@@ -31,7 +30,7 @@ class ConditionService {
 
     getAllByData = async data => {
         try {
-            const condition = await Condition.findAll({
+            const condition = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return condition;
@@ -42,7 +41,7 @@ class ConditionService {
 
     getByData = async data => {
         try {
-            const condition = await Condition.findOne({
+            const condition = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return condition;

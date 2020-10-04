@@ -1,11 +1,11 @@
 "use strict";
 import {DataTypes} from "sequelize";
 
-export const UPLOAD_DOCUMENTS = "upload_documents";
+export const TABLE_NAME = "upload_documents";
 
 export const db = (database) => {
     database.define(
-        UPLOAD_DOCUMENTS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,

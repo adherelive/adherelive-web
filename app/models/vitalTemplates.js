@@ -1,10 +1,10 @@
 import {DataTypes} from "sequelize";
 
-export const VITAL_TEMPLATES = "vital_templates";
+export const TABLE_NAME = "vital_templates";
 
 export const db = (database) => {
     database.define(
-        VITAL_TEMPLATES,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,

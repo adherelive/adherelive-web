@@ -1,10 +1,13 @@
 "use strict";
 
-import { DB_TABLES, GENDER } from "../constant";
+import { GENDER } from "../constant";
+import {TABLE_NAME} from "../app/models/doctors";
+import {TABLE_NAME as userTableName} from "../app/models/users";
+import {TABLE_NAME as specialityTableName} from "../app/models/specialities";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.DOCTORS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,7 +19,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.USERS,
+            tableName: userTableName,
           },
           key: 'id'
         }
@@ -30,7 +33,7 @@ module.exports = {
         allowNull: true,
         references: {
           model: {
-            tableName: DB_TABLES.SPECIALITIES,
+            tableName: specialityTableName,
           },
           key: 'id'
         }
@@ -75,6 +78,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.DOCTORS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

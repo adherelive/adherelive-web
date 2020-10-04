@@ -1,11 +1,11 @@
 'use strict';
 
-import {DB_TABLES} from "../../constant";
+import {TABLE_NAME} from "../models/careplanTemplate";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
 
-   return queryInterface.bulkInsert(DB_TABLES.CARE_PLAN_TEMPLATE, [
+   return queryInterface.bulkInsert(TABLE_NAME, [
     {
       name: 'Sample Care Plan',
         treatment_id: '1',
@@ -18,7 +18,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-
-   return queryInterface.bulkDelete(DB_TABLES.CARE_PLAN_TEMPLATE, null, {});
+   return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

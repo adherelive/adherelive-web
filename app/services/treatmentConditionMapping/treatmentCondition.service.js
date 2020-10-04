@@ -1,12 +1,11 @@
-import database from "../../../libs/mysql";
-
-const {treatment_condition_mappings: TreatmentConditionMapping} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/treatmentConditionMapping";
 
 class TreatmentConditionService {
 
     getAll = async (data) => {
         try {
-            const treatmentCondition = await TreatmentConditionMapping.findAll({
+            const treatmentCondition = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return treatmentCondition;

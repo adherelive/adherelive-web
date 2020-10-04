@@ -1,13 +1,12 @@
-import database from "../../../libs/mysql";
-
-const {patients: Patient} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/patients";
 
 class PatientsService {
     constructor() {}
 
     getAll = async () => {
         try {
-            const patients = await Patient.findAll();
+            const patients = await Database.getModel(TABLE_NAME).findAll();
             return patients;
         } catch(error) {
             throw error;
@@ -15,7 +14,7 @@ class PatientsService {
     };
 
     updatePatient = async (modelInstance, data) => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
       try {
           // todo: change to update when sign-in flow done for mobile
           const patient = await modelInstance.update({...data}, {transaction});
@@ -28,10 +27,10 @@ class PatientsService {
     };
 
     update = async (data, id) => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
             // todo: change to update when sign-in flow done for mobile
-            const patient = await Patient.update(data, {
+            const patient = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
                     id
                 },
@@ -46,9 +45,9 @@ class PatientsService {
     };
 
     addPatient = async data => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
-            const patient = await Patient.create(data, {transaction});
+            const patient = await Database.getModel(TABLE_NAME).create(data, {transaction});
             await transaction.commit();
             return patient;
         } catch(error) {
@@ -59,7 +58,7 @@ class PatientsService {
 
     getPatientByData = async (data) => {
         try {
-            const patient = await Patient.findAll({
+            const patient = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return patient;
@@ -70,7 +69,7 @@ class PatientsService {
 
     getPatientById = async (data) => {
         try {
-            const patient = await Patient.findOne({
+            const patient = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return patient;
@@ -81,7 +80,7 @@ class PatientsService {
 
     getPatientByUserId = async user_id => {
         try {
-            const patient = await Patient.findOne({
+            const patient = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     user_id
                 }

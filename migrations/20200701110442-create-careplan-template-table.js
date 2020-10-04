@@ -1,11 +1,15 @@
 'use strict';
 
 import {DB_TABLES} from "../constant";
-import Sequelize from "sequelize";
+import {TABLE_NAME} from "../app/models/careplanTemplate";
+import {TABLE_NAME as treatmentTableName} from "../app/models/treatments";
+import {TABLE_NAME as severityTableName} from "../app/models/severity";
+import {TABLE_NAME as conditionTableName} from "../app/models/conditions";
+import {TABLE_NAME as userTableName} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.CARE_PLAN_TEMPLATE, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -21,7 +25,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.TREATMENTS,
+            tableName: treatmentTableName,
           },
           key: "id",
         },
@@ -31,7 +35,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.SEVERITY,
+            tableName: severityTableName,
           },
           key: "id",
         },
@@ -41,7 +45,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.CONDITIONS,
+            tableName: conditionTableName,
           },
           key: "id",
         },
@@ -51,7 +55,7 @@ module.exports = {
         allowNull: true,
         references: {
           model: {
-            tableName: DB_TABLES.USERS,
+            tableName: userTableName,
           },
           key: "id",
         },
@@ -75,6 +79,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.CARE_PLAN_TEMPLATE);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

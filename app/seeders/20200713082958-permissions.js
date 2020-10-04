@@ -1,9 +1,10 @@
 'use strict';
-import {DB_TABLES} from "../../constant";
+
+import {TABLE_NAME} from "../models/permissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(DB_TABLES.PERMISSIONS, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         type: "VERIFIED_ACCOUNT",
         created_at: new Date(),
@@ -48,6 +49,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(DB_TABLES.PERMISSIONS, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };
