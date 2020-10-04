@@ -754,6 +754,11 @@ class DoctorController extends Controller {
         gender = "",
         date_of_birth = "",
         prefix = "",
+        comorbidities = "",
+        allergies = "",
+          clinical_notes = "",
+          diagnosis_type = "1",
+          diagnosis_description = "",
         treatment_id = "1",
         severity_id = "1",
         condition_id = "1"
@@ -810,6 +815,19 @@ class DoctorController extends Controller {
       const birth_date = moment(date_of_birth);
       const age = getAge(date_of_birth);
 
+      // check for optional details before adding
+      let patientOtherDetails = {};
+      if(comorbidities) {
+        patientOtherDetails["comorbidities"] = comorbidities;
+      }
+      if(allergies) {
+        patientOtherDetails["allergies"] = allergies;
+      }
+      if(clinical_notes) {
+        patientOtherDetails["clinical_notes"] = clinical_notes;
+      }
+
+
       // const age = moment().diff(birth_date, "y");
       const patient = await patientsService.addPatient({
         first_name,
@@ -819,7 +837,14 @@ class DoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
-        dob: moment(date_of_birth).toISOString()
+        dob: moment(date_of_birth).toISOString(),
+        details: {
+          ...patientOtherDetails,
+          diagnosis: {
+            type: diagnosis_type,
+            description: diagnosis_description
+          },
+        }
         // uid
       });
 

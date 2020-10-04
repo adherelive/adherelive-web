@@ -19,6 +19,9 @@ import switzerland from '../../../Assets/images/switzerland.png';
 import france from '../../../Assets/images/france.png';
 import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
+import TextArea from "antd/lib/input/TextArea";
+import { FINAL,PROBABLE,DIAGNOSIS_TYPE } from "../../../constant";
+
 const { Option } = Select;
 
 const MALE = 'm';
@@ -40,6 +43,11 @@ class PatientDetailsDrawer extends Component {
             fetchingCondition: false,
             fetchingTreatment: false,
             fetchingSeverity: false,
+            comorbidities:'',
+            allergies:'',
+            clinical_notes:'',
+            diagnosis_description:'',
+            diagnosis_type:'2'
         };
 
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
@@ -79,6 +87,43 @@ class PatientDetailsDrawer extends Component {
             this.setState({ name: e.target.value });
         }
     };
+
+    setComorbidities = e => {
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if (reg.test(value) || value === '') {
+            this.setState({ comorbidities: e.target.value });
+        }
+    }
+
+    setClinicalNotes = e => {
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if (reg.test(value) || value === '') {
+            this.setState({ clinical_notes: e.target.value });
+        }
+    }
+
+    setAllergies= e => {
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if (reg.test(value) || value === '') {
+            this.setState({ allergies: e.target.value });
+        }
+    }
+
+    setDiagnosis = e => {
+        const { value } = e.target;
+        const reg =  /^[a-zA-Z][a-zA-Z\s]*$/;
+        if (reg.test(value) || value === '') {
+            this.setState({ diagnosis_description: e.target.value });
+        }
+    }
+
+    setDiagnosisType = value => {
+        this.setState({ diagnosis_type: value });
+      
+    }
 
 
     setPrefix = value => {
@@ -147,6 +192,7 @@ class PatientDetailsDrawer extends Component {
         }
         return newSeverity;
     }
+
 
 
     getConditionOption = () => {
@@ -227,8 +273,8 @@ class PatientDetailsDrawer extends Component {
         }
     };
 
-    renderAddPatient = () => {
 
+    renderAddPatient = () => {
         let dtToday = new Date();
 
         let month = dtToday.getMonth() + 1;
@@ -241,7 +287,7 @@ class PatientDetailsDrawer extends Component {
             month = '0' + month;
         }
 
-        const { mobile_number = '', name = '', condition = '', prefix = '' } = this.state;
+        const { mobile_number = '', name = '', condition = '', prefix = '',allergies='',comorbidities='',diagnosis_description='',clinical_notes='',diagnosis_type='' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -277,6 +323,8 @@ class PatientDetailsDrawer extends Component {
             </Select>
         );
 
+       
+
         return (
             <div className='form-block-ap'>
                 <div className='form-headings flex align-center justify-start'>{this.formatMessage(messages.phoneNo)}<div className="star-red">*</div></div>
@@ -311,7 +359,68 @@ class PatientDetailsDrawer extends Component {
                 <Input className={"form-inputs-ap"} type='date'
                     max={`${year}-${month}-${day}`}
                     onChange={this.setDOB} />
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.comorbidities)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={comorbidities}
+                    className={"form-textarea-ap"}
+                    onChange={this.setComorbidities}
+                    
+                />
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={allergies}
+                    className={"form-textarea-ap"}
+                    onChange={this.setAllergies}
+                />
+
+                
+
                 <div className='form-category-headings-ap'>{this.formatMessage(messages.treatmentPlan)}</div>
+
+                
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.clinicalNotes)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={clinical_notes}
+                    className={"form-textarea-ap "}
+                    onChange={this.setClinicalNotes}
+                />
+
+                <div className='form-headings-ap flex  justify-space-between'>
+                    <div className="flex direction-row "  key="diagnosys-h" >
+                        {this.formatMessage(messages.diagnosis)}
+                        <div className="star-red">*</div>
+                    </div>
+                    <div>
+                        <Select placeholder="Final" key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType}>
+
+                            <Option 
+                            value={DIAGNOSIS_TYPE[FINAL].diagnosis_type}
+                            key={`final-${DIAGNOSIS_TYPE[FINAL].diagnosis_type}`}
+                            >{DIAGNOSIS_TYPE[FINAL].value}</Option>
+
+                            <Option 
+                            value={DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}
+                            key={`probable-${DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}`}
+                             >{DIAGNOSIS_TYPE[PROBABLE].value}</Option>
+                        </Select>
+                    </div>
+
+                </div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={diagnosis_description}
+                    className={"form-textarea-ap"}
+                    onChange={this.setDiagnosis}
+                />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}<div className="star-red">*</div></div>
 
@@ -397,7 +506,9 @@ class PatientDetailsDrawer extends Component {
 
 
     validateData = () => {
-        const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+
+        const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type= '' } = this.state;
+        // console.log("diagnosis_type =========>",diagnosis_type);
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
         if (!prefix) {
@@ -427,16 +538,24 @@ class PatientDetailsDrawer extends Component {
             message.error(this.formatMessage(messages.conditionError))
             return false;
         }
+        else if(!diagnosis_description){
+            message.error(this.formatMessage(messages.diagnosisError))
+            return false;
+        }
+        else if(!diagnosis_type){
+            message.error(this.formatMessage(messages.diagnosisTypeError))
+            return false;
+        }
         
         return true;
     }
 
     onSubmit = () => {
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '' } = this.state;
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes=''} = this.state;
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
-            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix })
+            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes})
         }
     }
 
@@ -457,7 +576,12 @@ class PatientDetailsDrawer extends Component {
             prefix: "91",
             fetchingCondition: false,
             fetchingTreatment: false,
-            fetchingSeverity: false
+            fetchingSeverity: false,
+            comorbidities:'',
+            allergies:'',
+            clinical_notes:'',
+            diagnosis_description:'',
+            diagnosis_type:''
         });
         close();
     };
@@ -503,3 +627,5 @@ class PatientDetailsDrawer extends Component {
 }
 
 export default injectIntl(PatientDetailsDrawer);
+
+

@@ -75,6 +75,23 @@ class TwilioController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  deleteChat = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const allChannels = await twilioService.deleteAllMessages();
+
+      return raiseSuccess(
+          res,
+          200,
+          { },
+          "DELETED ALL CHAT MESSAGES"
+      );
+    } catch (error) {
+      Log.debug("deleteChat 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new TwilioController();

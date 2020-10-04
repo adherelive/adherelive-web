@@ -206,13 +206,14 @@ class ScheduleEventService {
 
     getPageEventByData = async (data) => {
         try {
-            const {eventIds, startLimit, endLimit} = data;
+            const {eventIds, startLimit, endLimit, event_type} = data;
             console.log("11239883 startLimit, endLimit", startLimit, endLimit);
             const scheduleEvent = await ScheduleEvent.findAll({
                 offset: startLimit,
                 limit: endLimit,
                 where: {
                     event_id: eventIds,
+                    event_type
                 },
                 order: [
                     ['start_time','ASC']

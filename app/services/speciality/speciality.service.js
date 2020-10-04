@@ -1,7 +1,7 @@
 import {Op} from "sequelize";
 import database from "../../../libs/mysql";
 
-const {speciality: Specialities} = database.models;
+const {specialities: Specialities} = database.models;
 
 class SpecialityService {
     getSpecialityByData = async (data) => {

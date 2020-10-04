@@ -573,7 +573,7 @@ class UserController extends Controller {
 
         // treatments
         let treatmentApiDetails = {};
-        const treatmentDetails = await treatmentService.getAll({ id: treatmentIds });
+        const treatmentDetails = await treatmentService.getAll();
         treatmentIds = [];
         for (const treatment of treatmentDetails) {
 
@@ -665,10 +665,6 @@ class UserController extends Controller {
     } catch (err) {
       Logger.debug("onAppStart 500 error", err);
       return this.raiseServerError(res);
-      // console.log("ON APP START CATCH ERROR ", err);
-      // response = new Response(false, 500);
-      // response.setError(err.message);
-      // return res.status(500).json(response.getResponse());
     }
   };
 

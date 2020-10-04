@@ -1,5 +1,6 @@
 import { Op } from "sequelize";
 import database from "../../../libs/mysql";
+import {USER_CATEGORY} from "../../../constant";
 
 const {appointments : Appointments} = database.models;
 
@@ -62,9 +63,11 @@ class AppointmentService {
           [Op.or]: [
             {
               participant_two_id: patient_id,
+              participant_two_type: USER_CATEGORY.PATIENT
             },
             {
               participant_one_id: patient_id,
+              participant_one_type: USER_CATEGORY.PATIENT
             },
           ],
         },

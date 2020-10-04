@@ -263,3 +263,123 @@
     }
   }
 }
+
+
+.symptom-message-container{
+  margin:0px;
+  padding:10px 0px;
+  min-height:200px;
+  height:auto;
+  min-width:255px;
+  width:450px;
+  background-color:whitesmoke;
+}
+
+.symptom-detail-container{
+  margin:0px auto !important;
+  background-color:#e8e8e8;
+  width:90%;
+  min-height:90px;
+  height:auto;
+  border-left:4px solid #a4a4a4;
+  border-radius:3px 2px 2px 3px;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  color:#212b36;
+  .symptom-h{
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:0.05rem;
+  }
+  .symptom-details{
+      .dot{
+        color:#a6a8a9;
+      }
+    &>span{
+    padding:2px;
+    font-size:17px;
+    font-weight:normal;
+    
+    }
+  }
+  
+}
+
+.symptom-image-container, .symptom-video-container, .text-msg-container{
+  background-color:inherit;
+  min-height:300px;
+  height: auto;
+  width:90%;
+  min-width: 400px;
+  margin:20px auto;
+  .symptom-image{
+    min-width: 100%; 
+    min-height: 300px;
+    height: auto;
+    object-fit: fill;
+    margin: 0px;
+}
+}
+
+
+.symptom-audio-container{
+  background-color:inherit;
+  min-height:50px;
+  height: auto;
+  width:90%;
+  min-width: 400px;
+  margin:20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  
+  
+}
+
+.symptom-video-container{
+  min-height:200px;
+  
+}
+
+.text-msg-container{
+  min-height:100px;
+  
+  &>span{
+    font-size: 20px;
+    color: #212b36;
+    text-align: left;
+
+  }
+}
+
+ .vital-container{
+  margin:0px;
+  padding:10px ;
+  min-height:80px;
+  height:auto;
+  min-width:100px;
+  width:auto;
+  background-color: @rosy-pink-10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  &>div{
+    border-left:4px solid pink;
+    border-radius: 2px;
+  }
+    span{
+      margin: 0px 10px;
+      font-size:17px;
+      font-weight:600;
+      letter-spacing:0.05rem;
+      color:#212b36;
+    }
+    .v-label{
+      text-transform: capitalize;
+    }
+}
