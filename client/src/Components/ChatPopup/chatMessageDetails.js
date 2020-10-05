@@ -155,7 +155,8 @@ class ChatMessageDetails extends Component {
         this.state = {
             loadSymptoms: true,
             loadingMessageDetails: false,
-            message_numbers: 0
+            message_numbers: 0,
+            vital_repeat_intervals:{}
 
         };
     }
@@ -173,6 +174,9 @@ class ChatMessageDetails extends Component {
     };
 
     componentDidMount() {
+        
+        this.fetchVitalDetails();
+        
     }
     componentDidUpdate() {
         const {
@@ -200,7 +204,8 @@ class ChatMessageDetails extends Component {
         for (let i in messagesArray) {
             let message = messagesArray[i];
             const { author = '', body = '' } = message.state;
-            if (author == USER_ADHERE_BOT) {
+            if (author === USER_ADHERE_BOT) {
+                
                 const message_type = body.split(':');
                 if (message_type[0] && message_type[0] == CHAT_MESSAGE_TYPE.SYMPTOM) {
                     adhere_bot_messages['symptom_ids'].push(message_type[1]);
@@ -221,17 +226,33 @@ class ChatMessageDetails extends Component {
 
     }
     
- 
+    fetchVitalDetails = () => {
+        const{getVitalOccurence } = this.props;
+        getVitalOccurence().then(res=>{
+            const { status = false } = res;
+            if(status){
+               const  {payload:{data} = {}} = res;
+               const {repeat_intervals ={} } = data;
+               this.setState({
+                vital_repeat_intervals:repeat_intervals
+               })
+
+            }
+          });
+    }
+   
     
      
      
     render() {
-        const { authenticated_user, users, roomId, chatMessages, patientDp, symptoms, upload_documents, otherUserLastConsumedMessageIndex } = this.props;
+        const { authenticated_user, users, roomId, chatMessages, patientDp, symptoms, upload_documents, otherUserLastConsumedMessageIndex,getVitalOccurence } = this.props;
         const { messageIds = [] } = chatMessages[roomId] || {};
-        const { loadSymptoms, loadingMessageDetails, message_numbers } = this.state;
+        const { loadSymptoms, loadingMessageDetails, message_numbers,vital_repeat_intervals } = this.state;
         if (chatMessages[roomId] !== undefined && (loadSymptoms || message_numbers != messageIds.length) && !loadingMessageDetails) {
             this.fetchMessageDetails(chatMessages[roomId]);
         }
+
+
         const { messages: messagesArray = [] } = chatMessages[roomId] || {};
         if (messagesArray.length > 0) {
             const messagesToRender = [];
@@ -255,7 +276,7 @@ class ChatMessageDetails extends Component {
                 if (message.state.author == USER_ADHERE_BOT) {
                     mess = (
                         
-                       <BotMessage body={body} message={message} patientDp={patientDp} {...this.props} />
+                       <BotMessage body={body} message={message} patientDp={patientDp} vital_repeat_intervals={vital_repeat_intervals} {...this.props} />
                     )
                 } else {
                     mess = (

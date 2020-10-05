@@ -14,24 +14,29 @@ class vitalBotMessage extends Component{
     }
 
     componentDidMount(){
+       
         
-
     }
 
-    render(){
-        const{message,patientDp} = this.props;
+    getVitalsMessageArray = () => {
+        const{message,patientDp,vital_repeat_intervals = {} } = this.props;
         const {vitals, vital_id, vital_templates, response} = this.props.body;
         const vitalsMessageArray = [];
-        const {basic_info: {vital_template_id} = {} ,details:{repeat_days = [] , repeat_interval_id =''}={}} = vitals[vital_id] || {};
+        const {basic_info: {vital_template_id} = {} ,details:{repeat_days = [] , repeat_interval_id = ''}={}} = vitals[vital_id] || {};
         const {basic_info: {name} = {}, details: {template = [] } = {}} = vital_templates[vital_template_id] || {};
-
+       
         // console.log("template",template);
         //while rendering bottom message for vitals
+        
         template.map(eachTemplate => {
             let vitalMessage = '';
             const {id, label, placeholder} = eachTemplate || {};
-            // console.log("EachTemplate",eachTemplate);
-            const occurence = REPEAT_INTERVAL_VITALS[repeat_interval_id]
+            
+            let obj = vital_repeat_intervals[repeat_interval_id];
+            
+            if(typeof(obj) !== 'undefined'){
+                const {text : occurence = ''} = obj;
+                
             vitalMessage = (
 
                 <Fragment key={`${message.state.sid}-vital-response`} >
@@ -78,9 +83,16 @@ class vitalBotMessage extends Component{
 
                 
             )
+        }
 
             vitalsMessageArray.push(vitalMessage);
         });
+
+        return vitalsMessageArray;
+    }
+
+    render(){
+        const vitalsMessageArray = this.getVitalsMessageArray();
 
         return vitalsMessageArray;
     }

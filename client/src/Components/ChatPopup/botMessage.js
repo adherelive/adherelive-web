@@ -21,15 +21,16 @@ class botMessage extends Component{
         
     }
 
-    getBotMessageByType(type,body,message,patientDp){
-        if(type == CHAT_MESSAGE_TYPE.SYMPTOM){
+    getBotMessageByType(type,body,message,patientDp,vital_repeat_intervals){
+        if(type === CHAT_MESSAGE_TYPE.SYMPTOM){
+          
             return (
                 <SymptomBotMessage body={body} message={message} patientDp={patientDp}  />
             )
         }
-        else if (type == CHAT_MESSAGE_TYPE.VITAL){
+        else if (type === CHAT_MESSAGE_TYPE.VITAL){
               return (
-                <VitalBotMessage body={body} message={message} patientDp={patientDp}  />
+                <VitalBotMessage body={body} message={message} patientDp={patientDp} vital_repeat_intervals={vital_repeat_intervals}  />
               )
         }
         else{
@@ -61,13 +62,13 @@ class botMessage extends Component{
     }
 
     getBotMessage = () => {
-        const { body : this_body ,message,patientDp} = this.props;
+        const { body : this_body ,message,patientDp,vital_repeat_intervals} = this.props;
         const body = JSON.parse(this_body);
         // console.log("body",body);
         const tempType = this_body.split(':')[0];
         const type = tempType.slice(2,tempType.length-1);
         // console.log("type",type);
-        const newBotMessage = this.getBotMessageByType(type,body,message,patientDp);
+        const newBotMessage = this.getBotMessageByType(type,body,message,patientDp,vital_repeat_intervals);
         return newBotMessage;
 
     }
