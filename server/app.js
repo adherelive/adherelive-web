@@ -9,6 +9,9 @@ import Passed from "../app/Crons/passed";
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 
+import EventObserver from "../app/proxySdk/eventObserver";
+import Activity from "../app/activitySdk/activityObserver";
+
 Database.init();
 
 const Events  = import("../events").then(module => {}).catch(err => {console.log("event module error", err)});
@@ -24,6 +27,9 @@ const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     await Passed.runObserver();
     await Start.runObserver();
 });
+
+EventObserver.runObservers();
+Activity.runObservers();
 
 app.use(express.json({ limit: "50mb" }));
 app.use(
