@@ -2,11 +2,11 @@
 import {DataTypes} from "sequelize";
 import {FEATURE_TYPE} from "../../constant";
 
-export const FEATURE_DETAILS = "feature_details";
+export const TABLE_NAME = "feature_details";
 
 export const db = (database) => {
     database.define(
-        FEATURE_DETAILS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,

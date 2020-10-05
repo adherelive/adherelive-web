@@ -18,7 +18,6 @@ import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 import providerService from "../../../services/provider/provider.service";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
-import EventSchedule from "../../../eventSchedules";
 
 // SERVICES...
 import queueService from "../../../services/awsQueue/queue.service";

@@ -15,7 +15,6 @@ import FeatureDetailService from "../services/featureDetails/featureDetails.serv
 import FeatureDetailWrapper from "../ApiWrapper/mobile/featureDetails";
 
 const Log = new Logger("CRON > PASSED");
-const scheduleEventService = new ScheduleEventService();
 
 class PassedCron {
     constructor() {

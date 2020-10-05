@@ -1,20 +1,10 @@
 'use strict';
 
-import {DB_TABLES} from "../../constant";
+import {TABLE_NAME} from "../models/patients";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkInsert('People', [{
-        name: 'John Doe',
-        isBetaMember: false
-      }], {});
-    */
-    return queryInterface.bulkInsert(DB_TABLES.PATIENTS, [{
+    return queryInterface.bulkInsert(TABLE_NAME, [{
       user_id: "2",
       gender: "m",
       age:"25 y",
@@ -29,13 +19,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkDelete('People', null, {});
-    */
-    return queryInterface.bulkDelete(DB_TABLES.PATIENTS, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

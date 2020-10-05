@@ -1,10 +1,10 @@
 'use strict';
 
-import {DB_TABLES} from "../../constant";
+import {TABLE_NAME} from "../models/vitalTemplates";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(DB_TABLES.VITAL_TEMPLATES, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         name: "Blood Pressure",
         unit:"mm of Hg",
@@ -187,6 +187,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(DB_TABLES.VITAL_TEMPLATES, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

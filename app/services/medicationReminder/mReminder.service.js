@@ -1,11 +1,11 @@
-import database from "../../../libs/mysql";
-
-const {medications: MedicationReminder, medicines: Medicines} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/medicationReminders";
+import {TABLE_NAME as medicineTableName} from "../../models/medicines";
 
 class MReminderService {
   async addMReminder(data) {
     try {
-      const response = await MedicationReminder.create(data);
+      const response = await Database.getModel(TABLE_NAME).create(data);
       return response;
     } catch (err) {
       throw err;
@@ -14,7 +14,7 @@ class MReminderService {
 
   updateMedication = async (data, id) => {
     try {
-      const medication = await MedicationReminder.update(data, {
+      const medication = await Database.getModel(TABLE_NAME).update(data, {
         where: {
           id,
         },
@@ -27,9 +27,9 @@ class MReminderService {
 
   getMedication = async (data) => {
     try {
-      const medication = await MedicationReminder.findOne({
+      const medication = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [Medicines]
+        include: [Database.getModel(medicineTableName)]
       });
       return medication;
     } catch (err) {
@@ -39,7 +39,7 @@ class MReminderService {
 
   getMedicationsForParticipant = async (data) => {
     try {
-      const medications = await MedicationReminder.findAll({
+      const medications = await Database.getModel(TABLE_NAME).findAll({
         where: data,
       });
       return medications;
@@ -50,7 +50,7 @@ class MReminderService {
 
   deleteMedication = async (id) => {
     try {
-      const medication = await MedicationReminder.destroy({
+      const medication = await Database.getModel(TABLE_NAME).destroy({
         where: {
           id,
         },

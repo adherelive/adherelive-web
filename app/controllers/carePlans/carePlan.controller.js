@@ -400,11 +400,13 @@ class CarePlanController extends Controller {
 
             let carePlanApiData = {};
 
+            const {vital_ids} = await carePlanApiWrapper.getAllInfo();
+
             carePlanApiData[
                 carePlanApiWrapper.getCarePlanId()
-            ] = { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, carePlanMedicationIds, carePlanAppointmentIds };
+            ] = { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, carePlanMedicationIds, carePlanAppointmentIds, vital_ids };
 
-
+            Log.debug("87937198123 careplan", carePlanApiData);
 
 
             let templateMedications = {};

@@ -1,14 +1,16 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {DOCTORS} from "./doctors";
-import {PATIENTS} from "./patients";
-import {CARE_PLAN_TEMPLATE} from "./careplanTemplate";
+import {TABLE_NAME as doctorTableName} from "./doctors";
+import {TABLE_NAME as patientTableName} from "./patients";
+import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
+import {TABLE_NAME as carePlanAppointmentTableName} from "./carePlanAppointments";
+import {TABLE_NAME as carePlanMedicationTableName} from "./carePlanMedications";
 
-export const CARE_PLANS = "care_plans";
+export const TABLE_NAME = "care_plans";
 
 export const db = (database) => {
     database.define(
-        CARE_PLANS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -21,7 +23,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: DOCTORS,
+                        tableName: doctorTableName,
                     },
                     key: 'id'
                 }
@@ -31,7 +33,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: PATIENTS,
+                        tableName: patientTableName,
                     },
                     key: 'id'
                 }
@@ -41,7 +43,7 @@ export const db = (database) => {
                 allowNull: true,
                 references: {
                     model: {
-                        tableName: CARE_PLAN_TEMPLATE,
+                        tableName: carePlanTemplateTableName,
                     },
                     key: 'id'
                 }
@@ -87,42 +89,24 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-    const {care_plans, patients, doctors, care_plan_appointments, care_plan_medications} = database.models || {};
-
     // associations here (if any) ...
-    care_plans.hasOne(patients, {
+    database.models[TABLE_NAME].hasOne(database.models[patientTableName], {
         foreignKey: "id",
         sourceKey: "patient_id"
     });
 
-    care_plans.hasOne(doctors, {
+    database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
         foreignKey: "id",
         sourceKey: "doctor_id"
     });
 
-    care_plans.hasMany(care_plan_appointments, {
+    database.models[TABLE_NAME].hasMany(database.models[carePlanAppointmentTableName], {
         foreignKey:"care_plan_id",
         sourceKey:"id"
     });
 
-    care_plans.hasMany(care_plan_medications, {
+    database.models[TABLE_NAME].hasMany(database.models[carePlanMedicationTableName], {
         foreignKey:"care_plan_id",
         sourceKey:"id"
     });
 };
-
-// CarePlan.hasOne(Conditions, {
-//     foreignKey: "condition_id",
-//     targetKey: "id"
-// });
-
-// CarePlan.hasOne(Consents, {
-//     foreignKey: "consent_id",
-//     targetKey: "id"
-// });
-
-//
-// CarePlan.hasMany(Symptoms, {
-//     foreignKey:"cae_plan_id",
-//     sourceKey:"id"
-// });

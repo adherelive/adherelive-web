@@ -32,7 +32,8 @@ export const CHAT_MESSAGE_DETAILS = {
 };
  export const USER_ADHERE_BOT = 'adhere_bot';
  export const CHAT_MESSAGE_TYPE = {
-   SYMPTOM:'symptom'
+   SYMPTOM:'symptoms',
+   VITAL:'vitals'
  }
 
 export const ROOM_ID_TEXT = '-adhere-';
@@ -642,6 +643,10 @@ export const BODY_VIEW = {
   BACK: "2"
 };
 
+export const BODY_SIDE = {
+  1:"FRONT",
+  2:"BACK"
+};
 export const PARTS = {
   HEAD: "HEAD",
   RIGHT_EYE: "RIGHT_EYE",
@@ -1632,4 +1637,19 @@ export const BODY = {
     //areaStyle: { top: 740, left: 168 }
   }
 };
+
+
+export const FINAL = "1";
+export const PROBABLE = "2";
+
+export const DIAGNOSIS_TYPE =  {
+  [FINAL]:{
+    "diagnosis_type":"1",
+    "value":"Final"
+  },
+  [PROBABLE]:{
+    "diagnosis_type":"2",
+    "value":"Probable"
+  }
+}
 

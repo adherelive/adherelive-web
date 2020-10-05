@@ -1,14 +1,13 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {USER_CATEGORY_PERMISSIONS} from "./userCategoryPermissions";
-
+import {TABLE_NAME as UserCategoryPermissionTableName} from "./userCategoryPermissions";
 import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
-export const USERS = "users";
+export const TABLE_NAME = "users";
 
 export const db = (database) => {
     database.define(
-        USERS,
+        TABLE_NAME,
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -117,7 +116,7 @@ export const associate = (database) => {
     })
 
     users.belongsToMany(permissions, {
-        through: USER_CATEGORY_PERMISSIONS,
+        through: UserCategoryPermissionTableName,
         sourceKey:"category",
         foreignKey:"category"
     });

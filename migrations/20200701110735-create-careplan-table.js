@@ -1,52 +1,26 @@
 'use strict';
 
 import {DB_TABLES} from "../constant";
+import {TABLE_NAME} from "../app/models/carePlan";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import {TABLE_NAME as patientTableName} from "../app/models/patients";
+import {TABLE_NAME as carePlanTemplateName} from "../app/models/careplanTemplate";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
-    return queryInterface.createTable(DB_TABLES.CARE_PLANS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      // name: {
-      //   type: Sequelize.STRING(1000)
-      // },
-      // condition_id: {
-      //   type: Sequelize.INTEGER,
-      //   allowNull: false,
-      //   references: {
-      //     model: {
-      //       tableName: DB_TABLES.CONDITIONS,
-      //     },
-      //     key: 'id'
-      //   }
-      // },
-      // consent_id: {
-      //   type: Sequelize.INTEGER,
-      //   allowNull: false,
-      //   references: {
-      //     model: {
-      //       tableName: DB_TABLES.CONSENTS,
-      //     },
-      //     key: 'id'
-      //   }
-      // },
       doctor_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.DOCTORS,
+            tableName: doctorTableName,
           },
           key: 'id'
         }
@@ -56,7 +30,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.PATIENTS,
+            tableName: patientTableName,
           },
           key: 'id'
         }
@@ -66,7 +40,7 @@ module.exports = {
         allowNull: true,
         references: {
           model: {
-            tableName: DB_TABLES.CARE_PLAN_TEMPLATE,
+            tableName: carePlanTemplateName,
           },
           key: 'id'
         }
@@ -100,13 +74,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
-    return queryInterface.dropTable(DB_TABLES.CARE_PLANS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

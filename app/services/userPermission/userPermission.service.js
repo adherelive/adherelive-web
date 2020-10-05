@@ -1,6 +1,5 @@
-import database from "../../../libs/mysql";
-
-const {user_category_permissions: UserCategoryPermissions} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/userCategoryPermissions";
 
 class UserPermissionService {
     constructor() {
@@ -8,7 +7,7 @@ class UserPermissionService {
 
     getPermissionsByData = async data => {
       try {
-          const userPermission = UserCategoryPermissions.findAll({
+          const userPermission = Database.getModel(TABLE_NAME).findAll({
               where: data
           });
           return userPermission;

@@ -354,6 +354,9 @@ class PatientController extends Controller {
                 }
             }
 
+            // todo: temp fix. api needs rewrite
+            const {vital_ids} = await carePlanData.getAllInfo();
+
 
             return this.raiseSuccess(res, 200, {
                 // care_plans: { ...carePlanApiData },
@@ -364,6 +367,7 @@ class PatientController extends Controller {
                         ...carePlanData.getBasicInfo(),
                         appointment_ids,
                         medication_ids,
+                        vital_ids,
                         ...severityDetails
                     }
                 },

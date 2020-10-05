@@ -1137,16 +1137,18 @@ class PatientDetails extends Component {
     let carePlanId = 1;
     let cPAppointmentIds = [];
     let cPMedicationIds = [];
+    let vitalIds = [];
     for (let carePlan of Object.values(care_plans)) {
       let {
         basic_info: { id = 1, patient_id: patientId = 1 }
       } = carePlan;
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
-        let { appointment_ids = [], medication_ids = [] } = carePlan;
+        let { appointment_ids = [], medication_ids = [], vital_ids = [] } = carePlan;
 
         cPAppointmentIds = appointment_ids;
         cPMedicationIds = medication_ids;
+        vitalIds = vital_ids;
       }
     }
 
@@ -1202,7 +1204,7 @@ class PatientDetails extends Component {
       showUseTemplate = false;
     }
 
-    let showTabs = (cPAppointmentIds.length || cPMedicationIds.length) ? true : false;
+    let showTabs = (cPAppointmentIds.length || cPMedicationIds.length || vitalIds.length) ? true : false;
     const {
       basic_info: {
         first_name,
