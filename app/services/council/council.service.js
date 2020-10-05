@@ -1,13 +1,12 @@
 import {Op} from "sequelize";
-import database from "../../../libs/mysql";
-
-const {registration_councils: Council} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/registrationCouncil";
 
 class CouncilService {
 
     getAll = async () => {
         try {
-            const council = await Council.findAll();
+            const council = await Database.getModel(TABLE_NAME).findAll();
             return council;
         } catch(error) {
             throw error;
@@ -16,7 +15,7 @@ class CouncilService {
 
     search = async (data) => {
         try {
-            const council = await Council.findAll({
+            const council = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     name: {
                         [Op.like]: `%${data}%`,
@@ -31,7 +30,7 @@ class CouncilService {
 
     getByData = async data => {
         try {
-            const council = await Council.findOne({
+            const council = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return council;
@@ -42,7 +41,7 @@ class CouncilService {
 
     getCouncilByData = async data => {
         try {
-            const council = await Council.findAll({
+            const council = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return council;

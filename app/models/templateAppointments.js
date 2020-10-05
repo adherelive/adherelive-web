@@ -1,14 +1,14 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {CARE_PLAN_TEMPLATES} from "./careplanTemplate";
-import {PROVIDERS} from "./providers";
+import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
+import {TABLE_NAME as providerTableName} from "./providers";
 
 
-export const TEMPLATE_APPOINTMENTS = "template_appointments";
+export const TABLE_NAME = "template_appointments";
 
 export const db = (database) => {
     database.define(
-        TEMPLATE_APPOINTMENTS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -21,7 +21,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: CARE_PLAN_TEMPLATES
+                        tableName: carePlanTemplateTableName
                     },
                     key: "id"
                 }
@@ -42,7 +42,7 @@ export const db = (database) => {
                 type: DataTypes.INTEGER,
                 references: {
                     model: {
-                        tableName: PROVIDERS
+                        tableName: providerTableName
                     },
                     key: "id"
                 },

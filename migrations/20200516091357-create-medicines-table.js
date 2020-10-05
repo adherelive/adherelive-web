@@ -1,18 +1,11 @@
 "use strict";
 
-import { DB_TABLES, MEDICINE_TYPE } from "../constant";
-import Sequelize from "sequelize";
+import { MEDICINE_TYPE } from "../constant";
+import {TABLE_NAME} from "../app/models/medicines";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
-    return queryInterface.createTable(DB_TABLES.MEDICINES, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -50,13 +43,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.dropTable('users');
-    */
-    return queryInterface.dropTable(DB_TABLES.MEDICINES);
+    return queryInterface.dropTable(TABLE_NAME);
   },
 };

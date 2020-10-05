@@ -1,11 +1,10 @@
-import database from "../../../libs/mysql";
-
-const {user_verifications: UserVerifications} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/userVerifications";
 
 class UserVerificationsService {
     async addRequest(data) {
         try {
-            const response = await UserVerifications.create(data);
+            const response = await Database.getModel(TABLE_NAME).create(data);
             return response;
         } catch (err) {
             throw err;
@@ -14,7 +13,7 @@ class UserVerificationsService {
 
     async getRequestByLink(link) {
         try {
-            const verification = await UserVerifications.findOne({
+            const verification = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     request_id:link
                 }
@@ -27,7 +26,7 @@ class UserVerificationsService {
 
     updateVerification = async (data, link) => {
         try {
-            const verification = await UserVerifications.update(data, {
+            const verification = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
                     request_id:link
                 }
@@ -40,7 +39,7 @@ class UserVerificationsService {
 
     getRequestByData = async (data) => {
         try {
-            const verification = await UserVerifications.findOne({
+            const verification = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return verification;

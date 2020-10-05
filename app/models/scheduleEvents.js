@@ -2,11 +2,11 @@
 import {DataTypes} from "sequelize";
 import {EVENT_TYPE, EVENT_STATUS} from "../../constant";
 
-export const SCHEDULE_EVENTS = "schedule_events";
+export const TABLE_NAME = "schedule_events";
 
 export const db = (database) => {
     database.define(
-        SCHEDULE_EVENTS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,

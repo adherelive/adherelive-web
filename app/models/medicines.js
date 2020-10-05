@@ -2,11 +2,11 @@
 import {DataTypes} from "sequelize";
 import { MEDICINE_TYPE } from "../../constant";
 
-export const MEDICINES = "medicines";
+export const TABLE_NAME = "medicines";
 
 export const db = (database) => {
     database.define(
-        MEDICINES,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,

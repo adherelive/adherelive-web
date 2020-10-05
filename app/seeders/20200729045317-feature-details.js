@@ -1,10 +1,11 @@
 'use strict';
 
-import {DB_TABLES, FEATURE_TYPE, REPEAT_INTERVAL} from "../../constant";
+import {FEATURE_TYPE, REPEAT_INTERVAL} from "../../constant";
+import {TABLE_NAME} from "../models/featureDetails";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(DB_TABLES.FEATURE_DETAILS, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         feature_type: FEATURE_TYPE.APPOINTMENT,
         details: JSON.stringify({
@@ -107,6 +108,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(DB_TABLES.FEATURE_DETAILS, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

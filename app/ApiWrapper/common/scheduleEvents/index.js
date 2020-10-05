@@ -3,8 +3,6 @@ import BaseScheduleEvent from "../../../services/scheduleEvents";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import {EVENT_TYPE} from "../../../../constant";
 
-const scheduleEventService = new ScheduleEventService();
-
 class ScheduleEventWrapper extends BaseScheduleEvent {
     constructor(data) {
         super(data);
@@ -68,6 +66,7 @@ export default async (data = null, id = null) => {
     if(data) {
         return new ScheduleEventWrapper(data);
     }
+    const scheduleEventService = new ScheduleEventService();
     const scheduleEvent = await scheduleEventService.getEventByData({id});
     return new ScheduleEventWrapper(scheduleEvent);
 };

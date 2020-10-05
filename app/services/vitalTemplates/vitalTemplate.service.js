@@ -1,13 +1,12 @@
 import {Op} from "sequelize";
-import database from "../../../libs/mysql";
-
-const {vital_templates: VitalTemplates} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/vitalTemplates";
 
 class VitalTemplateService {
 
     searchByData = async (data) => {
         try {
-            const vitalTemplates = await VitalTemplates.findAll({
+            const vitalTemplates = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     name: {
                         [Op.like]: `${data}%`,
@@ -22,7 +21,7 @@ class VitalTemplateService {
 
     getByData = async (data) => {
         try {
-            const vitalTemplates = await VitalTemplates.findOne({
+            const vitalTemplates = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return vitalTemplates;

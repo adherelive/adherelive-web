@@ -1,13 +1,13 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {DOCTORS} from "./doctors";
-import {REGISTRATION_COUNCIL} from "./registrationCouncil";
+import {TABLE_NAME as doctorTableName} from "./doctors";
+import {TABLE_NAME as registrationCouncilTableName} from "./registrationCouncil";
 
-export const DOCTOR_REGISTRATIONS = "doctor_registrations";
+export const TABLE_NAME = "doctor_registrations";
 
 export const db = (database) => {
     database.define(
-        DOCTOR_REGISTRATIONS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -20,7 +20,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: DOCTORS,
+                        tableName: doctorTableName,
                     },
                     key: 'id'
                 }
@@ -34,7 +34,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: REGISTRATION_COUNCIL,
+                        tableName: registrationCouncilTableName,
                     },
                     key: 'id'
                 }
