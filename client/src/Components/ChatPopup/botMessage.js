@@ -18,17 +18,18 @@ class botMessage extends Component{
 
     componentDidMount(){
         
+        
     }
 
     getBotMessageByType(type,body,message,patientDp){
         if(type == CHAT_MESSAGE_TYPE.SYMPTOM){
             return (
-                <SymptomBotMessage body={body} message={message} patientDp={patientDp} />
+                <SymptomBotMessage body={body} message={message} patientDp={patientDp}  />
             )
         }
         else if (type == CHAT_MESSAGE_TYPE.VITAL){
               return (
-                <VitalBotMessage body={body} message={message} patientDp={patientDp} />
+                <VitalBotMessage body={body} message={message} patientDp={patientDp}  />
               )
         }
         else{

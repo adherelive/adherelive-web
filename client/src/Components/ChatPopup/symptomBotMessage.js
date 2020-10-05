@@ -139,7 +139,7 @@ class symptomBotMessage extends Component{
                 <audio controls className="symptom-audio" >
                     <source src={audio_src} alt="symptom audio" type="audio/ogg"></source>
                     <source src={audio_src} alt="symptom audio" type="audio/mpeg" ></source>
-                    Your browser does not support the audio element.
+                    {this.props.intl.formatMessage(messages.audioNotSupported)}
                 </audio>
                 </div>
             </div>
@@ -147,6 +147,7 @@ class symptomBotMessage extends Component{
     }
 
     getVideo= (video_src,side,parts) => {
+       
         return (
             <Fragment>
                 <div className="bot-message-container" >
@@ -155,7 +156,7 @@ class symptomBotMessage extends Component{
                     <video controls className="sympom-video" width="100%" height="100%" >
                         <source src={video_src} type="video/mp4"></source>
                         <source src={video_src} type="video/ogg"></source>
-                        Your browser does not support the video element.
+                        {this.props.intl.formatMessage(messages.videoNotSupported)}
                     </video>
                     </div>
                 </div>
@@ -166,7 +167,7 @@ class symptomBotMessage extends Component{
 
     getSymptomMessage = (side,parts) => {
        
-        if(side == '' || parts.length == 0){
+        if(side === '' || parts.length === 0){
             return null;
         }
         

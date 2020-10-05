@@ -1650,3 +1650,19 @@ export const REPEAT_INTERVAL_VITALS = {
   "5":"Every 6 hour",
   "6": "Every 12 hour",
 };
+
+
+
+export const FINAL = "1";
+export const PROBABLE = "2";
+
+export const DIAGNOSIS_TYPE =  {
+  [FINAL]:{
+    "diagnosis_type":"1",
+    "value":"Final"
+  },
+  [PROBABLE]:{
+    "diagnosis_type":"2",
+    "value":"Probable"
+  }
+}
