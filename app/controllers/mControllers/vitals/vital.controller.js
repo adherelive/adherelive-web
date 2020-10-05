@@ -291,10 +291,7 @@ class VitalController extends Controller {
     try {
       Log.debug("req.params --->", req.params);
       const { params: { id } = {}, userDetails: {userData: {category} = {}} = {}, body: { response } = {} } = req;
-<<<<<<< HEAD
-=======
       const EventService = new eventService();
->>>>>>> 65740a42ca067af993edbaef357d30aed83ada06
 
       if(category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(res, 401, {}, "Unauthorized");
