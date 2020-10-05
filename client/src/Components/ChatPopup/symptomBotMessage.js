@@ -69,7 +69,8 @@ class symptomBotMessage extends Component{
             const {basic_info : {document : audio_src = '',name : audio_name = ''} = {} } = upload_documents[audio_doc_id];
             // console.log("upload_documents",upload_documents);
             let audio_type="mp3";
-            audio_type = audio_name.split('.')[1];
+            // audio_type = audio_name.split('.')[1];
+            audio_name.split('.')[1] === '' ? audio_type = "mp4" : audio_type = audio_name.split('.')[1] ;
             audioMessage = (
                 <Fragment key={`${message.state.sid}-audio`} >
                     <div className="chat-messages">
@@ -95,7 +96,8 @@ class symptomBotMessage extends Component{
             const {basic_info : {document : video_src = '', name : video_name = ''} = {} } = upload_documents[video_doc_id];
            
             let video_type="mp4";
-            video_type = video_name.split('.')[1];
+            // video_type = video_name.split('.')[1];
+            video_name.split('.')[1] === '' ? video_type = "mp4" : video_type = video_name.split('.')[1] ;
             videoMessage = (
                 <Fragment key={`${message.state.sid}-video`} >
                     <div className="chat-messages">
