@@ -1,6 +1,6 @@
 import {Sequelize} from "sequelize";
-import Log from "./log";
-const Logger = new Log("SEQUELIZE QUERY");
+import Logger from "./log";
+const Log = new Logger("SEQUELIZE QUERY");
 // const Config = require("../config/config");
 // Config();
 
@@ -76,28 +76,8 @@ import * as UserVerifications from "../app/models/userVerifications";
 import * as Vitals from "../app/models/vitals";
 import * as VitalTemplates from "../app/models/vitalTemplates";
 
-const database = new Sequelize(
-  process.config.db.name,
-  process.config.db.username,
-  process.config.db.password,
-  {
-    host: process.config.db.host,
-    port: process.config.db.port,
-    dialect: process.config.db.dialect,
-    pool: {
-      max: 10,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-    },
-    logging: function (str) {
-      Logger.debug("query", str);
-    }
-  }
-);
-
 // Models List...
-const modelList = [
+const models = [
     ActionDetails,
     Actions,
     Adherence,
@@ -171,14 +151,57 @@ const modelList = [
     VitalTemplates,
 ];
 
-// MODEL INIT...
-for (const model of modelList) {
-    model.db(database);
+class Database {
+    static connection = null;
+
+    static getDatabase = async () => {
+        // console.log("=====", Database.connection);
+        if (Database.connection === null) {
+            Database.connection = await new Sequelize(
+                process.config.db.name,
+                process.config.db.username,
+                process.config.db.password,
+                {
+                    host: process.config.db.host,
+                    port: process.config.db.port,
+                    dialect: process.config.db.dialect,
+                    pool: {
+                        max: 10,
+                        min: 0,
+                        acquire: 30000,
+                        idle: 10000
+                    },
+                    logging: function (str) {
+                        Log.debug("query", str);
+                    }
+                }
+            );
+        }
+
+        return Database.connection;
+    };
+
+    static getModel = dbName => Database.connection.models[dbName];
+
+    static initTransaction = () => Database.connection.transaction();
+
+    static init = async () => {
+        try {
+            const database = await Database.getDatabase();
+            await database.authenticate();
+
+            for (const model of models) {
+                model.db(database);
+            }
+
+            for (const model of models) {
+                model.associate(database);
+            }
+            Log.info("Db and tables have been created...");
+        } catch (err) {
+            Log.err(1000, "Db connect error is: ", err);
+        }
+    };
 }
 
-// ASSOCIATIONS...
-for(const model of modelList) {
-    model.associate(database);
-}
-
-export default database;
+export default Database;

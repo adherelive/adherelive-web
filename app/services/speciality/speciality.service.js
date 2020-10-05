@@ -1,12 +1,11 @@
 import {Op} from "sequelize";
-import database from "../../../libs/mysql";
-
-const {speciality: Specialities} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/specialities";
 
 class SpecialityService {
     getSpecialityByData = async (data) => {
       try {
-          const speciality = await Specialities.findOne({
+          const speciality = await Database.getModel(TABLE_NAME).findOne({
               where: data
           });
           return speciality;
@@ -17,7 +16,7 @@ class SpecialityService {
 
     search = async (data) => {
         try {
-            const speciality = await Specialities.findAll({
+            const speciality = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     name: {
                         [Op.like]: `${data}%`,

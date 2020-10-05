@@ -1,13 +1,12 @@
-import database from "../../../libs/mysql";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/templateMedications";
 
-const {template_medications: TemplateMedications} = database.models;
 
 class TemplateMedicationService {
 
     getTemplateMedicationByData = async (data) => {
         try {
-            console.log("careplan data --> ", data);
-            const templateMedications = await TemplateMedications.findAll({
+            const templateMedications = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return templateMedications;
@@ -18,8 +17,7 @@ class TemplateMedicationService {
 
     getSingleTemplateMedicationByData = async (data) => {
         try {
-            console.log("careplan data --> ", data);
-            const templateMedication = await TemplateMedications.findOne({
+            const templateMedication = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return templateMedication;
@@ -30,7 +28,7 @@ class TemplateMedicationService {
 
     getMedicationsByCarePlanTemplateId = async (care_plan_template_id) => {
         try {
-            const templateMedications = await TemplateMedications.findAll({
+            const templateMedications = await Database.getModel(TABLE_NAME).findAll({
                 where: care_plan_template_id
             });
             return templateMedications;
@@ -41,7 +39,7 @@ class TemplateMedicationService {
 
     addTemplateMedication = async data => {
         try {
-            const templateMedication = await TemplateMedications.create(data);
+            const templateMedication = await Database.getModel(TABLE_NAME).create(data);
             return templateMedication;
         } catch(error) {
             throw error;

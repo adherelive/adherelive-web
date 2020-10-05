@@ -822,7 +822,7 @@ class MobileUserController extends Controller {
 
         // treatments
         let treatmentApiDetails = {};
-        const treatmentDetails = await treatmentService.getAll({ id: treatmentIds });
+        const treatmentDetails = await treatmentService.getAll();
         treatmentIds = [];
 
         for (const treatment of treatmentDetails) {

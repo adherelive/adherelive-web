@@ -1,12 +1,12 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {USERS} from "./users";
+import {TABLE_NAME as userTableName} from "./users";
 
-export const OTP_VERIFICATIONS = "otp_verifications";
+export const TABLE_NAME = "otp_verifications";
 
 export const db = (database) => {
     database.define(
-        OTP_VERIFICATIONS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -19,7 +19,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: USERS,
+                        tableName: userTableName,
                     },
                     key: 'id'
                 }

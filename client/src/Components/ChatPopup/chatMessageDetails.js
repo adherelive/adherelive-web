@@ -257,6 +257,10 @@ class ChatMessageDetails extends Component {
                         
                        <BotMessage body={body} message={message} patientDp={patientDp} {...this.props} />
                     )
+<<<<<<< HEAD
+=======
+                    messagesToRender.push(mess);
+>>>>>>> 65740a42ca067af993edbaef357d30aed83ada06
                 } else {
                     mess = (
                         <Fragment key={message.state.sid}>
@@ -265,6 +269,10 @@ class ChatMessageDetails extends Component {
                                 null
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 65740a42ca067af993edbaef357d30aed83ada06
                                 // Human wrapper code ------>>>>>>>
 
                                     // mess = (

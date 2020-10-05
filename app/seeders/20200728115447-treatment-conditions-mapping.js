@@ -1,10 +1,10 @@
 'use strict';
 
-import {TREATMENT_CONDITION_MAPPING} from "../models/treatmentConditionMapping";
+import {TABLE_NAME} from "../models/treatmentConditionMapping";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(TREATMENT_CONDITION_MAPPING, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         condition_id: "1",
         treatment_id: "1",
@@ -93,6 +93,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(TREATMENT_CONDITION_MAPPING, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

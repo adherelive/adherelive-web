@@ -14,7 +14,6 @@ import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 import moment from "moment";
 
 const Log = new Logger("MOBILE > API_WRAPPER > VITALS");
-const EventService = new eventService();
 
 class VitalWrapper extends BaseVital {
     constructor(data) {
@@ -40,6 +39,7 @@ class VitalWrapper extends BaseVital {
 
     getAllInfo = async () => {
         const {getBasicInfo, getVitalId} = this;
+        const EventService = new eventService();
 
         const currentDate = moment().endOf("day").utc().toDate();
 

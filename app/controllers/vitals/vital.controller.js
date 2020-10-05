@@ -17,13 +17,11 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 
 import {DAYS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
-import EventSchedule from "../../eventSchedules";
 import moment from "moment";
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
 const Log = new Logger("WEB > VITALS > CONTROLLER");
-const EventService = new eventService();
 
 class VitalController extends Controller {
     constructor() {
@@ -127,6 +125,7 @@ class VitalController extends Controller {
                 body: {start_date, end_date} = {},
                 params: {id} = {}
             } = req;
+            const EventService = new eventService();
 
 
             const doesVitalExists = await VitalService.getByData({id});
@@ -175,7 +174,6 @@ class VitalController extends Controller {
                 Log.debug("deletedEvents", deletedEvents);
 
                 // RRule
-                EventSchedule.create(eventScheduleData);
 
                 // todo notification
 
@@ -265,6 +263,7 @@ class VitalController extends Controller {
         try {
             Log.debug("req.params vital id---->", req.params);
             const { params: { id } = {} } = req;
+            const EventService = new eventService();
 
             const today = moment()
                 .utc()

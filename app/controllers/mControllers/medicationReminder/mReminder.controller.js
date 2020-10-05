@@ -33,7 +33,6 @@ import queueService from "../../../services/awsQueue/queue.service";
 // WRAPPERS...
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 
-import EventSchedule from "../../../eventSchedules";
 
 const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);

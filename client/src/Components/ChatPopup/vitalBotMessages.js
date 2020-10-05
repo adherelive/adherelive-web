@@ -4,8 +4,11 @@ import messages from './messages';
 import { injectIntl } from "react-intl";
 import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
 import moment from 'moment';
+<<<<<<< HEAD
 import {REPEAT_INTERVAL_VITALS} from '../../constant';
 
+=======
+>>>>>>> 65740a42ca067af993edbaef357d30aed83ada06
 
 class vitalBotMessage extends Component{
     constructor(props){
@@ -20,9 +23,17 @@ class vitalBotMessage extends Component{
 
     render(){
         const{message,patientDp} = this.props;
+<<<<<<< HEAD
         const {vitals, vital_id, vital_templates, response} = this.props.body;
         const vitalsMessageArray = [];
         const {basic_info: {vital_template_id} = {} ,details:{repeat_days = [] , repeat_interval_id =''}={}} = vitals[vital_id] || {};
+=======
+        console.log("this.body.props",this.props.body);
+        const {vitals, vital_id, vital_templates, response} = this.props.body;
+        const vitalsMessageArray = [];
+        const {basic_info: {vital_template_id} = {}} = vitals[vital_id] || {};
+        console.log("vital_templates[vital_template_id] =====> ",vital_templates[vital_template_id]);
+>>>>>>> 65740a42ca067af993edbaef357d30aed83ada06
         const {basic_info: {name} = {}, details: {template = [] } = {}} = vital_templates[vital_template_id] || {};
 
         // console.log("template",template);
@@ -31,6 +42,7 @@ class vitalBotMessage extends Component{
             let vitalMessage = '';
             const {id, label, placeholder} = eachTemplate || {};
             // console.log("EachTemplate",eachTemplate);
+<<<<<<< HEAD
             const occurence = REPEAT_INTERVAL_VITALS[repeat_interval_id]
             vitalMessage = (
 
@@ -75,6 +87,33 @@ class vitalBotMessage extends Component{
                     </div>
                 </div>
             </Fragment> 
+=======
+            console.log("{`${message.state.sid}-${id}`}",`${message.state.sid}-${id}`);
+            vitalMessage = (
+
+
+                <Fragment
+                //  key={`${message.state.sid}-${id}`}
+                  >
+                    <div className="chat-messages">
+                        <div className="chat-avatar">
+                                <span className="twilio-avatar">
+                                    <Avatar src={patientDp} />
+                                </span>
+                            <Fragment>
+                                <div className="vital-container" >
+                                   <div>
+                                        <span className="v-label" >{label}</span> : <span>{response[id]}</span> <span>{placeholder}</span>
+                                   </div>
+                                 </div>
+                            </Fragment>
+                            </div>
+                            <div className="chat-time start">
+                                <span>{moment(message.state.timestamp).format("H:mm")}</span>
+                            </div>
+                        </div>
+                </Fragment>
+>>>>>>> 65740a42ca067af993edbaef357d30aed83ada06
 
                 
             )

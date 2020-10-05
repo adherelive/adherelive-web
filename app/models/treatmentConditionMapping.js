@@ -1,13 +1,13 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {CONDITIONS} from "./conditions";
-import {TREATMENTS} from "./treatments";
+import {TABLE_NAME as conditionTableName} from "./conditions";
+import {TABLE_NAME as treatmentTableName} from "./treatments";
 
-export const TREATMENT_CONDITION_MAPPING = "treatment_condition_mappings";
+export const TABLE_NAME = "treatment_condition_mappings";
 
 export const db = (database) => {
     database.define(
-        TREATMENT_CONDITION_MAPPING,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -20,7 +20,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: CONDITIONS,
+                        tableName: conditionTableName,
                     },
                     key: 'id'
                 }
@@ -30,7 +30,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: TREATMENTS,
+                        tableName: treatmentTableName,
                     },
                     key: 'id'
                 }

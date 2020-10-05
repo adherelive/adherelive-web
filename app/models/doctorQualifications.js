@@ -1,14 +1,14 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {DOCTORS} from "./doctors";
-import {DEGREES} from "./degree";
-import {COLLEGES} from "./college";
+import {TABLE_NAME as doctorTableName} from "./doctors";
+import {TABLE_NAME as degreeTableName} from "./degree";
+import {TABLE_NAME as collegeTableName} from "./college";
 
-export const DOCTOR_QUALIFICATIONS = "doctor_qualifications";
+export const TABLE_NAME = "doctor_qualifications";
 
 export const db = (database) => {
     database.define(
-        DOCTOR_QUALIFICATIONS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -21,7 +21,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: DOCTORS,
+                        tableName: doctorTableName,
                     },
                     key: 'id'
                 }
@@ -31,7 +31,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: DEGREES,
+                        tableName: degreeTableName,
                     },
                     key: 'id'
                 }
@@ -41,7 +41,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: COLLEGES,
+                        tableName: collegeTableName,
                     },
                     key: 'id'
                 }
@@ -50,9 +50,6 @@ export const db = (database) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            // photos:{
-            //   type: DataTypes.JSON
-            // }
         },
         {
             underscored: true,
@@ -74,10 +71,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-    const {doctors, doctor_qualifications} = database.models || {};
-
     // associations here (if any) ...
-    doctor_qualifications.belongsTo(doctors, {
+    database.models[TABLE_NAME].belongsTo(database.models[doctorTableName], {
         foreignKey:"doctor_id",
         targetKey:"id"
     });

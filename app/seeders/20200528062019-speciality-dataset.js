@@ -1,10 +1,10 @@
 'use strict';
 
-import {DB_TABLES} from "../../constant";
+import {TABLE_NAME} from "../models/specialities";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(DB_TABLES.SPECIALITIES, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         name: "Anaesthesia",
         created_at:new Date(),
@@ -34,6 +34,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(DB_TABLES.SPECIALITIES, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

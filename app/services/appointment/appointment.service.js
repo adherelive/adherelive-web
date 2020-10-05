@@ -1,13 +1,13 @@
 import { Op } from "sequelize";
-import database from "../../../libs/mysql";
-
-const {appointments : Appointments} = database.models;
+import Database from "../../../libs/mysql";
+import {USER_CATEGORY} from "../../../constant";
+import {TABLE_NAME} from "../../models/appointments";
 
 class AppointmentService {
   async addAppointment(data) {
-    const transaction = await database.transaction();
+    const transaction = await Database.initTransaction();
     try {
-      const appointment = await Appointments.create(data, {transaction});
+      const appointment = await Database.getModel(TABLE_NAME).create(data, {transaction});
       await transaction.commit();
       return appointment;
     } catch (err) {
@@ -18,13 +18,11 @@ class AppointmentService {
 
   updateAppointment = async (id, data) => {
     try {
-      console.log("29371381y73 data ---> ", data);
-      const appointment = await Appointments.update(data, {
+      const appointment = await Database.getModel(TABLE_NAME).update(data, {
         where: {
           id
         }
       });
-      console.log("29371381y73 data ---> ", appointment);
       return appointment;
     } catch(err) {
       throw err;
@@ -33,7 +31,7 @@ class AppointmentService {
 
   getAppointmentById = async (id) => {
     try {
-      const appointment = await Appointments.findOne({
+      const appointment = await Database.getModel(TABLE_NAME).findOne({
         where: {
           id
         },
@@ -46,7 +44,7 @@ class AppointmentService {
 
   getAppointmentByData = async (data) => {
     try {
-      const appointment = await Appointments.findAll({
+      const appointment = await Database.getModel(TABLE_NAME).findAll({
         where: data,
       });
       return appointment;
@@ -57,14 +55,16 @@ class AppointmentService {
 
   getAppointmentForPatient = async (patient_id) => {
     try {
-      const appointments = await Appointments.findAll({
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
               participant_two_id: patient_id,
+              participant_two_type: USER_CATEGORY.PATIENT
             },
             {
               participant_one_id: patient_id,
+              participant_one_type: USER_CATEGORY.PATIENT
             },
           ],
         },
@@ -79,7 +79,7 @@ class AppointmentService {
     try {
       const {participant_one_id, participant_one_type} = participantOne || {};
       const {participant_two_id, participant_two_type} = participantTwo || {};
-      const appointments = await Appointments.findAll({
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
@@ -119,7 +119,7 @@ class AppointmentService {
 
   deleteAppointment = async id => {
     try {
-      const appointment = await Appointments.destroy({
+      const appointment = await Database.getModel(TABLE_NAME).destroy({
         where: {
           id
         }

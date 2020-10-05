@@ -1,11 +1,11 @@
 "use strict";
 import {DataTypes} from "sequelize";
 
-export const SEVERITY = "severity";
+export const TABLE_NAME = "severity";
 
 export const db = (database) => {
     database.define(
-        SEVERITY,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,

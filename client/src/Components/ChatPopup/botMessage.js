@@ -10,6 +10,7 @@ import moment from 'moment';
 class botMessage extends Component{
     constructor(props){
         super(props);
+<<<<<<< HEAD
         // this.state = {
         //     mess:'',
         //     updated:false
@@ -18,6 +19,27 @@ class botMessage extends Component{
 
     componentDidMount(){
         
+=======
+        this.state = {
+            mess:'',
+            updated:false
+        }
+    }
+
+    componentDidMount(){
+        const { body : this_body ,message,patientDp} = this.props;
+        const { updated } = this.state;
+        const body = JSON.parse(this_body);
+        // console.log("body",body);
+        const tempType = this_body.split(':')[0];
+        const type = tempType.slice(2,tempType.length-1);
+        console.log("type",type);
+        const newBotMessage = this.getBotMessageByType(type,body,message,patientDp);
+        this.setState({
+            mess:newBotMessage
+        });
+
+>>>>>>> 65740a42ca067af993edbaef357d30aed83ada06
     }
 
     getBotMessageByType(type,body,message,patientDp){
@@ -59,6 +81,7 @@ class botMessage extends Component{
         }
     }
 
+<<<<<<< HEAD
     getBotMessage = () => {
         const { body : this_body ,message,patientDp} = this.props;
         const body = JSON.parse(this_body);
@@ -74,6 +97,10 @@ class botMessage extends Component{
     render(){
         const mess = this.getBotMessage();
         // const {mess} = this.state;
+=======
+    render(){
+        const {mess} = this.state;
+>>>>>>> 65740a42ca067af993edbaef357d30aed83ada06
         return(
             <Fragment>
                 <div>
