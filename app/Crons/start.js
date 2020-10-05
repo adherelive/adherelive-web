@@ -14,13 +14,10 @@ import NotificationSdk from "../NotificationSdk";
 
 const Log = new Logger("CRON > START");
 
-const scheduleEventService = new ScheduleEventService();
-
 class StartCron {
-    constructor() {
-    }
 
     getScheduleData = async () => {
+        const scheduleEventService =  new ScheduleEventService();
         const currentTime = moment().utc().toISOString();
         Log.info(`currentTime : ${currentTime}`);
         const scheduleEvents = await scheduleEventService.getStartEventByData(currentTime);
@@ -64,7 +61,7 @@ class StartCron {
     handleVitalStart = async (event) => {
         try {
             const eventId = event.getEventId();
-
+            const scheduleEventService =  new ScheduleEventService();
             const updateEventStatus = await scheduleEventService.update({
                 status: EVENT_STATUS.SCHEDULED
             }, event.getScheduleEventId());
@@ -83,7 +80,7 @@ class StartCron {
     handleAppointmentStart = async (event) => {
         try {
             const eventId = event.getEventId();
-
+            const scheduleEventService =  new ScheduleEventService();
             const updateEventStatus = await scheduleEventService.update({
                 status: EVENT_STATUS.SCHEDULED
             }, event.getScheduleEventId());
@@ -102,7 +99,7 @@ class StartCron {
     handleMedicationStart = async (event) => {
         try {
             const eventId = event.getEventId();
-
+            const scheduleEventService =  new ScheduleEventService();
             const updateEventStatus = await scheduleEventService.update({
                 status: EVENT_STATUS.SCHEDULED
             }, event.getScheduleEventId());

@@ -1,10 +1,13 @@
 'use strict';
 
-import { DB_TABLES, GENDER } from "../constant";
+import {TABLE_NAME} from "../app/models/doctorQualifications";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import {TABLE_NAME as degreeTableName} from "../app/models/degree";
+import {TABLE_NAME as collegeTableName} from "../app/models/college";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.DOCTOR_QUALIFICATIONS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,7 +19,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.DOCTORS,
+            tableName: doctorTableName,
           },
           key: 'id'
         }
@@ -26,7 +29,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.DEGREE,
+            tableName: degreeTableName,
           },
           key: 'id'
         }
@@ -36,7 +39,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.COLLEGE,
+            tableName: collegeTableName,
           },
           key: 'id'
         }
@@ -45,9 +48,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      // photos:{
-      //   type: Sequelize.JSON
-      // },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -64,6 +64,6 @@ module.exports = {
     },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.DOCTOR_QUALIFICATIONS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

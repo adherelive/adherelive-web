@@ -1,13 +1,13 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {PERMISSIONS} from "./permissions";
+import {TABLE_NAME as permissionTableName} from "./permissions";
 import {USER_CATEGORY} from "../../constant";
 
-export const USER_CATEGORY_PERMISSIONS = "user_category_permissions";
+export const TABLE_NAME = "user_category_permissions";
 
 export const db = (database) => {
     database.define(
-        USER_CATEGORY_PERMISSIONS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -24,7 +24,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: PERMISSIONS,
+                        tableName: permissionTableName,
                     },
                     key: 'id'
                 }

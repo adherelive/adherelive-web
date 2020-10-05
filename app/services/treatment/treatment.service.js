@@ -1,15 +1,12 @@
 import {Op} from "sequelize";
-import database from "../../../libs/mysql";
-
-const {treatments: Treatment} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/treatments";
 
 class TreatmentService {
 
     getAll = async (data) => {
         try {
-            const treatment = await Treatment.findAll({
-                where: data
-            });
+            const treatment = await Database.getModel(TABLE_NAME).findAll();
             return treatment;
         } catch(error) {
             throw error;
@@ -18,7 +15,7 @@ class TreatmentService {
 
     search = async (data) => {
         try {
-            const treatment = await Treatment.findAll({
+            const treatment = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     name: {
                         [Op.like]: `${data}%`,
@@ -33,7 +30,7 @@ class TreatmentService {
 
     getByData = async data => {
         try {
-            const treatment = await Treatment.findOne({
+            const treatment = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return treatment;

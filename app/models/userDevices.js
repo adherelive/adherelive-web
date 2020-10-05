@@ -1,12 +1,12 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {USERS} from "./users";
+import {TABLE_NAME as userTableName} from "./users";
 
-export const USER_DEVICES = "user_devices";
+export const TABLE_NAME = "user_devices";
 
 export const db = (database) => {
     database.define(
-        USER_DEVICES,
+        TABLE_NAME,
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -18,7 +18,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: USERS,
+                        tableName: userTableName,
                     },
                     key: 'id'
                 }

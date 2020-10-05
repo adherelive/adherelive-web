@@ -3,7 +3,6 @@ import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverit
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import moment from "moment";
-import EventSchedule from "../../eventSchedules";
 
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/helper";

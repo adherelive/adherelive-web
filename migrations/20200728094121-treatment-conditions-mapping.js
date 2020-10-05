@@ -1,11 +1,12 @@
 'use strict';
 
-import {DB_TABLES} from "../constant";
-import {TREATMENT_CONDITION_MAPPING} from "../app/models/treatmentConditionMapping";
+import {TABLE_NAME} from "../app/models/treatmentConditionMapping";
+import {TABLE_NAME as treatmentTableName} from "../app/models/treatments";
+import {TABLE_NAME as conditionTableName} from "../app/models/conditions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(TREATMENT_CONDITION_MAPPING, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,7 +18,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.CONDITIONS,
+            tableName: conditionTableName,
           },
           key: 'id'
         }
@@ -27,7 +28,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.TREATMENTS,
+            tableName: treatmentTableName,
           },
           key: 'id'
         }
@@ -48,6 +49,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(TREATMENT_CONDITION_MAPPING);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

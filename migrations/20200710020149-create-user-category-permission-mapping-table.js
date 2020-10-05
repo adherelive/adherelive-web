@@ -1,10 +1,12 @@
 'use strict';
 
-import {DB_TABLES, USER_CATEGORY} from "../constant";
+import {USER_CATEGORY} from "../constant";
+import {TABLE_NAME} from "../app/models/userCategoryPermissions";
+import {TABLE_NAME as permissionTableName} from "../app/models/permissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.USER_CATEGORY_PERMISSIONS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -20,7 +22,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.PERMISSIONS,
+            tableName: permissionTableName,
           },
           key: 'id'
         }
@@ -41,7 +43,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    queryInterface.query();
-    return queryInterface.dropTable(DB_TABLES.PERMISSIONS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

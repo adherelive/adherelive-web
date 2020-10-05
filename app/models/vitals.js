@@ -1,12 +1,12 @@
 import {DataTypes} from "sequelize";
-import {VITAL_TEMPLATES} from "./vitalTemplates";
-import {CARE_PLANS} from "./carePlan";
+import {TABLE_NAME as vitalTemplatesTableName} from "./vitalTemplates";
+import {TABLE_NAME as carePlanTableName} from "./carePlan";
 
-export const VITALS = "vitals";
+export const TABLE_NAME = "vitals";
 
 export const db = (database) => {
     database.define(
-        VITALS,
+        TABLE_NAME,
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -18,7 +18,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: VITAL_TEMPLATES,
+                        tableName: vitalTemplatesTableName,
                     },
                     key: 'id'
                 }
@@ -28,7 +28,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: CARE_PLANS,
+                        tableName: carePlanTableName,
                     },
                     key: 'id'
                 }
@@ -55,15 +55,14 @@ export const db = (database) => {
 
 
 export const associate = (database) => {
-    const {vitals, vital_templates, care_plans} = database.models || {};
 
     // associations here (if any) ...
-    vitals.hasOne(vital_templates, {
+    database.models[TABLE_NAME].hasOne(database.models[vitalTemplatesTableName], {
         foreignKey: "id",
         sourceKey: "vital_template_id"
     });
 
-    vitals.hasOne(care_plans, {
+    database.models[TABLE_NAME].hasOne(database.models[carePlanTableName], {
         foreignKey: "id",
         sourceKey: "care_plan_id"
     });

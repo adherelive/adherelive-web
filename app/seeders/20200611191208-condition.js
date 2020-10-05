@@ -1,10 +1,10 @@
 "use strict";
 
-import { DB_TABLES } from "../../constant";
+import {TABLE_NAME} from "../models/conditions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(DB_TABLES.CONDITIONS, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         code: "A000",
         name: "Cholera due to Vibrio cholerae 01, biovar cholerae",
@@ -3012,6 +3012,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(DB_TABLES.CONDITIONS, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

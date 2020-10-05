@@ -1,6 +1,5 @@
-import database from "../../../libs/mysql";
-
-const {user_preferences: UserPreference} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/userPreferences";
 
 class UserPreferenceService {
     constructor() {
@@ -8,7 +7,7 @@ class UserPreferenceService {
 
     addUserPreference = async data => {
         try {
-            const userPreference = await UserPreference.create(data);
+            const userPreference = await Database.getModel(TABLE_NAME).create(data);
             return userPreference;
         } catch(error) {
             throw error;
@@ -17,7 +16,7 @@ class UserPreferenceService {
 
     getPreferenceByData = async data => {
         try {
-            const userPreference = await UserPreference.findOne({
+            const userPreference = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return userPreference;
@@ -27,9 +26,9 @@ class UserPreferenceService {
     };
 
     updateUserPreferenceData = async (data, id) => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
-            const userPreference = await UserPreference.update(data, {
+            const userPreference = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
                     id
                 },

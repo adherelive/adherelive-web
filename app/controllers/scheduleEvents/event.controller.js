@@ -15,7 +15,6 @@ import {EVENT_TYPE} from "../../../constant";
 
 const Log = new Logger("WEB > EVENT > CONTROLLER");
 
-const EventService = new eventService();
 
 class EventController extends Controller {
     constructor() {
@@ -27,6 +26,7 @@ class EventController extends Controller {
         try {
             Log.debug("req.params", req.params);
             const {params: {patient_id} = {}} = req;
+            const EventService = new eventService();
 
             const carePlanData = await CarePlanService.getSingleCarePlanByData({patient_id});
             const carePlan = await CarePlanWrapper(carePlanData);

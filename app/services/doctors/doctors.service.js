@@ -1,14 +1,14 @@
-import database from "../../../libs/mysql";
-
-const {doctors: Doctor, speciality: Speciality} = database.models;
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/doctors";
+import {TABLE_NAME as specialityTableName} from "../../models/specialities";
 
 class DoctorsService {
   constructor() {}
 
   addDoctor = async data => {
-    const transaction = await database.transaction();
+    const transaction = await Database.initTransaction();
     try {
-      const doctor = await Doctor.create(data, { transaction });
+      const doctor = await Database.getModel(TABLE_NAME).create(data, { transaction });
 
       await transaction.commit();
       return doctor;
@@ -20,11 +20,11 @@ class DoctorsService {
 
   getDoctorByUserId = async user_id => {
     try {
-      const doctor = await Doctor.findOne({
+      const doctor = await Database.getModel(TABLE_NAME).findOne({
         where: {
           user_id,
         },
-        include: Speciality
+        include: Database.getModel(specialityTableName)
       });
       return doctor;
     } catch (error) {
@@ -33,9 +33,9 @@ class DoctorsService {
   };
 
   updateDoctor = async (data, id) => {
-    const transaction = await database.transaction();
+    const transaction = await Database.initTransaction();
     try {
-      const doctor = await Doctor.update(data, {
+      const doctor = await Database.getModel(TABLE_NAME).update(data, {
         where: {
           id
         },
@@ -51,11 +51,9 @@ class DoctorsService {
 
   getDoctorByData = async data => {
     try {
-      console.log("DATA --> ", data);
-      const doctor = await Doctor.findAll({
+      const doctor = await Database.getModel(TABLE_NAME).findAll({
         where: data
       });
-      console.log("DOCTOR ----> ", doctor);
       return doctor;
     } catch (error) {
       throw error;

@@ -1,11 +1,15 @@
-import database from "../../../libs/mysql";
+import Database from "../../../libs/mysql";
 
-const {vitals: Vitals, vital_templates: VitalTemplates, care_plans: CarePlan, care_plan_appointments: CarePlanAppointment, care_plan_medications: CarePlanMedication} = database.models;
+import {TABLE_NAME} from "../../models/vitals";
+import {TABLE_NAME as vitalTemplatesTableName} from "../../models/vitalTemplates";
+import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";
+import {TABLE_NAME as carePlanAppointmentTableName} from "../../models/carePlanAppointments";
+import {TABLE_NAME as carePlanMedicationTableName} from "../../models/carePlanMedications";
 
 class VitalService {
   addVital = async data => {
     try {
-      const vitals = await Vitals.create(data);
+      const vitals = await Database.getModel(TABLE_NAME).create(data);
       return vitals;
     } catch (error) {
       throw error;
@@ -13,9 +17,9 @@ class VitalService {
   };
 
   update = async (data, id) => {
-    const transaction = await database.transaction();
+    const transaction = await Database.initTransaction();
     try {
-      const vitals = await Vitals.update(data, {
+      const vitals = await Database.getModel(TABLE_NAME).update(data, {
         where: {
           id
         }
@@ -30,15 +34,15 @@ class VitalService {
 
   getByData = async data => {
     try {
-      const vitals = await Vitals.findOne({
+      const vitals = await Database.getModel(TABLE_NAME).findOne({
         where: data,
         include: [
           {
-            model: VitalTemplates
+            model: Database.getModel(vitalTemplatesTableName)
           },
           {
-            model: CarePlan,
-            include: [CarePlanAppointment, CarePlanMedication]
+            model: Database.getModel(carePlanTableName),
+            include: [Database.getModel(carePlanAppointmentTableName), Database.getModel(carePlanMedicationTableName)]
           }
         ]
       });
@@ -50,14 +54,14 @@ class VitalService {
 
   getAllByData = async data => {
     try {
-      const vitals = await Vitals.findAll({
+      const vitals = await Database.getModel(TABLE_NAME).findAll({
         where: data,
         include: [
           {
-            model: VitalTemplates
+            model: Database.getModel(vitalTemplatesTableName)
           },
           {
-            model: CarePlan
+            model: Database.getModel(carePlanTableName)
           }
         ]
       });

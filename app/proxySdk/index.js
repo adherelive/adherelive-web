@@ -1,4 +1,4 @@
-import scheduleService from "../services/events/event.service";
+import scheduleService from "../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import { EVENT_TYPE } from "../../constant";
 

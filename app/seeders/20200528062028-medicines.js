@@ -1,10 +1,10 @@
 "use strict";
 
-import { DB_TABLES } from "../../constant";
+import {TABLE_NAME} from "../models/medicines";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(DB_TABLES.MEDICINES, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         name: "acetaminophen 300 MG / codeine phosphate 30 MG Oral Tablet",
         type: "tablet",
@@ -8051,6 +8051,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(DB_TABLES.MEDICINES, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

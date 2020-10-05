@@ -1,13 +1,13 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {CARE_PLANS} from "./carePlan";
-import {MEDICATIONS} from "./medicationReminders";
+import {TABLE_NAME as carePlanTableName} from "./carePlan";
+import {TABLE_NAME as medicationTableName} from "./medicationReminders";
 
-export const CARE_PLAN_MEDICATIONS = "care_plan_medications";
+export const TABLE_NAME = "care_plan_medications";
 
 export const db = (database) => {
     database.define(
-        CARE_PLAN_MEDICATIONS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -20,7 +20,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: CARE_PLANS,
+                        tableName: carePlanTableName,
                     },
                     key: 'id'
                 }
@@ -30,7 +30,7 @@ export const db = (database) => {
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: MEDICATIONS,
+                        tableName: medicationTableName,
                     },
                     key: 'id'
                 }
@@ -56,10 +56,8 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-    const {care_plan_medications, medications} = database.models || {};
-
     // associations here (if any) ...
-    care_plan_medications.hasOne(medications, {
+    database.models[TABLE_NAME].hasOne(database.models[medicationTableName], {
         foreignKey: "id",
         targetKey: "medication_id"
     });

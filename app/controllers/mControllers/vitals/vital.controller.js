@@ -27,13 +27,11 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES, USER_CATEGORY
 } from "../../../../constant";
-import EventSchedule from "../../../eventSchedules";
 import SqsQueueService from "../../../services/awsQueue/queue.service";
 
 const Log = new Logger("MOBILE > VITALS > CONTROLLER");
-const EventService = new eventService();
 
 class VitalController extends Controller {
   constructor() {
@@ -155,6 +153,8 @@ class VitalController extends Controller {
         body: {start_date, end_date} = {},
         params: {id} = {}
       } = req;
+      const EventService = new eventService();
+
 
       const doesVitalExists = await VitalService.getByData({id});
 
@@ -290,7 +290,12 @@ class VitalController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params --->", req.params);
-      const { params: { id } = {}, body: { response } = {} } = req;
+      const { params: { id } = {}, userDetails: {userData: {category} = {}} = {}, body: { response } = {} } = req;
+      const EventService = new eventService();
+
+      if(category !== USER_CATEGORY.PATIENT) {
+        return raiseClientError(res, 401, {}, "Unauthorized");
+      }
 
       const {event_id, ...rest} = response || {};
 
@@ -341,19 +346,18 @@ class VitalController extends Controller {
       const doctorData = await DoctorWrapper(null, carePlan.getDoctorId());
       const patientData = await PatientWrapper(null, carePlan.getPatientId());
 
-      let customMessage = `${vitalTemplate.getName()} Vital Update : `;
+      const chatJSON = JSON.stringify({
+        vitals: {
+          [vital.getVitalId()]: vital.getBasicInfo(),
+        },
+        vital_templates: {
+          [vitalTemplate.getVitalTemplateId()]: vitalTemplate.getBasicInfo(),
+        },
+        vital_id: vital.getVitalId(),
+        response,
+      });
 
-      for (const template of vitalTemplate.getTemplate()) {
-        customMessage += `${template["label"]}: ${
-          response[template["id"]] ? response[template["id"]] : "--"
-          }${vitalTemplate.getUnit()}   `;
-      }
-
-      const twilioMsg = await twilioService.addSymptomMessage(
-        doctorData.getUserId(),
-        patientData.getUserId(),
-        customMessage
-      );
+      const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), chatJSON);
 
       return raiseSuccess(
         res,
@@ -374,6 +378,7 @@ class VitalController extends Controller {
     try {
       Log.debug("req.params vital id---->", req.params);
       const { params: { id } = {} } = req;
+      const EventService = new eventService();
 
       const today = moment()
         .utc()
