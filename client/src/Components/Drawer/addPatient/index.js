@@ -394,12 +394,14 @@ class PatientDetailsDrawer extends Component {
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>
-                    <div className="flex direction-row "  key="diagnosys-h" >
-                        {this.formatMessage(messages.diagnosis)}
-                        <div className="star-red">*</div>
+                    <div className="flex direction-column align-center justify-center" >
+                        <div className="flex direction-row "  key="diagnosys-h" >
+                            {this.formatMessage(messages.diagnosis)}
+                            <div className="star-red">*</div>
+                        </div>
                     </div>
                     <div>
-                        <Select placeholder="Final" key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType}>
+                        <Select  key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType} >
 
                             <Option 
                             value={DIAGNOSIS_TYPE[FINAL].diagnosis_type}
@@ -410,6 +412,7 @@ class PatientDetailsDrawer extends Component {
                             value={DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}
                             key={`probable-${DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}`}
                              >{DIAGNOSIS_TYPE[PROBABLE].value}</Option>
+
                         </Select>
                     </div>
 
@@ -581,7 +584,7 @@ class PatientDetailsDrawer extends Component {
             allergies:'',
             clinical_notes:'',
             diagnosis_description:'',
-            diagnosis_type:''
+            diagnosis_type:'2'
         });
         close();
     };
