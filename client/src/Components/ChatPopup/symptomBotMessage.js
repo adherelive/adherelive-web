@@ -66,13 +66,16 @@ class symptomBotMessage extends Component{
         const audioMediaArray = [];
         audio_document_ids.map( audio_doc_id => {
             let audioMessage = '';
-            const {basic_info : {document : audio_src = ''} = {} } = upload_documents[audio_doc_id];
+            const {basic_info : {document : audio_src = '',name : audio_name = ''} = {} } = upload_documents[audio_doc_id];
+            // console.log("upload_documents",upload_documents);
+            let audio_type="mp3";
+            audio_type = audio_name.split('.')[1];
             audioMessage = (
                 <Fragment key={`${message.state.sid}-audio`} >
                     <div className="chat-messages">
                         <div className="chat-avatar">
                             {this.getPatientAvatar(patientDp)}
-                            {this.getAudio(audio_src,side,parts)}
+                            {this.getAudio(audio_src,side,parts,audio_type)}
                         </div>
                         {this.getMessageTime(message)}
                         
@@ -89,13 +92,16 @@ class symptomBotMessage extends Component{
         const videoMediaArray = [];
         video_document_ids.map( video_doc_id => {
             let videoMessage = '';
-            const {basic_info : {document : video_src = ''} = {} } = upload_documents[video_doc_id];
+            const {basic_info : {document : video_src = '', name : video_name = ''} = {} } = upload_documents[video_doc_id];
+           
+            let video_type="mp4";
+            video_type = video_name.split('.')[1];
             videoMessage = (
                 <Fragment key={`${message.state.sid}-video`} >
                     <div className="chat-messages">
                         <div className="chat-avatar">
                             {this.getPatientAvatar(patientDp)}
-                            {this.getVideo(video_src,side,parts)}
+                            {this.getVideo(video_src,side,parts,video_type)}
                         </div>
                         {this.getMessageTime(message)}
                     </div>
@@ -131,14 +137,14 @@ class symptomBotMessage extends Component{
         </Fragment>)
     }
 
-    getAudio =(audio_src,side,parts) => {
+    getAudio =(audio_src,side,parts,audio_type) => {
         return(<Fragment>
             <div className="bot-message-container" >
                 <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                 <div className="media-container symptom-audio-container" >
                 <audio controls className="symptom-audio" >
-                    <source src={audio_src} alt="symptom audio" type="audio/ogg"></source>
-                    <source src={audio_src} alt="symptom audio" type="audio/mpeg" ></source>
+                    <source src={audio_src} alt="symptom audio" type={`audio/${audio_type}`}></source>
+                    {/* <source src={audio_src} alt="symptom audio" type="audio/mpeg" ></source> */}
                     {this.props.intl.formatMessage(messages.audioNotSupported)}
                 </audio>
                 </div>
@@ -146,7 +152,7 @@ class symptomBotMessage extends Component{
         </Fragment>)
     }
 
-    getVideo= (video_src,side,parts) => {
+    getVideo= (video_src,side,parts,video_type) => {
        
         return (
             <Fragment>
@@ -154,8 +160,8 @@ class symptomBotMessage extends Component{
                     <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                     <div className="media-container symptom-video-container">
                     <video controls className="sympom-video" width="100%" height="100%" >
-                        <source src={video_src} type="video/mp4"></source>
-                        <source src={video_src} type="video/ogg"></source>
+                        <source src={video_src} type={`video/${video_type}`}></source>
+                        {/* <source src={video_src} type="video/ogg"></source> */}
                         {this.props.intl.formatMessage(messages.videoNotSupported)}
                     </video>
                     </div>
@@ -199,7 +205,8 @@ class symptomBotMessage extends Component{
 
     getAllMedia = () => {
         const {body,message,patientDp} = this.props;
-
+        // console.log("body",body);
+        // console.log("message",message);
         const symptom_id = body.symptom_id;
         const  imagesMedia = [] ,audioMedia = [],videoMedia = [];
         // const {imagesMedia = [] ,audioMedia = [],videoMedia = []} = this.state;
