@@ -61,7 +61,7 @@ class CreateJob extends AppointmentJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
-      appointmentId
+      event_id
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -71,7 +71,7 @@ class CreateJob extends AppointmentJob {
       templateData.push({
         actor: actorId,
         object: `${participant}`,
-        foreign_id: `${appointmentId}`,
+        foreign_id: `${event_id}`,
         verb: "appointment_create",
         // message: `${name}(${actorCategory}) has created an appointment with you`,
         event: EVENT_TYPE.APPOINTMENT,
