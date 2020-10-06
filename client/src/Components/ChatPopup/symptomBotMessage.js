@@ -33,7 +33,7 @@ class symptomBotMessage extends Component{
                                 </div>
                             </Fragment>
                         </div>
-                        {this.getMessageTime}
+                        {this.getMessageTime(message)}
                     </div>
             </Fragment>
         );
@@ -70,7 +70,7 @@ class symptomBotMessage extends Component{
             // console.log("upload_documents",upload_documents);
             let audio_type="mp3";
             // audio_type = audio_name.split('.')[1];
-            audio_name.split('.')[1] === '' ? audio_type = "mp4" : audio_type = audio_name.split('.')[1] ;
+            audio_name.split('.')[1] === '' ? audio_type = "mp3" : audio_type = audio_name.split('.')[1] ;
             audioMessage = (
                 <Fragment key={`${message.state.sid}-audio`} >
                     <div className="chat-messages">
@@ -144,7 +144,7 @@ class symptomBotMessage extends Component{
             <div className="bot-message-container" >
                 <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                 <div className="media-container symptom-audio-container" >
-                <audio controls className="symptom-audio" >
+                <audio controls className="symptom-audio" width="100%" height="100%" >
                     <source src={audio_src} alt="symptom audio" type={`audio/${audio_type}`}></source>
                     {/* <source src={audio_src} alt="symptom audio" type="audio/mpeg" ></source> */}
                     {this.props.intl.formatMessage(messages.audioNotSupported)}

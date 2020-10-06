@@ -270,7 +270,7 @@
   padding:10px 0px;
   min-height:200px;
   height:auto;
-  min-width:255px;
+  // min-width:255px;
   width:450px;
   background-color:whitesmoke;
 }
@@ -312,9 +312,10 @@
   min-height:300px;
   height: auto;
   width:90%;
-  min-width: 400px;
+  // min-width: 400px;
   margin:20px auto;
   .symptom-image{
+    max-width: 100%;
     min-width: 100%; 
     min-height: 300px;
     height: auto;
@@ -325,11 +326,11 @@
 
 
 .symptom-audio-container{
-  background-color:inherit;
+  // background-color:inherit;
   min-height:50px;
-  height: auto;
-  width:90%;
-  min-width: 400px;
+  // height: auto;
+  // width:90%;
+  // min-width: 400px;
   margin:20px auto;
   display: flex;
   flex-direction: column;
@@ -339,8 +340,11 @@
   
 }
 
+
+
 .symptom-video-container{
   min-height:200px;
+  
   
 }
 
@@ -353,4 +357,8 @@
     text-align: left;
 
   }
+}
+
+.symptom-audio, .symptom-video, .symptom-image{
+  max-width: 100% ;
 }
