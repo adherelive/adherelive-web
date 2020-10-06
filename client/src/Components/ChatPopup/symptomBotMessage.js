@@ -9,7 +9,7 @@ class symptomBotMessage extends Component{
     constructor(props){
         super(props);
         // this.state = {
-        //    allMedia : []
+        //   replyMessage : ''
         // }
     }
 
@@ -17,8 +17,32 @@ class symptomBotMessage extends Component{
         
     }
 
+
+    getEllisis = () =>{
+        return (
+            <div className="wp100 tar fs20 pr20">
+               
+                <span onClick={ this.replyToMessage}
+                    
+                > &hellip;</span>
+                
+            </div>
+        )
+    }
+
+    replyToMessage = (e) => {
+        e.preventDefault();
+        const parentNode = e.target.parentNode;
+        const replyMetaContainer = parentNode.nextElementSibling;
+        const footer = document.getElementsByClassName("footer-right")[0];
+        console.log("footr ===> ",footer);
+        footer.append(replyMetaContainer);
+        
+    }
+
     getText = (symptom_text,message,patientDp,side,parts) => {
         let text = '';
+        let msg = (<div>EEEP</div>);
         text = (
             <Fragment key={`${message.state.sid}-text-msg`} >
                     <div className="chat-messages">
@@ -26,6 +50,8 @@ class symptomBotMessage extends Component{
                                {this.getPatientAvatar(patientDp)}
                             <Fragment>
                                 <div className="bot-message-container" >
+                                    <Fragment>{this.getEllisis()}
+                                    </Fragment>
                                     <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                                     <div className="text-msg-container" >
                                     <span>{symptom_text}</span>
@@ -131,6 +157,7 @@ class symptomBotMessage extends Component{
     getImage =(img_src,side,parts) => {
         return ( <Fragment>
             <div className="bot-message-container" >
+                <Fragment>{this.getEllisis()}</Fragment>
                 <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                 <div className="media-container symptom-image-container" >
                     <img className="symptom-image" src={img_src} alt="Symptom Image" ></img>
@@ -142,6 +169,7 @@ class symptomBotMessage extends Component{
     getAudio =(audio_src,side,parts,audio_type) => {
         return(<Fragment>
             <div className="bot-message-container" >
+                <Fragment>{this.getEllisis()}</Fragment>
                 <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                 <div className="media-container symptom-audio-container" >
                 <audio controls className="symptom-audio" width="100%" height="100%" >
@@ -159,6 +187,7 @@ class symptomBotMessage extends Component{
         return (
             <Fragment>
                 <div className="bot-message-container" >
+                    <Fragment>{this.getEllisis()}</Fragment>
                     <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
                     <div className="media-container symptom-video-container">
                     <video controls className="sympom-video" width="100%" height="100%" >
@@ -227,6 +256,12 @@ class symptomBotMessage extends Component{
         imagesMediaArray.map(each => {allMediaArray.push(each)});
         audioMediaArray.map(each => {allMediaArray.push(each)});
         videoMediaArray.map(each => {allMediaArray.push(each)});
+
+
+        // const {replyMessage} = this.state;
+        // if(replyMessage!== ''){
+        //     allMediaArray.push(replyMessage);
+        // }
 
             // this.setState({
             //     allMedia:allMediaArray
