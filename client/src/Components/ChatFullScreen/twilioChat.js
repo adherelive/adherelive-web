@@ -433,40 +433,22 @@ class TwilioChat extends Component {
 
        
         mess = (
-            <div className="wp100 flex direction-row">
-                <div className="wp90 flex direction-column justify-space-between p20 mh200" >
+            <div className="wp100 flex direction-row bg-whitesmoke">
+                <div className="wp90 flex direction-column justify-space-between p20 mh100" >
                     {metaDataReply}
-                    <Form className="wp90 mauto">
-
-                        <Input placeholder="Add reply here .. " className="br-dark-blue p20 br25"></Input>
-                        
-                    </Form>
+                   
                 </div>
                 <div className="fs30" onClick={this.unsetReplyId}>&times;</div>
             </div>
         )
-
-        if(mess !== '' && metaDataReply !== null){
-            const form  = document.getElementsByClassName("chat-form");
-            const input = form[0].getElementsByTagName("Input")[0];
-            input.disabled = true
-
-        }
-        
-        
         return mess;
     }
 
     unsetReplyId = (e) => {
         e.preventDefault();
         const {updateReplyMessadeId} = this.props;
-       
-        
         updateReplyMessadeId();
-        const form  = document.getElementsByClassName("chat-form");
-        const input = form[0].getElementsByTagName("Input")[0];
-        input.disabled = false;
-      
+       
     }
 
  
