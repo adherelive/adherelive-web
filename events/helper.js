@@ -29,6 +29,7 @@ import ScheduleService from "../app/services/scheduleEvents/scheduleEvent.servic
 import UserPreferenceService from "../app/services/userPreferences/userPreference.service";
 
 // WRAPPERS
+import PatientWrapper from "../app/ApiWrapper/mobile/patient";
 
 
 const Log = new Logger("EVENT > HELPER");
@@ -37,6 +38,7 @@ const scheduleService = new ScheduleService();
 
 const getUserPreferences = async (user_id) => {
     try {
+        Log.info(`user_id : ${user_id}`);
         const userPreference = await UserPreferenceService.getPreferenceByData({user_id});
         const {timings = {}} = userPreference.get("details") || {};
         return timings;
@@ -132,7 +134,9 @@ export const handleMedications = async (medication) => {
 
         const allDays = rrule.all();
 
-        const patientPreference = await getUserPreferences(patient_id);
+        const patient = await PatientWrapper(null, patient_id);
+
+        const patientPreference = await getUserPreferences(patient.getUserId());
 
         const scheduleEventArr = [];
 

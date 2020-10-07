@@ -12,7 +12,7 @@ export default class QueueService {
       region: process.config.aws.region
     });
     this.sqs = new AWS.SQS();
-    this.TEMP_QUEUE_NAME = "adhere_test";
+    this.TEMP_QUEUE_NAME = "adhere_local";
   }
 
   createQueue = (name = "test_queue") => {
