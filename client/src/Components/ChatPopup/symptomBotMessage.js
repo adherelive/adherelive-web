@@ -34,9 +34,11 @@ class symptomBotMessage extends Component{
         e.preventDefault();
         const {updateReplyMessadeId} = this.props;
         if(typeof(updateReplyMessadeId) !== 'undefined'){
+           
             const parentNode = e.target.parentNode.parentNode;
+            // console.log("parentNode -->",parentNode);
             const id = parentNode.getAttribute("id");
-        
+            // console.log("id ===>",id);
             updateReplyMessadeId(id);
         }
       
@@ -44,47 +46,27 @@ class symptomBotMessage extends Component{
     }
 
   
-    getText = (symptom_text,message,patientDp,side,parts) => {
+    getText = (symptom_text) => {
         let text = '';
         text = (
-            <Fragment key={`${message.state.sid}-text-msg`}  >
-                    <div className="chat-messages">
-                        <div className="chat-avatar">
-                               {this.getPatientAvatar(patientDp)}
-                           
-                                <div className="bot-message-container" >
-                                    <div id={`${message.state.sid}-text-msg`}  >
-                                        {this.getEllipsis()}
-                                    </div>
-                                    <div>{this.getSymptomMessage(side,parts)}</div>
-                                    <div className="text-msg-container " >
-                                    <span>{symptom_text}</span>
-                                    </div>
-                                </div>
-                           
-                        </div>
-                        {this.getMessageTime(message)}
+            <Fragment  >
+                    <div className="text-msg-container " >
+                        <span>{symptom_text}</span>
                     </div>
             </Fragment>
         );
         return text;
     } 
 
-    getImagesMedia = (image_document_ids,upload_documents,message,patientDp,side,parts) => {
+    getImagesMedia = (image_document_ids,upload_documents) => {
         const imagesMediaArray = [];
         image_document_ids.map( image_doc_id => {
             let imageMessage = '';
             const {basic_info : {document : img_src= ''} = {} } = upload_documents[image_doc_id];
             imageMessage = (
-                <Fragment key={`${message.state.sid}-image`} >
-                    <div className="chat-messages">
-                        <div className="chat-avatar">
-                            {this.getPatientAvatar(patientDp)}
-                            {this.getImage(img_src,side,parts,message)}
-                        </div>
-                        {this.getMessageTime(message)}
-                    </div>
-                </Fragment> 
+              <div>
+                  {this.getImage(img_src)}
+              </div>
             );
             imagesMediaArray.push(imageMessage);
         } );
@@ -92,7 +74,7 @@ class symptomBotMessage extends Component{
     }
 
 
-    getAudioMedia = (audio_document_ids,upload_documents,message,patientDp,side,parts) => {
+    getAudioMedia = (audio_document_ids,upload_documents) => {
         const audioMediaArray = [];
         audio_document_ids.map( audio_doc_id => {
             let audioMessage = '';
@@ -102,16 +84,9 @@ class symptomBotMessage extends Component{
             // audio_type = audio_name.split('.')[1];
             audio_name.split('.')[1] === '' ? audio_type = "mp3" : audio_type = audio_name.split('.')[1] ;
             audioMessage = (
-                <Fragment key={`${message.state.sid}-audio`} >
-                    <div className="chat-messages">
-                        <div className="chat-avatar">
-                            {this.getPatientAvatar(patientDp)}
-                            {this.getAudio(audio_src,side,parts,audio_type,message)}
-                        </div>
-                        {this.getMessageTime(message)}
-                        
-                    </div>
-                </Fragment> 
+                <div>
+                    {this.getAudio(audio_src,audio_type)}
+                </div>
                 
             )
             audioMediaArray.push(audioMessage);
@@ -119,7 +94,7 @@ class symptomBotMessage extends Component{
         return audioMediaArray;
     }
 
-    getVideoMedia = (video_document_ids,upload_documents,message,patientDp,side,parts) => {
+    getVideoMedia = (video_document_ids,upload_documents) => {
         const videoMediaArray = [];
         video_document_ids.map( video_doc_id => {
             let videoMessage = '';
@@ -129,15 +104,9 @@ class symptomBotMessage extends Component{
             // video_type = video_name.split('.')[1];
             video_name.split('.')[1] === '' ? video_type = "mp4" : video_type = video_name.split('.')[1] ;
             videoMessage = (
-                <Fragment key={`${message.state.sid}-video`} >
-                    <div className="chat-messages">
-                        <div className="chat-avatar">
-                            {this.getPatientAvatar(patientDp)}
-                            {this.getVideo(video_src,side,parts,video_type,message)}
-                        </div>
-                        {this.getMessageTime(message)}
-                    </div>
-                </Fragment> 
+             <div>
+                   {this.getVideo(video_src,video_type)}
+             </div>
                 
             );
 
@@ -158,50 +127,32 @@ class symptomBotMessage extends Component{
                 </div>)
     }
 
-    getImage =(img_src,side,parts,message) => {
-        return ( <Fragment>
-            <div className="bot-message-container" >
-                <div id={`${message.state.sid}-image`} >{this.getEllipsis()}</div>
-                <div>{this.getSymptomMessage(side,parts)}</div>
-                <div className="media-container symptom-image-container" >
+    getImage =(img_src) => {
+        return (  <div className="media-container symptom-image-container" >
                     <img className="symptom-image" src={img_src} alt="Symptom Image" ></img>
-                </div>
-            </div>
-        </Fragment>)
+                </div>)
     }
 
-    getAudio =(audio_src,side,parts,audio_type,message) => {
-        return(<Fragment>
-            <div className="bot-message-container" >
-                <div id={`${message.state.sid}-audio`}  >{this.getEllipsis()}</div>
-                <div>{this.getSymptomMessage(side,parts)}</div>
-                <div className="media-container symptom-audio-container" >
-                <audio controls className="symptom-audio" width="100%" height="100%" >
-                    <source src={audio_src} alt="symptom audio" type={`audio/${audio_type}`}></source>
-                    {/* <source src={audio_src} alt="symptom audio" type="audio/mpeg" ></source> */}
-                    {this.props.intl.formatMessage(messages.audioNotSupported)}
-                </audio>
-                </div>
-            </div>
-        </Fragment>)
+    getAudio =(audio_src,audio_type) => {
+        return(<div className="media-container symptom-audio-container" >
+                    <audio controls className="symptom-audio" width="100%" height="100%" >
+                        <source src={audio_src} alt="symptom audio" type={`audio/${audio_type}`}></source>
+                        {/* <source src={audio_src} alt="symptom audio" type="audio/mpeg" ></source> */}
+                        {this.props.intl.formatMessage(messages.audioNotSupported)}
+                    </audio>
+                </div>)
     }
 
-    getVideo= (video_src,side,parts,video_type,message) => {
+    getVideo= (video_src,video_type) => {
        
         return (
-            <Fragment>
-                <div className="bot-message-container" >
-                    <div id={`${message.state.sid}-video`} >{this.getEllipsis()}</div>
-                    <div >{this.getSymptomMessage(side,parts)}</div>
-                    <div className="media-container symptom-video-container">
-                    <video controls className="sympom-video" width="100%" height="100%" >
-                        <source src={video_src} type={`video/${video_type}`}></source>
-                        {/* <source src={video_src} type="video/ogg"></source> */}
-                        {this.props.intl.formatMessage(messages.videoNotSupported)}
-                    </video>
-                    </div>
-                </div>
-            </Fragment>
+            <div className="media-container symptom-video-container">
+                <video controls className="sympom-video" width="100%" height="100%" >
+                    <source src={video_src} type={`video/${video_type}`}></source>
+                    {/* <source src={video_src} type="video/ogg"></source> */}
+                    {this.props.intl.formatMessage(messages.videoNotSupported)}
+                </video>
+            </div>
         )
     }
     
@@ -238,51 +189,66 @@ class symptomBotMessage extends Component{
         
     }
 
+    getFinalMessage = (message,patientDp,side,parts,allMediaArray) => {
+        let mess = '';
+        mess = (<Fragment  >
+            <div className="chat-messages"  >
+                <div className="chat-avatar">
+                    {this.getPatientAvatar(patientDp)}
+                    <div className="bot-message-container" id={`${message.state.sid}-symptom`} >
+                       {this.getEllipsis()}
+                    <div>{this.getSymptomMessage(side,parts)}</div>
+                    <div className="media-container symptom-video-container">
+                        {allMediaArray}
+                    </div>
+                </div>
+                   
+                </div>
+                {this.getMessageTime(message)}
+            </div>
+        </Fragment> ) 
+
+        return mess;
+    }
+
     getAllMedia = () => {
 
-        const { body_p :body ,message_p : message ,patientDp_p : patientDp} = this.props;
-        // console.log("replyMessadeId ====> ",typeof(replyMessadeId));
+        const { body :this_body , message ,patientDp} = this.props;
+
+        const body = JSON.parse(this_body);
+       
         const symptom_id = body.symptom_id;
-        const  imagesMedia = [] ,audioMedia = [],videoMedia = [];
-        // const {imagesMedia = [] ,audioMedia = [],videoMedia = []} = this.state;
         const allMediaArray = [];
+        let finalMessage  ='';
         if (symptom_id != undefined) {
         const {upload_documents = {} } = body;
 
         const { text : symptom_text = '' , audio_document_ids = [], image_document_ids=[] ,video_document_ids = [], config : {side = '1' , parts = [] , duration='' }} = {} = body.symptoms[symptom_id] || {};
         
-        const textMessage= this.getText(symptom_text,message,patientDp,side,parts);
-        const imagesMediaArray = this.getImagesMedia(image_document_ids,upload_documents,message,patientDp,side,parts);
-        const audioMediaArray= this.getAudioMedia(audio_document_ids,upload_documents,message,patientDp,side,parts)  ;
-        const videoMediaArray = this.getVideoMedia(video_document_ids,upload_documents,message,patientDp,side,parts);
-
-        allMediaArray.push(textMessage);
+        
+        const imagesMediaArray = this.getImagesMedia(image_document_ids,upload_documents);
+        const audioMediaArray= this.getAudioMedia(audio_document_ids,upload_documents)  ;
+        const videoMediaArray = this.getVideoMedia(video_document_ids,upload_documents);
+        const textMessage= this.getText(symptom_text);
+        
+        
         imagesMediaArray.map(each => {allMediaArray.push(each)});
-        audioMediaArray.map(each => {allMediaArray.push(each)});
         videoMediaArray.map(each => {allMediaArray.push(each)});
+        audioMediaArray.map(each => {allMediaArray.push(each)});
+        allMediaArray.push(textMessage);
+        finalMessage = this.getFinalMessage(message,patientDp,side,parts,allMediaArray);
 
-
-        // const {replyMessage} = this.state;
-        // if(replyMessage!== ''){
-        //     allMediaArray.push(replyMessage);
-        // }
-
-            // this.setState({
-            //     allMedia:allMediaArray
-            // }
-            
-            // );
         
         }
 
-        return allMediaArray;
+        return finalMessage;
     }
     
     render() {
         // const {allMedia} = this.state;
-        const allMedia = this.getAllMedia();
+        const finalMessage = this.getAllMedia();
        
-        return allMedia;
+        return finalMessage;
        
     }
 }

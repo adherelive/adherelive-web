@@ -63,22 +63,20 @@ class botMessage extends Component{
 
     getBotMessage = () => {
         const { body : this_body ,message,patientDp,vital_repeat_intervals} = this.props;
-        // console.log("PROPSSS ===>",this.props);
-        
+      
         const body = JSON.parse(this_body);
         // console.log("body",body);
-        const tempType = this_body.split(':')[0];
-        const type = tempType.slice(2,tempType.length-1);
+        const {type} = body;
         // console.log("type",type);
         if(type === CHAT_MESSAGE_TYPE.SYMPTOM){
           
             return (
-                <SymptomBotMessage body_p={body} message_p={message} patientDp_p={patientDp}  {...this.props} />
+                <SymptomBotMessage  {...this.props} />
             )
         }
         else if (type === CHAT_MESSAGE_TYPE.VITAL){
               return (
-                <VitalBotMessage body_p={body} message_p={message} patientDp_p={patientDp}  vital_repeat_intervals={vital_repeat_intervals}  {...this.props} />
+                <VitalBotMessage  {...this.props} />
               )
         }
         else{

@@ -37,9 +37,11 @@ class vitalBotMessage extends Component{
         e.preventDefault();
         const {updateReplyMessadeId} = this.props;
         if(typeof(updateReplyMessadeId) !== 'undefined'){
+           
             const parentNode = e.target.parentNode.parentNode;
+            // console.log("parentNode -->",parentNode);
             const id = parentNode.getAttribute("id");
-            
+            // console.log("id ===>",id);
             updateReplyMessadeId(id);
         }
       
@@ -47,7 +49,9 @@ class vitalBotMessage extends Component{
     }
 
     getVitalsMessageArray = () => {
-        const{ body_p :body ,message_p : message ,patientDp_p : patientDp,vital_repeat_intervals = {} } = this.props;
+
+        const{body:this_body , message , patientDp,vital_repeat_intervals = {} } = this.props;
+        const body = JSON.parse(this_body);
         const {vitals, vital_id, vital_templates, response} = body; 
         
         const vitalsMessageArray = [];
@@ -76,10 +80,10 @@ class vitalBotMessage extends Component{
                             <Avatar src={patientDp} />
                         </span>
                         <Fragment>
-                <div className="bot-message-container  relative " >
-                                <div id={`${message.state.sid}-vital-response`}  >
+                <div className="bot-message-container  relative " id={`${message.state.sid}-vital-response`} >
+                                
                                     {this.getEllipsis()}
-                                </div>
+                                
                 <div className="bot-msg-detail-container" >
                         <span className="bot-m-h ">
                             Vital
