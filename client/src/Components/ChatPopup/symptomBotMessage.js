@@ -49,17 +49,17 @@ class symptomBotMessage extends Component{
                     <div className="chat-messages">
                         <div className="chat-avatar">
                                {this.getPatientAvatar(patientDp)}
-                            <div>
+                           
                                 <div className="bot-message-container" >
                                     <div id={`${message.state.sid}-text-msg`}  >
                                         {this.getEllipsis()}
                                     </div>
                                     <div>{this.getSymptomMessage(side,parts)}</div>
-                                    <div className="text-msg-container" >
+                                    <div className="text-msg-container " >
                                     <span>{symptom_text}</span>
                                     </div>
                                 </div>
-                            </div>
+                           
                         </div>
                         {this.getMessageTime(message)}
                     </div>
