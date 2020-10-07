@@ -14,6 +14,8 @@ import { injectIntl } from "react-intl";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
 import ChatMessageDetails from "../ChatPopup/chatMessageDetails";
+// import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
+
 
 const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, otherTyping = false, formatMessage }) => {
     let pic = patientName ?
@@ -384,11 +386,96 @@ class TwilioChat extends Component {
         this.channel = null;
     };
 
+    getReplyMetaData = (side,part) => {
+       
+        if(side === '' || part.length === 0){
+            return null;
+        }
+       
+        return (
+            <Fragment>
+                <div className="bot-msg-detail-container wp50" >
+                    <span className="bot-m-h ">
+                        Symptom
+                    </span>
+                    
+                    <div className="bot-msg-details" >
+                        <span className="fs14 fw500  ">
+                            {side}
+                        </span> 
+                        <span className="dot" >&bull;</span>
+                        <span className="side">
+                            {part}
+                        </span>
+                    </div>
+                    
+                </div>
+            </Fragment>
+            )
+        
+    }
+
+    getReplyMessage = () => {
+        const { ChatForm } = this;
+       
+        const {replyMessadeId =''} = this.props;
+        const renderArray = [];
+        const {updateReplyMessadeId} = this.props;
+        const ellipsisContainer = document.getElementById(replyMessadeId); 
+        // console.log(ellipsisContainer);
+        const metaDataContainer = ellipsisContainer.nextElementSibling;
+        const  msgDetailsContainer = metaDataContainer.getElementsByClassName("bot-msg-details");
+        const msgChildNodes = msgDetailsContainer[0].children;
+        const data1 = msgChildNodes[0].innerHTML;
+        const data2 = msgChildNodes[2].innerHTML;
+        let mess ='';
+        const metaDataReply = this.getReplyMetaData(data1,data2);
+
+       
+        mess = (
+            <div className="wp100 flex direction-row">
+                <div className="wp90 flex direction-column justify-space-between p20 mh200" >
+                    {metaDataReply}
+                    <Form className="wp90 mauto">
+
+                        <Input placeholder="Add reply here .. " className="br-dark-blue p20 br25"></Input>
+                        
+                    </Form>
+                </div>
+                <div className="fs30" onClick={this.unsetReplyId}>&times;</div>
+            </div>
+        )
+
+        if(mess !== '' && metaDataReply !== null){
+            const form  = document.getElementsByClassName("chat-form");
+            const input = form[0].getElementsByTagName("Input")[0];
+            input.disabled = true
+
+        }
+        
+        
+        return mess;
+    }
+
+    unsetReplyId = (e) => {
+        e.preventDefault();
+        const {updateReplyMessadeId} = this.props;
+       
+        
+        updateReplyMessadeId();
+        const form  = document.getElementsByClassName("chat-form");
+        const input = form[0].getElementsByTagName("Input")[0];
+        input.disabled = false;
+      
+    }
+
+ 
     render() {
         const { ChatForm } = this;
 
         const { messagesLoading = false, other_user_online = false, other_typing = false, otherUserLastConsumedMessageIndex } = this.state;
-        const { placeVideoCall, patientDp = '', patientName = '' } = this.props;
+        const { placeVideoCall, patientDp = '', patientName = '',replyMessadeId='' } = this.props;
+        console.log("replyMessadeId ===>",replyMessadeId);
         const { ...props} = this.props;
 
         return (
@@ -403,7 +490,15 @@ class TwilioChat extends Component {
                             : <ChatMessageDetails {...props} scrollToBottom={this.scrollToBottom} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
                         <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                     </div>
+
+                    {replyMessadeId ? 
+                        this.getReplyMessage()
+                        : null
+                    }
+                   
+
                 </div>
+
 
                 <div className="twilio-chat-footer">
                     {/* <div className="footer-left"> */}
@@ -414,6 +509,7 @@ class TwilioChat extends Component {
               alt="chatImg"
             /> */}
                     {/* </div> */}
+
                     <div className="footer-right wp100">
                         <ChatForm messages={this.messages} channel={this.channel} formatMessage={this.formatMessage} />
                     </div>

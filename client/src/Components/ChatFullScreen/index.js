@@ -31,7 +31,8 @@ class ChatFullScreen extends Component {
             roomId: '',
             patientUserId: 1,
             patientId: 1,
-            placeCall: false
+            placeCall: false,
+            replyMessadeId:''
         };
     }
 
@@ -56,6 +57,26 @@ class ChatFullScreen extends Component {
         // console.log('754624646546245624562462456', doctorUserId, patient_id, roomId);
         this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
     }
+
+    updateReplyMessadeId = (newId='') => {
+        
+        const {replyMessadeId : currentId} = this.state;
+
+        if(currentId !== newId && newId === '' && currentId !== ''){ 
+            console.log("UNSETTING ID");
+            this.setState({
+                replyMessadeId:newId
+            });
+
+        }else if(currentId !== newId && newId !== '' && currentId === '' ){  
+           console.log("SETTING ID");
+            this.setState({
+                replyMessadeId:newId
+            });
+        }
+    }
+
+  
 
     openVideoChatTab = () => {
 
@@ -95,7 +116,8 @@ class ChatFullScreen extends Component {
 
 
     render() {
-        let { roomId, patientId, doctorUserId } = this.state;
+        let { roomId, patientId, doctorUserId, replyMessadeId} = this.state;
+        
         let { patients = {} } = this.props;
 
         const { basic_info: { first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[patientId] || {};
@@ -111,7 +133,8 @@ class ChatFullScreen extends Component {
                     </div>
                     <div className='chat-messageBox-container'>
                         {/* <Header placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={} /> */}
-                        <TwilioChat roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
+                        <TwilioChat replyMessadeId={replyMessadeId}  updateReplyMessadeId={this.updateReplyMessadeId}  roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
+                        
                     </div>
                 </Fragment>
             </div>

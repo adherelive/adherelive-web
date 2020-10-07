@@ -18,9 +18,36 @@ class vitalBotMessage extends Component{
         
     }
 
+
+    // getEllipsis = () =>{
+    //     return (
+    //         <div className="wp100 tar fs20 pr20">
+               
+    //             <span onClick={this.replyToMessage}
+                    
+    //             > &hellip;</span>
+                
+    //         </div>
+    //     )
+    // }
+
+    // replyToMessage = (e) => {
+    //     // e.preventDefault();
+    //     console.log("VITAL ELLIPSIS CLICKEDDDDD");
+    //     const {updateReplyMessadeId} = this.props;
+    //     console.log("11111 ====>",e.target);
+    //     // const parentNode = e.target.parentNode.parentNode;
+    //     // const id = parentNode.getAttribute("id");
+        
+    //     // updateReplyMessadeId(id);
+      
+ 
+    // }
+
     getVitalsMessageArray = () => {
-        const{message,patientDp,vital_repeat_intervals = {} } = this.props;
-        const {vitals, vital_id, vital_templates, response} = this.props.body;
+        const{ body_p :body ,message_p : message ,patientDp_p : patientDp,vital_repeat_intervals = {} } = this.props;
+        const {vitals, vital_id, vital_templates, response} = body; 
+        
         const vitalsMessageArray = [];
         const {basic_info: {vital_template_id} = {} ,details:{repeat_days = [] , repeat_interval_id = ''}={}} = vitals[vital_id] || {};
         const {basic_info: {name} = {}, details: {template = [] } = {}} = vital_templates[vital_template_id] || {};
@@ -48,7 +75,10 @@ class vitalBotMessage extends Component{
                         </span>
                         <Fragment>
                 <div className="bot-message-container  relative " >
-                    <div className="bot-msg-detail-container" >
+                                {/* <div id={`${message.state.sid}-vital-response`}  >
+                                    {this.getEllipsis()}
+                                </div> */}
+                <div className="bot-msg-detail-container" >
                         <span className="bot-m-h ">
                             Vital
                         </span>

@@ -22,15 +22,63 @@ class botMessage extends Component{
     }
 
     getBotMessageByType(type,body,message,patientDp,vital_repeat_intervals){
+        // if(type === CHAT_MESSAGE_TYPE.SYMPTOM){
+          
+        //     return (
+        //         <SymptomBotMessage body={body} message={message} patientDp={patientDp}   />
+        //     )
+        // }
+        // else if (type === CHAT_MESSAGE_TYPE.VITAL){
+        //       return (
+        //         <VitalBotMessage body={body} message={message} patientDp={patientDp} vital_repeat_intervals={vital_repeat_intervals}  />
+        //       )
+        // }
+        // else{
+        //     return (
+        //         <Fragment key={message.state.sid}  >
+        //                <div className="chat-avatar">
+        //                                 <span className="twilio-avatar">
+        //                                     <Avatar src={patientDp} />
+        //                                 </span>
+        //                                 {message.type === "media" ? (
+        //                                     <div className="chat-text">
+        //                                         <div className="clickable white chat-media-message-text">
+        //                                             <Fragment>
+        //                                                 {message}
+        //                                             </Fragment> 
+        //                                         </div>
+        //                                     </div>
+        //                                 ) : (
+        //                                         <div className="chat-text " >{message.state.body}</div>
+        //                                     )}
+                                    
+        //                             <div className="chat-time start">
+        //                                 {moment(message.state.timestamp).format("H:mm")}
+        //                             </div>
+        //                 </div>
+        //         </Fragment>
+        //     )
+        // }
+    }
+
+    getBotMessage = () => {
+        const { body : this_body ,message,patientDp,vital_repeat_intervals} = this.props;
+        // console.log("PROPSSS ===>",this.props);
+        
+        const body = JSON.parse(this_body);
+        // console.log("body",body);
+        const tempType = this_body.split(':')[0];
+        const type = tempType.slice(2,tempType.length-1);
+        // console.log("type",type);
         if(type === CHAT_MESSAGE_TYPE.SYMPTOM){
           
             return (
-                <SymptomBotMessage body={body} message={message} patientDp={patientDp}  />
+                <SymptomBotMessage body_p={body} message_p={message} patientDp_p={patientDp}  {...this.props} />
             )
         }
         else if (type === CHAT_MESSAGE_TYPE.VITAL){
               return (
-                <VitalBotMessage body={body} message={message} patientDp={patientDp} vital_repeat_intervals={vital_repeat_intervals}  />
+                <VitalBotMessage body_p={body} message_p={message} patientDp_p={patientDp}  vital_repeat_intervals={vital_repeat_intervals}  {...this.props} />
               )
         }
         else{
@@ -59,17 +107,7 @@ class botMessage extends Component{
                 </Fragment>
             )
         }
-    }
-
-    getBotMessage = () => {
-        const { body : this_body ,message,patientDp,vital_repeat_intervals} = this.props;
-        const body = JSON.parse(this_body);
-        // console.log("body",body);
-        const tempType = this_body.split(':')[0];
-        const type = tempType.slice(2,tempType.length-1);
-        // console.log("type",type);
-        const newBotMessage = this.getBotMessageByType(type,body,message,patientDp,vital_repeat_intervals);
-        return newBotMessage;
+       
 
     }
 

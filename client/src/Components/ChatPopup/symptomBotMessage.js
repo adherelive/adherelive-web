@@ -18,7 +18,7 @@ class symptomBotMessage extends Component{
     }
 
 
-    getEllisis = () =>{
+    getEllipsis = () =>{
         return (
             <div className="wp100 tar fs20 pr20">
                
@@ -32,32 +32,34 @@ class symptomBotMessage extends Component{
 
     replyToMessage = (e) => {
         e.preventDefault();
-        const parentNode = e.target.parentNode;
-        const replyMetaContainer = parentNode.nextElementSibling;
-        const footer = document.getElementsByClassName("footer-right")[0];
-        console.log("footr ===> ",footer);
-        footer.append(replyMetaContainer);
+        const {updateReplyMessadeId} = this.props;
+        const parentNode = e.target.parentNode.parentNode;
+        const id = parentNode.getAttribute("id");
         
+        updateReplyMessadeId(id);
+      
+ 
     }
 
+  
     getText = (symptom_text,message,patientDp,side,parts) => {
         let text = '';
-        let msg = (<div>EEEP</div>);
         text = (
-            <Fragment key={`${message.state.sid}-text-msg`} >
+            <Fragment key={`${message.state.sid}-text-msg`}  >
                     <div className="chat-messages">
                         <div className="chat-avatar">
                                {this.getPatientAvatar(patientDp)}
-                            <Fragment>
+                            <div>
                                 <div className="bot-message-container" >
-                                    <Fragment>{this.getEllisis()}
-                                    </Fragment>
-                                    <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                                    <div id={`${message.state.sid}-text-msg`}  >
+                                        {this.getEllipsis()}
+                                    </div>
+                                    <div>{this.getSymptomMessage(side,parts)}</div>
                                     <div className="text-msg-container" >
                                     <span>{symptom_text}</span>
                                     </div>
                                 </div>
-                            </Fragment>
+                            </div>
                         </div>
                         {this.getMessageTime(message)}
                     </div>
@@ -76,7 +78,7 @@ class symptomBotMessage extends Component{
                     <div className="chat-messages">
                         <div className="chat-avatar">
                             {this.getPatientAvatar(patientDp)}
-                            {this.getImage(img_src,side,parts)}
+                            {this.getImage(img_src,side,parts,message)}
                         </div>
                         {this.getMessageTime(message)}
                     </div>
@@ -102,7 +104,7 @@ class symptomBotMessage extends Component{
                     <div className="chat-messages">
                         <div className="chat-avatar">
                             {this.getPatientAvatar(patientDp)}
-                            {this.getAudio(audio_src,side,parts,audio_type)}
+                            {this.getAudio(audio_src,side,parts,audio_type,message)}
                         </div>
                         {this.getMessageTime(message)}
                         
@@ -129,7 +131,7 @@ class symptomBotMessage extends Component{
                     <div className="chat-messages">
                         <div className="chat-avatar">
                             {this.getPatientAvatar(patientDp)}
-                            {this.getVideo(video_src,side,parts,video_type)}
+                            {this.getVideo(video_src,side,parts,video_type,message)}
                         </div>
                         {this.getMessageTime(message)}
                     </div>
@@ -154,11 +156,11 @@ class symptomBotMessage extends Component{
                 </div>)
     }
 
-    getImage =(img_src,side,parts) => {
+    getImage =(img_src,side,parts,message) => {
         return ( <Fragment>
             <div className="bot-message-container" >
-                <Fragment>{this.getEllisis()}</Fragment>
-                <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                <div id={`${message.state.sid}-image`} >{this.getEllipsis()}</div>
+                <div>{this.getSymptomMessage(side,parts)}</div>
                 <div className="media-container symptom-image-container" >
                     <img className="symptom-image" src={img_src} alt="Symptom Image" ></img>
                 </div>
@@ -166,11 +168,11 @@ class symptomBotMessage extends Component{
         </Fragment>)
     }
 
-    getAudio =(audio_src,side,parts,audio_type) => {
+    getAudio =(audio_src,side,parts,audio_type,message) => {
         return(<Fragment>
             <div className="bot-message-container" >
-                <Fragment>{this.getEllisis()}</Fragment>
-                <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                <div id={`${message.state.sid}-audio`}  >{this.getEllipsis()}</div>
+                <div>{this.getSymptomMessage(side,parts)}</div>
                 <div className="media-container symptom-audio-container" >
                 <audio controls className="symptom-audio" width="100%" height="100%" >
                     <source src={audio_src} alt="symptom audio" type={`audio/${audio_type}`}></source>
@@ -182,13 +184,13 @@ class symptomBotMessage extends Component{
         </Fragment>)
     }
 
-    getVideo= (video_src,side,parts,video_type) => {
+    getVideo= (video_src,side,parts,video_type,message) => {
        
         return (
             <Fragment>
                 <div className="bot-message-container" >
-                    <Fragment>{this.getEllisis()}</Fragment>
-                    <Fragment>{this.getSymptomMessage(side,parts)}</Fragment>
+                    <div id={`${message.state.sid}-video`} >{this.getEllipsis()}</div>
+                    <div >{this.getSymptomMessage(side,parts)}</div>
                     <div className="media-container symptom-video-container">
                     <video controls className="sympom-video" width="100%" height="100%" >
                         <source src={video_src} type={`video/${video_type}`}></source>
@@ -235,9 +237,9 @@ class symptomBotMessage extends Component{
     }
 
     getAllMedia = () => {
-        const {body,message,patientDp} = this.props;
-        // console.log("body",body);
-        // console.log("message",message);
+
+        const { body_p :body ,message_p : message ,patientDp_p : patientDp} = this.props;
+        // console.log("replyMessadeId ====> ",typeof(replyMessadeId));
         const symptom_id = body.symptom_id;
         const  imagesMedia = [] ,audioMedia = [],videoMedia = [];
         // const {imagesMedia = [] ,audioMedia = [],videoMedia = []} = this.state;
