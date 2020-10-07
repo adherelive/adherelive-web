@@ -33,10 +33,12 @@ class symptomBotMessage extends Component{
     replyToMessage = (e) => {
         e.preventDefault();
         const {updateReplyMessadeId} = this.props;
-        const parentNode = e.target.parentNode.parentNode;
-        const id = parentNode.getAttribute("id");
+        if(typeof(updateReplyMessadeId) !== 'undefined'){
+            const parentNode = e.target.parentNode.parentNode;
+            const id = parentNode.getAttribute("id");
         
-        updateReplyMessadeId(id);
+            updateReplyMessadeId(id);
+        }
       
  
     }
