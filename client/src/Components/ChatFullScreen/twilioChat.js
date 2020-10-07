@@ -386,8 +386,7 @@ class TwilioChat extends Component {
         this.channel = null;
     };
 
-    getReplyMetaData = (side,part) => {
-       
+    getReplyMetaData = (heading,side,part) => {
         if(side === '' || part.length === 0){
             return null;
         }
@@ -396,7 +395,7 @@ class TwilioChat extends Component {
             <Fragment>
                 <div className="bot-msg-detail-container wp50" >
                     <span className="bot-m-h ">
-                        Symptom
+                        {heading}
                     </span>
                     
                     <div className="bot-msg-details" >
@@ -424,12 +423,15 @@ class TwilioChat extends Component {
         const ellipsisContainer = document.getElementById(replyMessadeId); 
         // console.log(ellipsisContainer);
         const metaDataContainer = ellipsisContainer.nextElementSibling;
+        // console.log("metaDataContainer",metaDataContainer);
+        const heading = metaDataContainer.getElementsByClassName("bot-m-h")[0].innerHTML;
+        // console.log("heading",heading);
         const  msgDetailsContainer = metaDataContainer.getElementsByClassName("bot-msg-details");
         const msgChildNodes = msgDetailsContainer[0].children;
         const data1 = msgChildNodes[0].innerHTML;
         const data2 = msgChildNodes[2].innerHTML;
         let mess ='';
-        const metaDataReply = this.getReplyMetaData(data1,data2);
+        const metaDataReply = this.getReplyMetaData(heading,data1,data2);
 
        
         mess = (

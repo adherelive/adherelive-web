@@ -19,30 +19,30 @@ class vitalBotMessage extends Component{
     }
 
 
-    // getEllipsis = () =>{
-    //     return (
-    //         <div className="wp100 tar fs20 pr20">
+    getEllipsis = () =>{
+        return (
+            <div className="wp100 tar fs20 pr20">
                
-    //             <span onClick={this.replyToMessage}
+                <span 
+                onClick={this.replyToMessage}
+                className="h-cursor-p"
                     
-    //             > &hellip;</span>
+                > &hellip;</span>
                 
-    //         </div>
-    //     )
-    // }
+            </div>
+        )
+    }
 
-    // replyToMessage = (e) => {
-    //     // e.preventDefault();
-    //     console.log("VITAL ELLIPSIS CLICKEDDDDD");
-    //     const {updateReplyMessadeId} = this.props;
-    //     console.log("11111 ====>",e.target);
-    //     // const parentNode = e.target.parentNode.parentNode;
-    //     // const id = parentNode.getAttribute("id");
+    replyToMessage = (e) => {
+        e.preventDefault();
+        const {updateReplyMessadeId} = this.props;
+        const parentNode = e.target.parentNode.parentNode;
+        const id = parentNode.getAttribute("id");
         
-    //     // updateReplyMessadeId(id);
+        updateReplyMessadeId(id);
       
  
-    // }
+    }
 
     getVitalsMessageArray = () => {
         const{ body_p :body ,message_p : message ,patientDp_p : patientDp,vital_repeat_intervals = {} } = this.props;
@@ -75,9 +75,9 @@ class vitalBotMessage extends Component{
                         </span>
                         <Fragment>
                 <div className="bot-message-container  relative " >
-                                {/* <div id={`${message.state.sid}-vital-response`}  >
+                                <div id={`${message.state.sid}-vital-response`}  >
                                     {this.getEllipsis()}
-                                </div> */}
+                                </div>
                 <div className="bot-msg-detail-container" >
                         <span className="bot-m-h ">
                             Vital
