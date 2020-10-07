@@ -438,7 +438,7 @@ class TwilioChat extends Component {
                     {metaDataReply}
                    
                 </div>
-                <div className="fs30" onClick={this.unsetReplyId}>&times;</div>
+                <div className="fs30 h-cursor-p" onClick={this.unsetReplyId}>&times;</div>
             </div>
         )
         return mess;

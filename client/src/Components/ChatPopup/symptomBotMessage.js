@@ -23,7 +23,7 @@ class symptomBotMessage extends Component{
             <div className="wp100 tar fs20 pr20">
                
                 <span onClick={ this.replyToMessage}
-                    
+                    className="h-cursor-p"
                 > &hellip;</span>
                 
             </div>
