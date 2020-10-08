@@ -89,18 +89,16 @@ class PatientDetailsDrawer extends Component {
     };
 
     setComorbidities = e => {
-        const { value } = e.target;
-        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        const  value  = e.target.value.trim();
         
-        if (reg.test(value) || value === '') {
-            this.setState({ comorbidities: e.target.value });
+        if (value.length>0) {
+            this.setState({ comorbidities: e.target.value});
         }
     }
 
     setPastedComorbidities = e => {
         e.preventDefault();
         let pastedValue = '';
-        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
@@ -111,17 +109,16 @@ class PatientDetailsDrawer extends Component {
 
 
     setClinicalNotes = e => {
-        const { value } = e.target;
-        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        if (reg.test(value) || value === '') {
-            this.setState({ clinical_notes: e.target.value });
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0) {
+            this.setState({ clinical_notes: e.target.value});
         }
     }
 
     setPastedClinicalNotes = e => {
         e.preventDefault();
         let pastedValue = '';
-        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
@@ -131,9 +128,10 @@ class PatientDetailsDrawer extends Component {
     }
 
     setAllergies= e => {
-        const { value } = e.target;
-        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        if (reg.test(value) || value === '') {
+      
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0) {
             this.setState({ allergies: e.target.value });
         }
     }
@@ -141,7 +139,6 @@ class PatientDetailsDrawer extends Component {
     setPastedAllergies = e => {
         e.preventDefault();
         let pastedValue = '';
-        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
@@ -151,17 +148,18 @@ class PatientDetailsDrawer extends Component {
     }
 
     setDiagnosis = e => {
-        const { value } = e.target;
-        const reg =  /^[a-zA-Z][a-zA-Z\s]*$/;
-        if (reg.test(value) || value === '') {
+      
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0) {
             this.setState({ diagnosis_description: e.target.value });
         }
+        
     }
     
     setPastedDiagnosis = e => {
         e.preventDefault();
         let pastedValue = '';
-        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
