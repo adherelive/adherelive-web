@@ -193,7 +193,7 @@ class symptomBotMessage extends Component{
     getFinalMessage = (message,patientDp,side,parts,allMediaArray) => {
         let mess = '';
         mess = (<Fragment >
-            <div className="chat-messages"  >
+            <div className="chat-messages"  key={`${message.state.sid}-symptom-key`}  >
                 <div className="chat-avatar">
                     {this.getPatientAvatar(patientDp)}
                     <div className="bot-message-container"  >

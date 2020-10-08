@@ -73,7 +73,7 @@ class vitalBotMessage extends Component{
                 
             vitalMessage = (
 
-                <Fragment key={`${message.state.sid}-vital-response`} >
+                <Fragment key={`${message.state.sid}-vital-key`} >
 
                 <div className="chat-messages">
                     <div className="chat-avatar">
