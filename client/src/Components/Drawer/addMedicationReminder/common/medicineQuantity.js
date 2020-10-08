@@ -79,8 +79,8 @@ class MedicineQuantity extends Component {
               size="small"
               className="flex justify-content-end"
             >
-              <RadioButton value={0.25} onClick={onRadioChange}>+0.25</RadioButton>
               <RadioButton value={0.5} onClick={onRadioChange}>+0.5</RadioButton>
+              <RadioButton value={1.0} onClick={onRadioChange}>+1.0</RadioButton>
             </RadioGroup>
           </div>
         </div>
