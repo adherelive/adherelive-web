@@ -61,7 +61,7 @@ class CreateJob extends AppointmentJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
-      appointmentId,
+      // appointmentId,
       event_id
     } = getAppointmentData() || {};
 
