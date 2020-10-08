@@ -91,16 +91,46 @@ class PatientDetailsDrawer extends Component {
     setComorbidities = e => {
         const { value } = e.target;
         const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        
         if (reg.test(value) || value === '') {
             this.setState({ comorbidities: e.target.value });
         }
     }
+
+    setPastedComorbidities = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text');
+        }
+
+        if (pastedValue.length>0) {
+            console.log("pasted val length",pastedValue.length );
+            this.setState({ comorbidities:pastedValue  });
+        }
+    }
+
 
     setClinicalNotes = e => {
         const { value } = e.target;
         const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if (reg.test(value) || value === '') {
             this.setState({ clinical_notes: e.target.value });
+        }
+    }
+
+    setPastedClinicalNotes = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text');
+        }
+
+        if (pastedValue.length>0) {
+            console.log("pasted val length",pastedValue.length );
+            this.setState({ clinical_notes:pastedValue  });
         }
     }
 
@@ -112,11 +142,39 @@ class PatientDetailsDrawer extends Component {
         }
     }
 
+    setPastedAllergies = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text');
+        }
+
+        if (pastedValue.length>0) {
+            console.log("pasted val length",pastedValue.length );
+            this.setState({ allergies:pastedValue  });
+        }
+    }
+
     setDiagnosis = e => {
         const { value } = e.target;
         const reg =  /^[a-zA-Z][a-zA-Z\s]*$/;
         if (reg.test(value) || value === '') {
             this.setState({ diagnosis_description: e.target.value });
+        }
+    }
+
+    setPastedDiagnosis = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text');
+        }
+
+        if (pastedValue.length>0) {
+            console.log("pasted val length",pastedValue.length );
+            this.setState({ diagnosis_description:pastedValue  });
         }
     }
 
@@ -273,6 +331,7 @@ class PatientDetailsDrawer extends Component {
         }
     };
 
+    
 
     renderAddPatient = () => {
         let dtToday = new Date();
@@ -367,7 +426,7 @@ class PatientDetailsDrawer extends Component {
                     value={comorbidities}
                     className={"form-textarea-ap"}
                     onChange={this.setComorbidities}
-                    
+                    onPaste={this.setPastedComorbidities}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
@@ -377,6 +436,7 @@ class PatientDetailsDrawer extends Component {
                     value={allergies}
                     className={"form-textarea-ap"}
                     onChange={this.setAllergies}
+                    onPaste={this.setPastedAllergies}
                 />
 
                 
@@ -391,6 +451,7 @@ class PatientDetailsDrawer extends Component {
                     value={clinical_notes}
                     className={"form-textarea-ap "}
                     onChange={this.setClinicalNotes}
+                    onPaste={this.setPastedClinicalNotes}
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>
@@ -423,6 +484,7 @@ class PatientDetailsDrawer extends Component {
                     value={diagnosis_description}
                     className={"form-textarea-ap"}
                     onChange={this.setDiagnosis}
+                    onPaste={this.setPastedDiagnosis}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}<div className="star-red">*</div></div>
