@@ -26,7 +26,7 @@ class EventController extends Controller {
     try {
       Log.debug("req.params", req.params);
       const { params: { id } = {} } = req;
-        const eventService = new EventService();
+      const eventService = new EventService();
 
       const events = await eventService.getEventByData({
         id
@@ -121,7 +121,11 @@ class EventController extends Controller {
         eventIds: medication_ids
       });
 
-      let scheduleEvents = [...vitalEvents, ...appointmentEvents, ...medicationEvents];
+      let scheduleEvents = [
+        ...vitalEvents,
+        ...appointmentEvents,
+        ...medicationEvents
+      ];
 
       Log.debug("21237193721 events --> ", scheduleEvents.length);
 
@@ -146,41 +150,41 @@ class EventController extends Controller {
               medications
             } = event.getDateWiseInfo();
             dateWiseEventData[event.getDate()] = {
-                all: [...prevAll, ...all],
-                appointments: [...prevAppointments, ...appointments],
-                medications: [...prevMedications, ...medications],
-                vitals: [...prevVitals, ...vitals],
+              all: [...prevAll, ...all],
+              appointments: [...prevAppointments, ...appointments],
+              medications: [...prevMedications, ...medications],
+              vitals: [...prevVitals, ...vitals]
             };
           } else {
-              const {
-                  all,
-                  appointments,
-                  vitals,
-                  medications
-              } = event.getDateWiseInfo();
+            const {
+              all,
+              appointments,
+              vitals,
+              medications
+            } = event.getDateWiseInfo();
             dateWiseEventData[event.getDate()] = {
-                all,
-                appointments,
-                medications,
-                vitals
+              all,
+              appointments,
+              medications,
+              vitals
             };
             dates.push(event.getDate());
           }
         }
 
         return raiseSuccess(
-            res,
-            200,
-            {
-                schedule_events: {
-                    ...scheduleEventData
-                },
-                date_wise_events: {
-                    ...dateWiseEventData,
-                },
-                date_ids: dates
+          res,
+          200,
+          {
+            schedule_events: {
+              ...scheduleEventData
             },
-            "Events fetched successfully"
+            date_wise_events: {
+              ...dateWiseEventData
+            },
+            date_ids: dates
+          },
+          "Events fetched successfully"
         );
       } else {
         return raiseSuccess(
@@ -192,6 +196,54 @@ class EventController extends Controller {
       }
     } catch (error) {
       Log.debug("getVitalEvent 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updateMedicationStatus = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { body: { status = null } = {} } = req || {};
+      const eventService = new EventService();
+      const { params: { eventId: event_id = null } = {} } = req || {};
+
+      if (!event_id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please give a proper event value."
+        );
+      }
+
+      let eventDetails = await eventService.getEventByData({ id: event_id });
+      let { details = {} } = eventDetails;
+
+      details = { ...details, ...{ status } };
+      eventDetails = { ...eventDetails, ...{ details } };
+
+      const mEventDetails = await eventService.update(eventDetails, event_id);
+
+      const updatedEventDetails = await eventService.getEventByData({
+        id: event_id
+      });
+
+      const eventApiDetails = await EventWrapper(updatedEventDetails);
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          schedule_events: {
+            [eventApiDetails.getEventId()]: {
+              ...eventApiDetails.getAllInfo()
+            }
+          }
+        },
+        "Medication reminder event status updated successfully"
+      );
+    } catch (error) {
+      Log.debug("Update medication status 500 error: ", error);
       return raiseServerError(res);
     }
   };

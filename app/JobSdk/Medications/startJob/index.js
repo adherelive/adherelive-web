@@ -1,8 +1,10 @@
 import MedicationJob from "../";
 import moment from "moment";
-import { EVENT_TYPE } from "../../../../constant";
+import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
 
-class CreateJob extends MedicationJob {
+const { MEDICATION_REMINDER_START } = NOTIFICATION_VERB;
+
+class StartJob extends MedicationJob {
   constructor(data) {
     super(data);
   }
@@ -10,12 +12,13 @@ class CreateJob extends MedicationJob {
   getPushAppTemplate = () => {
     const { getMedicationData } = this;
     const {
-      participants = [],
-      actor: {
-        id: actorId,
-        details: { name, category: actorCategory } = {}
-      } = {},
-      medicationId = null
+      details: {
+        participants = [],
+        actor: {
+          id: actorId,
+          details: { name, category: actorCategory } = {}
+        } = {}
+      }
     } = getMedicationData() || {};
 
     const templateData = [];
@@ -26,9 +29,9 @@ class CreateJob extends MedicationJob {
 
         templateData.push({
           app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-          headings: { en: `Appointment Created` },
+          headings: { en: `Medication Reminder` },
           contents: {
-            en: `${name}(${actorCategory}) has created a medication reminder with you`
+            en: `A medication reminder is scheduled for you.`
           },
           // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
           include_player_ids: [...participants],
@@ -44,35 +47,40 @@ class CreateJob extends MedicationJob {
   getInAppTemplate = () => {
     const { getMedicationData } = this;
     const {
-      participants = [],
-      actor: {
-        id: actorId,
-        details: { name, category: actorCategory } = {}
-      } = {},
-      medicationId
+      details: {
+        participants = [],
+        actor: {
+          id: actorId,
+          details: { name, category: actorCategory } = {}
+        } = {}
+      },
+      id,
+      start_time
     } = getMedicationData() || {};
 
+    console.log(
+      "inside get in app template function: ",
+      getMedicationData(),
+      participants
+    );
+
     const templateData = [];
-    const currentTime = new moment().utc().toISOString();
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      // if (participant !== actorId) {
       templateData.push({
         actor: actorId,
         object: `${participant}`,
-        foreign_id: `${medicationId}`,
-        verb: `medication_create:${currentTimeStamp}`,
+        foreign_id: `${id}`,
+        verb: `${MEDICATION_REMINDER_START}:${currentTimeStamp}`,
         event: EVENT_TYPE.MEDICATION_REMINDER,
-        // message: `${name}(${actorCategory}) has created a medication reminder`,
-        time: currentTime,
-        create_time: `${currentTime}`
+        time: start_time,
+        start_time: start_time
       });
-      // }
     }
-
+    console.log("Returning templateData: ", templateData);
     return templateData;
   };
 }
 
-export default CreateJob;
+export default StartJob;

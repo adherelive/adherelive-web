@@ -13,6 +13,7 @@ export const ACTIVITY_TYPE = {
 };
 
 export const EVENT_TYPE = {
+  SYMPTOMS: "symptoms",
   VITALS: "vitals",
   APPOINTMENT: "appointment",
   REMINDER: "reminder",
@@ -237,7 +238,9 @@ export const NOTIFICATION_VERB = {
   HOSPITALISATION_CREATE: "HOSPITALISATION_CREATE",
   BENEFIT_DOCS_VERIFIED: "BENEFIT_DOCS_VERIFIED",
   CHARITY_APPROVAL: "CHARITY_APPROVAL",
-  MRL_GENERATION: "MRL_GENERATION"
+  MRL_GENERATION: "MRL_GENERATION",
+  VITAL_CREATE: "VITAL_CREATE",
+  VITAL_START: "VITAL_START"
 };
 
 export const NOTIFICATION_STAGES = {
@@ -358,7 +361,7 @@ export const DOCUMENT_PARENT_TYPE = {
   DOCTOR_REGISTRATION: "doctor_registration",
   SYMPTOM_AUDIO: "symptom_audio",
   SYMPTOM_PHOTO: "symptom_photo",
-  SYMPTOM_VIDEO: "symptom_video",
+  SYMPTOM_VIDEO: "symptom_video"
 };
 
 export const ONBOARDING_STATUS = {
@@ -388,7 +391,8 @@ export const EVENT_STATUS = {
   PENDING: "pending",
   COMPLETED: "completed",
   EXPIRED: "expired",
-  CANCELLED: "cancelled"
+  CANCELLED: "cancelled",
+  STARTED: "started"
 };
 
 export const EMAIL_TEMPLATE_NAME = {
@@ -441,8 +445,6 @@ export const DOSE_UNIT = {
 
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
-
-
 
 export const BEFORE_BREAKFAST = "1";
 export const AFTER_BREAKFAST = "2";
@@ -614,7 +616,7 @@ export const APPOINTMENT_TYPE_DESCRIPTION = {
 export const FEATURE_TYPE = {
   APPOINTMENT: "appointment",
   MEDICATION: "medication",
-  VITAL: "vital",
+  VITAL: "vital"
 };
 
 export const BLANK_STATE = "";
@@ -744,7 +746,7 @@ export const PARTS_GRAPH = {
   [LEFT_HAMSTRING]: { name: "Left Hamstring" },
   [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
   [LEFT_CALF]: { name: "Left Calf" },
-  [RIGHT_CALF]: { name: "Right Calf" },
+  [RIGHT_CALF]: { name: "Right Calf" }
 };
 
 export const BODY_VIEW = {
@@ -753,12 +755,12 @@ export const BODY_VIEW = {
 };
 
 export const REPEAT_INTERVAL = {
-  ONCE:"ONCE",
-  ONE_HOUR:"ONE_HOUR",
-  TWO_HOUR:"TWO_HOUR",
-  FOUR_HOUR:"FOUR_HOUR",
-  SIX_HOUR:"SIX_HOUR",
-  TWELVE_HOUR: "TWELVE_HOUR",
+  ONCE: "ONCE",
+  ONE_HOUR: "ONE_HOUR",
+  TWO_HOUR: "TWO_HOUR",
+  FOUR_HOUR: "FOUR_HOUR",
+  SIX_HOUR: "SIX_HOUR",
+  TWELVE_HOUR: "TWELVE_HOUR"
 };
 
 export const MP4 = "mp4";
@@ -771,24 +773,23 @@ export const EVENING = "4";
 export const DINNER = "5";
 export const SLEEP = "6";
 
-export const PATIENT_MEAL_TIMINGS =  {
-  [WAKE_UP]:{
-    "value":"2020-09-24T08:00:00+05:30"
+export const PATIENT_MEAL_TIMINGS = {
+  [WAKE_UP]: {
+    value: "2020-09-24T08:00:00+05:30"
   },
-  [BREAKFAST]:{
-    "value":"2020-09-24T09:00:00+05:30"
+  [BREAKFAST]: {
+    value: "2020-09-24T09:00:00+05:30"
   },
-  [LUNCH]:{
-    "value":"2020-09-24T13:00:00+05:30"
+  [LUNCH]: {
+    value: "2020-09-24T13:00:00+05:30"
   },
-  [EVENING]:{
-    "value":"2020-09-24T16:00:00+05:30"
+  [EVENING]: {
+    value: "2020-09-24T16:00:00+05:30"
   },
-  [DINNER]:{
-    "value":"2020-09-24T20:00:00+05:30"
+  [DINNER]: {
+    value: "2020-09-24T20:00:00+05:30"
   },
-  [SLEEP]:{
-    "value":"2020-09-24T23:00:00+05:30"
+  [SLEEP]: {
+    value: "2020-09-24T23:00:00+05:30"
   }
-}
-
+};
