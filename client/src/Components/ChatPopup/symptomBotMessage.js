@@ -18,12 +18,13 @@ class symptomBotMessage extends Component{
     }
 
 
-    getEllipsis = () =>{
+    getEllipsis = (message) =>{
         return (
             <div className="wp100 tar fs20 pr20">
                
                 <span onClick={ this.replyToMessage}
                     className="h-cursor-p"
+                    meta-id={`${message.state.sid}-symptom`}
                 > &hellip;</span>
                 
             </div>
@@ -35,10 +36,10 @@ class symptomBotMessage extends Component{
         const {updateReplyMessadeId} = this.props;
         if(typeof(updateReplyMessadeId) !== 'undefined'){
            
-            const parentNode = e.target.parentNode.parentNode;
-            // console.log("parentNode -->",parentNode);
-            const id = parentNode.getAttribute("id");
-            // console.log("id ===>",id);
+            const node = e.target;
+
+            const id = node.getAttribute("meta-id");
+            // console.log("id  ===>",id);
             updateReplyMessadeId(id);
         }
       
@@ -157,7 +158,7 @@ class symptomBotMessage extends Component{
     }
     
 
-    getSymptomMessage = (side,parts) => {
+    getSymptomMessage = (message,side,parts) => {
        
         if(side === '' || parts.length === 0){
             return null;
@@ -168,7 +169,7 @@ class symptomBotMessage extends Component{
        
         return (
             <Fragment>
-                <div className="bot-msg-detail-container" >
+                <div className="bot-msg-detail-container"  id={`${message.state.sid}-symptom`} >
                     <span className="bot-m-h ">
                         Symptom
                     </span>
@@ -191,13 +192,13 @@ class symptomBotMessage extends Component{
 
     getFinalMessage = (message,patientDp,side,parts,allMediaArray) => {
         let mess = '';
-        mess = (<Fragment  >
+        mess = (<Fragment >
             <div className="chat-messages"  >
                 <div className="chat-avatar">
                     {this.getPatientAvatar(patientDp)}
-                    <div className="bot-message-container" id={`${message.state.sid}-symptom`} >
-                       {this.getEllipsis()}
-                    <div>{this.getSymptomMessage(side,parts)}</div>
+                    <div className="bot-message-container"  >
+                       {this.getEllipsis(message)}
+                    <div>{this.getSymptomMessage(message,side,parts)}</div>
                     <div className="media-container symptom-video-container">
                         {allMediaArray}
                     </div>

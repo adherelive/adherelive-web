@@ -19,14 +19,14 @@ class vitalBotMessage extends Component{
     }
 
 
-    getEllipsis = () =>{
+    getEllipsis = (message) =>{
         return (
             <div className="wp100 tar fs20 pr20">
                
                 <span 
                 onClick={this.replyToMessage}
                 className="h-cursor-p"
-                    
+                meta-id={`${message.state.sid}-vital`}
                 > &hellip;</span>
                 
             </div>
@@ -38,12 +38,13 @@ class vitalBotMessage extends Component{
         const {updateReplyMessadeId} = this.props;
         if(typeof(updateReplyMessadeId) !== 'undefined'){
            
-            const parentNode = e.target.parentNode.parentNode;
-            // console.log("parentNode -->",parentNode);
-            const id = parentNode.getAttribute("id");
-            // console.log("id ===>",id);
+            const node = e.target;
+
+            const id = node.getAttribute("meta-id");
+            console.log("id  ===>",id);
             updateReplyMessadeId(id);
         }
+      
       
  
     }
@@ -80,11 +81,11 @@ class vitalBotMessage extends Component{
                             <Avatar src={patientDp} />
                         </span>
                         <Fragment>
-                <div className="bot-message-container  relative " id={`${message.state.sid}-vital-response`} >
+                <div className="bot-message-container  relative ">
                                 
-                                    {this.getEllipsis()}
+                                    {this.getEllipsis(message)}
                                 
-                <div className="bot-msg-detail-container" >
+                <div className="bot-msg-detail-container" id={`${message.state.sid}-vital`} >
                         <span className="bot-m-h ">
                             Vital
                         </span>

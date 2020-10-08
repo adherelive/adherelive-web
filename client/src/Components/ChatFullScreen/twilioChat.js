@@ -415,17 +415,13 @@ class TwilioChat extends Component {
     }
 
     getReplyMessage = () => {
-        const { ChatForm } = this;
         const {replyMessadeId =''} = this.props;
-        const renderArray = [];
         const {updateReplyMessadeId} = this.props;
         const Container = document.getElementById(replyMessadeId); 
-        // console.log("Container",Container);
         const metaDataContainer = Container.getElementsByClassName("bot-msg-detail-container")[0];
-        // console.log("metaDataContainer",metaDataContainer);
-        const heading = metaDataContainer.getElementsByClassName("bot-m-h")[0].innerHTML;
-        const  msgDetailsContainer = metaDataContainer.getElementsByClassName("bot-msg-details");
-        // console.log("msgDetailsContainer",msgDetailsContainer);
+        const heading = Container.getElementsByClassName("bot-m-h")[0].innerHTML;
+        const  msgDetailsContainer = Container.getElementsByClassName("bot-msg-details");
+       
         const msgChildNodes = msgDetailsContainer[0].children;
         const data1 = msgChildNodes[0].innerHTML;
         const data2 = msgChildNodes[2].innerHTML;
