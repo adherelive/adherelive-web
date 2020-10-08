@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 import Authenticate from "../middlewares/auth";
@@ -9,40 +8,38 @@ import MobileMedicationReminder from "../../../app/controllers/mControllers/medi
 import * as validator from "./validator";
 
 router.post(
-    "/appointments",
-    Authenticate,
-    validator.validateAppointmentFormData,
-    MobileAppointment.create
+  "/appointments",
+  Authenticate,
+  validator.validateAppointmentFormData,
+  MobileAppointment.create
 );
 
 // ----------- MEDICATION -----------
 
 router.get(
-    "/medication-details",
-    Authenticate,
-    MobileMedicationReminder.getMedicationDetails
+  "/medication-details",
+  Authenticate,
+  MobileMedicationReminder.getMedicationDetails
 );
 
 router.post(
-    "/medication/:patient_id",
-    Authenticate,
-    validator.validateMedicationReminderData,
-    MobileMedicationReminder.createCarePlanMedication
+  "/medication/:patient_id",
+  Authenticate,
+  validator.validateMedicationReminderData,
+  MobileMedicationReminder.createCarePlanMedication
 );
 
 // VITALS
 
-router.get(
-  "/vitals/:id",
-  Authenticate,
-  EventController.getVitalEvent
-);
+router.get("/vitals/:id", Authenticate, EventController.getVitalEvent);
 
 // --------------- GET ALL RECENT EVENTS PATIENT DASHBOARD
-router.get(
-    "/",
-    Authenticate,
-    EventController.getAllEvents
+router.get("/", Authenticate, EventController.getAllEvents);
+
+router.post(
+  "/medication-status/:eventId",
+  Authenticate,
+  EventController.updateMedicationStatus
 );
 
 module.exports = router;

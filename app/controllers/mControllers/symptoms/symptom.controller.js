@@ -15,7 +15,7 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import {uploadAudio, uploadImage, uploadVideo} from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
-import {DOCUMENT_PARENT_TYPE, USER_CATEGORY, ALLOWED_VIDEO_EXTENSIONS} from "../../../../constant";
+import {DOCUMENT_PARENT_TYPE, USER_CATEGORY, ALLOWED_VIDEO_EXTENSIONS, EVENT_TYPE} from "../../../../constant";
 import {getFilePath} from "../../../helper/filePath";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
@@ -118,7 +118,8 @@ class SymptomController extends Controller {
                 upload_documents: {
                    ...uploadDocumentData
                 },
-                symptom_id: symptom.getSymptomId()
+                symptom_id: symptom.getSymptomId(),
+                type: EVENT_TYPE.SYMPTOMS,
             });
 
             const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), chatJSON);

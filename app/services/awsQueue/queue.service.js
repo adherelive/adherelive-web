@@ -12,7 +12,7 @@ export default class QueueService {
       region: process.config.aws.region
     });
     this.sqs = new AWS.SQS();
-    this.TEMP_QUEUE_NAME = "adhere_test";
+    this.TEMP_QUEUE_NAME = "adhere_local";
   }
 
   createQueue = (name = "test_queue") => {
@@ -44,18 +44,18 @@ export default class QueueService {
       const params = {
         DelaySeconds: 30,
         MessageAttributes: {
-        //     Title: {
-        //         DataType: "String",
-        //         StringValue: "The Whistler"
-        //     },
-        //     Author: {
-        //         DataType: "String",
-        //         StringValue: "John Grisham"
-        //     },
-        //     WeeksOn: {
-        //         DataType: "Number",
-        //         StringValue: "6"
-        //     }
+          //     Title: {
+          //         DataType: "String",
+          //         StringValue: "The Whistler"
+          //     },
+          //     Author: {
+          //         DataType: "String",
+          //         StringValue: "John Grisham"
+          //     },
+          //     WeeksOn: {
+          //         DataType: "Number",
+          //         StringValue: "6"
+          //     }
         },
         MessageBody: stringData,
         // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
@@ -79,10 +79,8 @@ export default class QueueService {
         const params = {
           Id: `${moment().format("x")}-${index}`,
           DelaySeconds: 5,
-          MessageAttributes: {
-
-          },
-          MessageBody: stringData,
+          MessageAttributes: {},
+          MessageBody: stringData
           // QueueUrl: this.getQueueUrl(queueName)
         };
         formattedData.push(params);
@@ -122,7 +120,7 @@ export default class QueueService {
     }
   };
 
-  deleteMessage = async (ReceiptHandle) => {
+  deleteMessage = async ReceiptHandle => {
     try {
       const params = {
         QueueUrl: await this.getQueueUrl(),
