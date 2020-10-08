@@ -102,11 +102,9 @@ class PatientDetailsDrawer extends Component {
         let pastedValue = '';
         // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
-            pastedValue = e.clipboardData.getData('text');
+            pastedValue = e.clipboardData.getData('text').trim();
         }
-
         if (pastedValue.length>0) {
-            console.log("pasted val length",pastedValue.length );
             this.setState({ comorbidities:pastedValue  });
         }
     }
@@ -125,11 +123,9 @@ class PatientDetailsDrawer extends Component {
         let pastedValue = '';
         // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
-            pastedValue = e.clipboardData.getData('text');
+            pastedValue = e.clipboardData.getData('text').trim();
         }
-
         if (pastedValue.length>0) {
-            console.log("pasted val length",pastedValue.length );
             this.setState({ clinical_notes:pastedValue  });
         }
     }
@@ -147,11 +143,9 @@ class PatientDetailsDrawer extends Component {
         let pastedValue = '';
         // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
-            pastedValue = e.clipboardData.getData('text');
+            pastedValue = e.clipboardData.getData('text').trim();
         }
-
         if (pastedValue.length>0) {
-            console.log("pasted val length",pastedValue.length );
             this.setState({ allergies:pastedValue  });
         }
     }
@@ -163,17 +157,15 @@ class PatientDetailsDrawer extends Component {
             this.setState({ diagnosis_description: e.target.value });
         }
     }
-
+    
     setPastedDiagnosis = e => {
         e.preventDefault();
         let pastedValue = '';
         // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
-            pastedValue = e.clipboardData.getData('text');
+            pastedValue = e.clipboardData.getData('text').trim();
         }
-
         if (pastedValue.length>0) {
-            console.log("pasted val length",pastedValue.length );
             this.setState({ diagnosis_description:pastedValue  });
         }
     }
