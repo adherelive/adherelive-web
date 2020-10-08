@@ -1,5 +1,5 @@
 import * as constants from "../../../../config/constants";
-
+import Controller from "../../";
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
@@ -9,9 +9,6 @@ import base64 from "js-base64";
 import Log from "../../../../libs/log";
 
 const Response = require("../../helper/responseFormat");
-import userService from "../../../services/user/user.service";
-import patientService from "../../../services/patients/patients.service";
-import carePlanService from "../../../services/carePlan/carePlan.service";
 
 import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MUserWrapper from "../../../ApiWrapper/mobile/user";
@@ -21,7 +18,9 @@ import MUploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import MDoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
 
-import Controller from "../../";
+import userService from "../../../services/user/user.service";
+import patientService from "../../../services/patients/patients.service";
+import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorService from "../../../services/doctors/doctors.service";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
@@ -30,9 +29,8 @@ import UserVerificationServices from "../../../services/userVerifications/userVe
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
-
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
-import patientsService from "../../../services/patients/patients.service";
+
 import { doctorQualificationData, uploadImageS3 } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -198,10 +196,10 @@ class MobileUserController extends Controller {
           }
         );
 
-        const notificationToken = AppNotification.getUserToken(
-          `${userData.getId()}`
-        );
-        const feedId = base64.encode(`${userData.getId()}`);
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user_id}`);
+        const feedId = base64.encode(`${user_id}`);
 
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
@@ -233,97 +231,6 @@ class MobileUserController extends Controller {
     } catch (error) {
       Logger.debug("verifyOtp 500 error", error);
       raiseServerError(res);
-    }
-  };
-
-  doctorSignIn = async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      const user = await userService.getUserByEmail({ email });
-
-      // const userDetails = user[0];
-      // console.log("userDetails --> ", userDetails);
-      if (!user) {
-        return this.raiseClientError(res, 422, {}, "Email doesn't exists");
-      }
-
-      // TODO: UNCOMMENT below code after signup done for password check or seeder
-      // const passwordMatch = await bcrypt.compare(
-      //   password,
-      //   user.get("password")
-      // );
-      // if (passwordMatch) {
-      //   const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-      //
-      //   const secret = process.config.TOKEN_SECRET_KEY;
-      //   const accessToken = await jwt.sign(
-      //     {
-      //       userId: user.get("id")
-      //     },
-      //     secret,
-      //     {
-      //       expiresIn
-      //     }
-      //   );
-      const apiUserDetails = await MUserWrapper(user.get());
-      const otp = generateOTP();
-
-      // delete previous generated otp if generated within time limit
-      const previousOtp = await otpVerificationService.delete({
-        user_id: apiUserDetails.getId()
-      });
-
-      const patientOtpVerification = await otpVerificationService.create({
-        user_id: apiUserDetails.getId(),
-        otp
-      });
-
-      const emailPayload = {
-        title: "OTP Verification for patient",
-        toAddress: process.config.app.developer_email,
-        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-        templateData: {
-          title: "Patient",
-          mainBodyText: "OTP for adhere patient login is",
-          subBodyText: otp,
-          host: process.config.WEB_URL,
-          contactTo: process.config.app.support_email
-        }
-      };
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-
-      // const smsPayload = {
-      //   // countryCode: prefix,
-      //   phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
-      //   message: `Hello from Adhere! Your OTP for login is ${otp}`
-      // };
-      //
-      // Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
-
-      // let permissions = {
-      //   permissions: []
-      // };
-      //
-      // if(apiUserDetails.isActivated()) {
-      //   permissions = await apiUserDetails.getPermissions();
-      // }
-      //
-      // Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
-
-      return this.raiseSuccess(
-        res,
-        200,
-        {
-          user_id: apiUserDetails.getId()
-        },
-        "OTP sent successfully"
-      );
-      // } else {
-      //   return this.raiseClientError(res, 422, {}, "Invalid Credentials");
-      // }
-    } catch (error) {
-      console.log("error sign in  --> ", error);
-      return this.raiseServerError(res);
     }
   };
 
@@ -367,10 +274,10 @@ class MobileUserController extends Controller {
           }
         );
 
-        const notificationToken = AppNotification.getUserToken(
-          `${userData.getId()}`
-        );
-        const feedId = base64.encode(`${userData.getId()}`);
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user_id}`);
+        const feedId = base64.encode(`${user_id}`);
 
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
@@ -435,10 +342,10 @@ class MobileUserController extends Controller {
           }
         );
 
-        // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-        //
-        // const feedId = base64.encode(`${user.get("id")}`);
-        // const antiFeed = base64.atob(feedId);
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user.get("id")}`);
+        const feedId = base64.encode(`${user.get("id")}`);
 
         const apiUserDetails = await MUserWrapper(user.get());
 
@@ -451,21 +358,21 @@ class MobileUserController extends Controller {
         }
 
         return this.raiseSuccess(
-          res,
-          200,
-          {
-            accessToken,
-            // notificationToken,
-            // feedId,
-            users: {
-              [apiUserDetails.getId()]: {
-                ...apiUserDetails.getBasicInfo()
-              }
+            res,
+            200,
+            {
+              accessToken,
+              notificationToken,
+              feedId,
+              users: {
+                [apiUserDetails.getId()]: {
+                  ...apiUserDetails.getBasicInfo()
+                }
+              },
+              auth_user: apiUserDetails.getId(),
+              auth_category: apiUserDetails.getCategory(),
+              ...permissions,
             },
-            auth_user: apiUserDetails.getId(),
-            auth_category: apiUserDetails.getCategory(),
-            ...permissions
-          },
           "Signed in successfully"
         );
       } else {
@@ -550,11 +457,10 @@ class MobileUserController extends Controller {
         }
       );
 
-      // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-      //
-      // Logger.debug("feedId ---> user id", user.get("id"));
-      // const feedId = base64.encode(`${user.get("id")}`);
-      // Logger.debug("feedId ---> ", feedId);
+      const appNotification = new AppNotification();
+
+      const notificationToken = appNotification.getUserToken(`${user.get("id")}`);
+      const feedId = base64.encode(`${user.get("id")}`);
 
       const apiUserDetails = await MUserWrapper(user.get());
 
@@ -563,8 +469,8 @@ class MobileUserController extends Controller {
         200,
         {
           accessToken,
-          // notificationToken,
-          // feedId,
+          notificationToken,
+          feedId,
           users: {
             [apiUserDetails.getId()]: {
               ...apiUserDetails.getBasicInfo()
@@ -933,6 +839,7 @@ class MobileUserController extends Controller {
           },
           ...referenceData,
           ...permissions,
+
           severity_ids: severityIds,
           condition_ids: conditionIds,
           treatment_ids: treatmentIds,
@@ -1670,7 +1577,7 @@ class MobileUserController extends Controller {
       let uid = uuidv4();
       let birth_date = moment(date_of_birth);
       let age = moment().diff(birth_date, "years");
-      let patient = await patientsService.addPatient({
+      let patient = await patientService.addPatient({
         first_name,
         gender,
         middle_name,
@@ -2301,7 +2208,7 @@ class MobileUserController extends Controller {
 
       switch (category) {
         case USER_CATEGORY.PATIENT:
-          const patient = await patientsService.getPatientByUserId(userId);
+          const patient = await patientService.getPatientByUserId(userId);
           const patientData = await MPatientWrapper(patient);
           categoryData[patientData.getPatientId()] = patientData.getBasicInfo();
           break;

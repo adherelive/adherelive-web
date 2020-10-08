@@ -192,8 +192,10 @@ class UserController extends Controller {
           }
         );
 
-        // const notificationToken = AppNotification.getUserToken(`${userId}`);
-        // const feedId = base64.encode(`${userId}`);
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user.get("id")}`);
+        const feedId = base64.encode(`${user.get("id")}`);
 
         const apiUserDetails = await UserWrapper(userData.getBasicInfo);
 
@@ -203,8 +205,8 @@ class UserController extends Controller {
               ...apiUserDetails.getBasicInfo()
             }
           },
-          // notificationToken: notificationToken,
-          // feedId: `${userId}`,
+          notificationToken: notificationToken,
+          feedId: `${userId}`,
           auth_user: apiUserDetails.getUserId(),
           auth_category: apiUserDetails.getCategory()
         };
@@ -273,9 +275,11 @@ class UserController extends Controller {
           }
         );
 
-        // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-        // const feedId = base64.encode(`${user.get("id")}`);
-        //
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user.get("id")}`);
+        const feedId = base64.encode(`${user.get("id")}`);
+
         // Logger.debug("notificationToken --> ", notificationToken);
         // Logger.debug("feedId --> ", feedId);
 
@@ -298,8 +302,8 @@ class UserController extends Controller {
           // ...permissions,
           ...await apiUserDetails.getReferenceData(),
           auth_user: apiUserDetails.getId(),
-          // notificationToken: notificationToken,
-          // feedId: `${user.get("id")}`,
+          notificationToken: notificationToken,
+          feedId: `${user.get("id")}`,
           auth_category: apiUserDetails.getCategory()
         };
 
@@ -607,9 +611,6 @@ class UserController extends Controller {
           permissions: []
         };
 
-        // const notificationToken = AppNotification.getUserToken(`${userId}`);
-        // const feedId = base64.encode(`${userId}`);
-
 
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
@@ -624,7 +625,10 @@ class UserController extends Controller {
           referenceData = await userCategoryApiWrapper.getReferenceInfo();
         }
 
-        /**** API wrapper for DOCTOR ****/
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${userId}`);
+        const feedId = base64.encode(`${userId}`);
 
         return this.raiseSuccess(res, 200, {
           users: {
@@ -639,8 +643,8 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
-          // notificationToken: notificationToken,
-          // feedId: `${userId}`,
+          notificationToken: notificationToken,
+          feedId: `${userId}`,
           severity: {
             ...severityApiDetails,
           },
