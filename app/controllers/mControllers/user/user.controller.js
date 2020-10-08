@@ -39,7 +39,8 @@ import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS, VERIFICATION_TYPE
+  ONBOARDING_STATUS,
+  VERIFICATION_TYPE
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
 const errMessage = require("../../../../config/messages.json").errMessages;
@@ -52,7 +53,7 @@ import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
 
 import generateOTP from "../../../helper/generateOtp";
-// import AppNotification from "../../../NotificationSdk/inApp";
+import AppNotification from "../../../NotificationSdk/inApp";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -69,7 +70,12 @@ class MobileUserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "Mobile Number doesn't exists");
+        return this.raiseClientError(
+          res,
+          422,
+          user,
+          "Mobile Number doesn't exists"
+        );
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
@@ -100,7 +106,7 @@ class MobileUserController extends Controller {
 
       const patientOtpVerification = await otpVerificationService.create({
         user_id: apiUserDetails.getId(),
-        otp,
+        otp
       });
 
       const emailPayload = {
@@ -166,7 +172,9 @@ class MobileUserController extends Controller {
 
       if (otpDetails.length > 0) {
         const destroyOtp = await otpVerificationService.delete({ user_id });
-        const userDetails = await userService.getUserById(otpDetails[0].get("user_id"));
+        const userDetails = await userService.getUserById(
+          otpDetails[0].get("user_id")
+        );
 
         const userData = await UserWrapper(userDetails.get());
         let permissions = {
@@ -190,8 +198,10 @@ class MobileUserController extends Controller {
           }
         );
 
-        // const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
-        // const feedId = base64.encode(`${userData.getId()}`);
+        const notificationToken = AppNotification.getUserToken(
+          `${userData.getId()}`
+        );
+        const feedId = base64.encode(`${userData.getId()}`);
 
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
@@ -199,8 +209,8 @@ class MobileUserController extends Controller {
           200,
           {
             accessToken,
-            // notificationToken,
-            // feedId,
+            notificationToken,
+            feedId,
             users: {
               [userData.getId()]: {
                 ...userData.getBasicInfo()
@@ -213,7 +223,12 @@ class MobileUserController extends Controller {
           "Signed in successfully"
         );
       } else {
-        return this.raiseClientError(res, 422, {}, "OTP not correct. Please try again");
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "OTP not correct. Please try again"
+        );
       }
     } catch (error) {
       Logger.debug("verifyOtp 500 error", error);
@@ -260,7 +275,7 @@ class MobileUserController extends Controller {
 
       const patientOtpVerification = await otpVerificationService.create({
         user_id: apiUserDetails.getId(),
-        otp,
+        otp
       });
 
       const emailPayload = {
@@ -326,32 +341,36 @@ class MobileUserController extends Controller {
 
       if (otpDetails.length > 0) {
         const destroyOtp = await otpVerificationService.delete({ user_id });
-        const userDetails = await userService.getUserById(otpDetails[0].get("user_id"));
+        const userDetails = await userService.getUserById(
+          otpDetails[0].get("user_id")
+        );
 
         const userData = await UserWrapper(userDetails.get());
         let permissions = {
           permissions: []
         };
 
-        if(userData.isActivated()) {
+        if (userData.isActivated()) {
           permissions = await userData.getPermissions();
         }
 
-          const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
-          const secret = process.config.TOKEN_SECRET_KEY;
-          const accessToken = await jwt.sign(
-            {
-              userId: userData.getId()
-            },
-            secret,
-            {
-              expiresIn
-            }
-          );
+        const secret = process.config.TOKEN_SECRET_KEY;
+        const accessToken = await jwt.sign(
+          {
+            userId: userData.getId()
+          },
+          secret,
+          {
+            expiresIn
+          }
+        );
 
-        // const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
-        // const feedId = base64.encode(`${userData.getId()}`);
+        const notificationToken = AppNotification.getUserToken(
+          `${userData.getId()}`
+        );
+        const feedId = base64.encode(`${userData.getId()}`);
 
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
@@ -359,8 +378,8 @@ class MobileUserController extends Controller {
           200,
           {
             accessToken,
-            // notificationToken,
-            // feedId,
+            notificationToken,
+            feedId,
             users: {
               [userData.getId()]: {
                 ...userData.getBasicInfo()
@@ -373,9 +392,14 @@ class MobileUserController extends Controller {
           "Signed in successfully"
         );
       } else {
-        return this.raiseClientError(res, 422, {}, "OTP not correct. Please try again");
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "OTP not correct. Please try again"
+        );
       }
-    } catch(error) {
+    } catch (error) {
       Logger.debug("verifyOtp 500 error", error);
       raiseServerError(res);
     }
@@ -384,7 +408,7 @@ class MobileUserController extends Controller {
   doctorSignIn = async (req, res) => {
     try {
       const { email, password } = req.body;
-      const user = await userService.getUserByEmail({email});
+      const user = await userService.getUserByEmail({ email });
 
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
@@ -394,8 +418,8 @@ class MobileUserController extends Controller {
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
       const passwordMatch = await bcrypt.compare(
-          password,
-          user.get("password")
+        password,
+        user.get("password")
       );
       if (passwordMatch) {
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
@@ -427,24 +451,23 @@ class MobileUserController extends Controller {
         }
 
         return this.raiseSuccess(
-            res,
-            200,
-            {
-              accessToken,
-              // notificationToken,
-              // feedId,
-              users: {
-                [apiUserDetails.getId()]: {
-                  ...apiUserDetails.getBasicInfo()
-                }
-              },
-              auth_user: apiUserDetails.getId(),
-              auth_category: apiUserDetails.getCategory(),
-              ...permissions,
+          res,
+          200,
+          {
+            accessToken,
+            // notificationToken,
+            // feedId,
+            users: {
+              [apiUserDetails.getId()]: {
+                ...apiUserDetails.getBasicInfo()
+              }
             },
+            auth_user: apiUserDetails.getId(),
+            auth_category: apiUserDetails.getCategory(),
+            ...permissions
+          },
           "Signed in successfully"
         );
-
       } else {
         return this.raiseClientError(res, 422, {}, "Invalid Credentials");
       }
@@ -479,7 +502,7 @@ class MobileUserController extends Controller {
         sign_in_type: "basic",
         category: "doctor",
         onboarded: false,
-        verified,
+        verified
       });
 
       const userInfo = await userService.getUserByEmail({ email });
@@ -726,7 +749,11 @@ class MobileUserController extends Controller {
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
 
-                const { severity_id, treatment_id, condition_id } = carePlanApiWrapper.getCarePlanDetails();
+                const {
+                  severity_id,
+                  treatment_id,
+                  condition_id
+                } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
               });
@@ -757,7 +784,11 @@ class MobileUserController extends Controller {
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
 
-                const { severity_id, treatment_id, condition_id } = carePlanApiWrapper.getCarePlanDetails();
+                const {
+                  severity_id,
+                  treatment_id,
+                  condition_id
+                } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
               });
@@ -848,7 +879,9 @@ class MobileUserController extends Controller {
 
         // conditions
         let conditionApiDetails = {};
-        const conditionDetails = await conditionService.getAllByData({ id: conditionIds });
+        const conditionDetails = await conditionService.getAllByData({
+          id: conditionIds
+        });
         conditionIds = [];
 
         for (const condition of conditionDetails) {
@@ -893,10 +926,10 @@ class MobileUserController extends Controller {
             ...severityApiDetails
           },
           conditions: {
-            ...conditionApiDetails,
+            ...conditionApiDetails
           },
           treatments: {
-            ...treatmentApiDetails,
+            ...treatmentApiDetails
           },
           ...referenceData,
           ...permissions,
@@ -1018,8 +1051,8 @@ class MobileUserController extends Controller {
         doctorName.length == 3
           ? doctorName[2]
           : doctorName.length == 2
-            ? doctorName[1]
-            : "";
+          ? doctorName[1]
+          : "";
 
       if (doctorExist) {
         let doctor_data = {
@@ -1068,7 +1101,7 @@ class MobileUserController extends Controller {
     }
   };
 
-    getDoctorProfileRegisterData = async (req, res) => {
+  getDoctorProfileRegisterData = async (req, res) => {
     // let{user_id,name,city,category,mobile_number,prefix,profile_pic}=req.body;
     let { userId } = req.params;
     try {
@@ -1108,12 +1141,22 @@ class MobileUserController extends Controller {
           profile_pic: docPic = ""
         } = docInfo || {};
 
-        name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
+        name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${
+          last_name ? `${last_name} ` : ""
+        }`;
 
-        Logger.debug("MIDDLE NAME --> ", first_name, middle_name, last_name, name);
+        Logger.debug(
+          "MIDDLE NAME --> ",
+          first_name,
+          middle_name,
+          last_name,
+          name
+        );
 
         city = docCity;
-        profile_pic = docPic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}` : docPic;
+        profile_pic = docPic
+          ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}`
+          : docPic;
       }
 
       const profileData = {
@@ -1621,8 +1664,8 @@ class MobileUserController extends Controller {
         patientName.length == 3
           ? patientName[2]
           : patientName.length == 2
-            ? patientName[1]
-            : "";
+          ? patientName[1]
+          : "";
 
       let uid = uuidv4();
       let birth_date = moment(date_of_birth);
@@ -2030,7 +2073,10 @@ class MobileUserController extends Controller {
         });
         // let uId = userInfo.get("id");
 
-        Logger.debug("process.config.WEB_URL --------------->", process.config.WEB_URL);
+        Logger.debug(
+          "process.config.WEB_URL --------------->",
+          process.config.WEB_URL
+        );
 
         const emailPayload = {
           toAddress: email,
@@ -2055,7 +2101,12 @@ class MobileUserController extends Controller {
           emailPayload
         );
       } else {
-        return raiseClientError(res, 422, {}, "User does not exists for the email");
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "User does not exists for the email"
+        );
       }
 
       raiseSuccess(
@@ -2068,19 +2119,26 @@ class MobileUserController extends Controller {
       Logger.debug("forgot password 500 error", error);
       return raiseServerError(res);
     }
-  }
+  };
 
   verifyPasswordResetLink = async (req, res) => {
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
       const { params: { link } = {} } = req;
 
-      const passwordResetLink = await UserVerificationServices.getRequestByLink(link);
+      const passwordResetLink = await UserVerificationServices.getRequestByLink(
+        link
+      );
 
       if (passwordResetLink) {
-        const linkVerificationData = await LinkVerificationWrapper(passwordResetLink);
+        const linkVerificationData = await LinkVerificationWrapper(
+          passwordResetLink
+        );
 
-        const userData = await UserWrapper(null, linkVerificationData.getUserId());
+        const userData = await UserWrapper(
+          null,
+          linkVerificationData.getUserId()
+        );
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -2094,16 +2152,26 @@ class MobileUserController extends Controller {
           }
         );
 
-        return raiseSuccess(res, 200, {
-          accessToken,
-          users: {
-            [userData.getId()]: {
-              ...userData.getBasicInfo()
+        return raiseSuccess(
+          res,
+          200,
+          {
+            accessToken,
+            users: {
+              [userData.getId()]: {
+                ...userData.getBasicInfo()
+              }
             }
-          }
-        }, "Email verified for password reset");
+          },
+          "Email verified for password reset"
+        );
       } else {
-        return raiseClientError(res, 422, {}, "Cannot verify email to update password");
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot verify email to update password"
+        );
       }
     } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
@@ -2114,7 +2182,10 @@ class MobileUserController extends Controller {
   updateUserPassword = async (req, res) => {
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { userDetails: { userId }, body: { new_password, confirm_password } = {} } = req;
+      const {
+        userDetails: { userId },
+        body: { new_password, confirm_password } = {}
+      } = req;
 
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
@@ -2123,20 +2194,25 @@ class MobileUserController extends Controller {
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(new_password, salt);
 
-      const updateUser = await userService.updateUser({
-        password: hash
-      }, userId);
+      const updateUser = await userService.updateUser(
+        {
+          password: hash
+        },
+        userId
+      );
 
       const updatedUser = await UserWrapper(null, userId);
 
-      return raiseSuccess(res, 200, {
-        users: {
-          [updatedUser.getId()]: updatedUser.getBasicInfo()
+      return raiseSuccess(
+        res,
+        200,
+        {
+          users: {
+            [updatedUser.getId()]: updatedUser.getBasicInfo()
+          }
         },
-      },
         "Password reset successful. Please login to continue"
       );
-
     } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
       return raiseServerError(res);
@@ -2148,12 +2224,19 @@ class MobileUserController extends Controller {
     try {
       const { params: { link } = {} } = req;
 
-      const patientVerifyLink = await UserVerificationServices.getRequestByLink(link);
+      const patientVerifyLink = await UserVerificationServices.getRequestByLink(
+        link
+      );
 
       if (patientVerifyLink) {
-        const linkVerificationData = await LinkVerificationWrapper(patientVerifyLink);
+        const linkVerificationData = await LinkVerificationWrapper(
+          patientVerifyLink
+        );
 
-        const userData = await UserWrapper(null, linkVerificationData.getUserId());
+        const userData = await UserWrapper(
+          null,
+          linkVerificationData.getUserId()
+        );
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -2167,16 +2250,26 @@ class MobileUserController extends Controller {
           }
         );
 
-        return raiseSuccess(res, 200, {
-          accessToken,
-          users: {
-            [userData.getId()]: {
-              ...userData.getBasicInfo()
+        return raiseSuccess(
+          res,
+          200,
+          {
+            accessToken,
+            users: {
+              [userData.getId()]: {
+                ...userData.getBasicInfo()
+              }
             }
-          }
-        }, "Email verified for password reset");
+          },
+          "Email verified for password reset"
+        );
       } else {
-        return raiseClientError(res, 422, {}, "Cannot verify email to update password");
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot verify email to update password"
+        );
       }
     } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
@@ -2186,7 +2279,10 @@ class MobileUserController extends Controller {
 
   updatePassword = async (req, res) => {
     try {
-      const { body: { password, confirm_password } = {}, userDetails: { userId, userData: { category } = {} } = {} } = req;
+      const {
+        body: { password, confirm_password } = {},
+        userDetails: { userId, userData: { category } = {} } = {}
+      } = req;
 
       if (password !== confirm_password) {
         return this.raiseClientError(res, 422, {}, "Password does not match");
@@ -2194,7 +2290,10 @@ class MobileUserController extends Controller {
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
 
-      const updateUser = await userService.updateUser({ password: hash }, userId);
+      const updateUser = await userService.updateUser(
+        { password: hash },
+        userId
+      );
 
       const updatedUser = await UserWrapper(null, userId);
 
@@ -2214,17 +2313,19 @@ class MobileUserController extends Controller {
         default:
       }
 
-      return this.raiseSuccess(res, 200, {
-        users: {
-          [updatedUser.getId()]: updatedUser.getBasicInfo()
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          users: {
+            [updatedUser.getId()]: updatedUser.getBasicInfo()
+          },
+          [`${category}s`]: {
+            ...categoryData
+          }
         },
-        [`${category}s`]: {
-          ...categoryData
-        },
-      },
         "Password updated successfully"
       );
-
     } catch (error) {
       Logger.debug("updatePassword 500 error", error);
       return this.raiseServerError(res);

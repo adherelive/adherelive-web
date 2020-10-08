@@ -355,6 +355,7 @@ class VitalController extends Controller {
         },
         vital_id: vital.getVitalId(),
         response,
+        type: EVENT_TYPE.VITALS,
       });
 
       const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), chatJSON);
