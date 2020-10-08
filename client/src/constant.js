@@ -1639,6 +1639,20 @@ export const BODY = {
 };
 
 
+
+// -------- REPEAT INTERVAL,Occurence VITALS
+
+export const REPEAT_INTERVAL_VITALS = {
+  "1":"Once",
+  "2":"Every hour",
+  "3":"Every 2 hour",
+  "4":"Every 4 hour",
+  "5":"Every 6 hour",
+  "6": "Every 12 hour",
+};
+
+
+
 export const FINAL = "1";
 export const PROBABLE = "2";
 
@@ -1652,4 +1666,3 @@ export const DIAGNOSIS_TYPE =  {
     "value":"Probable"
   }
 }
-

@@ -4,6 +4,8 @@ import ChatPopUp from "../../Components/ChatPopup";
 import { fetchChatAccessToken } from "../../modules/twilio";
 import { getSymptomDetails } from "../../modules/symptoms";
 
+import { getVitalOccurence } from "../../modules/vital_occurence";
+
 import { addMessageOfChat } from "../../modules/chatMessages";
 import { closePopUp, minimizePopUp, maximizePopUp } from "../../modules/chat";
 
@@ -20,7 +22,8 @@ const mapDispatchToProps = dispatch => {
         getSymptomDetails: (id) => dispatch(getSymptomDetails(id)),
         maximizePopUp: () => dispatch(maximizePopUp()),
         getSymptomDetails: (data) => dispatch(getSymptomDetails(data)),
-        addMessageOfChat: (roomId, messages) => dispatch(addMessageOfChat(roomId, messages))
+        addMessageOfChat: (roomId, messages) => dispatch(addMessageOfChat(roomId, messages)),
+        getVitalOccurence: () => dispatch(getVitalOccurence())
     };
 };
 
