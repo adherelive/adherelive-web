@@ -22,7 +22,8 @@ module.exports = () => {
     },
     sqs: {
       domain_url: process.env.SQS_DOMAIN_URL,
-      account_id: process.env.AWS_ACCCOUNT_ID
+      account_id: process.env.AWS_ACCCOUNT_ID,
+      queue_name: process.env.SQS_QUEUE_NAME,
     },
     db: {
       connection: process.env.DB_CONNECTION,

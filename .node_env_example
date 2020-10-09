@@ -115,3 +115,4 @@ SENDGRID_FROM_ADDRESS=atish.kumar@tripock.com
 
 AWS_ACCCOUNT_ID=832280438605
 SQS_DOMAIN_URL=https://sqs.ap-south-1.amazonaws.com
+SQS_QUEUE_NAME=
