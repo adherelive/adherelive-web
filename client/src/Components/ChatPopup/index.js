@@ -159,7 +159,6 @@ class ChatPopUp extends Component {
             loadSymptoms: true,
             loadingMessageDetails: false,
             message_numbers: 0
-
         };
         this.channelName = "test";
     }

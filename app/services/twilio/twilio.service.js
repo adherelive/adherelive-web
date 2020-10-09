@@ -24,33 +24,22 @@ class TwilioService {
     return createdRoom;
   }
 
+  getRoomId = (doctor, patient) => {
+    return `${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
+  };
+
   async chatTokenGenerator(identity, deviceId) {
-    // const client = twilio(accountSid, authToken);
-    // client.chat.services(chatServiceId)
-    //     .update({ reachabilityEnabled: true })
-    //     .then(service => console.log(service));
 
     const token = new AccessToken(accountSid, apiKey, apiSecret);
     token.identity = identity;
 
     const appName = "TwilioChat";
     const endpointId = appName + ":" + identity + ":" + deviceId;
-    Logger.debug("endpointId ---> ", endpointId);
-    Logger.debug("accountSid ---> ", accountSid);
-    Logger.debug("apiKey ---> ", apiKey);
-    Logger.debug("apiSecret ---> ", apiSecret);
-    Logger.debug(
-      "process.config.twilio.TWILIO_CHAT_SERVICE_SID ---> ",
-      process.config.twilio.TWILIO_CHAT_SERVICE_SID
-    );
     const ipmGrant = new IpMessagingGrant({
       serviceSid: process.config.twilio.TWILIO_CHAT_SERVICE_SID,
       endpointId: endpointId
     });
-    Logger.debug("ipmGrant ---> ", ipmGrant);
     token.addGrant(ipmGrant);
-
-    console.log("token ----> ", token);
 
     return token.toJwt();
   }
@@ -61,8 +50,6 @@ class TwilioService {
 
     const grant = new VideoGrant();
     token.addGrant(grant);
-
-    console.log("videoToken ---> ", token);
 
     return token.toJwt();
   }
@@ -90,7 +77,7 @@ class TwilioService {
       const client = require("twilio")(accountSid, authToken);
       const channel = await client.chat
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
-        .channels(`${doctor}-adhere-${patient}`);
+        .channels(this.getRoomId(doctor, patient));
 
       // issue: http for development
       // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues

@@ -156,14 +156,11 @@ class UserController extends Controller {
 
   verifyUser = async (req, res) => {
     try {
-      console.log("IN VERIFY USERRRRRRRR");
       let { link } = req.params;
-      console.log("IN VERIFY USERRRRRRRR", link);
       let verifications = await UserVerificationServices.getRequestByLink(link);
       let userId = verifications.get("user_id");
       let userData = await userService.getUserById(userId);
       let isVerified = userData.get('verified');
-      console.log('IS VERIFIEDDDDDD ===========>', isVerified);
       if (!isVerified) {
         let updateVerification = await UserVerificationServices.updateVerification(
           { status: "verified" },
@@ -173,11 +170,9 @@ class UserController extends Controller {
         // let activated_on = moment();
         let verified = true;
         let dataToUpdate = { verified };
-        console.log("DATA TO UPDATEEEE", dataToUpdate);
         let user = await userService.updateUser(dataToUpdate, userId);
 
 
-        console.log("UPDATED USERRRRR", user);
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -227,8 +222,6 @@ class UserController extends Controller {
           "user verified successfully"
         );
       } else {
-
-        // res.redirect("/sign-in");
         return this.raiseServerError(res, 422, {}, 'This verification link is expired!');
       }
     } catch (error) {
