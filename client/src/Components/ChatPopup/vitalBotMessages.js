@@ -105,7 +105,7 @@ class vitalBotMessage extends Component{
                         </div>
                    
                     </div>
-                    <Button  className="wp100 color-white bg-ocean-green position absolute h40 b0 fs20 " >
+                    <Button  className="wp100 color-white bg-ocean-green position absolute h40 b0 fs-1rem " >
                     {/* <img src={} className="edit-medication-icon"/> */}
                      Add Medication/Pres
                     </Button>

@@ -18,7 +18,6 @@ import { getPatientConsultingUrl } from '../../Helper/url/patients';
 import config from "../../config";
 
 
-
 const { TabPane } = Tabs;
 
 const SUMMARY = "Summary";
