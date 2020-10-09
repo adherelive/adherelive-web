@@ -409,7 +409,7 @@ class MobileUserController extends Controller {
         password: hash,
         sign_in_type: "basic",
         category: USER_CATEGORY.DOCTOR,
-        onboarded: false,
+        onboarded: true,
         verified: true
       });
 
