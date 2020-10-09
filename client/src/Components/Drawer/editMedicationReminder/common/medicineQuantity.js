@@ -9,6 +9,7 @@ const RadioGroup = Radio.Group;
 const { Item: FormItem } = Form;
 
 const FIELD_NAME = "quantity";
+const UNIT = "unit";
 
 class MedicineQuantity extends Component {
   componentDidMount() {
@@ -29,10 +30,12 @@ class MedicineQuantity extends Component {
   onRadioChange = e => {
     e.preventDefault();
     const {
-      form: { setFieldsValue, getFieldValue }
+      form: { setFieldsValue, getFieldValue },
+      enableSubmit
     } = this.props;
     const currentValue = getFieldValue(FIELD_NAME) || 0.0;
     setFieldsValue({ [FIELD_NAME]: (parseFloat(currentValue) + parseFloat(e.target.value)) });
+    enableSubmit();
   };
 
   getInitialValue = () => {
@@ -49,9 +52,11 @@ class MedicineQuantity extends Component {
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched
-      //getFieldValue
+      isFieldTouched,
+      getFieldValue
     } = form;
+
+    const unit = getFieldValue(UNIT);
 
     const { onRadioChange, formatMessage, getInitialValue } = this;
 
@@ -81,13 +86,25 @@ class MedicineQuantity extends Component {
               
             </div> */}
           <div className="flex-grow-0">
-            <RadioGroup
-              size="small"
-              className="flex justify-content-end"
-            >
-              <RadioButton value={0.25} onClick={onRadioChange}>+0.25</RadioButton>
-              <RadioButton value={0.5} onClick={onRadioChange}>+0.5</RadioButton>
-            </RadioGroup>
+            {
+              unit === "mg"
+              ?
+              (<RadioGroup
+                size="small"
+                className="flex justify-content-end"
+              >
+                <RadioButton value={50} onClick={onRadioChange}>+50</RadioButton>
+                <RadioButton value={100} onClick={onRadioChange}>+100</RadioButton>
+              </RadioGroup>)
+              :
+              (<RadioGroup
+                size="small"
+                className="flex justify-content-end"
+              >
+                <RadioButton value={10} onClick={onRadioChange}>+10</RadioButton>
+                <RadioButton value={20} onClick={onRadioChange}>+20</RadioButton>
+              </RadioGroup>)
+            }
           </div>
         </div>
         <FormItem
