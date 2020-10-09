@@ -192,7 +192,7 @@ class EditMedicationReminder extends Component {
             [repeatDaysField.field_name]: repeatDays.split(","),
           };
         }
-        if (!medicine_id || !unit ||  !quantity || !strength || !when_to_take || !startDate) {
+        if (!medicine_id || !unit ||  (unit === MEDICINE_UNITS.MG && !quantity)  || !strength || !when_to_take || !startDate) {
 
           message.error('Please fill all details.')
         }

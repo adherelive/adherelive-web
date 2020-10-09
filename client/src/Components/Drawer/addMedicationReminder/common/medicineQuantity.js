@@ -10,7 +10,6 @@ const { Item: FormItem } = Form;
 
 const FIELD_NAME = "quantity";
 
-const UNIT = "unit";
 
 class MedicineQuantity extends Component {
   componentDidMount() {
@@ -55,7 +54,6 @@ class MedicineQuantity extends Component {
       getFieldValue
     } = form;
 
-    const unit = getFieldValue(UNIT);
     const { onRadioChange, formatMessage, getInitialValue } = this;
 
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
@@ -78,25 +76,15 @@ class MedicineQuantity extends Component {
               
             </div> */}
           <div className="flex-grow-0">
-            {
-              unit === "mg"
-              ?
-              (<RadioGroup
+            
+              <RadioGroup
                 size="small"
                 className="flex justify-content-end"
               >
-                <RadioButton value={50} onClick={onRadioChange}>+50</RadioButton>
-                <RadioButton value={100} onClick={onRadioChange}>+100</RadioButton>
-              </RadioGroup>)
-              :
-              (<RadioGroup
-                size="small"
-                className="flex justify-content-end"
-              >
-                <RadioButton value={10} onClick={onRadioChange}>+10</RadioButton>
-                <RadioButton value={20} onClick={onRadioChange}>+20</RadioButton>
-              </RadioGroup>)
-            }
+                <RadioButton value={0.25} onClick={onRadioChange}>+0.25</RadioButton>
+                <RadioButton value={0.50} onClick={onRadioChange}>+0.50</RadioButton>
+              </RadioGroup>
+             
           </div>
         </div>
         <FormItem
