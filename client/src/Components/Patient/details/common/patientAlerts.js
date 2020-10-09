@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {injectIntl} from "react-intl";
-import moment from "moment";
+import moment from "../../../../Helper/moment";
 import messages from "./messages";
 
 import {EVENT_TYPE, EVENT_STATUS} from "../../../../constant";
@@ -99,7 +99,6 @@ class PatientAlerts extends Component {
         const {intl: {formatMessage} = {}} = this.props;
         const {status, details: {vital_templates: {basic_info: {name} = {}} = {}} = {}} = data || {};
 
-
         return (
             <div key={`vital-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6">
                 {status === EVENT_STATUS.EXPIRED ? (
@@ -130,7 +129,7 @@ class PatientAlerts extends Component {
     }
 
     getEvents = () => {
-        const {schedule_events, symptoms} = this.props;
+        const {schedule_events} = this.props;
         const {last_visit} = this.state;
 
         const events = last_visit.map(details => {
