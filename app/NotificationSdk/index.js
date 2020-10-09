@@ -9,37 +9,36 @@ import PushApp from "./pushApp";
 const Logger = new Log("NOTIFICATION_SDK > INDEX");
 
 class NotificationSdk {
-    constructor() {
-    }
+  constructor() {}
 
-    execute = async (job) => {
-        // const users = job.getUsers();
-        // for (const id of users) {
-            // const userPreference = await UserPreferenceWrapper(null, id);
+  execute = async job => {
+    // const users = job.getUsers();
+    // for (const id of users) {
+    // const userPreference = await UserPreferenceWrapper(null, id);
 
-            // todo actor don't send notification : manage in job
-            PushApp.notify(await job.getPushAppTemplate());
-            // InApp.notify(job.getInAppTemplate());
+    // todo actor don't send notification : manage in job
+    PushApp.notify(await job.getPushAppTemplate());
+    InApp.notify(job.getInAppTemplate());
 
-            // Logger.debug("job ---> ", job.getInAppTemplate());
+    Logger.debug("job ---> ", job.getInAppTemplate());
 
-            // todo: when user preferences relevant
-            // if (job.isCritical()) {
-            //     Email.notify(job.getEmailTemplate());
-            //     // Sms.notify(job.getSmsTemplate());
-            // } else {
-            //     if (userPreference.allowEmail()) {
-            //         Email.notify(job.getEmailTemplate());
-            //     }
-            //
-            //     if (userPreference.allowSms()) {
-            //         // Sms.notify(job.getSmsTemplate());
-            //     }
-            // }
+    // todo: when user preferences relevant
+    // if (job.isCritical()) {
+    //     Email.notify(job.getEmailTemplate());
+    //     // Sms.notify(job.getSmsTemplate());
+    // } else {
+    //     if (userPreference.allowEmail()) {
+    //         Email.notify(job.getEmailTemplate());
+    //     }
+    //
+    //     if (userPreference.allowSms()) {
+    //         // Sms.notify(job.getSmsTemplate());
+    //     }
+    // }
 
-            // more to come todo
-        // }
-    };
+    // more to come todo
+    // }
+  };
 }
 
 export default new NotificationSdk();

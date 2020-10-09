@@ -28,7 +28,7 @@ class CreateJob extends AppointmentJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
-        event_id = null
+      event_id = null
     } = getAppointmentData() || {};
 
     const templateData = [];
@@ -36,17 +36,17 @@ class CreateJob extends AppointmentJob {
     for (const participant of participants) {
       // if (participant !== actorId) { // todo: add actor after testing (deployment)
 
-        templateData.push({
-          app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-          headings: { en: `Appointment Created` },
-          contents: {
-            en: `${name}(${actorCategory}) has created an appointment with you`
-          },
-          // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
-          include_player_ids: [...participants],
-          priority: 10,
-          data: { url: "/appointments", params: getAppointmentData() }
-        });
+      templateData.push({
+        app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+        headings: { en: `Appointment Created` },
+        contents: {
+          en: `${name}(${actorCategory}) has created an appointment with you`
+        },
+        // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
+        include_player_ids: [...participants],
+        priority: 10,
+        data: { url: "/appointments", params: getAppointmentData() }
+      });
       // }
     }
 
@@ -61,25 +61,28 @@ class CreateJob extends AppointmentJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
+      // appointmentId,
       event_id
     } = getAppointmentData() || {};
 
     const templateData = [];
-    const currentTime = new moment().utc();
+    const currentTime = new moment().utc().toISOString();
+    const now = moment();
+    const currentTimeStamp = now.unix();
     for (const participant of participants) {
       // if (participant !== actorId) {
       templateData.push({
         actor: actorId,
         object: `${participant}`,
         foreign_id: `${event_id}`,
-        verb: "appointment_create",
+        verb: `appointment_create:${currentTimeStamp}`,
         // message: `${name}(${actorCategory}) has created an appointment with you`,
         event: EVENT_TYPE.APPOINTMENT,
-        time: currentTime
+        time: `${currentTime}`,
+        create_time: `${currentTime}`
       });
       // }
     }
-
     return templateData;
   };
 }

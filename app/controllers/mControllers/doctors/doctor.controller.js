@@ -169,7 +169,12 @@ class MobileDoctorController extends Controller {
         prefix = "",
         treatment_id = "1",
         severity_id = "1",
-        condition_id = "1"
+        condition_id = "1",
+        comorbidities = "",
+        allergies = "",
+        clinical_notes = "",
+        diagnosis_type = "1",
+        diagnosis_description = "",
       } = req.body;
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
@@ -195,6 +200,17 @@ class MobileDoctorController extends Controller {
       });
       const userData = await UserWrapper(user.get());
 
+      let patientOtherDetails = {};
+      if(comorbidities) {
+        patientOtherDetails["comorbidities"] = comorbidities;
+      }
+      if(allergies) {
+        patientOtherDetails["allergies"] = allergies;
+      }
+      if(clinical_notes) {
+        patientOtherDetails["clinical_notes"] = clinical_notes;
+      }
+
 
       let newUserId = user.get("id");
 
@@ -219,8 +235,14 @@ class MobileDoctorController extends Controller {
         user_id: newUserId,
         birth_date,
         age,
-        dob: date_of_birth
-        // uid
+        dob: date_of_birth,
+        details: {
+          ...patientOtherDetails,
+          diagnosis: {
+            type: diagnosis_type,
+            description: diagnosis_description
+          },
+        }
       });
 
       const patientData = await PatientWrapper(patient);

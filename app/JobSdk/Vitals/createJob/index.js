@@ -1,6 +1,6 @@
 import VitalJob from "../";
 import moment from "moment";
-import {getFullName} from "../../../helper/common";
+import { getFullName } from "../../../helper/common";
 import { EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
@@ -18,8 +18,10 @@ class CreateJob extends VitalJob {
       participants = [],
       actor: {
         id: actorId,
-        userCategoryData: {basic_info: {first_name, middle_name, last_name} = {}} = {},
-          category
+        userCategoryData: {
+          basic_info: { first_name, middle_name, last_name } = {}
+        } = {},
+        category
       } = {},
       vital_templates: { basic_info: { name: vitalName = "" } = {} } = {},
       eventId = null
@@ -50,7 +52,11 @@ class CreateJob extends VitalJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `Vital Added` },
       contents: {
-        en: `${getFullName({first_name, middle_name, last_name})}(${category}) has added ${vitalName} vital for you`
+        en: `${getFullName({
+          first_name,
+          middle_name,
+          last_name
+        })}(${category}) has added ${vitalName} vital for you`
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
@@ -65,24 +71,26 @@ class CreateJob extends VitalJob {
     const { getData } = this;
     const {
       participants = [],
-      actor: {
-        id: actorId,
-      } = {},
-      eventId = null
+      actor: { id: actorId } = {},
+      event_id: eventId = null
     } = getData() || {};
 
     const templateData = [];
-    const currentTime = new moment().utc();
+    const currentTime = new moment().utc().toISOString();
+
+    const now = moment();
+    const currentTimeStamp = now.unix();
     for (const participant of participants) {
       if (participant !== actorId) {
-      templateData.push({
-        actor: actorId,
-        object: `${participant}`,
-        foreign_id: `${eventId}`,
-        verb: "vital_create",
-        event: EVENT_TYPE.VITALS,
-        time: currentTime
-      });
+        templateData.push({
+          actor: actorId,
+          object: `${participant}`,
+          foreign_id: `${eventId}`,
+          verb: `vital_create:${currentTimeStamp}`,
+          event: EVENT_TYPE.VITALS,
+          time: currentTime,
+          create_time: `${currentTime}`
+        });
       }
     }
 

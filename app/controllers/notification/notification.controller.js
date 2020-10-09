@@ -13,7 +13,7 @@ class NotificationController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body: { activities } = {}, userDetails: { userId } = {} } = req;
-       console.log('43756464865745348=========>>',activities);
+      console.log("43756464865745348=========>>", activities);
       const notificationIds = [];
 
       let notificationData = {};
@@ -23,8 +23,9 @@ class NotificationController extends Controller {
       let appointmentData = {};
       let medicationData = {};
       let medicineData = {};
+      let vitalsData = {};
       for (let key in activities) {
-        const { activity: activityData, is_read } = activities[key];
+        const { activity: activityData, is_read, group_id } = activities[key];
 
         Log.debug("activityData", activityData[0]);
         const { id, verb } = activityData[0] || {};
@@ -33,7 +34,8 @@ class NotificationController extends Controller {
         const details = await getDataForNotification({
           data: activityData[0] || {},
           loggedInUser: userId,
-          is_read: is_read
+          is_read: is_read,
+          group_id
         });
 
         Log.debug("details", details);
@@ -44,16 +46,18 @@ class NotificationController extends Controller {
           doctors = {},
           patients = {},
           appointments = {},
-            medications = {},
-          medicines = {}
+          medications = {},
+          medicines = {},
+          vitals = {}
         } = details || {};
         notificationData = { ...notificationData, ...notifications };
         userData = { ...userData, ...users };
         doctorData = { ...doctorData, ...doctors };
         patientData = { ...patientData, ...patients };
         appointmentData = { ...appointmentData, ...appointments };
-        medicationData = {...medicationData, ...medications};
+        medicationData = { ...medicationData, ...medications };
         medicineData = { ...medicineData, ...medicines };
+        vitalsData = { ...vitalsData, ...vitals };
       }
 
       return raiseSuccess(
@@ -66,15 +70,17 @@ class NotificationController extends Controller {
           notifications: notificationData,
           appointments: appointmentData,
           medications: medicationData,
-            medicines: medicineData,
+          medicines: medicineData,
+          vitals: vitalsData,
           // ids
           notification_ids: Object.keys(notificationData),
           doctor_ids: Object.keys(doctorData),
           patient_ids: Object.keys(patientData),
           appointment_ids: Object.keys(appointmentData),
           user_ids: Object.keys(userData),
-            medicine_ids: Object.keys(medicineData),
+          medicine_ids: Object.keys(medicineData),
           medication_ids: Object.keys(medicationData),
+          vitals_ids: Object.keys(vitalsData)
         },
         "Notification data fetched successfully"
       );

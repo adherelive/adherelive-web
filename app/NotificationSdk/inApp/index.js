@@ -6,6 +6,7 @@ const Log = new Logger("NOTIFICATION_SDK > IN_APP");
 
 class AppNotification {
     constructor() {
+        this.client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey);
     }
 
     notify = (templates = []) => {
@@ -18,8 +19,7 @@ class AppNotification {
     }
 
     getUserToken = (id) => {
-        const client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey);
-        const userToken = client.createUserToken(
+        const userToken = this.client.createUserToken(
             `${id}`
         );
         return userToken;
@@ -53,4 +53,4 @@ class AppNotification {
     };
 }
 
-export default new AppNotification();
+export default AppNotification;
