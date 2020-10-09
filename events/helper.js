@@ -141,9 +141,7 @@ export const handleMedications = async medication => {
 
     const allDays = rrule.all();
 
-    const patient = await PatientWrapper(null, patient_id);
-
-    const patientPreference = await getUserPreferences(patient.getUserId());
+    const patientPreference = await getUserPreferences(patient_id);
 
     const scheduleEventArr = [];
 
