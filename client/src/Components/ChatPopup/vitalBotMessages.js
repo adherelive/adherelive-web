@@ -25,7 +25,7 @@ class vitalBotMessage extends Component{
                
                 <span 
                 onClick={this.replyToMessage}
-                className="h-cursor-p"
+                className="h-cursor-p "
                 meta-id={`${message.state.sid}-vital`}
                 > &hellip;</span>
                 

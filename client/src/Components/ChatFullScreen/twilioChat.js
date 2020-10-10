@@ -428,12 +428,12 @@ class TwilioChat extends Component {
 
        
         mess = (
-            <div className="wp100 flex direction-row bg-whitesmoke">
+            <div className="wp100 flex direction-row bg-whitesmoke relative"  >
                 <div className="wp90 flex direction-column justify-space-between p20 mh100" >
                     {metaDataReply}
                    
                 </div>
-                <div className="fs30 h-cursor-p" onClick={this.unsetReplyId}>&times;</div>
+                <div className="fs30 h-cursor-p close-reply" onClick={this.unsetReplyId}></div>
             </div>
         )
         return mess;
