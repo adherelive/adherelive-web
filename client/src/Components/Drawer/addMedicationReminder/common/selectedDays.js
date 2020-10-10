@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Form, Input, Tag } from "antd";
-import { DAYS } from "../../../../constant";
+import { DAYS,ALTERNATE_DAYS } from "../../../../constant";
+import startDate from "./startDate";
+import endDate from "./endDate";
+import messages from '../message';
+import moment from "moment";
+import { Radio } from "antd";
+
 
 const { Item: FormItem } = Form;
 const { CheckableTag } = Tag;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 const FIELD_NAME = "repeat_days";
 
@@ -40,19 +48,76 @@ class SelectedDays extends Component {
       : selectedDays.filter(t => t !== tag);
     this.setState({ selectedDays: nextSelectedTags });
     const {
-      form: { setFieldsValue, validateFields }
+      form: { setFieldsValue, validateFields ,getFieldsValue}
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: nextSelectedTags.join(",") });
     validateFields();
   };
 
+  setRepeatEveryDay = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue,validateFields,getFieldsValue }
+    } = this.props;
+    this.setState({ selectedDays: DAYS });
+    setFieldsValue({ [FIELD_NAME]: DAYS.join(",") });
+    validateFields();
+  };
+
+  setRepeatAlternateDay = e => {
+    e.preventDefault();
+    const {
+      form: { setFieldsValue,validateFields,getFieldsValue }
+    } = this.props;
+    this.setState({ selectedDays: ALTERNATE_DAYS });
+    setFieldsValue({ [FIELD_NAME]: ALTERNATE_DAYS.join(",") });
+    validateFields();
+  };
+
+
+
   render() {
     const {
-      form: { getFieldDecorator }
+      form: { getFieldDecorator,getFieldValue,setFieldValue }
     } = this.props;
 
     const { selectedDays } = this.state;
     const { handleCheckDays, formatMessage } = this;
+
+    let start = getFieldValue(startDate.field_name);
+    let end = getFieldValue(endDate.field_name);
+    let selectedDaysValue = selectedDays;
+
+    let selectedDaysArray = [];
+    let selectedDaysRadio = 2;
+    if(selectedDaysValue){
+      if(Array.isArray(selectedDaysValue)){
+        selectedDaysArray = selectedDaysValue;
+      }else{
+        selectedDaysArray = selectedDaysValue.split(',');
+      }
+      if(selectedDaysArray.length == 7){
+        selectedDaysRadio = 1;
+      }else if(selectedDaysArray.length == 4){
+        ALTERNATE_DAYS.map(value=>{
+          if(!selectedDaysArray.includes(value)){
+            selectedDaysRadio = null;
+          }
+        })
+      }else{
+        selectedDaysRadio = null;
+      }
+    }else{
+      selectedDaysRadio = null;
+    }
+    let diff = end ? moment(end).diff(moment(start), 'days') : 1;
+    let selectedRadio = end ? null : 3;
+    if( diff == 7 ){
+      selectedRadio = 1;
+    } else if( diff == 14 ){
+      selectedRadio = 2;
+    }
+
 
     return (
       <div className="mb20 select-days-form-content">
@@ -82,6 +147,15 @@ class SelectedDays extends Component {
             </CheckableTag>
           ))}
         </div>
+
+        <RadioGroup
+        className="flex justify-content-end radio-formulation mt10 mb24"
+        buttonStyle="solid"
+        value={selectedDaysRadio}
+      >
+        <RadioButton value={1} onClick={this.setRepeatEveryDay} >{this.formatMessage(messages.everyday)}</RadioButton>
+        <RadioButton value={2} onClick={this.setRepeatAlternateDay}>{this.formatMessage(messages.alternate)}</RadioButton>
+      </RadioGroup>
       </div>
     );
   }
