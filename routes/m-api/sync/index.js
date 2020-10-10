@@ -1,5 +1,5 @@
 import express from "express";
-import Authenticate from "../middleware/auth";
+import Authenticate from "../middlewares/auth";
 import SyncController from "../../../app/controllers/mControllers/syncOfflineData/sync.controller.js";
 
 const router = express.Router();

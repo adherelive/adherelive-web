@@ -96,50 +96,40 @@ class EventController extends Controller {
         vital_ids = []
       } = await carePlanWrapper.getAllInfo();
 
-      let events = [];
+      let schedule_events = [];
 
-      const scheduleEvents = await eventService.getUpcomingByData({
-        vital_ids,
-        appointment_ids,
-        medication_ids,
-        startLimit,
-        endLimit
-      });
-
-      const appointmentEvents = await eventService.getPageEventByData({
-        startLimit,
-        endLimit,
-        event_type: EVENT_TYPE.APPOINTMENT,
-        eventIds: appointment_ids
-      });
-
-      const medicationEvents = await eventService.getPageEventByData({
-        startLimit,
-        endLimit,
-        event_type: EVENT_TYPE.MEDICATION_REMINDER,
-        eventIds: medication_ids
-      });
       if (key) {
-        const startLimit =
-          parseInt(process.config.event.count) * (parseInt(key) - 1);
-        const endLimit = parseInt(process.config.event.count);
-
-        events = await EventService.getPageEventByData({
+        const vitalEvents = await eventService.getPageEventByData({
           startLimit,
           endLimit,
-          eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
+          event_type: EVENT_TYPE.VITALS,
+          eventIds: vital_ids
         });
+
+        const appointmentEvents = await eventService.getPageEventByData({
+          startLimit,
+          endLimit,
+          event_type: EVENT_TYPE.APPOINTMENT,
+          eventIds: appointment_ids
+        });
+
+        const medicationEvents = await eventService.getPageEventByData({
+          startLimit,
+          endLimit,
+          event_type: EVENT_TYPE.MEDICATION_REMINDER,
+          eventIds: medication_ids
+        });
+
+        scheduleEvents = [
+          ...vitalEvents,
+          ...appointmentEvents,
+          ...medicationEvents
+        ];
       } else {
-        events = await EventService.getPendingEventsData({
+        schedule_events = await EventService.getPendingEventsData({
           eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
         });
       }
-
-      let scheduleEvents = [
-        ...vitalEvents,
-        ...appointmentEvents,
-        ...medicationEvents
-      ];
 
       Log.debug("21237193721 events --> ", scheduleEvents.length);
 
