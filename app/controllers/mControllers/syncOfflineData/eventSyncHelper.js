@@ -24,16 +24,17 @@ export const syncMedicationReminderStatus = async (
   res
 ) => {
   try {
+    const eventService = new EventService();
     const { status } = event_data;
-    let eventDetails = await EventService.getEventByData({ id: event_id });
+    let eventDetails = await eventService.getEventByData({ id: event_id });
     let { details = {} } = eventDetails;
 
     details = { ...details, status };
     eventDetails = { ...eventDetails, ...{ details } };
 
-    const mEventDetails = await EventService.update(eventDetails, event_id);
+    const mEventDetails = await eventService.update(eventDetails, event_id);
 
-    const updatedEventDetails = await EventService.getEventByData({
+    const updatedEventDetails = await eventService.getEventByData({
       id: event_id
     });
 
@@ -48,6 +49,7 @@ export const syncMedicationReminderStatus = async (
 export const syncVitalsResponseData = async (event_data, createdTime, res) => {
   try {
     console.log("Going to sync vitals response data: ", event_data);
+    const eventService = new EventService();
     const { vital_id = null, data = {} } = event_data;
 
     const { event_id, ...rest } = data || {};
@@ -66,7 +68,7 @@ export const syncVitalsResponseData = async (event_data, createdTime, res) => {
 
     console.log(`event.getStatus() ${event.getStatus()}`);
 
-    const updateEvent = await EventService.update(
+    const updateEvent = await eventService.update(
       {
         details: {
           ...event.getDetails(),
@@ -103,7 +105,7 @@ export const syncVitalsResponseData = async (event_data, createdTime, res) => {
       customMessage
     );
 
-    const updatedEventDetails = await EventService.getEventByData({
+    const updatedEventDetails = await eventService.getEventByData({
       id: event_id
     });
 
