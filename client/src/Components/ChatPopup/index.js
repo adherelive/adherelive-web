@@ -585,14 +585,6 @@ class ChatPopUp extends Component {
                     </div>
 
                     <div className="twilio-chat-footer-popUp">
-                        {/* <div className="footer-left"> */}
-                        {/* <img
-              src={CloseChatIcon}
-              className="back-image"
-              onClick={this.props.hideChat}
-              alt="chatImg"
-            /> */}
-                        {/* </div> */}
                         <div className="footer-right-popUp">
                             <ChatForm messages={this.messages} channel={this.channel} formatMessage={this.formatMessage} />
                         </div>
