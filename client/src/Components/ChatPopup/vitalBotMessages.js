@@ -35,14 +35,14 @@ class vitalBotMessage extends Component{
 
     replyToMessage = (e) => {
         e.preventDefault();
-        const {updateReplyMessadeId} = this.props;
-        if(typeof(updateReplyMessadeId) !== 'undefined'){
+        const {updateReplyMessageId} = this.props;
+        if(typeof(updateReplyMessageId) !== 'undefined'){
            
             const node = e.target;
 
             const id = node.getAttribute("meta-id");
             console.log("id  ===>",id);
-            updateReplyMessadeId(id);
+            updateReplyMessageId(id);
         }
       
       

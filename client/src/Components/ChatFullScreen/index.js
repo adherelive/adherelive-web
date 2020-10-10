@@ -58,18 +58,16 @@ class ChatFullScreen extends Component {
         this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
     }
 
-    updateReplyMessadeId = (newId='') => {
+    updateReplyMessageId = (newId=null) => {
         
         const {replyMessadeId : currentId} = this.state;
 
-        if(currentId !== newId && newId === '' && currentId !== ''){ 
-            console.log("UNSETTING ID");
+        if(currentId !== newId && newId === null && currentId !== null){ 
             this.setState({
                 replyMessadeId:newId
             });
 
-        }else if(currentId !== newId && newId !== '' && currentId === '' ){  
-           console.log("SETTING ID");
+        }else if(currentId !== newId && newId !== null && currentId === null ){  
             this.setState({
                 replyMessadeId:newId
             });
@@ -127,16 +125,16 @@ class ChatFullScreen extends Component {
                     ?
                     (<TwilioVideo patientUserId={patientUserId} hideChat={this.hideVideoCall} roomId={roomId} />) :
                     ( */}
-                <Fragment>
+                <div>
                     <div className='chat-patientList-container'>
                         <PatientList setPatientId={this.setPatientId} doctorUserId={doctorUserId} patientId={patientId} {...this.props} />
                     </div>
                     <div className='chat-messageBox-container'>
                         {/* <Header placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={} /> */}
-                        <TwilioChat replyMessadeId={replyMessadeId}  updateReplyMessadeId={this.updateReplyMessadeId}  roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
+                        <TwilioChat replyMessadeId={replyMessadeId}  updateReplyMessageId={this.updateReplyMessageId}  roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
                         
                     </div>
-                </Fragment>
+                </div>
             </div>
         );
     }
