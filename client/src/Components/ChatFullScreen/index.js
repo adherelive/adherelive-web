@@ -1,26 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Avatar } from "antd";
 import PatientList from './patientListSideBar';
 import TwilioChat from '../../Containers/ChatFullScreen/twilioChat';
-import CallIcon from '../../Assets/images/telephone.png';
 import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
-import { ROOM_ID_TEXT } from '../../constant';
 import config from "../../config";
-
-// const Header = ({ placeVideoCall, patientName, patientDp = '' }) => {
-//     let pic = patientName ?
-//         <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />
-//     return (
-//         <div className='chat-patientListheader-chatBoxPopUp'>
-//             <div className='flex direction-row align-center wp90'>
-//                 {pic}
-//                 <div className='doctor-name-chat-header mt2'>{patientName}</div>
-//             </div>
-//             <img src={CallIcon} className='callIcon-header mr10' onClick={placeVideoCall} />
-//         </div>
-//     );
-// }
+import {getRoomId} from "../../Helper/twilio";
 
 
 class ChatFullScreen extends Component {
@@ -52,9 +36,8 @@ class ChatFullScreen extends Component {
             }
         }
 
-        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+        const roomId = getRoomId(doctorUserId, patientUserId);
 
-        // console.log('754624646546245624562462456', doctorUserId, patient_id, roomId);
         this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
     }
 
@@ -79,16 +62,15 @@ class ChatFullScreen extends Component {
     openVideoChatTab = () => {
 
         const { roomId = '' } = this.state;
-        // setPatientForChat(patient_id);
         window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
     }
 
     setPatientId = (patient_id) => () => {
 
-        let { doctorUserId } = this.state;
-        let { patients = {} } = this.props;
-        let { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id];
-        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+        const { doctorUserId } = this.state;
+        const { patients = {} } = this.props;
+        const { basic_info: { user_id: patientUserId = '' } = {} } = patients[patient_id];
+        const roomId = getRoomId(doctorUserId, patientUserId);
         this.setState({ patientUserId: patientUserId, patientId: patient_id, roomId });
     }
 
@@ -100,17 +82,17 @@ class ChatFullScreen extends Component {
         this.setState({ placeCall: false });
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        let { patientUserId } = this.state;
-
-        let { patientUserId: prevPatientId } = this.state;
-        if (patientUserId !== prevPatientId) {
-
-            let { doctorUserId } = this.state;
-            let roomId = doctorUserId + '-' + patientUserId;
-            this.setState({ roomId });
-        }
-    }
+    // componentDidUpdate(prevProps, prevState) {
+    //     const { patientUserId } = this.state;
+    //
+    //     const { patientUserId: prevPatientId } = this.state;
+    //     if (patientUserId !== prevPatientId) {
+    //
+    //         const { doctorUserId } = this.state;
+    //         let roomId = doctorUserId + '-' + patientUserId;
+    //         this.setState({ roomId });
+    //     }
+    // }
 
 
     render() {

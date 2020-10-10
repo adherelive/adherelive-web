@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from "../../constant";
-import { Timeline, message, Button, Spin, Modal } from "antd";
+import { PART_LIST_CODES } from "../../constant";
+import { Timeline, message, Spin, Modal } from "antd";
 
-import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
 import audio from "../../Assets/images/music.png";
 import messages from "./message";
-import config from "../../config";
-
-
 
 const TABS = {
     TIMELINE: "1",
@@ -267,7 +263,6 @@ class TimelineTab extends Component {
         return data;
     }
     onClickDownloader = (url, filename) => () => {
-        console.log('ONCLICK DOWNLOADER CALLED', url, filename);
         if (url && url.length > 0) {
             fetch(url, {
                 method: "GET"
@@ -311,7 +306,6 @@ class TimelineTab extends Component {
                 audioUrl = document;
                 audioName = name;
             }
-            // console.log('ROW DETAILSSSSSSSSS=======>', imageUrl, audioUrl);
             if (date) {
                 dataTorender.push(
                     <Timeline.Item dot={<div className={'timelineDot'} />}>
@@ -386,7 +380,6 @@ class TimelineTab extends Component {
                             </div>
                         ) : null}
                         <div
-                            // className={'flex  mt10 align-center' + imageUrl && imageUrl.length ? 'ml10' : ''}
                             style={{ display: 'flex', flexDirection: 'row', marginTop: (text || imageUrl || audioUrl) ? 10 : 0, marginLeft: 10, alignItems: 'center' }}
                         >
                             <div>{moment(createdAt).format("h a")}</div>
@@ -408,9 +401,7 @@ class TimelineTab extends Component {
 
     render() {
         const data = this.formatDataForTimeLine();
-        console.log('weiutqweoiuiquwoerw===>', data);
-        let { symptoms = {} } = this.props;
-        const { carePlanTemplateIds = [], currentTab = TABS.TIMELINE, loading } = this.state;
+        const { loading } = this.state;
         if (loading) {
             return (
                 <div className='wp100 hp100 flex justify-center align-center'>

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
-import { GRAPH_COLORS, PERMISSIONS, ROOM_ID_TEXT } from "../../constant";
+import { PERMISSIONS } from "../../constant";
 import Tabs from "antd/es/tabs";
 import { Button, Menu, Dropdown, Spin, message } from "antd";
 import Patients from "../../Containers/Patient/table";
@@ -17,11 +17,10 @@ import { getPatientConsultingVideoUrl } from '../../Helper/url/patients';
 import { getPatientConsultingUrl } from '../../Helper/url/patients';
 import config from "../../config";
 
+// helpers...
+import {getRoomId} from "../../Helper/twilio";
 
 const { TabPane } = Tabs;
-
-const SUMMARY = "Summary";
-const WATCHLIST = "Watch list";
 
 class Dashboard extends Component {
     constructor(props) {
@@ -36,7 +35,6 @@ class Dashboard extends Component {
 
     componentDidMount() {
         const { searchMedicine, getGraphs, doctors = {}, authenticated_user, closePopUp, fetchChatAccessToken } = this.props;
-        // getInitialData();
         closePopUp();
         let doctorUserId = '';   //user_id of doctor
         for (let doc of Object.values(doctors)) {
@@ -169,7 +167,7 @@ class Dashboard extends Component {
             twilio: { patientId: chatPatientId = 1 } } = this.props;
         const { doctorUserId } = this.state;
         let { basic_info: { user_id: patientUserId = '' } = {} } = patients[chatPatientId];
-        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+        const roomId = getRoomId(doctorUserId, patientUserId);
 
         window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
     }
@@ -196,7 +194,8 @@ class Dashboard extends Component {
 
         const { visible, graphsToShow, visibleModal, doctorUserId } = this.state;
 
-        let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+        const roomId = getRoomId(doctorUserId, patientUserId);
+        console.log("198381239 roomId", roomId);
         if (Object.keys(graphs).length === 0) {
             return (
                 <Loading className={"wp100 mt20"} />
