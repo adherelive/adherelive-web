@@ -41,7 +41,6 @@ class vitalBotMessage extends Component{
             const node = e.target;
 
             const id = node.getAttribute("meta-id");
-            console.log("id  ===>",id);
             updateReplyMessageId(id);
         }
       

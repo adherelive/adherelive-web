@@ -451,8 +451,7 @@ class TwilioChat extends Component {
         const { ChatForm } = this;
 
         const { messagesLoading = false, other_user_online = false, other_typing = false, otherUserLastConsumedMessageIndex } = this.state;
-        const { placeVideoCall, patientDp = '', patientName = '',replyMessadeId='' } = this.props;
-        console.log("replyMessadeId ===>",replyMessadeId);
+        const { placeVideoCall, patientDp = '', patientName = '',replyMessadeId=null } = this.props;
         const { ...props} = this.props;
 
         return (

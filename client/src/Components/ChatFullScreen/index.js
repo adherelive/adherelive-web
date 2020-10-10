@@ -16,7 +16,7 @@ class ChatFullScreen extends Component {
             patientUserId: 1,
             patientId: 1,
             placeCall: false,
-            replyMessadeId:''
+            replyMessadeId:null
         };
     }
 
@@ -41,16 +41,15 @@ class ChatFullScreen extends Component {
         this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
     }
 
-    updateReplyMessageId = (newId='') => {
-        
+    updateReplyMessageId = (newId=null) => {
         const {replyMessadeId : currentId} = this.state;
 
-        if(currentId !== newId && newId === '' && currentId !== ''){ 
+        if(currentId !== newId && newId === null && currentId !== null){ 
             this.setState({
                 replyMessadeId:newId
             });
 
-        }else if(currentId !== newId && newId !== '' && currentId === '' ){  
+        }else if(currentId !== newId && newId !== null && currentId === null ){  
             this.setState({
                 replyMessadeId:newId
             });
