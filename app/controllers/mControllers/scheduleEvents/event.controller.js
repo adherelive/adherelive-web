@@ -96,9 +96,13 @@ class EventController extends Controller {
         vital_ids = []
       } = await carePlanWrapper.getAllInfo();
 
-      let schedule_events = [];
+      let scheduleEvents = [];
 
       if (key) {
+        const startLimit =
+          parseInt(process.config.event.count) * (parseInt(key) - 1);
+        const endLimit = parseInt(process.config.event.count);
+
         const vitalEvents = await eventService.getPageEventByData({
           startLimit,
           endLimit,
@@ -126,7 +130,7 @@ class EventController extends Controller {
           ...medicationEvents
         ];
       } else {
-        schedule_events = await EventService.getPendingEventsData({
+        scheduleEvents = await eventService.getPendingEventsData({
           eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
         });
       }
