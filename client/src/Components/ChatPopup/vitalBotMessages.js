@@ -36,7 +36,7 @@ class vitalBotMessage extends Component{
     replyToMessage = (e) => {
         e.preventDefault();
         const {updateReplyMessageId} = this.props;
-        if(typeof(updateReplyMessageId) !== 'undefined'){
+        if(typeof(updateReplyMessageId) === 'function'){
            
             const node = e.target;
 

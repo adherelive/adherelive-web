@@ -34,7 +34,7 @@ class symptomBotMessage extends Component{
     replyToMessage = (e) => {
         e.preventDefault();
         const {updateReplyMessageId} = this.props;
-        if(typeof(updateReplyMessageId) !== 'undefined'){
+        if(typeof(updateReplyMessageId) === 'function'){
            
             const node = e.target;
 
@@ -78,7 +78,8 @@ class symptomBotMessage extends Component{
 
     getAudioMedia = (audio_document_ids,upload_documents) => {
         const audioMediaArray = [];
-        audio_document_ids.map( audio_doc_id => {
+
+        audio_document_ids.forEach(audio_doc_id => {
             let audioMessage = '';
             const {basic_info : {document : audio_src = '',name : audio_name = ''} = {} } = upload_documents[audio_doc_id];
             // console.log("upload_documents",upload_documents);
@@ -92,13 +93,16 @@ class symptomBotMessage extends Component{
                 
             )
             audioMediaArray.push(audioMessage);
-        } );
+        });
+
+      
         return audioMediaArray;
     }
 
     getVideoMedia = (video_document_ids,upload_documents) => {
         const videoMediaArray = [];
-        video_document_ids.map( video_doc_id => {
+
+        video_document_ids.forEach(video_doc_id => {
             let videoMessage = '';
             const {basic_info : {document : video_src = '', name : video_name = ''} = {} } = upload_documents[video_doc_id];
            
@@ -113,7 +117,9 @@ class symptomBotMessage extends Component{
             );
 
             videoMediaArray.push(videoMessage);
-        } );
+        });
+
+    
         return videoMediaArray;
     }
 
@@ -124,30 +130,36 @@ class symptomBotMessage extends Component{
     }
 
     getMessageTime = (message) => {
-        return (<div className="chat-time start">
+        let mess = '';
+        mess =  (<div className="chat-time start">
                     {moment(message.state.timestamp).format("H:mm")}
                 </div>)
+        return mess ;
     }
 
     getImage =(img_src) => {
-        return (  <div className="media-container symptom-image-container" >
+        let mess = '';
+        mess =  (  <div className="media-container symptom-image-container" >
                     <img className="symptom-image" src={img_src} alt="Symptom Image" ></img>
                 </div>)
+        return mess;
     }
 
     getAudio =(audio_src,audio_type) => {
-        return(<div className="media-container symptom-audio-container" >
+        let mess = '';
+        mess = (<div className="media-container symptom-audio-container" >
                     <audio controls className="symptom-audio" width="100%" height="100%" >
                         <source src={audio_src} alt="symptom audio" type={`audio/${audio_type}`}></source>
                         {/* <source src={audio_src} alt="symptom audio" type="audio/mpeg" ></source> */}
                         {this.props.intl.formatMessage(messages.audioNotSupported)}
                     </audio>
                 </div>)
+        return mess;
     }
 
     getVideo= (video_src,video_type) => {
-       
-        return (
+       let mess = '';
+        mess = (
             <div className="media-container symptom-video-container">
                 <video controls className="sympom-video" width="100%" height="100%" >
                     <source src={video_src} type={`video/${video_type}`}></source>
@@ -156,19 +168,21 @@ class symptomBotMessage extends Component{
                 </video>
             </div>
         )
+        return mess;
     }
     
 
     getSymptomMessage = (message,side,parts) => {
        
         if(side === '' || parts.length === 0){
-            return null;
+            return '';
         }
         
         const part = PARTS_GRAPH[7].name;
         const body_side = BODY_SIDE[side] || '';
+        let mess = '';
        
-        return (
+        mess = (
             <div>
                 <div className="bot-msg-detail-container"  id={`${message.state.sid}-symptom`} >
                     <span className="bot-m-h ">
@@ -188,6 +202,7 @@ class symptomBotMessage extends Component{
                 </div>
             </div>
             )
+        return mess;
         
     }
 
@@ -234,9 +249,11 @@ class symptomBotMessage extends Component{
         const textMessage= this.getText(symptom_text);
         
         
-        imagesMediaArray.map(each => {allMediaArray.push(each)});
-        videoMediaArray.map(each => {allMediaArray.push(each)});
-        audioMediaArray.map(each => {allMediaArray.push(each)});
+       
+
+        imagesMediaArray.forEach(each => {allMediaArray.push(each)});
+        videoMediaArray.forEach(each => {allMediaArray.push(each)});
+        audioMediaArray.forEach(each => {allMediaArray.push(each)});
         allMediaArray.push(textMessage);
         finalMessage = this.getFinalMessage(message,patientDp,side,parts,allMediaArray);
 
