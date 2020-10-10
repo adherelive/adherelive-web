@@ -107,7 +107,7 @@ class ChatFullScreen extends Component {
                     ?
                     (<TwilioVideo patientUserId={patientUserId} hideChat={this.hideVideoCall} roomId={roomId} />) :
                     ( */}
-                <div>
+                <Fragment>
                     <div className='chat-patientList-container'>
                         <PatientList setPatientId={this.setPatientId} doctorUserId={doctorUserId} patientId={patientId} {...this.props} />
                     </div>
@@ -116,7 +116,7 @@ class ChatFullScreen extends Component {
                         <TwilioChat replyMessadeId={replyMessadeId}  updateReplyMessageId={this.updateReplyMessageId}  roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
                         
                     </div>
-                </div>
+                </Fragment>
             </div>
         );
     }

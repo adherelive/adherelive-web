@@ -10,10 +10,7 @@ import moment from 'moment';
 class botMessage extends Component{
     constructor(props){
         super(props);
-        // this.state = {
-        //     mess:'',
-        //     updated:false
-        // }
+        
     }
 
     componentDidMount(){
@@ -21,53 +18,11 @@ class botMessage extends Component{
         
     }
 
-    getBotMessageByType(type,body,message,patientDp,vital_repeat_intervals){
-        // if(type === CHAT_MESSAGE_TYPE.SYMPTOM){
-          
-        //     return (
-        //         <SymptomBotMessage body={body} message={message} patientDp={patientDp}   />
-        //     )
-        // }
-        // else if (type === CHAT_MESSAGE_TYPE.VITAL){
-        //       return (
-        //         <VitalBotMessage body={body} message={message} patientDp={patientDp} vital_repeat_intervals={vital_repeat_intervals}  />
-        //       )
-        // }
-        // else{
-        //     return (
-        //         <Fragment key={message.state.sid}  >
-        //                <div className="chat-avatar">
-        //                                 <span className="twilio-avatar">
-        //                                     <Avatar src={patientDp} />
-        //                                 </span>
-        //                                 {message.type === "media" ? (
-        //                                     <div className="chat-text">
-        //                                         <div className="clickable white chat-media-message-text">
-        //                                             <Fragment>
-        //                                                 {message}
-        //                                             </Fragment> 
-        //                                         </div>
-        //                                     </div>
-        //                                 ) : (
-        //                                         <div className="chat-text " >{message.state.body}</div>
-        //                                     )}
-                                    
-        //                             <div className="chat-time start">
-        //                                 {moment(message.state.timestamp).format("H:mm")}
-        //                             </div>
-        //                 </div>
-        //         </Fragment>
-        //     )
-        // }
-    }
-
     getBotMessage = () => {
         const { body : this_body ,message,patientDp,vital_repeat_intervals} = this.props;
       
         const body = JSON.parse(this_body);
-        // console.log("body",body);
         const {type} = body;
-        // console.log("type",type);
         if(type === CHAT_MESSAGE_TYPE.SYMPTOM){
           
             return (
@@ -111,7 +66,6 @@ class botMessage extends Component{
 
     render(){
         const mess = this.getBotMessage();
-        // const {mess} = this.state;
         return(
             <Fragment>
                 <div>
