@@ -391,5 +391,15 @@ export default defineMessages({
     description: "",
     defaultMessage: "Enter instructions",
   },
+  everyday: {
+    id: "medication_reminder.drawer.everyday",
+    description: "",
+    defaultMessage: "Everyday",
+  },
+  alternate: {
+    id: "medication_reminder.drawer.alternate",
+    description: "",
+    defaultMessage: "Alternate",
+  },
 
 });

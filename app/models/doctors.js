@@ -53,7 +53,7 @@ export const db = (database) => {
             },
             first_name: {
                 type: DataTypes.STRING(100),
-                allowNull: false,
+                allowNull: true,
             },
             middle_name: {
                 type: DataTypes.STRING(100),

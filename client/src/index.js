@@ -13,7 +13,6 @@ import translations from "./i18n/locales";
 import retainState from "./RetainState";
 import { getQuery } from "./Helper/queryString";
 import * as serviceWorker from "./serviceWorker";
-// import Loading from "./Components/Common/Loading";
 
 import "./Styles/index.less";
 
