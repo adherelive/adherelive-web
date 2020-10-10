@@ -29,6 +29,7 @@ const { Item: FormItem } = Form;
 const UNIT_FIELD = 'unit';
 
 
+
 const UNIT_ML = 'ml';
 
 const UNIT_MG = 'mg';
@@ -504,6 +505,18 @@ class AddMedicationReminderForm extends Component {
 
   }
 
+  setStrength = (e) =>{
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue,validateFields },
+      enableSubmit
+    } = this.props;
+    const currentValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
+    setFieldsValue({ [medicineStrengthField.field_name]: (parseFloat(currentValue) + parseFloat(e.target.value)) });
+    validateFields([medicineStrengthField.field_name]);
+
+  }
+
   render() {
     const {
       disabledEndDate,
@@ -515,7 +528,8 @@ class AddMedicationReminderForm extends Component {
       setFormulation,
       setUnit,
       setEndDateOneWeek,
-      setEndDateTwoWeek, setEndDateLongTime
+      setEndDateTwoWeek, setEndDateLongTime,
+      setStrength
     } = this;
 
     const {
@@ -591,6 +605,8 @@ class AddMedicationReminderForm extends Component {
               >
                 <RadioButton value={MEDICINE_UNITS.ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML} >ml</RadioButton>
                 <RadioButton value={MEDICINE_UNITS.MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >mg</RadioButton>
+                {medicineUnit !== 'ml' && (<RadioButton value={50} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >+50</RadioButton>)}
+
               </RadioGroup>
             </div>
           </div>
@@ -601,7 +617,8 @@ class AddMedicationReminderForm extends Component {
           </InputGroup>
 
           {medicineUnit !== 'ml' && (<div id="quantity">{medicineQuantityField.render(this.props)}</div>)}
-
+          
+          
           <div id="timing">{whenToTakeMedicineField.render(this.props)}</div>
 
           <RepeatFields

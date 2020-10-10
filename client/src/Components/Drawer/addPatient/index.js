@@ -89,34 +89,82 @@ class PatientDetailsDrawer extends Component {
     };
 
     setComorbidities = e => {
-        const { value } = e.target;
-        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        if (reg.test(value) || value === '') {
-            this.setState({ comorbidities: e.target.value });
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0) {
+            this.setState({ comorbidities: e.target.value});
         }
     }
 
+    setPastedComorbidities = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text').trim();
+        }
+        if (pastedValue.length>0) {
+            this.setState({ comorbidities:pastedValue  });
+        }
+    }
+
+
     setClinicalNotes = e => {
-        const { value } = e.target;
-        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        if (reg.test(value) || value === '') {
-            this.setState({ clinical_notes: e.target.value });
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0) {
+            this.setState({ clinical_notes: e.target.value});
+        }
+    }
+
+    setPastedClinicalNotes = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text').trim();
+        }
+        if (pastedValue.length>0) {
+            this.setState({ clinical_notes:pastedValue  });
         }
     }
 
     setAllergies= e => {
-        const { value } = e.target;
-        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        if (reg.test(value) || value === '') {
+      
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0) {
             this.setState({ allergies: e.target.value });
         }
     }
 
+    setPastedAllergies = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text').trim();
+        }
+        if (pastedValue.length>0) {
+            this.setState({ allergies:pastedValue  });
+        }
+    }
+
     setDiagnosis = e => {
-        const { value } = e.target;
-        const reg =  /^[a-zA-Z][a-zA-Z\s]*$/;
-        if (reg.test(value) || value === '') {
+      
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0) {
             this.setState({ diagnosis_description: e.target.value });
+        }
+        
+    }
+    
+    setPastedDiagnosis = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text').trim();
+        }
+        if (pastedValue.length>0) {
+            this.setState({ diagnosis_description:pastedValue  });
         }
     }
 
@@ -273,6 +321,7 @@ class PatientDetailsDrawer extends Component {
         }
     };
 
+    
 
     renderAddPatient = () => {
         let dtToday = new Date();
@@ -367,7 +416,7 @@ class PatientDetailsDrawer extends Component {
                     value={comorbidities}
                     className={"form-textarea-ap"}
                     onChange={this.setComorbidities}
-                    
+                    onPaste={this.setPastedComorbidities}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
@@ -377,6 +426,7 @@ class PatientDetailsDrawer extends Component {
                     value={allergies}
                     className={"form-textarea-ap"}
                     onChange={this.setAllergies}
+                    onPaste={this.setPastedAllergies}
                 />
 
                 
@@ -391,15 +441,18 @@ class PatientDetailsDrawer extends Component {
                     value={clinical_notes}
                     className={"form-textarea-ap "}
                     onChange={this.setClinicalNotes}
+                    onPaste={this.setPastedClinicalNotes}
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>
-                    <div className="flex direction-row "  key="diagnosys-h" >
-                        {this.formatMessage(messages.diagnosis)}
-                        <div className="star-red">*</div>
+                    <div className="flex direction-column align-center justify-center" >
+                        <div className="flex direction-row "  key="diagnosys-h" >
+                            {this.formatMessage(messages.diagnosis)}
+                            <div className="star-red">*</div>
+                        </div>
                     </div>
                     <div>
-                        <Select placeholder="Final" key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType}>
+                        <Select  key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType} >
 
                             <Option 
                             value={DIAGNOSIS_TYPE[FINAL].diagnosis_type}
@@ -410,6 +463,7 @@ class PatientDetailsDrawer extends Component {
                             value={DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}
                             key={`probable-${DIAGNOSIS_TYPE[PROBABLE].diagnosis_type}`}
                              >{DIAGNOSIS_TYPE[PROBABLE].value}</Option>
+
                         </Select>
                     </div>
 
@@ -420,6 +474,7 @@ class PatientDetailsDrawer extends Component {
                     value={diagnosis_description}
                     className={"form-textarea-ap"}
                     onChange={this.setDiagnosis}
+                    onPaste={this.setPastedDiagnosis}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}<div className="star-red">*</div></div>
@@ -581,7 +636,7 @@ class PatientDetailsDrawer extends Component {
             allergies:'',
             clinical_notes:'',
             diagnosis_description:'',
-            diagnosis_type:''
+            diagnosis_type:'2'
         });
         close();
     };

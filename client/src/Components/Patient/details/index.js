@@ -6,15 +6,10 @@ import chat_image from "../../../Assets/images/chat.svg";
 import {
   GENDER,
   PERMISSIONS,
-  ROOM_ID_TEXT,
   TABLET,
-  SYRINGE,
   SYRUP,
   PARTS,
-  PART_LIST_BACK,
   PART_LIST_CODES,
-  PART_LIST_FRONT,
-  BODY
 } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 
@@ -47,6 +42,7 @@ import SymptomTabs from "../../../Containers/Symptoms";
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
 import EditVitals from "../../../Containers/Drawer/editVitals";
+import {getRoomId} from "../../../Helper/twilio";
 
 
 const BLANK_TEMPLATE = "Blank Template";
@@ -60,45 +56,6 @@ const PATIENT_TABS = {
   }
 };
 
-function callback(key) {}
-
-// const menu = (
-//   <Menu>
-//     <Menu.Item>
-//       <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
-//         Medication
-//       </a>
-//     </Menu.Item>
-//     <Menu.Item>
-//       <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
-//         Appointments
-//       </a>
-//     </Menu.Item>
-//     <Menu.Item>
-//       <a target="_blank" rel="noopener noreferrer" href="http://www.google.com/">
-//         Actions
-//       </a>
-//     </Menu.Item>
-//   </Menu>
-// );
-
-// const columns_symptoms = [
-//   {
-//     title: "Medicine",
-//     dataIndex: "medicine",
-//     key: "medicine",
-//   },
-//   {
-//     title: "In take",
-//     dataIndex: "in_take",
-//     key: "in_take",
-//   },
-//   {
-//     title: "Duration",
-//     dataIndex: "duration",
-//     key: "duration",
-//   },
-// ];
 
 const columns_medication = [
   {
@@ -1218,7 +1175,7 @@ class PatientDetails extends Component {
       }
     } = patients[patient_id] || {};
 
-    let roomId = doctorUserId + ROOM_ID_TEXT + patientUserId;
+    const roomId = getRoomId(doctorUserId, patientUserId);
 
     const { basic_info: { mobile_number = "", email, prefix = "" } = {} } =
       users[user_id] || {};
@@ -1362,20 +1319,8 @@ class PatientDetails extends Component {
             )}
             {showTabs && (
               <div className="flex-grow-1 direction-column align-center">
-                {/* <PatientAlertCard
-              formatMessage={formatMessage}
-              count={count}
-              new_symptoms_string={new_symptoms_string}
-              missed_appointment={missed_appointment}
-            /> */}
                 <div className="patient-tab mt20">
-                  <Tabs defaultActiveKey="1" onChange={callback}>
-                    {/* <TabPane tab="Symptoms" key="1">
-                  <Table
-                    columns={columns_symptoms}
-                    dataSource={data_symptoms}
-                  />
-                </TabPane> */}
+                  <Tabs defaultActiveKey="1">
                     <TabPane tab="Medication" key="1">
                       <Table
                         columns={
@@ -1411,18 +1356,12 @@ class PatientDetails extends Component {
                     </TabPane>
 
                     <TabPane tab="Symptoms" key="3">
-                      {/* <Table
-                        columns={columns_symptoms}
-                        dataSource={this.getSymptomsData(symptoms)}
-                        onRow={onRowSymptoms}
-                      /> */}
                       <SymptomTabs patientId={patient_id} />
                     </TabPane>
                     <TabPane
                       tab={PATIENT_TABS.ACTIONS["name"]}
                       key={PATIENT_TABS.ACTIONS["key"]}
                     >
-                      {/*<div>{formatMessage(messages.vitals)}</div>*/}
                       <VitalTable patientId={patient_id} carePlanId={carePlanId}/>
                     </TabPane>
                   </Tabs>

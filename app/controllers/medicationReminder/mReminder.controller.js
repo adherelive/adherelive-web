@@ -329,8 +329,8 @@ class MReminderController extends Controller {
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
-      console.log("Add m-reminder error ----> ", error);
-      return this.raiseServerError(res, 500, error.message, "something went wrong");
+      Logger.debug("Add m-reminder error ---->", error);
+      // return this.raiseServerError(res, 500, error.message, "something went wrong");
     }
   };
 

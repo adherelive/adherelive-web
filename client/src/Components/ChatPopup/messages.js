@@ -37,6 +37,16 @@ const messages = defineMessages({
     id: "app.chatFullScreen.today",
     description: "Click Here to Go Home",
     defaultMessage: "Today"
+  },
+  videoNotSupported :{
+    id: "app.chatFullScreen.videoNotSupported",
+    description: "Click Here to Go Home",
+    defaultMessage: "Your browser does not support the video element."
+  },
+  audioNotSupported:{
+    id: "app.chatFullScreen.audioNotSupported",
+    description: "Click Here to Go Home",
+    defaultMessage: "Your browser does not support the audio element."
   }
 
 });

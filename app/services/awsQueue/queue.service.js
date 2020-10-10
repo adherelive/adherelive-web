@@ -12,7 +12,6 @@ export default class QueueService {
       region: process.config.aws.region
     });
     this.sqs = new AWS.SQS();
-    this.TEMP_QUEUE_NAME = "adhere_local";
   }
 
   createQueue = (name = "test_queue") => {
@@ -34,7 +33,7 @@ export default class QueueService {
   };
 
   getQueueUrl = (name = "test_queue") => {
-    return `${process.config.sqs.domain_url}/${process.config.sqs.account_id}/${this.TEMP_QUEUE_NAME}`;
+    return `${process.config.sqs.domain_url}/${process.config.sqs.account_id}/${process.config.sqs.queue_name}`;
   };
 
   sendMessage = async (queueName = "test_queue", data) => {
