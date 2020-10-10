@@ -49,18 +49,18 @@ class symptomBotMessage extends Component{
     getText = (symptom_text) => {
         let text = '';
         text = (
-            <Fragment  >
+            <div  >
                     <div className="text-msg-container " >
                         <span>{symptom_text}</span>
                     </div>
-            </Fragment>
+            </div>
         );
         return text;
     } 
 
     getImagesMedia = (image_document_ids,upload_documents) => {
         const imagesMediaArray = [];
-        image_document_ids.map( image_doc_id => {
+        image_document_ids.forEach(image_doc_id => {
             let imageMessage = '';
             const {basic_info : {document : img_src= ''} = {} } = upload_documents[image_doc_id];
             imageMessage = (
@@ -69,7 +69,9 @@ class symptomBotMessage extends Component{
               </div>
             );
             imagesMediaArray.push(imageMessage);
-        } );
+        });
+
+        
         return imagesMediaArray;
     }
 
@@ -167,7 +169,7 @@ class symptomBotMessage extends Component{
         const body_side = BODY_SIDE[side] || '';
        
         return (
-            <Fragment>
+            <div>
                 <div className="bot-msg-detail-container"  id={`${message.state.sid}-symptom`} >
                     <span className="bot-m-h ">
                         Symptom
@@ -184,14 +186,14 @@ class symptomBotMessage extends Component{
                     </div>
                     
                 </div>
-            </Fragment>
+            </div>
             )
         
     }
 
     getFinalMessage = (message,patientDp,side,parts,allMediaArray) => {
         let mess = '';
-        mess = (<Fragment >
+        mess = (<div >
             <div className="chat-messages"  key={`${message.state.sid}-symptom-key`}  >
                 <div className="chat-avatar">
                     {this.getPatientAvatar(patientDp)}
@@ -206,7 +208,7 @@ class symptomBotMessage extends Component{
                 </div>
                 {this.getMessageTime(message)}
             </div>
-        </Fragment> ) 
+        </div> ) 
 
         return mess;
     }

@@ -41,16 +41,16 @@ class ChatFullScreen extends Component {
         this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
     }
 
-    updateReplyMessageId = (newId=null) => {
+    updateReplyMessageId = (newId='') => {
         
         const {replyMessadeId : currentId} = this.state;
 
-        if(currentId !== newId && newId === null && currentId !== null){ 
+        if(currentId !== newId && newId === '' && currentId !== ''){ 
             this.setState({
                 replyMessadeId:newId
             });
 
-        }else if(currentId !== newId && newId !== null && currentId === null ){  
+        }else if(currentId !== newId && newId !== '' && currentId === '' ){  
             this.setState({
                 replyMessadeId:newId
             });
