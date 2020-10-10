@@ -13,6 +13,8 @@ import messages from './messages';
 import { injectIntl } from "react-intl";
 import CallIcon from '../../Assets/images/telephone.png';
 import ChatMessageDetails from "../ChatPopup/chatMessageDetails";
+// import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
+
 
 
 const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, otherTyping = false, formatMessage }) => {
@@ -390,7 +392,11 @@ class TwilioChat extends Component {
         }
        
         return (
+<<<<<<< HEAD
             <div>
+=======
+            <Fragment>
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
                 <div className="bot-msg-detail-container wp50" >
                     <span className="bot-m-h ">
                         {heading}
@@ -407,7 +413,11 @@ class TwilioChat extends Component {
                     </div>
                     
                 </div>
+<<<<<<< HEAD
             </div>
+=======
+            </Fragment>
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
             )
         
     }
@@ -428,12 +438,20 @@ class TwilioChat extends Component {
 
        
         mess = (
+<<<<<<< HEAD
             <div className="wp100 flex direction-row bg-whitesmoke relative"  >
+=======
+            <div className="wp100 flex direction-row bg-whitesmoke">
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
                 <div className="wp90 flex direction-column justify-space-between p20 mh100" >
                     {metaDataReply}
                    
                 </div>
+<<<<<<< HEAD
                 <div className="fs30 h-cursor-p close-reply" onClick={this.unsetReplyId}></div>
+=======
+                <div className="fs30 h-cursor-p" onClick={this.unsetReplyId}>&times;</div>
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
             </div>
         )
         return mess;
@@ -441,8 +459,13 @@ class TwilioChat extends Component {
 
     unsetReplyId = (e) => {
         e.preventDefault();
+<<<<<<< HEAD
         const {updateReplyMessageId} = this.props;
         updateReplyMessageId();
+=======
+        const {updateReplyMessadeId} = this.props;
+        updateReplyMessadeId();
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
        
     }
 
@@ -451,7 +474,12 @@ class TwilioChat extends Component {
         const { ChatForm } = this;
 
         const { messagesLoading = false, other_user_online = false, other_typing = false, otherUserLastConsumedMessageIndex } = this.state;
+<<<<<<< HEAD
         const { placeVideoCall, patientDp = '', patientName = '',replyMessadeId=null } = this.props;
+=======
+        const { placeVideoCall, patientDp = '', patientName = '',replyMessadeId='' } = this.props;
+        console.log("replyMessadeId ===>",replyMessadeId);
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
         const { ...props} = this.props;
 
         return (

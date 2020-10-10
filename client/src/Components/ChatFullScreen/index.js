@@ -41,15 +41,27 @@ class ChatFullScreen extends Component {
         this.setState({ doctorUserId, roomId, patientUserId: patientUserId, patientId: patient_id });
     }
 
+<<<<<<< HEAD
     updateReplyMessageId = (newId=null) => {
         const {replyMessadeId : currentId} = this.state;
 
         if(currentId !== newId && newId === null && currentId !== null){ 
+=======
+    updateReplyMessadeId = (newId='') => {
+        
+        const {replyMessadeId : currentId} = this.state;
+
+        if(currentId !== newId && newId === '' && currentId !== ''){ 
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
             this.setState({
                 replyMessadeId:newId
             });
 
+<<<<<<< HEAD
         }else if(currentId !== newId && newId !== null && currentId === null ){  
+=======
+        }else if(currentId !== newId && newId !== '' && currentId === '' ){  
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
             this.setState({
                 replyMessadeId:newId
             });
@@ -112,7 +124,11 @@ class ChatFullScreen extends Component {
                     </div>
                     <div className='chat-messageBox-container'>
                         {/* <Header placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={} /> */}
+<<<<<<< HEAD
                         <TwilioChat replyMessadeId={replyMessadeId}  updateReplyMessageId={this.updateReplyMessageId}  roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
+=======
+                        <TwilioChat replyMessadeId={replyMessadeId}  updateReplyMessadeId={this.updateReplyMessadeId}  roomId={roomId} placeVideoCall={this.openVideoChatTab} patientName={first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ''}${last_name ? `${last_name}` : ''}` : ''} patientDp={patientDp} />
+>>>>>>> 752c9b9deacacdde1dd0d63335ec8c67c81ef8af
                         
                     </div>
                 </Fragment>
