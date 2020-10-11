@@ -1,5 +1,6 @@
 import React from "react";
 // import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
+import {getName} from "../../../../Helper/validation";
 
 export default props => {
   const {
@@ -10,7 +11,9 @@ export default props => {
 
   return (
     <div className="tab-color flex align-center">
-      <div className="fw600">{`${first_name} ${middle_name ? `${middle_name} `: ""}${last_name}`}</div>
+      {/* <div className="fw600">{`${first_name} ${middle_name ? `${middle_name} `: ""}${last_name ? `${last_name} `: ""}`}</div> */}
+      <div className="fw600">{`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}</div>
+
       {unread === "0" ? (
         ""
       ) : (
