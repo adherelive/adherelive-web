@@ -11,7 +11,9 @@ import CarePlanWrapper from "../../../ApiWrapper/web/carePlan";
 import moment from "moment";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../common/scheduleEvents";
-import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
+import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE} from "../../../../constant";
+import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
+import FeatureDetailWrapper from "../featureDetails";
 
 const Log = new Logger("SERVICES > VITALS");
 
@@ -67,9 +69,18 @@ class VitalWrapper extends BaseVital {
 
     Log.debug("7761283 scheduleEvents --> ", scheduleEvents);
 
+    const vitalData = await FeatureDetailService.getDetailsByData({
+      feature_type: FEATURE_TYPE.VITAL
+    });
+
+    const vitalDetails = await FeatureDetailWrapper(vitalData);
+    const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
+
         const scheduleEventIds = [];
         for(const events of scheduleEvents) {
             const scheduleEvent = await EventWrapper(events);
+            const x = scheduleEvent.getAllInfo();
+          // Log.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
             if(scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
               scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 

@@ -49,6 +49,6 @@ export default async (data = null, id = null) => {
   if (data) {
     return new MobileMedicineWrapper(data);
   }
-  const medicine = await medicineService.getMedicineByData({ id });
+  const medicine = await medicineService.getMedicineById(id);
   return new MobileMedicineWrapper(medicine);
 };

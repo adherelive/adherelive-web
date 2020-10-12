@@ -214,7 +214,7 @@ class MobileDoctorController extends Controller {
 
       let newUserId = user.get("id");
 
-      let patientName = name.split(" ");
+      let patientName = name.trim().split(" ");
       let first_name = patientName[0];
       let middle_name = patientName.length == 3 ? patientName[1] : "";
       let last_name =
@@ -259,12 +259,6 @@ class MobileDoctorController extends Controller {
         condition_id,
         user_id: userId
       });
-
-      Logger.debug("carePlanTemplate ---> ", carePlanTemplate);
-
-      // const carePlanTemplateData = await CarePlanTemplateWrapper(
-      //   carePlanTemplate
-      // );
 
       const patient_id = patient.get("id");
       const care_plan_template_id = null;
