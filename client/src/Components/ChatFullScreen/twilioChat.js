@@ -11,10 +11,10 @@ import Download from "../../Assets/images/down-arrow.png";
 import File from "../../Assets/images/file.png";
 import messages from './messages';
 import { injectIntl } from "react-intl";
-// import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from '../../Assets/images/telephone.png';
 import ChatMessageDetails from "../ChatPopup/chatMessageDetails";
 // import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
+
 
 
 const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, otherTyping = false, formatMessage }) => {
@@ -392,7 +392,7 @@ class TwilioChat extends Component {
         }
        
         return (
-            <Fragment>
+            <div>
                 <div className="bot-msg-detail-container wp50" >
                     <span className="bot-m-h ">
                         {heading}
@@ -409,14 +409,14 @@ class TwilioChat extends Component {
                     </div>
                     
                 </div>
-            </Fragment>
+            </div>
             )
         
     }
 
     getReplyMessage = () => {
-        const {replyMessadeId =''} = this.props;
-        const {updateReplyMessadeId} = this.props;
+        const {replyMessadeId =null} = this.props;
+        const {updateReplyMessageId} = this.props;
         const Container = document.getElementById(replyMessadeId); 
         const metaDataContainer = Container.getElementsByClassName("bot-msg-detail-container")[0];
         const heading = Container.getElementsByClassName("bot-m-h")[0].innerHTML;
@@ -430,12 +430,12 @@ class TwilioChat extends Component {
 
        
         mess = (
-            <div className="wp100 flex direction-row bg-whitesmoke">
+            <div className="wp100 flex direction-row bg-whitesmoke relative"  >
                 <div className="wp90 flex direction-column justify-space-between p20 mh100" >
                     {metaDataReply}
                    
                 </div>
-                <div className="fs30 h-cursor-p" onClick={this.unsetReplyId}>&times;</div>
+                <div className="fs30 h-cursor-p close-reply" onClick={this.unsetReplyId}></div>
             </div>
         )
         return mess;
@@ -443,8 +443,8 @@ class TwilioChat extends Component {
 
     unsetReplyId = (e) => {
         e.preventDefault();
-        const {updateReplyMessadeId} = this.props;
-        updateReplyMessadeId();
+        const {updateReplyMessageId} = this.props;
+        updateReplyMessageId();
        
     }
 
@@ -453,8 +453,7 @@ class TwilioChat extends Component {
         const { ChatForm } = this;
 
         const { messagesLoading = false, other_user_online = false, other_typing = false, otherUserLastConsumedMessageIndex } = this.state;
-        const { placeVideoCall, patientDp = '', patientName = '',replyMessadeId='' } = this.props;
-        console.log("replyMessadeId ===>",replyMessadeId);
+        const { placeVideoCall, patientDp = '', patientName = '',replyMessadeId=null } = this.props;
         const { ...props} = this.props;
 
         return (
