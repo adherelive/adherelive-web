@@ -8,6 +8,7 @@ import {
   LUNCH,
   EVENING,
   DINNER,
+  AFTER_WAKEUP,
   BEFORE_BREAKFAST,
   AFTER_BREAKFAST,
   BEFORE_LUNCH,
@@ -23,7 +24,7 @@ import {
   THURSDAY,
   FRIDAY,
   SATURDAY,
-  SUNDAY
+  SUNDAY, MEDICATION_TIMING
 } from "../constant";
 import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
 import { RRule } from "rrule";
@@ -36,7 +37,10 @@ import ScheduleService from "../app/services/scheduleEvents/scheduleEvent.servic
 import UserPreferenceService from "../app/services/userPreferences/userPreference.service";
 
 // WRAPPERS
-import PatientWrapper from "../app/ApiWrapper/mobile/patient";
+// import PatientWrapper from "../app/ApiWrapper/mobile/patient";
+import MedicineWrapper from "../app/ApiWrapper/mobile/medicine";
+import MedicationWrapper from "../app/ApiWrapper/mobile/medicationReminder";
+
 
 const Log = new Logger("EVENT > HELPER");
 
@@ -105,8 +109,7 @@ export const handleAppointments = async appointment => {
   }
 };
 
-export const handleMedications = async medication => {
-  Log.debug("213971203 createMedicationSchedule -->", medication);
+export const handleMedications = async (data) => {
   try {
     const {
       patient_id,
@@ -115,13 +118,16 @@ export const handleMedications = async medication => {
       end_date,
       details,
       details: {
+        medicine_id,
         when_to_take,
-        repeat_days,
+        repeat_days = [],
         critical = false,
         participants = [],
         actors = {}
       } = {}
-    } = medication || {};
+    } = data || {};
+
+    Log.debug("repeat days before --> ", {details, data});
 
     const rrule = new RRule({
       freq: RRule.WEEKLY,
@@ -141,11 +147,14 @@ export const handleMedications = async medication => {
 
     const allDays = rrule.all();
 
-    const patient = await PatientWrapper(null, patient_id);
+    const patientPreference = await getUserPreferences(patient_id);
 
-    const patientPreference = await getUserPreferences(patient.getUserId());
+    const medicine = await MedicineWrapper(null, medicine_id);
+    const medication = await MedicationWrapper(null, event_id);
 
     const scheduleEventArr = [];
+
+    Log.debug("213971203 createMedicationSchedule -->", {medicine_id, data: medicine.getBasicInfo()});
 
     for (let i = 0; i < allDays.length; i++) {
       for (const timing of when_to_take) {
@@ -165,7 +174,10 @@ export const handleMedications = async medication => {
           details: {
             ...details,
             participants,
-            actors
+            actors,
+            medicines: medicine.getBasicInfo(),
+            when_to_take_data: MEDICATION_TIMING[timing], // TODO: to be changed(included in) to patient preference data
+            medications: medication.getExistingData(),
           }
         });
       }
@@ -352,6 +364,13 @@ export const handleVitals = async vital => {
   }
 };
 
+const getWakeUp = timings => {
+  const { value } = timings[WAKE_UP] || {};
+  const hours = moment(value).hours();
+  const minutes = moment(value).minutes();
+  return { hours, minutes };
+};
+
 const getBreakfast = timings => {
   const { value } = timings[BREAKFAST] || {};
   const hours = moment(value).hours();
@@ -389,6 +408,12 @@ const getSleep = timings => {
 
 const updateMedicationTiming = (date, timing, patientPreference) => {
   switch (timing) {
+    case AFTER_WAKEUP:
+      const { hours: awh, minutes: awm } =
+      getWakeUp(patientPreference) || {};
+      return moment(date)
+          .set("hours", awh)
+          .set("minutes", awm)
     case BEFORE_BREAKFAST:
       const { hours: bbh, minutes: bbm } =
         getBreakfast(patientPreference) || {};
@@ -443,8 +468,7 @@ const updateMedicationTiming = (date, timing, patientPreference) => {
       const { hours: bsh, minutes: bsm } = getSleep(patientPreference) || {};
       return moment(date)
         .set("hours", bsh)
-        .set("minutes", bsm)
-        .subtract(30, "minutes");
+        .set("minutes", bsm);
     default:
       return moment(date);
   }

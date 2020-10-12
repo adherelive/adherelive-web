@@ -36,9 +36,10 @@ class MedicationStrength extends Component {
       getFieldDecorator,
       getFieldError,
       isFieldTouched,
-      medication
-      //getFieldValue
+      medication,
+      getFieldValue
     } = form;
+    
     const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     const { getInitialValue } = this;

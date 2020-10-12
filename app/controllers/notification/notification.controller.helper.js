@@ -36,7 +36,6 @@ const Log = new Logger("WEB > NOTIFICATION > CONTROLLER > HELPER");
 
 const medicationNotification = async data => {
   try {
-    Log.debug("In medication notification with data", data);
     const scheduleEventService = new ScheduleEventService();
     const {
       data: {
@@ -90,15 +89,9 @@ const medicationNotification = async data => {
       const event = await MedicationWrapper(null, eventId);
       const { medications, medicines } = await event.getReferenceInfo();
 
-      Log.debug("medications, medicines ---> ", medications);
       eventData = { ...eventData, ...medications };
       medicineData = { ...medicineData, medicines };
       participants = event.getParticipants();
-      // } else {
-      //     const events = await ScheduleEventService.getEventByData({id: foreign_id});
-      //     const event = await ScheduleEventWrapper(events);
-      //     eventData = event.getData();
-      //     participants = event.getParticipants();
     }
 
     if (eventData && eventData === null) {

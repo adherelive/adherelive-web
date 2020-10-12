@@ -344,7 +344,9 @@ class MobileUserController extends Controller {
 
         const appNotification = new AppNotification();
 
-        const notificationToken = appNotification.getUserToken(`${user.get("id")}`);
+        const notificationToken = appNotification.getUserToken(
+          `${user.get("id")}`
+        );
         const feedId = base64.encode(`${user.get("id")}`);
 
         const apiUserDetails = await MUserWrapper(user.get());
@@ -358,21 +360,21 @@ class MobileUserController extends Controller {
         }
 
         return this.raiseSuccess(
-            res,
-            200,
-            {
-              accessToken,
-              notificationToken,
-              feedId,
-              users: {
-                [apiUserDetails.getId()]: {
-                  ...apiUserDetails.getBasicInfo()
-                }
-              },
-              auth_user: apiUserDetails.getId(),
-              auth_category: apiUserDetails.getCategory(),
-              ...permissions,
+          res,
+          200,
+          {
+            accessToken,
+            notificationToken,
+            feedId,
+            users: {
+              [apiUserDetails.getId()]: {
+                ...apiUserDetails.getBasicInfo()
+              }
             },
+            auth_user: apiUserDetails.getId(),
+            auth_category: apiUserDetails.getCategory(),
+            ...permissions
+          },
           "Signed in successfully"
         );
       } else {
@@ -385,64 +387,37 @@ class MobileUserController extends Controller {
   };
 
   signUp = async (req, res) => {
+    const {raiseClientError, raiseSuccess, raiseServerError} = this;
     try {
       const { password, email } = req.body;
       const userExits = await userService.getUserByEmail({ email });
 
-      console.log("CREDENTIALSSSSSSSSSSSSSS", password, email);
       if (userExits !== null) {
-        const userExitsError = new Error();
-        userExitsError.code = 11000;
-        throw userExitsError;
+        return raiseClientError(
+          res,
+          11000,
+          errMessage.EMAIL_ALREADY_EXISTS,
+          errMessage.EMAIL_ALREADY_EXISTS.message
+        );
       }
 
-      let response;
-      const link = uuidv4();
-      const status = "verified"; //make it pending completing flow with verify permission
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
-      const verified = true;
 
-      let user = await userService.addUser({
+      const user = await userService.addUser({
         email,
         password: hash,
         sign_in_type: "basic",
-        category: "doctor",
-        onboarded: false,
-        verified
+        category: USER_CATEGORY.DOCTOR,
+        onboarded: true,
+        verified: true
       });
 
-      const userInfo = await userService.getUserByEmail({ email });
-
-      const userVerification = UserVerificationServices.addRequest({
-        user_id: userInfo.get("id"),
-        request_id: link,
-        status: "pending"
-      });
-      let uId = userInfo.get("id");
-
-      console.log(
-        "CREDENTIALSSSSSSSSSSSSSS111111111111",
-        "      1234567890          ",
-        userInfo.get("id")
-      );
-      const emailPayload = {
-        title: "Verification mail",
-        toAddress: email,
-        templateName: EMAIL_TEMPLATE_NAME.WELCOME,
-        templateData: {
-          title: "Doctor",
-          link: process.config.app.invite_link + link,
-          inviteCard: "",
-          mainBodyText: "We are really happy that you chose us.",
-          subBodyText: "Please verify your account",
-          buttonText: "Verify",
-          host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com"
-        }
-      };
-
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      if(user) {
+        await doctorService.addDoctor({
+          user_id: user.get("id")
+        });
+      }
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
@@ -459,12 +434,14 @@ class MobileUserController extends Controller {
 
       const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(`${user.get("id")}`);
+      const notificationToken = appNotification.getUserToken(
+        `${user.get("id")}`
+      );
       const feedId = base64.encode(`${user.get("id")}`);
 
       const apiUserDetails = await MUserWrapper(user.get());
 
-      return this.raiseSuccess(
+      return raiseSuccess(
         res,
         200,
         {
@@ -475,100 +452,18 @@ class MobileUserController extends Controller {
             [apiUserDetails.getId()]: {
               ...apiUserDetails.getBasicInfo()
             }
-          }
+          },
+          auth_user: apiUserDetails.getId(),
+          auth_category: apiUserDetails.getCategory()
         },
-        "Sign up successfull"
+        "Sign up successful"
       );
     } catch (err) {
+      Logger.debug("signup 500 error", err);
       console.log("signup err,", err);
-      if (err.code && err.code == 11000) {
-        let response = new Response(false, 400);
-        console.log(
-          "Sign ka hai -----------> , ",
-          errMessage.EMAIL_ALREADY_EXISTS
-        );
-        response.setError(errMessage.EMAIL_ALREADY_EXISTS);
-        response.setMessage(errMessage.EMAIL_ALREADY_EXISTS.message);
-        return res.status(400).json(response.getResponse());
-      } else {
-        return this.raiseServerError(res);
-      }
+      return raiseServerError(res);
     }
   };
-
-  // signIn = async (req, res) => {
-  //   try {
-  //     const { email, password } = req.body;
-  //     const user = await userService.getUserByEmail({
-  //       email,
-  //     });
-
-  //     // const userDetails = user[0];
-  //     // console.log("userDetails --> ", userDetails);
-  //     if (!user) {
-  //       return this.raiseClientError(res, 422, user, "user does not exists");
-  //     }
-
-  //     let verified = user.get("verified");
-
-  //     if (!verified) {
-  //       return this.raiseClientError(res, 401, "user account not verified");
-  //     }
-
-  //     // TODO: UNCOMMENT below code after signup done for password check or seeder
-  //     const passwordMatch = await bcrypt.compare(
-  //       password,
-  //       user.get("password")
-  //     );
-  //     if (passwordMatch) {
-  //       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
-  //       const secret = process.config.TOKEN_SECRET_KEY;
-  //       const accessToken = await jwt.sign(
-  //         {
-  //           userId: user.get("id"),
-  //         },
-  //         secret,
-  //         {
-  //           expiresIn,
-  //         }
-  //       );
-
-  //       return this.raiseSuccess(
-  //         res,
-  //         200,
-  //         {
-  //           accessToken,
-  //         },
-  //         "initial data retrieved successfully"
-  //       );
-  //     } else {
-  //       return this.raiseClientError(res, 422, {}, "password not matching");
-  //     }
-  //   } catch (error) {
-  //     console.log("error sign in  --> ", error);
-  //     return this.raiseServerError(res, 500, error, error.getMessage());
-  //   }
-  //   //   );
-
-  //   //   console.log("access token combines --> ", accessTokenCombined);
-
-  //   //   // res.cookie("accessToken", accessTokenCombined);
-
-  //   //   let response = new Response(true, 200);
-  //   //   response.setMessage("Sign in successful!");
-  //   //   response.setData({
-  //   //     accessToken: accessTokenCombined,
-  //   //   });
-  //   //   return res.status(response.getStatusCode()).send(response.getResponse());
-  //   // } catch (err) {
-  //   //   console.log("error ======== ", err);
-  //   //   //throw err;
-  //   //   let response = new Response(false, 500);
-  //   //   response.setMessage("Sign in Unsuccessful!");
-  //   //   return res.status(response.getStatusCode()).send(response.getResponse());
-  //   // }
-  // };
 
   async signInFacebook(req, res) {
     const { accessToken } = req.body;
@@ -751,7 +646,7 @@ class MobileUserController extends Controller {
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
         } else {
-          apiUserDetails = await MUserWrapper(userData.get());
+          apiUserDetails = await MUserWrapper(null, userId);
           userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
 
           // Logger.debug("userApiData --> ", apiUserDetails.isActivated());

@@ -70,7 +70,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        query: { key } = {},
+        query: { key = null } = {},
         userDetails: { userData: { category }, userCategoryId } = {}
       } = req;
       Log.info(`query : key = ${key}`);
@@ -96,36 +96,44 @@ class EventController extends Controller {
         vital_ids = []
       } = await carePlanWrapper.getAllInfo();
 
-      const startLimit =
-        parseInt(process.config.event.count) * (parseInt(key) - 1);
-      const endLimit = parseInt(process.config.event.count);
+      let scheduleEvents = [];
 
-      const vitalEvents = await eventService.getPageEventByData({
-        startLimit,
-        endLimit,
-        event_type: EVENT_TYPE.VITALS,
-        eventIds: vital_ids
-      });
+      if (key) {
+        const startLimit =
+          parseInt(process.config.event.count) * (parseInt(key) - 1);
+        const endLimit = parseInt(process.config.event.count);
 
-      const appointmentEvents = await eventService.getPageEventByData({
-        startLimit,
-        endLimit,
-        event_type: EVENT_TYPE.APPOINTMENT,
-        eventIds: appointment_ids
-      });
+        const vitalEvents = await eventService.getPageEventByData({
+          startLimit,
+          endLimit,
+          event_type: EVENT_TYPE.VITALS,
+          eventIds: vital_ids
+        });
 
-      const medicationEvents = await eventService.getPageEventByData({
-        startLimit,
-        endLimit,
-        event_type: EVENT_TYPE.MEDICATION_REMINDER,
-        eventIds: medication_ids
-      });
+        const appointmentEvents = await eventService.getPageEventByData({
+          startLimit,
+          endLimit,
+          event_type: EVENT_TYPE.APPOINTMENT,
+          eventIds: appointment_ids
+        });
 
-      let scheduleEvents = [
-        ...vitalEvents,
-        ...appointmentEvents,
-        ...medicationEvents
-      ];
+        const medicationEvents = await eventService.getPageEventByData({
+          startLimit,
+          endLimit,
+          event_type: EVENT_TYPE.MEDICATION_REMINDER,
+          eventIds: medication_ids
+        });
+
+        scheduleEvents = [
+          ...vitalEvents,
+          ...appointmentEvents,
+          ...medicationEvents
+        ];
+      } else {
+        scheduleEvents = await eventService.getPendingEventsData({
+          eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
+        });
+      }
 
       Log.debug("21237193721 events --> ", scheduleEvents.length);
 

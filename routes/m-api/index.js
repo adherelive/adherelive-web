@@ -27,6 +27,7 @@ import carePlanTemplateRouter from "./carePlanTemplate";
 import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
+import syncRouter from "./sync";
 
 router.use(async (req, res, next) => {
   try {
@@ -40,11 +41,11 @@ router.use(async (req, res, next) => {
     if (accessToken) {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const {userId = null} = decodedAccessToken || {};
+      const { userId = null } = decodedAccessToken || {};
 
       const userData = await userService.getUser(userId);
       const user = await UserWrapper(userData);
-      const {userCategoryData, userCategoryId} = await user.getCategoryInfo();
+      const {userCategoryData, userCategoryId} = await user.getCategoryInfo() || {};
       if (user) {
         req.userDetails = {
           exists: true,
@@ -95,5 +96,6 @@ router.use("/care-plan-templates", carePlanTemplateRouter);
 router.use("/notifications", notificationRouter);
 router.use("/symptoms", symptomRouter);
 router.use("/vitals", vitalRouter);
+router.use("/sync", syncRouter);
 
 module.exports = router;
