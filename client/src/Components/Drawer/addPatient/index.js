@@ -127,6 +127,18 @@ class PatientDetailsDrawer extends Component {
         }
     }
 
+    setPastedClinicalNotes = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text').trim();
+        }
+        if (pastedValue.length>0) {
+            this.setState({ clinical_notes:pastedValue  });
+        }
+    }
+
     setAllergies= e => {
       
         const  value  = e.target.value.trim();
@@ -160,6 +172,18 @@ class PatientDetailsDrawer extends Component {
     setPastedDiagnosis = e => {
         e.preventDefault();
         let pastedValue = '';
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text').trim();
+        }
+        if (pastedValue.length>0) {
+            this.setState({ diagnosis_description:pastedValue  });
+        }
+    }
+    
+    setPastedDiagnosis = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
