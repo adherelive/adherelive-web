@@ -91,7 +91,7 @@ class PatientDetailsDrawer extends Component {
     setComorbidities = e => {
         const  value  = e.target.value.trim();
         
-        if (value.length>0) {
+        if (value.length>0 || value === '') {
             this.setState({ comorbidities: e.target.value});
         }
     }
@@ -102,7 +102,7 @@ class PatientDetailsDrawer extends Component {
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
-        if (pastedValue.length>0) {
+        if (pastedValue.length>0 || pastedValue === '') {
             this.setState({ comorbidities:pastedValue  });
         }
     }
@@ -111,7 +111,7 @@ class PatientDetailsDrawer extends Component {
     setClinicalNotes = e => {
         const  value  = e.target.value.trim();
         
-        if (value.length>0) {
+        if (value.length>0 || value === '') {
             this.setState({ clinical_notes: e.target.value});
         }
     }
@@ -122,19 +122,7 @@ class PatientDetailsDrawer extends Component {
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
-        if (pastedValue.length>0) {
-            this.setState({ clinical_notes:pastedValue  });
-        }
-    }
-
-    setPastedClinicalNotes = e => {
-        e.preventDefault();
-        let pastedValue = '';
-        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        if(typeof(e.clipboardData) !== 'undefined'){
-            pastedValue = e.clipboardData.getData('text').trim();
-        }
-        if (pastedValue.length>0) {
+        if (pastedValue.length>0 || pastedValue === '') {
             this.setState({ clinical_notes:pastedValue  });
         }
     }
@@ -143,7 +131,7 @@ class PatientDetailsDrawer extends Component {
       
         const  value  = e.target.value.trim();
         
-        if (value.length>0) {
+        if (value.length>0 || value === '') {
             this.setState({ allergies: e.target.value });
         }
     }
@@ -154,7 +142,7 @@ class PatientDetailsDrawer extends Component {
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
-        if (pastedValue.length>0) {
+        if (pastedValue.length>0 || pastedValue === '') {
             this.setState({ allergies:pastedValue  });
         }
     }
@@ -163,7 +151,7 @@ class PatientDetailsDrawer extends Component {
       
         const  value  = e.target.value.trim();
         
-        if (value.length>0) {
+        if (value.length>0 || value === '') {
             this.setState({ diagnosis_description: e.target.value });
         }
         
@@ -175,19 +163,7 @@ class PatientDetailsDrawer extends Component {
         if(typeof(e.clipboardData) !== 'undefined'){
             pastedValue = e.clipboardData.getData('text').trim();
         }
-        if (pastedValue.length>0) {
-            this.setState({ diagnosis_description:pastedValue  });
-        }
-    }
-    
-    setPastedDiagnosis = e => {
-        e.preventDefault();
-        let pastedValue = '';
-        // const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
-        if(typeof(e.clipboardData) !== 'undefined'){
-            pastedValue = e.clipboardData.getData('text').trim();
-        }
-        if (pastedValue.length>0) {
+        if (pastedValue.length>0 || pastedValue === '') {
             this.setState({ diagnosis_description:pastedValue  });
         }
     }
@@ -236,7 +212,6 @@ class PatientDetailsDrawer extends Component {
     };
 
     setDOB = e => {
-        // (date) => {
         this.setState({ date_of_birth: moment(e.target.value) });
     }
 
@@ -512,16 +487,13 @@ class PatientDetailsDrawer extends Component {
                     onSearch={this.handleConditionSearch}
                     notFoundContent={this.state.fetchingCondition ? <Spin size="small" /> : 'No match found'}
                     showSearch
-                    // onFocus={() => handleMedicineSearch("")}
                     autoComplete="off"
-                    // onFocus={() => handleMedicineSearch("")}
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                         option.props.children
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
-                // getPopupContainer={getParentNode}
 
                 >
                     {this.getConditionOption()}
@@ -538,16 +510,13 @@ class PatientDetailsDrawer extends Component {
                     onSearch={this.handleSeveritySearch}
                     notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : 'No match found'}
                     showSearch
-                    // onFocus={() => handleMedicineSearch("")}
                     autoComplete="off"
-                    // onFocus={() => handleMedicineSearch("")}
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                         option.props.children
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
-                // getPopupContainer={getParentNode}
 
                 >
                     {this.getSeverityOption()}
@@ -561,19 +530,16 @@ class PatientDetailsDrawer extends Component {
                     placeholder="Select Treatment"
                     value={this.state.treatment}
                     onChange={this.setTreatment}
-                    // onSearch={this.handleTreatmentSearch}
                     notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : 'No match found'}
                     showSearch
                     disabled={!condition}
                     autoComplete="off"
-                    // onFocus={() => handleMedicineSearch("")}
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                         option.props.children
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
-                // getPopupContainer={getParentNode}
 
                 >
                     {this.getTreatmentOption()}
@@ -587,7 +553,6 @@ class PatientDetailsDrawer extends Component {
     validateData = () => {
 
         const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type= '' } = this.state;
-        // console.log("diagnosis_type =========>",diagnosis_type);
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
         if (!prefix) {
@@ -677,8 +642,6 @@ class PatientDetailsDrawer extends Component {
                 <Drawer
                     title={this.formatMessage(messages.addPatient)}
                     placement="right"
-                    // closable={false}
-                    // closeIcon={<img src={backArrow} />}
                     maskClosable={false}
                     headerStyle={{
                         position: "sticky",

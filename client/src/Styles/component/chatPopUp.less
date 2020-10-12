@@ -270,8 +270,9 @@
   padding:10px 0px;
   min-height:200px;
   height:auto;
-  width:450px;
-  // width: auto;
+  width:90%;
+  max-width: 450px;
+  width: 80%;
   background-color:whitesmoke;
   border-radius: 15px;
 }
@@ -301,7 +302,6 @@
     padding:2px;
     font-size:17px;
     font-weight:normal;
-    
     }
   }
   
@@ -318,7 +318,7 @@
     height: auto;
     object-fit: fill;
     margin: 0px;
-}
+  }
 }
 
 
@@ -331,20 +331,43 @@
   
   
 }
-
-
-
 .text-msg-container{
   max-width: 100%;
   &>span{
     font-size: 1rem;
     color: #212b36;
     text-align: left;
+    overflow-wrap: anywhere;
     max-width: 100% ;
-
   }
 }
 
 .symptom-audio, .symptom-video, .symptom-image{
   max-width: 100% ;
+}
+
+.close-reply {
+  position: absolute;
+  right: 5%;
+  top: 30%;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+.close-reply:hover {
+  opacity: 1;
+}
+.close-reply:before, .close-reply:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.close-reply:before {
+  transform: rotate(45deg);
+}
+.close-reply:after {
+  transform: rotate(-45deg);
 }
