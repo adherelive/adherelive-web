@@ -212,7 +212,6 @@ class PatientDetailsDrawer extends Component {
     };
 
     setDOB = e => {
-        // (date) => {
         this.setState({ date_of_birth: moment(e.target.value) });
     }
 
@@ -416,7 +415,7 @@ class PatientDetailsDrawer extends Component {
                     value={comorbidities}
                     className={"form-textarea-ap"}
                     onChange={this.setComorbidities}
-                    // onPaste={this.setPastedComorbidities}
+                    onPaste={this.setPastedComorbidities}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
@@ -426,7 +425,7 @@ class PatientDetailsDrawer extends Component {
                     value={allergies}
                     className={"form-textarea-ap"}
                     onChange={this.setAllergies}
-                    // onPaste={this.setPastedAllergies}
+                    onPaste={this.setPastedAllergies}
                 />
 
                 
@@ -441,7 +440,7 @@ class PatientDetailsDrawer extends Component {
                     value={clinical_notes}
                     className={"form-textarea-ap "}
                     onChange={this.setClinicalNotes}
-                    // onPaste={this.setPastedClinicalNotes}
+                    onPaste={this.setPastedClinicalNotes}
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>
@@ -474,7 +473,7 @@ class PatientDetailsDrawer extends Component {
                     value={diagnosis_description}
                     className={"form-textarea-ap"}
                     onChange={this.setDiagnosis}
-                    // onPaste={this.setPastedDiagnosis}
+                    onPaste={this.setPastedDiagnosis}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}<div className="star-red">*</div></div>
@@ -488,16 +487,13 @@ class PatientDetailsDrawer extends Component {
                     onSearch={this.handleConditionSearch}
                     notFoundContent={this.state.fetchingCondition ? <Spin size="small" /> : 'No match found'}
                     showSearch
-                    // onFocus={() => handleMedicineSearch("")}
                     autoComplete="off"
-                    // onFocus={() => handleMedicineSearch("")}
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                         option.props.children
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
-                // getPopupContainer={getParentNode}
 
                 >
                     {this.getConditionOption()}
@@ -514,16 +510,13 @@ class PatientDetailsDrawer extends Component {
                     onSearch={this.handleSeveritySearch}
                     notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : 'No match found'}
                     showSearch
-                    // onFocus={() => handleMedicineSearch("")}
                     autoComplete="off"
-                    // onFocus={() => handleMedicineSearch("")}
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                         option.props.children
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
-                // getPopupContainer={getParentNode}
 
                 >
                     {this.getSeverityOption()}
@@ -537,19 +530,16 @@ class PatientDetailsDrawer extends Component {
                     placeholder="Select Treatment"
                     value={this.state.treatment}
                     onChange={this.setTreatment}
-                    // onSearch={this.handleTreatmentSearch}
                     notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : 'No match found'}
                     showSearch
                     disabled={!condition}
                     autoComplete="off"
-                    // onFocus={() => handleMedicineSearch("")}
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                         option.props.children
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
-                // getPopupContainer={getParentNode}
 
                 >
                     {this.getTreatmentOption()}
@@ -563,7 +553,6 @@ class PatientDetailsDrawer extends Component {
     validateData = () => {
 
         const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type= '' } = this.state;
-        // console.log("diagnosis_type =========>",diagnosis_type);
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
         if (!prefix) {
@@ -653,8 +642,6 @@ class PatientDetailsDrawer extends Component {
                 <Drawer
                     title={this.formatMessage(messages.addPatient)}
                     placement="right"
-                    // closable={false}
-                    // closeIcon={<img src={backArrow} />}
                     maskClosable={false}
                     headerStyle={{
                         position: "sticky",
