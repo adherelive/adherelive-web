@@ -55,14 +55,11 @@ class MPatientController extends Controller {
       const { userId = "3" } = userDetails || {};
 
       if (email) {
-        const updateUserDetails = await userService.updateEmail(email, userId);
+        const updateUserDetails = await userService.updateEmail({email}, userId);
       }
 
       if(Object.keys(timings).length > 0) {
         const {value} = timings["1"];
-        Logger.debug("update timing pref 1", moment(value).format());
-        Logger.debug("update timing pref 2", moment.utc(value).format());
-        Logger.debug("update timing pref 3", moment.timezone);
         const addTimingPreference = await UserPreferenceService.addUserPreference({
           user_id: userId,
           details: {
