@@ -25,7 +25,7 @@ class vitalBotMessage extends Component{
                
                 <span 
                 onClick={this.replyToMessage}
-                className="h-cursor-p"
+                className="h-cursor-p "
                 meta-id={`${message.state.sid}-vital`}
                 > &hellip;</span>
                 
@@ -35,14 +35,13 @@ class vitalBotMessage extends Component{
 
     replyToMessage = (e) => {
         e.preventDefault();
-        const {updateReplyMessadeId} = this.props;
-        if(typeof(updateReplyMessadeId) !== 'undefined'){
+        const {updateReplyMessageId} = this.props;
+        if(typeof(updateReplyMessageId) === 'function'){
            
             const node = e.target;
 
             const id = node.getAttribute("meta-id");
-            console.log("id  ===>",id);
-            updateReplyMessadeId(id);
+            updateReplyMessageId(id);
         }
       
       
@@ -105,7 +104,7 @@ class vitalBotMessage extends Component{
                         </div>
                    
                     </div>
-                    <Button  className="wp100 color-white bg-ocean-green position absolute h40 b0 fs20 " >
+                    <Button  className="wp100 color-white bg-ocean-green position absolute h40 b0 fs-1rem " >
                     {/* <img src={} className="edit-medication-icon"/> */}
                      Add Medication/Pres
                     </Button>
