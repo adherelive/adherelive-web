@@ -799,7 +799,7 @@ class DoctorController extends Controller {
       let last_name = "";
 
       if (name) {
-        let patientName = name.split(" ");
+        let patientName = name.trim().split(" ");
         first_name = patientName[0];
         middle_name = patientName.length == 3 ? patientName[1] : "";
         last_name =

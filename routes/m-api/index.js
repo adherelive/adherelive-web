@@ -45,7 +45,7 @@ router.use(async (req, res, next) => {
 
       const userData = await userService.getUser(userId);
       const user = await UserWrapper(userData);
-      const { userCategoryData, userCategoryId } = await user.getCategoryInfo();
+      const {userCategoryData, userCategoryId} = await user.getCategoryInfo() || {};
       if (user) {
         req.userDetails = {
           exists: true,

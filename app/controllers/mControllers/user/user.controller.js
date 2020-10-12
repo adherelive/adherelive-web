@@ -453,6 +453,8 @@ class MobileUserController extends Controller {
               ...apiUserDetails.getBasicInfo()
             }
           },
+          auth_user: apiUserDetails.getId(),
+          auth_category: apiUserDetails.getCategory()
         },
         "Sign up successful"
       );
