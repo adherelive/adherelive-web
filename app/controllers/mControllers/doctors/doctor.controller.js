@@ -29,7 +29,7 @@ import Log from "../../../../libs/log";
 import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME,
-  ONBOARDING_STATUS,
+  ONBOARDING_STATUS, PATIENT_MEAL_TIMINGS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY, VERIFICATION_TYPE
 } from "../../../../constant";
@@ -63,6 +63,7 @@ import getUniversalLink from "../../../helper/universalLink";
 import getAge from "../../../helper/getAge";
 import {getSeparateName} from "../../../helper/common";
 import {EVENTS, Proxy_Sdk} from "../../../proxySdk";
+import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -242,6 +243,13 @@ class MobileDoctorController extends Controller {
             type: diagnosis_type,
             description: diagnosis_description
           },
+        }
+      });
+
+      const addTimingPreference = await UserPreferenceService.addUserPreference({
+        user_id: newUserId,
+        details: {
+          timings: PATIENT_MEAL_TIMINGS
         }
       });
 
