@@ -142,7 +142,12 @@ class UserService {
                 where: {
                     category: USER_CATEGORY.PATIENT,
                     mobile_number,
-                }
+                },
+                include: [
+                    {
+                        model: Database.getModel(patientTableName)
+                    }
+                ]
             });
             return user;
         } catch (err) {

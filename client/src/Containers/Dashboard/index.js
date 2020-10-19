@@ -10,6 +10,8 @@ import { getGraphs, updateGraphs } from "../../modules/graphs";
 import { connect } from "react-redux";
 import { closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
+import {searchPatientFromNum} from "../../modules/patients";
+import {addToWatchlist} from "../../modules/doctors";
 
 const mapStateToProps = state => {
     const { graphs, auth: { authPermissions = [], authenticated_user = 1 } = {},
@@ -44,6 +46,8 @@ const mapDispatchToProps = dispatch => {
         addPatient: (data) => dispatch(addPatient(data)),
         closePopUp: () => dispatch(closePopUp()),
         fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
+        searchPatientFromNum: (value) => dispatch(searchPatientFromNum(value)),
+        addToWatchlist:(patient_id) => dispatch(addToWatchlist(patient_id))
     };
 };
 

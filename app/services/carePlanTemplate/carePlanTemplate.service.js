@@ -69,17 +69,14 @@ class CarePlanTemplateService {
 
   getCarePlanTemplateData = async data => {
     try {
-      const { user_id, treatment_id, severity_id, condition_id } = data;
+      const { user_id, treatment_id } = data;
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
               treatment_id: { [Op.eq]: treatment_id },
-              severity_id: { [Op.eq]: severity_id },
-              condition_id: { [Op.eq]: condition_id }
             },
             {
-              condition_id: { [Op.eq]: condition_id },
               user_id: { [Op.eq]: user_id }
             }
           ]

@@ -1,7 +1,12 @@
 import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
+import ConsentService from "../../../services/consents/consent.service";
+import carePlanService from "../../../services/carePlan/carePlan.service";
 
 import SpecialityWrapper from "../speciality";
+import ConsentWrapper from "../../mobile/consent";
+import CarePlanWrapper from "../../mobile/carePlan";
+
 import {completePath} from "../../../helper/filePath";
 
 class MDoctorWrapper extends BaseDoctor {
@@ -62,12 +67,91 @@ class MDoctorWrapper extends BaseDoctor {
             activated_on
         };
     }
+
+    getAllInfo = async () => {
+        const {_data} = this;
+        const {
+            id,
+            user_id,
+            gender,
+            first_name,
+            middle_name,
+            last_name,
+            qualifications,
+            activated_on,
+            profile_pic,
+            city,
+            speciality_id
+        } = _data || {};
+
+        const consentService = new ConsentService();
+        const consents = await consentService.getAllByData({doctor_id: id});
+        const watchlistPatients = await doctorService.getAllWatchlist({doctor_id: id});
+
+        let watchlist_patient_ids = [];
+
+        if(watchlistPatients.length > 0) {
+            for(const watchlist of watchlistPatients) {
+                watchlist_patient_ids.push(watchlist.patient_id);
+            }
+        }
+
+        const patientIds = [];
+        if(consents.length > 0) {
+            for(const consentData of consents) {
+                const consent = await ConsentWrapper({data: consentData});
+                patientIds.push(consent.getPatientId());
+            }
+        }
+
+        const carePlansDoctor = await carePlanService.getMultipleCarePlanByData({doctor_id: id}) || [];
+        const carePlansPatient = await carePlanService.getMultipleCarePlanByData({patient_id: patientIds}) || [];
+
+        const carePlanIds = [];
+
+        let carePlans = [...carePlansDoctor, ...carePlansPatient];
+
+        if(carePlans.length > 0) {
+
+            carePlans.sort((carePlanA, carePlanB) => {
+                if(carePlanA.get("expired_on")) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+
+            for(const carePlanData of carePlans) {
+                const carePlan = await CarePlanWrapper(carePlanData);
+                if(!carePlanIds.includes(carePlan.getCarePlanId()))
+                    carePlanIds.push(carePlan.getCarePlanId());
+            }
+        }
+
+        return {
+            basic_info: {
+                id,
+                user_id,
+                gender,
+                first_name,
+                middle_name,
+                last_name,
+                speciality_id,
+                profile_pic: completePath(profile_pic)
+            },
+            city,
+            qualifications,
+            activated_on,
+            care_plan_ids: carePlanIds,
+            watchlist_patient_ids
+        };
+    };
 }
 
-export default async (data = null, userId = null) => {
+export default async (data = null, id = null) => {
     if(data) {
         return new MDoctorWrapper(data);
     }
-    const doctor = await doctorService.getDoctorByData({user_id: userId});
+    const doctor = await doctorService.getDoctorByData({id});
     return new MDoctorWrapper(doctor);
 }

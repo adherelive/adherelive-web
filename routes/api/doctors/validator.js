@@ -26,8 +26,8 @@ const addPatientForm = Joi.object().keys({
     diagnosis_type: Joi.number().required(),
     diagnosis_description: Joi.string().trim().max(500).required(),
     treatment_id: Joi.number().required().label("Incorrect Treatment value selected"),
-    severity_id: Joi.number().required().label("Incorrect Severity value selected"),
-    condition_id: Joi.number().required().label("Incorrect Condition value selected"),
+    severity_id: Joi.number().optional().allow("", null).label("Incorrect Severity value selected"),
+    condition_id: Joi.number().optional().allow("", null).label("Incorrect Condition value selected"),
 });
 
 const addQualificationRegistrationForm = Joi.object().keys({

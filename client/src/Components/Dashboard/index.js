@@ -5,6 +5,7 @@ import { PERMISSIONS } from "../../constant";
 import Tabs from "antd/es/tabs";
 import { Button, Menu, Dropdown, Spin, message } from "antd";
 import Patients from "../../Containers/Patient/table";
+import Watchlist from "../../Containers/Patient/watchlist";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
@@ -29,11 +30,13 @@ class Dashboard extends Component {
             visible: false,
             visibleModal: false,
             graphsToShow: [],
-            doctorUserId: 1
+            doctorUserId: 1,
+            isWatchlisVisible:false
         };
     }
 
     componentDidMount() {
+        const {addToWatchlist} = this.props;
         const { searchMedicine, getGraphs, doctors = {}, authenticated_user, closePopUp, fetchChatAccessToken } = this.props;
         closePopUp();
         let doctorUserId = '';   //user_id of doctor
@@ -109,6 +112,8 @@ class Dashboard extends Component {
         this.setState({ visibleModal: true });
     }
 
+    
+
     addPatient = (data) => {
 
         const { addPatient, authenticated_user, getInitialData } = this.props;
@@ -178,8 +183,11 @@ class Dashboard extends Component {
             twilio: { patientId: chatPatientId = 1 } } = this.props;
         window.open(`${config.WEB_URL}${getPatientConsultingUrl(chatPatientId)}`, '_blank');
     }
+
+  
     render() {
-        const { graphs,
+        const {
+             graphs,
             treatments,
             conditions,
             severity,
@@ -234,11 +242,13 @@ class Dashboard extends Component {
                         >
                             <Patients />
                         </TabPane>
+
                         <TabPane
                             tab={<span className="fs16 fw600">{formatMessage(messages.watchList)}</span>}
                             key="2"
                         >
-                            <Patients />
+                            {/* <Patients /> */}
+                            <Watchlist/>
                             {/*add watchlist table here*/}
                         </TabPane>
                     </Tabs>
@@ -259,7 +269,9 @@ class Dashboard extends Component {
                     searchCondition={this.props.searchCondition}
                     searchTreatment={this.props.searchTreatment}
                     searchSeverity={this.props.searchSeverity}
-                    treatments={treatments} conditions={conditions} severity={severity} close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient} />
+                    searchPatientFromNum={this.props.searchPatientFromNum}
+                    treatments={treatments} conditions={conditions} severity={severity} close={this.hideAddPatientDrawer} visible={visible} submit={this.addPatient}
+                    patients={patients} />
                 {visibleModal && (<GraphsModal visible={visibleModal} handleCancel={this.hideEditGraphModal} handleOk={this.editDisplayGraphs} selectedGraphs={graphsToShow} />)}
                 <NotificationDrawer />
             </Fragment>

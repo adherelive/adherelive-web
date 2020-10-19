@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
@@ -9,9 +9,13 @@ import {
   TABLET,
   SYRUP,
   PARTS,
-  PART_LIST_CODES,
+  PART_LIST_CODES
 } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
+import Modal from "antd/es/modal";
+import Collapse from "antd/es/collapse";
+
+import OtpInput from "react-otp-input";
 
 // DRAWERS
 import VitalTimelineDrawer from "../../../Containers/Drawer/vitalTimeline";
@@ -20,6 +24,8 @@ import VitalTimelineDrawer from "../../../Containers/Drawer/vitalTimeline";
 import VitalTable from "../../../Containers/Vitals/table";
 
 import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
+
+import PatientCarePlans from "./common/patientProfileCarePlans";
 
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -42,12 +48,14 @@ import SymptomTabs from "../../../Containers/Symptoms";
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
 import EditVitals from "../../../Containers/Drawer/editVitals";
-import {getRoomId} from "../../../Helper/twilio";
-
+import { getRoomId } from "../../../Helper/twilio";
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
+
+const { confirm } = Modal;
+const {Panel} = Collapse;
 
 const PATIENT_TABS = {
   ACTIONS: {
@@ -55,7 +63,6 @@ const PATIENT_TABS = {
     key: "4"
   }
 };
-
 
 const columns_medication = [
   {
@@ -282,13 +289,15 @@ const PatientCard = ({
   patient_last_name,
   gender = "m",
   patient_age = "--",
-  patient_id = "123456",
+  uid = "123456",
   patient_phone_number,
   patient_email_id,
   formatMessage,
-  openChat
+  openChat,
+    patients,
+    patient_id
 }) => {
-  
+  const {details: {comorbidities, allergies} = {}} = patients[patient_id] || {};
   return (
     <div className="patient-card tac">
       <img
@@ -301,7 +310,7 @@ const PatientCard = ({
         {gender ? `${GENDER[gender].view} ` : ""}
         {patient_age})
       </div>
-      <div className="patient-id mt6 mr0 mb0 ml0 ">PID: {patient_id}</div>
+      <div className="patient-id mt6 mr0 mb0 ml0 ">PID: {uid}</div>
       <div className="patient-contact-number mt16 mr0 mb0 ml0 flex direction-row justify-center align-center">
         <PhoneOutlined className="dark-sky-blue mr8" />
         <div>{patient_phone_number}</div>
@@ -310,6 +319,29 @@ const PatientCard = ({
         {patient_email_id && <MailOutlined className="dark-sky-blue mr8" />}
         {patient_email_id && <div>{patient_email_id}</div>}
       </div>
+
+      {/*show more*/}
+      {/*<div>*/}
+        <Collapse ghost={true} expandIconPosition={"right"}>
+          <Panel header={formatMessage(messages.show_more_text)} key={"1"}>
+
+            {/*comorbidities*/}
+            <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.comorbidities_text)}</div>
+              <div className="fs14 fw500 flex justify-start">{comorbidities}</div>
+            </div>
+
+            {/*allergies*/}
+            <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.allergies_text)}</div>
+              <div className="fs14 fw500">{allergies}</div>
+            </div>
+
+          </Panel>
+        </Collapse>
+      {/*</div>*/}
+
+
       <div className="action-buttons flex">
         <div className="edit-button p10">
           <img className="mr5" src={edit_image} />
@@ -415,17 +447,20 @@ const PatientAlertCard = ({
 class PatientDetails extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       loading: true,
       templateDrawerVisible: false,
       carePlanTemplateExists: false,
       carePlanTemplateIds: [],
-      appointmentsListIds:[],
+      appointmentsListIds: [],
       symptoms: [
         { body_part: PARTS.HEAD, description: "werwerewrwer" },
         { body_part: PARTS.CHEST, description: "342342352343" }
-      ]
+      ],
+      consentLoading: false,
+      selectedCarePlanId: null,
+      isOtherCarePlan: true
     };
   }
 
@@ -451,34 +486,44 @@ class PatientDetails extends Component {
     }
 
     fetchChatAccessToken(authenticated_user);
-    
+
     // if (showTd) {
-      getPatientCarePlanDetails(patient_id).then(response => {
-        let { status = false, payload = {} } = response;
-        if (status) {
-          let {
-            data: {
-              show = false,
-              care_plan_templates = {},
-              care_plan_template_ids = []
-            } = {}
-          } = payload;
+    getPatientCarePlanDetails(patient_id).then(response => {
+      let { status = false, payload = {} } = response;
+      if (status) {
+        let {
+          data: {
+            show = false,
+            care_plan_templates = {},
+            care_plan_template_ids = [],
+            care_plan_ids = [],
+            current_careplan_id = null
+          } = {}
+        } = payload;
 
-          // const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
+        // const { basic_info: { id: carePlanTemplateId = 0 } } = care_plan_templates[Object.keys(care_plan_templates)[0]];
 
-          let carePlanTemplateExists =
-            care_plan_templates && Object.values(care_plan_templates).length
-              ? true
-              : false;
+        let carePlanTemplateExists =
+          care_plan_templates && Object.values(care_plan_templates).length
+            ? true
+            : false;
 
-          this.setState({ carePlanTemplateId, carePlanTemplateExists, loading: false });
-        }
-      });
-      
-      getMedications(patient_id);
-      getAppointmentsDetails();
-      getAppointments(patient_id);
-      
+        this.setState({
+          carePlanTemplateId,
+          carePlanTemplateExists,
+          loading: false,
+          patientCarePlanIds: care_plan_ids,
+          current_careplan_id,
+          isOtherCarePlan: false,
+          selectedCarePlanId: current_careplan_id
+        });
+      }
+    });
+
+    getMedications(patient_id);
+    getAppointmentsDetails();
+    getAppointments(patient_id);
+
     // }
     // searchMedicine("");
     let carePlanTemplateId = 0;
@@ -862,10 +907,10 @@ class PatientDetails extends Component {
       onClick: onRowClickSymptoms(record)
     };
   };
-  
+
   handlePatientLastVisitAlert = () => {
-    const {getLastVisitAlerts,patient_id} = this.props;
- 
+    const { getLastVisitAlerts, patient_id } = this.props;
+
     getLastVisitAlerts(patient_id).then(response => {
       const {
         status = false,
@@ -875,20 +920,14 @@ class PatientDetails extends Component {
           message: errorMessage = ""
         } = {}
       } = response;
-      
-      if(status){
+
+      if (status) {
         let data = response.payload.data;
-        
-      }else {
-          message.error(this.formatMessage(messages.somethingWentWrong));
-        }
+      } else {
+        message.error(this.formatMessage(messages.somethingWentWrong));
       }
-      
-    );
-    
-  }
-  
-  
+    });
+  };
 
   handleSubmitTemplate = data => {
     const {
@@ -899,7 +938,7 @@ class PatientDetails extends Component {
       patient_id,
       getPatientCarePlanDetails
     } = this.props;
-    
+
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
       let {
@@ -953,20 +992,20 @@ class PatientDetails extends Component {
     );
   };
 
-  handleSymptoms = (e) => {
+  handleSymptoms = e => {
     const { openSymptomsDrawer, patient_id } = this.props;
     openSymptomsDrawer({
-      patient_id,
+      patient_id
     });
   };
 
   onCloseTemplate = () => {
     this.setState({ templateDrawerVisible: false });
-  }
+  };
 
   showTemplateDrawer = () => {
     this.setState({ templateDrawerVisible: true });
-  }
+  };
   onRowClickAppointment = key => event => {
     const { openEditAppointmentDrawer, patient_id } = this.props;
     openEditAppointmentDrawer({ id: key, patient_id });
@@ -995,18 +1034,33 @@ class PatientDetails extends Component {
     };
   };
 
-  handleSubmitTemplate = (data) => {
-    const { addCarePlanMedicationsAndAppointments, getMedications, getAppointments, care_plans, patient_id, getPatientCarePlanDetails } = this.props;
+  handleSubmitTemplate = data => {
+    const {
+      addCarePlanMedicationsAndAppointments,
+      getMedications,
+      getAppointments,
+      care_plans,
+      patient_id,
+      getPatientCarePlanDetails
+    } = this.props;
     let carePlanId = 1;
     for (let carePlan of Object.values(care_plans)) {
-      let { basic_info: { id = 1, patient_id: patientId = 1 } } = carePlan;
+      let {
+        basic_info: { id = 1, patient_id: patientId = 1 }
+      } = carePlan;
       if (patient_id == patientId) {
         carePlanId = id;
       }
-
     }
     addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
-      const { status = false, statusCode, payload: { error: { error_type = '' } = {}, message: errorMessage = '' } = {} } = response;
+      const {
+        status = false,
+        statusCode,
+        payload: {
+          error: { error_type = "" } = {},
+          message: errorMessage = ""
+        } = {}
+      } = response;
       if (status) {
         this.onCloseTemplate();
 
@@ -1014,31 +1068,146 @@ class PatientDetails extends Component {
         getMedications(patient_id).then(() => {
           getAppointments(patient_id).then(() => {
             getPatientCarePlanDetails(patient_id);
-          })
-        })
+          });
+        });
       } else {
-        if (statusCode === 422 && error_type == 'slot_present') {
-          message.error(this.formatMessage(messages.slotPresent))
+        if (statusCode === 422 && error_type == "slot_present") {
+          message.error(this.formatMessage(messages.slotPresent));
         } else if (statusCode === 422) {
-
-          message.error(errorMessage)
+          message.error(errorMessage);
         } else {
-          message.error(this.formatMessage(messages.somethingWentWrong))
+          message.error(this.formatMessage(messages.somethingWentWrong));
         }
       }
     });
-  }
-  openVideoChatTab = (roomId) => () => {
-
-    window.open(`${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`, '_blank');
-  }
+  };
+  openVideoChatTab = roomId => () => {
+    window.open(
+      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      "_blank"
+    );
+  };
 
   maximizeChat = () => {
-    const {
-      patient_id } = this.props;
-    window.open(`${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`, '_blank');
-  }
+    const { patient_id } = this.props;
+    window.open(
+      `${config.WEB_URL}${getPatientConsultingUrl(patient_id)}`,
+      "_blank"
+    );
+  };
 
+  consentConfirmModal = () => {
+    const { intl: { formatMessage } = {} } = this.props;
+    return (
+      <div className="flex align-center">
+        {formatMessage(messages.consent_details_text)}
+      </div>
+    );
+  };
+
+  handleOtpModal = show => {
+    this.setState({ showOtpModal: show });
+  };
+
+  handleRequestConsent = () => {
+    const { requestConsent, patient_id } = this.props;
+    const { consentLoading } = this.state;
+    const { consentConfirmModal, closeConfirm, handleOtpModal } = this;
+
+    confirm({
+      content: consentConfirmModal(),
+      okButtonProps: {
+        loading: consentLoading
+      },
+      onOk: async () => {
+        this.setState({ consentLoading: true });
+        const response = await requestConsent(patient_id);
+        const { status, payload: { data: { user_id: otpUserId } = {} } = {} } =
+          response || {};
+        if (status === true) {
+          this.setState({ otpUserId });
+        }
+        this.setState({ consentLoading: false });
+        handleOtpModal(true);
+      },
+      onCancel() {
+        // closeConfirm();
+      }
+    });
+  };
+
+  updateOtp = otp => {
+    this.setState({ otp });
+  };
+
+  getConsentDetails = () => {
+    const { intl: { formatMessage } = {} } = this.props;
+    const { otp } = this.state;
+    const { updateOtp } = this;
+    return (
+      <div>
+        <div className="wp100 flex justify-center fs18 fw500 mb20">
+          {formatMessage(messages.enter_otp_text)}
+        </div>
+        <div className="wp100 justify-space-evenly">
+          <OtpInput
+            value={otp}
+            onChange={updateOtp}
+            numInputs={4}
+            shouldAutoFocus={true}
+            className="wp100 flex justify-space-evenly"
+            inputStyle={{ width: "50%", height: "100%", margin: 10 }}
+            focusStyle={{ border: "2px solid #4a90e2" }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  handleOtpVerify = async () => {
+    const { consentVerify } = this.props;
+    const { otp, otpUserId } = this.state;
+
+    const response = await consentVerify({ otp, user_id: otpUserId });
+    const { status, message: errMessage = "error" } = response || {};
+    if (status === true) {
+      message.success("OTP verified successfully");
+      this.setState({ showOtpModal: false });
+    } else {
+      message.warn(errMessage);
+    }
+  };
+
+  handleOtpCancel = e => {
+    e.preventDefault();
+    this.handleOtpModal(false);
+  };
+
+  handleCarePlanChange = id => e => {
+    e.preventDefault();
+    const { doctors, care_plans, authenticated_user } = this.props;
+
+    let doctorId = null;
+
+    Object.keys(doctors).forEach(id => {
+      const { basic_info: { user_id } = {} } = doctors[id] || {};
+
+      if (user_id === authenticated_user) {
+        doctorId = id;
+      }
+    });
+
+    let isOtherCarePlan = true;
+
+    const {
+      basic_info: { doctor_id }
+    } = care_plans[id] || {};
+    if (doctorId === `${doctor_id}`) {
+      isOtherCarePlan = false;
+    }
+
+    this.setState({ selectedCarePlanId: id, isOtherCarePlan });
+  };
 
   render() {
     let {
@@ -1058,14 +1227,20 @@ class PatientDetails extends Component {
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {},
       care_plan_template_ids = {},
-      symptoms = {}
+      symptoms = {},
+      authenticated_user = null
     } = this.props;
     const {
       loading,
       templateDrawerVisible = false,
       carePlanTemplateId = 0,
       carePlanTemplateExists = false,
-      carePlanTemplateIds = []
+      carePlanTemplateIds = [],
+      patientCarePlanIds = [],
+      showOtpModal,
+      selectedCarePlanId,
+      current_careplan_id,
+      isOtherCarePlan
     } = this.state;
 
     const {
@@ -1076,7 +1251,12 @@ class PatientDetails extends Component {
       onCloseTemplate,
       onRowAppointment,
       onRowMedication,
-      onRowSymptoms
+      onRowSymptoms,
+      handleRequestConsent,
+      getConsentDetails,
+      handleOtpVerify,
+      handleOtpCancel,
+      handleCarePlanChange
     } = this;
 
     if (loading) {
@@ -1087,21 +1267,41 @@ class PatientDetails extends Component {
       );
     }
 
+    let doctorId = null;
+
+    Object.keys(doctors).forEach(id => {
+      const { basic_info: { user_id } = {} } = doctors[id] || {};
+
+      if (user_id === authenticated_user) {
+        doctorId = id;
+      }
+    });
+
     let { basic_info: { name: firstTemplateName = "" } = {} } =
       care_plan_templates[care_plan_template_ids[0]] || {};
 
     // todo: dummy careplan
-    let carePlanId = 1;
+    let carePlanId = selectedCarePlanId;
     let cPAppointmentIds = [];
     let cPMedicationIds = [];
     let vitalIds = [];
+
     for (let carePlan of Object.values(care_plans)) {
       let {
-        basic_info: { id = 1, patient_id: patientId = 1 }
+        basic_info: { id = 1, doctor_id }
       } = carePlan;
-      if (parseInt(patient_id) === parseInt(patientId)) {
-        carePlanId = id;
-        let { appointment_ids = [], medication_ids = [], vital_ids = [] } = carePlan;
+      if (doctorId === `${doctor_id}`) {
+        if (carePlanId === null) {
+          carePlanId = id;
+        }
+      }
+
+      if (id === selectedCarePlanId) {
+        let {
+          appointment_ids = [],
+          medication_ids = [],
+          vital_ids = []
+        } = carePlan;
 
         cPAppointmentIds = appointment_ids;
         cPMedicationIds = medication_ids;
@@ -1112,9 +1312,7 @@ class PatientDetails extends Component {
     const {
       basic_info: { doctor_id = 1 } = {},
       activated_on: treatment_start_date,
-      treatment_id = "",
-      severity_id = "",
-      condition_id = ""
+      details: { treatment_id = "", severity_id = "", condition_id = "" } = {}
     } = care_plans[carePlanId] || {};
     const { basic_info: { name: treatment = "" } = {} } =
       treatments[treatment_id] || {};
@@ -1161,7 +1359,10 @@ class PatientDetails extends Component {
       showUseTemplate = false;
     }
 
-    let showTabs = (cPAppointmentIds.length || cPMedicationIds.length || vitalIds.length) ? true : false;
+    let showTabs =
+      cPAppointmentIds.length || cPMedicationIds.length || vitalIds.length
+        ? true
+        : false;
     const {
       basic_info: {
         first_name,
@@ -1201,9 +1402,10 @@ class PatientDetails extends Component {
     } = this.props.user_details;
 
     let showAddButton =
-      authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) ||
-      authPermissions.includes(PERMISSIONS.ADD_MEDICATION) ||
-      authPermissions.includes(PERMISSIONS.ADD_ACTION);
+      (authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) ||
+        authPermissions.includes(PERMISSIONS.ADD_MEDICATION) ||
+        authPermissions.includes(PERMISSIONS.ADD_ACTION)) &&
+      !isOtherCarePlan;
 
     // const {
     //   alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {},
@@ -1219,204 +1421,241 @@ class PatientDetails extends Component {
     //   new_symptoms.length > 0 ? new_symptoms.map((e) => e).join(", ") : "";
 
     return (
-      
-      <div className="pt10 pr10 pb10 pl10">
-      
-        <PatientProfileHeader
-          formatMessage={formatMessage}
-          getMenu={getMenu}
-          showAddButton={showAddButton}
-        />
-        
-        <div className="flex">
-        
-          <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
-          
-            <PatientCard
-              patient_display_picture={patient_display_picture}
-              patient_first_name={first_name}
-              patient_middle_name={middle_name}
-              patient_last_name={last_name}
-              patient_id={uid}
-              gender={gender}
-              patient_age={age}
-              patient_phone_number={`${
-                prefix ? `+${prefix} ` : ""
-              }${mobile_number}`}
-              patient_email_id={email ? email : ""}
-              formatMessage={formatMessage}
-              openChat={openPopUp}
-            />
-            
-            <PatientTreatmentCard
-            
-              formatMessage={formatMessage}
-              treatment_name={treatment ? treatment : "--"}
-              treatment_condition={condition ? condition : "--"}
-              treatment_doctor={
-                doctor_first_name
-                  ? `${doctor_first_name} ${
-                      doctor_middle_name ? `${doctor_middle_name} ` : ""
-                    }${doctor_last_name}`
-                  : "--"
-              }
-              treatment_start_date={
-                treatment_start_date
-                  ? moment(treatment_start_date).format("Do MMM YYYY")
-                  : "--"
-              }
-              treatment_provider={
-                treatment_provider ? treatment_provider : "--"
-              }
-              treatment_severity_status={severity ? severity : "--"}
-            />
-            
-          </div>
-          
-          
-           
-          
-          <div className="flex-grow-1 direction-column align-center pt20 pr24 pb20 pl24 ola123">
+      <Fragment>
+        <div className="pt10 pr10 pb10 pl10">
+          <PatientProfileHeader
+            formatMessage={formatMessage}
+            getMenu={getMenu}
+            showAddButton={showAddButton}
+          />
 
-            {<PatientAlerts patientId={patient_id}/>}
-            
-            
-           {/* <div className="last-visit-alerts" >*/}
-           {/*   <div className="last-visit-h-container" >*/}
-           {/*     <span >Alerts from last visit</span>  */}
-           {/*   </div>*/}
-           {/*   */}
-           {/*   <div className="last-visit-details">*/}
-           {/*    */}
-           {/*   </div>*/}
-           {/*       */}
-           {/*</div>*/}
-           
-           
-            {!showTabs && (
-              <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
-                <img src={noMedication} className="w200 h200" />
-                <div className="fs20 fw700">
-                  {formatMessage(messages.nothing_to_show)}
-                </div>
-                {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
-                <div
-                  className="use-template-button"
-                  onClick={this.showTemplateDrawer}
-                >
-                  <div>
-                    {firstTemplateName === BLANK_TEMPLATE
-                      ? formatMessage(messages.create_template)
-                      : formatMessage(messages.use_template)}
+          <div className="flex">
+            <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
+              <PatientCard
+                patient_display_picture={patient_display_picture}
+                patient_first_name={first_name}
+                patient_middle_name={middle_name}
+                patient_last_name={last_name}
+                uid={uid}
+                gender={gender}
+                patient_age={age}
+                patient_phone_number={`${
+                  prefix ? `+${prefix} ` : ""
+                }${mobile_number}`}
+                patient_email_id={email ? email : ""}
+                formatMessage={formatMessage}
+                openChat={openPopUp}
+                patients={patients}
+                patient_id={patient_id}
+              />
+
+              <PatientTreatmentCard
+                formatMessage={formatMessage}
+                treatment_name={treatment ? treatment : "--"}
+                treatment_condition={condition ? condition : "--"}
+                treatment_doctor={
+                  doctor_first_name
+                    ? `${doctor_first_name} ${
+                        doctor_middle_name ? `${doctor_middle_name} ` : ""
+                      }${doctor_last_name}`
+                    : "--"
+                }
+                treatment_start_date={
+                  treatment_start_date
+                    ? moment(treatment_start_date).format("Do MMM YYYY")
+                    : "--"
+                }
+                treatment_provider={
+                  treatment_provider ? treatment_provider : "--"
+                }
+                treatment_severity_status={severity ? severity : "--"}
+              />
+
+              {/*<PatientCarePlans {...this.props}  />*/}
+              <PatientCarePlans
+                {...this.props}
+                patientCarePlanIds={patientCarePlanIds}
+                handleRequestConsent={handleRequestConsent}
+                handleCarePlanChange={handleCarePlanChange}
+                selectedCarePlanId={selectedCarePlanId}
+                patient_id={patient_id}
+              />
+            </div>
+
+            <div className="flex-grow-1 direction-column align-center pt20 pr24 pb20 pl24 ola123">
+              {!isOtherCarePlan && <PatientAlerts patientId={patient_id} />}
+
+              {/* <div className="last-visit-alerts" >*/}
+              {/*   <div className="last-visit-h-container" >*/}
+              {/*     <span >Alerts from last visit</span>  */}
+              {/*   </div>*/}
+              {/*   */}
+              {/*   <div className="last-visit-details">*/}
+              {/*    */}
+              {/*   </div>*/}
+              {/*       */}
+              {/*</div>*/}
+
+              {!showTabs && (
+                <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
+                  <img src={noMedication} className="w200 h200" />
+                  <div className="fs20 fw700">
+                    {formatMessage(messages.nothing_to_show)}
                   </div>
-                </div>
-                {/* ) :
+                  {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
+                  {!isOtherCarePlan && (
+                    <div
+                      className="use-template-button"
+                      onClick={this.showTemplateDrawer}
+                    >
+                      <div>
+                        {firstTemplateName === BLANK_TEMPLATE
+                          ? formatMessage(messages.create_template)
+                          : formatMessage(messages.use_template)}
+                      </div>
+                    </div>
+                  )}
+                  {/* ) :
                   showUseTemplate ? (
                     <div className='use-template-button' onClick={this.handleMedicationReminder}>
                       <div>{formatMessage(messages.add_medication)}</div>
                     </div>) : <div />} */}
-              </div>
-            )}
-            {showTabs && (
-              <div className="flex-grow-1 direction-column align-center">
-                <div className="patient-tab mt20">
-                  <Tabs defaultActiveKey="1">
-                    <TabPane tab="Medication" key="1">
-                      <Table
-                        columns={
-                          authPermissions.includes(PERMISSIONS.EDIT_MEDICATION)
-                            ? columns_medication
-                            : columns_medication_non_editable
-                        }
-                        dataSource={getMedicationData(carePlan)}
-                        onRow={
-                          authPermissions.includes(PERMISSIONS.EDIT_MEDICATION)
-                            ? onRowMedication
-                            : null
-                        }
-                      />
-                    </TabPane>
-                    <TabPane tab="Appointments" key="2">
-                      <Table
-                        columns={
-                          authPermissions.includes(PERMISSIONS.EDIT_APPOINTMENT)
-                            ? columns_appointments
-                            : columns_appointments_non_editable
-                        }
-                        dataSource={getAppointmentsData(carePlan, docName)}
-                        onRow={
-                          authPermissions.includes(PERMISSIONS.EDIT_APPOINTMENT)
-                            ? onRowAppointment
-                            : null
-                        }
-                      />
-                      {/*<div className="wp100">*/}
-                      {/*  /!* <AppointmentTable /> *!/*/}
-                      {/*</div>*/}
-                    </TabPane>
-
-                    <TabPane tab="Symptoms" key="3">
-                      <SymptomTabs patientId={patient_id} />
-                    </TabPane>
-                    <TabPane
-                      tab={PATIENT_TABS.ACTIONS["name"]}
-                      key={PATIENT_TABS.ACTIONS["key"]}
-                    >
-                      <VitalTable patientId={patient_id} carePlanId={carePlanId}/>
-                    </TabPane>
-                  </Tabs>
                 </div>
+              )}
+              {showTabs && (
+                <div className="flex-grow-1 direction-column align-center">
+                  <div className="patient-tab mt20">
+                    <Tabs defaultActiveKey="1">
+                      <TabPane tab="Medication" key="1">
+                        <Table
+                          columns={
+                            authPermissions.includes(
+                              PERMISSIONS.EDIT_MEDICATION
+                            )
+                              ? columns_medication
+                              : columns_medication_non_editable
+                          }
+                          dataSource={getMedicationData(carePlan)}
+                          onRow={
+                            authPermissions.includes(
+                              PERMISSIONS.EDIT_MEDICATION
+                            )
+                              ? onRowMedication
+                              : null
+                          }
+                        />
+                      </TabPane>
+                      <TabPane tab="Appointments" key="2">
+                        <Table
+                          columns={
+                            authPermissions.includes(
+                              PERMISSIONS.EDIT_APPOINTMENT
+                            )
+                              ? columns_appointments
+                              : columns_appointments_non_editable
+                          }
+                          dataSource={getAppointmentsData(carePlan, docName)}
+                          onRow={
+                            authPermissions.includes(
+                              PERMISSIONS.EDIT_APPOINTMENT
+                            )
+                              ? onRowAppointment
+                              : null
+                          }
+                        />
+                        {/*<div className="wp100">*/}
+                        {/*  /!* <AppointmentTable /> *!/*/}
+                        {/*</div>*/}
+                      </TabPane>
+
+                      <TabPane tab="Symptoms" key="3">
+                        <SymptomTabs patientId={patient_id} />
+                      </TabPane>
+                      <TabPane
+                        tab={PATIENT_TABS.ACTIONS["name"]}
+                        key={PATIENT_TABS.ACTIONS["key"]}
+                      >
+                        <VitalTable
+                          patientId={patient_id}
+                          carePlanId={carePlanId}
+                        />
+                      </TabPane>
+                    </Tabs>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          {!isOtherCarePlan && (
+            <Fragment>
+              <AddMedicationReminder
+                patientId={patient_id}
+                carePlanId={carePlanId}
+              />
+              <AddVitals carePlanId={carePlanId} />
+              <EditVitals />
+              <AddAppointmentDrawer carePlanId={carePlanId} />
+              {templateDrawerVisible && (
+                <TemplateDrawer
+                  visible={templateDrawerVisible}
+                  submit={this.handleSubmitTemplate}
+                  dispatchClose={close}
+                  closeTemplateDrawer={onCloseTemplate}
+                  patientId={patient_id}
+                  carePlanTemplateIds={carePlanTemplateIds}
+                  carePlan={carePlan}
+                  {...this.props}
+                />
+              )}
+              <EditAppointmentDrawer
+                carePlan={carePlan}
+                carePlanId={carePlanId}
+              />
+              <EditMedicationReminder
+                patientId={patient_id}
+                carePlanId={carePlanId}
+              />
+            </Fragment>
+          )}
+          {popUpVisible && (
+              <div
+                  className={
+                    (drawerVisible || templateDrawerVisible) && minimized
+                        ? "chat-popup-minimized"
+                        : (drawerVisible || templateDrawerVisible) && !minimized
+                        ? "chat-popup"
+                        : minimized
+                            ? "chat-popup-minimized-closedDrawer"
+                            : "chat-popup-closedDrawer"
+                  }
+              >
+                <ChatPopup
+                    roomId={roomId}
+                    placeVideoCall={this.openVideoChatTab(roomId)}
+                    patientName={
+                      first_name
+                          ? `${first_name} ${
+                              middle_name ? `${middle_name} ` : ""
+                          }${last_name ? `${last_name}` : ""}`
+                          : ""
+                    }
+                    maximizeChat={this.maximizeChat}
+                />
               </div>
-            )}
-          </div>
+          )}
+          <SymptomsDrawer />
+          <VitalTimelineDrawer />
         </div>
-        <AddMedicationReminder patientId={patient_id} carePlanId={carePlanId} />
-        <AddVitals carePlanId={carePlanId} />
-        <EditVitals/>
-        {popUpVisible && (
-          <div
-            className={
-              (drawerVisible || templateDrawerVisible) && minimized
-                ? "chat-popup-minimized"
-                : (drawerVisible || templateDrawerVisible) && !minimized
-                ? "chat-popup"
-                : minimized
-                ? "chat-popup-minimized-closedDrawer"
-                : "chat-popup-closedDrawer"
-            }
-          >
-            <ChatPopup
-              roomId={roomId}
-              placeVideoCall={this.openVideoChatTab(roomId)}
-              patientName={
-                first_name
-                  ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${
-                      last_name ? `${last_name}` : ""
-                    }`
-                  : ""
-              }
-              maximizeChat={this.maximizeChat}
-            />
-          </div>
-        )}
-        <AddAppointmentDrawer carePlanId={carePlanId} />
-        {templateDrawerVisible && (
-          <TemplateDrawer
-            visible={templateDrawerVisible}
-            submit={this.handleSubmitTemplate}
-            dispatchClose={close}
-            closeTemplateDrawer={onCloseTemplate}
-            patientId={patient_id}
-            carePlanTemplateIds={carePlanTemplateIds}
-            carePlan={carePlan}
-            {...this.props}
-          />
-        )}
-        <EditAppointmentDrawer carePlan={carePlan} carePlanId={carePlanId} />
-        <EditMedicationReminder patientId={patient_id} carePlanId={carePlanId} />
-        <SymptomsDrawer />
-        <VitalTimelineDrawer />
-      </div>
+        <Modal
+          visible={showOtpModal}
+          title={formatMessage(messages.consent_modal_title_text)}
+          onOk={handleOtpVerify}
+          onCancel={handleOtpCancel}
+          okText={formatMessage(messages.verify_otp_text)}
+        >
+          {getConsentDetails()}
+        </Modal>
+      </Fragment>
     );
   }
 }

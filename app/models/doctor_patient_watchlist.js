@@ -1,9 +1,10 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {TABLE_NAME as patientTableName} from "./patients";
 import {TABLE_NAME as doctorTableName} from "./doctors";
+import {TABLE_NAME as patientTableName} from "./patients";
+import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
-export const TABLE_NAME = "consents";
+export const TABLE_NAME = "doctor_patient_watchlists";
 
 export const db = (database) => {
     database.define(
@@ -12,13 +13,10 @@ export const db = (database) => {
             id: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
-                autoIncrement: true
-            },
-            type: {
-                type: DataTypes.STRING,
+                autoIncrement: true,
                 allowNull: false,
             },
-            doctor_id: {
+            doctor_id:{
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
@@ -28,7 +26,7 @@ export const db = (database) => {
                     key: 'id'
                 }
             },
-            patient_id: {
+            patient_id:{
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
@@ -37,16 +35,7 @@ export const db = (database) => {
                     },
                     key: 'id'
                 }
-            },
-            details: {
-                type: DataTypes.JSON,
-            },
-            activated_on: {
-                type: DataTypes.DATE,
-            },
-            expired_on: {
-                type: DataTypes.DATE,
-            },
+            }
         },
         {
             underscored: true,
@@ -55,10 +44,9 @@ export const db = (database) => {
                 getBasicInfo() {
                     return {
                         id: this.id,
-                        type:this.type,
-                        details: this.details,
-                        activated_on: this.activated_on,
-                        expired_on: this.expired_on
+                        doctor_id:this.doctor_id,
+                        patients_id:this.patients_id
+
                     };
                 }
             }
@@ -66,14 +54,19 @@ export const db = (database) => {
     );
 };
 
+
+
 export const associate = (database) => {
-    database.models[TABLE_NAME].hasOne(database.models[patientTableName], {
-        foreignKey: "id",
-        sourceKey: "patient_id"
+    // const {TABLE_NAME} = database.models || {};
+   
+    // associations here (if any) ...
+    database.models[TABLE_NAME].belongsTo(database.models[doctorTableName], {
+        foreignKey:"doctor_id",
+        targetKey:"id"
     });
 
-    database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
-        foreignKey: "id",
-        sourceKey: "doctor_id"
+    database.models[TABLE_NAME].belongsTo(database.models[patientTableName], {
+        foreignKey:"patient_id",
+        targetKey:"id"
     });
 };

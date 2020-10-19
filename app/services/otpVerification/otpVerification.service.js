@@ -17,13 +17,11 @@ class OtpVerificationService {
     getOtpByData = async (data) => {
         try {
             const {otp, user_id} = data;
-            console.log("moment now ---> ", moment().toDate());
             const otpDetails = await Database.getModel(TABLE_NAME).findAll({
                 limit: 1,
                 where: {
                     // TODO: change on deployment
-                    otp,
-                    user_id,
+                    ...data,
                     updated_at: {
                         [Op.gte]: moment().subtract(2, 'minutes').toDate()
                     }
