@@ -1,49 +1,46 @@
 "use strict";
-import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES} from "../../constant";
-import ActionDetails from "./actionDetails";
+import {DataTypes} from "sequelize";
+import * as ActionDetails from "./actionDetails";
 
-const Adherence = database.define(
-    DB_TABLES.ADHERENCE,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const TABLE_NAME = "adherence";
+
+export const db = (database) => {
+    database.define(
+        TABLE_NAME,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            action_details_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: ActionDetails.TABLE_NAME,
+                    },
+                    key: 'id'
+                }
+            },
+            adherence: {
+                type: DataTypes.STRING(1)
+            },
         },
-        action_details_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: DB_TABLES.ACTION_DETAILS,
-                },
-                key: 'id'
-            }
-        },
-        adherence: {
-            type: Sequelize.STRING(1)
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    name: this.name,
-                };
-            }
+        {
+            underscored: true,
+            paranoid: true,
         }
-    }
-);
+    );
+};
 
-Adherence.belongsTo(ActionDetails, {
-    foreignKey: "action_details_id",
-    targetKey: "id"
-});
+export const associate = (database) => {
+    const {adherence, action_details} = database.models || {};
 
-export default Adherence;
+    // associations here (if any) ...
+    adherence.belongsTo(action_details, {
+        foreignKey: "action_details_id",
+        targetKey: "id"
+    });
+};

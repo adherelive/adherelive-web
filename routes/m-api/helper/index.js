@@ -13,3 +13,15 @@ export const validationError = (res, isValid) => {
         return;
     }
 };
+
+export const raiseClientError = (res, code = 422, error = {}, message) => {
+    const payload = {
+        code,
+        error
+    };
+
+    const response = new Response(false, payload.code);
+    response.setError(payload.error);
+    response.setMessage(message);
+    return res.status(payload.code).json(response.getResponse());
+};

@@ -1,5 +1,5 @@
 import express from "express";
-import Authenticate from "../middleware/auth";
+import Authenticate from "../middlewares/auth";
 import NotificationController from "../../../app/controllers/notification/notification.controller";
 
 const router = express.Router();

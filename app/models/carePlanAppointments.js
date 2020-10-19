@@ -1,68 +1,64 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
-import Appointment from './appointments';
-import CarePlan from "./carePlan";
+import {DataTypes} from "sequelize";
+import { TABLE_NAME as carePlanTableName } from "./carePlan";
+import {TABLE_NAME as appointmentTableName} from "./appointments";
 
-const CarePlanAppointment = database.define(
-  DB_TABLES.CARE_PLAN_APPOINTMENTS,
-  {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: Sequelize.INTEGER
-    },
-    care_plan_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: {
-          tableName: DB_TABLES.CARE_PLANS,
+export const TABLE_NAME = "care_plan_appointments";
+
+export const db = (database) => {
+  database.define(
+      TABLE_NAME,
+      {
+        id: {
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: DataTypes.INTEGER
         },
-        key: 'id'
-      }
-    },
-    appointment_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: {
-          tableName: DB_TABLES.APPOINTMENTS,
+        care_plan_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+            model: {
+              tableName: carePlanTableName,
+            },
+            key: 'id'
+          }
         },
-        key: 'id'
-      }
-    },
-  },
-  {
-    underscored: true,
-    paranoid: true,
-    getterMethods: {
-      getBasicInfo() {
-        return {
-          id: this.id,
-          care_plan_id: this.care_plan_id,
-          appointment_id: this.appointment_id
-        };
+        appointment_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+            model: {
+              tableName: appointmentTableName,
+            },
+            key: 'id'
+          }
+        },
       },
-      getId() {
-        return this.id;
+      {
+        underscored: true,
+        paranoid: true,
+        getterMethods: {
+          getBasicInfo() {
+            return {
+              id: this.id,
+              care_plan_id: this.care_plan_id,
+              appointment_id: this.appointment_id
+            };
+          },
+          getId() {
+            return this.id;
+          }
+        }
       }
-    }
-  }
-);
+  );
+};
 
-CarePlanAppointment.hasOne(Appointment, {
-  foreignKey: "id",
-  targetKey: "appointment_id"
-});
-
-// CarePlanAppointment.belongsTo(CarePlan, {
-//   foreignKey:"care_plan_id",
-//   targetKey:"id"
-// });
-
-
-
-export default CarePlanAppointment;
+export const associate = (database) => {
+  // associations here (if any) ...
+  database.models[TABLE_NAME].hasOne(database.models[appointmentTableName], {
+    foreignKey: "id",
+    targetKey: "appointment_id"
+  });
+};

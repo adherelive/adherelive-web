@@ -1,25 +1,38 @@
-import Doctor from "../../models/doctors";
-import {database} from "../../../libs/mysql";
-import Specialities from "../../models/specialities";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/doctors";
+import {TABLE_NAME as watchlistTableName} from "../../models/doctor_patient_watchlist";
+import {TABLE_NAME as specialityTableName} from "../../models/specialities";
 
 class DoctorService {
 
     getDoctorByData = async (data) => {
         try {
-            const doctor = await Doctor.findOne({
+            const doctor = await Database.getModel(TABLE_NAME).findOne({
                 where: data,
-                include: Specialities
+                include: Database.getModel(specialityTableName)
             });
             return doctor;
         } catch(error) {
             throw error;
         }
-    }
+    };
+
+    getAllDoctorByData = async (data) => {
+        try {
+            const doctor = await Database.getModel(TABLE_NAME).findAll({
+                where: data,
+                include: Database.getModel(specialityTableName)
+            });
+            return doctor;
+        } catch(error) {
+            throw error;
+        }
+    };
 
     addDoctor = async data => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
-            const doctor = await Doctor.create(data, { transaction });
+            const doctor = await Database.getModel(TABLE_NAME).create(data, { transaction });
 
             await transaction.commit();
             return doctor;
@@ -30,9 +43,9 @@ class DoctorService {
     };
 
     updateDoctor = async (data, id) => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
-            const doctor = await Doctor.update(data, {
+            const doctor = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
                     id
                 },
@@ -48,12 +61,37 @@ class DoctorService {
 
     getAllDoctors = async () => {
         try {
-            const doctors = await Doctor.findAll({
-                include: Specialities
+            const doctors = await Database.getModel(TABLE_NAME).findAll({
+                include: Database.getModel(specialityTableName)
             });
             return doctors;
         } catch(err) {
             throw err;
+        }
+    };
+
+    createNewWatchlistRecord = async(watchlist_data) => {
+        const transaction = await Database.initTransaction();
+        try{
+            const newWatchlistRecord = await Database.getModel(watchlistTableName).create(watchlist_data, { transaction });
+
+            await transaction.commit();
+            return newWatchlistRecord;
+        }catch(error){
+            await transaction.rollback();
+            throw error;
+        }
+    };
+
+    getAllWatchlist = async (data) => {
+        try{
+            const watchlistRecord = await Database.getModel(watchlistTableName).findAll({
+                where: data,
+                raw: true
+            });
+            return watchlistRecord;
+        }catch(error){
+            throw error;
         }
     };
 }

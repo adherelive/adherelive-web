@@ -4,7 +4,7 @@ export default class MedicationReminder {
     }
 
     getExistingData = () => {
-        return this._data;
+        return this._data.get("");
     }
 
     getParticipants = () => {

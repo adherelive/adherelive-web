@@ -1,10 +1,12 @@
 "use strict";
 
-import { DB_TABLES, GENDER, USER_CATEGORY } from "../constant";
+import {TABLE_NAME} from "../app/models/appointments";
+import {TABLE_NAME as providerTableName} from "../app/models/providers";
+import { USER_CATEGORY } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.APPOINTMENTS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -40,7 +42,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: DB_TABLES.PROVIDERS,
+            tableName: providerTableName,
           },
           key: 'id'
         },
@@ -87,6 +89,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.APPOINTMENTS);
+    return queryInterface.dropTable(TABLE_NAME);
   },
 };

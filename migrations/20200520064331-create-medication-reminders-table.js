@@ -1,18 +1,12 @@
 "use strict";
 
-import { DB_TABLES, USER_CATEGORY } from "../constant";
-import Sequelize from "sequelize";
+import { USER_CATEGORY } from "../constant";
+import {TABLE_NAME} from "../app/models/medicationReminders";
+import {TABLE_NAME as medicineTableName} from "../app/models/medicines";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    /*
-          Add altering commands here.
-          Return a promise to correctly handle asynchronicity.
-    
-          Example:
-          return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-        */
-    return queryInterface.createTable(DB_TABLES.MEDICATION_REMINDERS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -36,7 +30,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.MEDICINES,
+            tableName: medicineTableName,
           },
           key: "id",
         },
@@ -72,13 +66,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    /*
-          Add reverting commands here.
-          Return a promise to correctly handle asynchronicity.
-    
-          Example:
-          return queryInterface.dropTable('users');
-        */
-    return queryInterface.dropTable(DB_TABLES.MEDICATION_REMINDERS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

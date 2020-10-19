@@ -107,14 +107,12 @@ class EditVital extends Component {
             startDate && startDate !== null
               ? startDate
                 .clone()
-                .startOf("day")
                 .toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
               ? endDate
                 .clone()
-                .endOf("day")
                 .toISOString()
               : endDate,
         };

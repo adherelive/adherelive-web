@@ -21,7 +21,8 @@ import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
 import Log from "../../../../libs/log_new";
-import EventSchedule from "../../../eventSchedules";
+import queueService from "../../../services/awsQueue/queue.service";
+// import SqsQueueService from "../../../services/awsQueue/queue.service";
 const moment = require("moment");
 
 class CarePlanController extends Controller {
@@ -193,8 +194,8 @@ class CarePlanController extends Controller {
                 });
 
                 const eventScheduleData = {
+                    type: EVENT_TYPE.APPOINTMENT,
                     event_id: appointmentData.getAppointmentId(),
-                    event_type: EVENT_TYPE.APPOINTMENT,
                     critical,
                     start_time,
                     end_time,
@@ -206,8 +207,11 @@ class CarePlanController extends Controller {
                     }
                 };
 
-                // RRule
-                await EventSchedule.create(eventScheduleData);
+                const QueueService = new queueService();
+
+                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+                Log.debug("sqsResponse ---> ", sqsResponse);
             }
 
             let medicationApiDetails = {};
@@ -273,18 +277,27 @@ class CarePlanController extends Controller {
                     }
                 });
 
-                EventSchedule.create({
-                    event_type: EVENT_TYPE.MEDICATION_REMINDER,
+                const patient = await PatientWrapper(null, patient_id);
+
+                const eventScheduleData = {
+                    patient_id: patient.getUserId(),
+                    type: EVENT_TYPE.MEDICATION_REMINDER,
                     event_id: mReminderDetails.getId,
-                    details: mReminderDetails.getBasicInfo,
+                    details: mReminderDetails.getBasicInfo.details,
                     status: EVENT_STATUS.SCHEDULED,
                     start_date,
                     end_date,
-                });
+                    when_to_take,
+                    participant_one: patient.getUserId(),
+                    participant_two: userId
+                };
+
+                const QueueService = new queueService();
+
+                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+                Log.debug("sqsResponse ---> ", sqsResponse);
             }
-
-
-            console.log("BODYYY OF REQUESTTTTT=======>", carePlan, patient_id, care_plan_id);
 
             let carePlanTemplate = null;
 
@@ -307,19 +320,13 @@ class CarePlanController extends Controller {
 
                 carePlanData = await CarePlanWrapper(null, care_plan_id);
                 // await carePlanTemplate.getReferenceInfo();
-                Log.debug(
-                    "appointmentsData --------------------->",
-                    createCarePlanTemplate
-                );
             }
 
 
             return this.raiseSuccess(res, 200, {
                 care_plans: {
                     [carePlanData.getCarePlanId()] : {
-                        ...carePlanData.getBasicInfo(),
-                        appointment_ids,
-                        medication_ids
+                        ...await carePlanData.getAllInfo(),
                     }
                 },
                 appointments: {

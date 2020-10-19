@@ -6,7 +6,7 @@ import * as vitalHelper from "./vitalHelper";
 import VitalTemplateService from "../../services/vitalTemplates/vitalTemplate.service";
 import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
-import CarePlanService from "../../services/carePlan/carePlan.service";
+import queueService from "../../services/awsQueue/queue.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
@@ -17,9 +17,8 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 
 import {DAYS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
-import EventSchedule from "../../eventSchedules";
 import moment from "moment";
-import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
 const Log = new Logger("WEB > VITALS > CONTROLLER");
@@ -45,6 +44,8 @@ class VitalController extends Controller {
                     description
             } = {}} = req;
 
+            const QueueService = new queueService();
+
             const doesVitalExists = await VitalService.getByData({care_plan_id, vital_template_id});
 
             if(!doesVitalExists) {
@@ -68,6 +69,8 @@ class VitalController extends Controller {
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
                 const eventScheduleData = {
+                    type: EVENT_TYPE.VITALS,
+                    patient_id: patient.getUserId(),
                     event_id: vitals.getVitalId(),
                     event_type: EVENT_TYPE.VITALS,
                     critical: false,
@@ -83,8 +86,12 @@ class VitalController extends Controller {
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
 
+                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+                Log.debug("sqsResponse ---> ", sqsResponse);
+
                 // RRule
-                EventSchedule.create(eventScheduleData);
+                // await EventSchedule.create(eventScheduleData);
 
                 return raiseSuccess(
                     res,
@@ -113,11 +120,12 @@ class VitalController extends Controller {
         Log.debug("req.params --->", req.params);
         try {
             const {
-                userDetails: {userId, userData: {category} = {}} = {},
+                userDetails: {userId, userData: {category} = {}, userCategoryData = {}} = {},
                 body,
                 body: {start_date, end_date} = {},
                 params: {id} = {}
             } = req;
+            const EventService = new eventService();
 
 
             const doesVitalExists = await VitalService.getByData({id});
@@ -141,6 +149,8 @@ class VitalController extends Controller {
                 const patient = await PatientWrapper(null, carePlan.getPatientId());
 
                 const eventScheduleData = {
+                    type: EVENT_TYPE.VITALS,
+                    patient_id: patient.getUserId(),
                     event_id: vitals.getVitalId(),
                     event_type: EVENT_TYPE.VITALS,
                     critical: false,
@@ -150,7 +160,8 @@ class VitalController extends Controller {
                     participants: [doctor.getUserId(), patient.getUserId()],
                     actor: {
                         id: userId,
-                        category
+                        category,
+                        userCategoryData
                     },
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
@@ -163,7 +174,6 @@ class VitalController extends Controller {
                 Log.debug("deletedEvents", deletedEvents);
 
                 // RRule
-                EventSchedule.create(eventScheduleData);
 
                 // todo notification
 
@@ -253,6 +263,7 @@ class VitalController extends Controller {
         try {
             Log.debug("req.params vital id---->", req.params);
             const { params: { id } = {} } = req;
+            const EventService = new eventService();
 
             const today = moment()
                 .utc()
@@ -262,6 +273,7 @@ class VitalController extends Controller {
 
             const completeEvents = await EventService.getAllPassedByData({
                 event_id: id,
+                event_type: EVENT_TYPE.VITALS,
                 date: vital.getStartDate(),
                 sort: "DESC"
             });

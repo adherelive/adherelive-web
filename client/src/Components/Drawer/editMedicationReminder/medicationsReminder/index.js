@@ -35,8 +35,8 @@ class EditMedicationReminder extends Component {
   }
 
   componentDidMount() {
-    const { getMedicationDetails } = this.props;
-    getMedicationDetails();
+    const { getMedicationDetails, patientId } = this.props;
+    getMedicationDetails(patientId);
   }
 
   hasErrors = (fieldsError) => {
@@ -177,14 +177,12 @@ class EditMedicationReminder extends Component {
             startDate && startDate !== null
               ? startDate
                 .clone()
-                .startOf("day")
                 .toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
               ? endDate
                 .clone()
-                .endOf("day")
                 .toISOString()
               : endDate,
         };
@@ -194,7 +192,7 @@ class EditMedicationReminder extends Component {
             [repeatDaysField.field_name]: repeatDays.split(","),
           };
         }
-        if (!medicine_id || !unit || (unit === MEDICINE_UNITS.MG && !quantity) || !strength || !when_to_take || !startDate) {
+        if (!medicine_id || !unit ||  (unit === MEDICINE_UNITS.MG && !quantity)  || !strength || !when_to_take || !startDate) {
 
           message.error('Please fill all details.')
         }
@@ -338,6 +336,7 @@ class EditMedicationReminder extends Component {
           top: "0px"
         }}
         className="ant-drawer"
+        
         title={editMedication ? formatMessage(messages.medication) : addMedication ? 'Add Medication' : formatMessage(messages.title)}
       >
         <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />

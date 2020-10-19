@@ -20,6 +20,11 @@ module.exports = () => {
       KEY: process.env.SENDGRID_PASSWORD,
       FROM: process.env.SENDGRID_FROM_ADDRESS
     },
+    sqs: {
+      domain_url: process.env.SQS_DOMAIN_URL,
+      account_id: process.env.AWS_ACCCOUNT_ID,
+      queue_name: process.env.SQS_QUEUE_NAME,
+    },
     db: {
       connection: process.env.DB_CONNECTION,
       name: process.env.DB_DATABASE_NAME,
@@ -50,7 +55,8 @@ module.exports = () => {
       TWILIO_API_KEY: process.env.TWILIO_API_KEY,
       TWILIO_API_SECRET: process.env.TWILIO_API_SECRET,
       TWILIO_CHAT_SERVICE_SID: process.env.TWILIO_CHAT_SERVICE_SID,
-      TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN
+      TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
+      CHANNEL_SERVER: process.env.TWILIO_CHANNEL_SERVER,
     },
     saltRounds: process.env.SALT_ROUNDS,
     minio: {

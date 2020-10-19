@@ -1,6 +1,8 @@
 import BasePatient from "../../../services/patients";
 import patientService from "../../../services/patients/patients.service";
+import carePlanService from "../../../services/carePlan/carePlan.service";
 import {completePath} from "../../../helper/filePath";
+import UserWrapper from "../../web/user";
 
 
 class PatientWrapper extends BasePatient {
@@ -46,6 +48,38 @@ class PatientWrapper extends BasePatient {
             details: updatedDetails,
             dob,
         };
+    };
+
+    getAllInfo = async () => {
+        const {_data, getBasicInfo, getPatientId} = this;
+
+        const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
+
+        let carePlanId = null;
+
+        for(const carePlan of carePlans) {
+            carePlanId = carePlan.get("id");
+        }
+        return {
+            ...getBasicInfo(),
+            care_plan_id: carePlanId
+        }
+    };
+
+    getReferenceInfo = async () => {
+        const {_data, getAllInfo, getPatientId} = this;
+        const {user} = _data || {};
+
+        const users = await UserWrapper(user.get());
+
+        return {
+            patients: {
+                [getPatientId()]: await getAllInfo()
+            },
+            users: {
+                [users.getId()]: users.getBasicInfo()
+            }
+        }
     };
 }
 

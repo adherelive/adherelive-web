@@ -49,6 +49,7 @@ class EditMedicationReminderForm extends Component {
   }
 
   componentDidMount() {
+    this.scrollToTop();
     const {
       form: { validateFields },
       // currentUser: {
@@ -86,6 +87,15 @@ class EditMedicationReminderForm extends Component {
       });
     }
   }
+  
+  scrollToTop = () => {
+    let antForm= document.getElementsByClassName('Form')[0];
+    let antDrawerBody = antForm.parentNode;
+    let antDrawerWrapperBody=antDrawerBody.parentNode;
+    antDrawerBody.scrollIntoView(true);
+    antDrawerWrapperBody.scrollTop -= 200;
+  }
+  
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
@@ -485,6 +495,18 @@ class EditMedicationReminderForm extends Component {
     );
   };
 
+  setStrength = (e) =>{
+    e.preventDefault();
+    const {
+      form: { setFieldsValue, getFieldValue,validateFields },
+      enableSubmit
+    } = this.props;
+    const currentValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
+    setFieldsValue({ [medicineStrengthField.field_name]: (parseFloat(currentValue) + parseFloat(e.target.value)) });
+    validateFields([medicineStrengthField.field_name]);
+    enableSubmit();
+  }
+
   render() {
     const {
       disabledEndDate,
@@ -495,7 +517,8 @@ class EditMedicationReminderForm extends Component {
       setUnit,
       formatMessage,
       setEndDateOneWeek,
-      setEndDateTwoWeek, setEndDateLongTime
+      setEndDateTwoWeek, setEndDateLongTime,
+      setStrength
     } = this;
 
     const {
@@ -517,7 +540,7 @@ class EditMedicationReminderForm extends Component {
 
     return (
       <Fragment>
-        <Form className="event-form pb80 wp100">
+        <Form className="event-form pb80 wp100 Form">
           {/* {participantsField.render({
             ...this.props,
             otherUser,
@@ -556,6 +579,7 @@ class EditMedicationReminderForm extends Component {
               >
                 <RadioButton value={UNIT_ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML}  >ml</RadioButton>
                 <RadioButton value={UNIT_MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >mg</RadioButton>
+                {medicineUnit !== 'ml' && (<RadioButton value={50} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >+50</RadioButton>)}
               </RadioGroup>
             </div>
           </div>
@@ -565,7 +589,8 @@ class EditMedicationReminderForm extends Component {
           </InputGroup>
 
           {medicineUnit !== 'ml' && (<div id="quantity">{medicineQuantityField.render(this.props)}</div>)}
-
+         
+          
           <div id="timing">{whenToTakeMedicineField.render(this.props)}</div>
 
           <RepeatFields

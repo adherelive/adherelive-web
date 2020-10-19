@@ -1,11 +1,12 @@
 'use strict';
 
-import {DB_TABLES} from "../constant";
-import Sequelize from "sequelize";
+import {TABLE_NAME} from "../app/models/vitals";
+import {TABLE_NAME as vitalTemplateTableName} from "../app/models/vitalTemplates";
+import {TABLE_NAME as carePlanTableName} from "../app/models/carePlan";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.VITALS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,7 +18,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.VITAL_TEMPLATES,
+            tableName: vitalTemplateTableName,
           },
           key: 'id'
         }
@@ -27,7 +28,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.CARE_PLANS,
+            tableName: carePlanTableName,
           },
           key: 'id'
         }
@@ -60,6 +61,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.VITALS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

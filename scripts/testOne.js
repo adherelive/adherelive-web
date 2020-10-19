@@ -3,8 +3,8 @@ import fs from "fs";
 import path from "path";
 import moment from "moment";
 import Sequelize, {QueryTypes} from "sequelize";
-const Config = require("../config/config");
-Config();
+// const Config = require("../config/config");
+// Config();
 
 import Log from "../libs/log";
 

@@ -1,66 +1,64 @@
 "use strict";
-import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES} from "../../constant";
-import Doctors from "./doctors";
-import Patients from "./patients";
-import Medication from './medicationReminders';
-import CarePlan from "./carePlan";
-import CarePlanAppointment from "./carePlanAppointments";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as carePlanTableName} from "./carePlan";
+import {TABLE_NAME as medicationTableName} from "./medicationReminders";
 
-const CarePlanMedication = database.define(
-    DB_TABLES.CARE_PLAN_MEDICATIONS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
-          },
-          care_plan_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-              model: {
-                tableName: DB_TABLES.CARE_PLANS,
-              },
-              key: 'id'
-            }
-          },
-          medication_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-              model: {
-                tableName: DB_TABLES.MEDICATION_REMINDERS,
-              },
-              key: 'id'
-            }
-          },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    care_plan_id: this.care_plan_id,
-                    medication_id: this.medication_id,
-                };
+export const TABLE_NAME = "care_plan_medications";
+
+export const db = (database) => {
+    database.define(
+        TABLE_NAME,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
             },
-            getId() {
-              return this.id;
+            care_plan_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: carePlanTableName,
+                    },
+                    key: 'id'
+                }
+            },
+            medication_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: medicationTableName,
+                    },
+                    key: 'id'
+                }
+            },
+        },
+        {
+            underscored: true,
+            paranoid: true,
+            getterMethods: {
+                getBasicInfo() {
+                    return {
+                        id: this.id,
+                        care_plan_id: this.care_plan_id,
+                        medication_id: this.medication_id,
+                    };
+                },
+                getId() {
+                    return this.id;
+                }
             }
         }
-    }
-);
+    );
+};
 
-
-CarePlanMedication.hasOne(Medication, {
-    foreignKey: "id",
-    targetKey: "medication_id"
-});
-
-
-export default CarePlanMedication;
+export const associate = (database) => {
+    // associations here (if any) ...
+    database.models[TABLE_NAME].hasOne(database.models[medicationTableName], {
+        foreignKey: "id",
+        targetKey: "medication_id"
+    });
+};

@@ -1,98 +1,106 @@
 "use strict";
-import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES, USER_CATEGORY, SIGN_IN_CATEGORY, GENDER} from "../../constant";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as providerTableName} from "./providers";
+import {USER_CATEGORY} from "../../constant";
 
-const Appointments = database.define(
-    DB_TABLES.APPOINTMENTS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
-        },
-        participant_one_type: {
-            type: Sequelize.ENUM,
-            values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT]
-        },
-        participant_one_id: {
-            type: Sequelize.INTEGER,
-        },
-        participant_two_type: {
-            type: Sequelize.ENUM,
-            values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT]
-        },
-        participant_two_id: {
-            type: Sequelize.INTEGER,
-        },
-        organizer_type: {
-            type: Sequelize.ENUM,
-            values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.CARE_TAKER]
-        },
-        organizer_id: {
-            type: Sequelize.INTEGER,
-        },
-        provider_id: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: {
-                    tableName: DB_TABLES.PROVIDERS,
-                },
-                key: 'id'
+export const TABLE_NAME = "appointments";
+
+export const db = (database) => {
+    database.define(
+        TABLE_NAME,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
             },
-            allowNull: true,
+            participant_one_type: {
+                type: DataTypes.ENUM,
+                values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT]
+            },
+            participant_one_id: {
+                type: DataTypes.INTEGER,
+            },
+            participant_two_type: {
+                type: DataTypes.ENUM,
+                values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT]
+            },
+            participant_two_id: {
+                type: DataTypes.INTEGER,
+            },
+            organizer_type: {
+                type: DataTypes.ENUM,
+                values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.CARE_TAKER]
+            },
+            organizer_id: {
+                type: DataTypes.INTEGER,
+            },
+            provider_id: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: {
+                        tableName: providerTableName,
+                    },
+                    key: 'id'
+                },
+                allowNull: true,
+            },
+            provider_name: {
+                type: DataTypes.STRING(100),
+                allowNull: true,
+            },
+            description: {
+                type: DataTypes.STRING(1000)
+            },
+            start_date: {
+                type: DataTypes.DATE
+            },
+            end_date: {
+                type: DataTypes.DATE
+            },
+            start_time: {
+                type: DataTypes.DATE
+            },
+            end_time: {
+                type: DataTypes.DATE
+            },
+            rr_rule: {
+                type: DataTypes.STRING(1000)
+            },
+            details: {
+                type: DataTypes.JSON,
+            },
         },
-        provider_name: {
-            type: Sequelize.STRING(100),
-            allowNull: true,
-        },
-        description: {
-            type: Sequelize.STRING(1000)
-        },
-        start_date: {
-            type: Sequelize.DATE
-        },
-        end_date: {
-            type: Sequelize.DATE
-        },
-        start_time: {
-            type: Sequelize.DATE
-        },
-        end_time: {
-            type: Sequelize.DATE
-        },
-        rr_rule: {
-            type: Sequelize.STRING(1000)
-        },
-        details: {
-            type: Sequelize.JSON,
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-        getterMethods: {
-            getBasicInfo() {
-                return {
-                    id: this.id,
-                    participant_one_type: this.participant_one_type,
-                    participant_one_id: this.participant_one_id,
-                    participant_two_type: this.participant_two_type,
-                    participant_two_id: this.participant_two_id,
-                    organizer_type: this.organizer_type,
-                    organizer_id: this.organizer_id,
-                    description: this.description,
-                    start_date: this.start_date,
-                    end_date: this.end_date,
-                    rr_rule: this.rr_rule,
-                    start_time: this.start_time,
-                    end_time: this.end_time,
-                    details: this.details,
-                };
+        {
+            underscored: true,
+            paranoid: true,
+            getterMethods: {
+                getBasicInfo() {
+                    return {
+                        id: this.id,
+                        participant_one_type: this.participant_one_type,
+                        participant_one_id: this.participant_one_id,
+                        participant_two_type: this.participant_two_type,
+                        participant_two_id: this.participant_two_id,
+                        organizer_type: this.organizer_type,
+                        organizer_id: this.organizer_id,
+                        description: this.description,
+                        start_date: this.start_date,
+                        end_date: this.end_date,
+                        rr_rule: this.rr_rule,
+                        start_time: this.start_time,
+                        end_time: this.end_time,
+                        details: this.details,
+                    };
+                }
             }
         }
-    }
-);
+    );
+};
 
-export default Appointments;
+export const associate = (database) => {
+    // const {<TABLE_NAME>} = database.models || {};
+
+    // associations here (if any) ...
+};

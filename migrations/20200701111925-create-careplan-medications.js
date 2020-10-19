@@ -1,10 +1,12 @@
 'use strict';
 
-import { DB_TABLES } from "../constant";
+import {TABLE_NAME} from "../app/models/carePlanMedications";
+import {TABLE_NAME as carePlanTableName} from "../app/models/carePlan";
+import {TABLE_NAME as medicationTableName} from "../app/models/medicationReminders";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.CARE_PLAN_MEDICATIONS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,7 +18,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.CARE_PLANS,
+            tableName: carePlanTableName,
           },
           key: 'id'
         }
@@ -26,7 +28,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.MEDICATION_REMINDERS,
+            tableName: medicationTableName,
           },
           key: 'id'
         }
@@ -48,6 +50,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.CARE_PLAN_MEDICATIONS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

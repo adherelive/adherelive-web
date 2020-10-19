@@ -1,119 +1,114 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
-import Treatment from "./treatments";
-import Severity from "./severity";
-import Conditions from "./conditions";
-import TemplateAppointment from "./templateAppointments";
-import TemplateMedication from "./templateMedications";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as treatmentTableName} from "./treatments";
+import {TABLE_NAME as severityTableName} from "./severity";
+import {TABLE_NAME as conditionTableName} from "./conditions";
+import {TABLE_NAME as userTableName} from "./users";
+import {TABLE_NAME as appointmentTemplateTableName} from "./templateAppointments";
+import {TABLE_NAME as medicationTemplateTableName} from "./templateMedications";
 
-const CarePlanTemplate = database.define(
-  DB_TABLES.CARE_PLAN_TEMPLATE,
-  {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: Sequelize.INTEGER
-    },
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    treatment_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: {
-          tableName: DB_TABLES.TREATMENTS
-        },
-        key: "id"
-      }
-    },
-    severity_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: {
-          tableName: DB_TABLES.SEVERITY
-        },
-        key: "id"
-      }
-    },
-    condition_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: {
-          tableName: DB_TABLES.CONDITIONS
-        },
-        key: "id"
-      }
-    },
-      user_id: {
-          type: Sequelize.INTEGER,
-          allowNull: true,
-          references: {
-              model: {
-                  tableName: DB_TABLES.USERS,
-              },
-              key: "id",
-          },
+export const TABLE_NAME = "care_plan_templates";
+
+export const db = database => {
+  database.define(
+    TABLE_NAME,
+    {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER
       },
-    details: {
-      type: Sequelize.JSON
-    }
-  },
-  {
-    underscored: true,
-    paranoid: true,
-    getterMethods: {
-      getBasicInfo() {
-        return {
-          id: this.id,
-          type: this.type,
-          severity: this.severity,
-          condition: this.condition,
-          details: this.details
-        };
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      treatment_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: treatmentTableName
+          },
+          key: "id"
+        }
+      },
+      severity_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: severityTableName
+          },
+          key: "id"
+        }
+      },
+      condition_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: conditionTableName
+          },
+          key: "id"
+        }
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: userTableName
+          },
+          key: "id"
+        }
+      },
+      details: {
+        type: DataTypes.JSON
+      }
+    },
+    {
+      underscored: true,
+      paranoid: true,
+      getterMethods: {
+        getBasicInfo() {
+          return {
+            id: this.id,
+            type: this.type,
+            severity: this.severity,
+            condition: this.condition,
+            details: this.details
+          };
+        }
       }
     }
-  }
-);
+  );
+};
 
-CarePlanTemplate.hasOne(Treatment, {
+export const associate = database => {
+
+  // associations here (if any) ...
+  database.models[TABLE_NAME].hasOne(database.models[treatmentTableName], {
     foreignKey: "id",
     sourceKey: "treatment_id"
-});
+  });
 
-CarePlanTemplate.hasOne(Severity, {
+  database.models[TABLE_NAME].hasOne(database.models[severityTableName], {
     foreignKey: "id",
     sourceKey: "severity_id"
-});
+  });
 
-CarePlanTemplate.hasOne(Conditions, {
+  database.models[TABLE_NAME].hasOne(database.models[conditionTableName], {
     foreignKey: "id",
     sourceKey: "condition_id"
-});
+  });
 
-CarePlanTemplate.hasMany(TemplateAppointment, {
-    foreignKey:"care_plan_template_id",
-    sourceKey:"id",
-});
-CarePlanTemplate.hasMany(TemplateMedication, {
-    foreignKey:"care_plan_template_id",
-    sourceKey:"id",
-});
-
-CarePlanTemplate.hasMany(TemplateAppointment, {
-    foreignKey:"care_plan_template_id",
-    sourceKey:"id"
-});
-
-CarePlanTemplate.hasMany(TemplateMedication, {
-    foreignKey:"care_plan_template_id",
-    sourceKey:"id"
-});
-
-export default CarePlanTemplate;
+  database.models[TABLE_NAME].hasMany(database.models[appointmentTemplateTableName], {
+    foreignKey: "care_plan_template_id",
+    sourceKey: "id"
+  });
+  database.models[TABLE_NAME].hasMany(database.models[medicationTemplateTableName], {
+    foreignKey: "care_plan_template_id",
+    sourceKey: "id"
+  });
+};

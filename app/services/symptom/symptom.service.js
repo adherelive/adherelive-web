@@ -1,15 +1,15 @@
-import Symptoms from "../../models/symptoms";
-import Patients from "../../models/patients";
-import CarePlan from "../../models/carePlan";
-import Doctors from "../../models/doctors";
+import { Op } from "sequelize";
+import Database from "../../../libs/mysql";
 
-import {Op} from "sequelize";
+import {TABLE_NAME} from "../../models/symptoms";
+import {TABLE_NAME as doctorTableName} from "../../models/doctors";
+import {TABLE_NAME as patientTableName} from "../../models/patients";
+import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";
 
 class SymptomService {
-
   create = async data => {
     try {
-      const symptom = await Symptoms.create(data);
+      const symptom = await Database.getModel(TABLE_NAME).create(data);
       return symptom;
     } catch (error) {
       throw error;
@@ -18,15 +18,15 @@ class SymptomService {
 
   getByData = async data => {
     try {
-      const symptom = await Symptoms.findOne({
+      const symptom = await Database.getModel(TABLE_NAME).findOne({
         where: data,
         include: [
           {
-            model: Patients
+            model: Database.getModel(patientTableName)
           },
           {
-            model: CarePlan,
-            include: [Doctors]
+            model: Database.getModel(carePlanTableName),
+            include: [Database.getModel(doctorTableName)]
           }
         ]
       });
@@ -38,15 +38,15 @@ class SymptomService {
 
   getAllByData = async data => {
     try {
-      const symptom = await Symptoms.findAll({
+      const symptom = await Database.getModel(TABLE_NAME).findAll({
         where: data,
         include: [
           {
-            model: Patients
+            model: Database.getModel(patientTableName)
           },
           {
-            model: CarePlan,
-            include: [Doctors]
+            model: Database.getModel(carePlanTableName),
+            include: [Database.getModel(doctorTableName)]
           }
         ]
       });
@@ -58,8 +58,8 @@ class SymptomService {
 
   getFilteredData = async data => {
     try {
-      const {patient_id, start_time, end_time} = data || {};
-      const symptom = await Symptoms.findAll({
+      const { patient_id, start_time, end_time } = data || {};
+      const symptom = await Database.getModel(TABLE_NAME).findAll({
         where: {
           patient_id,
           created_at: {
@@ -68,11 +68,11 @@ class SymptomService {
         },
         include: [
           {
-            model: Patients
+            model: Database.getModel(patientTableName)
           },
           {
-            model: CarePlan,
-            include: [Doctors]
+            model: Database.getModel(carePlanTableName),
+            include: [Database.getModel(doctorTableName)]
           }
         ]
       });
@@ -82,21 +82,19 @@ class SymptomService {
     }
   };
 
-  getLastUpdatedData = async (data) => {
+  getLastUpdatedData = async data => {
     try {
-      const symptom = await Symptoms.findAll({
+      const symptom = await Database.getModel(TABLE_NAME).findAll({
         where: data,
         limit: 1,
-        order: [
-            ['updated_at', 'DESC']
-        ],
+        order: [["updated_at", "DESC"]],
         include: [
           {
-            model: Patients
+            model: Database.getModel(patientTableName)
           },
           {
-            model: CarePlan,
-            include: [Doctors]
+            model: Database.getModel(carePlanTableName),
+            include: [Database.getModel(doctorTableName)]
           }
         ]
       });

@@ -1,17 +1,12 @@
 'use strict';
 
-import {DB_TABLES, VERIFICATION_TYPE} from "../constant";
+import {VERIFICATION_TYPE} from "../constant";
+import {TABLE_NAME} from "../app/models/userVerifications";
+import {TABLE_NAME as userTableName} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-    */
-   return queryInterface.createTable(DB_TABLES.USER_VERIFICATIONS, {
+   return queryInterface.createTable(TABLE_NAME, {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -23,7 +18,7 @@ module.exports = {
       allowNull: false,
       references: {
         model: {
-          tableName: DB_TABLES.USERS,
+          tableName: userTableName,
         },
         key: 'id'
       }
@@ -55,13 +50,6 @@ module.exports = {
 },
 
 down: (queryInterface, Sequelize) => {
-  /*
-    Add reverting commands here.
-    Return a promise to correctly handle asynchronicity.
-
-    Example:
-    return queryInterface.dropTable('users');
-  */
-  return queryInterface.dropTable(DB_TABLES.USER_VERIFICATIONS);
+  return queryInterface.dropTable(TABLE_NAME);
 }
 };

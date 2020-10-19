@@ -1,11 +1,31 @@
 const express = require("express");
 const router = express.Router();
-import Authenticated from "../middleware/auth";
+import Authenticated from "../middlewares/auth";
+import isPatient from "../middlewares/patients";
 import PatientController from "../../../app/controllers/mControllers/patients/patients.controller";
 
 router.post('/',
-    // upload.single("profile_pic"),
+    isPatient,
+    Authenticated,
     PatientController.mUpdatePatient
+);
+
+router.post(
+  "/:id/consents/request",
+  Authenticated,
+    PatientController.patientConsentRequest
+);
+
+router.post(
+    "/consents/verify",
+    Authenticated,
+    PatientController.patientConsentVerification
+);
+
+router.get(
+  "/",
+  Authenticated,
+  PatientController.searchPatient
 );
 
 router.get(

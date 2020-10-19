@@ -4,6 +4,7 @@ import moment from "moment";
 
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
+import doctorsService from "../../services/doctors/doctors.service";
 import patientsService from "../../services/patients/patients.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
@@ -11,15 +12,15 @@ import documentService from "../../services/uploadDocuments/uploadDocuments.serv
 import registrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-import medicineService from "../../services/medicine/medicine.service";
-import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+// import medicineService from "../../services/medicine/medicine.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import degreeService from "../../services/degree/degree.service";
 import collegeService from "../../services/college/college.service";
 import councilService from "../../services/council/council.service";
 
-import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
-import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
+// import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
+// import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -30,7 +31,7 @@ import QualificationWrapper from "../../ApiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
-import MedicineApiWrapper from "../../ApiWrapper/web/medicine";
+// import MedicineApiWrapper from "../../ApiWrapper/web/medicine";
 import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
@@ -43,7 +44,8 @@ import {
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
-  VERIFICATION_TYPE
+  VERIFICATION_TYPE,
+  PATIENT_MEAL_TIMINGS
 } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
@@ -54,6 +56,8 @@ import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../mControllers/user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
+import UserPreferenceService from "../../services/userPreferences/userPreference.service";
+import doctor from "../../ApiWrapper/web/doctor";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 
@@ -752,190 +756,154 @@ class DoctorController extends Controller {
         gender = "",
         date_of_birth = "",
         prefix = "",
-        treatment_id = "1",
-        severity_id = "1",
-        condition_id = "1"
+        comorbidities = "",
+        allergies = "",
+          clinical_notes = "",
+          diagnosis_type = "1",
+          diagnosis_description = "",
+        treatment_id,
+        severity_id,
+        condition_id,
       } = req.body;
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
       const userExists = await userService.getPatientByMobile(mobile_number);
 
-      if (userExists.length > 0) {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          `Patient with mobile number: ${mobile_number} already exists`
-        );
+      let userData = null;
+      let patientData = null;
+      let patientOtherDetails = {};
+      let carePlanOtherDetails = {};
+
+      if(comorbidities) {
+        patientOtherDetails["comorbidities"] = comorbidities;
+      }
+      if(allergies) {
+        patientOtherDetails["allergies"] = allergies;
+      }
+      if(clinical_notes) {
+        carePlanOtherDetails["clinical_notes"] = clinical_notes;
       }
 
-      let password = process.config.DEFAULT_PASSWORD;
-      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(password, salt);
-      let user = await userService.addUser({
-        prefix,
-        mobile_number,
-        password: hash,
-        sign_in_type: SIGN_IN_CATEGORY.BASIC,
-        category: USER_CATEGORY.PATIENT,
-        onboarded: false,
-        onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
-        activated_on: moment().format()
-      });
+      if(userExists.length > 0) {
 
-      const userData = await UserWrapper(user.get());
+        // todo: find alternative to userExists[0]
+        userData = await UserWrapper(userExists[0].get());
+        const {patient_id} = await userData.getReferenceInfo();
+        patientData = await PatientWrapper(null, patient_id);
 
-      let newUserId = user.get("id");
+      } else {
 
-      let first_name = "";
-      let middle_name = "";
-      let last_name = "";
+        const password = process.config.DEFAULT_PASSWORD;
+        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+        const hash = await bcrypt.hash(password, salt);
+        let user = await userService.addUser({
+          prefix,
+          mobile_number,
+          password: hash,
+          sign_in_type: SIGN_IN_CATEGORY.BASIC,
+          category: USER_CATEGORY.PATIENT,
+          onboarded: false,
+          onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
+          verified: true,
+          activated_on: moment().format()
+        });
+        userData = await UserWrapper(user.get());
 
-      if (name) {
-        let patientName = name.split(" ");
-        first_name = patientName[0];
-        middle_name = patientName.length == 3 ? patientName[1] : "";
-        last_name =
-          patientName.length == 3
-            ? patientName[2]
-            : patientName.length == 2
-            ? patientName[1]
-            : "";
+        if(clinical_notes) {
+          carePlanOtherDetails["clinical_notes"] = clinical_notes;
+        }
+
+        let newUserId = userData.getId();
+
+        let patientName = name.trim().split(" ");
+        let first_name = patientName[0];
+        let middle_name = patientName.length == 3 ? patientName[1] : "";
+        let last_name =
+            patientName.length == 3
+                ? patientName[2]
+                : patientName.length == 2
+                ? patientName[1]
+                : "";
+
+        // const uid = uuidv4();
+        const birth_date = moment(date_of_birth);
+        const age = getAge(date_of_birth);
+        const patient = await patientsService.addPatient({
+          first_name,
+          gender,
+          middle_name,
+          last_name,
+          user_id: newUserId,
+          birth_date,
+          age,
+          dob: date_of_birth,
+          details: {
+            ...patientOtherDetails,
+          }
+        });
+
+        await UserPreferenceService.addUserPreference({
+          user_id: newUserId,
+          details: {
+            timings: PATIENT_MEAL_TIMINGS
+          }
+        });
+
+        const uid = getReferenceId(patient.get("id"));
+
+        await patientsService.update({uid}, patient.get("id"));
+        patientData = await PatientWrapper(null, patient.get("id"));
       }
-
-      // const uid = uuidv4();
-
-      const birth_date = moment(date_of_birth);
-      const age = getAge(date_of_birth);
-
-      // const age = moment().diff(birth_date, "y");
-      const patient = await patientsService.addPatient({
-        first_name,
-        gender: gender ? gender : null,
-        middle_name,
-        last_name,
-        user_id: newUserId,
-        birth_date,
-        age,
-        dob: moment(date_of_birth).toISOString()
-        // uid
-      });
-
-      const patientData = await PatientWrapper(patient);
-      const uid = getReferenceId(patientData.getPatientId());
-      // Logger.debug("UID -------------> ", uid);
-
-      const updatePatientUid = await patientsService.update(
-        { uid },
-        patientData.getPatientId()
-      );
-
-      const updatedPatientData = await PatientWrapper(
-        null,
-        patientData.getPatientId()
-      );
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData(
-        {
-          treatment_id,
-          severity_id,
-          condition_id,
-          user_id: userId
-        }
-      );
+      const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData({
+        treatment_id,
+        severity_id,
+        condition_id,
+        user_id: userId
+      });
 
-      Logger.debug("carePlanTemplate ---> ", carePlanTemplate);
-
-      const patient_id = patient.get("id");
+      const patient_id = patientData.getPatientId();
       const care_plan_template_id = null;
 
-      const details = { treatment_id, severity_id, condition_id };
+      const details = {
+        treatment_id,
+        severity_id,
+        condition_id,
+        diagnosis: {
+          type: diagnosis_type,
+          description: diagnosis_description
+        },
+        ...carePlanOtherDetails
+      };
 
       const carePlan = await carePlanService.addCarePlan({
         patient_id,
         doctor_id: doctor.get("id"),
         care_plan_template_id,
         details,
-        expired_on: moment().add(1, "y")
+        created_at: moment()
       });
 
       const carePlanData = await CarePlanWrapper(carePlan);
 
       let templateMedicationData = {};
-      let template_medication_ids = [];
-
       let templateAppointmentData = {};
-      let template_appointment_ids = [];
-      let medicine_ids = [];
 
       let carePlanTemplateData = null;
 
-      // if (carePlanData.getCarePlanTemplateId()) {
-      //   const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(carePlanData.getCarePlanTemplateId());
-      //   carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
-      //   const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
-      //
-      //   for (const medication of medications) {
-      //     const medicationData = await TemplateMedicationWrapper(medication);
-      //     templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
-      //     template_medication_ids.push(medicationData.getTemplateMedicationId());
-      //     medicine_ids.push(medicationData.getTemplateMedicineId());
-      //   }
-      //
-      //   const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
-      //
-      //   for (const appointment of appointments) {
-      //     const appointmentData = await TemplateAppointmentWrapper(appointment);
-      //     templateAppointmentData[appointmentData.getTemplateAppointmentId()] = appointmentData.getBasicInfo();
-      //     template_appointment_ids.push(appointmentData.getTemplateAppointmentId());
-      //   }
-      // }
-      //
-      // const medicineData = await medicineService.getMedicineByData({
-      //   id: medicine_ids
-      // });
-
       let medicineApiData = {};
 
-      // let carePlanTemplateDetails = {};
-      // if (carePlanTemplate) {
-      //   const carePlanTemplateData = await CarePlanTemplateWrapper(
-      //     carePlanTemplate
-      //   );
-      //   carePlanTemplateDetails[carePlanTemplateData.getCarePlanTemplateId()] = {
-      //     ...carePlanTemplateData.getBasicInfo(),
-      //     template_appointment_ids,
-      //     template_medication_ids
-      //   };
-      // }
-
-      // Logger.debug(
-      //   "medicineData",
-      //   medicineData
-      // );
-
-      // for (const medicine of medicineData) {
-      //   const medicineWrapper = await MedicineApiWrapper(medicine);
-      //   medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
-      // }
-
       const link = uuidv4();
-      const status = "pending";
 
       const userVerification = UserVerificationServices.addRequest({
-        user_id: userId,
+        user_id: patientData.getUserId(),
         request_id: link,
         status: "pending",
         type: VERIFICATION_TYPE.PATIENT_SIGN_UP
       });
 
-      const universalLink = await getUniversalLink({
-        event_type: VERIFICATION_TYPE.PATIENT_SIGN_UP,
-        link
-      });
-
-      // Logger.debug("universalLink --> ", universalLink);
+      const universalLink = await getUniversalLink({event_type : VERIFICATION_TYPE.PATIENT_SIGN_UP,link});
 
       const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
 
@@ -1005,47 +973,42 @@ class DoctorController extends Controller {
       }
 
       return this.raiseSuccess(
-        res,
-        200,
-        {
-          patient_ids: [patient_id],
-          // carePlanId,
-          care_plan_ids: [carePlanData.getCarePlanId()],
-          care_plan_template_ids: [...carePlanTemplateIds],
-          users: {
-            [userData.getId()]: userData.getBasicInfo()
+          res,
+          200,
+          {
+            patient_ids: [patient_id],
+            // carePlanId,
+            care_plan_ids: [carePlanData.getCarePlanId()],
+            care_plan_template_ids: carePlanTemplateIds,
+            users: {
+              [userData.getId()]: userData.getBasicInfo()
+            },
+            patients: {
+              [patientData.getPatientId()]: patientData.getBasicInfo()
+            },
+            care_plans: {
+              [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
+            },
+            care_plan_templates: {
+              ...otherCarePlanTemplates,
+            },
+            template_appointments: {
+              ...templateAppointmentData
+            },
+            template_medications: {
+              ...templateMedicationData
+            },
+            medicines: {
+              ...medicineApiData
+            }
           },
-          patients: {
-            [updatedPatientData.getPatientId()]: updatedPatientData.getBasicInfo()
-          },
-          care_plans: {
-            [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
-          },
-          care_plan_templates: {
-            ...otherCarePlanTemplates
-          },
-          template_appointments: {
-            ...templateAppointmentData
-          },
-          template_medications: {
-            ...templateMedicationData
-          },
-          medicines: {
-            ...medicineApiData
-          },
-          // show: carePlanTemplate ? true : false
-          show: true
-        },
-        "doctor's patient added successfully"
+          "Patient added successfully"
       );
     } catch (error) {
       Logger.debug("ADD DOCTOR PATIENT 500 ERROR", error);
       return this.raiseServerError(res);
     }
   };
-
-
-
 
   updateDoctorQualificationRegistration = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
@@ -2268,6 +2231,59 @@ class DoctorController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
+
+  AddPatientToWatchlist = async (req,res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {  patient_id = 0 } = req.params;
+      const { userDetails: { userId } = {} } = req;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      if(patient && doctor){
+
+
+        const newWatchlistRecord = await doctorService.createNewWatchlistRecord({
+          patient_id:parseInt(patient_id),
+          doctor_id: doctor.get("id")
+        });
+
+        let doctorData = {};
+
+        if(newWatchlistRecord) {
+          const doctorDetails = await DoctorWrapper(doctor);
+          doctorData[doctorDetails.getDoctorId()] = await doctorDetails.getAllInfo();
+        }
+
+        return raiseSuccess(
+          res,
+          200,
+          {
+            doctors: {
+              ...doctorData
+            }
+          },
+          "watchlist record created"
+        );
+      }else{
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Doctor/patient do not exist"
+        );
+      }
+
+      
+    }catch (error) {
+      Logger.debug("83901283091298 add patient to watchlist error", error);
+      return raiseServerError(res);
+    }
+
+  };
+
 }
+
 
 export default new DoctorController();

@@ -3,9 +3,7 @@ import { Drawer, Form, message } from "antd";
 import { injectIntl } from "react-intl";
 
 import moment from "moment";
-import { getRelatedMembersURL } from "../../../../Helper/urls/user";
-import { doRequest } from "../../../../Helper/network";
-import { USER_CATEGORY, MEDICATION_TIMING, MEDICINE_UNITS } from "../../../../constant";
+import { MEDICINE_UNITS } from "../../../../constant";
 import AddMedicationReminderForm from "./form";
 
 import participants from "../common/participants";
@@ -15,9 +13,7 @@ import Footer from "../../footer";
 import startTimeField from "../common/startTime";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
-// import backArrow from '../../../Assets/images/arrow-left-circle-simple-line-icons@3x.png';
 import repeatDaysField from "../common/selectedDays";
-import { getInitialData } from "../../../../Helper/urls/auth";
 
 class AddMedicationReminder extends Component {
   constructor(props) {
@@ -32,8 +28,8 @@ class AddMedicationReminder extends Component {
   }
 
   componentDidMount() {
-    const { getMedicationDetails } = this.props;
-    getMedicationDetails();
+    const { getMedicationDetails, patientId } = this.props;
+    getMedicationDetails(patientId);
   }
 
   hasErrors = fieldsError => {
@@ -146,9 +142,9 @@ class AddMedicationReminder extends Component {
 
           [startTimeField.field_name]:startTime && startTime !== null ? startTime.startOf("minute").toISOString(): startTime,
           
-          [startDateField.field_name]:startDate && startDate !== null ? startDate.clone().startOf("day").toISOString():startDate,
+          [startDateField.field_name]:startDate && startDate !== null ? startDate.clone().toISOString():startDate,
           
-          [endDateField.field_name]:endDate && endDate !== null? endDate.clone().endOf("day").toISOString():endDate
+          [endDateField.field_name]:endDate && endDate !== null? endDate.clone().toISOString():endDate
         };
 
         if (repeatDays) {
@@ -283,11 +279,7 @@ class AddMedicationReminder extends Component {
           zIndex: "9999",
           top: "0px"
         }}
-        headerStyle={{
-          position: "sticky",
-          zIndex: "9999",
-          top: "0px"
-        }}
+     
         maskClosable={false}
         destroyOnClose={true}
         className="ant-drawer"

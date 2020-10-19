@@ -3,6 +3,8 @@ import PatientTable from "../../Components/Patient/table";
 import { withRouter } from "react-router-dom";
 import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
+import {searchPatientFromNum} from "../../modules/patients";
+import {addToWatchlist} from "../../modules/doctors";
 
 const mapStateToProps = state => {
   const {
@@ -15,9 +17,12 @@ const mapStateToProps = state => {
     pages: { patient_ids = [], chat_ids = [] } = {},
     chats = {},
     users,
-    auth: { authPermissions = [] } = {},
+    auth: { authPermissions = [], authenticated_user } = {},
     care_plans
   } = state;
+
+
+  
 
   return {
     patient_ids,
@@ -31,13 +36,15 @@ const mapStateToProps = state => {
     chats,
     users,
     care_plans,
-    authPermissions
+    authPermissions,
+    authenticated_user
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    openPatientDetailsDrawer: (payload) => dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload }))
+    openPatientDetailsDrawer: (payload) => dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload })),
+    addToWatchlist:(patient_id) => dispatch(addToWatchlist(patient_id))
   };
 };
 

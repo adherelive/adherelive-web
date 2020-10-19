@@ -98,4 +98,9 @@ router.post(
     DoctorController.updateDoctorDetails
 );
 
+router.post(
+    "/watchlist/:patient_id",
+    DoctorController.AddPatientToWatchlist
+)
+
 module.exports = router;

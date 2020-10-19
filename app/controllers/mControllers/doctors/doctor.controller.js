@@ -29,7 +29,7 @@ import Log from "../../../../libs/log";
 import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME,
-  ONBOARDING_STATUS,
+  ONBOARDING_STATUS, PATIENT_MEAL_TIMINGS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY, VERIFICATION_TYPE
 } from "../../../../constant";
@@ -63,6 +63,8 @@ import getUniversalLink from "../../../helper/universalLink";
 import getAge from "../../../helper/getAge";
 import {getSeparateName} from "../../../helper/common";
 import {EVENTS, Proxy_Sdk} from "../../../proxySdk";
+import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
+import doctorsService from "../../../services/doctors/doctors.service";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -169,66 +171,102 @@ class MobileDoctorController extends Controller {
         prefix = "",
         treatment_id = "1",
         severity_id = "1",
-        condition_id = "1"
+        condition_id = "1",
+        comorbidities = "",
+        allergies = "",
+        clinical_notes = "",
+        diagnosis_type = "1",
+        diagnosis_description = "",
       } = req.body;
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
       const userExists = await userService.getPatientByMobile(mobile_number);
 
-      if(userExists.length > 0) {
-        return this.raiseClientError(res, 422, {}, `Patient with mobile number: ${mobile_number} already exists`);
+      let userData = null;
+      let patientData = null;
+      let patientOtherDetails = {};
+      let carePlanOtherDetails = {};
+
+      if(comorbidities) {
+        patientOtherDetails["comorbidities"] = comorbidities;
+      }
+      if(allergies) {
+        patientOtherDetails["allergies"] = allergies;
+      }
+      if(clinical_notes) {
+        carePlanOtherDetails["clinical_notes"] = clinical_notes;
       }
 
-      let password = process.config.DEFAULT_PASSWORD;
-      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(password, salt);
-      let user = await userService.addUser({
-        prefix,
-        mobile_number,
-        password: hash,
-        sign_in_type: SIGN_IN_CATEGORY.BASIC,
-        category: USER_CATEGORY.PATIENT,
-        onboarded: false,
-        onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
-        verified: true,
-        activated_on: moment().format()
-      });
-      const userData = await UserWrapper(user.get());
+      if(userExists.length > 0) {
 
+        // todo: find alternative to userExists[0]
+        userData = await UserWrapper(userExists[0].get());
+        const {patient_id} = await userData.getReferenceInfo();
+        patientData = await PatientWrapper(null, patient_id);
 
-      let newUserId = user.get("id");
+      } else {
 
-      let patientName = name.split(" ");
-      let first_name = patientName[0];
-      let middle_name = patientName.length == 3 ? patientName[1] : "";
-      let last_name =
-        patientName.length == 3
-          ? patientName[2]
-          : patientName.length == 2
-          ? patientName[1]
-          : "";
+        const password = process.config.DEFAULT_PASSWORD;
+        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+        const hash = await bcrypt.hash(password, salt);
+        let user = await userService.addUser({
+          prefix,
+          mobile_number,
+          password: hash,
+          sign_in_type: SIGN_IN_CATEGORY.BASIC,
+          category: USER_CATEGORY.PATIENT,
+          onboarded: false,
+          onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
+          verified: true,
+          activated_on: moment().format()
+        });
+        userData = await UserWrapper(user.get());
 
-      // const uid = uuidv4();
-      const birth_date = moment(date_of_birth);
-      const age = getAge(date_of_birth);
-      const patient = await patientsService.addPatient({
-        first_name,
-        gender,
-        middle_name,
-        last_name,
-        user_id: newUserId,
-        birth_date,
-        age,
-        dob: date_of_birth
-        // uid
-      });
+        if(clinical_notes) {
+          carePlanOtherDetails["clinical_notes"] = clinical_notes;
+        }
 
-      const patientData = await PatientWrapper(patient);
-      const uid = getReferenceId(patientData.getPatientId());
+        let newUserId = userData.getId();
 
-      const updatePatientUid = await patientsService.update({uid}, patientData.getPatientId());
+        let patientName = name.trim().split(" ");
+        let first_name = patientName[0];
+        let middle_name = patientName.length == 3 ? patientName[1] : "";
+        let last_name =
+            patientName.length == 3
+                ? patientName[2]
+                : patientName.length == 2
+                ? patientName[1]
+                : "";
 
-      const updatedPatientData = await PatientWrapper(null, patientData.getPatientId());
+        // const uid = uuidv4();
+        const birth_date = moment(date_of_birth);
+        const age = getAge(date_of_birth);
+        const patient = await patientsService.addPatient({
+          first_name,
+          gender,
+          middle_name,
+          last_name,
+          user_id: newUserId,
+          birth_date,
+          age,
+          dob: date_of_birth,
+          details: {
+            ...patientOtherDetails,
+          }
+        });
+
+        await UserPreferenceService.addUserPreference({
+          user_id: newUserId,
+          details: {
+            timings: PATIENT_MEAL_TIMINGS
+          }
+        });
+
+        const uid = getReferenceId(patient.get("id"));
+
+        await patientsService.update({uid}, patient.get("id"));
+        patientData = await PatientWrapper(null, patient.get("id"));
+      }
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData({
@@ -238,94 +276,47 @@ class MobileDoctorController extends Controller {
         user_id: userId
       });
 
-      Logger.debug("carePlanTemplate ---> ", carePlanTemplate);
-
-      // const carePlanTemplateData = await CarePlanTemplateWrapper(
-      //   carePlanTemplate
-      // );
-
-      const patient_id = patient.get("id");
+      const patient_id = patientData.getPatientId();
       const care_plan_template_id = null;
 
-      const details = { treatment_id, severity_id, condition_id };
+      const details = {
+        treatment_id,
+        severity_id,
+        condition_id,
+        diagnosis: {
+          type: diagnosis_type,
+          description: diagnosis_description
+        },
+        ...carePlanOtherDetails
+      };
 
       const carePlan = await carePlanService.addCarePlan({
         patient_id,
         doctor_id: doctor.get("id"),
         care_plan_template_id,
         details,
-        expired_on: moment().add(1, "y")
+        created_at: moment()
       });
 
       const carePlanData = await CarePlanWrapper(carePlan);
 
       let templateMedicationData = {};
-      let template_medication_ids = [];
-
       let templateAppointmentData = {};
-      let template_appointment_ids = [];
-      let medicine_ids = [];
-
 
       let carePlanTemplateData = null;
 
-      // if (carePlanData.getCarePlanTemplateId()) {
-      //   const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(carePlanData.getCarePlanTemplateId());
-      //   carePlanTemplateData = await CarePlanTemplateWrapper(carePlanTemplate);
-      //   const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
-      //
-      //   for (const medication of medications) {
-      //     const medicationData = await TemplateMedicationWrapper(medication);
-      //     templateMedicationData[medicationData.getTemplateMedicationId()] = medicationData.getBasicInfo();
-      //     template_medication_ids.push(medicationData.getTemplateMedicationId());
-      //     medicine_ids.push(medicationData.getTemplateMedicineId());
-      //   }
-      //
-      //   const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(carePlanData.getCarePlanTemplateId());
-      //
-      //   for (const appointment of appointments) {
-      //     const appointmentData = await TemplateAppointmentWrapper(appointment);
-      //     templateAppointmentData[appointmentData.getTemplateAppointmentId()] = appointmentData.getBasicInfo();
-      //     template_appointment_ids.push(appointmentData.getTemplateAppointmentId());
-      //   }
-      // }
-      //
-      // const medicineData = await medicineService.getMedicineByData({
-      //   id: medicine_ids
-      // });
-      //
       let medicineApiData = {};
-      //
-      // let carePlanTemplateDetails = {};
-      // if (carePlanTemplate) {
-      //   carePlanTemplateData = await CarePlanTemplateWrapper(
-      //       carePlanTemplate
-      //   );
-      //   carePlanTemplateDetails[carePlanTemplateData.getCarePlanTemplateId()] = {
-      //     ...carePlanTemplateData.getBasicInfo(),
-      //     template_appointment_ids,
-      //     template_medication_ids
-      //   };
-      // }
-      //
-      // for (const medicine of medicineData) {
-      //   const medicineWrapper = await MedicineApiWrapper(medicine);
-      //   medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
-      // }
 
       const link = uuidv4();
-      const status = "pending";
 
       const userVerification = UserVerificationServices.addRequest({
-        user_id: updatedPatientData.getUserId(),
+        user_id: patientData.getUserId(),
         request_id: link,
         status: "pending",
         type: VERIFICATION_TYPE.PATIENT_SIGN_UP
       });
 
       const universalLink = await getUniversalLink({event_type : VERIFICATION_TYPE.PATIENT_SIGN_UP,link});
-
-      // Logger.debug("universalLink --> ", universalLink);
 
       const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
 
@@ -335,25 +326,23 @@ class MobileDoctorController extends Controller {
         message: `Hello from Adhere! Please click the link to verify your number. ${universalLink}`
       };
 
-      // Logger.debug("process.config.app.env ---> ", process.config.app.env);
-
       // if(process.config.app.env === "development") {
-        const emailPayload = {
-          title: "Mobile Patient Verification mail",
-          toAddress: process.config.app.developer_email,
-          templateName: EMAIL_TEMPLATE_NAME.INVITATION,
-          templateData: {
-            title: "Patient",
-            link: universalLink,
-            inviteCard: "",
-            mainBodyText: "We are really happy to welcome you onboard.",
-            subBodyText: "Please verify your account",
-            buttonText: "Verify",
-            host: process.config.WEB_URL,
-            contactTo: "patientEngagement@adhere.com"
-          }
-        };
-        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      const emailPayload = {
+        title: "Mobile Patient Verification mail",
+        toAddress: process.config.app.developer_email,
+        templateName: EMAIL_TEMPLATE_NAME.INVITATION,
+        templateData: {
+          title: "Patient",
+          link: universalLink,
+          inviteCard: "",
+          mainBodyText: "We are really happy to welcome you onboard.",
+          subBodyText: "Please verify your account",
+          buttonText: "Verify",
+          host: process.config.WEB_URL,
+          contactTo: "patientEngagement@adhere.com"
+        }
+      };
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
       // } else {
       //   Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
       // }
@@ -397,36 +386,36 @@ class MobileDoctorController extends Controller {
       }
 
       return this.raiseSuccess(
-        res,
-        200,
-        {
-          patient_ids: [patient_id],
-          // carePlanId,
-          care_plan_ids: [carePlanData.getCarePlanId()],
-          care_plan_template_ids: carePlanTemplateIds,
-          users: {
-            [userData.getId()]: userData.getBasicInfo()
+          res,
+          200,
+          {
+            patient_ids: [patient_id],
+            // carePlanId,
+            care_plan_ids: [carePlanData.getCarePlanId()],
+            care_plan_template_ids: carePlanTemplateIds,
+            users: {
+              [userData.getId()]: userData.getBasicInfo()
+            },
+            patients: {
+              [patientData.getPatientId()]: patientData.getBasicInfo()
+            },
+            care_plans: {
+              [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
+            },
+            care_plan_templates: {
+              ...otherCarePlanTemplates,
+            },
+            template_appointments: {
+              ...templateAppointmentData
+            },
+            template_medications: {
+              ...templateMedicationData
+            },
+            medicines: {
+              ...medicineApiData
+            }
           },
-          patients: {
-            [updatedPatientData.getPatientId()]: updatedPatientData.getBasicInfo()
-          },
-          care_plans: {
-            [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
-          },
-          care_plan_templates: {
-            ...otherCarePlanTemplates,
-          },
-          template_appointments: {
-            ...templateAppointmentData
-          },
-          template_medications: {
-            ...templateMedicationData
-          },
-          medicines: {
-            ...medicineApiData
-          }
-        },
-        "doctor's patient added successfully"
+          "Patient added successfully"
       );
     } catch (error) {
       Logger.debug("ADD DOCTOR PATIENT 500 ERROR ", error);
@@ -1402,6 +1391,58 @@ class MobileDoctorController extends Controller {
       return this.raiseServerError(res, 500, {}, `${error.message}`);
     }
   };
+
+  AddPatientToWatchlist = async (req,res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {  patient_id = 0 } = req.params;
+      const { userDetails: { userId } = {} } = req;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      if(patient && doctor){
+
+        const newWatchlistRecord = await doctorService.createNewWatchlistRecord({
+          patient_id:parseInt(patient_id),
+          doctor_id:doctor.get("id")
+        });
+
+        let doctorData = {};
+
+        if(newWatchlistRecord) {
+          const doctorDetails = await DoctorWrapper(doctor);
+          doctorData[doctorDetails.getDoctorId()] = await doctorDetails.getAllInfo();
+        }
+
+
+        return raiseSuccess(
+            res,
+            200,
+            {
+              doctors: {
+                ...doctorData
+              }
+            },
+            "Patient added to watchlist"
+        );
+      }else{
+        return raiseClientError(
+            res,
+            422,
+            {},
+            "Doctor/patient do not exist"
+        );
+      }
+
+
+    }catch (error) {
+      Logger.debug("83901283091298 add patient to watchlist error", error);
+      return raiseServerError(res);
+    }
+
+  };
+
 }
 
 export default new MobileDoctorController();

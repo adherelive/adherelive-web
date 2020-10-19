@@ -1,20 +1,20 @@
-import User from "../../models/users";
-import {database} from "../../../libs/mysql";
+import Database from "../../../libs/mysql";
 import {USER_CATEGORY} from "../../../constant";
 import {Op} from "sequelize";
 
-import Permissions from "../../models/permissions";
-import UserDevices from "../../models/userDevices";
-import Doctors from "../../models/doctors";
-import Patients from "../../models/patients";
+// TABLES
+import {TABLE_NAME} from "../../models/users";
+import {TABLE_NAME as permissionTableName} from "../../models/permissions";
+import {TABLE_NAME as doctorTableName} from "../../models/doctors";
+import {TABLE_NAME as patientTableName} from "../../models/patients";
+import {TABLE_NAME as userDeviceTableName} from "../../models/userDevices";
 
 class UserService {
-    constructor() {
-    }
+    constructor() {}
 
     async getAll() {
         try {
-            const user = await User.findAll();
+            const user = await Database.getModel(TABLE_NAME).findAll();
             return user;
         } catch (err) {
             console.log(err);
@@ -24,11 +24,11 @@ class UserService {
 
     getUser = async (id) => {
         try {
-            const user = await User.findOne({
+            const user = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     id
                 },
-                include: [Doctors, Patients]
+                include: [Database.getModel(doctorTableName), Database.getModel(patientTableName)]
             });
             return user;
         } catch (err) {
@@ -40,7 +40,7 @@ class UserService {
     async getUserByEmail(data) {
         try {
             const {email} = data;
-            const user = await User.findOne({
+            const user = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     email
                 }
@@ -53,7 +53,7 @@ class UserService {
 
     getUserByNumber = async (data) => {
         try {
-            const user = await User.findOne({
+            const user = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     ...data,
                     category: USER_CATEGORY.PATIENT
@@ -67,11 +67,11 @@ class UserService {
 
     getUserById = async id => {
         try {
-            const user = await User.findOne({
+            const user = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     id
                 },
-                include: [Doctors, Patients]
+                include: [Database.getModel(doctorTableName), Database.getModel(patientTableName)]
             });
             return user;
         } catch (err) {
@@ -81,7 +81,7 @@ class UserService {
 
     getUserByData = async data => {
         try {
-            const user = await User.findAll({
+            const user = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return user;
@@ -91,9 +91,9 @@ class UserService {
     };
 
     async addUser(data) {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
-            const response = await User.create(data, {transaction});
+            const response = await Database.getModel(TABLE_NAME).create(data, {transaction});
             await transaction.commit();
             return response;
         } catch (err) {
@@ -103,9 +103,9 @@ class UserService {
     }
 
     updateEmail = async (data, id) => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
-            const user = await User.update(data, {
+            const user = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
                     id
                 },
@@ -120,9 +120,9 @@ class UserService {
     };
 
     updateUser = async (data, id) => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
         try {
-            const user = await User.update(data, {
+            const user = await Database.getModel(TABLE_NAME).update(data, {
                 where: {
                     id
                 },
@@ -138,11 +138,16 @@ class UserService {
 
     getPatientByMobile = async (mobile_number) => {
         try {
-            const user = await User.findAll({
+            const user = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     category: USER_CATEGORY.PATIENT,
                     mobile_number,
-                }
+                },
+                include: [
+                    {
+                        model: Database.getModel(patientTableName)
+                    }
+                ]
             });
             return user;
         } catch (err) {
@@ -152,7 +157,7 @@ class UserService {
 
     getUserByUsername = async (user_name) => {
         try {
-            const user = await User.findOne({
+            const user = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     // category: USER_CATEGORY.PATIENT,
                     [Op.or]: [
@@ -174,9 +179,9 @@ class UserService {
 
     getUserData = async (data) => {
       try {
-          const user = await User.findOne({
+          const user = await Database.getModel(TABLE_NAME).findOne({
               where: data,
-              include: Permissions
+              include: [Database.getModel(permissionTableName)]
           });
           return user;
       } catch(error) {
@@ -186,9 +191,9 @@ class UserService {
 
     getUserByDevices = async (data) => {
         try {
-            const user = await User.findOne({
+            const user = await Database.getModel(TABLE_NAME).findOne({
                 where: data,
-                include: [UserDevices]
+                include: [Database.getModel(userDeviceTableName)]
             });
             return user;
         } catch(error) {

@@ -1,9 +1,10 @@
 'use strict';
-import {DB_TABLES, USER_CATEGORY} from "../../constant";
+import {USER_CATEGORY} from "../../constant";
+import {TABLE_NAME} from "../models/userCategoryPermissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(DB_TABLES.USER_CATEGORY_PERMISSIONS, [
+    return queryInterface.bulkInsert(TABLE_NAME, [
       {
         category:USER_CATEGORY.DOCTOR,
         permission_id: "1",
@@ -147,6 +148,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete(DB_TABLES.USER_CATEGORY_PERMISSIONS, null, {});
+    return queryInterface.bulkDelete(TABLE_NAME, null, {});
   }
 };

@@ -103,13 +103,14 @@ class EndDate extends Component {
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
-    return (
+
+   return (
       <div className="wp100 flex align-center">
-        <div className="pl8 wp100">
-          <div className="flex row">
+        <div className="pr8 wp100">
+          <div className='flex row'>
             <span className="form-label">To</span>
           </div>
-          <FormItem className="wp100 mt-4">
+          <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
               initialValue: getInitialValue()
             })(
@@ -137,6 +138,41 @@ class EndDate extends Component {
         </div>
       </div>
     );
+
+    // return (
+    //   <div className="wp100 flex align-center">
+    //     <div className="pl8 wp100">
+    //       <div className="flex row">
+    //         <span className="form-label">To</span>
+    //       </div>
+    //       <FormItem className="wp100 mt-4">
+    //         {getFieldDecorator(FIELD_NAME, {
+    //           initialValue: getInitialValue()
+    //         })(
+    //           <DatePicker
+    //             className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}
+    //             format="DD/MM/YYYY, ddd"
+    //             showToday={false}
+    //             // suffixIcon={calendarComp()}
+    //             disabled={
+    //               getFieldError(repeatIntervalField.field_name) !== undefined
+    //             }
+    //             // allowClear={false}
+    //             disabledDate={disabledEndDate}
+    //             getCalendarContainer={this.getParentNode}
+    //             popupStyle={{ left: 0 }}
+    //           />
+    //         )}
+    //         {/*<img*/}
+    //         {/*  alt=""*/}
+    //         {/*  className="calendar clickable new-calendar"*/}
+    //         {/*  onClick={openCalendar}*/}
+    //         {/*  src={calendar}*/}
+    //         {/*/>*/}
+    //       </FormItem>
+    //     </div>
+    //   </div>
+    // );
   }
 }
 

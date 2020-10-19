@@ -1,14 +1,13 @@
-import Medicine from "../../models/medicines";
-import Sequelize from "sequelize";
-
-const Op = Sequelize.Op;
+import {Op} from "sequelize";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/medicines";
 
 class MedicineService {
   constructor() {}
 
   add = async (data) => {
     try {
-      const medicine = await Medicine.create(data);
+      const medicine = await Database.getModel(TABLE_NAME).create(data);
       return medicine;
     } catch(err) {
       throw err;
@@ -17,7 +16,7 @@ class MedicineService {
 
   search = async (data) => {
     try {
-      const medicine = await Medicine.findAll({
+      const medicine = await Database.getModel(TABLE_NAME).findAll({
         where: {
           name: {
             [Op.like]: `${data}%`,
@@ -32,7 +31,7 @@ class MedicineService {
 
   getMedicineById = async (id) => {
     try {
-      const medicine = await Medicine.findOne({
+      const medicine = await Database.getModel(TABLE_NAME).findOne({
         where: {
           id
         }
@@ -45,7 +44,7 @@ class MedicineService {
 
   getMedicineByData = async (data) => {
     try {
-      const medicine = await Medicine.findAll({
+      const medicine = await Database.getModel(TABLE_NAME).findAll({
         where: data
       });
       return medicine;

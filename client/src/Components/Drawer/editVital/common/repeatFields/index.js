@@ -58,14 +58,7 @@ export default props => {
       <div className="select-days-wrapper flex align-items-center justify-content-space-between wp100">
         <div className="repeats wp100">{selectedDays.render(props)}</div>
       </div>
-      <RadioGroup
-        className="flex justify-content-end radio-formulation mt10 mb24"
-        buttonStyle="solid"
-        value={selectedDaysRadio}
-      >
-        <RadioButton value={1} onClick={props.setRepeatEveryDay} >{props.formatMessage(messages.everyday)}</RadioButton>
-        <RadioButton value={2} onClick={props.setRepeatAlternateDay}>{props.formatMessage(messages.alternate)}</RadioButton>
-      </RadioGroup>
+      
       
       <div className="flex align-items-center justify-content-space-between">
         {startDate.render(props)}

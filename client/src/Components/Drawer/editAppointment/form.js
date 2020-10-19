@@ -54,6 +54,7 @@ class EditAppointmentForm extends Component {
   //   }
   // };
   componentDidMount = () => {
+    this.scrollToTop();
     let {
       appointments,
       appointmentData,
@@ -69,6 +70,16 @@ class EditAppointmentForm extends Component {
 
     this.setState({ typeDescription: descArray });
   }
+  
+  scrollToTop = () => {
+    let antForm= document.getElementsByClassName('Form')[0];
+    let antDrawerBody = antForm.parentNode;
+    let antDrawerWrapperBody=antDrawerBody.parentNode;
+    antDrawerBody.scrollIntoView(true);
+    antDrawerWrapperBody.scrollTop -= 200;
+  }
+  
+  
   fetchPatients = async (data) => {
     try {
     } catch (err) {
@@ -410,7 +421,7 @@ class EditAppointmentForm extends Component {
     });
 
     return (
-      <Form className="fw700 wp100 pb30">
+      <Form className="fw700 wp100 pb30 Form">
         <FormItem
           // label={formatMessage(message.patient)}
           className='mb-24'

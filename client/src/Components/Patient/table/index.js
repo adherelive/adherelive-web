@@ -13,6 +13,7 @@ class PatientTable extends Component {
   }
 
   onRowClick = (key) => (event) => {
+    event.preventDefault();
     const { openPatientDetailsDrawer } = this.props;
     openPatientDetailsDrawer({ patient_id: key });
     // history.push(getPatientDetailsUrl(key));
@@ -50,9 +51,12 @@ class PatientTable extends Component {
       chats,
       care_plans,
       users,
+      authenticated_user,
+      addToWatchlist
     } = this.props;
 
-
+    const {onRowClick} = this;
+  
     return Object.keys(patients).map((id) => {
       return generateRow({
         id,
@@ -66,6 +70,9 @@ class PatientTable extends Component {
         chat_ids,
         care_plans,
         users,
+        authenticated_user,
+        addToWatchlist,
+        onRowClick
       });
     });
   };
@@ -87,7 +94,8 @@ class PatientTable extends Component {
 
     return (
       <Table
-        onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
+        
+        // onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
@@ -100,6 +108,7 @@ class PatientTable extends Component {
         pagination={{
           position: "bottom",
         }}
+        
       />
     );
   }

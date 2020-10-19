@@ -4,13 +4,13 @@ import BaseVital from "../../../services/vitals";
 
 // SERVICES
 import VitalService from "../../../services/vitals/vital.service";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../common/scheduleEvents";
-import {EVENT_STATUS} from "../../../../constant";
+import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 import moment from "moment";
 
 const Log = new Logger("MOBILE > API_WRAPPER > VITALS");
@@ -39,8 +39,9 @@ class VitalWrapper extends BaseVital {
 
     getAllInfo = async () => {
         const {getBasicInfo, getVitalId} = this;
+        const EventService = new eventService();
 
-        const currentDate = moment().utc().toDate();
+        const currentDate = moment().endOf("day").utc().toDate();
 
         const scheduleEvents = await EventService.getAllPreviousByData({
             event_id: getVitalId(),
@@ -54,11 +55,15 @@ class VitalWrapper extends BaseVital {
         const scheduleEventIds = [];
         for(const events of scheduleEvents) {
             const scheduleEvent = await EventWrapper(events);
-            if(scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
-                if(!latestPendingEventId) {
-                    latestPendingEventId = scheduleEvent.getScheduleEventId();
+            if(scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
+                scheduleEventIds.push(scheduleEvent.getScheduleEventId());
+
+                if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
+                    if(!latestPendingEventId) {
+                        latestPendingEventId = scheduleEvent.getScheduleEventId();
+                    }
+                    remaining++;
                 }
-                remaining++;
             }
         }
 

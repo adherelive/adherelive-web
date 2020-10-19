@@ -1,35 +1,40 @@
 "use strict";
-import Sequelize from "sequelize";
-import { database } from "../../libs/mysql";
-import { DB_TABLES } from "../../constant";
-import Doctors from "./doctors";
+import {DataTypes} from "sequelize";
 
-const Specialities = database.define(
-    DB_TABLES.SPECIALITIES,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const TABLE_NAME = "specialities";
+
+export const db = (database) => {
+    database.define(
+        TABLE_NAME,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            description: {
+                type: DataTypes.STRING(1000),
+            }
         },
-        name: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-        description: {
-            type: Sequelize.STRING(1000),
+        {
+            underscored: true,
+            paranoid: true,
         }
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
+    );
+};
 
-// Specialities.belongsTo(Doctors, {
-//     foreignKey: "speciality_id",
-//     targetKey:"id"
-// });
 
-export default Specialities;
+export const associate = (database) => {
+    // const {TABLE_NAME} = database.models || {};
+
+    // associations here (if any) ...
+    // Specialities.belongsTo(Doctors, {
+    //     foreignKey: "speciality_id",
+    //     targetKey:"id"
+    // });
+};

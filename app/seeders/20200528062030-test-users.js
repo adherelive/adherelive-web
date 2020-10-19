@@ -1,25 +1,13 @@
 'use strict';
 
-import {DB_TABLES} from "../../constant";
+import {TABLE_NAME} from "../models/users";
 import bcrypt from "bcrypt";
 
 let password = "";
 
-// const a = await bcrypt.hash("Password@123", 5);
-
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        /*
-          Add altering commands here.google
-          Return a promise to correctly handle asynchronicity.
-
-          Example:
-          return queryInterface.bulkInsert('People', [{
-            name: 'John Doe',
-            isBetaMember: false
-          }], {});
-        */
-        return queryInterface.bulkInsert(DB_TABLES.USERS, [
+        return queryInterface.bulkInsert(TABLE_NAME, [
             {
                 user_name: "doctorOne",
                 email: "test-doctor@mail.com",
@@ -82,13 +70,6 @@ module.exports = {
     },
 
     down: (queryInterface, Sequelize) => {
-        /*
-          Add reverting commands here.
-          Return a promise to correctly handle asynchronicity.
-
-          Example:
-          return queryInterface.bulkDelete('People', null, {});
-        */
-        return queryInterface.bulkDelete(DB_TABLES.USERS, null, {});
+        return queryInterface.bulkDelete(TABLE_NAME, null, {});
     }
 };

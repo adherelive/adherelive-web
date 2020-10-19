@@ -1,3 +1,3 @@
-export const getMedicationDetailsUrl = () => {
-    return `/events/medication-details`;
+export const getMedicationDetailsUrl = (patientId) => {
+    return `/medications/${patientId}/details`;
 };

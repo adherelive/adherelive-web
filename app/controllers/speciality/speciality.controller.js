@@ -1,8 +1,10 @@
 import Controller from "../";
-
+import Logger from "../../../libs/log";
 import specialityService from "../../services/speciality/speciality.service";
 
 import SpecialityWrapper from "../../ApiWrapper/mobile/speciality";
+
+const Log = new Logger("SPECIALITY WEB CONTROLLER");
 
 class SpecialityController extends Controller {
   constructor() {
@@ -46,7 +48,7 @@ class SpecialityController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("search 500 error", error);
+      Log.debug("search 500 error", error);
       return raiseServerError(res);
     }
   };

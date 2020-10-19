@@ -156,14 +156,11 @@ class UserController extends Controller {
 
   verifyUser = async (req, res) => {
     try {
-      console.log("IN VERIFY USERRRRRRRR");
       let { link } = req.params;
-      console.log("IN VERIFY USERRRRRRRR", link);
       let verifications = await UserVerificationServices.getRequestByLink(link);
       let userId = verifications.get("user_id");
       let userData = await userService.getUserById(userId);
       let isVerified = userData.get('verified');
-      console.log('IS VERIFIEDDDDDD ===========>', isVerified);
       if (!isVerified) {
         let updateVerification = await UserVerificationServices.updateVerification(
           { status: "verified" },
@@ -173,11 +170,9 @@ class UserController extends Controller {
         // let activated_on = moment();
         let verified = true;
         let dataToUpdate = { verified };
-        console.log("DATA TO UPDATEEEE", dataToUpdate);
         let user = await userService.updateUser(dataToUpdate, userId);
 
 
-        console.log("UPDATED USERRRRR", user);
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -192,8 +187,10 @@ class UserController extends Controller {
           }
         );
 
-        // const notificationToken = AppNotification.getUserToken(`${userId}`);
-        // const feedId = base64.encode(`${userId}`);
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user.get("id")}`);
+        const feedId = base64.encode(`${user.get("id")}`);
 
         const apiUserDetails = await UserWrapper(userData.getBasicInfo);
 
@@ -203,8 +200,8 @@ class UserController extends Controller {
               ...apiUserDetails.getBasicInfo()
             }
           },
-          // notificationToken: notificationToken,
-          // feedId: `${userId}`,
+          notificationToken: notificationToken,
+          feedId: `${userId}`,
           auth_user: apiUserDetails.getUserId(),
           auth_category: apiUserDetails.getCategory()
         };
@@ -225,8 +222,6 @@ class UserController extends Controller {
           "user verified successfully"
         );
       } else {
-
-        // res.redirect("/sign-in");
         return this.raiseServerError(res, 422, {}, 'This verification link is expired!');
       }
     } catch (error) {
@@ -273,9 +268,11 @@ class UserController extends Controller {
           }
         );
 
-        // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-        // const feedId = base64.encode(`${user.get("id")}`);
-        //
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user.get("id")}`);
+        const feedId = base64.encode(`${user.get("id")}`);
+
         // Logger.debug("notificationToken --> ", notificationToken);
         // Logger.debug("feedId --> ", feedId);
 
@@ -298,8 +295,8 @@ class UserController extends Controller {
           // ...permissions,
           ...await apiUserDetails.getReferenceData(),
           auth_user: apiUserDetails.getId(),
-          // notificationToken: notificationToken,
-          // feedId: `${user.get("id")}`,
+          notificationToken: notificationToken,
+          feedId: `${user.get("id")}`,
           auth_category: apiUserDetails.getCategory()
         };
 
@@ -501,7 +498,7 @@ class UserController extends Controller {
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
-              ] = userCategoryApiWrapper.getBasicInfo();
+              ] = await userCategoryApiWrapper.getAllInfo();
 
               careplanData = await carePlanService.getCarePlanByData({
                 doctor_id: userCategoryId
@@ -512,13 +509,7 @@ class UserController extends Controller {
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 const carePlanId = carePlanApiWrapper.getCarePlanId();
 
-                const medicationDetails = await careplanMedicationService.getMedicationsByCarePlanId(carePlanId);
-
-                let medicationIds = [];
-
-                for (const medication of medicationDetails) {
-                  medicationIds.push(medication.get("medication_id"));
-                }
+                const {appointment_ids = [], medication_ids = [], vital_ids = []} = await carePlanApiWrapper.getAllInfo();
 
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
 
@@ -529,7 +520,7 @@ class UserController extends Controller {
                   carePlanApiWrapper.getCarePlanId()
                 ] =
                   // carePlanApiWrapper.getBasicInfo();
-                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: medicationIds };
+                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids, appointment_ids, vital_ids };
               }
             }
             break;
@@ -552,13 +543,14 @@ class UserController extends Controller {
         let patientApiDetails = {};
 
         if (patientsData) {
-          await patientsData.forEach(async patient => {
+          for(const patient of patientsData) {
             const patientWrapper = await PatientWrapper(patient);
             patientApiDetails[
-              patientWrapper.getPatientId()
-            ] = patientWrapper.getBasicInfo();
+                patientWrapper.getPatientId()
+                ] = await patientWrapper.getAllInfo();
             userIds.push(patientWrapper.getUserId());
-          });
+
+          }
         }
         // Logger.debug("userIds --> ", userIds);
 
@@ -579,7 +571,7 @@ class UserController extends Controller {
 
         // treatments
         let treatmentApiDetails = {};
-        const treatmentDetails = await treatmentService.getAll({ id: treatmentIds });
+        const treatmentDetails = await treatmentService.getAll();
         treatmentIds = [];
         for (const treatment of treatmentDetails) {
 
@@ -613,9 +605,6 @@ class UserController extends Controller {
           permissions: []
         };
 
-        // const notificationToken = AppNotification.getUserToken(`${userId}`);
-        // const feedId = base64.encode(`${userId}`);
-
 
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
@@ -630,7 +619,10 @@ class UserController extends Controller {
           referenceData = await userCategoryApiWrapper.getReferenceInfo();
         }
 
-        /**** API wrapper for DOCTOR ****/
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${userId}`);
+        const feedId = base64.encode(`${userId}`);
 
         return this.raiseSuccess(res, 200, {
           users: {
@@ -645,8 +637,8 @@ class UserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
-          // notificationToken: notificationToken,
-          // feedId: `${userId}`,
+          notificationToken: notificationToken,
+          feedId: `${userId}`,
           severity: {
             ...severityApiDetails,
           },
@@ -671,10 +663,6 @@ class UserController extends Controller {
     } catch (err) {
       Logger.debug("onAppStart 500 error", err);
       return this.raiseServerError(res);
-      // console.log("ON APP START CATCH ERROR ", err);
-      // response = new Response(false, 500);
-      // response.setError(err.message);
-      // return res.status(500).json(response.getResponse());
     }
   };
 

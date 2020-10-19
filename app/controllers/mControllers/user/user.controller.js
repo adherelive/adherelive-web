@@ -1,5 +1,5 @@
 import * as constants from "../../../../config/constants";
-
+import Controller from "../../";
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
@@ -9,9 +9,6 @@ import base64 from "js-base64";
 import Log from "../../../../libs/log";
 
 const Response = require("../../helper/responseFormat");
-import userService from "../../../services/user/user.service";
-import patientService from "../../../services/patients/patients.service";
-import carePlanService from "../../../services/carePlan/carePlan.service";
 
 import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MUserWrapper from "../../../ApiWrapper/mobile/user";
@@ -21,7 +18,9 @@ import MUploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import MDoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
 
-import Controller from "../../";
+import userService from "../../../services/user/user.service";
+import patientService from "../../../services/patients/patients.service";
+import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorService from "../../../services/doctors/doctors.service";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
@@ -30,16 +29,16 @@ import UserVerificationServices from "../../../services/userVerifications/userVe
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
-
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
-import patientsService from "../../../services/patients/patients.service";
+
 import { doctorQualificationData, uploadImageS3 } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS, VERIFICATION_TYPE
+  ONBOARDING_STATUS,
+  VERIFICATION_TYPE
 } from "../../../../constant";
 import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
 const errMessage = require("../../../../config/messages.json").errMessages;
@@ -52,7 +51,7 @@ import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
 
 import generateOTP from "../../../helper/generateOtp";
-// import AppNotification from "../../../NotificationSdk/inApp";
+import AppNotification from "../../../NotificationSdk/inApp";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -69,7 +68,12 @@ class MobileUserController extends Controller {
       // const userDetails = user[0];
       // console.log("userDetails --> ", userDetails);
       if (!user) {
-        return this.raiseClientError(res, 422, user, "Mobile Number doesn't exists");
+        return this.raiseClientError(
+          res,
+          422,
+          user,
+          "Mobile Number doesn't exists"
+        );
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
@@ -100,7 +104,7 @@ class MobileUserController extends Controller {
 
       const patientOtpVerification = await otpVerificationService.create({
         user_id: apiUserDetails.getId(),
-        otp,
+        otp
       });
 
       const emailPayload = {
@@ -166,7 +170,9 @@ class MobileUserController extends Controller {
 
       if (otpDetails.length > 0) {
         const destroyOtp = await otpVerificationService.delete({ user_id });
-        const userDetails = await userService.getUserById(otpDetails[0].get("user_id"));
+        const userDetails = await userService.getUserById(
+          otpDetails[0].get("user_id")
+        );
 
         const userData = await UserWrapper(userDetails.get());
         let permissions = {
@@ -190,8 +196,10 @@ class MobileUserController extends Controller {
           }
         );
 
-        // const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
-        // const feedId = base64.encode(`${userData.getId()}`);
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user_id}`);
+        const feedId = base64.encode(`${user_id}`);
 
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
@@ -199,8 +207,8 @@ class MobileUserController extends Controller {
           200,
           {
             accessToken,
-            // notificationToken,
-            // feedId,
+            notificationToken,
+            feedId,
             users: {
               [userData.getId()]: {
                 ...userData.getBasicInfo()
@@ -213,7 +221,90 @@ class MobileUserController extends Controller {
           "Signed in successfully"
         );
       } else {
-        return this.raiseClientError(res, 422, {}, "OTP not correct. Please try again");
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "OTP not correct. Please try again"
+        );
+      }
+    } catch (error) {
+      Logger.debug("verifyOtp 500 error", error);
+      raiseServerError(res);
+    }
+  };
+
+  verifyOtp = async (req, res) => {
+    const { raiseServerError, raiseSuccess } = this;
+    try {
+      const { otp, user_id } = req.body;
+
+      const otpDetails = await otpVerificationService.getOtpByData({
+        otp,
+        user_id
+      });
+
+      Logger.debug("otpDetails --> ", otpDetails);
+
+      if (otpDetails.length > 0) {
+        const destroyOtp = await otpVerificationService.delete({ user_id });
+        const userDetails = await userService.getUserById(
+          otpDetails[0].get("user_id")
+        );
+
+        const userData = await UserWrapper(userDetails.get());
+        let permissions = {
+          permissions: []
+        };
+
+        if (userData.isActivated()) {
+          permissions = await userData.getPermissions();
+        }
+
+        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+        const secret = process.config.TOKEN_SECRET_KEY;
+        const accessToken = await jwt.sign(
+          {
+            userId: userData.getId()
+          },
+          secret,
+          {
+            expiresIn
+          }
+        );
+
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(`${user_id}`);
+        const feedId = base64.encode(`${user_id}`);
+
+        Logger.debug("userData ----> ", userData.isActivated());
+        return raiseSuccess(
+          res,
+          200,
+          {
+            accessToken,
+            notificationToken,
+            feedId,
+            users: {
+              [userData.getId()]: {
+                ...userData.getBasicInfo()
+              }
+            },
+            auth_user: userData.getId(),
+            auth_category: userData.getCategory(),
+            ...permissions
+          },
+          "Signed in successfully"
+        );
+      } else {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "OTP not correct. Please try again"
+        );
       }
     } catch (error) {
       Logger.debug("verifyOtp 500 error", error);
@@ -233,169 +324,9 @@ class MobileUserController extends Controller {
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
-      // const passwordMatch = await bcrypt.compare(
-      //   password,
-      //   user.get("password")
-      // );
-      // if (passwordMatch) {
-      //   const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-      //
-      //   const secret = process.config.TOKEN_SECRET_KEY;
-      //   const accessToken = await jwt.sign(
-      //     {
-      //       userId: user.get("id")
-      //     },
-      //     secret,
-      //     {
-      //       expiresIn
-      //     }
-      //   );
-      const apiUserDetails = await MUserWrapper(user.get());
-      const otp = generateOTP();
-
-      // delete previous generated otp if generated within time limit
-      const previousOtp = await otpVerificationService.delete({
-        user_id: apiUserDetails.getId()
-      });
-
-      const patientOtpVerification = await otpVerificationService.create({
-        user_id: apiUserDetails.getId(),
-        otp,
-      });
-
-      const emailPayload = {
-        title: "OTP Verification for patient",
-        toAddress: process.config.app.developer_email,
-        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-        templateData: {
-          title: "Patient",
-          mainBodyText: "OTP for adhere patient login is",
-          subBodyText: otp,
-          host: process.config.WEB_URL,
-          contactTo: process.config.app.support_email
-        }
-      };
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-
-      // const smsPayload = {
-      //   // countryCode: prefix,
-      //   phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
-      //   message: `Hello from Adhere! Your OTP for login is ${otp}`
-      // };
-      //
-      // Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
-
-      // let permissions = {
-      //   permissions: []
-      // };
-      //
-      // if(apiUserDetails.isActivated()) {
-      //   permissions = await apiUserDetails.getPermissions();
-      // }
-      //
-      // Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
-
-      return this.raiseSuccess(
-        res,
-        200,
-        {
-          user_id: apiUserDetails.getId()
-        },
-        "OTP sent successfully"
-      );
-      // } else {
-      //   return this.raiseClientError(res, 422, {}, "Invalid Credentials");
-      // }
-    } catch (error) {
-      console.log("error sign in  --> ", error);
-      return this.raiseServerError(res);
-    }
-  };
-
-  verifyOtp = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
-    try {
-      const { otp, user_id } = req.body;
-
-      const otpDetails = await otpVerificationService.getOtpByData({
-        otp,
-        user_id
-      });
-
-      Logger.debug("otpDetails --> ", otpDetails);
-
-      if (otpDetails.length > 0) {
-        const destroyOtp = await otpVerificationService.delete({ user_id });
-        const userDetails = await userService.getUserById(otpDetails[0].get("user_id"));
-
-        const userData = await UserWrapper(userDetails.get());
-        let permissions = {
-          permissions: []
-        };
-
-        if(userData.isActivated()) {
-          permissions = await userData.getPermissions();
-        }
-
-          const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
-          const secret = process.config.TOKEN_SECRET_KEY;
-          const accessToken = await jwt.sign(
-            {
-              userId: userData.getId()
-            },
-            secret,
-            {
-              expiresIn
-            }
-          );
-
-        // const notificationToken = AppNotification.getUserToken(`${userData.getId()}`);
-        // const feedId = base64.encode(`${userData.getId()}`);
-
-        Logger.debug("userData ----> ", userData.isActivated());
-        return raiseSuccess(
-          res,
-          200,
-          {
-            accessToken,
-            // notificationToken,
-            // feedId,
-            users: {
-              [userData.getId()]: {
-                ...userData.getBasicInfo()
-              }
-            },
-            auth_user: userData.getId(),
-            auth_category: userData.getCategory(),
-            ...permissions
-          },
-          "Signed in successfully"
-        );
-      } else {
-        return this.raiseClientError(res, 422, {}, "OTP not correct. Please try again");
-      }
-    } catch(error) {
-      Logger.debug("verifyOtp 500 error", error);
-      raiseServerError(res);
-    }
-  };
-
-  doctorSignIn = async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      const user = await userService.getUserByEmail({email});
-
-      // const userDetails = user[0];
-      // console.log("userDetails --> ", userDetails);
-      if (!user) {
-        return this.raiseClientError(res, 422, {}, "Email doesn't exists");
-      }
-
-      // TODO: UNCOMMENT below code after signup done for password check or seeder
       const passwordMatch = await bcrypt.compare(
-          password,
-          user.get("password")
+        password,
+        user.get("password")
       );
       if (passwordMatch) {
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
@@ -411,10 +342,12 @@ class MobileUserController extends Controller {
           }
         );
 
-        // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-        //
-        // const feedId = base64.encode(`${user.get("id")}`);
-        // const antiFeed = base64.atob(feedId);
+        const appNotification = new AppNotification();
+
+        const notificationToken = appNotification.getUserToken(
+          `${user.get("id")}`
+        );
+        const feedId = base64.encode(`${user.get("id")}`);
 
         const apiUserDetails = await MUserWrapper(user.get());
 
@@ -427,24 +360,23 @@ class MobileUserController extends Controller {
         }
 
         return this.raiseSuccess(
-            res,
-            200,
-            {
-              accessToken,
-              // notificationToken,
-              // feedId,
-              users: {
-                [apiUserDetails.getId()]: {
-                  ...apiUserDetails.getBasicInfo()
-                }
-              },
-              auth_user: apiUserDetails.getId(),
-              auth_category: apiUserDetails.getCategory(),
-              ...permissions,
+          res,
+          200,
+          {
+            accessToken,
+            notificationToken,
+            feedId,
+            users: {
+              [apiUserDetails.getId()]: {
+                ...apiUserDetails.getBasicInfo()
+              }
             },
+            auth_user: apiUserDetails.getId(),
+            auth_category: apiUserDetails.getCategory(),
+            ...permissions
+          },
           "Signed in successfully"
         );
-
       } else {
         return this.raiseClientError(res, 422, {}, "Invalid Credentials");
       }
@@ -455,64 +387,37 @@ class MobileUserController extends Controller {
   };
 
   signUp = async (req, res) => {
+    const {raiseClientError, raiseSuccess, raiseServerError} = this;
     try {
       const { password, email } = req.body;
       const userExits = await userService.getUserByEmail({ email });
 
-      console.log("CREDENTIALSSSSSSSSSSSSSS", password, email);
       if (userExits !== null) {
-        const userExitsError = new Error();
-        userExitsError.code = 11000;
-        throw userExitsError;
+        return raiseClientError(
+          res,
+          11000,
+          errMessage.EMAIL_ALREADY_EXISTS,
+          errMessage.EMAIL_ALREADY_EXISTS.message
+        );
       }
 
-      let response;
-      const link = uuidv4();
-      const status = "verified"; //make it pending completing flow with verify permission
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
-      const verified = true;
 
-      let user = await userService.addUser({
+      const user = await userService.addUser({
         email,
         password: hash,
         sign_in_type: "basic",
-        category: "doctor",
-        onboarded: false,
-        verified,
+        category: USER_CATEGORY.DOCTOR,
+        onboarded: true,
+        verified: true
       });
 
-      const userInfo = await userService.getUserByEmail({ email });
-
-      const userVerification = UserVerificationServices.addRequest({
-        user_id: userInfo.get("id"),
-        request_id: link,
-        status: "pending"
-      });
-      let uId = userInfo.get("id");
-
-      console.log(
-        "CREDENTIALSSSSSSSSSSSSSS111111111111",
-        "      1234567890          ",
-        userInfo.get("id")
-      );
-      const emailPayload = {
-        title: "Verification mail",
-        toAddress: email,
-        templateName: EMAIL_TEMPLATE_NAME.WELCOME,
-        templateData: {
-          title: "Doctor",
-          link: process.config.app.invite_link + link,
-          inviteCard: "",
-          mainBodyText: "We are really happy that you chose us.",
-          subBodyText: "Please verify your account",
-          buttonText: "Verify",
-          host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com"
-        }
-      };
-
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      if(user) {
+        await doctorService.addDoctor({
+          user_id: user.get("id")
+        });
+      }
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
@@ -527,119 +432,38 @@ class MobileUserController extends Controller {
         }
       );
 
-      // const notificationToken = AppNotification.getUserToken(`${user.get("id")}`);
-      //
-      // Logger.debug("feedId ---> user id", user.get("id"));
-      // const feedId = base64.encode(`${user.get("id")}`);
-      // Logger.debug("feedId ---> ", feedId);
+      const appNotification = new AppNotification();
+
+      const notificationToken = appNotification.getUserToken(
+        `${user.get("id")}`
+      );
+      const feedId = base64.encode(`${user.get("id")}`);
 
       const apiUserDetails = await MUserWrapper(user.get());
 
-      return this.raiseSuccess(
+      return raiseSuccess(
         res,
         200,
         {
           accessToken,
-          // notificationToken,
-          // feedId,
+          notificationToken,
+          feedId,
           users: {
             [apiUserDetails.getId()]: {
               ...apiUserDetails.getBasicInfo()
             }
-          }
+          },
+          auth_user: apiUserDetails.getId(),
+          auth_category: apiUserDetails.getCategory()
         },
-        "Sign up successfull"
+        "Sign up successful"
       );
     } catch (err) {
+      Logger.debug("signup 500 error", err);
       console.log("signup err,", err);
-      if (err.code && err.code == 11000) {
-        let response = new Response(false, 400);
-        console.log(
-          "Sign ka hai -----------> , ",
-          errMessage.EMAIL_ALREADY_EXISTS
-        );
-        response.setError(errMessage.EMAIL_ALREADY_EXISTS);
-        response.setMessage(errMessage.EMAIL_ALREADY_EXISTS.message);
-        return res.status(400).json(response.getResponse());
-      } else {
-        return this.raiseServerError(res);
-      }
+      return raiseServerError(res);
     }
   };
-
-  // signIn = async (req, res) => {
-  //   try {
-  //     const { email, password } = req.body;
-  //     const user = await userService.getUserByEmail({
-  //       email,
-  //     });
-
-  //     // const userDetails = user[0];
-  //     // console.log("userDetails --> ", userDetails);
-  //     if (!user) {
-  //       return this.raiseClientError(res, 422, user, "user does not exists");
-  //     }
-
-  //     let verified = user.get("verified");
-
-  //     if (!verified) {
-  //       return this.raiseClientError(res, 401, "user account not verified");
-  //     }
-
-  //     // TODO: UNCOMMENT below code after signup done for password check or seeder
-  //     const passwordMatch = await bcrypt.compare(
-  //       password,
-  //       user.get("password")
-  //     );
-  //     if (passwordMatch) {
-  //       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
-  //       const secret = process.config.TOKEN_SECRET_KEY;
-  //       const accessToken = await jwt.sign(
-  //         {
-  //           userId: user.get("id"),
-  //         },
-  //         secret,
-  //         {
-  //           expiresIn,
-  //         }
-  //       );
-
-  //       return this.raiseSuccess(
-  //         res,
-  //         200,
-  //         {
-  //           accessToken,
-  //         },
-  //         "initial data retrieved successfully"
-  //       );
-  //     } else {
-  //       return this.raiseClientError(res, 422, {}, "password not matching");
-  //     }
-  //   } catch (error) {
-  //     console.log("error sign in  --> ", error);
-  //     return this.raiseServerError(res, 500, error, error.getMessage());
-  //   }
-  //   //   );
-
-  //   //   console.log("access token combines --> ", accessTokenCombined);
-
-  //   //   // res.cookie("accessToken", accessTokenCombined);
-
-  //   //   let response = new Response(true, 200);
-  //   //   response.setMessage("Sign in successful!");
-  //   //   response.setData({
-  //   //     accessToken: accessTokenCombined,
-  //   //   });
-  //   //   return res.status(response.getStatusCode()).send(response.getResponse());
-  //   // } catch (err) {
-  //   //   console.log("error ======== ", err);
-  //   //   //throw err;
-  //   //   let response = new Response(false, 500);
-  //   //   response.setMessage("Sign in Unsuccessful!");
-  //   //   return res.status(response.getStatusCode()).send(response.getResponse());
-  //   // }
-  // };
 
   async signInFacebook(req, res) {
     const { accessToken } = req.body;
@@ -726,7 +550,11 @@ class MobileUserController extends Controller {
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
 
-                const { severity_id, treatment_id, condition_id } = carePlanApiWrapper.getCarePlanDetails();
+                const {
+                  severity_id,
+                  treatment_id,
+                  condition_id
+                } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
               });
@@ -742,7 +570,7 @@ class MobileUserController extends Controller {
 
               userCatApiData[
                 userCategoryApiData.getDoctorId()
-              ] = userCategoryApiData.getBasicInfo();
+              ] = await userCategoryApiData.getAllInfo();
 
               careplanData = await carePlanService.getCarePlanByData({
                 doctor_id: userCategoryId
@@ -757,7 +585,11 @@ class MobileUserController extends Controller {
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
 
-                const { severity_id, treatment_id, condition_id } = carePlanApiWrapper.getCarePlanDetails();
+                const {
+                  severity_id,
+                  treatment_id,
+                  condition_id
+                } = carePlanApiWrapper.getCarePlanDetails();
                 treatmentIds.push(treatment_id);
                 conditionIds.push(condition_id);
               });
@@ -814,7 +646,7 @@ class MobileUserController extends Controller {
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
         } else {
-          apiUserDetails = await MUserWrapper(userData.get());
+          apiUserDetails = await MUserWrapper(null, userId);
           userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
 
           // Logger.debug("userApiData --> ", apiUserDetails.isActivated());
@@ -822,7 +654,7 @@ class MobileUserController extends Controller {
 
         // treatments
         let treatmentApiDetails = {};
-        const treatmentDetails = await treatmentService.getAll({ id: treatmentIds });
+        const treatmentDetails = await treatmentService.getAll();
         treatmentIds = [];
 
         for (const treatment of treatmentDetails) {
@@ -848,7 +680,9 @@ class MobileUserController extends Controller {
 
         // conditions
         let conditionApiDetails = {};
-        const conditionDetails = await conditionService.getAllByData({ id: conditionIds });
+        const conditionDetails = await conditionService.getAllByData({
+          id: conditionIds
+        });
         conditionIds = [];
 
         for (const condition of conditionDetails) {
@@ -893,13 +727,14 @@ class MobileUserController extends Controller {
             ...severityApiDetails
           },
           conditions: {
-            ...conditionApiDetails,
+            ...conditionApiDetails
           },
           treatments: {
-            ...treatmentApiDetails,
+            ...treatmentApiDetails
           },
           ...referenceData,
           ...permissions,
+
           severity_ids: severityIds,
           condition_ids: conditionIds,
           treatment_ids: treatmentIds,
@@ -1018,8 +853,8 @@ class MobileUserController extends Controller {
         doctorName.length == 3
           ? doctorName[2]
           : doctorName.length == 2
-            ? doctorName[1]
-            : "";
+          ? doctorName[1]
+          : "";
 
       if (doctorExist) {
         let doctor_data = {
@@ -1068,7 +903,7 @@ class MobileUserController extends Controller {
     }
   };
 
-    getDoctorProfileRegisterData = async (req, res) => {
+  getDoctorProfileRegisterData = async (req, res) => {
     // let{user_id,name,city,category,mobile_number,prefix,profile_pic}=req.body;
     let { userId } = req.params;
     try {
@@ -1108,12 +943,22 @@ class MobileUserController extends Controller {
           profile_pic: docPic = ""
         } = docInfo || {};
 
-        name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}`;
+        name = `${first_name} ${middle_name ? `${middle_name} ` : ""}${
+          last_name ? `${last_name} ` : ""
+        }`;
 
-        Logger.debug("MIDDLE NAME --> ", first_name, middle_name, last_name, name);
+        Logger.debug(
+          "MIDDLE NAME --> ",
+          first_name,
+          middle_name,
+          last_name,
+          name
+        );
 
         city = docCity;
-        profile_pic = docPic ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}` : docPic;
+        profile_pic = docPic
+          ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}`
+          : docPic;
       }
 
       const profileData = {
@@ -1621,13 +1466,13 @@ class MobileUserController extends Controller {
         patientName.length == 3
           ? patientName[2]
           : patientName.length == 2
-            ? patientName[1]
-            : "";
+          ? patientName[1]
+          : "";
 
       let uid = uuidv4();
       let birth_date = moment(date_of_birth);
       let age = moment().diff(birth_date, "years");
-      let patient = await patientsService.addPatient({
+      let patient = await patientService.addPatient({
         first_name,
         gender,
         middle_name,
@@ -2030,7 +1875,10 @@ class MobileUserController extends Controller {
         });
         // let uId = userInfo.get("id");
 
-        Logger.debug("process.config.WEB_URL --------------->", process.config.WEB_URL);
+        Logger.debug(
+          "process.config.WEB_URL --------------->",
+          process.config.WEB_URL
+        );
 
         const emailPayload = {
           toAddress: email,
@@ -2055,7 +1903,12 @@ class MobileUserController extends Controller {
           emailPayload
         );
       } else {
-        return raiseClientError(res, 422, {}, "User does not exists for the email");
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "User does not exists for the email"
+        );
       }
 
       raiseSuccess(
@@ -2068,19 +1921,26 @@ class MobileUserController extends Controller {
       Logger.debug("forgot password 500 error", error);
       return raiseServerError(res);
     }
-  }
+  };
 
   verifyPasswordResetLink = async (req, res) => {
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
       const { params: { link } = {} } = req;
 
-      const passwordResetLink = await UserVerificationServices.getRequestByLink(link);
+      const passwordResetLink = await UserVerificationServices.getRequestByLink(
+        link
+      );
 
       if (passwordResetLink) {
-        const linkVerificationData = await LinkVerificationWrapper(passwordResetLink);
+        const linkVerificationData = await LinkVerificationWrapper(
+          passwordResetLink
+        );
 
-        const userData = await UserWrapper(null, linkVerificationData.getUserId());
+        const userData = await UserWrapper(
+          null,
+          linkVerificationData.getUserId()
+        );
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -2094,16 +1954,26 @@ class MobileUserController extends Controller {
           }
         );
 
-        return raiseSuccess(res, 200, {
-          accessToken,
-          users: {
-            [userData.getId()]: {
-              ...userData.getBasicInfo()
+        return raiseSuccess(
+          res,
+          200,
+          {
+            accessToken,
+            users: {
+              [userData.getId()]: {
+                ...userData.getBasicInfo()
+              }
             }
-          }
-        }, "Email verified for password reset");
+          },
+          "Email verified for password reset"
+        );
       } else {
-        return raiseClientError(res, 422, {}, "Cannot verify email to update password");
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot verify email to update password"
+        );
       }
     } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
@@ -2114,7 +1984,10 @@ class MobileUserController extends Controller {
   updateUserPassword = async (req, res) => {
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { userDetails: { userId }, body: { new_password, confirm_password } = {} } = req;
+      const {
+        userDetails: { userId },
+        body: { new_password, confirm_password } = {}
+      } = req;
 
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
@@ -2123,20 +1996,25 @@ class MobileUserController extends Controller {
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(new_password, salt);
 
-      const updateUser = await userService.updateUser({
-        password: hash
-      }, userId);
+      const updateUser = await userService.updateUser(
+        {
+          password: hash
+        },
+        userId
+      );
 
       const updatedUser = await UserWrapper(null, userId);
 
-      return raiseSuccess(res, 200, {
-        users: {
-          [updatedUser.getId()]: updatedUser.getBasicInfo()
+      return raiseSuccess(
+        res,
+        200,
+        {
+          users: {
+            [updatedUser.getId()]: updatedUser.getBasicInfo()
+          }
         },
-      },
         "Password reset successful. Please login to continue"
       );
-
     } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
       return raiseServerError(res);
@@ -2148,12 +2026,19 @@ class MobileUserController extends Controller {
     try {
       const { params: { link } = {} } = req;
 
-      const patientVerifyLink = await UserVerificationServices.getRequestByLink(link);
+      const patientVerifyLink = await UserVerificationServices.getRequestByLink(
+        link
+      );
 
       if (patientVerifyLink) {
-        const linkVerificationData = await LinkVerificationWrapper(patientVerifyLink);
+        const linkVerificationData = await LinkVerificationWrapper(
+          patientVerifyLink
+        );
 
-        const userData = await UserWrapper(null, linkVerificationData.getUserId());
+        const userData = await UserWrapper(
+          null,
+          linkVerificationData.getUserId()
+        );
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -2167,16 +2052,26 @@ class MobileUserController extends Controller {
           }
         );
 
-        return raiseSuccess(res, 200, {
-          accessToken,
-          users: {
-            [userData.getId()]: {
-              ...userData.getBasicInfo()
+        return raiseSuccess(
+          res,
+          200,
+          {
+            accessToken,
+            users: {
+              [userData.getId()]: {
+                ...userData.getBasicInfo()
+              }
             }
-          }
-        }, "Email verified for password reset");
+          },
+          "Email verified for password reset"
+        );
       } else {
-        return raiseClientError(res, 422, {}, "Cannot verify email to update password");
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot verify email to update password"
+        );
       }
     } catch (error) {
       Logger.debug("updateUserPassword 500 error", error);
@@ -2186,7 +2081,10 @@ class MobileUserController extends Controller {
 
   updatePassword = async (req, res) => {
     try {
-      const { body: { password, confirm_password } = {}, userDetails: { userId, userData: { category } = {} } = {} } = req;
+      const {
+        body: { password, confirm_password } = {},
+        userDetails: { userId, userData: { category } = {} } = {}
+      } = req;
 
       if (password !== confirm_password) {
         return this.raiseClientError(res, 422, {}, "Password does not match");
@@ -2194,7 +2092,10 @@ class MobileUserController extends Controller {
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
 
-      const updateUser = await userService.updateUser({ password: hash }, userId);
+      const updateUser = await userService.updateUser(
+        { password: hash },
+        userId
+      );
 
       const updatedUser = await UserWrapper(null, userId);
 
@@ -2202,7 +2103,7 @@ class MobileUserController extends Controller {
 
       switch (category) {
         case USER_CATEGORY.PATIENT:
-          const patient = await patientsService.getPatientByUserId(userId);
+          const patient = await patientService.getPatientByUserId(userId);
           const patientData = await MPatientWrapper(patient);
           categoryData[patientData.getPatientId()] = patientData.getBasicInfo();
           break;
@@ -2214,17 +2115,19 @@ class MobileUserController extends Controller {
         default:
       }
 
-      return this.raiseSuccess(res, 200, {
-        users: {
-          [updatedUser.getId()]: updatedUser.getBasicInfo()
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          users: {
+            [updatedUser.getId()]: updatedUser.getBasicInfo()
+          },
+          [`${category}s`]: {
+            ...categoryData
+          }
         },
-        [`${category}s`]: {
-          ...categoryData
-        },
-      },
         "Password updated successfully"
       );
-
     } catch (error) {
       Logger.debug("updatePassword 500 error", error);
       return this.raiseServerError(res);

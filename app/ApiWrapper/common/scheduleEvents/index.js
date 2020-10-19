@@ -66,6 +66,7 @@ export default async (data = null, id = null) => {
     if(data) {
         return new ScheduleEventWrapper(data);
     }
-    const scheduleEvent = await ScheduleEventService.getEventByData({id});
+    const scheduleEventService = new ScheduleEventService();
+    const scheduleEvent = await scheduleEventService.getEventByData({id});
     return new ScheduleEventWrapper(scheduleEvent);
 };

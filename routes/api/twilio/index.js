@@ -19,4 +19,10 @@ router.get(
   twilioController.getConnectedParticipants
 );
 
+// router.delete(
+//   "/delete",
+//     Authenticate,
+//     twilioController.deleteChat
+// );
+
 module.exports = router;

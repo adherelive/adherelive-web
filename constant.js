@@ -13,6 +13,7 @@ export const ACTIVITY_TYPE = {
 };
 
 export const EVENT_TYPE = {
+  SYMPTOMS: "symptoms",
   VITALS: "vitals",
   APPOINTMENT: "appointment",
   REMINDER: "reminder",
@@ -237,7 +238,9 @@ export const NOTIFICATION_VERB = {
   HOSPITALISATION_CREATE: "HOSPITALISATION_CREATE",
   BENEFIT_DOCS_VERIFIED: "BENEFIT_DOCS_VERIFIED",
   CHARITY_APPROVAL: "CHARITY_APPROVAL",
-  MRL_GENERATION: "MRL_GENERATION"
+  MRL_GENERATION: "MRL_GENERATION",
+  VITAL_CREATE: "VITAL_CREATE",
+  VITAL_START: "VITAL_START"
 };
 
 export const NOTIFICATION_STAGES = {
@@ -333,7 +336,7 @@ export const DB_TABLES = {
   QUALIFICATION: "qualifications",
   REGISTRATION_COUNCIL: "registration_councils",
   OTP_VERIFICATIONS: "otp_verifications",
-  TREATMENT_CONDITION_MAPPING: "treatment_condition_mappings",
+  TREATMENT_CONDITION_MAPPING: "",
   FEATURE_DETAILS: "feature_details",
   USER_DEVICES: "user_devices",
   SYMPTOMS: "symptoms",
@@ -358,7 +361,7 @@ export const DOCUMENT_PARENT_TYPE = {
   DOCTOR_REGISTRATION: "doctor_registration",
   SYMPTOM_AUDIO: "symptom_audio",
   SYMPTOM_PHOTO: "symptom_photo",
-  SYMPTOM_VIDEO: "symptom_video",
+  SYMPTOM_VIDEO: "symptom_video"
 };
 
 export const ONBOARDING_STATUS = {
@@ -388,7 +391,8 @@ export const EVENT_STATUS = {
   PENDING: "pending",
   COMPLETED: "completed",
   EXPIRED: "expired",
-  CANCELLED: "cancelled"
+  CANCELLED: "cancelled",
+  STARTED: "started"
 };
 
 export const EMAIL_TEMPLATE_NAME = {
@@ -442,9 +446,9 @@ export const DOSE_UNIT = {
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
 
-export const BEFORE_BREAKFAST = "1";
-export const AFTER_BREAKFAST = "2";
-export const NOON = "3";
+export const AFTER_WAKEUP = "1";
+export const BEFORE_BREAKFAST = "2";
+export const AFTER_BREAKFAST = "3";
 export const BEFORE_LUNCH = "4";
 export const AFTER_LUNCH = "5";
 export const BEFORE_EVENING_SNACK = "6";
@@ -454,6 +458,10 @@ export const AFTER_DINNER = "9";
 export const BEFORE_SLEEP = "10";
 
 export const MEDICATION_TIMING = {
+  [AFTER_WAKEUP]: {
+    [TEXT_KEY]: "After Wake Up",
+    [TIME_KEY]: "7am"
+  },
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
     [TIME_KEY]: "8am"
@@ -461,10 +469,6 @@ export const MEDICATION_TIMING = {
   [AFTER_BREAKFAST]: {
     [TEXT_KEY]: "After Breakfast",
     [TIME_KEY]: "9am"
-  },
-  [NOON]: {
-    [TEXT_KEY]: "Noon",
-    [TIME_KEY]: "12pm"
   },
   [BEFORE_LUNCH]: {
     [TEXT_KEY]: "Before Lunch",
@@ -475,11 +479,11 @@ export const MEDICATION_TIMING = {
     [TIME_KEY]: "1:30pm"
   },
   [BEFORE_EVENING_SNACK]: {
-    [TEXT_KEY]: "Before Evening Snack",
+    [TEXT_KEY]: "Before Evening Tea",
     [TIME_KEY]: "5:30pm"
   },
   [AFTER_EVENING_SNACK]: {
-    [TEXT_KEY]: "After Evening Snack",
+    [TEXT_KEY]: "After Evening Tea",
     [TIME_KEY]: "6pm"
   },
   [BEFORE_DINNER]: {
@@ -612,7 +616,7 @@ export const APPOINTMENT_TYPE_DESCRIPTION = {
 export const FEATURE_TYPE = {
   APPOINTMENT: "appointment",
   MEDICATION: "medication",
-  VITAL: "vital",
+  VITAL: "vital"
 };
 
 export const BLANK_STATE = "";
@@ -742,7 +746,7 @@ export const PARTS_GRAPH = {
   [LEFT_HAMSTRING]: { name: "Left Hamstring" },
   [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
   [LEFT_CALF]: { name: "Left Calf" },
-  [RIGHT_CALF]: { name: "Right Calf" },
+  [RIGHT_CALF]: { name: "Right Calf" }
 };
 
 export const BODY_VIEW = {
@@ -751,13 +755,49 @@ export const BODY_VIEW = {
 };
 
 export const REPEAT_INTERVAL = {
-  ONCE:"ONCE",
-  ONE_HOUR:"ONE_HOUR",
-  TWO_HOUR:"TWO_HOUR",
-  FOUR_HOUR:"FOUR_HOUR",
-  SIX_HOUR:"SIX_HOUR",
-  TWELVE_HOUR: "TWELVE_HOUR",
+  ONCE: "ONCE",
+  ONE_HOUR: "ONE_HOUR",
+  TWO_HOUR: "TWO_HOUR",
+  FOUR_HOUR: "FOUR_HOUR",
+  SIX_HOUR: "SIX_HOUR",
+  TWELVE_HOUR: "TWELVE_HOUR"
 };
 
 export const MP4 = "mp4";
 export const ALLOWED_VIDEO_EXTENSIONS = [MP4];
+
+export const WAKE_UP = "1";
+export const BREAKFAST = "2";
+export const LUNCH = "3";
+export const EVENING = "4";
+export const DINNER = "5";
+export const SLEEP = "6";
+
+export const PATIENT_MEAL_TIMINGS = {
+  [WAKE_UP]: {
+    value: "2020-09-24T08:00:00+05:30"
+  },
+  [BREAKFAST]: {
+    value: "2020-09-24T09:00:00+05:30"
+  },
+  [LUNCH]: {
+    value: "2020-09-24T13:00:00+05:30"
+  },
+  [EVENING]: {
+    value: "2020-09-24T16:00:00+05:30"
+  },
+  [DINNER]: {
+    value: "2020-09-24T20:00:00+05:30"
+  },
+  [SLEEP]: {
+    value: "2020-09-24T23:00:00+05:30"
+  }
+};
+
+export const OFFLINE_SYNC_DATA_TASKS = {
+  SYNC_EVENTS_DATA: "event_sync_data"
+};
+
+export const CONSENT_TYPE = {
+  CARE_PLAN: "CARE_PLAN",
+}

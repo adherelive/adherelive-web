@@ -1,32 +1,37 @@
-import {database} from "../../libs/mysql";
-import Sequelize from "sequelize";
+import {DataTypes} from "sequelize";
 
-export const VITAL_TEMPLATES = "vital_templates";
+export const TABLE_NAME = "vital_templates";
 
-const VitalTemplates = database.define(
-    VITAL_TEMPLATES,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+export const db = (database) => {
+    database.define(
+        TABLE_NAME,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            unit: {
+                type: DataTypes.STRING,
+            },
+            details: {
+                type: DataTypes.JSON
+            },
         },
-        name: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-        unit: {
-            type: Sequelize.STRING,
-        },
-        details: {
-            type: Sequelize.JSON
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
+        {
+            underscored: true,
+            paranoid: true,
+        }
+    );
+};
 
-export default VitalTemplates;
+export const associate = (database) => {
+    // const {upload_documents} = database.models || {};
+
+    // associations here (if any) ...
+};

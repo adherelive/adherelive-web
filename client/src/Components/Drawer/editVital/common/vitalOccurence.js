@@ -42,6 +42,14 @@ class VitalOccurence extends Component {
     
   getParentNode = t => t.parentNode;
 
+  occurenceEdited = (e) => {
+    const {
+      form: { setFieldsValue, validateFields },
+      enableSubmit
+    } = this.props;
+    
+    enableSubmit();
+  }
 
   render() {
     const {
@@ -58,7 +66,10 @@ class VitalOccurence extends Component {
     const options = Object.keys(repeat_intervals).map(id => {
       const { text = '' } = repeat_intervals[id] || {};
       return (
-        <Option key={id} value={id}>
+        <Option key={id} value={id}
+        onClick={this.occurenceEdited}
+        >  
+        
           {text}
         </Option>
       );
