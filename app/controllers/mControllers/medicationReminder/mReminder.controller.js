@@ -304,7 +304,7 @@ class MobileMReminderController extends Controller {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
 
         carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
-          ...carePlanApiWrapper.getBasicInfo(),
+          ...await carePlanApiWrapper.getAllInfo(),
           ...carePlanSeverityDetails,
           carePlanMedicationIds,
           carePlanAppointmentIds

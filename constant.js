@@ -797,3 +797,7 @@ export const PATIENT_MEAL_TIMINGS = {
 export const OFFLINE_SYNC_DATA_TASKS = {
   SYNC_EVENTS_DATA: "event_sync_data"
 };
+
+export const CONSENT_TYPE = {
+  CARE_PLAN: "CARE_PLAN",
+}

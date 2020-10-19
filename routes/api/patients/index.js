@@ -13,6 +13,24 @@ router.post('/patients',
     PatientController.updatePatient
 );
 
+router.post(
+    "/:id/consents/request",
+    Authenticated,
+    PatientController.patientConsentRequest
+);
+
+router.post(
+    "/consents/verify",
+    Authenticated,
+    PatientController.patientConsentVerification
+);
+
+router.get(
+    "/",
+    Authenticated,
+    PatientController.searchPatient
+);
+
 router.get(
     "/:id/appointments",
     Authenticated,

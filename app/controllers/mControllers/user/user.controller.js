@@ -570,7 +570,7 @@ class MobileUserController extends Controller {
 
               userCatApiData[
                 userCategoryApiData.getDoctorId()
-              ] = userCategoryApiData.getBasicInfo();
+              ] = await userCategoryApiData.getAllInfo();
 
               careplanData = await carePlanService.getCarePlanByData({
                 doctor_id: userCategoryId

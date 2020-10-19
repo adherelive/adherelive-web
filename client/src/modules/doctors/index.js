@@ -1,7 +1,7 @@
 
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
-import { getDoctorDetailsUrl, getAllDoctorsUrl, getVerifyDoctorUrl, updateDoctorURL, getDoctorProfileDetailsUrl } from "../../Helper/urls/doctor";
+import { getDoctorDetailsUrl, getAllDoctorsUrl, getVerifyDoctorUrl, updateDoctorURL, getDoctorProfileDetailsUrl,addPatientToWatchlistUrl } from "../../Helper/urls/doctor";
 
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
@@ -19,6 +19,10 @@ export const VERIFY_DOCTOR_FAILED = "VERIFY_DOCTOR_FAILED";
 export const UPDATE_DOCTOR_START = "UPDATE_DOCTOR_START";
 export const UPDATE_DOCTOR_COMPLETE = "UPDATE_DOCTOR_COMPLETE";
 export const UPDATE_DOCTOR_FAILED = "UPDATE_DOCTOR_FAILED";
+
+export const ADD_PATIENT_TO_WATCHLIST="ADD_PATIENT_TO_WATCHLIST";
+export const ADD_PATIENT_TO_WATCHLIST_COMPLETE="ADD_PATIENT_TO_WATCHLIST_COMPLETE";
+export const ADD_PATIENT_TO_WATCHLIST_FAILED = "ADD_PATIENT_TO_WATCHLIST_FAILED";
 
 
 export const updateDoctor = (user_id,updateData) => {
@@ -51,6 +55,46 @@ export const updateDoctor = (user_id,updateData) => {
     return response;
   }
 };
+
+
+
+export const addToWatchlist = (patient_id) => {
+  
+  let response = {};
+  return async (dispatch) => {
+    try{
+     
+      dispatch({ type: ADD_PATIENT_TO_WATCHLIST });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: addPatientToWatchlistUrl(patient_id)
+      });
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: ADD_PATIENT_TO_WATCHLIST_FAILED,
+          payload: { error },
+        });
+      } else if (status === true) {
+        dispatch({
+          type:ADD_PATIENT_TO_WATCHLIST_COMPLETE,
+          data: data,
+        });
+      }
+
+
+    }catch(error){
+      console.log("error search patient", error);
+      throw error;
+    }
+
+    return response;
+  };
+}
 
 export const verifyDoctor = id => {
   let response = {};

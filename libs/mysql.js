@@ -75,6 +75,7 @@ import * as UserVerifications from "../app/models/userVerifications";
 
 import * as Vitals from "../app/models/vitals";
 import * as VitalTemplates from "../app/models/vitalTemplates";
+import * as Watchlist from "../app/models/doctor_patient_watchlist";
 
 // Models List...
 const models = [
@@ -149,6 +150,8 @@ const models = [
 
     Vitals,
     VitalTemplates,
+    
+    Watchlist
 ];
 
 class Database {

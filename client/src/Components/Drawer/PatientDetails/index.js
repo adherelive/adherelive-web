@@ -177,7 +177,7 @@ class PatientDetailsDrawer extends Component {
   };
 
   getPatientDetailContent = () => {
-    const { treatments = {}, doctors = {}, conditions = {}, severity: severities = {}, providers, patients, payload, care_plans, } = this.props;
+    const { auth = {}, treatments = {}, doctors = {}, conditions = {}, severity: severities = {}, providers, patients, payload, care_plans, } = this.props;
     const {
       formatMessage,
       getMedicationList,
@@ -186,6 +186,18 @@ class PatientDetailsDrawer extends Component {
       getAppointmentList
     } = this;
 
+    const {authenticated_user} = auth || {};
+
+    let doctorId = null;
+
+    Object.keys(doctors).forEach(id => {
+      const {basic_info: {user_id} = {}} = doctors[id] || {};
+
+      if(user_id === authenticated_user) {
+        doctorId = id;
+      }
+    });
+
     let { patient_id: id = "" } = payload || {};
 
     if (id) {
@@ -193,10 +205,12 @@ class PatientDetailsDrawer extends Component {
       let carePlanId = 1;
       for (let carePlan of Object.values(care_plans)) {
 
-        let { basic_info: { id: cpId = 1, patient_id: patientId = 1 }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
+        let { basic_info: { id: cpId = 1, doctor_id = null, patient_id = null }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
 
-        if (parseInt(id) === parseInt(patientId)) {
-          carePlanId = cpId;
+        if (doctorId === `${doctor_id}`) {
+          if(`${patient_id}` === id) {
+            carePlanId = cpId;
+          }
         }
       }
 

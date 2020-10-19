@@ -16,7 +16,6 @@ import ChatMessageDetails from "../ChatPopup/chatMessageDetails";
 // import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
 
 
-
 const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false, otherTyping = false, formatMessage }) => {
     let pic = patientName ?
         <Avatar src={patientDp}>{patientName[0]}</Avatar> : <Avatar src={patientDp} icon="user" />

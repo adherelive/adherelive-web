@@ -16,7 +16,6 @@ module.exports = {
         }),
         activated_on: new Date(),
         renew_on: new Date(),
-        expired_on: new Date(),
         created_at: new Date(),
         updated_at: new Date(),
       },

@@ -11,6 +11,7 @@ import StartDate from "../datacolumn/startDate";
 import Doctor from "../datacolumn/doctor";
 import Provider from "../datacolumn/provider";
 import NewSymptoms from "../datacolumn/newSymptoms";
+import Watchlist from "../datacolumn/watchlist";
 
 export default props => {
   const { formatMessage } = props || {};
@@ -21,9 +22,14 @@ export default props => {
       title: 'Patient',
       ...TABLE_COLUMN.PID,
       render: data => {
-        const { patientData, chatData } = data || {};
-        return <PID patientData={patientData} chatData={chatData} />;
+        const { patientData, chatData,addToWatchlist ,doctorData, onRowClick} = data || {};
+        return <PID onRowClick={onRowClick} patientData={patientData} chatData={chatData} addToWatchlist={addToWatchlist} doctorData={doctorData}/>;
       }
+    },
+    {
+      title: formatMessage(messages.watchlist),
+      ...TABLE_COLUMN.WATCHLIST,
+      render: ({doctorData, addToWatchlist, patientData}) => <Watchlist patientData={patientData} doctorData={doctorData} addToWatchlist={addToWatchlist} />
     },
     {
       title: formatMessage(messages.condition),

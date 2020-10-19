@@ -23,4 +23,16 @@ export default class CarePlan {
     getCarePlanDetails = () => {
         return this._data.get('details');
     };
+
+    getCreatedAt = () => {
+        return this._data.get("created_at");
+    };
+
+    getActivatedOn = () => {
+      return this._data.get("activated_on");
+    };
+
+    getExpiredOn = () => {
+        return this._data.get("expired_on");
+    };
 }
