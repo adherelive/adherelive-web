@@ -45,7 +45,32 @@ const messages = defineMessages({
         id: "app.patients.common.alert.blank.text",
         description: "",
         defaultMessage: "No events updated recently"
-    }
+    },
+    active_careplan: {
+        id: "app.patients.common.careplan.active.text",
+        description: "",
+        defaultMessage: "Active"
+    },
+    inactive_careplan: {
+        id: "app.patients.common.careplan.in.active.text",
+        description: "",
+        defaultMessage: "In-Active"
+    },
+    careplan_text: {
+        id: "app.patients.common.careplan.text",
+        description: "",
+        defaultMessage: "Treatment"
+    },
+    request_consent_text: {
+        id: "app.patients.common.request.consent.text",
+        description: "",
+        defaultMessage: "Request Consent"
+    },
+    with_you_text: {
+        id: "app.patients.common.with.you.text",
+        description: "",
+        defaultMessage: "With You"
+    },
 });
 
 export default messages;

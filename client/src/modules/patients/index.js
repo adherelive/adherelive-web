@@ -1,19 +1,90 @@
 
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getAddPatientUrl} from '../../Helper/urls/patients'
-// import {getPatientLastVisitAlertUrl} from '../../Helper/url/patients'
-
-// todo: remove patient initial state after updating tables for patient with defaults
-
-
+import {getAddPatientUrl,searchPatientFromNumUrl, getRequestConsentUrl, getConsentVerifyUrl} from '../../Helper/urls/patients'
 
 export const ADD_PATIENT = "ADD_PATIENT";
 export const ADD_PATIENT_COMPLETED = "ADD_PATIENT_COMPLETED";
 export const ADD_PATIENT_COMPLETED_WITH_ERROR =
   "ADD_PATIENT_COMPLETED_WITH_ERROR";
-  
-  
+
+ export const SEARCH_PATIENT="SEARCH_PATIENT";
+ export const SEARCH_PATIENT_COMPLETE = "SEARCH_PATIENT_COMPLETE";
+ export const SEARCH_PATIENT_FAILED = "SEARCH_PATIENT_FAILED";
+
+export const REQUEST_CONSENT_OTP_START = "REQUEST_CONSENT_OTP_START";
+export const REQUEST_CONSENT_OTP_COMPLETED = "REQUEST_CONSENT_OTP_COMPLETED";
+export const REQUEST_CONSENT_OTP_FAILED = "REQUEST_CONSENT_OTP_FAILED";
+
+export const CONSENT_VERIFY_START = "CONSENT_VERIFY_START";
+export const CONSENT_VERIFY_COMPLETED = "CONSENT_VERIFY_COMPLETED";
+export const CONSENT_VERIFY_FAILED = "CONSENT_VERIFY_FAILED";
+
+ export const requestConsent = (id) => {
+   let response = {};
+   return async (dispatch) => {
+     try {
+       dispatch({ type: REQUEST_CONSENT_OTP_START });
+
+       response = await doRequest({
+         method: REQUEST_TYPE.POST,
+         url: getRequestConsentUrl(id),
+       });
+
+       const { status } =
+       response || {};
+
+       if (status === true) {
+         dispatch({
+           type: REQUEST_CONSENT_OTP_COMPLETED,
+         });
+       } else {
+         dispatch({
+           type:REQUEST_CONSENT_OTP_FAILED,
+         });
+       }
+     } catch (err) {
+       console.log("err requestConsent", err);
+       throw err;
+     }
+
+     return response;
+   };
+ };
+
+export const consentVerify = (payload) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: CONSENT_VERIFY_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: getConsentVerifyUrl(),
+        data: payload
+      });
+
+      const { status, payload: {data} = {} } =
+      response || {};
+
+      if (status === true) {
+        dispatch({
+          type: CONSENT_VERIFY_COMPLETED,
+          data
+        });
+      } else {
+        dispatch({
+          type:CONSENT_VERIFY_FAILED,
+        });
+      }
+    } catch (err) {
+      console.log("err consentVerify", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
 
 
 export const addPatient =(payload)=>{
@@ -44,7 +115,7 @@ export const addPatient =(payload)=>{
         });
       }
     } catch (err) {
-      console.log("err signin", err);
+      console.log("err add patient", err);
       throw err;
     }
 
@@ -52,6 +123,41 @@ export const addPatient =(payload)=>{
   };
 }
 
+export const searchPatientFromNum = (value) => {
+  let response = {};
+  return async (dispatch) => {
+    try{
+      dispatch({ type: SEARCH_PATIENT });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: searchPatientFromNumUrl(value)
+      });
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: SEARCH_PATIENT_FAILED,
+          payload: { error },
+        });
+      } else if (status === true) {
+        dispatch({
+          type:SEARCH_PATIENT_COMPLETE,
+          data: data,
+        });
+      }
+
+
+    }catch(error){
+      console.log("error search patient", error);
+      throw error;
+    }
+
+    return response;
+  };
+}
 
 function patientReducer(state, data) {
   const {patients} = data || {};

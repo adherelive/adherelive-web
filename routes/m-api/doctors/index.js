@@ -101,4 +101,10 @@ router.get(
     mDoctorController.getAllDoctorDetails
 );
 
+
+router.post(
+    "/watchlist/:patient_id",
+    mDoctorController.AddPatientToWatchlist
+)
+
 module.exports = router;

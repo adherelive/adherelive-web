@@ -45,7 +45,7 @@ class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
             },
             care_plans: {
                 [getCarePlanId()]: {
-                    ...carePlanData.getBasicInfo(),
+                    ...await carePlanData.getAllInfo(),
                     care_plan_appointment_ids: [getCarePlanAppointmentId()]
                 }
             }

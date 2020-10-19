@@ -58,6 +58,24 @@ class CarePlanService {
     }
   };
 
+  getMultipleCarePlanByData = async data => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+        include: [
+          Database.getModel(patientTableName),
+          Database.getModel(doctorTableName),
+          Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(carePlanMedicationTableName)
+        ],
+        order: [["created_at", "ASC"]]
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   updateCarePlan = async (data, id) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).update(data, {

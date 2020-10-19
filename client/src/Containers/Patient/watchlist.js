@@ -7,8 +7,9 @@ import {searchPatientFromNum} from "../../modules/patients";
 import {addToWatchlist} from "../../modules/doctors";
 
 const mapStateToProps = state => {
+    
   const {
-    patients = {},
+    patients : temp_patients = {},
     doctors = {},
     providers = {},
     treatments = {},
@@ -21,8 +22,18 @@ const mapStateToProps = state => {
     care_plans
   } = state;
 
+  const {watchlist_patient_ids=[]} =Object.values(doctors)[0] || {};
 
-  
+
+    const patients = Object.keys(temp_patients)
+    .filter(key => watchlist_patient_ids.includes(parseInt(key)))
+    .reduce((obj, key) => {
+    return {
+        ...obj,
+        [key]: temp_patients[key]
+    };
+    }, {});
+
 
   return {
     patient_ids,

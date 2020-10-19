@@ -2,6 +2,8 @@ import BasePatient from "../../../services/patients";
 import patientService from "../../../services/patients/patients.service";
 import {completePath} from "../../../helper/filePath";
 
+import UserWrapper from "../user";
+
 class MPatientWrapper extends BasePatient {
     constructor(data) {
         super(data);
@@ -46,6 +48,24 @@ class MPatientWrapper extends BasePatient {
             dob,
             details: updatedDetails
         };
+    };
+
+    getAllInfo = async () => {};
+
+    getReferenceInfo = async () => {
+        const {_data, getBasicInfo, getPatientId} = this;
+        const {user} = _data || {};
+
+        const users = await UserWrapper(user.get());
+
+        return {
+            patients: {
+                [getPatientId()]: getBasicInfo()
+            },
+            users: {
+                [users.getId()]: users.getBasicInfo()
+            }
+        }
     };
 }
 

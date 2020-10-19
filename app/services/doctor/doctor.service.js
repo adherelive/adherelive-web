@@ -1,5 +1,6 @@
 import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/doctors";
+import {TABLE_NAME as watchlistTableName} from "../../models/doctor_patient_watchlist";
 import {TABLE_NAME as specialityTableName} from "../../models/specialities";
 
 class DoctorService {
@@ -14,7 +15,19 @@ class DoctorService {
         } catch(error) {
             throw error;
         }
-    }
+    };
+
+    getAllDoctorByData = async (data) => {
+        try {
+            const doctor = await Database.getModel(TABLE_NAME).findAll({
+                where: data,
+                include: Database.getModel(specialityTableName)
+            });
+            return doctor;
+        } catch(error) {
+            throw error;
+        }
+    };
 
     addDoctor = async data => {
         const transaction = await Database.initTransaction();
@@ -54,6 +67,31 @@ class DoctorService {
             return doctors;
         } catch(err) {
             throw err;
+        }
+    };
+
+    createNewWatchlistRecord = async(watchlist_data) => {
+        const transaction = await Database.initTransaction();
+        try{
+            const newWatchlistRecord = await Database.getModel(watchlistTableName).create(watchlist_data, { transaction });
+
+            await transaction.commit();
+            return newWatchlistRecord;
+        }catch(error){
+            await transaction.rollback();
+            throw error;
+        }
+    };
+
+    getAllWatchlist = async (data) => {
+        try{
+            const watchlistRecord = await Database.getModel(watchlistTableName).findAll({
+                where: data,
+                raw: true
+            });
+            return watchlistRecord;
+        }catch(error){
+            throw error;
         }
     };
 }

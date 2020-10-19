@@ -22,7 +22,8 @@ const mapStateToProps = (state) => {
     appointments,
     care_plans,
     medicines,
-    chats
+    chats,
+      auth
   } = state;
   return {
     visible: visible && type === DRAWER.PATIENT_DETAILS,
@@ -38,7 +39,8 @@ const mapStateToProps = (state) => {
     appointments,
     payload,
     medicines,
-    chats
+    chats,
+    auth
   };
 };
 

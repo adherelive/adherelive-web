@@ -6,7 +6,26 @@ import PatientController from "../../../app/controllers/mControllers/patients/pa
 
 router.post('/',
     isPatient,
+    Authenticated,
     PatientController.mUpdatePatient
+);
+
+router.post(
+  "/:id/consents/request",
+  Authenticated,
+    PatientController.patientConsentRequest
+);
+
+router.post(
+    "/consents/verify",
+    Authenticated,
+    PatientController.patientConsentVerification
+);
+
+router.get(
+  "/",
+  Authenticated,
+  PatientController.searchPatient
 );
 
 router.get(

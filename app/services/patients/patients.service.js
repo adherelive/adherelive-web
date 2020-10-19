@@ -1,5 +1,6 @@
 import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/patients";
+import {TABLE_NAME as userTableName} from "../../models/users";
 
 class PatientsService {
     constructor() {}
@@ -70,7 +71,12 @@ class PatientsService {
     getPatientById = async (data) => {
         try {
             const patient = await Database.getModel(TABLE_NAME).findOne({
-                where: data
+                where: data,
+                include: [
+                    {
+                        model: Database.getModel(userTableName)
+                    }
+                ]
             });
             return patient;
         } catch(error) {

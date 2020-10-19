@@ -386,17 +386,56 @@ const messages = defineMessages({
         description: "Bleed Area Screen",
         defaultMessage: "Right Calf"
     },
-    left: {
-        id: "app.bleedArea.left",
-        description: "Bleed Area Screen",
-        defaultMessage: "Left"
+    activeCareplan: {
+        id: "app.patient_profile.active",
+        description: "Active",
+        defaultMessage: "Active"
     },
-    right: {
-        id: "app.bleedArea.right",
-        description: "Bleed Area Screen",
-        defaultMessage: "Right"
+    // inactiveCareplan: {
+    //     id: "app.patient_profile.inactive",
+    //     description: "Inactive",
+    //     defaultMessage: "Inactive"
+    // },
+    careplanHeading: {
+        id: "app.patient_profile.careplanHeading",
+        description: "",
+        defaultMessage: "Careplan"
+    },
+    consent_details_text: {
+        id: "app.patient_profile.consent.details.text",
+        description: "",
+        defaultMessage: "An OTP will be sent to patient's registered phone number. Please consult the patient for OTP to proceed with consent approval"
+    },
+    enter_otp_text: {
+        id: "app.patient_profile.enter.otp.text",
+        description: "",
+        defaultMessage: "Enter OTP from patient below"
+    },
+    verify_otp_text: {
+        id: "app.patient_profile.verify.otp.text",
+        description: "",
+        defaultMessage: "Verify"
+    },
+    consent_modal_title_text: {
+        id: "app.patient_profile.consent.modal.title.text",
+        description: "",
+        defaultMessage: "Consent Verification"
+    },
+    show_more_text: {
+        id: "app.patient_profile.show.more.text",
+        description: "",
+        defaultMessage: "Show More"
+    },
+    comorbidities_text: {
+        id: "app.patient_profile.comorbidities.text",
+        description: "",
+        defaultMessage: "Comorbidities"
+    },
+    allergies_text: {
+        id: "app.patient_profile.allergies.text",
+        description: "",
+        defaultMessage: "Allergies"
     }
-
 });
 
 export default messages;

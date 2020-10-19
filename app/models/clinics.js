@@ -58,8 +58,8 @@ export const associate = (database) => {
     const {clinics, consents} = database.models || {};
 
     // associations here (if any) ...
-    clinics.hasOne(consents, {
-        foreignKey: "consent_id",
-        targetKey: "id"
-    });
+    // clinics.hasOne(consents, {
+    //     foreignKey: "consent_id",
+    //     targetKey: "id"
+    // });
 };

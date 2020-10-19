@@ -56,7 +56,6 @@ module.exports = {
       },
       expired_on: {
         type: Sequelize.DATE,
-        allowNull: false
       },
       created_at: {
         allowNull: false,

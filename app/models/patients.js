@@ -88,6 +88,9 @@ export const db = database => {
 };
 
 export const associate = database => {
-  // const {TABLE_NAME} = database.models || {};
-  // associations here (if any) ...
+
+    database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
+        foreignKey:"user_id",
+        targetKey:"id"
+    });
 };

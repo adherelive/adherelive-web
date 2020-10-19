@@ -59,8 +59,11 @@ export const db = (database) => {
             },
             expired_on: {
                 type: DataTypes.DATE,
-                allowNull: false
             },
+            created_at: {
+                type: DataTypes.DATE,
+                allowNull: false
+            }
         },
         {
             underscored: true,

@@ -326,9 +326,7 @@ class CarePlanController extends Controller {
             return this.raiseSuccess(res, 200, {
                 care_plans: {
                     [carePlanData.getCarePlanId()] : {
-                        ...carePlanData.getBasicInfo(),
-                        appointment_ids,
-                        medication_ids
+                        ...await carePlanData.getAllInfo(),
                     }
                 },
                 appointments: {

@@ -6,6 +6,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Add Patient"
     },
+    addNewPatient: {
+        id: "app.addPatient.addNewPatient",
+        description: "",
+        defaultMessage: "Add New Patient"
+    },
+    searchPatient:{
+        id: "app.addPatient.searchPatient",
+        description: "",
+        defaultMessage: "Search"
+    },
     phoneNo: {
         id: "app.addPatient.phoneNo",
         description: "",

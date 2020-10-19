@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 import { Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker } from "antd";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
+import {getName} from "../../../Helper/validation";
 
 import india from '../../../Assets/images/india.png';
 import australia from '../../../Assets/images/australia.png';
@@ -43,22 +44,196 @@ class PatientDetailsDrawer extends Component {
             fetchingCondition: false,
             fetchingTreatment: false,
             fetchingSeverity: false,
+            fetchingPatients:false,
             comorbidities:'',
             allergies:'',
             clinical_notes:'',
             diagnosis_description:'',
-            diagnosis_type:'2'
+            diagnosis_type:'2',
+            patient_ids:[],
+            isdisabled:true,
+            selectedPatientId:null,
+            addNewPatient:false
         };
-
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
         this.handleTreatmentSearch = throttle(this.handleTreatmentSearch.bind(this), 2000);
         this.handleSeveritySearch = throttle(this.handleSeveritySearch.bind(this), 2000);
-    }
-
-    componentDidMount() {
-
+        this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000); 
 
     }
+
+    componentDidMount() {}
+
+    componentDidUpdate(prevProps,prevState) {
+
+        const {patients} = this.props;
+        const {selectedPatientId,isdisabled,addNewPatient,mobile_number} = this.state;
+        const {selectedPatientId : prev_selectedPatientId = null,addNewPatient: prev_addNewPatient } = prevState;
+        const { basic_info:
+            { first_name, middle_name, last_name, gender } = {},
+            dob , 
+            details :{
+                allergies='',
+                comorbidities=''
+            } = {}
+        } = patients[selectedPatientId] || {};
+
+        const formattedDate = this.getFormattedDate(dob);
+
+        if(selectedPatientId !== null && selectedPatientId !== prev_selectedPatientId ){
+           
+            this.setState({ 
+                mobile_number,
+                gender,
+                date_of_birth: moment(formattedDate),
+                name:`${first_name} ${getName(middle_name)} ${getName(last_name)}`,
+                addNewPatient:false,
+                isdisabled:true,
+                allergies,
+                comorbidities
+            });
+        }
+
+        if(addNewPatient && addNewPatient !== prev_addNewPatient){
+            this.setState({
+                isdisabled:false,
+                selectedPatientId:null,
+                patient_ids:[],
+                name: '',
+                gender: '',
+                date_of_birth: '',
+                treatment: '',
+                severity: '',
+                condition: '',
+                prefix: "91",
+                fetchingCondition: false,
+                fetchingTreatment: false,
+                fetchingSeverity: false,
+                fetchingPatients:false,
+                comorbidities:'',
+                allergies:'',
+                clinical_notes:'',
+                diagnosis_description:'',
+                diagnosis_type:'2',
+                addNewPatient:false
+            });
+        }
+
+    }
+
+
+    getFormattedDate = (dob) => {
+        let date = new Date(dob);
+        let year = date.getFullYear();
+        let month = date.getMonth()+1;
+        let dt = date.getDate();
+
+        if (dt < 10) {
+        dt = '0' + dt;
+        }
+        if (month < 10) {
+        month = '0' + month;
+        }
+
+        return (year+'-' + month + '-'+dt) ;
+        }
+
+    setPrefix = value => {
+        this.setState({ prefix: value });
+    };
+
+    setNumber = e => {
+        const { value } = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+            this.setState({ mobile_number: e.target.value });
+            if(value.length>=6 && value.length<=20){
+                {this.handlePatientSearch(value)}
+            }else{
+                this.setState({
+                    patient_ids:[]
+                });
+            }
+        }else{
+            this.setState({
+                patient_ids:[]
+            });
+        }
+       
+    };
+
+    async handlePatientSearch(data)  {
+        try {
+            if (data) {
+                this.setState({ fetchingPatients: true });
+                const { searchPatientFromNum,patients } = this.props;
+                const response = await searchPatientFromNum(data);
+                const { status, payload: {  data : {patient_ids:response_patient_ids = [] } } = {} } =
+            response || {};
+                if (status) {
+                    if(response_patient_ids.length>0){
+                        this.setState({
+                            patient_ids:response_patient_ids,
+                            fetchingPatients:false
+                        });
+                    }
+                    else{
+                        this.setState({
+                            patient_ids:[],
+                            fetchingPatients:false
+                        });
+                    }
+                } else{
+                    this.setState({ fetchingPatients: false });
+                }
+               
+            } 
+            else{
+                this.setState({fetchingPatients:false});
+            }
+           
+        } catch (err) {
+            console.log("err", err);
+            message.warn(this.formatMessage(messages.somethingWentWrong));
+            this.setState({fetchingPatients:false});
+        }
+    }
+
+    getPatientOptions = () => {
+        const {patient_ids} = this.state;
+        let options = [];
+        options.push(
+            <Option key={"new-patient-opt"} onClick={this.setAddnewPatient}  value={null} >
+                {this.formatMessage(messages.addNewPatient)}
+            </Option>
+            )
+
+        const {patients} = this.props;
+            for(let id of patient_ids){
+                const { basic_info:{first_name,middle_name,last_name} = {} } = patients[id] || {};
+                options.push(
+                <Option key={id} value={id} name={`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}>
+                    {`${first_name} ${getName(middle_name)} ${getName(last_name)}`} 
+                </Option>
+            );
+                
+            }
+       
+        return options;
+
+    }
+
+    setAddnewPatient = () => {
+        this.setState({
+            addNewPatient:true
+        });
+    }
+
+
+    setSearchedPatientId = value => {
+        this.setState({ selectedPatientId: value });
+    }
+
 
 
     getGenderOptions = () => {
@@ -128,7 +303,6 @@ class PatientDetailsDrawer extends Component {
     }
 
     setAllergies= e => {
-      
         const  value  = e.target.value.trim();
         
         if (value.length>0 || value === '') {
@@ -174,18 +348,6 @@ class PatientDetailsDrawer extends Component {
     }
 
 
-    setPrefix = value => {
-        this.setState({ prefix: value });
-    };
-
-    setNumber = e => {
-        const { value } = e.target;
-        const reg = /^-?\d*(\.\d*)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
-            this.setState({ mobile_number: e.target.value });
-        }
-    };
-
     setTreatment = value => {
         this.setState({ treatment: value });
     };
@@ -195,11 +357,11 @@ class PatientDetailsDrawer extends Component {
     };
 
     setCondition = async value => {
-
         const { searchTreatment } = this.props;
         this.setState({ condition: value });
 
         const response = await searchTreatment(value);
+        const abcd = await searchTreatment();
 
         const { status, payload: { data: { treatments = {} } = {}, message } = {} } = response;
         if (status) {
@@ -216,7 +378,7 @@ class PatientDetailsDrawer extends Component {
     }
 
     getTreatmentOption = () => {
-        let { treatments = {} } = this.state;
+        let { treatments = {} } = this.props;
         let newTreatments = [];
         for (let treatment of Object.values(treatments)) {
             let { basic_info: { id = 0, name = '' } = {} } = treatment;
@@ -241,7 +403,7 @@ class PatientDetailsDrawer extends Component {
     }
 
 
-
+   
     getConditionOption = () => {
         let { conditions = {} } = this.props;
         let newConditions = [];
@@ -253,6 +415,7 @@ class PatientDetailsDrawer extends Component {
         }
         return newConditions;
     }
+
 
     async handleConditionSearch(data) {
         try {
@@ -279,10 +442,10 @@ class PatientDetailsDrawer extends Component {
     async handleTreatmentSearch(data) {
         try {
             if (data) {
-                const { searchTreatment } = this.props;
+                const { searchTreatment} = this.props;
                 this.setState({ fetchingTreatment: true });
                 const response = await searchTreatment(data);
-                const { status } = response;
+                const { status, payload: { data: treatments, message } = {} } = response;
                 if (status) {
                     this.setState({ fetchingTreatment: false });
                 } else {
@@ -335,7 +498,11 @@ class PatientDetailsDrawer extends Component {
             month = '0' + month;
         }
 
-        const { mobile_number = '', name = '', condition = '', prefix = '',allergies='',comorbidities='',diagnosis_description='',clinical_notes='',diagnosis_type='' } = this.state;
+        const { mobile_number = '', name = '', condition = '',
+        date_of_birth='', prefix = '',allergies='',comorbidities='',
+        gender='',diagnosis_description='',clinical_notes='',
+        diagnosis_type='',isdisabled,addNewPatient,severity='',treatment='' } = this.state;
+
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -376,7 +543,8 @@ class PatientDetailsDrawer extends Component {
         return (
             <div className='form-block-ap'>
                 <div className='form-headings flex align-center justify-start'>{this.formatMessage(messages.phoneNo)}<div className="star-red">*</div></div>
-                <Input
+               
+                    <Input
                     addonBefore={prefixSelector}
                     className={"form-inputs-ap"}
                     placeholder={this.formatMessage(messages.phoneNo)}
@@ -384,18 +552,54 @@ class PatientDetailsDrawer extends Component {
                     maxLength={20}
                     value={mobile_number}
                     onChange={this.setNumber}
+                    
                 />
+                    
+                    <div className="mh40">
+                        {this.state.fetchingPatients 
+                        ?
+                        (<Spin size="default" />)
+                        : null}
+                    </div>
+                    
+                <div>
+             
+            <Select
+                    className="form-inputs-ap drawer-select"
+                    placeholder="Select Name"
+                    value={this.state.selectedPatientId}
+                    onChange={this.setSearchedPatientId}
+                    
+                    // notFoundContent={this.state.fetchingPatients ? <Spin size="small" /> : 'No match found'}
+                    // showSearch
+                    autoComplete="off"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.props.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                    }
+
+                >
+                    {this.getPatientOptions()}
+            </Select>
+                </div>
+             
                 <div className='form-headings-ap '>{this.formatMessage(messages.name)}</div>
                 <Input
                     placeholder={this.formatMessage(messages.name)}
                     value={name}
                     className={"form-inputs-ap"}
                     onChange={this.setName}
+                    disabled={isdisabled}
                 />
                 <div className='form-headings-ap'>{this.formatMessage(messages.gender)}</div>
                 <div className='add-patient-radio wp100 mt6 mb18 flex'>
 
-                    <Radio.Group buttonStyle="solid" >
+                    <Radio.Group buttonStyle="solid" 
+                    disabled={isdisabled}
+                    value={gender}
+                    >
                         <Radio.Button value={MALE} onClick={this.setGender(MALE)}>M</Radio.Button>
                         <Radio.Button value={FEMALE} onClick={this.setGender(FEMALE)}>F</Radio.Button>
                         <Radio.Button value={OTHER} onClick={this.setGender(OTHER)}>O</Radio.Button>
@@ -405,8 +609,10 @@ class PatientDetailsDrawer extends Component {
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.dob)}<div className="star-red">*</div></div>
 
                 <Input className={"form-inputs-ap"} type='date'
+                    // value={date_of_birth}
                     max={`${year}-${month}-${day}`}
-                    onChange={this.setDOB} />
+                    onChange={this.setDOB}
+                    disabled={isdisabled}/>
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.comorbidities)}</div>
 
@@ -416,6 +622,7 @@ class PatientDetailsDrawer extends Component {
                     className={"form-textarea-ap"}
                     onChange={this.setComorbidities}
                     onPaste={this.setPastedComorbidities}
+                    disabled={isdisabled}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
@@ -426,6 +633,7 @@ class PatientDetailsDrawer extends Component {
                     className={"form-textarea-ap"}
                     onChange={this.setAllergies}
                     onPaste={this.setPastedAllergies}
+                    disabled={isdisabled}
                 />
 
                 
@@ -476,7 +684,7 @@ class PatientDetailsDrawer extends Component {
                     onPaste={this.setPastedDiagnosis}
                 />
 
-                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}<div className="star-red">*</div></div>
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}</div>
 
 
                 <Select
@@ -499,13 +707,13 @@ class PatientDetailsDrawer extends Component {
                     {this.getConditionOption()}
                 </Select>
 
-                <div className='form-headings-ap  flex align-center justify-start'>{this.formatMessage(messages.severity)}<div className="star-red">*</div></div>
+                <div className='form-headings-ap  flex align-center justify-start'>{this.formatMessage(messages.severity)}</div>
 
 
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Severity"
-                    value={this.state.severity}
+                    value={severity}
                     onChange={this.setSeverity}
                     onSearch={this.handleSeveritySearch}
                     notFoundContent={this.state.fetchingSeverity ? <Spin size="small" /> : 'No match found'}
@@ -528,11 +736,11 @@ class PatientDetailsDrawer extends Component {
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Treatment"
-                    value={this.state.treatment}
+                    value={treatment}
                     onChange={this.setTreatment}
                     notFoundContent={this.state.fetchingTreatment ? <Spin size="small" /> : 'No match found'}
                     showSearch
-                    disabled={!condition}
+                    // onSearch={this.handleTreatmentSearch}
                     autoComplete="off"
                     optionFilterProp="children"
                     filterOption={(input, option) =>
@@ -540,7 +748,6 @@ class PatientDetailsDrawer extends Component {
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
-
                 >
                     {this.getTreatmentOption()}
                 </Select>
@@ -551,7 +758,7 @@ class PatientDetailsDrawer extends Component {
 
 
     validateData = () => {
-
+        
         const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type= '' } = this.state;
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
@@ -574,14 +781,6 @@ class PatientDetailsDrawer extends Component {
             message.error(this.formatMessage(messages.treatmentError))
             return false;
         }
-        else if (!severity) {
-            message.error(this.formatMessage(messages.severityError))
-            return false;
-        }
-        else if (!condition) {
-            message.error(this.formatMessage(messages.conditionError))
-            return false;
-        }
         else if(!diagnosis_description){
             message.error(this.formatMessage(messages.diagnosisError))
             return false;
@@ -595,7 +794,8 @@ class PatientDetailsDrawer extends Component {
     }
 
     onSubmit = () => {
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes=''} = this.state;
+
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='' } = this.state;
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
@@ -621,11 +821,16 @@ class PatientDetailsDrawer extends Component {
             fetchingCondition: false,
             fetchingTreatment: false,
             fetchingSeverity: false,
+            fetchingPatients:false,
             comorbidities:'',
             allergies:'',
             clinical_notes:'',
             diagnosis_description:'',
-            diagnosis_type:'2'
+            diagnosis_type:'2',
+            patient_ids:[],
+            isdisabled:true,
+            selectedPatientId:null,
+            addNewPatient:false
         });
         close();
     };

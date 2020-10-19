@@ -12,6 +12,7 @@ module.exports = {
       last_name:"Kumar",
       address:"delhi",
       dob:"1994-09-02 12:05:21",
+      details: JSON.stringify({allergies: "some allergies", comorbidities: "some comorbidities"}),
       uid: `ADH/${new Date().getFullYear()}/0001`,
       created_at: new Date(),
       updated_at: new Date()

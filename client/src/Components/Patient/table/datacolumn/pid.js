@@ -1,18 +1,25 @@
-import React from "react";
+import React,{ Component }  from "react";
 // import { TABLE_DEFAULT_BLANK_FIELD } from "../../../../constant";
 import {getName} from "../../../../Helper/validation";
 
+
+
+
+
+
+
 export default props => {
   const {
-    patientData: { basic_info: { first_name, middle_name, last_name } = {} } = {},
-    // openPatientDrawer,
-    chatData: { messages: { unread = "0" } = {} } = {}
+    patientData: { basic_info: { first_name, middle_name, last_name,id } = {} } = {},
+    chatData: { messages: { unread = "0" } = {} } = {},
+      onRowClick,
   } = props || {};
 
   return (
-    <div className="tab-color flex align-center">
-      {/* <div className="fw600">{`${first_name} ${middle_name ? `${middle_name} `: ""}${last_name ? `${last_name} `: ""}`}</div> */}
-      <div className="fw600">{`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}</div>
+    <div className="wp100 p10 flex align-center justify-space-between" onClick={onRowClick(id)}>
+      <div className="fw600 tab-color ">
+      
+        {`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}</div>
 
       {unread === "0" ? (
         ""
@@ -24,3 +31,4 @@ export default props => {
     </div>
   );
 };
+

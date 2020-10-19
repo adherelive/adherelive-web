@@ -498,7 +498,7 @@ class UserController extends Controller {
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
-              ] = userCategoryApiWrapper.getBasicInfo();
+              ] = await userCategoryApiWrapper.getAllInfo();
 
               careplanData = await carePlanService.getCarePlanByData({
                 doctor_id: userCategoryId
@@ -509,7 +509,7 @@ class UserController extends Controller {
                 patientIds.push(carePlanApiWrapper.getPatientId());
                 const carePlanId = carePlanApiWrapper.getCarePlanId();
 
-                const {appointment_ids = [], medication_ids = []} = await carePlanApiWrapper.getAllInfo();
+                const {appointment_ids = [], medication_ids = [], vital_ids = []} = await carePlanApiWrapper.getAllInfo();
 
                 let carePlanSeverityDetails = await getCarePlanSeverityDetails(carePlanId);
 
@@ -520,7 +520,7 @@ class UserController extends Controller {
                   carePlanApiWrapper.getCarePlanId()
                 ] =
                   // carePlanApiWrapper.getBasicInfo();
-                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids, appointment_ids };
+                  { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids, appointment_ids, vital_ids };
               }
             }
             break;
@@ -547,8 +547,9 @@ class UserController extends Controller {
             const patientWrapper = await PatientWrapper(patient);
             patientApiDetails[
                 patientWrapper.getPatientId()
-                ] = patientWrapper.getBasicInfo();
+                ] = await patientWrapper.getAllInfo();
             userIds.push(patientWrapper.getUserId());
+
           }
         }
         // Logger.debug("userIds --> ", userIds);

@@ -126,16 +126,21 @@ class UserWrapper extends BaseUser {
       const doctors = {};
       const patients = {};
 
+      let doctor_id = null;
+      let patient_id = null;
+
       const patientData = await PatientWrapper(patient);
 
       if(!isEmpty(doctor)) {
           const doctorData = await DoctorWrapper(doctor);
-          doctors[doctorData.getDoctorId()] = doctorData.getBasicInfo();
+          doctors[doctorData.getDoctorId()] = await doctorData.getAllInfo();
+          doctor_id = doctorData.getDoctorId();
       }
 
       if(!isEmpty(patient)) {
           const patientData = await PatientWrapper(patient);
           patients[patientData.getPatientId()] = patientData.getBasicInfo();
+          patient_id = patientData.getPatientId();
       }
 
       return {
@@ -143,7 +148,9 @@ class UserWrapper extends BaseUser {
               [getId()]: getBasicInfo()
           },
           doctors,
-          patients
+          patients,
+          patient_id,
+          doctor_id,
       }
 
   };

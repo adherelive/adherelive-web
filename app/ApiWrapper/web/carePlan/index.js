@@ -2,6 +2,9 @@ import BaseCarePlan from "../../../services/carePlan";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import VitalService from "../../../services/vitals/vital.service";
 
+// WRAPPERS...
+import DoctorWrapper from "../doctor";
+
 class CarePlanWrapper extends BaseCarePlan {
     constructor(data) {
         super(data);
@@ -54,6 +57,30 @@ class CarePlanWrapper extends BaseCarePlan {
             vital_ids: vitalIds
         }
     }
+
+    getReferenceInfo = async () => {
+      const {_data, getCarePlanId, getAllInfo} = this;
+      const {doctor, patient} = _data || {};
+
+      let doctorData = {};
+        let doctor_id = null;
+
+      if(doctor) {
+          const doctors = await DoctorWrapper(doctor);
+          doctorData[doctors.getDoctorId()] = await doctors.getAllInfo();
+          doctor_id = doctors.getDoctorId();
+      }
+
+      return {
+          care_plans: {
+              [getCarePlanId()]: await getAllInfo(),
+          },
+          doctors: {
+              ...doctorData
+          },
+          doctor_id
+      };
+    };
 }
 
 export default async (data = null, id = null) => {
