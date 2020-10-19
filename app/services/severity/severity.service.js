@@ -1,13 +1,12 @@
-import Severity from "../../models/severity";
-import Sequelize from "sequelize";
-
-const Op = Sequelize.Op;
+import {Op} from "sequelize";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/severity";
 
 class SeverityService {
 
     getAll = async () => {
         try {
-            const severity = await Severity.findAll();
+            const severity = await Database.getModel(TABLE_NAME).findAll();
             return severity;
         } catch(error) {
             throw error;
@@ -16,7 +15,7 @@ class SeverityService {
 
     search = async (data) => {
         try {
-            const severity = await Severity.findAll({
+            const severity = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     name: {
                         [Op.like]: `%${data}%`,
@@ -31,7 +30,7 @@ class SeverityService {
 
     getByData = async data => {
         try {
-            const severity = await Severity.findOne({
+            const severity = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return severity;

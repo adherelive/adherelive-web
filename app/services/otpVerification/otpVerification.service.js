@@ -1,12 +1,13 @@
-import OtpVerification from "../../models/otpVerifications";
 import {Op} from "sequelize";
 import moment from "moment";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/otpVerifications";
 
 class OtpVerificationService {
 
     create = async (data) => {
         try {
-            const otpDetails = await OtpVerification.create(data);
+            const otpDetails = await Database.getModel(TABLE_NAME).create(data);
             return otpDetails;
         } catch(error) {
             throw error;
@@ -16,13 +17,11 @@ class OtpVerificationService {
     getOtpByData = async (data) => {
         try {
             const {otp, user_id} = data;
-            console.log("moment now ---> ", moment().toDate());
-            const otpDetails = await OtpVerification.findAll({
+            const otpDetails = await Database.getModel(TABLE_NAME).findAll({
                 limit: 1,
                 where: {
                     // TODO: change on deployment
-                    otp,
-                    user_id,
+                    ...data,
                     updated_at: {
                         [Op.gte]: moment().subtract(2, 'minutes').toDate()
                     }
@@ -38,7 +37,7 @@ class OtpVerificationService {
         try {
             const {otp, user_id} = data;
             console.log("moment now ---> ", moment().toDate());
-            const otpDetails = await OtpVerification.destroy({
+            const otpDetails = await Database.getModel(TABLE_NAME).destroy({
                 where: {
                     user_id,
                 },

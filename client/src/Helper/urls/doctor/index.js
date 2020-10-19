@@ -67,3 +67,7 @@ export const getUploadURL = () => {
 export const updateDoctorURL = (id) => {
   return `/doctors/${id}`;
 };
+
+export const addPatientToWatchlistUrl = (patient_id) => {
+  return `/doctors/watchlist/${patient_id}`;
+}

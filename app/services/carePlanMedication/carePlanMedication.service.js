@@ -1,10 +1,11 @@
-import CarePlanMedication from "../../models/carePlanMedications";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/carePlanMedications";
 
 class CarePlanMedicationService {
 
     getAllByData = async (data) => {
         try {
-            const carePlanMedications = await CarePlanMedication.findAll({
+            const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return carePlanMedications;
@@ -15,8 +16,7 @@ class CarePlanMedicationService {
 
     getCarePlanMedicationByData = async (data) => {
         try {
-            console.log("careplan data --> ", data);
-            const carePlanMedications = await CarePlanMedication.findAll({
+            const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return carePlanMedications;
@@ -27,7 +27,7 @@ class CarePlanMedicationService {
 
     deleteCarePlanMedicationByMedicationId = async medication_id => {
         try {
-          const carePlanMedications = await CarePlanMedication.destroy({
+          const carePlanMedications = await Database.getModel(TABLE_NAME).destroy({
             where: {
                 medication_id
             }
@@ -40,8 +40,7 @@ class CarePlanMedicationService {
 
     getSingleCarePlanMedicationByData = async (data) => {
         try {
-            console.log("careplan data --> ", data);
-            const carePlanMedication = await CarePlanMedication.findOne({
+            const carePlanMedication = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return carePlanMedication;
@@ -52,8 +51,7 @@ class CarePlanMedicationService {
 
     getMedicationsByCarePlanId = async (care_plan_id) => {
         try {
-            console.log("careplan IDDDDDDDDD in MEDICATIONNNNN ----> ", care_plan_id);
-            const carePlanMedications = await CarePlanMedication.findAll({
+            const carePlanMedications = await Database.getModel(TABLE_NAME).findAll({
                 where: {care_plan_id}
             });
             return carePlanMedications;
@@ -64,7 +62,7 @@ class CarePlanMedicationService {
 
     addCarePlanMedication = async data => {
         try {
-            const carePlanMedication = await CarePlanMedication.create(data);
+            const carePlanMedication = await Database.getModel(TABLE_NAME).create(data);
             return carePlanMedication;
         } catch(error) {
             throw error;

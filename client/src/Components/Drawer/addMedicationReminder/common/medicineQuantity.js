@@ -10,6 +10,7 @@ const { Item: FormItem } = Form;
 
 const FIELD_NAME = "quantity";
 
+
 class MedicineQuantity extends Component {
   componentDidMount() {
     const {
@@ -49,8 +50,8 @@ class MedicineQuantity extends Component {
     const {
       getFieldDecorator,
       getFieldError,
-      isFieldTouched
-      //getFieldValue
+      isFieldTouched,
+      getFieldValue
     } = form;
 
     const { onRadioChange, formatMessage, getInitialValue } = this;
@@ -75,13 +76,15 @@ class MedicineQuantity extends Component {
               
             </div> */}
           <div className="flex-grow-0">
-            <RadioGroup
-              size="small"
-              className="flex justify-content-end"
-            >
-              <RadioButton value={0.25} onClick={onRadioChange}>+0.25</RadioButton>
-              <RadioButton value={0.5} onClick={onRadioChange}>+0.5</RadioButton>
-            </RadioGroup>
+            
+              <RadioGroup
+                size="small"
+                className="flex justify-content-end"
+              >
+                <RadioButton value={0.25} onClick={onRadioChange}>+0.25</RadioButton>
+                <RadioButton value={0.50} onClick={onRadioChange}>+0.50</RadioButton>
+              </RadioGroup>
+             
           </div>
         </div>
         <FormItem

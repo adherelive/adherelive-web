@@ -21,10 +21,11 @@ class PassedCron {
     }
 
     getScheduleData = async () => {
+        const scheduleEventService = new ScheduleEventService();
+
         const currentTime = moment().utc().toISOString();
         Log.info(`currentTime : ${currentTime}`);
-        const scheduleEvents = await ScheduleEventService.getPassedEventData(currentTime);
-        Log.debug("1892312937 scheduleEvents", scheduleEvents);
+        const scheduleEvents = await scheduleEventService.getPassedEventData(currentTime);
         return scheduleEvents;
     };
 
@@ -39,6 +40,7 @@ class PassedCron {
                 for (const scheduleEvent of scheduleEvents) {
                     count++;
                     const event = await ScheduleEventWrapper(scheduleEvent);
+
                     switch (event.getEventType()) {
                         case EVENT_TYPE.VITALS:
                             await this.handleVitalPassed(event);
@@ -64,6 +66,7 @@ class PassedCron {
 
     handleVitalPassed = async (event) => {
         try {
+            const scheduleEventService = new ScheduleEventService();
             const currentTime = moment().utc().toDate();
             const eventId = event.getEventId();
             const {details: {repeat_interval_id: repeatIntervalId = ""} = {}} = event.getDetails();
@@ -80,7 +83,7 @@ class PassedCron {
             Log.info(`value: ${value} | difference -> ${moment(currentTime).diff(event.getStartTime(), 'hours')}`);
 
             if(moment(currentTime).diff(event.getStartTime(), 'hours') >= value) {
-                const updateEventStatus = await ScheduleEventService.update({
+                const updateEventStatus = await scheduleEventService.update({
                     status: EVENT_STATUS.EXPIRED
                 }, event.getScheduleEventId());
             }
@@ -92,10 +95,11 @@ class PassedCron {
 
     handleMedicationPassed = async (event) => {
         try {
+            const scheduleEventService = new ScheduleEventService();
             const currentTime = moment().utc().toDate();
 
             if(moment(currentTime).diff(event.getStartTime(), 'hours') >= 1) {
-                const updateEventStatus = await ScheduleEventService.update({
+                const updateEventStatus = await scheduleEventService.update({
                     status: EVENT_STATUS.EXPIRED
                 }, event.getScheduleEventId());
             }
@@ -107,10 +111,11 @@ class PassedCron {
 
     handleAppointmentPassed = async (event) => {
         try {
+            const scheduleEventService = new ScheduleEventService();
             const currentTime = moment().utc().toDate();
 
-            if(moment(currentTime).diff(event.getStartTime(), 'hours') >= 1) {
-                const updateEventStatus = await ScheduleEventService.update({
+            if(moment(currentTime).diff(event.getEndTime(), 'minutes') > 0) {
+                const updateEventStatus = await scheduleEventService.update({
                     status: EVENT_STATUS.EXPIRED
                 }, event.getScheduleEventId());
             }

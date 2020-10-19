@@ -1,73 +1,102 @@
-import CarePlan from "../../models/carePlan";
-import CarePlanAppointment from "../../models/carePlanAppointments";
-import CarePlanMedication from "../../models/carePlanMedications";
-import Doctors from "../../models/doctors";
-import Patients from "../../models/patients";
+import Database from "../../../libs/mysql";
+
+import { TABLE_NAME } from "../../models/carePlan";
+import { TABLE_NAME as patientTableName } from "../../models/patients";
+import { TABLE_NAME as doctorTableName } from "../../models/doctors";
+import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePlanAppointments";
+import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlanMedications";
 
 class CarePlanService {
+  getCarePlanByData = async data => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+        include: [
+          Database.getModel(patientTableName),
+          Database.getModel(doctorTableName),
+          Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(carePlanMedicationTableName)
+        ]
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    getCarePlanByData = async (data) => {
-        try {
-            console.log("careplan data --> ", data);
-            const carePlan = await CarePlan.findAll({
-                where: data,
-                include: [Patients, Doctors, CarePlanAppointment, CarePlanMedication]
-            });
-            return carePlan;
-        } catch(error) {
-            throw error;
+  getCarePlanById = async id => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).findOne({
+        where: { id },
+        include: [
+          Database.getModel(patientTableName),
+          Database.getModel(doctorTableName),
+          Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(carePlanMedicationTableName)
+        ]
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getSingleCarePlanByData = async data => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).findOne({
+        where: data,
+        include: [
+          Database.getModel(patientTableName),
+          Database.getModel(doctorTableName),
+          Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(carePlanMedicationTableName)
+        ]
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getMultipleCarePlanByData = async data => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+        include: [
+          Database.getModel(patientTableName),
+          Database.getModel(doctorTableName),
+          Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(carePlanMedicationTableName)
+        ],
+        order: [["created_at", "ASC"]]
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  updateCarePlan = async (data, id) => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).update(data, {
+        where: {
+          id
         }
-    };
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-    getCarePlanById = async (id) => {
-        try {
-            console.log("careplan data --> ", id);
-            const carePlan = await CarePlan.findOne({
-                where: {id},
-                include: [Patients, Doctors, CarePlanAppointment, CarePlanMedication]
-            });
-            return carePlan;
-        } catch(error) {
-            throw error;
-        }
-    };
-
-    getSingleCarePlanByData = async (data) => {
-        try {
-            console.log("careplan data --> ", data);
-            const carePlan = await CarePlan.findOne({
-                where: data,
-                include: [Patients, Doctors, CarePlanAppointment, CarePlanMedication]
-            });
-            return carePlan;
-        } catch(error) {
-            throw error;
-        }
-    };
-
-    
-
-    updateCarePlan = async (data, id) => {
-        try {
-            const carePlan = await CarePlan.update(data, {
-                where: {
-                    id
-                }
-            });
-            return carePlan;
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    addCarePlan = async data => {
-        try {
-            const carePlan = await CarePlan.create(data);
-            return carePlan;
-        } catch(error) {
-            throw error;
-        }
-      };
+  addCarePlan = async data => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).create(data);
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default new CarePlanService();

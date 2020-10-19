@@ -1,10 +1,10 @@
 'use strict';
 
-import {DB_TABLES} from "../constant";
+import {TABLE_NAME} from "../app/models/specialities";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.SPECIALITIES, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -34,6 +34,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.SPECIALITIES);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

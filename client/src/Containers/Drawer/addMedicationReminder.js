@@ -6,7 +6,6 @@ import { getMedications, addMedicationReminder, addCarePlanMedicationReminder } 
 import { getMedicationDetails } from "../../modules/otherDetails";
 import { getAppointments } from "../../modules/appointments";
 import { searchMedicine } from "../../modules/medicines";
-// import { createReminder, updateReminder } from "../../modules/reminder"; // write to add to database
 const mapStateToProps = state => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
@@ -29,7 +28,7 @@ const mapDispatchToProps = dispatch => {
     close: () => dispatch(close()),
     addMedicationReminder: data => dispatch(addMedicationReminder(data)),
     addCarePlanMedicationReminder: (data, carePlanId) => dispatch(addCarePlanMedicationReminder(data, carePlanId)),
-    getMedicationDetails: () => dispatch(getMedicationDetails()),
+    getMedicationDetails: (patientId) => dispatch(getMedicationDetails(patientId)),
     searchMedicine: data => dispatch(searchMedicine(data)),
     getMedications: (id) => dispatch(getMedications(id)),
     getAppointments: (id) => dispatch(getAppointments(id)),

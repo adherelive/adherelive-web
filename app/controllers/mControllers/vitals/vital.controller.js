@@ -7,8 +7,9 @@ import * as vitalHelper from "../../vitals/vitalHelper";
 import VitalService from "../../../services/vitals/vital.service";
 import VitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
-import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import twilioService from "../../../services/twilio/twilio.service";
+import queueService from "../../../services/awsQueue/queue.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
@@ -26,9 +27,9 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES, USER_CATEGORY
 } from "../../../../constant";
-import EventSchedule from "../../../eventSchedules";
+import SqsQueueService from "../../../services/awsQueue/queue.service";
 
 const Log = new Logger("MOBILE > VITALS > CONTROLLER");
 
@@ -53,6 +54,8 @@ class VitalController extends Controller {
         } = {},
         userDetails: { userId, userData: { category } = {}, userCategoryData = {} } = {},
       } = req;
+
+      const QueueService = new queueService();
 
       const doesVitalExists = await VitalService.getByData({
         care_plan_id,
@@ -81,6 +84,8 @@ class VitalController extends Controller {
         const patient = await PatientWrapper(null, carePlan.getPatientId());
 
         const eventScheduleData = {
+          type: EVENT_TYPE.VITALS,
+          patient_id: patient.getUserId(),
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
           critical: false,
@@ -97,7 +102,11 @@ class VitalController extends Controller {
         };
 
         // RRule
-        EventSchedule.create(eventScheduleData);
+        const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+        Log.debug("sqsResponse ---> ", sqsResponse);
+
+        // EventSchedule.create(eventScheduleData);
 
         const vitalJob = JobSdk.execute({
           eventType: EVENT_TYPE.VITALS,
@@ -144,6 +153,8 @@ class VitalController extends Controller {
         body: {start_date, end_date} = {},
         params: {id} = {}
       } = req;
+      const EventService = new eventService();
+
 
       const doesVitalExists = await VitalService.getByData({id});
 
@@ -185,6 +196,8 @@ class VitalController extends Controller {
         const deletedEvents = await EventService.deleteBatch(vitals.getVitalId());
 
         Log.debug("deletedEvents", deletedEvents);
+
+
 
         // RRule
         EventSchedule.create(eventScheduleData);
@@ -277,7 +290,12 @@ class VitalController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params --->", req.params);
-      const { params: { id } = {}, body: { response } = {} } = req;
+      const { params: { id } = {}, userDetails: {userData: {category} = {}} = {}, body: { response } = {} } = req;
+      const EventService = new eventService();
+
+      if(category !== USER_CATEGORY.PATIENT) {
+        return raiseClientError(res, 401, {}, "Unauthorized");
+      }
 
       const {event_id, ...rest} = response || {};
 
@@ -328,19 +346,19 @@ class VitalController extends Controller {
       const doctorData = await DoctorWrapper(null, carePlan.getDoctorId());
       const patientData = await PatientWrapper(null, carePlan.getPatientId());
 
-      let customMessage = `${vitalTemplate.getName()} Vital Update : `;
+      const chatJSON = JSON.stringify({
+        vitals: {
+          [vital.getVitalId()]: vital.getBasicInfo(),
+        },
+        vital_templates: {
+          [vitalTemplate.getVitalTemplateId()]: vitalTemplate.getBasicInfo(),
+        },
+        vital_id: vital.getVitalId(),
+        response,
+        type: EVENT_TYPE.VITALS,
+      });
 
-      for (const template of vitalTemplate.getTemplate()) {
-        customMessage += `${template["label"]}: ${
-          response[template["id"]] ? response[template["id"]] : "--"
-          }${vitalTemplate.getUnit()}   `;
-      }
-
-      const twilioMsg = await twilioService.addSymptomMessage(
-        doctorData.getUserId(),
-        patientData.getUserId(),
-        customMessage
-      );
+      const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), chatJSON);
 
       return raiseSuccess(
         res,
@@ -361,6 +379,7 @@ class VitalController extends Controller {
     try {
       Log.debug("req.params vital id---->", req.params);
       const { params: { id } = {} } = req;
+      const EventService = new eventService();
 
       const today = moment()
         .utc()
@@ -370,6 +389,7 @@ class VitalController extends Controller {
 
       const completeEvents = await EventService.getAllPassedByData({
         event_id: id,
+        event_type: EVENT_TYPE.VITALS,
         date: vital.getStartDate(),
         sort: "DESC"
       });

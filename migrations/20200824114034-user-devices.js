@@ -1,10 +1,11 @@
 'use strict';
 
-import {DB_TABLES, FEATURE_TYPE} from "../constant";
+import {TABLE_NAME} from "../app/models/userDevices";
+import {TABLE_NAME as userTableName} from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.USER_DEVICES, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,7 +17,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.USERS,
+            tableName: userTableName,
           },
           key: 'id'
         }
@@ -49,6 +50,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.USER_DEVICES);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

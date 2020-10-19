@@ -1,13 +1,12 @@
-import College from "../../models/college";
-import Sequelize from "sequelize";
-
-const Op = Sequelize.Op;
+import {Op} from "sequelize";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/college";
 
 class CollegeService {
 
     getAll = async () => {
         try {
-            const college = await College.findAll();
+            const college = await Database.getModel(TABLE_NAME).findAll();
             return college;
         } catch(error) {
             throw error;
@@ -16,7 +15,7 @@ class CollegeService {
 
     search = async (data) => {
         try {
-            const college = await College.findAll({
+            const college = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     name: {
                         [Op.like]: `%${data}%`,
@@ -31,7 +30,7 @@ class CollegeService {
 
     getByData = async data => {
         try {
-            const college = await College.findOne({
+            const college = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return college;
@@ -42,7 +41,7 @@ class CollegeService {
 
     getCollegeByData = async data => {
         try {
-            const college = await College.findAll({
+            const college = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return college;

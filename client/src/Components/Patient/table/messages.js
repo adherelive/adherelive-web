@@ -45,6 +45,11 @@ const messages = defineMessages({
     id: "app.patient.table.new.symptoms",
     description: "",
     defaultMessage: "New Symptom"
+  },
+  watchlist: {
+    id: "app.patient.table.watchlist",
+    description: "",
+    defaultMessage: "Watchlist"
   }
 });
 

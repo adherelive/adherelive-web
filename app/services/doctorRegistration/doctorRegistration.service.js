@@ -1,5 +1,5 @@
-import doctorRegistrationModel from "../../models/doctorRegistrations";
-import { defaultEventBridgePolicies } from "twilio/lib/jwt/taskrouter/util";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/doctorRegistrations";
 
 class DoctorRegistrationService {
     constructor() {}
@@ -7,7 +7,7 @@ class DoctorRegistrationService {
     addRegistration = async data => {
         try {
 
-            const doctorRegistration = await doctorRegistrationModel.create(data);
+            const doctorRegistration = await Database.getModel(TABLE_NAME).create(data);
             return doctorRegistration;
         } catch(error) {
             throw error;
@@ -16,7 +16,7 @@ class DoctorRegistrationService {
 
     getRegistrationByDoctorId = async doctor_id => {
         try {
-            const doctorRegistration = await doctorRegistrationModel.findAll({
+            const doctorRegistration = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     doctor_id,
                     deleted_at:null
@@ -31,7 +31,7 @@ class DoctorRegistrationService {
 
     getRegistrationById = async id => {
         try {
-            const doctorRegistration = await doctorRegistrationModel.findOne({
+            const doctorRegistration = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     id,
                     deleted_at:null
@@ -45,7 +45,7 @@ class DoctorRegistrationService {
 
     updateRegistration = async (data,id) => {
         try {
-            const doctorRegistration = await doctorRegistrationModel.update(data,{
+            const doctorRegistration = await Database.getModel(TABLE_NAME).update(data,{
                 where: {
                     id,
                     deleted_at:null
@@ -59,7 +59,7 @@ class DoctorRegistrationService {
 
     getRegistrationByData = async (number,council,year,expiry_date)=> {
         try {
-            const doctorRegistration = await doctorRegistrationModel.findOne({
+            const doctorRegistration = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     number,
                     council,

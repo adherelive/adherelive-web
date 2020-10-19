@@ -1,6 +1,6 @@
 import express from "express";
 import VitalController from "../../../app/controllers/mControllers/vitals/vital.controller";
-import Authenticate from "../middleware/auth";
+import Authenticate from "../middlewares/auth";
 // import * as validator from "./validator";
 const router  = express.Router();
 

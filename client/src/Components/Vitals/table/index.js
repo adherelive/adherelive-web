@@ -9,22 +9,46 @@ import Table from "antd/es/table";
 class VitalTable extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            loading: true,
+            vital_ids: [],
+        };
     }
 
     componentDidMount() {
-        const {vital_ids, getPatientVitals} = this.props;
-        if(vital_ids.length === 0) {
-            getPatientVitals();
+        this.getVitals();
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {care_plans: {vital_ids = []} = {}} = this.props;
+        const {care_plans: {vital_ids: prev_vital_ids = []} = {}} = prevProps;
+
+        if(vital_ids.length !== prev_vital_ids.length) {
+            this.setState({vital_ids});
         }
     }
+
+    getVitals = async () => {
+        try {
+            const {getPatientVitals} = this.props;
+            const {loading} = this.state;
+            const response = await getPatientVitals();
+            console.log("139871283 response", response);
+            const {status, payload: {data: {vital_ids = []} = {}} = {}} = response || {};
+            this.setState({vital_ids, loading: false});
+        } catch(error) {
+            this.setState({loading: false});
+        }
+    };
 
     getDataSource = () => {
         const {
             vitals,
             vital_templates,
-            vital_ids,
             intl: {formatMessage} = {}
         } = this.props;
+        const {vital_ids} = this.state;
 
         const {openResponseDrawer, openEditDrawer} = this;
 

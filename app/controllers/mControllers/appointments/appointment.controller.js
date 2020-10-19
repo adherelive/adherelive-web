@@ -16,10 +16,14 @@ import Log from "../../../../libs/log";
 import featureDetailService from "../../../services/featureDetails/featureDetails.service";
 import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 import providerService from "../../../services/provider/provider.service";
-import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
-import EventSchedule from "../../../eventSchedules";
+
+// SERVICES...
+import queueService from "../../../services/awsQueue/queue.service";
+
+// WRAPPERS...
+import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
@@ -147,6 +151,7 @@ class MobileAppointmentController extends Controller {
       }
 
       const eventScheduleData = {
+        type: EVENT_TYPE.APPOINTMENT,
         event_id: appointmentData.getAppointmentId(),
         event_type: EVENT_TYPE.APPOINTMENT,
         critical,
@@ -164,13 +169,14 @@ class MobileAppointmentController extends Controller {
         },
       };
 
-      // RRule
-      await EventSchedule.create(eventScheduleData);
+      const QueueService = new queueService();
+
+      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+
+      Logger.debug("sqsResponse ---> ", sqsResponse);
 
       const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
       await NotificationSdk.execute(appointmentJob);
-
-      Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
       // ADD CARE_PLAN APPOINTMENT
       if (care_plan_id) {

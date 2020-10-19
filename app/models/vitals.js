@@ -1,69 +1,69 @@
-import {database} from "../../libs/mysql";
-import Sequelize from "sequelize";
-import {VITAL_TEMPLATES} from "./vitalTemplates";
-import {CARE_PLANS} from "./carePlan";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME as vitalTemplatesTableName} from "./vitalTemplates";
+import {TABLE_NAME as carePlanTableName} from "./carePlan";
 
-// models
-import CarePlan from "./carePlan";
-import VitalTemplates from "./vitalTemplates";
+export const TABLE_NAME = "vitals";
 
-export const VITALS = "vitals";
+export const db = (database) => {
+    database.define(
+        TABLE_NAME,
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            vital_template_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: vitalTemplatesTableName,
+                    },
+                    key: 'id'
+                }
+            },
+            care_plan_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: carePlanTableName,
+                    },
+                    key: 'id'
+                }
+            },
+            details: {
+                type: DataTypes.JSON
+            },
+            description: {
+                type: DataTypes.STRING(1000),
+            },
+            start_date: {
+                type: DataTypes.DATE
+            },
+            end_date: {
+                type: DataTypes.DATE
+            },
+        },
+        {
+            underscored: true,
+            paranoid: true,
+        }
+    );
+};
 
-const Vitals = database.define(
-    VITALS,
-    {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        vital_template_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: VITAL_TEMPLATES,
-                },
-                key: 'id'
-            }
-        },
-        care_plan_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: {
-                    tableName: CARE_PLANS,
-                },
-                key: 'id'
-            }
-        },
-        details: {
-            type: Sequelize.JSON
-        },
-        description: {
-            type: Sequelize.STRING(1000),
-        },
-        start_date: {
-            type: Sequelize.DATE
-        },
-        end_date: {
-            type: Sequelize.DATE
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
 
-Vitals.hasOne(VitalTemplates, {
-    foreignKey: "id",
-    sourceKey: "vital_template_id"
-});
+export const associate = (database) => {
 
-Vitals.hasOne(CarePlan, {
-    foreignKey: "id",
-    sourceKey: "care_plan_id"
-});
+    // associations here (if any) ...
+    database.models[TABLE_NAME].hasOne(database.models[vitalTemplatesTableName], {
+        foreignKey: "id",
+        sourceKey: "vital_template_id"
+    });
 
-export default Vitals;
+    database.models[TABLE_NAME].hasOne(database.models[carePlanTableName], {
+        foreignKey: "id",
+        sourceKey: "care_plan_id"
+    });
+};

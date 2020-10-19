@@ -39,7 +39,7 @@ export const addVital = (payload) => {
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
       if (status === true) {
-        dispatch({ type: ADD_VITAL_COMPLETED, payload: data });
+        dispatch({ type: ADD_VITAL_COMPLETED, payload: data, data });
       } else {
         dispatch({ type: ADD_VITAL_FAILED, payload: error });
       }
@@ -53,10 +53,11 @@ export const addVital = (payload) => {
 
 export const getVitals = (carePlanId) => {
   return async (dispatch) => {
+    let response = {};
     try {
       dispatch({ type: GET_VITALS_START });
 
-      const response = await doRequest({
+      response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: getPatientVitalsURL(carePlanId),
       });
@@ -65,7 +66,7 @@ export const getVitals = (carePlanId) => {
       response || {};
       console.log("3912312789 response -> ", response);
       if (status === true) {
-        dispatch({ type: GET_VITALS_COMPLETE, payload: data });
+        dispatch({ type: GET_VITALS_COMPLETE, payload: data, data });
       } else {
         dispatch({ type: GET_VITALS_FAILED, payload: error });
       }
@@ -73,6 +74,7 @@ export const getVitals = (carePlanId) => {
       console.log("getVitals error ----> ", error);
       dispatch({ type: GET_VITALS_FAILED });
     }
+    return response;
   };
 };
 
@@ -90,7 +92,7 @@ export const getVitalTimeline = (vitalId) => {
       const { status, payload: { data = {}, error = {} } = {} } =
       response || {};
       if (status === true) {
-        dispatch({ type: GET_VITALS_TIMELINE_COMPLETE, payload: data });
+        dispatch({ type: GET_VITALS_TIMELINE_COMPLETE, payload: data, data });
       } else {
         dispatch({ type: GET_VITALS_TIMELINE_FAILED, payload: error });
       }
@@ -118,7 +120,7 @@ export const updateVital = (payload) => {
       const { status, payload: { data = {}, error = {} } = {} } =
       response || {};
       if (status === true) {
-        dispatch({ type: UPDATE_VITAL_COMPLETED, payload: data });
+        dispatch({ type: UPDATE_VITAL_COMPLETED, payload: data, data });
       } else {
         dispatch({ type: UPDATE_VITAL_FAILED, payload: error });
       }

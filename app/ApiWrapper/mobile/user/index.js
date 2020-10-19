@@ -4,6 +4,7 @@ import userPermissionService from "../../../services/userPermission/userPermissi
 import permissionService from "../../../services/permission/permission.service";
 import DoctorWrapper from "../../mobile/doctor";
 import PatientWrapper from "../../mobile/patient";
+import isEmpty from "lodash/isEmpty";
 
 class MUserWrapper extends BaseUser {
   constructor(data) {
@@ -95,6 +96,49 @@ class MUserWrapper extends BaseUser {
         userCategoryData: patientData.getBasicInfo(),
         userCategoryId: patientData.getPatientId()
       };
+    }
+  };
+
+  getReferenceInfo = async () => {
+    try {
+      const {getId, getBasicInfo, _data} = this;
+
+      const {doctor, patient} = _data;
+
+      console.log("19031298 doctor, patient ----------->", doctor, patient);
+
+      const doctors = {};
+      const patients = {};
+
+      let doctor_id = null;
+      let patient_id = null;
+
+      const patientData = await PatientWrapper(patient);
+
+      if(!isEmpty(doctor)) {
+        const doctorData = await DoctorWrapper(doctor);
+        doctors[doctorData.getDoctorId()] = doctorData.getBasicInfo();
+        doctor_id = doctorData.getDoctorId();
+      }
+
+      if(!isEmpty(patient)) {
+        const patientData = await PatientWrapper(patient);
+        patients[patientData.getPatientId()] = patientData.getBasicInfo();
+        patient_id = patientData.getPatientId();
+      }
+
+      return {
+        users: {
+          [getId()]: getBasicInfo()
+        },
+        doctors,
+        patients,
+        patient_id,
+        doctor_id,
+      }
+
+    } catch(error) {
+      throw error;
     }
   };
 }

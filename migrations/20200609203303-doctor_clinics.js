@@ -1,11 +1,11 @@
 'use strict';
 
-import { DB_TABLES } from "../constant";
-import Sequelize from "sequelize";
+import {TABLE_NAME} from "../app/models/doctorClinics";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.DOCTOR_CLINICS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: DB_TABLES.DOCTORS,
+            tableName: doctorTableName,
           },
           key: 'id'
         }
@@ -50,6 +50,6 @@ module.exports = {
     },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.DOCTOR_CLINICS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

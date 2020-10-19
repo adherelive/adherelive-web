@@ -2,6 +2,8 @@ import { connect } from "react-redux";
 import TwilioChat from "../../Components/ChatFullScreen/twilioChat";
 import { getSymptomDetails } from "../../modules/symptoms";
 
+import { getVitalOccurence } from "../../modules/vital_occurence";
+
 import { fetchChatAccessToken } from "../../modules/twilio";
 import { addMessageOfChat } from "../../modules/chatMessages";
 
@@ -14,7 +16,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
     addMessageOfChat: (roomId, messages) => dispatch(addMessageOfChat(roomId, messages)),
-    getSymptomDetails: (data) => dispatch(getSymptomDetails(data))
+    getSymptomDetails: (data) => dispatch(getSymptomDetails(data)),
+    getVitalOccurence: () => dispatch(getVitalOccurence())
   };
 };
 

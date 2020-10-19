@@ -5,6 +5,7 @@ import carePlanMedicationService from "../../../services/carePlanMedication/care
 import VitalService from "../../../services/vitals/vital.service";
 
 import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
+import DoctorWrapper from "../../web/doctor";
 
 class CarePlanWrapper extends BaseCarePlan {
   constructor(data) {
@@ -76,25 +77,26 @@ class CarePlanWrapper extends BaseCarePlan {
   };
 
   getReferenceInfo = async () => {
-    const { _data, getBasicInfo, getCarePlanId } = this;
-    const carePlanAppointments = await carePlanAppointmentService.getAllByData({
-      care_plan_id: getCarePlanId()
-    });
-    const carePlanMedications = await carePlanMedicationService.getAllByData({
-      care_plan_id: getCarePlanId()
-    });
+    const {_data, getCarePlanId, getAllInfo} = this;
+    const {doctor, patient} = _data || {};
 
-    let care_plan_appointment_ids = [];
-    for (const appointment of carePlanAppointments) {
-      const appointmentData = await CarePlanAppointmentWrapper(appointment);
-      // todo: wip
+    let doctorData = {};
+    let doctor_id = null;
+
+    if(doctor) {
+      const doctors = await DoctorWrapper(doctor);
+      doctorData[doctors.getDoctorId()] = await doctors.getAllInfo();
+      doctor_id = doctors.getDoctorId();
     }
-    let care_plan_medications_ids = [];
 
     return {
-      basic_info: getBasicInfo(),
-      care_plan_appointment_ids,
-      care_plan_medications_ids
+      care_plans: {
+        [getCarePlanId()]: await getAllInfo(),
+      },
+      doctors: {
+        ...doctorData
+      },
+      doctor_id
     };
   };
 }

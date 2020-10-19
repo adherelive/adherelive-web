@@ -20,9 +20,14 @@ const addPatientForm = Joi.object().keys({
     gender: Joi.string().length(1).optional().allow("", null),
     date_of_birth: Joi.date().required().label("Please enter date of birth"),
     prefix: Joi.string().regex(/^\d+$/).required().label("Please select prefix"),
+    comorbidities: Joi.string().trim().optional().allow(""),
+    allergies: Joi.string().trim().optional().allow(""),
+    clinical_notes: Joi.string().trim().optional().allow(""),
+    diagnosis_type: Joi.number().required(),
+    diagnosis_description: Joi.string().trim().max(500).required(),
     treatment_id: Joi.number().required().label("Incorrect Treatment value selected"),
-    severity_id: Joi.number().required().label("Incorrect Severity value selected"),
-    condition_id: Joi.number().required().label("Incorrect Condition value selected"),
+    severity_id: Joi.number().optional().allow("", null).label("Incorrect Severity value selected"),
+    condition_id: Joi.number().optional().allow("", null).label("Incorrect Condition value selected"),
 });
 
 const addQualificationRegistrationForm = Joi.object().keys({

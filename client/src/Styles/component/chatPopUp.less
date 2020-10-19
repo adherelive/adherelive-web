@@ -263,3 +263,111 @@
     }
   }
 }
+
+
+.bot-message-container{
+  margin:0px;
+  padding:10px 0px;
+  min-height:200px;
+  height:auto;
+  width:90%;
+  max-width: 450px;
+  width: 80%;
+  background-color:whitesmoke;
+  border-radius: 15px;
+}
+
+.bot-msg-detail-container{
+  margin:0px auto !important;
+  background-color:#e8e8e8;
+  width:90%;
+  height:auto;
+  border-left:4px solid #a4a4a4;
+  border-radius:3px 2px 2px 3px;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  color:#212b36;
+  .bot-m-h{
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:0.05rem;
+  }
+  .bot-msg-details{
+      .dot{
+        color:#a6a8a9;
+      }
+    &>span{
+    padding:2px;
+    font-size:17px;
+    font-weight:normal;
+    }
+  }
+  
+}
+
+.media-container{
+  background-color:inherit;
+  height: auto;
+  width:90%;
+  margin:20px auto;
+  .symptom-image{
+    max-width: 100%;
+    min-width: 100%; 
+    height: auto;
+    object-fit: fill;
+    margin: 0px;
+  }
+}
+
+
+.symptom-audio-container{
+  margin:20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  
+  
+}
+.text-msg-container{
+  max-width: 100%;
+  &>span{
+    font-size: 1rem;
+    color: #212b36;
+    text-align: left;
+    overflow-wrap: anywhere;
+    max-width: 100% ;
+  }
+}
+
+.symptom-audio, .symptom-video, .symptom-image{
+  max-width: 100% ;
+}
+
+.close-reply {
+  position: absolute;
+  right: 5%;
+  top: 30%;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+.close-reply:hover {
+  opacity: 1;
+}
+.close-reply:before, .close-reply:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.close-reply:before {
+  transform: rotate(45deg);
+}
+.close-reply:after {
+  transform: rotate(-45deg);
+}

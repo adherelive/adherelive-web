@@ -1,13 +1,13 @@
-import uploadDocumentsModel from "../../models/uploadDocuments";
-import {database} from "../../../libs/mysql";
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/uploadDocuments";
 
 class UploadDocumentService {
     constructor() {}
 
     addDocument = async data => {
-        const transaction = await database.transaction();
+        const transaction = await Database.initTransaction();
       try {
-          const document = await uploadDocumentsModel.create(data, {transaction});
+          const document = await Database.getModel(TABLE_NAME).create(data, {transaction});
           await transaction.commit();
           return document;
       } catch(error) {
@@ -18,7 +18,7 @@ class UploadDocumentService {
 
     getDocumentById = async id => {
         try {
-            const documents = await uploadDocumentsModel.findOne({
+            const documents = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     id
                 }
@@ -31,7 +31,7 @@ class UploadDocumentService {
 
     getDoctorQualificationDocuments = async (parent_type,parent_id) => {
         try {
-            const documents = await uploadDocumentsModel.findAll({
+            const documents = await Database.getModel(TABLE_NAME).findAll({
                 where: {
                     parent_type,
                     parent_id,
@@ -46,7 +46,7 @@ class UploadDocumentService {
 
     getDocumentByData = async (parent_type,parent_id,document) => {
         try {
-            const documents = await uploadDocumentsModel.findOne({
+            const documents = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     parent_type,
                     parent_id,
@@ -62,7 +62,7 @@ class UploadDocumentService {
 
     deleteDocumentsOfQualification = async (parent_type,parent_id) => {
         try {
-            const documents = await uploadDocumentsModel.destroy({
+            const documents = await Database.getModel(TABLE_NAME).destroy({
                 where: {
                     parent_type,
                     parent_id,
@@ -77,7 +77,7 @@ class UploadDocumentService {
 
     getDocumentByName = async (data) => {
         try {
-            const document = await uploadDocumentsModel.findOne({
+            const document = await Database.getModel(TABLE_NAME).findOne({
                 where: data
             });
             return document;
@@ -88,7 +88,7 @@ class UploadDocumentService {
 
     getAllByData = async (data) => {
         try {
-            const documents = await uploadDocumentsModel.findAll({
+            const documents = await Database.getModel(TABLE_NAME).findAll({
                 where: data
             });
             return documents;

@@ -1,15 +1,10 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { MEDICINE_TYPE, GENDER, PERMISSIONS, ROOM_ID_TEXT, TABLET, SYRINGE, SYRUP, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY } from "../../constant";
-import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
+import { Tabs, message } from "antd";
 
-import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
-import moment from "moment";
 import Timeline from './timeline';
 import Summary from './summary';
-import userDp from "../../Assets/images/ico-placeholder-userdp.svg";
 import messages from "./message";
-import config from "../../config";
 
 
 

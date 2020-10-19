@@ -1,3 +1,5 @@
+import twilioController from "../../../app/controllers/twilio/twilio.controller";
+
 const express = require("express");
 const router = express.Router();
 import Authenticate from "../middleware/auth";
@@ -40,6 +42,12 @@ router.post(
     "/doctors/:id",
     Authenticate,
     Doctor.verifyDoctors
+);
+
+router.delete(
+    "/chats/delete",
+    Authenticate,
+    twilioController.deleteChat
 );
 
 module.exports = router;

@@ -18,6 +18,8 @@ class EmailManger {
     //   apiVersion: "2010-12-01"
     // });
 
+    Log.info(`api_user: ${process.config.email.USER} | api_key: ${process.config.email.USER}`);
+
     this.smtpTransporter = nodemailer.createTransport(
       smtpTransport({
         auth: {

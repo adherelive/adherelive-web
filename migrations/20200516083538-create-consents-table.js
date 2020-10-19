@@ -1,10 +1,13 @@
 'use strict';
 
-import {DB_TABLES} from "../constant";
+import {DataTypes} from "sequelize";
+import {TABLE_NAME} from "../app/models/consents";
+import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
+import {TABLE_NAME as patientTableName} from "../app/models/patients";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable(DB_TABLES.CONSENTS, {
+    return queryInterface.createTable(TABLE_NAME, {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,6 +17,26 @@ module.exports = {
       type: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      doctor_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: doctorTableName,
+          },
+          key: 'id'
+        }
+      },
+      patient_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: patientTableName,
+          },
+          key: 'id'
+        }
       },
       details: {
         type: Sequelize.JSON,
@@ -40,6 +63,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(DB_TABLES.CONSENTS);
+    return queryInterface.dropTable(TABLE_NAME);
   }
 };

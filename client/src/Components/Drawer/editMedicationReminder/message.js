@@ -292,7 +292,7 @@ export default defineMessages({
     defaultMessage: "Please Fill All Details"
   },
   title: {
-    id: "medication_reminder.modal.title",
+    id: "edit.medication_reminder.modal.title",
     description: "",
     defaultMessage: "Edit Medication"
   },
@@ -386,5 +386,15 @@ export default defineMessages({
     id: "medication_reminder.drawer.enterInstruction",
     description: "",
     defaultMessage: "Enter instructions",
+  },
+  everyday: {
+    id: "medication_reminder.drawer.everyday",
+    description: "",
+    defaultMessage: "Everyday",
+  },
+  alternate: {
+    id: "medication_reminder.drawer.alternate",
+    description: "",
+    defaultMessage: "Alternate",
   },
 });

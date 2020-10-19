@@ -1,29 +1,36 @@
 "use strict";
-import Sequelize from "sequelize";
-import {database} from "../../libs/mysql";
-import {DB_TABLES, FEATURE_TYPE} from "../../constant";
+import {DataTypes} from "sequelize";
+import {FEATURE_TYPE} from "../../constant";
 
-const FeatureDetails = database.define(
-    DB_TABLES.FEATURE_DETAILS,
-    {
-        id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
-        },
-        feature_type: {
-            type: Sequelize.ENUM,
-            values: [...Object.values(FEATURE_TYPE)]
-        },
-        details: {
-            type: Sequelize.JSON,
-        },
-    },
-    {
-        underscored: true,
-        paranoid: true,
-    }
-);
+export const TABLE_NAME = "feature_details";
 
-export default FeatureDetails;
+export const db = (database) => {
+    database.define(
+        TABLE_NAME,
+        {
+            id: {
+                allowNull: false,
+                autoIncrement: true,
+                primaryKey: true,
+                type: DataTypes.INTEGER
+            },
+            feature_type: {
+                type: DataTypes.ENUM,
+                values: [...Object.values(FEATURE_TYPE)]
+            },
+            details: {
+                type: DataTypes.JSON,
+            },
+        },
+        {
+            underscored: true,
+            paranoid: true,
+        }
+    );
+};
+
+export const associate = (database) => {
+    // const {TABLE_NAME} = database.models || {};
+
+    // associations here (if any) ...
+};

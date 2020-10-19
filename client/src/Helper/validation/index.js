@@ -32,6 +32,17 @@ export const isNumber = (data, positiveOnly = true) => {
   }
 };
 
+
+
 export const hasErrors = fieldsError => {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 };
+
+
+export const getName = (nameInput) => {
+  if(nameInput){
+    return nameInput
+  }else{
+    return ""
+  }
+}

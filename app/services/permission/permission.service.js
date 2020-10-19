@@ -1,5 +1,5 @@
-import Permissions from "../../models/permissions";
-
+import Database from "../../../libs/mysql";
+import {TABLE_NAME} from "../../models/permissions";
 
 class PermissionService {
     constructor() {
@@ -7,7 +7,7 @@ class PermissionService {
 
     getPermissionsById = async data => {
       try {
-          const permissions = Permissions.findAll({
+          const permissions = Database.getModel(TABLE_NAME).findAll({
               where: {
                   id: data
               }
