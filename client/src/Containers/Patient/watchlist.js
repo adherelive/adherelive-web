@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import {searchPatientFromNum} from "../../modules/patients";
-import {addToWatchlist} from "../../modules/doctors";
+import {addToWatchlist,removePatientFromWatchlist} from "../../modules/doctors";
 
 const mapStateToProps = state => {
     
@@ -55,7 +55,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     openPatientDetailsDrawer: (payload) => dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload })),
-    addToWatchlist:(patient_id) => dispatch(addToWatchlist(patient_id))
+    addToWatchlist:(patient_id) => dispatch(addToWatchlist(patient_id)),
+    removePatientFromWatchlist:(patient_id) => dispatch(removePatientFromWatchlist(patient_id))
+
   };
 };
 

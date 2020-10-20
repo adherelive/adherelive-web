@@ -1,7 +1,7 @@
 
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
-import { getDoctorDetailsUrl, getAllDoctorsUrl, getVerifyDoctorUrl, updateDoctorURL, getDoctorProfileDetailsUrl,addPatientToWatchlistUrl } from "../../Helper/urls/doctor";
+import { getDoctorDetailsUrl, getAllDoctorsUrl, getVerifyDoctorUrl, updateDoctorURL, getDoctorProfileDetailsUrl,addPatientToWatchlistUrl ,removePatientFromWatchlistUrl} from "../../Helper/urls/doctor";
 
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
@@ -24,6 +24,9 @@ export const ADD_PATIENT_TO_WATCHLIST="ADD_PATIENT_TO_WATCHLIST";
 export const ADD_PATIENT_TO_WATCHLIST_COMPLETE="ADD_PATIENT_TO_WATCHLIST_COMPLETE";
 export const ADD_PATIENT_TO_WATCHLIST_FAILED = "ADD_PATIENT_TO_WATCHLIST_FAILED";
 
+export const REMOVE_PATIENT_FROM_WATCHLIST ="REMOVE_PATIENT_FROM_WATCHLIST";
+export const REMOVE_PATIENT_FROM_WATCHLIST_COMPLETE="REMOVE_PATIENT_FROM_WATCHLIST_COMPLETE";
+export const REMOVE_PATIENT_FROM_WATCHLIST_FAILED="REMOVE_PATIENT_FROM_WATCHLIST_FAILED";
 
 export const updateDoctor = (user_id,updateData) => {
   let response = {};
@@ -82,6 +85,42 @@ export const addToWatchlist = (patient_id) => {
       } else if (status === true) {
         dispatch({
           type:ADD_PATIENT_TO_WATCHLIST_COMPLETE,
+          data: data,
+        });
+      }
+
+    }catch(error){
+      console.log("error search patient", error);
+      throw error;
+    }
+
+    return response;
+  };
+}
+
+export const removePatientFromWatchlist = (patient_id) => {
+  let response = {};
+  return async (dispatch) => {
+    try{
+     
+      dispatch({ type: REMOVE_PATIENT_FROM_WATCHLIST });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: removePatientFromWatchlistUrl(patient_id)
+      });
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: REMOVE_PATIENT_FROM_WATCHLIST_FAILED,
+          payload: { error },
+        });
+      } else if (status === true) {
+        dispatch({
+          type:REMOVE_PATIENT_FROM_WATCHLIST_COMPLETE,
           data: data,
         });
       }
