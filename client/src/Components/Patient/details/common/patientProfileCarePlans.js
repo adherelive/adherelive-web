@@ -156,7 +156,7 @@ class PatientCarePlans extends Component {
     } = this;
 
     return (
-      <div className="mt18 bw1">
+      <div className="mt18">
         {getVisibleCarePlans()}
         {getHiddenCarePlans()}
         {!hideFooter() && renderFooter()}

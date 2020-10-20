@@ -1570,6 +1570,7 @@ class PatientDetails extends Component {
                           }
                           dataSource={getMedicationData(carePlan)}
                           onRow={
+                            !isOtherCarePlan &&
                             authPermissions.includes(
                               PERMISSIONS.EDIT_MEDICATION
                             )
@@ -1589,6 +1590,7 @@ class PatientDetails extends Component {
                           }
                           dataSource={getAppointmentsData(carePlan, docName)}
                           onRow={
+                            !isOtherCarePlan &&
                             authPermissions.includes(
                               PERMISSIONS.EDIT_APPOINTMENT
                             )
@@ -1611,6 +1613,7 @@ class PatientDetails extends Component {
                         <VitalTable
                           patientId={patient_id}
                           carePlanId={carePlanId}
+                        isOtherCarePlan={isOtherCarePlan}
                         />
                       </TabPane>
                     </Tabs>
