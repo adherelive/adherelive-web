@@ -97,7 +97,7 @@ class PatientTable extends Component {
     return (
       <Table
         
-        // onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
+        onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
