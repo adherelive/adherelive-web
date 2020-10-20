@@ -52,7 +52,8 @@ class PatientTable extends Component {
       care_plans,
       users,
       authenticated_user,
-      addToWatchlist
+      addToWatchlist,
+      removePatientFromWatchlist
     } = this.props;
 
     const {onRowClick} = this;
@@ -72,7 +73,8 @@ class PatientTable extends Component {
         users,
         authenticated_user,
         addToWatchlist,
-        onRowClick
+        onRowClick,
+        removePatientFromWatchlist
       });
     });
   };

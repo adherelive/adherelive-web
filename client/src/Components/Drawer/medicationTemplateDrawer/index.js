@@ -562,7 +562,7 @@ class TemplateDrawer extends Component {
 
 
     onSubmit = () => {
-        const { submit, patientId, carePlan: { treatment_id = 1, severity_id = 1, condition_id = 1 } = {} } = this.props;
+        const { submit, patientId, carePlan: { basic_info: {id: carePlanId} = {}, treatment_id = 1, severity_id = 1, condition_id = 1 } = {} } = this.props;
         let { medications = {}, appointments = {}, name = '', createTemplate = false } = this.state;
         let medicationsData = Object.values(medications);
         let appointmentsData = Object.values(appointments);
@@ -624,7 +624,7 @@ class TemplateDrawer extends Component {
         }
         let validate = this.validateData(medicationsData, appointmentsData);
         if (validate) {
-            submit({ medicationsData, appointmentsData, name, createTemplate, treatment_id, severity_id, condition_id });
+            submit({ carePlanId, medicationsData, appointmentsData, name, createTemplate, treatment_id, severity_id, condition_id });
         }
     }
 
