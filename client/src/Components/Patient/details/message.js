@@ -406,6 +406,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "An OTP will be sent to patient's registered phone number. Please consult the patient for OTP to proceed with consent approval"
     },
+    sent_otp_consent_details_text: {
+        id: "app.patient_profile.sent.otp.consent.details.text",
+        description: "",
+        defaultMessage: "An OTP has been sent to patient's registered phone number. Please consult the patient for OTP"
+    },
     enter_otp_text: {
         id: "app.patient_profile.enter.otp.text",
         description: "",
@@ -415,6 +420,16 @@ const messages = defineMessages({
         id: "app.patient_profile.verify.otp.text",
         description: "",
         defaultMessage: "Verify"
+    },
+    cancel_text: {
+        id: "app.patient_profile.cancel.modal.text",
+        description: "",
+        defaultMessage: "Cancel"
+    },
+    resend_otp_text: {
+        id: "app.patient_profile.resend.otp.text",
+        description: "",
+        defaultMessage: "Resend OTP"
     },
     consent_modal_title_text: {
         id: "app.patient_profile.consent.modal.title.text",
