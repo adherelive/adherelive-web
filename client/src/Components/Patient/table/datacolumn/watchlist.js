@@ -44,7 +44,7 @@ class Watchlist extends Component {
     });
   };
 
-  removeFromWatchlist = () => {
+  removeFromWatchlist = (e) => {
     const { patientData: { basic_info: { id, first_name, middle_name, last_name } = {} } = {}, addToWatchlist ,removePatientFromWatchlist} =
       this.props || {};
     removePatientFromWatchlist(id).then(response => {
@@ -64,19 +64,24 @@ class Watchlist extends Component {
     
   };
 
+  stopEventBubbling = (e) => {
+    e.stopPropagation();
+  };
+
   render() {
     const { isAdded } = this.state;
     return (
-      <div className=" flex align-center justify-space-between">
+      <div className=" flex align-center justify-space-between" onClick={this.stopEventBubbling}>
           {/* <Rate count={1} value={isAdded ? 1 : 0} onChange={this.addThisToWatchlist}/> */}
         {isAdded ? (
           <Rate  count={1}  value={isAdded} 
-          onChange={this.removeFromWatchlist} 
+          onChange={this.removeFromWatchlist}
+
           />
         ) : (
           <Rate count={1}  value={isAdded} 
            onChange={this.addThisToWatchlist}
-         />
+          />
         )}
       </div>
     );

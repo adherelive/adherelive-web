@@ -35,7 +35,7 @@ class PatientCarePlans extends Component {
 
     const patientCarePlans = care_plan_ids.filter(id => {
       const {
-        basic_info: { patient_id: carePlanPatientId } = {},
+        basic_info: { patient_id: carePlanPatientId = "0" } = {},
       } = care_plans[id] || {};
 
       if(carePlanPatientId.toString() === patient_id) {
@@ -67,11 +67,7 @@ class PatientCarePlans extends Component {
         <div
           key={`cp-${id}`}
           onClick={handleCarePlanChange(id)}
-          className={`pointer flex justify-space-between align-center p10 ${
-            care_plan_ids.length - 1 === index ? "bblr10 bbrr10" : "bb-05"
-          } ${selectedCarePlanId === id ? "bg-medium-blue" : ""} ${
-            index > 0 ? "" : "btlr10 btrr10"
-          }`}
+          className={`pointer flex justify-space-between align-center p10 bb-05 ${selectedCarePlanId === id ? "bg-medium-blue" : ""}`}
         >
           <div>
             <div className="fs18 fw700">{name}</div>
@@ -160,7 +156,7 @@ class PatientCarePlans extends Component {
     } = this;
 
     return (
-      <div className="mt18 br10 bg-light-blue-grey">
+      <div className="mt18 bw1">
         {getVisibleCarePlans()}
         {getHiddenCarePlans()}
         {!hideFooter() && renderFooter()}
