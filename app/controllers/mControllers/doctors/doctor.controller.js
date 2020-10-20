@@ -1392,7 +1392,7 @@ class MobileDoctorController extends Controller {
     }
   };
 
-  AddPatientToWatchlist = async (req,res) => {
+  addPatientToWatchlist = async (req,res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {  patient_id = 0 } = req.params;
@@ -1442,6 +1442,58 @@ class MobileDoctorController extends Controller {
     }
 
   };
+
+
+
+  removePatientFromWatchlist = async(req,res) => {
+
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {  patient_id = 0 } = req.params;
+      const { userDetails: { userId } = {} } = req;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+      if(patient && doctor){
+
+        const deletedWatchlistRecord = await doctorService.deleteWatchlistRecord({
+          patient_id:parseInt(patient_id),
+          doctor_id: doctor.get("id")
+        });
+        
+        let doctorData = {};
+
+        if(deletedWatchlistRecord) {
+          const doctorDetails = await DoctorWrapper(doctor);
+          doctorData[doctorDetails.getDoctorId()] = await doctorDetails.getAllInfo();
+        }
+
+        return raiseSuccess(
+          res,
+          200,
+          {
+            doctors: {
+              ...doctorData
+            }          },
+          "watchlist record destroyed"
+        );
+      }else{
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Doctor/patient do not exist"
+        );
+      }
+
+      
+    }catch (error) {
+      Logger.debug("83901283091298 add patient to watchlist error", error);
+      return raiseServerError(res);
+    }
+
+  };
+
 
 }
 

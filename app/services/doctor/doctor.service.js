@@ -94,6 +94,27 @@ class DoctorService {
             throw error;
         }
     };
+
+    deleteWatchlistRecord = async (watchlist_data) => {
+        const transaction = await Database.initTransaction();
+        try{
+            const {patient_id,doctor_id} = watchlist_data;
+            const deletedWatchlistDetails = await Database.getModel(watchlistTableName).destroy({
+                where: {
+                    patient_id,
+                    doctor_id
+                },
+            });
+            await transaction.commit();
+            return deletedWatchlistDetails;
+
+        }catch(error){
+            await transaction.rollback();
+            throw error;
+        }
+    }
+
+
 }
 
 export default new DoctorService();

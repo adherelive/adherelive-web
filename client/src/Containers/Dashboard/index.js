@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 import { closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
 import {searchPatientFromNum} from "../../modules/patients";
-import {addToWatchlist} from "../../modules/doctors";
+import {addToWatchlist,removePatientFromWatchlist} from "../../modules/doctors";
 
 const mapStateToProps = state => {
     const { graphs, auth: { authPermissions = [], authenticated_user = 1 } = {},
@@ -47,7 +47,8 @@ const mapDispatchToProps = dispatch => {
         closePopUp: () => dispatch(closePopUp()),
         fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
         searchPatientFromNum: (value) => dispatch(searchPatientFromNum(value)),
-        addToWatchlist:(patient_id) => dispatch(addToWatchlist(patient_id))
+        addToWatchlist:(patient_id) => dispatch(addToWatchlist(patient_id)),
+        removePatientFromWatchlist:(patient_id) => dispatch(removePatientFromWatchlist(patient_id))
     };
 };
 

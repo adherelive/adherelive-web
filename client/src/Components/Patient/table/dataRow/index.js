@@ -1,7 +1,7 @@
 import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 
 export default data => {
-  const { id,addToWatchlist, onRowClick} = data;
+  const { id,addToWatchlist, onRowClick,removePatientFromWatchlist} = data;
   const formattedData = formatPatientTableData(data);
   const { patientData, treatmentData, doctorData, providerData, chatData, carePlanData } =
     formattedData || {};
@@ -19,6 +19,7 @@ export default data => {
       patientData,
       addToWatchlist,
       doctorData,
+      removePatientFromWatchlist
     },
     [TABLE_COLUMN.CONDITION.dataIndex]: {
       patientData

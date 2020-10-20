@@ -929,54 +929,54 @@ class PatientDetails extends Component {
     });
   };
 
-  handleSubmitTemplate = data => {
-    const {
-      addCarePlanMedicationsAndAppointments,
-      getMedications,
-      getAppointments,
-      care_plans,
-      patient_id,
-      getPatientCarePlanDetails
-    } = this.props;
-
-    let carePlanId = 1;
-    for (let carePlan of Object.values(care_plans)) {
-      let {
-        basic_info: { id = 1, patient_id: patientId = 1 }
-      } = carePlan;
-      if (patient_id == patientId) {
-        carePlanId = id;
-      }
-    }
-    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
-      const {
-        status = false,
-        statusCode,
-        payload: {
-          error: { error_type = "" } = {},
-          message: errorMessage = ""
-        } = {}
-      } = response;
-      if (status) {
-        this.onCloseTemplate();
-
-        message.success(this.formatMessage(messages.carePlanUpdated));
-        getMedications(patient_id).then(() => {
-          getAppointments(patient_id).then(() => {
-            getPatientCarePlanDetails(patient_id);
-          });
-        });
-      } else {
-        if (statusCode === 422 && error_type == "slot_present") {
-          message.error(this.formatMessage(messages.slotPresent));
-        } else if (statusCode === 422) {
-          message.error(errorMessage);
-        } else {
-          message.error(this.formatMessage(messages.somethingWentWrong));
-        }
-      }
-    });
-  };
+  // handleSubmitTemplate = data => {
+  //   const {
+  //     addCarePlanMedicationsAndAppointments,
+  //     getMedications,
+  //     getAppointments,
+  //     care_plans,
+  //     patient_id,
+  //     getPatientCarePlanDetails
+  //   } = this.props;
+  //
+  //   let carePlanId = 1;
+  //   for (let carePlan of Object.values(care_plans)) {
+  //     let {
+  //       basic_info: { id = 1, patient_id: patientId = 1 }
+  //     } = carePlan;
+  //     if (patient_id == patientId) {
+  //       carePlanId = id;
+  //     }
+  //   }
+  //   addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+  //     const {
+  //       status = false,
+  //       statusCode,
+  //       payload: {
+  //         error: { error_type = "" } = {},
+  //         message: errorMessage = ""
+  //       } = {}
+  //     } = response;
+  //     if (status) {
+  //       this.onCloseTemplate();
+  //
+  //       message.success(this.formatMessage(messages.carePlanUpdated));
+  //       getMedications(patient_id).then(() => {
+  //         getAppointments(patient_id).then(() => {
+  //           getPatientCarePlanDetails(patient_id);
+  //         });
+  //       });
+  //     } else {
+  //       if (statusCode === 422 && error_type == "slot_present") {
+  //         message.error(this.formatMessage(messages.slotPresent));
+  //       } else if (statusCode === 422) {
+  //         message.error(errorMessage);
+  //       } else {
+  //         message.error(this.formatMessage(messages.somethingWentWrong));
+  //       }
+  //     }
+  //   });
+  // };
   openVideoChatTab = roomId => () => {
     window.open(
       `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
@@ -1043,16 +1043,8 @@ class PatientDetails extends Component {
       patient_id,
       getPatientCarePlanDetails
     } = this.props;
-    let carePlanId = 1;
-    for (let carePlan of Object.values(care_plans)) {
-      let {
-        basic_info: { id = 1, patient_id: patientId = 1 }
-      } = carePlan;
-      if (patient_id == patientId) {
-        carePlanId = id;
-      }
-    }
-    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+    const {carePlanId, ...rest} = data || {};
+    addCarePlanMedicationsAndAppointments(rest, carePlanId).then(response => {
       const {
         status = false,
         statusCode,
@@ -1306,8 +1298,10 @@ class PatientDetails extends Component {
         cPAppointmentIds = appointment_ids;
         cPMedicationIds = medication_ids;
         vitalIds = vital_ids;
+        carePlanId = selectedCarePlanId;
       }
     }
+
 
     const {
       basic_info: { doctor_id = 1 } = {},
@@ -1335,7 +1329,7 @@ class PatientDetails extends Component {
           condition_id: cIdTemp = 0,
           severity_id: sIdTemp = 0,
           treatment_id: tIdTemp = 0
-        } = {}
+        } = {},
       } = care_plan_templates[carePlanTemplateId] || {};
       carePlan.treatment_id = tIdTemp;
       carePlan.severity_id = sIdTemp;
