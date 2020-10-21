@@ -29,7 +29,7 @@ export default props => {
     {
       title: formatMessage(messages.watchlist),
       ...TABLE_COLUMN.WATCHLIST,
-      render: ({doctorData, addToWatchlist, patientData}) => <Watchlist patientData={patientData} doctorData={doctorData} addToWatchlist={addToWatchlist} />
+      render: ({doctorData, addToWatchlist, patientData,removePatientFromWatchlist}) => <Watchlist patientData={patientData} doctorData={doctorData} addToWatchlist={addToWatchlist} removePatientFromWatchlist={removePatientFromWatchlist}  />
     },
     {
       title: formatMessage(messages.condition),

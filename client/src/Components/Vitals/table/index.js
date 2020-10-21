@@ -46,7 +46,8 @@ class VitalTable extends Component {
         const {
             vitals,
             vital_templates,
-            intl: {formatMessage} = {}
+            intl: {formatMessage} = {},
+            isOtherCarePlan
         } = this.props;
         const {vital_ids} = this.state;
 
@@ -60,7 +61,8 @@ class VitalTable extends Component {
                 vital_templates,
                 openResponseDrawer,
                 openEditDrawer,
-                formatMessage
+                formatMessage,
+                isOtherCarePlan
             });
         });
     };
@@ -73,8 +75,10 @@ class VitalTable extends Component {
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
-        const {editVitalDrawer} = this.props;
-        editVitalDrawer({id, loading: true});
+        const {editVitalDrawer, isOtherCarePlan} = this.props;
+        if(!isOtherCarePlan) {
+            editVitalDrawer({id, loading: true});
+        }
     };
 
     render() {

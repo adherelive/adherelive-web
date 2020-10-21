@@ -71,3 +71,7 @@ export const updateDoctorURL = (id) => {
 export const addPatientToWatchlistUrl = (patient_id) => {
   return `/doctors/watchlist/${patient_id}`;
 }
+
+export const removePatientFromWatchlistUrl = (patient_id) => {
+  return `/doctors/watchlistremove/${patient_id}`;
+}
