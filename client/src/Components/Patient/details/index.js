@@ -49,6 +49,7 @@ import SymptomTabs from "../../../Containers/Symptoms";
 import config from "../../../config";
 import EditVitals from "../../../Containers/Drawer/editVitals";
 import { getRoomId } from "../../../Helper/twilio";
+import {getFullName} from "../../../Helper/common";
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
@@ -929,54 +930,54 @@ class PatientDetails extends Component {
     });
   };
 
-  handleSubmitTemplate = data => {
-    const {
-      addCarePlanMedicationsAndAppointments,
-      getMedications,
-      getAppointments,
-      care_plans,
-      patient_id,
-      getPatientCarePlanDetails
-    } = this.props;
-
-    let carePlanId = 1;
-    for (let carePlan of Object.values(care_plans)) {
-      let {
-        basic_info: { id = 1, patient_id: patientId = 1 }
-      } = carePlan;
-      if (patient_id == patientId) {
-        carePlanId = id;
-      }
-    }
-    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
-      const {
-        status = false,
-        statusCode,
-        payload: {
-          error: { error_type = "" } = {},
-          message: errorMessage = ""
-        } = {}
-      } = response;
-      if (status) {
-        this.onCloseTemplate();
-
-        message.success(this.formatMessage(messages.carePlanUpdated));
-        getMedications(patient_id).then(() => {
-          getAppointments(patient_id).then(() => {
-            getPatientCarePlanDetails(patient_id);
-          });
-        });
-      } else {
-        if (statusCode === 422 && error_type == "slot_present") {
-          message.error(this.formatMessage(messages.slotPresent));
-        } else if (statusCode === 422) {
-          message.error(errorMessage);
-        } else {
-          message.error(this.formatMessage(messages.somethingWentWrong));
-        }
-      }
-    });
-  };
+  // handleSubmitTemplate = data => {
+  //   const {
+  //     addCarePlanMedicationsAndAppointments,
+  //     getMedications,
+  //     getAppointments,
+  //     care_plans,
+  //     patient_id,
+  //     getPatientCarePlanDetails
+  //   } = this.props;
+  //
+  //   let carePlanId = 1;
+  //   for (let carePlan of Object.values(care_plans)) {
+  //     let {
+  //       basic_info: { id = 1, patient_id: patientId = 1 }
+  //     } = carePlan;
+  //     if (patient_id == patientId) {
+  //       carePlanId = id;
+  //     }
+  //   }
+  //   addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+  //     const {
+  //       status = false,
+  //       statusCode,
+  //       payload: {
+  //         error: { error_type = "" } = {},
+  //         message: errorMessage = ""
+  //       } = {}
+  //     } = response;
+  //     if (status) {
+  //       this.onCloseTemplate();
+  //
+  //       message.success(this.formatMessage(messages.carePlanUpdated));
+  //       getMedications(patient_id).then(() => {
+  //         getAppointments(patient_id).then(() => {
+  //           getPatientCarePlanDetails(patient_id);
+  //         });
+  //       });
+  //     } else {
+  //       if (statusCode === 422 && error_type == "slot_present") {
+  //         message.error(this.formatMessage(messages.slotPresent));
+  //       } else if (statusCode === 422) {
+  //         message.error(errorMessage);
+  //       } else {
+  //         message.error(this.formatMessage(messages.somethingWentWrong));
+  //       }
+  //     }
+  //   });
+  // };
   openVideoChatTab = roomId => () => {
     window.open(
       `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
@@ -1043,16 +1044,8 @@ class PatientDetails extends Component {
       patient_id,
       getPatientCarePlanDetails
     } = this.props;
-    let carePlanId = 1;
-    for (let carePlan of Object.values(care_plans)) {
-      let {
-        basic_info: { id = 1, patient_id: patientId = 1 }
-      } = carePlan;
-      if (patient_id == patientId) {
-        carePlanId = id;
-      }
-    }
-    addCarePlanMedicationsAndAppointments(data, carePlanId).then(response => {
+    const {carePlanId, ...rest} = data || {};
+    addCarePlanMedicationsAndAppointments(rest, carePlanId).then(response => {
       const {
         status = false,
         statusCode,
@@ -1120,20 +1113,35 @@ class PatientDetails extends Component {
         loading: consentLoading
       },
       onOk: async () => {
-        this.setState({ consentLoading: true });
-        const response = await requestConsent(patient_id);
-        const { status, payload: { data: { user_id: otpUserId } = {} } = {} } =
-          response || {};
-        if (status === true) {
-          this.setState({ otpUserId });
-        }
-        this.setState({ consentLoading: false });
-        handleOtpModal(true);
+        await this.sendOtp();
       },
       onCancel() {
         // closeConfirm();
       }
     });
+  };
+
+  sendOtp = async (e) => {
+    if(e) {
+      e.preventDefault();
+    }
+    const { requestConsent, patient_id, patients } = this.props;
+    const { handleOtpModal } = this;
+
+    const {basic_info: {first_name, middle_name, last_name} = {}} = patients[patient_id] || {};
+
+    this.setState({ consentLoading: true });
+    const response = await requestConsent(patient_id);
+    const { status, payload: { data: { user_id: otpUserId } = {} } = {}, message: errMessage } =
+    response || {};
+    if (status === true) {
+      this.setState({ otpUserId });
+      message.success(`OTP sent successfully to ${getFullName({first_name, middle_name, last_name})}. Please consult with patient for the same`);
+    } else {
+      message.warn(errMessage);
+    }
+    this.setState({ consentLoading: false });
+    handleOtpModal(true);
   };
 
   updateOtp = otp => {
@@ -1146,25 +1154,37 @@ class PatientDetails extends Component {
     const { updateOtp } = this;
     return (
       <div>
-        <div className="wp100 flex justify-center fs18 fw500 mb20">
+        <div className="fs20 fw700 wp100 flex justify-center fs18 fw500 mb20">
           {formatMessage(messages.enter_otp_text)}
         </div>
-        <div className="wp100 justify-space-evenly">
-          <OtpInput
-            value={otp}
-            onChange={updateOtp}
-            numInputs={4}
-            shouldAutoFocus={true}
-            className="wp100 flex justify-space-evenly"
-            inputStyle={{ width: "50%", height: "100%", margin: 10 }}
-            focusStyle={{ border: "2px solid #4a90e2" }}
-          />
+
+        <div className="fs16 flex align-center tac">
+          {formatMessage(messages.sent_otp_consent_details_text)}
+        </div>
+
+        <div className="wp100 flex justify-center">
+          <div className="wp80 justify-space-evenly">
+            <OtpInput
+                value={otp}
+                onChange={updateOtp}
+                numInputs={4}
+                // shouldAutoFocus={true}
+                className="wp100 flex justify-space-evenly"
+                inputStyle={{ width: 60, height: 60, margin: 8, border:"none", fontSize:20, borderBottom: "1px solid #000" }}
+                focusStyle={{ border: "none" }}
+            />
+          </div>
+        </div>
+
+        <div>
+
         </div>
       </div>
     );
   };
 
-  handleOtpVerify = async () => {
+  handleOtpVerify = async (e) => {
+    e.preventDefault();
     const { consentVerify } = this.props;
     const { otp, otpUserId } = this.state;
 
@@ -1207,6 +1227,18 @@ class PatientDetails extends Component {
     }
 
     this.setState({ selectedCarePlanId: id, isOtherCarePlan });
+  };
+
+  getOtpModalFooter = () => {
+    const {intl: {formatMessage} = {}} = this.props;
+    const {handleOtpVerify, sendOtp} = this;
+    return (
+      <div>
+        {/*<Button ghost={true} className="text-grey">{formatMessage(messages.cancel_text)}</Button>*/}
+        <Button onClick={sendOtp}>{formatMessage(messages.resend_otp_text)}</Button>
+        <Button type={"primary"} onClick={handleOtpVerify}>{formatMessage(messages.verify_otp_text)}</Button>
+      </div>
+    );
   };
 
   render() {
@@ -1256,7 +1288,8 @@ class PatientDetails extends Component {
       getConsentDetails,
       handleOtpVerify,
       handleOtpCancel,
-      handleCarePlanChange
+      handleCarePlanChange,
+      getOtpModalFooter
     } = this;
 
     if (loading) {
@@ -1306,8 +1339,10 @@ class PatientDetails extends Component {
         cPAppointmentIds = appointment_ids;
         cPMedicationIds = medication_ids;
         vitalIds = vital_ids;
+        carePlanId = selectedCarePlanId;
       }
     }
+
 
     const {
       basic_info: { doctor_id = 1 } = {},
@@ -1335,7 +1370,7 @@ class PatientDetails extends Component {
           condition_id: cIdTemp = 0,
           severity_id: sIdTemp = 0,
           treatment_id: tIdTemp = 0
-        } = {}
+        } = {},
       } = care_plan_templates[carePlanTemplateId] || {};
       carePlan.treatment_id = tIdTemp;
       carePlan.severity_id = sIdTemp;
@@ -1449,28 +1484,6 @@ class PatientDetails extends Component {
                 patient_id={patient_id}
               />
 
-              <PatientTreatmentCard
-                formatMessage={formatMessage}
-                treatment_name={treatment ? treatment : "--"}
-                treatment_condition={condition ? condition : "--"}
-                treatment_doctor={
-                  doctor_first_name
-                    ? `${doctor_first_name} ${
-                        doctor_middle_name ? `${doctor_middle_name} ` : ""
-                      }${doctor_last_name}`
-                    : "--"
-                }
-                treatment_start_date={
-                  treatment_start_date
-                    ? moment(treatment_start_date).format("Do MMM YYYY")
-                    : "--"
-                }
-                treatment_provider={
-                  treatment_provider ? treatment_provider : "--"
-                }
-                treatment_severity_status={severity ? severity : "--"}
-              />
-
               {/*<PatientCarePlans {...this.props}  />*/}
               <PatientCarePlans
                 {...this.props}
@@ -1479,6 +1492,26 @@ class PatientDetails extends Component {
                 handleCarePlanChange={handleCarePlanChange}
                 selectedCarePlanId={selectedCarePlanId}
                 patient_id={patient_id}
+              />
+
+              <PatientTreatmentCard
+                  formatMessage={formatMessage}
+                  treatment_name={treatment ? treatment : "--"}
+                  treatment_condition={condition ? condition : "--"}
+                  treatment_doctor={doctor_first_name ? getFullName({
+                    first_name: doctor_first_name,
+                    middle_name: doctor_middle_name,
+                    last_name: doctor_last_name
+                  }) : "--"}
+                  treatment_start_date={
+                    treatment_start_date
+                        ? moment(treatment_start_date).format("Do MMM YYYY")
+                        : "--"
+                  }
+                  treatment_provider={
+                    treatment_provider ? treatment_provider : "--"
+                  }
+                  treatment_severity_status={severity ? severity : "--"}
               />
             </div>
 
@@ -1537,6 +1570,7 @@ class PatientDetails extends Component {
                           }
                           dataSource={getMedicationData(carePlan)}
                           onRow={
+                            !isOtherCarePlan &&
                             authPermissions.includes(
                               PERMISSIONS.EDIT_MEDICATION
                             )
@@ -1556,6 +1590,7 @@ class PatientDetails extends Component {
                           }
                           dataSource={getAppointmentsData(carePlan, docName)}
                           onRow={
+                            !isOtherCarePlan &&
                             authPermissions.includes(
                               PERMISSIONS.EDIT_APPOINTMENT
                             )
@@ -1578,6 +1613,7 @@ class PatientDetails extends Component {
                         <VitalTable
                           patientId={patient_id}
                           carePlanId={carePlanId}
+                        isOtherCarePlan={isOtherCarePlan}
                         />
                       </TabPane>
                     </Tabs>
@@ -1649,9 +1685,10 @@ class PatientDetails extends Component {
         <Modal
           visible={showOtpModal}
           title={formatMessage(messages.consent_modal_title_text)}
-          onOk={handleOtpVerify}
+          // onOk={handleOtpVerify}
           onCancel={handleOtpCancel}
-          okText={formatMessage(messages.verify_otp_text)}
+          // okText={formatMessage(messages.verify_otp_text)}
+          footer={getOtpModalFooter()}
         >
           {getConsentDetails()}
         </Modal>

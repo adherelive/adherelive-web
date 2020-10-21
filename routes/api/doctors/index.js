@@ -100,7 +100,13 @@ router.post(
 
 router.post(
     "/watchlist/:patient_id",
-    DoctorController.AddPatientToWatchlist
+    DoctorController.addPatientToWatchlist
 )
+
+router.get(
+    "/watchlistremove/:patient_id",
+    DoctorController.removePatientFromWatchlist
+)
+
 
 module.exports = router;

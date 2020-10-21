@@ -52,7 +52,8 @@ class PatientTable extends Component {
       care_plans,
       users,
       authenticated_user,
-      addToWatchlist
+      addToWatchlist,
+      removePatientFromWatchlist
     } = this.props;
 
     const {onRowClick} = this;
@@ -72,7 +73,8 @@ class PatientTable extends Component {
         users,
         authenticated_user,
         addToWatchlist,
-        onRowClick
+        onRowClick,
+        removePatientFromWatchlist
       });
     });
   };
@@ -95,7 +97,7 @@ class PatientTable extends Component {
     return (
       <Table
         
-        // onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
+        onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
