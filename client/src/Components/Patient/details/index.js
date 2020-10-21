@@ -329,13 +329,13 @@ const PatientCard = ({
             {/*comorbidities*/}
             <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.comorbidities_text)}</div>
-              <div className="fs14 fw500 flex justify-start">{comorbidities}</div>
+              <div className="fs14 fw500 flex justify-center">{comorbidities}</div>
             </div>
 
             {/*allergies*/}
             <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.allergies_text)}</div>
-              <div className="fs14 fw500">{allergies}</div>
+              <div className="fs14 fw500 flex justify-center">{allergies}</div>
             </div>
 
           </Panel>
@@ -1562,6 +1562,7 @@ class PatientDetails extends Component {
                       <TabPane tab="Medication" key="1">
                         <Table
                           columns={
+                            !isOtherCarePlan &&
                             authPermissions.includes(
                               PERMISSIONS.EDIT_MEDICATION
                             )
@@ -1582,6 +1583,7 @@ class PatientDetails extends Component {
                       <TabPane tab="Appointments" key="2">
                         <Table
                           columns={
+                            !isOtherCarePlan &&
                             authPermissions.includes(
                               PERMISSIONS.EDIT_APPOINTMENT
                             )
