@@ -24,6 +24,7 @@ class NotificationController extends Controller {
       let medicationData = {};
       let medicineData = {};
       let vitalsData = {};
+      let carePlansData = {};
       for (let key in activities) {
         const { activity: activityData, is_read, group_id } = activities[key];
 
@@ -48,7 +49,8 @@ class NotificationController extends Controller {
           appointments = {},
           medications = {},
           medicines = {},
-          vitals = {}
+          vitals = {},
+          care_plans = {}
         } = details || {};
         notificationData = { ...notificationData, ...notifications };
         userData = { ...userData, ...users };
@@ -58,6 +60,7 @@ class NotificationController extends Controller {
         medicationData = { ...medicationData, ...medications };
         medicineData = { ...medicineData, ...medicines };
         vitalsData = { ...vitalsData, ...vitals };
+        carePlansData = { ...carePlansData, ...care_plans };
       }
 
       return raiseSuccess(
@@ -72,6 +75,7 @@ class NotificationController extends Controller {
           medications: medicationData,
           medicines: medicineData,
           vitals: vitalsData,
+          care_plans: carePlansData,
           // ids
           notification_ids: Object.keys(notificationData),
           doctor_ids: Object.keys(doctorData),
@@ -80,7 +84,8 @@ class NotificationController extends Controller {
           user_ids: Object.keys(userData),
           medicine_ids: Object.keys(medicineData),
           medication_ids: Object.keys(medicationData),
-          vitals_ids: Object.keys(vitalsData)
+          vitals_ids: Object.keys(vitalsData),
+          care_plan_ids: Object.keys(carePlansData)
         },
         "Notification data fetched successfully"
       );

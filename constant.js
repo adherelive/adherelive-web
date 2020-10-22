@@ -19,7 +19,8 @@ export const EVENT_TYPE = {
   REMINDER: "reminder",
   ADVERSE_EVENT: "adverse",
   ARTICLE: "article",
-  MEDICATION_REMINDER: "medication-reminder"
+  MEDICATION_REMINDER: "medication-reminder",
+  CARE_PLAN_ACTIVATION: "careplan-activation"
 };
 
 export const VITALFIELD = {
@@ -240,7 +241,8 @@ export const NOTIFICATION_VERB = {
   CHARITY_APPROVAL: "CHARITY_APPROVAL",
   MRL_GENERATION: "MRL_GENERATION",
   VITAL_CREATE: "VITAL_CREATE",
-  VITAL_START: "VITAL_START"
+  VITAL_START: "VITAL_START",
+  CARE_PLAN_CREATE: "CAREPLAN_CREATE"
 };
 
 export const NOTIFICATION_STAGES = {
