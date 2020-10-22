@@ -24,7 +24,8 @@ import {
   THURSDAY,
   FRIDAY,
   SATURDAY,
-  SUNDAY, MEDICATION_TIMING
+  SUNDAY,
+  MEDICATION_TIMING
 } from "../constant";
 import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
 import { RRule } from "rrule";
@@ -41,20 +42,21 @@ import UserPreferenceService from "../app/services/userPreferences/userPreferenc
 import MedicineWrapper from "../app/ApiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/ApiWrapper/mobile/medicationReminder";
 
-
 const Log = new Logger("EVENT > HELPER");
 
 const scheduleService = new ScheduleService();
 
-const getUserPreferences = async (user_id) => {
-    try {
-        Log.info(`user_id : ${user_id}`);
-        const userPreference = await UserPreferenceService.getPreferenceByData({user_id});
-        const {timings = {}} = userPreference.get("details") || {};
-        return timings;
-    } catch(error) {
-        Log.debug("userPreferences catch error", error);
-    }
+const getUserPreferences = async user_id => {
+  try {
+    Log.info(`user_id : ${user_id}`);
+    const userPreference = await UserPreferenceService.getPreferenceByData({
+      user_id
+    });
+    const { timings = {} } = userPreference.get("details") || {};
+    return timings;
+  } catch (error) {
+    Log.debug("userPreferences catch error", error);
+  }
 };
 
 export const handleAppointments = async appointment => {
@@ -109,7 +111,7 @@ export const handleAppointments = async appointment => {
   }
 };
 
-export const handleMedications = async (data) => {
+export const handleMedications = async data => {
   try {
     const {
       patient_id,
@@ -127,7 +129,7 @@ export const handleMedications = async (data) => {
       } = {}
     } = data || {};
 
-    Log.debug("repeat days before --> ", {details, data});
+    Log.debug("repeat days before --> ", { details, data });
 
     const rrule = new RRule({
       freq: RRule.WEEKLY,
@@ -154,7 +156,10 @@ export const handleMedications = async (data) => {
 
     const scheduleEventArr = [];
 
-    Log.debug("213971203 createMedicationSchedule -->", {medicine_id, data: medicine.getBasicInfo()});
+    Log.debug("213971203 createMedicationSchedule -->", {
+      medicine_id,
+      data: medicine.getBasicInfo()
+    });
 
     for (let i = 0; i < allDays.length; i++) {
       for (const timing of when_to_take) {
@@ -177,7 +182,7 @@ export const handleMedications = async (data) => {
             actors,
             medicines: medicine.getBasicInfo(),
             when_to_take_data: MEDICATION_TIMING[timing], // TODO: to be changed(included in) to patient preference data
-            medications: medication.getExistingData(),
+            medications: medication.getExistingData()
           }
         });
       }
@@ -364,6 +369,54 @@ export const handleVitals = async vital => {
   }
 };
 
+export const handleCarePlans = async data => {
+  try {
+    const {
+      patient_id,
+      critical,
+      event_id,
+      start_time,
+      end_time,
+      details,
+      actor = {},
+      participants = []
+    } = data || {};
+
+    // const patientPreference = await getUserPreferences(patient_id);
+
+    const scheduleEvents = {
+      event_id,
+      critical,
+      date: moment(start_time).toISOString(),
+      start_time: moment(start_time).toISOString(),
+      end_time: moment(end_time).toISOString(),
+      event_type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
+      details: {
+        medications: details,
+        actor,
+        participants
+      }
+    };
+
+    Log.debug(
+      "------------> Schedule events data for careplan activation is: ",
+      scheduleEvents
+    );
+
+    const schedule = await scheduleService.create(scheduleEvents);
+    let response = false;
+    if (schedule) {
+      Log.debug("schedule events created for careplan activation: ", true);
+      response = true;
+    } else {
+      Log.debug("schedule events failed for careplan activation: ", false);
+    }
+    return response;
+  } catch (error) {
+    Log.debug("schedule events careplan activation 500 error", error);
+  }
+};
+
 const getWakeUp = timings => {
   const { value } = timings[WAKE_UP] || {};
   const hours = moment(value).hours();
@@ -409,11 +462,10 @@ const getSleep = timings => {
 const updateMedicationTiming = (date, timing, patientPreference) => {
   switch (timing) {
     case AFTER_WAKEUP:
-      const { hours: awh, minutes: awm } =
-      getWakeUp(patientPreference) || {};
+      const { hours: awh, minutes: awm } = getWakeUp(patientPreference) || {};
       return moment(date)
-          .set("hours", awh)
-          .set("minutes", awm)
+        .set("hours", awh)
+        .set("minutes", awm);
     case BEFORE_BREAKFAST:
       const { hours: bbh, minutes: bbm } =
         getBreakfast(patientPreference) || {};
