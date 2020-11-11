@@ -294,7 +294,7 @@ class ClinicRegister extends Component {
     }
 
     onNextClick = () => {
-        const { history } = this.props;
+        const { history, showVerifyModal } = this.props;
         const validate = this.validateData();
         if (validate) {
             const { clinics = {} } = this.state;
@@ -320,6 +320,7 @@ class ClinicRegister extends Component {
             doctorClinicRegister(data).then(response => {
                 const { status, message: errorMessage } = response;
                 if (status) {
+                    showVerifyModal(true);
                     history.replace(PATH.DASHBOARD);
                 } else {
                     message.error(errorMessage);

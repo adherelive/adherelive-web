@@ -71,6 +71,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "With You"
     },
+    treatment_plans_text: {
+        id: "app.patients.common.treatment.plans.text",
+        description: "",
+        defaultMessage: "Treatment Plans"
+    },
 });
 
 export default messages;

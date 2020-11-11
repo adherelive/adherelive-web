@@ -8,6 +8,12 @@ import {TABLE_NAME as permissionTableName} from "../../models/permissions";
 import {TABLE_NAME as doctorTableName} from "../../models/doctors";
 import {TABLE_NAME as patientTableName} from "../../models/patients";
 import {TABLE_NAME as userDeviceTableName} from "../../models/userDevices";
+import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";;
+
+import Log from "../../../libs/log";
+import carePlan from "../../ApiWrapper/web/carePlan";
+
+const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
 class UserService {
     constructor() {}
@@ -155,6 +161,9 @@ class UserService {
         }
     };
 
+
+    
+
     getUserByUsername = async (user_name) => {
         try {
             const user = await Database.getModel(TABLE_NAME).findOne({
@@ -200,6 +209,23 @@ class UserService {
             throw error;
         }
     };
+
+    getCarePlanData = async (id) => {
+
+        try {
+            const carePlan = await Database.getModel(carePlanTableName).findOne({
+                where: {
+                    id
+                }
+            });
+            return carePlan;
+        } catch(error) {
+            throw error;
+        }
+        
+    }
+
+ 
 }
 
 export default new UserService();

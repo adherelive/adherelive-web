@@ -424,13 +424,14 @@ class DoctorProfilePage extends Component {
       newQualificationCollege[qualification_id]=false;
       this.setState({edit_qualification_college:newQualificationCollege});
     };
-    updateCollege = (qualification_id) => value => {
+    updateCollege = (qualification_id) => e => {
+        e.preventDefault();
       const { doctor_user_id, edit_qualification_college } = this.state;
       let newQualificationCollege = edit_qualification_college;
       let updateData = {
           qualification_details : [
               {
-                  college_id:value,
+                  college_name:e.target.value,
                   doctor_id: doctor_user_id,
                   id: qualification_id
               }
@@ -1146,36 +1147,37 @@ class DoctorProfilePage extends Component {
         const { doctor_qualifications = {}, colleges = {} } = this.props;
         const {
             basic_info:{
-                college_id
+                college_name
             }
         } = doctor_qualifications[qualification_id];
         if(edit_qualification_college[qualification_id]){
           return (
-            <Select
-                size={"small"}
-                style={{margin:"0",height:"auto"}}
-                onSearch={this.handleCollegeSearch}
-                className="form-inputs"
-                placeholder={"Select College"}
-                showSearch
-                value={college_id.toString()}
-                onChange={this.updateCollege(qualification_id)}
-                autoComplete="off"
-                filterOption={(input, option) =>
-                option.props.children
-                    .toLowerCase()
-                    .indexOf(input.toLowerCase()) >= 0
-                }
-                onBlur={()=> this.onBlurQualificationCollege(qualification_id)}
-                autoFocus
-            >
-                {this.getCollegesOption()}
-          </Select>
+          //   <Select
+          //       size={"small"}
+          //       style={{margin:"0",height:"auto"}}
+          //       onSearch={this.handleCollegeSearch}
+          //       className="form-inputs"
+          //       placeholder={"Select College"}
+          //       showSearch
+          //       value={college_id.toString()}
+          //       onChange={this.updateCollege(qualification_id)}
+          //       autoComplete="off"
+          //       filterOption={(input, option) =>
+          //       option.props.children
+          //           .toLowerCase()
+          //           .indexOf(input.toLowerCase()) >= 0
+          //       }
+          //       onBlur={()=> this.onBlurQualificationCollege(qualification_id)}
+          //       autoFocus
+          //   >
+          //       {this.getCollegesOption()}
+          // </Select>
+              <Input value={college_name} onChange={this.updateCollege(qualification_id)} onBlur={()=> this.onBlurQualificationCollege(qualification_id)}/>
           );
         }else{
               return (
                   <>
-                      <span>{college_id? colleges[college_id].basic_info.name: TABLE_DEFAULT_BLANK_FIELD}</span>
+                      <span>{college_name? college_name : TABLE_DEFAULT_BLANK_FIELD}</span>
                       {!verified_doctor?
                         <span style={{marginLeft:"5px"}}>
                             <EditOutlined onClick={()=> this.editQualificationCollege(qualification_id)} title={"Edit College"}/>

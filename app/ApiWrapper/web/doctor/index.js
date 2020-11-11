@@ -2,156 +2,170 @@ import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import ConsentService from "../../../services/consents/consent.service";
-import {completePath} from "../../../helper/filePath";
+import { completePath } from "../../../helper/filePath";
 import SpecialityWrapper from "../../web/speciality";
 import CarePlanWrapper from "../../web/carePlan";
 import ConsentWrapper from "../../web/consent";
 
-
 class DoctorWrapper extends BaseDoctor {
-    constructor(data) {
-        super(data);
+  constructor(data) {
+    super(data);
+  }
+
+  getReferenceInfo = async () => {
+    const { _data } = this;
+    const { speciality } = _data || {};
+
+    if (speciality) {
+      const specialityDetails = await SpecialityWrapper(speciality);
+
+      console.log("speciality ----> ", _data);
+
+      return {
+        // doctors: {
+        //   [getDoctorId()] : getBasicInfo()
+        // },
+        specialities: {
+          [specialityDetails.getSpecialityId()]: specialityDetails.getBasicInfo()
+        }
+      };
+    } else {
+      return {};
+    }
+  };
+
+  getBasicInfo = () => {
+    const { _data } = this;
+    const {
+      id,
+      user_id,
+      gender,
+      first_name,
+      middle_name,
+      last_name,
+      city,
+      speciality_id,
+      qualifications,
+      activated_on,
+      profile_pic,
+      signature_pic
+    } = _data || {};
+    return {
+      basic_info: {
+        id,
+        user_id,
+        gender,
+        first_name,
+        middle_name,
+        last_name,
+        city,
+        speciality_id,
+        profile_pic: completePath(profile_pic),
+        signature_pic: completePath(signature_pic)
+      },
+      qualifications,
+      activated_on
+    };
+  };
+
+  getAllInfo = async () => {
+    const { _data, getDoctorId } = this;
+    const {
+      id,
+      user_id,
+      gender,
+      first_name,
+      middle_name,
+      last_name,
+      qualifications,
+      activated_on,
+      profile_pic,
+      city,
+      speciality_id,
+      razorpay_account_id,
+      signature_pic
+    } = _data || {};
+
+    const consentService = new ConsentService();
+    const consents = await consentService.getAllByData({
+      doctor_id: getDoctorId()
+    });
+
+    const watchlistPatients = await doctorService.getAllWatchlist({
+      doctor_id: getDoctorId()
+    });
+
+    let watchlist_patient_ids = [];
+
+    if (watchlistPatients.length > 0) {
+      for (const watchlist of watchlistPatients) {
+        watchlist_patient_ids.push(watchlist.patient_id);
+      }
     }
 
-    getReferenceInfo = async () => {
-        const {_data} = this;
-        const {speciality} = _data || {};
+    const patientIds = [];
+    if (consents.length > 0) {
+      for (const consentData of consents) {
+        const consent = await ConsentWrapper({ data: consentData });
+        patientIds.push(consent.getPatientId());
+      }
+    }
 
-        if(speciality) {
-            const specialityDetails = await SpecialityWrapper(speciality);
+    const carePlansDoctor =
+      (await carePlanService.getMultipleCarePlanByData({
+        doctor_id: getDoctorId()
+      })) || [];
+    const carePlansPatient =
+      (await carePlanService.getMultipleCarePlanByData({
+        patient_id: patientIds
+      })) || [];
 
-            console.log("speciality ----> ", _data);
+    const carePlanIds = [];
 
-            return {
-                // doctors: {
-                //   [getDoctorId()] : getBasicInfo()
-                // },
-                specialities: {
-                    [specialityDetails.getSpecialityId()]: specialityDetails.getBasicInfo()
-                }
-            }
+    let carePlans = [...carePlansDoctor, ...carePlansPatient];
+
+    if (carePlans.length > 0) {
+      carePlans.sort((carePlanA, carePlanB) => {
+        if (carePlanA.get("expired_on")) {
+          return -1;
         } else {
-            return {};
+          return 1;
         }
-    };
+      });
 
-    getBasicInfo = () => {
-        const {_data} = this;
-        const {
-            id,
-            user_id,
-            gender,
-            first_name,
-            middle_name,
-            last_name,
-            city,
-            speciality_id,
-            qualifications,
-            activated_on,
-            profile_pic
-        } = _data || {};
-        return {
-            basic_info: {
-                id,
-                user_id,
-                gender,
-                first_name,
-                middle_name,
-                last_name,
-                city,
-                speciality_id,
-                profile_pic: completePath(profile_pic)
-            },
-            qualifications,
-            activated_on
-        };
+      for (const carePlanData of carePlans) {
+        const carePlan = await CarePlanWrapper(carePlanData);
+        if (!carePlanIds.includes(carePlan.getCarePlanId()))
+          carePlanIds.push(carePlan.getCarePlanId());
+      }
     }
 
-    getAllInfo = async () => {
-        const {_data, getDoctorId} = this;
-        const {
-            id,
-            user_id,
-            gender,
-            first_name,
-            middle_name,
-            last_name,
-            qualifications,
-            activated_on,
-            profile_pic,
-            city,
-            speciality_id
-        } = _data || {};
-
-        const consentService = new ConsentService();
-        const consents = await consentService.getAllByData({doctor_id: getDoctorId()});
-
-        const watchlistPatients = await doctorService.getAllWatchlist({doctor_id: getDoctorId()});
-
-        let watchlist_patient_ids = [];
-
-        if(watchlistPatients.length > 0) {
-            for(const watchlist of watchlistPatients) {
-                watchlist_patient_ids.push(watchlist.patient_id);
-            }
-        }
-
-        const patientIds = [];
-        if(consents.length > 0) {
-            for(const consentData of consents) {
-                const consent = await ConsentWrapper({data: consentData});
-                patientIds.push(consent.getPatientId());
-            }
-        }
-
-        const carePlansDoctor = await carePlanService.getMultipleCarePlanByData({doctor_id: getDoctorId()}) || [];
-        const carePlansPatient = await carePlanService.getMultipleCarePlanByData({patient_id: patientIds}) || [];
-
-        const carePlanIds = [];
-
-        let carePlans = [...carePlansDoctor, ...carePlansPatient];
-
-        if(carePlans.length > 0) {
-
-            carePlans.sort((carePlanA, carePlanB) => {
-                if(carePlanA.get("expired_on")) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            });
-
-            for(const carePlanData of carePlans) {
-                const carePlan = await CarePlanWrapper(carePlanData);
-                if(!carePlanIds.includes(carePlan.getCarePlanId()))
-                    carePlanIds.push(carePlan.getCarePlanId());
-            }
-        }
-
-        return {
-            basic_info: {
-                id,
-                user_id,
-                gender,
-                first_name,
-                middle_name,
-                last_name,
-                speciality_id,
-                profile_pic: completePath(profile_pic),
-            },
-            city,
-            qualifications,
-            activated_on,
-            care_plan_ids: carePlanIds,
-            watchlist_patient_ids,
-        };
+    return {
+      basic_info: {
+        id,
+        user_id,
+        gender,
+        first_name,
+        middle_name,
+        last_name,
+        speciality_id,
+        profile_pic: completePath(profile_pic),
+        signature_pic: completePath(signature_pic)
+      },
+      city,
+      qualifications,
+      activated_on,
+      care_plan_ids: carePlanIds,
+      watchlist_patient_ids,
+      razorpay_account_id
     };
+  };
 }
 
 export default async (data = null, id = null) => {
-    if(data) {
-        return new DoctorWrapper(data);
-    }
-    const doctor = await doctorService.getDoctorByData({id});
-    return new DoctorWrapper(doctor);
-}
+  if (data) {
+    return new DoctorWrapper(data);
+  }
+  const doctor = await doctorService.getDoctorByData({ id });
+  return new DoctorWrapper(doctor);
+};

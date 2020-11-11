@@ -249,6 +249,7 @@ class PatientDetailsDrawer extends Component {
               />
             </div>
             <img
+              title={formatMessage(messages.gotoprofile)}
               src={ShareIcon}
               alt="share icon"
               className="pointer w25"

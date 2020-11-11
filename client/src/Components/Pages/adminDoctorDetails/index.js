@@ -7,19 +7,28 @@ import {
   CheckCircleTwoTone,
   ExclamationCircleTwoTone,
   ArrowLeftOutlined,
-  FileTextOutlined
+  FileTextOutlined,
+  EditOutlined
 } from "@ant-design/icons";
+
+import { Input } from "antd";
+
 import moment from "moment";
 import messages from "./messages";
 import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
+import Tooltip from "antd/es/tooltip";
 
 class AdminDoctorDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
+      razorpayModalVisible: false,
+      razorpayId: "",
+      razorpayAccountName: "",
+      account_details: {}
     };
   }
 
@@ -38,7 +47,7 @@ class AdminDoctorDetails extends Component {
   getInitialData = async () => {
     try {
       this.setState({ loading: true });
-      const { getDoctorDetails } = this.props;
+      const { getDoctorDetails, getDoctorAccountDetails } = this.props;
       const response = await getDoctorDetails();
       const {
         status,
@@ -46,9 +55,23 @@ class AdminDoctorDetails extends Component {
       } = response || {};
 
       if (status === true) {
-        this.setState({
-          loading: false
-        });
+        const response = await getDoctorAccountDetails();
+        const {
+          status,
+          payload: { data: { account_details } = {}, message: respMessage } = {}
+        } = response || {};
+
+        if (status === true) {
+          this.setState({
+            loading: false,
+            account_details
+          });
+        } else {
+          this.setState({
+            loading: false
+          });
+          message.warn(respMessage);
+        }
       } else {
         this.setState({
           loading: false
@@ -81,6 +104,116 @@ class AdminDoctorDetails extends Component {
     );
   };
 
+  openAddRazorpayIdModal = e => {
+    e.preventDefault();
+    this.setState({ razorpayModalVisible: true });
+  };
+
+  handleRazorpayModalClose = e => {
+    e.preventDefault();
+    this.setState({
+      razorpayModalVisible: false,
+      razorpayId: ""
+    });
+  };
+
+  setRazorpayId = e => {
+    e.preventDefault();
+    const { value } = e.target;
+    this.setState({ razorpayId: value });
+  };
+
+  setRazorpayAccountName = e => {
+    e.preventDefault();
+    const { value } = e.target;
+    this.setState({ razorpayAccountName: value });
+  };
+
+  async handleRazorpayIdSubmit() {
+    try {
+      const { addRazorpayId, id } = this.props;
+      const { razorpayId = "", razorpayAccountName = "" } = this.state;
+      if (razorpayId) {
+        const response = await addRazorpayId(id, {
+          account_id: razorpayId,
+          account_name: razorpayAccountName
+        });
+        const { status, payload: { data: { account_details } = {} } = {} } =
+          response || {};
+        if (status) {
+          this.setState({ account_details });
+          message.success(
+            this.formatMessage(messages.addValidRazorpayIdSuccess)
+          );
+        } else {
+          message.warn(this.formatMessage(messages.somethingWentWrong));
+        }
+
+        this.setState({
+          razorpayModalVisible: false,
+          razorpayId: ""
+        });
+      } else {
+        message.warn(this.formatMessage(messages.addValidRazorpayIdError));
+      }
+    } catch (err) {
+      console.log("err", err);
+      message.warn(this.formatMessage(messages.somethingWentWrong));
+    }
+  }
+
+  getRazorpayModal = () => {
+    const { doctors, id } = this.props;
+    const { razorpayModalVisible } = this.state;
+    const {
+      formatMessage
+      // handleProfilePicModalClose
+    } = this;
+
+    // const { basic_info: { profile_pic } = {} } = doctors[id] || {};
+
+    return (
+      <Modal
+        visible={razorpayModalVisible}
+        title={this.formatMessage(messages.add_razorpay_details_text)}
+        closable
+        mask
+        maskClosable
+        onCancel={this.handleRazorpayModalClose}
+        width={`50%`}
+        footer={[
+          <Button
+            key="submit"
+            type="primary"
+            onClick={() => this.handleRazorpayIdSubmit()}
+          >
+            {this.formatMessage(messages.submit)}
+          </Button>
+        ]}
+      >
+        <div className="form-headings flex align-center justify-start">
+          {this.formatMessage(messages.razorpay_account_id_text)}
+        </div>
+
+        <Input
+          className={"form-inputs-ap"}
+          value={this.state.razorpayId}
+          onChange={this.setRazorpayId}
+        />
+
+        <div className="form-headings flex align-center justify-start">
+          {this.formatMessage(messages.razorpay_account_name_text)}
+        </div>
+
+        <Input
+          className={"form-inputs-ap"}
+          value={this.state.razorpayAccountName}
+          onChange={this.setRazorpayAccountName}
+        />
+      </Modal>
+    );
+  };
+
   getDoctorBasicDetails = () => {
     const { id, doctors, users, specialities } = this.props;
     const { formatMessage, handleProfilePicModalOpen } = this;
@@ -94,23 +227,35 @@ class AdminDoctorDetails extends Component {
         profile_pic,
         gender,
         city,
-          speciality_id
-      } = {},
+        speciality_id
+      } = {}
     } = doctors[id] || {};
     const {
-      basic_info: {  email, mobile_number, prefix } = {},
+      basic_info: { email, mobile_number, prefix } = {},
       onboarded,
       onboarding_status,
       activated_on
     } = users[user_id] || {};
 
-    const {basic_info: {name : specialityName} = {}} = specialities[speciality_id] || {};
+    const { basic_info: { name: specialityName } = {} } =
+      specialities[speciality_id] || {};
 
     return (
       <div className="mt20 mb20 wp100 flex direction-column">
+        {/*<div className="fs20 fw700 mb14 flex direction-row align-center justify-space-between">*/}
         <div className="fs20 fw700 mb14">
           {formatMessage(messages.basic_details_text)}
         </div>
+
+        {/*<div>*/}
+        {/*  <Button*/}
+        {/*  type="primary"*/}
+        {/*  className="mb10 mr10"*/}
+        {/*  onClick={this.openAddRazorpayIdModal}*/}
+        {/*   >{this.formatMessage(messages.razorpayIdInput)}</Button>*/}
+        {/*</div>*/}
+
+        {/*</div>*/}
         <div className="wp100 p20 flex direction-row justify-space-between align-center border-box">
           <div className="w200">
             {profile_pic ? (
@@ -167,7 +312,9 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.mobile_number_text)}
               </div>
               <div className="fs14 fw500">
-                {mobile_number ? `+${prefix}-${mobile_number}` : TABLE_DEFAULT_BLANK_FIELD}
+                {mobile_number
+                  ? `+${prefix}-${mobile_number}`
+                  : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
@@ -255,11 +402,7 @@ class AdminDoctorDetails extends Component {
 
     return doctor_registration_ids.map((registration_id, index) => {
       const {
-        basic_info: {
-          number,
-          registration_council_id,
-          year
-        } = {},
+        basic_info: { number, registration_council_id, year } = {},
         expiry_date,
         upload_document_ids
       } = doctor_registrations[registration_id] || {};
@@ -330,7 +473,8 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType = document.substring(document.length - 3) || null;
+                  const documentType =
+                    document.substring(document.length - 3) || null;
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -391,12 +535,12 @@ class AdminDoctorDetails extends Component {
 
     return doctor_qualification_ids.map((qualification_id, index) => {
       const {
-        basic_info: { degree_id, college_id, year } = {},
+        basic_info: { degree_id, college_name: collegeName, year } = {},
         upload_document_ids = []
       } = doctor_qualifications[qualification_id] || {};
 
-      const { basic_info: { name: collegeName } = {} } =
-        colleges[college_id] || {};
+      // const { basic_info: { name: collegeName } = {} } =
+      //   colleges[college_id] || {};
       const { basic_info: { name: degreeName } = {} } =
         degrees[degree_id] || {};
 
@@ -427,7 +571,7 @@ class AdminDoctorDetails extends Component {
                 {formatMessage(messages.college_text)}
               </div>
               <div className="fs14 fw500">
-                {college_id ? collegeName : TABLE_DEFAULT_BLANK_FIELD}
+                {collegeName ? collegeName : TABLE_DEFAULT_BLANK_FIELD}
               </div>
             </div>
 
@@ -453,7 +597,8 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType = document.substring(document.length - 3) || null;
+                  const documentType =
+                    document.substring(document.length - 3) || null;
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -495,7 +640,7 @@ class AdminDoctorDetails extends Component {
   };
 
   getFullDayText = day => {
-    if(day.length === 1) {
+    if (day.length === 1) {
       return DAYS_TEXT_NUM[day].toLocaleUpperCase();
     }
     // return DAYS_TEXT[day].toLocaleUpperCase();
@@ -555,28 +700,35 @@ class AdminDoctorDetails extends Component {
 
                 return (
                   <Fragment>
-                    {time_slots[day].length > 0 && <div className="wp100 flex">
-                      <div className="fs14 fw700 mt16 mb10 mr16">{getFullDayText(day)}</div>
-                      <div
-                        className="wp100 mt16 mb10 mr16 flex"
-                        key={`ts-${index}`}
-                      >
-                        {time_slots[day].map((time_slot, i) => {
-                          const { startTime: start_time, endTime: end_time } =
-                            time_slot || {};
+                    {time_slots[day].length > 0 && (
+                      <div className="wp100 flex">
+                        <div className="fs14 fw700 mt16 mb10 mr16">
+                          {getFullDayText(day)}
+                        </div>
+                        <div
+                          className="wp100 mt16 mb10 mr16 flex"
+                          key={`ts-${index}`}
+                        >
+                          {time_slots[day].map((time_slot, i) => {
+                            const { startTime: start_time, endTime: end_time } =
+                              time_slot || {};
 
-                          return (
-                            <div className="fs14 fw500 wp100" key={`ts/${index}/${i}`}>
-                              {start_time
-                                ? `${moment(start_time).format(
-                                    "LT"
-                                  )} - ${moment(end_time).format("LT")}`
-                                : "CLOSED"}
-                            </div>
-                          );
-                        })}
+                            return (
+                              <div
+                                className="fs14 fw500 wp100"
+                                key={`ts/${index}/${i}`}
+                              >
+                                {start_time
+                                  ? `${moment(start_time).format(
+                                      "LT"
+                                    )} - ${moment(end_time).format("LT")}`
+                                  : "CLOSED"}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>}
+                    )}
                   </Fragment>
                 );
               })}
@@ -588,35 +740,46 @@ class AdminDoctorDetails extends Component {
   };
 
   getFooter = () => {
-    const { id, doctors, users, doctor_qualifications, doctor_registrations } = this.props;
+    const {
+      id,
+      doctors,
+      users,
+      doctor_qualifications,
+      doctor_registrations
+    } = this.props;
     const { formatMessage, handleVerify } = this;
 
     const {
       doctor_clinic_ids = [],
       doctor_qualification_ids = [],
       doctor_registration_ids = [],
-    basic_info :{user_id} = {}
+      basic_info: { user_id } = {}
     } = doctors[id] || {};
 
-    const {activated_on} = users[user_id] || {};
+    const { activated_on } = users[user_id] || {};
     const disabled =
       doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
-      doctor_registration_ids.length === 0 || activated_on !== null;
+      doctor_registration_ids.length === 0 ||
+      activated_on !== null;
     let no_qualification_docs = 0;
     let no_registration_docs = 0;
-    if(doctor_qualification_ids.length){
-      for(const i in doctor_qualification_ids){
-        let { upload_document_ids } = doctor_qualifications[doctor_qualification_ids[i]];
-        if(upload_document_ids.length == 0){
+    if (doctor_qualification_ids.length) {
+      for (const i in doctor_qualification_ids) {
+        let { upload_document_ids } = doctor_qualifications[
+          doctor_qualification_ids[i]
+        ];
+        if (upload_document_ids.length == 0) {
           no_qualification_docs = 1;
         }
       }
     }
-    if(doctor_registration_ids.length){
-      for(const i in doctor_registration_ids){
-        let { upload_document_ids } = doctor_registrations[doctor_registration_ids[i]];
-        if(upload_document_ids.length == 0){
+    if (doctor_registration_ids.length) {
+      for (const i in doctor_registration_ids) {
+        let { upload_document_ids } = doctor_registrations[
+          doctor_registration_ids[i]
+        ];
+        if (upload_document_ids.length == 0) {
           no_registration_docs = 1;
         }
       }
@@ -637,13 +800,13 @@ class AdminDoctorDetails extends Component {
     );
   };
 
-  handleVerify = async (e) => {
+  handleVerify = async e => {
     e.preventDefault();
-    if(parseInt(e.target.dataset.q)){
+    if (parseInt(e.target.dataset.q)) {
       message.warn(this.formatMessage(messages.noUploadQualificationDocuments));
       return;
     }
-    if(parseInt(e.target.dataset.r)){
+    if (parseInt(e.target.dataset.r)) {
       message.warn(this.formatMessage(messages.noUploadRegsitrationDocuments));
       return;
     }
@@ -727,9 +890,123 @@ class AdminDoctorDetails extends Component {
     );
   };
 
+  getDoctorAccountDetails = () => {
+    const { account_details } = this.state;
+    const { formatMessage } = this;
+
+    return Object.keys(account_details).map(id => {
+      const {
+        basic_info: {
+          customer_name,
+          account_number,
+          upi_id,
+          ifsc_code,
+          account_type,
+          account_mobile_number,
+          prefix,
+          in_use,
+          razorpay_account_id,
+          razorpay_account_name
+        } = {}
+      } = account_details[id] || {};
+
+      return (
+        <div className="wp100 p20 flex direction-column">
+          <div className="wp100 flex direction-row align-center flex-wrap">
+            {/*bank_customer_name*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.bank_customer_name)}
+              </div>
+              <div className="fs14 fw500">
+                {customer_name ? customer_name : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+
+            {/*account_number*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.bank_account_number_text)}
+              </div>
+              <div className="fs14 fw500">
+                {account_number ? account_number : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+
+            {/*ifsc_code*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.ifsc_code_text)}
+              </div>
+              <div className="fs14 fw500">
+                {ifsc_code ? ifsc_code : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+
+            {/*account_type*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.account_type_text)}
+              </div>
+              <div className="fs14 fw500">
+                {account_type ? account_type : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+
+            {/*account_mobile_number*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.account_mobile_number_text)}
+              </div>
+              <div className="fs14 fw500">
+                {account_mobile_number
+                  ? `+${prefix}-${account_mobile_number}`
+                  : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+
+            {/*upi_id*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.upi_id_text)}
+              </div>
+              <div className="fs14 fw500">
+                {upi_id ? upi_id : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+
+            {/*razorpay_account_id*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.razorpay_account_id_text)}
+              </div>
+              <div className="fs14 fw500">
+                {razorpay_account_id
+                  ? razorpay_account_id
+                  : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+
+            {/*razorpay_account_name*/}
+            <div className="wp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.razorpay_account_name_text)}
+              </div>
+              <div className="fs14 fw500">
+                {razorpay_account_name
+                  ? razorpay_account_name
+                  : TABLE_DEFAULT_BLANK_FIELD}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  };
+
   render() {
     const { id, doctors } = this.props;
-    const { loading } = this.state;
+    const { loading, account_details = {} } = this.state;
     const {
       formatMessage,
       getDoctorDetailsHeader,
@@ -739,7 +1016,10 @@ class AdminDoctorDetails extends Component {
       getDoctorClinicDetails,
       getFooter,
       getModalDetails,
-      getProfilePicModal
+      getProfilePicModal,
+      getRazorpayModal,
+      getDoctorAccountDetails,
+      openAddRazorpayIdModal
     } = this;
 
     const {
@@ -747,7 +1027,6 @@ class AdminDoctorDetails extends Component {
       doctor_qualification_ids = [],
       doctor_registration_ids = []
     } = doctors[id] || {};
-
 
     if (loading) {
       return <PageLoading />;
@@ -761,6 +1040,31 @@ class AdminDoctorDetails extends Component {
 
           {/*basic details*/}
           {getDoctorBasicDetails()}
+
+          {/* account details */}
+          <div className="mt20 mb20 wp100 flex direction-column">
+            <div className="flex align-center mb14">
+              <div className="fs20 fw700">
+                {formatMessage(messages.account_details_text)}
+              </div>
+              {Object.keys(account_details).length > 0 && <Tooltip
+                  placement={"right"}
+                  title={formatMessage(messages.add_razorpay_details_text)}
+              >
+                <EditOutlined
+                    className="dark-sky-blue fs18 ml10 pointer"
+                    onClick={openAddRazorpayIdModal}
+                />
+              </Tooltip>}
+            </div>
+            {Object.keys(account_details).length > 0 ? (
+              <div className="border-box">{getDoctorAccountDetails()}</div>
+            ) : (
+              <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                {formatMessage(messages.no_account_details)}
+              </div>
+            )}
+          </div>
 
           {/*qualifications*/}
           <div className="mt20 mb20 wp100 flex direction-column">
@@ -813,6 +1117,8 @@ class AdminDoctorDetails extends Component {
         {getModalDetails()}
 
         {getProfilePicModal()}
+
+        {getRazorpayModal()}
       </Fragment>
     );
   }

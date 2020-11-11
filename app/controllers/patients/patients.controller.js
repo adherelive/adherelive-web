@@ -4,6 +4,7 @@ import Controller from "../";
 import userService from "../../../app/services/user/user.service";
 import patientService from "../../../app/services/patients/patients.service";
 import doctorService from "../../../app/services/doctor/doctor.service";
+import doctorsService from "../../../app/services/doctors/doctors.service";
 import minioService from "../../../app/services/minio/minio.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
@@ -39,6 +40,7 @@ import moment from "moment";
 import {BODY_VIEW, CONSENT_TYPE, EMAIL_TEMPLATE_NAME, USER_CATEGORY} from "../../../constant";
 import generateOTP from "../../helper/generateOtp";
 import {EVENTS, Proxy_Sdk} from "../../proxySdk";
+import carePlan from "../../ApiWrapper/web/carePlan";
 
 
 
@@ -236,6 +238,7 @@ class PatientController extends Controller {
 
             let otherCarePlanTemplates = {};
             let appointmentApiDetails = {};
+            let scheduleEventData = {};
             let medicationApiDetails = {};
             let medicineApiData = {};
 
@@ -312,7 +315,11 @@ class PatientController extends Controller {
                 if(appointments.length > 0) {
                     for(const appointment of appointments) {
                         const appointmentData = await AppointmentWrapper(appointment);
-                        appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+
+                        const {appointments, schedule_events} = await appointmentData.getReferenceInfo();
+                        appointmentApiDetails = {...appointmentApiDetails, ...appointments};
+                        scheduleEventData = {...scheduleEventData, ...schedule_events};
+                        // appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
                     }
                 }
                 const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(carePlanData.getCarePlanId());
@@ -413,6 +420,9 @@ class PatientController extends Controller {
                 },
                 medicines: {
                     ...medicineApiData
+                },
+                schedule_events: {
+                    ...scheduleEventData,
                 }
             }, "Patient care plan details fetched successfully");
 
@@ -663,6 +673,7 @@ class PatientController extends Controller {
             const {query: {value = ""} = {}} = req;
 
             const users = await userService.getPatientByMobile(value);
+            
             if(users.length > 0) {
 
                 let userDetails = {};
@@ -670,7 +681,10 @@ class PatientController extends Controller {
                 const patientIds = [];
                 for(const userData of users) {
                     const user = await UserWrapper(userData.get());
+
                     const {users, patients, patient_id} = await user.getReferenceInfo();
+                    Logger.debug("232323num",users);
+                    Logger.debug("232323num",patients);
                     patientIds.push(patient_id);
                     userDetails = {...userDetails, ...users};
                     patientDetails = {...patientDetails, ...patients};
@@ -698,6 +712,107 @@ class PatientController extends Controller {
             return raiseServerError(res);
         }
     };
+
+    searchPatientForDoctor = async (req,res) => {
+        const {raiseSuccess, raiseServerError} = this;
+        try {
+            const { userDetails: { userId } = {} } = req;
+            const {query: {value = ""} = {}} = req;
+            
+            const isNumber = (!isNaN(value));
+            let doctorData = {};
+            const patientIdsForThisDoc = [];
+            const userIdsForForPatientForDoc = [];
+            const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+            const doctorDetails = await DoctorWrapper(doctor);
+            doctorData[doctorDetails.getDoctorId()] = await doctorDetails.getAllInfo();
+            const {care_plan_ids = []} = doctorData[doctorDetails.getDoctorId()];
+
+            for(const each_id of care_plan_ids) {
+                let thisCarePlanData = await  userService.getCarePlanData(each_id);
+                const {dataValues : {patient_id = null } ={} } =thisCarePlanData;
+                patientIdsForThisDoc.push(patient_id);
+                const {dataValues : {user_id = null } ={} } = await patientService.getPatientByIdForPatientSearch(patient_id);
+                userIdsForForPatientForDoc.push(user_id);
+            };
+
+            if(!isNumber){
+                const allPatients = await patientService.getPatientForDoctor(value,patientIdsForThisDoc);
+                if(allPatients.length > 0) {
+                    let userDetails = {};
+                    let patientDetails = {};
+                    const patientIds = [];
+
+                    for(const patientData of allPatients) {
+                        const patient = await PatientWrapper(patientData,null);
+                        const { patients,users} = await patient.getReferenceInfo();
+                        const {basic_info : {id : current_patient_id =null } ={} } = Object.values(patients)[0];
+                        patientIds.push(current_patient_id);
+                        userDetails = {...userDetails, ...users};
+                        patientDetails = {...patientDetails, ...patients};
+                    }
+
+                    return raiseSuccess(
+                        res,
+                        200,
+                        {
+                            users: {
+                                ...userDetails
+                            },
+                            patients: {
+                                ...patientDetails
+                            },
+                            patient_ids: patientIds
+                        },
+                        "Patients fetched successfully"
+                    );
+                } else {
+                    return raiseSuccess(res, 201, {}, "No patient linked with the input ");
+                }
+            }else{
+                
+                const users = await patientService.getPatientByMobileForDoctor(value,userIdsForForPatientForDoc);
+
+                if(users.length > 0) {
+
+                    let userDetails = {};
+                    let patientDetails = {};
+                    const patientIds = [];
+                    for(const userData of users) {
+                        const user = await UserWrapper(userData.get());
+    
+                        const {users, patients, patient_id} = await user.getReferenceInfo();
+                        patientIds.push(patient_id);
+                        userDetails = {...userDetails, ...users};
+                        patientDetails = {...patientDetails, ...patients};
+                    }
+    
+                    return raiseSuccess(
+                        res,
+                        200,
+                        {
+                            users: {
+                                ...userDetails
+                            },
+                            patients: {
+                                ...patientDetails
+                            },
+                            patient_ids: patientIds
+                        },
+                        "Patients fetched successfully"
+                    );
+                } else {
+                    return raiseSuccess(res, 201, {}, "No patient linked with the given phone number");
+                }
+            }
+
+
+        } catch(error) {
+            Logger.debug("searchPatientForDoctor 500 error", error);
+            return raiseServerError(res);
+        }
+        
+    }
 
     patientConsentRequest = async (req, res) => {
         const {raiseSuccess, raiseServerError} = this;
@@ -845,6 +960,131 @@ class PatientController extends Controller {
             return raiseServerError(res);
         }
     };
+
+
+
+    createNewCareplanforPatient = async (req,res) => {
+
+        const {raiseSuccess, raiseClientError, raiseServerError} = this;
+        try {
+            const {
+              clinical_notes = "",
+              diagnosis_type = "1",
+              diagnosis_description = "",
+              treatment_id,
+              severity_id,
+              condition_id,
+              symptoms=''
+            } = req.body;
+      
+            const {params: {patient_id} = {}, userDetails: {userId} = {}} = req;
+      
+      
+            let userData = null;
+            let patientData = null;
+            let patientOtherDetails = {};
+            let carePlanOtherDetails = {};
+      
+            if(clinical_notes) {
+              carePlanOtherDetails["clinical_notes"] = clinical_notes;
+            }
+            if(symptoms){
+              carePlanOtherDetails["symptoms"] = symptoms;
+            }
+      
+            
+      
+              if(clinical_notes) {
+                carePlanOtherDetails["clinical_notes"] = clinical_notes;
+              }
+              if(symptoms){
+                carePlanOtherDetails["symptoms"] = symptoms;
+            
+              }
+      
+           
+              patientData = await PatientWrapper(null, patient_id);
+         
+      
+            const doctor = await doctorService.getDoctorByData({ user_id: userId });
+            const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData({
+              treatment_id,
+              severity_id,
+              condition_id,
+              user_id: userId
+            });
+            const care_plan_template_id = null;
+      
+            const details = {
+              treatment_id,
+              severity_id,
+              condition_id,
+              diagnosis: {
+                type: diagnosis_type,
+                description: diagnosis_description
+              },
+              ...carePlanOtherDetails
+            };
+      
+            const carePlan = await carePlanService.addCarePlan({
+              patient_id,
+              doctor_id: doctor.get("id"),
+              care_plan_template_id,
+              details,
+              created_at: moment()
+            });
+      
+      
+            const carePlanData = await CarePlanWrapper(carePlan);
+            const care_plan_id = await carePlanData.getCarePlanId();
+            let doctorData = {};
+            const doctorIds = [];
+
+            const carePlans = await carePlanService.getCarePlanByData({patient_id});
+
+                if(carePlans.length > 0) {
+                    for(let i = 0; i < carePlans.length; i++) {
+                        const carePlan = await CarePlanWrapper(carePlans[i]);
+                        doctorIds.push(carePlan.getDoctorId());
+                    }
+                }
+
+                if(doctorIds.length > 0) {
+                    const doctors = await doctorService.getAllDoctorByData({id: doctorIds});
+
+                    if(doctors.length > 0) {
+                        for(let i = 0; i < doctors.length; i++) {
+                            const doctor = await DoctorWrapper(doctors[i]);
+                            doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
+                        }
+                    }
+                }
+
+      return this.raiseSuccess(
+          res,
+          200,
+          {
+            care_plan_ids: [carePlanData.getCarePlanId()],
+            care_plans: {
+              [carePlanData.getCarePlanId()]: carePlanData.getBasicInfo()
+            },doctors: {
+                ...doctorData
+            }
+           
+          },
+          "Careplan added successfully"
+      );
+    
+          } catch (error) {
+            Logger.debug("ADD CAREPLAN PATIENT 500 ERROR", error);
+            return raiseServerError(res);
+          }
+    
+    }
+
+    
+
+
 }
 
 export default new PatientController();

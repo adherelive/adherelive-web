@@ -16,7 +16,6 @@ export default async (req, res, next) => {
                 accessToken = bearer[1];
             }
         } else {
-            console.log("req cookies --> ", req.cookies.accessToken);
             const { cookies = {} } = req;
             if (cookies.accessToken) {
                 accessToken = cookies.accessToken;
@@ -31,11 +30,9 @@ export default async (req, res, next) => {
         if (accessToken) {
             const secret = process.config.TOKEN_SECRET_KEY;
             const decodedAccessToken = await jwt.verify(accessToken, secret);
-            console.log("decodecd ------>  ", decodedAccessToken);
             // const access_token = decodedAccessToken.accessToken;
 
             const {userId = "", accessToken : access_token = ""} = decodedAccessToken || {};
-            console.log("55555555555555555555555 ", userId);
 
             // // const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
             // // const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;

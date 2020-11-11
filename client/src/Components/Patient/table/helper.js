@@ -40,6 +40,10 @@ export const TABLE_COLUMN = {
   NEW_SYMPTOMS: {
     key: "NEW_SYMPTOMS",
     dataIndex: "NEW_SYMPTOMS"
+  },
+  DIAGNOSIS: {
+    key: "DIAGNOSIS",
+    dataIndex: "DIAGNOSIS"
   }
 };
 
@@ -110,9 +114,9 @@ export const formatPatientTableData = data => {
       }
     }
   }
-
-
-  patientData = { ...patients[id], treatment, condition, severity };
+  
+  
+  patientData = { ...patients[id], treatment, condition, severity ,carePlanData  };
 
   const { basic_info: { name: carePlanName } = {}, activated_on } =
     care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized

@@ -45,6 +45,9 @@ class Profileregister extends Component {
             prefix: '91',
             profile_pic: '',
             profile_pic_url: '',
+            signature_pic : '',
+            signature_pic_url : '',
+            signature_pic_url_saved : '',
             loading: ''
         };
     }
@@ -65,10 +68,10 @@ class Profileregister extends Component {
 
         this.setState({ email, mobile_number, category, prefix: newPrefix ? newPrefix : '91' });
         for (let doctor of Object.values(doctors)) {
-            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '', address = '' } } = doctor;
+            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '' } } = doctor;
             if (parseInt(user_id) === parseInt(authenticated_user)) {
                 let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
-                this.setState({ name, city: address, profile_pic_url_saved: profile_pic, profile_pic });
+                this.setState({ name, city: address, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
             }
 
         }
@@ -123,8 +126,6 @@ class Profileregister extends Component {
         return options;
     };
     uploadDp = file => {
-
-
         let data = new FormData();
         data.append("files", file, file.name);
         doRequest({
@@ -154,6 +155,30 @@ class Profileregister extends Component {
         };
     };
 
+
+    uploadSignature = file => {
+        let data = new FormData();
+        data.append("files", file, file.name);
+        doRequest({
+            method: REQUEST_TYPE.POST,
+            data: data,
+            url: getUploadURL()
+        }).then(response => {
+            if (response.status) {
+                let { files = [] } = response.payload.data;
+                this.setState({ signature_pic_url: files[0] })
+            } else {
+                message.error(this.formatMessage(messages.somethingWentWrong))
+            }
+        });
+        
+        return {
+            abort() { }
+        };
+    }
+
+
+
     beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
@@ -180,13 +205,23 @@ class Profileregister extends Component {
         );
     };
 
+
+    handleSignatureUploadChange = info => {
+        this.getBase64(info.file.originFileObj, signature_pic =>
+            this.setState({
+                signature_pic,
+                loading: false,
+            })
+        );
+    }
+
     validateEmail = email => {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
 
     validateData = () => {
-        let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' } = this.state;
+        let { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' , signature_pic_url = '', signature_pic_url_saved = '' } = this.state;
 
         if (!category) {
             message.error(this.formatMessage(messages.profileTypeError))
@@ -194,7 +229,10 @@ class Profileregister extends Component {
         } else if (!profile_pic_url && !profile_pic_url_saved) {
             message.error(this.formatMessage(messages.profilePicError))
             return false;
-        } else if (!name) {
+        }else if (!signature_pic_url && !signature_pic_url_saved) {
+            message.error(this.formatMessage(messages.signaturePicError))
+            return false;
+        }else if (!name) {
             message.error(this.formatMessage(messages.nameError))
             return false;
         } else if (!prefix) {
@@ -218,8 +256,8 @@ class Profileregister extends Component {
         // const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
         const validate = this.validateData();
         if (validate) {
-            const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' } = this.state;
-            const data = { name, email, mobile_number, category, city, prefix, profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved };
+            const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' , signature_pic_url ='',signature_pic_url_saved ='' } = this.state;
+            const data = { name, email, mobile_number, category, city, prefix, profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved , signature_pic :  signature_pic_url ? signature_pic_url : signature_pic_url_saved };
             const { doctorProfileRegister } = this.props;
             doctorProfileRegister(data).then(response => {
                 const { status } = response;
@@ -270,7 +308,7 @@ class Profileregister extends Component {
     };
 
     renderProfileForm = () => {
-        let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' } = this.state;
+        let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' , signature_pic_url_saved ='' } = this.state;
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -310,7 +348,7 @@ class Profileregister extends Component {
                 <img src={plus} className={"w22 h22"} />
             </div>
         );
-        const { profile_pic } = this.state;
+        const { profile_pic , signature_pic } = this.state;
         return (
             <div className='form-block'>
                 <div className='form-headings'>{this.formatMessage(messages.profileType)}</div>
@@ -328,6 +366,21 @@ class Profileregister extends Component {
                 >
                     {profile_pic ? <img src={profile_pic} alt="avatar" style={{ width: '100%' }} /> : profile_pic_url_saved ? <img src={profile_pic_url_saved} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                 </Upload>
+
+
+                <div className='form-headings mb6'>{this.formatMessage(messages.signaturePicture)}</div>
+                <Upload
+                    name="signature_pic"
+                    listType="picture-card"
+                    showUploadList={false}
+                    action={this.uploadSignature}
+                    beforeUpload={this.beforeUpload}
+                    onChange={this.handleSignatureUploadChange}
+                >
+
+                    {signature_pic ? <img src={signature_pic} alt="signature picture" style={{ width: '100%' }} /> : signature_pic_url_saved ? <img src={signature_pic_url_saved} alt="signature picture" style={{ width: '100%' }} /> : uploadButton}
+                </Upload>
+
                 <div className='form-headings mt18'>{this.formatMessage(messages.name)}</div>
                 <Input
                     placeholder={this.formatMessage(messages.name)}

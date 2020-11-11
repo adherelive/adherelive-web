@@ -67,4 +67,16 @@ router.get(
     PatientController.getPatientPartSymptoms
 );
 
+router.get(
+    "/searchpatient",
+    Authenticated,
+    PatientController.searchPatientForDoctor
+);
+
+router.post(
+    "/addCareplanForPatient/:patient_id",
+    Authenticated,
+    PatientController.createNewCareplanforPatient
+)
+
 module.exports = router;

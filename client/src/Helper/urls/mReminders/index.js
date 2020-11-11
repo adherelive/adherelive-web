@@ -17,3 +17,7 @@ export const updateMedicationUrl = (id) => {
 export const deleteMedicationUrl = (id) => {
     return `/medications/${id}`;
 };
+
+export const getMissedMedicationsForDoctorUrl = () => {
+    return `/medications/missed`;
+  }

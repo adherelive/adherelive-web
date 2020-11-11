@@ -1,7 +1,12 @@
 import { connect } from "react-redux";
 import AdminDoctorDetails from "../../../Components/Pages/adminDoctorDetails";
 import { withRouter } from "react-router-dom";
-import { getDoctorDetails, verifyDoctor } from "../../../modules/doctors";
+import {
+  getDoctorDetails,
+  verifyDoctor,
+  addRazorpayId
+} from "../../../modules/doctors";
+import { getDoctorAccountDetails } from "../../../modules/accountDetails";
 // import {verifyDoctor} from "../../../modules/doctors";
 // import {open} from "../../../modules/drawer";
 // import {DRAWER} from "../../../constant";
@@ -15,10 +20,10 @@ const mapStateToProps = state => {
     doctor_qualifications = {},
     upload_documents = {},
     doctor_registrations = {},
-      degrees = {},
-      colleges = {},
-      councils = {},
-      specialities = {},
+    degrees = {},
+    colleges = {},
+    councils = {},
+    specialities = {}
   } = state;
   const { qualification_ids = [], clinic_ids = [], doctor_ids = [] } = pages;
   return {
@@ -41,7 +46,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     verifyDoctor: id => dispatch(verifyDoctor(id)),
-    getDoctorDetails: id => () => dispatch(getDoctorDetails(id))
+    getDoctorDetails: id => () => dispatch(getDoctorDetails(id)),
+    addRazorpayId: (id, payload) => dispatch(addRazorpayId(id, payload)),
+    getDoctorAccountDetails: id => () => dispatch(getDoctorAccountDetails(id))
   };
 };
 const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
@@ -58,12 +65,18 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     degrees,
     colleges,
     councils,
-    specialities,
+    specialities
   } = stateProps;
-  const { getDoctorDetails, verifyDoctor } = dispatchProps;
+  const {
+    getDoctorDetails,
+    verifyDoctor,
+    addRazorpayId,
+    getDoctorAccountDetails
+  } = dispatchProps;
   const { id } = ownProps;
 
   const getDoctorAllDetails = getDoctorDetails(id);
+  const getCurrentDoctorAccountDetails = getDoctorAccountDetails(id);
 
   return {
     users,
@@ -73,6 +86,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     doctor_ids,
     id,
     verifyDoctor,
+    addRazorpayId,
     doctor_clinics,
     doctor_qualifications,
     upload_documents,
@@ -81,7 +95,8 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
     colleges,
     councils,
     specialities,
-    getDoctorDetails: getDoctorAllDetails
+    getDoctorDetails: getDoctorAllDetails,
+    getDoctorAccountDetails: getCurrentDoctorAccountDetails
   };
 };
 

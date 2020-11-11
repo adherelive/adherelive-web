@@ -3,7 +3,8 @@ import { REQUEST_TYPE } from "../../constant";
 import {
   getAddVitalURL,
   getVitalTimelineURL,
-  getUpdateVitalURL
+  getUpdateVitalURL,
+  getMissedVitalsForDoctorUrl
 } from "../../Helper/urls/vitals";
 
 import {getPatientVitalsURL} from "../../Helper/urls/patients";
@@ -23,6 +24,10 @@ export const GET_VITALS_TIMELINE_FAILED = "GET_VITALS_TIMELINE_FAILED";
 export const UPDATE_VITAL_START = "UPDATE_VITAL_START";
 export const UPDATE_VITAL_COMPLETED = "UPDATE_VITAL_COMPLETED";
 export const UPDATE_VITAL_FAILED = "UPDATE_VITAL_FAILED";
+
+export const GET_MISSED_VITALS = "GET_MISSED_VITALS";
+export const GET_MISSED_VITALS_COMPLETE = "GET_MISSED_VITALS_COMPLETE";
+export const GET_MISSED_VITALS_FAILED = "GET_MISSED_VITALS_FAILED";
 
 export const addVital = (payload) => {
   let response = {};
@@ -131,6 +136,37 @@ export const updateVital = (payload) => {
     return response;
   };
 };
+
+
+export const getMissedVitalsForDoc = (id) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GET_MISSED_VITALS });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getMissedVitalsForDoctorUrl(id),
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_MISSED_VITALS_COMPLETE,
+          data,
+        });
+      } else {
+        dispatch({
+          type: GET_MISSED_VITALS_FAILED,
+          error,
+        });
+      }
+    } catch (error) {
+      console.log("GET_MISSED_VITALS FOR PATIENT ERROR", error);
+    }
+    return response;
+  };
+}
+
 
 
 function vitalsReducer(state, payload) {

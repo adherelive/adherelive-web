@@ -1,7 +1,14 @@
 import BaseScheduleEvent from "../../../services/scheduleEvents";
 
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
+
+import AppointmentWrapper from "../../web/appointments";
 import {EVENT_TYPE} from "../../../../constant";
+
+import Log from "../../../../libs/log";
+
+const Logger = new Log("WEB > API WRAPPER > SCHEDULE_EVENTS");
+
 
 class ScheduleEventWrapper extends BaseScheduleEvent {
     constructor(data) {
@@ -45,7 +52,8 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
           status,
           date,
           start_time,
-          end_time
+          end_time,
+          updated_at
       } = _data || {};
 
       return {
@@ -58,7 +66,31 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
           date,
           start_time,
           end_time,
+          updated_at
       };
+    };
+
+    getReferenceInfo = async () => {
+        const {getAllInfo, getScheduleEventId, getEventId, getEventType} = this;
+
+        let eventTypeData = {};
+
+        switch (getEventType()) {
+            case EVENT_TYPE.APPOINTMENT:
+                const appointment = await AppointmentWrapper(null, getEventId());
+                const {appointments} = await appointment.getAllInfo();
+                eventTypeData = {appointments};
+            default:
+                break;
+        }
+
+        return {
+            schedule_events: {
+                [getScheduleEventId()]: getAllInfo(),
+            },
+            ...eventTypeData,
+        }
+
     };
 }
 

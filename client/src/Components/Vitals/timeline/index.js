@@ -97,7 +97,7 @@ class VitalTimeline extends Component {
     const { getVitalTemplate } = this;
 
     return events.map(event => {
-      const { id, status, end_time, details = {} } = event || {};
+      const { id, status, end_time, details = {} ,updated_at = '' } = event || {};
       const { response: { value = {}, currentTime } = {} } = details;
 
       switch (status) {
@@ -109,7 +109,7 @@ class VitalTimeline extends Component {
               color={TIMELINE_STATUS[status].color}
               className="pl10"
             >
-              <div className="mb6 fs16 fw500">{moment(currentTime).format("LT")}</div>
+              <div className="mb6 fs16 fw500">{moment(updated_at).format("LT")}</div>
               {Object.keys(value).map((fieldId, index) => {
                 const { label, placeholder } = getVitalTemplate(fieldId, event);
                 

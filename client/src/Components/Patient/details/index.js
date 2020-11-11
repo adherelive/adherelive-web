@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
+import plus_white from '../../../Assets/images/plus_white.png';
 import chat_image from "../../../Assets/images/chat.svg";
 import {
   GENDER,
@@ -9,7 +10,8 @@ import {
   TABLET,
   SYRUP,
   PARTS,
-  PART_LIST_CODES
+  PART_LIST_CODES,
+  DIAGNOSIS_TYPE
 } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
@@ -27,7 +29,7 @@ import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 
 import PatientCarePlans from "./common/patientProfileCarePlans";
 
-import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
+import { MailOutlined, PhoneOutlined, MessageOutlined, VideoCameraOutlined, CaretDownOutlined } from "@ant-design/icons";
 import moment from "moment";
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddVitals from "../../../Containers/Drawer/addVitals";
@@ -45,11 +47,13 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from "../../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../../Helper/url/patients";
 import SymptomTabs from "../../../Containers/Symptoms";
+import AddCareplanDrawer from "../../../Containers/Drawer/addCareplan";
 // import messages from "../../Dashboard/message";
 import config from "../../../config";
 import EditVitals from "../../../Containers/Drawer/editVitals";
 import { getRoomId } from "../../../Helper/twilio";
 import {getFullName} from "../../../Helper/common";
+import Tooltip from "antd/es/tooltip";
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
@@ -169,22 +173,21 @@ const columns_appointments = [
     width: "30%",
     ellipsis: true
   },
-  {
-    title: "Adherence",
-    dataIndex: "Adherence",
-    key: "adherence",
-    width: "30%",
-    ellipsis: true
-  },
+
   {
     title: "",
-    dataIndex: "edit",
-    key: "edit",
-    render: () => (
-      <div className="edit-medication">
-        <img src={edit_image} className="edit-medication-icon" />
-      </div>
-    )
+    dataIndex: "markComplete",
+    key: "markComplete",
+    width:"30%",
+    render: ({active_event_id, markAppointmentComplete, formatMessage}) => {
+      if(active_event_id) {
+        return (
+            <div className="wp100 flex align-center justify-center pointer">
+              <Button type={"primary"} onClick={markAppointmentComplete(active_event_id)}>{formatMessage(messages.complete_text)}</Button>
+            </div>
+        );
+      }
+    }
   }
 ];
 
@@ -223,7 +226,7 @@ const columns_appointments_non_editable = [
     key: "adherence",
     width: "30%",
     ellipsis: true
-  }
+  },
 ];
 
 // const data_symptoms = [
@@ -273,9 +276,27 @@ const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
             trigger={["click"]}
             placement="bottomRight"
           >
-            <Button type="primary" className="add-button">
-              Add
-            </Button>
+           
+            
+           
+           <Button type="primary" className='ml10 add-button '>
+              <div className="flex direction-column align-center justify-center hp100">
+                <div className="flex direction-row" >
+                    <div className="flex direction-column align-center justify-center hp100">
+                        <img src={plus_white} className={"w20 h20 mr6 "} />
+                    </div>
+                    <div className="flex direction-column align-center justify-center hp100">
+                        <span className="fs20" > Add</span>
+                    </div>
+                </div>
+              </div>
+            
+          </Button>
+
+           
+            
+
+            
           </Dropdown>
         )}
       </div>
@@ -300,59 +321,102 @@ const PatientCard = ({
 }) => {
   const {details: {comorbidities, allergies} = {}} = patients[patient_id] || {};
   return (
-    <div className="patient-card tac">
-      <img
-        alt=""
-        className="patient-dp mt20 mr0 mb0 ml0"
-        src={patient_display_picture}
-      />
-      <div className="patient-name mt8 mr0 mb0 ml0">
-        {patient_first_name} {patient_middle_name} {patient_last_name} (
-        {gender ? `${GENDER[gender].view} ` : ""}
-        {patient_age})
+    <div className="flex direction-column tac br10 bg-lighter-grey">
+      <div className="flex justify-end pt20 pl20 pr20 pb6">
+        <CaretDownOutlined className="pointer"/>
+
       </div>
-      <div className="patient-id mt6 mr0 mb0 ml0 ">PID: {uid}</div>
-      <div className="patient-contact-number mt16 mr0 mb0 ml0 flex direction-row justify-center align-center">
-        <PhoneOutlined className="dark-sky-blue mr8" />
-        <div>{patient_phone_number}</div>
+      <div className="flex">
+        <div className="flex align-start">
+          <img
+              alt=""
+              className=" w50 br50 mr10 ml10"
+              src={patient_display_picture}
+          />
+        </div>
+
+        <div className="flex direction-column align-start">
+          <div className="patient-name">
+            {patient_first_name} {patient_middle_name} {patient_last_name} (
+            {gender ? `${GENDER[gender].view} ` : ""}
+            {patient_age})
+          </div>
+          <div className="patient-id mt6 mr0 mb0 ml0 warm-grey">PID: {uid}</div>
+
+          <div className="flex justify-space-evenly mt10">
+            <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer">
+              <Tooltip placement={"bottom"} title={patient_phone_number}>
+                <PhoneOutlined className="text-white fs18" />
+              </Tooltip>
+            </div>
+            <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer" onClick={openChat}>
+              <Tooltip placement={"bottom"} title={formatMessage(messages.chat_icon_text)}>
+                <MessageOutlined className="text-white fs18" />
+              </Tooltip>
+            </div>
+
+            <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer">
+              <Tooltip placement={"bottom"} title={formatMessage(messages.video_icon_text)}>
+              <VideoCameraOutlined className="text-white fs18" />
+              </Tooltip>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div className="patient-email-id mt8 mr0 mb0 ml0 flex direction-row justify-center align-center">
-        {patient_email_id && <MailOutlined className="dark-sky-blue mr8" />}
-        {patient_email_id && <div>{patient_email_id}</div>}
+
+      <div className="flex direction-column align-start mt10 ml10">
+        <div className="fs12 fw700 brown-grey">{formatMessage(messages.comorbidities_text)}</div>
+        <div className="fs14 fw700 black-85">{comorbidities}</div>
       </div>
+
+      {/*allergies*/}
+      <div className="flex direction-column align-start mb14 mt6 ml10">
+        <div className="fs12 fw700 brown-grey">{formatMessage(messages.allergies_text)}</div>
+        <div className="fs14 fw700 flex black-85">{allergies}</div>
+      </div>
+
+      {/*<div className="patient-contact-number mt16 mr0 mb0 ml0 flex direction-row justify-center align-center">*/}
+      {/*  <PhoneOutlined className="dark-sky-blue mr8" />*/}
+      {/*  <div>{patient_phone_number}</div>*/}
+      {/*</div>*/}
+      {/*<div className="patient-email-id mt8 mr0 mb0 ml0 flex direction-row justify-center align-center">*/}
+      {/*  {patient_email_id && <MailOutlined className="dark-sky-blue mr8" />}*/}
+      {/*  {patient_email_id && <div>{patient_email_id}</div>}*/}
+      {/*</div>*/}
 
       {/*show more*/}
       {/*<div>*/}
-        <Collapse ghost={true} expandIconPosition={"right"}>
-          <Panel header={formatMessage(messages.show_more_text)} key={"1"}>
-
-            {/*comorbidities*/}
-            <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.comorbidities_text)}</div>
-              <div className="fs14 fw500 flex justify-center">{comorbidities}</div>
-            </div>
-
-            {/*allergies*/}
-            <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.allergies_text)}</div>
-              <div className="fs14 fw500 flex justify-center">{allergies}</div>
-            </div>
-
-          </Panel>
-        </Collapse>
+      {/*  <Collapse ghost={true} expandIconPosition={"right"}  bordered={false} expandIcon={() => <CaretDownOutlined />}>*/}
+      {/*    <Panel  key={"1"} style={{border:"none"}} className="br10">*/}
+      
+      {/*      /!*comorbidities*!/*/}
+      {/*      <div className="flex direction-column align-start">*/}
+      {/*        <div className="fs12 fw700 brown-grey">{formatMessage(messages.comorbidities_text)}</div>*/}
+      {/*        <div className="fs14 fw700 black-85">{comorbidities}</div>*/}
+      {/*      </div>*/}
+      
+      {/*      /!*allergies*!/*/}
+      {/*      <div className="flex direction-column align-start mb14">*/}
+      {/*        <div className="fs12 fw700 brown-grey">{formatMessage(messages.allergies_text)}</div>*/}
+      {/*        <div className="fs14 fw700 flex black-85">{allergies}</div>*/}
+      {/*      </div>*/}
+      
+      {/*    </Panel>*/}
+      {/*  </Collapse>*/}
       {/*</div>*/}
 
 
-      <div className="action-buttons flex">
-        <div className="edit-button p10">
-          <img className="mr5" src={edit_image} />
-          <span>{formatMessage(messages.profile_edit)}</span>
-        </div>
-        <div className="chat-button p10" onClick={openChat}>
-          <img className="mr5" src={chat_image} />
-          <span>{formatMessage(messages.profile_chat)}</span>
-        </div>
-      </div>
+      {/*<div className="action-buttons flex">*/}
+      {/*  <div className="edit-button p10">*/}
+      {/*    <img className="mr5" src={edit_image} />*/}
+      {/*    <span>{formatMessage(messages.profile_edit)}</span>*/}
+      {/*  </div>*/}
+      {/*  <div className="chat-button p10" onClick={openChat}>*/}
+      {/*    <img className="mr5" src={chat_image} />*/}
+      {/*    <span>{formatMessage(messages.profile_chat)}</span>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
     </div>
   );
 };
@@ -364,50 +428,67 @@ const PatientTreatmentCard = ({
   treatment_doctor,
   treatment_start_date,
   treatment_provider,
-  treatment_severity_status = "1"
+  treatment_severity_status = "1",
+  treatment_diagnosis_description,
+  treatment_diagnosis_type ,
+  treatment_clinical_notes ,
+  treatment_symptoms
+  
 }) => {
   return (
-    <div className="treatment mt20">
-      <h3>{formatMessage(messages.treatment_details)}</h3>
-      <div className="treatment-details pl16 pr16">
-        <div className="treatment-name flex mt10">
-          <div className="wp40">{formatMessage(messages.treatment_header)}</div>
-          <div className="w120 wba tdh">{treatment_name}</div>
+    <div className="treatment mt20 tac">
+      <h3 >{formatMessage(messages.treatment_details)}</h3>
+      <div className="treatment-details pl16 pr16 ">
+        
+      <div className="flex direction-column mb14 mt20">
+              <div className="fs16 fw600 ">{formatMessage(messages.treatment_header)}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_name}</div>
+      </div>    
+
+      
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.treatment_severity)}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_severity_status}</div>
+        </div>    
+
+      
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.treatment_condition)}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_condition}</div>
+        </div>    
+
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.treatment_doctor)}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_doctor}</div>
+        </div> 
+
+
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.treatment_start_date)}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_start_date}</div>
+        </div>    
+
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.treatment_provider)}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_provider}</div>
         </div>
-        <div className="treatment-severity flex mt10">
-          <div className="wp40">
-            {formatMessage(messages.treatment_severity)}
-          </div>
-          <div className="w120 wba tdh">
-            {/* <div
-              className={`severity-label mr4 bg-${SEVERITY_STATUS[treatment_severity_status].color}`}
-            ></div> */}
-            {/* {SEVERITY_STATUS[treatment_severity_status].text} */}
-            {treatment_severity_status}
-          </div>
+
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.clinical_notes)}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_clinical_notes}</div>
         </div>
-        <div className="treatment-condition flex mt10">
-          <div className="wp40">
-            {formatMessage(messages.treatment_condition)}
-          </div>
-          <div className="w120 wba tdh">{treatment_condition}</div>
+
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600"> {formatMessage(messages.diagnosis_text)} : {treatment_diagnosis_type}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_diagnosis_description}</div>
         </div>
-        <div className="treatment-doctor flex mt10">
-          <div className="wp40">{formatMessage(messages.treatment_doctor)}</div>
-          <div className="w120 wba tdh">{treatment_doctor}</div>
+
+
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.symptoms_text)}</div>
+              <div className="fs14 fw500 flex justify-center">{treatment_symptoms}</div>
         </div>
-        <div className="treatment-start-date flex mt10">
-          <div className="wp40">
-            {formatMessage(messages.treatment_start_date)}
-          </div>
-          <div className="w120 wba">{treatment_start_date}</div>
-        </div>
-        <div className="treatment-provider flex mt10">
-          <div className="wp40">
-            {formatMessage(messages.treatment_provider)}
-          </div>
-          <div className="w120 wba">{treatment_provider}</div>
-        </div>
+
       </div>
     </div>
   );
@@ -541,13 +622,30 @@ class PatientDetails extends Component {
     this.setState({ carePlanTemplateId });
   }
 
+  markAppointmentComplete = (id) => async (e) => {
+    e.stopPropagation();
+    const {markAppointmentComplete} = this.props;
+    const response = await markAppointmentComplete(id);
+
+    const { status, payload: { data, error, message: responseMessage } = {} } = response || {};
+
+    if(status === true) {
+      message.success(responseMessage);
+    } else {
+      message.warn(responseMessage)
+    }
+  };
+
   getAppointmentsData = (carePlan = {}, docName = "--") => {
     const {
       appointments,
-      users = {}
+      users = {},
       // doctors = {},
       // patients = {},
+      schedule_events = {},
     } = this.props;
+
+    const {markAppointmentComplete, formatMessage} = this;
 
     let { appointment_ids = [] } = carePlan;
     let formattedAppointments = appointment_ids.map(id => {
@@ -560,7 +658,8 @@ class PatientDetails extends Component {
           end_time,
           description = ""
         } = {},
-        organizer: { id: organizer_id } = {}
+        organizer: { id: organizer_id } = {},
+          active_event_id = null
       } = appointments[id] || {};
       const { basic_info: { user_name = "" } = {} } = users[organizer_id] || {};
       return {
@@ -571,7 +670,8 @@ class PatientDetails extends Component {
         time: `${moment(start_time).format("LT")} - ${moment(end_time).format(
           "LT"
         )}`,
-        description: description ? description : "--"
+        description: description ? description : "--",
+        markComplete: {active_event_id, markAppointmentComplete, formatMessage}
       };
     });
     formattedAppointments.sort(function(a, b) {
@@ -679,7 +779,8 @@ class PatientDetails extends Component {
       handleAppointment,
       handleMedicationReminder,
       handleSymptoms,
-      handleVitals
+      handleVitals,
+      handleAddCareplan
     } = this;
     const { authPermissions = [] } = this.props;
     return (
@@ -707,6 +808,11 @@ class PatientDetails extends Component {
             <div>{this.formatMessage(messages.vitals)}</div>
           </Menu.Item>
         )}
+        {authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) && (  
+          <Menu.Item onClick={handleAddCareplan}>
+            <div>{this.formatMessage(messages.careplanHeading)}</div>
+          </Menu.Item>
+        )}
       </Menu>
     );
   };
@@ -723,6 +829,18 @@ class PatientDetails extends Component {
       patient_id
     });
   };
+
+  handleAddCareplan = e => {
+    const { openAddCareplanDrawer, patient_id } = this.props;
+    openAddCareplanDrawer({
+      // patients: {
+      //   id: patient_id,
+      //   first_name: "test",
+      //   last_name: "patient"
+      // },
+      // patient_id
+    });
+  }
 
   handleMedicationReminder = e => {
     const { openMReminderDrawer, patient_id } = this.props;
@@ -1260,7 +1378,7 @@ class PatientDetails extends Component {
       drawer: { visible: drawerVisible = false } = {},
       care_plan_template_ids = {},
       symptoms = {},
-      authenticated_user = null
+      authenticated_user = null,
     } = this.props;
     const {
       loading,
@@ -1347,7 +1465,7 @@ class PatientDetails extends Component {
     const {
       basic_info: { doctor_id = 1 } = {},
       activated_on: treatment_start_date,
-      details: { treatment_id = "", severity_id = "", condition_id = "" } = {}
+      details: { treatment_id = "", severity_id = "", condition_id = "",clinical_notes= "", diagnosis : { type : d_type = "", description : diagnosis_description = "" } = {},symptoms : carePlan_symptoms= "" } = {}
     } = care_plans[carePlanId] || {};
     const { basic_info: { name: treatment = "" } = {} } =
       treatments[treatment_id] || {};
@@ -1355,6 +1473,10 @@ class PatientDetails extends Component {
       conditions[condition_id] || {};
     const { basic_info: { name: severity = "" } = {} } =
       severities[severity_id] || {};
+    
+    const diagnosis_type_obj = DIAGNOSIS_TYPE[d_type] || {};
+    const diagnosis_type = diagnosis_type_obj["value"] || '';
+
 
     let carePlan = care_plans[carePlanId] || {};
     let {
@@ -1420,40 +1542,29 @@ class PatientDetails extends Component {
       close,
       openPopUp,
       user_details: {
-        // // gender,
-        // age: patient_age,
-        // phone_number: patient_phone_number = "--",
-        // email_id: patient_email_id = "test-patient@mail.com",
         profile_picture: patient_display_picture
       } = {}
     } = this.props;
 
     const {
       treatment_details: {
-        // treatment_severity: treatment_severity_status = "1",
         treatment_provider
-        // treatment_condition,
       } = {}
     } = this.props.user_details;
 
     let showAddButton =
       (authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) ||
         authPermissions.includes(PERMISSIONS.ADD_MEDICATION) ||
-        authPermissions.includes(PERMISSIONS.ADD_ACTION)) &&
+        authPermissions.includes(PERMISSIONS.ADD_ACTION)     ||
+        authPermissions.includes(PERMISSIONS.ADD_CAREPLAN)
+        ) &&
       !isOtherCarePlan;
-
-    // const {
-    //   alerts: { count = "1", new_symptoms = [], missed_appointment = "" } = {},
-    // } = this.props.user_details || {};
 
     let docName = doctor_first_name
       ? `${doctor_first_name} ${
           doctor_middle_name ? `${doctor_middle_name} ` : ""
         }${doctor_last_name}`
       : "--";
-
-    // const new_symptoms_string =
-    //   new_symptoms.length > 0 ? new_symptoms.map((e) => e).join(", ") : "";
 
     return (
       <Fragment>
@@ -1464,8 +1575,8 @@ class PatientDetails extends Component {
             showAddButton={showAddButton}
           />
 
-          <div className="flex">
-            <div className="patient-details flex-grow-0 pt20 pr24 pb20 pl24">
+          <div className="flex wp100">
+            <div className=" w350 pt20 pr24 pb20 pl24">
               <PatientCard
                 patient_display_picture={patient_display_picture}
                 patient_first_name={first_name}
@@ -1492,6 +1603,9 @@ class PatientDetails extends Component {
                 handleCarePlanChange={handleCarePlanChange}
                 selectedCarePlanId={selectedCarePlanId}
                 patient_id={patient_id}
+                treatment_provider={
+                  treatment_provider ? treatment_provider : "--"
+                }
               />
 
               <PatientTreatmentCard
@@ -1512,10 +1626,15 @@ class PatientDetails extends Component {
                     treatment_provider ? treatment_provider : "--"
                   }
                   treatment_severity_status={severity ? severity : "--"}
+                  treatment_diagnosis_description={diagnosis_description ? diagnosis_description : "--"}
+                  treatment_diagnosis_type = {diagnosis_type ? diagnosis_type : "--"}
+                  treatment_clinical_notes = {clinical_notes ? clinical_notes : "--"}
+                  treatment_symptoms = {carePlan_symptoms ? carePlan_symptoms : "--"}
+
               />
             </div>
 
-            <div className="flex-grow-1 direction-column align-center pt20 pr24 pb20 pl24 ola123">
+            <div className="wp80 direction-column align-center pt20 pr24 pb20 pl24 ola123">
               {!isOtherCarePlan && <PatientAlerts patientId={patient_id} />}
 
               {/* <div className="last-visit-alerts" >*/}
@@ -1633,6 +1752,7 @@ class PatientDetails extends Component {
               <AddVitals carePlanId={carePlanId} />
               <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
+              <AddCareplanDrawer   patientId={patient_id} />
               {templateDrawerVisible && (
                 <TemplateDrawer
                   visible={templateDrawerVisible}
