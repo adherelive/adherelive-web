@@ -1494,7 +1494,7 @@ class DoctorController extends Controller {
       const {
         gender = "",
         speciality_id = "",
-        qualifications = [],
+        qualification_details: qualifications = [],
         registration = {}
       } = body || {};
 
