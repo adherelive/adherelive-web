@@ -148,6 +148,15 @@ const addRegistrationStepForm = Joi.object().keys({
             id: Joi.number().optional().allow(0, null),
         })
     ),
+    registration: Joi.object().keys({
+        expiry_date: Joi.date().required().label("Expiry date is required"),
+        number: Joi.string().regex(/^\d+$/).required().label("Please enter valid registration number"),
+        registration_council_id: Joi.string().regex(/^\d+$/).required().label("Registration Council is required"),
+        year: Joi.number().max(3000).required("Registration Year is required"),
+        photos: Joi.array().items(Joi.string().uri().label("Please upload valid registration document")),
+        id: Joi.number().optional().allow(0, null),
+        photo: Joi.array().optional().allow("")
+    }),
     id: Joi.number()
       .optional()
       .allow(0, null)

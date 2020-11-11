@@ -97,7 +97,7 @@ class UserController extends Controller {
       const userPreference = await userPreferenceService.addUserPreference({
         user_id: user.get("id"),
         details: {
-          charts: ["1", "2", "3", "4"]
+          charts: ["1", "2", "3"]
         }
       });
 
