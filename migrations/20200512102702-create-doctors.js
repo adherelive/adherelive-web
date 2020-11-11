@@ -1,9 +1,10 @@
 "use strict";
 
 import { GENDER } from "../constant";
-import {TABLE_NAME} from "../app/models/doctors";
-import {TABLE_NAME as userTableName} from "../app/models/users";
-import {TABLE_NAME as specialityTableName} from "../app/models/specialities";
+import { TABLE_NAME } from "../app/models/doctors";
+import { TABLE_NAME as userTableName } from "../app/models/users";
+import { TABLE_NAME as specialityTableName } from "../app/models/specialities";
+import { DataTypes } from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -19,23 +20,23 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: userTableName,
+            tableName: userTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
-       city: {
+      city: {
         type: Sequelize.STRING(100),
-        allowNull: true,
+        allowNull: true
       },
       speciality_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: {
-            tableName: specialityTableName,
+            tableName: specialityTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
       gender: {
@@ -49,15 +50,15 @@ module.exports = {
       },
       first_name: {
         type: Sequelize.STRING(100),
-        allowNull: true,
+        allowNull: true
       },
       middle_name: {
         type: Sequelize.STRING(100),
-        allowNull: true,
+        allowNull: true
       },
       last_name: {
         type: Sequelize.STRING(100),
-        allowNull: true,
+        allowNull: true
       },
       activated_on: {
         type: Sequelize.DATE
@@ -73,6 +74,10 @@ module.exports = {
       deleted_at: {
         allowNull: true,
         type: Sequelize.DATE
+      },
+      signature_pic: {
+        type: Sequelize.STRING,
+        allowNull: true
       }
     });
   },

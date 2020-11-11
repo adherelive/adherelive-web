@@ -8,7 +8,9 @@ module.exports = {
       {
         user_id: "1",
         details: JSON.stringify({
-          charts: ["1","2","3","4"]
+          // charts: ["1","2","3","4"]
+          charts: ["1","2","3"]
+
         }),
         created_at: new Date(),
         updated_at: new Date(),
@@ -16,7 +18,9 @@ module.exports = {
       {
         user_id:"3",
         details: JSON.stringify({
-          charts: ["1","2","3","4"]
+          // charts: ["1","2","3","4"]
+          charts: ["1","2","3"]
+
         }),
         created_at: new Date(),
         updated_at: new Date(),

@@ -140,7 +140,7 @@ class PassedCron {
         .utc()
         .toDate();
 
-      if (moment(currentTime).diff(event.getEndTime(), "minutes") > 0) {
+      if (moment(currentTime).diff(event.getEndTime(), "hours") > process.config.app.appointment_wait_time_hours) {
         const updateEventStatus = await scheduleEventService.update(
           {
             status: EVENT_STATUS.EXPIRED

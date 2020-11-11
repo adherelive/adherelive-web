@@ -513,22 +513,22 @@ export const VERIFICATION_TYPE = {
   PATIENT_SIGN_UP: "patient_sign_up"
 };
 
-export const NO_ADHERENCE = "1";
-export const NO_MEDICATION = "2";
-export const NO_APPOINTMENT = "3";
-export const NO_ACTION = "4";
-export const TEST_ONE = "5";
-export const TEST_TWO = "6";
+// export const NO_ADHERENCE = "1";
+export const NO_MEDICATION = "1";
+export const NO_APPOINTMENT = "2";
+export const NO_ACTION = "3";
+// export const TEST_ONE = "5";
+// export const TEST_TWO = "6";
 
 export const CHART_LIMIT = 4;
 
 export const CHART_DETAILS = {
-  [NO_ADHERENCE]: {
-    type: "no_adherence",
-    name: "Missed Adherence",
-    critical: 19,
-    total: 100
-  },
+  // [NO_ADHERENCE]: {
+  //   type: "no_adherence",
+  //   name: "Missed Adherence",
+  //   critical: 19,
+  //   total: 100
+  // },
   [NO_MEDICATION]: {
     type: "no_medication",
     name: "Missed Medication",
@@ -547,18 +547,18 @@ export const CHART_DETAILS = {
     critical: 30,
     total: 120
   },
-  [TEST_ONE]: {
-    type: "test_one",
-    name: "Test One",
-    critical: 10,
-    total: 50
-  },
-  [TEST_TWO]: {
-    type: "test_two",
-    name: "Test Two",
-    critical: 10,
-    total: 60
-  }
+  // [TEST_ONE]: {
+  //   type: "test_one",
+  //   name: "Test One",
+  //   critical: 10,
+  //   total: 50
+  // },
+  // [TEST_TWO]: {
+  //   type: "test_two",
+  //   name: "Test Two",
+  //   critical: 10,
+  //   total: 60
+  // }
 };
 
 export const PERMISSIONS = {
@@ -801,5 +801,8 @@ export const OFFLINE_SYNC_DATA_TASKS = {
 };
 
 export const CONSENT_TYPE = {
-  CARE_PLAN: "CARE_PLAN",
-}
+  CARE_PLAN: "CARE_PLAN"
+};
+
+export const S3_DOWNLOAD_FOLDER = "s3Downloads";
+export const PRESCRIPTION_PDF_FOLDER = "prescriptionPdfs";

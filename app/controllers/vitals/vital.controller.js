@@ -7,6 +7,9 @@ import VitalTemplateService from "../../services/vitalTemplates/vitalTemplate.se
 import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
 import queueService from "../../services/awsQueue/queue.service";
+import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
+
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
@@ -16,8 +19,10 @@ import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 
-import {DAYS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
+
+import {DAYS, EVENT_TYPE,EVENT_STATUS, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
 import moment from "moment";
+
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
@@ -70,7 +75,8 @@ class VitalController extends Controller {
 
                 const eventScheduleData = {
                     type: EVENT_TYPE.VITALS,
-                    patient_id: patient.getUserId(),
+                    patient_id: patient.getPatientId(),
+                    patientUserId: patient.getUserId(),
                     event_id: vitals.getVitalId(),
                     event_type: EVENT_TYPE.VITALS,
                     critical: false,
@@ -318,6 +324,121 @@ class VitalController extends Controller {
             return raiseServerError(res);
         }
     };
+
+
+    getAllMissedVitals = async (req, res) => {
+        const { raiseSuccess, raiseServerError } = this;
+        try {
+    
+          
+    
+          const { body, userDetails } = req;
+    
+          const { userId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
+    
+    
+          let docAllCareplanData = [];
+          let vitalApiData = {};
+          let flag = true;
+          let criticalVitalEventIds = [];
+          let nonCriticalVitalEventIds = [];
+          const scheduleEventService = new ScheduleEventService();
+    
+          
+          docAllCareplanData = await carePlanService.getCarePlanByData({
+            doctor_id: doctorId
+          });
+    
+          // Logger.debug("786756465789",docAllCareplanData);
+    
+            for(let carePlan of docAllCareplanData) {
+            const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+            const {vital_ids} = await carePlanApiWrapper.getAllInfo();
+    
+    
+            for(let vId of vital_ids){
+              // Logger.debug("87657898763545",vital_ids);
+    
+                let expiredVitalsList = await scheduleEventService.getAllEventByData({
+                  event_type: EVENT_TYPE.VITALS,
+                  status: EVENT_STATUS.EXPIRED,
+                  event_id:vId
+                });
+    
+    
+                for(let vital of expiredVitalsList ){
+                  const vitalEventWrapper = await EventWrapper(vital);
+                  // Logger.debug("8976756576890",vitalEventWrapper);
+                 
+                    if (vitalEventWrapper.getCriticalValue()) {
+                      if (
+                        !criticalVitalEventIds.includes(
+                          vitalEventWrapper.getEventId()
+                        )
+                      ) {
+                        criticalVitalEventIds.push(
+                          vitalEventWrapper.getEventId()
+                        );
+                      }
+                    } else {
+                      if (
+                        !nonCriticalVitalEventIds.includes(
+                          vitalEventWrapper.getEventId()
+                        )
+                      ) {
+                        nonCriticalVitalEventIds.push(
+                          vitalEventWrapper.getEventId()
+                        );
+                      }
+                    }
+        
+                    vitalApiData[
+                      vitalEventWrapper.getEventId()
+                    ] = vitalEventWrapper.getDetails();
+                  
+                };
+    
+    
+            };
+    
+    
+          };
+    
+    
+    
+          if(Object.keys(vitalApiData).length === 0 && vitalApiData.constructor === Object){
+            flag = false;
+          }
+    
+    
+          if (flag === true) {
+            return raiseSuccess(
+              res,
+              200,
+              {
+                missed_vital_events: {
+                  ...vitalApiData
+                },
+                critical_vital_event_ids: criticalVitalEventIds,
+                non_critical_vital_event_ids: nonCriticalVitalEventIds
+              },
+              `Missed vitals fetched successfully`
+            );
+          } else {
+            return raiseSuccess(res, 201, {}, "No Missed Vitals");
+          }
+    
+          
+    
+        } catch (error) {
+         Log.debug("getVitalDetails 500 error ", error);
+          return raiseServerError(res);
+        }
+      };
+    
+      
+
+
 }
 
 export default new VitalController();

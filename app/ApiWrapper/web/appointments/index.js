@@ -1,5 +1,10 @@
 import BaseAppointment from "../../../services/appointment";
+
 import appointmentService from "../../../services/appointment/appointment.service";
+import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
+
+import EventWrapper from "../../common/scheduleEvents";
+import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 
 class AppointmentWrapper extends BaseAppointment {
   constructor(data) {
@@ -52,6 +57,50 @@ class AppointmentWrapper extends BaseAppointment {
       provider_id,
       provider_name,
     };
+  };
+
+  getAllInfo = async () => {
+    const {getBasicInfo, getAppointmentId, _data} = this;
+    const {id} = _data;
+
+    // console.log("817389127", {data: this._data.get("id"), func: getAppointmentId()});
+
+    const scheduleEventService = new ScheduleEventService();
+    const scheduleEventData = await scheduleEventService.getAllEventByData({
+      event_id: id,
+      event_type: EVENT_TYPE.APPOINTMENT
+    });
+
+    let activeEventId = null;
+    let scheduleData = {};
+
+    if(scheduleEventData.length > 0) {
+      for(let i = 0; i < scheduleEventData.length; i++) {
+        const scheduleEvent = await EventWrapper(scheduleEventData[i]);
+        if(scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
+          activeEventId = scheduleEvent.getScheduleEventId();
+          scheduleData[scheduleEvent.getScheduleEventId()] = scheduleEvent.getAllInfo();
+        }
+      }
+    }
+
+    return {
+      appointments: {
+        [`${id}`]: {
+          ...getBasicInfo(),
+          active_event_id: activeEventId
+        }
+      },
+      schedule_events: {
+        ...scheduleData
+      }
+    };
+  };
+
+  getReferenceInfo = async () => {
+    const {getAllInfo} = this;
+
+    return getAllInfo();
   };
 }
 

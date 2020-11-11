@@ -1,13 +1,21 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 // import messages from "./message";
-import { CHART_TITLE, NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_TWO, TEST_ONE } from "../../constant";
+import { CHART_TITLE,
+    //  NO_ADHERENCE,
+      NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, 
+    //   TEST_TWO, TEST_ONE 
+    } from "../../constant";
 
 import { Button, Checkbox, Modal } from "antd";
 
 
 
-const graphs = [NO_ADHERENCE, NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, TEST_ONE, TEST_TWO];
+const graphs = [
+    // NO_ADHERENCE,
+     NO_ACTION, NO_APPOINTMENT, NO_MEDICATION,
+    //   TEST_ONE, TEST_TWO
+    ];
 
 class ClinicRegister extends Component {
     constructor(props) {

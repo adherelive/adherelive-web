@@ -50,6 +50,14 @@ module.exports = {
           address: {
               type: Sequelize.STRING,
           },
+          height:{
+            type: Sequelize.STRING,
+              allowNull: true
+          },
+          weight:{
+            type: Sequelize.STRING,
+            allowNull: true
+          },
           activated_on: {
               type: Sequelize.DATE
           },

@@ -9,107 +9,131 @@ const storage = multer.memoryStorage();
 const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 import mDoctorController from "../../../app/controllers/mControllers/doctors/doctor.controller";
+import { isDoctor } from "../middlewares/doctor";
+import PaymentController from "../../../app/controllers/mControllers/payments/payment.controller";
 
 router.post(
   "/",
   Authenticate,
   validator.validateUpdateDoctorData,
-    // todo :: wip
-    mDoctorController.updateDoctor
+  // todo :: wip
+  mDoctorController.updateDoctor
 );
 
 router.post(
-    "/details",
-    Authenticate,
-    // validator.validateDoctorQualificationData,
-    // todo :: wip
-    mDoctorController.updateDoctorQualificationRegistration
+  "/details",
+  Authenticate,
+  // validator.validateDoctorQualificationData,
+  // todo :: wip
+  mDoctorController.updateDoctorQualificationRegistration
 );
 
 router.post(
-    "/upload",
-    Authenticate,
-    upload.single("files"),
-    mDoctorController.uploadImage
+  "/upload",
+  Authenticate,
+  upload.single("files"),
+  mDoctorController.uploadImage
 );
 
 router.post(
-    "/qualifications",
-    Authenticate,
-    // validator.validateDoctorQualificationData,
-    // todo :: wip
-    mDoctorController.updateQualificationStep
+  "/qualifications",
+  Authenticate,
+  // validator.validateDoctorQualificationData,
+  // todo :: wip
+  mDoctorController.updateQualificationStep
 );
 
 router.post(
-    "/qualifications/docs",
-    Authenticate,
-    // validator.validateDoctorQualificationData,
-    // todo :: wip
-    upload.single("files"),
-    mDoctorController.updateQualificationDocs
+  "/qualifications/docs",
+  Authenticate,
+  // validator.validateDoctorQualificationData,
+  // todo :: wip
+  upload.single("files"),
+  mDoctorController.updateQualificationDocs
 );
 
 router.post(
-    "/registrations",
-    Authenticate,
-    // validator.validateDoctorQualificationData,
-    // todo :: wip
-    mDoctorController.updateRegistrationStep
+  "/registrations",
+  Authenticate,
+  // validator.validateDoctorQualificationData,
+  // todo :: wip
+  mDoctorController.updateRegistrationStep
 );
 
 router.post(
-    "/registrations/docs",
-    Authenticate,
-    // validator.validateDoctorQualificationData,
-    // todo :: wip
-    upload.single("files"),
-    mDoctorController.updateRegistrationDocs
+  "/registrations/docs",
+  Authenticate,
+  // validator.validateDoctorQualificationData,
+  // todo :: wip
+  upload.single("files"),
+  mDoctorController.updateRegistrationDocs
 );
 
 router.post(
-    "/clinics",
-    Authenticate,
-    // validator.validateDoctorQualificationData,
-    // todo :: wip
-    mDoctorController.updateDoctorClinics
+  "/clinics",
+  Authenticate,
+  // validator.validateDoctorQualificationData,
+  // todo :: wip
+  mDoctorController.updateDoctorClinics
+);
+
+router.post(
+  "/patients",
+  Authenticate,
+  validator.validateAddPatientData,
+  // todo :: wip
+  mDoctorController.addPatient
+);
+
+router.post("/watchlist/:patient_id", mDoctorController.addPatientToWatchlist);
+
+router.post(
+  "/consultations",
+  Authenticate,
+  isDoctor,
+  // validator.validatePaymentProduct,
+  PaymentController.addDoctorPaymentProduct
 );
 
 router.delete(
-    "/qualification-documents/:id",
-    Authenticate,
-    mDoctorController.deleteQualificationDocument
+  "/qualification-documents/:id",
+  Authenticate,
+  mDoctorController.deleteQualificationDocument
 );
 
 router.delete(
-    "/registration-documents/:id",
-    Authenticate,
-    mDoctorController.deleteRegistrationDocument
+  "/registration-documents/:id",
+  Authenticate,
+  mDoctorController.deleteRegistrationDocument
 );
 
-router.post(
-    "/patients",
-    Authenticate,
-    validator.validateAddPatientData,
-    // todo :: wip
-    mDoctorController.addPatient
+router.delete(
+  "/watchlist/:patient_id",
+  Authenticate,
+  isDoctor,
+  mDoctorController.removePatientFromWatchlist
+);
+
+router.get("/", Authenticate, mDoctorController.getAllDoctorDetails);
+
+router.get(
+  "/consultations",
+  Authenticate,
+  isDoctor,
+  PaymentController.getAllDoctorPaymentProduct
+);
+
+router.delete(
+  "/consultations/:id",
+  Authenticate,
+  isDoctor,
+  PaymentController.deleteDoctorPaymentProduct
 );
 
 router.get(
-    "/",
-    Authenticate,
-    mDoctorController.getAllDoctorDetails
+  "/consultations/default",
+  Authenticate,
+  PaymentController.getAllAdminPaymentProduct
 );
-
-
-router.post(
-    "/watchlist/:patient_id",
-    mDoctorController.addPatientToWatchlist
-)
-
-router.get(
-    "/watchlistremove/:patient_id",
-    mDoctorController.removePatientFromWatchlist
-)
 
 module.exports = router;

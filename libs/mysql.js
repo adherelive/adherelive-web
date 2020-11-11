@@ -1,4 +1,4 @@
-import {Sequelize} from "sequelize";
+import { Sequelize } from "sequelize";
 import Logger from "./log";
 const Log = new Logger("SEQUELIZE QUERY");
 // const Config = require("../config/config");
@@ -48,6 +48,7 @@ import * as PlatformEvents from "../app/models/platformEvents";
 import * as ProductPlans from "../app/models/productPlans";
 import * as ProviderMembers from "../app/models/providerMembers";
 import * as Providers from "../app/models/providers";
+import * as PaymentProducts from "../app/models/paymentProducts";
 
 import * as RegionFeatures from "../app/models/regionFeatures";
 import * as RegionProviders from "../app/models/regionProviders";
@@ -65,6 +66,7 @@ import * as TemplateAppointments from "../app/models/templateAppointments";
 import * as TemplateMedications from "../app/models/templateMedications";
 import * as TreatmentConditionMapping from "../app/models/treatmentConditionMapping";
 import * as Treatments from "../app/models/treatments";
+import * as Transactions from "../app/models/transactions";
 
 import * as UploadDocuments from "../app/models/uploadDocuments";
 import * as UserCategoryPermissions from "../app/models/userCategoryPermissions";
@@ -77,134 +79,139 @@ import * as Vitals from "../app/models/vitals";
 import * as VitalTemplates from "../app/models/vitalTemplates";
 import * as Watchlist from "../app/models/doctor_patient_watchlist";
 
+import * as AccountDetails from "../app/models/accountDetails";
+
 // Models List...
 const models = [
-    ActionDetails,
-    Actions,
-    Adherence,
-    Appointments,
-    Articles,
+  AccountDetails,
+  ActionDetails,
+  Actions,
+  Adherence,
+  Appointments,
+  Articles,
 
-    CarePlans,
-    CarePlanAppointments,
-    CarePlanMedications,
-    CarePlanTemplates,
-    Clinics,
-    Colleges,
-    Conditions,
-    Consents,
-    Course,
+  CarePlans,
+  CarePlanAppointments,
+  CarePlanMedications,
+  CarePlanTemplates,
+  Clinics,
+  Colleges,
+  Conditions,
+  Consents,
+  Course,
 
-    Degree,
-    Diet,
-    Disease,
-    DoctorClinics,
-    DoctorQualifications,
-    DoctorRegistrations,
-    Doctors,
+  Degree,
+  Diet,
+  Disease,
+  DoctorClinics,
+  DoctorQualifications,
+  DoctorRegistrations,
+  Doctors,
 
-    EmailLogger,
-    Exercise,
+  EmailLogger,
+  Exercise,
 
-    FeatureDetails,
-    Features,
+  FeatureDetails,
+  Features,
 
-    Medications,
-    Medicines,
-    MemberSpecialities,
+  Medications,
+  Medicines,
+  MemberSpecialities,
 
-    ScheduleEvents,
+  ScheduleEvents,
 
-    OtpVerifications,
+  OtpVerifications,
 
-    PatientCareTakers,
-    Patients,
-    Permissions,
-    PlatformEvents,
-    ProductPlans,
-    Providers,
-    ProviderMembers,
+  PatientCareTakers,
+  Patients,
+  Permissions,
+  PlatformEvents,
+  ProductPlans,
+  Providers,
+  ProviderMembers,
+  PaymentProducts,
 
-    RegionFeatures,
-    RegionProviders,
-    Regions,
-    RegistrationCouncils,
-    Reminders,
+  RegionFeatures,
+  RegionProviders,
+  Regions,
+  RegistrationCouncils,
+  Reminders,
 
-    Severity,
-    Speciality,
-    Subscriptions,
-    Symptoms,
+  Severity,
+  Speciality,
+  Subscriptions,
+  Symptoms,
 
-    TemplateAppointments,
-    TemplateMedications,
-    TreatmentConditionMapping,
-    Treatments,
+  TemplateAppointments,
+  TemplateMedications,
+  TreatmentConditionMapping,
+  Treatments,
+  Transactions,
 
-    UploadDocuments,
-    UserCategoryPermissions,
-    UserDevices,
-    UserPreferences,
-    Users,
-    UserVerifications,
+  UploadDocuments,
+  UserCategoryPermissions,
+  UserDevices,
+  UserPreferences,
+  Users,
+  UserVerifications,
 
-    Vitals,
-    VitalTemplates,
-    
-    Watchlist
+  Vitals,
+  VitalTemplates,
+
+  Watchlist
 ];
 
 class Database {
-    static connection = null;
+  static connection = null;
 
-    static getDatabase = async () => {
-        // console.log("=====", Database.connection);
-        if (Database.connection === null) {
-            Database.connection = await new Sequelize(
-                process.config.db.name,
-                process.config.db.username,
-                process.config.db.password,
-                {
-                    host: process.config.db.host,
-                    port: process.config.db.port,
-                    dialect: process.config.db.dialect,
-                    pool: {
-                        max: 10,
-                        min: 0,
-                        acquire: 30000,
-                        idle: 10000
-                    },
-                    logging: function (str) {
-                        Log.debug("query", str);
-                    }
-                }
-            );
+  static getDatabase = async () => {
+    // console.log("=====", Database.connection);
+    if (Database.connection === null) {
+      Database.connection = await new Sequelize(
+        process.config.db.name,
+        process.config.db.username,
+        process.config.db.password,
+        {
+          host: process.config.db.host,
+          port: process.config.db.port,
+          dialect: process.config.db.dialect,
+          pool: {
+            max: 10,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+          },
+          logging: function(str) {
+            Log.debug("query", str);
+          }
         }
+      );
+    }
 
-        return Database.connection;
-    };
+    return Database.connection;
+  };
 
-    static getModel = dbName => Database.connection.models[dbName];
+  static getModel = dbName => Database.connection.models[dbName];
 
-    static initTransaction = () => Database.connection.transaction();
+  static initTransaction = () => Database.connection.transaction();
 
-    static init = async () => {
-        try {
-            const database = await Database.getDatabase();
-            await database.authenticate();
+  static init = async () => {
+    try {
+      const database = await Database.getDatabase();
+      await database.authenticate();
 
-            for (const model of models) {
-                model.db(database);
-            }
+      for (const model of models) {
+        model.db(database);
+      }
 
-            for (const model of models) {
-                model.associate(database);
-            }
-            Log.info("Db and tables have been created...");
-        } catch (err) {
-            Log.err(1000, "Db connect error is: ", err);
-        }
-    };
+      for (const model of models) {
+        model.associate(database);
+      }
+      Log.info("Db and tables have been created...");
+    } catch (err) {
+      Log.err(1000, "Db connect error is: ", err);
+    }
+  };
 }
 
 export default Database;

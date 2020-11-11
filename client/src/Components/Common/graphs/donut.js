@@ -8,9 +8,11 @@ export default function donutGraph(props) {
   const { id, data: graphContent, total, title, formatMessage } = props || {};
   const { dark, light } = GRAPH_COLORS[id] || {};
   const { className } = GRAPH_COLORS[id] || {};
-  const labels = [CHART_TITLE[id] === "Adherence" ? formatMessage(messages.compliant_text) : formatMessage(messages.critical_text),
-  CHART_TITLE[id] === "Adherence" ? formatMessage(messages.non_compliant_text) : formatMessage(messages.non_critical_text)
-  ];
+  const labels = [formatMessage(messages.compliant_text),formatMessage(messages.critical_text)]
+  // const labels = [CHART_TITLE[id] === "Adherence" ? formatMessage(messages.compliant_text) : formatMessage(messages.critical_text),
+  // CHART_TITLE[id] === "Adherence" ? formatMessage(messages.non_compliant_text) : formatMessage(messages.non_critical_text)
+  // ];
+
 const donutData = {
   labels: labels,
   datasets: [
@@ -47,16 +49,17 @@ return (
       <div className="wp90 flex align-center justify-space-between mt20">
         <div className="flex align-center fs10">
           <div
-            className={`ml10 mr6 br50 w10 h10 ${className["dark"]}`}
+            className={`ml10 mr6 br50 w10 h10 
+            ${className["dark"]}`}
           ></div>
-          <div>{CHART_TITLE[id] === "Adherence" ? formatMessage(messages.compliant_text) : formatMessage(messages.critical_text)}</div>
+          <div>{formatMessage(messages.critical_text)}</div>
         </div>
         <div className="flex align-center fs10">
           <div
             className={`mr6 br50 w10 h10 ${className["light"]}`}
           ></div>
           <div className="mr10">
-            {CHART_TITLE[id] === "Adherence" ? formatMessage(messages.non_compliant_text) : formatMessage(messages.non_critical_text)}
+            {formatMessage(messages.non_critical_text)}
           </div>
         </div>
       </div>

@@ -18,7 +18,9 @@ import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
 import { DRAWER } from "../../constant";
 import { openPopUp, closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
-import { getLastVisitAlerts } from "../../modules/scheduleEvents/index";
+import { getLastVisitAlerts, markAppointmentComplete } from "../../modules/scheduleEvents/index";
+import {addCareplanForPatient} from "../../modules/patients";
+
 
 const mapStateToProps = (state, ownProps) => {
   const {
@@ -111,6 +113,11 @@ const mapDispatchToProps = dispatch => {
     fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
     requestConsent: (patientId) => dispatch(requestConsent(patientId)),
     consentVerify: (data) => dispatch(consentVerify(data)),
+    markAppointmentComplete: (id) => dispatch(markAppointmentComplete(id)),
+    openAddCareplanDrawer: payload =>
+      dispatch(open({ type: DRAWER.ADD_CAREPLAN, payload })),
+    addCareplanForPatient : (patient_id,data) => dispatch(addCareplanForPatient(patient_id,data))
+ 
   };
 };
 

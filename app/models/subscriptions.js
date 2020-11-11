@@ -1,13 +1,13 @@
 "use strict";
 import {DataTypes} from "sequelize";
-import {PRODUCT_PLANS} from "./productPlans";
-import {USER_CATEGORY} from "../../constant";
+import {TABLE_NAME as paymentProductPlansTableName} from "./paymentProducts";
+import {USER_CATEGORY_ARRAY} from "./users";
 
-export const SUBSCRIPTIONS = "subscriptions";
+export const TABLE_NAME = "subscriptions";
 
 export const db = (database) => {
     database.define(
-        SUBSCRIPTIONS,
+        TABLE_NAME,
         {
             id: {
                 allowNull: false,
@@ -15,19 +15,19 @@ export const db = (database) => {
                 primaryKey: true,
                 type: DataTypes.INTEGER
             },
-            product_plan_id: {
+            payment_product_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
                     model: {
-                        tableName: PRODUCT_PLANS,
+                        tableName: paymentProductPlansTableName,
                     },
                     key: 'id'
                 }
             },
             subscriber_type: {
                 type: DataTypes.ENUM,
-                values: [USER_CATEGORY.PATIENT],
+                values: USER_CATEGORY_ARRAY,
                 allowNull: false
             },
             subscriber_id: {
@@ -48,26 +48,14 @@ export const db = (database) => {
         {
             underscored: true,
             paranoid: true,
-            getterMethods: {
-                getBasicInfo() {
-                    return {
-                        id: this.id,
-                        product_plan_id:this.product_plan_id,
-                        subscriber_type:this.subscriber_type,
-                        subscriber_id:this.subscriber_id,
-                        activated_on:this.activated_on,
-                        renew_on:this.renew_on,
-                        expired_on:this.expired_on,
-                    };
-                }
-            }
         }
     );
 };
 
 
 export const associate = (database) => {
-    // const {TABLE_NAME} = database.models || {};
-
-    // associations here (if any) ...
+    database.models[TABLE_NAME].hasOne(database.models[paymentProductPlansTableName], {
+        foreignKey:"id",
+        sourceKey:"payment_product_id"
+    });
 };

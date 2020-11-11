@@ -13,6 +13,9 @@ import messages from './messages';
 import { injectIntl } from "react-intl";
 import CallIcon from '../../Assets/images/telephone.png';
 import ChatMessageDetails from "../ChatPopup/chatMessageDetails";
+import Tooltip from "antd/es/tooltip";
+import {SwapOutlined} from "@ant-design/icons";
+import {CONSULTATION_FEE_TYPE_TEXT} from "../../constant";
 // import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
 
 
@@ -36,12 +39,24 @@ const Header = ({ placeVideoCall, patientName, patientDp = '', isOnline = false,
 }
 
 class ChatForm extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             newMessage: "",
-            fileList: []
+            fileList: [],
+            payment_products: {}
         };
+    }
+
+    async componentDidMount() {
+        const {getDoctorConsultations} = this.props;
+        const resp = await getDoctorConsultations();
+        const {status, payload: {data: {payment_products} = {}} = {}} = resp || {};
+
+        console.log("0928209834 resp", {resp});
+        if(status === true) {
+            this.setState({payment_products});
+        }
     }
 
     onMessageChanged = event => {
@@ -80,43 +95,113 @@ class ChatForm extends Component {
         return true;
     };
 
-    render() {
+    handleConsultationModal = (e) => {
+        e.preventDefault();
+        this.setState({viewConsultationModal: true});
+    };
 
-        return (
-            <Form
-                onSubmit={this.sendMessage}
-                className="chat-form"
-            //style={{ position: "absolute", bottom: 0, left: 72, width: 264 }}
-            >
-                <div className="form-input">
-                    <Input
-                        type="text"
-                        value={this.state.newMessage}
-                        onChange={this.onMessageChanged}
-                        placeholder={this.props.formatMessage(messages.writeMessage)}
-                        className='message-input'
-                        suffix={<div className="form-button">
-                            <Button htmlType="submit"><img src={Send} className='h20' /></Button>
-                        </div>}
-                    />
-                </div>
+    closeConsultationModal = e => {
+      e.preventDefault();
+        this.setState({viewConsultationModal: false});
+    };
 
-                <Upload
-                    onClick
-                    customRequest={this.handleUpload}
-                    beforeUpload={this.beforeUpload}
-                    showUploadList={false}
-                    multiple={false}
-                    accept=".jpg,.jpeg,.png,.pdf,.mp4"
-                    className="chat-upload-component"
-                >
-                    <div className="chat-upload-btn">
-                        {/* <Icon type="paper-clip" className='h20 mt6' /> */}
-                        <img src={PaperClip} className='h30 mt6 pointer' />
+    sendPaymentMessage = ({name, type, amount, productId}) => (e) => {
+        e.preventDefault();
+        this.props.channel.sendMessage(JSON.stringify({
+            meta: {
+                name,
+                type,
+                amount,
+                productId
+            }
+        }));
+
+        this.setState({viewConsultationModal: false});
+    };
+
+    getConsultationOptions = () => {
+        const {payment_products} = this.state;
+
+        console.log("098181302 payment_products ", {payment_products});
+        return Object.keys(payment_products).map(id => {
+           const {basic_info: {name, type, amount} = {}} = payment_products[id] || {};
+
+            return (
+                <div key={`consultation-${id}`} className="mb10 pointer" onClick={this.sendPaymentMessage({name, type, amount, productId: id})}>
+                    <div className="flex justify-space-between align-center bw1 br5 p10">
+                        <div className="">
+                            <div className="fs18 fw700">{name}</div>
+                            <div>{CONSULTATION_FEE_TYPE_TEXT[type]}</div>
+                        </div>
+                        <div>{`Rs.${amount}/-`}</div>
                     </div>
-                </Upload>
+                </div>
+            );
 
-            </Form>
+        });
+    };
+
+    render() {
+        console.log("8929829 this.props", this.props);
+        const {viewConsultationModal} = this.state;
+        return (
+            <Fragment>
+                <Form
+                    onSubmit={this.sendMessage}
+                    className="chat-form"
+                    //style={{ position: "absolute", bottom: 0, left: 72, width: 264 }}
+                >
+                    <div className="form-input">
+                        <Input
+                            type="text"
+                            value={this.state.newMessage}
+                            onChange={this.onMessageChanged}
+                            placeholder={this.props.formatMessage(messages.writeMessage)}
+                            className='message-input'
+                            suffix={<div className="form-button">
+                                <Button htmlType="submit"><img src={Send} className='h20' /></Button>
+                            </div>}
+                        />
+                    </div>
+
+                    <div className="flex mr10 align-center">
+                        <Tooltip placement={"topRight"} title={"Request Consultation Fee"}> {/*formatMessage(messages.consultationFeeText)*/}
+                            <SwapOutlined className="text-white fs20 pointer" onClick={this.handleConsultationModal}/>
+                        </Tooltip>
+                    </div>
+
+                    <Upload
+                        onClick
+                        customRequest={this.handleUpload}
+                        beforeUpload={this.beforeUpload}
+                        showUploadList={false}
+                        multiple={false}
+                        accept=".jpg,.jpeg,.png,.pdf,.mp4"
+                        className="chat-upload-component"
+                    >
+                        <div className="chat-upload-btn">
+                            {/* <Icon type="paper-clip" className='h20 mt6' /> */}
+                            <img src={PaperClip} className='h30 mt6 pointer' />
+                        </div>
+                    </Upload>
+
+                </Form>
+                {viewConsultationModal && (
+                    <Modal
+                        className=""
+                        visible={viewConsultationModal}
+                        title={"Consultation Fees"}
+                        closable
+                        mask
+                        maskClosable
+                        onCancel={this.closeConsultationModal}
+                        wrapClassName={"chat-media-modal-dialog"}
+                        width={`50%`}
+                    >
+                        {this.getConsultationOptions()}
+                    </Modal>
+                )}
+            </Fragment>
         );
     }
 }
@@ -447,9 +532,15 @@ class TwilioChat extends Component {
        
     }
 
+    handleReply = (data) => e => {
+      e.preventDefault();
+      this.setState({replyMeta: data});
+    };
+
  
     render() {
-        const { ChatForm } = this;
+        const {getDoctorConsultations} = this.props;
+        const { ChatForm, handleReply } = this;
 
         const { messagesLoading = false, other_user_online = false, other_typing = false, otherUserLastConsumedMessageIndex } = this.state;
         const { placeVideoCall, patientDp = '', patientName = '',replyMessadeId=null } = this.props;
@@ -464,7 +555,7 @@ class TwilioChat extends Component {
                             <div className='wp100 hp100 flex justify-center align-center'>
                                 <Spin />
                             </div>
-                            : <ChatMessageDetails {...props} scrollToBottom={this.scrollToBottom} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
+                            : <ChatMessageDetails handleReply={handleReply} {...props} scrollToBottom={this.scrollToBottom} otherUserLastConsumedMessageIndex={otherUserLastConsumedMessageIndex}/>}
                         <div id="chatEnd" style={{ float: "left", clear: "both" }} />
                     </div>
 
@@ -488,7 +579,7 @@ class TwilioChat extends Component {
                     {/* </div> */}
 
                     <div className="footer-right wp100">
-                        <ChatForm messages={this.messages} channel={this.channel} formatMessage={this.formatMessage} />
+                        <ChatForm messages={this.messages} channel={this.channel} formatMessage={this.formatMessage} getDoctorConsultations={getDoctorConsultations}/>
                     </div>
                 </div>
             </Fragment>

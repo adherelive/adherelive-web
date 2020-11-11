@@ -24,6 +24,7 @@ class VitalWrapper extends BaseVital {
 
   getBasicInfo = () => {
     const { _data } = this;
+    Log.debug("4563452342134566564532423",_data);
     const {
       id,
       vital_template_id,
@@ -31,7 +32,7 @@ class VitalWrapper extends BaseVital {
       start_date,
       end_date,
       details,
-      description
+      description,
     } = _data || {};
 
     return {

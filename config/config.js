@@ -10,7 +10,13 @@ module.exports = () => {
       reset_password: process.env.RESET_PASSWORD_LINK,
       developer_email: process.env.DEVELOPER_EMAIL,
       verified_doctor: process.env.DASHBOARD_LINK,
-      support_email: process.env.SUPPORT_EMAIL
+      support_email: process.env.SUPPORT_EMAIL,
+      appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
+      default_currency: process.env.DEFAULT_CURRENCY,
+    },
+    razorpay: {
+      key: process.env.RAZORPAY_KEY,
+      secret: process.env.RAZORPAY_SECRET,
     },
     event: {
       count: process.env.EVENT_FETCH_COUNT

@@ -1,22 +1,27 @@
 import React, { Component, Fragment } from "react";
-import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
-import messages from './messages';
+import {
+  USER_ADHERE_BOT,
+  CHAT_MESSAGE_TYPE,
+  PARTS,
+  PART_LIST_BACK,
+  PART_LIST_CODES,
+  PART_LIST_FRONT,
+  BODY,
+  PARTS_GRAPH,
+  BODY_VIEW,
+  BODY_SIDE
+} from "../../constant";
+import messages from "./messages";
 import { injectIntl } from "react-intl";
-import SymptomBotMessage from './symptomBotMessage';
-import VitalBotMessage from './vitalBotMessages';
+import SymptomBotMessage from "./symptomBotMessage";
+import VitalBotMessage from "./vitalBotMessages";
 import { Form, Input, Button, Spin, Avatar, Upload, Modal } from "antd";
-import moment from 'moment';
+import moment from "moment";
 
-class botMessage extends Component{
-    constructor(props){
-        super(props);
-        
-    }
-
-    componentDidMount(){
-        
-        
-    }
+class botMessage extends Component {
+  constructor(props) {
+    super(props);
+  }
 
     getBotMessage = () => {
         const { body : this_body ,message,patientDp,vital_repeat_intervals} = this.props;
@@ -38,9 +43,9 @@ class botMessage extends Component{
             return (
                 <Fragment key={message.state.sid}  >
                        <div className="chat-avatar">
-                                        <span className="twilio-avatar">
-                                            <Avatar src={patientDp} />
-                                        </span>
+                                        {/*<span className="twilio-avatar">*/}
+                                        {/*    <Avatar src={patientDp} />*/}
+                                        {/*</span>*/}
                                         {message.type === "media" ? (
                                             <div className="chat-text">
                                                 <div className="clickable white chat-media-message-text">
@@ -60,20 +65,16 @@ class botMessage extends Component{
                 </Fragment>
             )
         }
-       
+  }
 
-    }
-
-    render(){
-        const mess = this.getBotMessage();
-        return(
-            <Fragment>
-                <div>
-                   {mess}
-                </div>
-            </Fragment>
-        )
-    }
+  render() {
+    const mess = this.getBotMessage();
+    return (
+      <Fragment>
+        <div>{mess}</div>
+      </Fragment>
+    );
+  }
 }
 
 export default injectIntl(botMessage);

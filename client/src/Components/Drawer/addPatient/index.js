@@ -38,8 +38,8 @@ class PatientDetailsDrawer extends Component {
             gender: '',
             date_of_birth: '',
             treatment: '',
-            severity: '',
-            condition: '',
+            severity: null,
+            condition: null,
             prefix: "91",
             fetchingCondition: false,
             fetchingTreatment: false,
@@ -53,12 +53,16 @@ class PatientDetailsDrawer extends Component {
             patient_ids:[],
             isdisabled:true,
             selectedPatientId:null,
-            addNewPatient:false
+            addNewPatient:false,
+            height:'',
+            weight:'',
+            symptoms:''
         };
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
         this.handleTreatmentSearch = throttle(this.handleTreatmentSearch.bind(this), 2000);
         this.handleSeveritySearch = throttle(this.handleSeveritySearch.bind(this), 2000);
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000); 
+        this.handlePatientSearch = throttle(this.handlePatientSearch.bind(this), 2000); 
 
     }
 
@@ -70,7 +74,7 @@ class PatientDetailsDrawer extends Component {
         const {selectedPatientId,isdisabled,addNewPatient,mobile_number} = this.state;
         const {selectedPatientId : prev_selectedPatientId = null,addNewPatient: prev_addNewPatient } = prevState;
         const { basic_info:
-            { first_name, middle_name, last_name, gender } = {},
+            { first_name, middle_name, last_name, gender,height,weight } = {},
             dob , 
             details :{
                 allergies='',
@@ -86,11 +90,13 @@ class PatientDetailsDrawer extends Component {
                 mobile_number,
                 gender,
                 date_of_birth: moment(formattedDate),
+                height,
+                weight,
                 name:`${first_name} ${getName(middle_name)} ${getName(last_name)}`,
                 addNewPatient:false,
                 isdisabled:true,
                 allergies,
-                comorbidities
+                comorbidities,
             });
         }
 
@@ -103,8 +109,8 @@ class PatientDetailsDrawer extends Component {
                 gender: '',
                 date_of_birth: '',
                 treatment: '',
-                severity: '',
-                condition: '',
+                severity: null,
+                condition: null,
                 prefix: "91",
                 fetchingCondition: false,
                 fetchingTreatment: false,
@@ -115,7 +121,10 @@ class PatientDetailsDrawer extends Component {
                 clinical_notes:'',
                 diagnosis_description:'',
                 diagnosis_type:'2',
-                addNewPatient:false
+                addNewPatient:false,
+                height:'',
+                weight:'',
+                symptoms:''
             });
         }
 
@@ -170,6 +179,7 @@ class PatientDetailsDrawer extends Component {
                 const response = await searchPatientFromNum(data);
                 const { status, payload: {  data : {patient_ids:response_patient_ids = [] } } = {} } =
             response || {};
+            // console.log("Patient search Response =====>",response);
                 if (status) {
                     if(response_patient_ids.length>0){
                         this.setState({
@@ -291,6 +301,14 @@ class PatientDetailsDrawer extends Component {
         }
     }
 
+    setSymptoms = e => {
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0 || value === '') {
+            this.setState({ symptoms: e.target.value});
+        }
+    }
+
     setPastedClinicalNotes = e => {
         e.preventDefault();
         let pastedValue = '';
@@ -299,6 +317,17 @@ class PatientDetailsDrawer extends Component {
         }
         if (pastedValue.length>0 || pastedValue === '') {
             this.setState({ clinical_notes:pastedValue  });
+        }
+    }
+
+    setPastedSymptoms = e => {
+        e.preventDefault();
+        let pastedValue = '';
+        if(typeof(e.clipboardData) !== 'undefined'){
+            pastedValue = e.clipboardData.getData('text').trim();
+        }
+        if (pastedValue.length>0 || pastedValue === '') {
+            this.setState({ symptoms:pastedValue  });
         }
     }
 
@@ -361,7 +390,7 @@ class PatientDetailsDrawer extends Component {
         this.setState({ condition: value });
 
         const response = await searchTreatment(value);
-        const abcd = await searchTreatment();
+       
 
         const { status, payload: { data: { treatments = {} } = {}, message } = {} } = response;
         if (status) {
@@ -483,6 +512,22 @@ class PatientDetailsDrawer extends Component {
         }
     };
 
+    setHeight = (e) => {
+        const { value } = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+            this.setState({height: e.target.value });
+        }
+    }
+
+    setWeight = (e) => {
+        const { value } = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+            this.setState({weight: e.target.value });
+        }
+    }
+
     
 
     renderAddPatient = () => {
@@ -498,10 +543,10 @@ class PatientDetailsDrawer extends Component {
             month = '0' + month;
         }
 
-        const { mobile_number = '', name = '', condition = '',
+        const { mobile_number = '', name = '', condition = null,
         date_of_birth='', prefix = '',allergies='',comorbidities='',
         gender='',diagnosis_description='',clinical_notes='',
-        diagnosis_type='',isdisabled,addNewPatient,severity='',treatment='' } = this.state;
+        diagnosis_type='2',isdisabled,addNewPatient,severity='',treatment='',height='',weight='',symptoms='' } = this.state;
 
         const prefixSelector = (
 
@@ -541,7 +586,7 @@ class PatientDetailsDrawer extends Component {
        
 
         return (
-            <div className='form-block-ap'>
+            <div className='form-block-ap '>
                 <div className='form-headings flex align-center justify-start'>{this.formatMessage(messages.phoneNo)}<div className="star-red">*</div></div>
                
                     <Input
@@ -553,7 +598,7 @@ class PatientDetailsDrawer extends Component {
                     value={mobile_number}
                     onChange={this.setNumber}
                     
-                />
+                    />
                     
                     <div className="mh40">
                         {this.state.fetchingPatients 
@@ -569,7 +614,6 @@ class PatientDetailsDrawer extends Component {
                     placeholder="Select Name"
                     value={this.state.selectedPatientId}
                     onChange={this.setSearchedPatientId}
-                    
                     // notFoundContent={this.state.fetchingPatients ? <Spin size="small" /> : 'No match found'}
                     // showSearch
                     autoComplete="off"
@@ -605,6 +649,33 @@ class PatientDetailsDrawer extends Component {
                         <Radio.Button value={OTHER} onClick={this.setGender(OTHER)}>O</Radio.Button>
                     </Radio.Group>
                 </div>
+
+
+                <div className='form-headings-ap'>{this.formatMessage(messages.height)}</div>
+                <Input
+                    className={"form-inputs-ap"}
+                    placeholder={this.formatMessage(messages.height_placeholder)}
+                    // minLength={6}
+                    // maxLength={20}
+                    value={height}
+                    onChange={this.setHeight}
+                    disabled={isdisabled}
+                    
+                />
+
+
+
+                <div className='form-headings-ap'>{this.formatMessage(messages.weight)}</div>
+                <Input
+                    className={"form-inputs-ap"}
+                    placeholder={this.formatMessage(messages.weight_placeholder)}
+                    // minLength={6}
+                    // maxLength={20}
+                    value={weight}
+                    onChange={this.setWeight}
+                    disabled={isdisabled}
+                    
+                />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.dob)}<div className="star-red">*</div></div>
 
@@ -651,9 +722,20 @@ class PatientDetailsDrawer extends Component {
                     onPaste={this.setPastedClinicalNotes}
                 />
 
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.symptoms)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={symptoms}
+                    className={"form-textarea-ap "}
+                    onChange={this.setSymptoms}
+                    onPaste={this.setPastedSymptoms}
+                />
+
                 <div className='form-headings-ap flex  justify-space-between'>
                     <div className="flex direction-column align-center justify-center" >
-                        <div className="flex direction-row "  key="diagnosys-h" >
+                        <div className="flex direction-row "  key="diagnosis-h" >
                             {this.formatMessage(messages.diagnosis)}
                             <div className="star-red">*</div>
                         </div>
@@ -759,7 +841,7 @@ class PatientDetailsDrawer extends Component {
 
     validateData = () => {
         
-        const { mobile_number = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type= '' } = this.state;
+        const { mobile_number = '', date_of_birth = '', treatment = '', severity = null, condition = null, prefix = '',diagnosis_description='',diagnosis_type= '' } = this.state;
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
 
         if (!prefix) {
@@ -795,11 +877,11 @@ class PatientDetailsDrawer extends Component {
 
     onSubmit = () => {
 
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='' } = this.state;
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='',height='',weight='', symptoms='' } = this.state;
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
-            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes})
+            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms})
         }
     }
 
@@ -815,8 +897,8 @@ class PatientDetailsDrawer extends Component {
             gender: '',
             date_of_birth: '',
             treatment: '',
-            severity: '',
-            condition: '',
+            severity: null,
+            condition: null,
             prefix: "91",
             fetchingCondition: false,
             fetchingTreatment: false,
@@ -830,12 +912,16 @@ class PatientDetailsDrawer extends Component {
             patient_ids:[],
             isdisabled:true,
             selectedPatientId:null,
-            addNewPatient:false
+            addNewPatient:false,
+            height:'',
+            weight:'',
+            symptoms:''
         });
         close();
     };
 
     render() {
+        console.log("Props Add Patient =================>",this.props);
         const { visible } = this.props;
         const { onClose, renderAddPatient } = this;
 
@@ -855,7 +941,7 @@ class PatientDetailsDrawer extends Component {
                     }}
                     onClose={onClose}
                     visible={visible} // todo: change as per state, -- WIP --
-                    width={400}
+                    width={'30%'}
                 >
                     {renderAddPatient()}
                     <div className='add-patient-footer'>

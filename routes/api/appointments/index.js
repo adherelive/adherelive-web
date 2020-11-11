@@ -4,6 +4,7 @@ const router = express.Router();
 import Authenticate from "../middleware/auth";
 import Appointment from "../../../app/controllers/appointments/appointment.controller";
 import * as validator from "./validator";
+import { isDoctor } from "../middleware/doctor";
 
 
 router.get(
@@ -11,6 +12,16 @@ router.get(
     Authenticate,
     Appointment.getAppointmentDetails
 );
+
+
+
+router.get(
+    "/missed",
+    Authenticate,
+    isDoctor,
+    Appointment.getAllMissedAppointments
+)
+
 
 router.get(
     "/:id",
@@ -44,5 +55,6 @@ router.delete(
     Authenticate,
     Appointment.delete
 );
+
 
 module.exports = router;

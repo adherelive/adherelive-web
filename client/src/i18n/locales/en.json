@@ -167,7 +167,7 @@
   "app.dashboard.header.dashboard": "Dashboard",
   "app.dashboard.header.report": "Report",
   "app.doctorOnBoarding.add1PhotoError": "Please add at least 1 photo for education.",
-  "app.doctorOnBoarding.add1PhotoRegError": "Please add at least 1 photo for registration.",
+  "app.doctorOnBoarding.add1PhotoRegError": "Please add at least 1 registraion document photo.",
   "app.doctorOnBoarding.addManually": "Or add manually",
   "app.doctorOnBoarding.addMore": "Add More",
   "app.doctorOnBoarding.address": "Address",

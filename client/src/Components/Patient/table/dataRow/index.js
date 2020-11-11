@@ -13,15 +13,13 @@ export default data => {
       chatData,
       addToWatchlist,
       doctorData,
-      onRowClick
-    },
-    [TABLE_COLUMN.WATCHLIST.dataIndex]: {
-      patientData,
-      addToWatchlist,
-      doctorData,
+      onRowClick,
       removePatientFromWatchlist
     },
-    [TABLE_COLUMN.CONDITION.dataIndex]: {
+    // [TABLE_COLUMN.CONDITION.dataIndex]: {
+    //   patientData
+    // },
+    [TABLE_COLUMN.DIAGNOSIS.dataIndex]: {
       patientData
     },
     [TABLE_COLUMN.TREATMENT.dataIndex]: {
@@ -32,9 +30,9 @@ export default data => {
       treatmentData,
       carePlanData
     },
-    [TABLE_COLUMN.AGE.dataIndex]: {
-      patientData
-    },
+    // [TABLE_COLUMN.AGE.dataIndex]: {
+    //   patientData
+    // },
     [TABLE_COLUMN.START_DATE.dataIndex]: {
       treatmentData,
       carePlanData

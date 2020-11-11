@@ -11,7 +11,7 @@ import SymptomService from "../../services/symptom/symptom.service";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import SymptomWrapper from "../../ApiWrapper/web/symptoms";
-import {EVENT_TYPE} from "../../../constant";
+import {EVENT_STATUS, EVENT_TYPE} from "../../../constant";
 
 const Log = new Logger("WEB > EVENT > CONTROLLER");
 
@@ -123,6 +123,34 @@ class EventController extends Controller {
 
         } catch(error) {
             Log.debug("getAllEvents 500 error", error);
+            return raiseServerError(res);
+        }
+    };
+
+    markEventComplete = async (req, res) => {
+        const {raiseSuccess, raiseServerError} = this;
+        try {
+            const {params: {id} = {}} = req;
+            const EventService = new eventService();
+            const markEventComplete = await EventService.update({status: EVENT_STATUS.COMPLETED}, id);
+
+            Log.debug("1982732178 markEventComplete ---> ", markEventComplete);
+
+            const event = await EventWrapper(null, id);
+            const {appointments = {}, schedule_events = {}} = await event.getReferenceInfo();
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                    appointments,
+                    schedule_events,
+                },
+                "Event completed successfully"
+            );
+
+        } catch(error) {
+            Log.debug("markEventComplete 500 error", error);
             return raiseServerError(res);
         }
     };

@@ -11,6 +11,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Condition"
   },
+  diagnosis: {
+    id: "app.patient.table.diagnosis",
+    description: "",
+    defaultMessage: "Diagnosis"
+  },
   treatment: {
     id: "app.patient.table.treatment",
     description: "",

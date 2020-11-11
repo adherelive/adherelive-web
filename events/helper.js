@@ -207,6 +207,7 @@ export const handleVitals = async vital => {
   try {
     const {
       patient_id,
+      patientUserId,
       event_id,
       start_date,
       end_date,
@@ -219,7 +220,7 @@ export const handleVitals = async vital => {
       vital_templates = {}
     } = vital || {};
 
-    const timings = await getUserPreferences(patient_id);
+    const timings = await getUserPreferences(patientUserId);
 
     const vitalData = await FeatureDetailService.getDetailsByData({
       feature_type: FEATURE_TYPE.VITAL
@@ -308,6 +309,7 @@ export const handleVitals = async vital => {
         while (moment(endOfDay).diff(moment(ongoingTime), "minutes") > 0) {
           const hours = moment(ongoingTime).get("hours");
           const minutes = moment(ongoingTime).get("minutes");
+
           scheduleEventArr.push({
             event_id,
             critical,
@@ -328,8 +330,9 @@ export const handleVitals = async vital => {
               participants,
               actor,
               vital_templates,
-              eventId: event_id
-            }
+              eventId: event_id,
+              patient_id
+            },
           });
           // const scheduleData = {
           //     event_id,

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, Select, Input, message, Button, TimePicker, Modal } from "antd";
 
-import { MEDICATION_TIMING, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
+import { MEDICATION_TIMING,DAYS,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
@@ -401,11 +401,32 @@ class TemplateDrawer extends Component {
 
                 </div>
                 {medicationKeys.map(key => {
-                    let { medicine, medicineType, schedule_data: { when_to_take = '', start_date = moment(), medicine_type = '1' } = {}, } = medications[key];
+                    let { medicine, medicineType, schedule_data: { when_to_take = '', start_date = moment(), medicine_type = '1' ,repeat_days=[]} = {}, } = medications[key];
                     when_to_take.sort();
                     let nextDueTime = moment().format('HH:MM A');
                     let closestWhenToTake = 0;
                     let minDiff = 0;
+
+                    const date = moment(); 
+                    const dow = date.day();
+                    let dayNum = dow;
+
+                    if(typeof(DAYS_TEXT_NUM_SHORT[dow]) !== 'undefined' && !repeat_days.includes(DAYS_TEXT_NUM_SHORT[dow])){
+                        while( typeof(DAYS_TEXT_NUM_SHORT[dayNum]) !== 'undefined' && !(repeat_days.includes(DAYS_TEXT_NUM_SHORT[dayNum]))){
+                            if(dayNum > 7){
+                                dayNum =1
+                            }
+                            else{
+                                dayNum ++;
+                            }
+
+                        }
+                        start_date=moment().isoWeekday(dayNum);
+                    }
+                    // else{
+                    //     console.log("Today is ",DAYS_TEXT_NUM_SHORT[dow],"and is included in ",repeat_days);
+                    // }
+
                     if (moment(start_date).isSame(moment(), 'D')) {
                         for (let wtt of when_to_take) {
                             let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
@@ -420,7 +441,7 @@ class TemplateDrawer extends Component {
                     }
                     nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
                     
-                    
+
                     let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
                     return (
                         <div className='flex wp100 flex-grow-1 align-center' key={key}>
@@ -522,7 +543,7 @@ class TemplateDrawer extends Component {
         let templateDataExists = (Object.values(medications).length && Object.values(appointments).length) ? true : false;
 
         if (templateDataExists) {
-            if (Object.values(medications).length === templateMedicationIDs.length && Object.values(appointments).length === templateAppointmentIDs.length) {
+            if (Object.values(medications).length === templateMedicationIDs.length || Object.values(appointments).length === templateAppointmentIDs.length) {
 
                 if (templateEdited) {
                     this.setState({ showTemplateNameModal: true });

@@ -32,15 +32,24 @@ export const db = database => {
       },
       first_name: {
         type: DataTypes.STRING(100),
-        allowNull: true
+        allowNull: true,
+        set(value) {
+          this.setDataValue('first_name',  value.charAt(0).toUpperCase()+value.slice(1));
+        }
       },
       middle_name: {
         type: DataTypes.STRING(100),
-        allowNull: true
+        allowNull: true,
+        set(value) {
+          this.setDataValue('middle_name',  value.charAt(0).toUpperCase()+value.slice(1));
+        }
       },
       last_name: {
         type: DataTypes.STRING(100),
-        allowNull: true
+        allowNull: true,
+        set(value) {
+          this.setDataValue('last_name',  value.charAt(0).toUpperCase()+value.slice(1));
+        }
       },
       age: {
         type: DataTypes.STRING
@@ -51,6 +60,14 @@ export const db = database => {
       },
       address: {
         type: DataTypes.STRING
+      },
+      height :{
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      weight:{
+        type: DataTypes.STRING,
+        allowNull: true
       },
       activated_on: {
         type: DataTypes.DATE
@@ -76,7 +93,9 @@ export const db = database => {
             last_name: this.last_name,
             address: this.address,
             activated_on: this.activated_on,
-            details: this.details
+            details: this.details,
+            height:this.height,
+            weight:this.weight
           };
         },
         getId() {

@@ -17,3 +17,12 @@ export const getRequestConsentUrl = (id) => {
 export const getConsentVerifyUrl = () => {
   return `/patients/consents/verify`;
 };
+
+
+export const searchPatientForDoctorUrl = (value) => {
+  return `/patients/searchpatient?value=${value}`;
+};
+
+export const addCareplanForPatientUrl = (id) => {
+  return `/patients/addCareplanForPatient/${id}`;
+}
