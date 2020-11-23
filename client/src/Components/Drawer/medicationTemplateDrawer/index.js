@@ -618,26 +618,55 @@ class TemplateDrawer extends Component {
                 id: patientId,
                 category: "patient",
             }
-            if (!date && !start_time && !end_time) {
-                // let currMinutes=moment().minutes();
-                let minutesToAdd = 30 - (moment().minutes()) % 30;
-                appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
-                appointmentsData[appointment].schedule_data.end_time = moment(appointmentsData[appointment].schedule_data.start_time).add('days', parseInt(time_gap)).add('minutes', 30);
-                appointmentsData[appointment].schedule_data.date = moment().add('days', 18);
-                // appointmentsData[appointment].schedule_data.type = type;
-                // appointmentsData[appointment].schedule_data.type_description =type_description ;
-                // appointmentsData[appointment].schedule_data.critical = critical;
+
+            let updatedDate = null;
+            let minutesToAdd = 30 - (moment().minutes()) % 30;
+
+            if(!date) {
+                updatedDate = moment().add('days', time_gap);
+                appointmentsData[appointment].schedule_data.date = updatedDate;
             }
-            if (!date) {
-                appointmentsData[appointment].schedule_data.date = reason == 'Checking of Vitals' ? moment().add('days', 14) : moment().add('days', 18);
+
+            if(!start_time) {
+                if(!date) {
+                    appointmentsData[appointment].schedule_data.start_time = moment(updatedDate).add("minutes", minutesToAdd);
+                } else {
+                    appointmentsData[appointment].schedule_data.start_time = moment(date).add("minutes", minutesToAdd);
+                }
             }
-            if (!start_time) {
-                let minutesToAdd = 30 - (moment().minutes()) % 30;
-                appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
+
+            if(!end_time) {
+                if(!date) {
+                    appointmentsData[appointment].schedule_data.end_time = moment(updatedDate).add("minutes", minutesToAdd + 30);
+                } else {
+                    appointmentsData[appointment].schedule_data.end_time = moment(date).add("minutes", minutesToAdd + 30);
+                }
             }
-            if (!end_time) {
-                appointmentsData[appointment].schedule_data.end_time = moment(appointmentsData[appointment].schedule_data.start_time).add('days', parseInt(time_gap)).add('minutes', 30);
-            }
+
+
+
+            // if (!date && !start_time && !end_time) {
+            //     // let currMinutes=moment().minutes();
+            //     let minutesToAdd = 30 - (moment().minutes()) % 30;
+            //     appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
+            //     appointmentsData[appointment].schedule_data.end_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd + 45);
+            //     appointmentsData[appointment].schedule_data.date = moment().add('days', 18);
+
+            // console.log("9821731298389 ", {start_time, end_time, date, minutesToAdd, appointmentData: appointmentsData[appointment]});
+            //     // appointmentsData[appointment].schedule_data.type = type;
+            //     // appointmentsData[appointment].schedule_data.type_description =type_description ;
+            //     // appointmentsData[appointment].schedule_data.critical = critical;
+            // }
+            // if (!date) {
+            //     appointmentsData[appointment].schedule_data.date = reason == 'Checking of Vitals' ? moment().add('days', 14) : moment().add('days', 18);
+            // }
+            // if (!start_time) {
+            //     let minutesToAdd = 30 - (moment().minutes()) % 30;
+            //     appointmentsData[appointment].schedule_data.start_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
+            // }
+            // if (!end_time && start_time) {
+            //     appointmentsData[appointment].schedule_data.end_time = moment().add('days', parseInt(time_gap)).add('minutes', minutesToAdd);
+            // }
             if (!treatment_id) {
                 const { carePlan: { treatment_id: cPtreat = 0 } = {} } = this.props;
                 appointmentsData[appointment].schedule_data.treatment_id = cPtreat;

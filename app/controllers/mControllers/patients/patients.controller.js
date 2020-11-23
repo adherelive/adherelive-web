@@ -193,8 +193,8 @@ class MPatientController extends Controller {
       const patientData = {
         user_id: userId,
         first_name: splitName[0],
-        middle_name: splitName.length > 2 ? splitName[2] : null,
-        last_name: splitName.length > 1 ? splitName[1] : null,
+        middle_name: splitName.length > 2 ? splitName[2] : "",
+        last_name: splitName.length > 1 ? splitName[1] : "",
         ...prevBasicInfo,
         details: {
           // todo: profile_pic
@@ -271,7 +271,7 @@ class MPatientController extends Controller {
           schedule_events: {
             ...scheduleEventData
           },
-          appointment_ids
+          appointment_ids: Object.keys(appointmentApiData)
         },
         `appointment data for patient: ${id} fetched successfully`
       );
@@ -847,12 +847,10 @@ class MPatientController extends Controller {
   getPatientVitals = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
-      const { params: { patient_id } = {} } = req;
+      Logger.debug("34554321345324", req.params);
+      const {params: {careplan_id} = {}} = req;
 
-      const carePlan = await carePlanService.getSingleCarePlanByData({
-        patient_id
-      });
+      const carePlan = await carePlanService.getSingleCarePlanByData({id:careplan_id});
       const allVitals = await VitalService.getAllByData({
         care_plan_id: carePlan.get("id")
       });

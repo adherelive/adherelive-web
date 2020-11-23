@@ -51,7 +51,7 @@ router.get(
 );
 
 router.get(
-  "/:patient_id/vitals",
+  "/:careplan_id/vitals",
   Authenticated,
   PatientController.getPatientVitals
 );

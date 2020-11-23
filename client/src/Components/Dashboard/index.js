@@ -45,12 +45,13 @@ class Dashboard extends Component {
             patient_ids:[],
             appointmentDrawerVisible:false,
             vitalDrawerVisisble:false,
-            medicationDrawerVisible:false,          
+            medicationDrawerVisible:false,
+            showModal: false,
         };
     }
 
     componentDidMount() {
-        const {addToWatchlist} = this.props;
+        const {addToWatchlist, authPermissions = []} = this.props;
         const { searchMedicine, getGraphs, doctors = {}, authenticated_user, closePopUp, fetchChatAccessToken } = this.props;
         closePopUp();
         let doctorUserId = '';   //user_id of doctor
@@ -67,6 +68,10 @@ class Dashboard extends Component {
                 this.setState({ graphsToShow: [...charts], graphLoading: false });
             }
         });
+
+        if(authPermissions.length === 0) {
+            this.setState({showModal: true});
+        }
         fetchChatAccessToken(authenticated_user);
         searchMedicine("");
       
@@ -240,11 +245,12 @@ class Dashboard extends Component {
 
     getVerifyModal = () => {
         const {showVerifyModal = false} = this.props;
+        const {showModal} = this.state;
         return (
             <div className="wp100 flex justify-center align-center">
                 <Modal
                     className="mt62"
-                    visible={showVerifyModal}
+                    visible={showVerifyModal} //showModal
                     // title={' '}
                     closable
                     mask
@@ -300,7 +306,7 @@ class Dashboard extends Component {
         let { basic_info: { user_id: patientUserId = '', first_name = '', middle_name = '', last_name = '' } = {}, details: { profile_pic: patientDp = '' } = {} } = patients[chatPatientId] || {};
 
 
-        const { visible, graphsToShow, visibleModal, doctorUserId } = this.state;
+        const { visible, graphsToShow, visibleModal, doctorUserId, showModal } = this.state;
 
         const roomId = getRoomId(doctorUserId, patientUserId);
         console.log("198381239 roomId", roomId);
@@ -427,6 +433,7 @@ class Dashboard extends Component {
                 
 
                 {showVerifyModal && getVerifyModal()}
+                {/*{showModal && getVerifyModal()}*/}
             </Fragment>
         );
     }

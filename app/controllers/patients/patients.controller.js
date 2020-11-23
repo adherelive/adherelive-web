@@ -513,11 +513,12 @@ class PatientController extends Controller {
     getPatientVitals = async (req, res) => {
         const { raiseSuccess, raiseServerError, raiseClientError } = this;
         try {
-            Logger.debug("req.params ----->", req.params);
-            const {params: {patient_id} = {}} = req;
+            Logger.debug("3455432134532476567897", req.params);
+            const {params: {careplan_id} = {}} = req;
 
-            const carePlan = await carePlanService.getSingleCarePlanByData({patient_id});
+            const carePlan = await carePlanService.getSingleCarePlanByData({id:careplan_id});
             const allVitals = await VitalService.getAllByData({care_plan_id: carePlan.get("id")});
+            Logger.debug("786768767876757687",allVitals);
 
             let vitalDetails = {};
             let vitalTemplateDetails = {};
