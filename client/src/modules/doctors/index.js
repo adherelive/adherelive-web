@@ -12,7 +12,8 @@ import {
   getDoctorPaymentProductUrl,
   addDoctorPaymentPoductUrl,
   addRazorpayIdUrl,
-  patientWatchlistUrl
+  patientWatchlistUrl,
+  updatePatientAndCareplanUrl
 } from "../../Helper/urls/doctor";
 import { accountDetailsUrl } from "../../Helper/urls/accounts";
 
@@ -76,6 +77,10 @@ export const DELETE_DOCTOR_PAYMENT_PRODUCT_FAILED =
 // export const GET_ACCOUNT_DETAILS_COMPLETE = "GET_ACCOUNT_DETAILS_COMPLETE";
 // export const GET_ACCOUNT_DETAILS_FAILED = "GET_ACCOUNT_DETAILS_FAILED";
 
+export const UPDATE_PATIENT_AND_CAREPLAN ="UPDATE_PATIENT_AND_CAREPLAN";
+export const UPDATE_PATIENT_AND_CAREPLAN_COMPLETE = "UPDATE_PATIENT_AND_CAREPLAN_COMPLETE";
+export const UPDATE_PATIENT_AND_CAREPLAN_FAILED = "UPDATE_PATIENT_AND_CAREPLAN_FAILED";
+
 export const ADD_RAZORPAY_ID = "ADD_RAZORPAY_ID";
 export const ADD_RAZORPAY_ID_COMPLETE = "ADD_RAZORPAY_ID_COMPLETE";
 export const ADD_RAZORPAY_ID_FAILED = "ADD_RAZORPAY_ID_FAILED";
@@ -110,6 +115,39 @@ export const updateDoctor = (user_id, updateData) => {
     return response;
   };
 };
+
+
+export const updatePatientAndCareplan = (careplan_id,payload) => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: UPDATE_PATIENT_AND_CAREPLAN });
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: updatePatientAndCareplanUrl(careplan_id),
+        data: payload
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: UPDATE_PATIENT_AND_CAREPLAN_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: UPDATE_PATIENT_AND_CAREPLAN_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("UPDATE_PATIENT_AND_CAREPLAN ERROR --> ", error);
+    }
+    return response;
+  };
+};
+
 
 export const getAdminPaymentProduct = () => {
   let response = {};

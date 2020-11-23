@@ -95,3 +95,7 @@ export const getDoctorPaymentProductUrl = () => {
 export const addDoctorPaymentPoductUrl = () => {
   return `/doctors/consultations`;
 };
+
+export const updatePatientAndCareplanUrl = (careplan_id) => {
+  return `/doctors/updatePatient_careplan/${careplan_id}`;
+};

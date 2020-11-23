@@ -116,7 +116,9 @@ const mapDispatchToProps = dispatch => {
     markAppointmentComplete: (id) => dispatch(markAppointmentComplete(id)),
     openAddCareplanDrawer: payload =>
       dispatch(open({ type: DRAWER.ADD_CAREPLAN, payload })),
-    addCareplanForPatient : (patient_id,data) => dispatch(addCareplanForPatient(patient_id,data))
+    addCareplanForPatient : (patient_id,data) => dispatch(addCareplanForPatient(patient_id,data)),
+    openEditPatientDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_PATIENT, payload }))
+
  
   };
 };

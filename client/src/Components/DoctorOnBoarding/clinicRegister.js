@@ -321,6 +321,7 @@ class ClinicRegister extends Component {
                 const { status, message: errorMessage } = response;
                 if (status) {
                     showVerifyModal(true);
+                    // message.success(this.formatMessage(messages.successgetAdminVerified))
                     history.replace(PATH.DASHBOARD);
                 } else {
                     message.error(errorMessage);

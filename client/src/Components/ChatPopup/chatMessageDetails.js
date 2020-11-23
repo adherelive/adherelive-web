@@ -621,27 +621,26 @@ class ChatMessageDetails extends Component {
         } else {
           messageToRender.push(
             <div className="wp100 flex justify-start">
-              <div className="flex direction-column">
-                <div className="bg-other-message wp40 mt10 mb10 ml10 mr10 p10 br5 fs16 fw500 word-wrap">
-                  {body}
+                <div className="direction-column bg-other-message wp40 mt10 mb10 ml10 mr10 p10 br5 fs16 fw500 word-wrap">
+                  <div className="fs16 fw600 word-wrap">{body}</div>
+                  {/* date here */}
+                  <div className="flex justify-space-between mr-4 pl6 pr6">
+                    <div>{moment(message.state.timestamp).format("h:mm A")}</div>
+                    <img
+                        className={
+                          index < otherUserLastConsumedMessageIndex
+                              ? `h14 mt4`
+                              : `h12 mt4`
+                        }
+                        src={
+                          index <= otherUserLastConsumedMessageIndex
+                              ? DoubleTick
+                              : SingleTick
+                        }
+                    />
+                  </div>
                 </div>
-                {/* date here */}
-                <div className="flex justify-space-between mr-4 pl6 pr6">
-                  <div>{moment(message.state.timestamp).format("h:mm A")}</div>
-                  <img
-                    className={
-                      index < otherUserLastConsumedMessageIndex
-                        ? `h14 mt4`
-                        : `h12 mt4`
-                    }
-                    src={
-                      index <= otherUserLastConsumedMessageIndex
-                        ? DoubleTick
-                        : SingleTick
-                    }
-                  />
-                </div>
-              </div>
+
             </div>
           );
         }

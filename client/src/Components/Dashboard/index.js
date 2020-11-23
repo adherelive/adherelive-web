@@ -7,6 +7,8 @@ import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
 import Watchlist from "../../Containers/Patient/watchlist";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
+import EditPatientDrawer from "../../Containers/Drawer/editPatientDrawer";
+
 import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
 import Loading from "../Common/Loading";
@@ -421,6 +423,8 @@ class Dashboard extends Component {
                 {...this.props}
                 />
 
+                <EditPatientDrawer/>
+                
 
                 {showVerifyModal && getVerifyModal()}
             </Fragment>

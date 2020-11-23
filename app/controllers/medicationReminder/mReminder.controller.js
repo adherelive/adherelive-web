@@ -211,6 +211,7 @@ class MReminderController extends Controller {
   };
 
   createCarePlanMedication = async (req, res) => {
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
       const {
         body,
@@ -218,12 +219,6 @@ class MReminderController extends Controller {
         params: { patient_id, carePlanId: care_plan_id = 0 } = {}
       } = req;
 
-      console.log(
-        "medicineDetails **********--------> ",
-        care_plan_id,
-        typeof care_plan_id
-      );
-      // todo: get patient_id from url
       const {
         start_date,
         end_date,
@@ -241,6 +236,41 @@ class MReminderController extends Controller {
         start_time,
         critical = false
       } = body;
+
+
+      const patient_temp = await PatientWrapper(null, patient_id);
+      const {care_plan_id : care_plan_id_temp } = await patient_temp.getAllInfo();
+
+        let flag_temp =true;
+        const eachCareplan_temp = await CarePlanWrapper(null,care_plan_id_temp);
+        const {medication_ids : medication_ids_temp} = await eachCareplan_temp.getAllInfo(); 
+
+        for(let eachMId of medication_ids_temp){
+          const medicationWrapper_temp  = await MedicationWrapper(null,eachMId); 
+          const abc = await medicationWrapper_temp.getBasicInfo();
+          const {basic_info : {details : { medicine_id :  medicine_id_temp = ''} = {}} = {}} = abc;
+          if(medicine_id_temp === medicine_id){
+            flag_temp=false;
+            break;
+          }
+
+        }
+
+
+        if(flag_temp === false){
+          return raiseClientError(res, 422, {}, "Medication already added for the patient");
+        }
+
+      
+      console.log(
+        "medicineDetails **********--------> ",
+        care_plan_id,
+        typeof care_plan_id
+      );
+
+      
+      // todo: get patient_id from url
+    
       const { userId, userData: { category } = {} } = userDetails || {};
 
       const medicineDetails = await medicineService.getMedicineById(

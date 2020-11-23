@@ -89,7 +89,7 @@ const messages = defineMessages({
   pending_verify_content_text: {
     id: "app.dashboard.pending.verify.content.text",
     description: "",
-    defaultMessage: "The details provided are being verified and features will be activated soon"
+    defaultMessage: "The details provided are being verified. You will be able to add patient only after verification is complete"
   },
 });
 

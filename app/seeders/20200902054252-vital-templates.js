@@ -182,7 +182,33 @@ module.exports = {
         }),
         created_at: new Date(),
         updated_at: new Date()
-      }
+      },
+      {
+        name: "Blood Glucose",
+        unit: "mg/dL",
+        details: JSON.stringify({
+          template: [
+            {
+              id: "C1989A61-1515-4248-98B4-984774FFF531",
+              element: "NumberInput",
+              text: "Number Input",
+              placeholder: "mg/dL",
+              required: false,
+              canHaveAnswer: true,
+              canHavePageBreakBefore: true,
+              canHaveAlternateForm: true,
+              canHaveDisplayHorizontal: true,
+              canHaveOptionCorrect: true,
+              canHaveOptionValue: true,
+              field_name: "number_input_9580A8A2-DC82-4FD8-B210-BA383CD21E2D",
+              label: "milligrams per decilitre ",
+              dirty: false
+            }
+          ]
+        }),
+        created_at: new Date(),
+        updated_at: new Date()
+      },
     ]);
   },
 

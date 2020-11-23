@@ -44,6 +44,10 @@ export const TABLE_COLUMN = {
   DIAGNOSIS: {
     key: "DIAGNOSIS",
     dataIndex: "DIAGNOSIS"
+  },
+  EDIT: {
+    key: "EDIT",
+    dataIndex: "EDIT"
   }
 };
 
@@ -61,6 +65,7 @@ export const formatPatientTableData = data => {
     users,
     care_plans,
     authenticated_user,
+    openEditPatientDrawer
   } = data || {};
 
   let doctor_id = null;
@@ -153,5 +158,6 @@ export const formatPatientTableData = data => {
     treatmentData,
     chatData,
     carePlanData,
+    openEditPatientDrawer
   };
 };

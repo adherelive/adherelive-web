@@ -238,7 +238,7 @@ class Profileregister extends Component {
         } else if (!prefix) {
             message.error(this.formatMessage(messages.prefixError))
             return false;
-        } else if (mobile_number && mobile_number.length < 10 || !mobile_number) {
+        } else if (mobile_number && mobile_number.length < 6 || !mobile_number) {
             message.error(this.formatMessage(messages.mobNoError))
             return false;
         } else if (!email || !this.validateEmail(email)) {

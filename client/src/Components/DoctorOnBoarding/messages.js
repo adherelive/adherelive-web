@@ -342,11 +342,6 @@ const messages = defineMessages({
     description: "",
     defaultMessage: 'Landmark'
   },
-  addManually: {
-    id: "app.doctorOnBoarding.addManually",
-    description: "",
-    defaultMessage: 'Or add manually'
-  },
   startTime: {
     id: "app.doctorOnBoarding.startTime",
     description: "",

@@ -97,6 +97,8 @@ const addPatientForm = Joi.object().keys({
     .allow("")
 });
 
+
+
 const addQualificationRegistrationForm = Joi.object().keys({
     gender: Joi.string().required().label("Gender is required"),
     speciality_id: Joi.number().required().label("Speciality is required"),

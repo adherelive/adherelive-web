@@ -136,4 +136,11 @@ router.get(
   PaymentController.getAllAdminPaymentProduct
 );
 
+router.post(
+  "/updatePatient_careplan/:careplan_id",
+  Authenticate,
+  validator.validateAddPatientData,
+  mDoctorController.updatePatientAndCareplan
+)
+
 module.exports = router;

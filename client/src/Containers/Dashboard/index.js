@@ -22,8 +22,8 @@ const mapStateToProps = state => {
     const { graphs, auth: { authPermissions = [], authenticated_user = 1 } = {},
         treatments = {},
         conditions = {},
-        ui_features = {},
-        severity = {}, chats, drawer, twilio, patients, doctors ={}} = state;
+        pages: {ui_features = {}} = {},
+        severity = {}, chats, drawer, twilio, patients, doctors = {}} = state;
     return {
         graphs,
         treatments,
