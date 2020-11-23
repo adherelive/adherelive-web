@@ -486,6 +486,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Symptoms"
     },
+    edit_patient:{
+        id: "app.patient_profile.edit_patient",
+        description: "",
+        defaultMessage: "Edit Patient Details"
+    },
 
 
 });

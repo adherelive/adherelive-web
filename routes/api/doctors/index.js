@@ -97,6 +97,12 @@ router.post(
   PaymentController.addDoctorPaymentProduct
 );
 
+router.post(
+  "/updatePatient_careplan/:careplan_id",
+  Authenticate,
+  validator.validateAddPatientData,
+  DoctorController.updatePatientAndCareplan
+)
 
 router.delete(            
     "/consultations",

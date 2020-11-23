@@ -68,4 +68,6 @@ router.get(
   PatientController.generatePrescription
 );
 
+router.get("/timings", Authenticated, PatientController.getPatientTimings);
+
 module.exports = router;

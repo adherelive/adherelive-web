@@ -4,6 +4,7 @@ import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import plus_white from '../../../Assets/images/plus_white.png';
 import chat_image from "../../../Assets/images/chat.svg";
+
 import {
   GENDER,
   PERMISSIONS,
@@ -31,6 +32,8 @@ import PatientCarePlans from "./common/patientProfileCarePlans";
 
 import { MailOutlined, PhoneOutlined, MessageOutlined, VideoCameraOutlined, CaretDownOutlined } from "@ant-design/icons";
 import moment from "moment";
+import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
+
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddVitals from "../../../Containers/Drawer/addVitals";
 import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
@@ -317,15 +320,30 @@ const PatientCard = ({
   formatMessage,
   openChat,
     patients,
-    patient_id
+    patient_id,
+    editPatientOption
 }) => {
   const {details: {comorbidities, allergies} = {}} = patients[patient_id] || {};
   return (
     <div className="flex direction-column tac br10 bg-lighter-grey">
-      <div className="flex justify-end pt20 pl20 pr20 pb6">
-        <CaretDownOutlined className="pointer"/>
+      {/* <div className="flex justify-end pt20 pl20 pr20 pb6">
+        <CaretDownOutlined className="pointer" />
+      </div> */}
 
-      </div>
+      <div>
+        <Collapse ghost={true} expandIconPosition={"right"}  bordered={false} expandIcon={() => <CaretDownOutlined className="pointer" />}>
+          <Panel  key={"1"} style={{border:"none"}} className="br10">
+      
+            <div className="flex direction-row align-center tac">
+             {editPatientOption()}
+            </div>
+      
+          
+      
+          </Panel>
+        </Collapse>
+              </div>
+
       <div className="flex">
         <div className="flex align-start">
           <img
@@ -360,6 +378,18 @@ const PatientCard = ({
               <VideoCameraOutlined className="text-white fs18" />
               </Tooltip>
             </div>
+
+            
+            {/* <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer">
+              <Tooltip placement={"bottom"} title={formatMessage(messages.video_icon_text)}>
+              <div className="text-white fs18" >
+                      {editPatientOption()}
+
+              </div>
+              </Tooltip>
+            </div> */}
+
+
           </div>
         </div>
 
@@ -436,57 +466,58 @@ const PatientTreatmentCard = ({
   
 }) => {
   return (
-    <div className="treatment mt20 tac">
+    <div className="treatment mt20 tac ">
       <h3 >{formatMessage(messages.treatment_details)}</h3>
+      
       <div className="treatment-details pl16 pr16 ">
         
       <div className="flex direction-column mb14 mt20">
               <div className="fs16 fw600 ">{formatMessage(messages.treatment_header)}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_name}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_name}</div>
       </div>    
 
       
         <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.treatment_severity)}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_severity_status}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_severity_status}</div>
         </div>    
 
       
         <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.treatment_condition)}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_condition}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_condition}</div>
         </div>    
 
         <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.treatment_doctor)}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_doctor}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_doctor}</div>
         </div> 
 
 
         <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.treatment_start_date)}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_start_date}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_start_date}</div>
         </div>    
 
         <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.treatment_provider)}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_provider}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_provider}</div>
         </div>
 
         <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.clinical_notes)}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_clinical_notes}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_clinical_notes}</div>
         </div>
 
         <div className="flex direction-column mb14">
               <div className="fs16 fw600"> {formatMessage(messages.diagnosis_text)} : {treatment_diagnosis_type}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_diagnosis_description}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_diagnosis_description}</div>
         </div>
 
 
         <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.symptoms_text)}</div>
-              <div className="fs14 fw500 flex justify-center">{treatment_symptoms}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_symptoms}</div>
         </div>
 
       </div>
@@ -561,6 +592,10 @@ class PatientDetails extends Component {
       getLastVisitAlerts,
       show_template_drawer = {}
     } = this.props;
+
+
+
+
     const { show: showTd = false } = show_template_drawer;
     // let isCarePlanDataPresent = currentCarePlanId ? true : false;
     if (showTd) {
@@ -1359,6 +1394,100 @@ class PatientDetails extends Component {
     );
   };
 
+
+  editPatientOption = () => {
+       return (
+            <div className="flex direction-row justify-end  wp100 " >
+              <div onClick={this.handleEditPatientDrawer} className="pointer h30 flex direction-row  " >
+                  <div className="flex direction-column align-center justify-center  hp100   ">
+                    <span className="fw700 fs19 mr20">{this.formatMessage(messages.edit_patient)}</span> 
+                  </div  >
+                  <div className="flex direction-column align-center justify-center  hp100 " >
+                    <img src={edit_image} className="edit-patient-icon" />
+                  </div>
+              </div>
+              
+            </div>
+        )
+  }
+
+
+
+  handleEditPatientDrawer = (e) => {
+    e.preventDefault();
+    let {
+      patient_id : id,
+      patients,
+      doctors,
+      treatments = {},
+      severity: severities = {},
+      conditions = {},
+      chats,
+      chat_ids,
+      users,
+      care_plans,
+      authenticated_user,
+      openEditPatientDrawer
+    } = this.props;
+  
+    let doctor_id = null;
+
+    Object.keys(doctors).forEach(id => {
+      const { basic_info: { user_id } = {} } = doctors[id] || {};
+  
+  
+      if (user_id === authenticated_user) {
+        doctor_id = id;
+      }
+    });
+  
+    let patientData = patients[id] || {};
+    let treatment = "";
+    let condition = "";
+    let severity = "";
+  
+    let carePlanData = {};
+    for (let carePlan of Object.values(care_plans)) {
+      let { basic_info = {} } = carePlan || {};
+      let { doctor_id: doctorId = 1, patient_id, id: carePlanId = 1 } = basic_info;
+      if (`${doctorId}` === doctor_id) {
+        if(`${patient_id}` === id) {
+          let {
+            details: {
+              treatment_id: cTreatment = "",
+              condition_id: cCondition = "",
+              severity_id: cSeverity = ""
+            } = {}
+          } = carePlan || {};
+          let { basic_info: { name: treatmentName = "" } = {} } =
+          treatments[cTreatment] || {};
+          let { basic_info: { name: severityName = "" } = {} } =
+          severities[cSeverity] || {};
+          let { basic_info: { name: conditionName = "" } = {} } =
+          conditions[cCondition] || {};
+  
+          treatment = treatmentName;
+          condition = conditionName;
+          severity = severityName;
+  
+          carePlanData = {
+            ...care_plans[carePlanId],
+            treatment,
+            condition,
+            severity
+          };
+        }
+      }
+    }
+    
+
+    
+    patientData = { ...patients[id], treatment, condition, severity ,carePlanData  };
+  
+
+    openEditPatientDrawer({patientData,carePlanData});
+}
+
   render() {
     let {
       patients,
@@ -1593,7 +1722,10 @@ class PatientDetails extends Component {
                 openChat={openPopUp}
                 patients={patients}
                 patient_id={patient_id}
+                editPatientOption={this.editPatientOption}
               />
+
+            {/* {this.editPatientOption()} */}
 
               {/*<PatientCarePlans {...this.props}  />*/}
               <PatientCarePlans
@@ -1803,6 +1935,7 @@ class PatientDetails extends Component {
           )}
           <SymptomsDrawer />
           <VitalTimelineDrawer />
+          <EditPatientDrawer/>
         </div>
         <Modal
           visible={showOtpModal}

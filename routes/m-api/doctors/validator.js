@@ -95,6 +95,9 @@ const addPatientForm = Joi.object().keys({
     .allow("", null)
 });
 
+
+
+
 const validDOB = date => {
   return moment().diff(date, "d") <= 0;
 };

@@ -6,6 +6,9 @@ import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 import doctorsService from "../../services/doctors/doctors.service";
 import patientsService from "../../services/patients/patients.service";
+
+import patientService from "../../../app/services/patients/patients.service";
+
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
@@ -1243,7 +1246,7 @@ class DoctorController extends Controller {
           doctor_qualifications: {
             ...qualificationsData
           },
-          doctor_Registrations: {
+          doctor_registrations: {
             ...registrationsData
           },
           upload_documents: {
@@ -1732,20 +1735,20 @@ class DoctorController extends Controller {
         {
           registration_id: docRegistrationDetails.getDoctorRegistrationId(),
           doctors: {
-            [updatedDoctorData.getDoctorId()]: updatedDoctorData.getBasicInfo()
+            [updatedDoctorData.getDoctorId()]: updatedDoctorData.getBasicInfo(),
+            doctor_qualification_ids,
+            doctor_registration_ids
           },
           ...(await updatedDoctorData.getReferenceInfo()),
           doctor_qualifications: {
             ...qualificationsData
           },
-          doctor_Registrations: {
+          doctor_registrations: {
             ...registrationsData
           },
           upload_documents: {
             ...uploadDocumentsData
           },
-          doctor_qualification_ids,
-          doctor_registration_ids
         },
         "registration details updated successfully"
       );
@@ -2393,6 +2396,106 @@ class DoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  updatePatientAndCareplan = async (req,res) => {
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    try {
+      
+      const {  mobile_number = "",
+      name = "",
+      gender = "",
+      date_of_birth = "",
+      prefix = "",
+      comorbidities = "",
+      allergies = "",
+      clinical_notes = "",
+      diagnosis_type = "1",
+      diagnosis_description = "",
+      treatment_id,
+      severity_id,
+      condition_id,
+      height = "",
+      weight = "",
+      symptoms = ""} = req.body;
+
+      
+  
+        const {params: {careplan_id} = {}, userDetails: {userId} = {}} = req;
+        const  carePlanData = await CarePlanWrapper(null, careplan_id);
+        const patient_id = await carePlanData.getPatientId();
+        const initialPatientData = await PatientWrapper(null,patient_id);
+        
+        const previousDetails = (await initialPatientData.getDetails()) || {};
+        const { basic_info: prevBasicInfo } =
+          initialPatientData.getBasicInfo() || {};
+  
+        const patientUpdateData = {
+          ...prevBasicInfo,
+          details: {
+            ...previousDetails,
+            allergies ,
+            comorbidities 
+          }
+        };
+  
+        const updatedPatient = await patientService.update(
+          patientUpdateData,patient_id
+          );
+
+         const updatedpatientDetails =  await PatientWrapper(null,patient_id);
+
+         const  initialCarePlanData = await CarePlanWrapper(null, careplan_id);
+         const previousCareplanDetails = (await initialCarePlanData.getCarePlanDetails()) || {};
+        const { basic_info: prevCareplanBasicInfo } =
+          initialCarePlanData.getBasicInfo() || {};
+  
+        const carePlanUpdateData = {
+          ...prevCareplanBasicInfo,
+          details: {
+            ...previousCareplanDetails,
+            clinical_notes,
+            treatment_id,
+            severity_id,
+            condition_id,
+            symptoms,
+             diagnosis:
+             {type: diagnosis_type,
+              description: diagnosis_description}
+            
+          }
+        };
+
+
+        const updatedCareplanId = await carePlanService.updateCarePlan(
+          carePlanUpdateData,careplan_id
+            );
+
+        const updatedCareplanDetails = await CarePlanWrapper(null,careplan_id);
+        
+
+  return this.raiseSuccess(
+      res,
+      200,
+      {
+        care_plan_ids: [initialCarePlanData.getCarePlanId()],
+        care_plans: {
+          [initialCarePlanData.getCarePlanId()]: updatedCareplanDetails.getBasicInfo()
+        },
+        patients: {
+          [initialPatientData.getPatientId()]: updatedpatientDetails.getBasicInfo()
+        },
+
+      },
+      "Careplan added successfully"
+  );
+
+      } catch (error) {
+        Logger.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
+        return raiseServerError(res);
+      }
+}
+
+
 }
 
 export default new DoctorController();

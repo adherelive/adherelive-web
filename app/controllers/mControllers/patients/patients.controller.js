@@ -20,6 +20,7 @@ import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
 import RegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import CouncilWrapper from "../../../ApiWrapper/mobile/council";
 import ConditionWrapper from "../../../ApiWrapper/mobile/conditions";
+import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
 
 import { randomString } from "../../../../libs/helper";
 import Log from "../../../../libs/log";
@@ -91,14 +92,32 @@ class MPatientController extends Controller {
 
       if (Object.keys(timings).length > 0) {
         const { value } = timings["1"];
-        const addTimingPreference = await UserPreferenceService.addUserPreference(
-          {
+        const prevUserPreference = await UserPreferenceService.getPreferenceByData(
+          { user_id: userId }
+        );
+        let addTimingPreference = null;
+        if (!prevUserPreference) {
+          addTimingPreference = await UserPreferenceService.addUserPreference({
             user_id: userId,
             details: {
               timings
             }
-          }
-        );
+          });
+        } else {
+          const userPreferenceWrapper = await UserPreferenceWrapper(
+            prevUserPreference
+          );
+          const userPreferenceId = userPreferenceWrapper.getUserPreferenceId();
+          addTimingPreference = await UserPreferenceService.updateUserPreferenceData(
+            {
+              user_id: userId,
+              details: {
+                timings
+              }
+            },
+            userPreferenceId
+          );
+        }
         // Logger.debug("addTimingPreference", addTimingPreference);
       }
 
@@ -1408,6 +1427,31 @@ class MPatientController extends Controller {
       return res.sendFile(pdfFile, options);
     } catch (err) {
       Logger.debug("Error got in the generate prescription: ", err);
+      return raiseServerError(res);
+    }
+  };
+
+  getPatientTimings = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { userDetails: { userId } = {} } = req;
+      const userPreference = await UserPreferenceService.getPreferenceByData({
+        user_id: userId
+      });
+      const userPreferenceWrapper = await UserPreferenceWrapper(userPreference);
+      const userPreferenceData = userPreferenceWrapper.getBasicInfo();
+      return raiseSuccess(
+        res,
+        201,
+        {
+          user_preference: {
+            ...userPreferenceData
+          }
+        },
+        "User preference fetched successfully."
+      );
+    } catch (err) {
+      Logger.debug("Error got in the get patient timings: ", err);
       return raiseServerError(res);
     }
   };

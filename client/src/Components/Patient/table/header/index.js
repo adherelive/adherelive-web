@@ -7,6 +7,7 @@ import PID from "../datacolumn/pid";
 import Diagnosis from "../datacolumn/diagnosis";
 import Treatment from "../datacolumn/treatment";
 import Severity from "../datacolumn/severity";
+import EditPatientColumn from "../datacolumn/editColumn";
 import Age from "../datacolumn/age";
 import StartDate from "../datacolumn/startDate";
 import Doctor from "../datacolumn/doctor";
@@ -14,8 +15,10 @@ import Provider from "../datacolumn/provider";
 import NewSymptoms from "../datacolumn/newSymptoms";
 import Watchlist from "../datacolumn/watchlist";
 
+
 export default props => {
   const { formatMessage } = props || {};
+
 
   return [
     {
@@ -65,6 +68,20 @@ export default props => {
       title: formatMessage(messages.new_symptoms),
       ...TABLE_COLUMN.NEW_SYMPTOMS,
       render: patientData => <NewSymptoms {...patientData} />
+    },
+    {
+      title:"",
+      ...TABLE_COLUMN.EDIT,
+      render : data => {
+        const {  patientData,
+          carePlanData,
+          openEditPatientDrawer} = data;
+          return (
+            <EditPatientColumn patientData={patientData} carePlanData={carePlanData}  openEditPatientDrawer={openEditPatientDrawer} />
+          )
+
+       
+      }
     }
   ];
 };
