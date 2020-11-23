@@ -47,7 +47,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         care_plans: care_plans[carePlanId],
         vitalResponseDrawer,
         editVitalDrawer,
-        getPatientVitals: getPatientVitals(patientId)
+        getPatientVitals: getPatientVitals(carePlanId)
     };
 };
 

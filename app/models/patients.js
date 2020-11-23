@@ -34,21 +34,27 @@ export const db = database => {
         type: DataTypes.STRING(100),
         allowNull: true,
         set(value) {
-          this.setDataValue('first_name',  value.charAt(0).toUpperCase()+value.slice(1));
+            if(value) {
+                this.setDataValue('first_name',  value.charAt(0).toUpperCase()+value.slice(1));
+            }
         }
       },
       middle_name: {
         type: DataTypes.STRING(100),
         allowNull: true,
         set(value) {
-          this.setDataValue('middle_name',  value.charAt(0).toUpperCase()+value.slice(1));
+            if(value) {
+                this.setDataValue('middle_name',  value.charAt(0).toUpperCase()+value.slice(1));
+            }
         }
       },
       last_name: {
         type: DataTypes.STRING(100),
         allowNull: true,
         set(value) {
-          this.setDataValue('last_name',  value.charAt(0).toUpperCase()+value.slice(1));
+            if(value) {
+                this.setDataValue('last_name',  value.charAt(0).toUpperCase()+value.slice(1));
+            }
         }
       },
       age: {
