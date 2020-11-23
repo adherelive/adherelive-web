@@ -1,7 +1,5 @@
 import Controller from "../../index";
-import userService from "../../../../app/services/user/user.service";
 import patientService from "../../../../app/services/patients/patients.service";
-import minioService from "../../../../app/services/minio/minio.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
@@ -28,8 +26,7 @@ import Log from "../../../../libs/log_new";
 import queueService from "../../../services/awsQueue/queue.service";
 // import SqsQueueService from "../../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
-
-const moment = require("moment");
+import moment from "moment";
 
 class CarePlanController extends Controller {
   constructor() {
@@ -104,48 +101,79 @@ class CarePlanController extends Controller {
       );
       const patient_id = carePlan.get("patient_id");
 
-      for (const appointment of appointmentsData) {
-        const {
-          schedule_data: {
-            description = "",
-            end_time = "",
-            organizer = {},
-            treatment = "",
-            participant_two = {},
-            start_time = "",
-            date = ""
-          } = {},
-          reason = "",
-          time_gap = ""
-        } = appointment || {};
+      let timeForAppointment = {};
 
-        const { id: participant_two_id, category: participant_two_type } =
-          participant_two || {};
+      for(let i = 0; i < appointmentsData.length; i++) {
+
+        const {
+          schedule_data: { description = '', end_time = '', organizer = {}, treatment = '', participant_two = {}, start_time = '', date = '' } = {},
+          reason = '', time_gap = '' } = appointmentsData[i] || {};
+
+        const { id: participant_two_id, category: participant_two_type } = participant_two || {};
 
         const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
-          start_time,
-          end_time,
-          {
-            participant_one_id: userCategoryId,
-            participant_one_type: category
-          },
-          {
-            participant_two_id,
-            participant_two_type
-          }
+            start_time,
+            end_time,
+            {
+              participant_one_id: userCategoryId,
+              participant_one_type: category,
+            },
+            {
+              participant_two_id,
+              participant_two_type,
+            }
         );
 
+        Log.debug("getAppointmentForTimeSlot --> ", getAppointmentForTimeSlot);
+
         if (getAppointmentForTimeSlot.length > 0) {
-          return this.raiseClientError(
-            res,
-            422,
-            {
-              error_type: "slot_present"
-            },
-            `Appointment Slot already present between`
-          );
+          let startTime = start_time;
+          let endTime = end_time;
+          let isSearchComplete = false;
+          let timeDifference = moment(end_time).diff(moment(start_time), "minutes");
+          let step = 0;
+
+          while(!isSearchComplete) {
+            startTime = moment(start_time).startOf("day").add({hours: 4, minutes: 30}).add("minutes", step);
+            endTime = moment(start_time).startOf("day").add({hours: 4, minutes: 30}).add("minutes", (step + timeDifference));
+
+            const getAppointment = await appointmentService.checkTimeSlot(
+                startTime,
+                endTime,
+                {
+                  participant_one_id: userCategoryId,
+                  participant_one_type: category,
+                },
+                {
+                  participant_two_id,
+                  participant_two_type,
+                }
+            );
+
+            if(getAppointment.length > 0) {
+              step += timeDifference;
+              // if reached end of the day
+              if(moment(moment().startOf("day").add({hours: 14, minutes: 30}), "minutes").diff(moment(endTime)) >= 0) {
+                return this.raiseClientError(
+                    res,
+                    422,
+                    {
+                      error_type: "slot_present",
+                    },
+                    `Appointment Slot already booked for the day`
+                );
+              }
+
+              // continue;
+            } else {
+              isSearchComplete = true;
+              timeForAppointment[i] = {start_time: startTime, end_time: endTime};
+            }
+          }
+        } else {
+          timeForAppointment[i] = {start_time, end_time};
         }
-      }
+      };
 
       let appointmentApiDetails = {};
       let appointment_ids = [];
@@ -153,15 +181,13 @@ class CarePlanController extends Controller {
       let appointmentsArr = [];
       let medicationsArr = [];
 
-      for (const appointment of appointmentsData) {
+      for(let i = 0; i < appointmentsData.length; i++) {
         const {
           schedule_data: {
             description = "",
-            end_time = "",
             organizer = {},
             treatment_id = "",
             participant_two = {},
-            start_time = "",
             date = ""
           } = {},
           reason = "",
@@ -171,7 +197,9 @@ class CarePlanController extends Controller {
           type = "",
           type_description = "",
           critical = false
-        } = appointment;
+        } = appointmentsData[i];
+
+        const {start_time = "", end_time = ""} = timeForAppointment[i] || {};
 
         const { id: participant_two_id, category: participant_two_type } =
           participant_two || {};
@@ -244,7 +272,6 @@ class CarePlanController extends Controller {
           reason,
           time_gap,
           provider_id,
-          // care_plan_template_id: carePlanTemplate.getCarePlanTemplateId(),
           details: {
             date,
             description,

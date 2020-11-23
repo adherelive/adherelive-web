@@ -76,11 +76,6 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
             _data
         } = this;
 
-        console.log(
-            "92881293 getTemplateAppointments ---> ",
-            getTemplateMedications()
-        );
-
         let templateAppointments = [];
         let templateMedications = [];
         let medicines = [];
