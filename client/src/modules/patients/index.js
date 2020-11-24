@@ -1,7 +1,7 @@
 
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getAddPatientUrl,searchPatientFromNumUrl, getRequestConsentUrl, getConsentVerifyUrl} from '../../Helper/urls/patients'
+import {getAddPatientUrl,searchPatientFromNumUrl, getRequestConsentUrl, getConsentVerifyUrl,searchPatientForDoctorUrl,addCareplanForPatientUrl} from '../../Helper/urls/patients'
 
 export const ADD_PATIENT = "ADD_PATIENT";
 export const ADD_PATIENT_COMPLETED = "ADD_PATIENT_COMPLETED";
@@ -19,6 +19,15 @@ export const REQUEST_CONSENT_OTP_FAILED = "REQUEST_CONSENT_OTP_FAILED";
 export const CONSENT_VERIFY_START = "CONSENT_VERIFY_START";
 export const CONSENT_VERIFY_COMPLETED = "CONSENT_VERIFY_COMPLETED";
 export const CONSENT_VERIFY_FAILED = "CONSENT_VERIFY_FAILED";
+
+
+export const SEARCH_PATIENT_FOR_DOCTOR="SEARCH_PATIENT_FOR_DOCTOR";
+export const SEARCH_PATIENT_FOR_DOCTOR_COMPLETE = "SEARCH_PATIENT_FOR_DOCTOR_COMPLETE";
+export const SEARCH_PATIENT_FOR_DOCTOR_FAILED = "SEARCH_PATIENT_FOR_DOCTOR_FAILED";
+
+export const ADD_NEW_CAREPLAN = "ADD_NEW_CAREPLAN";
+export const ADD_NEW_CAREPLAN_COMPLETE = "ADD_NEW_CAREPLAN_COMPLETE";
+export const ADD_NEW_CAREPLAN_FAILED =  "ADD_NEW_CAREPLAN_FAILED"; 
 
  export const requestConsent = (id) => {
    let response = {};
@@ -158,6 +167,77 @@ export const searchPatientFromNum = (value) => {
     return response;
   };
 }
+
+export const searchPatientForDoctor = (value) => {
+  let response = {};
+  return async (dispatch) => {
+    try{
+      dispatch({ type: SEARCH_PATIENT_FOR_DOCTOR });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: searchPatientForDoctorUrl(value)
+      });
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: SEARCH_PATIENT_FOR_DOCTOR_FAILED,
+          payload: { error },
+        });
+      } else if (status === true) {
+        dispatch({
+          type:SEARCH_PATIENT_FOR_DOCTOR_COMPLETE,
+          data: data,
+        });
+      }
+
+    }catch(error){
+      console.log("error search patient", error);
+      throw error;
+    }
+
+    return response;
+  };
+}
+
+export const addCareplanForPatient = (id,payload) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: ADD_NEW_CAREPLAN });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: addCareplanForPatientUrl(id),
+        data:payload
+      });
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: ADD_NEW_CAREPLAN_FAILED,
+          payload: { error },
+        });
+      } else if (status === true) {
+        // const { patients = {} } = data;
+        dispatch({
+          type:ADD_NEW_CAREPLAN_COMPLETE,
+          data: data,
+        });
+      }
+    } catch (err) {
+      console.log("err add patient", err);
+      throw err;
+    }
+
+    return response;
+  };
+} 
 
 function patientReducer(state, data) {
   const {patients} = data || {};

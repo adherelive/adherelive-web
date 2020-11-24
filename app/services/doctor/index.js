@@ -15,4 +15,8 @@ export default class Doctor {
     getName = () => {
         return this._data.get("first_name");
     };
+
+    getRazorpayAccountId = () => {
+      return this._data.get("razorpay_account_id");
+    };
 }

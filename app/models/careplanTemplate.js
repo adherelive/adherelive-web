@@ -35,7 +35,7 @@ export const db = database => {
       },
       severity_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: {
             tableName: severityTableName
@@ -45,7 +45,7 @@ export const db = database => {
       },
       condition_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: {
             tableName: conditionTableName

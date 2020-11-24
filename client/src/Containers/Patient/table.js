@@ -45,7 +45,8 @@ const mapDispatchToProps = dispatch => {
   return {
     openPatientDetailsDrawer: (payload) => dispatch(open({ type: DRAWER.PATIENT_DETAILS, payload })),
     addToWatchlist:(patient_id) => dispatch(addToWatchlist(patient_id)),
-    removePatientFromWatchlist:(patient_id) => dispatch(removePatientFromWatchlist(patient_id))
+    removePatientFromWatchlist:(patient_id) => dispatch(removePatientFromWatchlist(patient_id)),
+    openEditPatientDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_PATIENT, payload }))
 
   };
 };

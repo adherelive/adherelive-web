@@ -28,6 +28,8 @@ import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
 import syncRouter from "./sync";
+import transactionRouter from "./transactions";
+import accountsRouter from "./accounts";
 
 router.use(async (req, res, next) => {
   try {
@@ -45,7 +47,8 @@ router.use(async (req, res, next) => {
 
       const userData = await userService.getUser(userId);
       const user = await UserWrapper(userData);
-      const {userCategoryData, userCategoryId} = await user.getCategoryInfo() || {};
+      const { userCategoryData, userCategoryId } =
+        (await user.getCategoryInfo()) || {};
       if (user) {
         req.userDetails = {
           exists: true,
@@ -97,5 +100,7 @@ router.use("/notifications", notificationRouter);
 router.use("/symptoms", symptomRouter);
 router.use("/vitals", vitalRouter);
 router.use("/sync", syncRouter);
+router.use("/transactions", transactionRouter);
+router.use("/accounts", accountsRouter);
 
 module.exports = router;

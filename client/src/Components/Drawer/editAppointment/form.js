@@ -371,6 +371,8 @@ class EditAppointmentForm extends Component {
     let { basic_info: { description, start_date, start_time, end_time, details: { treatment_id = "", reason = '', type = '', type_description = '', critical = false } = {} } = {}, provider_id = 0, provider_name = '' } = appointments[appointment_id] || {};
     provider_id = provider_name ? provider_name : provider_id;
 
+    console.log("8917239938  ", {start_time, end_time});
+
 
 
     if (Object.values(carePlan).length) {

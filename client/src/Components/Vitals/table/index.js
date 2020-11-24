@@ -24,7 +24,18 @@ class VitalTable extends Component {
         const {care_plans: {vital_ids = []} = {}} = this.props;
         const {care_plans: {vital_ids: prev_vital_ids = []} = {}} = prevProps;
 
-        if(vital_ids.length !== prev_vital_ids.length) {
+        let isDifferent=false;
+        if(vital_ids.length>0 && prev_vital_ids.length>0){
+            if(vital_ids[0] !== prev_vital_ids[0]){
+                isDifferent=true;
+            }
+        }else if (vital_ids.length>0 || prev_vital_ids.length>0){
+            isDifferent=true;
+        }
+
+
+        if(vital_ids.length !== prev_vital_ids.length || isDifferent ) {
+            this.getVitals();
             this.setState({vital_ids});
         }
     }
@@ -50,7 +61,6 @@ class VitalTable extends Component {
             isOtherCarePlan
         } = this.props;
         const {vital_ids} = this.state;
-
         const {openResponseDrawer, openEditDrawer} = this;
 
 

@@ -139,6 +139,31 @@ const messages = defineMessages({
         id: "app.addPatient.diagnosisTypeError",
         description: "",
         defaultMessage: "Please enter Diagnosis Type"
+    },
+    height: {
+        id: "app.addPatient.height",
+        description: "",
+        defaultMessage: "Height"
+    },
+    weight: {
+        id: "app.addPatient.weight",
+        description: "",
+        defaultMessage: "Weight"
+    },
+    symptoms: {
+        id: "app.addPatient.symptoms",
+        description: "",
+        defaultMessage: "Symptoms"
+    },
+    height_placeholder:{
+        id: "app.addPatient.height.placeholder",
+        description: "",
+        defaultMessage: "Add Height in Centimeters"
+    },
+    weight_placeholder:{
+        id: "app.addPatient.weight.placeholder",
+        description: "",
+        defaultMessage: "Add Weight in Kgs"
     }
       
     

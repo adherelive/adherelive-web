@@ -13,6 +13,7 @@ import JobSdk from "../JobSdk";
 import NotificationSdk from "../NotificationSdk";
 import AppointmentJob from "../JobSdk/Appointments/observer";
 import MedicationJob from "../JobSdk/Medications/observer";
+import CarePlanJob from "../JobSdk/CarePlan/observer";
 
 const Log = new Logger("CRON > START");
 
@@ -50,6 +51,9 @@ class StartCron {
               break;
             case EVENT_TYPE.APPOINTMENT:
               await this.handleAppointmentStart(event);
+              break;
+            case EVENT_TYPE.CARE_PLAN_ACTIVATION:
+              await this.handleCarePlanStart(event);
               break;
             default:
               break;
@@ -150,6 +154,33 @@ class StartCron {
       // NotificationSdk.execute(job);
     } catch (error) {
       Log.debug("handleVitalStart 500 error ---->", error);
+    }
+  };
+
+  handleCarePlanStart = async event => {
+    try {
+      const eventId = event.getEventId();
+      const scheduleEventId = event.getScheduleEventId();
+      const scheduleEventService = new ScheduleEventService();
+      const updateEventStatus = await scheduleEventService.update(
+        {
+          status: EVENT_STATUS.SCHEDULED
+        },
+        scheduleEventId
+      );
+
+      const eventScheduleData = await scheduleEventService.getEventByData({
+        id: scheduleEventId
+      });
+
+      const carePlanJob = CarePlanJob.execute(
+        EVENT_STATUS.SCHEDULED,
+        eventScheduleData
+      );
+
+      await NotificationSdk.execute(carePlanJob);
+    } catch (error) {
+      Log.debug("handleCarePlanStart 500 error ---->", error);
     }
   };
 }

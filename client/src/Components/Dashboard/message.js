@@ -6,6 +6,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Dashboard"
   },
+  welcome: {
+    id: "app.dashboard.header.welcome",
+    description: "",
+    defaultMessage: "Welcome "
+  },
   patients: {
     id: "app.dashboard.content.patients",
     description: "",
@@ -60,7 +65,32 @@ const messages = defineMessages({
     id: "app.dashboard.graph.no.graph.text",
     description: "",
     defaultMessage: "Please add graphs from the menu above to display here"
-  }
+  },
+  phoneNo: {
+    id: "app.dashboard.phoneNo",
+    description: "",
+    defaultMessage: "Phone Number"
+  },
+  searchPatient: {
+    id: "app.dashboard.search.patient",
+    description: "",
+    defaultMessage: "Search Patient"
+  },
+  noMatch: {
+    id: "app.dashboard.no.match",
+    description: "",
+    defaultMessage: "No Match found"
+},
+  welcome_onboard_text: {
+    id: "app.dashboard.welcome.onboard.text",
+    description: "",
+    defaultMessage: "Welcome Onboard!"
+  },
+  pending_verify_content_text: {
+    id: "app.dashboard.pending.verify.content.text",
+    description: "",
+    defaultMessage: "The details provided are being verified. You will be able to add patient only after verification is complete"
+  },
 });
 
 export default messages;

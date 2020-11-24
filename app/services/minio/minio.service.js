@@ -23,7 +23,7 @@ class MinioService {
       let doesBucketExists = await this.minioClient.bucketExists(
         process.config.minio.MINIO_BUCKET_NAME
       );
-      Log.debug("doesBucketExists",doesBucketExists);
+      Log.debug("doesBucketExists", doesBucketExists);
       const bucket_name = process.config.minio.MINIO_BUCKET_NAME;
       if (!doesBucketExists) {
         const policy = {
@@ -52,15 +52,13 @@ class MinioService {
         );
 
         fs.readFile(`${__dirname}/../../../logo.png`, (err, data) => {
-          if(!err) {
+          if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
             Log.debug("emailLogo", emailLogo);
           } else {
             Log.debug("err", err);
           }
         });
-
-
       }
       this.bucket = process.config.minio.MINIO_BUCKET_NAME;
       return result;
@@ -106,6 +104,20 @@ class MinioService {
     }
   }
 
+  async downloadFileObject(objectName, filePath) {
+    try {
+      const result = await this.minioClient.fGetObject(
+        this.bucket,
+        objectName,
+        filePath
+      );
+      return result;
+    } catch (err) {
+      console.log("Error got in the download file object: ", err);
+      throw err;
+    }
+  }
+
   async removeObject(file) {
     try {
       let result = await this.minioClient.removeObject(this.bucket, file);
@@ -121,10 +133,10 @@ class MinioService {
         metaData = { "Content-Type": "audio/mpeg" };
       }
       let result = await this.minioClient.putObject(
-          this.bucket,
-          file,
-          buffer,
-          metaData
+        this.bucket,
+        file,
+        buffer,
+        metaData
       );
 
       return result;
@@ -140,10 +152,10 @@ class MinioService {
         metaData = { "Content-Type": "video/mp4" };
       }
       let result = await this.minioClient.putObject(
-          this.bucket,
-          file,
-          buffer,
-          metaData
+        this.bucket,
+        file,
+        buffer,
+        metaData
       );
 
       return result;

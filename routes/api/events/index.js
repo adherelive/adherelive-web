@@ -34,4 +34,10 @@ router.post(
     MedicationReminder.createCarePlanMedication
 );
 
+router.post(
+    "/:id/complete",
+    Authenticate,
+    EventController.markEventComplete
+);
+
 module.exports = router;

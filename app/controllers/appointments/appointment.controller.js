@@ -19,6 +19,8 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 import featureDetailService from "../../services/featureDetails/featureDetails.service";
 import providerService from "../../services/provider/provider.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+
 
 // WRAPPERS...
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
@@ -27,6 +29,10 @@ import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+
+
+import eventService from "../../services/scheduleEvents/scheduleEvent.service";
+import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
@@ -400,6 +406,7 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
+
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
@@ -613,24 +620,117 @@ class AppointmentController extends Controller {
     }
   };
 
-  // getTypeDescription = async (req, res) => {
-  //   const {raiseSuccess, raiseServerError} = this;
-  //   try {
-  //     const {id} = req.query || {};
-  //     const appointmentDetails = await featureDetailService.getDetailsByData({feature_type: FEATURE_TYPE.APPOINTMENT});
-  //
-  //     const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
-  //
-  //     return raiseSuccess(res, 200, {
-  //           ...appointmentData.getAppointmentTypeDescription(id),
-  //         },
-  //         "Appointment type description details fetched successfully");
-  //
-  //   } catch(error) {
-  //     Logger.debug("getTypeDescription 500 error ", error);
-  //     return raiseServerError(res);
-  //   }
-  // };
+
+  getAllMissedAppointments = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+
+
+      const { body, userDetails } = req;
+
+      const { userId, userData: { category  } = {} ,userCategoryData :{basic_info:{id :doctorId } ={} } = {} } = userDetails || {};
+
+
+      let docAllCareplanData = [];
+      let appointmentApiData = {};
+      let flag = true;
+      let criticalAppointmentEventIds = [];
+      let nonCriticalAppointmentEventIds = [];
+      const scheduleEventService = new ScheduleEventService();
+
+      
+      docAllCareplanData = await carePlanService.getCarePlanByData({
+        doctor_id: doctorId
+      });
+
+      // Logger.debug("786756465789",docAllCareplanData);
+
+        for(let carePlan of docAllCareplanData) {
+        const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+        const {appointment_ids} = await carePlanApiWrapper.getAllInfo();
+
+
+        for(let aId of appointment_ids){
+          // Logger.debug("87657898763545",appointment_ids);
+
+            let expiredAppointmentsList = await scheduleEventService.getAllEventByData({
+              event_type: EVENT_TYPE.APPOINTMENT,
+              status: EVENT_STATUS.EXPIRED,
+              event_id:aId
+            });
+
+
+            for(let appointment of expiredAppointmentsList ){
+              const appointmentEventWrapper = await EventWrapper(appointment);
+              // Logger.debug("8976756576890",appointmentEventWrapper);
+             
+                if (appointmentEventWrapper.getCriticalValue()) {
+                  if (
+                    !criticalAppointmentEventIds.includes(
+                      appointmentEventWrapper.getEventId()
+                    )
+                  ) {
+                    criticalAppointmentEventIds.push(
+                      appointmentEventWrapper.getEventId()
+                    );
+                  }
+                } else {
+                  if (
+                    !nonCriticalAppointmentEventIds.includes(
+                      appointmentEventWrapper.getEventId()
+                    )
+                  ) {
+                    nonCriticalAppointmentEventIds.push(
+                      appointmentEventWrapper.getEventId()
+                    );
+                  }
+                }
+    
+                appointmentApiData[
+                  appointmentEventWrapper.getEventId()
+                ] = appointmentEventWrapper.getDetails();
+              
+            };
+
+
+        };
+
+
+      };
+
+
+
+      if(Object.keys(appointmentApiData).length === 0 && appointmentApiData.constructor === Object){
+        flag = false;
+      }
+
+
+      if (flag === true) {
+        return raiseSuccess(
+          res,
+          200,
+          {
+            missed_appointment_events: {
+              ...appointmentApiData
+            },
+            critical_appointment_event_ids: criticalAppointmentEventIds,
+            non_critical_appointment_event_ids: nonCriticalAppointmentEventIds
+          },
+          `Missed appointment fetched successfully`
+        );
+      } else {
+        return raiseSuccess(res, 201, {}, "No Missed Appointment");
+      }
+
+      
+
+    } catch (error) {
+      Logger.debug("getappointmentDetails 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+  
+
 }
 
 export default new AppointmentController();

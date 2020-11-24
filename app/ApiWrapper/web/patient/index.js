@@ -8,6 +8,7 @@ import UserWrapper from "../../web/user";
 class PatientWrapper extends BasePatient {
     constructor(data) {
         super(data);
+        console.log("PATIENT WRAPPER DATA",data);
     }
 
     getBasicInfo = () => {
@@ -16,6 +17,8 @@ class PatientWrapper extends BasePatient {
             id,
             user_id,
             gender,
+            height,
+            weight,
             first_name,
             middle_name,
             last_name,
@@ -24,7 +27,7 @@ class PatientWrapper extends BasePatient {
             activated_on,
             details,
             dob,
-            uid
+            uid,
         } = _data || {};
         const {profile_pic = ""} = details || {};
 
@@ -37,12 +40,15 @@ class PatientWrapper extends BasePatient {
                 id,
                 user_id,
                 gender,
+                height,
+                weight,
                 age,
                 first_name,
                 middle_name,
                 last_name,
                 address,
                 uid,
+                
             },
             activated_on,
             details: updatedDetails,
@@ -69,7 +75,6 @@ class PatientWrapper extends BasePatient {
     getReferenceInfo = async () => {
         const {_data, getAllInfo, getPatientId} = this;
         const {user} = _data || {};
-
         const users = await UserWrapper(user.get());
 
         return {

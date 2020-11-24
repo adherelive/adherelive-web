@@ -3,9 +3,11 @@ import React from "react";
 import { TABLE_COLUMN } from "../helper";
 import messages from "../messages";
 import PID from "../datacolumn/pid";
-import Condition from "../datacolumn/condition";
+// import Condition from "../datacolumn/condition";
+import Diagnosis from "../datacolumn/diagnosis";
 import Treatment from "../datacolumn/treatment";
 import Severity from "../datacolumn/severity";
+import EditPatientColumn from "../datacolumn/editColumn";
 import Age from "../datacolumn/age";
 import StartDate from "../datacolumn/startDate";
 import Doctor from "../datacolumn/doctor";
@@ -13,28 +15,24 @@ import Provider from "../datacolumn/provider";
 import NewSymptoms from "../datacolumn/newSymptoms";
 import Watchlist from "../datacolumn/watchlist";
 
+
 export default props => {
   const { formatMessage } = props || {};
 
+
   return [
     {
-      // title: formatMessage(messages.pid),
       title: 'Patient',
       ...TABLE_COLUMN.PID,
       render: data => {
-        const { patientData, chatData,addToWatchlist ,doctorData, onRowClick} = data || {};
-        return <PID onRowClick={onRowClick} patientData={patientData} chatData={chatData} addToWatchlist={addToWatchlist} doctorData={doctorData}/>;
+        const { patientData, chatData,addToWatchlist ,doctorData, onRowClick,removePatientFromWatchlist} = data || {};
+        return <PID onRowClick={onRowClick} patientData={patientData} chatData={chatData} addToWatchlist={addToWatchlist} doctorData={doctorData} removePatientFromWatchlist={removePatientFromWatchlist}/>;
       }
     },
     {
-      title: formatMessage(messages.watchlist),
-      ...TABLE_COLUMN.WATCHLIST,
-      render: ({doctorData, addToWatchlist, patientData,removePatientFromWatchlist}) => <Watchlist patientData={patientData} doctorData={doctorData} addToWatchlist={addToWatchlist} removePatientFromWatchlist={removePatientFromWatchlist}  />
-    },
-    {
-      title: formatMessage(messages.condition),
-      ...TABLE_COLUMN.CONDITION,
-      render: patientData => <Condition {...patientData} />
+      title: formatMessage(messages.diagnosis),
+      ...TABLE_COLUMN.DIAGNOSIS,
+      render: patientData => <Diagnosis {...patientData} />
     },
     {
       title: formatMessage(messages.treatment),
@@ -52,22 +50,9 @@ export default props => {
       render: treatmentData => <Severity {...treatmentData} />
     },
     {
-      title: formatMessage(messages.age),
-      ...TABLE_COLUMN.AGE,
-      render: patientData => <Age {...patientData} />
-    },
-    {
       title: formatMessage(messages.start_date),
       ...TABLE_COLUMN.START_DATE,
       render: carePlanData => <StartDate {...carePlanData} />
-    },
-    {
-      title: formatMessage(messages.doctor),
-      ...TABLE_COLUMN.DOCTOR,
-      render: data => {
-        const { patientData, doctorData } = data;
-        return <Doctor patientData={patientData} doctorData={doctorData} />;
-      }
     },
     {
       title: formatMessage(messages.provider),
@@ -83,6 +68,20 @@ export default props => {
       title: formatMessage(messages.new_symptoms),
       ...TABLE_COLUMN.NEW_SYMPTOMS,
       render: patientData => <NewSymptoms {...patientData} />
+    },
+    {
+      title:"",
+      ...TABLE_COLUMN.EDIT,
+      render : data => {
+        const {  patientData,
+          carePlanData,
+          openEditPatientDrawer} = data;
+          return (
+            <EditPatientColumn patientData={patientData} carePlanData={carePlanData}  openEditPatientDrawer={openEditPatientDrawer} />
+          )
+
+       
+      }
     }
   ];
 };

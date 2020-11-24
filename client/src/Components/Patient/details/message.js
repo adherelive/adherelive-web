@@ -450,7 +450,49 @@ const messages = defineMessages({
         id: "app.patient_profile.allergies.text",
         description: "",
         defaultMessage: "Allergies"
-    }
+    },
+    chat_icon_text: {
+        id: "app.patient_profile.chat.icon.text",
+        description: "",
+        defaultMessage: "Chat"
+    },
+    video_icon_text: {
+        id: "app.patient_profile.video.icon.text",
+        description: "",
+        defaultMessage: "Video Call"
+    },
+    complete_text: {
+        id: "app.patient_profile.complete.button.text",
+        description: "",
+        defaultMessage: "Complete"
+    },
+    clinical_notes: {
+        id: "app.patient_profile.clinical.notes.text",
+        description: "",
+        defaultMessage: "Clinical Notes"
+    },
+    diagnosis_type:{
+        id: "app.patient_profile.diagnosis.type",
+        description: "",
+        defaultMessage: "Diagnosis Type"
+    },
+    diagnosis_text:{
+        id: "app.patient_profile.diagnosis.text",
+        description: "",
+        defaultMessage: "Diagnosis"
+    },
+    symptoms_text:{
+        id: "app.patient_profile.symptom.text",
+        description: "",
+        defaultMessage: "Symptoms"
+    },
+    edit_patient:{
+        id: "app.patient_profile.edit_patient",
+        description: "",
+        defaultMessage: "Edit Patient Details"
+    },
+
+
 });
 
 export default messages;

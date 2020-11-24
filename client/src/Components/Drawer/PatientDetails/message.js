@@ -55,6 +55,11 @@ const messages = defineMessages({
     id: "app.drawer.patient.details.appointments",
     description: "",
     defaultMessage: "Appointments"
+  },
+  gotoprofile: {
+    id: "app.drawer.patient.details.gotoprofile",
+    description: "",
+    defaultMessage: "Go to Profile"
   }
 });
 

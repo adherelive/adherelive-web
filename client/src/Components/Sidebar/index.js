@@ -15,7 +15,8 @@ const DASHBOARD = "dashboard";
 const NOTIFICATIONS = "notifications";
 const LOG_OUT = "log_out";
 const PROFILE = "profile";
-const SUB_MENU = "sub-menu"
+const SUB_MENU = "sub-menu";
+const SETTINGS = "settings";
 
 class SideMenu extends Component {
   constructor(props) {
@@ -61,6 +62,11 @@ class SideMenu extends Component {
           history.push(PATH.PROFILE);
         }
         break;
+      case SETTINGS:
+        if(onboarded){
+          history.push(PATH.SETTINGS);
+        }
+        break;  
       case NOTIFICATIONS:
         if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
           openAppointmentDrawer({ doctorUserId: authenticated_user });
@@ -85,6 +91,9 @@ class SideMenu extends Component {
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={LOG_OUT}>Logout
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item className="pl24 pr80" key={SETTINGS}>Settings
         </Menu.Item>
       </Menu>
     );

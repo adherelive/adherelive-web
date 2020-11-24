@@ -56,7 +56,7 @@ router.get(
 );
 
 router.get(
-    "/:patient_id/vitals",
+    "/:careplan_id/vitals",
     Authenticated,
     PatientController.getPatientVitals
 );
@@ -66,5 +66,17 @@ router.get(
     Authenticated,
     PatientController.getPatientPartSymptoms
 );
+
+router.get(
+    "/searchpatient",
+    Authenticated,
+    PatientController.searchPatientForDoctor
+);
+
+router.post(
+    "/addCareplanForPatient/:patient_id",
+    Authenticated,
+    PatientController.createNewCareplanforPatient
+)
 
 module.exports = router;

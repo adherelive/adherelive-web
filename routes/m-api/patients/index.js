@@ -4,46 +4,38 @@ import Authenticated from "../middlewares/auth";
 import isPatient from "../middlewares/patients";
 import PatientController from "../../../app/controllers/mControllers/patients/patients.controller";
 
-router.post('/',
-    isPatient,
-    Authenticated,
-    PatientController.mUpdatePatient
-);
+router.post("/", isPatient, Authenticated, PatientController.mUpdatePatient);
 
 router.post(
   "/:id/consents/request",
   Authenticated,
-    PatientController.patientConsentRequest
+  PatientController.patientConsentRequest
 );
 
 router.post(
-    "/consents/verify",
-    Authenticated,
-    PatientController.patientConsentVerification
-);
-
-router.get(
-  "/",
+  "/consents/verify",
   Authenticated,
-  PatientController.searchPatient
+  PatientController.patientConsentVerification
+);
+
+router.get("/", Authenticated, PatientController.searchPatient);
+
+router.get(
+  "/:id/appointments",
+  Authenticated,
+  PatientController.getPatientAppointments
 );
 
 router.get(
-    "/:id/appointments",
-    Authenticated,
-    PatientController.getPatientAppointments
+  "/:id/medications",
+  Authenticated,
+  PatientController.getPatientMedications
 );
 
 router.get(
-    "/:id/medications",
-    Authenticated,
-    PatientController.getPatientMedications
-);
-
-router.get(
-    "/:id/careplan-details",
-    Authenticated,
-    PatientController.getPatientCarePlanDetails
+  "/:id/careplan-details",
+  Authenticated,
+  PatientController.getPatientCarePlanDetails
 );
 
 router.get(
@@ -53,15 +45,29 @@ router.get(
 );
 
 router.get(
-    "/:patient_id/parts/symptoms",
-    Authenticated,
-    PatientController.getPatientPartSymptoms
+  "/:patient_id/parts/symptoms",
+  Authenticated,
+  PatientController.getPatientPartSymptoms
 );
 
 router.get(
-  "/:patient_id/vitals",
+  "/:careplan_id/vitals",
   Authenticated,
   PatientController.getPatientVitals
 );
+
+router.get(
+  "/searchpatient",
+  Authenticated,
+  PatientController.searchPatientForDoctor
+);
+
+router.get(
+  "/generate_prescription/:care_plan_id",
+  Authenticated,
+  PatientController.generatePrescription
+);
+
+router.get("/timings", Authenticated, PatientController.getPatientTimings);
 
 module.exports = router;

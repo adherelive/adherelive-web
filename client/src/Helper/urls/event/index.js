@@ -90,3 +90,7 @@ export const getUpdateMedicationReminderURL = scheduleEventId => {
 export const getScheduleEventsUrl = () => {
   return `/schedule-events`;
 };
+
+export const getAppointmentCompleteUrl = (id) => {
+  return `/events/${id}/complete`;
+};

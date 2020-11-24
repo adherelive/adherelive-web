@@ -9,10 +9,17 @@ import * as validator from "./validator";
 const router = express.Router();
 
 // router.post('/create-medications-and-appointments/:carePlanId',
-router.post('/:carePlanId',
-    Authenticated,
-    validator.validateCreateCarePlanFromTemplate,
-    CarePlanController.createCarePlanMedicationsAndAppointmentsByTemplateData
+router.post(
+  "/:carePlanId",
+  Authenticated,
+  validator.validateCreateCarePlanFromTemplate,
+  CarePlanController.createCarePlanMedicationsAndAppointmentsByTemplateData
+);
+
+router.post(
+  "/activate/:carePlanId",
+  Authenticated,
+  CarePlanController.activateCarePlan
 );
 
 // router.get('/:patientId',

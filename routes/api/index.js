@@ -31,15 +31,15 @@ import carePlanTemplateRouter from "./carePlanTemplate";
 import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
-
+import accountsRouter from "./accounts";
 
 router.use(async function(req, res, next) {
   try {
     let accessToken;
-      const { cookies = {} } = req;
-      if (cookies.accessToken) {
-        accessToken = cookies.accessToken;
-      }
+    const { cookies = {} } = req;
+    if (cookies.accessToken) {
+      accessToken = cookies.accessToken;
+    }
 
     //  ----- FOR API TEST POSTMAN ------
 
@@ -52,11 +52,12 @@ router.use(async function(req, res, next) {
     if (accessToken) {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const {userId = null} = decodedAccessToken || {};
+      const { userId = null } = decodedAccessToken || {};
 
       const userData = await userService.getUser(userId);
       const user = await UserWrapper(userData);
-      const {userCategoryData = {}, userCategoryId} = await user.getCategoryInfo() || {};
+      const { userCategoryData = {}, userCategoryId } =
+        (await user.getCategoryInfo()) || {};
       if (user) {
         req.userDetails = {
           exists: true,
@@ -109,5 +110,6 @@ router.use("/care-plan-templates", carePlanTemplateRouter);
 router.use("/notifications", notificationRouter);
 router.use("/symptoms", symptomRouter);
 router.use("/vitals", vitalRouter);
+router.use("/accounts", accountsRouter);
 
 module.exports = router;

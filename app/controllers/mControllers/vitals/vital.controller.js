@@ -85,7 +85,8 @@ class VitalController extends Controller {
 
         const eventScheduleData = {
           type: EVENT_TYPE.VITALS,
-          patient_id: patient.getUserId(),
+          patient_id: patient.getPatientId(),
+          patientUserId: patient.getUserId(),
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
           critical: false,

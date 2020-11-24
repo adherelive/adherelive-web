@@ -40,6 +40,14 @@ export const TABLE_COLUMN = {
   NEW_SYMPTOMS: {
     key: "NEW_SYMPTOMS",
     dataIndex: "NEW_SYMPTOMS"
+  },
+  DIAGNOSIS: {
+    key: "DIAGNOSIS",
+    dataIndex: "DIAGNOSIS"
+  },
+  EDIT: {
+    key: "EDIT",
+    dataIndex: "EDIT"
   }
 };
 
@@ -57,6 +65,7 @@ export const formatPatientTableData = data => {
     users,
     care_plans,
     authenticated_user,
+    openEditPatientDrawer
   } = data || {};
 
   let doctor_id = null;
@@ -110,9 +119,9 @@ export const formatPatientTableData = data => {
       }
     }
   }
-
-
-  patientData = { ...patients[id], treatment, condition, severity };
+  
+  
+  patientData = { ...patients[id], treatment, condition, severity ,carePlanData  };
 
   const { basic_info: { name: carePlanName } = {}, activated_on } =
     care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized
@@ -149,5 +158,6 @@ export const formatPatientTableData = data => {
     treatmentData,
     chatData,
     carePlanData,
+    openEditPatientDrawer
   };
 };

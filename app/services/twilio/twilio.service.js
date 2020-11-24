@@ -100,6 +100,35 @@ class TwilioService {
     }
   };
 
+  addUserMessage = async (doctor, patient, message) => {
+    try {
+      const client = require("twilio")(accountSid, authToken);
+      const channel = await client.chat
+          .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+          .channels(this.getRoomId(doctor, patient));
+
+      // issue: http for development
+      // link: https://support.twilio.com/hc/en-us/articles/360007130274-Requirements-for-Connecting-to-the-Twilio-REST-API-and-Troubleshooting-Common-Issues
+      channel.messages
+          .create({
+            from: `${doctor}`,
+            body: message
+          })
+          .then(response => {
+            console.log("User message sent!", response);
+          })
+          .catch(err => {
+            console.error("Failed to send message");
+            console.error(err);
+          });
+
+      Logger.debug("channel -> ", channel);
+    } catch(error) {
+      Logger.debug("addUserMessage 500 error", error);
+      throw error;
+    }
+  };
+
   deleteAllMessages = async () => {
     try {
       const client = require("twilio")(accountSid, authToken);

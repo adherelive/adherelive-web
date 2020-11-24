@@ -35,4 +35,9 @@ export default class ScheduleEvent {
     getEndTime = () => {
         return this._data.get("end_time");
     };
+
+
+    getCriticalValue = () => {
+        return this._data.get("critical");
+    }
 }

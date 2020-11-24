@@ -1,8 +1,8 @@
 "use strict";
-import {DataTypes} from "sequelize";
-import {TABLE_NAME as doctorTableName} from "./doctors";
-import {TABLE_NAME as degreeTableName} from "./degree";
-import {TABLE_NAME as collegeTableName} from "./college";
+import { DataTypes } from "sequelize";
+import { TABLE_NAME as doctorTableName } from "./doctors";
+import { TABLE_NAME as degreeTableName } from "./degree";
+import { TABLE_NAME as collegeTableName } from "./college";
 
 export const TABLE_NAME = "doctor_qualifications";
 
@@ -36,15 +36,9 @@ export const db = (database) => {
                     key: 'id'
                 }
             },
-            college_id: {
-                type: DataTypes.INTEGER,
+            college_name: {
+                type: DataTypes.STRING(1000),
                 allowNull: false,
-                references: {
-                    model: {
-                        tableName: collegeTableName,
-                    },
-                    key: 'id'
-                }
             },
             year: {
                 type: DataTypes.INTEGER,
@@ -67,13 +61,12 @@ export const db = (database) => {
                 }
             }
         }
-    );
-};
+    )};
 
-export const associate = (database) => {
-    // associations here (if any) ...
-    database.models[TABLE_NAME].belongsTo(database.models[doctorTableName], {
-        foreignKey:"doctor_id",
-        targetKey:"id"
-    });
+export const associate = database => {
+  // associations here (if any) ...
+  database.models[TABLE_NAME].belongsTo(database.models[doctorTableName], {
+    foreignKey: "doctor_id",
+    targetKey: "id"
+  });
 };

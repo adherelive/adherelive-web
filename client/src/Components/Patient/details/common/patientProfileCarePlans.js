@@ -67,17 +67,17 @@ class PatientCarePlans extends Component {
         <div
           key={`cp-${id}`}
           onClick={handleCarePlanChange(id)}
-          className={`pointer flex justify-space-between align-center p10 bb-05 ${selectedCarePlanId === id ? "bg-medium-blue" : ""}`}
+          className={`pointer flex justify-space-between align-center p10 br5 ${selectedCarePlanId === id ? "bg-lighter-blue" : ""}`}
         >
           <div>
-            <div className="fs18 fw700">{name}</div>
-            <div>{doctorId === doctor_id ? formatMessage(messages.with_you_text) : `Dr. ${getFullName({
+            <div className="fs18 fw700 blueish-purple">{name}</div>
+            <div className="blueish-purple">{doctorId === doctor_id ? formatMessage(messages.with_you_text) : `Dr. ${getFullName({
               first_name,
               middle_name,
               last_name
             })}`}</div>
           </div>
-          <div>{getCarePlanStatus(expired_on)}</div>
+          <div className="blueish-purple">{getCarePlanStatus(expired_on)}</div>
         </div>
       );
     });
@@ -105,14 +105,12 @@ class PatientCarePlans extends Component {
         hiddenCarePlans.push(
           <div
             key={`cp-no-consent-${id}`}
-            className={`flex justify-space-between align-center p10 bg-light-grey ${
-              patientCarePlanIds.length - 1 === index ? "" : "bb-05"
-            }`}
+            className={`flex justify-space-between blueish-purple align-center p10 br5`}
           >
-            <div className="fs18 fw700">{`${formatMessage(
+            <div className="fs18 fw700 blueish-purple">{`${formatMessage(
               messages.careplan_text
             )} ${index + 1}`}</div>
-            <div>{getCarePlanStatus(expired_on)}</div>
+            <div className="blueish-purple">{getCarePlanStatus(expired_on)}</div>
           </div>
         );
       }
@@ -148,6 +146,7 @@ class PatientCarePlans extends Component {
   };
 
   render() {
+    const {intl: {formatMessage} = {}} = this.props;
     const {
       getVisibleCarePlans,
       getHiddenCarePlans,
@@ -157,8 +156,11 @@ class PatientCarePlans extends Component {
 
     return (
       <div className="mt18">
-        {getVisibleCarePlans()}
-        {getHiddenCarePlans()}
+        <div className="fs18 fw500 blueish-purple">{formatMessage(messages.treatment_plans_text)}</div>
+          <div className="br5 bw-purple">
+            {getVisibleCarePlans()}
+            {getHiddenCarePlans()}
+          </div>
         {!hideFooter() && renderFooter()}
       </div>
     );

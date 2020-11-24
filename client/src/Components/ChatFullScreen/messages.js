@@ -37,6 +37,12 @@ const messages = defineMessages({
     id: "app.chatFullScreen.today",
     description: "Click Here to Go Home",
     defaultMessage: "Today"
+  },
+
+  consultationFeeText: {
+    id: "app.chatFullScreen.consultationFeeText.tooltip",
+    description: "",
+    defaultMessage: "Request Consultation Fee"
   }
 
 });

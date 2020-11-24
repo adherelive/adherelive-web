@@ -1,6 +1,6 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getScheduleEventsUrl} from "../../Helper/urls/event";
+import {getScheduleEventsUrl, getAppointmentCompleteUrl} from "../../Helper/urls/event";
 
 
 import {getPatientLastVisitAlertUrl} from '../../Helper/url/patients'
@@ -13,6 +13,9 @@ export const GET_SCHEDULE_EVENTS_FAILED = "GET_SCHEDULE_EVENTS_FAILED";
 export const GET_LAST_VISIT_ALERTS='GET_LAST_VISIT_ALERTS';
 export const GET_LAST_VISIT_ALERTS_COMPLETE='GET_LAST_VISIT_ALERTS_COMPLETE';
 export const GET_LAST_VISIT_ALERTS_FAILED='GET_LAST_VISIT_ALERTS_FAILED';
+
+export const APPOINTMENT_STATUS_UPDATE_COMPLETED = "APPOINTMENT_STATUS_UPDATE_COMPLETED";
+export const APPOINTMENT_STATUS_UPDATE_FAILED = "APPOINTMENT_STATUS_UPDATE_FAILED";
 
 
 export const getScheduleEvents = payload => {
@@ -62,7 +65,7 @@ export const getLastVisitAlerts = (id) => {
         console.log("================================>GET_LAST_VISIT_ALERTS_COMPLETE");
         dispatch({
           type: GET_LAST_VISIT_ALERTS_COMPLETE,
-          payload: data,
+          data: data,
         });
       } else {
         console.log("================================>GET_LAST_VISIT_ALERTS_FAILED");
@@ -80,6 +83,33 @@ export const getLastVisitAlerts = (id) => {
   }
 };
 
+export const markAppointmentComplete = (id) => {
+    let response = {};
+    return async (dispatch) => {
+        try {
+            response = await doRequest({
+                method: REQUEST_TYPE.POST,
+                url:getAppointmentCompleteUrl(id),
+            });
+
+            const { status, payload: { data, error } = {} } = response || {};
+            if (status === true) {
+                dispatch({
+                    type: APPOINTMENT_STATUS_UPDATE_COMPLETED,
+                    data: data,
+                });
+            } else {
+                dispatch({
+                    type: APPOINTMENT_STATUS_UPDATE_FAILED,
+                    error,
+                });
+            }
+        } catch(error) {
+            console.log("markAppointmentComplete 500 error", error);
+        }
+        return response;
+    };
+};
 
 function eventReducer(state, data) {
     const {schedule_events = {}} = data || {};
@@ -94,9 +124,9 @@ function eventReducer(state, data) {
 }
 
 export default (state = {}, action = {}) => {
-    const {type, payload} = action;
+    const {type, data} = action;
     switch (type) {
         default:
-            return eventReducer(state, payload);
+            return eventReducer(state, data);
     }
 };
