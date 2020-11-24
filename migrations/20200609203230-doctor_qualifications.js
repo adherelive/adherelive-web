@@ -3,7 +3,6 @@
 import {TABLE_NAME} from "../app/models/doctorQualifications";
 import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
 import {TABLE_NAME as degreeTableName} from "../app/models/degree";
-import {TABLE_NAME as collegeTableName} from "../app/models/college";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -29,24 +28,17 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: degreeTableName,
+            tableName: degreeTableName
           },
-          key: 'id'
+          key: "id"
         }
       },
-      college_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: {
-            tableName: collegeTableName,
-          },
-          key: 'id'
-        }
+      college_name: {
+        type: Sequelize.STRING(100)
       },
       year: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       created_at: {
         allowNull: false,

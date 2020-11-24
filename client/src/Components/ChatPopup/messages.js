@@ -1,7 +1,6 @@
 import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
-
   searchPatient: {
     id: "app.chatPopUp.searchPatient",
     description: "Click Here to Go Home",
@@ -38,17 +37,31 @@ const messages = defineMessages({
     description: "Click Here to Go Home",
     defaultMessage: "Today"
   },
-  videoNotSupported :{
+  videoNotSupported: {
     id: "app.chatFullScreen.videoNotSupported",
     description: "",
     defaultMessage: "Your browser does not support the video element."
   },
-  audioNotSupported:{
+  audioNotSupported: {
     id: "app.chatFullScreen.audioNotSupported",
     description: "",
     defaultMessage: "Your browser does not support the audio element."
-  }
-
+  },
+  blankStateChatText: {
+    id: "app.chatFullScreen.blank.state.chat.text",
+    description: "",
+    defaultMessage: "Send \"Hi\" to start conversation"
+  },
+  symptomMessageText: {
+    id: "app.chatFullScreen.symptomMessageText",
+    description: "",
+    defaultMessage: "Symptom"
+  },
+  vitalMessageText: {
+    id: "app.chatFullScreen.vitalMessageText",
+    description: "",
+    defaultMessage: "Vitals"
+  },
 });
 
 export default messages;

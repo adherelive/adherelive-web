@@ -5,8 +5,8 @@ const templateCreateCarePlanForm = Joi.object().keys({
     medicationsData: Joi.array(),
     appointmentsData: Joi.array(),
     treatment_id: Joi.number().required().label("Incorrect Treatment value selected"),
-    severity_id: Joi.number().required().label("Incorrect Severity value selected"),
-    condition_id: Joi.number().required().label("Incorrect Condition value selected"),
+    severity_id: Joi.number().optional().allow("", null).label("Incorrect Severity value selected"),
+    condition_id: Joi.number().optional().allow("", null).label("Incorrect Condition value selected"),
     createTemplate: Joi.boolean(),
     name: Joi.string().when('createTemplate', {
         is: Joi.boolean().valid(true),

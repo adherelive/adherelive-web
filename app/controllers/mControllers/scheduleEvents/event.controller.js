@@ -255,6 +255,34 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  markEventComplete = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const {params: {id} = {}} = req;
+      const eventService = new EventService();
+      const markEventComplete = await eventService.update({status: EVENT_STATUS.COMPLETED}, id);
+
+      Log.debug("1982732178 markEventComplete ---> ", markEventComplete);
+
+      const event = await EventWrapper(null, id);
+      const {appointments = {}, schedule_events = {}} = await event.getReferenceInfo();
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            appointments,
+            schedule_events,
+          },
+          "Event completed successfully"
+      );
+
+    } catch(error) {
+      Log.debug("markEventComplete 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new EventController();

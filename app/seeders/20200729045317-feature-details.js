@@ -44,7 +44,7 @@ module.exports = {
                 "HIV -1 & HIV-2"
             ],
             "2": ["At Clinic", "At Home", "Telephone"],
-            "3": ["MRI", "CT Scan", "Ultrasound"]
+            "3": ["MRI", "CT Scan", "Ultrasound","X-Ray"]
           }
         }),
         created_at:new Date(),

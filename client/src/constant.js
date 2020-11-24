@@ -3,6 +3,10 @@ export const PATH = {
   DASHBOARD: "/dashboard",
   SIGN_IN: "/sign-in",
   PROFILE: "/profile",
+  SETTINGS:"/settings",
+  CONSULTATION_FEE:"/consultation-fee",
+  BILLING:"/billing",
+  PAYMENT_DETAILS:"/payment-details",
   VALIDATION_PAGE: "/validation/:link",
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
@@ -194,7 +198,12 @@ export const DRAWER = {
   SYMPTOMS: 'SYMPTOMS',
   NOTIFICATIONS: "NOTIFICATIONS",
   EDIT_VITALS:"EDIT_VITALS",
-  VITAL_RESPONSE_TIMELINE: "VITAL_RESPONSE_TIMELINE"
+  VITAL_RESPONSE_TIMELINE: "VITAL_RESPONSE_TIMELINE",
+  ADD_CONSULTATION_FEE:"ADD_CONSULTATION_FEE",
+  ADD_RAZORPAY_ACCOUNT_DETAILS: "ADD_RAZORPAY_ACCOUNT_DETAILS",
+  EDIT_RAZORPAY_ACCOUNT_DETAILS: "EDIT_RAZORPAY_ACCOUNT_DETAILS",
+  ADD_CAREPLAN : "ADD_CAREPLAN",
+  EDIT_PATIENT : "EDIT_PATIENT"
 };
 
 export const USER_CATEGORY = {
@@ -223,7 +232,8 @@ export const PERMISSIONS = {
   EDIT_MEDICATION: "EDIT_MEDICATION",
   EDIT_GRAPH: 'EDIT_GRAPH',
   ADD_ACTION: 'ADD_ACTION',
-  ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE"
+  ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE",
+  ADD_CAREPLAN : "ADD_CAREPLAN"
 };
 
 
@@ -310,6 +320,17 @@ export const DAYS_TEXT_NUM = {
   "7": "saturday"
 }
 
+
+export const DAYS_TEXT_NUM_SHORT = {
+  "1": "Mon",
+  "2": "Tue",
+  "3": "Wed",
+  "4": "Thu",
+  "5": "Fri",
+  "6": "Sat",
+  "7": "Sun"
+}
+
 export const HOST = "/api";
 
 export const EVENT_TYPE = {
@@ -361,32 +382,32 @@ export const SEVERITY_STATUS = {
 };
 
 
-export const NO_ADHERENCE = "1";
-export const NO_MEDICATION = "2";
-export const NO_APPOINTMENT = "3";
-export const NO_ACTION = "4";
-export const TEST_ONE = "5";
-export const TEST_TWO = "6";
+// export const NO_ADHERENCE = "1";
+export const NO_MEDICATION = "1";
+export const NO_APPOINTMENT = "2";
+export const NO_ACTION = "3";
+// export const TEST_ONE = "5";
+// export const TEST_TWO = "6";
 
 export const CHART_TITLE = {
-  [NO_ADHERENCE]: "Adherence",
+  // [NO_ADHERENCE]: "Adherence",
   [NO_MEDICATION]: "Missed Medication",
   [NO_APPOINTMENT]: "Missed Appointments",
   [NO_ACTION]: "Missed Actions",
-  [TEST_ONE]: 'Test One',
-  [TEST_TWO]: 'Test Two'
+  // [TEST_ONE]: 'Test One',
+  // [TEST_TWO]: 'Test Two'
 
 };
 
 export const GRAPH_COLORS = {
-  [NO_ADHERENCE]: {
-    dark: "#13c2c2",
-    light: "#b5f5ec",
-    className: {
-      dark: "bg-dark-aqua",
-      light: "bg-light-aqua"
-    }
-  },
+  // [NO_ADHERENCE]: {
+  //   dark: "#13c2c2",
+  //   light: "#b5f5ec",
+  //   className: {
+  //     dark: "bg-dark-aqua",
+  //     light: "bg-light-aqua"
+  //   }
+  // },
   [NO_MEDICATION]: {
     dark: "#722ed1",
     light: "#d3adf7",
@@ -411,32 +432,32 @@ export const GRAPH_COLORS = {
       light: "bg-light-blue"
     }
   },
-  [TEST_ONE]: {
-    dark: "#A0522D",
-    light: "#F5DEB3",
-    className: {
-      dark: "bg-dark-brown",
-      light: "bg-light-brown"
-    }
+  // [TEST_ONE]: {
+  //   dark: "#A0522D",
+  //   light: "#F5DEB3",
+  //   className: {
+  //     dark: "bg-dark-brown",
+  //     light: "bg-light-brown"
+  //   }
 
-  },
+  // },
 
-  [TEST_TWO]: {
-    dark: "#00FF7F",
-    light: "#90EE90",
-    className: {
-      dark: "bg-spring-green",
-      light: "bg-light-green"
-    }
-  }
+  // [TEST_TWO]: {
+  //   dark: "#00FF7F",
+  //   light: "#90EE90",
+  //   className: {
+  //     dark: "bg-spring-green",
+  //     light: "bg-light-green"
+  //   }
+  // }
 };
 
 export const GRAPH_TYPE = {
-  [NO_ADHERENCE]: 'donut',
+  // [NO_ADHERENCE]: 'donut',
   [NO_MEDICATION]: 'donut',
   [NO_APPOINTMENT]: 'donut',
-  [NO_ACTION]: 'donut',
-  [TEST_ONE]: 'donut'
+  // [NO_ACTION]: 'donut',
+  // [TEST_ONE]: 'donut'
 };
 
 export const SYMPTOM = {
@@ -1664,3 +1685,25 @@ export const DIAGNOSIS_TYPE =  {
     "value":"Probable"
   }
 }
+
+
+
+
+export const CONSULTATION_FEE_TYPE_TEXT = {
+  "1" : "One Time Fee",
+  "2" : "Monthly Subscription"
+}
+
+//payment -------->
+export const CONSULTATION_FEE = "consultation-fee";
+export const BILLING = "billing";
+export const PAYMENT_DETAILS = "payment-details"
+
+export const SAVINGS = "savings";
+export const CURRENT="current";
+
+export const ACCOUNT_TYPES = {
+  [SAVINGS]: "Savings",
+  [CURRENT]: "Current"
+};
+

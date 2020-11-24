@@ -16,6 +16,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Please select a Profile picture."
   },
+  signaturePicError: {
+    id: "app.doctorOnBoarding.signaturePicError",
+    description: "",
+    defaultMessage: "Please select a Signature picture."
+  },
   profileTypeError: {
     id: "app.doctorOnBoarding.profileTypeError",
     description: "",
@@ -55,6 +60,11 @@ const messages = defineMessages({
     id: "app.doctorOnBoarding.profilePicture",
     description: "",
     defaultMessage: 'Profile Picture'
+  },
+  signaturePicture: {
+    id: "app.doctorOnBoarding.signaturePicture",
+    description: "",
+    defaultMessage: 'Signature Picture'
   },
   name: {
     id: "app.doctorOnBoarding.name",
@@ -230,7 +240,7 @@ const messages = defineMessages({
   add1PhotoRegError: {
     id: "app.doctorOnBoarding.add1PhotoRegError",
     description: "",
-    defaultMessage: 'Please add at least 1 photo for registration.'
+    defaultMessage: 'Please add at least 1 registraion document photo.'
   },
   profile: {
     id: "app.doctorOnBoarding.profile",
@@ -331,11 +341,6 @@ const messages = defineMessages({
     id: "app.doctorOnBoarding.landmark",
     description: "",
     defaultMessage: 'Landmark'
-  },
-  addManually: {
-    id: "app.doctorOnBoarding.addManually",
-    description: "",
-    defaultMessage: 'Or add manually'
   },
   startTime: {
     id: "app.doctorOnBoarding.startTime",

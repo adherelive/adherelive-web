@@ -18,7 +18,8 @@ class symptomBotMessage extends Component{
     }
 
 
-    getEllipsis = (message) =>{
+    getEllipsis = (message, side, parts) =>{
+        const {handleReply} = this.props;
         return (
             <div className="wp100 tar fs20 pr20">
                
@@ -33,7 +34,7 @@ class symptomBotMessage extends Component{
 
     replyToMessage = (e) => {
         e.preventDefault();
-        const {updateReplyMessageId} = this.props;
+        const {updateReplyMessageId, handleReply} = this.props;
         if(typeof(updateReplyMessageId) === 'function'){
            
             const node = e.target;
@@ -211,9 +212,9 @@ class symptomBotMessage extends Component{
         mess = (<div >
             <div className="chat-messages"  key={`${message.state.sid}-symptom-key`}  >
                 <div className="chat-avatar">
-                    {this.getPatientAvatar(patientDp)}
+                    {/*{this.getPatientAvatar(patientDp)}*/}
                     <div className="bot-message-container"  >
-                       {this.getEllipsis(message)}
+                       {this.getEllipsis(message, side, parts)}
                     <div>{this.getSymptomMessage(message,side,parts)}</div>
                     <div className="media-container symptom-video-container">
                         {allMediaArray}

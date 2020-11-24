@@ -12,12 +12,18 @@ import { closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
 import {searchPatientFromNum} from "../../modules/patients";
 import {addToWatchlist,removePatientFromWatchlist} from "../../modules/doctors";
+import {showVerifyModal} from "../../modules/pages/features";
+import {getMissedAppointmentsForDoc} from "../../modules/appointments";
+import {getMissedVitalsForDoc} from "../../modules/vitals";
+import {getMissedMedicationsForDoc} from "../../modules/medications";
 
 const mapStateToProps = state => {
+    console.log("DASHBOARD STATE ============================>",state);
     const { graphs, auth: { authPermissions = [], authenticated_user = 1 } = {},
         treatments = {},
         conditions = {},
-        severity = {}, chats, drawer, twilio, patients, doctors } = state;
+        pages: {ui_features = {}} = {},
+        severity = {}, chats, drawer, twilio, patients, doctors = {}} = state;
     return {
         graphs,
         treatments,
@@ -29,7 +35,8 @@ const mapStateToProps = state => {
         twilio,
         patients,
         doctors,
-        authenticated_user
+        authenticated_user,
+        ui_features,
     };
 };
 
@@ -48,7 +55,11 @@ const mapDispatchToProps = dispatch => {
         fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
         searchPatientFromNum: (value) => dispatch(searchPatientFromNum(value)),
         addToWatchlist:(patient_id) => dispatch(addToWatchlist(patient_id)),
-        removePatientFromWatchlist:(patient_id) => dispatch(removePatientFromWatchlist(patient_id))
+        removePatientFromWatchlist:(patient_id) => dispatch(removePatientFromWatchlist(patient_id)),
+        showVerifyModal: (data) => dispatch(showVerifyModal(data)),
+        getMissedAppointmentsForDoc : () => dispatch(getMissedAppointmentsForDoc()),
+        getMissedVitalsForDoc : () => dispatch(getMissedVitalsForDoc()),
+        getMissedMedicationsForDoc : () => dispatch(getMissedMedicationsForDoc())
     };
 };
 

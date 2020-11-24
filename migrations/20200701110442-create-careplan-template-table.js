@@ -32,7 +32,7 @@ module.exports = {
       },
       severity_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: {
             tableName: severityTableName,
@@ -42,7 +42,7 @@ module.exports = {
       },
       condition_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: {
             tableName: conditionTableName,

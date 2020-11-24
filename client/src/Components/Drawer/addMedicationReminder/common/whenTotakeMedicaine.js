@@ -12,14 +12,25 @@ const RadioGroup = Radio.Group;
 
 // const DropDownIcon = <img src={dropDownIcon} alt="d" className="w24 h24" />;
 const { Item: FormItem } = Form;
-// const when = [
-//   { key: "Before BreakFast", value: "Before BreakFast" },
-//   { key: "After BreakFast", value: "After BreakFast" },
-//   { key: "Before Lunch", value: "Before Lunch" },
-//   { key: "After Lunch", value: "After Lunch" },
-//   { key: "Before Dinner", value: "Before Dinner" },
-//   { key: "After Dinner", value: "After Dinner" },
-// ];
+
+const AFTER_WAKEUP="1";
+const BEFORE_BREAKFAST = "2";
+const AFTER_BREAKFAST = "3";
+const BEFORE_LUNCH = "4";
+const AFTER_LUNCH = "5";
+const BEFORE_EVENING_TEA = "6";
+const AFTER_EVENING_TEA = "7";
+const BEFORE_DINNER = "8";
+const AFTER_DINNER = "9";
+const BEFORE_SLEEP = "10";
+
+const BEFORE_MEALS_ARRAY_OD = [BEFORE_BREAKFAST];
+const AFTER_MEALS_ARRAY_OD = [AFTER_BREAKFAST];
+const BEFORE_MEALS_ARRAY_BD = [BEFORE_BREAKFAST,BEFORE_LUNCH];
+const AFTER_MEALS_ARRAY_BD = [AFTER_BREAKFAST,AFTER_LUNCH];
+const BEFORE_MEALS_ARRAY_TDS = [BEFORE_BREAKFAST,BEFORE_LUNCH,BEFORE_DINNER];
+const AFTER_MEALS_ARRAY_TDS = [AFTER_BREAKFAST,AFTER_LUNCH,AFTER_DINNER];
+
 const { Option } = Select;
 
 const FIELD_NAME = "when_to_take";
@@ -44,6 +55,7 @@ class WhenToTakeMedication extends Component {
       selected_timing_overall: [],
       status: statusList,
       total_status,
+      nugget_selected:null
     };
   }
 
@@ -59,10 +71,12 @@ class WhenToTakeMedication extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps,prevState) {
     const { medication_details } = this.props;
     const { medication_details: prev_medication_details } = prevProps;
-
+    const { form } = this.props;
+    const { getFieldValue, setFieldsValue } = form;
+    
 
     if (
       Object.keys(medication_details).length !==
@@ -74,6 +88,11 @@ class WhenToTakeMedication extends Component {
         remaining_timing: { ...timings },
       });
     }
+
+    const keys = getFieldValue("keys") || [];
+    const {nugget_selected} = this.state;
+
+
   }
 
   componentWillUnmount() {
@@ -126,7 +145,13 @@ class WhenToTakeMedication extends Component {
   getUnitOption = (k) => {
     const { status } = this.state;
     const { getUpdatedList } = this;
-    const getList = getUpdatedList(k);
+    // const  getList = getUpdatedList(k);
+    const { medication_details } = this.props;
+    const { timings } = medication_details || {};
+    let getList =[];
+    Object.keys(timings).forEach((id) => {
+      getList.push(id);
+    });
 
     return getList.map((id) => {
       const text = status[id];
@@ -192,22 +217,56 @@ class WhenToTakeMedication extends Component {
   // };
 
   handleSelect = (value, select_box_id) => {
-    const { selected_timing = {} } = this.state;
+
+    const { form } = this.props;
+    const { getFieldValue, setFieldsValue } = form;
+    const { selected_timing = {}  } = this.state;
     // const keys = new Set([...selected_timing_overall, value]);
+    
     const updatedSelectTiming = {
       ...selected_timing,
       [select_box_id]: value,
     };
-    this.setState(
-      {
-        // selected_timing_overall: [...keys],
+    this.setState({
         selected_timing: updatedSelectTiming,
-      },
-      () => {
+      });
 
-      }
-    );
+      this.handleRadioButtonChange();
+     
   };
+
+
+  handleRadioButtonChange = () => {
+
+    const { form } = this.props;
+    const {nugget_selected} = this.state;
+    const { getFieldValue, setFieldsValue } = form;
+    const keys = getFieldValue("keys");
+    let check = [];
+
+    if(nugget_selected === 1){
+      if(keys.length === 1){check = BEFORE_MEALS_ARRAY_OD}
+      else if(keys.length === 2){check = BEFORE_MEALS_ARRAY_BD}
+      else if(keys.length === 3){check = BEFORE_MEALS_ARRAY_TDS}
+    }else if(nugget_selected === 2){
+      if(keys.length === 1){check = AFTER_MEALS_ARRAY_OD}
+      else if(keys.length === 2){check = AFTER_MEALS_ARRAY_BD}
+      else if(keys.length === 3){check = AFTER_MEALS_ARRAY_TDS}
+    }
+
+    let flag =true;
+
+    const seletedValues = Object.values(getFieldValue([FIELD_NAME]))[0];
+    seletedValues.forEach(eachVal => {
+      if(!check.includes(eachVal)){
+        flag = false;
+      }   
+    });
+
+    if(flag === false){
+      this.setState({nugget_selected:null})
+    }
+  }
 
   handleDeselect = (value) => {
     // const { selected_timing_overall } = this.state;
@@ -217,6 +276,7 @@ class WhenToTakeMedication extends Component {
     this.setState({
       // selected_timing_overall: updateField
     });
+
   };
 
   remove = (k) => {
@@ -248,9 +308,9 @@ class WhenToTakeMedication extends Component {
   };
 
   getInitialValue = (k) => {
-    const { total_status } = this.state;
-    // const value = status[k+1];
-    return total_status[k];
+    const { total_status,nugget_selected } = this.state;
+    // return total_status[k];
+    return k;
   };
 
   getFormItems = () => {
@@ -267,16 +327,36 @@ class WhenToTakeMedication extends Component {
       // getFieldError,
       // isFieldTouched,
       getFieldValue,
+      setFieldsValue
     } = form;
+
+    const {nugget_selected} = this.state;
 
 
 
     getFieldDecorator("keys", {
       initialValue: count.map((id, index) => id),
     });
-    const keys = getFieldValue("keys");
-
+    let keys = getFieldValue("keys");
+    let initialValuesArray ;
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
+
+    
+    if(keys.length === 1){
+      keys = [0]
+      initialValuesArray= AFTER_MEALS_ARRAY_OD;
+    }
+    else if(keys.length === 2){
+      keys = [0,1]
+      initialValuesArray= AFTER_MEALS_ARRAY_BD;
+    }
+    else if(keys.length === 3){
+      keys = [0,1,2]
+      initialValuesArray= AFTER_MEALS_ARRAY_TDS;
+    }
+
+
+    
     return keys.map((k, index) => {
       return (
         <Fragment>
@@ -292,15 +372,20 @@ class WhenToTakeMedication extends Component {
               <FormItem
                 className="flex-1 mb0"
               >
-                {getFieldDecorator(`${FIELD_NAME}[${k}]`, {
+                {
+
+                getFieldDecorator(`${FIELD_NAME}[${k}]`, {
                   rules: [
                     {
                       required: true,
                       message: "Select The Time",
                     },
                   ],
-                  initialValue: getInitialValue(k),
-                })(
+                  initialValue: getInitialValue(initialValuesArray[k])
+                  
+                })
+
+                (
                   <Select
                     className="wp100 drawer-select"
                     autoComplete="off"
@@ -332,6 +417,10 @@ class WhenToTakeMedication extends Component {
   onClickOd = () => {
 
     const { form } = this.props;
+    const {
+      setFieldsValue
+    } = form;
+
     const { selected_timing } = this.state;
     const keys = form.getFieldValue("keys");
     if (keys.length === 3) {
@@ -340,10 +429,21 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 2) {
       this.remove(keys[1]);
     }
+
+    this.setState({nugget_selected:null});
+    setFieldsValue({
+      keys:[0]
+    });
+    setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_OD});
+
   }
   onClickBd = () => {
 
     const { form } = this.props;
+    const {
+      setFieldsValue
+    } = form;
+
     const { selected_timing } = this.state;
     const keys = form.getFieldValue("keys");
     if (keys.length === 3) {
@@ -351,11 +451,20 @@ class WhenToTakeMedication extends Component {
     } else if (keys.length === 1) {
       this.add();
     }
+    this.setState({nugget_selected:null});
+    setFieldsValue({
+      keys:[0,1]
+    });
+    setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_BD});
   }
 
   onClickTds = () => {
 
     const { form } = this.props;
+    const {
+      setFieldsValue
+    } = form;
+
     const { selected_timing } = this.state;
     const keys = form.getFieldValue("keys");
     if (keys.length === 2) {
@@ -364,6 +473,11 @@ class WhenToTakeMedication extends Component {
       this.add();
       this.add();
     }
+    this.setState({nugget_selected:null});
+    setFieldsValue({
+      keys:[0,1,2]
+    });
+    setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_TDS});
   }
 
   add = () => {
@@ -392,7 +506,56 @@ class WhenToTakeMedication extends Component {
     });
   };
 
+  setAllMealsBefore = ()=> {
+    const { form } = this.props;
+    const { getFieldValue, setFieldsValue } = form;
+    const keys = getFieldValue("keys") || [];
+    this.setState({nugget_selected:1});
+    if(keys.length === 1){
+      setFieldsValue({
+        keys:[0]
+      });
+      setFieldsValue({[FIELD_NAME]:BEFORE_MEALS_ARRAY_OD})
+    }
+    else if(keys.length === 2){
+      setFieldsValue({
+        keys:[0,1]
+      });
+      setFieldsValue({[FIELD_NAME]:BEFORE_MEALS_ARRAY_BD})}
+    else if(keys.length === 3){
+      setFieldsValue({
+        keys:[0,1,2]
+      });
+      setFieldsValue({[FIELD_NAME]:BEFORE_MEALS_ARRAY_TDS})}
+  }
+
+  setAllMealsAfter = ()=> {
+    const { form } = this.props;
+    const { getFieldValue, setFieldsValue } = form;
+    const keys = getFieldValue("keys") || [];
+    this.setState({nugget_selected:2});
+    if(keys.length === 1){
+      setFieldsValue({
+        keys:[0]
+      });
+      setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_OD})}
+    else if(keys.length === 2){
+      setFieldsValue({
+        keys:[0,1]
+      });
+      setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_BD})}
+    else if(keys.length === 3){
+      setFieldsValue({
+        keys:[0,1,2]
+      });
+      setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_TDS})}
+  }
+
+
+
   render() {
+    console.log("Med Reminder render ===============================>",this.state);
+
     const { form } = this.props;
     const {
       getFormItems,
@@ -410,6 +573,8 @@ class WhenToTakeMedication extends Component {
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
     // const { getInitialValue } = this;
+ 
+    const {nugget_selected} = this.state;
 
     return (
       <Fragment>
@@ -446,6 +611,16 @@ class WhenToTakeMedication extends Component {
         </RadioGroup>
 
         {getFormItems()}
+
+        <RadioGroup
+          className="flex justify-content-end radio-formulation mb10"
+          buttonStyle="solid"
+          value={nugget_selected}
+        >
+          <RadioButton value={1}  checked={nugget_selected === 1} onClick={this.setAllMealsBefore} >Before Meals</RadioButton>
+          <RadioButton value={2}  checked={nugget_selected === 2}  onClick={this.setAllMealsAfter} >After Meals</RadioButton>
+        </RadioGroup>
+
       </Fragment>
     );
     // }

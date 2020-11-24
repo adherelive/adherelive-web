@@ -16,7 +16,7 @@ class OtpVerificationService {
 
     getOtpByData = async (data) => {
         try {
-            const {otp, user_id} = data;
+            const { otp, user_id} = data; //otp,
             const otpDetails = await Database.getModel(TABLE_NAME).findAll({
                 limit: 1,
                 where: {

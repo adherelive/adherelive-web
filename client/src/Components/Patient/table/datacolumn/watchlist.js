@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import Rate from "antd/es/rate";
+// import Icon from "antd/es/rate";
 import message from "antd/es/message";
 import {getFullName} from "../../../../Helper/common";
+import { Icon } from 'antd';
 
 class Watchlist extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class Watchlist extends Component {
   }
 
   componentDidMount() {
+    console.log("MOUNTTTTTTTTTTTTTTTTTTTTTTTTT");
     const {
       patientData: {
         basic_info: { id } = {}
@@ -26,7 +28,36 @@ class Watchlist extends Component {
     }
   }
 
-  addThisToWatchlist = () => {
+  componentDidUpdate(prevProps,prevState){
+    
+    const {
+      patientData: {
+        basic_info: { id : prev_id } = {}
+      } = {},
+      doctorData: { watchlist_patient_ids  : prev_watchlist_patient_ids = [] } = {},
+      removePatientFromWatchlist  : prev_removePatientFromWatchlist
+    } = prevProps || {};
+
+    const {
+      patientData: {
+        basic_info: { id } = {}
+      } = {},
+      doctorData: { watchlist_patient_ids = [] } = {},
+      removePatientFromWatchlist
+    } = this.props || {};
+
+
+    if(prev_watchlist_patient_ids.length !== watchlist_patient_ids.length  && !(watchlist_patient_ids.includes(id))){
+      this.setState({
+        isAdded:watchlist_patient_ids.includes(id)
+      });
+
+    }
+  }
+
+
+  addThisToWatchlist = (e) => {
+    e.preventDefault();
     const { patientData: { basic_info: { id, first_name, middle_name, last_name } = {} } = {}, addToWatchlist } =
       this.props || {};
 
@@ -45,8 +76,10 @@ class Watchlist extends Component {
   };
 
   removeFromWatchlist = (e) => {
+    e.preventDefault();
     const { patientData: { basic_info: { id, first_name, middle_name, last_name } = {} } = {}, addToWatchlist ,removePatientFromWatchlist} =
       this.props || {};
+
     removePatientFromWatchlist(id).then(response => {
       const {status, message: errMessage} = response || {};
       if(status === true) {
@@ -74,13 +107,11 @@ class Watchlist extends Component {
       <div className=" flex align-center justify-space-between" onClick={this.stopEventBubbling}>
           {/* <Rate count={1} value={isAdded ? 1 : 0} onChange={this.addThisToWatchlist}/> */}
         {isAdded ? (
-          <Rate  count={1}  value={isAdded} 
-          onChange={this.removeFromWatchlist}
+          <Icon  type="eye-invisible" theme="filled" className="fs24" value={isAdded}  onClick={this.removeFromWatchlist}
 
           />
         ) : (
-          <Rate count={1}  value={isAdded} 
-           onChange={this.addThisToWatchlist}
+          <Icon type="eye"  className="fs24"  value={isAdded}   onClick={this.addThisToWatchlist}
           />
         )}
       </div>

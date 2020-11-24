@@ -37,12 +37,17 @@ const ChatFullScreen = lazy(() =>
 );
 
 const TwilioVideo = lazy(() =>
-  import(/* webpackChunkName: "ChatFullScreen" */ "../../Containers/ChatFullScreen/twilioVideo")
+  import(/* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/twilioVideo")
 );
 
 const DoctorProfilePage = lazy(() =>
   import(/* webpackChunkName: "AdminDoctorTable" */ "../../Containers/Pages/doctorProfilePage")
 );
+
+const DoctorSettingsePage = lazy(() =>
+  import(/* webpackChunkName: "DoctorSettingsePage" */ "../../Containers/Pages/doctorSettingsPage")  
+);
+
 
 const PatientDetailsComp = props => {
   const { match: { params: { patient_id } = {} } = {} } = props;
@@ -122,6 +127,31 @@ class Doctors extends Component {
                   path={PATH.PROFILE}
                   component={DoctorProfilePage}
                 />
+
+                <Route
+                  exact
+                  path={PATH.SETTINGS}
+                  component={DoctorSettingsePage}
+                />
+
+                <Route
+                  exact
+                  path={PATH.CONSULTATION_FEE}
+                  component={DoctorSettingsePage}
+                />
+
+                <Route
+                  exact
+                  path={PATH.BILLING}
+                  component={DoctorSettingsePage}
+                />
+
+              <Route
+                  exact
+                  path={PATH.PAYMENT_DETAILS}
+                  component={DoctorSettingsePage}
+                />
+
                 {/* <Route
                   exact
                   path={PATH.DASHBOARD}

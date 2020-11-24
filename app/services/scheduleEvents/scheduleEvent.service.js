@@ -53,6 +53,17 @@ class ScheduleEventService {
     }
   };
 
+  getAllEventByData = async (data) => {
+      try {
+          const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
+              where: data
+          });
+          return scheduleEvent;
+      } catch (error) {
+          throw error;
+      }
+  };
+
   getAllPreviousByData = async (data = {}) => {
     try {
       const { event_id, date } = data;

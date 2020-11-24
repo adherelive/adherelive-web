@@ -44,7 +44,13 @@ module.exports = {
         type: "EDIT_GRAPH",
         created_at: new Date(),
         updated_at: new Date(),
+      },
+      {
+        type: "ADD_CAREPLAN",
+        created_at: new Date(),
+        updated_at: new Date(),
       }
+
     ]);
   },
 

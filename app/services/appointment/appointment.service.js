@@ -1,13 +1,16 @@
 import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
-import {USER_CATEGORY} from "../../../constant";
-import {TABLE_NAME} from "../../models/appointments";
+import moment from "moment";
+import { USER_CATEGORY } from "../../../constant";
+import { TABLE_NAME } from "../../models/appointments";
 
 class AppointmentService {
   async addAppointment(data) {
     const transaction = await Database.initTransaction();
     try {
-      const appointment = await Database.getModel(TABLE_NAME).create(data, {transaction});
+      const appointment = await Database.getModel(TABLE_NAME).create(data, {
+        transaction
+      });
       await transaction.commit();
       return appointment;
     } catch (err) {
@@ -24,17 +27,17 @@ class AppointmentService {
         }
       });
       return appointment;
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
   };
 
-  getAppointmentById = async (id) => {
+  getAppointmentById = async id => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).findOne({
         where: {
           id
-        },
+        }
       });
       return appointment;
     } catch (err) {
@@ -42,10 +45,46 @@ class AppointmentService {
     }
   };
 
-  getAppointmentByData = async (data) => {
+  getDoctorAppointmentsForDate = async ({
+    today,
+    participant_one_id,
+    participant_two_id,
+  }) => {
+    try {
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          start_date: {
+            [Op.between]: [
+              moment(today)
+                .startOf("day")
+                .toISOString(),
+              moment(today)
+                .endOf("day")
+                .toISOString()
+            ]
+          },
+          [Op.or]: [
+            {
+              participant_one_id,
+              participant_one_type: USER_CATEGORY.DOCTOR
+            },
+            {
+              participant_two_id,
+              participant_two_type: USER_CATEGORY.DOCTOR
+            }
+          ]
+        }
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getAppointmentByData = async data => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).findAll({
-        where: data,
+        where: data
       });
       return appointment;
     } catch (err) {
@@ -53,7 +92,7 @@ class AppointmentService {
     }
   };
 
-  getAppointmentForPatient = async (patient_id) => {
+  getAppointmentForPatient = async patient_id => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -65,9 +104,9 @@ class AppointmentService {
             {
               participant_one_id: patient_id,
               participant_one_type: USER_CATEGORY.PATIENT
-            },
-          ],
-        },
+            }
+          ]
+        }
       });
       return appointments;
     } catch (error) {
@@ -75,23 +114,28 @@ class AppointmentService {
     }
   };
 
-  checkTimeSlot = async (start_time, end_time, participantOne = {}, participantTwo = {}) => {
+  checkTimeSlot = async (
+    start_time,
+    end_time,
+    participantOne = {},
+    participantTwo = {}
+  ) => {
     try {
-      const {participant_one_id, participant_one_type} = participantOne || {};
-      const {participant_two_id, participant_two_type} = participantTwo || {};
+      const { participant_one_id, participant_one_type } = participantOne || {};
+      const { participant_two_id, participant_two_type } = participantTwo || {};
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
             {
               participant_one_id,
-              participant_one_type,
+              participant_one_type
             },
             {
               participant_two_id,
-              participant_two_type,
-            },
+              participant_two_type
+            }
           ],
-          [Op.and] : {
+          [Op.and]: {
             [Op.or]: [
               {
                 start_time: {
@@ -107,9 +151,9 @@ class AppointmentService {
                   // }
                 }
               }
-            ],
-          },
-        },
+            ]
+          }
+        }
       });
       return appointments;
     } catch (error) {
@@ -125,7 +169,7 @@ class AppointmentService {
         }
       });
       return appointment;
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
   };

@@ -42,4 +42,10 @@ router.post(
   EventController.updateMedicationStatus
 );
 
+router.post(
+    "/:id/complete",
+    Authenticate,
+    EventController.markEventComplete
+);
+
 module.exports = router;

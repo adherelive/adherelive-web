@@ -5,12 +5,14 @@ import schedule from "node-schedule";
 
 import Start from "../app/Crons/start";
 import Passed from "../app/Crons/passed";
+import RenewSubscription from "../app/Crons/renewSubscription";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 
 import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
+import moment from "moment";
 
 Database.init();
 
@@ -26,6 +28,16 @@ const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     // await Prior.getPriorEvents();
     await Passed.runObserver();
     await Start.runObserver();
+});
+
+// for crons running at start of every month
+const rule = new schedule.RecurrenceRule();
+rule.dayOfWeek=[new schedule.Range(0,6)];
+rule.hour = 0;
+rule.minute = 0;
+
+const perDayCron = schedule.scheduleJob(rule, async () => {
+    await RenewSubscription.runObserver();
 });
 
 EventObserver.runObservers();

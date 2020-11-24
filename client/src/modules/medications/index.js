@@ -6,6 +6,7 @@ import {
   getMedicationForParticipantUrl,
   updateMedicationUrl,
   deleteMedicationUrl,
+  getMissedMedicationsForDoctorUrl
 } from "../../Helper/urls/mReminders";
 
 // const INITIAL_STATE = {
@@ -75,6 +76,9 @@ export const ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE =
   "ADD_CARE_PLAN_MEDICATION_REMINDER_COMPLETE";
 export const ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED = "ADD_CARE_PLAN_MEDICATION_REMINDER_FAILED";
 
+export const GET_MISSED_MEDICATIONS = "GET_MISSED_MEDICATIONS";
+export const GET_MISSED_MEDICATIONS_COMPLETE = "GET_MISSED_MEDICATIONS_COMPLETE";
+export const GET_MISSED_MEDICATIONS_FAILED = "GET_MISSED_MEDICATIONS_FAILED";
 
 export const addCarePlanMedicationReminder = (payload,carePlanId) => {
   let response = {};
@@ -211,11 +215,40 @@ export const deleteMedication = (id) => {
         });
       }
     } catch (error) {
-      console.log("DELETE APPOINTMENTS ERROR", error);
+      console.log("DELETE MEDICATIONS ERROR", error);
     }
     return response;
   };
 };
+
+export const getMissedMedicationsForDoc = (id) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GET_MISSED_MEDICATIONS });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getMissedMedicationsForDoctorUrl(id),
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_MISSED_MEDICATIONS_COMPLETE,
+          data,
+        });
+      } else {
+        dispatch({
+          type: GET_MISSED_MEDICATIONS_FAILED,
+          error,
+        });
+      }
+    } catch (error) {
+      console.log("GET_MISSED_MEDICATIONS FOR PATIENT ERROR", error);
+    }
+    return response;
+  };
+}
 
 function medicationReducer(state, payload) {
   const { medications = {} } = payload || {};

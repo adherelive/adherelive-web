@@ -39,7 +39,7 @@ import vital_templates from "./vital_templates";
 import repeat_intervals from "./vital_occurence";
 import vitals from "./vitals";
 import schedule_events from "./scheduleEvents";
-
+import account_details from "./accountDetails";
 
 const rootReducer = combineReducers({
   auth,
@@ -81,7 +81,8 @@ const rootReducer = combineReducers({
   vital_templates,
   vitals,
   repeat_intervals,
-  schedule_events
+  schedule_events,
+  account_details
 });
 
 export default (state, action) => {
