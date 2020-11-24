@@ -1764,6 +1764,26 @@ class PatientDetails extends Component {
                   treatment_symptoms = {carePlan_symptoms ? carePlan_symptoms : "--"}
 
               />
+
+              <PatientTreatmentCard
+                  formatMessage={formatMessage}
+                  treatment_name={treatment ? treatment : "--"}
+                  treatment_condition={condition ? condition : "--"}
+                  treatment_doctor={doctor_first_name ? getFullName({
+                    first_name: doctor_first_name,
+                    middle_name: doctor_middle_name,
+                    last_name: doctor_last_name
+                  }) : "--"}
+                  treatment_start_date={
+                    treatment_start_date
+                        ? moment(treatment_start_date).format("Do MMM YYYY")
+                        : "--"
+                  }
+                  treatment_provider={
+                    treatment_provider ? treatment_provider : "--"
+                  }
+                  treatment_severity_status={severity ? severity : "--"}
+              />
             </div>
 
             <div className="wp80 direction-column align-center pt20 pr24 pb20 pl24 ola123">
