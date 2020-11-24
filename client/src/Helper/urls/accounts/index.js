@@ -1,5 +1,5 @@
 export const accountDetailsUrl = () => {
-    return `/accounts/`
+    return `/accounts?all_accounts=1`
 }
 
 export const updateAccountDetailsUrl = (id) => {
