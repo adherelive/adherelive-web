@@ -40,7 +40,8 @@ class editAccountDetailsDrawer extends Component {
             ifsc_code:'',
             account_type:'',
             use_as_main : true,
-            upi_id:null
+            upi_id:null,
+            account_details:{}
         }
        
     }
@@ -61,14 +62,16 @@ class editAccountDetailsDrawer extends Component {
 
     async handleGetAccountDetails(){
         try {
-            const { getAccountDetails } = this.props;
+            const { getAccountDetails ,editDetailsSelectedID = null} = this.props;
             const response = await getAccountDetails();
             const { status, payload: {  data :{users = {},account_details  = {} } = {}  } = {} ,statusCode} =
             response || {};
            
 
                 if (status && Object.keys(account_details).length > 0 ) {
-                    const {basic_info : {id='',customer_name='',account_number='',ifsc_code='',account_type='',account_mobile_number='',in_use=false,prefix='',upi_id=null} = {} } = Object.values(account_details)[0] || {};
+                    this.setState({account_details});
+
+                    const {basic_info : {id='',customer_name='',account_number='',ifsc_code='',account_type='',account_mobile_number='',in_use=false,prefix='',upi_id=null} = {} } =account_details[editDetailsSelectedID] || {};
                     this.setState({
                         accountDetailsId:id,
                         customer_name,
@@ -104,22 +107,17 @@ class editAccountDetailsDrawer extends Component {
     setPhoneNumber = e => {
         e.preventDefault();
         const { value } = e.target;
-        // const reg = /^-?\d*(\.\d*)?$/;
-        const reg = /^[1-9]\d*(\.\d+)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+      
             this.setState({ account_mobile_number: e.target.value });
             
-        }
+        
     };
 
     setAccountNumber = e => {
         e.preventDefault();
         const { value } = e.target;
-        // const reg = /^-?\d*(\.\d*)?$/;
-        const reg = /^[1-9]\d*(\.\d+)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === '') {
             this.setState({account_number:value})
-        }
+        
     };
 
     setAccountType = value => {
@@ -134,12 +132,8 @@ class editAccountDetailsDrawer extends Component {
     set_ifsc_code = (e) => {
         e.preventDefault();
         const {value} = e.target;
-        const reg = /^[a-zA-Z0-9]*$/;
-        if (reg.test(value) || value === '') {
-            console.log("#42353424t4233");
             this.setState({ifsc_code:value})
             
-        }
         
     }
 
@@ -221,6 +215,7 @@ class editAccountDetailsDrawer extends Component {
                                 className={"form-inputs-ap"}
                                 value={customer_name}
                                 onChange={this.setLinkedAccountName}
+                                type="string"
                                 
                             />
 
@@ -233,6 +228,7 @@ class editAccountDetailsDrawer extends Component {
                         onChange={this.setPhoneNumber}
                         minLength={6}
                         maxLength={20}
+                        type="number"
                         />   
 
                         
@@ -251,6 +247,8 @@ class editAccountDetailsDrawer extends Component {
                                 className={"form-inputs-ap"}
                                 value={account_number}
                                 onChange={this.setAccountNumber}
+                                type="number"
+                                maxLength={500}
                                 
                             />
 
@@ -282,7 +280,7 @@ class editAccountDetailsDrawer extends Component {
                         className={"form-inputs-ap"}
                         value={upi_id}
                         onChange={this.setUPIidValue}
-                        
+                        type="string"
                         />    
                         
 
@@ -294,7 +292,8 @@ class editAccountDetailsDrawer extends Component {
                         className={"form-inputs-ap"}
                         value={ifsc_code}
                         onChange={this.set_ifsc_code}
-                        
+                        type="string"
+                        maxLength={500}
                         />    
 
                         <div className='form-headings flex align-center justify-start'>{this.formatMessage(messages.useAsMainAccount)}</div>
@@ -347,7 +346,7 @@ class editAccountDetailsDrawer extends Component {
     validateData = () => {
         
         const { customer_name = '', account_mobile_number = '', prefix = '', account_number = '', ifsc_code = '', account_type = ''} = this.state;
-        const reg = /^[A-Z]{4}\d{7}$/;
+
         if (!prefix) {
             message.error(this.formatMessage(messages.prefixError))
             return false;
@@ -363,7 +362,7 @@ class editAccountDetailsDrawer extends Component {
             message.error(this.formatMessage(messages.account_numberError))
             return false;
         }
-        else if (!ifsc_code || !reg.test(ifsc_code)) {
+        else if (!ifsc_code ) {
             message.error(this.formatMessage(messages.ifsc_codeError))
             return false;
         }
@@ -390,7 +389,6 @@ class editAccountDetailsDrawer extends Component {
             const response = await updateAccountDetails(accountDetailsId,{ customer_name, account_mobile_number,prefix,account_number,ifsc_code,account_type,use_as_main,upi_id});
             const { status, payload: { message : msg } = {} } = response;
             if(status){
-                console.log("STATUSSSSSSSSSSSSSSSSSSSSSSSSSS",status);
                 message.success(this.formatMessage(messages.editAccountDetailsSuccess));
                 updateAccountDetailsAdded();
                 this.onClose();
@@ -453,6 +451,7 @@ class editAccountDetailsDrawer extends Component {
 
 
     render() {
+
 
         const {renderAddAccountDetailsForm} = this;
         const { visible } = this.props;

@@ -100,7 +100,17 @@ const messages = defineMessages({
     id: "app.admin.doctors.settings.upiId",
     description: "",
     defaultMessage: "UPI Id"
-  }
+  },
+  editAccount: {
+    id: "app.admin.doctors.settings.edit.account.text",
+    description: "",
+    defaultMessage: "Edit"
+  },
+  deleteAccount: {
+    id: "app.admin.doctors.settings.delete.account.text",
+    description: "",
+    defaultMessage: "Delete"
+  },
 });
 
 export default messages;

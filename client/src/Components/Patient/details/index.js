@@ -466,7 +466,7 @@ const PatientTreatmentCard = ({
   
 }) => {
   return (
-    <div className="treatment mt20 tac ">
+    <div className="treatment mt20 tal ">
       <h3 >{formatMessage(messages.treatment_details)}</h3>
       
       <div className="treatment-details pl16 pr16 ">
@@ -493,7 +493,23 @@ const PatientTreatmentCard = ({
               <div className="fs14 fw500 flex justify-start">{treatment_doctor}</div>
         </div> 
 
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.clinical_notes)}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_clinical_notes}</div>
+        </div>
 
+
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600"> {formatMessage(messages.diagnosis_text)} : {treatment_diagnosis_type}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_diagnosis_description}</div>
+        </div>
+
+        <div className="flex direction-column mb14">
+              <div className="fs16 fw600">{formatMessage(messages.symptoms_text)}</div>
+              <div className="fs14 fw500 flex justify-start">{treatment_symptoms}</div>
+        </div>
+
+        
         <div className="flex direction-column mb14">
               <div className="fs16 fw600">{formatMessage(messages.treatment_start_date)}</div>
               <div className="fs14 fw500 flex justify-start">{treatment_start_date}</div>
@@ -504,21 +520,12 @@ const PatientTreatmentCard = ({
               <div className="fs14 fw500 flex justify-start">{treatment_provider}</div>
         </div>
 
-        <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.clinical_notes)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_clinical_notes}</div>
-        </div>
+      
 
-        <div className="flex direction-column mb14">
-              <div className="fs16 fw600"> {formatMessage(messages.diagnosis_text)} : {treatment_diagnosis_type}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_diagnosis_description}</div>
-        </div>
+       
 
 
-        <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.symptoms_text)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_symptoms}</div>
-        </div>
+      
 
       </div>
     </div>
@@ -845,7 +852,7 @@ class PatientDetails extends Component {
         )}
         {authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) && (  
           <Menu.Item onClick={handleAddCareplan}>
-            <div>{this.formatMessage(messages.careplanHeading)}</div>
+            <div>{this.formatMessage(messages.newTreatmentPlan)}</div>
           </Menu.Item>
         )}
       </Menu>

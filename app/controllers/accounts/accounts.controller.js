@@ -87,6 +87,7 @@ class MobileAccountsController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
+      Logger.debug("6564546787654678787678965678",req.query);
 
       const { query: { all_accounts = 0 } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;
@@ -212,14 +213,35 @@ class MobileAccountsController extends Controller {
         );
       }
 
-      const accountDetails = await accountDetailsService.deleteAccountDetails(
+      const deleteAccountDetails = await accountDetailsService.deleteAccountDetails(
         id
       );
+      let accountDetails = {};
+      let accountWrapperDetails = {};
+      let accountWrapper = null;
+      accountDetails = await accountDetailsService.getAllAccountsForUser(
+        userId
+      );
+
+      if (accountDetails) {
+        Logger.debug("234543453245",accountDetails);
+        for (const account of accountDetails) {
+          accountWrapper = await AccountsWrapper(account);
+          accountWrapperDetails[
+            accountWrapper.getId()
+          ] = accountWrapper.getBasicInfo();
+        }
+      }
+
 
       return raiseSuccess(
         res,
         200,
-        {},
+        {
+          account_details: {
+            ...accountWrapperDetails
+          }
+        },
         "Account details deleted successfully."
       );
     } catch (error) {

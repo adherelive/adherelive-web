@@ -19,7 +19,9 @@ router.post(
   AccountsController.addAccountDetails
 );
 
-router.get("/", Authenticate, AccountsController.getUserAccountDetails);
+router.get("/",
+ Authenticate, 
+ AccountsController.getUserAccountDetails);
 
 router.delete(
   "/:id",
