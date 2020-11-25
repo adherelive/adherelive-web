@@ -75,13 +75,15 @@ class PatientDetailsDrawer extends Component {
         const {selectedPatientId,isdisabled,addNewPatient,mobile_number} = this.state;
         const {selectedPatientId : prev_selectedPatientId = null,addNewPatient: prev_addNewPatient } = prevState;
         const { basic_info:
-            { first_name, middle_name, last_name, gender,height,weight } = {},
+            { first_name = '', middle_name ='', last_name ='', gender ='',height ='',weight ='' ,address = ''} = {},
             dob , 
             details :{
                 allergies='',
                 comorbidities=''
             } = {}
         } = patients[selectedPatientId] || {};
+
+        console.log("4532564325", patients[selectedPatientId]);
 
         const formattedDate = this.getFormattedDate(dob);
 
@@ -98,6 +100,7 @@ class PatientDetailsDrawer extends Component {
                 isdisabled:true,
                 allergies,
                 comorbidities,
+                address
             });
         }
 
@@ -658,6 +661,7 @@ class PatientDetailsDrawer extends Component {
                     value={address}
                     className={"form-textarea-ap "}
                     onChange={this.setAddress}
+                    disabled={isdisabled}
                 />
 
 
