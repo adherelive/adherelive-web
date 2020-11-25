@@ -51,6 +51,7 @@ class EditPatientDrawer extends Component {
             height:'',
             weight:'',
             symptoms:'',
+            address : '',
             treatment:null ,
             severity:null,
             condition:null,
@@ -71,7 +72,7 @@ class EditPatientDrawer extends Component {
         const {visible} = this.props;
         const {users ={},conditions ={},severity ={},treatments ={}} = this.props;
         const {patientData,carePlanData} = this.props.payload || {};
-        const {basic_info : {age,first_name ='',middle_name ='',last_name ='',user_id ='' , id :patient_id ='',height ='',weight ='' , gender =''} = {} , 
+        const {basic_info : {age,first_name ='',middle_name ='',last_name ='',user_id ='' , id :patient_id ='',height ='',weight ='' , gender ='',address = ''} = {} , 
         details : {allergies = '' , comorbidities = ''} = {} , dob =''} = patientData || {};
 
         const {basic_info : {mobile_number ='',prefix = ''} = {} } = users[user_id] || {};
@@ -101,7 +102,8 @@ class EditPatientDrawer extends Component {
                 height,
                 weight,
                 symptoms,
-                careplan_id
+                careplan_id,
+                address
             })
 
         
@@ -187,6 +189,7 @@ class EditPatientDrawer extends Component {
             this.setState({ symptoms: e.target.value});
         }
     }
+
 
     setPastedClinicalNotes = e => {
         e.preventDefault();
@@ -411,7 +414,7 @@ class EditPatientDrawer extends Component {
         const { mobile_number = '', name = '', condition = null,
         date_of_birth='', prefix = '',allergies='',comorbidities='',
         gender='',diagnosis_description='',clinical_notes='',
-        diagnosis_type='2',severity=null,treatment=null,height='',weight='',symptoms='' } = this.state;
+        diagnosis_type='2',severity=null,treatment=null,height='',weight='',symptoms='',address ='' } = this.state;
 
        let setDOB = moment(date_of_birth).format('MM-DD-YYYY');
         const prefixSelector = (
@@ -476,6 +479,17 @@ class EditPatientDrawer extends Component {
                     disabled={true}
                     
                 />
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.address)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={address}
+                    className={"form-textarea-ap "}
+                    disabled={true}
+                />
+
+
                 <div className='form-headings-ap'>{this.formatMessage(messages.gender)}</div>
                 <div className='add-patient-radio wp100 mt6 mb18 flex'>
 
@@ -716,21 +730,21 @@ class EditPatientDrawer extends Component {
 
     onSubmit = () => {
 
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='',height='',weight='', symptoms='' } = this.state;
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='',height='',weight='', symptoms='',address ='' } = this.state;
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
-            this.handleSubmit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms})
+            this.handleSubmit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms , address})
             // submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms})
         }
     }
 
-    async handleSubmit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms}){
+    async handleSubmit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms,address}){
        
         try {
             const {updatePatientAndCareplan} = this.props;
             const {careplan_id = null} = this.state;
-            const response = await updatePatientAndCareplan(careplan_id,{ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms});
+            const response = await updatePatientAndCareplan(careplan_id,{ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms,address});
             const { status, payload: { message : msg } = {} } = response;
 
             if(status){
@@ -768,6 +782,7 @@ class EditPatientDrawer extends Component {
             height:'',
             weight:'',
             symptoms:'',
+            address : '',
             treatment:null ,
             severity:null,
             condition:null,

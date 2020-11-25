@@ -2418,7 +2418,8 @@ class DoctorController extends Controller {
       condition_id,
       height = "",
       weight = "",
-      symptoms = ""} = req.body;
+      symptoms = "",
+      address = ""} = req.body;
 
       
   
