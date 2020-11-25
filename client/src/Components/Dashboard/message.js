@@ -9,7 +9,7 @@ const messages = defineMessages({
   welcome: {
     id: "app.dashboard.header.welcome",
     description: "",
-    defaultMessage: "Welcome "
+    defaultMessage: "Welcome"
   },
   patients: {
     id: "app.dashboard.content.patients",
@@ -91,6 +91,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "The details provided are being verified. You will be able to add patient only after verification is complete"
   },
+  important_note_text: {
+    id: "app.dashboard.important.note.text",
+    description: "",
+    defaultMessage: "Important"
+  }
 });
 
 export default messages;

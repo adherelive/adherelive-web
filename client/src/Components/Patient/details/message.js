@@ -396,10 +396,10 @@ const messages = defineMessages({
     //     description: "Inactive",
     //     defaultMessage: "Inactive"
     // },
-    careplanHeading: {
-        id: "app.patient_profile.careplanHeading",
+    newTreatmentPlan: {
+        id: "app.patient_profile.newTreatmentPlan",
         description: "",
-        defaultMessage: "Careplan"
+        defaultMessage: " Treatment Plan"
     },
     consent_details_text: {
         id: "app.patient_profile.consent.details.text",

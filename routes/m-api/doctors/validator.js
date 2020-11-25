@@ -89,7 +89,7 @@ const addPatientForm = Joi.object().keys({
   symptoms: Joi.string()
     .trim()
     .optional()
-    .allow(""),
+    .allow("",null),
   address: Joi.string()
     .optional()
     .allow("", null)
