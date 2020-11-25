@@ -666,7 +666,7 @@ class DoctorSettingsPage extends Component {
 
         {/************************* SIDEBAR *************************/}
         <div className="wp100 p20 flex ">
-          <div className=" bg-grey h250 p20 wp30 flex direction-column ">
+          <div className="br5 bg-grey h250 p20 wp30 flex direction-column ">
             <div
               className="fs20 fw700 mb14 h-cursor-p"
               onClick={this.handleItemSelect(CONSULTATION_FEE)}
