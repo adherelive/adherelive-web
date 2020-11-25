@@ -12,7 +12,7 @@ import {
   SYRUP,
   PARTS,
   PART_LIST_CODES,
-  DIAGNOSIS_TYPE
+  DIAGNOSIS_TYPE,
 } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
@@ -289,7 +289,7 @@ const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
                         <img src={plus_white} className={"w20 h20 mr6 "} />
                     </div>
                     <div className="flex direction-column align-center justify-center hp100">
-                        <span className="fs20" > Add</span>
+                        <span className="fs20" >Add</span>
                     </div>
                 </div>
               </div>
@@ -472,52 +472,53 @@ const PatientTreatmentCard = ({
       <div className="treatment-details pl16 pr16 ">
         
       <div className="flex direction-column mb14 mt20">
-              <div className="fs16 fw600 ">{formatMessage(messages.treatment_header)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_name}</div>
+              <div className="fs16 ">{formatMessage(messages.treatment_header)}</div>
+              <div className="fs18 fw700">{treatment_name}</div>
       </div>    
 
       
         <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.treatment_severity)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_severity_status}</div>
+              <div className="fs16">{formatMessage(messages.treatment_severity)}</div>
+              <div className="fs18 fw700">{treatment_severity_status}</div>
         </div>    
 
       
         <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.treatment_condition)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_condition}</div>
+              <div className="fs16">{formatMessage(messages.treatment_condition)}</div>
+              <div className="fs18 fw700">{treatment_condition}</div>
         </div>    
 
         <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.treatment_doctor)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_doctor}</div>
+              <div className="fs16">{formatMessage(messages.treatment_doctor)}</div>
+              <div className="fs18 fw700">{treatment_doctor}</div>
         </div> 
 
         <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.clinical_notes)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_clinical_notes}</div>
+              <div className="fs16">{formatMessage(messages.clinical_notes)}</div>
+              <div className="fs18 fw700">{treatment_clinical_notes}</div>
         </div>
 
 
         <div className="flex direction-column mb14">
-              <div className="fs16 fw600"> {formatMessage(messages.diagnosis_text)} : {treatment_diagnosis_type}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_diagnosis_description}</div>
+              <div className="fs16"> {formatMessage(messages.diagnosis_text)} : {treatment_diagnosis_type}</div>
+              <div className="fs18 fw700">{treatment_diagnosis_description}</div>
         </div>
 
+
         <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.symptoms_text)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_symptoms}</div>
+              <div className="fs16">{formatMessage(messages.symptoms_text)}</div>
+              <div className="fs18 fw700">{treatment_symptoms}</div>
         </div>
 
         
         <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.treatment_start_date)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_start_date}</div>
+              <div className="fs16">{formatMessage(messages.treatment_start_date)}</div>
+              <div className="fs18 fw700">{treatment_start_date}</div>
         </div>    
 
         <div className="flex direction-column mb14">
-              <div className="fs16 fw600">{formatMessage(messages.treatment_provider)}</div>
-              <div className="fs14 fw500 flex justify-start">{treatment_provider}</div>
+              <div className="fs16">{formatMessage(messages.treatment_provider)}</div>
+              <div className="fs18 fw700">{treatment_provider}</div>
         </div>
 
       
@@ -1772,25 +1773,7 @@ class PatientDetails extends Component {
 
               />
 
-              <PatientTreatmentCard
-                  formatMessage={formatMessage}
-                  treatment_name={treatment ? treatment : "--"}
-                  treatment_condition={condition ? condition : "--"}
-                  treatment_doctor={doctor_first_name ? getFullName({
-                    first_name: doctor_first_name,
-                    middle_name: doctor_middle_name,
-                    last_name: doctor_last_name
-                  }) : "--"}
-                  treatment_start_date={
-                    treatment_start_date
-                        ? moment(treatment_start_date).format("Do MMM YYYY")
-                        : "--"
-                  }
-                  treatment_provider={
-                    treatment_provider ? treatment_provider : "--"
-                  }
-                  treatment_severity_status={severity ? severity : "--"}
-              />
+            
             </div>
 
             <div className="wp80 direction-column align-center pt20 pr24 pb20 pl24 ola123">
