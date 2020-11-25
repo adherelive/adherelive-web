@@ -472,53 +472,53 @@ const PatientTreatmentCard = ({
       <div className="treatment-details pl16 pr16 ">
         
       <div className="flex direction-column mb14 mt20">
-              <div className="fs16 ">{formatMessage(messages.treatment_header)}</div>
-              <div className="fs18 fw700">{treatment_name}</div>
+              <div className="fs18 fw700">{formatMessage(messages.treatment_header)}</div>
+              <div  className="fs16 ">{treatment_name}</div>
       </div>    
 
       
         <div className="flex direction-column mb14">
-              <div className="fs16">{formatMessage(messages.treatment_severity)}</div>
-              <div className="fs18 fw700">{treatment_severity_status}</div>
+              <div className="fs18 fw700">{formatMessage(messages.treatment_severity)}</div>
+              <div  className="fs16 ">{treatment_severity_status}</div>
         </div>    
 
       
         <div className="flex direction-column mb14">
-              <div className="fs16">{formatMessage(messages.treatment_condition)}</div>
-              <div className="fs18 fw700">{treatment_condition}</div>
+              <div className="fs18 fw700">{formatMessage(messages.treatment_condition)}</div>
+              <div  className="fs16 ">{treatment_condition}</div>
         </div>    
 
         <div className="flex direction-column mb14">
-              <div className="fs16">{formatMessage(messages.treatment_doctor)}</div>
-              <div className="fs18 fw700">{treatment_doctor}</div>
+              <div className="fs18 fw700">{formatMessage(messages.treatment_doctor)}</div>
+              <div  className="fs16 ">{treatment_doctor}</div>
         </div> 
 
         <div className="flex direction-column mb14">
-              <div className="fs16">{formatMessage(messages.clinical_notes)}</div>
-              <div className="fs18 fw700">{treatment_clinical_notes}</div>
+              <div className="fs18 fw700">{formatMessage(messages.clinical_notes)}</div>
+              <div  className="fs16 ">{treatment_clinical_notes}</div>
         </div>
 
 
         <div className="flex direction-column mb14">
-              <div className="fs16"> {formatMessage(messages.diagnosis_text)} : {treatment_diagnosis_type}</div>
-              <div className="fs18 fw700">{treatment_diagnosis_description}</div>
+              <div className="fs18 fw700"> {formatMessage(messages.diagnosis_text)} </div>
+              <div  className="fs16 ">{treatment_diagnosis_description}  {`(${treatment_diagnosis_type})`}</div>
         </div>
 
 
         <div className="flex direction-column mb14">
-              <div className="fs16">{formatMessage(messages.symptoms_text)}</div>
-              <div className="fs18 fw700">{treatment_symptoms}</div>
+              <div className="fs18 fw700">{formatMessage(messages.symptoms_text)}</div>
+              <div  className="fs16 ">{treatment_symptoms}</div>
         </div>
 
         
         <div className="flex direction-column mb14">
-              <div className="fs16">{formatMessage(messages.treatment_start_date)}</div>
-              <div className="fs18 fw700">{treatment_start_date}</div>
+              <div className="fs18 fw700">{formatMessage(messages.treatment_start_date)}</div>
+              <div  className="fs16 ">{treatment_start_date}</div>
         </div>    
 
         <div className="flex direction-column mb14">
-              <div className="fs16">{formatMessage(messages.treatment_provider)}</div>
-              <div className="fs18 fw700">{treatment_provider}</div>
+              <div className="fs18 fw700">{formatMessage(messages.treatment_provider)}</div>
+              <div  className="fs16 ">{treatment_provider}</div>
         </div>
 
       

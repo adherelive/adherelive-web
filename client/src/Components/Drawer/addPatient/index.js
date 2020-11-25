@@ -56,7 +56,8 @@ class PatientDetailsDrawer extends Component {
             addNewPatient:false,
             height:'',
             weight:'',
-            symptoms:''
+            symptoms:'',
+            address : ''
         };
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
         this.handleTreatmentSearch = throttle(this.handleTreatmentSearch.bind(this), 2000);
@@ -124,7 +125,8 @@ class PatientDetailsDrawer extends Component {
                 addNewPatient:false,
                 height:'',
                 weight:'',
-                symptoms:''
+                symptoms:'',
+                address : ''
             });
         }
 
@@ -306,6 +308,14 @@ class PatientDetailsDrawer extends Component {
         
         if (value.length>0 || value === '') {
             this.setState({ symptoms: e.target.value});
+        }
+    }
+
+    setAddress = e => {
+        const  value  = e.target.value.trim();
+        
+        if (value.length>0 || value === '') {
+            this.setState({ address: e.target.value});
         }
     }
 
@@ -546,7 +556,7 @@ class PatientDetailsDrawer extends Component {
         const { mobile_number = '', name = '', condition = null,
         date_of_birth='', prefix = '',allergies='',comorbidities='',
         gender='',diagnosis_description='',clinical_notes='',
-        diagnosis_type='2',isdisabled,addNewPatient,severity='',treatment='',height='',weight='',symptoms='' } = this.state;
+        diagnosis_type='2',isdisabled,addNewPatient,severity='',treatment='',height='',weight='',symptoms='' , address ='' } = this.state;
 
         const prefixSelector = (
 
@@ -639,6 +649,18 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setName}
                     disabled={isdisabled}
                 />
+
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.address)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={address}
+                    className={"form-textarea-ap "}
+                    onChange={this.setAddress}
+                />
+
+
                 <div className='form-headings-ap'>{this.formatMessage(messages.gender)}</div>
                 <div className='add-patient-radio wp100 mt6 mb18 flex'>
 
@@ -879,11 +901,11 @@ class PatientDetailsDrawer extends Component {
 
     onSubmit = () => {
 
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='',height='',weight='', symptoms='' } = this.state;
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='',height='',weight='', symptoms='',address ='' } = this.state;
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
-            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms})
+            submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms,address})
         }
     }
 
@@ -917,7 +939,8 @@ class PatientDetailsDrawer extends Component {
             addNewPatient:false,
             height:'',
             weight:'',
-            symptoms:''
+            symptoms:'',
+            address:''
         });
         close();
     };

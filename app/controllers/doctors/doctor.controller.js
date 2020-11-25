@@ -766,7 +766,8 @@ class DoctorController extends Controller {
         condition_id,
         height = "",
         weight = "",
-        symptoms = ""
+        symptoms = "",
+        address = ""
       } = req.body;
 
       Logger.debug("1213132314231", req.body);
@@ -849,7 +850,8 @@ class DoctorController extends Controller {
             ...patientOtherDetails
           },
           height,
-          weight
+          weight,
+          address
         });
 
         await UserPreferenceService.addUserPreference({
