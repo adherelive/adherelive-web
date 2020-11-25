@@ -100,6 +100,30 @@ const messages = defineMessages({
     id: "app.admin.doctors.settings.upiId",
     description: "",
     defaultMessage: "UPI Id"
+  },
+  editAccount: {
+    id: "app.admin.doctors.settings.edit.account.text",
+    description: "",
+    defaultMessage: "Edit"
+  }, 
+  deleteAccount: {
+    id: "app.admin.doctors.settings.delete.account.text",
+    description: "",
+    defaultMessage: "Delete"
+  },
+  billingDisplay: {
+    id: "app.admin.doctors.settings.delete.billingDisplay",
+    description: "",
+    defaultMessage: "Billing Display"
+  },  warnNote :{
+    id: "app.admin.doctors.settings.delete.warnNote",
+    description: "",
+    defaultMessage: "There might be payment settlements attached to this account. Please be sure before removing these Account Details."
+  },
+  irreversibleWarn :{
+    id: "app.admin.doctors.settings.delete.irreversibleWarn",
+    description: "",
+    defaultMessage: "This delete is irreversible"
   }
 });
 

@@ -104,7 +104,7 @@ class PatientDetailsDrawer extends Component {
             this.setState({
                 isdisabled:false,
                 selectedPatientId:null,
-                patient_ids:[],
+                // patient_ids:[],
                 name: '',
                 gender: '',
                 date_of_birth: '',
@@ -609,6 +609,8 @@ class PatientDetailsDrawer extends Component {
                     
                 <div>
              
+            {/* <Button type="ghost" onClick={this.setAddnewPatient} className="mauto" >Add New Patient</Button> */}
+
             <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Name"

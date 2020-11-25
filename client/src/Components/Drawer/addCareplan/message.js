@@ -6,10 +6,10 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Add Careplan"
     },
-    newCareplan: {
-        id: "app.addCareplan.newCareplan",
+    newTreatmentPlan: {
+        id: "app.addCareplan.newTreatmentPlan",
         description: "",
-        defaultMessage: "New Careplan"
+        defaultMessage: "New Treatment Plan"
     },
     condition: {
         id: "app.addCareplan.condition",

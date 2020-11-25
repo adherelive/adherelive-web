@@ -54,6 +54,8 @@ class addAccountDetailsDrawer extends Component {
        
     }
 
+  
+
     setLinkedAccountName = (e) => {
         e.preventDefault();
         const { value } = e.target;
@@ -67,22 +69,17 @@ class addAccountDetailsDrawer extends Component {
     setPhoneNumber = e => {
         e.preventDefault();
         const { value } = e.target;
-        // const reg = /^-?\d*(\.\d*)?$/;
-        const reg = /^[1-9]\d*(\.\d+)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+      
             this.setState({ account_mobile_number: e.target.value });
             
-        }
+        
     };
 
     setAccountNumber = e => {
         e.preventDefault();
         const { value } = e.target;
-        // const reg = /^-?\d*(\.\d*)?$/;
-        const reg = /^[1-9]\d*(\.\d+)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === '') {
             this.setState({account_number:value})
-        }
+        
     };
 
     setAccountType = value => {
@@ -97,15 +94,10 @@ class addAccountDetailsDrawer extends Component {
     set_ifsc_code = (e) => {
         e.preventDefault();
         const {value} = e.target;
-        const reg = /^[a-zA-Z0-9]*$/;
-        if (reg.test(value) || value === '') {
-            console.log("#42353424t4233");
             this.setState({ifsc_code:value})
             
-        }
         
     }
-
     setMain = (e) => {
         e.preventDefault();
         const {use_as_main} = this.state;
@@ -185,6 +177,7 @@ class addAccountDetailsDrawer extends Component {
                                 className={"form-inputs-ap"}
                                 value={customer_name}
                                 onChange={this.setLinkedAccountName}
+                                type="string"
                                 
                             />
 
@@ -197,6 +190,7 @@ class addAccountDetailsDrawer extends Component {
                         onChange={this.setPhoneNumber}
                         minLength={6}
                         maxLength={20}
+                        type="number"
                         />   
 
                         
@@ -215,6 +209,8 @@ class addAccountDetailsDrawer extends Component {
                                 className={"form-inputs-ap"}
                                 value={account_number}
                                 onChange={this.setAccountNumber}
+                                type="number"
+                                maxLength={500}
                                 
                             />
 
@@ -246,7 +242,7 @@ class addAccountDetailsDrawer extends Component {
                         className={"form-inputs-ap"}
                         value={upi_id}
                         onChange={this.setUPIidValue}
-                        
+                        type="string"
                         />    
                         
 
@@ -256,7 +252,8 @@ class addAccountDetailsDrawer extends Component {
                         className={"form-inputs-ap"}
                         value={ifsc_code}
                         onChange={this.set_ifsc_code}
-                        
+                        type="string"
+                        maxLength={500}
                         />    
 
                         <div className='form-headings flex align-center justify-start'>{this.formatMessage(messages.useAsMainAccount)}</div>
@@ -310,7 +307,7 @@ class addAccountDetailsDrawer extends Component {
     validateData = () => {
         
         const { customer_name = '', account_mobile_number = '', prefix = '', account_number = '', ifsc_code = '', account_type = ''} = this.state;
-        const reg = /^[A-Z]{4}\d{7}$/;
+
         if (!prefix) {
             message.error(this.formatMessage(messages.prefixError))
             return false;
@@ -326,7 +323,7 @@ class addAccountDetailsDrawer extends Component {
             message.error(this.formatMessage(messages.account_numberError))
             return false;
         }
-        else if (!ifsc_code || !reg.test(ifsc_code)) {
+        else if (!ifsc_code ) {
             message.error(this.formatMessage(messages.ifsc_codeError))
             return false;
         }

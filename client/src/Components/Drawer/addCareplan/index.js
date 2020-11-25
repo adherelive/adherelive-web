@@ -490,7 +490,7 @@ class AddCareplanDrawer extends Component {
         return (
             <Fragment>
                 <Drawer
-                    title={this.formatMessage(messages.newCareplan)}
+                    title={this.formatMessage(messages.newTreatmentPlan)}
                     placement="right"
                     maskClosable={false}
                     headerStyle={{

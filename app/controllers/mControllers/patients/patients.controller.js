@@ -848,12 +848,21 @@ class MPatientController extends Controller {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       Logger.debug("34554321345324", req.params);
-      const {params: {careplan_id} = {}} = req;
+      const { params: { patient_id } = {} } = req;
 
-      const carePlan = await carePlanService.getSingleCarePlanByData({id:careplan_id});
-      const allVitals = await VitalService.getAllByData({
-        care_plan_id: carePlan.get("id")
+      const carePlans = await carePlanService.getMultipleCarePlanByData({
+        patient_id
       });
+
+      let allVitals = [];
+
+      for (const carePlan of carePlans) {
+        const vitals = await VitalService.getAllByData({
+          care_plan_id: carePlan.get("id")
+        });
+
+        allVitals = [...allVitals, ...vitals];
+      }
 
       let vitalDetails = {};
       let vitalTemplateDetails = {};
@@ -968,8 +977,10 @@ class MPatientController extends Controller {
 
       const patient = await PatientWrapper(null, patient_id);
 
-      const { users } = await patient.getReferenceInfo();
-      const { basic_info: { mobile_number } = {} } = users[patient.getUserId()];
+      // const { users } = await patient.getReferenceInfo();
+      const users = await UserWrapper(null, patient.getUserId());
+
+      const { basic_info: { mobile_number } = {} } = users.getBasicInfo();
 
       Logger.debug("patient_id ---> ", mobile_number);
 
