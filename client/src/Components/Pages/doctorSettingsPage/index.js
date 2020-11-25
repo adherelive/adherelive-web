@@ -427,6 +427,9 @@ class DoctorSettingsPage extends Component {
     );
   };
 
+  deleteAccountDetails = id => {
+    this.handleDelete(id);
+  };
 
   deleteAccountDetails = (id) => () => {
 
