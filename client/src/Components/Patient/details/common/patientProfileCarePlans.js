@@ -6,7 +6,7 @@ import { getAuthCategory, getFullName } from "../../../../Helper/common";
 import {
   DIAGNOSIS_TYPE,
   FINAL,
-  PROBABLE,
+  PROBABLE, TABLE_DEFAULT_BLANK_FIELD,
 } from "../../../../constant";
 import messages from "./messages";
 
@@ -78,15 +78,15 @@ class PatientCarePlans extends Component {
           className={`pointer flex justify-space-between align-center p10 br5 ${selectedCarePlanId === id ? "bg-lighter-blue" : ""}`}
         >
           <div>
-            <div className="fs18 fw700 blueish-purple">{description}</div>
-            <div className="blueish-purple">{name}</div>
-            <div className="blueish-purple">{doctorId === doctor_id ? formatMessage(messages.with_you_text) : `Dr. ${getFullName({
+            <div className="fs18 black-85 fw700">{description ? description : TABLE_DEFAULT_BLANK_FIELD}</div>
+            <div className="fw700 brown-grey">{name}</div>
+            <div className="fw700 brown-grey">{doctorId === doctor_id ? formatMessage(messages.with_you_text) : `Dr. ${getFullName({
               first_name,
               middle_name,
               last_name
             })}`}</div>
           </div>
-          <div className="blueish-purple">{getCarePlanStatus(expired_on)}</div>
+          <div className="fw700 brown-grey">{getCarePlanStatus(expired_on)}</div>
         </div>
       );
     });
@@ -114,12 +114,12 @@ class PatientCarePlans extends Component {
         hiddenCarePlans.push(
           <div
             key={`cp-no-consent-${id}`}
-            className={`flex justify-space-between blueish-purple align-center p10 br5`}
+            className={`flex justify-space-between align-center p10 br5`}
           >
-            <div className="fs18 fw700 blueish-purple">{`${formatMessage(
+            <div className="fs18 fw700">{`${formatMessage(
               messages.careplan_text
             )} ${index + 1}`}</div>
-            <div className="blueish-purple">{getCarePlanStatus(expired_on)}</div>
+            <div className="">{getCarePlanStatus(expired_on)}</div>
           </div>
         );
       }
@@ -165,8 +165,8 @@ class PatientCarePlans extends Component {
 
     return (
       <div className="mt18">
-        <div className="fs18 fw500 blueish-purple">{formatMessage(messages.treatment_plans_text)}</div>
-          <div className="br5 bw-purple">
+        <div className="fs18 fw700">{formatMessage(messages.treatment_plans_text)}</div>
+          <div className="br5 bw-faint-grey">
             {getVisibleCarePlans()}
             {getHiddenCarePlans()}
           </div>
