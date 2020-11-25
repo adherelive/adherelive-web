@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer } from "antd";
-import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS } from "../../../constant";
+import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS ,DIAGNOSIS_TYPE,FINAL,PROBABLE} from "../../../constant";
 import messages from "./message";
 import moment from "moment";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
@@ -22,7 +22,7 @@ class PatientDetailsDrawer extends Component {
   }
 
   componentDidMount() {
-    const { getMedications, payload: { patient_id } = {}, care_plans = {},getAppointments, appointments={}  } = this.props;
+    const { getMedications, payload: { patient_id } = {}, care_plans = {},getAppointments, appointments={} ,patients ={} } = this.props;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
     let appointmentsListIds = [];
@@ -39,6 +39,7 @@ class PatientDetailsDrawer extends Component {
     
     for (let carePlan of Object.values(care_plans)) {
       let { basic_info: { id = 1, patient_id: patientId = 1 }, medication_ids = [] , appointment_ids=[] } = carePlan;
+      console.log("CAREPLAN =========>",patients[patientId]);
       if (parseInt(patient_id) === parseInt(patientId)) {
         carePlanId = id;
         carePlanMedicationIds = medication_ids;
@@ -177,7 +178,7 @@ class PatientDetailsDrawer extends Component {
   };
 
   getPatientDetailContent = () => {
-    const { auth = {}, treatments = {}, doctors = {}, conditions = {}, severity: severities = {}, providers, patients, payload, care_plans, } = this.props;
+    const { auth = {}, treatments = {}, doctors = {}, conditions = {}, severity: severities = {}, providers, patients, payload, care_plans, users = {}} = this.props;
     const {
       formatMessage,
       getMedicationList,
@@ -214,22 +215,24 @@ class PatientDetailsDrawer extends Component {
         }
       }
 
-
-      const { basic_info: { doctor_id = 1 } = {}, activated_on: start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
+      const { basic_info: { doctor_id = 1 } = {},
+      details :{clinical_notes ='' , diagnosis : {type = "1" , description =''} = {} , symptoms = ''} = {},
+       activated_on: start_date, treatment_id = '', severity_id = '', condition_id = '' } = care_plans[carePlanId] || {};
       const { basic_info: { name: treatment = '' } = {} } = treatments[treatment_id] || {};
       const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
       const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
       const {
-        basic_info: { first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
+        basic_info: { user_id = null, first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
         reports = [],
         provider_id,
       } = patients[id] || {};
-
+      const {basic_info  : {prefix = "91" , mobile_number = ''} = {} } = users[user_id] || {}
 
       const { basic_info: { first_name: doctor_first_name, middle_name: doctor_middle_name, last_name: doctor_last_name } = {} } = doctors[doctor_id] || {};
       const { basic_info: { name: providerName = "--" } = {} } =
         providers[provider_id] || {};
-
+     const diagnosis_type = DIAGNOSIS_TYPE[type];
+     const diagnosis = diagnosis_type["value"]; 
       return (
         <Fragment>
           {/*<img src={CloseIcon} alt="close icon" onClick={}/>*/}
@@ -257,6 +260,8 @@ class PatientDetailsDrawer extends Component {
             />
           </div>
           <div className="fw700 wp100">{`PID: ${uid}`}</div>
+          <div className="fw700 wp100">{`${formatMessage(messages.mobile)}: +${prefix} ${mobile_number}`}</div>
+
 
           {/*boxes*/}
 
@@ -314,6 +319,26 @@ class PatientDetailsDrawer extends Component {
                 <div className="flex-2">{doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name ? `${doctor_last_name} ` : ""}` : "--"}</div>
               </div>
               <div className="flex justify-space-between align-center">
+                <div className="flex-1">{formatMessage(messages.clinicalNotes)}</div>
+                <div className="flex-2">{clinical_notes ? clinical_notes : "--" }</div>
+              </div>
+              <div className="flex justify-space-between align-center">
+                <div className="flex-1">{formatMessage(messages.diagnosisType)}</div>
+                  <div className="flex-2">{
+                    diagnosis
+                  }</div>
+              </div>
+
+              <div className="flex justify-space-between align-center">
+                <div className="flex-1">{formatMessage(messages.diagnosisDesc)}</div>
+                
+                <div className="flex-2">{ description  ? description : "--"}</div>
+              </div>
+              <div className="flex justify-space-between align-center">
+                <div className="flex-1">{formatMessage(messages.symptoms)}</div>
+                <div className="flex-2">{symptoms ? symptoms : "--" }</div>
+              </div>
+              <div className="flex justify-space-between align-center">
                 <div className="flex-1">{formatMessage(messages.start_date)}</div>
                 <div className="flex-2">{start_date ? moment(start_date).format("Do MMM YYYY") : '--'}</div>
               </div>
@@ -321,6 +346,7 @@ class PatientDetailsDrawer extends Component {
                 <div className="flex-1">{formatMessage(messages.provider)}</div>
                 <div className="flex-2">{providerName}</div>
               </div>
+            
             </div>
           </div>
 

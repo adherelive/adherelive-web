@@ -3,6 +3,11 @@ import { injectIntl } from "react-intl";
 import Button from "antd/es/button";
 
 import { getAuthCategory, getFullName } from "../../../../Helper/common";
+import {
+  DIAGNOSIS_TYPE,
+  FINAL,
+  PROBABLE,
+} from "../../../../constant";
 import messages from "./messages";
 
 class PatientCarePlans extends Component {
@@ -56,12 +61,15 @@ class PatientCarePlans extends Component {
     return patientCarePlans.map((id, index) => {
       const {
         basic_info: { doctor_id, patient_id: carePlanPatientId } = {},
-        details: { treatment_id } = {},
+        details: { treatment_id,
+        diagnosis :{type = "1", description =''} = {} } = {},
         expired_on
       } = care_plans[id] || {};
       const { basic_info: { name } = {} } = treatments[treatment_id] || {};
       const { basic_info: { first_name, middle_name, last_name } = {} } =
         doctors[doctor_id] || {};
+
+        console.log("6tr678656",care_plans[id]);
 
       return (
         <div
@@ -70,7 +78,8 @@ class PatientCarePlans extends Component {
           className={`pointer flex justify-space-between align-center p10 br5 ${selectedCarePlanId === id ? "bg-lighter-blue" : ""}`}
         >
           <div>
-            <div className="fs18 fw700 blueish-purple">{name}</div>
+            <div className="fs18 fw700 blueish-purple">{description}</div>
+            <div className="blueish-purple">{name}</div>
             <div className="blueish-purple">{doctorId === doctor_id ? formatMessage(messages.with_you_text) : `Dr. ${getFullName({
               first_name,
               middle_name,

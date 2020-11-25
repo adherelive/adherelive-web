@@ -60,6 +60,31 @@ const messages = defineMessages({
     id: "app.drawer.patient.details.gotoprofile",
     description: "",
     defaultMessage: "Go to Profile"
+  },
+  mobile: {
+    id: "app.drawer.patient.details.mobile",
+    description: "",
+    defaultMessage: "Mobile"
+  },
+  clinicalNotes: {
+    id: "app.drawer.patient.details.clinicalNotes",
+    description: "",
+    defaultMessage: "Clinical Notes"
+  },
+  diagnosisType: {
+    id: "app.drawer.patient.details.diagnosisType",
+    description: "",
+    defaultMessage: "Diagnosis Type"
+  },
+  diagnosisDesc: {
+    id: "app.drawer.patient.details.diagnosisDesc",
+    description: "",
+    defaultMessage: "Diagnosis Description"
+  },
+  symptoms: {
+    id: "app.drawer.patient.details.symptoms",
+    description: "",
+    defaultMessage: "Symptoms"
   }
 });
 

@@ -9,7 +9,7 @@ const messages = defineMessages({
   welcome: {
     id: "app.dashboard.header.welcome",
     description: "",
-    defaultMessage: "Welcome "
+    defaultMessage: "Welcome"
   },
   patients: {
     id: "app.dashboard.content.patients",

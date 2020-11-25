@@ -321,12 +321,19 @@ class Dashboard extends Component {
 
         return (
             <Fragment>
-                <div className="dashboard p20">
-                    <div className="flex direction-row justify-space-between align-center">
+                <div className=" dashboard p20">
+                    {authPermissions.length === 0
+                    ?
+                    (<div className="fixed mb100 t0 l0 pl140 pt10 pb10 bg-light-grey hauto wp100 ">
+                             <div className="wp100 ht20 b fs20 text-left">{this.formatMessage(messages.pending_verify_content_text)}</div>
+                    </div>)
+                    :
+                    null}
+                    <div className={`flex direction-row justify-space-between align-center ${authPermissions.length === 0 ? 'mt50' : ``} `}>
                         {/* <div className="fs28 fw700">{formatMessage(messages.dashboard)}</div> */}
                         {docName !== '' 
                         ? 
-                        (<div className="fs28 fw700">{formatMessage(messages.welcome)} &nbsp; {docName}</div>)
+                        (<div className="fs28 fw700">{formatMessage(messages.welcome)},  {docName}</div>)
                         :
                         (<div className="fs28 fw700">{formatMessage(messages.dashboard)}</div>)
                         }
