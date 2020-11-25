@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
-import plus_white from '../../../Assets/images/plus_white.png';
+import plus_white from "../../../Assets/images/plus_white.png";
 import chat_image from "../../../Assets/images/chat.svg";
 
 import {
@@ -12,7 +12,7 @@ import {
   SYRUP,
   PARTS,
   PART_LIST_CODES,
-  DIAGNOSIS_TYPE,
+  DIAGNOSIS_TYPE
 } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
@@ -30,7 +30,13 @@ import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 
 import PatientCarePlans from "./common/patientProfileCarePlans";
 
-import { MailOutlined, PhoneOutlined, MessageOutlined, VideoCameraOutlined, CaretDownOutlined } from "@ant-design/icons";
+import {
+  MailOutlined,
+  PhoneOutlined,
+  MessageOutlined,
+  VideoCameraOutlined,
+  CaretDownOutlined
+} from "@ant-design/icons";
 import moment from "moment";
 import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
 
@@ -55,7 +61,7 @@ import AddCareplanDrawer from "../../../Containers/Drawer/addCareplan";
 import config from "../../../config";
 import EditVitals from "../../../Containers/Drawer/editVitals";
 import { getRoomId } from "../../../Helper/twilio";
-import {getFullName} from "../../../Helper/common";
+import { getFullName } from "../../../Helper/common";
 import Tooltip from "antd/es/tooltip";
 
 const BLANK_TEMPLATE = "Blank Template";
@@ -63,7 +69,7 @@ const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
 
 const { confirm } = Modal;
-const {Panel} = Collapse;
+const { Panel } = Collapse;
 
 const PATIENT_TABS = {
   ACTIONS: {
@@ -181,13 +187,18 @@ const columns_appointments = [
     title: "",
     dataIndex: "markComplete",
     key: "markComplete",
-    width:"30%",
-    render: ({active_event_id, markAppointmentComplete, formatMessage}) => {
-      if(active_event_id) {
+    width: "30%",
+    render: ({ active_event_id, markAppointmentComplete, formatMessage }) => {
+      if (active_event_id) {
         return (
-            <div className="wp100 flex align-center justify-center pointer">
-              <Button type={"primary"} onClick={markAppointmentComplete(active_event_id)}>{formatMessage(messages.complete_text)}</Button>
-            </div>
+          <div className="wp100 flex align-center justify-center pointer">
+            <Button
+              type={"primary"}
+              onClick={markAppointmentComplete(active_event_id)}
+            >
+              {formatMessage(messages.complete_text)}
+            </Button>
+          </div>
         );
       }
     }
@@ -229,7 +240,7 @@ const columns_appointments_non_editable = [
     key: "adherence",
     width: "30%",
     ellipsis: true
-  },
+  }
 ];
 
 // const data_symptoms = [
@@ -266,7 +277,7 @@ const columns_appointments_non_editable = [
 
 const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
   return (
-    <div className="flex pt20 pr24 pb20 pl24">
+    <div className="flex pt20 pr24 pb10 pl24">
       <div className="patient-profile-header flex-grow-0">
         <div className="fs28 fw700">
           {formatMessage(messages.patient_profile_header)}
@@ -279,27 +290,9 @@ const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
             trigger={["click"]}
             placement="bottomRight"
           >
-           
-            
-           
-           <Button type="primary" className='ml10 add-button '>
-              <div className="flex direction-column align-center justify-center hp100">
-                <div className="flex direction-row" >
-                    <div className="flex direction-column align-center justify-center hp100">
-                        <img src={plus_white} className={"w20 h20 mr6 "} />
-                    </div>
-                    <div className="flex direction-column align-center justify-center hp100">
-                        <span className="fs20" >Add</span>
-                    </div>
-                </div>
-              </div>
-            
-          </Button>
-
-           
-            
-
-            
+            <Button type="primary" className="ml10 add-button " icon={"plus"}>
+              <span className="fs16">Add</span>
+            </Button>
           </Dropdown>
         )}
       </div>
@@ -319,37 +312,39 @@ const PatientCard = ({
   patient_email_id,
   formatMessage,
   openChat,
-    patients,
-    patient_id,
-    editPatientOption
+  patients,
+  patient_id,
+  editPatientOption
 }) => {
-  const {details: {comorbidities, allergies} = {}} = patients[patient_id] || {};
+  const { details: { comorbidities, allergies } = {} } =
+    patients[patient_id] || {};
   return (
-    <div className="flex direction-column tac br10 bg-lighter-grey">
+    <div className="flex direction-column tac br10 bg-faint-grey">
       {/* <div className="flex justify-end pt20 pl20 pr20 pb6">
         <CaretDownOutlined className="pointer" />
       </div> */}
 
       <div>
-        <Collapse ghost={true} expandIconPosition={"right"}  bordered={false} expandIcon={() => <CaretDownOutlined className="pointer" />}>
-          <Panel  key={"1"} style={{border:"none"}} className="br10">
-      
+        <Collapse
+          ghost={true}
+          expandIconPosition={"right"}
+          bordered={false}
+          expandIcon={() => <CaretDownOutlined className="pointer" />}
+        >
+          <Panel key={"1"} style={{ border: "none" }} className="br10">
             <div className="flex direction-row align-center tac">
-             {editPatientOption()}
+              {editPatientOption()}
             </div>
-      
-          
-      
           </Panel>
         </Collapse>
-              </div>
+      </div>
 
       <div className="flex">
         <div className="flex align-start">
           <img
-              alt=""
-              className=" w50 br50 mr10 ml10"
-              src={patient_display_picture}
+            alt=""
+            className=" w50 br50 mr10 ml10"
+            src={patient_display_picture}
           />
         </div>
 
@@ -367,19 +362,27 @@ const PatientCard = ({
                 <PhoneOutlined className="text-white fs18" />
               </Tooltip>
             </div>
-            <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer" onClick={openChat}>
-              <Tooltip placement={"bottom"} title={formatMessage(messages.chat_icon_text)}>
+            <div
+              className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer"
+              onClick={openChat}
+            >
+              <Tooltip
+                placement={"bottom"}
+                title={formatMessage(messages.chat_icon_text)}
+              >
                 <MessageOutlined className="text-white fs18" />
               </Tooltip>
             </div>
 
             <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer">
-              <Tooltip placement={"bottom"} title={formatMessage(messages.video_icon_text)}>
-              <VideoCameraOutlined className="text-white fs18" />
+              <Tooltip
+                placement={"bottom"}
+                title={formatMessage(messages.video_icon_text)}
+              >
+                <VideoCameraOutlined className="text-white fs18" />
               </Tooltip>
             </div>
 
-            
             {/* <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer">
               <Tooltip placement={"bottom"} title={formatMessage(messages.video_icon_text)}>
               <div className="text-white fs18" >
@@ -388,21 +391,22 @@ const PatientCard = ({
               </div>
               </Tooltip>
             </div> */}
-
-
           </div>
         </div>
-
       </div>
 
       <div className="flex direction-column align-start mt10 ml10">
-        <div className="fs12 fw700 brown-grey">{formatMessage(messages.comorbidities_text)}</div>
+        <div className="fs12 fw700 brown-grey">
+          {formatMessage(messages.comorbidities_text)}
+        </div>
         <div className="fs14 fw700 black-85">{comorbidities}</div>
       </div>
 
       {/*allergies*/}
       <div className="flex direction-column align-start mb14 mt6 ml10">
-        <div className="fs12 fw700 brown-grey">{formatMessage(messages.allergies_text)}</div>
+        <div className="fs12 fw700 brown-grey">
+          {formatMessage(messages.allergies_text)}
+        </div>
         <div className="fs14 fw700 flex black-85">{allergies}</div>
       </div>
 
@@ -419,23 +423,22 @@ const PatientCard = ({
       {/*<div>*/}
       {/*  <Collapse ghost={true} expandIconPosition={"right"}  bordered={false} expandIcon={() => <CaretDownOutlined />}>*/}
       {/*    <Panel  key={"1"} style={{border:"none"}} className="br10">*/}
-      
+
       {/*      /!*comorbidities*!/*/}
       {/*      <div className="flex direction-column align-start">*/}
       {/*        <div className="fs12 fw700 brown-grey">{formatMessage(messages.comorbidities_text)}</div>*/}
       {/*        <div className="fs14 fw700 black-85">{comorbidities}</div>*/}
       {/*      </div>*/}
-      
+
       {/*      /!*allergies*!/*/}
       {/*      <div className="flex direction-column align-start mb14">*/}
       {/*        <div className="fs12 fw700 brown-grey">{formatMessage(messages.allergies_text)}</div>*/}
       {/*        <div className="fs14 fw700 flex black-85">{allergies}</div>*/}
       {/*      </div>*/}
-      
+
       {/*    </Panel>*/}
       {/*  </Collapse>*/}
       {/*</div>*/}
-
 
       {/*<div className="action-buttons flex">*/}
       {/*  <div className="edit-button p10">*/}
@@ -460,15 +463,14 @@ const PatientTreatmentCard = ({
   treatment_provider,
   treatment_severity_status = "1",
   treatment_diagnosis_description,
-  treatment_diagnosis_type ,
-  treatment_clinical_notes ,
+  treatment_diagnosis_type,
+  treatment_clinical_notes,
   treatment_symptoms
-  
 }) => {
   return (
-    <div className="treatment mt20 tal ">
-      <h3 >{formatMessage(messages.treatment_details)}</h3>
-      
+    <div className="treatment mt20 tal bg-faint-grey">
+      <h3>{formatMessage(messages.treatment_details)}</h3>
+
       <div className="treatment-details pl16 pr16 ">
         
       <div className="flex direction-column mb14 mt20">
@@ -476,13 +478,11 @@ const PatientTreatmentCard = ({
               <div  className="fs16 ">{treatment_name}</div>
       </div>    
 
-      
         <div className="flex direction-column mb14">
               <div className="fs18 fw700">{formatMessage(messages.treatment_severity)}</div>
               <div  className="fs16 ">{treatment_severity_status}</div>
         </div>    
 
-      
         <div className="flex direction-column mb14">
               <div className="fs18 fw700">{formatMessage(messages.treatment_condition)}</div>
               <div  className="fs16 ">{treatment_condition}</div>
@@ -498,19 +498,16 @@ const PatientTreatmentCard = ({
               <div  className="fs16 ">{treatment_clinical_notes}</div>
         </div>
 
-
         <div className="flex direction-column mb14">
               <div className="fs18 fw700"> {formatMessage(messages.diagnosis_text)} </div>
               <div  className="fs16 ">{treatment_diagnosis_description}  {`(${treatment_diagnosis_type})`}</div>
         </div>
-
 
         <div className="flex direction-column mb14">
               <div className="fs18 fw700">{formatMessage(messages.symptoms_text)}</div>
               <div  className="fs16 ">{treatment_symptoms}</div>
         </div>
 
-        
         <div className="flex direction-column mb14">
               <div className="fs18 fw700">{formatMessage(messages.treatment_start_date)}</div>
               <div  className="fs16 ">{treatment_start_date}</div>
@@ -520,14 +517,6 @@ const PatientTreatmentCard = ({
               <div className="fs18 fw700">{formatMessage(messages.treatment_provider)}</div>
               <div  className="fs16 ">{treatment_provider}</div>
         </div>
-
-      
-
-       
-
-
-      
-
       </div>
     </div>
   );
@@ -601,9 +590,6 @@ class PatientDetails extends Component {
       show_template_drawer = {}
     } = this.props;
 
-
-
-
     const { show: showTd = false } = show_template_drawer;
     // let isCarePlanDataPresent = currentCarePlanId ? true : false;
     if (showTd) {
@@ -665,17 +651,18 @@ class PatientDetails extends Component {
     this.setState({ carePlanTemplateId });
   }
 
-  markAppointmentComplete = (id) => async (e) => {
+  markAppointmentComplete = id => async e => {
     e.stopPropagation();
-    const {markAppointmentComplete} = this.props;
+    const { markAppointmentComplete } = this.props;
     const response = await markAppointmentComplete(id);
 
-    const { status, payload: { data, error, message: responseMessage } = {} } = response || {};
+    const { status, payload: { data, error, message: responseMessage } = {} } =
+      response || {};
 
-    if(status === true) {
+    if (status === true) {
       message.success(responseMessage);
     } else {
-      message.warn(responseMessage)
+      message.warn(responseMessage);
     }
   };
 
@@ -685,10 +672,10 @@ class PatientDetails extends Component {
       users = {},
       // doctors = {},
       // patients = {},
-      schedule_events = {},
+      schedule_events = {}
     } = this.props;
 
-    const {markAppointmentComplete, formatMessage} = this;
+    const { markAppointmentComplete, formatMessage } = this;
 
     let { appointment_ids = [] } = carePlan;
     let formattedAppointments = appointment_ids.map(id => {
@@ -702,7 +689,7 @@ class PatientDetails extends Component {
           description = ""
         } = {},
         organizer: { id: organizer_id } = {},
-          active_event_id = null
+        active_event_id = null
       } = appointments[id] || {};
       const { basic_info: { user_name = "" } = {} } = users[organizer_id] || {};
       return {
@@ -714,7 +701,11 @@ class PatientDetails extends Component {
           "LT"
         )}`,
         description: description ? description : "--",
-        markComplete: {active_event_id, markAppointmentComplete, formatMessage}
+        markComplete: {
+          active_event_id,
+          markAppointmentComplete,
+          formatMessage
+        }
       };
     });
     formattedAppointments.sort(function(a, b) {
@@ -851,7 +842,7 @@ class PatientDetails extends Component {
             <div>{this.formatMessage(messages.vitals)}</div>
           </Menu.Item>
         )}
-        {authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) && (  
+        {authPermissions.includes(PERMISSIONS.ADD_CAREPLAN) && (
           <Menu.Item onClick={handleAddCareplan}>
             <div>{this.formatMessage(messages.newTreatmentPlan)}</div>
           </Menu.Item>
@@ -883,7 +874,7 @@ class PatientDetails extends Component {
       // },
       // patient_id
     });
-  }
+  };
 
   handleMedicationReminder = e => {
     const { openMReminderDrawer, patient_id } = this.props;
@@ -1205,7 +1196,7 @@ class PatientDetails extends Component {
       patient_id,
       getPatientCarePlanDetails
     } = this.props;
-    const {carePlanId, ...rest} = data || {};
+    const { carePlanId, ...rest } = data || {};
     addCarePlanMedicationsAndAppointments(rest, carePlanId).then(response => {
       const {
         status = false,
@@ -1282,22 +1273,32 @@ class PatientDetails extends Component {
     });
   };
 
-  sendOtp = async (e) => {
-    if(e) {
+  sendOtp = async e => {
+    if (e) {
       e.preventDefault();
     }
     const { requestConsent, patient_id, patients } = this.props;
     const { handleOtpModal } = this;
 
-    const {basic_info: {first_name, middle_name, last_name} = {}} = patients[patient_id] || {};
+    const { basic_info: { first_name, middle_name, last_name } = {} } =
+      patients[patient_id] || {};
 
     this.setState({ consentLoading: true });
     const response = await requestConsent(patient_id);
-    const { status, payload: { data: { user_id: otpUserId } = {} } = {}, message: errMessage } =
-    response || {};
+    const {
+      status,
+      payload: { data: { user_id: otpUserId } = {} } = {},
+      message: errMessage
+    } = response || {};
     if (status === true) {
       this.setState({ otpUserId });
-      message.success(`OTP sent successfully to ${getFullName({first_name, middle_name, last_name})}. Please consult with patient for the same`);
+      message.success(
+        `OTP sent successfully to ${getFullName({
+          first_name,
+          middle_name,
+          last_name
+        })}. Please consult with patient for the same`
+      );
     } else {
       message.warn(errMessage);
     }
@@ -1326,25 +1327,30 @@ class PatientDetails extends Component {
         <div className="wp100 flex justify-center">
           <div className="wp80 justify-space-evenly">
             <OtpInput
-                value={otp}
-                onChange={updateOtp}
-                numInputs={4}
-                // shouldAutoFocus={true}
-                className="wp100 flex justify-space-evenly"
-                inputStyle={{ width: 60, height: 60, margin: 8, border:"none", fontSize:20, borderBottom: "1px solid #000" }}
-                focusStyle={{ border: "none" }}
+              value={otp}
+              onChange={updateOtp}
+              numInputs={4}
+              // shouldAutoFocus={true}
+              className="wp100 flex justify-space-evenly"
+              inputStyle={{
+                width: 60,
+                height: 60,
+                margin: 8,
+                border: "none",
+                fontSize: 20,
+                borderBottom: "1px solid #000"
+              }}
+              focusStyle={{ border: "none" }}
             />
           </div>
         </div>
 
-        <div>
-
-        </div>
+        <div></div>
       </div>
     );
   };
 
-  handleOtpVerify = async (e) => {
+  handleOtpVerify = async e => {
     e.preventDefault();
     const { consentVerify } = this.props;
     const { otp, otpUserId } = this.state;
@@ -1391,40 +1397,45 @@ class PatientDetails extends Component {
   };
 
   getOtpModalFooter = () => {
-    const {intl: {formatMessage} = {}} = this.props;
-    const {handleOtpVerify, sendOtp} = this;
+    const { intl: { formatMessage } = {} } = this.props;
+    const { handleOtpVerify, sendOtp } = this;
     return (
       <div>
         {/*<Button ghost={true} className="text-grey">{formatMessage(messages.cancel_text)}</Button>*/}
-        <Button onClick={sendOtp}>{formatMessage(messages.resend_otp_text)}</Button>
-        <Button type={"primary"} onClick={handleOtpVerify}>{formatMessage(messages.verify_otp_text)}</Button>
+        <Button onClick={sendOtp}>
+          {formatMessage(messages.resend_otp_text)}
+        </Button>
+        <Button type={"primary"} onClick={handleOtpVerify}>
+          {formatMessage(messages.verify_otp_text)}
+        </Button>
       </div>
     );
   };
 
-
   editPatientOption = () => {
-       return (
-            <div className="flex direction-row justify-end  wp100 " >
-              <div onClick={this.handleEditPatientDrawer} className="pointer h30 flex direction-row  " >
-                  <div className="flex direction-column align-center justify-center  hp100   ">
-                    <span className="fw700 fs19 mr20">{this.formatMessage(messages.edit_patient)}</span> 
-                  </div  >
-                  <div className="flex direction-column align-center justify-center  hp100 " >
-                    <img src={edit_image} className="edit-patient-icon" />
-                  </div>
-              </div>
-              
-            </div>
-        )
-  }
+    return (
+      <div className="flex direction-row justify-end  wp100 ">
+        <div
+          onClick={this.handleEditPatientDrawer}
+          className="pointer h30 flex direction-row  "
+        >
+          <div className="flex direction-column align-center justify-center  hp100   ">
+            <span className="fw700 fs19 mr20">
+              {this.formatMessage(messages.edit_patient)}
+            </span>
+          </div>
+          <div className="flex direction-column align-center justify-center  hp100 ">
+            <img src={edit_image} className="edit-patient-icon" />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
-
-
-  handleEditPatientDrawer = (e) => {
+  handleEditPatientDrawer = e => {
     e.preventDefault();
     let {
-      patient_id : id,
+      patient_id: id,
       patients,
       doctors,
       treatments = {},
@@ -1437,29 +1448,32 @@ class PatientDetails extends Component {
       authenticated_user,
       openEditPatientDrawer
     } = this.props;
-  
+
     let doctor_id = null;
 
     Object.keys(doctors).forEach(id => {
       const { basic_info: { user_id } = {} } = doctors[id] || {};
-  
-  
+
       if (user_id === authenticated_user) {
         doctor_id = id;
       }
     });
-  
+
     let patientData = patients[id] || {};
     let treatment = "";
     let condition = "";
     let severity = "";
-  
+
     let carePlanData = {};
     for (let carePlan of Object.values(care_plans)) {
       let { basic_info = {} } = carePlan || {};
-      let { doctor_id: doctorId = 1, patient_id, id: carePlanId = 1 } = basic_info;
+      let {
+        doctor_id: doctorId = 1,
+        patient_id,
+        id: carePlanId = 1
+      } = basic_info;
       if (`${doctorId}` === doctor_id) {
-        if(`${patient_id}` === id) {
+        if (`${patient_id}` === id) {
           let {
             details: {
               treatment_id: cTreatment = "",
@@ -1468,16 +1482,16 @@ class PatientDetails extends Component {
             } = {}
           } = carePlan || {};
           let { basic_info: { name: treatmentName = "" } = {} } =
-          treatments[cTreatment] || {};
+            treatments[cTreatment] || {};
           let { basic_info: { name: severityName = "" } = {} } =
-          severities[cSeverity] || {};
+            severities[cSeverity] || {};
           let { basic_info: { name: conditionName = "" } = {} } =
-          conditions[cCondition] || {};
-  
+            conditions[cCondition] || {};
+
           treatment = treatmentName;
           condition = conditionName;
           severity = severityName;
-  
+
           carePlanData = {
             ...care_plans[carePlanId],
             treatment,
@@ -1487,14 +1501,17 @@ class PatientDetails extends Component {
         }
       }
     }
-    
 
-    
-    patientData = { ...patients[id], treatment, condition, severity ,carePlanData  };
-  
+    patientData = {
+      ...patients[id],
+      treatment,
+      condition,
+      severity,
+      carePlanData
+    };
 
-    openEditPatientDrawer({patientData,carePlanData});
-}
+    openEditPatientDrawer({ patientData, carePlanData });
+  };
 
   render() {
     let {
@@ -1515,7 +1532,7 @@ class PatientDetails extends Component {
       drawer: { visible: drawerVisible = false } = {},
       care_plan_template_ids = {},
       symptoms = {},
-      authenticated_user = null,
+      authenticated_user = null
     } = this.props;
     const {
       loading,
@@ -1598,11 +1615,20 @@ class PatientDetails extends Component {
       }
     }
 
-
     const {
       basic_info: { doctor_id = 1 } = {},
       activated_on: treatment_start_date,
-      details: { treatment_id = "", severity_id = "", condition_id = "",clinical_notes= "", diagnosis : { type : d_type = "", description : diagnosis_description = "" } = {},symptoms : carePlan_symptoms= "" } = {}
+      details: {
+        treatment_id = "",
+        severity_id = "",
+        condition_id = "",
+        clinical_notes = "",
+        diagnosis: {
+          type: d_type = "",
+          description: diagnosis_description = ""
+        } = {},
+        symptoms: carePlan_symptoms = ""
+      } = {}
     } = care_plans[carePlanId] || {};
     const { basic_info: { name: treatment = "" } = {} } =
       treatments[treatment_id] || {};
@@ -1610,10 +1636,9 @@ class PatientDetails extends Component {
       conditions[condition_id] || {};
     const { basic_info: { name: severity = "" } = {} } =
       severities[severity_id] || {};
-    
-    const diagnosis_type_obj = DIAGNOSIS_TYPE[d_type] || {};
-    const diagnosis_type = diagnosis_type_obj["value"] || '';
 
+    const diagnosis_type_obj = DIAGNOSIS_TYPE[d_type] || {};
+    const diagnosis_type = diagnosis_type_obj["value"] || "";
 
     let carePlan = care_plans[carePlanId] || {};
     let {
@@ -1629,7 +1654,7 @@ class PatientDetails extends Component {
           condition_id: cIdTemp = 0,
           severity_id: sIdTemp = 0,
           treatment_id: tIdTemp = 0
-        } = {},
+        } = {}
       } = care_plan_templates[carePlanTemplateId] || {};
       carePlan.treatment_id = tIdTemp;
       carePlan.severity_id = sIdTemp;
@@ -1678,23 +1703,18 @@ class PatientDetails extends Component {
     const {
       close,
       openPopUp,
-      user_details: {
-        profile_picture: patient_display_picture
-      } = {}
+      user_details: { profile_picture: patient_display_picture } = {}
     } = this.props;
 
     const {
-      treatment_details: {
-        treatment_provider
-      } = {}
+      treatment_details: { treatment_provider } = {}
     } = this.props.user_details;
 
     let showAddButton =
       (authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) ||
         authPermissions.includes(PERMISSIONS.ADD_MEDICATION) ||
-        authPermissions.includes(PERMISSIONS.ADD_ACTION)     ||
-        authPermissions.includes(PERMISSIONS.ADD_CAREPLAN)
-        ) &&
+        authPermissions.includes(PERMISSIONS.ADD_ACTION) ||
+        authPermissions.includes(PERMISSIONS.ADD_CAREPLAN)) &&
       !isOtherCarePlan;
 
     let docName = doctor_first_name
@@ -1713,7 +1733,7 @@ class PatientDetails extends Component {
           />
 
           <div className="flex wp100">
-            <div className=" w350 pt20 pr24 pb20 pl24">
+            <div className=" w350 pt10 pr24 pb20 pl24">
               <PatientCard
                 patient_display_picture={patient_display_picture}
                 patient_first_name={first_name}
@@ -1733,7 +1753,7 @@ class PatientDetails extends Component {
                 editPatientOption={this.editPatientOption}
               />
 
-            {/* {this.editPatientOption()} */}
+              {/* {this.editPatientOption()} */}
 
               {/*<PatientCarePlans {...this.props}  />*/}
               <PatientCarePlans
@@ -1749,34 +1769,43 @@ class PatientDetails extends Component {
               />
 
               <PatientTreatmentCard
-                  formatMessage={formatMessage}
-                  treatment_name={treatment ? treatment : "--"}
-                  treatment_condition={condition ? condition : "--"}
-                  treatment_doctor={doctor_first_name ? getFullName({
-                    first_name: doctor_first_name,
-                    middle_name: doctor_middle_name,
-                    last_name: doctor_last_name
-                  }) : "--"}
-                  treatment_start_date={
-                    treatment_start_date
-                        ? moment(treatment_start_date).format("Do MMM YYYY")
-                        : "--"
-                  }
-                  treatment_provider={
-                    treatment_provider ? treatment_provider : "--"
-                  }
-                  treatment_severity_status={severity ? severity : "--"}
-                  treatment_diagnosis_description={diagnosis_description ? diagnosis_description : "--"}
-                  treatment_diagnosis_type = {diagnosis_type ? diagnosis_type : "--"}
-                  treatment_clinical_notes = {clinical_notes ? clinical_notes : "--"}
-                  treatment_symptoms = {carePlan_symptoms ? carePlan_symptoms : "--"}
-
+                formatMessage={formatMessage}
+                treatment_name={treatment ? treatment : "--"}
+                treatment_condition={condition ? condition : "--"}
+                treatment_doctor={
+                  doctor_first_name
+                    ? getFullName({
+                        first_name: doctor_first_name,
+                        middle_name: doctor_middle_name,
+                        last_name: doctor_last_name
+                      })
+                    : "--"
+                }
+                treatment_start_date={
+                  treatment_start_date
+                    ? moment(treatment_start_date).format("Do MMM YYYY")
+                    : "--"
+                }
+                treatment_provider={
+                  treatment_provider ? treatment_provider : "--"
+                }
+                treatment_severity_status={severity ? severity : "--"}
+                treatment_diagnosis_description={
+                  diagnosis_description ? diagnosis_description : "--"
+                }
+                treatment_diagnosis_type={
+                  diagnosis_type ? diagnosis_type : "--"
+                }
+                treatment_clinical_notes={
+                  clinical_notes ? clinical_notes : "--"
+                }
+                treatment_symptoms={
+                  carePlan_symptoms ? carePlan_symptoms : "--"
+                }
               />
-
-            
             </div>
 
-            <div className="wp80 direction-column align-center pt20 pr24 pb20 pl24 ola123">
+            <div className="wp80 direction-column align-center pt10 pr24 pb20 pl24 ola123">
               {!isOtherCarePlan && <PatientAlerts patientId={patient_id} />}
 
               {/* <div className="last-visit-alerts" >*/}
@@ -1876,7 +1905,7 @@ class PatientDetails extends Component {
                         <VitalTable
                           patientId={patient_id}
                           carePlanId={carePlanId}
-                        isOtherCarePlan={isOtherCarePlan}
+                          isOtherCarePlan={isOtherCarePlan}
                         />
                       </TabPane>
                     </Tabs>
@@ -1894,7 +1923,7 @@ class PatientDetails extends Component {
               <AddVitals carePlanId={carePlanId} />
               <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
-              <AddCareplanDrawer   patientId={patient_id} />
+              <AddCareplanDrawer patientId={patient_id} />
               {templateDrawerVisible && (
                 <TemplateDrawer
                   visible={templateDrawerVisible}
@@ -1918,34 +1947,34 @@ class PatientDetails extends Component {
             </Fragment>
           )}
           {popUpVisible && (
-              <div
-                  className={
-                    (drawerVisible || templateDrawerVisible) && minimized
-                        ? "chat-popup-minimized"
-                        : (drawerVisible || templateDrawerVisible) && !minimized
-                        ? "chat-popup"
-                        : minimized
-                            ? "chat-popup-minimized-closedDrawer"
-                            : "chat-popup-closedDrawer"
-                  }
-              >
-                <ChatPopup
-                    roomId={roomId}
-                    placeVideoCall={this.openVideoChatTab(roomId)}
-                    patientName={
-                      first_name
-                          ? `${first_name} ${
-                              middle_name ? `${middle_name} ` : ""
-                          }${last_name ? `${last_name}` : ""}`
-                          : ""
-                    }
-                    maximizeChat={this.maximizeChat}
-                />
-              </div>
+            <div
+              className={
+                (drawerVisible || templateDrawerVisible) && minimized
+                  ? "chat-popup-minimized"
+                  : (drawerVisible || templateDrawerVisible) && !minimized
+                  ? "chat-popup"
+                  : minimized
+                  ? "chat-popup-minimized-closedDrawer"
+                  : "chat-popup-closedDrawer"
+              }
+            >
+              <ChatPopup
+                roomId={roomId}
+                placeVideoCall={this.openVideoChatTab(roomId)}
+                patientName={
+                  first_name
+                    ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${
+                        last_name ? `${last_name}` : ""
+                      }`
+                    : ""
+                }
+                maximizeChat={this.maximizeChat}
+              />
+            </div>
           )}
           <SymptomsDrawer />
           <VitalTimelineDrawer />
-          <EditPatientDrawer/>
+          <EditPatientDrawer />
         </div>
         <Modal
           visible={showOtpModal}
