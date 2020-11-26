@@ -65,7 +65,8 @@ export const db = database => {
         allowNull: true
       },
       address: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true
       },
       height :{
         type: DataTypes.STRING,

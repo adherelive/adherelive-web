@@ -164,6 +164,11 @@ const messages = defineMessages({
         id: "app.editPatient.editSuccess",
         description: "",
         defaultMessage: "Patient Edited successfully"
+    },
+    address:{
+        id: "app.editPatient.address",
+        description: "",
+        defaultMessage: "Address"
     }
       
     
