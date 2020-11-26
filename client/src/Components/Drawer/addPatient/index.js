@@ -661,7 +661,7 @@ class PatientDetailsDrawer extends Component {
                     value={address}
                     className={"form-textarea-ap "}
                     onChange={this.setAddress}
-                    disabled={isdisabled}
+                    // disabled={isdisabled}
                     style={{resize:"none"}}
                 />
 
@@ -689,7 +689,7 @@ class PatientDetailsDrawer extends Component {
                     // maxLength={20}
                     value={height}
                     onChange={this.setHeight}
-                    disabled={isdisabled}
+                    // disabled={isdisabled}
                     
                 />
 
@@ -703,7 +703,7 @@ class PatientDetailsDrawer extends Component {
                     // maxLength={20}
                     value={weight}
                     onChange={this.setWeight}
-                    disabled={isdisabled}
+                    // disabled={isdisabled}
                     
                 />
 
@@ -713,7 +713,8 @@ class PatientDetailsDrawer extends Component {
                     // value={date_of_birth}
                     max={`${year}-${month}-${day}`}
                     onChange={this.setDOB}
-                    disabled={isdisabled}/>
+                    disabled={isdisabled}
+                />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.comorbidities)}</div>
 
@@ -723,7 +724,7 @@ class PatientDetailsDrawer extends Component {
                     className={"form-textarea-ap"}
                     onChange={this.setComorbidities}
                     onPaste={this.setPastedComorbidities}
-                    disabled={isdisabled}
+                    // disabled={isdisabled}
                     style={{resize:"none"}}
                 />
 
@@ -735,7 +736,7 @@ class PatientDetailsDrawer extends Component {
                     className={"form-textarea-ap"}
                     onChange={this.setAllergies}
                     onPaste={this.setPastedAllergies}
-                    disabled={isdisabled}
+                    // disabled={isdisabled}
                     style={{resize:"none"}}
                 />
 

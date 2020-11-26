@@ -54,7 +54,6 @@ class EditPatientDrawer extends Component {
             address : '',
             treatment:null ,
             severity:null,
-            condition:null,
             careplan_id : null
         };
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
@@ -158,7 +157,7 @@ class EditPatientDrawer extends Component {
         const  value  = e.target.value.trim();
         
         if (value.length>0 || value === '') {
-            this.setState({ comorbidities: e.target.value});
+            this.setState({ comorbidities: value});
         }
     }
 
@@ -393,10 +392,29 @@ class EditPatientDrawer extends Component {
     };
 
 
+    setWeight = (e) => {
+        e.preventDefault();
+        const weight = e.target.value.trim();
+        if(weight.length > 0) {
+            this.setState({weight});
+        }
+    };
 
- 
+    setHeight = (e) => {
+        e.preventDefault();
+        const height = e.target.value.trim();
+        if(height.length > 0) {
+            this.setState({height});
+        }
+    };
 
-    
+    setAddress = (e) => {
+        e.preventDefault();
+        const address = e.target.value.trim();
+        if(address.length > 0) {
+            this.setState({address});
+        }
+    };
 
     renderEditPatient = () => {
         let dtToday = new Date();
@@ -486,7 +504,8 @@ class EditPatientDrawer extends Component {
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={address}
                     className={"form-textarea-ap "}
-                    disabled={true}
+                    // disabled={true}
+                    onChange={this.setAddress}
                     style={{resize:"none"}}
                 />
 
@@ -512,7 +531,8 @@ class EditPatientDrawer extends Component {
                     // minLength={6}
                     // maxLength={20}
                     value={height}
-                    disabled={true}
+                    // disabled={true}
+                    onChange={this.setHeight}
                     
                 />
 
@@ -525,7 +545,8 @@ class EditPatientDrawer extends Component {
                     // minLength={6}
                     // maxLength={20}
                     value={weight}
-                    disabled={true}
+                    onChange={this.setWeight}
+                    // disabled={true}
                     
                 />
 
@@ -791,7 +812,6 @@ class EditPatientDrawer extends Component {
             address : '',
             treatment:null ,
             severity:null,
-            condition:null,
             careplan_id:null
         });
         close();

@@ -77,7 +77,7 @@ class Dashboard extends Component {
     let doctorUserId = ""; //user_id of doctor
     for (let doc of Object.values(doctors)) {
       let {
-        basic_info: { user_id, id = 1 }
+        basic_info: { user_id, id = 1 } = {}
       } = doc;
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         doctorUserId = user_id;
@@ -539,7 +539,7 @@ class Dashboard extends Component {
 
         <EditPatientDrawer />
 
-        {showVerifyModal && getVerifyModal()}
+        {/*{showVerifyModal && getVerifyModal()}*/}
         {/*{showModal && getVerifyModal()}*/}
           {authPermissions.length === 0 ? (
               <div className="fixed b0 p20 bg-light-grey wp100">

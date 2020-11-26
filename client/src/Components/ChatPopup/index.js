@@ -272,7 +272,9 @@ class ChatPopUp extends Component {
     initChat = () => {
         console.log('846328756839658932', this.channelName, this.state.token);
         this.chatClient = new Chat(this.state.token);
-        this.chatClient.initialize().then(this.clientInitiated.bind(this));
+        this.chatClient.initialize().then(this.clientInitiated.bind(this)).catch(err => {
+            console.log("79873973892 twilio chat connection error --> ", err);
+        });
     };
 
 
