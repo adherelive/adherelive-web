@@ -518,7 +518,7 @@ class DoctorSettingsPage extends Component {
           <div
             className={`relative br5 wp30 ml20 mt20 flex direction-column justify-center ${
               in_use ? "bg-lighter-blue" : "bg-lighter-grey"
-            }`}
+            } account-details `}
             key={`account-detail-${id}`}
           >
             {/* customer_name */}
@@ -595,7 +595,8 @@ class DoctorSettingsPage extends Component {
               
             <div className="flex  align-center justify-space-evenly wp100 mb10">
            
-              <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}>
+              <Tooltip placement={"bottom"} title={this.formatMessage(messages.editAccount)}
+              className="account-details-edit">
                  <div className="flex align-center justify-space-between w60 pointer" onClick={this.displayEditRazorpayAccountDetails(id)} >
                    
                     <div className="flex direction-column  align-center justify-center" >
@@ -607,9 +608,9 @@ class DoctorSettingsPage extends Component {
                  </div>
               </Tooltip>
               {/* </div> */}
-              <Tooltip className="absolute t10 r10"  title={this.formatMessage(messages.deleteAccount)}>
+              <Tooltip className="absolute t10 r10 account-details-delete"  title={this.formatMessage(messages.deleteAccount)}>
               <DeleteTwoTone
-                className={"pointer align-self-start"}
+                className={"pointer align-self-start "}
                 onClick={this.deleteAccountDetails(id)}
                 twoToneColor="#707070"
                 style={{ fontSize: "18px" }}

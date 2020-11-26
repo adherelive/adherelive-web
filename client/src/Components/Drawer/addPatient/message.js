@@ -164,6 +164,11 @@ const messages = defineMessages({
         id: "app.addPatient.weight.placeholder",
         description: "",
         defaultMessage: "Add Weight in Kgs"
+    },
+    address:{
+        id: "app.addPatient.address",
+        description: "",
+        defaultMessage: "Address"
     }
       
     
