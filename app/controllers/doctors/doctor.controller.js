@@ -766,7 +766,8 @@ class DoctorController extends Controller {
         condition_id,
         height = "",
         weight = "",
-        symptoms = ""
+        symptoms = "",
+        address = ""
       } = req.body;
 
       Logger.debug("1213132314231", req.body);
@@ -797,6 +798,13 @@ class DoctorController extends Controller {
         userData = await UserWrapper(userExists[0].get());
         const { patient_id } = await userData.getReferenceInfo();
         patientData = await PatientWrapper(null, patient_id);
+
+        const previousDetails = patientData.getDetails();
+        const updateResponse = await patientsService.update({ height, weight, address, details: {...previousDetails, ...patientOtherDetails} }, patient_id);
+        Logger.debug("Patient updateResponse ", updateResponse);
+
+        patientData = await PatientWrapper(null, patient_id);
+
       } else {
         const password = process.config.DEFAULT_PASSWORD;
         const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -849,7 +857,8 @@ class DoctorController extends Controller {
             ...patientOtherDetails
           },
           height,
-          weight
+          weight,
+          address
         });
 
         await UserPreferenceService.addUserPreference({
@@ -2416,7 +2425,8 @@ class DoctorController extends Controller {
       condition_id,
       height = "",
       weight = "",
-      symptoms = ""} = req.body;
+      symptoms = "",
+      address = ""} = req.body;
 
       
   
@@ -2435,7 +2445,10 @@ class DoctorController extends Controller {
             ...previousDetails,
             allergies ,
             comorbidities 
-          }
+          },
+          height,
+          weight,
+          address
         };
   
         const updatedPatient = await patientService.update(
