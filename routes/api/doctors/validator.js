@@ -195,7 +195,6 @@ export const validateAddPatientData = (req, res, next) => {
   const { body: data, data: { date_of_birth } = {} } = req;
   const isValid = addPatientForm.validate(data);
   if (isValid && isValid.error != null) {
-    console.log("9999999999999999999999999999999999");
     return validationError(res, isValid);
   }
   if (!validDOB(date_of_birth)) {
