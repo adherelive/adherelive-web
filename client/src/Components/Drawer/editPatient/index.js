@@ -487,6 +487,7 @@ class EditPatientDrawer extends Component {
                     value={address}
                     className={"form-textarea-ap "}
                     disabled={true}
+                    style={{resize:"none"}}
                 />
 
 
@@ -545,6 +546,7 @@ class EditPatientDrawer extends Component {
                     className={"form-textarea-ap"}
                     onChange={this.setComorbidities}
                     onPaste={this.setPastedComorbidities}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
@@ -555,6 +557,7 @@ class EditPatientDrawer extends Component {
                     className={"form-textarea-ap"}
                     onChange={this.setAllergies}
                     onPaste={this.setPastedAllergies}
+                    style={{resize:"none"}}
                 />
 
                 
@@ -570,6 +573,7 @@ class EditPatientDrawer extends Component {
                     className={"form-textarea-ap "}
                     onChange={this.setClinicalNotes}
                     onPaste={this.setPastedClinicalNotes}
+                    style={{resize:"none"}}
                 />
 
 
@@ -581,6 +585,7 @@ class EditPatientDrawer extends Component {
                     className={"form-textarea-ap "}
                     onChange={this.setSymptoms}
                     onPaste={this.setPastedSymptoms}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>
@@ -614,6 +619,7 @@ class EditPatientDrawer extends Component {
                     className={"form-textarea-ap"}
                     onChange={this.setDiagnosis}
                     onPaste={this.setPastedDiagnosis}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}</div>

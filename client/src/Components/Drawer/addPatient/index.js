@@ -559,7 +559,7 @@ class PatientDetailsDrawer extends Component {
         const { mobile_number = '', name = '', condition = null,
         date_of_birth='', prefix = '',allergies='',comorbidities='',
         gender='',diagnosis_description='',clinical_notes='',
-        diagnosis_type='2',isdisabled,addNewPatient,severity='',treatment='',height='',weight='',symptoms='' , address ='' } = this.state;
+        diagnosis_type='2',isdisabled,addNewPatient,severity='',treatment='',height='',weight='',symptoms='' , address ='' ,fetchingPatients} = this.state;
 
         const prefixSelector = (
 
@@ -610,15 +610,14 @@ class PatientDetailsDrawer extends Component {
                     maxLength={20}
                     value={mobile_number}
                     onChange={this.setNumber}
-                    
                     />
                     
-                    <div className="mh40">
+                    {/* <div className="mh40">
                         {this.state.fetchingPatients 
                         ?
                         (<Spin size="default" />)
                         : null}
-                    </div>
+                    </div> */}
                     
                 <div>
              
@@ -629,8 +628,9 @@ class PatientDetailsDrawer extends Component {
                     placeholder="Select Name"
                     value={this.state.selectedPatientId}
                     onChange={this.setSearchedPatientId}
-                    // notFoundContent={this.state.fetchingPatients ? <Spin size="small" /> : 'No match found'}
+                    notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
                     // showSearch
+                    autoFocus
                     autoComplete="off"
                     optionFilterProp="children"
                     filterOption={(input, option) =>
@@ -662,8 +662,10 @@ class PatientDetailsDrawer extends Component {
                     className={"form-textarea-ap "}
                     onChange={this.setAddress}
                     disabled={isdisabled}
+                    style={{resize:"none"}}
                 />
 
+               
 
                 <div className='form-headings-ap'>{this.formatMessage(messages.gender)}</div>
                 <div className='add-patient-radio wp100 mt6 mb18 flex'>
@@ -722,6 +724,7 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setComorbidities}
                     onPaste={this.setPastedComorbidities}
                     disabled={isdisabled}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
@@ -733,6 +736,7 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setAllergies}
                     onPaste={this.setPastedAllergies}
                     disabled={isdisabled}
+                    style={{resize:"none"}}
                 />
 
                 
@@ -748,6 +752,7 @@ class PatientDetailsDrawer extends Component {
                     className={"form-textarea-ap "}
                     onChange={this.setClinicalNotes}
                     onPaste={this.setPastedClinicalNotes}
+                    style={{resize:"none"}}
                 />
 
 
@@ -759,6 +764,7 @@ class PatientDetailsDrawer extends Component {
                     className={"form-textarea-ap "}
                     onChange={this.setSymptoms}
                     onPaste={this.setPastedSymptoms}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>
@@ -792,6 +798,7 @@ class PatientDetailsDrawer extends Component {
                     className={"form-textarea-ap"}
                     onChange={this.setDiagnosis}
                     onPaste={this.setPastedDiagnosis}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}</div>
