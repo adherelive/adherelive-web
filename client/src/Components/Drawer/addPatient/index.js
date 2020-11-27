@@ -556,10 +556,10 @@ class PatientDetailsDrawer extends Component {
             month = '0' + month;
         }
 
-        const { mobile_number = '', name = '', condition = null,
+        const {fetchingPatients=false, mobile_number = '', name = '', condition = null,
         date_of_birth='', prefix = '',allergies='',comorbidities='',
         gender='',diagnosis_description='',clinical_notes='',
-        diagnosis_type='2',isdisabled,addNewPatient,severity='',treatment='',height='',weight='',symptoms='' , address ='' ,fetchingPatients} = this.state;
+        diagnosis_type='2',isdisabled,addNewPatient,severity='',treatment='',height='',weight='',symptoms='' , address ='' } = this.state;
 
         const prefixSelector = (
 
@@ -596,6 +596,13 @@ class PatientDetailsDrawer extends Component {
             </Select>
         );
 
+        const spin =  (<div className="mh40 mw40 flex direction-column align-center justify-center">
+        {fetchingPatients 
+        ?
+        (<Spin size="small" />)
+        : null}
+    </div>)
+
        
 
         return (
@@ -610,14 +617,15 @@ class PatientDetailsDrawer extends Component {
                     maxLength={20}
                     value={mobile_number}
                     onChange={this.setNumber}
+                    addonAfter={fetchingPatients
+                    ?
+                    spin
+                    :
+                    null
+                   } 
                     />
                     
-                    {/* <div className="mh40">
-                        {this.state.fetchingPatients 
-                        ?
-                        (<Spin size="default" />)
-                        : null}
-                    </div> */}
+                    
                     
                 <div>
              
@@ -630,7 +638,7 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setSearchedPatientId}
                     notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
                     // showSearch
-                    autoFocus
+                    // autoFocus
                     autoComplete="off"
                     optionFilterProp="children"
                     filterOption={(input, option) =>
@@ -659,7 +667,7 @@ class PatientDetailsDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={address}
-                    className={"form-textarea-ap "}
+                    className={"form-textarea-ap form-inputs-ap "}
                     onChange={this.setAddress}
                     // disabled={isdisabled}
                     style={{resize:"none"}}
@@ -721,7 +729,7 @@ class PatientDetailsDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={comorbidities}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setComorbidities}
                     onPaste={this.setPastedComorbidities}
                     // disabled={isdisabled}
@@ -733,7 +741,7 @@ class PatientDetailsDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={allergies}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setAllergies}
                     onPaste={this.setPastedAllergies}
                     // disabled={isdisabled}
@@ -750,7 +758,7 @@ class PatientDetailsDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={clinical_notes}
-                    className={"form-textarea-ap "}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setClinicalNotes}
                     onPaste={this.setPastedClinicalNotes}
                     style={{resize:"none"}}
@@ -762,7 +770,7 @@ class PatientDetailsDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={symptoms}
-                    className={"form-textarea-ap "}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setSymptoms}
                     onPaste={this.setPastedSymptoms}
                     style={{resize:"none"}}
@@ -796,7 +804,7 @@ class PatientDetailsDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={diagnosis_description}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setDiagnosis}
                     onPaste={this.setPastedDiagnosis}
                     style={{resize:"none"}}
@@ -829,7 +837,7 @@ class PatientDetailsDrawer extends Component {
 
 
                 <Select
-                    className="form-inputs-ap drawer-select"
+                    className="form-inputs-ap drawer-select "
                     placeholder="Select Severity"
                     value={severity}
                     onChange={this.setSeverity}
