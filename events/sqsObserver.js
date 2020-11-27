@@ -4,7 +4,8 @@ import {
   handleAppointments,
   handleMedications,
   handleVitals,
-  handleCarePlans
+  handleCarePlans,
+  handleAppointmentsTimeAssignment
 } from "./helper";
 
 const Log = new Logger("EVENTS > SQS_OBSERVER");
@@ -38,6 +39,9 @@ export default class SqsObserver {
               break;
             case EVENT_TYPE.CARE_PLAN_ACTIVATION:
               response = await handleCarePlans(data);
+              break;
+            case EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT:
+              response = await handleAppointmentsTimeAssignment(data);
               break;
             default:
               response = false;

@@ -20,7 +20,8 @@ export const EVENT_TYPE = {
   ADVERSE_EVENT: "adverse",
   ARTICLE: "article",
   MEDICATION_REMINDER: "medication-reminder",
-  CARE_PLAN_ACTIVATION: "careplan-activation"
+  CARE_PLAN_ACTIVATION: "careplan-activation",
+  APPOINTMENT_TIME_ASSIGNMENT: "appointment-time-assignment"
 };
 
 export const VITALFIELD = {
@@ -546,7 +547,7 @@ export const CHART_DETAILS = {
     name: "Missed Action",
     critical: 30,
     total: 120
-  },
+  }
   // [TEST_ONE]: {
   //   type: "test_one",
   //   name: "Test One",
