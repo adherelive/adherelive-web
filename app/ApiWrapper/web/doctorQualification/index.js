@@ -12,7 +12,7 @@ class DoctorQualificationWrapper extends BaseDoctorQualification {
             id,
             doctor_id,
             degree_id,
-            college_name,
+            college_id,
             year
         } = _data || {};
         return {
@@ -20,7 +20,7 @@ class DoctorQualificationWrapper extends BaseDoctorQualification {
                 id,
                 doctor_id,
                 degree_id,
-                college_name,
+                college_id,
                 year
             }
         };

@@ -36,9 +36,15 @@ export const db = (database) => {
                     key: 'id'
                 }
             },
-            college_name: {
-                type: DataTypes.STRING(1000),
+            college_id: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: {
+                        tableName: collegeTableName,
+                    },
+                    key: 'id'
+                }
             },
             year: {
                 type: DataTypes.INTEGER,

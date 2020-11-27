@@ -1,6 +1,7 @@
 'use strict';
 
 import {TABLE_NAME} from "../app/models/doctorQualifications";
+import {TABLE_NAME as collegeTableName} from "../app/models/college";
 import {TABLE_NAME as doctorTableName} from "../app/models/doctors";
 import {TABLE_NAME as degreeTableName} from "../app/models/degree";
 
@@ -33,8 +34,15 @@ module.exports = {
           key: "id"
         }
       },
-      college_name: {
-        type: Sequelize.STRING(100)
+      college_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: collegeTableName
+          },
+          key: "id"
+        }
       },
       year: {
         type: Sequelize.INTEGER,
