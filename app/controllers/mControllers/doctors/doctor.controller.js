@@ -225,7 +225,15 @@ class MobileDoctorController extends Controller {
         patientData = await PatientWrapper(null, patient_id);
 
         const previousDetails = patientData.getDetails();
-        const updateResponse = await patientsService.update({ height, weight, address, details: {...previousDetails, ...patientOtherDetails} }, patient_id);
+        const updateResponse = await patientsService.update(
+          {
+            height,
+            weight,
+            address,
+            details: { ...previousDetails, ...patientOtherDetails }
+          },
+          patient_id
+        );
         Logger.debug("Patient updateResponse ", updateResponse);
 
         patientData = await PatientWrapper(null, patient_id);
@@ -495,46 +503,39 @@ class MobileDoctorController extends Controller {
           degree_id = "",
           year = "",
           college_name = "",
-          college_id="",
+          college_id = "",
           photos = [],
           id = 0
         } = item;
         if (id && id !== "0") {
-
-
           let collegeId = college_id;
-          if(college_name !== '' ){
-
+          if (college_name) {
             const college = await collegeService.create({
-              name:college_name,
-              user_created:true
-            })
+              name: college_name,
+              user_created: true
+            });
 
             const collegeWrapper = await CollegeWrapper(college);
             collegeId = collegeWrapper.getCollegeId();
           }
-
 
           const qualification = await qualificationService.updateQualification(
             {
               doctor_id: doctorData.getDoctorId(),
               degree_id,
               year,
-              college_id:collegeId
+              college_id: collegeId
             },
             id
           );
           newQualifications.push(parseInt(id));
         } else {
-
-
           let collegeId = college_id;
-          if(college_name !== '' ){
-
+          if (college_name) {
             const college = await collegeService.create({
-              name:college_name,
-              user_created:true
-            })
+              name: college_name,
+              user_created: true
+            });
 
             const collegeWrapper = await CollegeWrapper(college);
             collegeId = collegeWrapper.getCollegeId();
@@ -544,7 +545,7 @@ class MobileDoctorController extends Controller {
             doctor_id: doctorData.getDoctorId(),
             degree_id,
             year,
-            college_id:collegeId
+            college_id: collegeId
           });
         }
       }
@@ -828,15 +829,12 @@ class MobileDoctorController extends Controller {
       }
 
       if (!id) {
-
-
         let collegeId = college_id;
-        if(college_name !== '' ){
-
+        if (college_name) {
           const college = await collegeService.create({
-            name:college_name,
-            user_created:true
-          })
+            name: college_name,
+            user_created: true
+          });
 
           const collegeWrapper = await CollegeWrapper(college);
           collegeId = collegeWrapper.getCollegeId();
@@ -846,7 +844,7 @@ class MobileDoctorController extends Controller {
           doctor_id: doctorData.getDoctorId(),
           degree_id,
           year,
-          college_id:collegeId
+          college_id: collegeId
         });
 
         for (const photo of photos) {
@@ -866,15 +864,12 @@ class MobileDoctorController extends Controller {
           }
         }
       } else {
-
-
         let collegeId = college_id;
-            if(college_name !== '' ){
-
-              const college = await collegeService.create({
-                name:college_name,
-                user_created:true
-              })
+        if (college_name) {
+          const college = await collegeService.create({
+            name: college_name,
+            user_created: true
+          });
 
               const collegeWrapper = await CollegeWrapper(college);
               collegeId = collegeWrapper.getCollegeId();
@@ -885,7 +880,7 @@ class MobileDoctorController extends Controller {
             doctor_id: doctorData.getDoctorId(),
             degree_id,
             year,
-            college_id:collegeId
+            college_id: collegeId
           },
           id
         );
@@ -954,6 +949,15 @@ class MobileDoctorController extends Controller {
         };
       }
 
+      const colleges = await collegeService.getAll();
+      let collegeData = {};
+      for (const college of colleges) {
+        const collegeWrapper = await CollegeWrapper(college);
+        collegeData[
+          collegeWrapper.getCollegeId()
+        ] = collegeWrapper.getBasicInfo();
+      }
+
       return raiseSuccess(
         res,
         200,
@@ -971,6 +975,9 @@ class MobileDoctorController extends Controller {
           },
           upload_documents: {
             ...uploadDocumentsData
+          },
+          colleges: {
+            ...collegeData
           }
         },
         "qualification details updated successfully"
@@ -1008,19 +1015,17 @@ class MobileDoctorController extends Controller {
             degree_id = "",
             year = "",
             college_name = "",
-            college_id="",
+            college_id = "",
             id = 0,
             photos = []
           } = qualification || {};
           if (!id) {
-
             let collegeId = college_id;
-            if(college_name !== '' ){
-
+            if (college_name !== "") {
               const college = await collegeService.create({
-                name:college_name,
-                user_created:true
-              })
+                name: college_name,
+                user_created: true
+              });
 
               const collegeWrapper = await CollegeWrapper(college);
               collegeId = collegeWrapper.getCollegeId();
@@ -1031,7 +1036,7 @@ class MobileDoctorController extends Controller {
                 doctor_id: doctorData.getDoctorId(),
                 degree_id,
                 year,
-                college_id:collegeId
+                college_id: collegeId
               }
             );
 
@@ -1730,7 +1735,7 @@ class MobileDoctorController extends Controller {
         height = "",
         weight = "",
         symptoms = "",
-          address = "",
+        address = ""
       } = req.body;
 
       const {
