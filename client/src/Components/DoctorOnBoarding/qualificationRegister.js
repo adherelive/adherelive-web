@@ -76,11 +76,12 @@ class QualificationRegister extends Component {
     let docQualificationIds = [];
     let docRegistrationIds = [];
     for (let doctor of Object.values(doctors)) {
-      const { basic_info: { user_id = 0, id = 0, gender = '', speciality = '' }, doctor_qualification_ids = [], doctor_registration_ids = [] } = doctor;
+      console.log("7865467876545678",doctor);
+      const { basic_info: { user_id = 0, id = 0, gender = '', speciality_id = '' } = {}, doctor_qualification_ids = [], doctor_registration_ids = [] } = doctor || {};
 
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         docGender = gender;
-        docSpeciality = speciality;
+        docSpeciality = speciality_id;
         doctorId = id;
         docQualificationIds = doctor_qualification_ids;
         docRegistrationIds = doctor_registration_ids;
@@ -115,11 +116,12 @@ class QualificationRegister extends Component {
         let key = uuid();
 
         let qualification = {};
-        let { basic_info: { year = '', college_name = '', degree_id = '', id = 0 }, upload_document_ids = [] } = doctor_qualifications[qualifi];
+        let { basic_info: { year = '',college_name='', college_id = '', degree_id = '', id = 0 }, upload_document_ids = [] } = doctor_qualifications[qualifi];
 
         qualification.id = id;
         qualification.year = year;
         qualification.college_name = college_name;
+        qualification.college_id = college_id;
         qualification.degree_id = degree_id;
         let photos = [];
         for (let doc of upload_document_ids) {
@@ -145,7 +147,7 @@ class QualificationRegister extends Component {
     } else {
       let key = uuid();
 
-      education[key] = { degree_id: "", college_name: "", year: parseInt(moment().format("YYYY")), photo: [], photos: [], id: 0 };
+      education[key] = { degree_id: "",college_name:'', college_id: "", year: parseInt(moment().format("YYYY")), photo: [], photos: [], id: 0 };
       educationKeys = [key];
     }
 
@@ -176,7 +178,8 @@ class QualificationRegister extends Component {
     }
 
     this.setState({
-      speciality_id: docSpeciality, gender: docGender,
+      speciality_id: docSpeciality, 
+      gender: docGender,
       registration, registrationKeys, education, educationKeys,
       degrees: degreeList, councils: councilList, colleges: collegeList
     });
@@ -268,13 +271,27 @@ class QualificationRegister extends Component {
     this.setState({ education: newEducation });
   }
 
-  setCollege = (key) => e => {
-    e.preventDefault();
+  // setCollege = (key) => e => {
+  //   e.preventDefault();
+  //   let { education = {} } = this.state;
+  //   let newEducation = education;
+  //   newEducation[key].college_id = e.target.value;
+  //   this.setState({ education: newEducation });
+  // }
+
+
+  setCollege = (key) => (data) => {
+    console.log("data 3243242423423",data);
     let { education = {} } = this.state;
     let newEducation = education;
-    newEducation[key].college_name = e.target.value;
+    newEducation[key].college_id = data;
+    newEducation[key].college_name = '';
     this.setState({ education: newEducation });
   }
+
+
+
+
   setYear = key => (value) => {
     let { education = {} } = this.state;
     let newEducation = education;
@@ -303,8 +320,8 @@ class QualificationRegister extends Component {
           }
         })
 
-        let { degree_id = '', year = '', college_name = '', photos = [], id = 0 } = newEducation[key];
-        let qualData = { degree_id: degree_id.toString(), year, college_name, photos, id: id.toString() };
+        let { degree_id = '', year = '',college_name='', college_id = '', photos = [], id = 0 } = newEducation[key];
+        let qualData = { degree_id: degree_id.toString(), year,college_name, college_id, photos, id: id.toString() };
         let qualificationData = { speciality_id, gender, qualification: qualData };
         let response = await registerQualification(qualificationData)
         // .then(response => {
@@ -369,8 +386,8 @@ class QualificationRegister extends Component {
         let regData = { number, registration_council_id: registration_council_id.toString(), year, expiry_date: expiryDate, photos, id: id.toString() };
         let newEdu = [];
         for (let edu of Object.values(education)) {
-          let { college_name = '', degree_id = '', id = '', photos = [], year = '' } = edu;
-          let localEdu = { college_name, degree_id: degree_id.toString(), id: id.toString(), photos, year };
+          let { college_id = '',college_name='', degree_id = '', id = '', photos = [], year = '' } = edu;
+          let localEdu = {college_name, college_id : college_id.toString() , degree_id: degree_id.toString(), id: id.toString(), photos, year };
           newEdu.push(localEdu);
         }
         let registrationData = { speciality_id, gender, qualification_details: newEdu, registration: regData };
@@ -421,7 +438,7 @@ class QualificationRegister extends Component {
 
     let qualification = education[key];
 
-    let { degree_id = '', college_id = '', year = '' } = qualification;
+    // let { degree_id = '', college_id = '', year = '' } = qualification;
 
 
     // const { basic_info: { id = 1 } = {} } = authenticated_user || {};
@@ -702,7 +719,7 @@ class QualificationRegister extends Component {
     let { education = {}, educationKeys = [] } = this.state;
     let newEducation = education;
     let newEducationKeys = educationKeys;
-    newEducation[key] = { degree_id: "", college_name: "", year: parseInt(moment().format('YYYY')), photo: [], photos: [], id: 0 };
+    newEducation[key] = { degree_id: "",college_name:'', college_id: "", year: parseInt(moment().format('YYYY')), photo: [], photos: [], id: 0 };
     newEducationKeys.unshift(key);
     this.setState({ education: newEducation, educationKeys: newEducationKeys });
   }
@@ -888,23 +905,46 @@ class QualificationRegister extends Component {
   };
 
 
-  async handleCollegeSearch(data) {
+   
+  callHandleCollegeSearch = (key) => (data) => {
+    this.handleCollegeSearch({key,data});
+  }
+
+
+    // handleCollegeSearch =  (key) => async (data) => {
+    async handleCollegeSearch ({key,data}) {
     try {
       if (data) {
         const { searchCollege } = this.props;
         this.setState({ fetchingColleges: true });
         const response = await searchCollege(data);
         const { status } = response;
+
+
         if (status) {
           // const { colleges = {} } = responseData;
           // const collegeList = {};
-          this.setState({ fetchingColleges: false });
+
+          let { education = {} } = this.state;
+          let newEducation = education;
+          newEducation[key].college_name =data.trim();
+          newEducation[key].college_id = '';
+
+          // newEducation[key].college_id = data;
+          this.setState({ education: newEducation ,fetchingColleges: false });
+
           // Object.keys(colleges).forEach(id => {
           //   collegeList[id] = colleges[id];
           // });
           // this.setState({ colleges: collegeList, fetchingColleges: false });
+          
         } else {
-          this.setState({ fetchingColleges: false });
+          let { education = {} } = this.state;
+          let newEducation = education;
+          newEducation[key].college_name = data.trim();
+          newEducation[key].college_id = '';
+          // newEducation[key].college_id = data;
+          this.setState({ education: newEducation, fetchingColleges: false  });
         }
       } else {
         this.setState({ fetchingColleges: false });
@@ -945,6 +985,8 @@ class QualificationRegister extends Component {
     }
   };
 
+
+
   renderEducation = () => {
     let { education = {}, educationKeys = [], fileList = [] } = this.state;
 
@@ -957,9 +999,19 @@ class QualificationRegister extends Component {
     return (
       <div className='flex direction-column'>
         {educationKeys.map(key => {
-          let { photo = [], degree_id, college_name, year, photos = [] } = education[key];
+          let { photo = [], degree_id,college_name, college_id = null, year, photos = [] } = education[key];
+          let college = '';
 
-          console.log("8281782 college_name", {college_name, education});
+          const {colleges = {}}  = this.props;
+          const { basic_info: { name: collegeName } = {} } =
+          colleges[college_id] || {};
+
+          if(college_name !== ''){
+            college = college_name
+          }else{
+            college =collegeName
+          }
+          console.log("8281782 college_id", {college_name,college_id, education});
           return (
 
             <div key={key}>
@@ -996,29 +1048,34 @@ class QualificationRegister extends Component {
                 {this.getDegreesOption()}
               </Select>
               <div className='form-headings'>{this.formatMessage(messages.college)}</div>
-              {/*<Select*/}
-              {/*  onSearch={this.handleCollegeSearch}*/}
-              {/*  notFoundContent={this.state.fetchingColleges ? <Spin size="small" /> : this.formatMessage(messages.noMatch)}*/}
-              {/*  className="form-inputs"*/}
-              {/*  placeholder={this.formatMessage(messages.selectCollege)}*/}
-              {/*  showSearch*/}
-              {/*  value={college_id.toString()}*/}
-              {/*  onChange={this.setCollege(key)}*/}
-              {/*  // onFocus={() => handleMedicineSearch("")}*/}
-              {/*  autoComplete="off"*/}
-              {/*  // onFocus={() => handleMedicineSearch("")}*/}
-              {/*  optionFilterProp="children"*/}
-              {/*  filterOption={(input, option) =>*/}
-              {/*    option.props.children*/}
-              {/*      .toLowerCase()*/}
-              {/*      .indexOf(input.toLowerCase()) >= 0*/}
-              {/*  }*/}
-              {/*// getPopupContainer={getParentNode}*/}
 
-              {/*>*/}
-              {/*  {this.getCollegesOption()}*/}
-              {/*</Select>*/}
-              <Input value={college_name} onChange={this.setCollege(key)} className={"form-inputs"}/>
+              {/* 1000000 */}
+              <Select
+                onSearch={this.callHandleCollegeSearch(key)}
+                notFoundContent={this.state.fetchingColleges ? <Spin size="small" /> : this.formatMessage(messages.noMatch)}
+                className="form-inputs"
+                placeholder={this.formatMessage(messages.selectCollege)}
+                showSearch
+                value={college}
+                // value={college_id}
+                // onChange={this.setCollege(key)}
+                onSelect={this.setCollege(key)}
+                // onFocus={() => handleMedicineSearch("")}
+                autoComplete="off"
+                // onFocus={() => handleMedicineSearch("")}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+              // getPopupContainer={getParentNode}
+
+              >
+                {this.getCollegesOption()}
+              </Select>
+
+              {/* <Input value={college_id} onChange={this.setCollege(key)} className={"form-inputs"}/> */}
               <div className='form-headings'>{this.formatMessage(messages.year)}</div>
               {/* <Input
                 placeholder="Year"
@@ -1051,7 +1108,7 @@ class QualificationRegister extends Component {
                   style={{ width: 128, height: 128, margin: 6 }}
                   beforeUpload={this.handleBeforeUpload(key)}
                   showUploadList={false}
-                  disabled={!(degree_id && college_name && year) || photos.length >= 3}
+                  disabled={!( (college_id || college_name) && degree_id && year) || photos.length >= 3}
                   fileList={photo}
                   customRequest={this.customRequest(key)}
                   onChange={this.handleChangeList(key, fileList)}
@@ -1233,8 +1290,8 @@ class QualificationRegister extends Component {
       //   return false;
     } else {
       for (let edu of newEducation) {
-        let { degree_id = '', college_name = '', year = '', photos = [] } = edu;
-        if (!degree_id || !college_name || !parseInt(year)) {
+        let { degree_id = '', college_name = '',college_id = '', year = '', photos = [] } = edu;
+        if (!degree_id || (!college_id && !college_name) || !parseInt(year)) {
 
           message.error(this.formatMessage(messages.allEduDetError))
           return false;
@@ -1274,8 +1331,8 @@ class QualificationRegister extends Component {
       // let newEducation = Object.values(education);
       let newEducation = [];
       for (let edu of Object.values(education)) {
-        let { college_name = '', degree_id = '', id = '', photos = [], year = '' } = edu;
-        let localEdu = { college_name, degree_id: degree_id.toString(), id: id.toString(), photos, year };
+        let { college_name = '', college_id = '', degree_id = '', id = '', photos = [], year = '' } = edu;
+        let localEdu = { college_name,college_id : college_id.toString(), degree_id: degree_id.toString(), id: id.toString(), photos, year };
         newEducation.push(localEdu);
       }
       // let newRegistration = Object.values(registration);
@@ -1317,6 +1374,8 @@ class QualificationRegister extends Component {
   renderQualificationForm = () => {
     const { searchSpecialities } = this.props;
     const { speciality_id = '', gender = '', registration_number = '', registration_council = '', registration_year = '' } = this.state
+
+    console.log("SPECIALITY ID =============>",speciality_id);
     return (
       <div className='form-block'>
         <div className='form-headings'>{this.formatMessage(messages.speciality)}</div>
