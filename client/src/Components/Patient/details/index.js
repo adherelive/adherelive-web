@@ -12,7 +12,8 @@ import {
   SYRUP,
   PARTS,
   PART_LIST_CODES,
-  DIAGNOSIS_TYPE
+  DIAGNOSIS_TYPE,
+  TABLE_DEFAULT_BLANK_FIELD
 } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
@@ -708,9 +709,9 @@ class PatientDetails extends Component {
         key: id,
         organizer: user_name ? user_name : docName,
         date: `${moment(start_date).format("LL")}`,
-        time: `${moment(start_time).format("LT")} - ${moment(end_time).format(
+        time: `${start_time ? moment(start_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD} - ${end_time ? moment(end_time).format(
           "LT"
-        )}`,
+        ) : TABLE_DEFAULT_BLANK_FIELD}`,
         description: description ? description : "--",
         markComplete: {
           active_event_id,
