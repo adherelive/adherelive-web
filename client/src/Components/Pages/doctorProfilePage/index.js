@@ -170,6 +170,8 @@ class DoctorProfilePage extends Component {
             clinic_names: {}
         };
         this.handleSpecialitySearch = throttle(this.handleSpecialitySearch.bind(this), 2000);
+
+        this.handleCollegeSearch = throttle(this.handleCollegeSearch.bind(this), 2000);
   }
 
     componentDidMount() {

@@ -1387,7 +1387,7 @@ class QualificationRegister extends Component {
           className="form-inputs"
           placeholder="Select Speciality"
           showSearch
-          value={speciality_id.toString()}
+          value={`${speciality_id ? speciality_id : ""}`}
           onChange={this.setSpeciality}
           // onFocus={() => handleMedicineSearch("")}
           autoComplete="off"
