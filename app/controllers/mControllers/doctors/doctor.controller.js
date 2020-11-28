@@ -37,6 +37,7 @@ import {
   USER_CATEGORY,
   VERIFICATION_TYPE
 } from "../../../../constant";
+
 import { getFilePath } from "../../../helper/filePath";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
@@ -221,6 +222,20 @@ class MobileDoctorController extends Controller {
         // todo: find alternative to userExists[0]
         userData = await UserWrapper(userExists[0].get());
         const { patient_id } = await userData.getReferenceInfo();
+        patientData = await PatientWrapper(null, patient_id);
+
+        const previousDetails = patientData.getDetails();
+        const updateResponse = await patientsService.update(
+          {
+            height,
+            weight,
+            address,
+            details: { ...previousDetails, ...patientOtherDetails }
+          },
+          patient_id
+        );
+        Logger.debug("Patient updateResponse ", updateResponse);
+
         patientData = await PatientWrapper(null, patient_id);
       } else {
         const password = process.config.DEFAULT_PASSWORD;
@@ -488,26 +503,49 @@ class MobileDoctorController extends Controller {
           degree_id = "",
           year = "",
           college_name = "",
+          college_id = "",
           photos = [],
           id = 0
         } = item;
         if (id && id !== "0") {
+          let collegeId = college_id;
+          if (college_name) {
+            const college = await collegeService.create({
+              name: college_name,
+              user_created: true
+            });
+
+            const collegeWrapper = await CollegeWrapper(college);
+            collegeId = collegeWrapper.getCollegeId();
+          }
+
           const qualification = await qualificationService.updateQualification(
             {
               doctor_id: doctorData.getDoctorId(),
               degree_id,
               year,
-              college_name
+              college_id: collegeId
             },
             id
           );
           newQualifications.push(parseInt(id));
         } else {
+          let collegeId = college_id;
+          if (college_name) {
+            const college = await collegeService.create({
+              name: college_name,
+              user_created: true
+            });
+
+            const collegeWrapper = await CollegeWrapper(college);
+            collegeId = collegeWrapper.getCollegeId();
+          }
+
           const qualification = await qualificationService.addQualification({
             doctor_id: doctorData.getDoctorId(),
             degree_id,
             year,
-            college_name
+            college_id: collegeId
           });
         }
       }
@@ -774,6 +812,7 @@ class MobileDoctorController extends Controller {
         degree_id = "",
         year = "",
         college_name = "",
+        college_id = "",
         id = 0,
         photos = []
       } = qualification || {};
@@ -790,11 +829,22 @@ class MobileDoctorController extends Controller {
       }
 
       if (!id) {
+        let collegeId = college_id;
+        if (college_name) {
+          const college = await collegeService.create({
+            name: college_name,
+            user_created: true
+          });
+
+          const collegeWrapper = await CollegeWrapper(college);
+          collegeId = collegeWrapper.getCollegeId();
+        }
+
         docQualification = await qualificationService.addQualification({
           doctor_id: doctorData.getDoctorId(),
           degree_id,
           year,
-          college_name
+          college_id: collegeId
         });
 
         for (const photo of photos) {
@@ -814,12 +864,23 @@ class MobileDoctorController extends Controller {
           }
         }
       } else {
+        let collegeId = college_id;
+        if (college_name) {
+          const college = await collegeService.create({
+            name: college_name,
+            user_created: true
+          });
+
+              const collegeWrapper = await CollegeWrapper(college);
+              collegeId = collegeWrapper.getCollegeId();
+            }
+
         const docQualificationUpdate = await qualificationService.updateQualification(
           {
             doctor_id: doctorData.getDoctorId(),
             degree_id,
             year,
-            college_name
+            college_id: collegeId
           },
           id
         );
@@ -888,6 +949,15 @@ class MobileDoctorController extends Controller {
         };
       }
 
+      const colleges = await collegeService.getAll();
+      let collegeData = {};
+      for (const college of colleges) {
+        const collegeWrapper = await CollegeWrapper(college);
+        collegeData[
+          collegeWrapper.getCollegeId()
+        ] = collegeWrapper.getBasicInfo();
+      }
+
       return raiseSuccess(
         res,
         200,
@@ -905,6 +975,9 @@ class MobileDoctorController extends Controller {
           },
           upload_documents: {
             ...uploadDocumentsData
+          },
+          colleges: {
+            ...collegeData
           }
         },
         "qualification details updated successfully"
@@ -942,16 +1015,28 @@ class MobileDoctorController extends Controller {
             degree_id = "",
             year = "",
             college_name = "",
+            college_id = "",
             id = 0,
             photos = []
           } = qualification || {};
           if (!id) {
+            let collegeId = college_id;
+            if (college_name !== "") {
+              const college = await collegeService.create({
+                name: college_name,
+                user_created: true
+              });
+
+              const collegeWrapper = await CollegeWrapper(college);
+              collegeId = collegeWrapper.getCollegeId();
+            }
+
             const docQualification = await qualificationService.addQualification(
               {
                 doctor_id: doctorData.getDoctorId(),
                 degree_id,
                 year,
-                college_name
+                college_id: collegeId
               }
             );
 
@@ -1649,7 +1734,8 @@ class MobileDoctorController extends Controller {
         condition_id,
         height = "",
         weight = "",
-        symptoms = ""
+        symptoms = "",
+        address = ""
       } = req.body;
 
       const {
@@ -1670,7 +1756,10 @@ class MobileDoctorController extends Controller {
           ...previousDetails,
           allergies,
           comorbidities
-        }
+        },
+        height,
+        weight,
+        address
       };
 
       const updatedPatient = await patientService.update(

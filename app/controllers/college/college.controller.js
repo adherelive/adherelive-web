@@ -39,7 +39,7 @@ class CollegeController extends Controller {
                     "Colleges fetched successfully"
                 );
             } else {
-                return raiseClientError(res, 422, {}, `No college found with name including ${value}`)
+                return raiseClientError(res, 201, {}, `No college found with name including ${value}`)
             }
         } catch(error) {
             Logger.debug("college search 500 error", error);

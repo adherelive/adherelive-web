@@ -51,9 +51,9 @@ class EditPatientDrawer extends Component {
             height:'',
             weight:'',
             symptoms:'',
+            address : '',
             treatment:null ,
             severity:null,
-            condition:null,
             careplan_id : null
         };
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
@@ -71,7 +71,7 @@ class EditPatientDrawer extends Component {
         const {visible} = this.props;
         const {users ={},conditions ={},severity ={},treatments ={}} = this.props;
         const {patientData,carePlanData} = this.props.payload || {};
-        const {basic_info : {age,first_name ='',middle_name ='',last_name ='',user_id ='' , id :patient_id ='',height ='',weight ='' , gender =''} = {} , 
+        const {basic_info : {age,first_name ='',middle_name ='',last_name ='',user_id ='' , id :patient_id ='',height ='',weight ='' , gender ='',address = ''} = {} , 
         details : {allergies = '' , comorbidities = ''} = {} , dob =''} = patientData || {};
 
         const {basic_info : {mobile_number ='',prefix = ''} = {} } = users[user_id] || {};
@@ -101,7 +101,8 @@ class EditPatientDrawer extends Component {
                 height,
                 weight,
                 symptoms,
-                careplan_id
+                careplan_id,
+                address
             })
 
         
@@ -156,7 +157,7 @@ class EditPatientDrawer extends Component {
         const  value  = e.target.value.trim();
         
         if (value.length>0 || value === '') {
-            this.setState({ comorbidities: e.target.value});
+            this.setState({ comorbidities: value});
         }
     }
 
@@ -187,6 +188,7 @@ class EditPatientDrawer extends Component {
             this.setState({ symptoms: e.target.value});
         }
     }
+
 
     setPastedClinicalNotes = e => {
         e.preventDefault();
@@ -390,10 +392,29 @@ class EditPatientDrawer extends Component {
     };
 
 
+    setWeight = (e) => {
+        e.preventDefault();
+        const weight = e.target.value.trim();
+        if(weight.length > 0) {
+            this.setState({weight});
+        }
+    };
 
- 
+    setHeight = (e) => {
+        e.preventDefault();
+        const height = e.target.value.trim();
+        if(height.length > 0) {
+            this.setState({height});
+        }
+    };
 
-    
+    setAddress = (e) => {
+        e.preventDefault();
+        const address = e.target.value.trim();
+        if(address.length > 0) {
+            this.setState({address});
+        }
+    };
 
     renderEditPatient = () => {
         let dtToday = new Date();
@@ -411,7 +432,7 @@ class EditPatientDrawer extends Component {
         const { mobile_number = '', name = '', condition = null,
         date_of_birth='', prefix = '',allergies='',comorbidities='',
         gender='',diagnosis_description='',clinical_notes='',
-        diagnosis_type='2',severity=null,treatment=null,height='',weight='',symptoms='' } = this.state;
+        diagnosis_type='2',severity=null,treatment=null,height='',weight='',symptoms='',address ='' } = this.state;
 
        let setDOB = moment(date_of_birth).format('MM-DD-YYYY');
         const prefixSelector = (
@@ -476,6 +497,19 @@ class EditPatientDrawer extends Component {
                     disabled={true}
                     
                 />
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.address)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={address}
+                    className={"form-textarea-ap form-inputs-ap"}
+                    // disabled={true}
+                    onChange={this.setAddress}
+                    style={{resize:"none"}}
+                />
+
+
                 <div className='form-headings-ap'>{this.formatMessage(messages.gender)}</div>
                 <div className='add-patient-radio wp100 mt6 mb18 flex'>
 
@@ -497,7 +531,8 @@ class EditPatientDrawer extends Component {
                     // minLength={6}
                     // maxLength={20}
                     value={height}
-                    disabled={true}
+                    // disabled={true}
+                    onChange={this.setHeight}
                     
                 />
 
@@ -510,7 +545,8 @@ class EditPatientDrawer extends Component {
                     // minLength={6}
                     // maxLength={20}
                     value={weight}
-                    disabled={true}
+                    onChange={this.setWeight}
+                    // disabled={true}
                     
                 />
 
@@ -528,9 +564,10 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={comorbidities}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setComorbidities}
                     onPaste={this.setPastedComorbidities}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.allergies)}</div>
@@ -538,9 +575,10 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={allergies}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setAllergies}
                     onPaste={this.setPastedAllergies}
+                    style={{resize:"none"}}
                 />
 
                 
@@ -553,9 +591,10 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={clinical_notes}
-                    className={"form-textarea-ap "}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setClinicalNotes}
                     onPaste={this.setPastedClinicalNotes}
+                    style={{resize:"none"}}
                 />
 
 
@@ -564,9 +603,10 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={symptoms}
-                    className={"form-textarea-ap "}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setSymptoms}
                     onPaste={this.setPastedSymptoms}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>
@@ -597,9 +637,10 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={diagnosis_description}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setDiagnosis}
                     onPaste={this.setPastedDiagnosis}
+                    style={{resize:"none"}}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}</div>
@@ -716,21 +757,21 @@ class EditPatientDrawer extends Component {
 
     onSubmit = () => {
 
-        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='',height='',weight='', symptoms='' } = this.state;
+        const { mobile_number = '', name = '', gender = '', date_of_birth = '', treatment = '', severity = '', condition = '', prefix = '',diagnosis_description='',diagnosis_type='' ,comorbidities='',allergies='',clinical_notes='',height='',weight='', symptoms='',address ='' } = this.state;
         const validate = this.validateData();
         const { submit } = this.props;
         if (validate) {
-            this.handleSubmit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms})
+            this.handleSubmit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms , address})
             // submit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms})
         }
     }
 
-    async handleSubmit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms}){
+    async handleSubmit({ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms,address}){
        
         try {
             const {updatePatientAndCareplan} = this.props;
             const {careplan_id = null} = this.state;
-            const response = await updatePatientAndCareplan(careplan_id,{ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms});
+            const response = await updatePatientAndCareplan(careplan_id,{ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms,address});
             const { status, payload: { message : msg } = {} } = response;
 
             if(status){
@@ -768,9 +809,9 @@ class EditPatientDrawer extends Component {
             height:'',
             weight:'',
             symptoms:'',
+            address : '',
             treatment:null ,
             severity:null,
-            condition:null,
             careplan_id:null
         });
         close();

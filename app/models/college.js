@@ -17,6 +17,11 @@ export const db = (database) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            user_created: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue:false
+            }
         },
         {
             underscored: true,

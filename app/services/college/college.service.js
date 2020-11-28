@@ -49,6 +49,19 @@ class CollegeService {
             throw error;
         }
     };
+
+    create = async data => {
+        try {
+
+            const college = await Database.getModel(TABLE_NAME).create(
+                data
+              );
+              return college;
+
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new CollegeService();
