@@ -77,7 +77,7 @@ class Dashboard extends Component {
     let doctorUserId = ""; //user_id of doctor
     for (let doc of Object.values(doctors)) {
       let {
-        basic_info: { user_id, id = 1 }
+        basic_info: { user_id, id = 1 } = {}
       } = doc;
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         doctorUserId = user_id;
@@ -421,19 +421,11 @@ class Dashboard extends Component {
                   trigger={["click"]}
                   placement="bottomRight"
                 >
-                  <Button
-                    type="primary"
-                    className="ml10 add-button flex direction-column align-center justify-center hp100"
-                  >
-                    <div className="flex direction-row">
-                      <div className="flex direction-column align-center justify-center hp100">
-                        <img src={plus_white} className={"w20 h20 mr6 "} />
-                      </div>
-                      <div className="flex direction-column align-center justify-center hp100">
-                        <span className="fs20"> Add</span>
-                      </div>
-                    </div>
-                  </Button>
+                     <Button type="primary" className="ml10 add-button " icon={"plus"}>
+                      <span className="fs16">Add</span>
+                    </Button>
+
+                    
                 </Dropdown>
               </div>
             )}
@@ -547,7 +539,7 @@ class Dashboard extends Component {
 
         <EditPatientDrawer />
 
-        {showVerifyModal && getVerifyModal()}
+        {/*{showVerifyModal && getVerifyModal()}*/}
         {/*{showModal && getVerifyModal()}*/}
           {authPermissions.length === 0 ? (
               <div className="fixed b0 p20 bg-light-grey wp100">

@@ -36,11 +36,14 @@ import Logger from "../libs/log";
 import FeatureDetailService from "../app/services/featureDetails/featureDetails.service";
 import ScheduleService from "../app/services/scheduleEvents/scheduleEvent.service";
 import UserPreferenceService from "../app/services/userPreferences/userPreference.service";
+import appointmentService from "../app/services/appointment/appointment.service";
+import queueService from "../app/services/awsQueue/queue.service";
 
 // WRAPPERS
 // import PatientWrapper from "../app/ApiWrapper/mobile/patient";
 import MedicineWrapper from "../app/ApiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/ApiWrapper/mobile/medicationReminder";
+import AppointmentWrapper from "../app/ApiWrapper/mobile/appointments";
 
 const Log = new Logger("EVENT > HELPER");
 
@@ -332,7 +335,7 @@ export const handleVitals = async vital => {
               vital_templates,
               eventId: event_id,
               patient_id
-            },
+            }
           });
           // const scheduleData = {
           //     event_id,
@@ -369,6 +372,149 @@ export const handleVitals = async vital => {
     return response;
   } catch (error) {
     Log.debug("schedule events vitals 500 error", error);
+  }
+};
+
+export const handleAppointmentsTimeAssignment = async appointment => {
+  try {
+    const QueueService = new queueService();
+    const { event_id, start_time, end_time } = appointment;
+
+    const appointmentData = await AppointmentWrapper(null, event_id);
+
+    const {
+      basic_info: { details: { critical = null } = {} } = {},
+      participant_one = {},
+      participant_two = {}
+    } = appointmentData.getBasicInfo() || {};
+
+    const { id: participant_two_id, category: participant_two_type } =
+      participant_two || {};
+
+    const { id: participant_one_id, category: participant_one_type } =
+      participant_one || {};
+
+    let appointment_start_time = null,
+      appointment_end_time = null;
+
+    const late_start_time = moment(start_time).add({ minutes: 1 });
+
+    const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
+      late_start_time,
+      end_time,
+      {
+        participant_one_id,
+        participant_one_type
+      },
+      {
+        participant_two_id,
+        participant_two_type
+      }
+    );
+
+    Log.debug("getAppointmentForTimeSlot --> ", getAppointmentForTimeSlot);
+
+    if (getAppointmentForTimeSlot.length > 0) {
+      let startTime = start_time;
+      let endTime = end_time;
+      let isSearchComplete = false;
+      let timeDifference = moment(end_time).diff(moment(start_time), "minutes");
+      let step = 0;
+
+      let start_date = start_time,
+        end_date = end_time;
+
+      while (!isSearchComplete) {
+        startTime = moment(start_date)
+          .startOf("day")
+          .add({ hours: 4, minutes: 30 })
+          .add("minutes", step);
+        endTime = moment(start_date)
+          .startOf("day")
+          .add({ hours: 4, minutes: 30 })
+          .add("minutes", step + timeDifference);
+
+        const one_minute_late_start_time = moment(startTime).add({
+          minutes: 1
+        });
+
+        const getAppointment = await appointmentService.checkTimeSlot(
+          one_minute_late_start_time,
+          endTime,
+          {
+            participant_one_id,
+            participant_one_type
+          },
+          {
+            participant_two_id,
+            participant_two_type
+          }
+        );
+
+        if (getAppointment.length > 0) {
+          step += timeDifference;
+          // if reached end of the day
+          if (
+            moment(endTime).diff(
+              moment(
+                moment(start_date)
+                  .startOf("day")
+                  .add({ hours: 14, minutes: 30 }),
+                "minutes"
+              )
+            ) >= 0
+          ) {
+            start_date = moment(start_date).add(1, "days");
+
+            step = 0;
+          }
+
+          // continue;
+        } else {
+          isSearchComplete = true;
+          appointment_start_time = startTime;
+          appointment_end_time = endTime;
+        }
+      }
+    } else {
+      appointment_start_time = start_time;
+      appointment_end_time = end_time;
+    }
+
+    const updatedAppointmentData = {
+      start_time: appointment_start_time,
+      end_time: appointment_end_time,
+      start_date: appointment_start_time,
+      end_date: appointment_end_time
+    };
+    const updatedAppointment = await appointmentService.updateAppointment(
+      appointmentData.getAppointmentId(),
+      updatedAppointmentData
+    );
+
+    const eventScheduleData = {
+      type: EVENT_TYPE.APPOINTMENT,
+      event_id: appointmentData.getAppointmentId(),
+      critical,
+      start_time: appointment_start_time,
+      end_time: appointment_end_time,
+      details: appointmentData.getBasicInfo(),
+      participants: [participant_one_id, participant_two_id],
+      actor: {
+        id: participant_one_id,
+        category: participant_one_type
+      }
+    };
+
+    const sqsResponse = await QueueService.sendMessage(
+      "test_queue",
+      eventScheduleData
+    );
+
+    Log.debug("sqsResponse ---> ", sqsResponse);
+    return true;
+  } catch (error) {
+    Log.debug("appointment time assignment 500 error", error);
   }
 };
 

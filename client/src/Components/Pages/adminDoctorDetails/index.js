@@ -535,12 +535,14 @@ class AdminDoctorDetails extends Component {
 
     return doctor_qualification_ids.map((qualification_id, index) => {
       const {
-        basic_info: { degree_id, college_name: collegeName, year } = {},
+        basic_info: { degree_id, college_id, year } = {},
         upload_document_ids = []
       } = doctor_qualifications[qualification_id] || {};
 
-      // const { basic_info: { name: collegeName } = {} } =
-      //   colleges[college_id] || {};
+      const { basic_info: { name: collegeName } = {} } =
+        colleges[college_id] || {};
+
+      
       const { basic_info: { name: degreeName } = {} } =
         degrees[degree_id] || {};
 

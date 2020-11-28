@@ -32,8 +32,6 @@ class StartJob extends VitalJob {
     const vitals = await VitalWrapper({ id: _data.getEventId() });
     const { vitals: latestVital } = await vitals.getAllInfo();
 
-    console.log("1289317932  participants, actorId", participants, actorId);
-
     participants.forEach(participant => {
       if (participant !== actorId) {
         userIds.push(participant);
@@ -55,7 +53,7 @@ class StartJob extends VitalJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `${vitalName} Reminder` },
       contents: {
-        en: `Please update ${vitalName} vital`
+        en: `Tap here to update ${vitalName} vital`
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],

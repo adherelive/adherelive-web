@@ -49,6 +49,7 @@ module.exports = {
           },
           address: {
               type: Sequelize.STRING,
+              allowNull: true,
           },
           height:{
             type: Sequelize.STRING,
