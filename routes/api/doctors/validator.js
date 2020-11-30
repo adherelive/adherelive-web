@@ -35,6 +35,9 @@ const addDoctorForm = Joi.object().keys({
   email: Joi.string()
     .required()
     .label("Email entered is not valid"),
+  is_provider: Joi.boolean()
+    .optional()
+    .allow("", null)
 });
 
 const addPatientForm = Joi.object().keys({
@@ -97,7 +100,7 @@ const addPatientForm = Joi.object().keys({
     .allow("", null),
   address: Joi.string()
     .optional()
-    .allow("", null),
+    .allow("", null)
 });
 
 const addQualificationRegistrationForm = Joi.object().keys({
@@ -115,7 +118,9 @@ const addQualificationRegistrationForm = Joi.object().keys({
       college_name: Joi.string().when("college_id", {
         is: "",
         then: Joi.string().required(),
-        otherwise: Joi.string().optional().allow("", null),
+        otherwise: Joi.string()
+          .optional()
+          .allow("", null)
       }),
       degree_id: Joi.string()
         .regex(/^\d+$/)
@@ -133,7 +138,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
         .allow(0, null),
       photo: Joi.array()
         .optional()
-        .allow(""),
+        .allow("")
     })
   ),
   registration_details: Joi.array().items(
@@ -162,9 +167,9 @@ const addQualificationRegistrationForm = Joi.object().keys({
         .allow(0, null),
       photo: Joi.array()
         .optional()
-        .allow(""),
+        .allow("")
     })
-  ),
+  )
 });
 
 const addQualificationStepForm = Joi.object().keys({
@@ -176,13 +181,15 @@ const addQualificationStepForm = Joi.object().keys({
     .label("Speciality is required"),
   qualification: Joi.object().keys({
     college_id: Joi.string()
+      .optional()
+      .allow(""),
+    college_name: Joi.string().when("college_id", {
+      is: "",
+      then: Joi.string().required(),
+      otherwise: Joi.string()
         .optional()
-        .allow(""),
-      college_name: Joi.string().when("college_id", {
-        is: "",
-        then: Joi.string().required(),
-        otherwise: Joi.string().optional().allow("", null),
-      }),
+        .allow("", null)
+    }),
     degree_id: Joi.string()
       .regex(/^\d+$/)
       .required("Degree is required"),
@@ -196,8 +203,8 @@ const addQualificationStepForm = Joi.object().keys({
     ),
     id: Joi.number()
       .optional()
-      .allow(0, null),
-  }),
+      .allow(0, null)
+  })
 });
 
 const addRegistrationStepForm = Joi.object().keys({
@@ -212,13 +219,15 @@ const addRegistrationStepForm = Joi.object().keys({
       photo: Joi.array()
         .optional()
         .allow(""),
-        college_id: Joi.string()
+      college_id: Joi.string()
         .optional()
         .allow(""),
       college_name: Joi.string().when("college_id", {
         is: "",
         then: Joi.string().required(),
-        otherwise: Joi.string().optional().allow("", null),
+        otherwise: Joi.string()
+          .optional()
+          .allow("", null)
       }),
       degree_id: Joi.string()
         .regex(/^\d+$/)
@@ -233,7 +242,7 @@ const addRegistrationStepForm = Joi.object().keys({
       ),
       id: Joi.number()
         .optional()
-        .allow(0, null),
+        .allow(0, null)
     })
   ),
   registration: Joi.object().keys({
@@ -261,11 +270,11 @@ const addRegistrationStepForm = Joi.object().keys({
       .allow(0, null),
     photo: Joi.array()
       .optional()
-      .allow(""),
+      .allow("")
   }),
   id: Joi.number()
     .optional()
-    .allow(0, null),
+    .allow(0, null)
 });
 
 const addClinicsForm = Joi.object().keys({
@@ -277,9 +286,9 @@ const addClinicsForm = Joi.object().keys({
       location: Joi.string()
         .required()
         .label("Location of clinic is required"),
-      time_slots: Joi.object(),
+      time_slots: Joi.object()
     })
-  ),
+  )
 });
 
 export const validateAddDoctorData = (req, res, next) => {
@@ -291,7 +300,7 @@ export const validateAddDoctorData = (req, res, next) => {
   next();
 };
 
-const validDOB = (date) => {
+const validDOB = date => {
   return moment().diff(date, "d") <= 0;
 };
 

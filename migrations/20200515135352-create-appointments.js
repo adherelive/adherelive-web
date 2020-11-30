@@ -1,7 +1,6 @@
 "use strict";
 
 import { TABLE_NAME } from "../app/models/appointments";
-import { TABLE_NAME as providerTableName } from "../app/models/providers";
 import { USER_CATEGORY } from "../constant";
 
 module.exports = {
@@ -40,12 +39,6 @@ module.exports = {
       },
       provider_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: providerTableName
-          },
-          key: "id"
-        },
         allowNull: true
       },
       provider_name: {

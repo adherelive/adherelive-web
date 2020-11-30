@@ -1,6 +1,5 @@
 "use strict";
 import { DataTypes } from "sequelize";
-import { TABLE_NAME as providerTableName } from "./providers";
 import { USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "appointments";
@@ -42,12 +41,6 @@ export const db = database => {
       },
       provider_id: {
         type: DataTypes.INTEGER,
-        references: {
-          model: {
-            tableName: providerTableName
-          },
-          key: "id"
-        },
         allowNull: true
       },
       provider_name: {

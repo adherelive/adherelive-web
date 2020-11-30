@@ -80,6 +80,7 @@ import * as VitalTemplates from "../app/models/vitalTemplates";
 import * as Watchlist from "../app/models/doctor_patient_watchlist";
 
 import * as AccountDetails from "../app/models/accountDetails";
+import * as DoctorProviderMapping from "../app/models/doctorProviderMapping";
 
 // Models List...
 const models = [
@@ -107,6 +108,7 @@ const models = [
   DoctorQualifications,
   DoctorRegistrations,
   Doctors,
+  DoctorProviderMapping,
 
   EmailLogger,
   Exercise,
