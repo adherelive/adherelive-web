@@ -12,7 +12,8 @@ import {
   SYRUP,
   PARTS,
   PART_LIST_CODES,
-  DIAGNOSIS_TYPE
+  DIAGNOSIS_TYPE,
+  TABLE_DEFAULT_BLANK_FIELD
 } from "../../../constant";
 import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
@@ -332,7 +333,7 @@ const PatientCard = ({
           expandIcon={() => <CaretDownOutlined className="pointer" />}
         >
           <Panel key={"1"} style={{ border: "none" }} className="br10">
-            <div className="flex direction-row align-center tac">
+            <div className="flex   align-center tac">
               {editPatientOption()}
             </div>
           </Panel>
@@ -410,11 +411,11 @@ const PatientCard = ({
         <div className="fs14 fw700 flex black-85">{allergies}</div>
       </div>
 
-      {/*<div className="patient-contact-number mt16 mr0 mb0 ml0 flex direction-row justify-center align-center">*/}
+      {/*<div className="patient-contact-number mt16 mr0 mb0 ml0 flex   justify-center align-center">*/}
       {/*  <PhoneOutlined className="dark-sky-blue mr8" />*/}
       {/*  <div>{patient_phone_number}</div>*/}
       {/*</div>*/}
-      {/*<div className="patient-email-id mt8 mr0 mb0 ml0 flex direction-row justify-center align-center">*/}
+      {/*<div className="patient-email-id mt8 mr0 mb0 ml0 flex   justify-center align-center">*/}
       {/*  {patient_email_id && <MailOutlined className="dark-sky-blue mr8" />}*/}
       {/*  {patient_email_id && <div>{patient_email_id}</div>}*/}
       {/*</div>*/}
@@ -708,9 +709,9 @@ class PatientDetails extends Component {
         key: id,
         organizer: user_name ? user_name : docName,
         date: `${moment(start_date).format("LL")}`,
-        time: `${moment(start_time).format("LT")} - ${moment(end_time).format(
+        time: `${start_time ? moment(start_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD} - ${end_time ? moment(end_time).format(
           "LT"
-        )}`,
+        ) : TABLE_DEFAULT_BLANK_FIELD}`,
         description: description ? description : "--",
         markComplete: {
           active_event_id,
@@ -782,7 +783,7 @@ class PatientDetails extends Component {
         // organizer: organizer_type === "doctor" ? doctors[organizer_id] : patients[organizer_id].
         key: id,
         medicine: (
-          <div className="flex direction-row justify-space-around align-center">
+          <div className="flex   justify-space-around align-center">
             <img
               className="w20 mr10"
               src={
@@ -1425,10 +1426,12 @@ class PatientDetails extends Component {
 
   editPatientOption = () => {
     return (
-      <div className="flex direction-row justify-end  wp100 ">
+      <div
+       onClick={this.handleEditPatientDrawer}
+       className="flex  align-center justify-center  wp100 ">
         <div
-          onClick={this.handleEditPatientDrawer}
-          className="pointer h30 flex direction-row  "
+         
+          className="pointer h30 flex   "
         >
           <div className="flex direction-column align-center justify-center  hp100   ">
             <span className="fw700 fs19 mr20">

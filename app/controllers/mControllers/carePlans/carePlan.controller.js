@@ -59,8 +59,6 @@ class CarePlanController extends Controller {
         }
       );
 
-      Log.debug("templateNameCheck ---> ", templateNameCheck);
-
       if (templateNameCheck) {
         return this.raiseClientError(
           res,
@@ -92,88 +90,7 @@ class CarePlanController extends Controller {
       const carePlan = await carePlanService.getCarePlanById(id);
       let carePlanData = await CarePlanWrapper(carePlan);
 
-      console.log(
-        "====================> ",
-        care_plan_id,
-        id,
-        carePlan,
-        userDetails
-      );
       const patient_id = carePlan.get("patient_id");
-
-      let timeForAppointment = {};
-
-      for(let i = 0; i < appointmentsData.length; i++) {
-
-        const {
-          schedule_data: { description = '', end_time = '', organizer = {}, treatment = '', participant_two = {}, start_time = '', date = '' } = {},
-          reason = '', time_gap = '' } = appointmentsData[i] || {};
-
-        const { id: participant_two_id, category: participant_two_type } = participant_two || {};
-
-        const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
-            start_time,
-            end_time,
-            {
-              participant_one_id: userCategoryId,
-              participant_one_type: category,
-            },
-            {
-              participant_two_id,
-              participant_two_type,
-            }
-        );
-
-        Log.debug("getAppointmentForTimeSlot --> ", getAppointmentForTimeSlot);
-
-        if (getAppointmentForTimeSlot.length > 0) {
-          let startTime = start_time;
-          let endTime = end_time;
-          let isSearchComplete = false;
-          let timeDifference = moment(end_time).diff(moment(start_time), "minutes");
-          let step = 0;
-
-          while(!isSearchComplete) {
-            startTime = moment(start_time).startOf("day").add({hours: 4, minutes: 30}).add("minutes", step);
-            endTime = moment(start_time).startOf("day").add({hours: 4, minutes: 30}).add("minutes", (step + timeDifference));
-
-            const getAppointment = await appointmentService.checkTimeSlot(
-                startTime,
-                endTime,
-                {
-                  participant_one_id: userCategoryId,
-                  participant_one_type: category,
-                },
-                {
-                  participant_two_id,
-                  participant_two_type,
-                }
-            );
-
-            if(getAppointment.length > 0) {
-              step += timeDifference;
-              // if reached end of the day
-              if(moment(moment().startOf("day").add({hours: 14, minutes: 30}), "minutes").diff(moment(endTime)) >= 0) {
-                return this.raiseClientError(
-                    res,
-                    422,
-                    {
-                      error_type: "slot_present",
-                    },
-                    `Appointment Slot already booked for the day`
-                );
-              }
-
-              // continue;
-            } else {
-              isSearchComplete = true;
-              timeForAppointment[i] = {start_time: startTime, end_time: endTime};
-            }
-          }
-        } else {
-          timeForAppointment[i] = {start_time, end_time};
-        }
-      };
 
       let appointmentApiDetails = {};
       let appointment_ids = [];
@@ -181,14 +98,16 @@ class CarePlanController extends Controller {
       let appointmentsArr = [];
       let medicationsArr = [];
 
-      for(let i = 0; i < appointmentsData.length; i++) {
+      for (let i = 0; i < appointmentsData.length; i++) {
         const {
           schedule_data: {
             description = "",
             organizer = {},
             treatment_id = "",
             participant_two = {},
-            date = ""
+            date = "",
+            start_time = "",
+            end_time = ""
           } = {},
           reason = "",
           time_gap = "",
@@ -198,8 +117,6 @@ class CarePlanController extends Controller {
           type_description = "",
           critical = false
         } = appointmentsData[i];
-
-        const {start_time = "", end_time = ""} = timeForAppointment[i] || {};
 
         const { id: participant_two_id, category: participant_two_type } =
           participant_two || {};
@@ -238,8 +155,8 @@ class CarePlanController extends Controller {
           description,
           start_date: date,
           end_date: date,
-          start_time,
-          end_time,
+          start_time: null,
+          end_time: null,
           provider_id,
           provider_name,
           details: {
@@ -282,17 +199,10 @@ class CarePlanController extends Controller {
         });
 
         const eventScheduleData = {
-          type: EVENT_TYPE.APPOINTMENT,
+          type: EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT,
           event_id: appointmentData.getAppointmentId(),
-          critical,
           start_time,
-          end_time,
-          details: appointmentData.getBasicInfo(),
-          participants: [userId, participantTwoId],
-          actor: {
-            id: userId,
-            category
-          }
+          end_time
         };
 
         const sqsResponse = await QueueService.sendMessage(
@@ -302,6 +212,7 @@ class CarePlanController extends Controller {
 
         Log.debug("sqsResponse ---> ", sqsResponse);
       }
+      // careplan part starts.
 
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");

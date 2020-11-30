@@ -503,7 +503,7 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={address}
-                    className={"form-textarea-ap "}
+                    className={"form-textarea-ap form-inputs-ap"}
                     // disabled={true}
                     onChange={this.setAddress}
                     style={{resize:"none"}}
@@ -564,7 +564,7 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={comorbidities}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setComorbidities}
                     onPaste={this.setPastedComorbidities}
                     style={{resize:"none"}}
@@ -575,7 +575,7 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={allergies}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setAllergies}
                     onPaste={this.setPastedAllergies}
                     style={{resize:"none"}}
@@ -591,7 +591,7 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={clinical_notes}
-                    className={"form-textarea-ap "}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setClinicalNotes}
                     onPaste={this.setPastedClinicalNotes}
                     style={{resize:"none"}}
@@ -603,7 +603,7 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={symptoms}
-                    className={"form-textarea-ap "}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setSymptoms}
                     onPaste={this.setPastedSymptoms}
                     style={{resize:"none"}}
@@ -637,7 +637,7 @@ class EditPatientDrawer extends Component {
                 <TextArea
                     placeholder={this.formatMessage(messages.writeHere)}
                     value={diagnosis_description}
-                    className={"form-textarea-ap"}
+                    className={"form-textarea-ap form-inputs-ap"}
                     onChange={this.setDiagnosis}
                     onPaste={this.setPastedDiagnosis}
                     style={{resize:"none"}}
