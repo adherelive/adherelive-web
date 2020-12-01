@@ -239,19 +239,23 @@ export const getDoctorProfileRegisterData = (userId) => {
   };
 }
 
-export const getDoctorQualificationRegisterData = () => {
+export const getDoctorQualificationRegisterData = (payload) => {
   let response = {};
+  const {doctor_id} = payload || {};
   return async (dispatch) => {
     try {
       dispatch({ type: GET_DOCTOR_QUALIFICATION_DATA });
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Doctor.getdoctorQualificationRegisterDataUrl(),
+        url: Doctor.getdoctorQualificationRegisterDataUrl(doctor_id),
+        // data: payload
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
+
+      console.log("01831283908 response ---> ", {payload, response});
 
       if (status === false) {
         dispatch({

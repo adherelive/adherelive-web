@@ -53,8 +53,8 @@ const mapDispatchToProps = dispatch => {
     searchDegree: data => dispatch(searchDegree(data)),
     doctorQualificationRegister: data =>
       dispatch(doctorQualificationRegister(data)),
-    getDoctorQualificationRegisterData: () =>
-      dispatch(getDoctorQualificationRegisterData()),
+    getDoctorQualificationRegisterData: (data) =>
+      dispatch(getDoctorQualificationRegisterData(data)),
     registerQualification: data => dispatch(registerQualification(data)),
     registerRegistration: data => dispatch(registerRegistration(data)),
     deleteDoctorQualificationImage: (qualificationId, document) =>
