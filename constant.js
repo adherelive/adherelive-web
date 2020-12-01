@@ -619,7 +619,8 @@ export const APPOINTMENT_TYPE_DESCRIPTION = {
 export const FEATURE_TYPE = {
   APPOINTMENT: "appointment",
   MEDICATION: "medication",
-  VITAL: "vital"
+  VITAL: "vital",
+  PROVIDER: "provider"
 };
 
 export const BLANK_STATE = "";

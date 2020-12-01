@@ -1,7 +1,16 @@
 import Controller from "../index";
-import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from '../carePlans/carePlanHelper'
+import {
+  getCarePlanAppointmentIds,
+  getCarePlanMedicationIds,
+  getCarePlanSeverityDetails
+} from "../carePlans/carePlanHelper";
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
-import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
+import {
+  EVENT_STATUS,
+  EVENT_TYPE,
+  FEATURE_TYPE,
+  USER_CATEGORY
+} from "../../../constant";
 import moment from "moment";
 
 import Log from "../../../libs/log";
@@ -17,23 +26,18 @@ import patientService from "../../services/patients/patients.service";
 import appointmentService from "../../services/appointment/appointment.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import featureDetailService from "../../services/featureDetails/featureDetails.service";
-import providerService from "../../services/provider/provider.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
-
 
 // WRAPPERS...
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 
-
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -57,12 +61,12 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         treatment_id = "",
-          reason = "",
-          type = null,
-          type_description = null,
-          provider_id = null,
-          provider_name = null,
-          critical = false
+        reason = "",
+        type = null,
+        type_description = null,
+        provider_id = null,
+        provider_name = null,
+        critical = false
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -70,18 +74,17 @@ class AppointmentController extends Controller {
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
-
       /*
-      * check previous time slot for appointment based on
-      * date,
-      * start_time,
-      * end_time,
-      *
-      * participant_one_id,
-      * participant_one_type,
-      * participant_two_id,
-      * participant_two_type
-      * */
+       * check previous time slot for appointment based on
+       * date,
+       * start_time,
+       * end_time,
+       *
+       * participant_one_id,
+       * participant_one_type,
+       * participant_two_id,
+       * participant_two_type
+       * */
 
       let userCategoryId = null;
       let participantTwoId = null;
@@ -105,19 +108,18 @@ class AppointmentController extends Controller {
           break;
       }
 
-
       // Logger.debug("Start date", date);
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
         start_time,
         end_time,
-          {
-            participant_one_id: userCategoryId,
-            participant_one_type: category
-          },
-          {
-            participant_two_id,
-            participant_two_type
-          }
+        {
+          participant_one_id: userCategoryId,
+          participant_one_type: category
+        },
+        {
+          participant_two_id,
+          participant_two_type
+        }
       );
 
       if (getAppointmentForTimeSlot.length > 0) {
@@ -125,7 +127,7 @@ class AppointmentController extends Controller {
           res,
           422,
           {
-            error_type: "slot_present",
+            error_type: "slot_present"
           },
           `Appointment Slot already present between`
         );
@@ -149,7 +151,7 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical,
+          critical
         },
         provider_id,
         provider_name
@@ -181,11 +183,17 @@ class AppointmentController extends Controller {
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+      const sqsResponse = await QueueService.sendMessage(
+        "test_queue",
+        eventScheduleData
+      );
 
       Logger.debug("sqsResponse ---> ", sqsResponse);
 
-      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
+      const appointmentJob = AppointmentJob.execute(
+        EVENT_STATUS.SCHEDULED,
+        eventScheduleData
+      );
       await NotificationSdk.execute(appointmentJob);
 
       // TODO: schedule event and notifications here
@@ -198,9 +206,9 @@ class AppointmentController extends Controller {
         {
           appointments: {
             [appointmentApiData.getAppointmentId()]: {
-              ...appointmentApiData.getBasicInfo(),
-            },
-          },
+              ...appointmentApiData.getBasicInfo()
+            }
+          }
         },
         "appointment created successfully"
       );
@@ -214,7 +222,7 @@ class AppointmentController extends Controller {
     const { raiseClientError } = this;
     try {
       const { carePlanId: care_plan_id = 0 } = req.params;
-      const { body, userDetails, } = req;
+      const { body, userDetails } = req;
       const {
         participant_two,
         description = "",
@@ -223,7 +231,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         treatment_id = "",
-        reason = '',
+        reason = "",
         type = null,
         type_description = null,
         provider_id = null,
@@ -258,19 +266,18 @@ class AppointmentController extends Controller {
           break;
       }
 
-
       // Logger.debug("Start date", date);
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
         start_time,
         end_time,
-          {
-            participant_one_id: userCategoryId,
-            participant_one_type: category
-          },
-          {
-            participant_two_id,
-            participant_two_type
-          }
+        {
+          participant_one_id: userCategoryId,
+          participant_one_type: category
+        },
+        {
+          participant_two_id,
+          participant_two_type
+        }
       );
 
       if (getAppointmentForTimeSlot.length > 0) {
@@ -278,7 +285,7 @@ class AppointmentController extends Controller {
           res,
           422,
           {
-            error_type: "slot_present",
+            error_type: "slot_present"
           },
           `Appointment Slot already present between`
         );
@@ -305,7 +312,7 @@ class AppointmentController extends Controller {
           type,
           type_description,
           critical
-        },
+        }
       };
 
       const appointment = await appointmentService.addAppointment(
@@ -314,23 +321,31 @@ class AppointmentController extends Controller {
 
       let data_to_create = {
         care_plan_id: parseInt(care_plan_id),
-        appointment_id: appointment.get('id')
-      }
+        appointment_id: appointment.get("id")
+      };
 
-      let newAppointment = await carePlanAppointmentService.addCarePlanAppointment(data_to_create);
+      let newAppointment = await carePlanAppointmentService.addCarePlanAppointment(
+        data_to_create
+      );
 
       let carePlan = await carePlanService.getCarePlanById(care_plan_id);
 
-      let carePlanAppointmentIds = await getCarePlanAppointmentIds(care_plan_id);
+      let carePlanAppointmentIds = await getCarePlanAppointmentIds(
+        care_plan_id
+      );
       let carePlanMedicationIds = await getCarePlanMedicationIds(care_plan_id);
-      let carePlanSeverityDetails = await getCarePlanSeverityDetails(care_plan_id);
+      let carePlanSeverityDetails = await getCarePlanSeverityDetails(
+        care_plan_id
+      );
       const carePlanApiWrapper = await CarePlanWrapper(carePlan);
       let carePlanApiData = {};
 
-      carePlanApiData[
-        carePlanApiWrapper.getCarePlanId()
-      ] = { ...carePlanApiWrapper.getBasicInfo(), ...carePlanSeverityDetails, medication_ids: carePlanMedicationIds, appointment_ids: carePlanAppointmentIds };
-
+      carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
+        ...carePlanApiWrapper.getBasicInfo(),
+        ...carePlanSeverityDetails,
+        medication_ids: carePlanMedicationIds,
+        appointment_ids: carePlanAppointmentIds
+      };
 
       const appointmentApiData = await new AppointmentWrapper(appointment);
 
@@ -351,11 +366,17 @@ class AppointmentController extends Controller {
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+      const sqsResponse = await QueueService.sendMessage(
+        "test_queue",
+        eventScheduleData
+      );
 
       Logger.debug("sqsResponse ---> ", sqsResponse);
 
-      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
+      const appointmentJob = AppointmentJob.execute(
+        EVENT_STATUS.SCHEDULED,
+        eventScheduleData
+      );
       await NotificationSdk.execute(appointmentJob);
 
       Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
@@ -373,9 +394,9 @@ class AppointmentController extends Controller {
           care_plans: { ...carePlanApiData },
           appointments: {
             [appointmentApiData.getAppointmentId()]: {
-              ...appointmentApiData.getBasicInfo(),
-            },
-          },
+              ...appointmentApiData.getBasicInfo()
+            }
+          }
         },
         "appointment created successfully"
       );
@@ -397,7 +418,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         treatment_id = "",
-        reason = '',
+        reason = "",
         type = null,
         type_description = null,
         provider_id = null,
@@ -411,7 +432,9 @@ class AppointmentController extends Controller {
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
-      const oldAppointment = await appointmentService.getAppointmentById(appointment_id);
+      const oldAppointment = await appointmentService.getAppointmentById(
+        appointment_id
+      );
 
       const oldAppointmentData = await AppointmentWrapper(oldAppointment);
 
@@ -435,37 +458,42 @@ class AppointmentController extends Controller {
       }
 
       if (
-          moment(date).diff(moment(oldAppointmentData.getStartDate()), 'd') !== 0 ||
-          moment(start_time).diff(moment(oldAppointmentData.getStartTime()), 'm') !==
+        moment(date).diff(moment(oldAppointmentData.getStartDate()), "d") !==
           0 ||
-          moment(end_time).diff(moment(oldAppointmentData.getEndTime()), 'm') !== 0
+        moment(start_time).diff(
+          moment(oldAppointmentData.getStartTime()),
+          "m"
+        ) !== 0 ||
+        moment(end_time).diff(moment(oldAppointmentData.getEndTime()), "m") !==
+          0
       ) {
-
         const previousAppointments = await appointmentService.checkTimeSlot(
-            start_time,
-            end_time,
-            {
-                participant_one_id: userCategoryId,
-              participant_one_type: category
-            },
-            {
-              participant_two_id,
-              participant_two_type
-            }
+          start_time,
+          end_time,
+          {
+            participant_one_id: userCategoryId,
+            participant_one_type: category
+          },
+          {
+            participant_two_id,
+            participant_two_type
+          }
         );
 
-        const filteredAppointments = previousAppointments.filter(appointment => {
-          return `${appointment.get("id")}` !== appointment_id;
-        });
+        const filteredAppointments = previousAppointments.filter(
+          appointment => {
+            return `${appointment.get("id")}` !== appointment_id;
+          }
+        );
 
         if (filteredAppointments.length > 0) {
           return raiseClientError(
-              res,
-              422,
-              {
-                error_type: "slot_present"
-              },
-              `Appointment Slot already present between`
+            res,
+            422,
+            {
+              error_type: "slot_present"
+            },
+            `Appointment Slot already present between`
           );
         }
       }
@@ -477,7 +505,8 @@ class AppointmentController extends Controller {
         participant_two_id,
         organizer_type:
           Object.keys(organizer).length > 0 ? organizer.category : category,
-        organizer_id: Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
+        organizer_id:
+          Object.keys(organizer).length > 0 ? organizer.id : userCategoryId,
         description,
         start_date: moment(date),
         end_date: moment(date),
@@ -490,17 +519,22 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical,
-        },
+          critical
+        }
       };
 
-      const appointment = await appointmentService.updateAppointment(appointment_id,
+      const appointment = await appointmentService.updateAppointment(
+        appointment_id,
         appointment_data
       );
 
-      const updatedAppointmentDetails = await appointmentService.getAppointmentById(appointment_id);
+      const updatedAppointmentDetails = await appointmentService.getAppointmentById(
+        appointment_id
+      );
 
-      const appointmentApiData = await AppointmentWrapper(updatedAppointmentDetails);
+      const appointmentApiData = await AppointmentWrapper(
+        updatedAppointmentDetails
+      );
 
       // response
       return this.raiseSuccess(
@@ -509,9 +543,9 @@ class AppointmentController extends Controller {
         {
           appointments: {
             [appointmentApiData.getAppointmentId()]: {
-              ...appointmentApiData.getBasicInfo(),
-            },
-          },
+              ...appointmentApiData.getBasicInfo()
+            }
+          }
         },
         "Appointment updated successfully"
       );
@@ -526,8 +560,7 @@ class AppointmentController extends Controller {
     try {
       const { params: { id } = {}, userDetails: { userId } = {} } = req;
 
-
-      console.log('PATIENT IDDD OF GET APPOINTMENT', id);
+      console.log("PATIENT IDDD OF GET APPOINTMENT", id);
       const appointmentList = await appointmentService.getAppointmentForPatient(
         id
       );
@@ -537,12 +570,12 @@ class AppointmentController extends Controller {
       // if (appointmentList.length > 0) {
       let appointmentApiData = {};
 
-      for(const appointment of appointmentList) {
+      for (const appointment of appointmentList) {
         const appointmentWrapper = await AppointmentWrapper(appointment);
 
         appointmentApiData[
-            appointmentWrapper.getAppointmentId()
-            ] = appointmentWrapper.getBasicInfo();
+          appointmentWrapper.getAppointmentId()
+        ] = appointmentWrapper.getBasicInfo();
       }
 
       return raiseSuccess(
@@ -550,8 +583,8 @@ class AppointmentController extends Controller {
         200,
         {
           appointments: {
-            ...appointmentApiData,
-          },
+            ...appointmentApiData
+          }
         },
         `appointment data for patient: ${id} fetched successfully`
       );
@@ -567,20 +600,20 @@ class AppointmentController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       Logger.debug("REQUEST ------> ", req.params);
-      const { params: { appointment_id } = {}, userDetails: { userId } = {} } = req;
+      const {
+        params: { appointment_id } = {},
+        userDetails: { userId } = {}
+      } = req;
 
-
-      const carePlanAppointmentDetails = await carePlanAppointmentService.deleteCarePlanAppointmentByAppointmentId(appointment_id);
-
-      const appointmentDetails = await appointmentService.deleteAppointment(appointment_id);
-
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        `Appointment deleted successfully`
+      const carePlanAppointmentDetails = await carePlanAppointmentService.deleteCarePlanAppointmentByAppointmentId(
+        appointment_id
       );
 
+      const appointmentDetails = await appointmentService.deleteAppointment(
+        appointment_id
+      );
+
+      return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
     } catch (error) {
       Logger.debug("delete 500 error", error);
       return raiseServerError(res);
@@ -588,48 +621,57 @@ class AppointmentController extends Controller {
   };
 
   getAppointmentDetails = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const appointmentDetails = await featureDetailService.getDetailsByData({feature_type: FEATURE_TYPE.APPOINTMENT});
+      const appointmentDetails = await featureDetailService.getDetailsByData({
+        feature_type: FEATURE_TYPE.APPOINTMENT
+      });
 
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
       let providerData = {};
 
-      const providerDetails = await providerService.getAll();
+      const providerDetails = await featureDetailService.getManyByData({
+        feature_type: FEATURE_TYPE.PROVIDER
+      });
 
-      for(const provider of providerDetails) {
-        const providerDetail = await ProviderWrapper(provider);
-        providerData[providerDetail.getProviderId()] = providerDetail.getBasicInfo();
+      for (const provider of providerDetails) {
+        const providerWrapper = await FeatureDetailsWrapper(provider);
+        providerData = {
+          ...providerData,
+          ...providerWrapper.getFeatureDetails()
+        };
       }
 
-
-      return raiseSuccess(res, 200, {
-        static_templates: {
-          appointments: {...appointmentData.getFeatureDetails()},
+      return raiseSuccess(
+        res,
+        200,
+        {
+          static_templates: {
+            appointments: { ...appointmentData.getFeatureDetails() }
+          },
+          providers: {
+            ...providerData
+          }
         },
-        providers: {
-          ...providerData
-        }
-      },
-          "Appointment details fetched successfully");
-      
-    } catch(error) {
+        "Appointment details fetched successfully"
+      );
+    } catch (error) {
       Logger.debug("getAppointmentDetails 500 error ", error);
       return raiseServerError(res);
     }
   };
 
-
   getAllMissedAppointments = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-
-
       const { body, userDetails } = req;
 
-      const { userId, userData: { category  } = {} ,userCategoryData :{basic_info:{id :doctorId } ={} } = {} } = userDetails || {};
-
+      const {
+        userId,
+        userData: { category } = {},
+        userCategoryData: { basic_info: { id: doctorId } = {} } = {}
+      } = userDetails || {};
 
       let docAllCareplanData = [];
       let appointmentApiData = {};
@@ -638,72 +680,66 @@ class AppointmentController extends Controller {
       let nonCriticalAppointmentEventIds = [];
       const scheduleEventService = new ScheduleEventService();
 
-      
       docAllCareplanData = await carePlanService.getCarePlanByData({
         doctor_id: doctorId
       });
 
       // Logger.debug("786756465789",docAllCareplanData);
 
-        for(let carePlan of docAllCareplanData) {
+      for (let carePlan of docAllCareplanData) {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
-        const {appointment_ids} = await carePlanApiWrapper.getAllInfo();
+        const { appointment_ids } = await carePlanApiWrapper.getAllInfo();
 
-
-        for(let aId of appointment_ids){
+        for (let aId of appointment_ids) {
           // Logger.debug("87657898763545",appointment_ids);
 
-            let expiredAppointmentsList = await scheduleEventService.getAllEventByData({
+          let expiredAppointmentsList = await scheduleEventService.getAllEventByData(
+            {
               event_type: EVENT_TYPE.APPOINTMENT,
               status: EVENT_STATUS.EXPIRED,
-              event_id:aId
-            });
+              event_id: aId
+            }
+          );
 
+          for (let appointment of expiredAppointmentsList) {
+            const appointmentEventWrapper = await EventWrapper(appointment);
+            // Logger.debug("8976756576890",appointmentEventWrapper);
 
-            for(let appointment of expiredAppointmentsList ){
-              const appointmentEventWrapper = await EventWrapper(appointment);
-              // Logger.debug("8976756576890",appointmentEventWrapper);
-             
-                if (appointmentEventWrapper.getCriticalValue()) {
-                  if (
-                    !criticalAppointmentEventIds.includes(
-                      appointmentEventWrapper.getEventId()
-                    )
-                  ) {
-                    criticalAppointmentEventIds.push(
-                      appointmentEventWrapper.getEventId()
-                    );
-                  }
-                } else {
-                  if (
-                    !nonCriticalAppointmentEventIds.includes(
-                      appointmentEventWrapper.getEventId()
-                    )
-                  ) {
-                    nonCriticalAppointmentEventIds.push(
-                      appointmentEventWrapper.getEventId()
-                    );
-                  }
-                }
-    
-                appointmentApiData[
+            if (appointmentEventWrapper.getCriticalValue()) {
+              if (
+                !criticalAppointmentEventIds.includes(
                   appointmentEventWrapper.getEventId()
-                ] = appointmentEventWrapper.getDetails();
-              
-            };
+                )
+              ) {
+                criticalAppointmentEventIds.push(
+                  appointmentEventWrapper.getEventId()
+                );
+              }
+            } else {
+              if (
+                !nonCriticalAppointmentEventIds.includes(
+                  appointmentEventWrapper.getEventId()
+                )
+              ) {
+                nonCriticalAppointmentEventIds.push(
+                  appointmentEventWrapper.getEventId()
+                );
+              }
+            }
 
-
-        };
-
-
-      };
-
-
-
-      if(Object.keys(appointmentApiData).length === 0 && appointmentApiData.constructor === Object){
-        flag = false;
+            appointmentApiData[
+              appointmentEventWrapper.getEventId()
+            ] = appointmentEventWrapper.getDetails();
+          }
+        }
       }
 
+      if (
+        Object.keys(appointmentApiData).length === 0 &&
+        appointmentApiData.constructor === Object
+      ) {
+        flag = false;
+      }
 
       if (flag === true) {
         return raiseSuccess(
@@ -721,16 +757,11 @@ class AppointmentController extends Controller {
       } else {
         return raiseSuccess(res, 201, {}, "No Missed Appointment");
       }
-
-      
-
     } catch (error) {
       Logger.debug("getappointmentDetails 500 error ", error);
       return raiseServerError(res);
     }
   };
-  
-
 }
 
 export default new AppointmentController();

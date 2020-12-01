@@ -1,8 +1,9 @@
 "use strict";
 
-import { DB_TABLES } from "../constant";
-import { TABLE_NAME } from "../app/models/templateAppointments";
-import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/careplanTemplate";
+import { TABLE_NAME } from "../app/models/doctorProviderMapping";
+import { TABLE_NAME as providerTableName } from "../app/models/providers";
+import { TABLE_NAME as doctorTableName } from "../app/models/doctors";
+import { DataTypes } from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,37 +12,27 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER
       },
-      care_plan_template_id: {
-        type: Sequelize.INTEGER,
+      doctor_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTemplateTableName
+            tableName: doctorTableName
           },
           key: "id"
         }
       },
-      reason: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      time_gap: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      details: {
-        type: Sequelize.JSON,
-        allowNull: true
-      },
       provider_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-      },
-      provider_name: {
-        type: Sequelize.STRING(100),
-        allowNull: true
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: providerTableName
+          },
+          key: "id"
+        }
       },
       created_at: {
         allowNull: false,
