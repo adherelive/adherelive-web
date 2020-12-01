@@ -629,20 +629,6 @@ class AppointmentController extends Controller {
 
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
-      let providerData = {};
-
-      const providerDetails = await featureDetailService.getManyByData({
-        feature_type: FEATURE_TYPE.PROVIDER
-      });
-
-      for (const provider of providerDetails) {
-        const providerWrapper = await FeatureDetailsWrapper(provider);
-        providerData = {
-          ...providerData,
-          ...providerWrapper.getFeatureDetails()
-        };
-      }
-
       return raiseSuccess(
         res,
         200,
@@ -650,9 +636,6 @@ class AppointmentController extends Controller {
           static_templates: {
             appointments: { ...appointmentData.getFeatureDetails() }
           },
-          providers: {
-            ...providerData
-          }
         },
         "Appointment details fetched successfully"
       );
