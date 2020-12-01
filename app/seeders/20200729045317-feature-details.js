@@ -45,6 +45,44 @@ module.exports = {
             ],
             "2": ["At Clinic", "At Home", "Telephone"],
             "3": ["MRI", "CT Scan", "Ultrasound", "X-Ray"]
+          },
+          providers: {
+            "1": {
+              basic_info: {
+                id: 1,
+                name: "Apollo Hospitals",
+                address: null,
+                city: null,
+                state: null
+              }
+            },
+            "2": {
+              basic_info: {
+                id: 2,
+                name: "Columbia Asia",
+                address: null,
+                city: null,
+                state: null
+              }
+            },
+            "3": {
+              basic_info: {
+                id: 3,
+                name: "Fortis Hospitals",
+                address: null,
+                city: null,
+                state: null
+              }
+            },
+            "4": {
+              basic_info: {
+                id: 4,
+                name: "Self",
+                address: null,
+                city: null,
+                state: null
+              }
+            }
           }
         }),
         created_at: new Date(),
@@ -96,70 +134,6 @@ module.exports = {
               unit: "h",
               value: 12,
               key: REPEAT_INTERVAL.TWELVE_HOUR
-            }
-          }
-        }),
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        feature_type: FEATURE_TYPE.PROVIDER,
-        details: JSON.stringify({
-          "1": {
-            basic_info: {
-              id: 1,
-              name: "Apollo Hospitals",
-              address: null,
-              city: null,
-              state: null
-            }
-          }
-        }),
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        feature_type: FEATURE_TYPE.PROVIDER,
-        details: JSON.stringify({
-          "2": {
-            basic_info: {
-              id: 2,
-              name: "Columbia Asia",
-              address: null,
-              city: null,
-              state: null
-            }
-          }
-        }),
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        feature_type: FEATURE_TYPE.PROVIDER,
-        details: JSON.stringify({
-          "3": {
-            basic_info: {
-              id: 3,
-              name: "Fortis Hospitals",
-              address: null,
-              city: null,
-              state: null
-            }
-          }
-        }),
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-      {
-        feature_type: FEATURE_TYPE.PROVIDER,
-        details: JSON.stringify({
-          "4": {
-            basic_info: {
-              id: 4,
-              name: "Self",
-              address: null,
-              city: null,
-              state: null
             }
           }
         }),

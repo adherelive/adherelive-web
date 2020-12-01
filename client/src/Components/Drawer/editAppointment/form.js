@@ -320,7 +320,7 @@ class EditAppointmentForm extends Component {
   };
 
   getProviderOption = () => {
-    let { providers = [],
+    let { static_templates: { appointments: { providers = {} } = {} } = {},
       appointments,
       appointmentData,
       payload: { id: appointment_id } = {} } = this.props;
@@ -332,7 +332,7 @@ class EditAppointmentForm extends Component {
 
     for (let provider of Object.values(providers)) {
 
-      let { basic_info: { id = 0, name = '' } = {} } = provider;
+      let { basic_info: { id = "0", name = '' } = {} } = provider;
       newTypes.push(
         <Option key={id} value={parseInt(id)}>
           {name}

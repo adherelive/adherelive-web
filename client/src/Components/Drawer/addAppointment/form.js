@@ -309,11 +309,11 @@ class AddAppointmentForm extends Component {
   };
 
   getProviderOption = () => {
-    let { providers = [] } = this.props;
+    let { static_templates: { appointments: { providers = {} } = {} } = {} } = this.props;
     let newTypes = [];
     for (let provider of Object.values(providers)) {
 
-      let { basic_info: { id = 0, name = '' } = {} } = provider;
+      let { basic_info: { id = "0", name = '' } = {} } = provider;
       newTypes.push(
         <Option key={id} value={parseInt(id)}>
           {name}
