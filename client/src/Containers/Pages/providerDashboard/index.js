@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import ProviderDoctorPage from "../../../Components/Pages/providerDoctor";
+import ProviderDoctorPage from "../../../Components/Pages/provider";
 import { withRouter } from "react-router-dom";
 // import {open} from "../../../modules/drawer";
 // import {DRAWER} from "../../../constant";

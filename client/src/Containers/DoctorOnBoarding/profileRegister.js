@@ -6,8 +6,8 @@ import { connect } from "react-redux";
 
 const mapStateToProps = state => {
     const { auth, users, onBoarding, doctors } = state;
-    let { authenticated_user = {} } = auth;
-    return { authenticated_user, users, doctors, onBoarding };
+  const { authenticated_user, authenticated_category } = auth;
+    return { authenticated_user,authenticated_category, users, doctors, onBoarding };
 };
 
 const mapDispatchToProps = dispatch => {

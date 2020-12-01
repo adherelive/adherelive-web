@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Tabs, Button, Steps, Col, Select, Input, InputNumber, Upload, Modal, TimePicker, Icon, message } from "antd";
 import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH } from '../../constant';
+import { REQUEST_TYPE, PATH,USER_CATEGORY } from '../../constant';
 import UploadSteps from './steps';
 import { getUploadURL } from '../../Helper/urls/user';
 import { doRequest } from '../../Helper/network';
@@ -58,15 +58,17 @@ class Profileregister extends Component {
     }
 
     fetchData = async () => {
-        const { authenticated_user = '', users, getDoctorQualificationRegisterData } = this.props;
+        const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
 
         const { basic_info: { id = 1 } = {} } = authenticated_user;
         await getDoctorQualificationRegisterData();
         const { doctors } = this.props;
 
+        const doctor_user_category = USER_CATEGORY.DOCTOR; 
+
         const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
 
-        this.setState({ email, mobile_number, category, prefix: newPrefix ? newPrefix : '91' });
+        this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
         for (let doctor of Object.values(doctors)) {
             const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '' } } = doctor;
             if (parseInt(user_id) === parseInt(authenticated_user)) {
@@ -309,6 +311,8 @@ class Profileregister extends Component {
 
     renderProfileForm = () => {
         let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' , signature_pic_url_saved ='' } = this.state;
+        const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
+
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
