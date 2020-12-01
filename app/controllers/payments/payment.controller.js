@@ -6,9 +6,11 @@ import * as PaymentHelper from "./helper";
 
 // SERVICES...
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
+import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 // WRAPPERS...
 import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
+import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
 import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
@@ -65,41 +67,31 @@ class PaymentController extends Controller {
     }
   };
 
-  removeDoctorPaymentProduct = async(req,res) => {
-
+  removeDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body, userDetails: { userCategoryId } = {} } = req;
 
-      const {id,name,type,amount} = req.body;
+      const { id, name, type, amount } = req.body;
 
       const paymentProductService = new PaymentProductService();
-      const deletedDoctorProduct = await paymentProductService.deleteDoctorProduct({
-       id:id,
-       name:name,
-       type:type,
-       amount:amount
-      });
-      
+      const deletedDoctorProduct = await paymentProductService.deleteDoctorProduct(
+        {
+          id: id,
+          name: name,
+          type: type,
+          amount: amount
+        }
+      );
+
       // let doctorData = {};
 
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        "doctor product record destroyed"
-      );
-      
-
-      
-    }catch (error) {
+      return raiseSuccess(res, 200, {}, "doctor product record destroyed");
+    } catch (error) {
       Log.debug("83901283091298 delete doctor product error", error);
       return raiseServerError(res);
     }
-
   };
-
-
 
   getAllDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
@@ -107,13 +99,34 @@ class PaymentController extends Controller {
       const { userDetails: { userCategoryId } = {} } = req;
 
       const paymentProductService = new PaymentProductService();
-      const paymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+      const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         {
           creator_type: USER_CATEGORY.DOCTOR,
           creator_id: userCategoryId,
           product_user_type: "patient"
         }
       );
+
+      const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+        userCategoryId
+      );
+      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+        doctorProvider
+      );
+      const providerId = doctorProviderWrapper.getProviderId();
+
+      const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+        {
+          creator_type: USER_CATEGORY.PROVIDER,
+          creator_id: providerId,
+          product_user_type: "patient"
+        }
+      );
+
+      const paymentProductData = [
+        ...providerPaymentProductData,
+        ...doctorPaymentProductData
+      ];
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
@@ -146,7 +159,7 @@ class PaymentController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getAllAdminPaymentProduct 500 error", error);
+      Log.debug("getAllDoctorPaymentProduct 500 error", error);
       return raiseServerError(res);
     }
   };
