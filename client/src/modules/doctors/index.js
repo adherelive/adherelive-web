@@ -15,6 +15,10 @@ import {
   patientWatchlistUrl,
   updatePatientAndCareplanUrl
 } from "../../Helper/urls/doctor";
+
+import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
+
+
 import { accountDetailsUrl } from "../../Helper/urls/accounts";
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
@@ -76,6 +80,11 @@ export const DELETE_DOCTOR_PAYMENT_PRODUCT_FAILED =
 // export const GET_ACCOUNT_DETAILS = "GET_ACCOUNT_DETAILS";
 // export const GET_ACCOUNT_DETAILS_COMPLETE = "GET_ACCOUNT_DETAILS_COMPLETE";
 // export const GET_ACCOUNT_DETAILS_FAILED = "GET_ACCOUNT_DETAILS_FAILED";
+
+
+export const GET_ALL_DOCTORS_FOR_PROVIDER ="GET_ALL_DOCTORS_FOR_PROVIDER";
+export const GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE = "GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE";
+export const GET_ALL_DOCTORS_FOR_PROVIDER_FAILED = "GET_ALL_DOCTORS_FOR_PROVIDER_FAILED";
 
 export const UPDATE_PATIENT_AND_CAREPLAN ="UPDATE_PATIENT_AND_CAREPLAN";
 export const UPDATE_PATIENT_AND_CAREPLAN_COMPLETE = "UPDATE_PATIENT_AND_CAREPLAN_COMPLETE";
@@ -174,6 +183,36 @@ export const getAdminPaymentProduct = () => {
       }
     } catch (error) {
       console.log("GET_ADMIN_PAYMENT_PRODUCT ERROR --> ", error);
+    }
+    return response;
+  };
+};
+
+export const getAllDoctorsForProvider = () => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: GET_ALL_DOCTORS_FOR_PROVIDER });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getAllDoctorsForProviderUrl()
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: GET_ALL_DOCTORS_FOR_PROVIDER_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("GET_ALL_DOCTORS_FOR_PROVIDER ERROR --> ", error);
     }
     return response;
   };
@@ -398,6 +437,8 @@ export const getAllDoctors = () => {
     return response;
   };
 };
+
+
 
 export const getDoctorDetails = id => {
   let response = {};

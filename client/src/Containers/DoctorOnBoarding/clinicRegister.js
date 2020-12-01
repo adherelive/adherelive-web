@@ -7,8 +7,8 @@ import {showVerifyModal} from "../../modules/pages/features";
 
 const mapStateToProps = state => {
     const {auth,users} = state;
-    let{authenticated_user={}}=auth;
-    return {authenticated_user,users};
+    const { authenticated_user, authenticated_category } = auth;
+    return {authenticated_user,users,authenticated_category};
 };
 
 const mapDispatchToProps = dispatch => {

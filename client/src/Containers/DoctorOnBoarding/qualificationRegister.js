@@ -29,7 +29,7 @@ const mapStateToProps = state => {
     councils,
     specialities
   } = state;
-  let { authenticated_user = {} } = auth;
+  const { authenticated_user, authenticated_category } = auth;
   return {
     authenticated_user,
     doctors,
@@ -41,7 +41,8 @@ const mapStateToProps = state => {
     colleges,
     degrees,
     councils,
-    specialities
+    specialities,
+    authenticated_category
   };
 };
 

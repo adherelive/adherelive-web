@@ -5,7 +5,7 @@ import uuid from 'react-uuid';
 import { Input, DatePicker, Upload, message, Spin } from "antd";
 
 import Select from "antd/es/select";
-import { REQUEST_TYPE, PATH } from '../../constant';
+import { REQUEST_TYPE, PATH ,USER_CATEGORY} from '../../constant';
 import { getUploadQualificationDocumentUrl, getUploadRegistrationDocumentUrl } from '../../Helper/urls/doctor';
 import { doRequest } from '../../Helper/network';
 import UploadSteps from './steps';
@@ -1438,13 +1438,20 @@ class QualificationRegister extends Component {
   render() {
     console.log("PROPSSSSSSSSS in qualification ====>",this.props);
     console.log("QUAL STATE",this.state);
+    const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
+    console.log("444444444",authenticated_category);
 
     return (
       <Fragment>
         {/* <SideMenu {...this.props} /> */}
         <div className='registration-container'>
-          <div className='header'>{this.formatMessage(messages.createProfile)}</div>
-          <div className='registration-body'>
+        {
+            authenticated_category === USER_CATEGORY.PROVIDER ? 
+            <div className='header'>{this.formatMessage(messages.createDoctorProfile)}</div>
+            :
+            <div className='header'>{this.formatMessage(messages.createProfile)}</div>
+
+        }          <div className='registration-body'>
             <div className='flex mt36'>
               <UploadSteps current={1} />
             </div>

@@ -484,11 +484,19 @@ class Profileregister extends Component {
     }
 
     render() {
+        const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
+
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
-                    <div className='header'>{this.formatMessage(messages.createProfile)}</div>
+                    {
+                        authenticated_category === USER_CATEGORY.PROVIDER ? 
+                        <div className='header'>{this.formatMessage(messages.createDoctorProfile)}</div>
+                        :
+                        <div className='header'>{this.formatMessage(messages.createProfile)}</div>
+
+                    }
                     <div className='registration-body'>
                         <div className='flex mt36'>
                             <UploadSteps current={0} />

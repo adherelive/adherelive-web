@@ -4,7 +4,7 @@ import {Button} from 'antd';
 import messages from "./messages";
 
 
-// import DoctorTable from "../../../Containers/Doctor/table";
+import DoctorTable from "../../../Containers/ProviderDoctor/table";
 
 class ProviderDoctorPage extends Component {
     constructor(props) {
@@ -25,7 +25,7 @@ class ProviderDoctorPage extends Component {
                 <div className="p18 fs30 fw700 mb20">{this.formatMessage(messages.provider)}</div>
                 <Button onClick={this.addDoctor} >{this.formatMessage(messages.addDoctor)} </Button>
                 <div className="wp100 pl14 pr14 flex align-center justify-center">
-                    {/* <DoctorTable /> */}
+                    <DoctorTable />
                 </div>
                 </div>
             </Fragment>

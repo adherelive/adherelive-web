@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
 import { Input, Icon, message } from "antd";
-import { PATH, FULL_DAYS, FULL_DAYS_NUMBER } from '../../constant';
+import { PATH, FULL_DAYS, FULL_DAYS_NUMBER ,USER_CATEGORY} from '../../constant';
 import UploadSteps from './steps';
 import LocationModal from './locationmodal';
 import TimingModal from './timingModal';
@@ -361,6 +361,8 @@ class ClinicRegister extends Component {
 
     render() {
         const { visible = false, clinics, clinicKeyOfModal, timingsVisible = false, clinicKeyOfModalTiming } = this.state;
+        const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
+
         let currClinicTimings = {};
         let currClinicDaySelect = {};
         if (clinicKeyOfModalTiming) {
@@ -374,8 +376,13 @@ class ClinicRegister extends Component {
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
-                    <div className='header'>{this.formatMessage(messages.createProfile)}</div>
-                    <div className='registration-body'>
+                {
+                        authenticated_category === USER_CATEGORY.PROVIDER ? 
+                        <div className='header'>{this.formatMessage(messages.createDoctorProfile)}</div>
+                        :
+                        <div className='header'>{this.formatMessage(messages.createProfile)}</div>
+
+                    }                    <div className='registration-body'>
                         <div className='flex mt36'>
                             <UploadSteps current={2} />
                         </div>
