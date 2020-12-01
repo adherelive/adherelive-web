@@ -26,6 +26,8 @@ import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 
+import bcrypt from "bcrypt";
+
 import { DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME } from "../../../constant";
 
 import { generatePassword } from "../helper/passwordGenerator";
@@ -33,6 +35,8 @@ import { generatePassword } from "../helper/passwordGenerator";
 import { USER_CATEGORY } from "../../../constant";
 
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
+
+import { v4 as uuidv4 } from "uuid";
 
 const Logger = new Log("WEB > PROVIDERS > CONTROLLER");
 
@@ -75,15 +79,17 @@ class ProvidersController extends Controller {
       let doctorRegistrationApiDetails = {};
       let degreeApiDetails = {};
       let councilApiDetails = {};
-      let doctor_qualification_ids = [];
-      let doctor_registration_ids = [];
-      let doctor_clinic_ids = [];
+      let collegeApiDetails = {};
       let upload_document_ids = [];
 
       let registration_council_ids = [];
       let degree_ids = [];
+      let college_ids = [];
 
       for (const doctor of doctorIds) {
+        let doctor_qualification_ids = [];
+        let doctor_registration_ids = [];
+        let doctor_clinic_ids = [];
         const doctorWrapper = await DoctorWrapper(null, doctor);
         const { specialities } = await doctorWrapper.getReferenceInfo();
         specialityDetails = { ...specialityDetails, ...specialities };
@@ -132,7 +138,7 @@ class ProvidersController extends Controller {
 
           degree_ids.push(doctorQualificationWrapper.getDegreeId());
 
-          // college_ids.push(doctorQualificationWrapper.getCollegeId());
+          college_ids.push(doctorQualificationWrapper.getCollegeId());
 
           upload_document_ids = [];
         });
@@ -212,15 +218,14 @@ class ProvidersController extends Controller {
           degreeApiDetails[degree.getDegreeId()] = degree.getBasicInfo();
         }
 
-        // const doctorColleges = await collegeService.getCollegeByData({
-        //   id: college_ids
-        // });
+        const doctorColleges = await collegeService.getCollegeByData({
+          id: college_ids
+        });
 
-        // let collegeApiDetails = {};
-        // for (const doctorCollege of doctorColleges) {
-        //   const college = await CollegeWrapper(doctorCollege);
-        //   collegeApiDetails[college.getCollegeId()] = college.getBasicInfo();
-        // }
+        for (const doctorCollege of doctorColleges) {
+          const college = await CollegeWrapper(doctorCollege);
+          collegeApiDetails[college.getCollegeId()] = college.getBasicInfo();
+        }
 
         doctorApiDetails[doctorWrapper.getDoctorId()] = {
           ...doctorWrapper.getBasicInfo(),
@@ -252,9 +257,9 @@ class ProvidersController extends Controller {
           upload_documents: {
             ...uploadDocumentApiDetails
           },
-          // colleges: {
-          //   ...collegeApiDetails
-          // },
+          colleges: {
+            ...collegeApiDetails
+          },
           degrees: {
             ...degreeApiDetails
           },
@@ -271,7 +276,7 @@ class ProvidersController extends Controller {
   };
 
   mailPassword = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       const {
         userDetails: { userId } = {},
@@ -285,11 +290,13 @@ class ProvidersController extends Controller {
       const providerId = provider.getProviderId();
 
       if (!doctor_id) {
-        // return error
+        return raiseClientError(res, 401, {}, "Invalid doctor.");
       }
 
       const doctorWrapper = await DoctorWrapper(null, doctor_id);
       const doctorUserId = doctorWrapper.getUserId();
+
+      const link = uuidv4();
 
       const newPassword = generatePassword();
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -324,6 +331,8 @@ class ProvidersController extends Controller {
       };
 
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+
+      return raiseSuccess(res, 200, {}, "Password mailed successfully.");
     } catch (error) {
       Logger.debug("mailPassword 500 error ", error);
       return raiseServerError(res);

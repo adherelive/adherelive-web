@@ -1105,22 +1105,40 @@ class DoctorController extends Controller {
   };
 
   updateDoctorQualificationRegistration = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
       const {
         speciality_id = "",
         gender = "",
         qualification_details = [],
-        registration_details = []
+        registration_details = [],
+        doctor_id = null
       } = req.body;
 
-      const { userDetails: { userId: user_id } = {} } = req;
+      const {
+        userDetails: {
+          userId: user_id,
+          userData: { category = null } = {}
+        } = {}
+      } = req;
 
-      // let user_data_to_update = {
-      //   onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED
-      // };
-      const doctor = await doctorService.getDoctorByData({ user_id });
-      const doctorData = await DoctorWrapper(doctor);
+      let doctorUserId = user_id;
+      let doctorData = null;
+
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      } else {
+        const doctor = await doctorService.getDoctorByData({
+          user_id: doctorUserId
+        });
+        doctorData = await DoctorWrapper(doctor);
+      }
+
       // let doctor_id = doctor.get("id");
 
       const doctorUpdate = await doctorService.updateDoctor(
@@ -1257,13 +1275,15 @@ class DoctorController extends Controller {
         {
           onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED
         },
-        user_id
+        doctorUserId
       );
 
-      const updatedUser = await userService.getUserById(user_id);
+      const updatedUser = await userService.getUserById(doctorUserId);
       const updatedUserData = await UserWrapper(updatedUser.get());
 
-      const updatedDoctor = await doctorService.getDoctorByData({ user_id });
+      const updatedDoctor = await doctorService.getDoctorByData({
+        user_id: doctorUserId
+      });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
       let uploadDocumentsData = {};
@@ -1366,10 +1386,23 @@ class DoctorController extends Controller {
   };
 
   updateQualificationDocs = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {},
+        body: { doctor_id = null } = {}
+      } = req;
       const file = req.file;
+
+      let doctorUserId = userId;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
@@ -1383,7 +1416,7 @@ class DoctorController extends Controller {
         );
       }
 
-      let files = await uploadImageS3(userId, file);
+      let files = await uploadImageS3(doctorUserId, file);
       let qualification_id = 0;
       // let doctor = await doctorService.getDoctorByUserId(userId);
 
@@ -1402,14 +1435,27 @@ class DoctorController extends Controller {
   };
 
   updateRegistrationDocs = async (req, res) => {
-    const { raiseServerError } = this;
+    const { raiseServerError, raiseClientError } = this;
     try {
       const file = req.file;
-      const { userDetails: { userId } = {} } = req;
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {},
+        body: { doctor_id = null } = {}
+      } = req;
 
       Logger.debug("updateRegistrationDocs file", file);
 
-      let files = await uploadImageS3(userId, file);
+      let doctorUserId = userId;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
+
+      let files = await uploadImageS3(doctorUserId, file);
 
       Logger.debug("files --->", files);
 
@@ -1427,13 +1473,33 @@ class DoctorController extends Controller {
   };
 
   updateQualificationStep = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { gender = "", speciality_id = "", qualification = {} } = req.body;
-      const { userDetails: { userId } = {} } = req;
+      const {
+        gender = "",
+        speciality_id = "",
+        qualification = {},
+        doctor_id = null
+      } = req.body;
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {}
+      } = req;
 
-      let doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const doctorData = await DoctorWrapper(doctor);
+      let doctorUserId = userId;
+      let doctorData = null;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      } else {
+        let doctor = await doctorService.getDoctorByData({
+          user_id: doctorUserId
+        });
+        doctorData = await DoctorWrapper(doctor);
+      }
 
       if (gender && speciality_id) {
         const updatedDoctor = await doctorService.updateDoctor(
@@ -1548,7 +1614,7 @@ class DoctorController extends Controller {
       );
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: doctorUserId
       });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
@@ -1623,16 +1689,36 @@ class DoctorController extends Controller {
   updateRegistrationStep = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
-      const { body, userDetails: { userId } = {} } = req;
+      const {
+        body,
+        userDetails: { userId, userData: { category = null } = {} } = {}
+      } = req;
+
+      let doctorUserId = userId;
+
       const {
         gender = "",
         speciality_id = "",
         qualification_details: qualifications = [],
-        registration = {}
+        registration = {},
+        doctor_id = null
       } = body || {};
 
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const doctorData = await DoctorWrapper(doctor);
+      let doctorData = null;
+
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorWrapper.getUserId();
+      } else {
+        const doctor = await doctorService.getDoctorByData({
+          user_id: doctorUserId
+        });
+        doctorData = await DoctorWrapper(doctor);
+      }
 
       if (gender && speciality_id) {
         const updatedDoctor = await doctorService.updateDoctor(
@@ -1799,7 +1885,7 @@ class DoctorController extends Controller {
       }
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: doctorUserId
       });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
@@ -1896,128 +1982,6 @@ class DoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug("registrationStep 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  updateDoctorClinics = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
-    try {
-      const { clinics = [] } = req.body;
-      const { userDetails: { userId } = {} } = req;
-
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const doctorData = await DoctorWrapper(doctor);
-
-      let clinicDetails = {};
-      let doctor_clinic_ids = [];
-
-      for (const clinic of clinics) {
-        const { name = "", location = "", time_slots = [] } = clinic;
-
-        const details = {
-          time_slots
-        };
-
-        const newClinic = await clinicService.addClinic({
-          doctor_id: doctorData.getDoctorId(),
-          name,
-          location,
-          details
-        });
-
-        const clinicData = await ClinicWrapper(newClinic);
-        clinicDetails[
-          clinicData.getDoctorClinicId()
-        ] = clinicData.getBasicInfo();
-        doctor_clinic_ids.push(clinicData.getDoctorClinicId());
-      }
-
-      const userUpdate = await userService.updateUser(
-        {
-          onboarded: true,
-          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED
-        },
-        userId
-      );
-      const updateUser = await userService.getUserById(userId);
-
-      const userData = await UserWrapper(updateUser.get());
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          users: {
-            [userData.getId()]: userData.getBasicInfo()
-          },
-          doctor_clinics: {
-            ...clinicDetails
-          },
-          doctor_clinic_ids
-        },
-        "doctor clinics added successfully"
-      );
-    } catch (error) {
-      Logger.debug("updateDoctorClinics 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  deleteQualificationDocument = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-
-    try {
-      const { id = 0 } = req.params;
-      const { document = "" } = req.body;
-      const documentToCheck = getFilePath(document);
-      let documentToDelete = await documentService.getDocumentByData(
-        DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-        id,
-        documentToCheck
-      );
-
-      await documentToDelete.destroy();
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        "doctor qualification document deleted successfully"
-      );
-    } catch (error) {
-      Logger.debug(
-        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---->",
-        error
-      );
-      return raiseServerError(res);
-    }
-  };
-
-  deleteRegistrationDocument = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-
-    try {
-      const { id = 0 } = req.params;
-      const { document = "" } = req.body;
-      const documentToCheck = getFilePath(document);
-      let documentToDelete = await documentService.getDocumentByData(
-        DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-        id,
-        documentToCheck
-      );
-
-      await documentToDelete.destroy();
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        "doctor registration document deleted successfully"
-      );
-    } catch (error) {
-      Logger.debug(
-        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
-        error
-      );
       return raiseServerError(res);
     }
   };
@@ -2221,13 +2185,28 @@ class DoctorController extends Controller {
   };
 
   updateDoctorClinics = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { clinics = [] } = req.body;
-      const { userDetails: { userId } = {} } = req;
+      const { clinics = [], doctor_id = null } = req.body;
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {}
+      } = req;
 
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const doctorData = await DoctorWrapper(doctor);
+      let doctorUserId = userId;
+      let doctorData = null;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      } else {
+        const doctor = await doctorService.getDoctorByData({
+          user_id: doctorUserId
+        });
+        doctorData = await DoctorWrapper(doctor);
+      }
 
       let clinicDetails = {};
       let doctor_clinic_ids = [];
@@ -2258,9 +2237,9 @@ class DoctorController extends Controller {
           onboarded: true,
           onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED
         },
-        userId
+        doctorUserId
       );
-      const updateUser = await userService.getUserById(userId);
+      const updateUser = await userService.getUserById(doctorUserId);
 
       const userData = await UserWrapper(updateUser.get());
 
@@ -2344,11 +2323,25 @@ class DoctorController extends Controller {
 
   uploadImage = async (req, res) => {
     const { userDetails, body } = req;
-    const { userId = "3" } = userDetails || {};
+    const { userId = "3", userData: { category = null } = {} } =
+      userDetails || {};
+
+    const { doctor_id = null } = body;
+
     const file = req.file;
     Logger.debug("file ----> ", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
+      let doctorUserId = userId;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return this.raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
+
       //   await minioService.createBucket();
 
       //   const imageName = md5(`${userId}-education-pics`);
@@ -2375,7 +2368,7 @@ class DoctorController extends Controller {
       // console.log("Uplaoded File Url ---------------------->  ", file_link);
       // console.log("User Controllers =------------------->   ", files);
       //const resume_link = process.config.BASE_DOC_URL + files[0]
-      let files = await uploadImageS3(userId, file);
+      let files = await uploadImageS3(doctorUserId, file);
       return this.raiseSuccess(
         res,
         200,
