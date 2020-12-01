@@ -9,4 +9,11 @@ const router = express.Router();
 
 router.get("/doctors", Authenticate, isProvider, ProvidersController.getAll);
 
+router.post(
+  "/mail-password",
+  Authenticate,
+  isProvider,
+  ProvidersController.mailPassword
+);
+
 module.exports = router;

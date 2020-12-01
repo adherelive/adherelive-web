@@ -466,7 +466,7 @@ class DoctorController extends Controller {
           doctorUserId = doctorUserWrapper.getId();
         } else {
           const password = generatePassword();
-          doctorUserId = await createNewUser(email, password, false);
+          doctorUserId = await createNewUser(email, password);
         }
       } else {
         doctorUserId = userId;

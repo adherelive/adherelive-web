@@ -151,7 +151,7 @@ export const uploadImageS3 = async (userId, file) => {
   }
 };
 
-export const createNewUser = async (email, password, encrypt = true) => {
+export const createNewUser = async (email, password) => {
   try {
     const userExits = await userService.getUserByEmail({ email });
 
@@ -170,7 +170,7 @@ export const createNewUser = async (email, password, encrypt = true) => {
 
     let user = await userService.addUser({
       email,
-      password: encrypt ? hash : password,
+      password: hash,
       sign_in_type: "basic",
       category: "doctor",
       onboarded: false
