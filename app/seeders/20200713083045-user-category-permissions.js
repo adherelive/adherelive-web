@@ -150,6 +150,13 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      // provider
+      {
+        category:USER_CATEGORY.PROVIDER,
+        permission_id: "10",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 

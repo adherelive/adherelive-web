@@ -90,7 +90,11 @@ function setAuthRedirect(user, isInitial = false) {
     } else {
       authRedirect = PATH.REGISTER_PROFILE;
     }
-  } else if (category === USER_CATEGORY.ADMIN) {
+  } else if (category === USER_CATEGORY.PROVIDER) {
+    if (!isInitial) {
+      authRedirect = PATH.PROVIDER;
+    }
+  } else if (category === USER_CATEGORY.ADMIN || category === USER_CATEGORY.PROVIDER) {
     if (!isInitial) {
       authRedirect = PATH.ADMIN.DOCTORS.ROOT;
     }
@@ -119,7 +123,11 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     } else {
       authRedirect = PATH.REGISTER_PROFILE;
     }
-  } else if (category === USER_CATEGORY.ADMIN) {
+  }  else if (category === USER_CATEGORY.PROVIDER) {
+    if (!isInitial) {
+      authRedirect = PATH.PROVIDER;
+    }
+  }  else if (category === USER_CATEGORY.ADMIN ) {
     if (!isInitial) {
       authRedirect = PATH.ADMIN.DOCTORS.ROOT;
     }

@@ -49,6 +49,11 @@ module.exports = {
         type: "ADD_CAREPLAN",
         created_at: new Date(),
         updated_at: new Date(),
+      },
+      {
+        type: "ADD_DOCTOR",
+        created_at: new Date(),
+        updated_at: new Date(),
       }
 
     ]);

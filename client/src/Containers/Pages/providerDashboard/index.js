@@ -1,0 +1,19 @@
+import { connect } from "react-redux";
+import ProviderDoctorPage from "../../../Components/Pages/providerDoctor";
+import { withRouter } from "react-router-dom";
+// import {open} from "../../../modules/drawer";
+// import {DRAWER} from "../../../constant";
+
+const mapStateToProps = state => {
+  const {} = state;
+
+  return {};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ProviderDoctorPage)
+);

@@ -3,6 +3,7 @@ export const PATH = {
   DASHBOARD: "/dashboard",
   SIGN_IN: "/sign-in",
   PROFILE: "/profile",
+  PROVIDER : "/provider",
   SETTINGS:"/settings",
   CONSULTATION_FEE:"/consultation-fee",
   BILLING:"/billing",
@@ -214,6 +215,7 @@ export const USER_CATEGORY = {
   CHARITY_ADMIN: "charityAdmin",
   PHARMACY_ADMIN: "pharmacyAdmin",
   ADMIN: "admin",
+  PROVIDER:"provider"
 };
 
 export const ACTIVITY_TYPE = {
