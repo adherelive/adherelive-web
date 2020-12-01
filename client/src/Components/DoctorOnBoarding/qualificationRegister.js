@@ -66,9 +66,9 @@ class QualificationRegister extends Component {
 
   fetchData = async () => {
 
-
+    const url = window.location.href.split("/");
     const { getDoctorQualificationRegisterData } = this.props;
-    await getDoctorQualificationRegisterData();
+    await getDoctorQualificationRegisterData({doctor_id: url.length > 4 ? url[url.length - 1] : ""});
     const { authenticated_user = '', doctors = {} } = this.props;
     let docGender = '';
     let docSpeciality = '';
@@ -76,7 +76,6 @@ class QualificationRegister extends Component {
     let docQualificationIds = [];
     let docRegistrationIds = [];
     for (let doctor of Object.values(doctors)) {
-      console.log("7865467876545678",doctor);
       const { basic_info: { user_id = 0, id = 0, gender = '', speciality_id = '' } = {}, doctor_qualification_ids = [], doctor_registration_ids = [] } = doctor || {};
 
       if (parseInt(user_id) === parseInt(authenticated_user)) {

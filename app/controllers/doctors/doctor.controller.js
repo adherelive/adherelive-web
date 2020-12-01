@@ -1987,9 +1987,10 @@ class DoctorController extends Controller {
   };
 
   getAllDoctorDetails = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId } = {}, params: {doctor_id = null} = {} } = req;
+
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
 
       let doctorQualificationApiDetails = {};
@@ -2001,17 +2002,22 @@ class DoctorController extends Controller {
       let doctor_clinic_ids = [];
       let upload_document_ids = [];
 
-      const doctorWrapper = await DoctorWrapper(doctors);
+      let doctorWrapper = null;
 
-      Logger.debug("doctors ---> ", doctors);
+      if(doctor_id) {
+        doctorWrapper = await DoctorWrapper(null, doctor_id);
+      } else {
 
-      if (!doctors) {
-        return this.raiseServerError(
-          res,
-          422,
-          {},
-          "Doctor details not updated"
-        );
+        if (!doctors) {
+          return raiseClientError(
+              res,
+              422,
+              {},
+              "Doctor details not updated"
+          );
+        }
+
+        doctorWrapper = await DoctorWrapper(doctors);
       }
 
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(

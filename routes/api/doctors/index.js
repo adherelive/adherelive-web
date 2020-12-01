@@ -127,7 +127,7 @@ router.delete(
   DoctorController.removePatientFromWatchlist
 );
 
-router.get("/", Authenticate, DoctorController.getAllDoctorDetails);
+router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
 
 router.get(
   "/consultations",
