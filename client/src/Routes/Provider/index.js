@@ -23,6 +23,15 @@ const RegisterProfile = lazy(() =>
 );
 
 
+const RegisterQualifications = lazy(() =>
+  import(/* webpackChunkName: "RegisterQualifications" */ "../../Containers/DoctorOnBoarding/qualificationRegister")
+);
+
+const RegisterClinics = lazy(() =>
+  import(/* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister")
+);
+
+
 class ProviderDoctor extends Component {
   constructor(props) {
     super(props);
@@ -53,6 +62,20 @@ class ProviderDoctor extends Component {
                   path={PATH.REGISTER_PROFILE}
                   component={RegisterProfile}
                 />
+
+
+                <Route
+                  exact
+                  path={PATH.PROVIDER_REGISTER_QUALIFICATIONS}
+                  component={RegisterQualifications}
+                />
+                <Route
+                  exact
+                  path={PATH.REGISTER_CLINICS}
+                  component={RegisterClinics}
+                />
+
+
 
                 <Route exact path={""} component={ProviderDoctorPage} />
               </Switch>

@@ -2,6 +2,14 @@ import { REQUEST_TYPE } from "../../constant";
 import { doRequest } from "../../Helper/network";
 import { Doctor } from "../../Helper/urls";
 
+import { sendPasswordMailUrl } from "../../Helper/urls/provider";
+
+
+
+export const SEND_PASSWORD_MAIL = "SEND_PASSWORD_MAIL";
+export const SEND_PASSWORD_MAIL_COMPLETED = "SEND_PASSWORD_MAIL_COMPLETED";
+export const SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR = "SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR";
+
 
 export const DOCTOR_PROFILE_UPDATE = "DOCTOR_PROFILE_UPDATE";
 export const DOCTOR_PROFILE_UPDATE_COMPLETED = "DOCTOR_PROFILE_UPDATE_COMPLETED";
@@ -77,6 +85,48 @@ export const doctorProfileRegister = (payload) => {
     return response;
   };
 };
+
+
+
+export const sendPasswordMail = (payload) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: SEND_PASSWORD_MAIL });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: sendPasswordMailUrl(),
+        data: payload,
+      });
+
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+        if (status === true) {
+          dispatch({
+            type: SEND_PASSWORD_MAIL_COMPLETED,
+            payload: data,
+            data
+          });
+        } else {
+          dispatch({ type: SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR, payload: error });
+        }
+
+  
+    } catch (err) {
+      console.log("err password mail", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+
+
+
 
 export const doctorQualificationRegister = (payload) => {
   let response = {};

@@ -86,6 +86,7 @@ class QualificationRegister extends Component {
         docQualificationIds = doctor_qualification_ids;
         docRegistrationIds = doctor_registration_ids;
       }
+
     }
 
     const { onBoarding = {}, doctor_registrations = {}, doctor_qualifications = {}, upload_documents = {} } = this.props;
@@ -1435,6 +1436,9 @@ class QualificationRegister extends Component {
 
 
   render() {
+    console.log("PROPSSSSSSSSS in qualification ====>",this.props);
+    console.log("QUAL STATE",this.state);
+
     return (
       <Fragment>
         {/* <SideMenu {...this.props} /> */}

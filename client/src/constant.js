@@ -14,6 +14,7 @@ export const PATH = {
   SIGN_UP: "/sign-up/:link",
   REGISTER_PROFILE: '/register-profile',
   REGISTER_QUALIFICATIONS: '/register-qualifications',
+  PROVIDER_REGISTER_QUALIFICATIONS:'/register-qualifications/:doctor_id',
   REGISTER_CLINICS: '/register-clinics',
   PATIENT_CONSULTING: '/patient-consulting/:patient_id',
   PATIENT_CONSULTING_VIDEO: '/patient-consulting-video/:room_id',

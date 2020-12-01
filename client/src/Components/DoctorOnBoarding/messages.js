@@ -382,7 +382,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: 'Clinic Timings'
   },
-
+  passwordMailSent: {
+    id: "app.doctorOnBoarding.passwordMailSent",
+    description: "",
+    defaultMessage: "Password change mail sent to the registered email id."
+  },
 
 
 });
