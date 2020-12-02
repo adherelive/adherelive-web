@@ -9,11 +9,13 @@ const mapStateToProps = state => {
     auth: { authPermissions = [], authenticated_user = 1 ,authenticated_category} = {},
     users ={},
     doctors = {},
+    providers={}
 } = state;
 
   return {
   users,
   doctors,
+  providers,
   authPermissions,
   authenticated_user,
   authenticated_category};

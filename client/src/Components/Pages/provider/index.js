@@ -47,8 +47,22 @@ class ProviderDoctorPage extends Component {
 
     render() {
 
-      const {authenticated_user ='',users ={}} = this.props;
+      const {authenticated_user ='',users ={},providers = {}} = this.props;
+      
       const {basic_info : {user_name = ''} = {}} = users[authenticated_user] || {};
+      let providerID = null;
+      let providerName = "";
+      Object.keys(providers).forEach(id => {
+        const { basic_info: { user_id } = {} } = providers[id] || {};
+  
+        if (user_id === authenticated_user) {
+          providerID = id;
+        }
+      });
+
+      const {basic_info  : {name: p_name =''}= {}} = providers[providerID] || {};
+      providerName = p_name;
+
       console.log("AUTHENTICATED USER ===>",users[authenticated_user]);
         return (
             <Fragment>
@@ -56,9 +70,9 @@ class ProviderDoctorPage extends Component {
                   
 
                 <div className="flex direction-row justify-space-between align-center wp100 mr20 mb40">
-                  {user_name !== "" ? (
+                  {providerName !== "" ? (
                     <div className="p18 fs30 fw700 mb20">
-                      {this.formatMessage(messages.welcome)}, {user_name}
+                      {this.formatMessage(messages.welcome)}, {providerName}
                     </div>
                   ) : (
                     <div className="p18 fs30 fw700 mb20">
