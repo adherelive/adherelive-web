@@ -47,7 +47,8 @@ class QualificationRegister extends Component {
       colleges: {},
       fetchingColleges: false,
       councils: {},
-      fetchingCouncils: false
+      fetchingCouncils: false,
+      doctor_id : ''
 
     };
 
@@ -67,8 +68,10 @@ class QualificationRegister extends Component {
   fetchData = async () => {
 
     const url = window.location.href.split("/");
-    const { getDoctorQualificationRegisterData } = this.props;
+    const { getDoctorQualificationRegisterData ,callNewDoctorAction} = this.props;
     await getDoctorQualificationRegisterData({doctor_id: url.length > 4 ? url[url.length - 1] : ""});
+    let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+    await callNewDoctorAction(doctor_id);
     const { authenticated_user = '', doctors = {} } = this.props;
     let docGender = '';
     let docSpeciality = '';
@@ -84,6 +87,15 @@ class QualificationRegister extends Component {
         doctorId = id;
         docQualificationIds = doctor_qualification_ids;
         docRegistrationIds = doctor_registration_ids;
+      }else{
+        console.log("44234234242342", doctors[doctor_id]);
+        const { basic_info: { user_id = 0, id = 0, gender = '', speciality_id = '' } = {}, doctor_qualification_ids = [], doctor_registration_ids = [] } = doctors[doctor_id] || {};
+        docGender = gender;
+        docSpeciality = speciality_id;
+        doctorId = id;
+        docQualificationIds = doctor_qualification_ids;
+        docRegistrationIds = doctor_registration_ids;
+        this.setState({doctor_id:doctorId});
       }
 
     }
@@ -302,7 +314,7 @@ class QualificationRegister extends Component {
 
   onUploadComplete = async ({ files = [] }, key) => {
 
-    const { docs = [], speciality_id = '', gender = '' } = this.state;
+    const { docs = [], speciality_id = '', gender = '' ,doctor_id=''} = this.state;
 
     this.setState({ docs: [...docs, ...files] }, async () => {
       //  async () => {
@@ -322,7 +334,7 @@ class QualificationRegister extends Component {
 
         let { degree_id = '', year = '',college_name='', college_id = '', photos = [], id = 0 } = newEducation[key];
         let qualData = { degree_id: degree_id.toString(), year,college_name, college_id, photos, id: id.toString() };
-        let qualificationData = { speciality_id, gender, qualification: qualData };
+        let qualificationData = { speciality_id, gender, qualification: qualData , doctor_id };
         let response = await registerQualification(qualificationData)
         // .then(response => {
         const { status, statusCode, payload: { data: { qualification_id = 0 } = {} } = {} } = response;
@@ -367,7 +379,7 @@ class QualificationRegister extends Component {
     this.setState({ docsReg: [...docsReg, ...files] }, async () => {
       //  async () => {
 
-      let { docsReg, fileList, registration = {}, education } = this.state;
+      let { docsReg, fileList, registration = {}, education,doctor_id } = this.state;
       let newRegistration = registration;
       if (docsReg.length === newRegistration[key].photo.length || docsReg.length + newRegistration[key].photos.length === newRegistration[key].photo.length) {
         let newPhotos = newRegistration[key].photos;
@@ -390,7 +402,7 @@ class QualificationRegister extends Component {
           let localEdu = {college_name, college_id : college_id.toString() , degree_id: degree_id.toString(), id: id.toString(), photos, year };
           newEdu.push(localEdu);
         }
-        let registrationData = { speciality_id, gender, qualification_details: newEdu, registration: regData };
+        let registrationData = { speciality_id, gender, qualification_details: newEdu, registration: regData ,doctor_id};
         let response = await registerRegistration(registrationData, userId)
         // .then(response => {
         const { status, statusCode, payload: { data: { registration_id = 0 } = {} } = {} } = response;
@@ -1327,7 +1339,7 @@ class QualificationRegister extends Component {
     const { history } = this.props;
     const validate = this.validateData();
     if (validate) {
-      const { speciality_id = '', gender = '', registration = {}, education = {} } = this.state;
+      const { speciality_id = '', gender = '', registration = {}, education = {}, doctor_id= '' } = this.state;
       // let newEducation = Object.values(education);
       let newEducation = [];
       for (let edu of Object.values(education)) {
@@ -1349,12 +1361,18 @@ class QualificationRegister extends Component {
       newRegistration.forEach((reg, index) => {
         // delete reg.photo;
       })
-      const data = { speciality_id, gender, registration_details: newRegistration, qualification_details: newEducation };
-      const { doctorQualificationRegister } = this.props;
+      const data = { speciality_id, gender, registration_details: newRegistration, qualification_details: newEducation ,doctor_id };
+      const { doctorQualificationRegister  , authenticated_category} = this.props;
       doctorQualificationRegister(data).then(response => {
         const { status } = response;
         if (status) {
+          if(authenticated_category === USER_CATEGORY.PROVIDER){
+            history.replace(`${PATH.REGISTER_CLINICS}/${doctor_id}`);
+        }
+        else{
           history.replace(PATH.REGISTER_CLINICS);
+        }
+         
         } else {
           message.error(this.formatMessage(messages.somethingWentWrong))
         }
@@ -1365,8 +1383,13 @@ class QualificationRegister extends Component {
   }
 
   onBackClick = () => {
-    const { history } = this.props;
-    history.replace(PATH.REGISTER_PROFILE);
+    const { history,authenticated_category } = this.props;
+    const {doctor_id} = this.state;
+    if(authenticated_category === USER_CATEGORY.PROVIDER){
+      history.replace(`${PATH.REGISTER_PROFILE}/${doctor_id}`);
+    }else{
+      history.replace(PATH.REGISTER_PROFILE);
+  }
   }
 
 

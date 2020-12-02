@@ -13,9 +13,11 @@ export const PATH = {
   IDENTIFY: "/identify/:link",
   SIGN_UP: "/sign-up/:link",
   REGISTER_PROFILE: '/register-profile',
+  PROVIDER_REGISTER_PROFILE: '/register-profile/:id',
   REGISTER_QUALIFICATIONS: '/register-qualifications',
   PROVIDER_REGISTER_QUALIFICATIONS:'/register-qualifications/:doctor_id',
   REGISTER_CLINICS: '/register-clinics',
+  PROVIDER_REGISTER_CLINICS: '/register-clinics/:doctor_id',
   PATIENT_CONSULTING: '/patient-consulting/:patient_id',
   PATIENT_CONSULTING_VIDEO: '/patient-consulting-video/:room_id',
   RESET_PASSWORD: "/reset-password/:link",
@@ -227,6 +229,7 @@ export const ACTIVITY_TYPE = {
 
 export const PERMISSIONS = {
   ADD_PATIENT: "ADD_PATIENT",
+  ADD_DOCTOR: "ADD_DOCTOR",
   VERIFIED_ACCOUNT: 'VERIFIED_ACCOUNT',
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
   EDIT_APPOINTMENT: "EDIT_APPOINTMENT",

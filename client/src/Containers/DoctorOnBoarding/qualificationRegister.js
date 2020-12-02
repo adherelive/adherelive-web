@@ -7,7 +7,8 @@ import {
   registerQualification,
   deleteDoctorQualificationImage,
   deleteDoctorRegistrationImage,
-  registerRegistration
+  registerRegistration,
+  callNewDoctorAction
 } from "../../modules/onBoarding";
 import { connect } from "react-redux";
 import { searchCollege } from "../../modules/colleges";
@@ -63,6 +64,8 @@ const mapDispatchToProps = dispatch => {
     deleteDoctorRegistrationImage: (registrationId, document) =>
       dispatch(deleteDoctorRegistrationImage(registrationId, document)),
       searchSpecialities: (data) => dispatch(searchSpecialties(data)),
+    callNewDoctorAction : (doctor_id) => dispatch(callNewDoctorAction(doctor_id))
+  
   };
 };
 export default withRouter(

@@ -1,7 +1,7 @@
 import { withRouter } from "react-router-dom";
 import ProfileRegister from "../../Components/DoctorOnBoarding/profileRegister";
 import { signOut } from "../../modules/auth";
-import { doctorProfileRegister, getDoctorProfileRegisterData, getDoctorQualificationRegisterData,sendPasswordMail } from "../../modules/onBoarding";
+import { callNewDoctorAction,doctorProfileRegister, getDoctorProfileRegisterData, getDoctorQualificationRegisterData,sendPasswordMail } from "../../modules/onBoarding";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
@@ -16,7 +16,8 @@ const mapDispatchToProps = dispatch => {
         doctorProfileRegister: (data) => dispatch(doctorProfileRegister(data)),
         getDoctorProfileRegisterData: (userId) => dispatch(getDoctorProfileRegisterData(userId)),
         getDoctorQualificationRegisterData: () => dispatch(getDoctorQualificationRegisterData()),
-        sendPasswordMail : (data) => dispatch(sendPasswordMail(data))
+        sendPasswordMail : (data) => dispatch(sendPasswordMail(data)),
+        callNewDoctorAction : (doctor_id) => dispatch(callNewDoctorAction(doctor_id))
     };
 };
 

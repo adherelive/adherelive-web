@@ -57,13 +57,17 @@ class ProviderDoctor extends Component {
                   component={ProviderDoctorPage}
                 />
 
+              <Route
+                  exact
+                  path={PATH.PROVIDER_REGISTER_PROFILE}
+                  component={RegisterProfile}
+                />  
+
                 <Route
                   exact
                   path={PATH.REGISTER_PROFILE}
                   component={RegisterProfile}
                 />
-
-
                 <Route
                   exact
                   path={PATH.PROVIDER_REGISTER_QUALIFICATIONS}
@@ -71,7 +75,7 @@ class ProviderDoctor extends Component {
                 />
                 <Route
                   exact
-                  path={PATH.REGISTER_CLINICS}
+                  path={PATH.PROVIDER_REGISTER_CLINICS}
                   component={RegisterClinics}
                 />
 

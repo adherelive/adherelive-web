@@ -85,6 +85,7 @@ class ProvidersController extends Controller {
       let registration_council_ids = [];
       let degree_ids = [];
       let college_ids = [];
+      let userIds = [];
 
       for (const doctor of doctorIds) {
         let doctor_qualification_ids = [];
@@ -93,6 +94,8 @@ class ProvidersController extends Controller {
         const doctorWrapper = await DoctorWrapper(null, doctor);
         const { specialities } = await doctorWrapper.getReferenceInfo();
         specialityDetails = { ...specialityDetails, ...specialities };
+        userIds.push(doctorWrapper.getUserId());
+
 
         const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
           doctorWrapper.getDoctorId()
@@ -265,7 +268,12 @@ class ProvidersController extends Controller {
           },
           registration_councils: {
             ...councilApiDetails
-          }
+          },
+          specialities: {
+            ...specialityDetails
+          },
+          user_ids: userIds,
+          doctor_ids: doctorIds
         },
         "doctor details fetched successfully"
       );

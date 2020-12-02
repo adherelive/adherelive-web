@@ -233,6 +233,7 @@ class UserController extends Controller {
 
         if (apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
+          Logger.debug("675546767890876678",apiUserDetails.getBasicInfo());
         }
 
         const dataToSend = {

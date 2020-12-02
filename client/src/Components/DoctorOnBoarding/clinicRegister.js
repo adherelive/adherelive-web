@@ -13,6 +13,7 @@ import messages from './messages';
 
 
 
+
 const dayTimings = {
     [FULL_DAYS.MON]: [{ startTime: "", endTime: '' }],
     [FULL_DAYS.TUE]: [{ startTime: "", endTime: '' }],
@@ -43,22 +44,38 @@ class ClinicRegister extends Component {
             clinics: {},
             clinicsKeys: [],
             visible: false,
-            timingsVisible: false
+            timingsVisible: false,
+            doctor_id : ''
         };
     }
 
     componentDidMount() {
         let key = uuid();
         let key1 = uuid();
-
-
         let clinics = {};
         clinics[key1] = { name: "", location: "", timings: [], daySelected };
         let clinicsKeys = [key1];
+        this.setDoctorID();
         this.setState({ clinics, clinicsKeys });
 
     }
 
+    async setDoctorID() {
+        try{
+            const {callNewDoctorAction} = this.props;
+            const url = window.location.href.split("/");
+            let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+            await callNewDoctorAction(doctor_id);
+            this.setState({doctor_id});
+        }
+        catch(error){
+            console.log("443534543535 -->", error);
+            message.error(this.formatMessage(messages.somethingWentWrong))
+        }
+
+    }
+
+    
 
 
     setClinicName = (key, e) => {
@@ -296,6 +313,7 @@ class ClinicRegister extends Component {
     onNextClick = () => {
         const { history, showVerifyModal } = this.props;
         const validate = this.validateData();
+        const {doctor_id} = this.state;
         if (validate) {
             const { clinics = {} } = this.state;
             let newClinics = Object.values(clinics);
@@ -315,7 +333,7 @@ class ClinicRegister extends Component {
                 delete clinic.timingsKeys;
                 delete clinic.daySelected;
             }
-            const data = { clinics: newClinics };
+            const data = { clinics: newClinics , doctor_id };
             const { doctorClinicRegister } = this.props;
             doctorClinicRegister(data).then(response => {
                 const { status, message: errorMessage } = response;
@@ -331,8 +349,14 @@ class ClinicRegister extends Component {
     }
 
     onBackClick = () => {
-        const { history } = this.props;
-        history.replace(PATH.REGISTER_QUALIFICATIONS);
+        const { history ,authenticated_category } = this.props;
+        const {doctor_id} = this.state;
+        if(authenticated_category === USER_CATEGORY.PROVIDER){
+        
+            history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
+        }else{
+            history.replace(PATH.REGISTER_QUALIFICATIONS);
+        }
     }
 
 

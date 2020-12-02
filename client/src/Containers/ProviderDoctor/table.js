@@ -1,9 +1,10 @@
 import { connect } from "react-redux";
-import DoctorTable from "../../Components/Doctor/table";
+import ProviderDoctorTable from "../../Components/Provider/table";
 import { withRouter } from "react-router-dom";
 import {getAllDoctorsForProvider} from "../../modules/doctors";
 
 const mapStateToProps = state => {
+  console.log("DOCTOR TABLE FOR provider STATE",state);
   const {
     doctors = {},
     users = {},
@@ -27,5 +28,5 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(DoctorTable)
+  connect(mapStateToProps, mapDispatchToProps)(ProviderDoctorTable)
 );

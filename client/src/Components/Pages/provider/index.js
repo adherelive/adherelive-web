@@ -1,6 +1,20 @@
 import React, { Component , Fragment } from "react";
 import {injectIntl} from "react-intl";
-import {Button} from 'antd';
+import { PERMISSIONS } from "../../../constant";
+import {
+    Drawer,
+    Icon,
+    Select,
+    Input,
+    message,
+    Button,
+    Spin,
+    Radio,
+    DatePicker,
+    Menu,
+    Dropdown,
+    Modal
+  } from "antd";
 import messages from "./messages";
 
 
@@ -17,13 +31,54 @@ class ProviderDoctorPage extends Component {
     }
     formatMessage = data => this.props.intl.formatMessage(data);
     
+    getMenu = () => {
+        const { authPermissions = [] } = this.props;
+        return (
+          <Menu>
+            {authPermissions.includes(PERMISSIONS.ADD_DOCTOR) && (
+              <Menu.Item onClick={this.addDoctor}>
+                <div className="tac" >{this.formatMessage(messages.addDoctor)}</div>
+              </Menu.Item>
+            )}
+           
+          </Menu>
+        );
+      };
+
     render() {
+
+      const {authenticated_user ='',users ={}} = this.props;
+      const {basic_info : {user_name = ''} = {}} = users[authenticated_user] || {};
+      console.log("AUTHENTICATED USER ===>",users[authenticated_user]);
         return (
             <Fragment>
                 <div className="wp100 flex direction-column">
+                  
 
-                <div className="p18 fs30 fw700 mb20">{this.formatMessage(messages.provider)}</div>
-                <Button onClick={this.addDoctor} >{this.formatMessage(messages.addDoctor)} </Button>
+                <div className="flex direction-row justify-space-between align-center wp100 mr20 mb40">
+                  {user_name !== "" ? (
+                    <div className="p18 fs30 fw700 mb20">
+                      {this.formatMessage(messages.welcome)}, {user_name}
+                    </div>
+                  ) : (
+                    <div className="p18 fs30 fw700 mb20">
+                      {this.formatMessage(messages.welcome)}
+                    </div>
+                  )}
+                <Dropdown
+                  className={"mr40 "}
+                  overlay={this.getMenu()}
+                  trigger={["click"]}
+                  placement="bottomRight"
+                >
+                     <Button type="primary" className="ml10 add-button " icon={"plus"}>
+                      <span className="fs16">{this.formatMessage(messages.add)}</span>
+                    </Button>
+
+                    
+                </Dropdown>
+              </div>
+                {/* <Button onClick={this.addDoctor} >{this.formatMessage(messages.addDoctor)} </Button> */}
                 <div className="wp100 pl14 pr14 flex align-center justify-center">
                     <DoctorTable />
                 </div>

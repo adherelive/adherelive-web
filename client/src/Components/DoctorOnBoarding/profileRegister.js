@@ -270,9 +270,10 @@ class Profileregister extends Component {
                 data["is_provider"] = true
             } 
             doctorProfileRegister(data).then(response => {
-                const { status, statusCode, payload: { data: { doctors = {} } = {} } = {} } = response;
+                console.log(" 32453454RESPONSE FOR DOC PROFILE REGISTER ===>",response);
+                const { status, statusCode, payload: { data: { doctors : response_doctors = {} } = {} } = {} } = response;
                 if (status) {
-                    const {basic_info : {id : doctor_id = null} = {}} = Object.values(doctors)[0] || {};
+                    const {basic_info : {id : doctor_id = null} = {}} = Object.values(response_doctors)[0] || {};
                     if(authenticated_category === USER_CATEGORY.PROVIDER){
                         this.handleSendPasswordMail(doctor_id);
                         history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
@@ -293,9 +294,7 @@ class Profileregister extends Component {
             const {sendPasswordMail }  = this.props;
             const response = await sendPasswordMail({doctor_id});
             const { status } = response;
-            if (status) {
-                message.success(this.formatMessage(messages.passwordMailSent));
-            }
+            
           } catch (err) {
             console.log("err", err);
             message.warn("Something wen't wrong. Please try again later");

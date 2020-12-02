@@ -4,12 +4,17 @@ const messages = defineMessages({
     addDoctor: {
     id: "app.provider.dashboard.addDoctor",
     description: "",
-    defaultMessage: "Add Doctor"
+    defaultMessage: "Doctor"
   },
-  provider: {
+  welcome: {
     id: "app.provider.dashboard.provider",
     description: "",
-    defaultMessage: "Provider"
+    defaultMessage: "Welcome"
+  },
+  add:{
+    id: "app.provider.dashboard.add",
+    description: "",
+    defaultMessage: "Add"
   },
   
 });

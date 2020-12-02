@@ -5,9 +5,18 @@ import { withRouter } from "react-router-dom";
 // import {DRAWER} from "../../../constant";
 
 const mapStateToProps = state => {
-  const {} = state;
+  const {
+    auth: { authPermissions = [], authenticated_user = 1 ,authenticated_category} = {},
+    users ={},
+    doctors = {},
+} = state;
 
-  return {};
+  return {
+  users,
+  doctors,
+  authPermissions,
+  authenticated_user,
+  authenticated_category};
 };
 
 const mapDispatchToProps = dispatch => {

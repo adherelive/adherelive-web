@@ -1481,6 +1481,7 @@ class DoctorController extends Controller {
         qualification = {},
         doctor_id = null
       } = req.body;
+
       const {
         userDetails: { userId, userData: { category = null } = {} } = {}
       } = req;
@@ -1704,6 +1705,8 @@ class DoctorController extends Controller {
         doctor_id = null
       } = body || {};
 
+      Logger.debug("3456754321345643",doctor_id);
+
       let doctorData = null;
 
       if (doctor_id) {
@@ -1712,7 +1715,7 @@ class DoctorController extends Controller {
         }
 
         doctorData = await DoctorWrapper(null, doctor_id);
-        doctorUserId = doctorWrapper.getUserId();
+        doctorUserId = doctorData.getUserId();
       } else {
         const doctor = await doctorService.getDoctorByData({
           user_id: doctorUserId
