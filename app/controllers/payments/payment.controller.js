@@ -23,14 +23,29 @@ class PaymentController extends Controller {
   addDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { body, userDetails: { userCategoryId } = {} } = req;
+      const {
+        body,
+        userDetails: { userCategoryId, userData: { category = null } = {} } = {}
+      } = req;
+
+      let doctorId = userCategoryId;
+
+      const { doctor_id = null } = body || {};
+
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorId = doctor_id;
+      }
 
       const dataToAdd = PaymentHelper.getFormattedData(body);
 
       const paymentProductService = new PaymentProductService();
       const paymentProductData = await paymentProductService.addDoctorProduct({
         ...dataToAdd,
-        creator_id: userCategoryId,
+        creator_id: doctor_id,
         creator_type: USER_CATEGORY.DOCTOR,
         product_user_type: "patient" // todo: change to constant in model
       });
@@ -96,16 +111,53 @@ class PaymentController extends Controller {
   getAllDoctorPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userCategoryId } = {} } = req;
+      const {
+        userDetails: {
+          userCategoryId,
+          userData: { category = null } = {}
+        } = {},
+        query = {}
+      } = req;
+
+      let doctorId = userCategoryId;
+      const { doctor_id = null } = query || {};
+
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+        doctorId = doctor_id;
+      }
 
       const paymentProductService = new PaymentProductService();
-      const paymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+      const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         {
           creator_type: USER_CATEGORY.DOCTOR,
-          creator_id: userCategoryId,
+          creator_id: doctorId,
           product_user_type: "patient"
         }
       );
+
+      const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+        doctorId
+      );
+      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+        doctorProvider
+      );
+      const providerId = doctorProviderWrapper.getProviderId();
+
+      const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+        {
+          creator_type: USER_CATEGORY.PROVIDER,
+          creator_id: providerId,
+          product_user_type: "patient"
+        }
+      );
+
+      const paymentProductData = [
+        ...providerPaymentProductData,
+        ...doctorPaymentProductData
+      ];
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};
@@ -146,33 +198,10 @@ class PaymentController extends Controller {
   getAllAdminPaymentProduct = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userCategoryId } = {} } = req;
-
       const paymentProductService = new PaymentProductService();
-      const adminPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+      const paymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         { creator_type: USER_CATEGORY.ADMIN }
       );
-
-      const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-        userCategoryId
-      );
-      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-        doctorProvider
-      );
-      const providerId = doctorProviderWrapper.getProviderId();
-
-      const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-        {
-          creator_type: USER_CATEGORY.PROVIDER,
-          creator_id: providerId,
-          product_user_type: "patient"
-        }
-      );
-
-      const paymentProductData = [
-        ...providerPaymentProductData,
-        ...adminPaymentProductData
-      ];
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};

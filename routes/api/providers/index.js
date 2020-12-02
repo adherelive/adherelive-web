@@ -16,11 +16,11 @@ router.post(
   ProvidersController.mailPassword
 );
 
-router.post(
-  "/payment-products",
-  Authenticate,
-  isProvider,
-  ProvidersController.addPaymentProduct
-);
+// router.post(
+//   "/payment-products",
+//   Authenticate,
+//   isProvider,
+//   ProvidersController.addPaymentProduct
+// );
 
 module.exports = router;
