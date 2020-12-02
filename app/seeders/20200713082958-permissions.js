@@ -54,6 +54,26 @@ module.exports = {
         type: "ADD_DOCTOR",
         created_at: new Date(),
         updated_at: new Date()
+      },
+      {
+        type: "EDIT_DOCTOR",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        type: "ADD_PAYMENT_PRODUCT",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        type: "VIEW_PAYMENT_PRODUCT",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        type: "VIEW_CALENDAR_SCHEDULE",
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ]);
   },
