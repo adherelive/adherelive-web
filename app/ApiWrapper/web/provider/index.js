@@ -1,5 +1,8 @@
 import BaseProvider from "../../../services/provider";
 import providerService from "../../../services/provider/provider.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+
+import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 
 class ProviderWrapper extends BaseProvider {
   constructor(data) {
@@ -21,6 +24,35 @@ class ProviderWrapper extends BaseProvider {
         state
       },
       activated_on
+    };
+  };
+
+  getAllInfo = async () => {
+    const { _data } = this;
+    const { id, name, address, city, state, user_id, activated_on } =
+      _data || {};
+
+    const providerDoctors = await doctorProviderMappingService.getDoctorProviderMappingByData(
+      { provider_id: id }
+    );
+
+    const doctor_ids = [];
+    for (const doctor of providerDoctors) {
+      const providerDoctorsWrapper = await DoctorProviderMappingWrapper(doctor);
+      doctor_ids.push(providerDoctorsWrapper.getDoctorId());
+    }
+
+    return {
+      basic_info: {
+        id,
+        user_id,
+        name,
+        address,
+        city,
+        state
+      },
+      activated_on,
+      doctor_ids
     };
   };
 }

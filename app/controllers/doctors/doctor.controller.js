@@ -570,6 +570,10 @@ class DoctorController extends Controller {
     try {
       const { id = 0 } = req.params;
       const {
+        userDetails: { userData: { category: userCategory } = {} } = {}
+      } = req;
+
+      const {
         name = null,
         city = null,
         gender = null,
@@ -577,11 +581,24 @@ class DoctorController extends Controller {
         speciality_id = null,
         qualification_details = null,
         registration_details = null,
-        clinic_details = null
+        clinic_details = null,
+        doctor_id = null
       } = req.body;
       Logger.debug("ererer", req.body);
+
+      let doctorUserId = id;
+
+      if (doctor_id) {
+        if (userCategory !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
+
       let doctorExist = await doctorService.getDoctorByData({
-        user_id: id
+        user_id: doctorUserId
       });
       let doctor_data = {};
       if (name) {
@@ -620,7 +637,7 @@ class DoctorController extends Controller {
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
 
         const updatedDoctor = await doctorService.getDoctorByData({
-          user_id: id
+          user_id: doctorUserId
         });
 
         // basic information

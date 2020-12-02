@@ -19,6 +19,7 @@ import treatmentService from "../../services/treatment/treatment.service";
 import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
+import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -29,6 +30,7 @@ import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import SeverityWrapper from "../../ApiWrapper/web/severity";
 import ConditionWrapper from "../../ApiWrapper/web/conditions";
 import ProvidersWrapper from "../../ApiWrapper/web/provider";
+import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
 
 import doctorService from "../../services/doctors/doctors.service";
 // import patientService from "../../services/patients/patients.service";
@@ -425,6 +427,7 @@ class UserController extends Controller {
         let carePlanApiData = {};
         let userApiData = {};
         let userCaregoryApiData = {};
+        let providerApiData = {};
 
         let userCategoryApiWrapper = null;
         let userCategoryId = null;
@@ -448,6 +451,24 @@ class UserController extends Controller {
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
               ] = await userCategoryApiWrapper.getAllInfo();
+
+              const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+                userCategoryId
+              );
+
+              if (doctorProvider) {
+                const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+                  doctorProvider
+                );
+                const providerId = doctorProviderWrapper.getProviderId();
+                const providerWrapper = await ProvidersWrapper(
+                  null,
+                  providerId
+                );
+                providerApiData[
+                  providerId
+                ] = await providerWrapper.getAllInfo();
+              }
 
               careplanData = await carePlanService.getCarePlanByData({
                 doctor_id: userCategoryId
@@ -495,7 +516,7 @@ class UserController extends Controller {
               userCategoryApiWrapper = await ProvidersWrapper(userCategoryData);
               userCaregoryApiData[
                 userCategoryApiWrapper.getProviderId()
-              ] = await userCategoryApiWrapper.getBasicInfo();
+              ] = await userCategoryApiWrapper.getAllInfo();
             }
             break;
           default:
@@ -606,43 +627,44 @@ class UserController extends Controller {
         const notificationToken = appNotification.getUserToken(`${userId}`);
         const feedId = base64.encode(`${userId}`);
 
-        return this.raiseSuccess(
-          res,
-          200,
-          {
-            users: {
-              ...userApiData
-            },
-            [`${category}s`]: {
-              ...userCaregoryApiData
-            },
-            patients: {
-              ...patientApiDetails
-            },
-            care_plans: {
-              ...carePlanApiData
-            },
-            notificationToken: notificationToken,
-            feedId: `${userId}`,
-            severity: {
-              ...severityApiDetails
-            },
-            treatments: {
-              ...treatmentApiDetails
-            },
-            conditions: {
-              ...conditionApiDetails
-            },
-            ...referenceData,
-            ...permissions,
-            severity_ids: severityIds,
-            treatment_ids: treatmentIds,
-            condition_ids: conditionIds,
-            auth_user: userId,
-            auth_category: category
+        let response = {
+          users: {
+            ...userApiData
           },
-          "basic info"
-        );
+          [`${category}s`]: {
+            ...userCaregoryApiData
+          },
+          patients: {
+            ...patientApiDetails
+          },
+          care_plans: {
+            ...carePlanApiData
+          },
+          notificationToken: notificationToken,
+          feedId: `${userId}`,
+          severity: {
+            ...severityApiDetails
+          },
+          treatments: {
+            ...treatmentApiDetails
+          },
+          conditions: {
+            ...conditionApiDetails
+          },
+          ...referenceData,
+          ...permissions,
+          severity_ids: severityIds,
+          treatment_ids: treatmentIds,
+          condition_ids: conditionIds,
+          auth_user: userId,
+          auth_category: category
+        };
+
+        if (category !== USER_CATEGORY.PROVIDER) {
+          response = { ...response, ...{ providers: { ...providerApiData } } };
+        }
+
+        return this.raiseSuccess(res, 200, response, "basic info");
       } else {
         console.log("userExists --->>> ", req.userDetails.exists);
         // throw new Error(constants.COOKIES_NOT_SET);
