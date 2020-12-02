@@ -7,9 +7,11 @@ import * as PaymentHelper from "./helper";
 
 // SERVICES...
 import PaymentProductService from "../../../services/paymentProducts/paymentProduct.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 // WRAPPERS...
 import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
+import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
 
 const Log = new Logger("MOBILE > CONTROLLER > PAYMENTS");
 
@@ -96,13 +98,34 @@ class PaymentController extends Controller {
       const { userDetails: { userCategoryId } = {} } = req;
 
       const paymentProductService = new PaymentProductService();
-      const paymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+      const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         {
           creator_type: USER_CATEGORY.DOCTOR,
           creator_id: userCategoryId,
           product_user_type: "patient"
         }
       );
+
+      const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+        userCategoryId
+      );
+      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+        doctorProvider
+      );
+      const providerId = doctorProviderWrapper.getProviderId();
+
+      const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+        {
+          creator_type: USER_CATEGORY.PROVIDER,
+          creator_id: providerId,
+          product_user_type: "patient"
+        }
+      );
+
+      const paymentProductData = [
+        ...providerPaymentProductData,
+        ...doctorPaymentProductData
+      ];
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};

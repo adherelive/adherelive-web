@@ -13,6 +13,7 @@ import registrationService from "../../services/doctorRegistration/doctorRegistr
 import degreeService from "../../services/degree/degree.service";
 import collegeService from "../../services/college/college.service";
 import councilService from "../../services/council/council.service";
+import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -25,6 +26,9 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
+import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
+
+import * as PaymentHelper from "../payments/helper";
 
 import bcrypt from "bcrypt";
 
@@ -346,6 +350,59 @@ class ProvidersController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  // addPaymentProduct = async (req, res) => {
+  //   const { raiseSuccess, raiseServerError, raiseClientError } = this;
+  //   try {
+  //     const { body, userDetails: { userId } = {} } = req;
+
+  //     const providerData = await providerService.getProviderByData({
+  //       user_id: userId
+  //     });
+  //     const provider = await ProviderWrapper(providerData);
+  //     const providerId = provider.getProviderId();
+
+  //     const dataToAdd = PaymentHelper.getFormattedData(body);
+
+  //     const paymentProductService = new PaymentProductService();
+  //     const paymentProductData = await paymentProductService.addDoctorProduct({
+  //       ...dataToAdd,
+  //       creator_id: providerId,
+  //       creator_type: USER_CATEGORY.PROVIDER,
+  //       product_user_type: "patient"
+  //     });
+
+  //     if (paymentProductData) {
+  //       let paymentProducts = {};
+
+  //       const paymentProduct = await PaymentProductWrapper({
+  //         data: paymentProductData
+  //       });
+  //       paymentProducts[paymentProduct.getId()] = paymentProduct.getBasicInfo();
+
+  //       return raiseSuccess(
+  //         res,
+  //         200,
+  //         {
+  //           payment_products: {
+  //             ...paymentProducts
+  //           }
+  //         },
+  //         "Consultation Product added successfully"
+  //       );
+  //     } else {
+  //       return raiseClientError(
+  //         res,
+  //         201,
+  //         {},
+  //         "Please check details given for the consultation product"
+  //       );
+  //     }
+  //   } catch (error) {
+  //     Logger.debug("addPaymentProduct 500 error ", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
 }
 
 export default new ProvidersController();

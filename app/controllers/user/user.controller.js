@@ -18,6 +18,7 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 import treatmentService from "../../services/treatment/treatment.service";
 import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
+import providerService from "../../services/provider/provider.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -27,6 +28,7 @@ import DoctorRegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import SeverityWrapper from "../../ApiWrapper/web/severity";
 import ConditionWrapper from "../../ApiWrapper/web/conditions";
+import ProvidersWrapper from "../../ApiWrapper/web/provider";
 
 import doctorService from "../../services/doctors/doctors.service";
 // import patientService from "../../services/patients/patients.service";
@@ -484,6 +486,17 @@ class UserController extends Controller {
                     vital_ids
                   };
               }
+            }
+            break;
+          case USER_CATEGORY.PROVIDER:
+            userCategoryData = await providerService.getProviderByData({
+              user_id: userId
+            });
+            if (userCategoryData) {
+              userCategoryApiWrapper = await ProvidersWrapper(userCategoryData);
+              userCaregoryApiData[
+                userCategoryApiWrapper.getProviderId()
+              ] = await userCategoryApiWrapper.getBasicInfo();
             }
             break;
           default:

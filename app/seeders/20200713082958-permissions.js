@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../models/permissions";
+import { TABLE_NAME } from "../models/permissions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -8,54 +8,53 @@ module.exports = {
       {
         type: "VERIFIED_ACCOUNT",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "ADD_PATIENT",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "VIEW_PATIENT",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "ADD_APPOINTMENT",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "EDIT_APPOINTMENT",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "ADD_MEDICATION",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "EDIT_MEDICATION",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "EDIT_GRAPH",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "ADD_CAREPLAN",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       },
       {
         type: "ADD_DOCTOR",
         created_at: new Date(),
-        updated_at: new Date(),
+        updated_at: new Date()
       }
-
     ]);
   },
 
