@@ -191,6 +191,7 @@ export const getDoctorProfileRegisterData = (userId) => {
 
 export const getDoctorQualificationRegisterData = () => {
   let response = {};
+  const {doctor_id = ""} = payload || {};
   return async (dispatch) => {
     try {
       dispatch({ type: GET_DOCTOR_QUALIFICATION_DATA });
