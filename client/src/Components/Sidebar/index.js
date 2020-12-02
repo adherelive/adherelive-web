@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Menu, Tooltip, message, Avatar, Icon, Dropdown } from "antd";
 import { PATH, USER_CATEGORY, PERMISSIONS } from "../../constant";
+import confirm from "antd/es/modal/confirm";
 
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
@@ -39,11 +40,46 @@ class SideMenu extends Component {
     } catch (error) {}
   };
 
-  handleItemSelect = ({ key }) => {
+  warnNote = () => {
+    return (
+      <div className="pt16">
+        <p className="red">
+          <span className="fw600">{"Note"}</span>
+          {" : New Doctor signup information is not complete"}
+        </p>
+      </div>
+    );
+  };
+
+   handleRedirect =({key}) => {
+
+   try{
+       confirm({
+        title: `Are you sure you want to redirect?`,
+        content: (
+          <div>
+            {this.warnNote()}
+          </div>
+        ),
+        onOk: async () => {
+          this.handleItemSelectForRedirect({key})
+        },
+        onCancel() {
+          
+        }
+      });
+    }catch(error){
+      console.log("err --->",error);
+    }
+  }
+
+  handleItemSelectForRedirect = ({key}) => {
+
     const { users, history, authenticated_category, authenticated_user, authPermissions = [], openAppointmentDrawer } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
     const { onboarded } = current_user;
+
     switch (key) {
       case LOGO:
       case DASHBOARD:
@@ -82,6 +118,61 @@ class SideMenu extends Component {
         break;
     }
     this.setState({ selectedKeys: key });
+  }
+
+  
+  handleItemSelect = ({ key }) => {
+    
+    const { users, history, authenticated_category, authenticated_user, authPermissions = [], openAppointmentDrawer } = this.props;
+    const { handleLogout } = this;
+    const current_user = users[authenticated_user];
+    const { onboarded } = current_user;
+
+    const url = window.location.href.split("/");
+    let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+    
+    if(doctor_id && authenticated_category===USER_CATEGORY.PROVIDER){
+      this.handleRedirect({key});
+    }else{
+        switch (key) {
+          case LOGO:
+          case DASHBOARD:
+            if (authenticated_category === USER_CATEGORY.ADMIN) {
+              if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+                history.push(PATH.ADMIN.DOCTORS.ROOT);
+              }
+            } else {
+              if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) || onboarded) {
+                history.push(PATH.LANDING_PAGE);
+              }
+            }
+            break;
+          case PROFILE:
+            if(onboarded){
+              history.push(PATH.PROFILE);
+            }
+            break;
+          case SETTINGS:
+            if(onboarded){
+              history.push(PATH.SETTINGS);
+            }
+            break;  
+          case NOTIFICATIONS:
+            if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+              openAppointmentDrawer({ doctorUserId: authenticated_user });
+            }
+            break;
+          case LOG_OUT:
+            handleLogout();
+            break;
+          case SUB_MENU:
+            break;
+          default:
+            history.push(PATH.LANDING_PAGE);
+            break;
+        }
+        this.setState({ selectedKeys: key });
+    }
   };
 
   menu = () => {

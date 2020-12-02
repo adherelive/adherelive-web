@@ -17,11 +17,11 @@ export default props => {
       ...TABLE_COLUMN.NAME,
       render: doctorData => <Name {...doctorData} />
     },
-    // {
-    //   title: formatMessage(messages.verified),
-    //   ...TABLE_COLUMN.VERIFIED,
-    //   render: doctorData => <Verified {...doctorData} />
-    // },
+    {
+      title: formatMessage(messages.verified),
+      ...TABLE_COLUMN.VERIFIED,
+      render: doctorData => <Verified {...doctorData} />
+    },
     {
       title: formatMessage(messages.speciality),
       ...TABLE_COLUMN.SPECIALITY,

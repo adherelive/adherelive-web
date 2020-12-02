@@ -47,8 +47,8 @@ class ProviderDoctorPage extends Component {
 
     render() {
 
-      const {authenticated_user ='',users ={},providers = {}} = this.props;
-      
+      const {authenticated_user ='',users ={},providers = {},authPermissions = []} = this.props;
+
       const {basic_info : {user_name = ''} = {}} = users[authenticated_user] || {};
       let providerID = null;
       let providerName = "";
@@ -65,38 +65,84 @@ class ProviderDoctorPage extends Component {
 
       console.log("AUTHENTICATED USER ===>",users[authenticated_user]);
         return (
-            <Fragment>
-                <div className="wp100 flex direction-column">
+            // <Fragment>
+            //     <div className="wp100 flex direction-column">
                   
 
-                <div className="flex direction-row justify-space-between align-center wp100 mr20 mb40">
-                  {providerName !== "" ? (
-                    <div className="p18 fs30 fw700 mb20">
-                      {this.formatMessage(messages.welcome)}, {providerName}
-                    </div>
-                  ) : (
-                    <div className="p18 fs30 fw700 mb20">
-                      {this.formatMessage(messages.welcome)}
-                    </div>
-                  )}
-                <Dropdown
-                  className={"mr40 "}
-                  overlay={this.getMenu()}
-                  trigger={["click"]}
-                  placement="bottomRight"
-                >
-                     <Button type="primary" className="ml10 add-button " icon={"plus"}>
-                      <span className="fs16">{this.formatMessage(messages.add)}</span>
-                    </Button>
+            //     <div className="flex direction-row justify-space-between align-center wp100 mr20 mb40">
+            //       {providerName !== "" ? (
+            //         <div className="p18 fs30 fw700 mb20">
+            //           {this.formatMessage(messages.welcome)}, {providerName}
+            //         </div>
+            //       ) : (
+            //         <div className="p18 fs30 fw700 mb20">
+            //           {this.formatMessage(messages.welcome)}
+            //         </div>
+            //       )}
+            //     <Dropdown
+            //       className={"mr40 "}
+            //       overlay={this.getMenu()}
+            //       trigger={["click"]}
+            //       placement="bottomRight"
+            //     >
+            //          <Button type="primary" className="ml10 add-button " icon={"plus"}>
+            //           <span className="fs16">{this.formatMessage(messages.add)}</span>
+            //         </Button>
 
                     
-                </Dropdown>
-              </div>
-                {/* <Button onClick={this.addDoctor} >{this.formatMessage(messages.addDoctor)} </Button> */}
-                <div className="wp100 pl14 pr14 flex align-center justify-center">
+            //     </Dropdown>
+            //   </div>
+            //     {/* <Button onClick={this.addDoctor} >{this.formatMessage(messages.addDoctor)} </Button> */}
+            //     <div className="wp100 pl14 pr14 flex align-center justify-center">
+            //         <DoctorTable />
+            //     </div>
+            //     </div>
+            // </Fragment>
+            <Fragment>
+                    <div className=" p20">
+         
+                <div
+                    className={`mt20 flex direction-row justify-space-between align-center`}
+                >
+              {providerName !== "" ? (
+                <div className="fs28 fw700">
+                  {this.formatMessage(messages.welcome)}, {providerName}
+                </div>
+              ) : (
+                <div className="fs28 fw700">
+                  {this.formatMessage(messages.welcome)}
+                </div>
+              )}
+              {(authPermissions.includes(PERMISSIONS.ADD_DOCTOR) ) && (
+                <div className="flex direction-row justify-space-between align-center  mr20">
+
+                  <Dropdown
+                    className={"mr10 "}
+                    overlay={this.getMenu()}
+                    trigger={["click"]}
+                    placement="bottomRight"
+                  >
+                        <Button type="primary" className="ml10 add-button " icon={"plus"}>
+                        <span className="fs16">{this.formatMessage(messages.add)}</span>
+                      </Button>
+
+                  </Dropdown>
+                </div>
+              )}
+
+                
+            </div>
+
+            <div className="tac">
+              <span className="fs24 fw600">{this.formatMessage(messages.doctors)}</span>
+            </div>
+
+            <div className="mt20 wp100 pl14 pr14 flex align-center justify-center">
                     <DoctorTable />
-                </div>
-                </div>
+            </div>
+
+           
+   </div>
             </Fragment>
         );
     }

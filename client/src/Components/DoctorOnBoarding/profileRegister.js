@@ -61,13 +61,19 @@ class Profileregister extends Component {
         const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
 
         const { basic_info: { id = 1 } = {} } = authenticated_user;
-        await getDoctorQualificationRegisterData();
+
+        const url = window.location.href.split("/");
+
+        let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+
+      
         const { doctors } = this.props;
 
         const doctor_user_category = USER_CATEGORY.DOCTOR; 
 
         const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
 
+        await getDoctorQualificationRegisterData();
 
         this.setState({category : doctor_user_category});
         if(authenticated_category === USER_CATEGORY.DOCTOR){
@@ -80,6 +86,20 @@ class Profileregister extends Component {
                 }
     
             }
+        }else if(authenticated_category === USER_CATEGORY.PROVIDER && doctor_id !== '' ){
+            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', city = '' } = {} } = doctors[doctor_id] || {};
+
+            const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[user_id] || {};
+
+            this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+   
+           
+                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
+                this.setState({ name, city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+            
+    
+            
+
         }
         
         // const { profileData: { name = "", email = "", mobile_number = '', category = '', city = '', prefix = '', profile_pic = '' } = {} } = onBoarding || {};

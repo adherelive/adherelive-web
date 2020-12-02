@@ -16,6 +16,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Add"
   },
+  doctors:{
+    id: "app.provider.dashboard.doctors",
+    description: "",
+    defaultMessage: "Doctors"
+  },
   
 });
 
