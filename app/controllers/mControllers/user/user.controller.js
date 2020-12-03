@@ -17,6 +17,8 @@ import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import MUploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import MDoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
+import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+import ProvidersWrapper from "../../../ApiWrapper/web/provider";
 
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
@@ -30,6 +32,7 @@ import registrationService from "../../../services/doctorRegistration/doctorRegi
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 import { doctorQualificationData, uploadImageS3 } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
@@ -387,7 +390,7 @@ class MobileUserController extends Controller {
   };
 
   signUp = async (req, res) => {
-    const {raiseClientError, raiseSuccess, raiseServerError} = this;
+    const { raiseClientError, raiseSuccess, raiseServerError } = this;
     try {
       const { password, email } = req.body;
       const userExits = await userService.getUserByEmail({ email });
@@ -413,7 +416,7 @@ class MobileUserController extends Controller {
         verified: true
       });
 
-      if(user) {
+      if (user) {
         await doctorService.addDoctor({
           user_id: user.get("id")
         });
@@ -516,6 +519,7 @@ class MobileUserController extends Controller {
         let userApiData = {};
         let userCatApiData = {};
         let carePlanApiData = {};
+        let providerApiData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
         let careplanData = [];
@@ -571,6 +575,25 @@ class MobileUserController extends Controller {
               userCatApiData[
                 userCategoryApiData.getDoctorId()
               ] = await userCategoryApiData.getAllInfo();
+
+              const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+                userCategoryId
+              );
+
+              if (doctorProvider) {
+                const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+                  doctorProvider
+                );
+
+                const providerId = doctorProviderWrapper.getProviderId();
+                const providerWrapper = await ProvidersWrapper(
+                  null,
+                  providerId
+                );
+                providerApiData[
+                  providerId
+                ] = await providerWrapper.getAllInfo();
+              }
 
               careplanData = await carePlanService.getCarePlanByData({
                 doctor_id: userCategoryId
@@ -722,6 +745,9 @@ class MobileUserController extends Controller {
               : { ...doctorApiDetails },
           care_plans: {
             ...carePlanApiData
+          },
+          providers: {
+            ...providerApiData
           },
           severity: {
             ...severityApiDetails
