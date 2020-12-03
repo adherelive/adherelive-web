@@ -11,6 +11,8 @@ import {
 import { PATH } from "../../constant";
 import SideMenu from "../../Components/Sidebar";
 
+
+// FOR DOCTOR TODO: can be in separate doctors folder for easy management
 const ProviderDoctorPage = lazy(() =>
   import(
     /* webpackChunkName: "AdminDoctorTable" */ "../../Containers/Pages/providerDashboard"
@@ -31,6 +33,17 @@ const RegisterClinics = lazy(() =>
   import(/* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister")
 );
 
+const ProviderDoctorDetailsPage = lazy(() =>
+    import(
+        /* webpackChunkName: "ProviderDoctorDetailsPage" */ "../../Containers/Pages/providerDoctorDetails"
+        )
+);
+
+const ProviderDoctorDetailsComp = props => {
+  const { match: { params: { id } = {} } = {} } = props;
+  return <ProviderDoctorDetailsPage id={id} />;
+};
+
 
 class ProviderDoctor extends Component {
   constructor(props) {
@@ -50,6 +63,11 @@ class ProviderDoctor extends Component {
             <SideMenu {...this.props} />
             <div className="container">
               <Switch>
+                <Route
+                    exact
+                    path={PATH.PROVIDER.DOCTORS.DETAILS}
+                    component={ProviderDoctorDetailsComp}
+                />
                 
                 <Route
                   exact

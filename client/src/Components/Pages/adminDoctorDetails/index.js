@@ -37,9 +37,9 @@ class AdminDoctorDetails extends Component {
     const { getInitialData } = this;
 
     const { doctor_qualification_ids } = doctors[id] || {};
-    if (!doctor_qualification_ids) {
+    // if (!doctor_qualification_ids) {
       getInitialData();
-    }
+    // }
   }
 
   formatMessage = data => this.props.intl.formatMessage(data);

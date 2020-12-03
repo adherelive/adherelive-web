@@ -1,29 +1,20 @@
 import React, { Component , Fragment } from "react";
 import {injectIntl} from "react-intl";
 import { PERMISSIONS } from "../../../constant";
-import {
-    Drawer,
-    Icon,
-    Select,
-    Input,
-    message,
-    Button,
-    Spin,
-    Radio,
-    DatePicker,
-    Menu,
-    Dropdown,
-    Modal
-  } from "antd";
+
+// antd components
+import Button from "antd/es/button";
+import Menu from "antd/es/menu";
+import Dropdown from "antd/es/dropdown";
+
 import messages from "./messages";
 
 
-import DoctorTable from "../../../Containers/ProviderDoctor/table";
+import DoctorTable from "../../../Containers/Doctor/table";
 
 class ProviderDoctorPage extends Component {
     constructor(props) {
         super(props);
-        console.log("234567543213456432",props);
     }
 
     addDoctor = () => {

@@ -3,7 +3,6 @@ export const PATH = {
   DASHBOARD: "/dashboard",
   SIGN_IN: "/sign-in",
   PROFILE: "/profile",
-  PROVIDER : "/provider",
   SETTINGS:"/settings",
   CONSULTATION_FEE:"/consultation-fee",
   BILLING:"/billing",
@@ -28,6 +27,12 @@ export const PATH = {
   ADMIN: {
     DOCTORS: {
       ROOT: "/doctors",
+      DETAILS: "/doctors/:id"
+    }
+  },
+  PROVIDER: {
+    ROOT : "/provider",
+    DOCTORS: {
       DETAILS: "/doctors/:id"
     }
   }

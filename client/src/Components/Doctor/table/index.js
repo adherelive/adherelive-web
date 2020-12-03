@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
+import { withRouter } from "react-router-dom";
 
 import Table from "antd/es/table";
 import Icon from "antd/es/icon";
@@ -45,6 +46,7 @@ class DoctorTable extends Component {
     };
 
     onRowClick = key => event => {
+        event.preventDefault();
         const { history } = this.props;
         history.push(`/doctors/${key}`);
     };
@@ -59,8 +61,6 @@ class DoctorTable extends Component {
 
     render() {
         const { onRow, getLoadingComponent, getDataSource } = this;
-
-
 
         const {
             loading,
@@ -89,4 +89,4 @@ class DoctorTable extends Component {
     }
 }
 
-export default injectIntl(DoctorTable);
+export default withRouter(injectIntl(DoctorTable));
