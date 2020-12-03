@@ -11,7 +11,6 @@ import {
 import { PATH } from "../../constant";
 import SideMenu from "../../Components/Sidebar";
 
-
 // FOR DOCTOR TODO: can be in separate doctors folder for easy management
 const ProviderDoctorPage = lazy(() =>
   import(
@@ -19,31 +18,40 @@ const ProviderDoctorPage = lazy(() =>
   )
 );
 
-
 const RegisterProfile = lazy(() =>
-  import(/* webpackChunkName: "RegisterProfile" */ "../../Containers/DoctorOnBoarding/profileRegister")
+  import(
+    /* webpackChunkName: "RegisterProfile" */ "../../Containers/DoctorOnBoarding/profileRegister"
+  )
 );
 
-
 const RegisterQualifications = lazy(() =>
-  import(/* webpackChunkName: "RegisterQualifications" */ "../../Containers/DoctorOnBoarding/qualificationRegister")
+  import(
+    /* webpackChunkName: "RegisterQualifications" */ "../../Containers/DoctorOnBoarding/qualificationRegister"
+  )
 );
 
 const RegisterClinics = lazy(() =>
-  import(/* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister")
+  import(
+    /* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister"
+  )
 );
 
 const ProviderDoctorDetailsPage = lazy(() =>
-    import(
-        /* webpackChunkName: "ProviderDoctorDetailsPage" */ "../../Containers/Pages/providerDoctorDetails"
-        )
+  import(
+    /* webpackChunkName: "ProviderDoctorDetailsPage" */ "../../Containers/Pages/providerDoctorDetails"
+  )
+);
+
+const ProviderDoctorPaymentPage = lazy(() =>
+  import(
+    /* webpackChunkName: "ProviderDoctorPaymentProductPage" */ "../../Containers/Pages/providerDoctorPaymentProduct"
+  )
 );
 
 const ProviderDoctorDetailsComp = props => {
   const { match: { params: { id } = {} } = {} } = props;
   return <ProviderDoctorDetailsPage id={id} />;
 };
-
 
 class ProviderDoctor extends Component {
   constructor(props) {
@@ -64,22 +72,28 @@ class ProviderDoctor extends Component {
             <div className="container">
               <Switch>
                 <Route
-                    exact
-                    path={PATH.PROVIDER.DOCTORS.DETAILS}
-                    component={ProviderDoctorDetailsComp}
+                  exact
+                  path={PATH.PROVIDER.DOCTORS.DETAILS}
+                  component={ProviderDoctorDetailsComp}
                 />
-                
+
+                <Route
+                  exact
+                  path={PATH.PROVIDER.DOCTORS.PAYMENT_PRODUCTS}
+                  component={ProviderDoctorPaymentPage}
+                />
+
                 <Route
                   exact
                   path={PATH.PROVIDER}
                   component={ProviderDoctorPage}
                 />
 
-              <Route
+                <Route
                   exact
                   path={PATH.PROVIDER_REGISTER_PROFILE}
                   component={RegisterProfile}
-                />  
+                />
 
                 <Route
                   exact
@@ -96,8 +110,6 @@ class ProviderDoctor extends Component {
                   path={PATH.PROVIDER_REGISTER_CLINICS}
                   component={RegisterClinics}
                 />
-
-
 
                 <Route exact path={""} component={ProviderDoctorPage} />
               </Switch>

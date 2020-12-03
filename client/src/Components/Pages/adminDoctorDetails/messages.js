@@ -275,6 +275,11 @@ const messages = defineMessages({
     id: "app.admin.doctors.add.razorpay.details.text",
     description: "",
     defaultMessage: "Add Razorpay Details"
+  },
+  add_payment_product: {
+    id: "app.admin.doctors.add_payment_product",
+    description: "",
+    defaultMessage: "Add Payment Product"
   }
 });
 

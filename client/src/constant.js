@@ -3,22 +3,22 @@ export const PATH = {
   DASHBOARD: "/dashboard",
   SIGN_IN: "/sign-in",
   PROFILE: "/profile",
-  SETTINGS:"/settings",
-  CONSULTATION_FEE:"/consultation-fee",
-  BILLING:"/billing",
-  PAYMENT_DETAILS:"/payment-details",
+  SETTINGS: "/settings",
+  CONSULTATION_FEE: "/consultation-fee",
+  BILLING: "/billing",
+  PAYMENT_DETAILS: "/payment-details",
   VALIDATION_PAGE: "/validation/:link",
   FORGOT_PASSWORD: "/forgot-password",
   IDENTIFY: "/identify/:link",
   SIGN_UP: "/sign-up/:link",
-  REGISTER_PROFILE: '/register-profile',
-  PROVIDER_REGISTER_PROFILE: '/register-profile/:id',
-  REGISTER_QUALIFICATIONS: '/register-qualifications',
-  PROVIDER_REGISTER_QUALIFICATIONS:'/register-qualifications/:doctor_id',
-  REGISTER_CLINICS: '/register-clinics',
-  PROVIDER_REGISTER_CLINICS: '/register-clinics/:doctor_id',
-  PATIENT_CONSULTING: '/patient-consulting/:patient_id',
-  PATIENT_CONSULTING_VIDEO: '/patient-consulting-video/:room_id',
+  REGISTER_PROFILE: "/register-profile",
+  PROVIDER_REGISTER_PROFILE: "/register-profile/:id",
+  REGISTER_QUALIFICATIONS: "/register-qualifications",
+  PROVIDER_REGISTER_QUALIFICATIONS: "/register-qualifications/:doctor_id",
+  REGISTER_CLINICS: "/register-clinics",
+  PROVIDER_REGISTER_CLINICS: "/register-clinics/:doctor_id",
+  PATIENT_CONSULTING: "/patient-consulting/:patient_id",
+  PATIENT_CONSULTING_VIDEO: "/patient-consulting-video/:room_id",
   RESET_PASSWORD: "/reset-password/:link",
   PATIENT: {
     PA: "/patients",
@@ -31,9 +31,10 @@ export const PATH = {
     }
   },
   PROVIDER: {
-    ROOT : "/provider",
+    ROOT: "/provider",
     DOCTORS: {
-      DETAILS: "/doctors/:id"
+      DETAILS: "/doctors/:id",
+      PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
     }
   }
 };
@@ -43,11 +44,11 @@ export const HTTP_CODE_SERVER_ERROR = 500;
 export const CHAT_MESSAGE_DETAILS = {
   SYMPTOMS: "symptoms"
 };
- export const USER_ADHERE_BOT = 'adhere_bot';
- export const CHAT_MESSAGE_TYPE = {
-   SYMPTOM:'symptoms',
-   VITAL:'vitals'
- }
+export const USER_ADHERE_BOT = "adhere_bot";
+export const CHAT_MESSAGE_TYPE = {
+  SYMPTOM: "symptoms",
+  VITAL: "vitals"
+};
 
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
@@ -68,8 +69,7 @@ export const MEDICATION_TIMING = {
     [TEXT_KEY]: "Before Breakfast",
     [TIME_KEY]: "8:00am"
   },
-  [AFTER_BREAKFAST]:
-  {
+  [AFTER_BREAKFAST]: {
     [TEXT_KEY]: "After Breakfast",
     [TIME_KEY]: "9:00am"
   },
@@ -107,7 +107,6 @@ export const MEDICATION_TIMING = {
   }
 };
 
-
 export const MEDICATION_TIMING_HOURS = {
   [BEFORE_BREAKFAST]: 8,
   [AFTER_BREAKFAST]: 9,
@@ -135,12 +134,10 @@ export const MEDICATION_TIMING_MINUTES = {
 };
 
 export const ONBOARDING_STATUS = {
-  PROFILE_REGISTERED: 'profile_registered',
-  QUALIFICATION_REGISTERED: 'qualification_registered',
-  CLINIC_REGISTERED: 'CLINIC_registered',
+  PROFILE_REGISTERED: "profile_registered",
+  QUALIFICATION_REGISTERED: "qualification_registered",
+  CLINIC_REGISTERED: "CLINIC_registered"
 };
-
-
 
 export const CRITICAL = "1";
 export const HIGH = "2";
@@ -204,15 +201,15 @@ export const DRAWER = {
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
   EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
   PATIENT_DETAILS: "PATIENT_DETAILS",
-  SYMPTOMS: 'SYMPTOMS',
+  SYMPTOMS: "SYMPTOMS",
   NOTIFICATIONS: "NOTIFICATIONS",
-  EDIT_VITALS:"EDIT_VITALS",
+  EDIT_VITALS: "EDIT_VITALS",
   VITAL_RESPONSE_TIMELINE: "VITAL_RESPONSE_TIMELINE",
-  ADD_CONSULTATION_FEE:"ADD_CONSULTATION_FEE",
+  ADD_CONSULTATION_FEE: "ADD_CONSULTATION_FEE",
   ADD_RAZORPAY_ACCOUNT_DETAILS: "ADD_RAZORPAY_ACCOUNT_DETAILS",
   EDIT_RAZORPAY_ACCOUNT_DETAILS: "EDIT_RAZORPAY_ACCOUNT_DETAILS",
-  ADD_CAREPLAN : "ADD_CAREPLAN",
-  EDIT_PATIENT : "EDIT_PATIENT"
+  ADD_CAREPLAN: "ADD_CAREPLAN",
+  EDIT_PATIENT: "EDIT_PATIENT"
 };
 
 export const USER_CATEGORY = {
@@ -223,7 +220,7 @@ export const USER_CATEGORY = {
   CHARITY_ADMIN: "charityAdmin",
   PHARMACY_ADMIN: "pharmacyAdmin",
   ADMIN: "admin",
-  PROVIDER:"provider"
+  PROVIDER: "provider"
 };
 
 export const ACTIVITY_TYPE = {
@@ -235,18 +232,17 @@ export const ACTIVITY_TYPE = {
 export const PERMISSIONS = {
   ADD_PATIENT: "ADD_PATIENT",
   ADD_DOCTOR: "ADD_DOCTOR",
-  VERIFIED_ACCOUNT: 'VERIFIED_ACCOUNT',
+  VERIFIED_ACCOUNT: "VERIFIED_ACCOUNT",
   ADD_APPOINTMENT: "ADD_APPOINTMENT",
   EDIT_APPOINTMENT: "EDIT_APPOINTMENT",
-  VIEW_PATIENT: 'VIEW_PATIENT',
+  VIEW_PATIENT: "VIEW_PATIENT",
   ADD_MEDICATION: "ADD_MEDICATION",
   EDIT_MEDICATION: "EDIT_MEDICATION",
-  EDIT_GRAPH: 'EDIT_GRAPH',
-  ADD_ACTION: 'ADD_ACTION',
+  EDIT_GRAPH: "EDIT_GRAPH",
+  ADD_ACTION: "ADD_ACTION",
   ADD_CARE_PLAN_TEMPLATE: "ADD_CARE_PLAN_TEMPLATE",
-  ADD_CAREPLAN : "ADD_CAREPLAN"
+  ADD_CAREPLAN: "ADD_CAREPLAN"
 };
-
 
 const DAY = "1";
 const MONTH = "2";
@@ -300,25 +296,25 @@ export const EVENT_ACTION = {
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export const DAYS_TEXT = {
-  "Mon": "monday",
-  "Tue": "tuesday",
-  "Wed": "wednesday",
-  "Thu": "thursday",
-  "Fri": "friday",
-  "Sat": "saturday",
-  "Sun": "sunday",
+  Mon: "monday",
+  Tue: "tuesday",
+  Wed: "wednesday",
+  Thu: "thursday",
+  Fri: "friday",
+  Sat: "saturday",
+  Sun: "sunday"
 };
 
 export const ALTERNATE_DAYS = ["Sun", "Tue", "Thu", "Sat"];
 
 export const DAYS_NUMBER = {
-  "Mon": 1,
-  "Tue": 2,
-  "Wed": 3,
-  "Thu": 4,
-  "Fri": 5,
-  "Sat": 6,
-  "Sun": 7,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
+  Sun: 7
 };
 
 export const DAYS_TEXT_NUM = {
@@ -329,8 +325,7 @@ export const DAYS_TEXT_NUM = {
   "5": "thursday",
   "6": "friday",
   "7": "saturday"
-}
-
+};
 
 export const DAYS_TEXT_NUM_SHORT = {
   "1": "Mon",
@@ -340,7 +335,7 @@ export const DAYS_TEXT_NUM_SHORT = {
   "5": "Fri",
   "6": "Sat",
   "7": "Sun"
-}
+};
 
 export const HOST = "/api";
 
@@ -354,7 +349,7 @@ export const EVENT_TYPE = {
   ARTICLE: "article",
   MEDICATION_REMINDER: "medication-reminder",
   SYMPTOMS: "symptoms",
-  VITALS:"vitals",
+  VITALS: "vitals"
 };
 
 export const EVENT_STATUS = {
@@ -392,7 +387,6 @@ export const SEVERITY_STATUS = {
   }
 };
 
-
 // export const NO_ADHERENCE = "1";
 export const NO_MEDICATION = "1";
 export const NO_APPOINTMENT = "2";
@@ -404,10 +398,9 @@ export const CHART_TITLE = {
   // [NO_ADHERENCE]: "Adherence",
   [NO_MEDICATION]: "Missed Medication",
   [NO_APPOINTMENT]: "Missed Appointments",
-  [NO_ACTION]: "Missed Actions",
+  [NO_ACTION]: "Missed Actions"
   // [TEST_ONE]: 'Test One',
   // [TEST_TWO]: 'Test Two'
-
 };
 
 export const GRAPH_COLORS = {
@@ -442,7 +435,7 @@ export const GRAPH_COLORS = {
       dark: "bg-dark-blue",
       light: "bg-light-blue"
     }
-  },
+  }
   // [TEST_ONE]: {
   //   dark: "#A0522D",
   //   light: "#F5DEB3",
@@ -465,8 +458,8 @@ export const GRAPH_COLORS = {
 
 export const GRAPH_TYPE = {
   // [NO_ADHERENCE]: 'donut',
-  [NO_MEDICATION]: 'donut',
-  [NO_APPOINTMENT]: 'donut',
+  [NO_MEDICATION]: "donut",
+  [NO_APPOINTMENT]: "donut"
   // [NO_ACTION]: 'donut',
   // [TEST_ONE]: 'donut'
 };
@@ -486,7 +479,6 @@ export const CONDITIONS = {
 
 export const TABLE_DEFAULT_BLANK_FIELD = "--";
 
-
 export const TABLET = "1";
 export const SYRUP = "2";
 export const SYRINGE = "3";
@@ -500,13 +492,13 @@ export const MEDICINE_FORM_TYPE = {
 export const MEDICINE_TYPE = {
   TABLET: "tablet",
   INJECTION: "injection",
-  SYRUP: 'syrup'
-}
+  SYRUP: "syrup"
+};
 
 export const MEDICINE_UNITS = {
-  MG: 'mg',
-  ML: 'ml'
-}
+  MG: "mg",
+  ML: "ml"
+};
 
 export const FULL_DAYS = {
   SUN: "Sun",
@@ -515,7 +507,7 @@ export const FULL_DAYS = {
   WED: "Wed",
   THU: "Thu",
   FRI: "Fri",
-  SAT: "Sat",
+  SAT: "Sat"
 };
 
 export const FULL_DAYS_NUMBER = {
@@ -525,7 +517,7 @@ export const FULL_DAYS_NUMBER = {
   WED: "4",
   THU: "5",
   FRI: "6",
-  SAT: "7",
+  SAT: "7"
 };
 
 export const DAYS_LIST = [
@@ -538,19 +530,7 @@ export const DAYS_LIST = [
   FULL_DAYS.SUN
 ];
 
-
-export const DAYS_KEYS = [
-  'MON',
-  'TUE',
-  'WED',
-  'THU',
-  'FRI',
-  'SAT',
-  'SUN'
-];
-
-
-
+export const DAYS_KEYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 const HEAD = "1";
 const RIGHT_EYE = "2";
@@ -608,7 +588,6 @@ const RIGHT_HAMSTRING = "53";
 const LEFT_CALF = "54";
 const RIGHT_CALF = "55";
 
-
 export const PARTS_GRAPH = {
   [HEAD]: { name: "Head" },
   [RIGHT_EYE]: { name: "Right Eye" },
@@ -665,7 +644,7 @@ export const PARTS_GRAPH = {
   [LEFT_HAMSTRING]: { name: "Left Hamstring" },
   [RIGHT_HAMSTRING]: { name: "Right Hamstring" },
   [LEFT_CALF]: { name: "Left Calf" },
-  [RIGHT_CALF]: { name: "Right Calf" },
+  [RIGHT_CALF]: { name: "Right Calf" }
 };
 
 export const BODY_VIEW = {
@@ -674,8 +653,8 @@ export const BODY_VIEW = {
 };
 
 export const BODY_SIDE = {
-  1:"FRONT",
-  2:"BACK"
+  1: "FRONT",
+  2: "BACK"
 };
 export const PARTS = {
   HEAD: "HEAD",
@@ -776,7 +755,7 @@ export const PART_LIST = [
   LEFT_HAMSTRING,
   RIGHT_HAMSTRING,
   LEFT_CALF,
-  RIGHT_CALF,
+  RIGHT_CALF
 ];
 
 export const PART_LIST_CODES = {
@@ -835,7 +814,7 @@ export const PART_LIST_CODES = {
   RIGHT_HAMSTRING: RIGHT_HAMSTRING,
   LEFT_CALF: LEFT_CALF,
   RIGHT_CALF: RIGHT_CALF
-}
+};
 
 export const PART_LIST_FRONT = [
   HEAD,
@@ -895,8 +874,8 @@ export const PART_LIST_BACK = [
   LEFT_HAMSTRING,
   RIGHT_HAMSTRING,
   LEFT_CALF,
-  RIGHT_CALF,
-]
+  RIGHT_CALF
+];
 
 export const BODY = {
   [HEAD]: {
@@ -905,7 +884,7 @@ export const BODY = {
       height: 30,
       width: 68,
       top: 5,
-      left: 90,
+      left: 90
     },
     dotStyle: {
       top: 14,
@@ -918,7 +897,7 @@ export const BODY = {
       height: 30,
       width: 68,
       top: 5,
-      left: 90,
+      left: 90
     },
     dotStyle: {
       top: 14,
@@ -931,7 +910,7 @@ export const BODY = {
       top: 30,
       left: 92,
       height: 18,
-      width: 35,
+      width: 35
     },
     dotStyle: {
       top: 6,
@@ -944,7 +923,7 @@ export const BODY = {
       top: 30,
       left: 125,
       height: 18,
-      width: 35,
+      width: 35
     },
     dotStyle: {
       top: 6,
@@ -970,7 +949,7 @@ export const BODY = {
       top: 38,
       left: 140,
       height: 22,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 4,
@@ -983,7 +962,7 @@ export const BODY = {
       top: 44,
       left: 113,
       height: 15,
-      width: 22,
+      width: 22
     },
     dotStyle: {
       top: 2,
@@ -1036,7 +1015,7 @@ export const BODY = {
       top: 95,
       left: 40,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 8,
@@ -1050,7 +1029,7 @@ export const BODY = {
       top: 95,
       left: 158,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 8,
@@ -1064,7 +1043,7 @@ export const BODY = {
       top: 95,
       left: 40,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 8,
@@ -1078,7 +1057,7 @@ export const BODY = {
       top: 95,
       left: 158,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 8,
@@ -1092,7 +1071,7 @@ export const BODY = {
       top: 100,
       left: 80,
       height: 50,
-      width: 88,
+      width: 88
     },
     dotStyle: {
       top: 20,
@@ -1106,7 +1085,7 @@ export const BODY = {
       top: 100,
       left: 80,
       height: 50,
-      width: 88,
+      width: 88
     },
     dotStyle: {
       top: 20,
@@ -1204,7 +1183,7 @@ export const BODY = {
       top: 170,
       left: 90,
       height: 40,
-      width: 70,
+      width: 70
       // backgroundColor: "blue",
     },
     dotStyle: {
@@ -1304,7 +1283,7 @@ export const BODY = {
       top: 240,
       left: 25,
       height: 28,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 10,
@@ -1360,7 +1339,7 @@ export const BODY = {
       top: 295,
       left: 10,
       height: 40,
-      width: 40,
+      width: 40
       // backgroundColor: "blue",
     },
     dotStyle: {
@@ -1375,7 +1354,7 @@ export const BODY = {
       top: 295,
       left: 200,
       height: 40,
-      width: 40,
+      width: 40
     },
     dotStyle: {
       top: 4,
@@ -1460,7 +1439,7 @@ export const BODY = {
       top: 285,
       left: 130,
       height: 80,
-      width: 60,
+      width: 60
     },
     dotStyle: {
       top: 35,
@@ -1488,7 +1467,7 @@ export const BODY = {
       top: 285,
       left: 130,
       height: 80,
-      width: 60,
+      width: 60
     },
     dotStyle: {
       top: 35,
@@ -1586,7 +1565,7 @@ export const BODY = {
       top: 470,
       left: 102,
       height: 25,
-      width: 30,
+      width: 30
     },
     dotStyle: {
       top: 10,
@@ -1614,7 +1593,7 @@ export const BODY = {
       top: 490,
       left: 94,
       height: 20,
-      width: 35,
+      width: 35
       // backgroundColor: "blue",
     },
     dotStyle: {
@@ -1629,7 +1608,7 @@ export const BODY = {
       top: 490,
       left: 130,
       height: 20,
-      width: 35,
+      width: 35
       // backgroundColor: "blue",
     },
     dotStyle: {
@@ -1668,53 +1647,45 @@ export const BODY = {
   }
 };
 
-
-
 // -------- REPEAT INTERVAL,Occurence VITALS
 
 export const REPEAT_INTERVAL_VITALS = {
-  "1":"Once",
-  "2":"Every hour",
-  "3":"Every 2 hour",
-  "4":"Every 4 hour",
-  "5":"Every 6 hour",
-  "6": "Every 12 hour",
+  "1": "Once",
+  "2": "Every hour",
+  "3": "Every 2 hour",
+  "4": "Every 4 hour",
+  "5": "Every 6 hour",
+  "6": "Every 12 hour"
 };
-
-
 
 export const FINAL = "1";
 export const PROBABLE = "2";
 
-export const DIAGNOSIS_TYPE =  {
-  [FINAL]:{
-    "diagnosis_type":"1",
-    "value":"Final"
+export const DIAGNOSIS_TYPE = {
+  [FINAL]: {
+    diagnosis_type: "1",
+    value: "Final"
   },
-  [PROBABLE]:{
-    "diagnosis_type":"2",
-    "value":"Probable"
+  [PROBABLE]: {
+    diagnosis_type: "2",
+    value: "Probable"
   }
-}
-
-
-
+};
 
 export const CONSULTATION_FEE_TYPE_TEXT = {
-  "1" : "One Time Fee",
-  "2" : "Monthly Subscription"
-}
+  "1": "One Time Fee",
+  "2": "Monthly Subscription"
+};
 
 //payment -------->
 export const CONSULTATION_FEE = "consultation-fee";
 export const BILLING = "billing";
-export const PAYMENT_DETAILS = "payment-details"
+export const PAYMENT_DETAILS = "payment-details";
 
 export const SAVINGS = "savings";
-export const CURRENT="current";
+export const CURRENT = "current";
 
 export const ACCOUNT_TYPES = {
   [SAVINGS]: "Savings",
   [CURRENT]: "Current"
 };
-

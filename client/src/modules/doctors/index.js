@@ -18,7 +18,6 @@ import {
 
 import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
 
-
 import { accountDetailsUrl } from "../../Helper/urls/accounts";
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
@@ -81,14 +80,17 @@ export const DELETE_DOCTOR_PAYMENT_PRODUCT_FAILED =
 // export const GET_ACCOUNT_DETAILS_COMPLETE = "GET_ACCOUNT_DETAILS_COMPLETE";
 // export const GET_ACCOUNT_DETAILS_FAILED = "GET_ACCOUNT_DETAILS_FAILED";
 
+export const GET_ALL_DOCTORS_FOR_PROVIDER = "GET_ALL_DOCTORS_FOR_PROVIDER";
+export const GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE =
+  "GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE";
+export const GET_ALL_DOCTORS_FOR_PROVIDER_FAILED =
+  "GET_ALL_DOCTORS_FOR_PROVIDER_FAILED";
 
-export const GET_ALL_DOCTORS_FOR_PROVIDER ="GET_ALL_DOCTORS_FOR_PROVIDER";
-export const GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE = "GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE";
-export const GET_ALL_DOCTORS_FOR_PROVIDER_FAILED = "GET_ALL_DOCTORS_FOR_PROVIDER_FAILED";
-
-export const UPDATE_PATIENT_AND_CAREPLAN ="UPDATE_PATIENT_AND_CAREPLAN";
-export const UPDATE_PATIENT_AND_CAREPLAN_COMPLETE = "UPDATE_PATIENT_AND_CAREPLAN_COMPLETE";
-export const UPDATE_PATIENT_AND_CAREPLAN_FAILED = "UPDATE_PATIENT_AND_CAREPLAN_FAILED";
+export const UPDATE_PATIENT_AND_CAREPLAN = "UPDATE_PATIENT_AND_CAREPLAN";
+export const UPDATE_PATIENT_AND_CAREPLAN_COMPLETE =
+  "UPDATE_PATIENT_AND_CAREPLAN_COMPLETE";
+export const UPDATE_PATIENT_AND_CAREPLAN_FAILED =
+  "UPDATE_PATIENT_AND_CAREPLAN_FAILED";
 
 export const ADD_RAZORPAY_ID = "ADD_RAZORPAY_ID";
 export const ADD_RAZORPAY_ID_COMPLETE = "ADD_RAZORPAY_ID_COMPLETE";
@@ -125,8 +127,7 @@ export const updateDoctor = (user_id, updateData) => {
   };
 };
 
-
-export const updatePatientAndCareplan = (careplan_id,payload) => {
+export const updatePatientAndCareplan = (careplan_id, payload) => {
   let response = {};
   return async dispatch => {
     try {
@@ -156,7 +157,6 @@ export const updatePatientAndCareplan = (careplan_id,payload) => {
     return response;
   };
 };
-
 
 export const getAdminPaymentProduct = () => {
   let response = {};
@@ -218,15 +218,23 @@ export const getAllDoctorsForProvider = () => {
   };
 };
 
-export const getDoctorPaymentProduct = () => {
+export const getDoctorPaymentProduct = (params = null) => {
   let response = {};
   return async dispatch => {
     try {
       dispatch({ type: GET_DOCTOR_PAYMENT_PRODUCT });
-      response = await doRequest({
-        method: REQUEST_TYPE.GET,
-        url: getDoctorPaymentProductUrl()
-      });
+      if (params) {
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: getDoctorPaymentProductUrl(),
+          params
+        });
+      } else {
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: getDoctorPaymentProductUrl()
+        });
+      }
 
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
@@ -438,8 +446,6 @@ export const getAllDoctors = () => {
   };
 };
 
-
-
 export const getDoctorDetails = id => {
   let response = {};
   return async dispatch => {
@@ -508,7 +514,7 @@ export const getDoctorProfileDetails = () => {
 //           url: accountDetailsUrl(),
 //           data: payload
 //         });
-  
+
 //         const { status, payload: { data, error } = {} } = response || {};
 //         if (status === true) {
 //           dispatch({
@@ -527,10 +533,10 @@ export const getDoctorProfileDetails = () => {
 //       }
 //       return response;
 //     }
-  
+
 // }
 
-export const addRazorpayId = (id,payload) => {
+export const addRazorpayId = (id, payload) => {
   let response = {};
   return async dispatch => {
     try {
@@ -559,7 +565,6 @@ export const addRazorpayId = (id,payload) => {
     return response;
   };
 };
-
 
 // export const getAccountDetails = () => {
 //   let response = {};
