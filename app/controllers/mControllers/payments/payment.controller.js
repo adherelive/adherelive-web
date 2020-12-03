@@ -108,26 +108,26 @@ class PaymentController extends Controller {
 
       let paymentProductData = [...doctorPaymentProductData];
 
-      const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-        userCategoryId
-      );
+      // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+      //   userCategoryId
+      // );
 
-      if (doctorProvider) {
-        const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-          doctorProvider
-        );
-        const providerId = doctorProviderWrapper.getProviderId();
+      // if (doctorProvider) {
+      //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+      //     doctorProvider
+      //   );
+      //   const providerId = doctorProviderWrapper.getProviderId();
 
-        const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-          {
-            creator_type: USER_CATEGORY.PROVIDER,
-            creator_id: providerId,
-            product_user_type: "patient"
-          }
-        );
+      //   const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+      //     {
+      //       creator_type: USER_CATEGORY.PROVIDER,
+      //       creator_id: providerId,
+      //       product_user_type: "patient"
+      //     }
+      //   );
 
-        paymentProductData = [...providerPaymentProductData];
-      }
+      //   paymentProductData = [...paymentProductData, ...providerPaymentProductData];
+      // }
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};

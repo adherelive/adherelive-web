@@ -45,7 +45,7 @@ class PaymentController extends Controller {
       const paymentProductService = new PaymentProductService();
       const paymentProductData = await paymentProductService.addDoctorProduct({
         ...dataToAdd,
-        creator_id: doctor_id,
+        creator_id: doctorId,
         creator_type: USER_CATEGORY.DOCTOR,
         product_user_type: "patient" // todo: change to constant in model
       });
@@ -116,17 +116,20 @@ class PaymentController extends Controller {
           userCategoryId,
           userData: { category = null } = {}
         } = {},
-        query = {}
+        query: { doctor_id = null } = {}
       } = req;
 
       let doctorId = userCategoryId;
-      const { doctor_id = null } = query || {};
 
       if (doctor_id) {
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
         doctorId = doctor_id;
+      }
+
+      if (category === USER_CATEGORY.PROVIDER && !doctor_id) {
+        return raiseClientError(res, 402, {}, "Invalid doctor");
       }
 
       const paymentProductService = new PaymentProductService();
@@ -140,25 +143,29 @@ class PaymentController extends Controller {
 
       let paymentProductData = [...doctorPaymentProductData];
 
-      const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-        doctorId
-      );
-      if (doctorProvider) {
-        const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-          doctorProvider
-        );
-        const providerId = doctorProviderWrapper.getProviderId();
+      // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+      //   doctorId
+      // );
 
-        const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
-          {
-            creator_type: USER_CATEGORY.PROVIDER,
-            creator_id: providerId,
-            product_user_type: "patient"
-          }
-        );
+      // console.log("doctor provider is: ", doctorProvider)
+      // if (doctorProvider) {
+      //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+      //     doctorProvider
+      //   );
+      //   const providerId = doctorProviderWrapper.getProviderId();
 
-        paymentProductData = [...providerPaymentProductData];
-      }
+      //   console.log("Provider id is: ", providerId)
+
+      //   const providerPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
+      //     {
+      //       creator_type: USER_CATEGORY.PROVIDER,
+      //       creator_id: providerId,
+      //       product_user_type: "patient"
+      //     }
+      //   );
+
+      //   paymentProductData = [...paymentProductData, ...providerPaymentProductData];
+      // }
 
       if (paymentProductData.length > 0) {
         let paymentProducts = {};

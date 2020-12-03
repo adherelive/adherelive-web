@@ -128,8 +128,6 @@ router.delete(
   DoctorController.removePatientFromWatchlist
 );
 
-router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
-
 router.get(
   "/consultations",
   Authenticate,
@@ -142,5 +140,7 @@ router.get(
   Authenticate,
   PaymentController.getAllAdminPaymentProduct
 );
+
+router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
 
 module.exports = router;

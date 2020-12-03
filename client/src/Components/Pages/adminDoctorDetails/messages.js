@@ -280,6 +280,11 @@ const messages = defineMessages({
     id: "app.admin.doctors.add_payment_product",
     description: "",
     defaultMessage: "Add Payment Product"
+  },
+  add: {
+    id: "app.admin.doctors.add",
+    description: "",
+    defaultMessage: "Add"
   }
 });
 

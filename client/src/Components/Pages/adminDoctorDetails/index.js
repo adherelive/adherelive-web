@@ -20,6 +20,9 @@ import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 import Tooltip from "antd/es/tooltip";
 
+import Menu from "antd/es/menu";
+import Dropdown from "antd/es/dropdown";
+
 class AdminDoctorDetails extends Component {
   constructor(props) {
     super(props);
@@ -92,6 +95,18 @@ class AdminDoctorDetails extends Component {
     history.goBack();
   };
 
+  getMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item onClick={this.navigateToConsultationFee}>
+          <div className="tac">
+            {this.formatMessage(messages.add_payment_product)}
+          </div>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
   getDoctorDetailsHeader = () => {
     // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
@@ -103,16 +118,15 @@ class AdminDoctorDetails extends Component {
           <div>{formatMessage(messages.doctor_details_header_text)}</div>
         </div>
         <div className="flex flex-end align-center">
-          <Button
-            type="primary"
-            className="ml10 add-button "
-            icon={"plus"}
-            onClick={this.navigateToConsultationFee}
+          <Dropdown
+            overlay={this.getMenu()}
+            trigger={["click"]}
+            placement="bottomRight"
           >
-            <span className="fs16">
-              {this.formatMessage(messages.add_payment_product)}
-            </span>
-          </Button>
+            <Button type="primary" className="ml10 add-button " icon={"plus"}>
+              <span className="fs16">{this.formatMessage(messages.add)}</span>
+            </Button>
+          </Dropdown>
         </div>
       </div>
     );
