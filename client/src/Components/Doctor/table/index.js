@@ -8,6 +8,8 @@ import Icon from "antd/es/icon";
 import generateRow from "./dataRow";
 import getColumn from "./header";
 
+import messages from "./messages";
+
 class DoctorTable extends Component {
     // constructor(props) {
     //     super(props);
@@ -59,8 +61,15 @@ class DoctorTable extends Component {
         };
     };
 
+    getTableTitle = () => {
+        const {intl: {formatMessage} = {}} = this.props;
+      return (
+        <div className="fs22 fw600">{formatMessage(messages.doctors)}</div>
+      );
+    };
+
     render() {
-        const { onRow, getLoadingComponent, getDataSource } = this;
+        const { onRow, getLoadingComponent, getDataSource, getTableTitle } = this;
 
         const {
             loading,
@@ -81,6 +90,7 @@ class DoctorTable extends Component {
                 dataSource={getDataSource()}
                 scroll={{ x: 1600 }}
                 pagination={{ position: pagination_bottom ? "bottom" : "top" }}
+                title={getTableTitle}
             // pagination={{
             //     position: "bottom"
             // }}

@@ -90,10 +90,10 @@ class ProviderDoctorPage extends Component {
             //     </div>
             // </Fragment>
             <Fragment>
-                    <div className=" p20">
+                    <div className="p20">
          
                 <div
-                    className={`mt20 flex direction-row justify-space-between align-center`}
+                    className={`mt10 flex direction-row justify-space-between align-center`}
                 >
               {providerName !== "" ? (
                 <div className="fs28 fw700">
@@ -105,10 +105,9 @@ class ProviderDoctorPage extends Component {
                 </div>
               )}
               {(authPermissions.includes(PERMISSIONS.ADD_DOCTOR) ) && (
-                <div className="flex direction-row justify-space-between align-center  mr20">
+                <div className="flex direction-row justify-space-between align-center">
 
                   <Dropdown
-                    className={"mr10 "}
                     overlay={this.getMenu()}
                     trigger={["click"]}
                     placement="bottomRight"
@@ -124,11 +123,7 @@ class ProviderDoctorPage extends Component {
                 
             </div>
 
-            <div className="tac">
-              <span className="fs24 fw600">{this.formatMessage(messages.doctors)}</span>
-            </div>
-
-            <div className="mt20 wp100 pl14 pr14 flex align-center justify-center">
+            <div className="mt20 wp100 flex align-center justify-center provider-doctor-table">
                     <DoctorTable />
             </div>
 
