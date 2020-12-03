@@ -37,7 +37,11 @@ class ConsultationFeeTable extends Component {
   };
 
   getDataSource = () => {
-    const { doctorPaymentProducts, deleteDoctorProduct } = this.props;
+    const {
+      doctorPaymentProducts,
+      deleteDoctorProduct,
+      editDoctorProduct = null
+    } = this.props;
 
     // const {onRowClick} = this;
     let options = [];
@@ -46,7 +50,8 @@ class ConsultationFeeTable extends Component {
       options.push(
         generateRow({
           ...doctorPaymentProducts[each],
-          deleteDoctorProduct
+          deleteDoctorProduct,
+          editDoctorProduct
         })
       );
     }

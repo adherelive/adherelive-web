@@ -7,7 +7,6 @@ import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultation
 
 import ConsultationFeeTable from "../doctorSettingsPage/consultationFeeTable/index";
 
-import plus from "../../../Assets/images/plus.png";
 import messages from "./messages";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
@@ -19,11 +18,7 @@ class ProviderDoctorPaymentProduct extends Component {
       defaultPaymentsProducts: {},
       doctorPaymentProducts: {},
       noDoctorPaymentProducts: true,
-      isUpdated: false,
-      // selectedKey: PAYMENT_DETAILS,
-      noAccountDetails: true,
-      account_details: {},
-      editDetailsSelectedID: null
+      isUpdated: false
     };
   }
 
@@ -68,7 +63,7 @@ class ProviderDoctorPaymentProduct extends Component {
   async handleGetAdminPaymentProduct() {
     try {
       this.setState({ fetchingAdminPayments: true });
-      const { getAdminPaymentProduct, getDoctorPaymentProduct } = this.props;
+      const { getAdminPaymentProduct } = this.props;
       const response = await getAdminPaymentProduct();
       const { status, payload: { data: { payment_products = {} } = {} } = {} } =
         response || {};
@@ -111,7 +106,6 @@ class ProviderDoctorPaymentProduct extends Component {
             <span className="w200 fs20">
               {this.formatMessage(messages.addFee)}
             </span>
-            {/* Add */}
           </Button>
         </div>
       </div>
@@ -119,11 +113,7 @@ class ProviderDoctorPaymentProduct extends Component {
   };
 
   consultationFeeDisplay = () => {
-    const {
-      noDoctorPaymentProducts,
-      //   selectedKey,
-      doctorPaymentProducts
-    } = this.state;
+    const { noDoctorPaymentProducts, doctorPaymentProducts } = this.state;
 
     return (
       <div className="wp100 flex direction-column justify-space-between">
@@ -134,11 +124,10 @@ class ProviderDoctorPaymentProduct extends Component {
             </div>
           ) : (
             <div className="wp100 pl20 pr20 flex direction-column align-center justify-center">
-              {/* {this.displayDoctorPaymentProducts()} */}
-
               <ConsultationFeeTable
                 doctorPaymentProducts={doctorPaymentProducts}
                 deleteDoctorProduct={this.deleteDoctorProduct}
+                editDoctorProduct={this.displayEditDoctorPaymentProduct}
               />
             </div>
           )}
@@ -150,6 +139,13 @@ class ProviderDoctorPaymentProduct extends Component {
   displayAddDoctorPaymentProduct = () => {
     const { openConsultationFeeDrawer } = this.props;
     openConsultationFeeDrawer();
+  };
+
+  displayEditDoctorPaymentProduct = id => () => {
+    const { openConsultationFeeDrawer } = this.props;
+    const { doctorPaymentProducts } = this.state;
+    const { [id]: paymentData } = doctorPaymentProducts;
+    openConsultationFeeDrawer(paymentData);
   };
 
   deleteDoctorProduct = (id, name, type, amount) => () => {
@@ -169,7 +165,6 @@ class ProviderDoctorPaymentProduct extends Component {
 
       if (status) {
         this.setIsUpdated();
-        // this.updateAccountDetailsAdded();
         message.success(
           this.formatMessage(messages.deleteDoctorProductSuccess)
         );

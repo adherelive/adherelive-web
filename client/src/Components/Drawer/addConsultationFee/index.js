@@ -32,7 +32,9 @@ class addNewConsultationDrawer extends Component {
       newConsultationTypeText: "",
       newConsultationFee: "",
       fetchingAdminPayments: false,
-      selectedFeeRadio: ""
+      selectedFeeRadio: "",
+      consultationFeeId: null,
+      payload: null
     };
   }
 
@@ -49,7 +51,27 @@ class addNewConsultationDrawer extends Component {
     if (selectedFeeRadio !== prev_selectedFeeRadio) {
       this.setFieldValues();
     }
+    this.updateConsultationFeeData();
   }
+
+  updateConsultationFeeData = () => {
+    const { payload: updatedPayload = {} } = this.props;
+    const { payload } = this.state;
+    if (updatedPayload !== payload) {
+      const {
+        basic_info: { name = "", amount = "", type = "", id = null } = {}
+      } = updatedPayload;
+
+      this.setState({
+        newConsultationName: name,
+        newConsultationFee: amount,
+        newConsultationType: type,
+        payload: updatedPayload,
+        selectedFeeRadio: type,
+        consultationFeeId: id
+      });
+    }
+  };
 
   setFee = e => {
     const { value } = e.target;
@@ -73,22 +95,22 @@ class addNewConsultationDrawer extends Component {
       this.setState({
         newConsultationName: "Tele-Medicine",
         newConsultationType: "1",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"],
-        newConsultationFee: ""
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
+        // newConsultationFee: ""
       });
     } else if (selectedFeeRadio === "2") {
       this.setState({
         newConsultationName: "Offline Consultation",
         newConsultationType: "1",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"],
-        newConsultationFee: ""
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
+        // newConsultationFee: ""
       });
     } else if (selectedFeeRadio === "3") {
       this.setState({
         newConsultationName: "Adherence Monitoring",
         newConsultationType: "2",
-        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["2"],
-        newConsultationFee: ""
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["2"]
+        // newConsultationFee: ""
       });
     }
   };
@@ -134,7 +156,8 @@ class addNewConsultationDrawer extends Component {
       newConsultationName = "",
       newConsultationType = "",
       newConsultationTypeText = "",
-      newConsultationFee = ""
+      newConsultationFee = "",
+      consultationFeeId = null
     } = this.state;
     return (
       <div className="form-block-ap">
@@ -225,7 +248,8 @@ class addNewConsultationDrawer extends Component {
     const {
       newConsultationName = "",
       newConsultationType = "",
-      newConsultationFee = ""
+      newConsultationFee = "",
+      consultationFeeId = null
     } = this.state;
     const validate = this.validateData();
     const { submit } = this.props;
@@ -241,6 +265,9 @@ class addNewConsultationDrawer extends Component {
       if (doctor_id) {
         toSubmitData = { ...toSubmitData, doctor_id };
       }
+      if (consultationFeeId) {
+        toSubmitData = { ...toSubmitData, ...{ id: consultationFeeId } };
+      }
 
       this.handleSubmit(toSubmitData);
     }
@@ -251,6 +278,7 @@ class addNewConsultationDrawer extends Component {
       const { addDoctorPaymentProduct, setIsUpdated } = this.props;
       const { close } = this.props;
       const response = await addDoctorPaymentProduct(data);
+      const { consultationFeeId = null } = this.state;
       const {
         status,
         payload: {
@@ -258,7 +286,10 @@ class addNewConsultationDrawer extends Component {
         } = {}
       } = response || {};
       if (status) {
-        message.success(this.formatMessage(messages.ConsultationFeeAddSuccess));
+        const successMessage = consultationFeeId
+          ? this.formatMessage(messages.ConsultationFeeEditSuccess)
+          : this.formatMessage(messages.ConsultationFeeAddSuccess);
+        message.success(successMessage);
         setIsUpdated();
         this.onClose();
       } else {
@@ -289,6 +320,10 @@ class addNewConsultationDrawer extends Component {
     console.log();
     const { visible } = this.props;
     const { onClose, renderAddNewConsultationFee } = this;
+    const { consultationFeeId } = this.state;
+    const title = consultationFeeId
+      ? this.formatMessage(messages.editConsultationFee)
+      : this.formatMessage(messages.addConsultationFee);
 
     if (visible !== true) {
       return null;
@@ -296,7 +331,7 @@ class addNewConsultationDrawer extends Component {
     return (
       <Fragment>
         <Drawer
-          title={this.formatMessage(messages.addConsultationFee)}
+          title={title}
           placement="right"
           maskClosable={false}
           headerStyle={{

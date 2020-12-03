@@ -41,21 +41,43 @@ class PaymentController extends Controller {
       }
 
       const dataToAdd = PaymentHelper.getFormattedData(body);
-
       const paymentProductService = new PaymentProductService();
-      const paymentProductData = await paymentProductService.addDoctorProduct({
-        ...dataToAdd,
-        creator_id: doctorId,
-        creator_type: USER_CATEGORY.DOCTOR,
-        product_user_type: "patient" // todo: change to constant in model
-      });
 
-      if (paymentProductData) {
-        let paymentProducts = {};
+      const { id = null, ...rest } = dataToAdd || {};
 
-        const paymentProduct = await PaymentProductWrapper({
-          data: paymentProductData
+      let paymentProduct = null;
+
+      if (id) {
+        // update
+        const updatePaymentProductData = await paymentProductService.updateDoctorProduct(
+          {
+            ...rest
+          },
+          id
+        );
+
+        paymentProduct = await PaymentProductWrapper({
+          id
         });
+      } else {
+        const paymentProductData = await paymentProductService.addDoctorProduct(
+          {
+            ...dataToAdd,
+            creator_id: doctorId,
+            creator_type: USER_CATEGORY.DOCTOR,
+            product_user_type: "patient" // todo: change to constant in model
+          }
+        );
+
+        if (paymentProductData) {
+          paymentProduct = await PaymentProductWrapper({
+            data: paymentProductData
+          });
+        }
+      }
+
+      if (paymentProduct) {
+        let paymentProducts = {};
         paymentProducts[paymentProduct.getId()] = paymentProduct.getBasicInfo();
 
         return raiseSuccess(
