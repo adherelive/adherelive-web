@@ -1,6 +1,15 @@
+import { CodeArtifact } from "aws-sdk";
 import { REQUEST_TYPE } from "../../constant";
 import { doRequest } from "../../Helper/network";
 import { Doctor } from "../../Helper/urls";
+
+import { sendPasswordMailUrl } from "../../Helper/urls/provider";
+
+
+
+export const SEND_PASSWORD_MAIL = "SEND_PASSWORD_MAIL";
+export const SEND_PASSWORD_MAIL_COMPLETED = "SEND_PASSWORD_MAIL_COMPLETED";
+export const SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR = "SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR";
 
 
 export const DOCTOR_PROFILE_UPDATE = "DOCTOR_PROFILE_UPDATE";
@@ -41,6 +50,25 @@ export const REGISTER_REGISTRATION_COMPLETED = "REGISTER_REGISTRATION_COMPLETED"
 export const REGISTER_REGISTRATION_COMPLETED_WITH_ERROR = "REGISTER_REGISTRATION_COMPLETED_WITH_ERROR";
 
 
+export const NEW_DOCTOR="NEW_DOCTOR";
+
+export const callNewDoctorAction = (doctor_id) => {
+  return async (dispatch) => {
+    try {
+      
+        dispatch ({
+          type : NEW_DOCTOR,
+          data: {doctor_id}
+        })
+      
+    } catch (err) {
+      console.log("New Doctor Error", err);
+      throw err;
+    }
+
+  }
+
+}
 
 export const doctorProfileRegister = (payload) => {
   let response = {};
@@ -57,6 +85,8 @@ export const doctorProfileRegister = (payload) => {
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
+       const {doctors = {}} = data; 
+
       if (status === false) {
         dispatch({
           type: DOCTOR_PROFILE_UPDATE_COMPLETED_WITH_ERROR,
@@ -64,10 +94,22 @@ export const doctorProfileRegister = (payload) => {
         });
       } else if (status === true) {
 
+        const {doctors = {}} = data || {};
+        
+
+
         dispatch({
           type: DOCTOR_PROFILE_UPDATE_COMPLETED,
           data: data
         });
+
+        if(Object.keys(doctors).length > 0)
+        {
+          const doctor_id = Object.keys(doctors)[0];
+          callNewDoctorAction(doctor_id);
+        }
+
+
       }
     } catch (err) {
       console.log("err signin", err);
@@ -77,6 +119,48 @@ export const doctorProfileRegister = (payload) => {
     return response;
   };
 };
+
+
+
+export const sendPasswordMail = (payload) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: SEND_PASSWORD_MAIL });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: sendPasswordMailUrl(),
+        data: payload,
+      });
+
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+        if (status === true) {
+          dispatch({
+            type: SEND_PASSWORD_MAIL_COMPLETED,
+            payload: data,
+            data
+          });
+        } else {
+          dispatch({ type: SEND_PASSWORD_MAIL_COMPLETED_WITH_ERROR, payload: error });
+        }
+
+  
+    } catch (err) {
+      console.log("err password mail", err);
+      throw err;
+    }
+
+    return response;
+  };
+};
+
+
+
+
 
 export const doctorQualificationRegister = (payload) => {
   let response = {};
@@ -189,7 +273,7 @@ export const getDoctorProfileRegisterData = (userId) => {
   };
 }
 
-export const getDoctorQualificationRegisterData = () => {
+export const getDoctorQualificationRegisterData = (payload) => {
   let response = {};
   const {doctor_id = ""} = payload || {};
   return async (dispatch) => {
@@ -198,11 +282,14 @@ export const getDoctorQualificationRegisterData = () => {
 
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: Doctor.getdoctorQualificationRegisterDataUrl(),
+        url: Doctor.getdoctorQualificationRegisterDataUrl(doctor_id),
+        // data: payload
       });
 
       const { status, payload: { error = "", data = {} } = {} } =
         response || {};
+
+      console.log("01831283908 response ---> ", {payload, response});
 
       if (status === false) {
         dispatch({
@@ -372,10 +459,24 @@ export const deleteDoctorRegistrationImage = (registrationId, document) => {
 export default (state = {}, action) => {
   const { data, type } = action;
   switch (type) {
+    
+    case NEW_DOCTOR:
+      const {doctor_id = ''} = data;
+      if(doctor_id){
+        return {
+          ...state,
+          new_doctor_created_id:doctor_id
+        }   
+      }else{
+        return {...state}
+      }
+      
+
     case GET_DOCTOR_PROFILE_DATA_COMPLETED:
       return {
         profileData: data.profileData
       };
+
     case GET_DOCTOR_QUALIFICATION_DATA_COMPLETED:
       return {
         qualificationData: data.qualificationData,

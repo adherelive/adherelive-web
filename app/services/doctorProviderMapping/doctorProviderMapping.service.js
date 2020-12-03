@@ -25,6 +25,21 @@ class DoctorProviderMappingService {
       throw error;
     }
   };
+
+  getProviderForDoctor = async doctor_id => {
+    try {
+      const doctorProviderMapping = await Database.getModel(TABLE_NAME).findOne(
+        {
+          where: {
+            doctor_id
+          }
+        }
+      );
+      return doctorProviderMapping;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default new DoctorProviderMappingService();

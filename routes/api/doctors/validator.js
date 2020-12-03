@@ -110,6 +110,9 @@ const addQualificationRegistrationForm = Joi.object().keys({
   speciality_id: Joi.number()
     .required()
     .label("Speciality is required"),
+  doctor_id: Joi.number()
+    .optional()
+    .allow("", null),
   qualification_details: Joi.array().items(
     Joi.object().keys({
       college_id: Joi.string()
@@ -179,6 +182,9 @@ const addQualificationStepForm = Joi.object().keys({
   speciality_id: Joi.number()
     .required()
     .label("Speciality is required"),
+  doctor_id: Joi.number()
+    .optional()
+    .allow("", null),
   qualification: Joi.object().keys({
     college_id: Joi.string()
       .optional()
@@ -214,6 +220,9 @@ const addRegistrationStepForm = Joi.object().keys({
   speciality_id: Joi.number()
     .required()
     .label("Speciality is required"),
+  doctor_id: Joi.number()
+    .optional()
+    .allow("", null),
   qualification_details: Joi.array().items(
     Joi.object().keys({
       photo: Joi.array()
@@ -278,6 +287,9 @@ const addRegistrationStepForm = Joi.object().keys({
 });
 
 const addClinicsForm = Joi.object().keys({
+  doctor_id: Joi.number()
+    .optional()
+    .allow("", null),
   clinics: Joi.array().items(
     Joi.object().keys({
       name: Joi.string()

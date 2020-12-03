@@ -2,6 +2,7 @@
 import express from "express";
 import Authenticate from "../middleware/auth";
 import { isDoctor } from "../middleware/doctor";
+import { isDoctorOrProvider } from "../middleware/isDoctorOrProvider";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
 import PaymentController from "../../../app/controllers/payments/payment.controller";
 import * as validator from "./validator";
@@ -92,7 +93,7 @@ router.post("/watchlist/:patient_id", DoctorController.addPatientToWatchlist);
 router.post(
   "/consultations",
   Authenticate,
-  isDoctor,
+  isDoctorOrProvider,
   // validator.validatePaymentProduct,
   PaymentController.addDoctorPaymentProduct
 );
@@ -102,14 +103,14 @@ router.post(
   Authenticate,
   validator.validateAddPatientData,
   DoctorController.updatePatientAndCareplan
-)
+);
 
-router.delete(            
-    "/consultations",
-    Authenticate,
-    isDoctor,
-    // validator.validatePaymentProduct,
-    PaymentController.removeDoctorPaymentProduct
+router.delete(
+  "/consultations",
+  Authenticate,
+  isDoctorOrProvider,
+  // validator.validatePaymentProduct,
+  PaymentController.removeDoctorPaymentProduct
 );
 
 router.post(
@@ -127,12 +128,12 @@ router.delete(
   DoctorController.removePatientFromWatchlist
 );
 
-router.get("/", Authenticate, DoctorController.getAllDoctorDetails);
+router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
 
 router.get(
   "/consultations",
   Authenticate,
-  isDoctor,
+  isDoctorOrProvider,
   PaymentController.getAllDoctorPaymentProduct
 );
 
