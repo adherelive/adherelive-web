@@ -60,7 +60,7 @@ module.exports = {
         category: "admin",
         verified: 1,
         onboarded: 1,
-        mobile_number: "1234567890",
+        mobile_number: "12345678900",
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),

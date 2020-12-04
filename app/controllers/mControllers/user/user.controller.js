@@ -398,7 +398,7 @@ class MobileUserController extends Controller {
       if (userExits !== null) {
         return raiseClientError(
           res,
-          11000,
+          422,
           errMessage.EMAIL_ALREADY_EXISTS,
           errMessage.EMAIL_ALREADY_EXISTS.message
         );
