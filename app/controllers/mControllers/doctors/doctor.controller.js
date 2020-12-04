@@ -103,7 +103,7 @@ class MobileDoctorController extends Controller {
       const mobileNumberExist = await userService.getUserByData({
         mobile_number
       });
-      if (mobileNumberExist) {
+      if (mobileNumberExist && mobileNumberExist.length) {
         const prevUser = await UserWrapper(mobileNumberExist[0].get());
         const prevUserId = prevUser.getId();
         if (prevUserId !== userId) {
