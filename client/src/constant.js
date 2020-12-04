@@ -20,6 +20,7 @@ export const PATH = {
   PATIENT_CONSULTING: "/patient-consulting/:patient_id",
   PATIENT_CONSULTING_VIDEO: "/patient-consulting-video/:room_id",
   RESET_PASSWORD: "/reset-password/:link",
+  REGISTER_FROM_PROFILE:"/register-from-profile",
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"

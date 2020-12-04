@@ -312,6 +312,7 @@ class ClinicRegister extends Component {
 
     onNextClick = () => {
         const { history, showVerifyModal } = this.props;
+        const { authenticated_category } = this.props;
         const validate = this.validateData();
         const {doctor_id} = this.state;
         if (validate) {
@@ -340,7 +341,17 @@ class ClinicRegister extends Component {
                 if (status) {
                     showVerifyModal(true);
                     // message.success(this.formatMessage(messages.successgetAdminVerified))
-                    history.replace(PATH.DASHBOARD);
+                    if(authenticated_category === USER_CATEGORY.PROVIDER){
+                        if( window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)){
+                            history.push(`/doctors/${doctor_id}`);
+                        }else{
+                            history.replace(PATH.DASHBOARD);
+                        }
+                    }
+                    else{   
+                        history.replace(PATH.DASHBOARD);
+
+                    }
                 } else {
                     message.error(errorMessage);
                 };
@@ -352,8 +363,12 @@ class ClinicRegister extends Component {
         const { history ,authenticated_category } = this.props;
         const {doctor_id} = this.state;
         if(authenticated_category === USER_CATEGORY.PROVIDER){
-        
-            history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
+            if( window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)){
+                history.push(`/doctors/${doctor_id}`);
+            }else{
+                history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
+            }
+                
         }else{
             history.replace(PATH.REGISTER_QUALIFICATIONS);
         }

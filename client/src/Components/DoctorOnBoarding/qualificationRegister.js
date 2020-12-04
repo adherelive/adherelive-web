@@ -1367,12 +1367,20 @@ class QualificationRegister extends Component {
       doctorQualificationRegister(data).then(response => {
         const { status } = response;
         if (status) {
+              
           if(authenticated_category === USER_CATEGORY.PROVIDER){
-            history.replace(`${PATH.REGISTER_CLINICS}/${doctor_id}`);
+            if( window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)){
+                history.push(`/doctors/${doctor_id}`);
+            }else{
+              history.replace(`${PATH.REGISTER_CLINICS}/${doctor_id}`);
+            }
         }
-        else{
+        else{   
           history.replace(PATH.REGISTER_CLINICS);
+
         }
+
+       
          
         } else {
           message.error(this.formatMessage(messages.somethingWentWrong))
@@ -1387,10 +1395,17 @@ class QualificationRegister extends Component {
     const { history,authenticated_category } = this.props;
     const {doctor_id} = this.state;
     if(authenticated_category === USER_CATEGORY.PROVIDER){
-      history.replace(`${PATH.REGISTER_PROFILE}/${doctor_id}`);
+      if( window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)){
+          history.push(`/doctors/${doctor_id}`);
+      }else{
+        history.replace(`${PATH.REGISTER_PROFILE}/${doctor_id}`);
+      }
+          
     }else{
       history.replace(PATH.REGISTER_PROFILE);
-  }
+    }
+
+
   }
 
 

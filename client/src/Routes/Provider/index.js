@@ -64,6 +64,7 @@ class ProviderDoctor extends Component {
   render() {
     const { redirecting = false } = this.state;
     const { authRedirection } = this.props;
+
     return (
       <Fragment>
         <Router>
@@ -105,10 +106,23 @@ class ProviderDoctor extends Component {
                   path={PATH.PROVIDER_REGISTER_QUALIFICATIONS}
                   component={RegisterQualifications}
                 />
+
+                <Route
+                exact
+                path={`${PATH.REGISTER_FROM_PROFILE}${PATH.PROVIDER_REGISTER_QUALIFICATIONS}`}
+                component = {RegisterQualifications}
+                />
+
                 <Route
                   exact
                   path={PATH.PROVIDER_REGISTER_CLINICS}
                   component={RegisterClinics}
+                />
+
+                <Route
+                exact
+                path={`${PATH.REGISTER_FROM_PROFILE}${PATH.PROVIDER_REGISTER_CLINICS}`}
+                component = {RegisterClinics}
                 />
 
                 <Route exact path={""} component={ProviderDoctorPage} />

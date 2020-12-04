@@ -456,12 +456,7 @@ class DoctorController extends Controller {
       const mobileNumberExist = await userService.getUserByData({
         mobile_number
       });
-<<<<<<< HEAD
-      
-      if (mobileNumberExist && mobileNumberExist.length>0 ) {
-=======
       if (mobileNumberExist && mobileNumberExist.length) {
->>>>>>> ffee926e9b433384a2dcbc9d5d07a24658bae217
         const prevUser = await UserWrapper(mobileNumberExist[0].get());
         const prevUserId = prevUser.getId();
         if (prevUserId !== userId) {
@@ -798,7 +793,6 @@ class DoctorController extends Controller {
         }
 
         if (clinic_details) {
-          Logger.debug("inside");
           for (const clinic of clinic_details) {
             let clinicDetails = {};
             const {
