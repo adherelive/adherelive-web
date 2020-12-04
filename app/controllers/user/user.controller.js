@@ -615,7 +615,7 @@ class UserController extends Controller {
           "authUserDetails.isActivated() --> ",
           authUserDetails.isActivated()
         );
-        Logger.debug("permissions --> ", permissions);
+        // Logger.debug("permissions --> ", permissions);
 
         // speciality temp todo
         let referenceData = {};

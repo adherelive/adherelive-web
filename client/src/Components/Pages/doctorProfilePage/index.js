@@ -2387,12 +2387,17 @@ onChangeClinicLocation = clinic_id => (value) => {
     basic_info :{user_id} = {}
     } = doctors[id] || {};
 
-    const {activated_on} = users[user_id]  || {};
-    console.log("32424234324324",users[user_id] );
+    let {activated_on} = users[user_id]  || {};
+    const {id : doctor_id = ''} = this.props;
+    const {doctor_user_id =''} = this.state; 
+    const {basic_info : {user_id : d_user_id = ''} = {}} =  doctors[doctor_user_id] || {};
+
     const disabled =
       doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
       doctor_registration_ids.length === 0 || (activated_on !== null && authenticated_category !== USER_CATEGORY.PROVIDER);
+
+      console.log("DISABLED ====>", activated_on !== null);
 
     return (
       <div className="mt20 wi flex justify-end">
