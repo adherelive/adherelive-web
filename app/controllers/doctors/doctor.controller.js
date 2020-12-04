@@ -453,6 +453,22 @@ class DoctorController extends Controller {
         onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
       };
 
+      const mobileNumberExist = await userService.getUserByData({
+        mobile_number
+      });
+      if (mobileNumberExist) {
+        const prevUser = await UserWrapper(mobileNumberExist[0].get());
+        const prevUserId = prevUser.getId();
+        if (prevUserId !== userId) {
+          return this.raiseClientError(
+            res,
+            422,
+            {},
+            "This mobile number is already registered."
+          );
+        }
+      }
+
       let doctorUserId = null;
 
       if (is_provider) {
@@ -1722,7 +1738,7 @@ class DoctorController extends Controller {
         doctor_id = null
       } = body || {};
 
-      Logger.debug("3456754321345643",doctor_id);
+      Logger.debug("3456754321345643", doctor_id);
 
       let doctorData = null;
 
@@ -2009,7 +2025,10 @@ class DoctorController extends Controller {
   getAllDoctorDetails = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {}, params: {doctor_id = null} = {} } = req;
+      const {
+        userDetails: { userId } = {},
+        params: { doctor_id = null } = {}
+      } = req;
 
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
 
@@ -2024,17 +2043,11 @@ class DoctorController extends Controller {
 
       let doctorWrapper = null;
 
-      if(doctor_id) {
+      if (doctor_id) {
         doctorWrapper = await DoctorWrapper(null, doctor_id);
       } else {
-
         if (!doctors) {
-          return raiseClientError(
-              res,
-              422,
-              {},
-              "Doctor details not updated"
-          );
+          return raiseClientError(res, 422, {}, "Doctor details not updated");
         }
 
         doctorWrapper = await DoctorWrapper(doctors);
