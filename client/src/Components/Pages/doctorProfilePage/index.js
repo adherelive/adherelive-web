@@ -29,7 +29,7 @@ import {
 import moment from "moment";
 import messages from "./messages";
 import { getUploadURL, updateDoctorURL, getUploadQualificationDocumentUrl, getUploadRegistrationDocumentUrl } from '../../../Helper/urls/doctor';
-import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM, REQUEST_TYPE, MALE, GENDER, FEMALE, OTHER, FULL_DAYS, FULL_DAYS_NUMBER, HTTP_CODE_SERVER_ERROR } from "../../../constant";
+import {USER_CATEGORY, TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM, REQUEST_TYPE, MALE, GENDER, FEMALE, OTHER, FULL_DAYS, FULL_DAYS_NUMBER, HTTP_CODE_SERVER_ERROR } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 
@@ -189,16 +189,87 @@ class DoctorProfilePage extends Component {
         try {
         this.setState({ loading: true });
         const { getDoctorDetails } = this.props;
+        const { 
+          auth: {authenticated_category = ''}} = this.props;
+
         const response = await getDoctorDetails();
+
         const {
             status,
-            payload: { message: { message: responseMessage } = {} } = {}
+            payload: { data = {},message: { message: responseMessage } = {} } = {}
         } = response || {};
 
         if (status === true) {
-            this.setState({
-            loading: false
-            });
+
+              if(authenticated_category === USER_CATEGORY.PROVIDER){
+
+                const { id: doctorId } = this.props;
+                let doctor_user_id = doctorId;
+
+                  const {
+                    colleges = {},
+                    degrees ={},
+                    doctor_clinics ={},
+                    doctor_qualifications ={},
+                    docotr_registrations = {},
+                    doctors= {},
+                    registration_councils ={},
+                    specialities ={},
+                    upload_documents = {},
+                    users = {}
+                  } = data || {};
+
+                  const {
+                    basic_info: {
+                        first_name="",
+                        middle_name="",
+                        last_name="",
+                        profile_pic="",
+                        gender="",
+                        city="",
+                        speciality_id=""
+                    } = {},
+                    doctor_qualification_ids=[],
+                    doctor_registration_ids=[],
+                    doctor_clinic_ids=[]
+                } = doctors[doctor_user_id] || {};
+
+                console.log("433234234234",doctors[doctor_user_id]);
+
+
+
+                    this.setState({
+                    loading: false,
+                    colleges ,
+                    degrees ,
+                    doctor_clinics ,
+                    doctor_qualifications ,
+                    docotr_registrations ,
+                    doctors,
+                    registration_councils ,
+                    specialities ,
+                    upload_documents ,
+                    users ,
+                    first_name,
+                    middle_name,
+                    last_name,
+                    profile_pic,
+                    gender,
+                    city,
+                    speciality_id,
+                    doctor_qualification_ids,
+                    doctor_registration_ids,
+                    doctor_clinic_ids
+                    });
+
+
+
+              }else{
+                this.setState({
+                  loading: false})
+
+              }
+
         } else {
             this.setState({
             loading: false
@@ -218,10 +289,23 @@ class DoctorProfilePage extends Component {
     updateProfileData = async (updateData) => {
         try {
             this.setState({ updateLoading: true });
-            const { auth: {authenticated_user=null}, doctors, users, updateDoctorBasicInfo } = this.props;
+            const { auth: {authenticated_category ='',authenticated_user=null}, doctors, users, updateDoctorBasicInfo } = this.props;
             const { id } = authenticated_user;
-            let response = await updateDoctorBasicInfo(authenticated_user,updateData);
-            const { status , payload : { message:respMessage }, statusCode} = response;
+            let response ={};
+
+            if(authenticated_category === USER_CATEGORY.PROVIDER){
+              const {doctors = {} , doctor_user_id =''} = this.state; 
+              const {basic_info : {user_id : d_user_id = ''} = {}} =  doctors[doctor_user_id] || {};
+              console.log("7867897657894535",doctors[doctor_user_id]);
+              console.log("43535435345345345345",this.state);
+             response = await updateDoctorBasicInfo(d_user_id,updateData);
+             console.log("RESPONSE OF UPDATE ====>",response);
+            }else{
+             response = await updateDoctorBasicInfo(authenticated_user,updateData);
+            }
+           
+            
+            const { status , payload : { message:respMessage }, statusCode} = response ;
             if(status){
                 this.setState({
                     updateLoading: false
@@ -805,7 +889,14 @@ class DoctorProfilePage extends Component {
     history.goBack();
   };
   renderName = () => {
+    const {first_name='',middle_name='',last_name=''} = this.state;
+    let userName =`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? last_name : ""}`;
+    
       const { edit_name, name } =this.state;
+      if(!name){
+        this.setState({name : userName.trim()})
+      }
+      
       if(edit_name){
         return (
             <div style={{position:"relative"}} >
@@ -1569,7 +1660,7 @@ onChangeClinicLocation = clinic_id => (value) => {
 
     }
     getDoctorBasicDetails = () => {
-        const { auth: {authenticated_user=null}, doctors, users, specialities } = this.props;
+        const { auth: {authenticated_category = "",authenticated_user=null}, doctors, users, specialities } = this.props;
         const current_doctor = doctors[authenticated_user];
         const { profile_pic_url, edit_name, doctor_user_id } = this.state;
         const { formatMessage, handleProfilePicModalOpen } = this;
@@ -1581,6 +1672,36 @@ onChangeClinicLocation = clinic_id => (value) => {
                 speciality_id
             } = {}
         } = doctors[doctor_user_id] || {};
+        
+        // if(authenticated_category === USER_CATEGORY.PROVIDER){
+        //       console.log("45678765456789",doctors[doctor_user_id]);
+        //       const {
+        //         basic_info: {
+        //             user_id,
+        //             gender,
+        //             city,
+        //             speciality_id,
+        //             first_name,
+        //             last_name,
+        //             middle_name,
+        //             profile_pic,
+        //             signature_pic
+        //         } = {}
+        //     } = doctors[doctor_user_id] || {};
+
+        //       if(first_name === ''){
+        //         this.setState({ user_id,
+        //           gender,
+        //           city,
+        //           speciality_id,
+        //           first_name,
+        //           last_name,
+        //           middle_name,
+        //           profile_pic,
+        //           signature_pic})
+        //     } 
+        //   }
+
         const {
         basic_info: {  email, mobile_number, prefix } = {},
         onboarded,
