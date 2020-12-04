@@ -45,7 +45,7 @@ class SideMenu extends Component {
       <div className="pt16">
         <p className="red">
           <span className="fw600">{"Note"}</span>
-          {" : New Doctor signup information is not complete"}
+          {" : Doctor onboard information is not yet completed"}
         </p>
       </div>
     );
@@ -55,7 +55,7 @@ class SideMenu extends Component {
 
    try{
        confirm({
-        title: `Are you sure you want to redirect?`,
+        title: `Are you sure you want to leave?`,
         content: (
           <div>
             {this.warnNote()}
@@ -131,7 +131,8 @@ class SideMenu extends Component {
     const url = window.location.href.split("/");
     let doctor_id=url.length > 4 ? url[url.length - 1] : "";
     
-    if(doctor_id && authenticated_category===USER_CATEGORY.PROVIDER){
+   
+    if(doctor_id && authenticated_category===USER_CATEGORY.PROVIDER && !window.location.href.includes(PATH.ADMIN.DOCTORS.ROOT)){
       this.handleRedirect({key});
     }else{
         switch (key) {

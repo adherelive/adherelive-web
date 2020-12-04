@@ -11,16 +11,25 @@ import getColumn from "./header";
 import messages from "./messages";
 
 class DoctorTable extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
+    constructor(props) {
+        super(props);
+    }
 
     componentDidMount() {
         const { getAllDoctors, doctor_ids } = this.props;
-        if (doctor_ids.length === 0) {
+            getAllDoctors();
+    }
+
+    componentDidUpdate(prevProps,prevState){
+       
+        const {doctor_ids : prev_doctor_ids = []} = prevProps;
+        const {getAllDoctors,doctor_ids = []} = this.props;
+        if(doctor_ids.length !== prev_doctor_ids.length){
             getAllDoctors();
         }
+
     }
+
 
     onSelectChange = selectedRowKeys => {
         this.setState({ selectedRows: selectedRowKeys });
