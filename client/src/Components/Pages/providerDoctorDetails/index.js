@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { injectIntl } from "react-intl";
-import DoctorDetailsPage from "../../../Containers/Pages/doctorDetails";
-// import DoctorEditDetailsPage from "../../../Containers/Pages/doctorProfilePage";
+// import DoctorDetailsPage from "../../../Containers/Pages/doctorDetails";
+import DoctorEditDetailsPage from "../../../Containers/Pages/doctorProfilePage";
 
 class ProviderDoctorDetails extends Component {
     constructor(props) {
@@ -17,7 +17,8 @@ class ProviderDoctorDetails extends Component {
 
         return (
                 // activated_on ? <DoctorDetailsPage id={id} /> : <DoctorEditDetailsPage />
-            <DoctorDetailsPage id={id} />
+            // <DoctorDetailsPage id={id} />
+            <DoctorEditDetailsPage id={id} />
             );
     }
 }

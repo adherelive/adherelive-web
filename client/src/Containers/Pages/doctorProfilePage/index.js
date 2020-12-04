@@ -54,7 +54,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getDoctorDetails: id => () => dispatch(getDoctorProfileDetails()),
+    getDoctorDetails: id => () => dispatch(getDoctorProfileDetails(id)),
     searchSpecialities: (data) => dispatch(searchSpecialties(data)),
     updateDoctorBasicInfo: (user_id,data) => dispatch(updateDoctor(user_id,data)),
     searchDegree: data => dispatch(searchDegree(data)),
@@ -94,12 +94,19 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
       councils,
       specialities
     } = stateProps;
+
+    const {
+        id
+    } = ownProps;
     
   
-    const getDoctorAllDetails = getDoctorDetails();
+    const getDoctorAllDetails = getDoctorDetails(id);
+
+    console.log("1987381738 doctors --> ", doctors);
 
   
     return {
+        id,
       auth,
       users,
       doctors,

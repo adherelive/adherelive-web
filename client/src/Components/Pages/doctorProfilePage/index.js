@@ -52,9 +52,10 @@ class DoctorProfilePage extends Component {
             degrees,
             colleges,
             councils,
-            specialities
+            specialities,
+            id: doctorId
         } = props;
-        let doctor_user_id = 0;
+        let doctor_user_id = doctorId;
         for (let doctor of Object.values(doctors)) {
             let { basic_info: { user_id = 0, id = 0 } = {} } = doctor;
 
@@ -1574,6 +1575,7 @@ onChangeClinicLocation = clinic_id => (value) => {
         const { formatMessage, handleProfilePicModalOpen } = this;
         const {
             basic_info: {
+                user_id,
                 gender,
                 city,
                 speciality_id
@@ -1584,7 +1586,7 @@ onChangeClinicLocation = clinic_id => (value) => {
         onboarded,
         onboarding_status,
         activated_on
-        } = users[authenticated_user] || {};
+        } = users[user_id] || {};
         const {basic_info: {name : specialityName} = {}} = specialities[speciality_id] || {};
 
         return (

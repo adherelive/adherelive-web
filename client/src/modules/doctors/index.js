@@ -475,14 +475,14 @@ export const getDoctorDetails = id => {
   };
 };
 
-export const getDoctorProfileDetails = () => {
+export const getDoctorProfileDetails = (id = "") => {
   let response = {};
   return async dispatch => {
     try {
       dispatch({ type: GET_DOCTOR_DETAILS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getDoctorProfileDetailsUrl()
+        url: getDoctorProfileDetailsUrl(id)
       });
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
