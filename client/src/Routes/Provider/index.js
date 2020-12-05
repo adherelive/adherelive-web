@@ -14,7 +14,7 @@ import SideMenu from "../../Components/Sidebar";
 // FOR DOCTOR TODO: can be in separate doctors folder for easy management
 const ProviderDoctorPage = lazy(() =>
   import(
-    /* webpackChunkName: "AdminDoctorTable" */ "../../Containers/Pages/providerDashboard"
+    /* webpackChunkName: "ProviderDoctorTable" */ "../../Containers/Pages/providerDashboard"
   )
 );
 

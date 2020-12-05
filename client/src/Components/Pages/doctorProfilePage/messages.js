@@ -225,7 +225,27 @@ const messages = defineMessages({
         id: "app.admin.doctors.speciality.text",
         description: "",
         defaultMessage: "Speciality"
-    }
+    },
+    addRegistrationDetails: {
+        id: "app.admin.doctors.addRegistrationDetails",
+        description: "",
+        defaultMessage: "Add Registration Details"
+    },
+    addRegistrationQualificationDetails: {
+        id: "app.admin.doctors.addRegistrationQualificationDetails",
+        description: "",
+        defaultMessage: "Add Qaulification/Registration Details"
+    },
+    addClinicalDetails: {
+        id: "app.admin.doctors.addClinicalDetails",
+        description: "",
+        defaultMessage: "Add Clinic Details"
+    },
+    qualification_update_first: {
+        id: "app.admin.doctors.no.updateQualificationFirst.text",
+        description: "",
+        defaultMessage: "Qualification details need to be updated first"
+    },
 });
 
 export default messages;

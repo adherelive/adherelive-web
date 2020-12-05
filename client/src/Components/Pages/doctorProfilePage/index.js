@@ -270,7 +270,6 @@ class DoctorProfilePage extends Component {
               }else{
                 this.setState({
                   loading: false})
-
               }
 
         } else {
@@ -283,7 +282,7 @@ class DoctorProfilePage extends Component {
         this.setState({
             loading: false
         });
-        message.warn("Somthing wen't wrong, please try again later");
+        message.warn("Something went wrong, please try again later");
         }
     };
 
@@ -332,7 +331,7 @@ class DoctorProfilePage extends Component {
             updateLoading: false
         });
         console.log(error);
-        message.warn("Somthing wen't wrong, please try again later");
+        message.warn("Something went wrong, please try again later");
         }
         return false;
     };
@@ -1465,7 +1464,7 @@ onChangeClinicLocation = clinic_id => (value) => {
       // }
     } catch (err) {
       console.log("err", err);
-      message.warn("Something wen't wrong. Please try again later");
+      message.warn("Something went wrong, please try again later");
       this.setState({ fetchingSpeciality: false });
     }
   };
@@ -2395,7 +2394,6 @@ onChangeClinicLocation = clinic_id => (value) => {
       doctor_qualification_ids.length === 0 ||
       doctor_registration_ids.length === 0 || activated_on !== null 
 
-      console.log("DISABLED ====>", activated_on !== null);
 
     return (
       <div className="mt20 wi flex justify-end">
@@ -2513,7 +2511,7 @@ onChangeClinicLocation = clinic_id => (value) => {
     const { doctor_user_id ='',
     // verified_doctor = false
   } = this.state;
-    const { auth: {authenticated_user=null}, doctors } = this.props;
+    const { auth: {authenticated_category = '', authenticated_user=null}, doctors } = this.props;
     const current_doctor = doctors[authenticated_user];
     const { loading ='', updateLoading ='' } = this.state;
     const {
@@ -2558,8 +2556,14 @@ onChangeClinicLocation = clinic_id => (value) => {
               </div>
             ) : (
               <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
-                {/* {formatMessage(messages.no_qualification_text)} */}
-                <Button onClick={this.addQualificationDetails}>Add Qaulification/Registration Details</Button>
+                {
+                  authenticated_category === USER_CATEGORY.PROVIDER
+                  ?
+                  <Button onClick={this.addQualificationDetails}>{this.formatMessage(messages.addRegistrationQualificationDetails)}</Button>
+                  :
+                  formatMessage(messages.no_qualification_text)
+
+                }
               </div>
             )}
           </div>
@@ -2573,18 +2577,24 @@ onChangeClinicLocation = clinic_id => (value) => {
 
               <div className="border-box">{getDoctorRegistrationDetails()}</div>
             ) : (
-                  doctor_qualification_ids.length > 0 ? (
-                    (<div className="bg-grey wp100 h200 br5 flex align-center justify-center">
-                      {/* {formatMessage(messages.no_registration_text)} */}
-                      <Button onClick={this.addQualificationDetails}>Add Registration Details</Button>
-
-                    </div>)
-                  ) : (
-                    <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
-                      {formatMessage(messages.no_qualification_text)}
-                    </div>
-                  )
-               
+                 
+                   authenticated_category === USER_CATEGORY.PROVIDER
+                   ?
+                      ( doctor_qualification_ids.length > 0 ? (
+                        (<div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                          <Button onClick={this.addQualificationDetails}>{this.formatMessage(messages.addRegistrationDetails)}</Button>
+                        </div>)
+                      ) : (
+                        <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                          {formatMessage(messages.qualification_update_first)}
+                        </div>
+                      ))
+                  :
+                      (
+                        <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                        {formatMessage(messages.no_registration_text)}
+                      </div>
+                      )
             )}
           </div>
 
@@ -2598,15 +2608,27 @@ onChangeClinicLocation = clinic_id => (value) => {
             ) : (
               <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
                       
-                {/* {formatMessage(messages.no_clinic_text)} */}
-                <Button onClick={this.addClinicDetails} >Add Clinic Details</Button>
+                 {
+                   authenticated_category === USER_CATEGORY.PROVIDER
+                   ?
+                   <Button onClick={this.addClinicDetails} >{this.formatMessage(messages.addClinicalDetails)}</Button>
+                   :
+                   formatMessage(messages.no_clinic_text)
+                  }     
 
               </div>
             )}
           </div>
 
           {/*footer*/}
-          {getFooter()}
+          {
+            authenticated_category === USER_CATEGORY.PROVIDER || authenticated_category === USER_CATEGORY.ADMIN
+            ?
+            getFooter()
+            :
+            null
+          }
+
         </div>
 
         {getModalDetails()}
