@@ -11,14 +11,15 @@ import LocationModal from '../../../Components/DoctorOnBoarding/locationmodal';
 import TimingModal from '../../../Components/DoctorOnBoarding/timingModal';
 import plus from '../../../Assets/images/plus.png';
 import PlacesAutocomplete, {
-    geocodeByAddress,
-    getLatLng,
 } from 'react-places-autocomplete';
+
+import Menu from "antd/es/menu";
+import Dropdown from "antd/es/dropdown";
+
 import {
   CheckCircleTwoTone,
   ExclamationCircleTwoTone,
   ArrowLeftOutlined,
-  FileTextOutlined,
   UserOutlined,
   EditOutlined,
   CameraFilled,
@@ -1608,12 +1609,37 @@ onChangeClinicLocation = clinic_id => (value) => {
     getDoctorDetailsHeader = () => {
         // const { id, doctors, users } = this.props;
         const { formatMessage, handleBack } = this;
+        const { auth: {authenticated_category = '', authenticated_user=null}, doctors } = this.props;
+
 
         return (
-        <div className="wp100 mb20 fs28 fw700 flex justify-start align-center">
-            <ArrowLeftOutlined onClick={handleBack} className="mr10" />
-            <div>{formatMessage(messages.doctor_details_header_text)}</div>
-        </div>
+       <div>  
+            <div className="wp100 mb20 fs28 fw700 flex justify-space-between align-center">
+            <div className="flex flex-start align-center">
+              <ArrowLeftOutlined onClick={handleBack} className="mr10" />
+              <div>{formatMessage(messages.doctor_details_header_text)}</div>
+            </div>
+            
+            <div>
+              {authenticated_category === USER_CATEGORY.PROVIDER
+              ?
+                (<div className="flex flex-end align-center">
+                <Dropdown
+                  overlay={this.getMenu()}
+                  trigger={["click"]}
+                  placement="bottomRight"
+                >
+                  <Button type="primary" className="ml10 add-button " icon={"plus"}>
+                    <span className="fs16">{this.formatMessage(messages.add)}</span>
+                  </Button>
+                </Dropdown>
+              </div>)
+              :
+              null}
+            </div>
+
+            </div>
+       </div>
         );
     };
     getBase64 = (img, callback) => {
@@ -2506,6 +2532,27 @@ onChangeClinicLocation = clinic_id => (value) => {
     history.replace(`${PATH.REGISTER_FROM_PROFILE}${PATH.REGISTER_CLINICS}/${doctor_id}`);
   }
 
+
+  getMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item onClick={this.navigateToConsultationFee}>
+          <div className="tac">
+            {this.formatMessage(messages.add_payment_product)}
+          </div>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
+  navigateToConsultationFee = () => {
+    const { history } = this.props;
+    const { id } = this.props;
+    history.push(`/doctors/${id}/payment_products`);
+  };
+
+
+
   render() {
 
     const { doctor_user_id ='',
@@ -2542,8 +2589,10 @@ onChangeClinicLocation = clinic_id => (value) => {
           {/*header*/}
           {getDoctorDetailsHeader()}
 
+
           {/*basic details*/}
           {getDoctorBasicDetails()}
+
 
           {/*qualifications*/}
           <div className="mt20 mb20 wp100 flex direction-column">

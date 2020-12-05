@@ -122,7 +122,7 @@ class ProviderDoctorPage extends Component {
                 
             </div>
 
-            <div className="mt20 wp100 flex align-center justify-center provider-doctor-table">
+            <div className="mt0 wp100 flex align-center justify-center provider-doctor-table">
                     <DoctorTable />
             </div>
 

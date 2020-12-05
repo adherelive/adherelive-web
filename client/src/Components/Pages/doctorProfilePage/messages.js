@@ -234,7 +234,7 @@ const messages = defineMessages({
     addRegistrationQualificationDetails: {
         id: "app.admin.doctors.addRegistrationQualificationDetails",
         description: "",
-        defaultMessage: "Add Qaulification/Registration Details"
+        defaultMessage: "Add Qualification/Registration Details"
     },
     addClinicalDetails: {
         id: "app.admin.doctors.addClinicalDetails",
@@ -246,6 +246,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Qualification details need to be updated first"
     },
+    add_payment_product: {
+        id: "app.admin.doctors.add_payment_product",
+        description: "",
+        defaultMessage: "Add Payment Product"
+    },
+    add: {
+        id: "app.admin.doctors.add",
+        description: "",
+        defaultMessage: "Add"
+      }
 });
 
 export default messages;

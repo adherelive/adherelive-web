@@ -386,7 +386,22 @@ const messages = defineMessages({
     id: "app.doctorOnBoarding.clinicTimings",
     description: "",
     defaultMessage: 'Clinic Timings'
+  },
+  clinicAddSuccess: {
+    id: "app.doctorOnBoarding.clinicAddSuccess",
+    description: "",
+    defaultMessage: 'Clinical Details Added Successfully'
+  },
+  doctorAddSuccess: {
+    id: "app.doctorOnBoarding.doctorAddSuccess",
+    description: "",
+    defaultMessage: 'Doctor Added Successfully'
+  },qualificationAddSuccess: {
+    id: "app.doctorOnBoarding.qualificationAddSuccess",
+    description: "",
+    defaultMessage: 'Qualification Details Added Successfully'
   }
+
 
 
 });
