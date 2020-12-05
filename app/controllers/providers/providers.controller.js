@@ -14,6 +14,7 @@ import degreeService from "../../services/degree/degree.service";
 import collegeService from "../../services/college/college.service";
 import councilService from "../../services/council/council.service";
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
+import appointmentService from "../../services/appointment/appointment.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -27,6 +28,8 @@ import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
+import PatientWrapper from "../../ApiWrapper/web/patient";
 
 import * as PaymentHelper from "../payments/helper";
 
@@ -99,7 +102,6 @@ class ProvidersController extends Controller {
         const { specialities } = await doctorWrapper.getReferenceInfo();
         specialityDetails = { ...specialityDetails, ...specialities };
         userIds.push(doctorWrapper.getUserId());
-
 
         const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
           doctorWrapper.getDoctorId()
@@ -301,11 +303,13 @@ class ProvidersController extends Controller {
       const provider = await ProviderWrapper(providerData);
       const providerId = provider.getProviderId();
 
-      if (!doctor_id) {
+      const doctor = await doctorService.getDoctorByData({ id: doctor_id });
+
+      if (!doctor) {
         return raiseClientError(res, 401, {}, "Invalid doctor.");
       }
 
-      const doctorWrapper = await DoctorWrapper(null, doctor_id);
+      const doctorWrapper = await DoctorWrapper(doctor);
       const doctorUserId = doctorWrapper.getUserId();
 
       const link = uuidv4();
@@ -347,6 +351,186 @@ class ProvidersController extends Controller {
       return raiseSuccess(res, 200, {}, "Password mailed successfully.");
     } catch (error) {
       Logger.debug("mailPassword 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getAppointmentForDoctors = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      const { userDetails: { userId } = {}, query: { date = null } = {} } = req;
+
+      try {
+        const validDate = moment(date).isValid();
+        if (!validDate) {
+          return raiseClientError(res, 402, {}, "Invalid date.");
+        }
+      } catch {
+        return raiseClientError(res, 402, {}, "Invalid date.");
+      }
+
+      const providerData = await providerService.getProviderByData({
+        user_id: userId
+      });
+      const provider = await ProviderWrapper(providerData);
+      const providerId = provider.getProviderId();
+
+      let userApiDetails = {};
+      let doctorApiDetails = {};
+      let patientsApiDetails = {};
+      let appointmentApiDetails = {};
+      let dateWiseAppointmentDetails = {};
+
+      let patientIds = [];
+      let doctorIds = [];
+      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
+        { provider_id: providerId }
+      );
+
+      for (const mappingData of doctorProviderMapping) {
+        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
+        const doctorId = mappingWrapper.getDoctorId();
+        const doctorDetails = await DoctorWrapper(null, doctorId);
+
+        const doctorUserId = doctorDetails.getUserId();
+        const doctorUserData = await UserWrapper(null, doctorUserId);
+
+        userApiDetails[doctorUserId] = doctorUserData.getBasicInfo();
+        doctorApiDetails[doctorId] = doctorDetails.getBasicInfo();
+        doctorIds.push(doctorId);
+      }
+
+      for (const doctorId of doctorIds) {
+        let appointmentList = [];
+
+        if (date) {
+          appointmentList = await appointmentService.getDayAppointmentForDoctor(
+            doctorId,
+            date
+          );
+        }
+
+        if (appointmentList && appointmentList.length) {
+          for (const appointment of appointmentList) {
+            const appointmentData = await AppointmentWrapper(appointment);
+            const {
+              participant_one_id,
+              participant_two_id
+            } = appointmentData.getParticipants();
+
+            const {
+              [appointmentData.getFormattedStartDate()]: dateAppointments = null
+            } = dateWiseAppointmentDetails;
+
+            if (dateAppointments) {
+              dateWiseAppointmentDetails[
+                appointmentData.getFormattedStartDate()
+              ].push(appointmentData.getAppointmentId());
+            } else {
+              dateWiseAppointmentDetails[
+                appointmentData.getFormattedStartDate()
+              ] = [appointmentData.getAppointmentId()];
+            }
+
+            appointmentApiDetails[
+              appointmentData.getAppointmentId()
+            ] = appointmentData.getBasicInfo();
+
+            if (participant_one_id !== doctorId) {
+              patientIds.push(participant_one_id);
+            } else {
+              patientIds.push(participant_two_id);
+            }
+          }
+        }
+      }
+
+      for (const patientId of patientIds) {
+        const patientData = await PatientWrapper(null, patientId);
+        const patientUserId = patientData.getUserId();
+        const patientUserData = await UserWrapper(null, patientUserId);
+
+        userApiDetails[patientUserId] = patientUserData.getBasicInfo();
+        patientsApiDetails[patientId] = patientData.getBasicInfo();
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          users: { ...userApiDetails },
+          doctors: { ...doctorApiDetails },
+          date_wise_appointments: { ...dateWiseAppointmentDetails },
+          patients: { ...patientsApiDetails },
+          appointments: { ...appointmentApiDetails }
+        },
+        "Appointments data fetched successfully."
+      );
+    } catch (error) {
+      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getMonthAppointmentCountForDoctors = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      const { userDetails: { userId } = {}, query: { date = null } = {} } = req;
+
+      try {
+        const validDate = moment(date).isValid();
+        if (!validDate) {
+          return raiseClientError(res, 402, {}, "Invalid date.");
+        }
+      } catch {
+        return raiseClientError(res, 402, {}, "Invalid date.");
+      }
+
+      const providerData = await providerService.getProviderByData({
+        user_id: userId
+      });
+      const provider = await ProviderWrapper(providerData);
+      const providerId = provider.getProviderId();
+
+      let dateWiseAppointmentDetails = {};
+
+      let doctorIds = [];
+      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
+        { provider_id: providerId }
+      );
+
+      for (const mappingData of doctorProviderMapping) {
+        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
+        const doctorId = mappingWrapper.getDoctorId();
+        doctorIds.push(doctorId);
+      }
+
+      for (const doctorId of doctorIds) {
+        const appointmentList = await appointmentService.getMonthAppointmentCountForDoctor(
+          doctorId,
+          date
+        );
+
+        if (appointmentList && appointmentList.length) {
+          for (const appointment of appointmentList) {
+            const start_date = appointment.get("start_date");
+            const count = appointment.get("count");
+
+            dateWiseAppointmentDetails[start_date] = count;
+          }
+        }
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          date_wise_appointments: { ...dateWiseAppointmentDetails }
+        },
+        "Appointments data fetched successfully."
+      );
+    } catch (error) {
+      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };
