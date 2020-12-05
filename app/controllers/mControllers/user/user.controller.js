@@ -2015,6 +2015,10 @@ class MobileUserController extends Controller {
         body: { new_password, confirm_password } = {}
       } = req;
 
+      if (new_password !== confirm_password) {
+        return raiseClientError(res, 422, {}, "Password does not match");
+      }
+
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
       const userData = await UserWrapper(user.get());
@@ -2024,7 +2028,8 @@ class MobileUserController extends Controller {
 
       const updateUser = await userService.updateUser(
         {
-          password: hash
+          password: hash,
+          system_generated_password: false
         },
         userId
       );
@@ -2108,18 +2113,18 @@ class MobileUserController extends Controller {
   updatePassword = async (req, res) => {
     try {
       const {
-        body: { password, confirm_password } = {},
+        body: { new_password, confirm_password } = {},
         userDetails: { userId, userData: { category } = {} } = {}
       } = req;
 
-      if (password !== confirm_password) {
+      if (new_password !== confirm_password) {
         return this.raiseClientError(res, 422, {}, "Password does not match");
       }
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(password, salt);
+      const hash = await bcrypt.hash(new_password, salt);
 
       const updateUser = await userService.updateUser(
-        { password: hash },
+        { password: hash, system_generated_password: false },
         userId
       );
 
