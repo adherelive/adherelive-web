@@ -151,7 +151,11 @@ export const uploadImageS3 = async (userId, file) => {
   }
 };
 
-export const createNewUser = async (email, password) => {
+export const createNewUser = async (
+  email,
+  password,
+  system_generated_password = false
+) => {
   try {
     const userExits = await userService.getUserByEmail({ email });
 
@@ -173,7 +177,8 @@ export const createNewUser = async (email, password) => {
       password: hash,
       sign_in_type: "basic",
       category: "doctor",
-      onboarded: false
+      onboarded: false,
+      system_generated_password
     });
 
     const userPreference = await userPreferenceService.addUserPreference({

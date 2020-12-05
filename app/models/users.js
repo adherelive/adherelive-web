@@ -81,6 +81,10 @@ export const db = database => {
       verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+      },
+      system_generated_password: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {
@@ -99,7 +103,8 @@ export const db = database => {
             onboarded: this.onboarded,
             onboarding_status: this.onboarding_status,
             prefix: this.prefix,
-            verified: this.verified
+            verified: this.verified,
+            system_generated_password: this.system_generated_password
           };
         }
       }

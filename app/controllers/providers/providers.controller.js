@@ -319,7 +319,7 @@ class ProvidersController extends Controller {
       const hash = await bcrypt.hash(newPassword, salt);
 
       const updateUser = await userService.updateUser(
-        { password: hash },
+        { password: hash, system_generated_password: true },
         doctorUserId
       );
 
