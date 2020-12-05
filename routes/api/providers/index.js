@@ -16,6 +16,20 @@ router.post(
   ProvidersController.mailPassword
 );
 
+router.get(
+  "/appointments-count",
+  Authenticate,
+  isProvider,
+  ProvidersController.getMonthAppointmentCountForDoctors
+);
+
+router.get(
+  "/day-appointments",
+  Authenticate,
+  isProvider,
+  ProvidersController.getAppointmentForDoctors
+);
+
 // router.post(
 //   "/payment-products",
 //   Authenticate,
