@@ -89,7 +89,7 @@ class DoctorTable extends Component {
         return (
             <Table
                 onRow={onRow}
-                className="wp100"
+                className="wp100 mt40"
                 rowClassName={() => "pointer"}
                 loading={loading === true ? getLoadingComponent() : false}
                 columns={getColumn({
@@ -98,11 +98,11 @@ class DoctorTable extends Component {
                 })}
                 dataSource={getDataSource()}
                 scroll={{ x: 1600 }}
-                pagination={{ position: pagination_bottom ? "bottom" : "top" }}
                 title={getTableTitle}
-            // pagination={{
-            //     position: "bottom"
-            // }}
+                pagination={{
+                position: "bottom",
+                pageSize:6
+            }}
             />
         );
     }

@@ -475,7 +475,7 @@ export const getDoctorDetails = id => {
   };
 };
 
-export const getDoctorProfileDetails = (id = "") => {
+export const getDoctorProfileDetails = (id=null) => {
   let response = {};
   return async dispatch => {
     try {

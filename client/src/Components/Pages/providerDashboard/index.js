@@ -54,7 +54,6 @@ class ProviderDoctorPage extends Component {
       const {basic_info  : {name: p_name =''}= {}} = providers[providerID] || {};
       providerName = p_name;
 
-      console.log("AUTHENTICATED USER ===>",users[authenticated_user]);
         return (
             // <Fragment>
             //     <div className="wp100 flex direction-column">
