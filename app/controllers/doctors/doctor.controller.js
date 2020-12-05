@@ -380,7 +380,8 @@ class DoctorController extends Controller {
       } = doctorWrapper.getBasicInfo();
 
       let verifyData = {
-        activated_on: moment()
+        activated_on: moment(),
+        verified: true
       };
 
       const userDetails = await userService.updateUser(
