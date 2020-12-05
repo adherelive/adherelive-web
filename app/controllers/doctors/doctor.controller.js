@@ -2043,7 +2043,7 @@ class DoctorController extends Controller {
 
       let doctorWrapper = null;
 
-      if (doctor_id) {
+      if (parseInt(doctor_id) > 0) {
         doctorWrapper = await DoctorWrapper(null, doctor_id);
       } else {
         if (!doctors) {
