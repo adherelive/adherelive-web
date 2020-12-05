@@ -293,6 +293,8 @@ class Profileregister extends Component {
                 console.log(" 32453454RESPONSE FOR DOC PROFILE REGISTER ===>",response);
                 const { status, statusCode, payload: { data: { doctors : response_doctors = {} } = {} } = {} } = response;
                 if (status) {
+                    message.success(this.formatMessage(messages.doctorAddSuccess));
+
                     const {basic_info : {id : doctor_id = null} = {}} = Object.values(response_doctors)[0] || {};
                     if(authenticated_category === USER_CATEGORY.PROVIDER){
                         this.handleSendPasswordMail(doctor_id);

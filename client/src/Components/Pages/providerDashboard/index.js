@@ -92,7 +92,7 @@ class ProviderDoctorPage extends Component {
                     <div className="p20">
          
                 <div
-                    className={`mt10 flex direction-row justify-space-between align-center`}
+                    className={`mb0 mt10 flex direction-row justify-space-between align-center`}
                 >
               {providerName !== "" ? (
                 <div className="fs28 fw700">
@@ -111,7 +111,7 @@ class ProviderDoctorPage extends Component {
                     trigger={["click"]}
                     placement="bottomRight"
                   >
-                        <Button type="primary" className="ml10 add-button " icon={"plus"}>
+                        <Button type="primary" className="ml10 add-button mb0 " icon={"plus"}>
                         <span className="fs16">{this.formatMessage(messages.add)}</span>
                       </Button>
 
@@ -122,7 +122,10 @@ class ProviderDoctorPage extends Component {
                 
             </div>
 
-            <div className="mt20 wp100 flex align-center justify-center provider-doctor-table">
+            {/* <div className="mt0 wp100 flex align-center justify-center provider-doctor-table">
+                    <DoctorTable />
+            </div> */}
+            <div className="wp100 pl14 pr14 flex align-center justify-center">
                     <DoctorTable />
             </div>
 

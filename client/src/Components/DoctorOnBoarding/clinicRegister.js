@@ -341,6 +341,7 @@ class ClinicRegister extends Component {
                 if (status) {
                     showVerifyModal(true);
                     // message.success(this.formatMessage(messages.successgetAdminVerified))
+                    message.success(this.formatMessage(messages.clinicAddSuccess));
                     if(authenticated_category === USER_CATEGORY.PROVIDER){
                         if( window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)){
                             history.push(`/doctors/${doctor_id}`);

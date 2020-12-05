@@ -36,7 +36,8 @@ export const PATH = {
     DOCTORS: {
       DETAILS: "/doctors/:id",
       PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
-    }
+    },
+    CALENDER :"/calender"
   }
 };
 

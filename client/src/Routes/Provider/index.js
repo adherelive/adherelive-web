@@ -48,6 +48,15 @@ const ProviderDoctorPaymentPage = lazy(() =>
   )
 );
 
+
+const DoctorCalenderPage = lazy(() =>
+  import(
+    /* webpackChunkName: "DoctorCalenderPage" */ "../../Containers/Pages/doctorCalender"
+  )
+);
+
+
+
 const ProviderDoctorDetailsComp = props => {
   const { match: { params: { id } = {} } = {} } = props;
   return <ProviderDoctorDetailsPage id={id} />;
@@ -123,6 +132,13 @@ class ProviderDoctor extends Component {
                 exact
                 path={`${PATH.REGISTER_FROM_PROFILE}${PATH.PROVIDER_REGISTER_CLINICS}`}
                 component = {RegisterClinics}
+                />
+
+
+              <Route
+                exact
+                path={PATH.PROVIDER.CALENDER}
+                component = {DoctorCalenderPage}
                 />
 
                 <Route exact path={""} component={ProviderDoctorPage} />

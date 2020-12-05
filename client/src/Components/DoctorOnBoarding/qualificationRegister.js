@@ -1367,7 +1367,8 @@ class QualificationRegister extends Component {
       doctorQualificationRegister(data).then(response => {
         const { status } = response;
         if (status) {
-              
+          message.success(this.formatMessage(messages.qualificationAddSuccess));
+    
           if(authenticated_category === USER_CATEGORY.PROVIDER){
             if( window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)){
                 history.push(`/doctors/${doctor_id}`);

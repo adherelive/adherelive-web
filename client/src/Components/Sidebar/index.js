@@ -8,6 +8,7 @@ import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import notificationIcon from "../../Assets/images/notification.png";
 import { withRouter } from "react-router-dom";
+import {CalendarTwoTone} from "@ant-design/icons";
 
 const { Item: MenuItem, SubMenu } = Menu || {};
 
@@ -18,6 +19,7 @@ const LOG_OUT = "log_out";
 const PROFILE = "profile";
 const SUB_MENU = "sub-menu";
 const SETTINGS = "settings";
+const CALENDER = "calender";
 
 class SideMenu extends Component {
   constructor(props) {
@@ -108,6 +110,11 @@ class SideMenu extends Component {
           openAppointmentDrawer({ doctorUserId: authenticated_user });
         }
         break;
+      case CALENDER :
+        if(authPermissions.includes(PERMISSIONS.ADD_DOCTOR)){
+          history.push(PATH.PROVIDER.CALENDER)
+        }
+        break;
       case LOG_OUT:
         handleLogout();
         break;
@@ -163,6 +170,11 @@ class SideMenu extends Component {
               openAppointmentDrawer({ doctorUserId: authenticated_user });
             }
             break;
+          case CALENDER :
+            if(authPermissions.includes(PERMISSIONS.ADD_DOCTOR)){
+              history.push(PATH.PROVIDER.CALENDER)
+            }
+        break;
           case LOG_OUT:
             handleLogout();
             break;
@@ -294,6 +306,19 @@ class SideMenu extends Component {
            <Icon type="bell" theme="twoTone" twoToneColor='white' />
          </Tooltip>
         </MenuItem>
+
+        {authenticated_category === USER_CATEGORY.PROVIDER
+        ?
+          (<MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={CALENDER}
+          >
+            <Tooltip placement="right" title={"calender"}>
+              <CalendarTwoTone   theme="twoTone" twoToneColor='white' />
+            </Tooltip>
+          </MenuItem>)
+       :
+          null}
 
         {/*<MenuItem*/}
         {/*  className="flex direction-column justify-center align-center p0"*/}

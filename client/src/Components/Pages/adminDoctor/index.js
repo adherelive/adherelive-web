@@ -12,7 +12,7 @@ class AdminDoctorPage extends Component {
         return (
             <Fragment>
                 <div className="wp100 flex direction-column">
-                <div className="p18 fs30 fw700 mb20">Doctors</div>
+                <div className="p18 fs30 fw700 ">Doctors</div>
                 <div className="wp100 pl14 pr14 flex align-center justify-center">
                     <DoctorTable />
                 </div>
