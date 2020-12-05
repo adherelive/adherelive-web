@@ -450,7 +450,10 @@ class DoctorController extends Controller {
         category,
         mobile_number,
         prefix,
-        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
+        onboarding_status:
+          userCategory === USER_CATEGORY.PROVIDER
+            ? null
+            : ONBOARDING_STATUS.PROFILE_REGISTERED
       };
 
       const mobileNumberExist = await userService.getUserByData({
@@ -482,7 +485,7 @@ class DoctorController extends Controller {
           doctorUserId = doctorUserWrapper.getId();
         } else {
           const password = generatePassword();
-          doctorUserId = await createNewUser(email, password);
+          doctorUserId = await createNewUser(email, password, true);
         }
       } else {
         doctorUserId = userId;

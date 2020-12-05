@@ -237,7 +237,7 @@ class UserController extends Controller {
 
         if (apiUserDetails.isActivated()) {
           permissions = await apiUserDetails.getPermissions();
-          Logger.debug("675546767890876678",apiUserDetails.getBasicInfo());
+          Logger.debug("675546767890876678", apiUserDetails.getBasicInfo());
         }
 
         const dataToSend = {
@@ -1959,6 +1959,10 @@ class UserController extends Controller {
         body: { new_password, confirm_password } = {}
       } = req;
 
+      if (new_password !== confirm_password) {
+        return raiseClientError(res, 422, {}, "Password does not match");
+      }
+
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
       const userData = await UserWrapper(user.get());
@@ -1968,7 +1972,8 @@ class UserController extends Controller {
 
       const updateUser = await userService.updateUser(
         {
-          password: hash
+          password: hash,
+          system_generated_password: false
         },
         userId
       );
