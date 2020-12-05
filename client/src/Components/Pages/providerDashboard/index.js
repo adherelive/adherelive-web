@@ -125,7 +125,7 @@ class ProviderDoctorPage extends Component {
             {/* <div className="mt0 wp100 flex align-center justify-center provider-doctor-table">
                     <DoctorTable />
             </div> */}
-            <div className="wp100 pl14 pr14 flex align-center justify-center provider-doctor-table">
+            <div className="wp100 flex align-center justify-center provider-doctor-table">
                     <DoctorTable />
             </div>
 

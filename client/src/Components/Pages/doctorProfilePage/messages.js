@@ -249,7 +249,7 @@ const messages = defineMessages({
     add_payment_product: {
         id: "app.admin.doctors.add_payment_product",
         description: "",
-        defaultMessage: "Add Payment Product"
+        defaultMessage: "Consultation Fee"
     },
     add: {
         id: "app.admin.doctors.add",

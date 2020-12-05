@@ -32,13 +32,13 @@ export default props => {
     },
     {
       title: "",
-      ...TABLE_COLUMN.DELETE,
-      render: data => <Delete {...data} />
+      ...TABLE_COLUMN.EDIT,
+      render: data => <Edit {...data} />
     },
     {
       title: "",
-      ...TABLE_COLUMN.EDIT,
-      render: data => <Edit {...data} />
-    }
+      ...TABLE_COLUMN.DELETE,
+      render: data => <Delete {...data} />
+    },
   ];
 };

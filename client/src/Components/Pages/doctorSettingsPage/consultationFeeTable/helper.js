@@ -2,7 +2,7 @@ export const TABLE_COLUMN = {
   NAME: {
     key: "NAME",
     dataIndex: "NAME",
-    width: 200,
+    width: 300,
     fixed: "left"
   },
   TYPE: {
@@ -13,12 +13,14 @@ export const TABLE_COLUMN = {
     key: "AMOUNT",
     dataIndex: "AMOUNT"
   },
-  DELETE: {
-    key: "DELETE",
-    dataIndex: "DELETE"
-  },
   EDIT: {
     key: "EDIT",
+    width: 100,
     dataIndex: "EDIT"
-  }
+  },
+  DELETE: {
+    key: "DELETE",
+    width: 100,
+    dataIndex: "DELETE"
+  },
 };
