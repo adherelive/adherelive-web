@@ -48,7 +48,7 @@ class AppointmentService {
   getDoctorAppointmentsForDate = async ({
     today,
     participant_one_id,
-    participant_two_id,
+    participant_two_id
   }) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
@@ -104,6 +104,28 @@ class AppointmentService {
             {
               participant_one_id: patient_id,
               participant_one_type: USER_CATEGORY.PATIENT
+            }
+          ]
+        }
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getAppointmentForDoctor = async doctor_id => {
+    try {
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.or]: [
+            {
+              participant_two_id: doctor_id,
+              participant_two_type: USER_CATEGORY.DOCTOR
+            },
+            {
+              participant_one_id: doctor_id,
+              participant_one_type: USER_CATEGORY.DOCTOR
             }
           ]
         }

@@ -16,6 +16,13 @@ router.post(
   ProvidersController.mailPassword
 );
 
+router.get(
+  "/appointments",
+  Authenticate,
+  isProvider,
+  ProvidersController.getAllAppointmentForDoctors
+);
+
 // router.post(
 //   "/payment-products",
 //   Authenticate,
