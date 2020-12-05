@@ -184,7 +184,7 @@ class DoctorProfilePage extends Component {
         const { getInitialData } = this;
         const { doctor_qualification_ids,doctor_registration_ids } = doctors[doctor_user_id] || {};
         if (!doctor_qualification_ids || !doctor_registration_ids) {
-        this.getInitialData();
+          getInitialData();
         }
 
     }
@@ -239,8 +239,6 @@ class DoctorProfilePage extends Component {
                     doctor_registration_ids=[],
                     doctor_clinic_ids=[]
                 } = doctors[doctor_user_id] || {};
-
-
 
 
                     this.setState({
@@ -2395,7 +2393,7 @@ onChangeClinicLocation = clinic_id => (value) => {
     const disabled =
       doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
-      doctor_registration_ids.length === 0 || (activated_on !== null && authenticated_category !== USER_CATEGORY.PROVIDER);
+      doctor_registration_ids.length === 0 || activated_on !== null 
 
       console.log("DISABLED ====>", activated_on !== null);
 
@@ -2421,8 +2419,6 @@ onChangeClinicLocation = clinic_id => (value) => {
       const response = await verifyDoctor(id);
       const { status, payload: { message: respMessage = "" } = {} } =
         response || {};
-
-        console.log("RESPONSEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",response);
 
       if (status === true) {
         message.success(respMessage);
@@ -2514,7 +2510,9 @@ onChangeClinicLocation = clinic_id => (value) => {
 
   render() {
 
-    const { doctor_user_id =''} = this.state;
+    const { doctor_user_id ='',
+    // verified_doctor = false
+  } = this.state;
     const { auth: {authenticated_user=null}, doctors } = this.props;
     const current_doctor = doctors[authenticated_user];
     const { loading ='', updateLoading ='' } = this.state;
