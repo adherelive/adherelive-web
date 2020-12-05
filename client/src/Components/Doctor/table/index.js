@@ -9,6 +9,7 @@ import generateRow from "./dataRow";
 import getColumn from "./header";
 
 import messages from "./messages";
+import {USER_CATEGORY} from "../../../constant";
 
 class DoctorTable extends Component {
     constructor(props) {
@@ -72,8 +73,14 @@ class DoctorTable extends Component {
 
     getTableTitle = () => {
         const {intl: {formatMessage} = {}} = this.props;
+        const {auth : {authenticated_category = ''} = {}} = this.props;
       return (
-        <div className="fs22 fw600">{formatMessage(messages.doctors)}</div>
+        authenticated_category === USER_CATEGORY.PROVIDER
+        ?
+        (<div className="fs22 fw600 m0">{formatMessage(messages.doctors)}</div>)
+        :
+        null
+        
       );
     };
 
@@ -100,9 +107,8 @@ class DoctorTable extends Component {
                 scroll={{ x: 1600 }}
                 title={getTableTitle}
                 pagination={{
-                position: "bottom",
-                pageSize:6
-            }}
+                    position: "top"
+                }}
             />
         );
     }
