@@ -355,10 +355,19 @@ class ProvidersController extends Controller {
     }
   };
 
-  getAllAppointmentForDoctors = async (req, res) => {
+  getAppointmentForDoctors = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId } = {}, query: { date = null } = {} } = req;
+
+      try {
+        const validDate = moment(date).isValid();
+        if (!validDate) {
+          return raiseClientError(res, 402, {}, "Invalid date.");
+        }
+      } catch {
+        return raiseClientError(res, 402, {}, "Invalid date.");
+      }
 
       const providerData = await providerService.getProviderByData({
         user_id: userId
@@ -392,9 +401,15 @@ class ProvidersController extends Controller {
       }
 
       for (const doctorId of doctorIds) {
-        const appointmentList = await appointmentService.getAppointmentForDoctor(
-          doctorId
-        );
+        let appointmentList = [];
+
+        if (date) {
+          appointmentList = await appointmentService.getDayAppointmentForDoctor(
+            doctorId,
+            date
+          );
+        }
+
         if (appointmentList && appointmentList.length) {
           for (const appointment of appointmentList) {
             const appointmentData = await AppointmentWrapper(appointment);
@@ -448,6 +463,69 @@ class ProvidersController extends Controller {
           date_wise_appointments: { ...dateWiseAppointmentDetails },
           patients: { ...patientsApiDetails },
           appointments: { ...appointmentApiDetails }
+        },
+        "Appointments data fetched successfully."
+      );
+    } catch (error) {
+      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getMonthAppointmentCountForDoctors = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      const { userDetails: { userId } = {}, query: { date = null } = {} } = req;
+
+      try {
+        const validDate = moment(date).isValid();
+        if (!validDate) {
+          return raiseClientError(res, 402, {}, "Invalid date.");
+        }
+      } catch {
+        return raiseClientError(res, 402, {}, "Invalid date.");
+      }
+
+      const providerData = await providerService.getProviderByData({
+        user_id: userId
+      });
+      const provider = await ProviderWrapper(providerData);
+      const providerId = provider.getProviderId();
+
+      let dateWiseAppointmentDetails = {};
+
+      let doctorIds = [];
+      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
+        { provider_id: providerId }
+      );
+
+      for (const mappingData of doctorProviderMapping) {
+        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
+        const doctorId = mappingWrapper.getDoctorId();
+        doctorIds.push(doctorId);
+      }
+
+      for (const doctorId of doctorIds) {
+        const appointmentList = await appointmentService.getMonthAppointmentCountForDoctor(
+          doctorId,
+          date
+        );
+
+        if (appointmentList && appointmentList.length) {
+          for (const appointment of appointmentList) {
+            const start_date = appointment.get("start_date");
+            const count = appointment.get("count");
+
+            dateWiseAppointmentDetails[start_date] = count;
+          }
+        }
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          date_wise_appointments: { ...dateWiseAppointmentDetails }
         },
         "Appointments data fetched successfully."
       );

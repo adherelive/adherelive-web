@@ -17,10 +17,17 @@ router.post(
 );
 
 router.get(
-  "/appointments",
+  "/appointments-count",
   Authenticate,
   isProvider,
-  ProvidersController.getAllAppointmentForDoctors
+  ProvidersController.getMonthAppointmentCountForDoctors
+);
+
+router.get(
+  "/day-appointments",
+  Authenticate,
+  isProvider,
+  ProvidersController.getAppointmentForDoctors
 );
 
 // router.post(

@@ -32,8 +32,6 @@ export default class Appointment {
 
   getFormattedStartDate = () => {
     const start_date = this._data.get("start_date");
-    // const date = moment(moment.utc(start_date).startOf('day').format('LL')).startOf('day').toDate().toISOString();
-
     const date = moment(start_date)
       .startOf("day")
       .toISOString();

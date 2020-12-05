@@ -51,10 +51,10 @@ export const db = database => {
         type: DataTypes.STRING(1000)
       },
       start_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATEONLY
       },
       end_date: {
-        type: DataTypes.DATE
+        type: DataTypes.DATEONLY
       },
       start_time: {
         type: DataTypes.DATE,

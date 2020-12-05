@@ -49,10 +49,10 @@ module.exports = {
         type: Sequelize.STRING(1000)
       },
       start_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       end_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       start_time: {
         type: Sequelize.DATE,
