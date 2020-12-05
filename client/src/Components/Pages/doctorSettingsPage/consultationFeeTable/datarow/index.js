@@ -1,7 +1,7 @@
 import { TABLE_COLUMN } from "../helper";
 
 export default data => {
-  const { basic_info: { id = null } = {} } = data;
+  const { basic_info: { id = null } = {}, formatMessage } = data;
   // console.log("data in datarow",data);
 
   return {
@@ -15,11 +15,13 @@ export default data => {
     [TABLE_COLUMN.AMOUNT.dataIndex]: {
       data
     },
-    [TABLE_COLUMN.DELETE.dataIndex]: {
-      data
-    },
     [TABLE_COLUMN.EDIT.dataIndex]: {
-      data
-    }
+      data,
+      formatMessage
+    },
+    [TABLE_COLUMN.DELETE.dataIndex]: {
+      data,
+      formatMessage
+    },
   };
 };

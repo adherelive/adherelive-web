@@ -2583,7 +2583,7 @@ onChangeClinicLocation = clinic_id => (value) => {
       return <PageLoading />;
     }
 
-    return (
+      return (
       <Fragment>
         <div className="wp100 p20 flex direction-column">
           {/*header*/}

@@ -40,7 +40,8 @@ class ConsultationFeeTable extends Component {
     const {
       doctorPaymentProducts,
       deleteDoctorProduct,
-      editDoctorProduct = null
+      editDoctorProduct = null,
+      intl: { formatMessage } = {}
     } = this.props;
 
     // const {onRowClick} = this;
@@ -51,7 +52,8 @@ class ConsultationFeeTable extends Component {
         generateRow({
           ...doctorPaymentProducts[each],
           deleteDoctorProduct,
-          editDoctorProduct
+          editDoctorProduct,
+          formatMessage
         })
       );
     }
@@ -90,8 +92,8 @@ class ConsultationFeeTable extends Component {
         dataSource={getDataSource()}
         scroll={{ x: "100%" }}
         pagination={{
-          position: "bottom",
-          pageSize: 6
+          position: "top",
+          // pageSize: 6
         }}
       />
     );

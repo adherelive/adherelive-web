@@ -116,14 +116,14 @@ class ProviderDoctorPaymentProduct extends Component {
     const { noDoctorPaymentProducts, doctorPaymentProducts } = this.state;
 
     return (
-      <div className="wp100 flex direction-column justify-space-between">
+      <div className="wp100 flex p10 direction-column justify-space-between">
         <div className="wp100">
           {noDoctorPaymentProducts ? (
             <div className="wp100 justify-center align-center">
               {this.noConsultationFeeDisplay()}
             </div>
           ) : (
-            <div className="wp100 pl20 pr20 flex direction-column align-center justify-center">
+            <div className="wp100 flex direction-column align-center justify-center">
               <ConsultationFeeTable
                 doctorPaymentProducts={doctorPaymentProducts}
                 deleteDoctorProduct={this.deleteDoctorProduct}
@@ -178,7 +178,7 @@ class ProviderDoctorPaymentProduct extends Component {
   renderHeader = () => {
     const { noDoctorPaymentProducts } = this.state;
     return (
-      <div className="wp100 ml20 mt20 mb20 fs28 fw700 pr50 flex justify-space-between align-center">
+      <div className="wp100 p10 mt20 mb20 fs28 fw700 flex justify-space-between align-center">
         <div className="flex flex-start align-center">
           <ArrowLeftOutlined onClick={this.handleBack} className="mr10" />
           {this.formatMessage(messages.consultation_fee_header_text)}

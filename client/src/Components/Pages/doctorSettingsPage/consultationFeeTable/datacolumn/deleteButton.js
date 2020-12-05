@@ -1,22 +1,24 @@
 import React from "react";
-import { DeleteTwoTone } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
+import messages from "../messages";
+import Tooltip from "antd/es/tooltip";
 
 export default props => {
   const {
     data: {
       basic_info: { id = null, name = "", type = "", amount = "" } = {},
-      deleteDoctorProduct
+      deleteDoctorProduct,
+        formatMessage
     } = {}
   } = props || {};
 
   return (
-    <div>
-      <DeleteTwoTone
-        className={"pointer align-self-end"}
-        onClick={deleteDoctorProduct(id, name, type, amount)}
-        twoToneColor="#6f6f78"
-        style={{ fontSize: "20px" }}
-      />
-    </div>
+      <Tooltip placement={"bottom"} title={formatMessage(messages.deleteConsultationFee)}>
+          <DeleteOutlined
+            className={"pointer align-self-end"}
+            onClick={deleteDoctorProduct(id, name, type, amount)}
+            style={{ fontSize: "18px", color: "#6d7278" }}
+          />
+      </Tooltip>
   );
 };
