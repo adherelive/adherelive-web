@@ -3,6 +3,7 @@ import {injectIntl} from "react-intl";
 import { Calendar,Badge,message,Drawer } from "antd";
 import moment from "moment";
 
+import messages from "./message";
 
 
 
@@ -12,7 +13,7 @@ class doctorCalender extends Component {
         this.state = {
              monthWiseData : {},
              selectedDayAppointments : {},
-             isDateDataVisible:false
+             isDateDataVisible:false,
              
         }
     }
@@ -28,6 +29,9 @@ class doctorCalender extends Component {
         }    
         
     }
+
+    formatMessage = data => this.props.intl.formatMessage(data);
+
 
 
      handleGetMonthlydata = (i,ISOdate) => {
@@ -50,7 +54,7 @@ class doctorCalender extends Component {
             
         }catch(error){
             console.log("err --->",error);
-            message.warn("Something went wrong");
+            message.warn(this.formatMessage(messages.somethingWentWrong));
         }
     }
     
@@ -66,15 +70,11 @@ class doctorCalender extends Component {
         let dayAppointmentsNum = thisMonthsAppointments[date] || 0;
         if(dayAppointmentsNum !== 0){
            if(dayAppointmentsNum === 1){
-            return (<span >
-                {dayAppointmentsNum} Appointment
-            </span>)
+            return (
+                    <div className="fs14 fw700 brown-grey bg-grey">{dayAppointmentsNum} {this.formatMessage(messages.appointment)}</div>   
+            )         
            }else{
-            return (<div>
-                <span >
-                    {dayAppointmentsNum} Appointments
-                </span>
-            </div>)
+            return (<div className="fs14 fw700 brown-grey">{dayAppointmentsNum} {this.formatMessage(messages.appointments)}</div>)
            }
         }
 
@@ -99,14 +99,13 @@ class doctorCalender extends Component {
     monthCellRender = (value) => {
     const num = this.getMonthData(value);
     return num ? (
-        <div>
-        <span>{num} Appointments</span>
-        </div>
+        <div className="fs14 fw700 brown-grey">{num} {this.formatMessage(messages.appointments)}</div>
     ) : null;
     }
 
     onSelect = (value) => {
-        // console.log("ONSELECT ==========>",value)
+        console.log("ONSELECT ==========>",moment(value))
+        
         let ISOdate=moment(value).toISOString();
         this.handleGetDayData(ISOdate);
         this.setState({isDateDataVisible:true})
@@ -128,7 +127,10 @@ class doctorCalender extends Component {
                         users = {}
                     } = data || {};
 
-                    this.setState({selectedDayAppointments:appointments});
+                    this.setState({selectedDayAppointments:data});
+
+
+                    
                 }
             })
 
@@ -163,19 +165,97 @@ class doctorCalender extends Component {
     renderDateDetails = () => {
         const {selectedDayAppointments = {}} = this.state;
         let details = [];
-        for(let each in selectedDayAppointments){
+        const {
+            appointments = {},
+            date_wise_appointments = {},
+            doctors = {},
+            patients = {},
+            users = {}
+        } = selectedDayAppointments || {};
+        
+
+        for(let each in appointments){
             const {basic_info : {
                 details : {
                     critical=false,
                     reason = '',
                     type = '1',
                     type_description = ''
-                },
+                } = {},
+                start_date = '',
                 start_time  = '' 
             } = {},
         participant_one : {id : p1_id = '',category :p1_category = ''} = {},
-        participant_two : {id : p2_id = '',category :p2_category = ''}  } = selectedDayAppointments[each] || {};
-        } 
+        participant_two : {id : p2_id = '',category :p2_category = ''}  } = appointments[each] || {};
+        let doctor_name ='';
+        let patient_name ='';
+        if(p1_category === 'doctor'){
+            let {basic_info : {first_name : doctor_first_name ='',middle_name : doctor_middle_name ='',last_name : doctor_last_name = ''} = {} } = doctors[p1_id] || {};
+            let {basic_info : {first_name :patient_first_name ='',middle_name:patient_middle_name ='',last_name:patient_last_name = ''} = {} } = patients[p2_id] || {};
+            doctor_name = doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name ? `${doctor_last_name} ` : ""}` : '';
+            patient_name = patient_first_name ? `${patient_first_name} ${patient_middle_name ? `${patient_middle_name} ` : ""}${patient_last_name ? `${patient_last_name} ` : ""}` : '';
+
+        }else{
+            let {basic_info : {first_name : doctor_first_name ='',middle_name : doctor_middle_name ='',last_name : doctor_last_name = ''} = {} } = doctors[p2_id] || {}; 
+            let {basic_info : {first_name :patient_first_name ='',middle_name:patient_middle_name ='',last_name:patient_last_name = ''} = {} } = patients[p1_id] || {};
+            doctor_name = doctor_first_name ? `${doctor_first_name} ${doctor_middle_name ? `${doctor_middle_name} ` : ""}${doctor_last_name ? `${doctor_last_name} ` : ""}` : '';
+            patient_name = patient_first_name ? `${patient_first_name} ${patient_middle_name ? `${patient_middle_name} ` : ""}${patient_last_name ? `${patient_last_name} ` : ""}` : '';
+        }
+
+              let time =start_time ? moment(start_time).format('HH:mm') : '--';
+              let date =  start_date ? moment( start_date).format("DD MMM") : "--";
+            
+              
+        details.push(
+            (
+                <div key={`${each}-appoitment`} className="wp90 br5 bg-white flex-shrink-0 mt20 mb20 p10  ml10 mr10 chart-box-shadow  flex direction-column">
+              
+                <div className="flex direction-row align-start mt10 mb10 ml10">
+                    <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.doctor_name)}</div>
+                    <div className=" pointer fs14 fw700 black-85 ml20 tab-color">{doctor_name}</div>
+                  </div>
+
+                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                    <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.patient_name)}</div>
+                    <div className=" pointer fs14 fw700 black-85 ml20 tab-color">{patient_name}</div>
+                  </div>
+  
+                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                    <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_desc)}</div>
+                    <div className="fs14 fw700 black-85 ml20">{type_description}</div>
+                  </div>
+
+                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                    <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_desc)}</div>
+                    <div className="fs14 fw700 black-85 ml20">{reason}</div>
+                  </div>
+  
+                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                    <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_time)}</div>
+                    <div className="fs14 fw700 black-85 ml20">{time}</div>
+                  </div>
+  
+                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                    <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_date)}</div>
+                    <div className="fs14 fw700 black-85 ml20">{date}</div>
+                  </div>
+
+                  <div>
+                    {/* <span className="fs18 fw700 brown-grey tac mb20">{this.formatMessage(messages.critical)}</span> */}
+                    {critical ? <div className="ml10 fs14 fw700 brown-grey">{this.formatMessage(messages.critical)}</div> : 
+                    <div className="ml10 mt10 fs14 fw700 brown-grey">{this.formatMessage(messages.non_critical)}</div>  }
+                </div>
+  
+                </div>
+              )
+
+           
+        )
+        
+
+    } 
+
+    return details;
 
 
     }
@@ -191,11 +271,13 @@ class doctorCalender extends Component {
                 dateCellRender={this.dateCellRender} 
                 monthCellRender={this.monthCellRender} 
                 onPanelChange={this.onPanelChange}
-                onSelect={this.onSelect}/>
+                onSelect={this.onSelect}
+                 />
+                
             
                 </div>
                 <Drawer
-                    title={"Appointment Details"}
+                    title={this.formatMessage(messages.appointment_header)}
                     placement="right"
                     maskClosable={true}
                     headerStyle={{
