@@ -292,61 +292,63 @@ class ProvidersController extends Controller {
   mailPassword = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      const {
-        userDetails: { userId } = {},
-        body: { doctor_id = null } = {}
-      } = req;
+      // const {
+      //   userDetails: { userId } = {},
+      //   body: { doctor_id = null } = {}
+      // } = req;
 
-      const providerData = await providerService.getProviderByData({
-        user_id: userId
-      });
-      const provider = await ProviderWrapper(providerData);
-      const providerId = provider.getProviderId();
+      // const providerData = await providerService.getProviderByData({
+      //   user_id: userId
+      // });
+      // const provider = await ProviderWrapper(providerData);
+      // const providerId = provider.getProviderId();
 
-      const doctor = await doctorService.getDoctorByData({ id: doctor_id });
+      // const doctor = await doctorService.getDoctorByData({ id: doctor_id });
 
-      if (!doctor) {
-        return raiseClientError(res, 401, {}, "Invalid doctor.");
-      }
+      // if (!doctor) {
+      //   return raiseClientError(res, 401, {}, "Invalid doctor.");
+      // }
 
-      const doctorWrapper = await DoctorWrapper(doctor);
-      const doctorUserId = doctorWrapper.getUserId();
+      // const doctorWrapper = await DoctorWrapper(doctor);
+      // const doctorUserId = doctorWrapper.getUserId();
 
-      const link = uuidv4();
+      // const link = uuidv4();
 
-      const newPassword = generatePassword();
-      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(newPassword, salt);
+      // const newPassword = generatePassword();
+      // const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      // const hash = await bcrypt.hash(newPassword, salt);
 
-      const updateUser = await userService.updateUser(
-        { password: hash, system_generated_password: true },
-        doctorUserId
-      );
+      // const updateUser = await userService.updateUser(
+      //   { password: hash,
+      //     // system_generated_password: true
+      //   },
+      //   doctorUserId
+      // );
 
-      const userDetails = await userService.getUserById(doctorUserId);
-      const userWrapper = await UserWrapper(userDetails.get());
+      // const userDetails = await userService.getUserById(doctorUserId);
+      // const userWrapper = await UserWrapper(userDetails.get());
 
-      // todo: update password for new user.
+      // // todo: update password for new user.
 
-      const userEmail = userWrapper.getEmail();
+      // const userEmail = userWrapper.getEmail();
 
-      const emailPayload = {
-        title: "Verification mail",
-        toAddress: userEmail,
-        templateName: EMAIL_TEMPLATE_NAME.WELCOME,
-        templateData: {
-          title: "Doctor",
-          link: process.config.WEB_URL + process.config.app.invite_link + link,
-          inviteCard: "",
-          mainBodyText: `We are really happy that you chose us. Your temporary password is ${newPassword}.`,
-          subBodyText: "Please verify your account",
-          buttonText: "Verify",
-          host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com"
-        }
-      };
+      // const emailPayload = {
+      //   title: "Verification mail",
+      //   toAddress: userEmail,
+      //   templateName: EMAIL_TEMPLATE_NAME.WELCOME,
+      //   templateData: {
+      //     title: "Doctor",
+      //     link: process.config.WEB_URL + process.config.app.invite_link + link,
+      //     inviteCard: "",
+      //     mainBodyText: `We are really happy that you chose us. Your temporary password is ${newPassword}.`,
+      //     subBodyText: "Please verify your account",
+      //     buttonText: "Verify",
+      //     host: process.config.WEB_URL,
+      //     contactTo: "patientEngagement@adhere.com"
+      //   }
+      // };
 
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
       return raiseSuccess(res, 200, {}, "Password mailed successfully.");
     } catch (error) {
