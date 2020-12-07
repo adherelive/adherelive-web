@@ -14,7 +14,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getCalenderDataCountForDay : (date) => dispatch(getCalenderDataCountForDay(date)),
-    getCalenderDataForDay : (date) => dispatch(getCalenderDataForDay(date))
+    getCalenderDataForDay : (date,type) => dispatch(getCalenderDataForDay(date,type))
   };
 };
 

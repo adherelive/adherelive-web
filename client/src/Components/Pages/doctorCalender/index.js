@@ -6,6 +6,9 @@ import {APPOINTMENT_TYPE_TITLE} from "../../../constant";
 import messages from "./message";
 
 
+const DAY="d";
+const MONTH="m";
+const YEAR="year";
 
 class doctorCalender extends Component {
     constructor(props) {
@@ -14,12 +17,12 @@ class doctorCalender extends Component {
              monthWiseData : {},
              selectedDayAppointments : {},
              isDateDataVisible:false,
+             panelSelected:DAY
              
         }
     }
 
     componentDidMount(){
-        const {getCalenderDataCountForDay , getCalenderDataForDay} = this.props;
         const resultList = [];
         const startOfYear = moment().startOf('year').format('YYYY-MM-DD hh:mm');
         const tempMonthWiseData = {};
@@ -38,7 +41,9 @@ class doctorCalender extends Component {
         try{
             const {getCalenderDataCountForDay} = this.props;
             // console.log("6754567890 handleGetMonthlydata Called");
+     
             getCalenderDataCountForDay(ISOdate).then((response) => {
+                console.log("response =========>",response);
                 
                 const { status, payload: { data,  message } = {} } = response || {};
                 const {monthWiseData = {}} = this.state;
@@ -71,10 +76,10 @@ class doctorCalender extends Component {
         if(dayAppointmentsNum !== 0){
            if(dayAppointmentsNum === 1){
             return (
-                    <div className="br10 tac white fs14 fw700 brown-grey bg-dark-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointment)}</div>   
+                    <div className="br10 tac white fs14 fw700  bg-dark-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointment)}</div>   
             )         
            }else{
-            return (<div className="br10 tac white fs14 fw700 brown-grey bg-dark-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointments)}</div>)
+            return (<div className="br10 tac white fs14 fw700  bg-dark-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointments)}</div>)
            }
         }
 
@@ -99,25 +104,33 @@ class doctorCalender extends Component {
     monthCellRender = (value) => {
     const num = this.getMonthData(value);
     return num ? (
-        <div className="fs14 fw700 brown-grey">{num} {this.formatMessage(messages.appointments)}</div>
+        <div className="wp80 br10 tac fs14 fw700 bg-dark-blue white">{num} {this.formatMessage(messages.appointments)}</div>
     ) : null;
     }
 
     onSelect = (value) => {
         console.log("ONSELECT ==========>",moment(value))
-        
+        const {panelSelected} = this.state;
         let ISOdate=moment(value).toISOString();
-        this.handleGetDayData(ISOdate);
+        let type=DAY;
+        if(panelSelected === MONTH){
+            ISOdate=moment(value).month();
+            type=MONTH;
+        }
+        this.handleGetDayData(ISOdate,type);
         this.setState({isDateDataVisible:true})
     }
 
-    handleGetDayData = (ISOdate) => {
+    
+
+    handleGetDayData = (ISOdate,type=DAY) => {
         try{
             const {getCalenderDataForDay} = this.props;
-           
-            getCalenderDataForDay(ISOdate).then((response) => {
+            
+            getCalenderDataForDay(ISOdate,type).then((response) => {
                 
                 const { status, payload: { data,  message } = {} } = response;
+                console.log('6543567753546578',response);
                 if(status){
                     const {
                         appointments = {},
@@ -142,7 +155,15 @@ class doctorCalender extends Component {
     }
 
 
-    onPanelChange = (value) => {
+    onPanelChange = (value,mode) => {
+        let ISOdateMonth=moment(value).month();
+        if(mode === YEAR){
+            this.handleGetDayData(ISOdateMonth,MONTH);
+            this.setState({panelSelected:MONTH})
+
+        }else{ //month
+            this.setState({panelSelected:DAY})
+        }
         const {getCalenderDataCountForDay , getCalenderDataForDay} = this.props;
         const resultList = [];
         let startOfYear = moment().startOf('year').format('YYYY-MM-DD hh:mm');
@@ -214,12 +235,12 @@ class doctorCalender extends Component {
               
                 <div className="flex direction-row align-start mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.doctor_name)}</div>
-                    <div className=" pointer fs14 fw700 black-85 ml20 tab-color">{doctor_name}</div>
+                    <div className=" fs14 fw700 black-85 ml20">{`Dr ${doctor_name}`}</div>
                   </div>
 
                   <div className="flex direction-row align-start mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.patient_name)}</div>
-                    <div className=" pointer fs14 fw700 black-85 ml20 tab-color">{patient_name}</div>
+                    <div className=" fs14 fw700 black-85 ml20">{patient_name}</div>
                   </div>
   
                   <div className="flex direction-row align-start mt10 mb10 ml10">
@@ -244,8 +265,15 @@ class doctorCalender extends Component {
 
                   <div>
                     {/* <span className="fs18 fw700 brown-grey tac mb20">{this.formatMessage(messages.critical)}</span> */}
-                    {critical ? <div className="ml10 fs14 fw700 brown-grey">{this.formatMessage(messages.critical)}</div> : 
-                    <div className="ml10 mt10 fs14 fw700 brown-grey">{this.formatMessage(messages.non_critical)}</div>  }
+                    {critical ? 
+                     <div className="wp15 pl16 fw600 bl-warning-red">
+                     <div className="ml10 fs14 fw700 brown-grey">{this.formatMessage(messages.critical)}</div>
+                    </div>
+                    : 
+                    <div className="wp30 pl16 fw600 bl-green">
+                    <div className="ml10 mt10 fs14 fw700 brown-grey">{this.formatMessage(messages.non_critical)}</div>
+                    </div>
+                    }
                 </div>
   
                 </div>
@@ -274,6 +302,7 @@ class doctorCalender extends Component {
                 monthCellRender={this.monthCellRender} 
                 onPanelChange={this.onPanelChange}
                 onSelect={this.onSelect}
+                
                  />
                 
             

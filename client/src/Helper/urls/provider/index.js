@@ -11,6 +11,6 @@ export const getAllDoctorsForProviderUrl = () => {
    return `/providers/appointments-count?date=${date}`
  } 
 
- export const getCalenderDataForDayUrl = (date) => {
-  return `/providers/day-appointments?date=${date}`
+ export const getCalenderDataForDayUrl = (date,type) => {
+  return `/providers/day-appointments?value=${date}&type=${type}`
 } 

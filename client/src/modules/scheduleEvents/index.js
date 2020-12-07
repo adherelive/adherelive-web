@@ -90,7 +90,7 @@ export const getCalenderDataCountForDay = (date) => {
 };
 
 
-export const getCalenderDataForDay = (date) => {
+export const getCalenderDataForDay = (date,type) => {
     let response = {};
     return async dispatch => {
         try {
@@ -98,7 +98,7 @@ export const getCalenderDataForDay = (date) => {
 
             response = await doRequest({
                 method: REQUEST_TYPE.GET,
-                url: getCalenderDataForDayUrl(date),
+                url: getCalenderDataForDayUrl(date,type),
             });
 
             const {status, payload: {data = {}, error = {}} = {}} = response || {};
