@@ -151,11 +151,7 @@ export const uploadImageS3 = async (userId, file) => {
   }
 };
 
-export const createNewUser = async (
-  email,
-  password,
-  system_generated_password = false
-) => {
+export const createNewUser = async (email, password = null) => {
   try {
     const userExits = await userService.getUserByEmail({ email });
 
@@ -167,18 +163,23 @@ export const createNewUser = async (
     }
 
     let response;
+    let hash = null;
+
     const link = uuidv4();
     const status = "pending";
-    const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-    const hash = await bcrypt.hash(password, salt);
+
+    if (password) {
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      hash = await bcrypt.hash(password, salt);
+    }
 
     let user = await userService.addUser({
       email,
       password: hash,
       sign_in_type: "basic",
       category: "doctor",
-      onboarded: false,
-      system_generated_password
+      onboarded: false
+      // system_generated_password
     });
 
     const userPreference = await userPreferenceService.addUserPreference({

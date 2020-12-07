@@ -199,11 +199,31 @@ class UserController extends Controller {
       // }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.get("password")
-      );
-      if (passwordMatch) {
+
+      let passwordMatch = false;
+
+      const providerDoctorFirstLogin =
+        !user.get("password") && user.get("verified") ? true : false;
+
+      if (user.get("password")) {
+        passwordMatch = await bcrypt.compare(password, user.get("password"));
+      }
+
+      const doLogin = passwordMatch || providerDoctorFirstLogin ? true : false;
+
+      if (doLogin) {
+        if (providerDoctorFirstLogin) {
+          const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+          const hash = await bcrypt.hash(password, salt);
+
+          const updateUser = await userService.updateUser(
+            {
+              password: hash
+            },
+            user.get("id")
+          );
+        }
+
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -1972,8 +1992,8 @@ class UserController extends Controller {
 
       const updateUser = await userService.updateUser(
         {
-          password: hash,
-          system_generated_password: false
+          password: hash
+          // system_generated_password: false
         },
         userId
       );

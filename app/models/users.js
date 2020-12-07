@@ -46,7 +46,7 @@ export const db = database => {
       },
       password: {
         type: DataTypes.STRING(1000),
-        required: true
+        allowNull: true
       },
       sign_in_type: {
         type: DataTypes.ENUM,
@@ -81,11 +81,11 @@ export const db = database => {
       verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
-      },
-      system_generated_password: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
       }
+      // system_generated_password: {
+      //   type: DataTypes.BOOLEAN,
+      //   defaultValue: false
+      // }
     },
     {
       underscored: true,
@@ -103,8 +103,8 @@ export const db = database => {
             onboarded: this.onboarded,
             onboarding_status: this.onboarding_status,
             prefix: this.prefix,
-            verified: this.verified,
-            system_generated_password: this.system_generated_password
+            verified: this.verified
+            // system_generated_password: this.system_generated_password
           };
         }
       }
