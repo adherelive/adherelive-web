@@ -2,7 +2,7 @@ import React, { Component , Fragment } from "react";
 import {injectIntl} from "react-intl";
 import { Calendar,Badge,message,Drawer } from "antd";
 import moment from "moment";
-
+import {APPOINTMENT_TYPE_TITLE} from "../../../constant";
 import messages from "./message";
 
 
@@ -71,10 +71,10 @@ class doctorCalender extends Component {
         if(dayAppointmentsNum !== 0){
            if(dayAppointmentsNum === 1){
             return (
-                    <div className="fs14 fw700 brown-grey bg-grey">{dayAppointmentsNum} {this.formatMessage(messages.appointment)}</div>   
+                    <div className="br10 tac white fs14 fw700 brown-grey bg-dark-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointment)}</div>   
             )         
            }else{
-            return (<div className="fs14 fw700 brown-grey">{dayAppointmentsNum} {this.formatMessage(messages.appointments)}</div>)
+            return (<div className="br10 tac white fs14 fw700 brown-grey bg-dark-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointments)}</div>)
            }
         }
 
@@ -204,7 +204,9 @@ class doctorCalender extends Component {
 
               let time =start_time ? moment(start_time).format('HH:mm') : '--';
               let date =  start_date ? moment( start_date).format("DD MMM") : "--";
-            
+             
+              const appointment_type = APPOINTMENT_TYPE_TITLE[type];
+              const title = appointment_type["title"];
               
         details.push(
             (
@@ -222,11 +224,11 @@ class doctorCalender extends Component {
   
                   <div className="flex direction-row align-start mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_desc)}</div>
-                    <div className="fs14 fw700 black-85 ml20">{type_description}</div>
+            <div className="fs14 fw700 black-85 ml20">{type_description} {`(${title})`}</div>
                   </div>
 
                   <div className="flex direction-row align-start mt10 mb10 ml10">
-                    <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_desc)}</div>
+                    <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.reason)}</div>
                     <div className="fs14 fw700 black-85 ml20">{reason}</div>
                   </div>
   

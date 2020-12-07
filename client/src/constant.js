@@ -1691,3 +1691,20 @@ export const ACCOUNT_TYPES = {
   [SAVINGS]: "Savings",
   [CURRENT]: "Current"
 };
+
+
+const MEDICAL_TEST = "1";
+const CONSULTATION = "2";
+const RADIOLOGY = "3";
+
+export const APPOINTMENT_TYPE_TITLE = {
+  [MEDICAL_TEST]: {
+    title: "Medical Test"
+  },
+  [CONSULTATION]: {
+    title: "Consultation"
+  },
+  [RADIOLOGY]: {
+    title: "Radiology"
+  }
+};
