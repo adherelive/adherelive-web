@@ -174,12 +174,14 @@ class AppointmentService {
     }
   };
 
-  getMonthAppointmentForDoctor = async (doctor_id, month) => {
+  getMonthAppointmentForDoctor = async (doctor_id, value) => {
     try {
-      const startOfMonth = moment().month(month)
+      const month = moment(value).month();
+      const year = moment(value).year();
+      const startOfMonth = moment().month(month).year(year)
           .startOf("month")
           .toISOString();
-      const endOfMonth = moment().month(month)
+      const endOfMonth = moment().month(month).year(year)
           .endOf("month")
           .toISOString();
 

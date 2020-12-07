@@ -367,12 +367,10 @@ class ProvidersController extends Controller {
     try {
       const { userDetails: { userId } = {}, query: { type = APPOINTMENT_QUERY_TYPE.DAY, value = null } = {} } = req;
 
-      if(type === APPOINTMENT_QUERY_TYPE.DAY) {
         const validDate = moment(value).isValid();
         if (!validDate) {
           return raiseClientError(res, 402, {}, "Please enter correct date value");
         }
-      }
 
       const providerData = await providerService.getProviderByData({
         user_id: userId
@@ -418,7 +416,7 @@ class ProvidersController extends Controller {
           case APPOINTMENT_QUERY_TYPE.MONTH:
             appointmentList = await appointmentService.getMonthAppointmentForDoctor(
                 doctorId,
-                parseInt(value)
+                value
             );
             break;
           default:
