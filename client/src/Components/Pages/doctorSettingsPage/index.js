@@ -2,14 +2,10 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
-import Modal from "antd/es/modal";
-import uuid from "react-uuid";
-import { Avatar, Upload, Input, Select, Spin, DatePicker, Icon } from "antd";
-import throttle from "lodash-es/throttle";
-import { doRequest } from "../../../Helper/network";
+import { Select } from "antd";
 import plus from "../../../Assets/images/plus.png";
 import edit_image from "../../../Assets/images/edit.svg";
-import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
+import { DeleteTwoTone } from "@ant-design/icons";
 import confirm from "antd/es/modal/confirm";
 
 // todo: import any component from antd using this format
@@ -21,7 +17,7 @@ import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultation
 import AddAccountDetailsDrawer from "../../../Containers/Drawer/addAccountDetailsDrawer";
 import EditAccountDetailsDrawer from "../../../Containers/Drawer/editAccountDetailsDrawer";
 
-import ConsultationFeeTable from "./consultationFeeTable/index";
+import ConsultationFeeTable from "../../../Containers/ConsultationFees";
 
 import {
   BarChartOutlined,
@@ -29,10 +25,8 @@ import {
   WalletOutlined
 } from "@ant-design/icons";
 
-import moment from "moment";
 import messages from "./messages";
 import { PATH, CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
-import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 
 const { Option } = Select;
@@ -141,6 +135,13 @@ class DoctorSettingsPage extends Component {
   displayAddDoctorPaymentProduct = () => {
     const { openConsultationFeeDrawer } = this.props;
     openConsultationFeeDrawer();
+  };
+
+  displayEditDoctorPaymentProduct = id => () => {
+    const { openConsultationFeeDrawer } = this.props;
+    const { doctorPaymentProducts } = this.state;
+    const { [id]: paymentData } = doctorPaymentProducts;
+    openConsultationFeeDrawer(paymentData);
   };
 
   displayRazorpayAccountDetails = () => {
@@ -389,6 +390,8 @@ class DoctorSettingsPage extends Component {
       doctorPaymentProducts
     } = this.state;
 
+    const {displayEditDoctorPaymentProduct} = this;
+
     return (
       <div className="wp70 flex direction-column justify-space-between">
         <div>
@@ -401,6 +404,7 @@ class DoctorSettingsPage extends Component {
               <ConsultationFeeTable
                 doctorPaymentProducts={doctorPaymentProducts}
                 deleteDoctorProduct={this.deleteDoctorProduct}
+                editDoctorProduct={this.displayEditDoctorPaymentProduct}
               />
 
               <div className=" mt20 mr300 wp100 flex  justify-end">
@@ -652,9 +656,7 @@ class DoctorSettingsPage extends Component {
 
   render() {
     const {
-      noDoctorPaymentProducts,
       selectedKey,
-      doctorPaymentProducts
     } = this.state;
     const { getPaymentDetails } = this;
 

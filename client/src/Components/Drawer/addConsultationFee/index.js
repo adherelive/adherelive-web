@@ -151,6 +151,7 @@ class addNewConsultationDrawer extends Component {
   };
 
   renderAddNewConsultationFee = () => {
+    const {doctors: {provider_id} = {}} = this.props;
     const {
       selectedFeeRadio = "",
       newConsultationName = "",
@@ -215,6 +216,7 @@ class addNewConsultationDrawer extends Component {
                 className={"form-inputs-ap"}
                 value={newConsultationFee}
                 onChange={this.setFee}
+                disabled={provider_id}
               />
             </div>
           ) : null}
