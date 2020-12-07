@@ -109,12 +109,11 @@ class doctorCalender extends Component {
     }
 
     onSelect = (value) => {
-        console.log("ONSELECT ==========>",moment(value))
+        // console.log("ONSELECT ==========>",moment(value))
         const {panelSelected} = this.state;
         let ISOdate=moment(value).toISOString();
         let type=DAY;
         if(panelSelected === MONTH){
-            ISOdate=moment(value).month();
             type=MONTH;
         }
         this.handleGetDayData(ISOdate,type);
