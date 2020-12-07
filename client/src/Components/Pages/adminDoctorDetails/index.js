@@ -95,17 +95,7 @@ class AdminDoctorDetails extends Component {
     history.goBack();
   };
 
-  getMenu = () => {
-    return (
-      <Menu>
-        <Menu.Item onClick={this.navigateToConsultationFee}>
-          <div className="tac">
-            {this.formatMessage(messages.add_payment_product)}
-          </div>
-        </Menu.Item>
-      </Menu>
-    );
-  };
+  
 
   getDoctorDetailsHeader = () => {
     // const { id, doctors, users } = this.props;
@@ -117,26 +107,12 @@ class AdminDoctorDetails extends Component {
           <ArrowLeftOutlined onClick={handleBack} className="mr10" />
           <div>{formatMessage(messages.doctor_details_header_text)}</div>
         </div>
-        <div className="flex flex-end align-center">
-          <Dropdown
-            overlay={this.getMenu()}
-            trigger={["click"]}
-            placement="bottomRight"
-          >
-            <Button type="primary" className="ml10 add-button " icon={"plus"}>
-              <span className="fs16">{this.formatMessage(messages.add)}</span>
-            </Button>
-          </Dropdown>
-        </div>
+        
       </div>
     );
   };
 
-  navigateToConsultationFee = () => {
-    const { history } = this.props;
-    const { id } = this.props;
-    history.push(`/doctors/${id}/payment_products`);
-  };
+
 
   openAddRazorpayIdModal = e => {
     e.preventDefault();

@@ -1,122 +1,216 @@
 import React, { Component , Fragment } from "react";
 import {injectIntl} from "react-intl";
-import { Calendar,Badge,message } from "antd";
+import { Calendar,Badge,message,Drawer } from "antd";
 import moment from "moment";
+
+
 
 
 class doctorCalender extends Component {
     constructor(props) {
         super(props);
-    }
-
-    componentDidMount(){
-        // console.log("PROPSSSSSSSSSS",this.props);
-        const {getCalenderDataCountForDay , getCalenderDataForDay} = this.props;
-    }
-
-    async hangleGetEventsForDay(value)  {
-        try{
-            const {getCalenderDataCountForDay} = this.props;
-            // console.log("dateeeeeeee", moment().toISOString(value));
-            let ISOdate =  moment().toISOString(value);
-
-            const response  =  await getCalenderDataCountForDay(ISOdate);
-            const { status, payload: { data, message } = {} } = response;
-            if(status){
-                console.log("REsponse =========>",response);
-            }
-
-        }catch(error){
-            console.log("Error ---->",error);
-            message.warn("Something went wront. Please try again later.")
+        this.state = {
+             monthWiseData : {},
+             selectedDayAppointments : {},
+             isDateDataVisible:false
+             
         }
     }
 
-
-    getListData = (value) => {
-    let listData;
-    // getCalenderDataForDay
-    this.hangleGetEventsForDay(value);
-    switch (value.date()) {
-        // case 8:
-        // listData = [
-        //     { type: 'warning', content: 'This is warning event.'},
-        //     { type: 'success', content: 'This is usual event.' },
-        // ];
-        // break;
-        // case 10:
-        // listData = [
-        //     { type: 'warning', content: 'This is warning event.' },
-        //     { type: 'success', content: 'This is usual event.' },
-        //     { type: 'error', content: 'This is error event.' },
-        // ];
-        // break;
-        // case 15:
-        // listData = [
-        //     { type: 'warning', content: 'This is warning event' },
-        //     { type: 'success', content: 'This is very long usual event。。....' },
-        //     { type: 'error', content: 'This is error event 1.' },
-        //     { type: 'error', content: 'This is error event 2.' },
-        //     { type: 'error', content: 'This is error event 3.' },
-        //     { type: 'error', content: 'This is error event 4.' },
-        // ];
-        // break;
-        default:
-             listData = [
-            { type: 'success', content: 'This is very long usual event。。....' }
-        ];
-    }
-    return listData || [];
+    componentDidMount(){
+        const {getCalenderDataCountForDay , getCalenderDataForDay} = this.props;
+        const resultList = [];
+        const startOfYear = moment().startOf('year').format('YYYY-MM-DD hh:mm');
+        const tempMonthWiseData = {};
+        for(let i = 0;i<12;i++){
+            let ISOdate=moment(startOfYear).add(i, 'M').toISOString();
+            this.handleGetMonthlydata(i,ISOdate);
+        }    
+        
     }
 
-    dateCellRender = (value) =>  {
-    // console.log("34243242342 dateCellRender",value);    
-    const listData = this.getListData(value);
-    return (
-        <ul className="events">
-        {listData.map(item => (
-            <li key={item.content}>
-            <Badge 
-            status={item.type} 
-            text={item.content} 
-            />
-            </li>
-        ))}
-        </ul>
-    );
+
+     handleGetMonthlydata = (i,ISOdate) => {
+        try{
+            const {getCalenderDataCountForDay} = this.props;
+            // console.log("6754567890 handleGetMonthlydata Called");
+            getCalenderDataCountForDay(ISOdate).then((response) => {
+                
+                const { status, payload: { data,  message } = {} } = response || {};
+                const {monthWiseData = {}} = this.state;
+                monthWiseData[i] = data || {};
+                if(status){
+                    this.setState(monthWiseData);
+                }else {
+                    this.setState(monthWiseData);
+                    
+                }
+            })
+
+            
+        }catch(error){
+            console.log("err --->",error);
+            message.warn("Something went wrong");
+        }
+    }
+    
+    
+   
+
+    dateCellRender  = (value) => {
+        const {monthWiseData = {}} = this.state;
+        const m=value.month();
+        const {date_wise_appointments = {}}=monthWiseData[m] || {};
+        let thisMonthsAppointments = date_wise_appointments;
+        let date = value.format('YYYY-MM-DD');
+        let dayAppointmentsNum = thisMonthsAppointments[date] || 0;
+        if(dayAppointmentsNum !== 0){
+           if(dayAppointmentsNum === 1){
+            return (<span >
+                {dayAppointmentsNum} Appointment
+            </span>)
+           }else{
+            return (<div>
+                <span >
+                    {dayAppointmentsNum} Appointments
+                </span>
+            </div>)
+           }
+        }
+
+        return null;
+     
     }
 
     getMonthData = (value) => {
-    if (value.month() === 8) {
-        return 1394;
-    }
+        const {monthWiseData = {}} = this.state;
+        const m=value.month();
+        const {date_wise_appointments = {}}=monthWiseData[m] || {};
+        let n = 0;
+        for(let key in date_wise_appointments){
+            let keyDate = moment(key);
+            if(keyDate.year() === value.year() && keyDate.month() === value.month()){
+                n = n + date_wise_appointments[key];
+            }
+        }
+        return n;
     }
 
-    monthCellRender = (value) =>  {
+    monthCellRender = (value) => {
     const num = this.getMonthData(value);
     return num ? (
-        <div className="notes-month">
-        <section>{num}</section>
-        <span>Backlog number</span>
+        <div>
+        <span>{num} Appointments</span>
         </div>
     ) : null;
     }
 
+    onSelect = (value) => {
+        // console.log("ONSELECT ==========>",value)
+        let ISOdate=moment(value).toISOString();
+        this.handleGetDayData(ISOdate);
+        this.setState({isDateDataVisible:true})
+    }
+
+    handleGetDayData = (ISOdate) => {
+        try{
+            const {getCalenderDataForDay} = this.props;
+           
+            getCalenderDataForDay(ISOdate).then((response) => {
+                
+                const { status, payload: { data,  message } = {} } = response;
+                if(status){
+                    const {
+                        appointments = {},
+                        date_wise_appointments = {},
+                        doctors = {},
+                        patients = {},
+                        users = {}
+                    } = data || {};
+
+                    this.setState({selectedDayAppointments:appointments});
+                }
+            })
+
+            
+        }catch(error){
+            console.log("err --->",error);
+            message.warn("Something went wrong");
+        }
+    }
+
+
+    onPanelChange = (value) => {
+        const {getCalenderDataCountForDay , getCalenderDataForDay} = this.props;
+        const resultList = [];
+        let startOfYear = moment().startOf('year').format('YYYY-MM-DD hh:mm');
+        if(value){
+            startOfYear = moment(value).startOf('year').format('YYYY-MM-DD hh:mm');
+        }
+        const tempMonthWiseData = {};
+        for(let i = 0;i<12;i++){
+            let ISOdate=moment(startOfYear).add(i, 'M').toISOString();
+            this.handleGetMonthlydata(i,ISOdate);
+        }   
+    }
+
+
+    close = () =>{
+        this.setState({isDateDataVisible:false})
+    }
+
+
+    renderDateDetails = () => {
+        const {selectedDayAppointments = {}} = this.state;
+        let details = [];
+        for(let each in selectedDayAppointments){
+            const {basic_info : {
+                details : {
+                    critical=false,
+                    reason = '',
+                    type = '1',
+                    type_description = ''
+                },
+                start_time  = '' 
+            } = {},
+        participant_one : {id : p1_id = '',category :p1_category = ''} = {},
+        participant_two : {id : p2_id = '',category :p2_category = ''}  } = selectedDayAppointments[each] || {};
+        } 
+
+
+    }
 
     render() {
+        // console.log("STate =====>",this.state);
+        const {isDateDataVisible} = this.state;
         return (
             <Fragment>
+                <div className="p18 fs30 fw700 ">Schedules</div>
                 <div className="wp100 flex direction-column">
-                {/* <Calendar
-                    
-                    // dateCellRender={dateCellRender}
-                    // monthCellRender={monthCellRender}
-                    // onPanelChange={onPanelChange}
-                    // onSelect={onSelect}
-                    
-                /> */}
-                <Calendar dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender} />
+                <Calendar 
+                dateCellRender={this.dateCellRender} 
+                monthCellRender={this.monthCellRender} 
+                onPanelChange={this.onPanelChange}
+                onSelect={this.onSelect}/>
+            
                 </div>
+                <Drawer
+                    title={"Appointment Details"}
+                    placement="right"
+                    maskClosable={true}
+                    headerStyle={{
+                        position: "sticky",
+                        zIndex: "9999",
+                        top: "0px"
+                    }}
+                    onClose={this.close}
+                    visible={isDateDataVisible}
+                    width={'35%'}
+                >
+                    {this.renderDateDetails()}
+                   
+                </Drawer>
+                {/* <Drawer visible={isDateDataVisible} onClose={this.close} /> */}
             </Fragment>
         );
     }
