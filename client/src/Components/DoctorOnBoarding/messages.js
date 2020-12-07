@@ -395,7 +395,7 @@ const messages = defineMessages({
   doctorAddSuccess: {
     id: "app.doctorOnBoarding.doctorAddSuccess",
     description: "",
-    defaultMessage: 'Doctor Added Successfully'
+    defaultMessage: 'Doctor Profile Details Added Successfully'
   },qualificationAddSuccess: {
     id: "app.doctorOnBoarding.qualificationAddSuccess",
     description: "",
