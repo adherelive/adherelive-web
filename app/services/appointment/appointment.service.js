@@ -174,6 +174,44 @@ class AppointmentService {
     }
   };
 
+  getMonthAppointmentForDoctor = async (doctor_id, month) => {
+    try {
+      const startOfMonth = moment().month(month)
+          .startOf("month")
+          .toISOString();
+      const endOfMonth = moment().month(month)
+          .endOf("month")
+          .toISOString();
+
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.and]: [
+            {
+              start_date: {
+                [Op.between]: [startOfMonth, endOfMonth]
+              }
+            },
+            {
+              [Op.or]: [
+                {
+                  participant_two_id: doctor_id,
+                  participant_two_type: USER_CATEGORY.DOCTOR
+                },
+                {
+                  participant_one_id: doctor_id,
+                  participant_one_type: USER_CATEGORY.DOCTOR
+                }
+              ]
+            }
+          ]
+        }
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getMonthAppointmentCountForDoctor = async (doctor_id, date) => {
     try {
       const startOfMonth = moment(date)

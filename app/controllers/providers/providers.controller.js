@@ -47,6 +47,11 @@ import { v4 as uuidv4 } from "uuid";
 
 const Logger = new Log("WEB > PROVIDERS > CONTROLLER");
 
+const APPOINTMENT_QUERY_TYPE = {
+  DAY:"d",
+  MONTH:"m"
+};
+
 class ProvidersController extends Controller {
   constructor() {
     super();
@@ -360,15 +365,13 @@ class ProvidersController extends Controller {
   getAppointmentForDoctors = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      const { userDetails: { userId } = {}, query: { date = null } = {} } = req;
+      const { userDetails: { userId } = {}, query: { type = APPOINTMENT_QUERY_TYPE.DAY, value = null } = {} } = req;
 
-      try {
-        const validDate = moment(date).isValid();
+      if(type === APPOINTMENT_QUERY_TYPE.DAY) {
+        const validDate = moment(value).isValid();
         if (!validDate) {
-          return raiseClientError(res, 402, {}, "Invalid date.");
+          return raiseClientError(res, 402, {}, "Please enter correct date value");
         }
-      } catch {
-        return raiseClientError(res, 402, {}, "Invalid date.");
       }
 
       const providerData = await providerService.getProviderByData({
@@ -405,11 +408,21 @@ class ProvidersController extends Controller {
       for (const doctorId of doctorIds) {
         let appointmentList = [];
 
-        if (date) {
-          appointmentList = await appointmentService.getDayAppointmentForDoctor(
-            doctorId,
-            date
-          );
+        switch(type) {
+          case APPOINTMENT_QUERY_TYPE.DAY:
+            appointmentList = await appointmentService.getDayAppointmentForDoctor(
+                doctorId,
+                value
+            );
+            break;
+          case APPOINTMENT_QUERY_TYPE.MONTH:
+            appointmentList = await appointmentService.getMonthAppointmentForDoctor(
+                doctorId,
+                parseInt(value)
+            );
+            break;
+          default:
+            return raiseClientError(res, 422, {}, "Please check selected value for getting upcoming schedules")
         }
 
         if (appointmentList && appointmentList.length) {
