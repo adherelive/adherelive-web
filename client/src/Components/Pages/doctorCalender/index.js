@@ -179,7 +179,8 @@ class doctorCalender extends Component {
 
 
     close = () =>{
-        this.setState({isDateDataVisible:false})
+        this.setState({isDateDataVisible:false,
+            selectedDayAppointments:{}})
     }
 
 
