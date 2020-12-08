@@ -38,6 +38,7 @@ class ConsultationFeeTable extends Component {
 
   getDataSource = () => {
     const {
+      doctors ={},
       doctorPaymentProducts,
       deleteDoctorProduct,
       editDoctorProduct = null,
@@ -53,7 +54,8 @@ class ConsultationFeeTable extends Component {
           ...doctorPaymentProducts[each],
           deleteDoctorProduct,
           editDoctorProduct,
-          formatMessage
+          formatMessage,
+          doctors
         })
       );
     }

@@ -12,6 +12,14 @@ export default props => {
     } = {}
   } = props || {};
 
+
+  const {data : {doctors: {provider_id} = {} } ={}} =props;
+  // console.log("5464564564645654",provider_id);
+
+  if(provider_id){
+    return null;
+  }
+
   return (
       <Tooltip placement={"bottom"} title={formatMessage(messages.deleteConsultationFee)}>
           <DeleteOutlined
