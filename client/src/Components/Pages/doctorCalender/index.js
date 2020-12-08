@@ -4,6 +4,7 @@ import { Calendar,Badge,message,Drawer } from "antd";
 import moment from "moment";
 import {APPOINTMENT_TYPE_TITLE} from "../../../constant";
 import messages from "./message";
+import {InfoCircleOutlined} from "@ant-design/icons";
 
 
 const DAY="d";
@@ -76,10 +77,10 @@ class doctorCalender extends Component {
         if(dayAppointmentsNum !== 0){
            if(dayAppointmentsNum === 1){
             return (
-                    <div className="br10 tac white fs14 fw700  bg-dark-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointment)}</div>   
+                    <div className="br15 tac white fs14 fw700 pt5 pb5   bg-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointment)}</div>   
             )         
            }else{
-            return (<div className="br10 tac white fs14 fw700  bg-dark-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointments)}</div>)
+            return (<div className="br15 tac white fs14 fw700 pt5 pb5   bg-blue">{dayAppointmentsNum} {this.formatMessage(messages.appointments)}</div>)
            }
         }
 
@@ -104,7 +105,7 @@ class doctorCalender extends Component {
     monthCellRender = (value) => {
     const num = this.getMonthData(value);
     return num ? (
-        <div className="wp80 br10 tac fs14 fw700 bg-dark-blue white">{num} {this.formatMessage(messages.appointments)}</div>
+        <div className="wp80 br15 tac fs14 fw700 bg-blue pt5 pb5 white">{num} {this.formatMessage(messages.appointments)}</div>
     ) : null;
     }
 
@@ -223,7 +224,7 @@ class doctorCalender extends Component {
             patient_name = patient_first_name ? `${patient_first_name} ${patient_middle_name ? `${patient_middle_name} ` : ""}${patient_last_name ? `${patient_last_name} ` : ""}` : '';
         }
 
-              let time =start_time ? moment(start_time).format('HH:mm') : '--';
+              let time =start_time ? moment(start_time).format('hh:mm A'): '--';
               let date =  start_date ? moment( start_date).format("DD MMM") : "--";
              
               const appointment_type = APPOINTMENT_TYPE_TITLE[type];
@@ -231,48 +232,47 @@ class doctorCalender extends Component {
               
         details.push(
             (
-                <div key={`${each}-appoitment`} className="wp90 br5 bg-white flex-shrink-0 mt20 mb20 p10  ml10 mr10 chart-box-shadow  flex direction-column">
+                <div key={`${each}-appointment`} className="relative wp90 br5 bg-white flex-shrink-0 mt20 mb20 p10  ml10 mr10 chart-box-shadow  flex direction-column">
               
-                <div className="flex direction-row align-start mt10 mb10 ml10">
+                <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.doctor_name)}</div>
-                    <div className=" fs14 fw700 black-85 ml20">{`Dr ${doctor_name}`}</div>
+                    <div className=" fs14 fw700 black-85 ml20 wp50 tac">{`Dr ${doctor_name}`}</div>
                   </div>
 
-                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.patient_name)}</div>
-                    <div className=" fs14 fw700 black-85 ml20">{patient_name}</div>
+                    <div className=" fs14 fw700 black-85 ml20 wp50 tac">{patient_name}</div>
                   </div>
   
-                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_desc)}</div>
-            <div className="fs14 fw700 black-85 ml20">{type_description} {`(${title})`}</div>
+            <div className="fs14 fw700 black-85 ml20 wp50 tac">{type_description} {`(${title})`}</div>
                   </div>
 
-                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.reason)}</div>
-                    <div className="fs14 fw700 black-85 ml20">{reason}</div>
+                    <div className="fs14 fw700 black-85 ml20 wp50 tac">{reason}</div>
                   </div>
   
-                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_time)}</div>
-                    <div className="fs14 fw700 black-85 ml20">{time}</div>
+                    <div className="fs14 fw700 black-85 ml20 wp50 tac">{time}</div>
                   </div>
   
-                  <div className="flex direction-row align-start mt10 mb10 ml10">
+                  <div className="flex direction-row align-start  justify-space-between mt10 mb10 ml10">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_date)}</div>
-                    <div className="fs14 fw700 black-85 ml20">{date}</div>
+                    <div className="fs14 fw700 black-85 ml20 wp50 tac">{date}</div>
                   </div>
 
-                  <div>
+                    <div className="flex absolute t10 r10 hp20" >
                     {/* <span className="fs18 fw700 brown-grey tac mb20">{this.formatMessage(messages.critical)}</span> */}
                     {critical ? 
-                     <div className="wp15 pl16 fw600 bl-warning-red">
-                     <div className="ml10 fs14 fw700 brown-grey">{this.formatMessage(messages.critical)}</div>
-                    </div>
+                        <div className="flex direction-column align-center justify-center" >
+                        <InfoCircleOutlined    className="red fs18 "/>
+                        <div className="red mt5 fs14 fw700 brown-grey">{this.formatMessage(messages.critical)}</div>
+                    </div> 
                     : 
-                    <div className="wp30 pl16 fw600 bl-green">
-                    <div className="ml10 mt10 fs14 fw700 brown-grey">{this.formatMessage(messages.non_critical)}</div>
-                    </div>
+                   null
                     }
                 </div>
   

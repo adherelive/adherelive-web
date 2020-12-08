@@ -179,8 +179,8 @@ class ProviderDoctorPaymentProduct extends Component {
   renderHeader = () => {
     const { noDoctorPaymentProducts } = this.state;
     return (
-      <div className="wp100 p10 mt20 mb20 fs28 fw700 flex justify-space-between align-center">
-        <div className="flex flex-start align-center">
+      <div className="wp100 pt20  mb20 fs28 fw700 flex justify-space-between align-center">
+        <div className="ml20 flex flex-start align-center">
           <ArrowLeftOutlined onClick={this.handleBack} className="mr10" />
           {this.formatMessage(messages.consultation_fee_header_text)}
         </div>
@@ -189,7 +189,7 @@ class ProviderDoctorPaymentProduct extends Component {
           <div className="flex flex-end align-center">
             <Button
               type="primary"
-              className="ml10 add-button "
+              className="ml10 mr20 add-button "
               icon={"plus"}
               onClick={this.displayAddDoctorPaymentProduct}
             >

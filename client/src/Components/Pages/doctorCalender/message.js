@@ -34,12 +34,12 @@ const messages = defineMessages({
     reason: {
         id: "app.calender.reason",
         description: "",
-        defaultMessage: "Appointment Reason"
+        defaultMessage: "Reason"
     },
     appointment_desc: {
         id: "app.calender.appointment.desc",
         description: "",
-        defaultMessage: "Appointment Description"
+        defaultMessage: "Description"
     },
     appointment_time: {
         id: "app.calender.appointment.time",
