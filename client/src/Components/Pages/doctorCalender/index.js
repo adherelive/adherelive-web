@@ -105,7 +105,7 @@ class doctorCalender extends Component {
     monthCellRender = (value) => {
     const num = this.getMonthData(value);
     return num ? (
-        <div className="wp80 br15 tac fs14 fw700 bg-blue pt5 pb5 white">{num} {this.formatMessage(messages.appointments)}</div>
+        <div className=" br15 tac fs14 fw700 bg-blue pt5 pb5 white">{num} {this.formatMessage(messages.appointments)}</div>
     ) : null;
     }
 
