@@ -234,32 +234,32 @@ class doctorCalender extends Component {
             (
                 <div key={`${each}-appointment`} className="relative wp90 br5 bg-white flex-shrink-0 mt20 mb20 p10  ml10 mr10 chart-box-shadow  flex direction-column">
               
-                <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
+                <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.doctor_name)}</div>
                     <div className=" fs14 fw700 black-85 ml20 wp50 tac">{`Dr ${doctor_name}`}</div>
                   </div>
 
-                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
+                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.patient_name)}</div>
                     <div className=" fs14 fw700 black-85 ml20 wp50 tac">{patient_name}</div>
                   </div>
   
-                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
+                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_desc)}</div>
             <div className="fs14 fw700 black-85 ml20 wp50 tac">{type_description} {`(${title})`}</div>
                   </div>
 
-                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
+                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.reason)}</div>
                     <div className="fs14 fw700 black-85 ml20 wp50 tac">{reason}</div>
                   </div>
   
-                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10">
+                  <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_time)}</div>
                     <div className="fs14 fw700 black-85 ml20 wp50 tac">{time}</div>
                   </div>
   
-                  <div className="flex direction-row align-start  justify-space-between mt10 mb10 ml10">
+                  <div className="flex direction-row align-start  justify-space-between mt10 mb10 ml10 mr20">
                     <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.appointment_date)}</div>
                     <div className="fs14 fw700 black-85 ml20 wp50 tac">{date}</div>
                   </div>
