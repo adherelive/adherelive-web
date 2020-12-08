@@ -4,8 +4,9 @@ import message from "antd/es/message";
 import Button from "antd/es/button";
 
 import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultationFee";
+import ConsultationFeeTable from "../../../Containers/ConsultationFees";
 
-import ConsultationFeeTable from "../doctorSettingsPage/consultationFeeTable/index";
+// import ConsultationFeeTable from "../doctorSettingsPage/consultationFeeTable/index";
 
 import messages from "./messages";
 import { ArrowLeftOutlined } from "@ant-design/icons";
