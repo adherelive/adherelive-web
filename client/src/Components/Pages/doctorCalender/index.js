@@ -121,7 +121,7 @@ class doctorCalender extends Component {
                     <div key={`${id}-record`}  className="wp50  tac fs12 fw700  pt4 pb4 tab-color mt5">
                     <span>+ {appointmentIds.length-count}</span>
                     &nbsp;
-                    <span>More</span>
+                    <span>{this.formatMessage(messages.more)}</span>
                 </div>
                 )
                 break;

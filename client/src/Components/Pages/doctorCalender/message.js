@@ -52,14 +52,19 @@ const messages = defineMessages({
         defaultMessage: "Date"
     },
     critical: {
-        id: "app.missedAppointments.ciritical",
+        id: "app.calender.appointment.ciritical",
         description: "",
         defaultMessage: "Critical"
     },
     non_critical: {
-        id: "app.missedAppointments.non.critical",
+        id: "app.calender.appointment.non.critical",
         description: "",
         defaultMessage: "Non Critical"
+    },
+    more: {
+        id: "app.calender.appointment.more",
+        description: "",
+        defaultMessage: "More"
     },
 });
 
