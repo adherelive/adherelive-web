@@ -326,6 +326,10 @@ class MobileUserController extends Controller {
         return this.raiseClientError(res, 422, {}, "Email doesn't exists");
       }
 
+      if(user.get("category") !== USER_CATEGORY.DOCTOR) {
+        return this.raiseClientError(res, 422, {}, "Unauthorized");
+      }
+
       // TODO: UNCOMMENT below code after signup done for password check or seeder
 
       let passwordMatch = false;
