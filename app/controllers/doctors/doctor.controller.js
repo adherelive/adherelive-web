@@ -463,14 +463,35 @@ class DoctorController extends Controller {
       if (mobileNumberExist && mobileNumberExist.length) {
         const prevUser = await UserWrapper(mobileNumberExist[0].get());
         const prevUserId = prevUser.getId();
-        if (prevUserId !== userId) {
-          return this.raiseClientError(
-            res,
-            422,
-            {},
-            "This mobile number is already registered."
-          );
+
+        if(userCategory === USER_CATEGORY.PROVIDER){
+          let doctorUserIdTemp = null;
+          const doctorUserDetailsTemp = await userService.getUserByEmail({ email });
+          if (doctorUserDetailsTemp) {
+            const doctorUserWrapper = await UserWrapper(doctorUserDetailsTemp);
+            Logger.debug("7865346576789786",doctorUserWrapper);
+            doctorUserIdTemp = doctorUserWrapper.getId();
+            if (prevUserId !== doctorUserIdTemp) {
+              return this.raiseClientError(
+                res,
+                422,
+                {},
+                "This mobile number is already registered."
+              );
+            }
+          } 
+        }else{
+          if (prevUserId !== userId) {
+            return this.raiseClientError(
+              res,
+              422,
+              {},
+              "This mobile number is already registered."
+            );
+          }
         }
+
+        
       }
 
       let doctorUserId = null;

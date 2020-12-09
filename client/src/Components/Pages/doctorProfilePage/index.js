@@ -25,7 +25,8 @@ import {
   CameraFilled,
   DeleteTwoTone,
   CheckOutlined,
-  CloseOutlined
+  CloseOutlined,
+  PlusCircleOutlined
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
@@ -2551,6 +2552,7 @@ onChangeClinicLocation = clinic_id => (value) => {
     history.push(`/doctors/${id}/payment_products`);
   };
 
+  
 
 
   render() {
@@ -2598,6 +2600,13 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.qualification_details_text)}
+              {doctor_qualification_ids.length > 0 
+              ?
+              <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
+              onClick={this.addQualificationDetails}/>
+              :
+              null
+              }
             </div>
             {doctor_qualification_ids.length > 0 ? (
               <div className="border-box">
@@ -2621,6 +2630,13 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.registration_details_text)}
+              {doctor_registration_ids.length > 0 && doctor_qualification_ids.length > 0
+              ?
+              <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
+              onClick={this.addQualificationDetails}/>
+              :
+              null
+              }
             </div>
             {doctor_registration_ids.length > 0 ? (
 
@@ -2651,6 +2667,13 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.clinic_details_text)}
+              {doctor_clinic_ids.length > 0 
+              ?
+              <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
+              onClick={this.addClinicDetails}/>
+              :
+              null
+              }
             </div>
             {doctor_clinic_ids.length > 0 ? (
               <div className="border-box">{getDoctorClinicDetails()}</div>

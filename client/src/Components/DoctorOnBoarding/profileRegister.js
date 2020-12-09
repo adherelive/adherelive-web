@@ -53,7 +53,6 @@ class Profileregister extends Component {
     }
 
     componentDidMount = async () => {
-
         this.fetchData();
     }
 
@@ -79,23 +78,41 @@ class Profileregister extends Component {
         if(authenticated_category === USER_CATEGORY.DOCTOR){
             this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
             for (let doctor of Object.values(doctors)) {
-                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '' } } = doctor;
+                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '', city=''} ,city : city_temp = '' } = doctor;
                 if (parseInt(user_id) === parseInt(authenticated_user)) {
+                    let final_city = '';
+
+                    if(city === ''){
+                        final_city = city_temp
+                    }else{
+                        final_city = city
+                    }
+
                     let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
-                    this.setState({ name, city: address, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+                    this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+                    
                 }
     
             }
         }else if(authenticated_category === USER_CATEGORY.PROVIDER && doctor_id !== '' ){
-            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', city = '' } = {} } = doctors[doctor_id] || {};
+
+            console.log("876546768797865676879887643456", user_id);
+            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='',city='' } = {} ,city : city_temp = '' } = doctors[doctor_id] || {};
 
             const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[user_id] || {};
+            let final_city = '';
+
+            if(city === ''){
+                final_city = city_temp
+            }else{
+                final_city = city
+            }
 
             this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
    
            
                 let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
-                this.setState({ name, city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+                this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
             
     
             
@@ -363,7 +380,7 @@ class Profileregister extends Component {
     };
 
     renderProfileForm = () => {
-        let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' , signature_pic_url_saved ='' } = this.state;
+        let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' , signature_pic_url_saved ='',city='' } = this.state;
         const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
         
         const prefixSelector = (
@@ -468,7 +485,7 @@ class Profileregister extends Component {
 
                 <div className='form-headings'>{this.formatMessage(messages.city)}</div>
                 <PlacesAutocomplete
-                    value={this.state.city}
+                    value={city}
                     onChange={this.handleChangeCity}
                     onSelect={this.handleSelect}
                 >
@@ -506,7 +523,7 @@ class Profileregister extends Component {
 
     render() {
         const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
-
+        
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}

@@ -444,14 +444,14 @@ class doctorCalender extends Component {
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.doctor_name)}
             </div>
-            <div className=" fs14 fw700 black-85 ml20 wp50 tal">{`Dr ${doctor_name}`}</div>
+            <div className=" fs14 fw700 black-85 ml20 wp80 tal">{`Dr ${doctor_name}`}</div>
           </div>
 
           <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.patient_name)}
             </div>
-            <div className=" fs14 fw700 black-85 ml20 wp50 tal">
+            <div className=" fs14 fw700 black-85 ml20 wp80 tal">
               {patient_name}
             </div>
           </div>
@@ -460,7 +460,7 @@ class doctorCalender extends Component {
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.appointment_desc)}
             </div>
-            <div className="fs14 fw700 black-85 ml20 wp50 tal">
+            <div className="fs14 fw700 black-85 ml20 wp80 tal">
               {title} {`(${type_description})`}
             </div>
           </div>
@@ -469,21 +469,21 @@ class doctorCalender extends Component {
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.reason)}
             </div>
-            <div className="fs14 fw700 black-85 ml20 wp50 tal">{reason}</div>
+            <div className="fs14 fw700 black-85 ml20 wp80 tal">{reason}</div>
           </div>
 
           <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.appointment_time)}
             </div>
-            <div className="fs14 fw700 black-85 ml20 wp50 tal">{time}</div>
+            <div className="fs14 fw700 black-85 ml20 wp80 tal">{time}</div>
           </div>
 
           <div className="flex direction-row align-start  justify-space-between mt10 mb10 ml10 mr20">
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.appointment_date)}
             </div>
-            <div className="fs14 fw700 black-85 ml20 wp50 tal">{date}</div>
+            <div className="fs14 fw700 black-85 ml20 wp80 tal">{date}</div>
           </div>
         </div>
       );
