@@ -966,7 +966,6 @@ class PatientDetailsDrawer extends Component {
     };
 
     render() {
-        console.log("Props Add Patient =================>",this.props);
         const { visible } = this.props;
         const { onClose, renderAddPatient } = this;
 

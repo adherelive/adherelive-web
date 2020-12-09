@@ -181,7 +181,6 @@ class addNewConsultationDrawer extends Component {
       consultationFeeId = null,
       consultation=""
     } = this.state;
-    console.log("3435532313213212",consultation);
 
     return (
       <div className="form-block-ap">

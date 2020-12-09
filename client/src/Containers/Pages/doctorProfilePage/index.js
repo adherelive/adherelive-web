@@ -104,7 +104,6 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
   
     const getDoctorAllDetails = getDoctorDetails(id);
 
-    console.log("1987381738 doctors --> ", doctors);
 
   
     return {
