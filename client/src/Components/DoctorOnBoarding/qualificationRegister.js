@@ -68,11 +68,14 @@ class QualificationRegister extends Component {
   fetchData = async () => {
 
     const url = window.location.href.split("/");
-
+    const { doctorQualificationRegister  , authenticated_category} = this.props;
+    console.log("65467897655467890",authenticated_category);
     const { getDoctorQualificationRegisterData ,callNewDoctorAction} = this.props;
-    await getDoctorQualificationRegisterData({doctor_id: url.length > 4 ? url[url.length - 1] : ""});
-    let doctor_id=url.length > 4 ? url[url.length - 1] : "";
-    await callNewDoctorAction(doctor_id);
+
+      await getDoctorQualificationRegisterData({doctor_id: url.length > 4 ? url[url.length - 1] : ""});
+      let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+      await callNewDoctorAction(doctor_id);
+    
 
     const { authenticated_user = '', doctors = {} } = this.props;
     let docGender = '';
@@ -97,6 +100,9 @@ class QualificationRegister extends Component {
         docQualificationIds = doctor_qualification_ids;
         docRegistrationIds = doctor_registration_ids;
         this.setState({doctor_id:doctorId});
+      }
+      if(authenticated_category === USER_CATEGORY.DOCTOR){
+        await getDoctorQualificationRegisterData({doctor_id:id});
       }
 
     }

@@ -647,7 +647,11 @@ class DoctorSettingsPage extends Component {
     } = this.state;
     const { getPaymentDetails } = this;
     const { noDoctorPaymentProducts } = this.state;
-    const {doctors: {provider_id} = {}} = this.props;
+    const {doctors = {} } = this.props;
+    const {provider_id} = Object.values(doctors)[0];
+
+    // console.log("56456786546789",provider_id);
+    
 
     return (
       <Fragment>
@@ -662,7 +666,7 @@ class DoctorSettingsPage extends Component {
         {this.formatMessage(messages.doctor_settings_header_text)}
         </div>
 
-        {!noDoctorPaymentProducts && selectedKey === CONSULTATION_FEE &&(
+        {!noDoctorPaymentProducts && selectedKey === CONSULTATION_FEE &&  !provider_id  &&(
           <div className="flex flex-end align-center">
             <Button
               type="primary"

@@ -17,6 +17,7 @@ import { searchDegree } from "../../modules/degrees";
 import {searchSpecialties} from "../../modules/specialities";
 
 const mapStateToProps = state => {
+  console.log("STATEEEEEEEEEEEEEEEEEEEEE =====>",state);
   const {
     auth,
     users,
