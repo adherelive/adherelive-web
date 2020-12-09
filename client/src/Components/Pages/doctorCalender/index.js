@@ -145,20 +145,23 @@ class doctorCalender extends Component {
           : "";
       }
 
-      let time = `${
-        start_time ? moment(start_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD
-      } - ${
-        end_time ? moment(end_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD
-      }`;
+      // let time = `${
+      //   start_time ? moment(start_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD
+      // } - ${
+      //   end_time ? moment(end_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD
+      // }`;
+
+        let time =start_time ? moment(start_time).format('hh:mm A'): '--';
+
 
       if (count === 2) {
         listData.push(
           <div
             key={`${id}-record`}
-            className="wp50  tac fs12 fw700  pt4 pb4 tab-color mt5"
+            className="wp50  tal fs12 fw700  pt4 pb4 tab-color mt5"
           >
             <span>+ {appointmentIds.length - count}</span>
-            &nbsp;
+            {" "}
             <span>{this.formatMessage(messages.more)}</span>
           </div>
         );
@@ -175,7 +178,7 @@ class doctorCalender extends Component {
           }`}
         >
           <span>{time}</span>
-          &nbsp;
+          {" - "}
           <span>{patient_name}</span>
         </div>
       );
@@ -441,14 +444,14 @@ class doctorCalender extends Component {
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.doctor_name)}
             </div>
-            <div className=" fs14 fw700 black-85 ml20 wp50 tac">{`Dr ${doctor_name}`}</div>
+            <div className=" fs14 fw700 black-85 ml20 wp50 tal">{`Dr ${doctor_name}`}</div>
           </div>
 
           <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.patient_name)}
             </div>
-            <div className=" fs14 fw700 black-85 ml20 wp50 tac">
+            <div className=" fs14 fw700 black-85 ml20 wp50 tal">
               {patient_name}
             </div>
           </div>
@@ -457,8 +460,8 @@ class doctorCalender extends Component {
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.appointment_desc)}
             </div>
-            <div className="fs14 fw700 black-85 ml20 wp50 tac">
-              {type_description} {`(${title})`}
+            <div className="fs14 fw700 black-85 ml20 wp50 tal">
+              {title} {`(${type_description})`}
             </div>
           </div>
 
@@ -466,21 +469,21 @@ class doctorCalender extends Component {
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.reason)}
             </div>
-            <div className="fs14 fw700 black-85 ml20 wp50 tac">{reason}</div>
+            <div className="fs14 fw700 black-85 ml20 wp50 tal">{reason}</div>
           </div>
 
           <div className="flex direction-row align-start justify-space-between mt10 mb10 ml10 mr20">
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.appointment_time)}
             </div>
-            <div className="fs14 fw700 black-85 ml20 wp50 tac">{time}</div>
+            <div className="fs14 fw700 black-85 ml20 wp50 tal">{time}</div>
           </div>
 
           <div className="flex direction-row align-start  justify-space-between mt10 mb10 ml10 mr20">
             <div className="fs14 fw700 brown-grey">
               {this.formatMessage(messages.appointment_date)}
             </div>
-            <div className="fs14 fw700 black-85 ml20 wp50 tac">{date}</div>
+            <div className="fs14 fw700 black-85 ml20 wp50 tal">{date}</div>
           </div>
         </div>
       );

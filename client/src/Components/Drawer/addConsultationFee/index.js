@@ -32,26 +32,22 @@ class addNewConsultationDrawer extends Component {
       newConsultationTypeText: "",
       newConsultationFee: "",
       fetchingAdminPayments: false,
-      selectedFeeRadio: "",
       consultationFeeId: null,
+      consultation:"",
       payload: null
     };
   }
 
-  componentDidMount() {
-    // console.log("Drawer Props",this.props);
-    // this.handleGetAdminPaymentProduct();
-  }
+  componentDidMount() {}
 
   componentDidUpdate(prevProps, prevState) {
-    const { selectedFeeRadio } = this.state;
-    const { selectedFeeRadio: prev_selectedFeeRadio } = prevState;
-    // console.log("current selectedFeeRadio =====================>",selectedFeeRadio);
-    // console.log("prev selectedFeeRadio ------------------------->",prev_selectedFeeRadio);
-    if (selectedFeeRadio !== prev_selectedFeeRadio) {
+    const { consultation } = this.state;
+    const { consultation: prev_consultation } = prevState;
+    if (consultation !== prev_consultation) {
       this.setFieldValues();
     }
     this.updateConsultationFeeData();
+
   }
 
   updateConsultationFeeData = () => {
@@ -62,17 +58,23 @@ class addNewConsultationDrawer extends Component {
         basic_info: { name = "", amount = "", type = "", id = null } = {}
       } = updatedPayload;
 
+      console.log("3424234242432",type);
+
+      
       this.setState({
         newConsultationName: name,
         newConsultationFee: amount,
         newConsultationType: type,
         payload: updatedPayload,
-        selectedFeeRadio: type,
-        consultationFeeId: id
+        consultationFeeId: id,
       });
+      if(type){
+        this.setState({consultation:parseInt(type) });
+      }
     }
   };
 
+  
   setFee = e => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
@@ -81,31 +83,25 @@ class addNewConsultationDrawer extends Component {
     }
   };
 
-  setselectedFeeRadio = e => {
-    e.preventDefault();
-    let val = "1";
-    val = e.target.value;
-    console.log(typeof val);
-    this.setState({ selectedFeeRadio: val });
-  };
+ 
 
   setFieldValues = () => {
-    const { selectedFeeRadio } = this.state;
-    if (selectedFeeRadio === "1") {
+    const { consultation } = this.state;
+    if (consultation === 1) {
       this.setState({
         newConsultationName: "Tele-Medicine",
         newConsultationType: "1",
         newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
         // newConsultationFee: ""
       });
-    } else if (selectedFeeRadio === "2") {
+    } else if (consultation === 2) {
       this.setState({
         newConsultationName: "Offline Consultation",
         newConsultationType: "1",
         newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
         // newConsultationFee: ""
       });
-    } else if (selectedFeeRadio === "3") {
+    } else if (consultation === 3) {
       this.setState({
         newConsultationName: "Adherence Monitoring",
         newConsultationType: "2",
@@ -115,31 +111,7 @@ class addNewConsultationDrawer extends Component {
     }
   };
 
-  getConsultationOptions = () => {
-    const { defaultPaymentsProducts } = this.props;
-    let options = [];
-
-    for (let each in defaultPaymentsProducts) {
-      const { basic_info: { id = null, name = "", type = "" } = {} } =
-        defaultPaymentsProducts[each] || {};
-      options.push(
-        <RadioButton
-          key={id}
-          value={id}
-          onClick={this.setselectedFeeRadio}
-          className="mt10 mb10 flex direction-column ant-radio-settings-page tac"
-        >
-          <div>
-            <span className="fs20 fw600"> {name}</span>
-            <br></br>
-            {CONSULTATION_FEE_TYPE_TEXT[type]}
-          </div>
-        </RadioButton>
-      );
-    }
-
-    return options;
-  };
+  
 
   setConsultationName = e => {
     e.preventDefault();
@@ -150,16 +122,67 @@ class addNewConsultationDrawer extends Component {
     }
   };
 
+  getConsultationOption = () => {
+    const { defaultPaymentsProducts } = this.props;
+    let options = [];
+
+    for (let each in defaultPaymentsProducts) {
+      const { basic_info: { id = null, name = "", type = "" } = {} } =
+        defaultPaymentsProducts[each] || {};
+          options.push(<Option 
+            key={id}
+            value={id}>
+            {name}
+        </Option>)
+    
+    }
+
+    return options;
+
+    
+}
+
+
+  setConsultation = value => {
+
+    this.setState({ consultation: value });
+
+    if (value === 1) {
+      this.setState({
+        newConsultationName: "Tele-Medicine",
+        newConsultationType: "1",
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
+        // newConsultationFee: ""
+      });
+    } else if (value === 2) {
+      this.setState({
+        newConsultationName: "Offline Consultation",
+        newConsultationType: "1",
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["1"]
+        // newConsultationFee: ""
+      });
+    } else if (value === 3) {
+      this.setState({
+        newConsultationName: "Adherence Monitoring",
+        newConsultationType: "2",
+        newConsultationTypeText: CONSULTATION_FEE_TYPE_TEXT["2"]
+        // newConsultationFee: ""
+      });
+    }
+  };
+
   renderAddNewConsultationFee = () => {
     const {doctors: {provider_id} = {}} = this.props;
     const {
-      selectedFeeRadio = "",
       newConsultationName = "",
       newConsultationType = "",
       newConsultationTypeText = "",
       newConsultationFee = "",
-      consultationFeeId = null
+      consultationFeeId = null,
+      consultation=""
     } = this.state;
+    console.log("3435532313213212",consultation);
+
     return (
       <div className="form-block-ap">
         <div
@@ -167,23 +190,30 @@ class addNewConsultationDrawer extends Component {
                 //    flex align-center justify-start
                    tac"
         >
-          <span className="fwbolder fs22 ">
+          <span className="fwbolder fs18 ">
             {this.formatMessage(messages.defaultConsultationOptions)}
           </span>
         </div>
 
-        <div>
-          <RadioGroup
-            className="flex direction-column justify-content-end radio-formulation mt10 mb24"
-            buttonStyle="solid"
-            size="large"
-          >
-            {this.getConsultationOptions()}
-          </RadioGroup>
-        </div>
+                <Select
+                    className="form-inputs-ap drawer-select"
+                    placeholder="Select Consultation Type"
+                    value={consultation}
+                    onChange={this.setConsultation}
+                    autoComplete="off"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.props.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                    }
+                >
+                    {this.getConsultationOption()}
+                </Select>
+
 
         <div>
-          {selectedFeeRadio !== "" ? (
+          { consultation !== ""  ? (
             <div>
               <div className="form-headings flex align-center justify-start">
                 {this.formatMessage(messages.consultationFeeName)}
@@ -313,16 +343,15 @@ class addNewConsultationDrawer extends Component {
       newConsultationTypeText: "",
       newConsultationFee: "",
       fetchingAdminPayments: false,
-      selectedFeeRadio: ""
+      consultation : ""
     });
     close();
   };
 
   render() {
-    console.log();
     const { visible } = this.props;
     const { onClose, renderAddNewConsultationFee } = this;
-    const { consultationFeeId } = this.state;
+    const { consultationFeeId ,consultation} = this.state;
     const title = consultationFeeId
       ? this.formatMessage(messages.editConsultationFee)
       : this.formatMessage(messages.addConsultationFee);
@@ -348,7 +377,7 @@ class addNewConsultationDrawer extends Component {
         >
           {renderAddNewConsultationFee()}
 
-          {this.state.selectedFeeRadio !== "" ? (
+          {consultation !== "" ? (
             <div className="add-patient-footer">
               <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                 {this.formatMessage(messages.cancel)}

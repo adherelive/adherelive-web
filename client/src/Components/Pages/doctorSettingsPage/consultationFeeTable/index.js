@@ -11,6 +11,8 @@ class ConsultationFeeTable extends Component {
     this.state = {};
   }
 
+  componentDidUpdate(prevProps,prevState){}
+
   // onRowClick = (key) => (event) => {
   //   event.preventDefault();
   //   // const { openPatientDetailsDrawer } = this.props;

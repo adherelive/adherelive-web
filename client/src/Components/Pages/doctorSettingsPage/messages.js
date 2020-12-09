@@ -29,7 +29,7 @@ const messages = defineMessages({
   notAddedFeesYet: {
     id: "app.admin.doctors.settings.no.fees.added",
     description: "",
-    defaultMessage: "You have not added any fees yet"
+    defaultMessage: "Please add consultation fee in order to charge patients"
   },
   addFee: {
     id: "app.admin.doctors.settings.add.fee",
