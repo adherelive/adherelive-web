@@ -1,6 +1,8 @@
 import MedicationJob from "../";
 import moment from "moment";
 import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
+import UserDeviceService from "../../../services/userDevices/userDevice.service";
+import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
 const { MEDICATION_REMINDER_START } = NOTIFICATION_VERB;
 
@@ -9,7 +11,7 @@ class StartJob extends MedicationJob {
     super(data);
   }
 
-  getPushAppTemplate = () => {
+  getPushAppTemplate = async () => {
     const { getMedicationData } = this;
     const {
       details: {
@@ -17,29 +19,58 @@ class StartJob extends MedicationJob {
         actor: {
           id: actorId,
           details: { name, category: actorCategory } = {}
+        } = {},
+        medicines: { basic_info: { name: medicineName } = {} } = {},
+        medications: {
+          details: { unit, critical, quantity, strength } = {}
         } = {}
-      }
+      },
+      id
     } = getMedicationData() || {};
 
     const templateData = [];
+    const playerIds = [];
+    const userIds = [];
 
-    for (const participant of participants) {
+    participants.forEach(participant => {
       if (participant !== actorId) {
-        // todo: add actor after testing (deployment)
+        userIds.push(participant);
+      }
+    });
 
-        templateData.push({
-          app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-          headings: { en: `Medication Reminder` },
-          contents: {
-            en: `A medication reminder is scheduled for you.`
-          },
-          // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
-          include_player_ids: [...participants],
-          priority: 10,
-          data: { url: "/medications", params: getMedicationData() }
-        });
+    const userDevices = await UserDeviceService.getAllDeviceByData({
+      user_id: userIds
+    });
+
+    if (userDevices.length > 0) {
+      for (const device of userDevices) {
+        const userDevice = await UserDeviceWrapper({ data: device });
+        playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
+
+    // todo: add actor after testing (deployment)
+    const medicationResponseUrl = `${process.config.WEB_URL}/m-api/events/${id}/complete`;
+
+    templateData.push({
+      app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+      headings: { en: `Medication Reminder` },
+      contents: {
+        en: `${critical ? "!IMPORTANT!" : ""} Time to take ${
+          medicineName.length > 10
+            ? medicineName.substring(0, 11)
+            : medicineName
+        }(${strength}${unit}${quantity ? `x${quantity}` : ""})`
+      },
+      buttons: [
+        { id: "yes", text: "YES"},
+        { id: "no", text: "NO" }
+      ],
+      include_player_ids: [...playerIds],
+      priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
+      data: { url: "/medication-reminder", params: getMedicationData() }
+    });
 
     return templateData;
   };

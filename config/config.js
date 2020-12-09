@@ -96,6 +96,7 @@ module.exports = () => {
     one_signal: {
       app_id: process.env.ONE_SIGNAL_APP_ID,
       key: process.env.ONE_SIGNAL_KEY,
+      urgent_channel_id: process.env.URGENT_CHANNEL_ID
     },
     cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,

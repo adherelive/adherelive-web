@@ -87,7 +87,7 @@ class MobileMReminderController extends Controller {
         critical = false,
         care_plan_id = null
       } = body;
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userData: { category } = {}, userCategoryData: {basic_info: {full_name = ""} = {}} = {} } = userDetails || {};
 
       // const {text: doseUnit} = DOSE_UNIT[unit] || {};
       // const {text, time} = MEDICATION_TIMING[when_to_take] || {};
@@ -242,7 +242,7 @@ class MobileMReminderController extends Controller {
         critical = false,
         care_plan_id = 0
       } = body;
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userData: { category } = {}, userCategoryData: {basic_info: {full_name = ""} = {}} = {} } = userDetails || {};
 
       const medicineDetails = await medicineService.getMedicineById(
         medicine_id
@@ -344,6 +344,13 @@ class MobileMReminderController extends Controller {
         start_date,
         end_date,
         when_to_take,
+        participants: [
+          userId, patient.getUserId()
+        ],
+        actor: {
+          id: userId,
+          details: {name: full_name, category},
+        },
         participant_one: patient.getUserId(),
         participant_two: userId
       };
