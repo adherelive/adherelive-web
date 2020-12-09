@@ -2,10 +2,12 @@ import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
 import ConsentService from "../../../services/consents/consent.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 import SpecialityWrapper from "../speciality";
 import ConsentWrapper from "../../mobile/consent";
 import CarePlanWrapper from "../../mobile/carePlan";
+import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 
 import { completePath } from "../../../helper/filePath";
 
@@ -140,6 +142,19 @@ class MDoctorWrapper extends BaseDoctor {
       }
     }
 
+    const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+      id
+    );
+
+    let providerId = null;
+
+    if (doctorProvider) {
+      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+        doctorProvider
+      );
+      providerId = doctorProviderWrapper.getProviderId();
+    }
+
     return {
       basic_info: {
         id,
@@ -157,7 +172,8 @@ class MDoctorWrapper extends BaseDoctor {
       qualifications,
       activated_on,
       care_plan_ids: carePlanIds,
-      watchlist_patient_ids
+      watchlist_patient_ids,
+      provider_id: providerId
     };
   };
 }

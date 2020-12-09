@@ -45,7 +45,7 @@ class SignIn extends Component {
                     const response = await signIn({ email, password });
                     const { status = false } = response;
                     if (status) {
-                        message.success("LoggedIn successfully", 4);
+                        message.success("Logged in successfully", 4);
                     } else {
                         this.setState({ loading: false });
                         message.error("Username or Password incorrect", 4);

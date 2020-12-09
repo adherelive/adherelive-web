@@ -20,6 +20,9 @@ import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 import Tooltip from "antd/es/tooltip";
 
+import Menu from "antd/es/menu";
+import Dropdown from "antd/es/dropdown";
+
 class AdminDoctorDetails extends Component {
   constructor(props) {
     super(props);
@@ -37,9 +40,9 @@ class AdminDoctorDetails extends Component {
     const { getInitialData } = this;
 
     const { doctor_qualification_ids } = doctors[id] || {};
-    if (!doctor_qualification_ids) {
-      getInitialData();
-    }
+    // if (!doctor_qualification_ids) {
+    getInitialData();
+    // }
   }
 
   formatMessage = data => this.props.intl.formatMessage(data);
@@ -92,17 +95,24 @@ class AdminDoctorDetails extends Component {
     history.goBack();
   };
 
+  
+
   getDoctorDetailsHeader = () => {
     // const { id, doctors, users } = this.props;
     const { formatMessage, handleBack } = this;
 
     return (
-      <div className="wp100 mb20 fs28 fw700 flex justify-start align-center">
-        <ArrowLeftOutlined onClick={handleBack} className="mr10" />
-        <div>{formatMessage(messages.doctor_details_header_text)}</div>
+      <div className="wp100 mb20 fs28 fw700 flex justify-space-between align-center">
+        <div className="flex flex-start align-center">
+          <ArrowLeftOutlined onClick={handleBack} className="mr10" />
+          <div>{formatMessage(messages.doctor_details_header_text)}</div>
+        </div>
+        
       </div>
     );
   };
+
+
 
   openAddRazorpayIdModal = e => {
     e.preventDefault();
@@ -542,7 +552,6 @@ class AdminDoctorDetails extends Component {
       const { basic_info: { name: collegeName } = {} } =
         colleges[college_id] || {};
 
-      
       const { basic_info: { name: degreeName } = {} } =
         degrees[degree_id] || {};
 
@@ -1049,15 +1058,17 @@ class AdminDoctorDetails extends Component {
               <div className="fs20 fw700">
                 {formatMessage(messages.account_details_text)}
               </div>
-              {Object.keys(account_details).length > 0 && <Tooltip
+              {Object.keys(account_details).length > 0 && (
+                <Tooltip
                   placement={"right"}
                   title={formatMessage(messages.add_razorpay_details_text)}
-              >
-                <EditOutlined
+                >
+                  <EditOutlined
                     className="dark-sky-blue fs18 ml10 pointer"
                     onClick={openAddRazorpayIdModal}
-                />
-              </Tooltip>}
+                  />
+                </Tooltip>
+              )}
             </div>
             {Object.keys(account_details).length > 0 ? (
               <div className="border-box">{getDoctorAccountDetails()}</div>

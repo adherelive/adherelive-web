@@ -17,6 +17,8 @@ import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import MUploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import MDoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
+import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+import ProvidersWrapper from "../../../ApiWrapper/web/provider";
 
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
@@ -30,6 +32,7 @@ import registrationService from "../../../services/doctorRegistration/doctorRegi
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 import { doctorQualificationData, uploadImageS3 } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
@@ -324,11 +327,31 @@ class MobileUserController extends Controller {
       }
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.get("password")
-      );
-      if (passwordMatch) {
+
+      let passwordMatch = false;
+
+      const providerDoctorFirstLogin =
+        !user.get("password") && user.get("verified") ? true : false;
+
+      if (user.get("password")) {
+        passwordMatch = await bcrypt.compare(password, user.get("password"));
+      }
+
+      const doLogin = passwordMatch || providerDoctorFirstLogin ? true : false;
+
+      if (doLogin) {
+        if (providerDoctorFirstLogin) {
+          const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+          const hash = await bcrypt.hash(password, salt);
+
+          const updateUser = await userService.updateUser(
+            {
+              password: hash
+            },
+            user.get("id")
+          );
+        }
+
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -387,7 +410,7 @@ class MobileUserController extends Controller {
   };
 
   signUp = async (req, res) => {
-    const {raiseClientError, raiseSuccess, raiseServerError} = this;
+    const { raiseClientError, raiseSuccess, raiseServerError } = this;
     try {
       const { password, email } = req.body;
       const userExits = await userService.getUserByEmail({ email });
@@ -395,7 +418,7 @@ class MobileUserController extends Controller {
       if (userExits !== null) {
         return raiseClientError(
           res,
-          11000,
+          422,
           errMessage.EMAIL_ALREADY_EXISTS,
           errMessage.EMAIL_ALREADY_EXISTS.message
         );
@@ -413,7 +436,7 @@ class MobileUserController extends Controller {
         verified: true
       });
 
-      if(user) {
+      if (user) {
         await doctorService.addDoctor({
           user_id: user.get("id")
         });
@@ -516,6 +539,7 @@ class MobileUserController extends Controller {
         let userApiData = {};
         let userCatApiData = {};
         let carePlanApiData = {};
+        let providerApiData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
         let careplanData = [];
@@ -571,6 +595,25 @@ class MobileUserController extends Controller {
               userCatApiData[
                 userCategoryApiData.getDoctorId()
               ] = await userCategoryApiData.getAllInfo();
+
+              const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+                userCategoryId
+              );
+
+              if (doctorProvider) {
+                const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+                  doctorProvider
+                );
+
+                const providerId = doctorProviderWrapper.getProviderId();
+                const providerWrapper = await ProvidersWrapper(
+                  null,
+                  providerId
+                );
+                providerApiData[
+                  providerId
+                ] = await providerWrapper.getAllInfo();
+              }
 
               careplanData = await carePlanService.getCarePlanByData({
                 doctor_id: userCategoryId
@@ -722,6 +765,9 @@ class MobileUserController extends Controller {
               : { ...doctorApiDetails },
           care_plans: {
             ...carePlanApiData
+          },
+          providers: {
+            ...providerApiData
           },
           severity: {
             ...severityApiDetails
@@ -1989,6 +2035,10 @@ class MobileUserController extends Controller {
         body: { new_password, confirm_password } = {}
       } = req;
 
+      if (new_password !== confirm_password) {
+        return raiseClientError(res, 422, {}, "Password does not match");
+      }
+
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
       const userData = await UserWrapper(user.get());
@@ -1999,6 +2049,7 @@ class MobileUserController extends Controller {
       const updateUser = await userService.updateUser(
         {
           password: hash
+          // system_generated_password: false
         },
         userId
       );
@@ -2082,18 +2133,21 @@ class MobileUserController extends Controller {
   updatePassword = async (req, res) => {
     try {
       const {
-        body: { password, confirm_password } = {},
+        body: { new_password, confirm_password } = {},
         userDetails: { userId, userData: { category } = {} } = {}
       } = req;
 
-      if (password !== confirm_password) {
+      if (new_password !== confirm_password) {
         return this.raiseClientError(res, 422, {}, "Password does not match");
       }
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(password, salt);
+      const hash = await bcrypt.hash(new_password, salt);
 
       const updateUser = await userService.updateUser(
-        { password: hash },
+        {
+          password: hash
+          // system_generated_password: false
+        },
         userId
       );
 

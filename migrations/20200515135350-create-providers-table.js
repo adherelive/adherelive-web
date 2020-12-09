@@ -1,6 +1,7 @@
-'use strict';
+"use strict";
 
-import {TABLE_NAME} from "../app/models/providers";
+import { TABLE_NAME } from "../app/models/providers";
+import { TABLE_NAME as userTableName } from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,21 +12,31 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: userTableName
+          },
+          key: "id"
+        }
+      },
       name: {
         type: Sequelize.STRING(100),
-        allowNull: false,
+        allowNull: false
       },
       address: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       city: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       state: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       activated_on: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       created_at: {
         allowNull: false,

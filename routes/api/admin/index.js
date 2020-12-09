@@ -14,7 +14,7 @@ router.use(async (req, res, next) => {
     const { userDetails } = req;
     const { userData: { category } = {} } = userDetails || {};
 
-    if (category !== USER_CATEGORY.ADMIN) {
+    if (category !== USER_CATEGORY.ADMIN && category !== USER_CATEGORY.PROVIDER) {
       const response = new Response(false, 401);
       response.setMessage("only admin user can have access to this api");
       return res.status(response.getStatusCode()).json(response.getResponse());

@@ -1,0 +1,605 @@
+import Controller from "../index";
+import Log from "../../../libs/log";
+import moment from "moment";
+
+import userService from "../../services/user/user.service";
+import doctorService from "../../services/doctor/doctor.service";
+import providerService from "../../services/provider/provider.service";
+import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
+import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
+import clinicService from "../../services/doctorClinics/doctorClinics.service";
+import documentService from "../../services/uploadDocuments/uploadDocuments.service";
+import registrationService from "../../services/doctorRegistration/doctorRegistration.service";
+import degreeService from "../../services/degree/degree.service";
+import collegeService from "../../services/college/college.service";
+import councilService from "../../services/council/council.service";
+import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
+import appointmentService from "../../services/appointment/appointment.service";
+
+import UserWrapper from "../../ApiWrapper/web/user";
+import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import ProviderWrapper from "../../ApiWrapper/web/provider";
+import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
+import QualificationWrapper from "../../ApiWrapper/web/doctorQualification";
+import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
+import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
+import DegreeWrapper from "../../ApiWrapper/web/degree";
+import CollegeWrapper from "../../ApiWrapper/web/college";
+import CouncilWrapper from "../../ApiWrapper/web/council";
+import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
+import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
+import AppointmentWrapper from "../../ApiWrapper/web/appointments";
+import PatientWrapper from "../../ApiWrapper/web/patient";
+
+import * as PaymentHelper from "../payments/helper";
+
+import bcrypt from "bcrypt";
+
+import { DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME } from "../../../constant";
+
+import { generatePassword } from "../helper/passwordGenerator";
+
+import { USER_CATEGORY } from "../../../constant";
+
+import { Proxy_Sdk, EVENTS } from "../../proxySdk";
+
+import { v4 as uuidv4 } from "uuid";
+
+const Logger = new Log("WEB > PROVIDERS > CONTROLLER");
+
+const APPOINTMENT_QUERY_TYPE = {
+  DAY:"d",
+  MONTH:"m"
+};
+
+class ProvidersController extends Controller {
+  constructor() {
+    super();
+  }
+
+  getAll = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { userDetails: { userId } = {} } = req;
+
+      const providerData = await providerService.getProviderByData({
+        user_id: userId
+      });
+      const provider = await ProviderWrapper(providerData);
+      const providerId = provider.getProviderId();
+
+      let doctorIds = [];
+      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
+        { provider_id: providerId }
+      );
+
+      for (const mappingData of doctorProviderMapping) {
+        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
+        const doctorId = mappingWrapper.getDoctorId();
+        doctorIds.push(doctorId);
+      }
+
+      console.log("doctor ids got are: ", doctorIds);
+
+      let doctorApiDetails = {};
+      let userApiDetails = {};
+      // let userIds = [];
+      let specialityDetails = {};
+      let doctorQualificationApiDetails = {};
+      let doctorClinicApiDetails = {};
+      let uploadDocumentApiDetails = {};
+      let doctorRegistrationApiDetails = {};
+      let degreeApiDetails = {};
+      let councilApiDetails = {};
+      let collegeApiDetails = {};
+      let upload_document_ids = [];
+
+      let registration_council_ids = [];
+      let degree_ids = [];
+      let college_ids = [];
+      let userIds = [];
+
+      for (const doctor of doctorIds) {
+        let doctor_qualification_ids = [];
+        let doctor_registration_ids = [];
+        let doctor_clinic_ids = [];
+        const doctorWrapper = await DoctorWrapper(null, doctor);
+        const { specialities } = await doctorWrapper.getReferenceInfo();
+        specialityDetails = { ...specialityDetails, ...specialities };
+        userIds.push(doctorWrapper.getUserId());
+
+        const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
+          doctorWrapper.getDoctorId()
+        );
+
+        const userDetails = await userService.getUserById(
+          doctorWrapper.getUserId()
+        );
+        const userWrapper = await UserWrapper(userDetails.get());
+
+        userApiDetails[userWrapper.getId()] = { ...userWrapper.getBasicInfo() };
+
+        await doctorQualifications.forEach(async doctorQualification => {
+          const doctorQualificationWrapper = await QualificationWrapper(
+            doctorQualification
+          );
+
+          const qualificationDocuments = await documentService.getDoctorQualificationDocuments(
+            "doctor_qualification",
+            doctorQualificationWrapper.getDoctorQualificationId()
+          );
+
+          await qualificationDocuments.forEach(async document => {
+            const uploadDocumentWrapper = await UploadDocumentWrapper(document);
+            uploadDocumentApiDetails[
+              uploadDocumentWrapper.getUploadDocumentId()
+            ] = uploadDocumentWrapper.getBasicInfo();
+            upload_document_ids.push(
+              uploadDocumentWrapper.getUploadDocumentId()
+            );
+          });
+
+          doctorQualificationApiDetails[
+            doctorQualificationWrapper.getDoctorQualificationId()
+          ] = {
+            ...doctorQualificationWrapper.getBasicInfo(),
+            upload_document_ids
+          };
+
+          doctor_qualification_ids.push(
+            doctorQualificationWrapper.getDoctorQualificationId()
+          );
+
+          degree_ids.push(doctorQualificationWrapper.getDegreeId());
+
+          college_ids.push(doctorQualificationWrapper.getCollegeId());
+
+          upload_document_ids = [];
+        });
+
+        // REGISTRATION DETAILS
+        const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
+          doctorWrapper.getDoctorId()
+        );
+
+        Logger.debug("198361283 ---====> ", doctorRegistrations);
+
+        await doctorRegistrations.forEach(async doctorRegistration => {
+          const doctorRegistrationWrapper = await RegistrationWrapper(
+            doctorRegistration
+          );
+
+          const registrationDocuments = await documentService.getDoctorQualificationDocuments(
+            DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+          );
+
+          await registrationDocuments.forEach(async document => {
+            const uploadDocumentWrapper = await UploadDocumentWrapper(document);
+            uploadDocumentApiDetails[
+              uploadDocumentWrapper.getUploadDocumentId()
+            ] = uploadDocumentWrapper.getBasicInfo();
+            upload_document_ids.push(
+              uploadDocumentWrapper.getUploadDocumentId()
+            );
+          });
+
+          doctorRegistrationApiDetails[
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+          ] = {
+            ...doctorRegistrationWrapper.getBasicInfo(),
+            upload_document_ids
+          };
+
+          doctor_registration_ids.push(
+            doctorRegistrationWrapper.getDoctorRegistrationId()
+          );
+
+          registration_council_ids.push(
+            doctorRegistrationWrapper.getCouncilId()
+          );
+
+          upload_document_ids = [];
+        });
+
+        const doctorClinics = await clinicService.getClinicForDoctor(
+          doctorWrapper.getDoctorId()
+        );
+
+        await doctorClinics.forEach(async doctorClinic => {
+          const doctorClinicWrapper = await ClinicWrapper(doctorClinic);
+          doctorClinicApiDetails[
+            doctorClinicWrapper.getDoctorClinicId()
+          ] = doctorClinicWrapper.getBasicInfo();
+          doctor_clinic_ids.push(doctorClinicWrapper.getDoctorClinicId());
+        });
+
+        const doctorCouncils = await councilService.getCouncilByData({
+          id: registration_council_ids
+        });
+
+        for (const doctorCouncil of doctorCouncils) {
+          const council = await CouncilWrapper(doctorCouncil);
+          councilApiDetails[council.getCouncilId()] = council.getBasicInfo();
+        }
+
+        const doctorDegrees = await degreeService.getDegreeByData({
+          id: degree_ids
+        });
+
+        for (const doctorDegree of doctorDegrees) {
+          const degree = await DegreeWrapper(doctorDegree);
+          degreeApiDetails[degree.getDegreeId()] = degree.getBasicInfo();
+        }
+
+        const doctorColleges = await collegeService.getCollegeByData({
+          id: college_ids
+        });
+
+        for (const doctorCollege of doctorColleges) {
+          const college = await CollegeWrapper(doctorCollege);
+          collegeApiDetails[college.getCollegeId()] = college.getBasicInfo();
+        }
+
+        doctorApiDetails[doctorWrapper.getDoctorId()] = {
+          ...doctorWrapper.getBasicInfo(),
+          doctor_qualification_ids,
+          doctor_clinic_ids,
+          doctor_registration_ids
+        };
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          users: {
+            ...userApiDetails
+          },
+          doctors: {
+            ...doctorApiDetails
+          },
+          doctor_qualifications: {
+            ...doctorQualificationApiDetails
+          },
+          doctor_clinics: {
+            ...doctorClinicApiDetails
+          },
+          doctor_registrations: {
+            ...doctorRegistrationApiDetails
+          },
+          upload_documents: {
+            ...uploadDocumentApiDetails
+          },
+          colleges: {
+            ...collegeApiDetails
+          },
+          degrees: {
+            ...degreeApiDetails
+          },
+          registration_councils: {
+            ...councilApiDetails
+          },
+          specialities: {
+            ...specialityDetails
+          },
+          user_ids: userIds,
+          doctor_ids: doctorIds
+        },
+        "doctor details fetched successfully"
+      );
+    } catch (error) {
+      Logger.debug("getall 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  mailPassword = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      // const {
+      //   userDetails: { userId } = {},
+      //   body: { doctor_id = null } = {}
+      // } = req;
+
+      // const providerData = await providerService.getProviderByData({
+      //   user_id: userId
+      // });
+      // const provider = await ProviderWrapper(providerData);
+      // const providerId = provider.getProviderId();
+
+      // const doctor = await doctorService.getDoctorByData({ id: doctor_id });
+
+      // if (!doctor) {
+      //   return raiseClientError(res, 401, {}, "Invalid doctor.");
+      // }
+
+      // const doctorWrapper = await DoctorWrapper(doctor);
+      // const doctorUserId = doctorWrapper.getUserId();
+
+      // const link = uuidv4();
+
+      // const newPassword = generatePassword();
+      // const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      // const hash = await bcrypt.hash(newPassword, salt);
+
+      // const updateUser = await userService.updateUser(
+      //   { password: hash,
+      //     // system_generated_password: true
+      //   },
+      //   doctorUserId
+      // );
+
+      // const userDetails = await userService.getUserById(doctorUserId);
+      // const userWrapper = await UserWrapper(userDetails.get());
+
+      // // todo: update password for new user.
+
+      // const userEmail = userWrapper.getEmail();
+
+      // const emailPayload = {
+      //   title: "Verification mail",
+      //   toAddress: userEmail,
+      //   templateName: EMAIL_TEMPLATE_NAME.WELCOME,
+      //   templateData: {
+      //     title: "Doctor",
+      //     link: process.config.WEB_URL + process.config.app.invite_link + link,
+      //     inviteCard: "",
+      //     mainBodyText: `We are really happy that you chose us. Your temporary password is ${newPassword}.`,
+      //     subBodyText: "Please verify your account",
+      //     buttonText: "Verify",
+      //     host: process.config.WEB_URL,
+      //     contactTo: "patientEngagement@adhere.com"
+      //   }
+      // };
+
+      // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+
+      return raiseSuccess(res, 200, {}, "Password mailed successfully.");
+    } catch (error) {
+      Logger.debug("mailPassword 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getAppointmentForDoctors = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      const { userDetails: { userId } = {}, query: { type = APPOINTMENT_QUERY_TYPE.DAY, value = null } = {} } = req;
+
+        const validDate = moment(value).isValid();
+        if (!validDate) {
+          return raiseClientError(res, 402, {}, "Please enter correct date value");
+        }
+
+      const providerData = await providerService.getProviderByData({
+        user_id: userId
+      });
+      const provider = await ProviderWrapper(providerData);
+      const providerId = provider.getProviderId();
+
+      let userApiDetails = {};
+      let doctorApiDetails = {};
+      let patientsApiDetails = {};
+      let appointmentApiDetails = {};
+      let dateWiseAppointmentDetails = {};
+
+      let patientIds = [];
+      let doctorIds = [];
+      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
+        { provider_id: providerId }
+      );
+
+      for (const mappingData of doctorProviderMapping) {
+        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
+        const doctorId = mappingWrapper.getDoctorId();
+        const doctorDetails = await DoctorWrapper(null, doctorId);
+
+        const doctorUserId = doctorDetails.getUserId();
+        const doctorUserData = await UserWrapper(null, doctorUserId);
+
+        userApiDetails[doctorUserId] = doctorUserData.getBasicInfo();
+        doctorApiDetails[doctorId] = doctorDetails.getBasicInfo();
+        doctorIds.push(doctorId);
+      }
+
+      for (const doctorId of doctorIds) {
+        let appointmentList = [];
+
+        switch(type) {
+          case APPOINTMENT_QUERY_TYPE.DAY:
+            appointmentList = await appointmentService.getDayAppointmentForDoctor(
+                doctorId,
+                value
+            );
+            break;
+          case APPOINTMENT_QUERY_TYPE.MONTH:
+            appointmentList = await appointmentService.getMonthAppointmentForDoctor(
+                doctorId,
+                value
+            );
+            break;
+          default:
+            return raiseClientError(res, 422, {}, "Please check selected value for getting upcoming schedules")
+        }
+
+        if (appointmentList && appointmentList.length) {
+          for (const appointment of appointmentList) {
+            const appointmentData = await AppointmentWrapper(appointment);
+            const {
+              participant_one_id,
+              participant_two_id
+            } = appointmentData.getParticipants();
+
+            const {
+              [appointmentData.getFormattedStartDate()]: dateAppointments = null
+            } = dateWiseAppointmentDetails;
+
+            if (dateAppointments) {
+              dateWiseAppointmentDetails[
+                appointmentData.getFormattedStartDate()
+              ].push(appointmentData.getAppointmentId());
+            } else {
+              dateWiseAppointmentDetails[
+                appointmentData.getFormattedStartDate()
+              ] = [appointmentData.getAppointmentId()];
+            }
+
+            appointmentApiDetails[
+              appointmentData.getAppointmentId()
+            ] = appointmentData.getBasicInfo();
+
+            if (participant_one_id !== doctorId) {
+              patientIds.push(participant_one_id);
+            } else {
+              patientIds.push(participant_two_id);
+            }
+          }
+        }
+      }
+
+      for (const patientId of patientIds) {
+        const patientData = await PatientWrapper(null, patientId);
+        const patientUserId = patientData.getUserId();
+        const patientUserData = await UserWrapper(null, patientUserId);
+
+        userApiDetails[patientUserId] = patientUserData.getBasicInfo();
+        patientsApiDetails[patientId] = patientData.getBasicInfo();
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          users: { ...userApiDetails },
+          doctors: { ...doctorApiDetails },
+          date_wise_appointments: { ...dateWiseAppointmentDetails },
+          patients: { ...patientsApiDetails },
+          appointments: { ...appointmentApiDetails }
+        },
+        "Appointments data fetched successfully."
+      );
+    } catch (error) {
+      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getMonthAppointmentCountForDoctors = async (req, res) => {
+    const { raiseSuccess, raiseServerError, raiseClientError } = this;
+    try {
+      const { userDetails: { userId } = {}, query: { date = null } = {} } = req;
+
+      try {
+        const validDate = moment(date).isValid();
+        if (!validDate) {
+          return raiseClientError(res, 402, {}, "Invalid date.");
+        }
+      } catch {
+        return raiseClientError(res, 402, {}, "Invalid date.");
+      }
+
+      const providerData = await providerService.getProviderByData({
+        user_id: userId
+      });
+      const provider = await ProviderWrapper(providerData);
+      const providerId = provider.getProviderId();
+
+      let dateWiseAppointmentDetails = {};
+
+      let doctorIds = [];
+      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
+        { provider_id: providerId }
+      );
+
+      for (const mappingData of doctorProviderMapping) {
+        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
+        const doctorId = mappingWrapper.getDoctorId();
+        doctorIds.push(doctorId);
+      }
+
+      for (const doctorId of doctorIds) {
+        const appointmentList = await appointmentService.getMonthAppointmentCountForDoctor(
+          doctorId,
+          date
+        );
+
+        if (appointmentList && appointmentList.length) {
+          for (const appointment of appointmentList) {
+            const start_date = appointment.get("start_date");
+            const count = appointment.get("count");
+
+            dateWiseAppointmentDetails[start_date] = count;
+          }
+        }
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          date_wise_appointments: { ...dateWiseAppointmentDetails }
+        },
+        "Appointments data fetched successfully."
+      );
+    } catch (error) {
+      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  // addPaymentProduct = async (req, res) => {
+  //   const { raiseSuccess, raiseServerError, raiseClientError } = this;
+  //   try {
+  //     const { body, userDetails: { userId } = {} } = req;
+
+  //     const providerData = await providerService.getProviderByData({
+  //       user_id: userId
+  //     });
+  //     const provider = await ProviderWrapper(providerData);
+  //     const providerId = provider.getProviderId();
+
+  //     const dataToAdd = PaymentHelper.getFormattedData(body);
+
+  //     const paymentProductService = new PaymentProductService();
+  //     const paymentProductData = await paymentProductService.addDoctorProduct({
+  //       ...dataToAdd,
+  //       creator_id: providerId,
+  //       creator_type: USER_CATEGORY.PROVIDER,
+  //       product_user_type: "patient"
+  //     });
+
+  //     if (paymentProductData) {
+  //       let paymentProducts = {};
+
+  //       const paymentProduct = await PaymentProductWrapper({
+  //         data: paymentProductData
+  //       });
+  //       paymentProducts[paymentProduct.getId()] = paymentProduct.getBasicInfo();
+
+  //       return raiseSuccess(
+  //         res,
+  //         200,
+  //         {
+  //           payment_products: {
+  //             ...paymentProducts
+  //           }
+  //         },
+  //         "Consultation Product added successfully"
+  //       );
+  //     } else {
+  //       return raiseClientError(
+  //         res,
+  //         201,
+  //         {},
+  //         "Please check details given for the consultation product"
+  //       );
+  //     }
+  //   } catch (error) {
+  //     Logger.debug("addPaymentProduct 500 error ", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
+}
+
+export default new ProvidersController();

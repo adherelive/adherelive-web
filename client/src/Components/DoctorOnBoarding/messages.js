@@ -91,6 +91,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: 'Search City'
   },
+  createDoctorProfile: {
+    id: "app.doctorOnBoarding.createDoctorProfile",
+    description: "",
+    defaultMessage: 'Create Doctor Profile'
+  },
   createProfile: {
     id: "app.doctorOnBoarding.createProfile",
     description: "",
@@ -382,6 +387,20 @@ const messages = defineMessages({
     description: "",
     defaultMessage: 'Clinic Timings'
   },
+  clinicAddSuccess: {
+    id: "app.doctorOnBoarding.clinicAddSuccess",
+    description: "",
+    defaultMessage: 'Clinical Details Added Successfully'
+  },
+  doctorAddSuccess: {
+    id: "app.doctorOnBoarding.doctorAddSuccess",
+    description: "",
+    defaultMessage: 'Doctor Profile Details Added Successfully'
+  },qualificationAddSuccess: {
+    id: "app.doctorOnBoarding.qualificationAddSuccess",
+    description: "",
+    defaultMessage: 'Qualification Details Added Successfully'
+  }
 
 
 

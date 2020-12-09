@@ -1,6 +1,11 @@
 import Controller from "../../index";
 import appointmentService from "../../../services/appointment/appointment.service";
-import {EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, USER_CATEGORY} from "../../../../constant";
+import {
+  EVENT_STATUS,
+  EVENT_TYPE,
+  FEATURE_TYPE,
+  USER_CATEGORY
+} from "../../../../constant";
 import moment from "moment";
 
 import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
@@ -15,7 +20,6 @@ import patientService from "../../../services/patients/patients.service";
 import Log from "../../../../libs/log";
 import featureDetailService from "../../../services/featureDetails/featureDetails.service";
 import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
-import providerService from "../../../services/provider/provider.service";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
@@ -23,7 +27,6 @@ import NotificationSdk from "../../../NotificationSdk";
 import queueService from "../../../services/awsQueue/queue.service";
 
 // WRAPPERS...
-import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
@@ -80,14 +83,14 @@ class MobileAppointmentController extends Controller {
       const previousAppointments = await appointmentService.checkTimeSlot(
         start_time,
         end_time,
-          {
-            participant_one_id: userCategoryId,
-            participant_one_type: category
-          },
-          {
-            participant_two_id,
-            participant_two_type
-          }
+        {
+          participant_one_id: userCategoryId,
+          participant_one_type: category
+        },
+        {
+          participant_two_id,
+          participant_two_type
+        }
       );
 
       if (previousAppointments.length > 0) {
@@ -142,7 +145,9 @@ class MobileAppointmentController extends Controller {
           participantTwoId = doctorData.getUserId();
           break;
         case USER_CATEGORY.PATIENT:
-          const patient = await patientService.getPatientById({id: participant_two_id});
+          const patient = await patientService.getPatientById({
+            id: participant_two_id
+          });
           const patientData = await PatientWrapper(patient);
           participantTwoId = patientData.getUserId();
           break;
@@ -166,16 +171,22 @@ class MobileAppointmentController extends Controller {
             category,
             name: userCategoryData.getName()
           }
-        },
+        }
       };
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+      const sqsResponse = await QueueService.sendMessage(
+        "test_queue",
+        eventScheduleData
+      );
 
       Logger.debug("sqsResponse ---> ", sqsResponse);
 
-      const appointmentJob = AppointmentJob.execute(EVENT_STATUS.SCHEDULED, eventScheduleData);
+      const appointmentJob = AppointmentJob.execute(
+        EVENT_STATUS.SCHEDULED,
+        eventScheduleData
+      );
       await NotificationSdk.execute(appointmentJob);
 
       // ADD CARE_PLAN APPOINTMENT
@@ -256,7 +267,6 @@ class MobileAppointmentController extends Controller {
   };
 
   update = async (req, res) => {
-
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Logger.debug("REQUEST PARAM ---> ", req.params);
@@ -277,7 +287,7 @@ class MobileAppointmentController extends Controller {
         provider_name = null,
         critical = false
       } = body;
-        Logger.debug("CONDITION CHECK ---> ",  moment(date));
+      Logger.debug("CONDITION CHECK ---> ", moment(date));
       const { userId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
@@ -305,45 +315,58 @@ class MobileAppointmentController extends Controller {
           break;
       }
 
-      Logger.debug("CONDITION CHECK ---> 1",  moment(start_time));
-      Logger.debug("CONDITION CHECK ---> 2",  moment(oldAppointmentData.getStartTime()));
+      Logger.debug("CONDITION CHECK ---> 1", moment(start_time));
+      Logger.debug(
+        "CONDITION CHECK ---> 2",
+        moment(oldAppointmentData.getStartTime())
+      );
 
       if (
-        moment(date).diff(moment(oldAppointmentData.getStartDate()), 'd') !== 0 ||
-        moment(start_time).diff(moment(oldAppointmentData.getStartTime()), 'm') !==
+        moment(date).diff(moment(oldAppointmentData.getStartDate()), "d") !==
           0 ||
-        moment(end_time).diff(moment(oldAppointmentData.getEndTime()), 'm') !== 0
+        moment(start_time).diff(
+          moment(oldAppointmentData.getStartTime()),
+          "m"
+        ) !== 0 ||
+        moment(end_time).diff(moment(oldAppointmentData.getEndTime()), "m") !==
+          0
       ) {
-          const previousAppointments = await appointmentService.checkTimeSlot(
-              start_time,
-              end_time,
-              {
-                participant_one_id: userCategoryId,
-                participant_one_type: category
-              },
-              {
-                participant_two_id,
-                participant_two_type
-              }
-          );
+        const previousAppointments = await appointmentService.checkTimeSlot(
+          start_time,
+          end_time,
+          {
+            participant_one_id: userCategoryId,
+            participant_one_type: category
+          },
+          {
+            participant_two_id,
+            participant_two_type
+          }
+        );
 
-        const filteredAppointments = previousAppointments.filter(appointment => {
-          console.log("appointment id", typeof id,typeof appointment.get("id"));
-          return `${appointment.get("id")}` !== id;
-        });
+        const filteredAppointments = previousAppointments.filter(
+          appointment => {
+            console.log(
+              "appointment id",
+              typeof id,
+              typeof appointment.get("id")
+            );
+            return `${appointment.get("id")}` !== id;
+          }
+        );
 
         console.log("appointment id", filteredAppointments);
 
-          if (filteredAppointments.length > 0) {
-              return raiseClientError(
-                  res,
-                  422,
-                  {
-                      error_type: "slot_present"
-                  },
-                  `Appointment Slot already present between`
-              );
-          }
+        if (filteredAppointments.length > 0) {
+          return raiseClientError(
+            res,
+            422,
+            {
+              error_type: "slot_present"
+            },
+            `Appointment Slot already present between`
+          );
+        }
       }
 
       const appointment_data = {
@@ -366,7 +389,7 @@ class MobileAppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical,
+          critical
         }
       };
 
@@ -375,7 +398,9 @@ class MobileAppointmentController extends Controller {
         appointment_data
       );
 
-      const updatedAppointmentDetails = await appointmentService.getAppointmentById(id);
+      const updatedAppointmentDetails = await appointmentService.getAppointmentById(
+        id
+      );
 
       const appointmentApiData = await MAppointmentWrapper(
         updatedAppointmentDetails
@@ -439,35 +464,25 @@ class MobileAppointmentController extends Controller {
   };
 
   getAppointmentDetails = async (req, res) => {
-    const {raiseSuccess, raiseServerError} = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
-      const appointmentDetails = await featureDetailService.getDetailsByData({feature_type: FEATURE_TYPE.APPOINTMENT});
+      const appointmentDetails = await featureDetailService.getDetailsByData({
+        feature_type: FEATURE_TYPE.APPOINTMENT
+      });
 
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
-      let providerData = {};
-
-      const providerDetails = await providerService.getAll();
-
-      Logger.debug("providerDetails ---->", providerDetails);
-
-      for(const provider of providerDetails) {
-        const providerDetail = await ProviderWrapper(provider);
-        providerData[providerDetail.getProviderId()] = providerDetail.getBasicInfo();
-      }
-
-
-      return raiseSuccess(res, 200, {
-            static_templates: {
-              appointments: {...appointmentData.getFeatureDetails()},
-            },
-            providers: {
-              ...providerData
-            }
-          },
-          "Appointment details fetched successfully");
-
-    } catch(error) {
+      return raiseSuccess(
+        res,
+        200,
+        {
+          static_templates: {
+            appointments: { ...appointmentData.getFeatureDetails() }
+          }
+        },
+        "Appointment details fetched successfully"
+      );
+    } catch (error) {
       Logger.debug("getAppointmentDetails 500 error ", error);
       return raiseServerError(res);
     }

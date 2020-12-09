@@ -11,25 +11,27 @@ import LocationModal from '../../../Components/DoctorOnBoarding/locationmodal';
 import TimingModal from '../../../Components/DoctorOnBoarding/timingModal';
 import plus from '../../../Assets/images/plus.png';
 import PlacesAutocomplete, {
-    geocodeByAddress,
-    getLatLng,
 } from 'react-places-autocomplete';
+
+import Menu from "antd/es/menu";
+import Dropdown from "antd/es/dropdown";
+
 import {
   CheckCircleTwoTone,
   ExclamationCircleTwoTone,
   ArrowLeftOutlined,
-  FileTextOutlined,
   UserOutlined,
   EditOutlined,
   CameraFilled,
   DeleteTwoTone,
   CheckOutlined,
-  CloseOutlined
+  CloseOutlined,
+  PlusCircleOutlined
 } from "@ant-design/icons";
 import moment from "moment";
 import messages from "./messages";
 import { getUploadURL, updateDoctorURL, getUploadQualificationDocumentUrl, getUploadRegistrationDocumentUrl } from '../../../Helper/urls/doctor';
-import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM, REQUEST_TYPE, MALE, GENDER, FEMALE, OTHER, FULL_DAYS, FULL_DAYS_NUMBER, HTTP_CODE_SERVER_ERROR } from "../../../constant";
+import {PATH,USER_CATEGORY, TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM, REQUEST_TYPE, MALE, GENDER, FEMALE, OTHER, FULL_DAYS, FULL_DAYS_NUMBER, HTTP_CODE_SERVER_ERROR } from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 
@@ -39,7 +41,7 @@ class DoctorProfilePage extends Component {
     constructor(props) {
         super(props);
         const { 
-            auth: {authenticated_user=null,authPermissions=[]},
+            auth: {authenticated_user=null,authPermissions=[],authenticated_category=''},
             users,
             doctors,
             qualification_ids,
@@ -52,9 +54,10 @@ class DoctorProfilePage extends Component {
             degrees,
             colleges,
             councils,
-            specialities
+            specialities,
+            id: doctorId
         } = props;
-        let doctor_user_id = 0;
+        let doctor_user_id = doctorId;
         for (let doctor of Object.values(doctors)) {
             let { basic_info: { user_id = 0, id = 0 } = {} } = doctor;
 
@@ -120,12 +123,15 @@ class DoctorProfilePage extends Component {
             modal_timing_visible[element]=false;
         });
         let verified_doctor=false;
-
-        if(authPermissions.length){
+        
+        if(authPermissions.length && authenticated_category !== USER_CATEGORY.PROVIDER){
             verified_doctor=true;
         }
+        
+        
         let userName =`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? last_name : ""}`;
         this.state = {
+            isProviderEditable:true,
             verified_doctor:verified_doctor,
             loading: false,
             updateLoading: false,
@@ -175,29 +181,100 @@ class DoctorProfilePage extends Component {
   }
 
     componentDidMount() {
-        const { doctors } = this.state;
-        const { doctor_user_id } =this.state;
+        const { doctors ={} } = this.state;
+        const { doctor_user_id =''} =this.state;
         const { getInitialData } = this;
-        const { doctor_qualification_ids,doctor_registration_ids } = doctors[doctor_user_id] || {};
-        if (!doctor_qualification_ids || !doctor_registration_ids) {
+        const { doctor_qualification_ids,doctor_registration_ids ,doctor_clinic_ids} = doctors[doctor_user_id] || {};
         getInitialData();
-        }
+        // if (!doctor_qualification_ids || !doctor_registration_ids || !doctor_clinic_ids) {
+        //   getInitialData();
+        // }
+
     }
 
     getInitialData = async () => {
         try {
         this.setState({ loading: true });
         const { getDoctorDetails } = this.props;
+        const { 
+          auth: {authenticated_category = ''}} = this.props;
+
         const response = await getDoctorDetails();
+       
         const {
             status,
-            payload: { message: { message: responseMessage } = {} } = {}
+            payload: { data = {},message: { message: responseMessage } = {} } = {}
         } = response || {};
 
         if (status === true) {
-            this.setState({
-            loading: false
-            });
+
+              if(authenticated_category === USER_CATEGORY.PROVIDER){
+
+                const {isProviderEditable = true} = this.state;
+
+                const { id: doctorId } = this.props;
+                let doctor_user_id = doctorId;
+
+                  const {
+                    colleges = {},
+                    degrees ={},
+                    doctor_clinics ={},
+                    doctor_qualifications ={},
+                    docotr_registrations = {},
+                    doctors= {},
+                    registration_councils ={},
+                    specialities ={},
+                    upload_documents = {},
+                    users = {}
+                  } = data || {};
+
+                  const {
+                    basic_info: {
+                        first_name="",
+                        middle_name="",
+                        last_name="",
+                        profile_pic="",
+                        gender="",
+                        city="",
+                        speciality_id=""
+                    } = {},
+                    doctor_qualification_ids=[],
+                    doctor_registration_ids=[],
+                    doctor_clinic_ids=[]
+                } = doctors[doctor_user_id] || {};
+
+
+                    this.setState({
+                    loading: false,
+                    colleges ,
+                    degrees ,
+                    doctor_clinics ,
+                    doctor_qualifications ,
+                    docotr_registrations ,
+                    doctors,
+                    registration_councils ,
+                    specialities ,
+                    upload_documents ,
+                    users ,
+                    first_name,
+                    middle_name,
+                    last_name,
+                    profile_pic,
+                    gender,
+                    city,
+                    speciality_id,
+                    doctor_qualification_ids,
+                    doctor_registration_ids,
+                    doctor_clinic_ids,
+                    });
+
+
+
+              }else{
+                this.setState({
+                  loading: false})
+              }
+
         } else {
             this.setState({
             loading: false
@@ -208,7 +285,7 @@ class DoctorProfilePage extends Component {
         this.setState({
             loading: false
         });
-        message.warn("Somthing wen't wrong, please try again later");
+        message.warn("Something went wrong, please try again later");
         }
     };
 
@@ -217,10 +294,22 @@ class DoctorProfilePage extends Component {
     updateProfileData = async (updateData) => {
         try {
             this.setState({ updateLoading: true });
-            const { auth: {authenticated_user=null}, doctors, users, updateDoctorBasicInfo } = this.props;
+            const { auth: {authenticated_category ='',authenticated_user=null}, doctors, users, updateDoctorBasicInfo } = this.props;
             const { id } = authenticated_user;
-            let response = await updateDoctorBasicInfo(authenticated_user,updateData);
-            const { status , payload : { message:respMessage }, statusCode} = response;
+            let response ={};
+
+            if(authenticated_category === USER_CATEGORY.PROVIDER){
+              const {id : doctor_id = ''} = this.props;
+              const {doctors = {} , doctor_user_id =''} = this.state; 
+              const {basic_info : {user_id : d_user_id = ''} = {}} =  doctors[doctor_user_id] || {};
+              updateData["doctor_id"] = doctor_id;
+             response = await updateDoctorBasicInfo(d_user_id,updateData);
+            }else{
+             response = await updateDoctorBasicInfo(authenticated_user,updateData);
+            }
+           
+            
+            const { status , payload : { message:respMessage }, statusCode} = response ;
             if(status){
                 this.setState({
                     updateLoading: false
@@ -245,7 +334,7 @@ class DoctorProfilePage extends Component {
             updateLoading: false
         });
         console.log(error);
-        message.warn("Somthing wen't wrong, please try again later");
+        message.warn("Something went wrong, please try again later");
         }
         return false;
     };
@@ -284,7 +373,7 @@ class DoctorProfilePage extends Component {
     };
     undoNameChanges = () => {
       const { 
-        doctor_user_id,
+        doctor_user_id ='',
       } = this.state;
       const { doctors } =this.props;
       const { basic_info: { first_name='',middle_name='',last_name='' }} = doctors[doctor_user_id];
@@ -301,8 +390,8 @@ class DoctorProfilePage extends Component {
     };
     updateCity = () => {
       const { 
-        city,
-        doctor_user_id
+        city ='',
+        doctor_user_id =''
       } = this.state;
       const { doctors } =this.props;
       const { basic_info: { city:oldCity }} = doctors[doctor_user_id];
@@ -326,7 +415,7 @@ class DoctorProfilePage extends Component {
     };
     undoCityChanges = () => {
       const { 
-        doctor_user_id
+        doctor_user_id =''
       } = this.state;
       const { doctors } =this.props;
       const { basic_info: { city:oldCity }} = doctors[doctor_user_id];
@@ -338,7 +427,7 @@ class DoctorProfilePage extends Component {
       this.setState({edit_gender:true});
     };
     updateGender = value => {
-      this.setState({ gender: value,edit_gender:false });
+      this.setState({ gender: value ,edit_gender:false });
       this.updateProfileData({'gender':value});
     };
     genderBlur = () => {
@@ -352,7 +441,7 @@ class DoctorProfilePage extends Component {
       this.setState({edit_specialities:false});
     };
     updateSpeciality = value => {
-      this.setState({ speciality_id: value,edit_specialities:false });
+      this.setState({ speciality_id: value ,edit_specialities:false });
       this.updateProfileData({'speciality_id':value});
     };
 
@@ -427,7 +516,7 @@ class DoctorProfilePage extends Component {
       this.setState({edit_qualification_college:newQualificationCollege});
     };
     updateCollege = (qualification_id) => value => {
-      const { doctor_user_id, edit_qualification_college } = this.state;
+      const { doctor_user_id ='', edit_qualification_college = '' } = this.state;
       let newQualificationCollege = edit_qualification_college;
       let updateData = {
           qualification_details : [
@@ -498,7 +587,7 @@ class DoctorProfilePage extends Component {
       return years;
     };
     updateQualificationYear = qualification_id => (value) => {
-      const { doctor_user_id, edit_qualification_year } = this.state;
+      const { doctor_user_id ='', edit_qualification_year ='' } = this.state;
       const { doctor_qualifications } =this.props;
       let newQualificationYear = edit_qualification_year;
       let updateData = {
@@ -519,26 +608,26 @@ class DoctorProfilePage extends Component {
     };
 
     editRegistrationNumber = (registration_id) => {
-      const { edit_registration_number } =this.state;
+      const { edit_registration_number =''} =this.state;
       let newRegistrationNumber = edit_registration_number;
       newRegistrationNumber[registration_id]=true;
       this.setState({edit_registration_number:newRegistrationNumber});
     };
     onBlurRegistrationNumber = (registration_id) => {
-      const { edit_registration_number } =this.state;
+      const { edit_registration_number =''} =this.state;
       let newRegistrationNumber = edit_registration_number;
       newRegistrationNumber[registration_id]=false;
       this.setState({edit_registration_number:newRegistrationNumber});
     };
     changeRegistrationNumber = (event) => {
       let registration_id = event.target.dataset.id;
-      const { registration_numbers } =this.state;
+      const { registration_numbers ='' } =this.state;
       let newRegistrationNumber = registration_numbers;
       newRegistrationNumber[registration_id]=event.target.value;
       this.setState({registration_numbers:newRegistrationNumber});
     };
     updateRegistrationNumber = (e) => {
-      const { doctor_user_id, edit_registration_number,registration_numbers } = this.state;
+      const { doctor_user_id='', edit_registration_number='',registration_numbers='' } = this.state;
       const { doctor_registrations } =this.props;
       let newEditRegistrationNumber = edit_registration_number;
       let newRegistrationNumber = registration_numbers;
@@ -575,9 +664,9 @@ class DoctorProfilePage extends Component {
     };
     undoRegistrationNumberChanges = (registration_id) => {
       const { 
-        doctor_user_id,
-        registration_numbers,
-        edit_registration_number
+        doctor_user_id='',
+        registration_numbers='',
+        edit_registration_number=''
       } = this.state;
       const { doctor_registrations } =this.props;
       const { basic_info: { number }} = doctor_registrations[registration_id];
@@ -599,7 +688,7 @@ class DoctorProfilePage extends Component {
       this.setState({edit_registration_council:newRegistrationCouncil});
     };
     updateRegistrationCouncil = (registration_id) => value => {
-      const { doctor_user_id, edit_registration_council } = this.state;
+      const { doctor_user_id='', edit_registration_council='' } = this.state;
       let newRegistrationCouncil = edit_registration_council;
       let updateData = {
           registration_details : [
@@ -633,7 +722,7 @@ class DoctorProfilePage extends Component {
       this.setState({edit_registration_year:newRegistrationYear});
     };
     updateRegistrationYear = registration_id => (value) => {
-      const { doctor_user_id, edit_registration_year } = this.state;
+      const { doctor_user_id='', edit_registration_year =''} = this.state;
       let newRegistrationYear = edit_registration_year;
       let updateData = {
           registration_details : [
@@ -666,7 +755,7 @@ class DoctorProfilePage extends Component {
     };
     updateRegistrationExpiryDate = registration_id => (date, dateString) => {
       if(date){
-          const { doctor_user_id, edit_registration_expiry } = this.state;
+          const { doctor_user_id='', edit_registration_expiry='' } = this.state;
           let newRegistrationExpiryDate = edit_registration_expiry;
           let updateData = {
               registration_details : [
@@ -684,14 +773,14 @@ class DoctorProfilePage extends Component {
     };
 
     editClinicName = (clinic_id) => {
-      const { edit_clinic_name } =this.state;
+      const { edit_clinic_name='' } =this.state;
       let newClinicName = edit_clinic_name;
       newClinicName[clinic_id]=true;
       this.setState({edit_clinic_name:newClinicName});
     };
     updateClinicName = (e) => {
-      const { doctor_user_id, edit_clinic_name,clinic_names } = this.state;
-      const { doctor_clinics } =this.props;
+      const { doctor_user_id='', edit_clinic_name='',clinic_names='' } = this.state;
+      const { doctor_clinics  = []} =this.props;
       let newClinicName = clinic_names;
       let newEditClinic = edit_clinic_name;
       let clinic_id = e.target.dataset.id;
@@ -725,7 +814,7 @@ class DoctorProfilePage extends Component {
       });
     };
     undoClinicNameChanges = (clinic_id) => {
-      const { doctor_user_id, edit_clinic_name,clinic_names } = this.state;
+      const { doctor_user_id='', edit_clinic_name='',clinic_names='' } = this.state;
       const { doctor_clinics } =this.props;
       let newClinicName = clinic_names;
       let newEditClinic = edit_clinic_name;
@@ -804,7 +893,14 @@ class DoctorProfilePage extends Component {
     history.goBack();
   };
   renderName = () => {
+    const {first_name='',middle_name='',last_name=''} = this.state;
+    let userName =`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? last_name : ""}`;
+    
       const { edit_name, name } =this.state;
+      if(!name){
+        this.setState({name : userName.trim()})
+      }
+      
       if(edit_name){
         return (
             <div style={{position:"relative"}} >
@@ -838,7 +934,9 @@ class DoctorProfilePage extends Component {
         if(regNumber == undefined){
           regNumber=number;
         }
+
         if(edit_registration_number[registration_id]){
+          
         return (
             <div style={{position:"relative"}}>
               <Input value={regNumber} data-id={registration_id} onChange={this.changeRegistrationNumber} onPressEnter={this.updateRegistrationNumber} data-id={registration_id} onBlur={this.updateRegistrationNumber} autoFocus></Input>
@@ -945,7 +1043,7 @@ class DoctorProfilePage extends Component {
                 name
             }
         } = doctor_clinics[clinic_id];
-        
+
         return (Object.keys(time_slots).map((day, index) => {
             // todo: add DAY[day] later from constants
             return (
@@ -1369,7 +1467,7 @@ onChangeClinicLocation = clinic_id => (value) => {
       // }
     } catch (err) {
       console.log("err", err);
-      message.warn("Something wen't wrong. Please try again later");
+      message.warn("Something went wrong, please try again later");
       this.setState({ fetchingSpeciality: false });
     }
   };
@@ -1435,7 +1533,7 @@ onChangeClinicLocation = clinic_id => (value) => {
         className="form-inputs"
         placeholder="Select Speciality"
         showSearch
-        value={speciality_id.toString()}
+        value={speciality_id ? speciality_id.toString() : ''}
         onChange={this.updateSpeciality}
         onBlur={this.specialityBlur}
         autoComplete="off"
@@ -1465,7 +1563,7 @@ onChangeClinicLocation = clinic_id => (value) => {
     }
 
     renderGender= () => {
-        const { edit_gender, gender } = this.state;
+        const { edit_gender = '', gender = '' } = this.state;
     
     
         if(edit_gender){
@@ -1473,7 +1571,7 @@ onChangeClinicLocation = clinic_id => (value) => {
             <Select
               className="form-inputs"
               placeholder="Select Gender"
-              value={GENDER[gender].label}
+              value={ gender? GENDER[gender].label : ''}
               onChange={this.updateGender}
               onBlur={this.genderBlur}
               autoComplete="off"   
@@ -1505,7 +1603,7 @@ onChangeClinicLocation = clinic_id => (value) => {
     }
 
   editClinicTimings = (clinic_id) => {
-    const { edit_clinic_timings } =this.state;
+    const { edit_clinic_timings ='' } =this.state;
     let newClinicTimings = edit_clinic_timings;
     newClinicTimings[clinic_id]=true;
     this.setState({edit_clinic_timings:newClinicTimings});
@@ -1513,12 +1611,37 @@ onChangeClinicLocation = clinic_id => (value) => {
     getDoctorDetailsHeader = () => {
         // const { id, doctors, users } = this.props;
         const { formatMessage, handleBack } = this;
+        const { auth: {authenticated_category = '', authenticated_user=null}, doctors } = this.props;
+
 
         return (
-        <div className="wp100 mb20 fs28 fw700 flex justify-start align-center">
-            <ArrowLeftOutlined onClick={handleBack} className="mr10" />
-            <div>{formatMessage(messages.doctor_details_header_text)}</div>
-        </div>
+       <div>  
+            <div className="wp100 mb20 fs28 fw700 flex justify-space-between align-center">
+            <div className="flex flex-start align-center">
+              <ArrowLeftOutlined onClick={handleBack} className="mr10" />
+              <div>{formatMessage(messages.doctor_details_header_text)}</div>
+            </div>
+            
+            <div>
+              {authenticated_category === USER_CATEGORY.PROVIDER
+              ?
+                (<div className="flex flex-end align-center">
+                <Dropdown
+                  overlay={this.getMenu()}
+                  trigger={["click"]}
+                  placement="bottomRight"
+                >
+                  <Button type="primary" className="ml10 add-button " icon={"plus"}>
+                    <span className="fs16">{this.formatMessage(messages.add)}</span>
+                  </Button>
+                </Dropdown>
+              </div>)
+              :
+              null}
+            </div>
+
+            </div>
+       </div>
         );
     };
     getBase64 = (img, callback) => {
@@ -1568,23 +1691,44 @@ onChangeClinicLocation = clinic_id => (value) => {
 
     }
     getDoctorBasicDetails = () => {
-        const { auth: {authenticated_user=null}, doctors, users, specialities } = this.props;
+        const { auth: {authenticated_category = "",authenticated_user=null}, doctors, users, specialities } = this.props;
         const current_doctor = doctors[authenticated_user];
-        const { profile_pic_url, edit_name, doctor_user_id } = this.state;
+        let { profile_pic_url ='', edit_name ='', doctor_user_id ='' } = this.state;
         const { formatMessage, handleProfilePicModalOpen } = this;
         const {
             basic_info: {
+                user_id,
                 gender,
                 city,
                 speciality_id
             } = {}
         } = doctors[doctor_user_id] || {};
+
+        
+        
+        if(authenticated_category === USER_CATEGORY.PROVIDER){
+          let  {profile_pic  = '',profile_pic_url = ''} = this.state;
+           let p_pic = profile_pic !== '' ? profile_pic : profile_pic_url;
+
+            if(profile_pic === ''){
+              this.setState({profile_pic : p_pic});
+            }
+
+            if(profile_pic_url === ''){
+              this.setState({profile_pic_url : p_pic});
+            }
+          
+          profile_pic_url  =  p_pic;
+        }
+
+        
+
         const {
         basic_info: {  email, mobile_number, prefix } = {},
         onboarded,
         onboarding_status,
         activated_on
-        } = users[authenticated_user] || {};
+        } = users[user_id] || {};
         const {basic_info: {name : specialityName} = {}} = specialities[speciality_id] || {};
 
         return (
@@ -1736,7 +1880,7 @@ onChangeClinicLocation = clinic_id => (value) => {
       upload_documents,
       councils = {}
     } = this.props;
-    const { doctor_user_id, verified_doctor } = this.state;
+    const { doctor_user_id ='', verified_doctor ='' } = this.state;
     const { formatMessage, handlePictureModal } = this;
 
     const { doctor_registration_ids = [] } = doctors[doctor_user_id] || {};
@@ -1932,7 +2076,7 @@ onChangeClinicLocation = clinic_id => (value) => {
 
     let { status = false } = uploadResponse;
     if (status) {
-        const { doctor_user_id } = this.state;
+        const { doctor_user_id  = ''} = this.state;
         let updateData = {
             qualification_details : [
                 {
@@ -1968,7 +2112,7 @@ onChangeClinicLocation = clinic_id => (value) => {
 
     let { status = false } = uploadResponse;
     if (status) {
-        const { doctor_user_id } = this.state;
+        const { doctor_user_id = ''} = this.state;
         let updateData = {
             registration_details : [
                 {
@@ -2002,7 +2146,7 @@ onChangeClinicLocation = clinic_id => (value) => {
       degrees = {},
       colleges = {}
     } = this.props;
-    const { doctor_user_id, verified_doctor } =this.state;
+    const { doctor_user_id ='', verified_doctor ='' } =this.state;
     const { formatMessage, handlePictureModal } = this;
 
     const { doctor_qualification_ids = [] } = doctors[doctor_user_id] || {};
@@ -2158,7 +2302,7 @@ onChangeClinicLocation = clinic_id => (value) => {
     }
     const { id, doctors, doctor_clinics } = this.props;
     const { formatMessage, getFullDayText } = this;
-    const { doctor_user_id, verified_doctor, edit_clinic_timings } = this.state;
+    const { doctor_user_id ='', verified_doctor ='', edit_clinic_timings =''} = this.state;
     const { doctor_clinic_ids = [] } = doctors[doctor_user_id] || {};
 
     return doctor_clinic_ids.map((clinic_id, index) => {
@@ -2167,6 +2311,8 @@ onChangeClinicLocation = clinic_id => (value) => {
         location,
         details: { time_slots = [] } = {}
       } = doctor_clinics[clinic_id] || {};
+
+
       let timeForModal = {};
       let daySelected = {
         [FULL_DAYS.MON]: false,
@@ -2256,6 +2402,9 @@ onChangeClinicLocation = clinic_id => (value) => {
     const { id, doctors, users } = this.props;
     const { formatMessage, handleVerify } = this;
 
+    const { 
+      auth: {authenticated_category = ''}} = this.props;
+
     const {
       doctor_clinic_ids = [],
       doctor_qualification_ids = [],
@@ -2263,12 +2412,16 @@ onChangeClinicLocation = clinic_id => (value) => {
     basic_info :{user_id} = {}
     } = doctors[id] || {};
 
-    const {activated_on} = users[user_id] || {};
+    let {activated_on} = users[user_id]  || {};
+    const {id : doctor_id = ''} = this.props;
+    const {doctor_user_id =''} = this.state; 
+    const {basic_info : {user_id : d_user_id = ''} = {}} =  doctors[doctor_user_id] || {};
 
     const disabled =
       doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
-      doctor_registration_ids.length === 0 || activated_on !== null;
+      doctor_registration_ids.length === 0 || activated_on !== null 
+
 
     return (
       <div className="mt20 wi flex justify-end">
@@ -2287,10 +2440,12 @@ onChangeClinicLocation = clinic_id => (value) => {
   handleVerify = async e => {
     e.preventDefault();
     const { verifyDoctor, id } = this.props;
+    console.log("8675467865467890",this.props);
     try {
       const response = await verifyDoctor(id);
       const { status, payload: { message: respMessage = "" } = {} } =
         response || {};
+
       if (status === true) {
         message.success(respMessage);
       } else {
@@ -2308,7 +2463,7 @@ onChangeClinicLocation = clinic_id => (value) => {
 
   getModalDetails = () => {
     const { upload_documents } = this.props;
-    const { modalVisible, selectedDocumentId } = this.state;
+    const { modalVisible ='', selectedDocumentId =''} = this.state;
     const { formatMessage, handlePictureModalClose } = this;
 
     const { basic_info: { document } = {} } =
@@ -2344,8 +2499,8 @@ onChangeClinicLocation = clinic_id => (value) => {
 
   getProfilePicModal = () => {
     const { doctors } = this.props;
-    const { doctor_user_id } =this.state;
-    const { profilePicModalVisible } = this.state;
+    const { doctor_user_id ='' } =this.state;
+    const { profilePicModalVisible =''} = this.state;
     const { formatMessage, handleProfilePicModalClose } = this;
 
     const { basic_info: { profile_pic } = {} } = doctors[doctor_user_id] || {};
@@ -2365,12 +2520,49 @@ onChangeClinicLocation = clinic_id => (value) => {
       </Modal>
     );
   };
+  addQualificationDetails = (e) => {
+    e.preventDefault();
+    const { history } = this.props;
+    const {doctor_user_id : doctor_id = ''} = this.state;
+    history.replace(`${PATH.REGISTER_FROM_PROFILE}${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`)
+  }
+
+  addClinicDetails = (e) => {
+    e.preventDefault();
+    const { history } = this.props;
+    const {doctor_user_id : doctor_id = ''} = this.state;
+    history.replace(`${PATH.REGISTER_FROM_PROFILE}${PATH.REGISTER_CLINICS}/${doctor_id}`);
+  }
+
+
+  getMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item onClick={this.navigateToConsultationFee}>
+          <div className="tac">
+            {this.formatMessage(messages.add_payment_product)}
+          </div>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
+  navigateToConsultationFee = () => {
+    const { history } = this.props;
+    const { id } = this.props;
+    history.push(`/doctors/${id}/payment_products`);
+  };
+
+  
+
 
   render() {
-    const { doctor_user_id } = this.state;
-    const { auth: {authenticated_user=null}, doctors } = this.props;
+    const { doctor_user_id ='',
+    // verified_doctor = false
+  } = this.state;
+    const { auth: {authenticated_category = '', authenticated_user=null}, doctors } = this.props;
     const current_doctor = doctors[authenticated_user];
-    const { loading, updateLoading } = this.state;
+    const { loading ='', updateLoading ='' } = this.state;
     const {
       formatMessage,
       getDoctorDetailsHeader,
@@ -2378,7 +2570,7 @@ onChangeClinicLocation = clinic_id => (value) => {
       getDoctorRegistrationDetails,
       getDoctorQualificationDetails,
       getDoctorClinicDetails,
-    //   getFooter,
+      getFooter,
       getModalDetails,
       getProfilePicModal
     } = this;
@@ -2393,19 +2585,28 @@ onChangeClinicLocation = clinic_id => (value) => {
       return <PageLoading />;
     }
 
-    return (
+      return (
       <Fragment>
         <div className="wp100 p20 flex direction-column">
           {/*header*/}
           {getDoctorDetailsHeader()}
 
+
           {/*basic details*/}
           {getDoctorBasicDetails()}
+
 
           {/*qualifications*/}
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.qualification_details_text)}
+              {doctor_qualification_ids.length > 0 
+              ?
+              <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
+              onClick={this.addQualificationDetails}/>
+              :
+              null
+              }
             </div>
             {doctor_qualification_ids.length > 0 ? (
               <div className="border-box">
@@ -2413,7 +2614,14 @@ onChangeClinicLocation = clinic_id => (value) => {
               </div>
             ) : (
               <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
-                {formatMessage(messages.no_qualification_text)}
+                {
+                  authenticated_category === USER_CATEGORY.PROVIDER
+                  ?
+                  <Button onClick={this.addQualificationDetails}>{this.formatMessage(messages.addRegistrationQualificationDetails)}</Button>
+                  :
+                  formatMessage(messages.no_qualification_text)
+
+                }
               </div>
             )}
           </div>
@@ -2422,13 +2630,36 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.registration_details_text)}
+              {doctor_registration_ids.length > 0 && doctor_qualification_ids.length > 0
+              ?
+              <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
+              onClick={this.addQualificationDetails}/>
+              :
+              null
+              }
             </div>
             {doctor_registration_ids.length > 0 ? (
+
               <div className="border-box">{getDoctorRegistrationDetails()}</div>
             ) : (
-              <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
-                {formatMessage(messages.no_registration_text)}
-              </div>
+                 
+                   authenticated_category === USER_CATEGORY.PROVIDER
+                   ?
+                      ( doctor_qualification_ids.length > 0 ? (
+                        (<div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                          <Button onClick={this.addQualificationDetails}>{this.formatMessage(messages.addRegistrationDetails)}</Button>
+                        </div>)
+                      ) : (
+                        <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                          {formatMessage(messages.qualification_update_first)}
+                        </div>
+                      ))
+                  :
+                      (
+                        <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
+                        {formatMessage(messages.no_registration_text)}
+                      </div>
+                      )
             )}
           </div>
 
@@ -2436,18 +2667,40 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.clinic_details_text)}
+              {doctor_clinic_ids.length > 0 
+              ?
+              <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
+              onClick={this.addClinicDetails}/>
+              :
+              null
+              }
             </div>
             {doctor_clinic_ids.length > 0 ? (
               <div className="border-box">{getDoctorClinicDetails()}</div>
             ) : (
               <div className="bg-grey wp100 h200 br5 flex align-center justify-center">
-                {formatMessage(messages.no_clinic_text)}
+                      
+                 {
+                   authenticated_category === USER_CATEGORY.PROVIDER
+                   ?
+                   <Button onClick={this.addClinicDetails} >{this.formatMessage(messages.addClinicalDetails)}</Button>
+                   :
+                   formatMessage(messages.no_clinic_text)
+                  }     
+
               </div>
             )}
           </div>
 
           {/*footer*/}
-          {/* {getFooter()} */}
+          {
+            authenticated_category === USER_CATEGORY.PROVIDER || authenticated_category === USER_CATEGORY.ADMIN
+            ?
+            getFooter()
+            :
+            null
+          }
+
         </div>
 
         {getModalDetails()}

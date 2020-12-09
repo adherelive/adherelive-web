@@ -4,7 +4,7 @@ const messages = defineMessages({
     loginSuccessfull: {
         id: "app.signIn.loginSuccessfull",
         description: "Edit button in Patient Card",
-        defaultMessage: "LoggedIn successfully"
+        defaultMessage: "Logged in successfully"
     },
     enterPassword: {
         id: "app.signIn.enterPassword",
