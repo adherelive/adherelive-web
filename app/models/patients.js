@@ -84,7 +84,15 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
-      }
+      },
+        full_name: {
+          type: DataTypes.VIRTUAL,
+            get() {
+                return `${this.first_name}${
+                    this.middle_name ? ` ${this.middle_name}` : ""
+                }${this.last_name ? ` ${this.last_name}` : ""}`;
+            }
+        }
     },
     {
       underscored: true,

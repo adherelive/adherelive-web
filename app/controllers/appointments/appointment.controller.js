@@ -240,26 +240,23 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userData: { category } = {}, userCategoryId, userCategoryData: {basic_info: {full_name} = {}} = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
-      let userCategoryId = null;
       let participantTwoId = null;
 
-      switch (category) {
+      switch (participant_two_type) {
         case USER_CATEGORY.DOCTOR:
           const doctor = await doctorService.getDoctorByData({
             user_id: userId
           });
           const doctorData = await DoctorWrapper(doctor);
-          userCategoryId = doctorData.getDoctorId();
           participantTwoId = doctorData.getUserId();
           break;
         case USER_CATEGORY.PATIENT:
-          const patient = await patientService.getPatientByUserId(userId);
+          const patient = await patientService.getPatientById({id: participant_two_id});
           const patientData = await PatientWrapper(patient);
-          userCategoryId = patientData.getPatientId();
           participantTwoId = patientData.getUserId();
           break;
         default:
@@ -360,7 +357,8 @@ class AppointmentController extends Controller {
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
-          category
+          // todo add actor name
+          details: {name: full_name, category}
         }
       };
 

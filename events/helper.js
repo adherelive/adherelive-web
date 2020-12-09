@@ -121,14 +121,14 @@ export const handleMedications = async data => {
       event_id,
       start_date,
       end_date,
+      participants = [],
+      actor = {},
       details,
       details: {
         medicine_id,
         when_to_take,
         repeat_days = [],
         critical = false,
-        participants = [],
-        actors = {}
       } = {}
     } = data || {};
 
@@ -182,7 +182,7 @@ export const handleMedications = async data => {
           details: {
             ...details,
             participants,
-            actors,
+            actor,
             medicines: medicine.getBasicInfo(),
             when_to_take_data: MEDICATION_TIMING[timing], // TODO: to be changed(included in) to patient preference data
             medications: medication.getExistingData()
