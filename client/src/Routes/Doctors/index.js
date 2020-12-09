@@ -41,7 +41,7 @@ const TwilioVideo = lazy(() =>
 );
 
 const DoctorProfilePage = lazy(() =>
-  import(/* webpackChunkName: "AdminDoctorTable" */ "../../Containers/Pages/doctorProfilePage")
+  import(/* webpackChunkName: "DoctorProfilePage" */ "../../Containers/Pages/doctorProfilePage")
 );
 
 const DoctorSettingsePage = lazy(() =>

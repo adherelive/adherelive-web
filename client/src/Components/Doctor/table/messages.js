@@ -2,51 +2,55 @@ import { defineMessages } from "react-intl";
 
 const messages = defineMessages({
   organizer: {
-    id: "app.appointment.table.organizer",
+    id: "app.doctors.table.organizer",
     description: "",
     defaultMessage: "Organizer"
   },
   appointment_date: {
-    id: "app.appointment.table.appointment.date",
+    id: "app.doctors.table.appointment.date",
     description: "",
     defaultMessage: "Date"
   },
   timing_text: {
-    id: "app.appointment.table.timing.text",
+    id: "app.doctors.table.timing.text",
     description: "",
     defaultMessage: "Timing"
   },
   description: {
-    id: "app.appointment.table.description",
+    id: "app.doctors.table.description",
     description: "",
     defaultMessage: "Description"
   },
   name: {
-    id: "app.appointment.table.name",
+    id: "app.doctors.table.name",
     description: "",
     defaultMessage: "Name"
   },
   verified: {
-    id: "app.appointment.table.verified",
+    id: "app.doctors.table.verified",
     description: "",
     defaultMessage: "Verified"
   },
   speciality: {
-    id: "app.appointment.table.speciality",
+    id: "app.doctors.table.speciality",
     description: "",
     defaultMessage: "Speciality"
   },
   address: {
-    id: "app.appointment.table.address",
+    id: "app.doctors.table.address",
     description: "",
     defaultMessage: "City"
   },
   contact_details: {
-    id: "app.appointment.table.contact_details",
+    id: "app.doctors.table.contact_details",
     description: "",
     defaultMessage: "Contact Details"
   },
-
+  doctors: {
+    id: "app.doctor.table.doctors.title",
+    description: "",
+    defaultMessage: "Doctors"
+  },
 
 });
 

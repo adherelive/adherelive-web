@@ -3,13 +3,14 @@ import { injectIntl } from "react-intl";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
 import { Input, Icon, message } from "antd";
-import { PATH, FULL_DAYS, FULL_DAYS_NUMBER } from '../../constant';
+import { PATH, FULL_DAYS, FULL_DAYS_NUMBER ,USER_CATEGORY} from '../../constant';
 import UploadSteps from './steps';
 import LocationModal from './locationmodal';
 import TimingModal from './timingModal';
 import { withRouter } from "react-router-dom";
 import moment from 'moment';
 import messages from './messages';
+
 
 
 
@@ -43,22 +44,38 @@ class ClinicRegister extends Component {
             clinics: {},
             clinicsKeys: [],
             visible: false,
-            timingsVisible: false
+            timingsVisible: false,
+            doctor_id : ''
         };
     }
 
     componentDidMount() {
         let key = uuid();
         let key1 = uuid();
-
-
         let clinics = {};
         clinics[key1] = { name: "", location: "", timings: [], daySelected };
         let clinicsKeys = [key1];
+        this.setDoctorID();
         this.setState({ clinics, clinicsKeys });
 
     }
 
+    async setDoctorID() {
+        try{
+            const {callNewDoctorAction} = this.props;
+            const url = window.location.href.split("/");
+            let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+            await callNewDoctorAction(doctor_id);
+            this.setState({doctor_id});
+        }
+        catch(error){
+            console.log("443534543535 -->", error);
+            message.error(this.formatMessage(messages.somethingWentWrong))
+        }
+
+    }
+
+    
 
 
     setClinicName = (key, e) => {
@@ -295,7 +312,9 @@ class ClinicRegister extends Component {
 
     onNextClick = () => {
         const { history, showVerifyModal } = this.props;
+        const { authenticated_category } = this.props;
         const validate = this.validateData();
+        const {doctor_id} = this.state;
         if (validate) {
             const { clinics = {} } = this.state;
             let newClinics = Object.values(clinics);
@@ -315,14 +334,25 @@ class ClinicRegister extends Component {
                 delete clinic.timingsKeys;
                 delete clinic.daySelected;
             }
-            const data = { clinics: newClinics };
+            const data = { clinics: newClinics , doctor_id };
             const { doctorClinicRegister } = this.props;
             doctorClinicRegister(data).then(response => {
                 const { status, message: errorMessage } = response;
                 if (status) {
                     showVerifyModal(true);
                     // message.success(this.formatMessage(messages.successgetAdminVerified))
-                    history.replace(PATH.DASHBOARD);
+                    message.success(this.formatMessage(messages.clinicAddSuccess));
+                    if(authenticated_category === USER_CATEGORY.PROVIDER){
+                        if( window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)){
+                            history.push(`/doctors/${doctor_id}`);
+                        }else{
+                            history.replace(PATH.DASHBOARD);
+                        }
+                    }
+                    else{   
+                        history.replace(PATH.DASHBOARD);
+
+                    }
                 } else {
                     message.error(errorMessage);
                 };
@@ -331,8 +361,18 @@ class ClinicRegister extends Component {
     }
 
     onBackClick = () => {
-        const { history } = this.props;
-        history.replace(PATH.REGISTER_QUALIFICATIONS);
+        const { history ,authenticated_category } = this.props;
+        const {doctor_id} = this.state;
+        if(authenticated_category === USER_CATEGORY.PROVIDER){
+            if( window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)){
+                history.push(`/doctors/${doctor_id}`);
+            }else{
+                history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
+            }
+                
+        }else{
+            history.replace(PATH.REGISTER_QUALIFICATIONS);
+        }
     }
 
 
@@ -361,6 +401,8 @@ class ClinicRegister extends Component {
 
     render() {
         const { visible = false, clinics, clinicKeyOfModal, timingsVisible = false, clinicKeyOfModalTiming } = this.state;
+        const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
+
         let currClinicTimings = {};
         let currClinicDaySelect = {};
         if (clinicKeyOfModalTiming) {
@@ -374,8 +416,13 @@ class ClinicRegister extends Component {
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
-                    <div className='header'>{this.formatMessage(messages.createProfile)}</div>
-                    <div className='registration-body'>
+                {
+                        authenticated_category === USER_CATEGORY.PROVIDER ? 
+                        <div className='header'>{this.formatMessage(messages.createDoctorProfile)}</div>
+                        :
+                        <div className='header'>{this.formatMessage(messages.createProfile)}</div>
+
+                    }                    <div className='registration-body'>
                         <div className='flex mt36'>
                             <UploadSteps current={2} />
                         </div>

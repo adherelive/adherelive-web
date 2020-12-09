@@ -141,7 +141,7 @@ class SymptomWrapper extends BaseSymptom {
         [patients.getPatientId()]: patients.getBasicInfo()
       },
       doctors: {
-        [doctors.getDoctorId()]: doctors.getBasicInfo()
+        [doctors.getDoctorId()]: await doctors.getAllInfo()
       },
       // care_plans: {
       //   [carePlans.getCarePlanId()]: carePlans.getBasicInfo()

@@ -1,6 +1,6 @@
 "use strict";
 
-import {TABLE_NAME} from "../app/models/users";
+import { TABLE_NAME } from "../app/models/users";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,10 +12,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: true
       },
       email: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: true
       },
       prefix: {
@@ -24,11 +27,12 @@ module.exports = {
       },
       mobile_number: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: true
       },
       password: {
         type: Sequelize.STRING(1000),
-        allowNull: false
+        allowNull: true
       },
       sign_in_type: {
         type: Sequelize.ENUM,
@@ -48,12 +52,16 @@ module.exports = {
       },
       onboarding_status: {
         type: Sequelize.STRING,
-        allowNull:true
+        allowNull: true
       },
       verified: {
         type: Sequelize.BOOLEAN,
-        defaultValue:false
+        defaultValue: false
       },
+      // system_generated_password: {
+      //   type: Sequelize.BOOLEAN,
+      //   defaultValue: false
+      // },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -72,4 +80,3 @@ module.exports = {
     return queryInterface.dropTable(TABLE_NAME);
   }
 };
-

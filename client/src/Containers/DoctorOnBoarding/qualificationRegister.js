@@ -7,7 +7,8 @@ import {
   registerQualification,
   deleteDoctorQualificationImage,
   deleteDoctorRegistrationImage,
-  registerRegistration
+  registerRegistration,
+  callNewDoctorAction
 } from "../../modules/onBoarding";
 import { connect } from "react-redux";
 import { searchCollege } from "../../modules/colleges";
@@ -16,6 +17,7 @@ import { searchDegree } from "../../modules/degrees";
 import {searchSpecialties} from "../../modules/specialities";
 
 const mapStateToProps = state => {
+  console.log("STATEEEEEEEEEEEEEEEEEEEEE =====>",state);
   const {
     auth,
     users,
@@ -29,7 +31,7 @@ const mapStateToProps = state => {
     councils,
     specialities
   } = state;
-  let { authenticated_user = {} } = auth;
+  const { authenticated_user, authenticated_category } = auth;
   return {
     authenticated_user,
     doctors,
@@ -41,7 +43,8 @@ const mapStateToProps = state => {
     colleges,
     degrees,
     councils,
-    specialities
+    specialities,
+    authenticated_category
   };
 };
 
@@ -53,8 +56,8 @@ const mapDispatchToProps = dispatch => {
     searchDegree: data => dispatch(searchDegree(data)),
     doctorQualificationRegister: data =>
       dispatch(doctorQualificationRegister(data)),
-    getDoctorQualificationRegisterData: () =>
-      dispatch(getDoctorQualificationRegisterData()),
+    getDoctorQualificationRegisterData: (data) =>
+      dispatch(getDoctorQualificationRegisterData(data)),
     registerQualification: data => dispatch(registerQualification(data)),
     registerRegistration: data => dispatch(registerRegistration(data)),
     deleteDoctorQualificationImage: (qualificationId, document) =>
@@ -62,6 +65,8 @@ const mapDispatchToProps = dispatch => {
     deleteDoctorRegistrationImage: (registrationId, document) =>
       dispatch(deleteDoctorRegistrationImage(registrationId, document)),
       searchSpecialities: (data) => dispatch(searchSpecialties(data)),
+    callNewDoctorAction : (doctor_id) => dispatch(callNewDoctorAction(doctor_id))
+  
   };
 };
 export default withRouter(

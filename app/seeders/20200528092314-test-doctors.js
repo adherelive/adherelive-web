@@ -18,8 +18,8 @@ module.exports = {
             {
                 user_id: "3",
                 gender: "m",
-                first_name: "google",
-                last_name: "user",
+                first_name: "Deepak",
+                last_name: "Kumar",
                 city: "delhi",
                 speciality_id:"2",
                 created_at: new Date(),

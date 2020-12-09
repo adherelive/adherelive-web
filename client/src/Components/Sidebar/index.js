@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Menu, Tooltip, message, Avatar, Icon, Dropdown } from "antd";
 import { PATH, USER_CATEGORY, PERMISSIONS } from "../../constant";
+import confirm from "antd/es/modal/confirm";
 
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import notificationIcon from "../../Assets/images/notification.png";
 import { withRouter } from "react-router-dom";
+import {CalendarTwoTone} from "@ant-design/icons";
 
 const { Item: MenuItem, SubMenu } = Menu || {};
 
@@ -17,6 +19,7 @@ const LOG_OUT = "log_out";
 const PROFILE = "profile";
 const SUB_MENU = "sub-menu";
 const SETTINGS = "settings";
+const CALENDER = "calender";
 
 class SideMenu extends Component {
   constructor(props) {
@@ -39,11 +42,46 @@ class SideMenu extends Component {
     } catch (error) {}
   };
 
-  handleItemSelect = ({ key }) => {
+  warnNote = () => {
+    return (
+      <div className="pt16">
+        <p className="red">
+          <span className="fw600">{"Note"}</span>
+          {" : Doctor onboard information is not yet completed"}
+        </p>
+      </div>
+    );
+  };
+
+   handleRedirect =({key}) => {
+
+   try{
+       confirm({
+        title: `Are you sure you want to leave?`,
+        content: (
+          <div>
+            {this.warnNote()}
+          </div>
+        ),
+        onOk: async () => {
+          this.handleItemSelectForRedirect({key})
+        },
+        onCancel() {
+          
+        }
+      });
+    }catch(error){
+      console.log("err --->",error);
+    }
+  }
+
+  handleItemSelectForRedirect = ({key}) => {
+
     const { users, history, authenticated_category, authenticated_user, authPermissions = [], openAppointmentDrawer } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
     const { onboarded } = current_user;
+
     switch (key) {
       case LOGO:
       case DASHBOARD:
@@ -72,6 +110,11 @@ class SideMenu extends Component {
           openAppointmentDrawer({ doctorUserId: authenticated_user });
         }
         break;
+      case CALENDER :
+        if(authPermissions.includes(PERMISSIONS.ADD_DOCTOR)){
+          history.push(PATH.PROVIDER.CALENDER)
+        }
+        break;
       case LOG_OUT:
         handleLogout();
         break;
@@ -82,6 +125,67 @@ class SideMenu extends Component {
         break;
     }
     this.setState({ selectedKeys: key });
+  }
+
+  
+  handleItemSelect = ({ key }) => {
+    
+    const { users, history, authenticated_category, authenticated_user, authPermissions = [], openAppointmentDrawer } = this.props;
+    const { handleLogout } = this;
+    const current_user = users[authenticated_user];
+    const { onboarded } = current_user;
+
+    const url = window.location.href.split("/");
+    let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+    
+   
+    if(doctor_id && authenticated_category===USER_CATEGORY.PROVIDER && !window.location.href.includes(PATH.ADMIN.DOCTORS.ROOT)){
+      this.handleRedirect({key});
+    }else{
+        switch (key) {
+          case LOGO:
+          case DASHBOARD:
+            if (authenticated_category === USER_CATEGORY.ADMIN) {
+              if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+                history.push(PATH.ADMIN.DOCTORS.ROOT);
+              }
+            } else {
+              if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) || onboarded) {
+                history.push(PATH.LANDING_PAGE);
+              }
+            }
+            break;
+          case PROFILE:
+            if(onboarded){
+              history.push(PATH.PROFILE);
+            }
+            break;
+          case SETTINGS:
+            if(onboarded){
+              history.push(PATH.SETTINGS);
+            }
+            break;  
+          case NOTIFICATIONS:
+            if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+              openAppointmentDrawer({ doctorUserId: authenticated_user });
+            }
+            break;
+          case CALENDER :
+            if(authPermissions.includes(PERMISSIONS.ADD_DOCTOR)){
+              history.push(PATH.PROVIDER.CALENDER)
+            }
+        break;
+          case LOG_OUT:
+            handleLogout();
+            break;
+          case SUB_MENU:
+            break;
+          default:
+            history.push(PATH.LANDING_PAGE);
+            break;
+        }
+        this.setState({ selectedKeys: key });
+    }
   };
 
   menu = () => {
@@ -202,6 +306,19 @@ class SideMenu extends Component {
            <Icon type="bell" theme="twoTone" twoToneColor='white' />
          </Tooltip>
         </MenuItem>
+
+        {authenticated_category === USER_CATEGORY.PROVIDER
+        ?
+          (<MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={CALENDER}
+          >
+            <Tooltip placement="right" title={"calender"}>
+              <CalendarTwoTone   theme="twoTone" twoToneColor='white' />
+            </Tooltip>
+          </MenuItem>)
+       :
+          null}
 
         {/*<MenuItem*/}
         {/*  className="flex direction-column justify-center align-center p0"*/}
