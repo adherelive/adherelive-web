@@ -184,10 +184,11 @@ class DoctorProfilePage extends Component {
         const { doctors ={} } = this.state;
         const { doctor_user_id =''} =this.state;
         const { getInitialData } = this;
-        const { doctor_qualification_ids,doctor_registration_ids } = doctors[doctor_user_id] || {};
-        if (!doctor_qualification_ids || !doctor_registration_ids) {
-          getInitialData();
-        }
+        const { doctor_qualification_ids,doctor_registration_ids ,doctor_clinic_ids} = doctors[doctor_user_id] || {};
+        getInitialData();
+        // if (!doctor_qualification_ids || !doctor_registration_ids || !doctor_clinic_ids) {
+        //   getInitialData();
+        // }
 
     }
 
@@ -199,7 +200,7 @@ class DoctorProfilePage extends Component {
           auth: {authenticated_category = ''}} = this.props;
 
         const response = await getDoctorDetails();
-
+       
         const {
             status,
             payload: { data = {},message: { message: responseMessage } = {} } = {}
@@ -2556,7 +2557,6 @@ onChangeClinicLocation = clinic_id => (value) => {
 
 
   render() {
-
     const { doctor_user_id ='',
     // verified_doctor = false
   } = this.state;

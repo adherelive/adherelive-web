@@ -95,33 +95,68 @@ class Profileregister extends Component {
     
             }
         }else if(authenticated_category === USER_CATEGORY.PROVIDER && doctor_id !== '' ){
-
-            console.log("876546768797865676879887643456", user_id);
-            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='',city='' } = {} ,city : city_temp = '' } = doctors[doctor_id] || {};
-
-            const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[user_id] || {};
-            let final_city = '';
-
-            if(city === ''){
-                final_city = city_temp
-            }else{
-                final_city = city
-            }
-
-            this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
-   
-           
-                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
-                this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
-            
-    
-            
-
+            this.getDoctorInitialData(doctor_id);            
         }
         
-        // const { profileData: { name = "", email = "", mobile_number = '', category = '', city = '', prefix = '', profile_pic = '' } = {} } = onBoarding || {};
 
     }
+
+    async getDoctorInitialData(doctor_id=null){
+        try{
+            const {getDoctorDetails} = this.props;
+            const response = await getDoctorDetails(doctor_id);
+            const doctor_user_category = USER_CATEGORY.DOCTOR; 
+
+            const { status, payload: { data, message } = {} } = response;
+            if(status){
+
+                const {doctors ={} , users ={}} = data || {};
+                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='',city='' } = {} ,city : city_temp = '' } = doctors[doctor_id] || {};
+                const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[user_id] || {};
+                let final_city = '';
+    
+                if(city === ''){
+                    final_city = city_temp
+                }else{
+                    final_city = city
+                }
+    
+                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+       
+               
+                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
+                this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+          
+               
+            }else{
+                
+                const {doctors={},users={}}=this.props;
+                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='',city='' } = {} ,city : city_temp = '' } = doctors[doctor_id] || {};
+
+                const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[user_id] || {};
+                let final_city = '';
+
+                if(city === ''){
+                    final_city = city_temp
+                }else{
+                    final_city = city
+                }
+
+                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+    
+            
+                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
+                this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+                
+          
+            }
+
+           
+        }catch(error){
+            console.log("err --->",error);
+            message.warn("Something went wrong. Please try again later");
+        }
+    } 
 
     setName = e => {
         // this.setState({ name: e.target.value });
