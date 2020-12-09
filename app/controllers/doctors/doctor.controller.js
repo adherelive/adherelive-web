@@ -405,7 +405,7 @@ class DoctorController extends Controller {
           inviteCard: "",
           mainBodyText: `Greetings from Adhere! We are really happy to inform you that your account has been verified.`,
           subBodyText:
-            "To enable Add Patient option on your Dashboard, please click on verify",
+            "To enable Add Patient option on your Dashboard, please click on verify and login via email and password for the account",
           buttonText: "Verify",
           host: process.config.WEB_URL,
           contactTo: "patientEngagement@adhere.com"
