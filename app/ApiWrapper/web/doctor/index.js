@@ -66,7 +66,7 @@ class DoctorWrapper extends BaseDoctor {
         signature_pic: completePath(signature_pic)
       },
       qualifications,
-      activated_on
+      activated_on,
     };
   };
 

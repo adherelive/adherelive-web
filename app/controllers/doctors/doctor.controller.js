@@ -97,7 +97,7 @@ class DoctorController extends Controller {
 
         doctorApiDetails[
           doctorWrapper.getDoctorId()
-        ] = doctorWrapper.getBasicInfo();
+        ] = await doctorWrapper.getAllInfo();
         const { specialities } = await doctorWrapper.getReferenceInfo();
         specialityDetails = { ...specialityDetails, ...specialities };
         doctorIds.push(doctorWrapper.getDoctorId());
@@ -2189,7 +2189,7 @@ class DoctorController extends Controller {
           },
           doctors: {
             [doctorWrapper.getDoctorId()]: {
-              ...doctorWrapper.getBasicInfo(),
+              ...await doctorWrapper.getAllInfo(),
               doctor_qualification_ids,
               doctor_clinic_ids,
               doctor_registration_ids

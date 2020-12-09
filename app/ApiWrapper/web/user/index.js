@@ -57,7 +57,7 @@ class UserWrapper extends BaseUser {
     if (doctor) {
       const doctorData = await DoctorWrapper(doctor);
       return {
-        userCategoryData: doctorData.getBasicInfo(),
+        userCategoryData: await doctorData.getAllInfo(),
         userCategoryId: doctorData.getDoctorId()
       };
     } else if (patient) {
