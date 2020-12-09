@@ -8,7 +8,6 @@ import UserWrapper from "../../web/user";
 class PatientWrapper extends BasePatient {
     constructor(data) {
         super(data);
-        console.log("PATIENT WRAPPER DATA",data);
     }
 
     getBasicInfo = () => {
@@ -22,6 +21,7 @@ class PatientWrapper extends BasePatient {
             first_name,
             middle_name,
             last_name,
+            full_name,
             age,
             address,
             activated_on,
@@ -46,6 +46,7 @@ class PatientWrapper extends BasePatient {
                 first_name,
                 middle_name,
                 last_name,
+                full_name,
                 address,
                 uid,
                 

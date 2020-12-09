@@ -97,7 +97,7 @@ class MReminderController extends Controller {
         start_time,
         critical = false
       } = body;
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userData: { category } = {}, userCategoryData: {basic_info: {full_name = ""} = {}} = {} } = userDetails || {};
 
       const medicineDetails = await medicineService.getMedicineById(
         medicine_id
@@ -136,12 +136,6 @@ class MReminderController extends Controller {
         }
       };
 
-      Logger.debug(
-        "startdate ---> ",
-        moment(start_time)
-          .utc()
-          .toDate()
-      );
       const rrule = new RRule({
         freq: RRule.WEEKLY,
         dtstart: moment(start_time)
@@ -152,8 +146,6 @@ class MReminderController extends Controller {
           .utc()
           .toDate()
       });
-
-      Logger.debug("rrule ----> ", rrule.all());
 
       const mReminderDetails = await medicationReminderService.addMReminder(
         dataToSave
@@ -170,6 +162,13 @@ class MReminderController extends Controller {
         start_date,
         end_date,
         when_to_take,
+        participants: [
+            userId, patient.getUserId()
+        ],
+        actor: {
+          id: userId,
+          details: {name: full_name, category},
+        },
         participant_one: patient.getUserId(),
         participant_two: userId
       };
@@ -271,7 +270,7 @@ class MReminderController extends Controller {
       
       // todo: get patient_id from url
     
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userData: { category } = {}, userCategoryData: {basic_info: {full_name = ""} = {}} = {} } = userDetails || {};
 
       const medicineDetails = await medicineService.getMedicineById(
         medicine_id
@@ -347,6 +346,14 @@ class MReminderController extends Controller {
         start_date,
         end_date,
         when_to_take,
+        participants: [
+          userId, patient.getUserId()
+        ],
+        actor: {
+          id: userId,
+          // todo add name of doctor
+          details: {name: "", category},
+        },
         participant_one: patient.getUserId(),
         participant_two: userId
       };

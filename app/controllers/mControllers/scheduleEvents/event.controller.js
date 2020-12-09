@@ -259,20 +259,62 @@ class EventController extends Controller {
   markEventComplete = async (req, res) => {
     const {raiseSuccess, raiseServerError} = this;
     try {
-      const {params: {id} = {}} = req;
+      const {params: {id} = {}, body: {event_data = {}} = {}} = req;
       const eventService = new EventService();
-      const markEventComplete = await eventService.update({status: EVENT_STATUS.COMPLETED}, id);
+
+      const eventDetails = await eventService.getEventByData({ id });
+      const { details = {} } = eventDetails;
+
+      const updatedDetails = {...details, ...event_data};
+      const markEventComplete = await eventService.update({status: EVENT_STATUS.COMPLETED, details: updatedDetails}, id);
 
       Log.debug("1982732178 markEventComplete ---> ", markEventComplete);
 
       const event = await EventWrapper(null, id);
-      const {appointments = {}, schedule_events = {}} = await event.getReferenceInfo();
+      const {medications = {}, appointments = {}, medicines = {}, schedule_events = {}} = await event.getReferenceInfo();
 
       return raiseSuccess(
           res,
           200,
           {
             appointments,
+            medications,
+            medicines,
+            schedule_events,
+          },
+          "Event completed successfully"
+      );
+
+    } catch(error) {
+      Log.debug("markEventComplete 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  markEventCancelled = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const {params: {id} = {}, body: {event_data = {}} = {}} = req;
+      const eventService = new EventService();
+
+      const eventDetails = await eventService.getEventByData({ id });
+      const { details = {} } = eventDetails;
+
+      const updatedDetails = {...details, ...event_data};
+      const markEventCancelled = await eventService.update({status: EVENT_STATUS.CANCELLED, details: updatedDetails}, id);
+
+      Log.debug("1982732178 markEventComplete ---> ", markEventCancelled);
+
+      const event = await EventWrapper(null, id);
+      const {medications = {}, appointments = {}, medicines = {}, schedule_events = {}} = await event.getReferenceInfo();
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            appointments,
+            medications,
+            medicines,
             schedule_events,
           },
           "Event completed successfully"
