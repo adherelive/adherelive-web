@@ -78,7 +78,8 @@ class DoctorProfilePage extends Component {
             } = {},
             doctor_qualification_ids=[],
             doctor_registration_ids=[],
-            doctor_clinic_ids=[]
+            doctor_clinic_ids=[],
+            city : city_temp = ''
         } = doctors[doctor_user_id] || {};
         const {
             basic_info: {
@@ -88,6 +89,13 @@ class DoctorProfilePage extends Component {
             } = {},
             category= ""
         } = users[authenticated_user] || {};
+
+        let final_city = '';
+        if(city !== ''){
+          final_city = city
+        }else{
+          final_city = city_temp
+        }
 
         let edit_qualification_year = {};
         let edit_qualification_college = {};
@@ -144,7 +152,7 @@ class DoctorProfilePage extends Component {
             email: email,
             gender: gender,
             speciality_id: speciality_id,
-            city: city,
+            city: final_city,
             mobile_number: mobile_number,
             category: category,
             prefix: prefix,
@@ -240,9 +248,17 @@ class DoctorProfilePage extends Component {
                     } = {},
                     doctor_qualification_ids=[],
                     doctor_registration_ids=[],
-                    doctor_clinic_ids=[]
+                    doctor_clinic_ids=[],
+                    city : city_temp =''
                 } = doctors[doctor_user_id] || {};
 
+
+                let final_city ='';
+                if(city !== ''){
+                  final_city = city
+                }else{
+                  final_city=city_temp
+                }
 
                     this.setState({
                     loading: false,
@@ -261,7 +277,7 @@ class DoctorProfilePage extends Component {
                     last_name,
                     profile_pic,
                     gender,
-                    city,
+                    city:final_city,
                     speciality_id,
                     doctor_qualification_ids,
                     doctor_registration_ids,
@@ -2600,7 +2616,7 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.qualification_details_text)}
-              {doctor_qualification_ids.length > 0 
+              {doctor_qualification_ids.length > 0  && authenticated_category === USER_CATEGORY.PROVIDER
               ?
               <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
               onClick={this.addQualificationDetails}/>
@@ -2630,7 +2646,7 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.registration_details_text)}
-              {doctor_registration_ids.length > 0 && doctor_qualification_ids.length > 0
+              {doctor_registration_ids.length > 0 && doctor_qualification_ids.length > 0 && authenticated_category === USER_CATEGORY.PROVIDER
               ?
               <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
               onClick={this.addQualificationDetails}/>
@@ -2667,7 +2683,7 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.clinic_details_text)}
-              {doctor_clinic_ids.length > 0 
+              {doctor_clinic_ids.length > 0  && authenticated_category === USER_CATEGORY.PROVIDER
               ?
               <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
               onClick={this.addClinicDetails}/>

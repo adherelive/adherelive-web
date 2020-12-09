@@ -18,7 +18,6 @@ import {getMissedVitalsForDoc} from "../../modules/vitals";
 import {getMissedMedicationsForDoc} from "../../modules/medications";
 
 const mapStateToProps = state => {
-    console.log("DASHBOARD STATE ============================>",state);
     const { graphs, auth: { authPermissions = [], authenticated_user = 1 } = {},
         treatments = {},
         conditions = {},

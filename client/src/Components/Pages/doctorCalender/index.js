@@ -333,10 +333,7 @@ class doctorCalender extends Component {
       users = {}
     } = selectedMonthAppointments || {};
 
-    console.log("10283029987 appointments --> ", {
-      appointments,
-      selectedMonthAppointments
-    });
+  
 
     const thisDaysAppointments =
       date_wise_appointments[currentDateSelected] || [];

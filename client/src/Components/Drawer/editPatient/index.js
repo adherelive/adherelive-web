@@ -818,7 +818,6 @@ class EditPatientDrawer extends Component {
     };
 
     render() {
-        console.log("State EDITTTTTTTT Patient =================>",this.state);
         const { visible } = this.props;
         const { onClose, renderEditPatient } = this;
 
