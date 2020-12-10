@@ -1,4 +1,3 @@
-import { CodeArtifact } from "aws-sdk";
 import { REQUEST_TYPE } from "../../constant";
 import { doRequest } from "../../Helper/network";
 import { Doctor } from "../../Helper/urls";
