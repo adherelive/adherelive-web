@@ -13,7 +13,8 @@ const credentialsFormSchema = Joi.object().keys({
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/)
       .min(PASSWORD_LENGTH)
     .required()
-      .label("Password must contain atleast 1 uppercase, lowercase, number & special character")
+      .label("Password must contain atleast 1 uppercase, lowercase, number & special character"),
+  readTermsOfService: Joi.boolean().required().label("Please acknowledge if you have read the terms of service and privacy policy")
 });
 
 const signInSchema = Joi.object().keys({

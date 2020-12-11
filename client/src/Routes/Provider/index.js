@@ -48,14 +48,23 @@ const ProviderDoctorPaymentPage = lazy(() =>
   )
 );
 
-
 const DoctorCalenderPage = lazy(() =>
   import(
     /* webpackChunkName: "DoctorCalenderPage" */ "../../Containers/Pages/doctorCalender"
   )
 );
 
+const TermsOfService = lazy(() =>
+  import(
+    /* webpackChunkName: "TermsOfServicePage" */ "../../Containers/Pages/TermsOfService"
+  )
+);
 
+const PrivacyPolicy = lazy(() =>
+  import(
+    /* webpackChunkName: "PrivacyPolicyPage" */ "../../Containers/Pages/PrivacyPolicy"
+  )
+);
 
 const ProviderDoctorDetailsComp = props => {
   const { match: { params: { id } = {} } = {} } = props;
@@ -72,15 +81,31 @@ class ProviderDoctor extends Component {
 
   render() {
     const { redirecting = false } = this.state;
-    const { authRedirection } = this.props;
+    const { location: { pathname = "" } = {}, authRedirection } = this.props;
+
+    const showSidebar = !(
+      pathname.includes("patient-consulting") ||
+      pathname.includes("terms-of-service") ||
+      pathname.includes("privacy-policy")
+    );
 
     return (
       <Fragment>
         <Router>
           <div className="App flex" style={{ overflow: "hidden" }}>
-            <SideMenu {...this.props} />
-            <div className="container">
+            {showSidebar && <SideMenu {...this.props} />}
+            <div className={showSidebar ? `container` : ""}>
               <Switch>
+                <Route
+                  exact
+                  path={PATH.TERMS_OF_SERVICE}
+                  component={TermsOfService}
+                />
+                <Route
+                  exact
+                  path={PATH.PRIVACY_POLICY}
+                  component={PrivacyPolicy}
+                />
                 <Route
                   exact
                   path={PATH.PROVIDER.DOCTORS.DETAILS}
@@ -117,9 +142,9 @@ class ProviderDoctor extends Component {
                 />
 
                 <Route
-                exact
-                path={`${PATH.REGISTER_FROM_PROFILE}${PATH.PROVIDER_REGISTER_QUALIFICATIONS}`}
-                component = {RegisterQualifications}
+                  exact
+                  path={`${PATH.REGISTER_FROM_PROFILE}${PATH.PROVIDER_REGISTER_QUALIFICATIONS}`}
+                  component={RegisterQualifications}
                 />
 
                 <Route
@@ -129,16 +154,15 @@ class ProviderDoctor extends Component {
                 />
 
                 <Route
-                exact
-                path={`${PATH.REGISTER_FROM_PROFILE}${PATH.PROVIDER_REGISTER_CLINICS}`}
-                component = {RegisterClinics}
+                  exact
+                  path={`${PATH.REGISTER_FROM_PROFILE}${PATH.PROVIDER_REGISTER_CLINICS}`}
+                  component={RegisterClinics}
                 />
 
-
-              <Route
-                exact
-                path={PATH.PROVIDER.CALENDER}
-                component = {DoctorCalenderPage}
+                <Route
+                  exact
+                  path={PATH.PROVIDER.CALENDER}
+                  component={DoctorCalenderPage}
                 />
 
                 <Route exact path={""} component={ProviderDoctorPage} />

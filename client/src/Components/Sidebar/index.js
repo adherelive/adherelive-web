@@ -6,11 +6,13 @@ import confirm from "antd/es/modal/confirm";
 
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
-import notificationIcon from "../../Assets/images/notification.png";
 import { withRouter } from "react-router-dom";
-import {CalendarTwoTone} from "@ant-design/icons";
+import {CalendarTwoTone, FileOutlined} from "@ant-design/icons";
+import messages from "./messages";
+import config from "../../config";
 
-const { Item: MenuItem, SubMenu } = Menu || {};
+const { Item: MenuItem } = Menu || {};
+
 
 const LOGO = "logo";
 const DASHBOARD = "dashboard";
@@ -20,6 +22,10 @@ const PROFILE = "profile";
 const SUB_MENU = "sub-menu";
 const SETTINGS = "settings";
 const CALENDER = "calender";
+const TOS_PP_EDITOR = "tos-pp-editor";
+const PRIVACY_POLICY = "privacy_policy";
+
+const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
 class SideMenu extends Component {
   constructor(props) {
@@ -28,6 +34,8 @@ class SideMenu extends Component {
       selectedKeys: ""
     };
   }
+
+  formatMessage = message => this.props.intl.formatMessage(message);
 
   handleLogout = async () => {
     const { logOut } = this.props;
@@ -95,6 +103,9 @@ class SideMenu extends Component {
           }
         }
         break;
+      // case PRIVACY_POLICY:
+      //   history.push(PATH.PRIVACY_POLICY);
+      //   break;
       case PROFILE:
         if(onboarded){
           history.push(PATH.PROFILE);
@@ -155,6 +166,9 @@ class SideMenu extends Component {
               }
             }
             break;
+          // case PRIVACY_POLICY:
+          //   history.push(PATH.PRIVACY_POLICY);
+          //   break;
           case PROFILE:
             if(onboarded){
               history.push(PATH.PROFILE);
@@ -174,6 +188,10 @@ class SideMenu extends Component {
             if(authPermissions.includes(PERMISSIONS.ADD_DOCTOR)){
               history.push(PATH.PROVIDER.CALENDER)
             }
+            break;
+          case TOS_PP_EDITOR:
+            history.push(PATH.ADMIN.TOS_PP_EDITOR)
+              break;
         break;
           case LOG_OUT:
             handleLogout();
@@ -191,6 +209,12 @@ class SideMenu extends Component {
   menu = () => {
     return (
       <Menu className="l70 b10 position fixed" key={"sub"} onClick={this.handleItemSelect}>
+        <Menu.Item className="pl24 pr80" key={PRIVACY_POLICY}>
+          <a href={PRIVACY_PAGE_URL} target={"_blank"}>
+            {this.formatMessage(messages.privacy_policy_text)}
+          </a>
+        </Menu.Item>
+        <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
         <Menu.Divider />
@@ -212,7 +236,8 @@ class SideMenu extends Component {
       authenticated_user = 0,
       users = {},
       doctors = {},
-      authenticated_category
+      authenticated_category,
+        intl: {formatMessage} = {}
     } = this.props;
     let dp = "";
     let initials = "";
@@ -319,6 +344,19 @@ class SideMenu extends Component {
           </MenuItem>)
        :
           null}
+
+        {authenticated_category === USER_CATEGORY.ADMIN
+            ?
+            (<MenuItem
+                className="flex direction-column justify-center align-center p0"
+                key={TOS_PP_EDITOR}
+            >
+              <Tooltip placement="right" title={formatMessage(messages.tos_pp_editor)}>
+                <FileOutlined style={{color: "#fff"}}/>
+              </Tooltip>
+            </MenuItem>)
+            :
+            null}
 
         {/*<MenuItem*/}
         {/*  className="flex direction-column justify-center align-center p0"*/}

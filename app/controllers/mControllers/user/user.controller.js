@@ -318,6 +318,7 @@ class MobileUserController extends Controller {
   doctorSignIn = async (req, res) => {
     try {
       const { email, password } = req.body;
+
       const user = await userService.getUserByEmail({ email });
 
       // const userDetails = user[0];
@@ -416,7 +417,12 @@ class MobileUserController extends Controller {
   signUp = async (req, res) => {
     const { raiseClientError, raiseSuccess, raiseServerError } = this;
     try {
-      const { password, email } = req.body;
+      const { password, email, readTermsOfService = false } = req.body;
+
+      if(!readTermsOfService) {
+        return raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
+      }
+
       const userExits = await userService.getUserByEmail({ email });
 
       if (userExits !== null) {

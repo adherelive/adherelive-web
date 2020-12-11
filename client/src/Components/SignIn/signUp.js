@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 // import { injectIntl, FormattedMessage } from "react-intl";
-import { Button, Input, Form, message } from "antd";
+import {Button, Input, Form, message, Checkbox} from "antd";
 
 import { injectIntl } from "react-intl";
 import messages from "./message";
+import {PATH} from "../../constant";
+import config from "../../config";
 
 const { Item: FormItem } = Form;
 const { Password } = Input;
@@ -13,11 +15,16 @@ const PASSWORD = "password";
 
 const FIELDS = [EMAIL, PASSWORD];
 
+const TOS_PAGE_URL = `${config.WEB_URL}${PATH.TERMS_OF_SERVICE}`;
+const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
+
 class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            login: true
+            login: true,
+            readTermsOfService: true
+
         };
     }
 
@@ -31,10 +38,11 @@ class SignUp extends Component {
     handleSignUp = e => {
         e.preventDefault();
         const { signUp } = this.props;
+        const {readTermsOfService} = this.state;
 
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                signUp(values).then(response => {
+                signUp({...values, readTermsOfService}).then(response => {
 
                     const { status } = response;
                     if (status) {
@@ -55,9 +63,15 @@ class SignUp extends Component {
         });
     };
 
+    handleAcceptTermsOfService = e => {
+      const {readTermsOfService} = this.state;
+      this.setState({readTermsOfService: !readTermsOfService});
+    };
+
     render() {
         const { form: { getFieldDecorator, isFieldTouched,
             getFieldError } } = this.props;
+        const {readTermsOfService} = this.state;
         let fieldsError = {};
         FIELDS.forEach(value => {
             const error = isFieldTouched(value) && getFieldError(value);
@@ -104,8 +118,19 @@ class SignUp extends Component {
                     })(<Password placeholder="Password" className="h40" />)}
                 </FormItem>
 
-                {/* <div classname='fs12 medium dark-sky-blue mt4 tar'>Forgot Password?</div> */}
-                <div className='slate-grey mt-10 mb8 fs12 medium'> {this.formatMessage(messages.agreeText)}</div>
+                <div className="flex justify-space-between mb20">
+                    {/* <div classname='fs12 medium dark-sky-blue mt4 tar'>Forgot Password?</div> */}
+                    <Checkbox defaultChecked={readTermsOfService} onChange={this.handleAcceptTermsOfService}>
+                    </Checkbox>
+
+                    <div className='slate-grey mt-10 fs12 p10 medium'>
+                        <span>{this.formatMessage(messages.agreeText)}</span>{" "}
+                        <a href={TOS_PAGE_URL} target={"_blank"}>{this.formatMessage(messages.termsOfService)}</a>{" "}
+                        <span>{this.formatMessage(messages.andText)}</span>{" "}
+                        <a href={PRIVACY_PAGE_URL} target={"_blank"}>{this.formatMessage(messages.privacyPolicy)}</a>
+                    </div>
+                </div>
+
                 <FormItem >
                     <Button
                         type="primary"

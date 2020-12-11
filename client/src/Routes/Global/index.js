@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component, lazy} from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // import landingPage from "../Components/landingPage";
 // import Signup from "../Containers/Invite";
@@ -12,6 +12,18 @@ import ForgotPassword from "../../Containers/forgotPassword";
 import ResetPassword from "../../Containers/forgotPassword/resetPassword";
 //import SignIn from "../../Components/SignIn";
 import { PATH } from "../../constant";
+
+const TermsOfService = lazy(() =>
+    import(
+        /* webpackChunkName: "TermsOfServicePage" */ "../../Containers/Pages/TermsOfService"
+        )
+);
+
+const PrivacyPolicy = lazy(() =>
+    import(
+        /* webpackChunkName: "PrivacyPolicyPage" */ "../../Containers/Pages/PrivacyPolicy"
+        )
+);
 
 
 
@@ -62,21 +74,14 @@ export default class Global extends Component {
       <BrowserRouter>
         <Switch>
           {redirecting && <Redirect to={authRedirection} />}
-          {/* {this.state.redirecting && <Redirect to={this.state.redirecting} />} */}
-          {/* <Route exact path={PATH.SIGN_IN} component={SignIn} /> */}
-          {/* <Route exact path={PATH.REGISTER} component={Register} /> */}
           <Route exact path={PATH.SIGN_IN} component={SignIn} />
-          {/* <Route path="/already-verified" component={BlankState} /> */}
+
+          <Route exact path={PATH.TERMS_OF_SERVICE} component={TermsOfService} />
+          <Route exact path={PATH.PRIVACY_POLICY} component={PrivacyPolicy} />
           <Route path={PATH.VALIDATION_PAGE} component={Validation} />
           <Route path={PATH.FORGOT_PASSWORD} component={ForgotPassword} />
           <Route path={PATH.RESET_PASSWORD} component={ResetPassword} />
           <Route path="" component={SignIn} />
-          {/* <Route exact path={''} component={Register} /> */}
-          {/*<Route exact path={PATH.FORGOT_PASSWORD} component={ForgotPassword} />*/}
-          {/*<Route exact path={PATH.IDENTIFY} component={Identify} />*/}
-          {/*<Route exact path={PATH.SIGN_UP} component={Signup} />*/}
-          {/*<Route exact path={PATH.RESET_PASSWORD} component={ResetPassword} />*/}
-          {/*<Route exact path={PATH.LANDING_PAGE} component={landingPage} />*/}
           {/*<Route path="" component={BlankState} />*/}
         </Switch>
       </BrowserRouter>

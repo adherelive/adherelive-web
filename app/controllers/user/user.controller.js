@@ -1,5 +1,3 @@
-import DoctorQualificationWrapper from "../../ApiWrapper/web/doctorQualification";
-
 const { OAuth2Client } = require("google-auth-library");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
@@ -42,7 +40,7 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
-import Controller from "../";
+import Controller from "../index";
 import {
   doctorQualificationData,
   uploadImageS3,
@@ -76,13 +74,23 @@ class UserController extends Controller {
     super();
   }
 
-  async signUp(req, res) {
+  signUp= async (req, res) => {
+    const {raiseClientError, raiseServerError, raiseSuccess} = this;
     try {
-      const { password, email } = req.body;
-      let response = await createNewUser(email, password);
-      response = new Response(true, 200);
-      response.setMessage("Sign Up Successfully!");
-      return res.status(response.getStatusCode()).send(response.getResponse());
+        const {body: {password, email, readTermsOfService = false} = {}} = req;
+
+      if(!readTermsOfService) {
+        return this.raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
+      }
+
+      const newUser = await createNewUser(email, password);
+
+      return raiseSuccess(
+          res,
+          200,
+          {},
+          "Signed up successfully. Please check your email to proceed"
+      );
     } catch (err) {
       console.log("signup err,", err);
       if (err.code && err.code == 11000) {

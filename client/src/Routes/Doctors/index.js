@@ -21,37 +21,78 @@ const Dashboard = lazy(() =>
 );
 
 const RegisterProfile = lazy(() =>
-  import(/* webpackChunkName: "RegisterProfile" */ "../../Containers/DoctorOnBoarding/profileRegister")
+  import(
+    /* webpackChunkName: "RegisterProfile" */ "../../Containers/DoctorOnBoarding/profileRegister"
+  )
 );
 
 const RegisterQualifications = lazy(() =>
-  import(/* webpackChunkName: "RegisterQualifications" */ "../../Containers/DoctorOnBoarding/qualificationRegister")
+  import(
+    /* webpackChunkName: "RegisterQualifications" */ "../../Containers/DoctorOnBoarding/qualificationRegister"
+  )
 );
 
 const RegisterClinics = lazy(() =>
-  import(/* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister")
+  import(
+    /* webpackChunkName: "RegisterClinics" */ "../../Containers/DoctorOnBoarding/clinicRegister"
+  )
 );
 
 const ChatFullScreen = lazy(() =>
-  import(/* webpackChunkName: "ChatFullScreen" */ "../../Containers/ChatFullScreen")
+  import(
+    /* webpackChunkName: "ChatFullScreen" */ "../../Containers/ChatFullScreen"
+  )
 );
 
 const TwilioVideo = lazy(() =>
-  import(/* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/twilioVideo")
+  import(
+    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/twilioVideo"
+  )
 );
 
 const DoctorProfilePage = lazy(() =>
-  import(/* webpackChunkName: "DoctorProfilePage" */ "../../Containers/Pages/doctorProfilePage")
+  import(
+    /* webpackChunkName: "DoctorProfilePage" */ "../../Containers/Pages/doctorProfilePage"
+  )
 );
 
 const DoctorSettingsePage = lazy(() =>
-  import(/* webpackChunkName: "DoctorSettingsePage" */ "../../Containers/Pages/doctorSettingsPage")  
+  import(
+    /* webpackChunkName: "DoctorSettingsePage" */ "../../Containers/Pages/doctorSettingsPage"
+  )
 );
 
+const TermsOfService = lazy(() =>
+  import(
+    /* webpackChunkName: "TermsOfServicePage" */ "../../Containers/Pages/TermsOfService"
+  )
+);
+
+const PrivacyPolicy = lazy(() =>
+  import(
+    /* webpackChunkName: "PrivacyPolicyPage" */ "../../Containers/Pages/PrivacyPolicy"
+  )
+);
 
 const PatientDetailsComp = props => {
   const { match: { params: { patient_id } = {} } = {} } = props;
   return <PatientDetails patient_id={patient_id} />;
+};
+
+const SideMenuComp = props => {
+  const { location: { pathname = "" } = {} } = props;
+  console.log("102938138932 sidemenu component --> ", {props});
+  if (
+    !(
+      pathname.includes("patient-consulting") ||
+      pathname.includes("terms-of-service") ||
+      pathname.includes("privacy-policy")
+    )
+  ) {
+    return <SideMenu {...props} />;
+  } else {
+    return null;
+  }
 };
 
 class Doctors extends Component {
@@ -73,20 +114,39 @@ class Doctors extends Component {
   render() {
     // const {authRedirection} = this.props;
     const { redirecting = false } = this.state;
-    let { location: { pathname = '' } = {} } = this.props;
-    let isNotChatComponent = pathname.includes('patient-consulting') ? false : true;
+    let { location: { pathname = "" } = {} } = this.props;
+    let isNotChatComponent = !(
+      pathname.includes("patient-consulting") ||
+      pathname.includes("terms-of-service") ||
+      pathname.includes("privacy-policy")
+    );
     const { authRedirection } = this.props;
     return (
       <Fragment>
         <Router>
           <div className="App flex" style={{ overflow: "hidden" }}>
-            {isNotChatComponent && (<SideMenu {...this.props} />)}
-            <div className={isNotChatComponent ? `container` : 'container-chat-page '}>
+            <SideMenuComp {...this.props} />
+            <div
+              className={
+                isNotChatComponent ? `container` : "container-chat-page "
+              }
+            >
               <Switch>
-                {redirecting && redirecting.length > 0 && (<Redirect to={authRedirection} />)}
+                {redirecting && redirecting.length > 0 && (
+                  <Redirect to={authRedirection} />
+                )}
                 {/* {!onboarded &&category=="doctor" && <Redirect to={PATH.REGISTER_PROFILE} />} */}
                 {/*{this.state.redirecting && <Redirect to={this.state.redirecting}/>}*/}
-
+                <Route
+                  exact
+                  path={PATH.TERMS_OF_SERVICE}
+                  component={TermsOfService}
+                />
+                <Route
+                  exact
+                  path={PATH.PRIVACY_POLICY}
+                  component={PrivacyPolicy}
+                />
                 <Route
                   exact
                   path={PATH.PATIENT.DETAILS}
@@ -146,7 +206,7 @@ class Doctors extends Component {
                   component={DoctorSettingsePage}
                 />
 
-              <Route
+                <Route
                   exact
                   path={PATH.PAYMENT_DETAILS}
                   component={DoctorSettingsePage}
