@@ -23,6 +23,38 @@ class FeatureDetailsService {
       throw err;
     }
   };
+
+  update = async (data, feature_type) => {
+    const transaction = await Database.initTransaction();
+    try {
+      const featureDetails = await Database.getModel(TABLE_NAME).update(data, {
+        where: {
+          feature_type
+        },
+        transaction,
+        returning: true
+      });
+      transaction.commit();
+      console.log("FeatureDetails --> ", featureDetails);
+      return featureDetails;
+    } catch (err) {
+      console.log("err --> ", err);
+      transaction.rollback();
+      throw err;
+    }
+  };
+
+  add = async (data) => {
+    const transaction = await Database.initTransaction();
+    try {
+      const featureDetails = Database.getModel(TABLE_NAME).create(data);
+      transaction.commit();
+      return featureDetails;
+    } catch (err) {
+      transaction.rollback();
+      throw err;
+    }
+  };
 }
 
 export default new FeatureDetailsService();

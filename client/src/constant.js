@@ -29,7 +29,8 @@ export const PATH = {
     DOCTORS: {
       ROOT: "/doctors",
       DETAILS: "/doctors/:id"
-    }
+    },
+    TOS_PP_EDITOR: "/details"
   },
   PROVIDER: {
     ROOT: "/provider",
@@ -38,7 +39,9 @@ export const PATH = {
       PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
     },
     CALENDER :"/calender"
-  }
+  },
+  TERMS_OF_SERVICE: "/terms-of-service",
+  PRIVACY_POLICY: "/privacy-policy"
 };
 
 export const HTTP_CODE_SERVER_ERROR = 500;

@@ -7,7 +7,10 @@ import Response from "../../../app/helper/responseFormat";
 import { USER_CATEGORY } from "../../../constant";
 
 import Doctor from "../../../app/controllers/doctors/doctor.controller";
+import Admin from "../../../app/controllers/admin/admin.controller";
 import AccountsController from "../../../app/controllers/accounts/accounts.controller";
+
+router.get("/details/:type", Admin.getTermsAndPolicy);
 
 router.use(async (req, res, next) => {
   try {
@@ -34,6 +37,8 @@ router.get("/doctors/:id", Authenticate, Doctor.getAllAdminDoctorDetails);
 router.post("/doctors/:id", Authenticate, Doctor.verifyDoctors);
 
 router.post("/doctors/:id/account", Authenticate, Doctor.updateRazorpayAccount);
+
+router.post("/details", Authenticate, Admin.updateTermsAndPolicy);
 
 router.get(
   "/doctors/:id/account",

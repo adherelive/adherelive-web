@@ -3,11 +3,8 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect,
-  useLocation,
   withRouter
 } from "react-router-dom";
-// import BlankState from "../../Containers/BlankState";
 import { PATH } from "../../../constant";
 import SideMenu from "../../../Components/Sidebar";
 
@@ -23,6 +20,33 @@ const AdminDoctorDetailsPage = lazy(() =>
   )
 );
 
+const TosPpEditorPage = lazy(() =>
+    import(
+        /* webpackChunkName: "TosPpEditorPage" */ "../../../Containers/Pages/TosPPEditorPage"
+        )
+);
+
+const TermsOfService = lazy(() =>
+    import(
+        /* webpackChunkName: "TermsOfServicePage" */ "../../../Containers/Pages/TermsOfService"
+        )
+);
+
+const PrivacyPolicy = lazy(() =>
+    import(
+        /* webpackChunkName: "PrivacyPolicyPage" */ "../../../Containers/Pages/PrivacyPolicy"
+        )
+);
+
+const SideMenuComp = props => {
+  const { location: { pathname = '' } = {} } = props;
+  if(!(pathname.includes('patient-consulting') || pathname.includes('terms-of-service') || pathname.includes('privacy-policy'))) {
+    return <SideMenu {...props} />
+  } else {
+    return null;
+  }
+};
+
 const AdminDoctorDetailsPageComp = props => {
   const { match: { params: { id } = {} } = {} } = props;
   return <AdminDoctorDetailsPage id={id} />;
@@ -37,15 +61,17 @@ class AdminDoctor extends Component {
   }
 
   render() {
-    const { redirecting = false } = this.state;
-    const { authRedirection } = this.props;
+    const { location: { pathname = '' } = {} } = this.props;
+    const isSideMenuVisible = !(pathname.includes('patient-consulting') || pathname.includes('terms-of-service') || pathname.includes('privacy-policy'));
     return (
       <Fragment>
         <Router>
           <div className="App flex" style={{ overflow: "hidden" }}>
-            <SideMenu {...this.props} />
-            <div className="container">
+            <SideMenuComp {...this.props} />
+            <div className={isSideMenuVisible ? "container" : ""}>
               <Switch>
+                <Route exact path={PATH.TERMS_OF_SERVICE} component={TermsOfService} />
+                <Route exact path={PATH.PRIVACY_POLICY} component={PrivacyPolicy} />
                 <Route
                   exact
                   path={PATH.ADMIN.DOCTORS.DETAILS}
@@ -56,6 +82,7 @@ class AdminDoctor extends Component {
                   path={PATH.ADMIN.DOCTORS.ROOT}
                   component={AdminDoctorPage}
                 />
+                <Route exact path={PATH.ADMIN.TOS_PP_EDITOR} component={TosPpEditorPage} />
                 <Route exact path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
                 <Route exact path={""} component={AdminDoctorPage} />
               </Switch>

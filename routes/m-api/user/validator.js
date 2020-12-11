@@ -6,7 +6,8 @@ import { validationError } from "../../api/helper";
 
 const credentialsFormSchema = Joi.object().keys({
     email: Joi.string().email().required(),
-    password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).min(PASSWORD_LENGTH).required()
+    password: Joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/).min(PASSWORD_LENGTH).required(),
+    readTermsOfService: Joi.boolean().required().label("Please acknowledge if you have read the terms of service and privacy policy")
 });
 
 const updatedPasswordSchema = Joi.object().keys({

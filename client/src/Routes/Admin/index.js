@@ -3,8 +3,6 @@ import {
   
   withRouter
 } from "react-router-dom";
-// import SideMenu from "../../Components/Sidebar";
-// import BlankState from "../../Containers/BlankState";
 
 const AdminDoctors = lazy(() =>
   import(/* webpackChunkName: "AdminDoctorRouter" */ "./doctor")
