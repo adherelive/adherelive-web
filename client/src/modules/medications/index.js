@@ -152,7 +152,7 @@ export const updateMedication = (payload) => {
       const { status, payload: { data = {}, error = {} } = {} } =
         response || {};
       if (status === true) {
-        dispatch({ type: UPDATE_MEDICATION_COMPLETE, payload: data });
+        dispatch({ type: UPDATE_MEDICATION_COMPLETE, payload: data ,data});
       } else {
         dispatch({ type: UPDATE_MEDICATION_FAILED, payload: error });
       }

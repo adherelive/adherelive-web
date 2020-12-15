@@ -23,8 +23,8 @@ let key_field = 1;
 class WhenToTakeMedication extends Component {
   constructor(props) {
     super(props);
-    const { medication_details } = props;
-    const { timings } = medication_details || {};
+    const { medication_details ={}} = props;
+    const { timings = {} } = medication_details || {};
     let statusList = {};
     Object.keys(timings).forEach((id) => {
       const { text, time } = timings[id];
