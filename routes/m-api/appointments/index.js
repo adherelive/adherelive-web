@@ -10,10 +10,16 @@ const upload = multer({ dest: "../../../app/public/", storage: storage });
 
 router.get("/details", Authenticate, MobileAppointment.getAppointmentDetails);
 
-router.post(
+router.get(
   "/:document_id/download-doc",
   Authenticate,
   MobileAppointment.downloadAppointmentDoc
+);
+
+router.delete(
+  "/:document_id/delete-doc",
+  Authenticate,
+  MobileAppointment.deleteAppointmentDoc
 );
 
 router.post(
