@@ -291,6 +291,7 @@ class MedicationStage extends Component {
     // const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
     const { CustomSearchBox } = this;
 
+
     return (
       <FormItem>
         {getFieldDecorator(
