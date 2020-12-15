@@ -8,6 +8,7 @@ import { USER_CATEGORY } from "../../../constant";
 
 import Doctor from "../../../app/controllers/doctors/doctor.controller";
 import Admin from "../../../app/controllers/admin/admin.controller";
+import Algolia from "../../../app/controllers/algolia/algolia.controller";
 import AccountsController from "../../../app/controllers/accounts/accounts.controller";
 
 router.get("/details/:type", Admin.getTermsAndPolicy);
@@ -39,6 +40,7 @@ router.post("/doctors/:id", Authenticate, Doctor.verifyDoctors);
 router.post("/doctors/:id/account", Authenticate, Doctor.updateRazorpayAccount);
 
 router.post("/details", Authenticate, Admin.updateTermsAndPolicy);
+router.post("/algolia/medicine", Authenticate, Algolia.updateMedicine);
 
 router.get(
   "/doctors/:id/account",

@@ -11,7 +11,9 @@ import repeatIntervalField from "../common/repeatInterval";
 import repeatDaysField from "../common/selectedDays";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
-import chooseMedicationField from "../common/medicationStage";
+// import chooseMedicationField from "../common/medicationStage";
+import chooseMedicationField from "../common/medicine";
+
 import criticalMedicationField from "../common/criticalMedication";
 import medicineStrengthField from "../common/medicineStrength";
 import medicineStrengthUnitField from "../common/medicationStrengthUnit";
