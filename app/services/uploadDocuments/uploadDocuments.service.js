@@ -96,6 +96,19 @@ class UploadDocumentService {
             throw error;
         }
     };
+
+    deleteDocumentsOfAppointment = async (id) => {
+        try {
+            const documents = await Database.getModel(TABLE_NAME).destroy({
+                where: {
+                    id
+                }
+            });
+            return documents;
+        } catch(error) {
+            throw error;
+        }
+    };
    
 }
 

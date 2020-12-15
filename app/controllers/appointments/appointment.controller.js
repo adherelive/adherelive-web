@@ -9,9 +9,13 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
-  USER_CATEGORY
+  USER_CATEGORY,
+  DOCUMENT_PARENT_TYPE,
+  S3_DOWNLOAD_FOLDER
 } from "../../../constant";
 import moment from "moment";
+
+const path = require("path");
 
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/helper";
@@ -28,6 +32,7 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 import featureDetailService from "../../services/featureDetails/featureDetails.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 // WRAPPERS...
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
@@ -35,9 +40,16 @@ import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+
+import { uploadImageS3 } from "../user/userHelper";
+import { getFilePath } from "../../helper/filePath";
+import { checkAndCreateDirectory } from "../../helper/common";
+
+import { downloadFileFromS3 } from "../mControllers/user/userHelper";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
@@ -204,11 +216,12 @@ class AppointmentController extends Controller {
         res,
         200,
         {
-          appointments: {
-            [appointmentApiData.getAppointmentId()]: {
-              ...appointmentApiData.getBasicInfo()
-            }
-          }
+          ... await appointmentApiData.getAllInfo(),
+          // appointments: {
+          //   [appointmentApiData.getAppointmentId()]: {
+          //     ...appointmentApiData.getBasicInfo()
+          //   }
+          // }
         },
         "appointment created successfully"
       );
@@ -240,7 +253,12 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      const { userId, userData: { category } = {}, userCategoryId, userCategoryData: {basic_info: {full_name} = {}} = {} } = userDetails || {};
+      const {
+        userId,
+        userData: { category } = {},
+        userCategoryId,
+        userCategoryData: { basic_info: { full_name } = {} } = {}
+      } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
@@ -255,7 +273,9 @@ class AppointmentController extends Controller {
           participantTwoId = doctorData.getUserId();
           break;
         case USER_CATEGORY.PATIENT:
-          const patient = await patientService.getPatientById({id: participant_two_id});
+          const patient = await patientService.getPatientById({
+            id: participant_two_id
+          });
           const patientData = await PatientWrapper(patient);
           participantTwoId = patientData.getUserId();
           break;
@@ -358,7 +378,7 @@ class AppointmentController extends Controller {
         actor: {
           id: userId,
           // todo add actor name
-          details: {name: full_name, category}
+          details: { name: full_name, category }
         }
       };
 
@@ -390,11 +410,12 @@ class AppointmentController extends Controller {
         200,
         {
           care_plans: { ...carePlanApiData },
-          appointments: {
-            [appointmentApiData.getAppointmentId()]: {
-              ...appointmentApiData.getBasicInfo()
-            }
-          }
+          ...await appointmentApiData.getAllInfo(),
+          // appointments: {
+          //   [appointmentApiData.getAppointmentId()]: {
+          //     ...appointmentApiData.getBasicInfo()
+          //   }
+          // }
         },
         "appointment created successfully"
       );
@@ -539,11 +560,12 @@ class AppointmentController extends Controller {
         res,
         200,
         {
-          appointments: {
-            [appointmentApiData.getAppointmentId()]: {
-              ...appointmentApiData.getBasicInfo()
-            }
-          }
+          ...await appointmentApiData.getAllInfo(),
+          // appointments: {
+          //   [appointmentApiData.getAppointmentId()]: {
+          //     ...appointmentApiData.getBasicInfo()
+          //   }
+          // }
         },
         "Appointment updated successfully"
       );
@@ -567,13 +589,21 @@ class AppointmentController extends Controller {
 
       // if (appointmentList.length > 0) {
       let appointmentApiData = {};
+      let scheduleEventData = {};
+      let uploadDocumentData = {};
 
       for (const appointment of appointmentList) {
         const appointmentWrapper = await AppointmentWrapper(appointment);
 
-        appointmentApiData[
-          appointmentWrapper.getAppointmentId()
-        ] = appointmentWrapper.getBasicInfo();
+        // appointmentApiData[
+        //   appointmentWrapper.getAppointmentId()
+        // ] = appointmentWrapper.getBasicInfo();
+
+        const {appointments, schedule_events, upload_documents} = await appointmentWrapper.getAllInfo();
+        Logger.debug("1982378128 ", schedule_events, upload_documents);
+        appointmentApiData = {...appointmentApiData, ...appointments};
+        scheduleEventData = {...scheduleEventData, ...schedule_events};
+        uploadDocumentData = {...uploadDocumentData, ...upload_documents};
       }
 
       return raiseSuccess(
@@ -582,6 +612,12 @@ class AppointmentController extends Controller {
         {
           appointments: {
             ...appointmentApiData
+          },
+          schedule_events: {
+            ...scheduleEventData
+          },
+          upload_documents: {
+            ...uploadDocumentData
           }
         },
         `appointment data for patient: ${id} fetched successfully`
@@ -633,7 +669,7 @@ class AppointmentController extends Controller {
         {
           static_templates: {
             appointments: { ...appointmentData.getFeatureDetails() }
-          },
+          }
         },
         "Appointment details fetched successfully"
       );
@@ -743,6 +779,299 @@ class AppointmentController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  uploadAppointmentDoc = async (req, res) => {
+    try {
+      const {
+        userDetails: { userId = null, userData: { category } = {}, userCategoryData, userCategoryId } = {}
+      } = req || {};
+      const file = req.file;
+
+      const { params: { appointment_id = null } = {} } = req || {};
+
+      const { originalName: file_name = "" } = file;
+
+      const scheduleEventService = new ScheduleEventService();
+      const appointmentDetails = await appointmentService.getAppointmentById(
+        appointment_id
+      );
+
+      const eventForAppointment = await scheduleEventService.getEventByData({
+        event_id: appointment_id,
+        event_type: EVENT_TYPE.APPOINTMENT
+      });
+
+      const scheduleData = await EventWrapper(eventForAppointment);
+
+      if(scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
+        return raiseClientError(
+            res,
+            422,
+            {},
+            "Cannot upload documents before appointment is complete"
+        );
+      }
+
+
+      let userIsParticipant = true;
+      let timeDifference = null;
+
+      if (appointmentDetails) {
+        const appointmentApiData = await AppointmentWrapper(appointmentDetails);
+
+        const {
+          participant_one_id,
+          participant_two_id
+        } = appointmentApiData.getParticipants();
+
+        userIsParticipant =
+          participant_one_id === userCategoryId ||
+          participant_two_id === userCategoryId
+            ? true
+            : false;
+      }
+
+      if (!appointmentDetails || !userIsParticipant) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to upload document.`
+        );
+      }
+
+      try {
+        let files = await uploadImageS3(userId, file);
+
+        const fileUrl = files && files.length ? getFilePath(files[0]) : files;
+
+        const docExist = await documentService.getDocumentByData(
+          DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+          appointment_id,
+          fileUrl
+        );
+
+        if (!docExist) {
+          const appointmentDoc = await documentService.addDocument({
+            parent_type: DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+            parent_id: appointment_id,
+            document: fileUrl,
+            name: file_name
+          });
+        }
+
+        const appointmentDetails = await AppointmentWrapper(null, appointment_id);
+
+        return this.raiseSuccess(
+          res,
+          200,
+          {
+            ...await appointmentDetails.getAllInfo()
+          },
+          "Appointment documents uploaded successfully."
+        );
+      } catch (err) {
+        Logger.debug("APPOINTMENT DOC UPLOAD CATCH ERROR ", err);
+        return this.raiseServerError(res, 500, {}, `${err.message}`);
+      }
+    } catch (error) {
+      Logger.debug("uploadAppointmentDoc 500 error: ", error);
+      return this.raiseServerError(res);
+    }
+  };
+
+  downloadAppointmentDoc = async (req, res) => {
+    try {
+      const {
+        userDetails: { userId = null, userData: { category } = {} } = {},
+        body: { document_id = null } = {}
+      } = req || {};
+
+      const uploadDocuments = await documentService.getDocumentById(
+        document_id
+      );
+
+      if (!uploadDocuments) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `No such document available.`
+        );
+      }
+
+      const uploadDocumentData = await UploadDocumentWrapper(uploadDocuments);
+      const {
+        basic_info: { name, document, parent_id, parent_type } = {}
+      } = uploadDocumentData.getBasicInfo();
+
+      const appointmentDetails = await appointmentService.getAppointmentById(
+        parent_id
+      );
+      let userIsParticipant = true;
+
+      if (appointmentDetails) {
+        const appointmentApiData = await AppointmentWrapper(appointmentDetails);
+
+        const {
+          participant_one_id,
+          participant_two_id
+        } = appointmentApiData.getParticipants();
+
+        let userCategoryId = null;
+        let userCategoryData = null;
+
+        switch (category) {
+          case USER_CATEGORY.DOCTOR:
+            const doctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(doctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
+          case USER_CATEGORY.PATIENT:
+            const patient = await patientService.getPatientByUserId(userId);
+            userCategoryData = await PatientWrapper(patient);
+            userCategoryId = userCategoryData.getPatientId();
+            break;
+          default:
+            break;
+        }
+
+        userIsParticipant =
+          participant_one_id === userCategoryId ||
+          participant_two_id === userCategoryId
+            ? true
+            : false;
+      }
+
+      if (!appointmentDetails || !userIsParticipant) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to download document.`
+        );
+      }
+
+      checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
+
+      const appointmentDocPath = `${S3_DOWNLOAD_FOLDER}/${name}`;
+
+      const downloadDoc = await downloadFileFromS3(
+        getFilePath(document),
+        appointmentDocPath
+      );
+
+      const options = {
+        root: path.join(__dirname, `../../../${S3_DOWNLOAD_FOLDER}/`)
+      };
+      return res.sendFile(name, options);
+    } catch (error) {
+      Logger.debug("downloadAppointmentDoc 500 error: ", error);
+      return this.raiseServerError(res);
+    }
+  };
+
+  deleteAppointmentDoc = async (req,res) => {
+    try {
+      const {
+        userDetails: { userId = null, userData: { category } = {} } = {}} = req || {};
+      const { params: { document_id = null } = {} } = req || {};
+
+
+      const uploadDocuments = await documentService.getDocumentById(
+        document_id
+      );
+
+      if (!uploadDocuments) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `No such document available.`
+        );
+      }
+
+      const uploadDocumentData = await UploadDocumentWrapper(uploadDocuments);
+
+
+      const {
+        basic_info: { name, document, parent_id, parent_type } = {}
+      } = uploadDocumentData.getBasicInfo();
+
+      const appointmentDetails = await appointmentService.getAppointmentById(
+        parent_id
+      );
+      let userIsParticipant = true;
+
+      if (appointmentDetails) {
+        const appointmentApiData = await AppointmentWrapper(appointmentDetails);
+        const {
+          participant_one_id,
+          participant_two_id
+        } = appointmentApiData.getParticipants();
+
+        let userCategoryId = null;
+        let userCategoryData = null;
+
+        switch (category) {
+          case USER_CATEGORY.DOCTOR:
+            const doctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(doctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
+          case USER_CATEGORY.PATIENT:
+            const patient = await patientService.getPatientByUserId(userId);
+            userCategoryData = await PatientWrapper(patient);
+            userCategoryId = userCategoryData.getPatientId();
+            break;
+          default:
+            break;
+        }
+
+        userIsParticipant =
+          participant_one_id === userCategoryId ||
+          participant_two_id === userCategoryId
+            ? true
+            : false;
+
+
+    
+      }
+
+      if (!appointmentDetails || !userIsParticipant) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to delete document.`
+        );
+      }
+
+        const deleteDocs = await documentService.deleteDocumentsOfAppointment(
+          document_id
+        );
+  
+        const appointment = await AppointmentWrapper(appointmentDetails);
+
+        return this.raiseSuccess(
+          res,
+          200,
+          {
+            ...await appointment.getAllInfo()
+          },
+          "Appointment document deleted."
+        );
+    
+    
+    } catch (error) {
+      Logger.debug("deleteAppointmentDoc 500 error: ", error);
+      return this.raiseServerError(res);
+    }
+  }
 }
 
 export default new AppointmentController();

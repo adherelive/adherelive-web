@@ -248,6 +248,7 @@ class MPatientController extends Controller {
 
       let appointmentApiData = {};
       let scheduleEventData = {};
+      let appointmentDocuments = {};
       let appointment_ids = [];
 
       for (const appointment of appointmentList) {
@@ -255,10 +256,12 @@ class MPatientController extends Controller {
 
         const {
           appointments,
-          schedule_events
+          schedule_events,
+          appointment_docs
         } = await appointmentWrapper.getReferenceInfo();
         appointmentApiData = { ...appointmentApiData, ...appointments };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
+        appointmentDocuments = { ...appointmentDocuments, ...appointment_docs };
       }
 
       return raiseSuccess(
@@ -270,6 +273,9 @@ class MPatientController extends Controller {
           },
           schedule_events: {
             ...scheduleEventData
+          },
+          appointment_docs: {
+            ...appointmentDocuments
           },
           appointment_ids: Object.keys(appointmentApiData)
         },

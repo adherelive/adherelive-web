@@ -4,7 +4,9 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
-  USER_CATEGORY
+  USER_CATEGORY,
+  DOCUMENT_PARENT_TYPE,
+  S3_DOWNLOAD_FOLDER
 } from "../../../../constant";
 import moment from "moment";
 
@@ -22,11 +24,20 @@ import featureDetailService from "../../../services/featureDetails/featureDetail
 import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
 import NotificationSdk from "../../../NotificationSdk";
+import { uploadImageS3 } from "../user/userHelper";
+import { getFilePath } from "../../../helper/filePath";
+import { downloadFileFromS3 } from "../user/userHelper";
+import { checkAndCreateDirectory } from "../../../helper/common";
+
+const path = require("path");
 
 // SERVICES...
 import queueService from "../../../services/awsQueue/queue.service";
+import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 
 // WRAPPERS...
+import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
+import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
@@ -506,6 +517,236 @@ class MobileAppointmentController extends Controller {
   //     return raiseServerError(res);
   //   }
   // };
+
+  uploadAppointmentDoc = async (req, res) => {
+    try {
+      const {
+        userDetails: { userId = null, userData: { category } = {} } = {}
+      } = req || {};
+      const file = req.file;
+      const { params: { appointment_id = null } = {} } = req || {};
+
+      const { originalname: file_name = "" } = file;
+
+      Logger.debug("file ----> ", file);
+
+      const appointmentDetails = await appointmentService.getAppointmentById(
+        appointment_id
+      );
+      let userIsParticipant = true;
+      let timeDifference = null;
+
+      if (appointmentDetails) {
+        const appointmentApiData = await MAppointmentWrapper(
+          appointmentDetails
+        );
+
+        const {
+          participant_one_id,
+          participant_two_id
+        } = appointmentApiData.getParticipants();
+        const endTime = appointmentApiData.getEndTime();
+
+        timeDifference = moment().diff(moment(endTime), "seconds");
+
+        let userCategoryId = null;
+        let userCategoryData = null;
+
+        switch (category) {
+          case USER_CATEGORY.DOCTOR:
+            const doctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(doctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
+          case USER_CATEGORY.PATIENT:
+            const patient = await patientService.getPatientByUserId(userId);
+            userCategoryData = await PatientWrapper(patient);
+            userCategoryId = userCategoryData.getPatientId();
+            break;
+          default:
+            break;
+        }
+
+        userIsParticipant =
+          participant_one_id === userCategoryId ||
+          participant_two_id === userCategoryId
+            ? true
+            : false;
+      }
+
+      console.log("values got are: ", appointmentDetails, userIsParticipant);
+
+      if (!appointmentDetails || !userIsParticipant) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to upload document.`
+        );
+      }
+
+      // if (timeDifference < 0) {
+      //   return this.raiseClientError(
+      //     res,
+      //     422,
+      //     {},
+      //     "Appointment is not finished yet."
+      //   );
+      // }
+
+      try {
+        let files = await uploadImageS3(userId, file);
+
+        const fileUrl = files && files.length ? getFilePath(files[0]) : files;
+
+        const docExist = await documentService.getDocumentByData(
+          DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+          appointment_id,
+          fileUrl
+        );
+
+        if (!docExist) {
+          const appointmentDoc = await documentService.addDocument({
+            parent_type: DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+            parent_id: appointment_id,
+            document: fileUrl,
+            name: file_name
+          });
+        }
+
+        let uploadDocumentsData = {};
+        const uploadDocuments = await documentService.getDoctorQualificationDocuments(
+          DOCUMENT_PARENT_TYPE.APPOINTMENT_DOC,
+          appointment_id
+        );
+
+        for (const uploadDocument of uploadDocuments) {
+          const uploadDocumentData = await UploadDocumentWrapper(
+            uploadDocument
+          );
+          uploadDocumentsData[
+            uploadDocumentData.getUploadDocumentId()
+          ] = uploadDocumentData.getBasicInfo();
+        }
+
+        return this.raiseSuccess(
+          res,
+          200,
+          {
+            upload_documents: {
+              ...uploadDocumentsData
+            }
+          },
+          "Appointment documents uploaded successfully."
+        );
+      } catch (err) {
+        Logger.debug("APPOINTMENT DOC UPLOAD CATCH ERROR ", err);
+        return this.raiseServerError(res, 500, {}, `${err.message}`);
+      }
+    } catch (error) {
+      Logger.debug("uploadAppointmentDoc 500 error: ", error);
+      return this.raiseServerError(res);
+    }
+  };
+
+  downloadAppointmentDoc = async (req, res) => {
+    try {
+      const {
+        userDetails: { userId = null, userData: { category } = {} } = {},
+        params: { document_id = null } = {}
+      } = req || {};
+
+      const uploadDocuments = await documentService.getDocumentById(
+        document_id
+      );
+
+      if (!uploadDocuments) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `No such document available.`
+        );
+      }
+
+      const uploadDocumentData = await UploadDocumentWrapper(uploadDocuments);
+      const {
+        basic_info: { name, document, parent_id, parent_type } = {}
+      } = uploadDocumentData.getBasicInfo();
+
+      const appointmentDetails = await appointmentService.getAppointmentById(
+        parent_id
+      );
+      let userIsParticipant = true;
+
+      if (appointmentDetails) {
+        const appointmentApiData = await MAppointmentWrapper(
+          appointmentDetails
+        );
+
+        const {
+          participant_one_id,
+          participant_two_id
+        } = appointmentApiData.getParticipants();
+
+        let userCategoryId = null;
+        let userCategoryData = null;
+
+        switch (category) {
+          case USER_CATEGORY.DOCTOR:
+            const doctor = await doctorService.getDoctorByData({
+              user_id: userId
+            });
+            userCategoryData = await DoctorWrapper(doctor);
+            userCategoryId = userCategoryData.getDoctorId();
+            break;
+          case USER_CATEGORY.PATIENT:
+            const patient = await patientService.getPatientByUserId(userId);
+            userCategoryData = await PatientWrapper(patient);
+            userCategoryId = userCategoryData.getPatientId();
+            break;
+          default:
+            break;
+        }
+
+        userIsParticipant =
+          participant_one_id === userCategoryId ||
+          participant_two_id === userCategoryId
+            ? true
+            : false;
+      }
+
+      console.log("values are: ", appointmentDetails, userIsParticipant);
+
+      if (!appointmentDetails || !userIsParticipant) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to download document.`
+        );
+      }
+
+      checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
+
+      const appointmentDocPath = `${S3_DOWNLOAD_FOLDER}/${name}`;
+
+      const downloadDoc = await downloadFileFromS3(
+        getFilePath(document),
+        appointmentDocPath
+      );
+
+      const options = {
+        root: path.join(__dirname, `../../../../${S3_DOWNLOAD_FOLDER}/`)
+      };
+      return res.sendFile(name, options);
+    } catch (error) {
+      Logger.debug("downloadAppointmentDoc 500 error: ", error);
+      return this.raiseServerError(res);
+    }
+  };
 }
 
 export default new MobileAppointmentController();
