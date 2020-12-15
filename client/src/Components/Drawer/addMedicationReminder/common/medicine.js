@@ -30,17 +30,21 @@ class Medicine extends Component {
       value: "",
       hits: {},
       searching_medicine: true,
-      medicine_name: ""
+      medicine_name: "",
+      medicine_id: ""
     };
 
     const algoliaClient = this.algoliaClient();
     this.index = algoliaClient.initIndex(config.algolia.medicine_index);
   }
 
-  componentDidMount(){
-    this.setState({
-      searching_medicine: true,
-      medicine_name: ""})
+  componentDidMount() {
+    this.handleMedicineSearch(" ");
+
+    // this.setState({
+    //   searching_medicine: true,
+    //   medicine_name: ""
+    // });
   }
 
   getMedicineOptions = () => {
@@ -80,7 +84,7 @@ class Medicine extends Component {
       generic_name = "",
       objectID = null
     } = hit;
-    const { value } = this.state;
+    const { value, searching_medicine } = this.state;
     let final_name = name;
     let final_generic_name = generic_name;
 
@@ -88,10 +92,33 @@ class Medicine extends Component {
       final_generic_name = "";
     }
 
-    console.log("8309778120 final_name.indexOf(value) --> ", hit);
+    console.log("2830139828 searching_medicine --> ", searching_medicine);
+
+    if (!searching_medicine) {
+      return (
+        <div
+          key={medicine_id}
+          className="pointer flex wp100  align-center justify-space-between"
+          onClick={this.setMedicineValue(medicine_id, name)}
+        >
+          <Tooltip title="Name">
+            {" "}
+            {/* formatMessage here */}
+            <div className="fs18 fw800 black-85 medicine-selected">
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: hit._highlightResult.name.value
+                }}
+              ></span>
+            </div>
+          </Tooltip>
+        </div>
+      );
+    }
+
+    // console.log("8309778120 final_name.indexOf(value) --> ", hit);
 
     return (
-
       <div
         key={medicine_id}
         className="pointer flex wp100  align-center justify-space-between"
@@ -102,14 +129,22 @@ class Medicine extends Component {
             {" "}
             {/* formatMessage here */}
             <div className="fs18 fw800 black-85">
-              <span dangerouslySetInnerHTML={{__html: hit._highlightResult.name.value}}></span>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: hit._highlightResult.name.value
+                }}
+              ></span>
             </div>
           </Tooltip>
 
           <Tooltip title="Generic Name">
-          <div className="fs16">
-            <span dangerouslySetInnerHTML={{__html: hit._highlightResult.generic_name.value}}></span>
-          </div>
+            <div className="fs16">
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: hit._highlightResult.generic_name.value
+                }}
+              ></span>
+            </div>
           </Tooltip>
         </div>
       </div>
@@ -125,7 +160,8 @@ class Medicine extends Component {
     setFieldsValue({ [FIELD_NAME]: medicine_id });
     this.setState({
       medicine_name: medicine_name,
-      searching_medicine: false
+      searching_medicine: false,
+      medicine_id
     });
   };
 
@@ -141,21 +177,41 @@ class Medicine extends Component {
   formatMessage = message => this.props.intl.formatMessage(message);
 
   handleMedicineSearch = value => {
-    const { value: state_value = "" } = this.state;
+    this.searchValue(value);
+  };
 
-    this.index.search(value).then(({ hits }) => {
-      console.log("92839210 hits -> ", hits);
+  async searchValue(value) {
+    try {
+      const { value: state_value = "" } = this.state;
+      const res = await this.index.search(value);
+      const { hits = {} } = res;
       if (value !== state_value) {
         this.setState({
+          fetchingMedicines: false,
           hits,
           value
         });
       }
-    });
+
+      // console.log("987657890876567687980",res);
+    } catch (error) {
+      console.log("err --->", error);
+    }
+  }
+
+  onOptionSelect = value => {
+    const { setFormulation } = this.props;
+    setFormulation(value);
+    this.setState({medicine_id: value, temp_medicine: value});
+    console.log("9839012381 value ---> ", value);
+  };
+
+  dropdownVisible = open => {
+    console.log("9839012381 dropdown visible ---> ", open);
+    this.setState({searching_medicine: open, temp_medicine: ""});
   };
 
   getParentNode = t => t.parentNode;
-
 
   render() {
     const {
@@ -166,76 +222,61 @@ class Medicine extends Component {
     const {
       fetchingMedicines,
       searching_medicine = false,
-      medicine_name : med_name= ""
+      medicine_name: med_name = "",
+      temp_medicine = ""
     } = this.state;
 
     const { getMedicineOptions, handleMedicineSearch, getParentNode } = this;
-    console.log("7654676546765467", this.state.value);
-
-
+    // console.log("7654676546765467", this.state.value);
 
     return (
       <FormItem label={this.formatMessage(messages.addMedicine)}>
         {getFieldDecorator(
           FIELD_NAME,
 
-          {
-          }
+          {}
         )(
           <InstantSearch
             indexName={"adhere_medicine"}
             searchClient={this.algoliaClient()}
           >
-            {
-              !searching_medicine
-              ?
-              (
-                <>
-                    <div className="med-defaul-container" onClick = {this.isSearchingMedicine}>
-                        <span className="fs20 ml20" >{med_name}</span>
-                    </div>
-                </>
-            )
-              :
+            {/*{*/}
+            {/*  !searching_medicine*/}
+            {/*  ?*/}
+            {/*  (*/}
+            {/*    <>*/}
+            {/*        <div className="med-defaul-container" onClick = {this.isSearchingMedicine}>*/}
+            {/*            <span className="fs20 ml20" >{med_name}</span>*/}
+            {/*        </div>*/}
+            {/*    </>*/}
+            {/*)*/}
+            {/*  :*/}
 
-              (       
-                <Select
-                onSearch={handleMedicineSearch}
-                notFoundContent={
-                  fetchingMedicines ? <Spin size="small" /> : "No match found"
-                }
-                className="drawer-select medicine-search-select"
-                placeholder="Choose Medicine"
-                showSearch
-                onSelect={setFormulation}
-                // autoFocus={true}
-                defaultActiveFirstOption={true}
-                // onFocus={() => handleMedicineSearch("")}
-                autoComplete="off"
-                // onFocus={() => handleMedicineSearch("")}
-  
-                optionFilterProp="children"
-                filterOption={(input, option) => {
-                      console.log("83128908 options.props.children --> ", option.props.children);
-                    return option.props.children;
-                      // .toLowerCase()
-                      // .indexOf(input.toLowerCase()) >= 0
-                }
-                }
-  
-                // filterOption={(input, option) =>
-                //   option.props.children
-                //     .toString()
-                //     .toLowerCase()
-                //     .indexOf(option.props.children.toString().toLowerCase()) > -1
-                // }
-                getPopupContainer={getParentNode}
-              >
-                {getMedicineOptions()}
-              </Select>
-              )
-             
-            }
+            {/*  (       */}
+            <Select
+              onSearch={handleMedicineSearch}
+              notFoundContent={
+                fetchingMedicines ? <Spin size="small" /> : "No match found"
+              }
+              className="drawer-select medicine-search-select"
+              placeholder="Choose Medicine"
+              showSearch
+              onSelect={this.onOptionSelect}
+              defaultOpen={true}
+              value={temp_medicine}
+              onDropdownVisibleChange={this.dropdownVisible}
+              autoComplete="off"
+              optionFilterProp="children"
+              filterOption={(input, option) => {
+                return option.props.children;
+              }}
+              getPopupContainer={getParentNode}
+            >
+              {getMedicineOptions()}
+            </Select>
+            {/*)*/}
+
+            {/*}*/}
           </InstantSearch>
         )}
       </FormItem>

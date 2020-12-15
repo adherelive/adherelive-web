@@ -15,7 +15,7 @@ import {
   SearchBox,
   Highlight,
   connectSearchBox,
-    connectHighlight
+  connectHighlight
 } from "react-instantsearch-dom";
 
 const { Item: FormItem } = Form;
@@ -32,93 +32,100 @@ class Medicine extends Component {
       searching_medicine: false,
       medicine_name: ""
     };
+
+    const algoliaClient = this.algoliaClient();
+    this.index = algoliaClient.initIndex(config.algolia.medicine_index);
   }
 
-  componentDidMount(){
+  componentDidMount() {
+    // this.handleMedicineSearch(" ");
 
+    this.getDefaultMedicine();
+  }
+
+  getDefaultMedicine = () => {
     const {
-      form: { getFieldDecorator, getFieldError, isFieldTouched,getFieldValue },
-      medications={},
-      medicationData,
+      medications = {},
       payload: { id: medication_id } = {},
-      medicines={}
+      medicines = {}
     } = this.props;
 
-    let { basic_info: { details: { medicine_id  = null} = {} } = {} } = medications[medication_id] || {};
+    let { basic_info: { details: { medicine_id = null } = {} } = {} } =
+    medications[medication_id] || {};
 
+    const { basic_info: { name } = {} } = medicines[medicine_id] || {};
 
-    const { medicine_id: medicineId = '' } = medicationData || {};
-      
-    if (medicineId) {
-      medicine_id = parseInt(medicineId);
-    }
+    let defaultHit = [];
 
-    const {basic_info : {name} = {} } = medicines[medicine_id] || {};
+    this.index.search(name).then(({ hits }) => {
 
-   if(medicine_id){
-    this.setState({medicine_name:name,
-      searching_medicine:false});
-   }
-
-  }
-
-  getMedicineOptions = () => {
-    const algoliaClient = this.algoliaClient();
-    const index = algoliaClient.initIndex(config.algolia.medicine_index);
-    const { hits = {} } = this.state;
-    let list = [];
-    const { searchOptions } = this;
-
-      return Object.values(hits).map(function(hit, index) {
-        const {
-          medicine_id = null,
-          name = "",
-          generic_name = "",
-          objectID = null
-        } = hit;
-        let final_name = name;
-        let final_generic_name = generic_name;
-
-        if (name === generic_name) {
-          console.log("675456789763445", name);
-          final_generic_name = "";
-        }
-
-        return (
-          <Option
-            key={`opt-${medicine_id}`}
-            value={medicine_id}
-          >
-            {searchOptions(hit, index)}
-          </Option>
-        );
-      });
- 
-  };
-
-  highlightText = ({ highlight, attribute, hit }) => {
-    const parsedHit = highlight({
-      highlightProperty: "_highlightResult",
-      attribute,
-      hit
+        defaultHit = hits.filter(hit => hit.medicine_id === medicine_id);
+      console.log("19831829 defaultHit inside--> ", hits, defaultHit);
+      this.setState({hits: defaultHit, temp_medicine: medicine_id});
     });
 
-    return (
-      <span>
-        {parsedHit.map((part, index) => {
-            console.log("018381923 highlighted, index, value", {highlighted: part.isHighlighted, index, value: part.value, parsedHit});
-            return (
-                part.isHighlighted ? (
-                    <mark key={index}>{part.value}</mark>
-                ) : (
-                    <span key={index}>{part.value}</span>
-                )
-            );
-        }
+    console.log("19831829 defaultHit --> ", defaultHit);
+  };
 
-        )}
-      </span>
-    );
+
+  getMedicineOptions = () => {
+    const { hits = {}, value: state_value = "" } = this.state;
+    const { temp_medicine = "" } = this.state;
+
+    const { searchOptions } = this;
+
+    let defaultOption = [];
+
+    const {
+      medications = {},
+      payload: { id: medication_id } = {},
+      medicines = {}
+    } = this.props;
+
+    const { basic_info: { details: { medicine_id = null } = {} } = {} } =
+      medications[medication_id] || {};
+
+    const { basic_info: { name: med_name = "" } = {} } = medicines[medicine_id] || {};
+    //
+    // if (!temp_medicine) {
+    //   defaultOption.push(
+    //     <Option key={`opt-${medicine_id}`} value={`${medicine_id}`}>
+    //         <Tooltip title="Name">
+    //           <div className="fs18 fw800 black-85 medicine-selected">
+    //             <span>{med_name}</span>
+    //           </div>
+    //         </Tooltip>
+    //     </Option>
+    //   );
+    //
+    //   return defaultOption;
+    // }
+
+    console.log("10982309123 hits ---> ", hits);
+
+
+    return Object.values(hits).map(function(hit, index) {
+      const {
+        medicine_id = null,
+        name = "",
+        generic_name = "",
+        objectID = null
+      } = hit;
+      let final_name = name;
+      let final_generic_name = generic_name;
+
+      if (name === generic_name) {
+        console.log("675456789763445", name);
+        final_generic_name = "";
+      }
+      console.log("10982309123 medicine_id, type of medicine_id ", medicine_id, typeof medicine_id);
+
+      return (
+        <Option key={`opt-${medicine_id}`} value={medicine_id}>
+          {searchOptions(hit, index)}
+        </Option>
+      );
+    });
   };
 
   searchOptions = (hit, index) => {
@@ -128,7 +135,7 @@ class Medicine extends Component {
       generic_name = "",
       objectID = null
     } = hit;
-    const { value } = this.state;
+    const { value, searching_medicine, temp_medicine } = this.state;
     let final_name = name;
     let final_generic_name = generic_name;
 
@@ -136,10 +143,30 @@ class Medicine extends Component {
       final_generic_name = "";
     }
 
-    console.log("8309778120 final_name.indexOf(value) --> ", hit);
+    if (!searching_medicine) {
+      this.setMedicineValue(medicine_id, name);
+      return (
+        <div
+          key={medicine_id}
+          className="pointer flex wp100  align-center justify-space-between"
+          onClick={this.setMedicineValue(medicine_id, name)}
+        >
+          <Tooltip title="Name">
+            {" "}
+            {/* formatMessage here */}
+            <div className="fs18 fw800 black-85 medicine-selected">
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: hit._highlightResult.name.value
+                }}
+              ></span>
+            </div>
+          </Tooltip>
+        </div>
+      );
+    }
 
     return (
-
       <div
         key={medicine_id}
         className="pointer flex wp100  align-center justify-space-between"
@@ -150,47 +177,27 @@ class Medicine extends Component {
             {" "}
             {/* formatMessage here */}
             <div className="fs18 fw800 black-85">
-              <span dangerouslySetInnerHTML={{__html: hit._highlightResult.name.value}}></span>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: hit._highlightResult.name.value
+                }}
+              ></span>
             </div>
           </Tooltip>
 
           <Tooltip title="Generic Name">
-          <div className="fs16">
-            <span dangerouslySetInnerHTML={{__html: hit._highlightResult.generic_name.value}}></span>
-          </div>
+            <div className="fs16">
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: hit._highlightResult.generic_name.value
+                }}
+              ></span>
+            </div>
           </Tooltip>
         </div>
       </div>
     );
   };
-
-
-
-
-  algoliaClient = () => {
-    return algoliasearch(config.algolia.app_id, config.algolia.app_key);
-  };
-
-  formatMessage = message => this.props.intl.formatMessage(message);
-
-  handleMedicineSearch = value => {
-    const algoliaClient = this.algoliaClient();
-    const index = algoliaClient.initIndex(config.algolia.medicine_index);
-    const { value: state_value = "" } = this.state;
-
-    console.log("128321930 config.algolia.medicine_index -> ", config);
-
-    index.search(value).then(({ hits }) => {
-      if (value !== state_value) {
-        this.setState({
-          hits,
-          value
-        });
-      }
-    });
-  };
-
-  getParentNode = t => t.parentNode;
 
   setMedicineValue = (medicine_id, medicine_name) => e => {
     e.preventDefault();
@@ -207,106 +214,80 @@ class Medicine extends Component {
     enableSubmit();
   };
 
-  isSearchingMedicine = e => {
-    e.preventDefault();
-    console.log("7865467890765467890");
-    this.setState({ searching_medicine: true });
+  algoliaClient = () => {
+    return algoliasearch(config.algolia.app_id, config.algolia.app_key);
   };
 
-  render() {
+  formatMessage = message => this.props.intl.formatMessage(message);
 
+  handleMedicineSearch = value => {
+    const algoliaClient = this.algoliaClient();
+    const index = algoliaClient.initIndex(config.algolia.medicine_index);
+    const { value: state_value = "", defaultHit = [] } = this.state;
+
+    index.search(value).then(({ hits }) => {
+      if (value !== state_value) {
+        this.setState({
+          hits,
+          value,
+          searching_medicine: true
+        });
+      }
+    });
+  };
+
+  onOptionSelect = value => {
+    this.setState({ medicine_id: value, temp_medicine: value });
+  };
+
+  dropdownVisible = open => {
+    this.setState({ searching_medicine: open, temp_medicine: "" });
+  };
+
+  getParentNode = t => t.parentNode;
+  render() {
     const {
       fetchingMedicines,
-      searching_medicine=false,
-      medicine_name : med_name =''
-
+      medicine_name: med_name = "",
+      temp_medicine = ""
     } = this.state;
 
     const { getMedicineOptions, handleMedicineSearch, getParentNode } = this;
 
-
     const {
-      form: { getFieldDecorator, getFieldError, isFieldTouched,getFieldValue },
-      medications={},
-      medicationData,
-      payload: { id: medication_id } = {},
-      medicines={}
+      form: { getFieldDecorator },
     } = this.props;
-
-    let { basic_info: { details: { medicine_id  = null} = {} } = {} } = medications[medication_id] || {};
-
-
-    const { medicine_id: medicineId = '' } = medicationData || {};
-      
-    if (medicineId) {
-      medicine_id = parseInt(medicineId);
-    }
-
-
 
     return (
       <FormItem label={this.formatMessage(messages.addMedicine)}>
-        {getFieldDecorator(
-          FIELD_NAME,
-
-          {
-            initialValue : medicine_id ? medicine_id :null
-          }
-        )(
+        {getFieldDecorator(FIELD_NAME, {
+          initialValue: temp_medicine ? `${temp_medicine}` : ""
+        })(
           <InstantSearch
             indexName={"adhere_medicine"}
             searchClient={this.algoliaClient()}
           >
-            {
-              !searching_medicine
-              ?
-              (
-                <>
-                    <div className="med-defaul-container" onClick = {this.isSearchingMedicine}>
-                        <span className="fs20 ml20" >{med_name}</span>
-                        
-                    </div>
-                </>
-            )
-              :
-
-              (       
-                <Select
-                onSearch={handleMedicineSearch}
-                notFoundContent={
-                  fetchingMedicines ? <Spin size="small" /> : "No match found"
-                }
-                className="drawer-select medicine-search-select"
-                placeholder="Choose Medicine"
-                showSearch
-                // autoFocus={true}
-                defaultActiveFirstOption={true}
-                // onFocus={() => handleMedicineSearch("")}
-                autoComplete="off"
-                // onFocus={() => handleMedicineSearch("")}
-  
-                optionFilterProp="children"
-                filterOption={(input, option) => {
-                      console.log("83128908 options.props.children --> ", option.props.children);
-                    return option.props.children;
-                      // .toLowerCase()
-                      // .indexOf(input.toLowerCase()) >= 0
-                }
-                }
-  
-                // filterOption={(input, option) =>
-                //   option.props.children
-                //     .toString()
-                //     .toLowerCase()
-                //     .indexOf(option.props.children.toString().toLowerCase()) > -1
-                // }
-                getPopupContainer={getParentNode}
-              >
-                {getMedicineOptions()}
-              </Select>
-              )
-             
-            }
+            <Select
+              onSearch={handleMedicineSearch}
+              notFoundContent={
+                fetchingMedicines ? <Spin size="small" /> : "No match found"
+              }
+              className="drawer-select medicine-search-select"
+              placeholder="Choose Medicine"
+              showSearch
+              onSelect={this.onOptionSelect}
+              defaultActiveFirstOption={true}
+              value={temp_medicine}
+              onDropdownVisibleChange={this.dropdownVisible}
+              autoComplete="off"
+              optionFilterProp="children"
+              filterOption={(input, option) => {
+                return option.props.children;
+              }}
+              getPopupContainer={getParentNode}
+            >
+              {getMedicineOptions()}
+            </Select>
           </InstantSearch>
         )}
       </FormItem>

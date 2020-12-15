@@ -223,11 +223,15 @@ const columns_appointments = [
         return event_id === appointment_id;
       }) || [];
 
+
       if(appointmentEvent.length > 0) {
         const {status} = schedule_events[appointmentEvent] || {};
+
         if(status !== EVENT_STATUS.SCHEDULED && status !== EVENT_STATUS.COMPLETED) {
           return null;
         }
+      }else{
+        return null;
       }
 
 
@@ -246,10 +250,10 @@ const columns_appointments = [
         return (
           <div className="wp100 flex align-center justify-center pointer">
             <Button
-              type={"primary"}
+              type={"secondary"}
               onClick={uploadAppointmentDocs(appointment_id)}
             >
-              {formatMessage(messages.upload_docs)}
+              {formatMessage(messages.upload_reports)}
             </Button>
           </div>
         );
