@@ -49,13 +49,7 @@ export default class AlgoliaService {
       console.log("result ----. ", result);
 
       const searchAttributes = await index.setSettings({
-        searchableAttributes: ["name", "generic_name", "classification"],
-        attributesToHighlight: [
-            "name",
-            "generic_name"
-        ],
-        highlightPreTag: '<em class="search-highlight">',
-        highlightPostTag: '</em>'
+        searchableAttributes: ["name", "generic_name", "classification"]
       });
 
       console.log("searchAttributes ----. ", searchAttributes);
