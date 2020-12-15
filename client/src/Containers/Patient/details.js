@@ -20,6 +20,7 @@ import { openPopUp, closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
 import { getLastVisitAlerts, markAppointmentComplete } from "../../modules/scheduleEvents/index";
 import {addCareplanForPatient} from "../../modules/patients";
+import {storeAppointmentDocuments} from "../../modules/uploadDocuments";
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -43,7 +44,8 @@ const mapStateToProps = (state, ownProps) => {
     drawer,
     care_plan_template_ids = [],
     twilio = {},
-    symptoms = {}
+    symptoms = {},
+    schedule_events = {},
   } = state;
   // const { id } = ownprops;
   const user_details = users["3"] || {};
@@ -78,7 +80,8 @@ const mapStateToProps = (state, ownProps) => {
     drawer,
     symptoms,
     care_plan_template_ids,
-    authenticated_user
+    authenticated_user,
+    schedule_events,
   };
 };
 
@@ -117,7 +120,8 @@ const mapDispatchToProps = dispatch => {
     openAddCareplanDrawer: payload =>
       dispatch(open({ type: DRAWER.ADD_CAREPLAN, payload })),
     addCareplanForPatient : (patient_id,data) => dispatch(addCareplanForPatient(patient_id,data)),
-    openEditPatientDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_PATIENT, payload }))
+    openEditPatientDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
+    storeAppointmentDocuments : (data) => dispatch(storeAppointmentDocuments(data))
 
  
   };

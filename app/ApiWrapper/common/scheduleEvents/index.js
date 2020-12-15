@@ -81,10 +81,12 @@ class ScheduleEventWrapper extends BaseScheduleEvent {
                 const appointment = await AppointmentWrapper(null, getEventId());
                 const {appointments} = await appointment.getAllInfo();
                 eventTypeData = {appointments};
+                break;
             case EVENT_TYPE.MEDICATION_REMINDER:
                 const medication = await MedicationWrapper(null, getEventId());
                 const {medications, medicines} = await medication.getReferenceInfo();
                 eventTypeData = {medications, medicines};
+                break;
             default:
                 break;
         }

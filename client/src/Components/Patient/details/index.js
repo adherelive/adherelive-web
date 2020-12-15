@@ -4,6 +4,9 @@ import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import plus_white from "../../../Assets/images/plus_white.png";
 import chat_image from "../../../Assets/images/chat.svg";
+import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
+import { doRequest } from "../../../Helper/network";
+import {REQUEST_TYPE, PATH, USER_CATEGORY, EVENT_STATUS} from "../../../constant";
 
 import {
   GENDER,
@@ -15,7 +18,16 @@ import {
   DIAGNOSIS_TYPE,
   TABLE_DEFAULT_BLANK_FIELD
 } from "../../../constant";
-import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
+import {
+  Tabs,
+  Upload,
+  Table,
+  Menu,
+  Dropdown,
+  Spin,
+  message,
+  Button
+} from "antd";
 import Modal from "antd/es/modal";
 import Collapse from "antd/es/collapse";
 
@@ -36,10 +48,14 @@ import {
   PhoneOutlined,
   MessageOutlined,
   VideoCameraOutlined,
-  CaretDownOutlined
+  CaretDownOutlined,
+  InboxOutlined
 } from "@ant-design/icons";
 import moment from "moment";
 import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
+
+// appointment upload modal
+import AppointmentUpload from "../../../Containers/Modal/appointmentUpload";
 
 import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
 import AddVitals from "../../../Containers/Drawer/addVitals";
@@ -67,6 +83,7 @@ import Tooltip from "antd/es/tooltip";
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
+const { Dragger } = Upload;
 const APPOINTMENT = "appointment";
 
 const { confirm } = Modal;
@@ -189,7 +206,31 @@ const columns_appointments = [
     dataIndex: "markComplete",
     key: "markComplete",
     width: "30%",
-    render: ({ active_event_id, markAppointmentComplete, formatMessage }) => {
+    render: ({
+      id: appointment_id,
+      end_time,
+      active_event_id,
+      markAppointmentComplete,
+      formatMessage,
+      uploadAppointmentDocs,
+               schedule_events,
+    }) => {
+      // const timeDifference = moment().diff(moment(end_time), "seconds");
+
+      const appointmentEvent = Object.keys(schedule_events).filter(id => {
+        const {event_id = {}} = schedule_events[id] || {};
+
+        return event_id === appointment_id;
+      }) || [];
+
+      if(appointmentEvent.length > 0) {
+        const {status} = schedule_events[appointmentEvent] || {};
+        if(status !== EVENT_STATUS.SCHEDULED && status !== EVENT_STATUS.COMPLETED) {
+          return null;
+        }
+      }
+
+
       if (active_event_id) {
         return (
           <div className="wp100 flex align-center justify-center pointer">
@@ -198,6 +239,17 @@ const columns_appointments = [
               onClick={markAppointmentComplete(active_event_id)}
             >
               {formatMessage(messages.complete_text)}
+            </Button>
+          </div>
+        );
+      } else {
+        return (
+          <div className="wp100 flex align-center justify-center pointer">
+            <Button
+              type={"primary"}
+              onClick={uploadAppointmentDocs(appointment_id)}
+            >
+              {formatMessage(messages.upload_docs)}
             </Button>
           </div>
         );
@@ -333,9 +385,7 @@ const PatientCard = ({
           expandIcon={() => <CaretDownOutlined className="pointer" />}
         >
           <Panel key={"1"} style={{ border: "none" }} className="br10">
-            <div className="flex   align-center tac">
-              {editPatientOption()}
-            </div>
+            <div className="flex   align-center tac">{editPatientOption()}</div>
           </Panel>
         </Collapse>
       </div>
@@ -505,8 +555,7 @@ const PatientTreatmentCard = ({
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.diagnosis_text)}</div>
           <div>
-            <span className="fs16 fw700">{`${treatment_diagnosis_description}`}</span>
-            {" "}
+            <span className="fs16 fw700">{`${treatment_diagnosis_description}`}</span>{" "}
             <span className="fs12 fw600">{`(${treatment_diagnosis_type})`}</span>
           </div>
         </div>
@@ -582,7 +631,10 @@ class PatientDetails extends Component {
       ],
       consentLoading: false,
       selectedCarePlanId: null,
-      isOtherCarePlan: true
+      isOtherCarePlan: true,
+      uploadDocsModalVisible: false,
+      uploadDocsAppointmentId: null,
+      allAppointmentDocs: {}
     };
   }
 
@@ -678,6 +730,14 @@ class PatientDetails extends Component {
     }
   };
 
+  uploadAppointmentDocs = id => async e => {
+    e.stopPropagation();
+    this.setState({
+      uploadDocsModalVisible: true,
+      uploadDocsAppointmentId: id
+    });
+  };
+
   getAppointmentsData = (carePlan = {}, docName = "--") => {
     const {
       appointments,
@@ -687,7 +747,11 @@ class PatientDetails extends Component {
       schedule_events = {}
     } = this.props;
 
-    const { markAppointmentComplete, formatMessage } = this;
+    const {
+      markAppointmentComplete,
+      formatMessage,
+      uploadAppointmentDocs
+    } = this;
 
     let { appointment_ids = [] } = carePlan;
     let formattedAppointments = appointment_ids.map(id => {
@@ -709,14 +773,22 @@ class PatientDetails extends Component {
         key: id,
         organizer: user_name ? user_name : docName,
         date: `${moment(start_date).format("LL")}`,
-        time: `${start_time ? moment(start_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD} - ${end_time ? moment(end_time).format(
-          "LT"
-        ) : TABLE_DEFAULT_BLANK_FIELD}`,
+        time: `${
+          start_time
+            ? moment(start_time).format("LT")
+            : TABLE_DEFAULT_BLANK_FIELD
+        } - ${
+          end_time ? moment(end_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD
+        }`,
         description: description ? description : "--",
         markComplete: {
+          id,
+          end_time,
           active_event_id,
+          schedule_events,
           markAppointmentComplete,
-          formatMessage
+          formatMessage,
+          uploadAppointmentDocs
         }
       };
     });
@@ -1382,6 +1454,15 @@ class PatientDetails extends Component {
     this.handleOtpModal(false);
   };
 
+  closeAppointmentDocsModal = e => {
+    e.preventDefault();
+    // const {allAppointmentDocs[key]} = this.state.allAppointmentDocs;
+    this.setState({
+      uploadDocsModalVisible: false,
+      uploadDocsAppointmentId: null
+    });
+  };
+
   handleCarePlanChange = id => e => {
     e.preventDefault();
     const { doctors, care_plans, authenticated_user } = this.props;
@@ -1427,12 +1508,10 @@ class PatientDetails extends Component {
   editPatientOption = () => {
     return (
       <div
-       onClick={this.handleEditPatientDrawer}
-       className="flex  align-center justify-center  wp100 ">
-        <div
-         
-          className="pointer h30 flex   "
-        >
+        onClick={this.handleEditPatientDrawer}
+        className="flex  align-center justify-center  wp100 "
+      >
+        <div className="pointer h30 flex   ">
           <div className="flex direction-column align-center justify-center  hp100   ">
             <span className="fw700 fs19 mr20">
               {this.formatMessage(messages.edit_patient)}
@@ -1527,6 +1606,169 @@ class PatientDetails extends Component {
     openEditPatientDrawer({ patientData, carePlanData });
   };
 
+  handleBeforeUploadRegistration = key => file => {
+    const { allAppointmentDocs = {} } = this.state;
+
+    console.log("6756467897865678777", this.state);
+    // if(allAppointmentDocs[key]){
+    //   const {upload_documents = {}} = allAppointmentDocs[key];
+    //   console.log("783423452374672348",upload_documents);
+    //   for (let doc of upload_documents) {
+    //     console.log("DOCCCCCCCCCCCCCCCCCCCCC",doc);
+    //     let fileName = file.name;
+    //     let newFileName = fileName.replace(/\s/g, '');
+    //     if (doc.includes(newFileName)) {
+    //       console.log("DUPLICATE");
+    //       message.error(this.formatMessage(messages.duplicateError));
+    //       return false;
+    //     }
+    //   }
+    //   console.log("handleBeforeUploadRegistration Called YYYYYYYYYYYYYYYYYYy");
+    //   return true
+    // }
+    console.log("handleBeforeUploadRegistration Called");
+    return true;
+  };
+
+  // handleAddAppointmentDocuments = (appointment_id)  => info => {
+
+  //   const fileList = info.fileList;
+  //   let key = appointment_id;
+  //   let {  allAppointmentDocs={} } = this.state;
+  //   console.log("4334543535345345",info);
+
+  // }
+
+  // handleChangeList = key => info => {
+
+  //   console.log("234532432423423",info);
+  //   // const fileList = info.fileList;
+  //   // let { education = {} } = this.state;
+  //   // let newEducation = education;
+  //   // let { photos = [], photo = [] } = newEducation[key];
+  //   // for (let item of fileList) {
+
+  //   //   let uid = item.uid;
+  //   //   let push = true;
+
+  //   //   if (typeof (item) == 'object') {
+  //   //     for (let photo of photos) {
+
+  //   //       let { name = '' } = item;
+  //   //       let fileName = name;
+  //   //       let newFileName = fileName.replace(/\s/g, '');
+  //   //       if (photo.includes(newFileName)) {
+  //   //         push = false;
+  //   //       }
+  //   //     }
+  //   //   }
+  //   //   if (newEducation[key].photo && newEducation[key].photo.length) {
+  //   //     for (let pic of newEducation[key].photo) {
+  //   //       if (pic.uid === uid) {
+  //   //         push = false;
+  //   //       }
+  //   //     }
+  //   //   }
+  //   //   if (push) {
+  //   //     newEducation[key].photo.push(item);
+  //   //   }
+  //   // };
+
+  //   // this.setState({ education: newEducation });
+  // };
+
+  onUploadCompleteRegistration = async (data = {}, key) => {
+    // const {allAppointmentDocs ={} } =this.state;
+    const { upload_documents: latest_docs = {} } = data;
+    // console.log("7865789089767567890",data);
+
+    // const {storeAppointmentDocuments} = this.props;
+    // let appointmentDocs = allAppointmentDocs[key];
+    // allAppointmentDocs[key] = {...appointmentDocs,upload_documents};
+    // let newAppointmentDocs = allAppointmentDocs[key];
+    // this.setState({allAppointmentDocs:{...allAppointmentDocs}});
+
+    // storeAppointmentDocuments(data)
+
+    const { allAppointmentDocs = {} } = this.state;
+    let newappointmentDocs = allAppointmentDocs;
+
+    if (newappointmentDocs[key]) {
+      let newDocs = newappointmentDocs[key].upload_documents;
+      newappointmentDocs[key].upload_documents = latest_docs;
+      this.setState({
+        allAppointmentDocs: newappointmentDocs
+      });
+    } else {
+      newappointmentDocs[key] = {};
+      newappointmentDocs[key].upload_documents = latest_docs;
+      this.setState({
+        allAppointmentDocs: newappointmentDocs
+      });
+    }
+  };
+
+  customRequestUploadDocuments = key => async ({
+    file,
+    filename,
+    onError,
+    onProgress,
+    onSuccess
+  }) => {
+    let { allAppointmentDocs = {} } = this.state;
+    const { storeAppointmentDocuments } = this.props;
+
+    let newAppointmentDocs = allAppointmentDocs[key];
+
+    let data = new FormData();
+    data.append("files", file);
+
+    let uploadResponse = await doRequest({
+      method: REQUEST_TYPE.POST,
+      data: data,
+      url: getUploadAppointmentDocumentUrl(key)
+    });
+
+    const {
+      status = false,
+      statusCode,
+      payload: { data: responseData = {}, message: respMessage = "" } = {}
+    } = uploadResponse;
+
+    console.log("1398109830912 uploadResponse --> ", { uploadResponse });
+
+    if (status) {
+      message.success(respMessage);
+    } else {
+      message.warn(respMessage);
+    }
+  };
+
+  handleChangeList = info => {
+    const fileList = info.fileList;
+    let { photos = [], photo = [] } = this.state;
+    for (let item of fileList) {
+      let uid = item.uid;
+      let push = true;
+
+      if (typeof item == "object") {
+        for (let photo of photos) {
+          let { name = "" } = item;
+          let fileName = name;
+          let newFileName = fileName.replace(/\s/g, "");
+          if (photo.includes(newFileName)) {
+            push = false;
+          }
+        }
+      }
+      if (push) {
+        photo.push(item);
+      }
+    }
+
+    this.setState({ photos: [...photos, ...photo] });
+  };
+
   render() {
     let {
       patients,
@@ -1575,7 +1817,7 @@ class PatientDetails extends Component {
       handleOtpVerify,
       handleOtpCancel,
       handleCarePlanChange,
-      getOtpModalFooter
+      getOtpModalFooter,
     } = this;
 
     if (loading) {
@@ -1736,6 +1978,11 @@ class PatientDetails extends Component {
           doctor_middle_name ? `${doctor_middle_name} ` : ""
         }${doctor_last_name}`
       : "--";
+
+    const {
+      uploadDocsModalVisible = false,
+      uploadDocsAppointmentId = null
+    } = this.state;
 
     return (
       <Fragment>
@@ -2000,6 +2247,14 @@ class PatientDetails extends Component {
         >
           {getConsentDetails()}
         </Modal>
+
+        {uploadDocsModalVisible && (
+          <AppointmentUpload
+            visible={uploadDocsModalVisible}
+            appointmentId={uploadDocsAppointmentId}
+            onCancel={this.closeAppointmentDocsModal}
+          />
+        )}
       </Fragment>
     );
   }
