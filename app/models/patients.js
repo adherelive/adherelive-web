@@ -76,6 +76,14 @@ export const db = database => {
         type: DataTypes.STRING,
         allowNull: true
       },
+      height :{
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      weight:{
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       activated_on: {
         type: DataTypes.DATE
       },

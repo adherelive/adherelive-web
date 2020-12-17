@@ -1032,6 +1032,7 @@ class DoctorController extends Controller {
         created_at: moment()
       });
 
+
       const carePlanData = await CarePlanWrapper(carePlan);
       const care_plan_id = await carePlanData.getCarePlanId();
 

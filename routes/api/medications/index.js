@@ -46,4 +46,11 @@ router.delete(
     Medication.delete
 );
 
+router.get(
+    "/:id/timeline",
+    Authenticate,
+    Medication.getMedicationResponseTimeline
+);
+
+
 module.exports = router;

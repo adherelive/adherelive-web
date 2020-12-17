@@ -75,6 +75,8 @@ class TemplateDrawer extends Component {
         let newAppointsKeys = [];
         let newMedics = {};
         let newAppoints = {};
+        
+        console.log("4534543634534535634 CDM-->",this.props);
 
         let carePlanTemplateId = Object.keys(carePlanTemplateIds).length ? parseInt(carePlanTemplateIds[0]) : 0;
 
@@ -228,6 +230,7 @@ class TemplateDrawer extends Component {
     getCarePlanTemplateOptions = () => {
         const { carePlanTemplateIds = [] } = this.state;
         const { care_plan_templates = {} } = this.props;
+        console.log("4534543634534535634",carePlanTemplateIds);
         const templates = Object.values(carePlanTemplateIds).map(templateId => {
             const { basic_info: { name = '' } = {} } = care_plan_templates[templateId];
             return (
@@ -727,6 +730,7 @@ class TemplateDrawer extends Component {
         let { medicines } = this.props;
         let newMedication = {};
         const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
+        console.log("7865456709809876545678", medicines[medicine_id]);
         newMedication.medicine_id = medicine_id;
         newMedication.medicine = name;
         newMedication.medicineType = type;

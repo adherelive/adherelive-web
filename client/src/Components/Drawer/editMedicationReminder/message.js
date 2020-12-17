@@ -401,5 +401,10 @@ export default defineMessages({
     id: "medication_reminder.add.drawer.add.med",
     description: "",
     defaultMessage: "Add Medicine",
+  },
+  name:{
+    id: "medication_reminder.add.drawer.name",
+    description: "",
+    defaultMessage: "Name",
   }
 });

@@ -22,6 +22,7 @@ import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 
+
 import {
   CUSTOM_REPEAT_OPTIONS,
   DAYS,
@@ -853,6 +854,71 @@ class MReminderController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  getMedicationResponseTimeline = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+        Logger.debug("req.params medication id---->", req.params);
+        const { params: { id } = {} } = req;
+        const EventService = new eventService();
+
+        const today = moment()
+            .utc()
+            .toISOString();
+
+        const medication = await MedicationWrapper(null ,id);
+
+        const completeEvents = await EventService.getAllPassedByData({
+            event_id: id,
+            event_type: EVENT_TYPE.MEDICATION_REMINDER,
+            date: medication.getStartDate(),
+            sort: "DESC"
+        });
+
+
+
+        let dateWiseMedicationData = {};
+
+        const timelineDates = [];
+
+        if (completeEvents.length > 0) {
+            for (const scheduleEvent of completeEvents) {
+                const event = await EventWrapper(scheduleEvent);
+                if (dateWiseMedicationData.hasOwnProperty(event.getDate())) {
+                    dateWiseMedicationData[event.getDate()].push(event.getAllInfo());
+                } else {
+                    dateWiseMedicationData[event.getDate()] = [];
+                    dateWiseMedicationData[event.getDate()].push(event.getAllInfo());
+                    timelineDates.push(event.getDate());
+                }
+            }
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                  medication_timeline: {
+                        ...dateWiseMedicationData
+                    },
+                    medication_date_ids: timelineDates
+                },
+                "Medication responses fetched successfully"
+            );
+        } else {
+            return raiseSuccess(
+                res,
+                200,
+                {},
+                "No response updated yet for the medication"
+            );
+        }
+    } catch (error) {
+        Logger.debug("getMedicationResponse 500 error", error);
+        return raiseServerError(res);
+    }
+};
+
+
 }
 
 export default new MReminderController();

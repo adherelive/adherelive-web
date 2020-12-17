@@ -164,7 +164,7 @@ class EditMedicationReminder extends Component {
           critical,
           when_to_take: keys.map((id) => when_to_take[id]) || [],
           // when_to_take: when_to_take.map(id => `${id}`),
-          participant_id: patient_id,
+          participant_id: pId,
           medicine_type,
           description,
           repeat: "weekly",
@@ -213,6 +213,7 @@ class EditMedicationReminder extends Component {
               message.success(msg);
               getMedications(pId);
             } else {
+              console.log("87689076567890",msg);
               message.error(msg);
             }
           } catch (error) {

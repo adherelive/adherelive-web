@@ -83,7 +83,6 @@ class PatientDetailsDrawer extends Component {
             } = {}
         } = patients[selectedPatientId] || {};
 
-        console.log("4532564325", patients[selectedPatientId]);
 
         const formattedDate = this.getFormattedDate(dob);
 
@@ -774,6 +773,17 @@ class PatientDetailsDrawer extends Component {
                     onChange={this.setSymptoms}
                     onPaste={this.setPastedSymptoms}
                     style={{resize:"none"}}
+                />
+
+
+                <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.symptoms)}</div>
+
+                <TextArea
+                    placeholder={this.formatMessage(messages.writeHere)}
+                    value={symptoms}
+                    className={"form-textarea-ap "}
+                    onChange={this.setSymptoms}
+                    onPaste={this.setPastedSymptoms}
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>

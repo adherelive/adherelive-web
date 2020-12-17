@@ -235,6 +235,7 @@ class PatientController extends Controller {
 
   getPatientCarePlanDetails = async (req, res) => {
     try {
+      Logger.debug("4356457454625344574635235435464");
       const { id: patient_id = 1 } = req.params;
       const {
         userDetails: {
@@ -415,16 +416,22 @@ class PatientController extends Controller {
         }
 
         if (carePlanTemplateData || carePlanTemplates.length > 0) {
+          Logger.debug(`786534546789098765234569090114 ---> ${patient_id} All Careplan Templates`,carePlanTemplates);
+
           for (const carePlanTemplate of carePlanTemplates) {
             carePlanTemplateData = await CarePlanTemplateWrapper(
               carePlanTemplate
             );
+            Logger.debug(`786534546789098765234569090114 ---> ${patient_id} CARE PLAN TEMP Data`,carePlanTemplate);
+
             const {
               care_plan_templates,
               template_appointments,
               template_medications,
               medicines
             } = await carePlanTemplateData.getReferenceInfo();
+            Logger.debug(`786534546789098765234569090114 ---> ${patient_id} KEYSSSSSS`,Object.keys(care_plan_templates));
+
             carePlanTemplateIds.push(...Object.keys(care_plan_templates));
             otherCarePlanTemplates = {
               ...otherCarePlanTemplates,
@@ -449,6 +456,8 @@ class PatientController extends Controller {
             }
           };
         }
+
+        Logger.debug(`786534546789098765234569090114 ---> ${patient_id}`,carePlanTemplateIds);
 
         carePlanApiDetails[
           carePlanData.getCarePlanId()

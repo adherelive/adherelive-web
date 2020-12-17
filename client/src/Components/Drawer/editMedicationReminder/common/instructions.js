@@ -48,7 +48,6 @@ class Formulation extends Component {
             description = des;
         }
 
-        console.log('871236487126873412', medicationData.schedule_data);
 
         return (
             <div className="mb20 select-days-form-content">

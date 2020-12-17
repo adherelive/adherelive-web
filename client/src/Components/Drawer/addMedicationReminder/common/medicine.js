@@ -92,7 +92,6 @@ class Medicine extends Component {
       final_generic_name = "";
     }
 
-    console.log("2830139828 searching_medicine --> ", searching_medicine);
 
     if (!searching_medicine) {
       return (
@@ -101,7 +100,7 @@ class Medicine extends Component {
           className="pointer flex wp100  align-center justify-space-between"
           onClick={this.setMedicineValue(medicine_id, name)}
         >
-          <Tooltip title="Name">
+          <Tooltip title={this.formatMessage(messages.name)}>
             {" "}
             {/* formatMessage here */}
             <div className="fs18 fw800 black-85 medicine-selected">
@@ -125,7 +124,7 @@ class Medicine extends Component {
         onClick={this.setMedicineValue(medicine_id, name)}
       >
         <div className="flex direction-column align-start justify-center">
-          <Tooltip title="Name">
+          <Tooltip title={this.formatMessage(messages.name)}>
             {" "}
             {/* formatMessage here */}
             <div className="fs18 fw800 black-85">
@@ -203,15 +202,26 @@ class Medicine extends Component {
     const { setFormulation } = this.props;
     setFormulation(value);
     this.setState({medicine_id: value, temp_medicine: value});
-    console.log("9839012381 value ---> ", value);
   };
 
   dropdownVisible = open => {
-    console.log("9839012381 dropdown visible ---> ", open);
     this.setState({searching_medicine: open, temp_medicine: ""});
   };
 
   getParentNode = t => t.parentNode;
+
+  handleOnBlur = () => {
+    // console.log("867546756877654567",this.state);
+    const {medicine_id=null} = this.state;
+    if(medicine_id){
+      this.setState({
+        temp_medicine:medicine_id
+      })
+    }
+   
+  }
+
+
 
   render() {
     const {
@@ -271,6 +281,8 @@ class Medicine extends Component {
                 return option.props.children;
               }}
               getPopupContainer={getParentNode}
+
+              onBlur={this.handleOnBlur}
             >
               {getMedicineOptions()}
             </Select>

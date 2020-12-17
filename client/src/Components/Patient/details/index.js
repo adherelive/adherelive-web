@@ -35,9 +35,11 @@ import OtpInput from "react-otp-input";
 
 // DRAWERS
 import VitalTimelineDrawer from "../../../Containers/Drawer/vitalTimeline";
+import MedicationTimelineDrawer from "../../../Containers/Drawer/medicationTimeline";
 
 // TABLES
 import VitalTable from "../../../Containers/Vitals/table";
+import MedicationTable from "../../../Containers/Medications/table"; 
 
 import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 
@@ -582,6 +584,7 @@ const PatientTreatmentCard = ({
           </div>
           <div className="fs16 fw700">{treatment_provider}</div>
         </div>
+
       </div>
     </div>
   );
@@ -1794,6 +1797,7 @@ class PatientDetails extends Component {
       symptoms = {},
       authenticated_user = null
     } = this.props;
+
     const {
       loading,
       templateDrawerVisible = false,
@@ -1806,6 +1810,9 @@ class PatientDetails extends Component {
       current_careplan_id,
       isOtherCarePlan
     } = this.state;
+
+    console.log("4534543634534535634 ---> DETAILS INDEX",carePlanTemplateIds);
+
 
     const {
       formatMessage,
@@ -1896,9 +1903,9 @@ class PatientDetails extends Component {
       conditions[condition_id] || {};
     const { basic_info: { name: severity = "" } = {} } =
       severities[severity_id] || {};
-
+    
     const diagnosis_type_obj = DIAGNOSIS_TYPE[d_type] || {};
-    const diagnosis_type = diagnosis_type_obj["value"] || "";
+    const diagnosis_type = diagnosis_type_obj["value"] || '';
 
     let carePlan = care_plans[carePlanId] || {};
     let {
@@ -2115,7 +2122,7 @@ class PatientDetails extends Component {
                   <div className="patient-tab mt20">
                     <Tabs defaultActiveKey="1">
                       <TabPane tab="Medication" key="1">
-                        <Table
+                        {/* <Table
                           columns={
                             !isOtherCarePlan &&
                             authPermissions.includes(
@@ -2133,7 +2140,14 @@ class PatientDetails extends Component {
                               ? onRowMedication
                               : null
                           }
+                        /> */}
+                    
+                        <MedicationTable
+                         patientId={patient_id}
+                         carePlanId={carePlanId}
+                        isOtherCarePlan={isOtherCarePlan}
                         />
+
                       </TabPane>
                       <TabPane tab="Appointments" key="2">
                         <Table
@@ -2185,6 +2199,13 @@ class PatientDetails extends Component {
                 patientId={patient_id}
                 carePlanId={carePlanId}
               />
+               <EditMedicationReminder
+                patientId={patient_id}
+                carePlanId={carePlanId}
+              />
+              
+              {/* <EditMedicationReminder/> */}
+
               <AddVitals carePlanId={carePlanId} />
               <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
@@ -2205,10 +2226,7 @@ class PatientDetails extends Component {
                 carePlan={carePlan}
                 carePlanId={carePlanId}
               />
-              <EditMedicationReminder
-                patientId={patient_id}
-                carePlanId={carePlanId}
-              />
+             
             </Fragment>
           )}
           {popUpVisible && (
@@ -2239,6 +2257,7 @@ class PatientDetails extends Component {
           )}
           <SymptomsDrawer />
           <VitalTimelineDrawer />
+          <MedicationTimelineDrawer />
           <EditPatientDrawer />
         </div>
         <Modal
