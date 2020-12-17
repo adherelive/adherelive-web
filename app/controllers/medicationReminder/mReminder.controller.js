@@ -536,19 +536,24 @@ class MReminderController extends Controller {
   };
 
   getMedicationDetails = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       // Logger.debug("test", medicationReminderDetails);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+      Logger.info(`params: patient_id : ${patient_id}`);
 
+      if(!parseInt(patient_id)) {
+        return raiseClientError(res, 422, {}, "Please select valid patient to continue");
+      }
       const patient = await PatientWrapper(null, patient_id);
       const timingPreference = await userPreferenceService.getPreferenceByData({
         user_id: patient.getUserId()
       });
+      Logger.debug("8565655565857 timingPreference ", timingPreference);
       const options = await UserPreferenceWrapper(timingPreference);
-      const { timings: userTimings } = options.getAllDetails();
+      const { timings: userTimings = {} } = options.getAllDetails();
 
-      Logger.debug("timings9728313 ", timings);
+      Logger.debug("timings9728313 ", userTimings);
 
       const medicationTimings = [];
       let timings = {};

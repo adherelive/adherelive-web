@@ -452,11 +452,12 @@ class CarePlanController extends Controller {
       let carePlanTemplate = null;
 
       if (createTemplate) {
+        console.log("09282038 treatment_id, severity_id, condition_id", treatment_id, typeof severity_id, typeof condition_id);
         const createCarePlanTemplate = await carePlanTemplateService.create({
           name: newTemplateName,
           treatment_id,
-          severity_id,
-          condition_id,
+          severity_id: severity_id ? severity_id : null,
+          condition_id: severity_id ? severity_id : null,
           user_id: userId,
           template_appointments: [...appointmentsArr],
           template_medications: [...medicationsArr]
@@ -478,8 +479,6 @@ class CarePlanController extends Controller {
         "test_queue",
         eventScheduleData
       );
-
-      Log.debug("sqsResponse ---> ", sqsResponse);
 
       return this.raiseSuccess(
         res,
