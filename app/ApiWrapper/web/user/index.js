@@ -127,15 +127,6 @@ class UserWrapper extends BaseUser {
 
     const { doctor, patient } = _data;
 
-    console.log(
-      "19031298 doctor, patient ----------->",
-      doctor,
-      patient,
-      "############",
-      _data,
-      "###########33",
-      this
-    );
 
     const doctors = {};
     const patients = {};

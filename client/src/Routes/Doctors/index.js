@@ -81,7 +81,7 @@ const PatientDetailsComp = props => {
 
 const SideMenuComp = props => {
   const { location: { pathname = "" } = {} } = props;
-  console.log("102938138932 sidemenu component --> ", {props});
+  // console.log("102938138932 sidemenu component --> ", {props});
   if (
     !(
       pathname.includes("patient-consulting") ||

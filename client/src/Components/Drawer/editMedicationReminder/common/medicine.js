@@ -38,7 +38,11 @@ class Medicine extends Component {
   }
 
   componentDidMount() {
-    // this.handleMedicineSearch(" ");
+    const {addMedication , medicationData} = this.props;
+    if(addMedication && !medicationData){
+        this.handleMedicineSearch(" ");
+        return;
+    }
 
     this.getDefaultMedicine();
   }
@@ -57,15 +61,25 @@ class Medicine extends Component {
 
     let defaultHit = [];
 
+    const {medicationData ={}} = this.props;
+    if(medicationData){
+      const {medicine_id : template_medicine_id  } =  medicationData || {};
+      if(template_medicine_id){
+        medicine_id = template_medicine_id;
+      }
+    }
+
     this.index.search(name).then(({ hits }) => {
 
         defaultHit = hits.filter(hit => hit.medicine_id === medicine_id);
-      console.log("19831829 defaultHit inside--> ", hits, defaultHit);
+      console.log("19831829 defaultHit inside--> ",medicine_id, hits, defaultHit);
       this.setState({hits: defaultHit, temp_medicine: medicine_id});
     });
 
     console.log("19831829 defaultHit --> ", defaultHit);
   };
+
+  
 
 
   getMedicineOptions = () => {
@@ -101,7 +115,7 @@ class Medicine extends Component {
     //   return defaultOption;
     // }
 
-    console.log("10982309123 hits ---> ", hits);
+    // console.log("10982309123 hits ---> ", hits);
 
 
     return Object.values(hits).map(function(hit, index) {
@@ -118,7 +132,7 @@ class Medicine extends Component {
         console.log("675456789763445", name);
         final_generic_name = "";
       }
-      console.log("10982309123 medicine_id, type of medicine_id ", medicine_id, typeof medicine_id);
+      // console.log("10982309123 medicine_id, type of medicine_id ", medicine_id, typeof medicine_id);
 
       return (
         <Option key={`opt-${medicine_id}`} value={medicine_id}>
@@ -127,6 +141,7 @@ class Medicine extends Component {
       );
     });
   };
+
 
   searchOptions = (hit, index) => {
     const {
@@ -151,9 +166,8 @@ class Medicine extends Component {
           className="pointer flex wp100  align-center justify-space-between"
           onClick={this.setMedicineValue(medicine_id, name)}
         >
-          <Tooltip title="Name">
+          <Tooltip title={this.formatMessage(messages.name)}>
             {" "}
-            {/* formatMessage here */}
             <div className="fs18 fw800 black-85 medicine-selected">
               <span
                 dangerouslySetInnerHTML={{
@@ -173,9 +187,8 @@ class Medicine extends Component {
         onClick={this.setMedicineValue(medicine_id, name)}
       >
         <div className="flex direction-column align-start justify-center">
-          <Tooltip title="Name">
+          <Tooltip title={this.formatMessage(messages.name)}>
             {" "}
-            {/* formatMessage here */}
             <div className="fs18 fw800 black-85">
               <span
                 dangerouslySetInnerHTML={{
@@ -237,7 +250,12 @@ class Medicine extends Component {
   };
 
   onOptionSelect = value => {
+    const {
+      enableSubmit
+    } = this.props;
     this.setState({ medicine_id: value, temp_medicine: value });
+    enableSubmit();
+
   };
 
   dropdownVisible = open => {
@@ -245,6 +263,48 @@ class Medicine extends Component {
   };
 
   getParentNode = t => t.parentNode;
+
+  handleOnBlur = () => {
+  
+    const {medicine_id=null} = this.state;
+    const {
+      medications = {},
+      payload: { id: medication_id } = {},
+      medicines = {}
+    } = this.props;
+
+    let { basic_info: { details: { medicine_id : default_medicine_id = null } = {} } = {} } =
+    medications[medication_id] || {};
+
+    const { medicationData} = this.props;
+
+    if(medicationData){
+      const {medicine_id : template_medicine_id  } =  medicationData || {};
+      if(template_medicine_id){
+        default_medicine_id = template_medicine_id;
+      }
+    }
+    
+    if(medicine_id){
+      // console.log("867546756877654567 --> 1",this.state);
+
+       this.setState({
+        temp_medicine:medicine_id
+      })
+    }else if (default_medicine_id){
+      // console.log("867546756877654567 --> 2",this.state);
+
+      this.setState({
+        temp_medicine:default_medicine_id
+      })
+    }
+
+    // console.log("867546756877654567",this.state);
+
+   
+  }
+
+
   render() {
     const {
       fetchingMedicines,
@@ -285,6 +345,9 @@ class Medicine extends Component {
                 return option.props.children;
               }}
               getPopupContainer={getParentNode}
+
+              onBlur={this.handleOnBlur}
+
             >
               {getMedicineOptions()}
             </Select>

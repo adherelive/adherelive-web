@@ -54,7 +54,7 @@ class MissedMedicationsDrawer extends Component {
           
       } catch (err) {
           console.log("err", err);
-          message.warn(this.formatMessage(messages.somethingWentWrongError));
+          message.warn(this.formatMessage(messages.somethingWentWrong));
       }
   }
 

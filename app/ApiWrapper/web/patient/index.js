@@ -8,6 +8,7 @@ import UserWrapper from "../../web/user";
 class PatientWrapper extends BasePatient {
     constructor(data) {
         super(data);
+        console.log("PATIENT WRAPPER DATA",data);
     }
 
     getBasicInfo = () => {

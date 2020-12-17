@@ -554,7 +554,6 @@ class WhenToTakeMedication extends Component {
 
 
   render() {
-    console.log("Med Reminder render ===============================>",this.state);
 
     const { form } = this.props;
     const {

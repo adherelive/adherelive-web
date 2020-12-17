@@ -18,6 +18,10 @@ export const deleteMedicationUrl = (id) => {
     return `/medications/${id}`;
 };
 
+
+export const getMedicationTimelineURL = (id) => {
+    return `/medications/${id}/timeline`;
+};
 export const getMissedMedicationsForDoctorUrl = () => {
     return `/medications/missed`;
   }

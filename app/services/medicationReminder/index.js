@@ -23,4 +23,7 @@ export default class MedicationReminder {
             return medicine_id;
         }
     };
+    getStartDate = () => {
+        return this._data.get("start_date");
+    };
 }

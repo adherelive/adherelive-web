@@ -136,13 +136,11 @@ export const getLastVisitAlerts = (id) => {
       
     const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
-        console.log("================================>GET_LAST_VISIT_ALERTS_COMPLETE");
         dispatch({
           type: GET_LAST_VISIT_ALERTS_COMPLETE,
           data: data,
         });
       } else {
-        console.log("================================>GET_LAST_VISIT_ALERTS_FAILED");
         dispatch({
           type:GET_LAST_VISIT_ALERTS_FAILED,
           error,
@@ -150,7 +148,6 @@ export const getLastVisitAlerts = (id) => {
       }
       
     } catch(error) {
-      console.log("================================>GET_LAST_VISIT_ALERTS_ERROR");
        console.log("GET LAST VISIT ALERTS ERROR", error);
     }
     return response;
