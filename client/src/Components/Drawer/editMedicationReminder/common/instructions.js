@@ -48,7 +48,6 @@ class Formulation extends Component {
             description = des;
         }
 
-
         return (
             <div className="mb20 select-days-form-content">
                 <span className="form-label">{this.formatMessage(messages.specialInstruction)}</span>
