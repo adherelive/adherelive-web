@@ -86,10 +86,11 @@ class MAppointmentWrapper extends BaseAppointment {
         const scheduleEvent = await EventWrapper(scheduleEventData[i]);
         if (scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
           activeEventId = scheduleEvent.getScheduleEventId();
-          scheduleData[
-            scheduleEvent.getScheduleEventId()
-          ] = scheduleEvent.getAllInfo();
         }
+
+        scheduleData[
+          scheduleEvent.getScheduleEventId()
+        ] = scheduleEvent.getAllInfo();
       }
     }
 
