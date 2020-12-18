@@ -209,7 +209,8 @@ export const doctorClinicRegister = (payload) => {
         data: payload,
       });
 
-      const { status, payload: { error = "" } = {} } =
+    
+        const { status, payload: { error = "", data = {} } = {} } =
         response || {};
 
       if (status === false) {
@@ -221,9 +222,10 @@ export const doctorClinicRegister = (payload) => {
 
         dispatch({
           type: DOCTOR_CLINIC_UPDATE_COMPLETED,
-          payload: {
+          // payload: {
 
-          },
+          // },
+          data: data,
         });
       }
     } catch (err) {

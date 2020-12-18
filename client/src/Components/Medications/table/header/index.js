@@ -7,6 +7,7 @@ import Intake from "../dataColumn/intake";
 import TimelineButton from "../dataColumn/timelineButton";
 import EditButton from "../dataColumn/editButton";
 import Duration from "../dataColumn/duration";
+import Taken from "../dataColumn/taken";
 
 export default props => {
   const { formatMessage } = props || {};
@@ -21,6 +22,12 @@ export default props => {
           <Medicine medicationTemplateData={medicationTemplateData}  medicationData={medicationData} />
         );
       }
+    },
+    {
+      title: formatMessage(messages.taken_vs_total),
+      ...TABLE_COLUMN.TAKEN,
+
+      render: ({medicationData}) => <Taken medicationData={medicationData} />
     },
     {
       title: formatMessage(messages.intake),

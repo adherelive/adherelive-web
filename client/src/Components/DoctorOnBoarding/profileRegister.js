@@ -277,10 +277,12 @@ class Profileregister extends Component {
         //   let {file={}}=info;
 
         this.getBase64(info.file.originFileObj, profile_pic =>
+            {
+            // console.log("5645452413256547345224121",profile_pic)
             this.setState({
                 profile_pic,
                 loading: false,
-            })
+            })}
         );
     };
 
@@ -343,7 +345,7 @@ class Profileregister extends Component {
             } 
             doctorProfileRegister(data).then(response => {
                 console.log(" 32453454RESPONSE FOR DOC PROFILE REGISTER ===>",response);
-                const { status, statusCode, payload: { data: { doctors : response_doctors = {} } = {} } = {} } = response;
+                const { status, statusCode, payload: {  message : res_message ='',data: { doctors : response_doctors = {} } = {} } = {} } = response;
                 if (status) {
                     message.success(this.formatMessage(messages.doctorAddSuccess));
 
@@ -356,7 +358,7 @@ class Profileregister extends Component {
                         history.replace(PATH.REGISTER_QUALIFICATIONS);
                     }
                 } else {
-                    message.error(this.formatMessage(messages.somethingWentWrong));
+                    message.error(res_message);
                 }
             });
         }
@@ -379,8 +381,11 @@ class Profileregister extends Component {
 
     getBase64 = (img, callback) => {
         const reader = new FileReader();
-        reader.addEventListener('load', () => callback(reader.result));
-        reader.readAsDataURL(img);
+        // console.log("5645452413256547345224121 img-->",img);
+        if(img){
+            reader.addEventListener('load', () => callback(reader.result));
+            reader.readAsDataURL(img);
+        }
     }
 
     handleChangeCity = address => {

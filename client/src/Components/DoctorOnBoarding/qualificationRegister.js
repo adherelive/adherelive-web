@@ -401,20 +401,23 @@ class QualificationRegister extends Component {
     } = this.state;
 
     this.setState({ docs: [...docs, ...files] }, async () => {
-      //  async () => {
 
       const { docs, education } = this.state;
       let newEducation = education;
+     
       if (
-        docs.length === newEducation[key].photo.length ||
+        docs.length === newEducation[key].photo.length 
+        ||
         docs.length + newEducation[key].photos.length ===
-          newEducation[key].photo.length
+          newEducation[key].photo.length 
       ) {
+
         let newPhotos = newEducation[key].photos;
         let newPhoto = newEducation[key].photo;
         const { registerQualification } = this.props;
         newEducation[key].photos = [...newPhotos, ...docs];
         newEducation[key].photo.forEach((item, index) => {
+
           if (typeof item != "string") {
             item.status = "done";
           }
@@ -432,7 +435,7 @@ class QualificationRegister extends Component {
           degree_id: degree_id.toString(),
           year,
           college_name,
-          college_id,
+          college_id:college_id.toString(),
           photos,
           id: id.toString()
         };
@@ -447,8 +450,10 @@ class QualificationRegister extends Component {
         const {
           status,
           statusCode,
-          payload: { data: { qualification_id = 0 } = {} } = {}
+          payload: { message:res_message = '',data: { qualification_id = 0 } = {} } = {}
         } = response;
+
+
 
         if (status) {
           if (!newEducation[key].id) {
@@ -470,7 +475,7 @@ class QualificationRegister extends Component {
             education: newEducation
           });
           if (statusCode === 422) {
-            message.error(this.formatMessage(messages.eduPhotoError));
+            message.error(res_message);
           } else {
             message.error(this.formatMessage(messages.somethingWentWrong));
           }
@@ -560,7 +565,7 @@ class QualificationRegister extends Component {
         const {
           status,
           statusCode,
-          payload: { data: { registration_id = 0 } = {} } = {}
+          payload: { data: { registration_id = 0 } = {} , message:res_message ='' } = {}
         } = response;
 
         if (status) {
@@ -589,7 +594,7 @@ class QualificationRegister extends Component {
             registration: newRegistration
           });
           if (statusCode == 422) {
-            message.error(this.formatMessage(messages.regPhotoError));
+            message.error(res_message);
           } else {
             message.error(this.formatMessage(messages.somethingWentWrong));
           }
@@ -621,20 +626,38 @@ class QualificationRegister extends Component {
     data.append("files", file, file.name);
     // data.append("qualification", JSON.stringify(qualificationData));
 
+
     let uploadResponse = await doRequest({
       method: REQUEST_TYPE.POST,
       data: data,
       url: getUploadQualificationDocumentUrl()
     });
 
+
     let {
       status = false,
       payload: { message: respMessage = "" } = {}
     } = uploadResponse;
 
+
+
     if (status) {
-      onUploadComplete(uploadResponse.payload.data, key);
+       onUploadComplete(uploadResponse.payload.data, key);
+      
     } else {
+
+
+      let newUnuploadedArr =  this.handleRemoveAllUnuploadedFiles(key);
+      if (newUnuploadedArr) {
+
+        const { docs, education } = this.state;
+
+        let newEducation = education;
+        newEducation[key].photo  = newUnuploadedArr;
+        this.setState({ education: newEducation }, async () => {
+          console.log("7865789",this.state);
+        });
+      }
       message.error(respMessage);
     }
 
@@ -643,6 +666,25 @@ class QualificationRegister extends Component {
     };
   };
 
+  handleRemoveAllUnuploadedFiles = (key) => {
+
+    let { education  = {} } = this.state;
+    let newEducationAfterUpload = education;
+    const obj = newEducationAfterUpload[key].photo;
+    let newUnuploadedArr = [];
+    for(let each in obj){
+      const {status =''} = obj[each] || {} ;
+      if(status === "uploading"){
+       continue;
+      }else{
+        newUnuploadedArr.push(obj[each]);
+      }
+    }
+    return newUnuploadedArr;
+
+    
+
+  } 
   customRequestRegistration = key => async ({
     file,
     filename,
@@ -1656,23 +1698,27 @@ class QualificationRegister extends Component {
         authenticated_category
       } = this.props;
       doctorQualificationRegister(data).then(response => {
-        const { status } = response;
+        const { status, payload :{message:res_message= '' } = {} } = response;
         if (status) {
           message.success(this.formatMessage(messages.qualificationAddSuccess));
 
-          if (authenticated_category === USER_CATEGORY.PROVIDER) {
-            if (
-              window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)
-            ) {
-              history.push(`/doctors/${doctor_id}`);
-            } else {
-              history.replace(`${PATH.REGISTER_CLINICS}/${doctor_id}`);
+            if (authenticated_category === USER_CATEGORY.PROVIDER) {
+              if (
+                window.location.href.includes(`${PATH.REGISTER_FROM_PROFILE}`)
+              ) {
+                history.push(`/doctors/${doctor_id}`);
+              } else {
+                history.replace(`${PATH.REGISTER_CLINICS}/${doctor_id}`);
+              }
+            }else if(authenticated_category === USER_CATEGORY.DOCTOR && window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE) ) {
+              history.replace(PATH.PROFILE);
+              return;
             }
-          } else {
-            history.replace(PATH.REGISTER_CLINICS);
-          }
+            else {
+              history.replace(PATH.REGISTER_CLINICS);
+            }
         } else {
-          message.error(this.formatMessage(messages.somethingWentWrong));
+          message.error(res_message);
         }
       });
     } else {
@@ -1689,7 +1735,12 @@ class QualificationRegister extends Component {
       } else {
         history.replace(`${PATH.REGISTER_PROFILE}/${doctor_id}`);
       }
-    } else {
+    }
+    else if(authenticated_category === USER_CATEGORY.DOCTOR && window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE) ) {
+      history.replace(PATH.PROFILE);
+      return;
+    }
+    else {
       history.replace(PATH.REGISTER_PROFILE);
     }
   };

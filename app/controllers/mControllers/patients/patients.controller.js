@@ -304,9 +304,8 @@ class MPatientController extends Controller {
 
       for (const medication of medicationDetails) {
         const medicationWrapper = await MReminderWrapper(medication);
-        medicationApiData[
-          medicationWrapper.getMReminderId()
-        ] = medicationWrapper.getBasicInfo();
+        const {medications} = await medicationWrapper.getAllInfo();
+        medicationApiData = {...medicationApiData, ...medications};
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
@@ -513,11 +512,10 @@ class MPatientController extends Controller {
         );
         if (medications.length > 0) {
           for (const medication of medications) {
-            const medicationData = await MReminderWrapper(medication);
-            medicationApiDetails[
-              medicationData.getMReminderId()
-            ] = medicationData.getBasicInfo();
-            medicine_ids.push(medicationData.getMedicineId());
+            const medicationWrapper = await MReminderWrapper(medication);
+            const {medications: medicationData} = await medicationWrapper.getAllInfo();
+            medicationApiDetails = {...medicationApiDetails, ...medicationData};
+            medicine_ids.push(medicationWrapper.getMedicineId());
           }
         }
 

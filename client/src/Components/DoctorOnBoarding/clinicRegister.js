@@ -62,11 +62,16 @@ class ClinicRegister extends Component {
 
     async setDoctorID() {
         try{
-            const {callNewDoctorAction} = this.props;
-            const url = window.location.href.split("/");
-            let doctor_id=url.length > 4 ? url[url.length - 1] : "";
-            await callNewDoctorAction(doctor_id);
-            this.setState({doctor_id});
+            const { authenticated_category } = this.props;
+                if(authenticated_category === USER_CATEGORY.PROVIDER){
+                        const {callNewDoctorAction} = this.props;
+                        const url = window.location.href.split("/");
+                        let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+                        await callNewDoctorAction(doctor_id);
+                        this.setState({doctor_id});
+                }else{
+                    return;
+                }    
         }
         catch(error){
             console.log("443534543535 -->", error);
@@ -338,6 +343,7 @@ class ClinicRegister extends Component {
             const { doctorClinicRegister } = this.props;
             doctorClinicRegister(data).then(response => {
                 const { status, message: errorMessage } = response;
+                console.log("67543465768997737234829 Response ------>",response);
                 if (status) {
                     showVerifyModal(true);
                     // message.success(this.formatMessage(messages.successgetAdminVerified))
@@ -348,6 +354,10 @@ class ClinicRegister extends Component {
                         }else{
                             history.replace(PATH.DASHBOARD);
                         }
+                    }
+                    else if(authenticated_category === USER_CATEGORY.DOCTOR && window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE) ) {
+                        history.replace(PATH.PROFILE);
+                        return;
                     }
                     else{   
                         history.replace(PATH.DASHBOARD);
@@ -370,7 +380,12 @@ class ClinicRegister extends Component {
                 history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
             }
                 
-        }else{
+        }
+        else if(authenticated_category === USER_CATEGORY.DOCTOR && window.location.href.includes(PATH.REGISTER_FROM_MY_PROFILE) ) {
+            history.replace(PATH.PROFILE);
+            return;
+        }
+        else{
             history.replace(PATH.REGISTER_QUALIFICATIONS);
         }
     }

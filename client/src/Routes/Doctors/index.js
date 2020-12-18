@@ -177,11 +177,25 @@ class Doctors extends Component {
                   path={PATH.REGISTER_QUALIFICATIONS}
                   component={RegisterQualifications}
                 />
+
+                <Route
+                exact
+                path={`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_QUALIFICATIONS}`}
+                component={RegisterQualifications}
+                />
+
                 <Route
                   exact
                   path={PATH.REGISTER_CLINICS}
                   component={RegisterClinics}
                 />
+
+                <Route
+                  exact
+                  path={`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_CLINICS}`}
+                  component={RegisterClinics}
+                />
+
                 <Route
                   exact
                   path={PATH.PROFILE}
