@@ -185,7 +185,7 @@ export const handleMedications = async data => {
             actor,
             medicines: medicine.getBasicInfo(),
             when_to_take_data: MEDICATION_TIMING[timing], // TODO: to be changed(included in) to patient preference data
-            medications: medication.getExistingData()
+            medications: medication.getBasicInfo()
           }
         });
       }
