@@ -458,7 +458,7 @@ class MobileAppointmentController extends Controller {
     try {
       Logger.debug("REQUEST DATA ----> ", req.params);
       const {
-        params: { appointment_id } = {},
+        params: { id: appointment_id } = {},
         userDetails: { userId } = {}
       } = req;
 
