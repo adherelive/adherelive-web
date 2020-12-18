@@ -109,6 +109,10 @@ class MedicationTimeline extends Component {
 
     return events.map(event => {
       const { id, status, end_time, details = {} } = event || {};
+      // console.log("76546789765435678",event);
+      const {updated_at=''} = event;
+      const {details : {unit='mg',strength='',quantity=''} = {} } = event;
+
       const { response: { value = {}, currentTime } = {} , medicines : {basic_info : {name :medicine_name =''} = {} } = {} } = details;
 
       switch (status) {
@@ -121,7 +125,7 @@ class MedicationTimeline extends Component {
               className="pl10"
             >
               <div className="mb6 fs16 fw500">{moment(currentTime).format("LT")}</div>
-              <div className="fs12">{`${medicine_name} ${formatMessage(messages.taken)}`}</div>
+              <div className="fs12">{`${medicine_name} ${formatMessage(messages.taken)} ( ${strength} ${unit} ${quantity ? `x ${quantity}` : '' }  )`}</div>
 
               {Object.keys(value).map((fieldId, index) => {
                 const { label, placeholder } = getMedicationTemplate(fieldId, event);
@@ -156,7 +160,8 @@ class MedicationTimeline extends Component {
             color={TIMELINE_STATUS[status].color}
             className="pl10"
           >
-            <div className="mb6 fs16 fw500">{formatMessage(messages.cancelled_reschedule)}</div>
+            <div className="mb6 fs16 fw500">{moment(updated_at).format("LT")}</div>
+            <div className="fs12">{formatMessage(messages.cancelled_reschedule)}</div>
           </TimelineItem>
         );
       }

@@ -269,7 +269,7 @@ class PatientController extends Controller {
       let carePlanMedicationData = {};
       let medication_ids = [];
 
-      const carePlanTemplateIds = [];
+      let carePlanTemplateIds = [];
 
       let latestCarePlan = null;
       let latestCarePlanId = null;
@@ -430,9 +430,11 @@ class PatientController extends Controller {
               template_medications,
               medicines
             } = await carePlanTemplateData.getReferenceInfo();
-            Logger.debug(`786534546789098765234569090114 ---> ${patient_id} KEYSSSSSS`,Object.keys(care_plan_templates));
 
-            carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+
+            carePlanTemplateIds = [...new Set([...carePlanTemplateIds, ...Object.keys(care_plan_templates)])];
+
+            // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
             otherCarePlanTemplates = {
               ...otherCarePlanTemplates,
               ...care_plan_templates
