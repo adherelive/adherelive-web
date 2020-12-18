@@ -11,6 +11,9 @@ export default data => {
         medicationTemplateData,
         medicationData
     },
+    [TABLE_COLUMN.TAKEN.dataIndex]: {
+      medicationData
+    },
     [TABLE_COLUMN.INTAKE.dataIndex]: {
       medicationData
     },

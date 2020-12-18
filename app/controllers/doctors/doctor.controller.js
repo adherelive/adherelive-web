@@ -1224,13 +1224,29 @@ class DoctorController extends Controller {
         if (id && id !== "0") {
           let collegeId = college_id;
           if (college_name !== "") {
-            const college = await collegeService.create({
-              name: college_name,
-              user_created: true
-            });
 
-            const collegeWrapper = await CollegeWrapper(college);
-            collegeId = collegeWrapper.getCollegeId();
+            const existingCollege  = await collegeService.getByData({
+              name:college_name
+            }) ;
+
+            // Logger.debug("876546789653456789876789",existingCollege);
+
+            if(!existingCollege){
+
+              const college = await collegeService.create({
+                name: college_name,
+                user_created: true
+              });
+  
+              const collegeWrapper = await CollegeWrapper(college);
+              collegeId = collegeWrapper.getCollegeId();
+
+            }else{
+              const existingCollegeWrapper = await CollegeWrapper(existingCollege);
+              collegeId = existingCollegeWrapper.getCollegeId();
+            }
+
+            
           }
 
           const qualification = await qualificationService.updateQualification(

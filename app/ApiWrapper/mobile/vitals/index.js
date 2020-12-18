@@ -45,7 +45,8 @@ class VitalWrapper extends BaseVital {
 
         const scheduleEvents = await EventService.getAllPreviousByData({
             event_id: getVitalId(),
-            date: currentDate
+            date: currentDate,
+            event_type: EVENT_TYPE.VITALS
         });
 
         let vitalEvents = {};
@@ -55,7 +56,6 @@ class VitalWrapper extends BaseVital {
         const scheduleEventIds = [];
         for(const events of scheduleEvents) {
             const scheduleEvent = await EventWrapper(events);
-            if(scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
                 scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
                 if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
@@ -64,7 +64,6 @@ class VitalWrapper extends BaseVital {
                     }
                     remaining++;
                 }
-            }
         }
 
         return {

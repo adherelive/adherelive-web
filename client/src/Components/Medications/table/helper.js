@@ -3,6 +3,10 @@ export const TABLE_COLUMN = {
       key: "MEDICINE",
       dataIndex: "MEDICINE",
     },
+    TAKEN: {
+      key: "TAKEN",
+      dataIndex: "TAKEN",
+    },
     INTAKE: {
       key: "INTAKE",
       dataIndex: "INTAKE",

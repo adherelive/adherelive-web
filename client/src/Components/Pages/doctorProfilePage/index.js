@@ -2540,6 +2540,15 @@ onChangeClinicLocation = clinic_id => (value) => {
     e.preventDefault();
     const { history } = this.props;
     const {doctor_user_id : doctor_id = ''} = this.state;
+
+    const { auth: {authenticated_category = '', authenticated_user=null}, doctors } = this.props;
+
+    if(authenticated_category === USER_CATEGORY.DOCTOR ){
+
+      history.replace(`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_QUALIFICATIONS}`);
+      return;
+    }
+
     history.replace(`${PATH.REGISTER_FROM_PROFILE}${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`)
   }
 
@@ -2547,6 +2556,15 @@ onChangeClinicLocation = clinic_id => (value) => {
     e.preventDefault();
     const { history } = this.props;
     const {doctor_user_id : doctor_id = ''} = this.state;
+    const { auth: {authenticated_category = '', authenticated_user=null}, doctors } = this.props;
+
+
+    if(authenticated_category === USER_CATEGORY.DOCTOR ){
+
+      history.replace(`${PATH.REGISTER_FROM_MY_PROFILE}${PATH.REGISTER_CLINICS}`);
+      return ;
+    }
+
     history.replace(`${PATH.REGISTER_FROM_PROFILE}${PATH.REGISTER_CLINICS}/${doctor_id}`);
   }
 
@@ -2616,7 +2634,7 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.qualification_details_text)}
-              {doctor_qualification_ids.length > 0  && authenticated_category === USER_CATEGORY.PROVIDER
+              {doctor_qualification_ids.length > 0  
               ?
               <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
               onClick={this.addQualificationDetails}/>
@@ -2646,7 +2664,7 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.registration_details_text)}
-              {doctor_registration_ids.length > 0 && doctor_qualification_ids.length > 0 && authenticated_category === USER_CATEGORY.PROVIDER
+              {doctor_registration_ids.length > 0 && doctor_qualification_ids.length > 0 
               ?
               <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
               onClick={this.addQualificationDetails}/>
@@ -2683,7 +2701,7 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.clinic_details_text)}
-              {doctor_clinic_ids.length > 0  && authenticated_category === USER_CATEGORY.PROVIDER
+              {doctor_clinic_ids.length > 0  
               ?
               <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
               onClick={this.addClinicDetails}/>

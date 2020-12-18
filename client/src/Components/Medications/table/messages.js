@@ -11,6 +11,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "In take"
   },
+  taken_vs_total: {
+    id: "app.medication.table.taken.vs.total",
+    description: "",
+    defaultMessage: "Taken/Total"
+  },
   duration: {
     id: "app.medication.table.duration",
     description: "",

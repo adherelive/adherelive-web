@@ -66,13 +66,14 @@ class ScheduleEventService {
 
   getAllPreviousByData = async (data = {}) => {
     try {
-      const { event_id, date } = data;
+      const { event_id, date, event_type = "" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id,
           date: {
             [Op.lte]: date
-          }
+          },
+            event_type
         },
         order: [["date", "ASC"]]
       });

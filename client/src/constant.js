@@ -21,6 +21,7 @@ export const PATH = {
   PATIENT_CONSULTING_VIDEO: "/patient-consulting-video/:room_id",
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE:"/register-from-profile",
+  REGISTER_FROM_MY_PROFILE:"/register-from-my-profile",
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"

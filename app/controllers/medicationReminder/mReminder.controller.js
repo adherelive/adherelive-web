@@ -247,8 +247,8 @@ class MReminderController extends Controller {
 
         for(let eachMId of medication_ids_temp){
           const medicationWrapper_temp  = await MedicationWrapper(null,eachMId); 
-          const abc = await medicationWrapper_temp.getBasicInfo();
-          const {basic_info : {details : { medicine_id :  medicine_id_temp = ''} = {}} = {}} = abc;
+          const basicInfoTemp = await medicationWrapper_temp.getBasicInfo();
+          const {basic_info : {details : { medicine_id :  medicine_id_temp = ''} = {}} = {}} = basicInfoTemp;
           if(medicine_id_temp === medicine_id){
             flag_temp=false;
             break;
@@ -694,9 +694,8 @@ class MReminderController extends Controller {
       // await medicationDetails.forEach(async medication => {
       for (let medication of medicationDetails) {
         const medicationWrapper = await MedicationWrapper(medication);
-        medicationApiData[
-          medicationWrapper.getMReminderId()
-        ] = medicationWrapper.getBasicInfo();
+        const {medications} = await medicationWrapper.getAllInfo();
+        medicationApiData = {...medicationApiData, ...medications};
         // });
       }
 
