@@ -108,22 +108,25 @@ class UserController extends Controller {
   }
 
   verifyUser = async (req, res) => {
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
     try {
-      let { link } = req.params;
-      let verifications = await UserVerificationServices.getRequestByLink(link);
-      let userId = verifications.get("user_id");
-      let userData = await userService.getUserById(userId);
-      let isVerified = userData.get("verified");
+      const {params: {link} = {}} = req;
+      Logger.info(`(request)(param) LINK :: ${link}`);
+      const verifications = await UserVerificationServices.getRequestByLink(link);
+
+      const {user_id: userId} = verifications.get("") || {};
+
+      const userData = await userService.getUserById(userId);
+      const {verified: isVerified} = userData.get("") || {};
+
       if (!isVerified) {
-        let updateVerification = await UserVerificationServices.updateVerification(
+        await UserVerificationServices.updateVerification(
           { status: "verified" },
           link
         );
 
         // let activated_on = moment();
-        let verified = true;
-        let dataToUpdate = { verified };
-        let user = await userService.updateUser(dataToUpdate, userId);
+        const user = await userService.updateUser({verified: true}, userId);
 
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
@@ -142,21 +145,21 @@ class UserController extends Controller {
         const appNotification = new AppNotification();
 
         const notificationToken = appNotification.getUserToken(
-          `${user.get("id")}`
+          `${userId}`
         );
-        const feedId = base64.encode(`${user.get("id")}`);
+        // const feedId = base64.encode(`${userId}`);
 
-        const apiUserDetails = await UserWrapper(userData.getBasicInfo);
+        const apiUserDetails = await UserWrapper(null, userId);
 
         const dataToSend = {
           users: {
-            [apiUserDetails.getUserId()]: {
+            [apiUserDetails.getId()]: {
               ...apiUserDetails.getBasicInfo()
             }
           },
           notificationToken: notificationToken,
           feedId: `${userId}`,
-          auth_user: apiUserDetails.getUserId(),
+          auth_user: apiUserDetails.getId(),
           auth_category: apiUserDetails.getCategory()
         };
 
@@ -168,14 +171,14 @@ class UserController extends Controller {
           httpOnly: true
         });
 
-        return this.raiseSuccess(
+        return raiseSuccess(
           res,
           200,
           { ...dataToSend },
           "user verified successfully"
         );
       } else {
-        return this.raiseServerError(
+        return raiseClientError(
           res,
           422,
           {},
@@ -183,9 +186,9 @@ class UserController extends Controller {
         );
       }
     } catch (error) {
-      console.log("error verify user  --> ", error);
-      res.redirect("/sign-in");
-      return this.raiseServerError(res, 500, error, error.message);
+      Logger.debug("verifyUser 500 error", error);
+      // res.redirect("/sign-in");
+      return raiseServerError(res);
     }
   };
 

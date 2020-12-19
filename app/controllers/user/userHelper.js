@@ -154,26 +154,22 @@ export const uploadImageS3 = async (userId, file) => {
 export const createNewUser = async (email, password = null) => {
   try {
     const userExits = await userService.getUserByEmail({ email });
-
-    console.log("CREDENTIALSSSSSSSSSSSSSS", password, email);
     if (userExits !== null) {
       const userExitsError = new Error();
       userExitsError.code = 11000;
       throw userExitsError;
     }
 
-    let response;
     let hash = null;
 
     const link = uuidv4();
-    const status = "pending";
 
     if (password) {
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       hash = await bcrypt.hash(password, salt);
     }
 
-    let user = await userService.addUser({
+    const user = await userService.addUser({
       email,
       password: hash,
       sign_in_type: "basic",
@@ -182,7 +178,7 @@ export const createNewUser = async (email, password = null) => {
       // system_generated_password
     });
 
-    const userPreference = await userPreferenceService.addUserPreference({
+    await userPreferenceService.addUserPreference({
       user_id: user.get("id"),
       details: {
         charts: ["1", "2", "3"]
@@ -191,7 +187,7 @@ export const createNewUser = async (email, password = null) => {
 
     const userInfo = await userService.getUserByEmail({ email });
 
-    const userVerification = UserVerificationServices.addRequest({
+    await UserVerificationServices.addRequest({
       user_id: userInfo.get("id"),
       request_id: link,
       status: "pending",
@@ -199,12 +195,6 @@ export const createNewUser = async (email, password = null) => {
     });
     let uId = userInfo.get("id");
 
-    console.log(
-      "CREDENTIALSSSSSSSSSSSSSS111111111111",
-      "      1234567890          ",
-      userInfo.get("id"),
-      process.config.app.invite_link + link
-    );
     const emailPayload = {
       title: "Verification mail",
       toAddress: email,
