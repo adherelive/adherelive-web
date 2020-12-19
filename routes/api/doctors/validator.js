@@ -298,7 +298,10 @@ const addClinicsForm = Joi.object().keys({
       location: Joi.string()
         .required()
         .label("Location of clinic is required"),
-      time_slots: Joi.object()
+      time_slots: Joi.object(),
+      clinic_id: Joi.number()
+      .optional()
+      .allow("", null),
     })
   )
 });

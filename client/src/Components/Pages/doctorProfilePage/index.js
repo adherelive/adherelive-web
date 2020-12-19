@@ -1674,6 +1674,8 @@ onChangeClinicLocation = clinic_id => (value) => {
             data: data,
             url: getUploadURL()
         }).then(response => {
+          const {payload:{message:resp_message = ''}={}} = response;
+
             if (response.status) {
                 let { files = [] } = response.payload.data;
                 this.setState({ profile_pic_url: files[0] });
@@ -2091,6 +2093,8 @@ onChangeClinicLocation = clinic_id => (value) => {
     })
 
     let { status = false } = uploadResponse;
+    const {payload:{message:resp_message = ''}={}} = uploadResponse;
+
     if (status) {
         const { doctor_user_id  = ''} = this.state;
         let updateData = {
@@ -2104,7 +2108,7 @@ onChangeClinicLocation = clinic_id => (value) => {
         };
         this.updateProfileData(updateData);
     } else {
-      message.error(this.formatMessage(messages.somethingWentWrong))
+      message.error(resp_message);
     }
 
 
@@ -2127,6 +2131,8 @@ onChangeClinicLocation = clinic_id => (value) => {
     })
 
     let { status = false } = uploadResponse;
+    const {payload:{message:resp_message = ''}={}} = uploadResponse;
+
     if (status) {
         const { doctor_user_id = ''} = this.state;
         let updateData = {
@@ -2140,7 +2146,7 @@ onChangeClinicLocation = clinic_id => (value) => {
         };
         this.updateProfileData(updateData);
     } else {
-      message.error(this.formatMessage(messages.somethingWentWrong))
+      message.error(resp_message);
     }
 
 

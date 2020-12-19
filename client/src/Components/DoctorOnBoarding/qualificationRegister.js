@@ -179,7 +179,7 @@ class QualificationRegister extends Component {
             id = 0
           },
           upload_document_ids = []
-        } = doctor_qualifications[qualifi];
+        } = doctor_qualifications[qualifi] || {};
 
         qualification.id = id;
         qualification.year = year;
@@ -238,7 +238,7 @@ class QualificationRegister extends Component {
           },
           upload_document_ids = [],
           expiry_date = ""
-        } = doctor_registrations[regis];
+        } = doctor_registrations[regis] || {};
         if (parseInt(doctorId) === parseInt(doctor_id)) {
           registration[key] = {
             year,
@@ -707,18 +707,48 @@ class QualificationRegister extends Component {
       url: getUploadRegistrationDocumentUrl()
     });
 
-    let { status = false } = uploadResponse;
+    let { status = false , payload : { message : res_message =''} = {} } = uploadResponse;
 
     if (status) {
       onUploadCompleteRegistration(uploadResponse.payload.data, key);
     } else {
-      message.error(this.formatMessage(messages.somethingWentWrong));
+      // console.log("7865789765678909876 --> before",this.state.registration);
+      let newUnuploadedArr =  this.handleRegRemoveAllUnuploadedFiles(key);
+      if (newUnuploadedArr) {
+
+        const { registration = {}} = this.state;
+
+        let newRegistration = registration;
+        newRegistration[key].photo  = newUnuploadedArr;
+        this.setState({ registration: newRegistration }, async () => {
+          console.log("7865789765678909876 --> After",this.state.registration);
+        });
+      }
+      message.error(res_message);
     }
 
     return {
       abort() {}
     };
   };
+
+  handleRegRemoveAllUnuploadedFiles= (key) => {
+
+    let { registration  = {} } = this.state;
+    let newRegistrationAfterUpload = registration;
+    const obj = newRegistrationAfterUpload[key].photo;
+    let newUnuploadedArr = [];
+    for(let each in obj){
+      const {status =''} = obj[each] || {} ;
+      if(status === "uploading"){
+        continue;
+      }else{
+        newUnuploadedArr.push(obj[each]);
+      }
+    }
+    return newUnuploadedArr;
+
+  } 
 
   handleChangeList = key => info => {
     const fileList = info.fileList;

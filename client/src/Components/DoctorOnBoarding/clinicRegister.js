@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import { DeleteTwoTone } from "@ant-design/icons";
 import uuid from 'react-uuid';
 import { Input, Icon, message } from "antd";
-import { PATH, FULL_DAYS, FULL_DAYS_NUMBER ,USER_CATEGORY} from '../../constant';
+import { PATH, FULL_DAYS, FULL_DAYS_NUMBER ,USER_CATEGORY,DAYS_TEXT_NUM_SHORT} from '../../constant';
 import UploadSteps from './steps';
 import LocationModal from './locationmodal';
 import TimingModal from './timingModal';
@@ -45,7 +45,8 @@ class ClinicRegister extends Component {
             clinicsKeys: [],
             visible: false,
             timingsVisible: false,
-            doctor_id : ''
+            doctor_id : '',
+            existingClinincsKeys:[]
         };
     }
 
@@ -53,12 +54,154 @@ class ClinicRegister extends Component {
         let key = uuid();
         let key1 = uuid();
         let clinics = {};
-        clinics[key1] = { name: "", location: "", timings: [], daySelected };
+        clinics[key1] = { name: "", location: "", timings: [], daySelected , clinic_id:'' };
         let clinicsKeys = [key1];
         this.setDoctorID();
         this.setState({ clinics, clinicsKeys });
+        this.fetchData();
 
     }
+
+    fetchData = async () => {
+
+        const url = window.location.href.split("/");
+        const { authenticated_category } = this.props;
+        const {
+         getDoctorProfileDetails
+        } = this.props;
+    
+        await getDoctorProfileDetails(
+           url.length > 4 ? url[url.length - 1] : 0
+        );
+    
+    
+        const { authenticated_user = "", doctors = {} } = this.props;
+
+        // console.log("8765467290120313",this.props);
+
+        let doctorId = 0;
+        let docClinicIds = [];
+        // console.log("8765467897657890983749283 provider docs",doctors);
+        for (let doctor of Object.values(doctors)) {
+            // console.log("8765467897657890983749283 provider doctor",doctor);
+
+          const {
+            basic_info: {
+              user_id = 0,
+              id = 0,
+            } = {},
+            doctor_clinic_ids = []
+          } = doctor || {};
+
+
+        //   console.log("8765467290120313 --->Qual",{doctor,authenticated_user});
+    
+          if (parseInt(user_id) === parseInt(authenticated_user)) {
+            // console.log("8765467290120313 --->user_id",user_id);
+
+            docClinicIds = doctor_clinic_ids;
+
+          }else if(authenticated_category === USER_CATEGORY.PROVIDER){
+            docClinicIds = doctor_clinic_ids;
+          } 
+    
+          if (authenticated_category === USER_CATEGORY.DOCTOR) {
+            await getDoctorProfileDetails( id );
+          }
+        }
+    
+        const {
+          onBoarding = {},
+          doctor_clinics = {},
+        } = this.props;
+        let clinicsKeys = [];
+        let clinics = {};
+        let existingClinincsKeys = [];
+
+
+        // console.log("8765467290120313",docClinicIds);
+    
+        if (docClinicIds.length) {
+
+          for (let eachClinic of docClinicIds) {
+            let key = uuid();
+    
+            let clinic = {};
+            let {
+              basic_info: {
+               id='',
+               name='',
+              },
+              location='',
+              details : {
+                  time_slots = {}
+              } = {}
+
+            } = doctor_clinics[eachClinic] || {};
+    
+          
+            let timings= {};
+            let daySelected ={};
+
+            // console.log("8765467290120313======> time_slots",time_slots);
+
+
+            for(let each in time_slots ){
+                let index=null;
+
+                if(each == 1 ){
+                    index= "7";
+                }
+                else{
+                    index = each-1;
+                }
+                // console.log("8765467290120313======> time_slots",time_slots[each]);
+
+                if(Object.keys(time_slots[each]).length === 0){
+                    timings[DAYS_TEXT_NUM_SHORT[index]] =[{ startTime: "", endTime: '' }];
+                    daySelected[DAYS_TEXT_NUM_SHORT[index]]=false;
+                }else{
+                    daySelected[DAYS_TEXT_NUM_SHORT[index]]=true;
+                    let timingArr = [];
+                    let allDayTimings = time_slots[each];
+                    for(let t in allDayTimings){
+                        const {startTime='',endTime=''} = allDayTimings[t];
+                        console.log("8765467290120313 tttt",startTime)
+                        let newTiming  = {};
+                        newTiming["startTime"] = moment(startTime);
+                        newTiming["endTime"] = moment(endTime);
+                        timingArr.push(newTiming);
+                    }
+                    timings[DAYS_TEXT_NUM_SHORT[index]] = timingArr;
+                }
+            }
+
+            clinic.clinic_id=id;
+            clinic.name =name;
+            clinic.location=location;
+            clinic.timings = timings;
+            clinic.daySelected=daySelected;
+            clinics[key] = clinic;
+            clinicsKeys.push(key);
+            existingClinincsKeys.push(key);
+          }
+        } 
+        else {
+          let key = uuid();
+    
+          clinics[key] = { name: "", location: "", timings: [], daySelected,clinic_id:'' };
+          clinicsKeys = [key];
+        }
+    
+      
+        this.setState({
+          clinics,
+          clinicsKeys,
+          existingClinincsKeys
+        });
+    };
+    
+
 
     async setDoctorID() {
         try{
@@ -174,11 +317,12 @@ class ClinicRegister extends Component {
     renderClinics = () => {
         let { clinics = {}, clinicsKeys = [] } = this.state;
 
+
         return (
             <div className='flex direction-column'>
                 {
                     clinicsKeys.map(key => {
-                        let { location = '', name = '', timings = {}, daySelected = {} } = clinics[key];
+                        let { location = '', name = '', timings = {}, daySelected = {} } = clinics[key] || {};
                         let isClinicOpen = false;
                         for (let day in daySelected) {
                             if (daySelected[day]) {
@@ -415,6 +559,7 @@ class ClinicRegister extends Component {
     };
 
     render() {
+
         const { visible = false, clinics, clinicKeyOfModal, timingsVisible = false, clinicKeyOfModalTiming } = this.state;
         const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
 
@@ -427,6 +572,8 @@ class ClinicRegister extends Component {
         }
         let timingForModal = clinicKeyOfModalTiming && Object.keys(currClinicTimings).length ? currClinicTimings : dayTimings;
         let daySelectForModal = clinicKeyOfModalTiming && Object.keys(currClinicDaySelect).length ? currClinicDaySelect : daySelected;
+        console.log("8765467290120313 --> state",this.state);
+
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}

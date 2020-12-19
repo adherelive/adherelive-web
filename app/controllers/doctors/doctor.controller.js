@@ -1529,6 +1529,19 @@ class DoctorController extends Controller {
         doctorUserId = doctorData.getUserId();
       }
 
+      const { mimetype } = file || {};
+      const fileType = mimetype.split("/");
+      Logger.debug("456786754676798675645546789 mimetype ------> ", mimetype);
+      if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "Only images and pdf documents are allowed"
+        );
+      }
+
+
       let files = await uploadImageS3(doctorUserId, file);
 
       Logger.debug("files --->", files);
@@ -2073,6 +2086,8 @@ class DoctorController extends Controller {
 
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
 
+      Logger.debug("76578937476238497923847238492342",userId);
+
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
       let uploadDocumentApiDetails = {};
@@ -2087,6 +2102,8 @@ class DoctorController extends Controller {
       if (parseInt(doctor_id) > 0) {
         doctorWrapper = await DoctorWrapper(null, doctor_id);
       } else {
+        Logger.debug("76578937476238497923847238492342 ----> doctors",doctors);
+
         if (!doctors) {
           return raiseClientError(res, 422, {}, "Doctor details not updated");
         }
@@ -2292,18 +2309,46 @@ class DoctorController extends Controller {
       let doctor_clinic_ids = [];
 
       for (const clinic of clinics) {
-        const { name = "", location = "", time_slots = {} } = clinic;
+        const { name = "", location = "", time_slots = {} ,clinic_id=''} = clinic;
 
         const details = {
           time_slots
         };
 
-        const newClinic = await clinicService.addClinic({
-          doctor_id: doctorData.getDoctorId(),
-          name,
-          location,
-          details
-        });
+        let newClinic = '';
+
+        if(clinic_id){
+          
+          Logger.debug("76578976546786546789",clinic_id);
+          if (name) {
+            clinicDetails["name"] = name;
+          }
+          if (location) {
+            clinicDetails["location"] = location;
+          }
+          if (time_slots) {
+            clinicDetails["details"] = { time_slots: time_slots };
+          }
+
+          let id = clinic_id;
+           let clinic = await clinicService.updateClinic(
+            clinicDetails,
+            id
+          );        
+
+          newClinic = await clinicService.getClinicById(clinic_id);
+
+          Logger.debug("76578976546786546789 --->",newClinic);
+
+        }else{
+          newClinic = await clinicService.addClinic({
+            doctor_id: doctorData.getDoctorId(),
+            name,
+            location,
+            details
+          });
+        }
+       
 
         const clinicData = await ClinicWrapper(newClinic);
         clinicDetails[

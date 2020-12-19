@@ -6,11 +6,25 @@ import {connect} from "react-redux";
 import {showVerifyModal} from "../../modules/pages/features";
 import {
     getDoctorDetails,
+    getDoctorProfileDetails,
   } from "../../modules/doctors";
 const mapStateToProps = state => {
-    const {auth,users} = state;
+    const {
+        auth,
+        users,
+        doctors,
+        onBoarding,
+        doctor_clinics,
+    } = state;
     const { authenticated_user, authenticated_category } = auth;
-    return {authenticated_user,users,authenticated_category};
+    return {
+        authenticated_user,
+        users,
+        authenticated_category,
+        doctors,
+        onBoarding,
+        doctor_clinics
+    };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -20,7 +34,7 @@ const mapDispatchToProps = dispatch => {
         showVerifyModal: (data) => dispatch(showVerifyModal(data)),
         callNewDoctorAction : (doctor_id) => dispatch(callNewDoctorAction(doctor_id)),
         getDoctorDetails: id => dispatch(getDoctorDetails(id)),
-
+        getDoctorProfileDetails : id => dispatch(getDoctorProfileDetails(id))
 
     };
 };
