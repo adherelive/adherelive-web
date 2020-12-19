@@ -12,6 +12,9 @@ import { Checkbox } from "antd";
 import message from "./message";
 import moment from "moment";
 import calendar from "../../../Assets/images/calendar1.svg";
+import { ClockCircleOutlined } from "@ant-design/icons";
+import Dropdown from "antd/es/dropdown";
+import TimeKeeper from "react-timekeeper";
 
 const { Item: FormItem } = Form;
 const { Option } = Select;
@@ -349,6 +352,66 @@ class EditAppointmentForm extends Component {
     return newTypes;
   };
 
+  getTimePicker = type => {
+    const { form: { getFieldValue } = {} } = this.props;
+    const { handleTimeSelect } = this;
+    let timeValue = "";
+    if (type === START_TIME) {
+      timeValue = getFieldValue(START_TIME);
+    } else {
+      timeValue = getFieldValue(END_TIME);
+    }
+    return (
+      <TimeKeeper
+        time={
+          timeValue ? timeValue.format("hh:mm A") : moment().format("hh:mm A")
+        }
+        switchToMinuteOnHourSelect={true}
+        closeOnMinuteSelect={true}
+        onChange={handleTimeSelect(type)}
+        // onDoneClick={doneBtn}
+        doneButton={null}
+        coarseMinutes={15}
+      />
+    );
+  };
+
+  getStartTime = () => {
+    const { form: { getFieldValue } = {} } = this.props;
+    return moment(getFieldValue(START_TIME)).format("hh:mm A");
+  };
+
+  getEndTime = () => {
+    const { form: { getFieldValue } = {} } = this.props;
+    if (getFieldValue(END_TIME)) {
+      return moment(getFieldValue(END_TIME)).format("hh:mm A");
+    }
+    return null;
+  };
+
+  handleTimeSelect = type => time => {
+    const { form: { setFieldsValue } = {} ,enableSubmit } = this.props;
+    const { hour24, minute } = time || {};
+    if (type === START_TIME) {
+      setFieldsValue({
+        [START_TIME]: moment()
+          .hour(hour24)
+          .minute(minute),
+        [END_TIME]: moment()
+          .hour(hour24)
+          .minute(minute + 30)
+      });
+    } else {
+      setFieldsValue({
+        [END_TIME]: moment()
+          .hour(hour24)
+          .minute(minute)
+      });
+    }
+    enableSubmit();
+  };
+
+
   render() {
     let {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
@@ -366,6 +429,9 @@ class EditAppointmentForm extends Component {
       handleDateSelect,
       handleStartTimeChange,
       handleEndTimeChange,
+      getStartTime,
+      getEndTime,
+      getTimePicker
     } = this;
     let pId = patientId ? patientId.toString() : patient_id;
     let { basic_info: { description, start_date, start_time, end_time, details: { treatment_id = "", reason = '', type = '', type_description = '', critical = false } = {} } = {}, provider_id = 0, provider_name = '' } = appointments[appointment_id] || {};
@@ -642,14 +708,20 @@ class EditAppointmentForm extends Component {
 
                 initialValue: moment(start_time),
               })(
-                <TimePicker
-                  use12Hours
-                  onChange={handleStartTimeChange}
-                  minuteStep={15}
-                  format="h:mm a"
-                  className="wp100 ant-time-custom"
-                // getPopupContainer={this.getParentNode}
-                />
+                // <TimePicker
+                //   use12Hours
+                //   onChange={handleStartTimeChange}
+                //   minuteStep={15}
+                //   format="h:mm a"
+                //   className="wp100 ant-time-custom"
+                // // getPopupContainer={this.getParentNode}
+                // />
+                <Dropdown overlay={getTimePicker(START_TIME)}>
+                <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
+                  <div>{getStartTime()}</div>
+                  <ClockCircleOutlined />
+                </div>
+              </Dropdown>
               )}
             </FormItem>
           </div>
@@ -676,14 +748,20 @@ class EditAppointmentForm extends Component {
               {getFieldDecorator(END_TIME, {
                 initialValue: moment(end_time),
               })(
-                <TimePicker
-                  use12Hours
-                  minuteStep={15}
-                  onChange={handleEndTimeChange}
-                  format="h:mm a"
-                  className="wp100 ant-time-custom"
-                // getPopupContainer={this.getParentNode}
-                />
+                // <TimePicker
+                //   use12Hours
+                //   minuteStep={15}
+                //   onChange={handleEndTimeChange}
+                //   format="h:mm a"
+                //   className="wp100 ant-time-custom"
+                // // getPopupContainer={this.getParentNode}
+                // />
+                <Dropdown overlay={getTimePicker(END_TIME)}>
+                <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
+                  <div>{getEndTime()}</div>
+                  <ClockCircleOutlined />
+                </div>
+              </Dropdown>
               )}
             </FormItem>
           </div>
