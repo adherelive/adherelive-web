@@ -29,6 +29,10 @@ class EditAppointment extends Component {
   componentDidMount = () => {
   }
 
+  enableSubmit = () => {
+    this.setState({ disabledSubmit: false });
+  }
+
   onFormFieldChanges = (props) => {
     const {
       form: { getFieldsError, isFieldsTouched },
@@ -309,7 +313,7 @@ class EditAppointment extends Component {
         // }}
         >
           {/* <div className="flex direction-row justify-space-between"> */}
-          <FormWrapper wrappedComponentRef={setFormRef} {...this.props} />
+          <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
           {/* <CalendarTimeSelecton 
                 className="calendar-section wp60"
             /> */}
