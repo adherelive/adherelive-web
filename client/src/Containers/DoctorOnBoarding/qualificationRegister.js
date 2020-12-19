@@ -15,6 +15,10 @@ import { searchCollege } from "../../modules/colleges";
 import { searchCouncil } from "../../modules/councils";
 import { searchDegree } from "../../modules/degrees";
 import {searchSpecialties} from "../../modules/specialities";
+import {
+  getDoctorDetails,
+  getDoctorProfileDetails,
+} from "../../modules/doctors";
 
 const mapStateToProps = state => {
   console.log("STATEEEEEEEEEEEEEEEEEEEEE =====>",state);
@@ -65,7 +69,9 @@ const mapDispatchToProps = dispatch => {
     deleteDoctorRegistrationImage: (registrationId, document) =>
       dispatch(deleteDoctorRegistrationImage(registrationId, document)),
       searchSpecialities: (data) => dispatch(searchSpecialties(data)),
-    callNewDoctorAction : (doctor_id) => dispatch(callNewDoctorAction(doctor_id))
+    callNewDoctorAction : (doctor_id) => dispatch(callNewDoctorAction(doctor_id)),
+    getDoctorProfileDetails : id => dispatch(getDoctorProfileDetails(id))
+
   
   };
 };

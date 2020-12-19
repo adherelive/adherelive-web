@@ -78,7 +78,7 @@ class Profileregister extends Component {
         if(authenticated_category === USER_CATEGORY.DOCTOR){
             this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
             for (let doctor of Object.values(doctors)) {
-                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '', city=''} ,city : city_temp = '' } = doctor;
+                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '', city=''} ,city : city_temp = '' } = doctor || {};
                 if (parseInt(user_id) === parseInt(authenticated_user)) {
                     let final_city = '';
 
