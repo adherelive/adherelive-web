@@ -300,12 +300,20 @@ class MPatientController extends Controller {
       // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
+      let scheduleEventApiData = {};
       let medicineId = [];
 
       for (const medication of medicationDetails) {
         const medicationWrapper = await MReminderWrapper(medication);
-        const {medications} = await medicationWrapper.getAllInfo();
-        medicationApiData = {...medicationApiData, ...medications};
+        const {
+          medications,
+          schedule_events
+        } = await medicationWrapper.getReferenceInfo();
+        medicationApiData = {
+          ...medicationApiData,
+          ...{ [medicationWrapper.getMReminderId()]: medications }
+        };
+        scheduleEventApiData = { ...scheduleEventApiData, ...schedule_events };
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
@@ -337,6 +345,9 @@ class MPatientController extends Controller {
           },
           medicines: {
             ...medicineApiData
+          },
+          schedule_events: {
+            ...scheduleEventApiData
           }
         },
         "Medications fetched successfully"
@@ -513,8 +524,15 @@ class MPatientController extends Controller {
         if (medications.length > 0) {
           for (const medication of medications) {
             const medicationWrapper = await MReminderWrapper(medication);
-            const {medications: medicationData} = await medicationWrapper.getAllInfo();
-            medicationApiDetails = {...medicationApiDetails, ...medicationData};
+            const {
+              medications: medicationData,
+              schedule_events
+            } = await medicationWrapper.getReferenceInfo();
+            medicationApiDetails = {
+              ...medicationApiDetails,
+              ...medicationData
+            };
+            scheduleEventData = { ...scheduleEventData, ...schedule_events };
             medicine_ids.push(medicationWrapper.getMedicineId());
           }
         }
