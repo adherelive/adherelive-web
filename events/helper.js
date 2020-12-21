@@ -128,7 +128,7 @@ export const handleMedications = async data => {
         medicine_id,
         when_to_take,
         repeat_days = [],
-        critical = false,
+        critical = false
       } = {}
     } = data || {};
 
@@ -223,7 +223,7 @@ export const handleVitals = async vital => {
       vital_templates = {}
     } = vital || {};
 
-    const timings = await getUserPreferences(patientUserId);
+    const timings = await getUserPreferences(patient_id);
 
     const vitalData = await FeatureDetailService.getDetailsByData({
       feature_type: FEATURE_TYPE.VITAL
@@ -506,9 +506,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
       }
     };
 
-    const sqsResponse = await QueueService.sendMessage(
-      eventScheduleData
-    );
+    const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
     Log.debug("sqsResponse ---> ", sqsResponse);
     return true;
