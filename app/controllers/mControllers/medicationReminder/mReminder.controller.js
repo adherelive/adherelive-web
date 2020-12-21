@@ -658,6 +658,57 @@ class MobileMReminderController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  getMedicationEventsStatus = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { params: { patient_id } = {} } = req;
+
+      const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+        { participant_id: patient_id }
+      );
+
+      let medicationScheduleEventResponse = {};
+
+      for (const medication of medicationDetails) {
+        const medicationWrapper = await MobileMReminderWrapper(medication);
+        const { schedule_events } = await medicationWrapper.getReferenceInfo();
+
+        const eventIds = Object.keys(schedule_events);
+        let medicationEventRunRate = [];
+        for (const eventId of eventIds) {
+          const {
+            [eventId]: { status = null }
+          } = schedule_events;
+          medicationEventRunRate.push(status);
+        }
+
+        medicationScheduleEventResponse = {
+          ...medicationScheduleEventResponse,
+          ...{ [medicationWrapper.getMReminderId()]: medicationEventRunRate }
+        };
+      }
+
+      Logger.debug(
+        "medicationScheduleEventResponse: ",
+        medicationScheduleEventResponse
+      );
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          medication_event_status: {
+            ...medicationScheduleEventResponse
+          }
+        },
+        "Medications status fetched successfully"
+      );
+    } catch (error) {
+      Logger.debug("getMedicationEventsStatus 500 error: ", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new MobileMReminderController();
