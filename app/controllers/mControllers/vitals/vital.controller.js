@@ -154,7 +154,11 @@ class VitalController extends Controller {
     Log.debug("req.params --->", req.params);
     try {
       const {
-        userDetails: { userId, userData: { category } = {} } = {},
+        userDetails: {
+          userId,
+          userData: { category } = {},
+          userCategoryData = {}
+        } = {},
         body,
         body: { start_date, end_date } = {},
         params: { id } = {}
@@ -185,6 +189,8 @@ class VitalController extends Controller {
         const patient = await PatientWrapper(null, carePlan.getPatientId());
 
         const eventScheduleData = {
+          type: EVENT_TYPE.VITALS,
+          patient_id: patient.getUserId(),
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
           critical: false,
@@ -194,7 +200,8 @@ class VitalController extends Controller {
           participants: [doctor.getUserId(), patient.getUserId()],
           actor: {
             id: userId,
-            category
+            category,
+            userCategoryData
           },
           vital_templates: vitalTemplates.getBasicInfo()
         };
@@ -209,7 +216,14 @@ class VitalController extends Controller {
         Log.debug("deletedEvents", deletedEvents);
 
         // RRule
-        EventSchedule.create(eventScheduleData);
+        const QueueService = new queueService();
+        const sqsResponse = await QueueService.sendMessage(eventScheduleData);
+        const vitalJob = JobSdk.execute({
+          eventType: EVENT_TYPE.VITALS,
+          eventStage: NOTIFICATION_STAGES.UPDATE,
+          event: eventScheduleData
+        });
+        NotificationSdk.execute(vitalJob);
 
         return raiseSuccess(
           res,
