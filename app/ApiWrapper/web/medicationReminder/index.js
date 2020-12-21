@@ -84,14 +84,14 @@ class MReminderWrapper extends BaseMedicationReminder {
     };
   };
   getReferenceInfo = async () => {
-    const {getBasicInfo, _data} = this;
+    const {getAllInfo, _data} = this;
     const {medicine} = _data || {};
-    const medicineData = await MedicineWrapper(medicine);
+    let medicineData = null;
+      medicineData = await MedicineWrapper(medicine);
+
 
     return {
-      medications: {
-        [this.getMReminderId()]: getBasicInfo()
-      },
+      ...await getAllInfo(),
       medicines: {
         [medicineData.getMedicineId()]: medicineData.getBasicInfo()
       }

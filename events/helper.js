@@ -507,7 +507,6 @@ export const handleAppointmentsTimeAssignment = async appointment => {
     };
 
     const sqsResponse = await QueueService.sendMessage(
-      "test_queue",
       eventScheduleData
     );
 

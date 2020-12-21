@@ -249,6 +249,7 @@ class EditMedicationReminder extends Component {
 
     const { basic_info: { first_name, middle_name, last_name } = {} } =
       patients[patient_id] || {};
+    console.log("2130982039 patients --> ", {patients, id, patient_id});
     const { basic_info: { details: { medicine_id } = {} } = {} } =
       medications[id] || {};
     const { basic_info: { name } = {} } = medicines[medicine_id] || {};
@@ -262,10 +263,13 @@ class EditMedicationReminder extends Component {
         this.setState({ loading: true });
         const { deleteMedication, getMedications, getPatientCarePlanDetails } = this.props;
         const response = await deleteMedication(id);
-        const { status } = response || {};
+        const { status, payload: {message: respMessage = ""} = {} } = response || {};
         if (status === true) {
           getPatientCarePlanDetails(patient_id);
           getMedications(patient_id);
+          message.success(respMessage);
+        } else {
+          message.warn(respMessage);
         }
       },
       onCancel() { },

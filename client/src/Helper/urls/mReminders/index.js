@@ -2,8 +2,8 @@ export const getAddMedicationReminderURL = (patient_id) => {
     return `/events/medication-reminder/${patient_id}`;
 }
 
-export const getAddCarePlanMedicationReminderURL = (patient_id,carePlanId) => {
-    return `/events/medication-reminder/${patient_id}/${carePlanId}`;
+export const getAddCarePlanMedicationReminderURL = (id, carePlanId) => {
+    return `/medications/treatment/${id}/${carePlanId}`;
 }
 
 export const getMedicationForParticipantUrl = (patient_id) => {

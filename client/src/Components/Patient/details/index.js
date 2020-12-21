@@ -1995,6 +1995,8 @@ class PatientDetails extends Component {
       uploadDocsAppointmentId = null
     } = this.state;
 
+    console.log("289371283 patient_id detailsPage ", {patient_id});
+
     return (
       <Fragment>
         <div className="pt10 pr10 pb10 pl10">

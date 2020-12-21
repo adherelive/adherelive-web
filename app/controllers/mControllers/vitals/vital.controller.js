@@ -103,7 +103,7 @@ class VitalController extends Controller {
         };
 
         // RRule
-        const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+        const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
         Log.debug("sqsResponse ---> ", sqsResponse);
 
@@ -194,7 +194,10 @@ class VitalController extends Controller {
 
         Log.debug("eventScheduleData", eventScheduleData);
 
-        const deletedEvents = await EventService.deleteBatch(vitals.getVitalId());
+        const deletedEvents = await EventService.deleteBatch({
+          event_id: vitals.getVitalId(),
+          event_type: EVENT_TYPE.VITALS
+        });
 
         Log.debug("deletedEvents", deletedEvents);
 

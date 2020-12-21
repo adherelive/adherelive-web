@@ -48,7 +48,7 @@ class MedicationTable extends Component {
             medications,
             medicines,
             isOtherCarePlan,
-            intl: {formatMessage} = {}
+            intl: {formatMessage} = {},
         } = this.props;
 
         const {medication_ids} = this.state;
@@ -78,9 +78,10 @@ class MedicationTable extends Component {
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
-        const {editMedicationDrawer, isOtherCarePlan} = this.props;
+        const {editMedicationDrawer, isOtherCarePlan, patientId} = this.props;
+        console.log("1237182 patientId --> ", {patientId});
         if(!isOtherCarePlan) {
-            editMedicationDrawer({id, loading: true});
+            editMedicationDrawer({id, patient_id: patientId, loading: true});
         }   //TODOj
     };
 

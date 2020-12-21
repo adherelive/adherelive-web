@@ -1,7 +1,8 @@
-import { EVENT_STATUS } from "../../../constant";
+import {EVENT_STATUS, NOTIFICATION_STAGES} from "../../../constant";
 import CreateJob from "./createJob";
 import PriorJob from "./priorJob";
 import StartJob from "./startJob";
+import UpdateJob from "./updateJob";
 
 class AppointmentObserver {
   constructor() {}
@@ -14,6 +15,8 @@ class AppointmentObserver {
         return new PriorJob(eventDetails);
       case EVENT_STATUS.STARTED:
         return new StartJob(eventDetails);
+      case NOTIFICATION_STAGES.UPDATE:
+        return new UpdateJob(eventDetails);
     }
   };
 }

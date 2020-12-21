@@ -32,6 +32,12 @@ router.get(
     Medication.getMedicationDetails
 );
 
+router.post(
+    "/treatment/:patient_id/:carePlanId",
+    Authenticate,
+    validator.validateMedicationReminderData,
+    MedicationReminder.createCarePlanMedication
+);
 
 router.post(
     "/:id",

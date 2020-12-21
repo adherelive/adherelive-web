@@ -12,9 +12,17 @@ export default class MedicationReminder {
         return {participant_id, organizer_id};
     }
 
+    getParticipant = () => {
+      return this._data.get("participant_id");
+    };
+
     getMReminderId = () => {
         return this._data.get("id");
     }
+
+    getDetails = () => {
+      return this._data.get("details");
+    };
 
     getMedicineId = () => {
         const details = this._data.get("details");
