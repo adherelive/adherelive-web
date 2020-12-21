@@ -186,13 +186,10 @@ class ScheduleEventService {
     }
   };
 
-  deleteBatch = async event_id => {
+  deleteBatch = async (data) => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).destroy({
-        where: {
-          event_id
-        },
-        force: true
+        where: data,
       });
       return scheduleEvent;
     } catch (error) {

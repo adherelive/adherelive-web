@@ -6,7 +6,7 @@ import {
   FEATURE_TYPE,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  S3_DOWNLOAD_FOLDER
+  S3_DOWNLOAD_FOLDER, NOTIFICATION_STAGES
 } from "../../../../constant";
 import moment from "moment";
 
@@ -69,29 +69,9 @@ class MobileAppointmentController extends Controller {
         provider_name = null,
         critical = false
       } = body;
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userData: { category } = {}, userCategoryId, userCategoryData: {basic_info: {full_name} = {}} = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
-
-      let userCategoryId = null;
-      let userCategoryData = null;
-
-      switch (category) {
-        case USER_CATEGORY.DOCTOR:
-          const doctor = await doctorService.getDoctorByData({
-            user_id: userId
-          });
-          userCategoryData = await DoctorWrapper(doctor);
-          userCategoryId = userCategoryData.getDoctorId();
-          break;
-        case USER_CATEGORY.PATIENT:
-          const patient = await patientService.getPatientByUserId(userId);
-          userCategoryData = await PatientWrapper(patient);
-          userCategoryId = userCategoryData.getPatientId();
-          break;
-        default:
-          break;
-      }
 
       const previousAppointments = await appointmentService.checkTimeSlot(
         start_time,
@@ -179,22 +159,15 @@ class MobileAppointmentController extends Controller {
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
-          category,
-          details: {
-            category,
-            name: userCategoryData.getName()
-          }
+          details: { name: full_name, category }
         }
       };
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage(
-        "test_queue",
+      await QueueService.sendMessage(
         eventScheduleData
       );
-
-      Logger.debug("sqsResponse ---> ", sqsResponse);
 
       const appointmentJob = AppointmentJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -300,39 +273,13 @@ class MobileAppointmentController extends Controller {
         provider_name = null,
         critical = false
       } = body;
-      Logger.debug("CONDITION CHECK ---> ", moment(date));
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userData: { category } = {}, userCategoryId, userCategoryData: {basic_info: {full_name} = {}} = {}} = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
       const oldAppointment = await appointmentService.getAppointmentById(id);
 
       const oldAppointmentData = await MAppointmentWrapper(oldAppointment);
-
-      let userCategoryId = null;
-
-      switch (category) {
-        case USER_CATEGORY.DOCTOR:
-          const doctor = await doctorService.getDoctorByData({
-            user_id: userId
-          });
-          const doctorData = await DoctorWrapper(doctor);
-          userCategoryId = doctorData.getDoctorId();
-          break;
-        case USER_CATEGORY.PATIENT:
-          const patient = await patientService.getPatientByUserId(userId);
-          const patientData = await PatientWrapper(patient);
-          userCategoryId = patientData.getPatientId();
-          break;
-        default:
-          break;
-      }
-
-      Logger.debug("CONDITION CHECK ---> 1", moment(start_time));
-      Logger.debug(
-        "CONDITION CHECK ---> 2",
-        moment(oldAppointmentData.getStartTime())
-      );
 
       if (
         moment(date).diff(moment(oldAppointmentData.getStartDate()), "d") !==
@@ -367,8 +314,6 @@ class MobileAppointmentController extends Controller {
             return `${appointment.get("id")}` !== id;
           }
         );
-
-        console.log("appointment id", filteredAppointments);
 
         if (filteredAppointments.length > 0) {
           return raiseClientError(
@@ -419,22 +364,59 @@ class MobileAppointmentController extends Controller {
         updatedAppointmentDetails
       );
 
-      // const eventScheduleData = {
-      //   event_type: EVENT_TYPE.APPOINTMENT,
-      //   event_id: appointmentApiData.getAppointmentId(),
-      //   details: appointmentApiData.getExistingData(),
-      //   status: EVENT_STATUS.PENDING,
-      //   start_time,
-      //   end_time,
-      // };
+      let participantTwoId = null;
 
-      // const scheduleEvent = await scheduleService.addNewJob(eventScheduleData);
-      // console.log("[ APPOINTMENTS ] scheduleEvent ", scheduleEvent);
+      switch (participant_two_type) {
+        case USER_CATEGORY.DOCTOR:
+          const doctor = await doctorService.getDoctorByData({
+            id: participant_two_id
+          });
+          const doctorData = await DoctorWrapper(doctor);
+          participantTwoId = doctorData.getUserId();
+          break;
+        case USER_CATEGORY.PATIENT:
+          const patient = await patientService.getPatientById({
+            id: participant_two_id
+          });
+          const patientData = await PatientWrapper(patient);
+          participantTwoId = patientData.getUserId();
+          break;
+        default:
+          break;
+      }
 
-      // TODO: schedule event and notifications here
-      // await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
+      // 1. delete
+      const scheduleEventService = new ScheduleEventService();
+      await scheduleEventService.deleteBatch({
+        event_id: id,
+        event_type: EVENT_TYPE.APPOINTMENT
+      });
 
-      // response
+      // 2. new sqs for updated appointment
+      const eventScheduleData = {
+        type: EVENT_TYPE.APPOINTMENT,
+        event_id: appointmentApiData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
+        critical,
+        start_time,
+        end_time,
+        details: appointmentApiData.getBasicInfo(),
+        participants: [userId, participantTwoId],
+        actor: {
+          id: userId,
+          details: { name: full_name, category }
+        }
+      };
+
+      const QueueService = new queueService();
+      await QueueService.sendMessage(eventScheduleData);
+
+      const appointmentJob = AppointmentJob.execute(
+          NOTIFICATION_STAGES.UPDATE,
+          eventScheduleData
+      );
+      await NotificationSdk.execute(appointmentJob);
+
       return raiseSuccess(
         res,
         200,
@@ -468,6 +450,13 @@ class MobileAppointmentController extends Controller {
       const appointmentDetails = await appointmentService.deleteAppointment(
         appointment_id
       );
+
+      // 1. delete events
+      const scheduleEventService = new ScheduleEventService();
+      await scheduleEventService.deleteBatch({
+        event_id: appointment_id,
+        event_type: EVENT_TYPE.APPOINTMENT
+      });
 
       return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
     } catch (error) {
@@ -589,8 +578,6 @@ class MobileAppointmentController extends Controller {
             ? true
             : false;
       }
-
-      console.log("values got are: ", appointmentDetails, userIsParticipant);
 
       if (!appointmentDetails || !userIsParticipant) {
         return this.raiseClientError(

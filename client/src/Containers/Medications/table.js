@@ -46,6 +46,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     const {medication_ids =[]} = care_plans[carePlanId];
 
     return {
+        patientId,
         medications,
         medication_ids,
         care_plans: care_plans[carePlanId],

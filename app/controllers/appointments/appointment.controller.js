@@ -11,7 +11,8 @@ import {
   FEATURE_TYPE,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  S3_DOWNLOAD_FOLDER
+  S3_DOWNLOAD_FOLDER,
+  NOTIFICATION_STAGES
 } from "../../../constant";
 import moment from "moment";
 
@@ -195,10 +196,7 @@ class AppointmentController extends Controller {
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage(
-        "test_queue",
-        eventScheduleData
-      );
+      const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
       Logger.debug("sqsResponse ---> ", sqsResponse);
 
@@ -216,7 +214,7 @@ class AppointmentController extends Controller {
         res,
         200,
         {
-          ... await appointmentApiData.getAllInfo(),
+          ...(await appointmentApiData.getAllInfo())
           // appointments: {
           //   [appointmentApiData.getAppointmentId()]: {
           //     ...appointmentApiData.getBasicInfo()
@@ -267,7 +265,7 @@ class AppointmentController extends Controller {
       switch (participant_two_type) {
         case USER_CATEGORY.DOCTOR:
           const doctor = await doctorService.getDoctorByData({
-            user_id: userId
+            id: participant_two_type
           });
           const doctorData = await DoctorWrapper(doctor);
           participantTwoId = doctorData.getUserId();
@@ -384,10 +382,7 @@ class AppointmentController extends Controller {
 
       const QueueService = new queueService();
 
-      const sqsResponse = await QueueService.sendMessage(
-        "test_queue",
-        eventScheduleData
-      );
+      const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
       Logger.debug("sqsResponse ---> ", sqsResponse);
 
@@ -410,7 +405,7 @@ class AppointmentController extends Controller {
         200,
         {
           care_plans: { ...carePlanApiData },
-          ...await appointmentApiData.getAllInfo(),
+          ...(await appointmentApiData.getAllInfo())
           // appointments: {
           //   [appointmentApiData.getAppointmentId()]: {
           //     ...appointmentApiData.getBasicInfo()
@@ -447,7 +442,12 @@ class AppointmentController extends Controller {
         // participant_one_id = "",
       } = body;
 
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const {
+        userId,
+        userData: { category } = {},
+        userCategoryId,
+        userCategoryData: { basic_info: { full_name } = {} } = {}
+      } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
@@ -457,25 +457,7 @@ class AppointmentController extends Controller {
 
       const oldAppointmentData = await AppointmentWrapper(oldAppointment);
 
-      let userCategoryId = null;
-
-      switch (category) {
-        case USER_CATEGORY.DOCTOR:
-          const doctor = await doctorService.getDoctorByData({
-            user_id: userId
-          });
-          const doctorData = await DoctorWrapper(doctor);
-          userCategoryId = doctorData.getDoctorId();
-          break;
-        case USER_CATEGORY.PATIENT:
-          const patient = await patientService.getPatientByUserId(userId);
-          const patientData = await PatientWrapper(patient);
-          userCategoryId = patientData.getPatientId();
-          break;
-        default:
-          break;
-      }
-
+      // check for date, start_time, end_time change
       if (
         moment(date).diff(moment(oldAppointmentData.getStartDate()), "d") !==
           0 ||
@@ -555,22 +537,71 @@ class AppointmentController extends Controller {
         updatedAppointmentDetails
       );
 
-      // response
-      return this.raiseSuccess(
+      let participantTwoId = null;
+
+      switch (participant_two_type) {
+        case USER_CATEGORY.DOCTOR:
+          const doctor = await doctorService.getDoctorByData({
+            id: participant_two_id
+          });
+          const doctorData = await DoctorWrapper(doctor);
+          participantTwoId = doctorData.getUserId();
+          break;
+        case USER_CATEGORY.PATIENT:
+          const patient = await patientService.getPatientById({
+            id: participant_two_id
+          });
+          const patientData = await PatientWrapper(patient);
+          participantTwoId = patientData.getUserId();
+          break;
+        default:
+          break;
+      }
+
+      // delete previous events and send sqs for new
+
+      // 1. delete
+      const scheduleEventService = new ScheduleEventService();
+      await scheduleEventService.deleteBatch({
+        event_id: appointment_id,
+        event_type: EVENT_TYPE.APPOINTMENT
+      });
+
+      // 2. send sqs for updated
+      const eventScheduleData = {
+        type: EVENT_TYPE.APPOINTMENT,
+        event_id: appointmentApiData.getAppointmentId(),
+        event_type: EVENT_TYPE.APPOINTMENT,
+        critical,
+        start_time,
+        end_time,
+        details: appointmentApiData.getBasicInfo(),
+        participants: [userId, participantTwoId],
+        actor: {
+          id: userId,
+          details: { name: full_name, category }
+        }
+      };
+
+      const QueueService = new queueService();
+      await QueueService.sendMessage(eventScheduleData);
+
+      const appointmentJob = AppointmentJob.execute(
+        NOTIFICATION_STAGES.UPDATE,
+        eventScheduleData
+      );
+      await NotificationSdk.execute(appointmentJob);
+
+      return raiseSuccess(
         res,
         200,
         {
-          ...await appointmentApiData.getAllInfo(),
-          // appointments: {
-          //   [appointmentApiData.getAppointmentId()]: {
-          //     ...appointmentApiData.getBasicInfo()
-          //   }
-          // }
+          ...(await appointmentApiData.getAllInfo())
         },
         "Appointment updated successfully"
       );
     } catch (error) {
-      Logger.debug("update 500 error", error);
+      Logger.debug("updateAppointment 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -599,11 +630,15 @@ class AppointmentController extends Controller {
         //   appointmentWrapper.getAppointmentId()
         // ] = appointmentWrapper.getBasicInfo();
 
-        const {appointments, schedule_events, upload_documents} = await appointmentWrapper.getAllInfo();
+        const {
+          appointments,
+          schedule_events,
+          upload_documents
+        } = await appointmentWrapper.getAllInfo();
         Logger.debug("1982378128 ", schedule_events, upload_documents);
-        appointmentApiData = {...appointmentApiData, ...appointments};
-        scheduleEventData = {...scheduleEventData, ...schedule_events};
-        uploadDocumentData = {...uploadDocumentData, ...upload_documents};
+        appointmentApiData = { ...appointmentApiData, ...appointments };
+        scheduleEventData = { ...scheduleEventData, ...schedule_events };
+        uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
       }
 
       return raiseSuccess(
@@ -646,6 +681,12 @@ class AppointmentController extends Controller {
       const appointmentDetails = await appointmentService.deleteAppointment(
         appointment_id
       );
+
+      const scheduleEventService = new ScheduleEventService();
+      await scheduleEventService.deleteBatch({
+        event_id: appointment_id,
+        event_type: EVENT_TYPE.APPOINTMENT
+      });
 
       return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
     } catch (error) {
@@ -783,7 +824,12 @@ class AppointmentController extends Controller {
   uploadAppointmentDoc = async (req, res) => {
     try {
       const {
-        userDetails: { userId = null, userData: { category } = {}, userCategoryData, userCategoryId } = {}
+        userDetails: {
+          userId = null,
+          userData: { category } = {},
+          userCategoryData,
+          userCategoryId
+        } = {}
       } = req || {};
       const file = req.file;
 
@@ -803,15 +849,14 @@ class AppointmentController extends Controller {
 
       const scheduleData = await EventWrapper(eventForAppointment);
 
-      if(scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
+      if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
         return raiseClientError(
-            res,
-            422,
-            {},
-            "Cannot upload documents before appointment is complete"
+          res,
+          422,
+          {},
+          "Cannot upload documents before appointment is complete"
         );
       }
-
 
       let userIsParticipant = true;
       let timeDifference = null;
@@ -860,13 +905,16 @@ class AppointmentController extends Controller {
           });
         }
 
-        const appointmentDetails = await AppointmentWrapper(null, appointment_id);
+        const appointmentDetails = await AppointmentWrapper(
+          null,
+          appointment_id
+        );
 
         return this.raiseSuccess(
           res,
           200,
           {
-            ...await appointmentDetails.getAllInfo()
+            ...(await appointmentDetails.getAllInfo())
           },
           "Appointment documents uploaded successfully."
         );
@@ -973,12 +1021,12 @@ class AppointmentController extends Controller {
     }
   };
 
-  deleteAppointmentDoc = async (req,res) => {
+  deleteAppointmentDoc = async (req, res) => {
     try {
       const {
-        userDetails: { userId = null, userData: { category } = {} } = {}} = req || {};
+        userDetails: { userId = null, userData: { category } = {} } = {}
+      } = req || {};
       const { params: { document_id = null } = {} } = req || {};
-
 
       const uploadDocuments = await documentService.getDocumentById(
         document_id
@@ -994,7 +1042,6 @@ class AppointmentController extends Controller {
       }
 
       const uploadDocumentData = await UploadDocumentWrapper(uploadDocuments);
-
 
       const {
         basic_info: { name, document, parent_id, parent_type } = {}
@@ -1037,9 +1084,6 @@ class AppointmentController extends Controller {
           participant_two_id === userCategoryId
             ? true
             : false;
-
-
-    
       }
 
       if (!appointmentDetails || !userIsParticipant) {
@@ -1051,27 +1095,25 @@ class AppointmentController extends Controller {
         );
       }
 
-        const deleteDocs = await documentService.deleteDocumentsOfAppointment(
-          document_id
-        );
-  
-        const appointment = await AppointmentWrapper(appointmentDetails);
+      const deleteDocs = await documentService.deleteDocumentsOfAppointment(
+        document_id
+      );
 
-        return this.raiseSuccess(
-          res,
-          200,
-          {
-            ...await appointment.getAllInfo()
-          },
-          "Appointment document deleted."
-        );
-    
-    
+      const appointment = await AppointmentWrapper(appointmentDetails);
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          ...(await appointment.getAllInfo())
+        },
+        "Appointment document deleted."
+      );
     } catch (error) {
       Logger.debug("deleteAppointmentDoc 500 error: ", error);
       return this.raiseServerError(res);
     }
-  }
+  };
 }
 
 export default new AppointmentController();

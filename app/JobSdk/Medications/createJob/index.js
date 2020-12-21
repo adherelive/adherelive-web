@@ -17,7 +17,7 @@ class CreateJob extends MedicationJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
-      medicationId = null
+      event_id = null
     } = getMedicationData() || {};
 
     const templateData = [];
@@ -45,7 +45,7 @@ class CreateJob extends MedicationJob {
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `Medication Created` },
       contents: {
-        en: `${name}(${actorCategory}) has created a medication reminder with you`
+        en: `${name}(${actorCategory}) has created a medication reminder with you. Tap here to know more!`
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
@@ -65,7 +65,7 @@ class CreateJob extends MedicationJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
-      medicationId
+      event_id
     } = getMedicationData() || {};
 
     const templateData = [];
@@ -77,7 +77,7 @@ class CreateJob extends MedicationJob {
       templateData.push({
         actor: actorId,
         object: `${participant}`,
-        foreign_id: `${medicationId}`,
+        foreign_id: `${event_id}`,
         verb: `medication_create:${currentTimeStamp}`,
         event: EVENT_TYPE.MEDICATION_REMINDER,
         // message: `${name}(${actorCategory}) has created a medication reminder`,

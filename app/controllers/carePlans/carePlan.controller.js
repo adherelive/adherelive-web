@@ -277,7 +277,6 @@ class CarePlanController extends Controller {
         };
 
         const sqsResponse = await QueueService.sendMessage(
-          "test_queue",
           eventScheduleData
         );
 
@@ -334,7 +333,6 @@ class CarePlanController extends Controller {
       };
 
       const sqsResponseforCareplan = await QueueService.sendMessage(
-        "test_queue",
         carePlanScheduleData
       );
 
@@ -476,7 +474,6 @@ class CarePlanController extends Controller {
       }
 
       const sqsResponse = await QueueService.sendBatchMessage(
-        "test_queue",
         eventScheduleData
       );
 
