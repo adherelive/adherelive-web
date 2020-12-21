@@ -602,6 +602,10 @@ class PatientDetailsDrawer extends Component {
         : null}
     </div>)
 
+
+            let existingDOB = moment(date_of_birth).format('MM-DD-YYYY');
+
+
        
 
         return (
@@ -716,12 +720,22 @@ class PatientDetailsDrawer extends Component {
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.dob)}<div className="star-red">*</div></div>
 
-                <Input className={"form-inputs-ap"} type='date'
+                {
+                    isdisabled ?
+                    <Input className={"form-inputs-ap"}
+                    placeholder={`${date_of_birth ? existingDOB : 'dd/mm/yyyy' }`}
+                    max={`${year}-${month}-${day}`}
+                    disabled={true}
+                    />
+                    :
+                    <Input className={"form-inputs-ap"} type='date'
                     // value={date_of_birth}
                     max={`${year}-${month}-${day}`}
                     onChange={this.setDOB}
                     disabled={isdisabled}
                 />
+                }
+                
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.comorbidities)}</div>
 

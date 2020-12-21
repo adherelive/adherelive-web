@@ -524,7 +524,8 @@ class EditMedicationReminderForm extends Component {
     } = this;
 
     const {
-      form: { getFieldValue }
+      form: { getFieldValue,setFieldsValue },
+      enableSubmit
     } = this.props;
 
     const otherUser = this.getOtherUser();
@@ -541,6 +542,14 @@ class EditMedicationReminderForm extends Component {
 
 
     const startDate = getFieldValue(startDateField.field_name);
+
+    const medicineVal = getFieldValue(chooseMedicationField.field_name);
+    
+    if(medicineVal && typeof(medicineVal) !== 'number'){
+      setFieldsValue({ [chooseMedicationField.field_name]: parseInt(medicineVal) });
+      enableSubmit();
+    }
+
 
     return (
       <Fragment>
