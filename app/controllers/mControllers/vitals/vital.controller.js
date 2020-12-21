@@ -27,7 +27,8 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
-  NOTIFICATION_STAGES, USER_CATEGORY
+  NOTIFICATION_STAGES,
+  USER_CATEGORY
 } from "../../../../constant";
 import SqsQueueService from "../../../services/awsQueue/queue.service";
 
@@ -52,7 +53,11 @@ class VitalController extends Controller {
           repeat_days,
           description
         } = {},
-        userDetails: { userId, userData: { category } = {}, userCategoryData = {} } = {},
+        userDetails: {
+          userId,
+          userData: { category } = {},
+          userCategoryData = {}
+        } = {}
       } = req;
 
       const QueueService = new queueService();
@@ -76,7 +81,7 @@ class VitalController extends Controller {
         });
 
         const vitals = await VitalWrapper({ id: vitalData.get("id") });
-        const {vital_templates, ...rest} = await vitals.getReferenceInfo();
+        const { vital_templates, ...rest } = await vitals.getReferenceInfo();
 
         const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
 
@@ -125,7 +130,7 @@ class VitalController extends Controller {
               [vitals.getVitalId()]: vitals.getBasicInfo()
             },
             ...rest,
-            vital_templates,
+            vital_templates
           },
           "Vital added successfully"
         );
@@ -144,34 +149,36 @@ class VitalController extends Controller {
   };
 
   updateVital = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     Log.debug("req.body --->", req.body);
     Log.debug("req.params --->", req.params);
     try {
       const {
-        userDetails: {userId, userData: {category} = {}} = {},
+        userDetails: { userId, userData: { category } = {} } = {},
         body,
-        body: {start_date, end_date} = {},
-        params: {id} = {}
+        body: { start_date, end_date } = {},
+        params: { id } = {}
       } = req;
       const EventService = new eventService();
 
+      const doesVitalExists = await VitalService.getByData({ id });
 
-      const doesVitalExists = await VitalService.getByData({id});
-
-      if(!doesVitalExists) {
+      if (!doesVitalExists) {
         return raiseClientError(res, 422, {}, "Vital does not exists");
       } else {
-
-        const previousVital = await VitalWrapper({data: doesVitalExists});
-        const dataToUpdate = vitalHelper.getVitalUpdateData({...body, previousVital});
+        const previousVital = await VitalWrapper({ data: doesVitalExists });
+        const dataToUpdate = vitalHelper.getVitalUpdateData({
+          ...body,
+          previousVital
+        });
         const vitalData = await VitalService.update(dataToUpdate, id);
 
         Log.debug("vitalData", vitalData);
 
-
-        const vitals = await VitalWrapper({id});
-        const vitalTemplates = await VitalTemplateWrapper({id: vitals.getVitalTemplateId()});
+        const vitals = await VitalWrapper({ id });
+        const vitalTemplates = await VitalTemplateWrapper({
+          id: vitals.getVitalTemplateId()
+        });
         const carePlan = await CarePlanWrapper(null, vitals.getCarePlanId());
 
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
@@ -201,25 +208,23 @@ class VitalController extends Controller {
 
         Log.debug("deletedEvents", deletedEvents);
 
-
-
         // RRule
         EventSchedule.create(eventScheduleData);
 
         return raiseSuccess(
-            res,
-            200,
-            {
-              vitals: {
-                [vitals.getVitalId()]: vitals.getBasicInfo()
-              },
-              ... await vitals.getReferenceInfo(),
-              vital_id: vitals.getVitalId()
+          res,
+          200,
+          {
+            vitals: {
+              [vitals.getVitalId()]: vitals.getBasicInfo()
             },
-            "Vital updated successfully"
+            ...(await vitals.getReferenceInfo()),
+            vital_id: vitals.getVitalId()
+          },
+          "Vital updated successfully"
         );
       }
-    } catch(error) {
+    } catch (error) {
       Log.debug("vitals create 500 error", error);
       return raiseServerError(res);
     }
@@ -255,7 +260,6 @@ class VitalController extends Controller {
       Log.debug("req.query --->", req.query);
 
       const { query: { value } = {} } = req;
-
 
       const vitalTemplates = await VitalTemplateService.searchByData(value);
       const templateDetails = {};
@@ -294,14 +298,18 @@ class VitalController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params --->", req.params);
-      const { params: { id } = {}, userDetails: {userData: {category} = {}} = {}, body: { response } = {} } = req;
+      const {
+        params: { id } = {},
+        userDetails: { userData: { category } = {} } = {},
+        body: { response } = {}
+      } = req;
       const EventService = new eventService();
 
-      if(category !== USER_CATEGORY.PATIENT) {
+      if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(res, 401, {}, "Unauthorized");
       }
 
-      const {event_id, ...rest} = response || {};
+      const { event_id, ...rest } = response || {};
 
       Log.info(`event_id ${event_id}`);
 
@@ -320,27 +328,29 @@ class VitalController extends Controller {
 
       Log.info(`event.getStatus() ${event.getStatus()}`);
 
-      if (event.getStatus() === EVENT_STATUS.SCHEDULED) {
+      if (event.getStatus() !== EVENT_STATUS.EXPIRED) {
+        let { response: prevResponse = [] } = event.getDetails() || {};
+
+        prevResponse.push({
+          value: rest,
+          createdTime
+        });
+
         const updateEvent = await EventService.update(
           {
             details: {
               ...event.getDetails(),
-              response: {
-                value: rest,
-                createdTime
-              }
+              response: prevResponse
             },
             status: EVENT_STATUS.COMPLETED
           },
-            event_id
+          event_id
         );
       } else {
         return raiseClientError(
           res,
           422,
-          {
-
-          },
+          {},
           "Cannot update response for the vital which has passed or has been missed"
         );
       }
@@ -352,23 +362,27 @@ class VitalController extends Controller {
 
       const chatJSON = JSON.stringify({
         vitals: {
-          [vital.getVitalId()]: vital.getBasicInfo(),
+          [vital.getVitalId()]: vital.getBasicInfo()
         },
         vital_templates: {
-          [vitalTemplate.getVitalTemplateId()]: vitalTemplate.getBasicInfo(),
+          [vitalTemplate.getVitalTemplateId()]: vitalTemplate.getBasicInfo()
         },
         vital_id: vital.getVitalId(),
         response,
-        type: EVENT_TYPE.VITALS,
+        type: EVENT_TYPE.VITALS
       });
 
-      const twilioMsg = await twilioService.addSymptomMessage(doctorData.getUserId(), patientData.getUserId(), chatJSON);
+      const twilioMsg = await twilioService.addSymptomMessage(
+        doctorData.getUserId(),
+        patientData.getUserId(),
+        chatJSON
+      );
 
       return raiseSuccess(
         res,
         200,
         {
-          ...await vital.getAllInfo()
+          ...(await vital.getAllInfo())
         },
         `${vitalTemplate.getName().toUpperCase()} vital updated successfully`
       );
@@ -389,7 +403,7 @@ class VitalController extends Controller {
         .utc()
         .toISOString();
 
-      const vital = await VitalWrapper({id});
+      const vital = await VitalWrapper({ id });
 
       const completeEvents = await EventService.getAllPassedByData({
         event_id: id,
