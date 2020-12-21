@@ -68,14 +68,18 @@ export const syncVitalsResponseData = async (event_data, createdTime, res) => {
 
     console.log(`event.getStatus() ${event.getStatus()}`);
 
+    let { response: prevResponse = [] } = event.getDetails() || {};
+
+    prevResponse.push({
+      value: rest,
+      createdTime
+    });
+
     const updateEvent = await eventService.update(
       {
         details: {
           ...event.getDetails(),
-          response: {
-            value: rest,
-            createdTime
-          }
+          response: prevResponse
         },
         status: EVENT_STATUS.COMPLETED
       },
