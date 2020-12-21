@@ -87,7 +87,11 @@ class MobileMReminderController extends Controller {
         critical = false,
         care_plan_id = null
       } = body;
-      const { userId, userData: { category } = {}, userCategoryData: {basic_info: {full_name = ""} = {}} = {} } = userDetails || {};
+      const {
+        userId,
+        userData: { category } = {},
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {}
+      } = userDetails || {};
 
       // const {text: doseUnit} = DOSE_UNIT[unit] || {};
       // const {text, time} = MEDICATION_TIMING[when_to_take] || {};
@@ -242,7 +246,11 @@ class MobileMReminderController extends Controller {
         critical = false,
         care_plan_id = 0
       } = body;
-      const { userId, userData: { category } = {}, userCategoryData: {basic_info: {full_name = ""} = {}} = {} } = userDetails || {};
+      const {
+        userId,
+        userData: { category } = {},
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {}
+      } = userDetails || {};
 
       const medicineDetails = await medicineService.getMedicineById(
         medicine_id
@@ -304,7 +312,7 @@ class MobileMReminderController extends Controller {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
 
         carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
-          ...await carePlanApiWrapper.getAllInfo(),
+          ...(await carePlanApiWrapper.getAllInfo()),
           ...carePlanSeverityDetails,
           carePlanMedicationIds,
           carePlanAppointmentIds
@@ -344,12 +352,10 @@ class MobileMReminderController extends Controller {
         start_date,
         end_date,
         when_to_take,
-        participants: [
-          userId, patient.getUserId()
-        ],
+        participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
-          details: {name: full_name, category},
+          details: { name: full_name, category }
         },
         participant_one: patient.getUserId(),
         participant_two: userId
@@ -439,9 +445,12 @@ class MobileMReminderController extends Controller {
 
       for (const medication of medicationDetails) {
         const medicationWrapper = await MobileMReminderWrapper(medication);
-        const {medications, schedule_events} = await medicationWrapper.getReferenceInfo();
-        medicationApiData = {...medicationApiData, ...medications};
-        scheduleEventApiData = {...scheduleEventApiData, ...schedule_events};
+        const {
+          medications,
+          schedule_events
+        } = await medicationWrapper.getReferenceInfo();
+        medicationApiData = { ...medicationApiData, ...medications };
+        scheduleEventApiData = { ...scheduleEventApiData, ...schedule_events };
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
@@ -609,6 +618,57 @@ class MobileMReminderController extends Controller {
 
       return raiseSuccess(res, 200, {}, "medication deleted successfully");
     } catch (error) {
+      return raiseServerError(res);
+    }
+  };
+
+  getMedicationEventsStatus = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { params: { patient_id } = {} } = req;
+
+      const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+        { participant_id: patient_id }
+      );
+
+      let medicationScheduleEventResponse = {};
+
+      for (const medication of medicationDetails) {
+        const medicationWrapper = await MobileMReminderWrapper(medication);
+        const { schedule_events } = await medicationWrapper.getReferenceInfo();
+
+        const eventIds = Object.keys(schedule_events);
+        let medicationEventRunRate = [];
+        for (const eventId of eventIds) {
+          const {
+            [eventId]: { status = null }
+          } = schedule_events;
+          medicationEventRunRate.push(status);
+        }
+
+        medicationScheduleEventResponse = {
+          ...medicationScheduleEventResponse,
+          ...{ [medicationWrapper.getMReminderId()]: medicationEventRunRate }
+        };
+      }
+
+      Logger.debug(
+        "medicationScheduleEventResponse: ",
+        medicationScheduleEventResponse
+      );
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          medication_event_status: {
+            ...medicationScheduleEventResponse
+          }
+        },
+        "Medications status fetched successfully"
+      );
+    } catch (error) {
+      Logger.debug("getMedicationEventsStatus 500 error: ", error);
       return raiseServerError(res);
     }
   };
