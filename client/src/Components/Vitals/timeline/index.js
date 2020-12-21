@@ -98,42 +98,61 @@ class VitalTimeline extends Component {
 
     return events.map(event => {
       const { id, status, end_time, details = {} ,updated_at = '' } = event || {};
-      const { response: { value = {}, currentTime } = {} } = details;
+      // const { response: { value = {}, currentTime } = {} } = details;
+      const {response = []} = details;
+      console.log("183908309123 details ---> ", {details});
 
-      switch (status) {
-        case COMPLETED:
-          return (
+      if(response.length > 0) {
+        return response.map(res => {
+          const {value = {}, createdTime} = res || {};
+          switch (status) {
+            case COMPLETED:
+              return (
+                  <TimelineItem
+                      key={id}
+                      dot={TIMELINE_STATUS[status].dot}
+                      color={TIMELINE_STATUS[status].color}
+                      className="pl10"
+                  >
+                    <div className="mb6 fs16 fw500">{moment(createdTime).format("LT")}</div>
+                    {Object.keys(value).map((fieldId, index) => {
+                      const { label, placeholder } = getVitalTemplate(fieldId, event);
+
+                      return (
+                          <div
+                              key={`${id}-${fieldId}-${index}`}
+                              className="mb4 fs14 fw500"
+                          >{`${label}: ${value[fieldId]} ${placeholder}`}</div>
+                      );
+                    })}
+                  </TimelineItem>
+              );
+            case EXPIRED:
+              return (
+                  <TimelineItem
+                      key={id}
+                      dot={TIMELINE_STATUS[status].dot}
+                      color={TIMELINE_STATUS[status].color}
+                      className="pl10"
+                  >
+                    <div className="fs16 fw500">{moment(end_time).format("LT")}</div>
+                    <div className="fs12">{formatMessage(messages.not_recorded)}</div>
+                  </TimelineItem>
+              );
+          }
+        });
+      } else {
+        return (
             <TimelineItem
-              key={id}
-              dot={TIMELINE_STATUS[status].dot}
-              color={TIMELINE_STATUS[status].color}
-              className="pl10"
-            >
-              <div className="mb6 fs16 fw500">{moment(updated_at).format("LT")}</div>
-              {Object.keys(value).map((fieldId, index) => {
-                const { label, placeholder } = getVitalTemplate(fieldId, event);
-                
-                return (
-                  <div
-                    key={`${id}-${fieldId}-${index}`}
-                    className="mb4 fs14 fw500"
-                  >{`${label}: ${value[fieldId]} ${placeholder}`}</div>
-                );
-              })}
-            </TimelineItem>
-          );
-        case EXPIRED:
-          return (
-            <TimelineItem
-              key={id}
-              dot={TIMELINE_STATUS[status].dot}
-              color={TIMELINE_STATUS[status].color}
-              className="pl10"
+                key={id}
+                dot={TIMELINE_STATUS[status].dot}
+                color={TIMELINE_STATUS[status].color}
+                className="pl10"
             >
               <div className="fs16 fw500">{moment(end_time).format("LT")}</div>
               <div className="fs12">{formatMessage(messages.not_recorded)}</div>
             </TimelineItem>
-          );
+        );
       }
     });
   };

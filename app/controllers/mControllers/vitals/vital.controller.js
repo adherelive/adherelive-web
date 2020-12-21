@@ -331,7 +331,7 @@ class VitalController extends Controller {
       if (event.getStatus() !== EVENT_STATUS.EXPIRED) {
         let { response: prevResponse = [] } = event.getDetails() || {};
 
-        prevResponse.push({
+        prevResponse.unshift({
           value: rest,
           createdTime
         });

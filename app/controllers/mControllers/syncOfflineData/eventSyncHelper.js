@@ -70,7 +70,7 @@ export const syncVitalsResponseData = async (event_data, createdTime, res) => {
 
     let { response: prevResponse = [] } = event.getDetails() || {};
 
-    prevResponse.push({
+    prevResponse.unshift({
       value: rest,
       createdTime
     });
