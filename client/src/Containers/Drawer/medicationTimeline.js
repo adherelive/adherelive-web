@@ -2,7 +2,6 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import MedicationTimelineDrawer from "../../Components/Drawer/medicationTimeline"; 
 
-import {getMedicationTimeline} from "../../modules/medications";
 import {close} from "../../modules/drawer";
 import {DRAWER} from "../../constant";
 
@@ -27,7 +26,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         close: () => dispatch(close()),
-        getMedicationTimeline: (id) => () => dispatch(getMedicationTimeline(id))
     };
 };
 
