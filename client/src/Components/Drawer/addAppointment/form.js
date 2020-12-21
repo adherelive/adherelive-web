@@ -359,16 +359,23 @@ class AddAppointmentForm extends Component {
   };
 
   getStartTime = () => {
-    const { form: { getFieldValue } = {} } = this.props;
-    return moment(getFieldValue(START_TIME)).format("hh:mm A");
+    const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+    const startTime = getFieldValue(START_TIME);
+    if(startTime) {
+      return moment(getFieldValue(START_TIME)).format("hh:mm A");
+    } else {
+      setFieldsValue({[START_TIME]: moment(getFieldValue(START_TIME))});
+      return moment(getFieldValue(START_TIME)).format("hh:mm A");
+    }
   };
 
   getEndTime = () => {
-    const { form: { getFieldValue } = {} } = this.props;
+    const { form: { getFieldValue, setFieldsValue } = {} } = this.props;
     if (getFieldValue(END_TIME)) {
       return moment(getFieldValue(END_TIME)).format("hh:mm A");
     }
-    return null;
+    setFieldsValue({[END_TIME]: moment(getFieldValue(START_TIME)).add(30, "minutes")});
+    return moment(getFieldValue(START_TIME)).add(30, "minutes").format("hh:mm A");
   };
 
   handleTimeSelect = type => time => {
@@ -401,6 +408,8 @@ class AddAppointmentForm extends Component {
     } else {
       timeValue = getFieldValue(END_TIME);
     }
+
+    console.log("182731289 timeValue --> ", {timeValue, type});
     return (
       <TimeKeeper
         time={

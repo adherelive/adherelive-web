@@ -209,6 +209,15 @@ class ClinicRegister extends Component {
     const { timings = {} } = dayTimings[day] || {};
 
     const { startTime = null } = timings[key] || {};
+
+    if(!startTime){
+      let { dayTimings = {} } = this.state;
+      let newDayTimings = dayTimings;
+      let newTimings = newDayTimings[day].timings;
+      newTimings[key] = { startTime: moment(), endTime: "" };
+      newDayTimings[day].timings = newTimings;
+      this.setState({ dayTimings: newDayTimings });
+    }
     return startTime ? moment(startTime).format("hh:mm A") : moment().format("hh:mm A");
   };
 
