@@ -434,13 +434,14 @@ class MobileMReminderController extends Controller {
       // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
+      let scheduleEventApiData = {};
       let medicineId = [];
 
       for (const medication of medicationDetails) {
         const medicationWrapper = await MobileMReminderWrapper(medication);
-        medicationApiData[
-          medicationWrapper.getMReminderId()
-        ] = medicationWrapper.getBasicInfo();
+        const {medications, schedule_events} = await medicationWrapper.getReferenceInfo();
+        medicationApiData = {...medicationApiData, ...medications};
+        scheduleEventApiData = {...scheduleEventApiData, ...schedule_events};
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
@@ -470,6 +471,9 @@ class MobileMReminderController extends Controller {
           },
           medicines: {
             ...medicineApiData
+          },
+          schedule_events: {
+            ...scheduleEventApiData
           }
         },
         "Medications fetched successfully"
