@@ -41,7 +41,7 @@ export const db = database => {
       },
       mobile_number: {
         type: DataTypes.STRING,
-        unique: true,
+        // unique: true,
         allow_null: true
       },
       password: {

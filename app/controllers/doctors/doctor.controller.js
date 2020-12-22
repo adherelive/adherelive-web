@@ -459,7 +459,7 @@ class DoctorController extends Controller {
 
       const mobileNumberExist = await userService.getUserByData({
         mobile_number
-      });
+      }) || [];
       if (mobileNumberExist && mobileNumberExist.length) {
         const prevUser = await UserWrapper(mobileNumberExist[0].get());
         const prevUserId = prevUser.getId();
@@ -469,7 +469,6 @@ class DoctorController extends Controller {
           const doctorUserDetailsTemp = await userService.getUserByEmail({ email });
           if (doctorUserDetailsTemp) {
             const doctorUserWrapper = await UserWrapper(doctorUserDetailsTemp);
-            Logger.debug("7865346576789786",doctorUserWrapper);
             doctorUserIdTemp = doctorUserWrapper.getId();
             if (prevUserId !== doctorUserIdTemp) {
               return this.raiseClientError(
@@ -868,7 +867,6 @@ class DoctorController extends Controller {
 
   addPatient = async (req, res) => {
     try {
-      Logger.debug("342525265342635");
       const {
         mobile_number = "",
         name = "",
@@ -889,7 +887,6 @@ class DoctorController extends Controller {
         address = ""
       } = req.body;
 
-      Logger.debug("1213132314231", req.body);
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
       const userExists = await userService.getPatientByMobile(mobile_number);
@@ -912,9 +909,14 @@ class DoctorController extends Controller {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
 
+      Logger.debug("1789173127 userExists.length ---> ", userExists.length);
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
         userData = await UserWrapper(userExists[0].get());
+
+        // if(userData.getCategory() !== USER_CATEGORY.PATIENT) {
+        //   return this.raiseClientError(res, 422, {}, "Number already registered with other user")
+        // }
         const { patient_id } = await userData.getReferenceInfo();
         patientData = await PatientWrapper(null, patient_id);
 

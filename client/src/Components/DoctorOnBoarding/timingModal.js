@@ -36,7 +36,7 @@ import TimeKeeper from "react-timekeeper";
 const START_TIME = "start_time";
 const END_TIME = "end_time";
 
-class ClinicRegister extends Component {
+class TimingModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,11 +59,15 @@ class ClinicRegister extends Component {
         [FULL_DAYS.SUN]: {}
       }
     };
+
+    console.log("981273189732 constructor being called", this.state);
   }
 
   componentDidMount() {
     const { timings = {}, daySelected: activeDays = {} } = this.props;
     let newTimings = {};
+
+    console.log("981273189732 componentDidMount being called", {daySelected: activeDays, timings});
 
     for (let day in timings) {
       let dayTiming = {};
@@ -83,25 +87,37 @@ class ClinicRegister extends Component {
     this.setState({ dayTimings: newTimings, daySelected: activeDays });
   }
 
+  componentWillUnmount() {
+    console.log("981273189732 componentWillUnmount being called", this.state);
+    this.setState({});
+  }
+
   formatMessage = data => this.props.intl.formatMessage(data);
 
   toggleDaySelected = day => () => {
     let { daySelected, dayTimings = {} } = this.state;
     let newDaySelected = daySelected;
     let isDaySelected = newDaySelected[day];
-    if (isDaySelected) {
-      newDaySelected[day] = !isDaySelected;
-      let key = uuid();
-      let dayTiming = {};
-      dayTiming[key] = { startTime: "", endTime: "" };
-      let dayTimingKeys = [key];
-      dayTimings[day].timings = dayTiming;
-      dayTimings[day].timingsKeys = dayTimingKeys;
-    } else {
-      newDaySelected[day] = !isDaySelected;
-    }
-
-    this.setState({ daySelected: newDaySelected });
+    // if (isDaySelected) {
+    //   newDaySelected[day] = !isDaySelected;
+    //   let key = uuid();
+    //   let dayTiming = {};
+    //   dayTiming[key] = { startTime: "", endTime: "" };
+    //   let dayTimingKeys = [key];
+    //   dayTimings[day].timings = dayTiming;
+    //   dayTimings[day].timingsKeys = dayTimingKeys;
+    // } else {
+    //   newDaySelected[day] = !isDaySelected;
+    // }
+    newDaySelected[day] = !isDaySelected;
+    let key = uuid();
+    let dayTiming = {};
+    dayTiming[key] = { startTime: "", endTime: "" };
+    let dayTimingKeys = [key];
+    dayTimings[day].timings = dayTiming;
+    dayTimings[day].timingsKeys = dayTimingKeys;
+    console.log("1987371823 toggleDaySelected", {daySelected: newDaySelected, dayTimings});
+    this.setState({ daySelected: newDaySelected, dayTimings });
   };
 
   addDayTimings = day => () => {
@@ -111,7 +127,12 @@ class ClinicRegister extends Component {
 
     let newTimings = newDayTimings[day].timings;
     newDayTimings[day].timingsKeys.push(key1);
-    newTimings[key1] = { startTime: "", endTime: "" };
+
+    if(newDayTimings[day].timingsKeys.length > 2) {
+      newTimings[key1] = { startTime: moment().add(newDayTimings[day].timingsKeys.length - 1, "hours"), endTime: moment().add(newDayTimings[day].timingsKeys.length, "hours") };
+    } else {
+      newTimings[key1] = { startTime: moment().add(1, "hours"), endTime: moment().add(2, "hours") };
+    }
     newDayTimings[day].timings = newTimings;
     this.setState({ dayTimings: newDayTimings });
   };
@@ -214,7 +235,7 @@ class ClinicRegister extends Component {
       let { dayTimings = {} } = this.state;
       let newDayTimings = dayTimings;
       let newTimings = newDayTimings[day].timings;
-      newTimings[key] = { startTime: moment(), endTime: "" };
+      newTimings[key] = { startTime: moment(), endTime: moment().add(1, "hour") };
       newDayTimings[day].timings = newTimings;
       this.setState({ dayTimings: newDayTimings });
     }
@@ -225,11 +246,10 @@ class ClinicRegister extends Component {
     const { dayTimings = {} } = this.state;
     const { timings = {} } = dayTimings[day] || {};
 
-    const { endTime } = timings[key] || {};
+    const { endTime, startTime } = timings[key] || {};
     if (endTime) {
       return moment(endTime).format("hh:mm A");
     }
-    return null;
   };
 
   renderTiming = () => {
@@ -239,6 +259,8 @@ class ClinicRegister extends Component {
       <div className="flex direction-column wp100">
         {Object.keys(daySelected).map(day => {
           const { timingsKeys = [], timings = {} } = dayTimings[day];
+
+          console.log("1987371823 daySelected[day], timingsKeys", {daySelected: daySelected[day], timingsKeys});
           return (
             <div className="flex direction-column wp100 pt8 pb8">
               <div className="flex justify-space-between wp100 mb8 mt4">
@@ -268,18 +290,6 @@ class ClinicRegister extends Component {
                           <div className="fs14 mt8 mb8 ">
                             {this.formatMessage(messages.startTime)}
                           </div>
-                          {/*<TimePicker*/}
-                          {/*  className="wp100"*/}
-                          {/*  value={*/}
-                          {/*    timings[tKey].startTime*/}
-                          {/*      ? timings[tKey].startTime*/}
-                          {/*      : null*/}
-                          {/*  }*/}
-                          {/*  use12Hours*/}
-                          {/*  minuteStep={15}*/}
-                          {/*  format="hh:mm a"*/}
-                          {/*  onChange={this.setDayStartTime(day, tKey)}*/}
-                          {/*/>*/}
                           <Dropdown
                             overlay={getTimePicker({
                               day,
@@ -305,18 +315,6 @@ class ClinicRegister extends Component {
                                 />
                               )}
                             </div>
-                            {/*<TimePicker*/}
-                            {/*  className="wp100"*/}
-                            {/*  value={*/}
-                            {/*    timings[tKey].endTime*/}
-                            {/*      ? timings[tKey].endTime*/}
-                            {/*      : null*/}
-                            {/*  }*/}
-                            {/*  use12Hours*/}
-                            {/*  minuteStep={15}*/}
-                            {/*  format="hh:mm a"*/}
-                            {/*  onChange={this.setDayEndTime(day, tKey)}*/}
-                            {/*/>*/}
                             <Dropdown
                               overlay={getTimePicker({
                                 day,
@@ -470,13 +468,14 @@ class ClinicRegister extends Component {
 
   render() {
     const { visible } = this.props;
+    console.log("981273189732 in timingModal", this.state);
     return (
       <Modal
         visible={visible}
         title={this.formatMessage(messages.clinicTimings)}
         onCancel={this.handleClose}
         destroyOnClose={true}
-        onOk={this.handleSave}
+        // onOk={this.handleSave}
         footer={[
           <Button key="back" onClick={this.handleClose}>
             {this.formatMessage(messages.return)}
@@ -491,4 +490,4 @@ class ClinicRegister extends Component {
     );
   }
 }
-export default injectIntl(ClinicRegister);
+export default injectIntl(TimingModal);

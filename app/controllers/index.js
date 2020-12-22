@@ -13,7 +13,7 @@ class Controller {
 
   raiseServerError = (res, code = 500, error = {}, message = "") => {
     const response = new Response(false, code);
-    response.setMessage(errMessage.INTERNAL_SERVER_ERROR);
+    response.setMessage(errMessage.INTERNAL_SERVER_ERROR.message);
     return res.status(code).json(response.getResponse());
   }
 
