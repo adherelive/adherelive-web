@@ -915,7 +915,7 @@ class PatientDetailsDrawer extends Component {
         if (!prefix) {
             message.error(this.formatMessage(messages.prefixError))
             return false;
-        } else if (mobile_number.length < 6 || mobile_number.length > 20 || !mobile_number) {
+        } else if (mobile_number.length < 10 || mobile_number.length > 10 || !mobile_number) {
             message.error(this.formatMessage(messages.mobNoError))
             return false;
         } else if (!date_of_birth) {

@@ -400,6 +400,11 @@ const messages = defineMessages({
     id: "app.doctorOnBoarding.qualificationAddSuccess",
     description: "",
     defaultMessage: 'Qualification Details Added Successfully'
+  },
+  timingSameForTheDay: {
+    id: "app.doctorOnBoarding.timingSameForTheDay",
+    description: "",
+    defaultMessage: 'Cannot have same start time or end time for the day'
   }
 
 

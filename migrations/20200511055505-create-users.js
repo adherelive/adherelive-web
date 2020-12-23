@@ -27,7 +27,7 @@ module.exports = {
       },
       mobile_number: {
         type: Sequelize.STRING,
-        unique: true,
+        // unique: true,
         allowNull: true
       },
       password: {

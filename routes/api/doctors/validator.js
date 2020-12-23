@@ -16,8 +16,8 @@ const addDoctorForm = Joi.object().keys({
     .valid(USER_CATEGORY.DOCTOR)
     .label("Please select correct category"),
   mobile_number: Joi.string()
-    .min(6)
-    .max(20)
+    .min(10)
+    .max(10)
     .regex(/^\d+$/)
     .optional()
     .allow("", null)
@@ -42,8 +42,8 @@ const addDoctorForm = Joi.object().keys({
 
 const addPatientForm = Joi.object().keys({
   mobile_number: Joi.string()
-    .min(6)
-    .max(20)
+    .min(10)
+    .max(10)
     .required()
     .label("Please enter correct mobile number"),
   name: Joi.string()
