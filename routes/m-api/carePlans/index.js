@@ -1,0 +1,29 @@
+import express from "express";
+import Authenticated from "../middlewares/auth";
+import CarePlanController from "../../../app/controllers/mControllers/carePlans/carePlan.controller";
+import multer from "multer";
+var storage = multer.memoryStorage();
+var upload = multer({ dest: "../app/public/", storage: storage });
+import * as validator from "./validator";
+
+const router = express.Router();
+
+// router.post('/create-medications-and-appointments/:carePlanId',
+router.post(
+  "/:carePlanId",
+  Authenticated,
+  validator.validateCreateCarePlanFromTemplate,
+  CarePlanController.createCarePlanMedicationsAndAppointmentsByTemplateData
+);
+
+router.post(
+  "/activate/:carePlanId",
+  Authenticated,
+  CarePlanController.activateCarePlan
+);
+
+// router.get('/:patientId',
+//     CarePlanController.getPatientCarePlanDetails
+// );
+
+module.exports = router;

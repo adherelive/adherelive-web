@@ -1,0 +1,27 @@
+.side-bar-menu {
+  width: @86px;
+  margin-top: @0px;
+  height: 100%;
+  position: fixed;
+  z-index: 3;
+  border-right: 1px solid @grey-light;
+  :nth-child(3) {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+  }
+  .ant-menu-item {
+    height: @86px;
+    line-height: 22px;
+
+    .anticon {
+      margin-right: 0;
+      font-size: 22px;
+    }
+
+    .text {
+      font-size: 10px;
+      text-align: center;
+    }
+  }
+}

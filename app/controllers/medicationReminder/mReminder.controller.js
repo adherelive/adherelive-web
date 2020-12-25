@@ -1,0 +1,851 @@
+import Controller from "../index";
+import moment from "moment";
+
+// SERVICES --------------------------------------------------
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
+import medicationReminderService from "../../services/medicationReminder/mReminder.service";
+import medicineService from "../../services/medicine/medicine.service";
+import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
+import doctorService from "../../services/doctor/doctor.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
+import queueService from "../../services/awsQueue/queue.service";
+import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+
+// API WRAPPERS ----------------------------------------------
+import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
+import MedicineWrapper from "../../ApiWrapper/web/medicine";
+import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import PatientWrapper from "../../ApiWrapper/web/patient";
+import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
+
+import eventService from "../../services/scheduleEvents/scheduleEvent.service";
+import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+
+import {
+  CUSTOM_REPEAT_OPTIONS,
+  DAYS,
+  DOSE_AMOUNT,
+  DOSE_UNIT,
+  EVENT_STATUS,
+  EVENT_TYPE,
+  MEDICATION_TIMING,
+  REPEAT_TYPE,
+  MEDICINE_FORM_TYPE,
+  USER_CATEGORY,
+  WAKE_UP,
+  SLEEP,
+  BREAKFAST,
+  LUNCH,
+  EVENING,
+  DINNER
+} from "../../../constant";
+import Log from "../../../libs/log";
+import {
+  getCarePlanAppointmentIds,
+  getCarePlanMedicationIds,
+  getCarePlanSeverityDetails
+} from "../carePlans/carePlanHelper";
+import { RRule } from "rrule";
+import MedicationJob from "../../JobSdk/Medications/observer";
+import NotificationSdk from "../../NotificationSdk";
+
+const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
+const Logger = new Log(FILE_NAME);
+
+const KEY_REPEAT_TYPE = "repeat_type";
+const KEY_DAYS = "days";
+const KEY_TIMING = "timings";
+const KEY_DOSE = "dose";
+const KEY_UNIT = "dose_unit";
+const KEY_CUSTOM_REPEAT_OPTIONS = "custom_repeat_options";
+const KEY_MEDICINE_TYPE = "medicine_type";
+
+const medicationReminderDetails = {
+  [KEY_REPEAT_TYPE]: REPEAT_TYPE,
+  [KEY_DAYS]: DAYS,
+  [KEY_TIMING]: MEDICATION_TIMING,
+  [KEY_DOSE]: DOSE_AMOUNT,
+  [KEY_UNIT]: DOSE_UNIT,
+  [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
+  [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
+};
+
+class MReminderController extends Controller {
+  constructor() {
+    super();
+  }
+
+  create = async (req, res) => {
+    try {
+      const { body, userDetails, params: { patient_id } = {} } = req;
+      // todo: get patient_id from url
+      const {
+        start_date,
+        end_date,
+        repeat,
+        repeat_days,
+        repeat_interval = 0,
+        medicine_id,
+        medicine_type,
+        quantity,
+        strength,
+        unit,
+        when_to_take,
+        medication_stage = "",
+        description,
+        start_time,
+        critical = false
+      } = body;
+      const { userId, userData: { category } = {} } = userDetails || {};
+
+      const medicineDetails = await medicineService.getMedicineById(
+        medicine_id
+      );
+
+      console.log(
+        "medicineDetails **********--------> ",
+        description,
+        start_time
+      );
+
+      const medicineApiWrapper = await MedicineWrapper(medicineDetails);
+
+      const dataToSave = {
+        participant_id: patient_id, // todo: patient_id
+        organizer_type: category,
+        organizer_id: userId,
+        description,
+        start_date,
+        end_date,
+        medicine_id,
+        details: {
+          medicine_id,
+          medicine_type,
+          start_time: start_time ? start_time : moment(),
+          end_time: start_time ? start_time : moment(),
+          repeat,
+          repeat_days,
+          repeat_interval,
+          quantity,
+          strength,
+          unit,
+          when_to_take,
+          medication_stage,
+          critical
+        }
+      };
+
+      Logger.debug(
+        "startdate ---> ",
+        moment(start_time)
+          .utc()
+          .toDate()
+      );
+      const rrule = new RRule({
+        freq: RRule.WEEKLY,
+        dtstart: moment(start_time)
+          .utc()
+          .toDate(),
+        until: moment(start_time)
+          .add(6, "months")
+          .utc()
+          .toDate()
+      });
+
+      Logger.debug("rrule ----> ", rrule.all());
+
+      const mReminderDetails = await medicationReminderService.addMReminder(
+        dataToSave
+      );
+
+      const patient = await PatientWrapper(null, patient_id);
+
+      const eventScheduleData = {
+        patient_id: patient.getUserId(),
+        type: EVENT_TYPE.MEDICATION_REMINDER,
+        event_id: mReminderDetails.getId,
+        details: mReminderDetails.getBasicInfo.details,
+        status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+        when_to_take,
+        participant_one: patient.getUserId(),
+        participant_two: userId
+      };
+
+      const QueueService = new queueService();
+
+      const sqsResponse = await QueueService.sendMessage(
+        "test_queue",
+        eventScheduleData
+      );
+
+      Logger.debug("sqsResponse ---> ", sqsResponse);
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          medications: {
+            [mReminderDetails.getId]: {
+              basic_info: {
+                ...mReminderDetails.getBasicInfo
+              }
+            }
+          },
+          medicines: {
+            [medicineApiWrapper.getMedicineId()]: {
+              ...medicineApiWrapper.getBasicInfo()
+            }
+          }
+        },
+        "Medication Reminder added successfully"
+      );
+
+      // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
+    } catch (error) {
+      console.log("Add m-reminder error ----> ", error);
+      return this.raiseServerError(res);
+    }
+  };
+
+  createCarePlanMedication = async (req, res) => {
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    try {
+      const {
+        body,
+        userDetails,
+        params: { patient_id, carePlanId: care_plan_id = 0 } = {}
+      } = req;
+
+      const {
+        start_date,
+        end_date,
+        repeat,
+        repeat_days,
+        repeat_interval = 0,
+        medicine_id,
+        medicine_type,
+        quantity,
+        strength,
+        unit,
+        when_to_take,
+        medication_stage = "",
+        description,
+        start_time,
+        critical = false
+      } = body;
+
+
+      const patient_temp = await PatientWrapper(null, patient_id);
+      const {care_plan_id : care_plan_id_temp } = await patient_temp.getAllInfo();
+
+        let flag_temp =true;
+        const eachCareplan_temp = await CarePlanWrapper(null,care_plan_id_temp);
+        const {medication_ids : medication_ids_temp} = await eachCareplan_temp.getAllInfo(); 
+
+        for(let eachMId of medication_ids_temp){
+          const medicationWrapper_temp  = await MedicationWrapper(null,eachMId); 
+          const abc = await medicationWrapper_temp.getBasicInfo();
+          const {basic_info : {details : { medicine_id :  medicine_id_temp = ''} = {}} = {}} = abc;
+          if(medicine_id_temp === medicine_id){
+            flag_temp=false;
+            break;
+          }
+
+        }
+
+
+        if(flag_temp === false){
+          return raiseClientError(res, 422, {}, "Medication already added for the patient");
+        }
+
+      
+      console.log(
+        "medicineDetails **********--------> ",
+        care_plan_id,
+        typeof care_plan_id
+      );
+
+      
+      // todo: get patient_id from url
+    
+      const { userId, userData: { category } = {} } = userDetails || {};
+
+      const medicineDetails = await medicineService.getMedicineById(
+        medicine_id
+      );
+
+      const medicineApiWrapper = await MedicineWrapper(medicineDetails);
+
+      const dataToSave = {
+        participant_id: patient_id, // todo: patient_id
+        organizer_type: category,
+        organizer_id: userId,
+        medicine_id,
+        description,
+        start_date,
+        end_date,
+        details: {
+          medicine_id,
+          medicine_type,
+          start_time: start_time ? start_time : moment(),
+          end_time: start_time ? start_time : moment(),
+          repeat,
+          repeat_days,
+          repeat_interval,
+          quantity,
+          strength,
+          unit,
+          when_to_take,
+          medication_stage,
+          critical
+        }
+      };
+
+      const mReminderDetails = await medicationReminderService.addMReminder(
+        dataToSave
+      );
+
+      const data_to_create = {
+        care_plan_id: parseInt(care_plan_id),
+        medication_id: mReminderDetails.get("id")
+      };
+
+      let newMedication = await carePlanMedicationService.addCarePlanMedication(
+        data_to_create
+      );
+
+      let carePlan = await carePlanService.getCarePlanById(care_plan_id);
+
+      let carePlanAppointmentIds = await getCarePlanAppointmentIds(
+        care_plan_id
+      );
+      let carePlanMedicationIds = await getCarePlanMedicationIds(care_plan_id);
+      let carePlanSeverityDetails = await getCarePlanSeverityDetails(
+        care_plan_id
+      );
+      const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+      let carePlanApiData = {};
+
+      carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
+        ...carePlanApiWrapper.getBasicInfo(),
+        ...carePlanSeverityDetails,
+        medication_ids: carePlanMedicationIds,
+        appointment_ids: carePlanAppointmentIds
+      };
+
+      const patient = await PatientWrapper(null, patient_id);
+
+      const eventScheduleData = {
+        patient_id: patient.getUserId(),
+        type: EVENT_TYPE.MEDICATION_REMINDER,
+        event_id: mReminderDetails.getId,
+        details: mReminderDetails.getBasicInfo.details,
+        status: EVENT_STATUS.SCHEDULED,
+        start_date,
+        end_date,
+        when_to_take,
+        participant_one: patient.getUserId(),
+        participant_two: userId
+      };
+
+      const QueueService = new queueService();
+
+      const sqsResponse = await QueueService.sendMessage(
+        "test_queue",
+        eventScheduleData
+      );
+
+      Logger.debug("sqsResponse ---> ", sqsResponse);
+
+      // to update later
+
+      let categoryData = null;
+      if (category === USER_CATEGORY.DOCTOR) {
+        const doctor = await doctorService.getDoctorByData({ user_id: userId });
+        categoryData = await DoctorWrapper(doctor);
+      }
+
+      const eventData = {
+        participants: [userId, patient.getUserId()],
+        actor: {
+          id: userId,
+          details: {
+            name: categoryData.getName(),
+            category
+          }
+        },
+        medicationId: mReminderDetails.get("id")
+      };
+
+      const medicationJob = MedicationJob.execute(
+        EVENT_STATUS.SCHEDULED,
+        eventData
+      );
+      await NotificationSdk.execute(medicationJob);
+
+      Logger.debug("medicationJob ---> ", medicationJob.getInAppTemplate());
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          care_plans: { ...carePlanApiData },
+          medications: {
+            [mReminderDetails.getId]: {
+              basic_info: {
+                ...mReminderDetails.getBasicInfo
+              }
+            }
+          },
+          medicines: {
+            [medicineApiWrapper.getMedicineId()]: {
+              ...medicineApiWrapper.getBasicInfo()
+            }
+          }
+        },
+        "medication reminder added successfully"
+      );
+
+      // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
+    } catch (error) {
+      Logger.debug("Add m-reminder error ---->", error);
+      // return this.raiseServerError(res, 500, error.message, "something went wrong");
+    }
+  };
+
+  update = async (req, res) => {
+    try {
+      const { body, userDetails, params: { id } = {} } = req;
+      // todo: get patient_id from url
+      const {
+        start_date,
+        end_date,
+        repeat,
+        repeat_days,
+        repeat_interval = 0,
+        medicine_id,
+        medicine_type,
+        quantity,
+        strength,
+        unit,
+        when_to_take,
+        medication_stage = "",
+        description,
+        start_time,
+        participant_id,
+        critical = false
+      } = body;
+      const { userId, userData: { category } = {} } = userDetails || {};
+
+      const medicineDetails = await medicineService.getMedicineById(
+        medicine_id
+      );
+
+      // Logger.debug("medicineDetails --> ", medicineDetails);
+
+      const medicineApiWrapper = await MedicineWrapper(medicineDetails);
+
+      const dataToSave = {
+        participant_id, // todo: patient_id
+        organizer_type: category,
+        organizer_id: userId,
+        medicine_id,
+        description,
+        start_date,
+        end_date,
+        details: {
+          medicine_id,
+          medicine_type,
+          start_time: start_time ? start_time : moment(),
+          end_time: start_time ? start_time : moment(),
+          repeat,
+          repeat_days,
+          repeat_interval,
+          quantity,
+          strength,
+          unit,
+          when_to_take,
+          medication_stage,
+          critical
+        }
+      };
+
+      const mReminderDetails = await medicationReminderService.updateMedication(
+        dataToSave,
+        id
+      );
+
+      const updatedMedicationDetails = await medicationReminderService.getMedication(
+        { participant_id }
+      );
+
+      // Logger.debug("updatedMedicationDetails --> ", updatedMedicationDetails);
+
+      const medicationApiDetails = await MedicationWrapper(
+        updatedMedicationDetails
+      );
+
+      // const eventScheduleData = {
+      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      //   event_id: mReminderDetails.id,
+      //   data: mReminderDetails.getBasicInfo,
+      //   status: EVENT_STATUS.PENDING,
+      //   start_time,
+      //   end_time: start_time
+      // };
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          medications: {
+            [medicationApiDetails.getMReminderId()]: {
+              ...medicationApiDetails.getBasicInfo()
+            }
+          },
+          medicines: {
+            [medicineApiWrapper.getMedicineId()]: {
+              ...medicineApiWrapper.getBasicInfo()
+            }
+          }
+        },
+        "medication reminder updated successfully"
+      );
+
+      // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
+    } catch (error) {
+      console.log("update m-reminder error ----> ", error);
+      return this.raiseServerError(
+        res,
+        500,
+        error.message,
+        "something went wrong"
+      );
+    }
+  };
+
+  getMedicationDetails = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      // Logger.debug("test", medicationReminderDetails);
+      const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const timingPreference = await userPreferenceService.getPreferenceByData({
+        user_id: patient.getUserId()
+      });
+      const options = await UserPreferenceWrapper(timingPreference);
+      const { timings: userTimings } = options.getAllDetails();
+
+      Logger.debug("timings9728313 ", timings);
+
+      const medicationTimings = [];
+      let timings = {};
+
+      Object.keys(userTimings).forEach(id => {
+        const { value } = userTimings[id] || {};
+
+        switch (id) {
+          case WAKE_UP:
+            medicationTimings.push({
+              text: "After Wake Up",
+              time: moment(value).toISOString()
+            });
+            break;
+          case SLEEP:
+            medicationTimings.push({
+              text: "Before Sleep",
+              time: moment(value).toISOString()
+            });
+            break;
+          case BREAKFAST:
+            medicationTimings.push(
+              {
+                text: "Before Breakfast",
+                time: moment(value)
+                  .subtract(30, "minutes")
+                  .toISOString()
+              },
+              {
+                text: "After Breakfast",
+                time: moment(value)
+                  .add(30, "minutes")
+                  .toISOString()
+              }
+            );
+            break;
+          case LUNCH:
+            medicationTimings.push(
+              {
+                text: "Before Lunch",
+                time: moment(value)
+                  .subtract(30, "minutes")
+                  .toISOString()
+              },
+              {
+                text: "After Lunch",
+                time: moment(value)
+                  .add(30, "minutes")
+                  .toISOString()
+              }
+            );
+            break;
+          case EVENING:
+            medicationTimings.push(
+              {
+                text: "Before Evening Tea",
+                time: moment(value)
+                  .subtract(30, "minutes")
+                  .toISOString()
+              },
+              {
+                text: "After Evening Tea",
+                time: moment(value)
+                  .add(30, "minutes")
+                  .toISOString()
+              }
+            );
+            break;
+          case DINNER:
+            medicationTimings.push(
+              {
+                text: "Before Dinner",
+                time: moment(value)
+                  .subtract(30, "minutes")
+                  .toISOString()
+              },
+              {
+                text: "After Dinner",
+                time: moment(value)
+                  .add(30, "minutes")
+                  .toISOString()
+              }
+            );
+            break;
+        }
+      });
+
+      medicationTimings.sort((activityA, activityB) => {
+        const { time: a } = activityA || {};
+        const { time: b } = activityB || {};
+        if (moment(a).isBefore(moment(b))) return -1;
+
+        if (moment(a).isAfter(moment(b))) return 1;
+      });
+
+      medicationTimings.forEach((timing, index) => {
+        timings[`${index + 1}`] = timing;
+      });
+
+      const medicationReminderDetails = {
+        [KEY_REPEAT_TYPE]: REPEAT_TYPE,
+        [KEY_DAYS]: DAYS,
+        [KEY_TIMING]: timings,
+        [KEY_DOSE]: DOSE_AMOUNT,
+        [KEY_UNIT]: DOSE_UNIT,
+        [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
+        [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
+      };
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...medicationReminderDetails
+        },
+        "create medication basic details"
+      );
+    } catch (error) {
+      console.log("Get m-reminder details error ----> ", error);
+      return raiseServerError(res, 500, error.message, "something went wrong");
+    }
+  };
+
+  getMedicationForId = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { params: { id } = {} } = req;
+
+      const medicationDetails = await medicationReminderService.getMedicationsForParticipant(
+        { participant_id: id }
+      );
+
+      // console.log("712367132 medicationDetails --> ", medicationDetails);
+      // Logger.debug("medication details", medicationDetails);
+
+      let medicationApiData = {};
+
+      // await medicationDetails.forEach(async medication => {
+      for (let medication of medicationDetails) {
+        const medicationWrapper = await MedicationWrapper(medication);
+        medicationApiData[
+          medicationWrapper.getMReminderId()
+        ] = medicationWrapper.getBasicInfo();
+        // });
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          medications: {
+            ...medicationApiData
+          }
+        },
+        "medications fetched successfully"
+      );
+    } catch (error) {
+      return raiseServerError(res);
+    }
+  };
+
+  delete = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { params: { id } = {} } = req;
+
+      const carePlanMedicationDetails = await carePlanMedicationService.deleteCarePlanMedicationByMedicationId(
+        id
+      );
+
+      const medicationDetails = await medicationReminderService.deleteMedication(
+        id
+      );
+
+      // console.log("712367132 medicationDetails --> ", medicationDetails);
+      // Logger.debug("medication details", medicationDetails);
+
+      return raiseSuccess(res, 200, {}, "medication deleted successfully");
+    } catch (error) {
+      return raiseServerError(res);
+    }
+  };
+
+  getAllMissedMedications = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+
+      /*
+      * flow:
+      * get careplans for auth user (doctor)
+      * from careplans, fetch all medication | appointment | vital ids
+      *
+      * for the same ids, fetch scheduleEvents based on event_id and event_type that are expired
+      *
+      * then proceed with the filter of critical and non critical based on critical column in schedule events 0 -> false 1 -> true
+      *
+      * other:
+      *   follow snake casing for response as followed across the apis
+      *
+      *
+      * */
+
+      const { body, userDetails } = req;
+
+      const { userId, userData: { category  } = {} ,userCategoryData :{basic_info:{id :doctorId } ={} } = {} } = userDetails || {};
+
+
+      let docAllCareplanData = [];
+      let medicationApiData = {};
+      let flag = true;
+      let criticalMedicationEventIds = [];
+      let nonCriticalMedicationEventIds = [];
+      const scheduleEventService = new ScheduleEventService();
+
+      
+      docAllCareplanData = await carePlanService.getCarePlanByData({
+        doctor_id: doctorId
+      });
+
+      // Logger.debug("786756465789",docAllCareplanData);
+
+        for(let carePlan of docAllCareplanData) {
+        const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+        const {medication_ids} = await carePlanApiWrapper.getAllInfo();
+
+
+        for(let mId of medication_ids){
+          // Logger.debug("87657898763545",medication_ids);
+
+            let expiredMedicationsList = await scheduleEventService.getAllEventByData({
+              event_type: EVENT_TYPE.MEDICATION_REMINDER,
+              status: EVENT_STATUS.EXPIRED,
+              event_id:mId
+            });
+
+
+            for(let medication of expiredMedicationsList ){
+              const medicationEventWrapper = await EventWrapper(medication);
+              // Logger.debug("8976756576890",medicationEventWrapper);
+             
+                if (medicationEventWrapper.getCriticalValue()) {
+                  if (
+                    !criticalMedicationEventIds.includes(
+                      medicationEventWrapper.getEventId()
+                    )
+                  ) {
+                    criticalMedicationEventIds.push(
+                      medicationEventWrapper.getEventId()
+                    );
+                  }
+                } else {
+                  if (
+                    !nonCriticalMedicationEventIds.includes(
+                      medicationEventWrapper.getEventId()
+                    )
+                  ) {
+                    nonCriticalMedicationEventIds.push(
+                      medicationEventWrapper.getEventId()
+                    );
+                  }
+                }
+    
+                medicationApiData[
+                  medicationEventWrapper.getEventId()
+                ] = medicationEventWrapper.getDetails();
+              
+            };
+
+
+        };
+
+
+      };
+
+
+
+      if(Object.keys(medicationApiData).length === 0 && medicationApiData.constructor === Object){
+        flag = false;
+      }
+
+
+      if (flag === true) {
+        return raiseSuccess(
+          res,
+          200,
+          {
+            missed_medication_events: {
+              ...medicationApiData
+            },
+            critical_medication_event_ids: criticalMedicationEventIds,
+            non_critical_medication_event_ids: nonCriticalMedicationEventIds
+          },
+          `Missed medications fetched successfully`
+        );
+      } else {
+        return raiseSuccess(res, 201, {}, "No Missed Medications");
+      }
+
+      
+
+    } catch (error) {
+      Logger.debug("getMedicationDetails 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+}
+
+export default new MReminderController();
