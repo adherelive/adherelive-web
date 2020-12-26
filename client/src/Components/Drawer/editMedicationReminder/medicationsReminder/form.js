@@ -11,7 +11,9 @@ import repeatIntervalField from "../common/repeatInterval";
 import repeatDaysField from "../common/selectedDays";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
-import chooseMedicationField from "../common/medicationStage";
+// import chooseMedicationField from "../common/medicationStage";
+import chooseMedicationField from "../common/medicine";
+
 import criticalMedicationField from "../common/criticalMedication";
 import medicineStrengthField from "../common/medicineStrength";
 import medicineStrengthUnitField from "../common/medicationStrengthUnit";
@@ -522,21 +524,32 @@ class EditMedicationReminderForm extends Component {
     } = this;
 
     const {
-      form: { getFieldValue }
+      form: { getFieldValue,setFieldsValue },
+      enableSubmit
     } = this.props;
 
     const otherUser = this.getOtherUser();
 
     const startTime = getFieldValue(startTimeField.field_name);
     let medicineUnit = getFieldValue(medicineStrengthUnitField.field_name);
-    console.log('765765467585785865875876', medicineUnit);
     let endTime;
 
     if (startTime && startTime.isValid) {
       endTime = startTime.clone().add("minutes", 3);
     }
 
+    const currentMLCalibValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
+
+
     const startDate = getFieldValue(startDateField.field_name);
+
+    const medicineVal = getFieldValue(chooseMedicationField.field_name);
+    
+    if(medicineVal && typeof(medicineVal) !== 'number'){
+      setFieldsValue({ [chooseMedicationField.field_name]: parseInt(medicineVal) });
+      enableSubmit();
+    }
+
 
     return (
       <Fragment>
@@ -579,6 +592,8 @@ class EditMedicationReminderForm extends Component {
               >
                 <RadioButton value={UNIT_ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML}  >ml</RadioButton>
                 <RadioButton value={UNIT_MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >mg</RadioButton>
+                {medicineUnit !== 'mg' && (<RadioButton value={5} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML} >+5</RadioButton>)}
+                {medicineUnit !== 'mg' && (<RadioButton value={-5} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML || currentMLCalibValue<=5 } >-5</RadioButton>)}
                 {medicineUnit !== 'ml' && (<RadioButton value={50} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >+50</RadioButton>)}
               </RadioGroup>
             </div>

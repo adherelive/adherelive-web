@@ -76,6 +76,14 @@ export const db = database => {
         type: DataTypes.STRING,
         allowNull: true
       },
+      height :{
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      weight:{
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       activated_on: {
         type: DataTypes.DATE
       },
@@ -84,7 +92,15 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
-      }
+      },
+        full_name: {
+          type: DataTypes.VIRTUAL,
+            get() {
+                return `${this.first_name}${
+                    this.middle_name ? ` ${this.middle_name}` : ""
+                }${this.last_name ? ` ${this.last_name}` : ""}`;
+            }
+        }
     },
     {
       underscored: true,

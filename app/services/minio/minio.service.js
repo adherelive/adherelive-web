@@ -51,7 +51,9 @@ class MinioService {
           JSON.stringify(policy)
         );
 
-        fs.readFile(`${__dirname}/../../../logo.png`, (err, data) => {
+        // Adhere logo for email
+        // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/logo.png
+        fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
             Log.debug("emailLogo", emailLogo);
@@ -59,6 +61,18 @@ class MinioService {
             Log.debug("err", err);
           }
         });
+
+        // Push Notification audio for android
+        // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/push_notification_sound.wav
+        fs.readFile(`${__dirname}/../../../other/push_notification_sound.wav`, (err, data) => {
+          if (!err) {
+            const audioObject = this.saveAudioObject(data, "push_notification_sound.wav");
+            Log.debug("audioObject", audioObject);
+          } else {
+            Log.debug("err", err);
+          }
+        });
+
       }
       this.bucket = process.config.minio.MINIO_BUCKET_NAME;
       return result;

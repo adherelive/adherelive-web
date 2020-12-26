@@ -31,6 +31,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Something went wrong."
     },
+    editConsultationFee: {
+        id: "app.admin.doctors.settings.table.edit.doctor.conultation.fee",
+        description: "",
+        defaultMessage: "Edit Consultation Fee"
+    },
+    deleteConsultationFee: {
+        id: "app.admin.doctors.settings.table.delete.doctor.conultation.fee",
+        description: "",
+        defaultMessage: "Delete"
+    }
    
 });
 

@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-import {FEATURE_TYPE, REPEAT_INTERVAL} from "../../constant";
-import {TABLE_NAME} from "../models/featureDetails";
+import { FEATURE_TYPE, REPEAT_INTERVAL } from "../../constant";
+import { TABLE_NAME } from "../models/featureDetails";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -18,53 +18,89 @@ module.exports = {
             },
             "3": {
               title: "Radiology"
-            },
+            }
           },
           type_description: {
             "1": [
-                "Blood test",
-                "Urine tests",
-                "COMPLETE BLOOD COUNT",
-                "Liver Function Tests (LFT)",
-                "Imaging tests",
-                "Kidney Biopsy",
-                "KIDNEY FUNCTION TEST",
-                "Lipid profile (Cholesterol and triglycerides)",
-                "BLOOD SUGAR TEST",
-                "HbA1c Blood Test",
-                "CARDIAC BLOOD TESTS",
-                "THYROID FUNCTION TEST",
-                "Blood Tests for Infertility",
-                "SEMAN ANALYSIS",
-                "Tumor marker",
-                "BLOOD TEST FOR ARTHRITIS",
-                "WIDAL TEST",
-                "Dengue Serology",
-                "Chikungunya",
-                "HIV -1 & HIV-2"
+              "Blood test",
+              "Urine tests",
+              "COMPLETE BLOOD COUNT",
+              "Liver Function Tests (LFT)",
+              "Imaging tests",
+              "Kidney Biopsy",
+              "KIDNEY FUNCTION TEST",
+              "Lipid profile (Cholesterol and triglycerides)",
+              "BLOOD SUGAR TEST",
+              "HbA1c Blood Test",
+              "CARDIAC BLOOD TESTS",
+              "THYROID FUNCTION TEST",
+              "Blood Tests for Infertility",
+              "SEMAN ANALYSIS",
+              "Tumor marker",
+              "BLOOD TEST FOR ARTHRITIS",
+              "WIDAL TEST",
+              "Dengue Serology",
+              "Chikungunya",
+              "HIV -1 & HIV-2"
             ],
             "2": ["At Clinic", "At Home", "Telephone"],
-            "3": ["MRI", "CT Scan", "Ultrasound","X-Ray"]
+            "3": ["MRI", "CT Scan", "Ultrasound", "X-Ray"]
+          },
+          providers: {
+            "1": {
+              basic_info: {
+                id: 1,
+                name: "Apollo Hospitals",
+                address: null,
+                city: null,
+                state: null
+              }
+            },
+            "2": {
+              basic_info: {
+                id: 2,
+                name: "Columbia Asia",
+                address: null,
+                city: null,
+                state: null
+              }
+            },
+            "3": {
+              basic_info: {
+                id: 3,
+                name: "Fortis Hospitals",
+                address: null,
+                city: null,
+                state: null
+              }
+            },
+            "4": {
+              basic_info: {
+                id: 4,
+                name: "Self",
+                address: null,
+                city: null,
+                state: null
+              }
+            }
           }
         }),
-        created_at:new Date(),
+        created_at: new Date(),
         updated_at: new Date()
       },
       {
         feature_type: FEATURE_TYPE.MEDICATION,
-        details: JSON.stringify({
-
-        }),
-        created_at:new Date(),
+        details: JSON.stringify({}),
+        created_at: new Date(),
         updated_at: new Date()
       },
       {
         feature_type: FEATURE_TYPE.VITAL,
         details: JSON.stringify({
-          repeat_interval_ids: ["1","2","3","4", "5", "6"],
+          repeat_interval_ids: ["1", "2", "3", "4", "5", "6"],
           repeat_intervals: {
             1: {
-              text:"Once",
+              text: "Once",
               unit: "h",
               value: 0,
               key: REPEAT_INTERVAL.ONCE
@@ -99,9 +135,9 @@ module.exports = {
               value: 12,
               key: REPEAT_INTERVAL.TWELVE_HOUR
             }
-          },
+          }
         }),
-        created_at:new Date(),
+        created_at: new Date(),
         updated_at: new Date()
       }
     ]);

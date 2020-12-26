@@ -36,6 +36,11 @@ const messages = defineMessages({
         description: "Header in treatment Details",
         defaultMessage: "Details"
     },
+    upload_docs: {
+        id: "app.patient_profile.upload_docs",
+        description: "Header in treatment Details",
+        defaultMessage: "Upload Documents"
+    },
     treatment_header: {
         id: "app.patient_profile.treatment_header",
         description: "Header in treatment Header",
@@ -487,9 +492,14 @@ const messages = defineMessages({
         defaultMessage: "Symptoms"
     },
     edit_patient:{
-        id: "app.patient_profile.edit_patient",
+        id: "app.patient_profile.edit.patient",
         description: "",
         defaultMessage: "Edit Patient Details"
+    },
+    upload_reports:{
+        id: "app.patient_profile.upload.reports",
+        description: "",
+        defaultMessage: "Upload Reports"
     },
 
 

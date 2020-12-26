@@ -18,6 +18,9 @@ const Admin = lazy(() =>
   import(/* webpackChunkName: "AdminRouter" */ "../Admin")
 );
 
+const Provider = lazy(() => 
+  import(/* webpackChunkName: "ProviderRouter" */ "../Provider") )
+
 export default class Authenticated extends Component {
   constructor(props) {
     super(props);
@@ -49,8 +52,11 @@ export default class Authenticated extends Component {
             {authenticated_category === USER_CATEGORY.DOCTOR && (
               <Doctors {...this.props} />
             )}
-            {authenticated_category === USER_CATEGORY.ADMIN && (
+            { (authenticated_category === USER_CATEGORY.ADMIN) && (
               <Admin {...this.props} />
+            )}
+            { (authenticated_category === USER_CATEGORY.PROVIDER) && (
+              <Provider {...this.props} />
             )}
       </Fragment>
     );

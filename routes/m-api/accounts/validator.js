@@ -10,6 +10,8 @@ const accountFormSchema = Joi.object().keys({
     .regex(/^\d+$/)
     .required(),
   account_mobile_number: Joi.string()
+      .min(10)
+      .max(10)
     .regex(/^\d+$/)
     .required()
     .label("Please enter correct mobile number"),

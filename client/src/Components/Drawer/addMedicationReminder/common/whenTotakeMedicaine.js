@@ -40,8 +40,8 @@ let key_field = 1;
 class WhenToTakeMedication extends Component {
   constructor(props) {
     super(props);
-    const { medication_details } = props;
-    const { timings } = medication_details || {};
+    const { medication_details = {}} = props;
+    const { timings = {} } = medication_details || {};
     let statusList = {};
     Object.keys(timings).forEach((id) => {
       const { text, time } = timings[id];
@@ -146,8 +146,8 @@ class WhenToTakeMedication extends Component {
     const { status } = this.state;
     const { getUpdatedList } = this;
     // const  getList = getUpdatedList(k);
-    const { medication_details } = this.props;
-    const { timings } = medication_details || {};
+    const { medication_details ={}} = this.props;
+    const { timings = {}} = medication_details || {};
     let getList =[];
     Object.keys(timings).forEach((id) => {
       getList.push(id);
@@ -554,7 +554,6 @@ class WhenToTakeMedication extends Component {
 
 
   render() {
-    console.log("Med Reminder render ===============================>",this.state);
 
     const { form } = this.props;
     const {

@@ -72,7 +72,6 @@ class Formulation extends Component {
             medicine_type = medType;
         }
 
-        console.log('6757868758675887',medicine_type,medType,medicationData);
 
         return (
             <div className="mb20 select-days-form-content">

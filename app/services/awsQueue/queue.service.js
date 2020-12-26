@@ -32,11 +32,11 @@ export default class QueueService {
     });
   };
 
-  getQueueUrl = (name = "test_queue") => {
+  getQueueUrl = () => {
     return `${process.config.sqs.domain_url}/${process.config.sqs.account_id}/${process.config.sqs.queue_name}`;
   };
 
-  sendMessage = async (queueName = "test_queue", data) => {
+  sendMessage = async (data) => {
     try {
       const stringData = JSON.stringify(data);
 
@@ -70,7 +70,7 @@ export default class QueueService {
     }
   };
 
-  sendBatchMessage = async (queueName = "test_queue", dataArr) => {
+  sendBatchMessage = async (dataArr) => {
     try {
       const formattedData = [];
       dataArr.forEach((data, index) => {
@@ -98,9 +98,9 @@ export default class QueueService {
     }
   };
 
-  receiveMessage = async (QueueName = "test_queue") => {
+  receiveMessage = async () => {
     try {
-      Log.info(`queue url : ${this.getQueueUrl("test_queue")}`);
+      Log.info(`queue url : ${this.getQueueUrl()}`);
 
       const params = {
         AttributeNames: ["SentTimestamp"],

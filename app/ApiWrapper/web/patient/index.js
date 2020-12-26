@@ -22,6 +22,7 @@ class PatientWrapper extends BasePatient {
             first_name,
             middle_name,
             last_name,
+            full_name,
             age,
             address,
             activated_on,
@@ -46,6 +47,7 @@ class PatientWrapper extends BasePatient {
                 first_name,
                 middle_name,
                 last_name,
+                full_name,
                 address,
                 uid,
                 

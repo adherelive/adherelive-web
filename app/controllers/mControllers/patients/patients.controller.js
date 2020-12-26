@@ -248,6 +248,7 @@ class MPatientController extends Controller {
 
       let appointmentApiData = {};
       let scheduleEventData = {};
+      let appointmentDocuments = {};
       let appointment_ids = [];
 
       for (const appointment of appointmentList) {
@@ -255,10 +256,12 @@ class MPatientController extends Controller {
 
         const {
           appointments,
-          schedule_events
+          schedule_events,
+          appointment_docs
         } = await appointmentWrapper.getReferenceInfo();
         appointmentApiData = { ...appointmentApiData, ...appointments };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
+        appointmentDocuments = { ...appointmentDocuments, ...appointment_docs };
       }
 
       return raiseSuccess(
@@ -270,6 +273,9 @@ class MPatientController extends Controller {
           },
           schedule_events: {
             ...scheduleEventData
+          },
+          appointment_docs: {
+            ...appointmentDocuments
           },
           appointment_ids: Object.keys(appointmentApiData)
         },
@@ -294,13 +300,20 @@ class MPatientController extends Controller {
       // Logger.debug("medication details", medicationDetails);
 
       let medicationApiData = {};
+      let scheduleEventApiData = {};
       let medicineId = [];
 
       for (const medication of medicationDetails) {
         const medicationWrapper = await MReminderWrapper(medication);
-        medicationApiData[
-          medicationWrapper.getMReminderId()
-        ] = medicationWrapper.getBasicInfo();
+        const {
+          medications,
+          schedule_events
+        } = await medicationWrapper.getReferenceInfo();
+        medicationApiData = {
+          ...medicationApiData,
+          ...{ [medicationWrapper.getMReminderId()]: medications }
+        };
+        scheduleEventApiData = { ...scheduleEventApiData, ...schedule_events };
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
@@ -332,6 +345,9 @@ class MPatientController extends Controller {
           },
           medicines: {
             ...medicineApiData
+          },
+          schedule_events: {
+            ...scheduleEventApiData
           }
         },
         "Medications fetched successfully"
@@ -507,11 +523,17 @@ class MPatientController extends Controller {
         );
         if (medications.length > 0) {
           for (const medication of medications) {
-            const medicationData = await MReminderWrapper(medication);
-            medicationApiDetails[
-              medicationData.getMReminderId()
-            ] = medicationData.getBasicInfo();
-            medicine_ids.push(medicationData.getMedicineId());
+            const medicationWrapper = await MReminderWrapper(medication);
+            const {
+              medications: medicationData,
+              schedule_events
+            } = await medicationWrapper.getReferenceInfo();
+            medicationApiDetails = {
+              ...medicationApiDetails,
+              ...medicationData
+            };
+            scheduleEventData = { ...scheduleEventData, ...schedule_events };
+            medicine_ids.push(medicationWrapper.getMedicineId());
           }
         }
 

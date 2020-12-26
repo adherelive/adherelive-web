@@ -1,5 +1,7 @@
 import MedicationJob from "../";
 import moment from "moment";
+import UserDeviceService from "../../../services/userDevices/userDevice.service";
+import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 import { EVENT_TYPE } from "../../../../constant";
 
 class CreateJob extends MedicationJob {
@@ -7,7 +9,7 @@ class CreateJob extends MedicationJob {
     super(data);
   }
 
-  getPushAppTemplate = () => {
+  getPushAppTemplate = async () => {
     const { getMedicationData } = this;
     const {
       participants = [],
@@ -15,28 +17,42 @@ class CreateJob extends MedicationJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
-      medicationId = null
+      event_id = null
     } = getMedicationData() || {};
 
     const templateData = [];
+    const playerIds = [];
+    const userIds = [];
 
-    for (const participant of participants) {
+    participants.forEach(participant => {
       if (participant !== actorId) {
-        // todo: add actor after testing (deployment)
+        userIds.push(participant);
+      }
+    });
 
-        templateData.push({
-          app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-          headings: { en: `Appointment Created` },
-          contents: {
-            en: `${name}(${actorCategory}) has created a medication reminder with you`
-          },
-          // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
-          include_player_ids: [...participants],
-          priority: 10,
-          data: { url: "/medications", params: getMedicationData() }
-        });
+    const userDevices = await UserDeviceService.getAllDeviceByData({
+      user_id: userIds
+    });
+
+    if (userDevices.length > 0) {
+      for (const device of userDevices) {
+        const userDevice = await UserDeviceWrapper({ data: device });
+        playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
+
+    templateData.push({
+      app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+      headings: { en: `Medication Created` },
+      contents: {
+        en: `${name}(${actorCategory}) has created a medication reminder with you. Tap here to know more!`
+      },
+      // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
+      include_player_ids: [...playerIds],
+      priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
+      data: { url: "/medications", params: getMedicationData() }
+    });
 
     return templateData;
   };
@@ -49,7 +65,7 @@ class CreateJob extends MedicationJob {
         id: actorId,
         details: { name, category: actorCategory } = {}
       } = {},
-      medicationId
+      event_id
     } = getMedicationData() || {};
 
     const templateData = [];
@@ -61,7 +77,7 @@ class CreateJob extends MedicationJob {
       templateData.push({
         actor: actorId,
         object: `${participant}`,
-        foreign_id: `${medicationId}`,
+        foreign_id: `${event_id}`,
         verb: `medication_create:${currentTimeStamp}`,
         event: EVENT_TYPE.MEDICATION_REMINDER,
         // message: `${name}(${actorCategory}) has created a medication reminder`,

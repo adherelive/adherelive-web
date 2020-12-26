@@ -37,7 +37,7 @@ export const validationError = (res, isValid) => {
     const { context: { label } = {}, message } = details[0] || {};
     const response = new Response(false, 422);
     response.setError(details);
-    response.setMessage(message ? message : label);
+    response.setMessage(label ? label : message);
     return res.status(response.getStatusCode()).json(response.getResponse());
   } else {
     return;

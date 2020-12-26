@@ -11,90 +11,94 @@ class ConsultationFeeTable extends Component {
     this.state = {};
   }
 
+  componentDidUpdate(prevProps,prevState){}
+
   // onRowClick = (key) => (event) => {
   //   event.preventDefault();
   //   // const { openPatientDetailsDrawer } = this.props;
   //   // openPatientDetailsDrawer({ patient_id: key });
   // };
 
-//   onRow = (record, rowIndex) => {
-//     const { onRowClick } = this;
-//     const { key } = record;
-//     return {
-//       onClick: onRowClick(key),
-//     };
-//   };
+  //   onRow = (record, rowIndex) => {
+  //     const { onRowClick } = this;
+  //     const { key } = record;
+  //     return {
+  //       onClick: onRowClick(key),
+  //     };
+  //   };
 
-//   onSelectChange = (selectedRowKeys) => {
-//     this.setState({ selectedRows: selectedRowKeys });
-//   };
+  //   onSelectChange = (selectedRowKeys) => {
+  //     this.setState({ selectedRows: selectedRowKeys });
+  //   };
 
   getLoadingComponent = () => {
     const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
     return {
-      indicator: antIcon,
+      indicator: antIcon
     };
   };
 
   getDataSource = () => {
     const {
-        doctorPaymentProducts,
-        deleteDoctorProduct
+      doctors ={},
+      doctorPaymentProducts,
+      deleteDoctorProduct,
+      editDoctorProduct = null,
+      intl: { formatMessage } = {}
     } = this.props;
 
     // const {onRowClick} = this;
     let options = [];
 
-    for( let each in doctorPaymentProducts){
-        options.push(
-            generateRow({
-              ...doctorPaymentProducts[each],
-              deleteDoctorProduct
-            })
-         );
+    for (let each in doctorPaymentProducts) {
+      options.push(
+        generateRow({
+          ...doctorPaymentProducts[each],
+          deleteDoctorProduct,
+          editDoctorProduct,
+          formatMessage,
+          doctors
+        })
+      );
     }
 
     return options;
-
   };
 
   render() {
-    const { 
-        // onRow, 
-        onSelectChange,
-        // getLoadingComponent, 
-        getDataSource } = this;
+    const {
+      // onRow,
+      onSelectChange,
+      // getLoadingComponent,
+      getDataSource
+    } = this;
 
     const rowSelection = {
-      onChange: onSelectChange,
+      onChange: onSelectChange
     };
-
 
     const {
       loading,
       pagination_bottom,
       authPermissions = [],
-      intl: { formatMessage } = {},
+      intl: { formatMessage } = {}
     } = this.props;
 
     return (
       <Table
-        
         // onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
         rowClassName={() => "pointer"}
         // loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
           formatMessage,
-          className: "pointer",
-          
+          className: "pointer"
         })}
         dataSource={getDataSource()}
-        scroll={{ x: 900 }}
+        scroll={{ x: "100%" }}
         pagination={{
-          position: "bottom",
-          pageSize:6
+          position: "top",
+          // pageSize: 6
         }}
-        
       />
     );
   }

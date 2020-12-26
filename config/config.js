@@ -14,6 +14,12 @@ module.exports = () => {
       appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
       default_currency: process.env.DEFAULT_CURRENCY,
     },
+    algolia: {
+      app_id: process.env.ALGOLIA_APP_ID,
+      app_key: process.env.ALGOLIA_APP_KEY,
+      backend_key: process.env.ALGOLIA_BACKEND_KEY,
+      medicine_index: process.env.ALGOLIA_MEDICINE_INDEX
+    },
     razorpay: {
       key: process.env.RAZORPAY_KEY,
       secret: process.env.RAZORPAY_SECRET,
@@ -96,6 +102,7 @@ module.exports = () => {
     one_signal: {
       app_id: process.env.ONE_SIGNAL_APP_ID,
       key: process.env.ONE_SIGNAL_KEY,
+      urgent_channel_id: process.env.URGENT_CHANNEL_ID
     },
     cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,

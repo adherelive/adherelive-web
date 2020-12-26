@@ -16,7 +16,7 @@ class UserVerificationsService {
             const verification = await Database.getModel(TABLE_NAME).findOne({
                 where: {
                     request_id:link
-                }
+                },
             });
             return verification;
         } catch (err) {

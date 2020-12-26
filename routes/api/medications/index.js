@@ -32,6 +32,12 @@ router.get(
     Medication.getMedicationDetails
 );
 
+router.post(
+    "/treatment/:patient_id/:carePlanId",
+    Authenticate,
+    validator.validateMedicationReminderData,
+    MedicationReminder.createCarePlanMedication
+);
 
 router.post(
     "/:id",
@@ -45,5 +51,12 @@ router.delete(
     Authenticate,
     Medication.delete
 );
+
+router.get(
+    "/:id/timeline",
+    Authenticate,
+    Medication.getMedicationResponseTimeline
+);
+
 
 module.exports = router;

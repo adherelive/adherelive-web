@@ -171,7 +171,6 @@ export const getMissedVitalsForDoc = (id) => {
 
 function vitalsReducer(state, payload) {
   const { vitals = {} } = payload || {};
-  console.log("3917378123 vitals --> ", vitals);
   if (Object.keys(vitals).length > 0) {
     return {
       ...state,
