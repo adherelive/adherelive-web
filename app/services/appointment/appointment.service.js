@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, fn, literal, col } from "sequelize";
 import Database from "../../../libs/mysql";
 import moment from "moment";
 import { USER_CATEGORY } from "../../../constant";
@@ -48,7 +48,7 @@ class AppointmentService {
   getDoctorAppointmentsForDate = async ({
     today,
     participant_one_id,
-    participant_two_id,
+    participant_two_id
   }) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
@@ -104,6 +104,146 @@ class AppointmentService {
             {
               participant_one_id: patient_id,
               participant_one_type: USER_CATEGORY.PATIENT
+            }
+          ]
+        }
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getAllAppointmentForDoctor = async doctor_id => {
+    try {
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.or]: [
+            {
+              participant_two_id: doctor_id,
+              participant_two_type: USER_CATEGORY.DOCTOR
+            },
+            {
+              participant_one_id: doctor_id,
+              participant_one_type: USER_CATEGORY.DOCTOR
+            }
+          ]
+        }
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getDayAppointmentForDoctor = async (doctor_id, date) => {
+    try {
+      const startOfDay = moment(date)
+        .startOf("day")
+        .toISOString();
+      const endOfDay = moment(date)
+        .endOf("day")
+        .toISOString();
+
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.and]: [
+            {
+              start_date: {
+                [Op.between]: [startOfDay, endOfDay]
+              }
+            },
+            {
+              [Op.or]: [
+                {
+                  participant_two_id: doctor_id,
+                  participant_two_type: USER_CATEGORY.DOCTOR
+                },
+                {
+                  participant_one_id: doctor_id,
+                  participant_one_type: USER_CATEGORY.DOCTOR
+                }
+              ]
+            }
+          ]
+        }
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getMonthAppointmentForDoctor = async (doctor_id, value) => {
+    try {
+      const month = moment(value).month();
+      const year = moment(value).year();
+      const startOfMonth = moment().month(month).year(year)
+          .startOf("month")
+          .toISOString();
+      const endOfMonth = moment().month(month).year(year)
+          .endOf("month")
+          .toISOString();
+
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.and]: [
+            {
+              start_date: {
+                [Op.between]: [startOfMonth, endOfMonth]
+              }
+            },
+            {
+              [Op.or]: [
+                {
+                  participant_two_id: doctor_id,
+                  participant_two_type: USER_CATEGORY.DOCTOR
+                },
+                {
+                  participant_one_id: doctor_id,
+                  participant_one_type: USER_CATEGORY.DOCTOR
+                }
+              ]
+            }
+          ]
+        }
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getMonthAppointmentCountForDoctor = async (doctor_id, date) => {
+    try {
+      const startOfMonth = moment(date)
+        .startOf("month")
+        .toISOString();
+      const endOfMonth = moment(date)
+        .endOf("month")
+        .toISOString();
+
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
+        attributes: ["start_date", [literal(`COUNT(*)`), "count"]],
+        group: ["start_date"],
+        where: {
+          [Op.and]: [
+            {
+              start_date: {
+                [Op.between]: [startOfMonth, endOfMonth]
+              }
+            },
+            {
+              [Op.or]: [
+                {
+                  participant_two_id: doctor_id,
+                  participant_two_type: USER_CATEGORY.DOCTOR
+                },
+                {
+                  participant_one_id: doctor_id,
+                  participant_one_type: USER_CATEGORY.DOCTOR
+                }
+              ]
             }
           ]
         }

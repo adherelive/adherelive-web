@@ -48,4 +48,10 @@ router.post(
     EventController.markEventComplete
 );
 
+router.post(
+    "/:id/cancel",
+    Authenticate,
+    EventController.markEventCancelled
+);
+
 module.exports = router;

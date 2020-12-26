@@ -1,6 +1,7 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {getScheduleEventsUrl, getAppointmentCompleteUrl} from "../../Helper/urls/event";
+import {getCalenderDataCountForDayUrl,getCalenderDataForDayUrl} from "../../Helper/urls/provider";
 
 
 import {getPatientLastVisitAlertUrl} from '../../Helper/url/patients'
@@ -16,6 +17,15 @@ export const GET_LAST_VISIT_ALERTS_FAILED='GET_LAST_VISIT_ALERTS_FAILED';
 
 export const APPOINTMENT_STATUS_UPDATE_COMPLETED = "APPOINTMENT_STATUS_UPDATE_COMPLETED";
 export const APPOINTMENT_STATUS_UPDATE_FAILED = "APPOINTMENT_STATUS_UPDATE_FAILED";
+
+
+export const GET_CALENDER_DATA_COUNT_START = "GET_CALENDER_DATA_COUNT_START";
+export const GET_CALENDER_DATA_COUNT_COMPLETED = "GET_CALENDER_DATA_COUNT_COMPLETED";
+export const GET_CALENDER_DATA_COUNT_FAILED = "GET_CALENDER_DATA_COUNT_FAILED";
+
+export const GET_CALENDER_DATA_FOR_DAY_START = "GET_CALENDER_DATA_FOR_DAY_START";
+export const GET_CALENDER_DATA_FOR_DAY_COMPLETED = "GET_CALENDER_DATA_FOR_DAY_COMPLETED";
+export const GET_CALENDER_DATA_FOR_DAY_FAILED = "GET_CALENDER_DATA_FOR_DAY_FAILED";
 
 
 export const getScheduleEvents = payload => {
@@ -48,6 +58,70 @@ export const getScheduleEvents = payload => {
     };
 };
 
+
+export const getCalenderDataCountForDay = (date) => {
+    let response = {};
+    return async dispatch => {
+        try {
+            dispatch({type: GET_CALENDER_DATA_COUNT_START});
+
+            response = await doRequest({
+                method: REQUEST_TYPE.GET,
+                url: getCalenderDataCountForDayUrl(date),
+            });
+
+            const {status, payload: {data = {}, error = {}} = {}} = response || {};
+            if (status === true) {
+                dispatch({
+                    type: GET_CALENDER_DATA_COUNT_COMPLETED,
+                    payload: data
+                });
+            } else {
+                dispatch({
+                    type: GET_CALENDER_DATA_COUNT_FAILED,
+                    payload: error
+                });
+            }
+        } catch (error) {
+            console.log("GET_CALENDER_DATA_COUNT error ----> ", error);
+        }
+        return response;
+    };
+};
+
+
+export const getCalenderDataForDay = (date,type) => {
+    let response = {};
+    return async dispatch => {
+        try {
+            dispatch({type: GET_CALENDER_DATA_FOR_DAY_START});
+
+            response = await doRequest({
+                method: REQUEST_TYPE.GET,
+                url: getCalenderDataForDayUrl(date,type),
+            });
+
+            const {status, payload: {data = {}, error = {}} = {}} = response || {};
+            if (status === true) {
+                dispatch({
+                    type: GET_CALENDER_DATA_FOR_DAY_COMPLETED,
+                    payload: data
+                });
+            } else {
+                dispatch({
+                    type: GET_CALENDER_DATA_FOR_DAY_FAILED,
+                    payload: error
+                });
+            }
+        } catch (error) {
+            console.log("GET_CALENDER_DATA_FOR_DAY error ----> ", error);
+        }
+        return response;
+    };
+};
+
+
+
 export const getLastVisitAlerts = (id) => {
   let response={};
   return async (dispatch) => {
@@ -62,13 +136,11 @@ export const getLastVisitAlerts = (id) => {
       
     const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
-        console.log("================================>GET_LAST_VISIT_ALERTS_COMPLETE");
         dispatch({
           type: GET_LAST_VISIT_ALERTS_COMPLETE,
           data: data,
         });
       } else {
-        console.log("================================>GET_LAST_VISIT_ALERTS_FAILED");
         dispatch({
           type:GET_LAST_VISIT_ALERTS_FAILED,
           error,
@@ -76,7 +148,6 @@ export const getLastVisitAlerts = (id) => {
       }
       
     } catch(error) {
-      console.log("================================>GET_LAST_VISIT_ALERTS_ERROR");
        console.log("GET LAST VISIT ALERTS ERROR", error);
     }
     return response;

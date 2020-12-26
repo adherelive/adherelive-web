@@ -33,10 +33,10 @@ const mapDispatchToProps = dispatch => {
     updateMedicationReminder: data => dispatch(updateMedication(data)),
     getMedicationDetails: (id) => dispatch(getMedicationDetails(id)),
     searchMedicine: data => dispatch(searchMedicine(data)),
-    // deleteMedication: id => dispatch(deleteMedication(id)),
+    deleteMedication: id => dispatch(deleteMedication(id)),
     getMedications: (id) => dispatch(getMedications(id)),
     getPatientCarePlanDetails:(patientId)=>dispatch(getPatientCarePlanDetails(patientId)),
-    
+
   };
 };
 

@@ -8,6 +8,17 @@
     table-layout: fixed;
   }
 
+  .provider-doctor-table {
+    position: relative;
+    .ant-table-title {
+    }
+    .ant-pagination {
+      position: absolute;
+      z-index: 99999;
+      right: @10px;
+    }
+  }
+
   .ant-collapse {
     border: none;
     background: none;
@@ -82,3 +93,30 @@
 //   }
 
 // }
+
+.tos-pp-markdown-editor {
+  .mde-text {
+    height: 600px !important;
+  }
+}
+
+// admin details page
+.details-header {
+  .ant-radio-group {
+    ant-radio-button-wrapper {
+      background:none;
+    }
+  }
+}
+
+.search-highlight {
+  font-style: normal;
+  background: @dark-orange;
+}
+
+.medicine-selected {
+  .search-highlight {
+    font-style: normal;
+    background: none;
+  }
+}

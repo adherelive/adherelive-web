@@ -11,7 +11,7 @@ import repeatIntervalField from "../common/repeatInterval";
 import repeatDaysField from "../common/selectedDays";
 import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
-import chooseMedicationField from "../common/medicationStage";
+import chooseMedicationField from "../common/medicine";
 import medicineStrengthField from "../common/medicineStrength";
 import criticalMedicationField from "../common/criticalMedication";
 import medicineStrengthUnitField from "../common/medicationStrengthUnit";
@@ -551,6 +551,9 @@ class AddMedicationReminderForm extends Component {
       endTime = startTime.clone().add("minutes", 3);
     }
 
+    const currentMLCalibValue = getFieldValue(medicineStrengthField.field_name) || 0.0;
+
+    
     // const startDate = getFieldValue(startDateField.field_name);
 
     return (
@@ -605,6 +608,8 @@ class AddMedicationReminderForm extends Component {
               >
                 <RadioButton value={MEDICINE_UNITS.ML} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML} >ml</RadioButton>
                 <RadioButton value={MEDICINE_UNITS.MG} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setUnit} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >mg</RadioButton>
+                {medicineUnit !== 'mg' && (<RadioButton value={5} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML} >+5</RadioButton>)}
+                {medicineUnit !== 'mg' && (<RadioButton value={-5} className={medicineUnit !== MEDICINE_UNITS.ML ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.ML} disabled={medicineUnit !== MEDICINE_UNITS.ML || currentMLCalibValue<=5} >-5</RadioButton>)}
                 {medicineUnit !== 'ml' && (<RadioButton value={50} className={medicineUnit !== MEDICINE_UNITS.MG ? `unselected-text no-shadow` : 'no-shadow'} onClick={setStrength} checked={medicineUnit === MEDICINE_UNITS.MG} disabled={medicineUnit !== MEDICINE_UNITS.MG} >+50</RadioButton>)}
 
               </RadioGroup>

@@ -20,6 +20,7 @@ class MPatientWrapper extends BasePatient {
             first_name,
             middle_name,
             last_name,
+            full_name,
             age,
             dob,
             address,
@@ -45,6 +46,7 @@ class MPatientWrapper extends BasePatient {
                 first_name,
                 middle_name,
                 last_name,
+                full_name,
                 address,
                 uid
             },

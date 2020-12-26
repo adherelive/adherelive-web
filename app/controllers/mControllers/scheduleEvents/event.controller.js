@@ -86,122 +86,129 @@ class EventController extends Controller {
         );
       }
 
-      const carePlanData = await CarePlanService.getSingleCarePlanByData({
+      const allCarePlanData = await CarePlanService.getMultipleCarePlanByData({
         patient_id: userCategoryId
-      });
-      const carePlanWrapper = await CarePlanWrapper(carePlanData);
-      const {
-        appointment_ids = [],
-        medication_ids = [],
-        vital_ids = []
-      } = await carePlanWrapper.getAllInfo();
+      }) || [];
 
       let scheduleEvents = [];
 
-      if (key) {
-        const startLimit =
-          parseInt(process.config.event.count) * (parseInt(key) - 1);
-        const endLimit = parseInt(process.config.event.count);
+      for(let i = 0; i < allCarePlanData.length; i++) {
+        const carePlanData = allCarePlanData[i] || {};
 
-        const vitalEvents = await eventService.getPageEventByData({
-          startLimit,
-          endLimit,
-          event_type: EVENT_TYPE.VITALS,
-          eventIds: vital_ids
-        });
+        const carePlanWrapper = await CarePlanWrapper(carePlanData);
+        const {
+          appointment_ids = [],
+          medication_ids = [],
+          vital_ids = []
+        } = await carePlanWrapper.getAllInfo();
 
-        const appointmentEvents = await eventService.getPageEventByData({
-          startLimit,
-          endLimit,
-          event_type: EVENT_TYPE.APPOINTMENT,
-          eventIds: appointment_ids
-        });
 
-        const medicationEvents = await eventService.getPageEventByData({
-          startLimit,
-          endLimit,
-          event_type: EVENT_TYPE.MEDICATION_REMINDER,
-          eventIds: medication_ids
-        });
+        if (key) {
+          const startLimit =
+              parseInt(process.config.event.count) * (parseInt(key) - 1);
+          const endLimit = parseInt(process.config.event.count);
 
-        scheduleEvents = [
-          ...vitalEvents,
-          ...appointmentEvents,
-          ...medicationEvents
-        ];
-      } else {
-        scheduleEvents = await eventService.getPendingEventsData({
-          eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
-        });
-      }
+          const vitalEvents = await eventService.getPageEventByData({
+            startLimit,
+            endLimit,
+            event_type: EVENT_TYPE.VITALS,
+            eventIds: vital_ids
+          });
 
-      Log.debug("21237193721 events --> ", scheduleEvents.length);
+          const appointmentEvents = await eventService.getPageEventByData({
+            startLimit,
+            endLimit,
+            event_type: EVENT_TYPE.APPOINTMENT,
+            eventIds: appointment_ids
+          });
 
-      if (scheduleEvents.length > 0) {
-        const dateWiseEventData = {};
-        const scheduleEventData = {};
-        const dates = [];
-        for (const eventData of scheduleEvents) {
-          const event = await EventWrapper(eventData);
-          scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
-          if (dateWiseEventData.hasOwnProperty(event.getDate())) {
-            const {
-              all: prevAll,
-              appointments: prevAppointments,
-              vitals: prevVitals,
-              medications: prevMedications
-            } = dateWiseEventData[event.getDate()] || {};
-            const {
-              all,
-              appointments,
-              vitals,
-              medications
-            } = event.getDateWiseInfo();
-            dateWiseEventData[event.getDate()] = {
-              all: [...prevAll, ...all],
-              appointments: [...prevAppointments, ...appointments],
-              medications: [...prevMedications, ...medications],
-              vitals: [...prevVitals, ...vitals]
-            };
-          } else {
-            const {
-              all,
-              appointments,
-              vitals,
-              medications
-            } = event.getDateWiseInfo();
-            dateWiseEventData[event.getDate()] = {
-              all,
-              appointments,
-              medications,
-              vitals
-            };
-            dates.push(event.getDate());
-          }
+          const medicationEvents = await eventService.getPageEventByData({
+            startLimit,
+            endLimit,
+            event_type: EVENT_TYPE.MEDICATION_REMINDER,
+            eventIds: medication_ids
+          });
+
+          scheduleEvents = [
+              ...scheduleEvents,
+            ...vitalEvents,
+            ...appointmentEvents,
+            ...medicationEvents
+          ];
+        } else {
+          scheduleEvents = await eventService.getPendingEventsData({
+            eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
+          });
         }
 
-        return raiseSuccess(
-          res,
-          200,
-          {
-            schedule_events: {
-              ...scheduleEventData
-            },
-            date_wise_events: {
-              ...dateWiseEventData
-            },
-            date_ids: dates
-          },
-          "Events fetched successfully"
-        );
-      } else {
-        return raiseSuccess(
-          res,
-          200,
-          {},
-          "No scheduled events exists for the moment"
-        );
+        Log.debug("21237193721 events --> ", scheduleEvents.length);
       }
+
+        if (scheduleEvents.length > 0) {
+          const dateWiseEventData = {};
+          const scheduleEventData = {};
+          const dates = [];
+          for (const eventData of scheduleEvents) {
+            const event = await EventWrapper(eventData);
+            scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
+            if (dateWiseEventData.hasOwnProperty(event.getDate())) {
+              const {
+                all: prevAll,
+                appointments: prevAppointments,
+                vitals: prevVitals,
+                medications: prevMedications
+              } = dateWiseEventData[event.getDate()] || {};
+              const {
+                all,
+                appointments,
+                vitals,
+                medications
+              } = event.getDateWiseInfo();
+              dateWiseEventData[event.getDate()] = {
+                all: [...prevAll, ...all],
+                appointments: [...prevAppointments, ...appointments],
+                medications: [...prevMedications, ...medications],
+                vitals: [...prevVitals, ...vitals]
+              };
+            } else {
+              const {
+                all,
+                appointments,
+                vitals,
+                medications
+              } = event.getDateWiseInfo();
+              dateWiseEventData[event.getDate()] = {
+                all,
+                appointments,
+                medications,
+                vitals
+              };
+              dates.push(event.getDate());
+            }
+          }
+
+          return raiseSuccess(
+              res,
+              200,
+              {
+                schedule_events: {
+                  ...scheduleEventData
+                },
+                date_wise_events: {
+                  ...dateWiseEventData
+                },
+                date_ids: dates
+              },
+              "Events fetched successfully"
+          );
+        } else {
+          return raiseSuccess(
+              res,
+              200,
+              {},
+              "No scheduled events exists for the moment"
+          );
+        }
     } catch (error) {
       Log.debug("getVitalEvent 500 error", error);
       return raiseServerError(res);
@@ -259,20 +266,62 @@ class EventController extends Controller {
   markEventComplete = async (req, res) => {
     const {raiseSuccess, raiseServerError} = this;
     try {
-      const {params: {id} = {}} = req;
+      const {params: {id} = {}, body: {event_data = {}} = {}} = req;
       const eventService = new EventService();
-      const markEventComplete = await eventService.update({status: EVENT_STATUS.COMPLETED}, id);
+
+      const eventDetails = await eventService.getEventByData({ id });
+      const { details = {} } = eventDetails;
+
+      const updatedDetails = {...details, ...event_data};
+      const markEventComplete = await eventService.update({status: EVENT_STATUS.COMPLETED, details: updatedDetails}, id);
 
       Log.debug("1982732178 markEventComplete ---> ", markEventComplete);
 
       const event = await EventWrapper(null, id);
-      const {appointments = {}, schedule_events = {}} = await event.getReferenceInfo();
+      const {medications = {}, appointments = {}, medicines = {}, schedule_events = {}} = await event.getReferenceInfo();
 
       return raiseSuccess(
           res,
           200,
           {
             appointments,
+            medications,
+            medicines,
+            schedule_events,
+          },
+          "Event completed successfully"
+      );
+
+    } catch(error) {
+      Log.debug("markEventComplete 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  markEventCancelled = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const {params: {id} = {}, body: {event_data = {}} = {}} = req;
+      const eventService = new EventService();
+
+      const eventDetails = await eventService.getEventByData({ id });
+      const { details = {} } = eventDetails;
+
+      const updatedDetails = {...details, ...event_data};
+      const markEventCancelled = await eventService.update({status: EVENT_STATUS.CANCELLED, details: updatedDetails}, id);
+
+      Log.debug("1982732178 markEventComplete ---> ", markEventCancelled);
+
+      const event = await EventWrapper(null, id);
+      const {medications = {}, appointments = {}, medicines = {}, schedule_events = {}} = await event.getReferenceInfo();
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            appointments,
+            medications,
+            medicines,
             schedule_events,
           },
           "Event completed successfully"

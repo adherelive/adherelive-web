@@ -100,19 +100,27 @@ class MobileDoctorController extends Controller {
         onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
       };
 
+      const mobileNumberExist = await userService.getUserByData({
+        mobile_number
+      });
+      if (mobileNumberExist && mobileNumberExist.length) {
+        const prevUser = await UserWrapper(mobileNumberExist[0].get());
+        const prevUserId = prevUser.getId();
+        if (prevUserId !== userId) {
+          return this.raiseClientError(
+            res,
+            422,
+            {},
+            "This mobile number is already registered."
+          );
+        }
+      }
+
       let doctor = {};
       let doctorExist = await doctorService.getDoctorByData({
         user_id: userId
       });
       const { first_name, middle_name, last_name } = getSeparateName(name);
-      // let first_name = doctorName[0];
-      // let middle_name = doctorName.length === 3 ? doctorName[1] : "";
-      // let last_name =
-      //   doctorName.length === 3
-      //     ? doctorName[2]
-      //     : doctorName.length === 2
-      //     ? doctorName[1]
-      //     : "";
 
       if (doctorExist) {
         let doctor_data = {
@@ -871,9 +879,9 @@ class MobileDoctorController extends Controller {
             user_created: true
           });
 
-              const collegeWrapper = await CollegeWrapper(college);
-              collegeId = collegeWrapper.getCollegeId();
-            }
+          const collegeWrapper = await CollegeWrapper(college);
+          collegeId = collegeWrapper.getCollegeId();
+        }
 
         const docQualificationUpdate = await qualificationService.updateQualification(
           {

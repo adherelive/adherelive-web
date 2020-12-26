@@ -1,28 +1,23 @@
 import Logger from "../../libs/log";
 import moment from "moment";
 
-import {
-  EVENT_STATUS,
-  EVENT_TYPE,
-  FEATURE_TYPE,
-  NOTIFICATION_STAGES
-} from "../../constant";
+import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../constant";
 
 // SERVICES ---------------
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
+import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 
 // WRAPPERS ---------------
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
-
-// import JobSdk from "../JobSdk";
-// import NotificationSdk from "../NotificationSdk";
-import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../ApiWrapper/mobile/featureDetails";
 
 const Log = new Logger("CRON > PASSED");
 
 class PassedCron {
-  constructor() {}
+  constructor() {
+    this.RESCHEDULE_INTERVAL = 10;
+    this.RESCHEDULE_DURATION = 30;
+  }
 
   getScheduleData = async () => {
     const scheduleEventService = new ScheduleEventService();
@@ -120,7 +115,20 @@ class PassedCron {
         .utc()
         .toDate();
 
-      if (moment(currentTime).diff(event.getStartTime(), "hours") >= 1) {
+      if (
+        moment(currentTime).diff(event.updatedAt(), "minutes") >=
+        this.RESCHEDULE_INTERVAL
+      ) {
+        const updateEventStatus = await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.PENDING
+          },
+          event.getScheduleEventId()
+        );
+      } else if (
+        moment(currentTime).diff(event.getStartTime(), "minutes") >=
+        this.RESCHEDULE_DURATION
+      ) {
         const updateEventStatus = await scheduleEventService.update(
           {
             status: EVENT_STATUS.EXPIRED
@@ -140,7 +148,10 @@ class PassedCron {
         .utc()
         .toDate();
 
-      if (moment(currentTime).diff(event.getEndTime(), "hours") > process.config.app.appointment_wait_time_hours) {
+      if (
+        moment(currentTime).diff(event.getEndTime(), "hours") >
+        process.config.app.appointment_wait_time_hours
+      ) {
         const updateEventStatus = await scheduleEventService.update(
           {
             status: EVENT_STATUS.EXPIRED
