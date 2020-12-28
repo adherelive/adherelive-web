@@ -730,7 +730,6 @@ class TemplateDrawer extends Component {
         let { medicines } = this.props;
         let newMedication = {};
         const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
-        console.log("7865456709809876545678", medicines[medicine_id]);
         newMedication.medicine_id = medicine_id;
         newMedication.medicine = name;
         newMedication.medicineType = type;

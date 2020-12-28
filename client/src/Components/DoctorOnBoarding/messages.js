@@ -245,7 +245,7 @@ const messages = defineMessages({
   add1PhotoRegError: {
     id: "app.doctorOnBoarding.add1PhotoRegError",
     description: "",
-    defaultMessage: 'Please add at least 1 registraion document photo.'
+    defaultMessage: 'Please add at least 1 registration document to proceed.'
   },
   profile: {
     id: "app.doctorOnBoarding.profile",
