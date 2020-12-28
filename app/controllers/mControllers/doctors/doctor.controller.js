@@ -1812,7 +1812,7 @@ class MobileDoctorController extends Controller {
         {
           care_plan_ids: [initialCarePlanData.getCarePlanId()],
           care_plans: {
-            [initialCarePlanData.getCarePlanId()]: updatedCareplanDetails.getBasicInfo()
+            [initialCarePlanData.getCarePlanId()]: await updatedCareplanDetails.getAllInfo()
           },
           patients: {
             [initialPatientData.getPatientId()]: updatedpatientDetails.getBasicInfo()

@@ -640,7 +640,7 @@ class PatientDetailsDrawer extends Component {
       clinical_notes = "",
       diagnosis_type = "2",
       isdisabled,
-      addNewPatient,
+      // addNewPatient,
       severity = "",
       treatment = "",
       height = "",
@@ -767,8 +767,8 @@ class PatientDetailsDrawer extends Component {
           addonBefore={prefixSelector}
           className={"form-inputs-ap"}
           placeholder={this.formatMessage(messages.phoneNo)}
-          minLength={6}
-          maxLength={20}
+          minLength={10}
+          maxLength={10}
           value={mobile_number}
           onChange={this.setNumber}
           addonAfter={fetchingPatients ? spin : null}
