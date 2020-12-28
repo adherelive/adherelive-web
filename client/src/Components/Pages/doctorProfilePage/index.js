@@ -2440,7 +2440,7 @@ onChangeClinicLocation = clinic_id => (value) => {
     const {basic_info : {user_id : d_user_id = ''} = {}} =  doctors[doctor_user_id] || {};
 
     const disabled =
-      doctor_clinic_ids.length === 0 ||
+      // doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
       doctor_registration_ids.length === 0 || activated_on !== null 
 
@@ -2462,7 +2462,6 @@ onChangeClinicLocation = clinic_id => (value) => {
   handleVerify = async e => {
     e.preventDefault();
     const { verifyDoctor, id } = this.props;
-    console.log("8675467865467890",this.props);
     try {
       const response = await verifyDoctor(id);
       const { status, payload: { message: respMessage = "" } = {} } =
