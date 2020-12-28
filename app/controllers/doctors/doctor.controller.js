@@ -2746,13 +2746,13 @@ class DoctorController extends Controller {
 
       const updatedCareplanDetails = await CarePlanWrapper(null, careplan_id);
 
-      return this.raiseSuccess(
+      return raiseSuccess(
         res,
         200,
         {
           care_plan_ids: [initialCarePlanData.getCarePlanId()],
           care_plans: {
-            [initialCarePlanData.getCarePlanId()]: updatedCareplanDetails.getBasicInfo()
+            [initialCarePlanData.getCarePlanId()]: await updatedCareplanDetails.getAllInfo()
           },
           patients: {
             [initialPatientData.getPatientId()]: updatedpatientDetails.getBasicInfo()

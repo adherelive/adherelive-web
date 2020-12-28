@@ -503,8 +503,8 @@ class EditPatientDrawer extends Component {
                     addonBefore={prefixSelector}
                     className={"form-inputs-ap"}
                     placeholder={this.formatMessage(messages.phoneNo)}
-                    minLength={6}
-                    maxLength={20}
+                    minLength={10}
+                    maxLength={10}
                     value={mobile_number}
                     disabled={true}
                     />

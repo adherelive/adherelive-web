@@ -85,7 +85,6 @@ import Tooltip from "antd/es/tooltip";
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
-const { Dragger } = Upload;
 const APPOINTMENT = "appointment";
 
 const { confirm } = Modal;
@@ -406,10 +405,9 @@ const PatientCard = ({
         </div>
 
         <div className="flex direction-column align-start">
-          <div className="patient-name">
-            {patient_first_name} {patient_middle_name} {patient_last_name} (
-            {gender ? `${GENDER[gender].view} ` : ""}
-            {patient_age})
+          <div className="patient-name flex flex-wrap">
+            <div>{patient_first_name} {patient_middle_name} {patient_last_name}</div>
+            <div className="align-self-start">({gender ? `${GENDER[gender].view} ` : ""}{patient_age})</div>
           </div>
           <div className="patient-id mt6 mr0 mb0 ml0 warm-grey">PID: {uid}</div>
 

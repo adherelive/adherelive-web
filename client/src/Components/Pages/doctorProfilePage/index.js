@@ -2706,13 +2706,13 @@ onChangeClinicLocation = clinic_id => (value) => {
           <div className="mt20 mb20 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.clinic_details_text)}
-              {doctor_clinic_ids.length > 0  
-              ?
+              {/*{doctor_clinic_ids.length > 0  */}
+              {/*?*/}
               <PlusCircleOutlined className="ml20 pointer tab-color" title="Add More" 
               onClick={this.addClinicDetails}/>
-              :
-              null
-              }
+              {/*:*/}
+              {/*null*/}
+              {/*}*/}
             </div>
             {doctor_clinic_ids.length > 0 ? (
               <div className="border-box">{getDoctorClinicDetails()}</div>
