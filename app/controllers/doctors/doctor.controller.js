@@ -348,9 +348,9 @@ class DoctorController extends Controller {
       const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
         doctorWrapper.getDoctorId()
       );
-      const doctorClinics = await clinicService.getClinicForDoctor(
-        doctorWrapper.getDoctorId()
-      );
+      // const doctorClinics = await clinicService.getClinicForDoctor(
+      //   doctorWrapper.getDoctorId()
+      // );
 
       if (doctorQualifications.length === 0) {
         return this.raiseClientError(
@@ -366,14 +366,15 @@ class DoctorController extends Controller {
           {},
           "Doctor has not updated any registration details yet. Cannot be verified"
         );
-      } else if (doctorClinics.length === 0) {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "Doctor has not updated any clinic details yet. Cannot be verified"
-        );
       }
+      // else if (doctorClinics.length === 0) {
+      //   return this.raiseClientError(
+      //     res,
+      //     422,
+      //     {},
+      //     "Doctor has not updated any clinic details yet. Cannot be verified"
+      //   );
+      // }
 
       const {
         basic_info: { first_name, middle_name, last_name } = {}
