@@ -15,6 +15,9 @@ import moment from "moment";
 import throttle from "lodash-es/throttle";
 import { getName } from "../../../Helper/validation";
 
+// antd components
+import InputNumber from "antd/es/input-number";
+
 import india from "../../../Assets/images/india.png";
 import australia from "../../../Assets/images/australia.png";
 import us from "../../../Assets/images/flag.png";
@@ -31,7 +34,12 @@ import france from "../../../Assets/images/france.png";
 import messages from "./message";
 import "react-datepicker/dist/react-datepicker.css";
 import TextArea from "antd/lib/input/TextArea";
-import { FINAL, PROBABLE, DIAGNOSIS_TYPE } from "../../../constant";
+import {
+  FINAL,
+  PROBABLE,
+  DIAGNOSIS_TYPE,
+  PATIENT_CONSTANTS
+} from "../../../constant";
 
 const { Option } = Select;
 
@@ -570,16 +578,38 @@ class PatientDetailsDrawer extends Component {
   setHeight = e => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
-    if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
-      this.setState({ height: e.target.value });
+    if (value === "") {
+      this.setState({ height: value });
+    } else {
+      if ((!isNaN(value) && reg.test(value)) || value === "-") {
+        if (
+            parseFloat(value) <= PATIENT_CONSTANTS.MAX_HEIGHT_ALLOWED &&
+            parseFloat(value) > 0
+        ) {
+          this.setState({ height: value });
+        } else {
+          message.warn(this.formatMessage(messages.heightWarnText));
+        }
+      }
     }
   };
 
   setWeight = e => {
     const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
-    if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
-      this.setState({ weight: e.target.value });
+    if (value === "") {
+      this.setState({ weight: value });
+    } else {
+      if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
+        if (
+            parseFloat(value) <= PATIENT_CONSTANTS.MAX_WEIGHT_ALLOWED &&
+            parseFloat(value) > 0
+        ) {
+          this.setState({ weight: value });
+        } else {
+          message.warn(this.formatMessage(messages.weightWarnText));
+        }
+      }
     }
   };
 
@@ -815,25 +845,25 @@ class PatientDetailsDrawer extends Component {
         </div>
         <Input
           className={"form-inputs-ap"}
+          type={"number"}
           placeholder={this.formatMessage(messages.height_placeholder)}
-          // minLength={6}
-          // maxLength={20}
           value={height}
           onChange={this.setHeight}
-          // disabled={isdisabled}
+          max={PATIENT_CONSTANTS.MAX_HEIGHT_ALLOWED}
+          suffix={"cm"}
         />
 
         <div className="form-headings-ap">
           {this.formatMessage(messages.weight)}
         </div>
         <Input
+          type={"number"}
           className={"form-inputs-ap"}
           placeholder={this.formatMessage(messages.weight_placeholder)}
-          // minLength={6}
-          // maxLength={20}
           value={weight}
           onChange={this.setWeight}
-          // disabled={isdisabled}
+          max={PATIENT_CONSTANTS.MAX_WEIGHT_ALLOWED}
+          suffix={"kg"}
         />
 
         <div className="form-headings-ap flex align-center justify-start">
@@ -1192,7 +1222,7 @@ class PatientDetailsDrawer extends Component {
             top: "0px"
           }}
           onClose={onClose}
-          visible={visible} // todo: change as per state, -- WIP --
+          visible={visible}
           width={"30%"}
         >
           {renderAddPatient()}
