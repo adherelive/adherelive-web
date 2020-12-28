@@ -121,10 +121,15 @@ const messages = defineMessages({
         description: "Edit button in Patient Card",
         defaultMessage: 'Why choose Adhere.live?'
     },
+    contactUsStart: {
+        id: "app.signIn.contactUsStart",
+        description: "Edit button in Patient Card",
+        defaultMessage: 'For any help or assistance, feel free to'
+    },
     contactUs: {
         id: "app.signIn.contactUs",
-        description: "Edit button in Patient Card",
-        defaultMessage: 'For any help or assistance, feel free to Contact Us'
+        description: "",
+        defaultMessage: 'Contact Us'
     },
     loginToDashboard: {
         id: "app.signIn.loginToDashboard",

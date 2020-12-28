@@ -89,7 +89,17 @@ const messages = defineMessages({
   pending_verify_content_text: {
     id: "app.dashboard.pending.verify.content.text",
     description: "",
-    defaultMessage: "The details provided are being verified. You will be able to add patient only after verification is complete"
+    defaultMessage: "The details provided are being verified. You will be able to add patient only after verification is complete. You will not be able to Add patient before verification is complete."
+  },
+  pending_verify_content_other_text: {
+    id: "app.dashboard.pending.verify.content.other.text",
+    description: "",
+    defaultMessage: "If you don't receive any email in next 24 hours, please contact"
+  },
+  adhere_support_text: {
+    id: "app.dashboard.adhere.support.text",
+    description: "",
+    defaultMessage: "Adhere.live support"
   },
   important_note_text: {
     id: "app.dashboard.important.note.text",

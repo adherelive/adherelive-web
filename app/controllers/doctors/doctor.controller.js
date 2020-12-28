@@ -2343,20 +2343,23 @@ class DoctorController extends Controller {
           Logger.debug("76578976546786546789 --->",newClinic);
 
         }else{
-          newClinic = await clinicService.addClinic({
-            doctor_id: doctorData.getDoctorId(),
-            name,
-            location,
-            details
-          });
+          if(name && location) {
+            newClinic = await clinicService.addClinic({
+              doctor_id: doctorData.getDoctorId(),
+              name,
+              location,
+              details
+            });
+          }
         }
        
-
-        const clinicData = await ClinicWrapper(newClinic);
-        clinicDetails[
-          clinicData.getDoctorClinicId()
-        ] = clinicData.getBasicInfo();
-        doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+        if(newClinic) {
+          const clinicData = await ClinicWrapper(newClinic);
+          clinicDetails[
+              clinicData.getDoctorClinicId()
+              ] = clinicData.getBasicInfo();
+          doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+        }
       }
 
       const userUpdate = await userService.updateUser(

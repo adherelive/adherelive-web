@@ -180,9 +180,9 @@ class SideMenu extends Component {
             }
             break;  
           case NOTIFICATIONS:
-            if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
-              openAppointmentDrawer({ doctorUserId: authenticated_user });
-            }
+              if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+                openAppointmentDrawer({doctorUserId: authenticated_user});
+              }
             break;
           case CALENDER :
             if(authPermissions.includes(PERMISSIONS.ADD_DOCTOR)){
@@ -322,15 +322,16 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         )}
+        {authenticated_category !== USER_CATEGORY.ADMIN &&
         <MenuItem
-         className="flex direction-column justify-center align-center p0"
-         key={NOTIFICATIONS}
+            className="flex direction-column justify-center align-center p0"
+            key={NOTIFICATIONS}
         >
-         <Tooltip placement="right" title={"Notifications"}>
+          <Tooltip placement="right" title={"Notifications"}>
             {/* <img alt={"Notification Icon"} className={'w22'} src={notificationIcon} />  */}
-           <Icon type="bell" theme="twoTone" twoToneColor='white' />
-         </Tooltip>
-        </MenuItem>
+            <Icon type="bell" theme="twoTone" twoToneColor='white'/>
+          </Tooltip>
+        </MenuItem>}
 
         {authenticated_category === USER_CATEGORY.PROVIDER
         ?

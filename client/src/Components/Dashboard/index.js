@@ -547,6 +547,11 @@ class Dashboard extends Component {
                   <div className="wp100 ht20 fs16 text-left">
                       {this.formatMessage(messages.pending_verify_content_text)}
                   </div>
+                <span className="wp100 ht20 fs16 text-left">
+                  {this.formatMessage(messages.pending_verify_content_other_text)}
+                </span>
+                {" "}
+                <a href={config.ADHERE_LIVE_CONTACT_LINK} target={"_blank"}><span className="wp100 ht20 fs16 text-left">{this.formatMessage(messages.adhere_support_text)}</span></a>
               </div>
           ) : null}
       </Fragment>
