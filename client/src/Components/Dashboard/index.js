@@ -551,7 +551,7 @@ class Dashboard extends Component {
                   {this.formatMessage(messages.pending_verify_content_other_text)}
                 </span>
                 {" "}
-                <a href={config.ADHERE_LIVE_CONTACT_LINK} target={"_blank"}><span className="wp100 ht20 fs16 text-left">{this.formatMessage(messages.adhere_support_text)}</span></a>
+                <a href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.VERIFICATION_PENDING_MESSAGE}`} target={"_blank"}><span className="wp100 ht20 fs16 text-left">{this.formatMessage(messages.adhere_support_text)}</span></a>
               </div>
           ) : null}
       </Fragment>
