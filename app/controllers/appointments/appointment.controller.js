@@ -837,26 +837,26 @@ class AppointmentController extends Controller {
 
       const { originalName: file_name = "" } = file;
 
-      const scheduleEventService = new ScheduleEventService();
+      // const scheduleEventService = new ScheduleEventService();
       const appointmentDetails = await appointmentService.getAppointmentById(
         appointment_id
       );
 
-      const eventForAppointment = await scheduleEventService.getEventByData({
-        event_id: appointment_id,
-        event_type: EVENT_TYPE.APPOINTMENT
-      });
+      // const eventForAppointment = await scheduleEventService.getEventByData({
+      //   event_id: appointment_id,
+      //   event_type: EVENT_TYPE.APPOINTMENT
+      // });
 
-      const scheduleData = await EventWrapper(eventForAppointment);
+      // const scheduleData = await EventWrapper(eventForAppointment);
 
-      if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Cannot upload documents before appointment is complete"
-        );
-      }
+      // if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
+      //   return raiseClientError(
+      //     res,
+      //     422,
+      //     {},
+      //     "Cannot upload documents before appointment is complete"
+      //   );
+      // }
 
       let userIsParticipant = true;
       let timeDifference = null;
