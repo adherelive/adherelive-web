@@ -199,7 +199,7 @@ class SignIn extends Component {
                       </div>
                     </div>
                     <div className="flex wp100 justify-center">
-                      <a href={config.ADHERE_LIVE_CONTACT_LINK} target={"_blank"} className="medium fs14 dark-sky-blue pointer">
+                      <a href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.LOGIN_CONTACT_MESSAGE}`} target={"_blank"} className="medium fs14 dark-sky-blue pointer">
                         {this.formatMessage(messages.contactSupport)}
                       </a>
                     </div>
