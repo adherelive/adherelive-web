@@ -206,7 +206,7 @@ const columns_appointments = [
     title: "",
     dataIndex: "markComplete",
     key: "markComplete",
-    width: "30%",
+    width: "40%",
     render: ({
       id: appointment_id,
       end_time,
@@ -225,41 +225,51 @@ const columns_appointments = [
       }) || [];
 
 
-      if(appointmentEvent.length > 0) {
-        const {status} = schedule_events[appointmentEvent] || {};
+      // if(appointmentEvent.length > 0) {
+      //   const {status} = schedule_events[appointmentEvent] || {};
+      //
+      //   if(status !== EVENT_STATUS.SCHEDULED && status !== EVENT_STATUS.COMPLETED) {
+      //     return null;
+      //   }
+      // }else{
+      //   return null;
+      // }
 
-        if(status !== EVENT_STATUS.SCHEDULED && status !== EVENT_STATUS.COMPLETED) {
-          return null;
-        }
-      }else{
-        return null;
-      }
 
-
-      if (active_event_id) {
+      // if (active_event_id) {
+      //   return (
+      //     <div className="wp100 flex align-center justify-center pointer">
+      //       <Button
+      //         type={"primary"}
+      //         onClick={markAppointmentComplete(active_event_id)}
+      //       >
+      //         {formatMessage(messages.complete_text)}
+      //       </Button>
+      //     </div>
+      //   );
+      // }
+      // else {}
         return (
-          <div className="wp100 flex align-center justify-center pointer">
-            <Button
-              type={"primary"}
-              onClick={markAppointmentComplete(active_event_id)}
-            >
-              {formatMessage(messages.complete_text)}
-            </Button>
-          </div>
-        );
-      } else {
-        return (
-          <div className="wp100 flex align-center justify-center pointer">
-            <Button
-              type={"secondary"}
-              onClick={uploadAppointmentDocs(appointment_id)}
-            >
-              {formatMessage(messages.upload_reports)}
-            </Button>
-          </div>
+              <div className="flex justify-space-between">
+                {active_event_id && <div className="wp100 flex align-center justify-center pointer">
+                  <Button
+                      type={"primary"}
+                      onClick={markAppointmentComplete(active_event_id)}
+                  >
+                    {formatMessage(messages.complete_text)}
+                  </Button>
+                </div>}
+                <div className="wp100 flex align-center justify-center pointer">
+                  <Button
+                      type={"secondary"}
+                      onClick={uploadAppointmentDocs(appointment_id)}
+                  >
+                    {formatMessage(messages.upload_reports)}
+                  </Button>
+                </div>
+              </div>
         );
       }
-    }
   }
 ];
 
@@ -1955,7 +1965,7 @@ class PatientDetails extends Component {
         user_id,
         age,
         gender,
-        uid = "123456",
+        uid = "",
         user_id: patientUserId = ""
       }
     } = patients[patient_id] || {};

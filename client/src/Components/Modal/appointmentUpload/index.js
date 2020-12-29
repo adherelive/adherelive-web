@@ -5,7 +5,14 @@ import message from "antd/es/message";
 import Upload from "antd/es/upload";
 import Button from "antd/es/button"
 import messages from "./messages";
-import { DeleteTwoTone, PlusOutlined , EyeTwoTone ,DownloadOutlined, CloudDownloadOutlined } from "@ant-design/icons";
+import {
+  DeleteTwoTone,
+  PlusOutlined,
+  EyeTwoTone,
+  DownloadOutlined,
+  // CloudDownloadOutlined,
+  LoadingOutlined
+} from "@ant-design/icons";
 import confirm from "antd/es/modal/confirm";
 
 class AppointmentUploadModal extends Component {
@@ -13,7 +20,8 @@ class AppointmentUploadModal extends Component {
     super(props);
     this.state={
       viewModalVisible:false,
-      viewModalSrc:''
+      viewModalSrc:'',
+      uploading: false
     }
   }
 
@@ -31,6 +39,8 @@ class AppointmentUploadModal extends Component {
     let data = new FormData();
     data.append("files", file);
 
+    this.setState({uploading: true});
+
     const response = await uploadAppointmentDocs(data);
 
     const {
@@ -39,6 +49,7 @@ class AppointmentUploadModal extends Component {
     } = response;
 
     if (status) {
+      this.setState({uploading: false});
       message.success(respMessage);
     } else {
       message.warn(respMessage);
@@ -216,13 +227,19 @@ class AppointmentUploadModal extends Component {
     });
   };
 
+  getUploadButton = () => {
+    const {uploading} = this.state;
+    return uploading ? (<LoadingOutlined />) : (<PlusOutlined />);
+  };
+
   render() {
     const { appointmentId, visible, onCancel } = this.props;
     const {
       formatMessage,
       customRequestUploadDocuments,
       getUploadedDocuments,
-      handleDocumentViewClose
+      handleDocumentViewClose,
+      getUploadButton
     } = this;
 
     const {viewModalVisible=false,viewModalSrc=''}=this.state;
@@ -251,7 +268,8 @@ class AppointmentUploadModal extends Component {
                 listType="picture-card"
               >
                 <div className="flex direction-column align-center">
-                  <PlusOutlined />
+                  {/*<PlusOutlined />*/}
+                  <span>{getUploadButton()}</span>
                   <span>{formatMessage(messages.upload_text)}</span>
                 </div>
               </Upload>
