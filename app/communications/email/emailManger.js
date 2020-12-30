@@ -272,6 +272,7 @@ class EmailManger {
         .createEmailTitle()
         .createEmailBodyTemplate(templateString)
         .createSourceAddress(process.config.email.FROM)
+          .createSourceName(process.config.email.FROM_NAME)
         .createReplyToAddress(process.config.REPLY_TO_ADDRESS)
         .build();
       console.log("Transformer Returning ====================>    ", content);
