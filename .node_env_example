@@ -122,7 +122,8 @@ EVENT_FETCH_COUNT=7
 
 SENDGRID_USER=adherelive
 SENDGRID_PASSWORD=Adhere$123
-SENDGRID_FROM_ADDRESS=atish.kumar@tripock.com
+SENDGRID_FROM_ADDRESS=info@adhere.live
+SENDGRID_FROM_NAME="Adhere.Live Support"
 
 AWS_ACCCOUNT_ID=832280438605
 SQS_DOMAIN_URL=https://sqs.ap-south-1.amazonaws.com

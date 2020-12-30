@@ -73,6 +73,11 @@ class EmailPayloadBuilder {
     return this;
   }
 
+  createSourceName(sourceName) {
+    this.payload.fromname = sourceName;
+    return this;
+  }
+
   createReplyToAddress(replyToAddress = "") {
     if (replyToAddress == "") return this;
     if (typeof replyToAddress == "string") {

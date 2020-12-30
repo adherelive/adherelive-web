@@ -30,7 +30,8 @@ module.exports = () => {
     email: {
       USER: process.env.SENDGRID_USER,
       KEY: process.env.SENDGRID_PASSWORD,
-      FROM: process.env.SENDGRID_FROM_ADDRESS
+      FROM: process.env.SENDGRID_FROM_ADDRESS,
+      FROM_NAME: process.env.SENDGRID_FROM_NAME
     },
     sqs: {
       domain_url: process.env.SQS_DOMAIN_URL,
