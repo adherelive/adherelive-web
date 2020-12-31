@@ -121,7 +121,7 @@ class Profileregister extends Component {
                     final_city = city
                 }
     
-                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91', doctor_id });
        
                
                 let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
@@ -333,15 +333,17 @@ class Profileregister extends Component {
     }
 
     onNextClick = () => {
-        const { history, authenticated_user = 1, users } = this.props;
+        const { history, authenticated_user = 1 } = this.props;
         // const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
         const validate = this.validateData();
         if (validate) {
             const { doctorProfileRegister ,authenticated_category = '',} = this.props;
-            const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' , signature_pic_url ='',signature_pic_url_saved ='' } = this.state;
+            const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' , signature_pic_url ='',signature_pic_url_saved ='', doctor_id = null } = this.state;
             const data = { name, email, mobile_number, category, city, prefix, profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved , signature_pic :  signature_pic_url ? signature_pic_url : signature_pic_url_saved };
             if (authenticated_category === USER_CATEGORY.PROVIDER ){
-                data["is_provider"] = true
+                data["is_provider"] = true;
+                data["doctor_id"] = doctor_id;
+
             } 
             doctorProfileRegister(data).then(response => {
                 console.log(" 32453454RESPONSE FOR DOC PROFILE REGISTER ===>",response);
