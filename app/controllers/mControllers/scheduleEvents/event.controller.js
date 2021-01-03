@@ -108,38 +108,47 @@ class EventController extends Controller {
               parseInt(process.config.event.count) * (parseInt(key) - 1);
           const endLimit = parseInt(process.config.event.count);
 
-          const vitalEvents = await eventService.getPageEventByData({
+          scheduleEvents = await eventService.getUpcomingByData({
             startLimit,
             endLimit,
-            event_type: EVENT_TYPE.VITALS,
-            eventIds: vital_ids
+            vital_ids,
+            appointment_ids,
+            medication_ids
           });
 
-          const appointmentEvents = await eventService.getPageEventByData({
-            startLimit,
-            endLimit,
-            event_type: EVENT_TYPE.APPOINTMENT,
-            eventIds: appointment_ids
-          });
-
-          const medicationEvents = await eventService.getPageEventByData({
-            startLimit,
-            endLimit,
-            event_type: EVENT_TYPE.MEDICATION_REMINDER,
-            eventIds: medication_ids
-          });
-
-          scheduleEvents = [
-              ...scheduleEvents,
-            ...vitalEvents,
-            ...appointmentEvents,
-            ...medicationEvents
-          ];
-        } else {
-          scheduleEvents = await eventService.getPendingEventsData({
-            eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
-          });
+          // const vitalEvents = await eventService.getPageEventByData({
+          //   startLimit,
+          //   endLimit,
+          //   event_type: EVENT_TYPE.VITALS,
+          //   eventIds: vital_ids
+          // });
+          //
+          // const appointmentEvents = await eventService.getPageEventByData({
+          //   startLimit,
+          //   endLimit,
+          //   event_type: EVENT_TYPE.APPOINTMENT,
+          //   eventIds: appointment_ids
+          // });
+          //
+          // const medicationEvents = await eventService.getPageEventByData({
+          //   startLimit,
+          //   endLimit,
+          //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+          //   eventIds: medication_ids
+          // });
+          //
+          // scheduleEvents = [
+          //     ...scheduleEvents,
+          //   ...vitalEvents,
+          //   ...appointmentEvents,
+          //   ...medicationEvents
+          // ];
         }
+        // else {
+        //   scheduleEvents = await eventService.getPendingEventsData({
+        //     eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
+        //   });
+        // }
 
         Log.debug("21237193721 events --> ", scheduleEvents.length);
       }
