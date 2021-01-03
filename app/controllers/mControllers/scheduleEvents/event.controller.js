@@ -92,6 +92,10 @@ class EventController extends Controller {
 
       let scheduleEvents = [];
 
+      let vitalIds = [];
+      let appointmentIds = [];
+      let medicationIds = [];
+
       for(let i = 0; i < allCarePlanData.length; i++) {
         const carePlanData = allCarePlanData[i] || {};
 
@@ -102,58 +106,62 @@ class EventController extends Controller {
           vital_ids = []
         } = await carePlanWrapper.getAllInfo();
 
+        vitalIds = [...vitalIds, ...vital_ids];
+        appointmentIds = [...appointmentIds, ...appointment_ids];
+        medicationIds = [...medicationIds, ...medication_ids];
 
-        if (key) {
-          const startLimit =
-              parseInt(process.config.event.count) * (parseInt(key) - 1);
-          const endLimit = parseInt(process.config.event.count);
-
-          const carePlanScheduleEvents = await eventService.getUpcomingByData({
-            startLimit,
-            endLimit,
-            vital_ids,
-            appointment_ids,
-            medication_ids
-          }) || [];
-
-          scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
-
-          // const vitalEvents = await eventService.getPageEventByData({
-          //   startLimit,
-          //   endLimit,
-          //   event_type: EVENT_TYPE.VITALS,
-          //   eventIds: vital_ids
-          // });
-          //
-          // const appointmentEvents = await eventService.getPageEventByData({
-          //   startLimit,
-          //   endLimit,
-          //   event_type: EVENT_TYPE.APPOINTMENT,
-          //   eventIds: appointment_ids
-          // });
-          //
-          // const medicationEvents = await eventService.getPageEventByData({
-          //   startLimit,
-          //   endLimit,
-          //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
-          //   eventIds: medication_ids
-          // });
-          //
-          // scheduleEvents = [
-          //     ...scheduleEvents,
-          //   ...vitalEvents,
-          //   ...appointmentEvents,
-          //   ...medicationEvents
-          // ];
-        }
-        // else {
-        //   scheduleEvents = await eventService.getPendingEventsData({
-        //     eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
-        //   });
-        // }
-
-        Log.debug("21237193721 events --> ", scheduleEvents.length);
       }
+
+      if (key) {
+        const startLimit =
+            parseInt(process.config.event.count) * (parseInt(key) - 1);
+        const endLimit = parseInt(process.config.event.count);
+
+        scheduleEvents = await eventService.getUpcomingByData({
+          startLimit,
+          endLimit,
+          vital_ids: vitalIds,
+          appointment_ids: appointmentIds,
+          medication_ids: medicationIds
+        }) || [];
+
+        // scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
+
+        // Log.debug("21237193721 events --> ", scheduleEvents.length);
+
+        // const vitalEvents = await eventService.getPageEventByData({
+        //   startLimit,
+        //   endLimit,
+        //   event_type: EVENT_TYPE.VITALS,
+        //   eventIds: vital_ids
+        // });
+        //
+        // const appointmentEvents = await eventService.getPageEventByData({
+        //   startLimit,
+        //   endLimit,
+        //   event_type: EVENT_TYPE.APPOINTMENT,
+        //   eventIds: appointment_ids
+        // });
+        //
+        // const medicationEvents = await eventService.getPageEventByData({
+        //   startLimit,
+        //   endLimit,
+        //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        //   eventIds: medication_ids
+        // });
+        //
+        // scheduleEvents = [
+        //     ...scheduleEvents,
+        //   ...vitalEvents,
+        //   ...appointmentEvents,
+        //   ...medicationEvents
+        // ];
+      }
+      // else {
+      //   scheduleEvents = await eventService.getPendingEventsData({
+      //     eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
+      //   });
+      // }
 
         if (scheduleEvents.length > 0) {
           const dateWiseEventData = {};
