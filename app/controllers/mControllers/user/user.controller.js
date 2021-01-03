@@ -110,27 +110,60 @@ class MobileUserController extends Controller {
         otp
       });
 
-      const emailPayload = {
-        title: "OTP Verification for patient",
-        toAddress: process.config.app.developer_email,
-        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-        templateData: {
-          title: "Patient",
-          mainBodyText: "OTP for adhere patient login is",
-          subBodyText: otp,
-          host: process.config.WEB_URL,
-          contactTo: process.config.app.support_email
-        }
-      };
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      if(process.config.app.env === "development") {
+        const emailPayload = {
+          title: "OTP Verification for patient",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+          templateData: {
+            title: "Patient",
+            mainBodyText: "OTP for adhere patient login is",
+            subBodyText: otp,
+            host: process.config.WEB_URL,
+            contactTo: process.config.app.support_email
+          }
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      } else {
 
-      // const smsPayload = {
-      //   // countryCode: prefix,
-      //   phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
-      //   message: `Hello from Adhere! Your OTP for login is ${otp}`
+        if(apiUserDetails.getEmail()) {
+          const emailPayload = {
+            title: "OTP Verification for patient",
+            toAddress: apiUserDetails.getEmail(),
+            templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+            templateData: {
+              title: "Patient",
+              mainBodyText: "OTP for adhere patient login is",
+              subBodyText: otp,
+              host: process.config.WEB_URL,
+              contactTo: process.config.app.support_email
+            }
+          };
+          Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        }
+
+        const smsPayload = {
+          // countryCode: prefix,
+          phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
+          message: `Hello from Adhere! Your OTP for login is ${otp}`
+        };
+
+        Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      }
+
+      // const emailPayload = {
+      //   title: "OTP Verification for patient",
+      //   toAddress: process.config.app.developer_email,
+      //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+      //   templateData: {
+      //     title: "Patient",
+      //     mainBodyText: "OTP for adhere patient login is",
+      //     subBodyText: otp,
+      //     host: process.config.WEB_URL,
+      //     contactTo: process.config.app.support_email
+      //   }
       // };
-      //
-      // Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
       // let permissions = {
       //   permissions: []
