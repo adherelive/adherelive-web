@@ -108,13 +108,15 @@ class EventController extends Controller {
               parseInt(process.config.event.count) * (parseInt(key) - 1);
           const endLimit = parseInt(process.config.event.count);
 
-          scheduleEvents = await eventService.getUpcomingByData({
+          const carePlanScheduleEvents = await eventService.getUpcomingByData({
             startLimit,
             endLimit,
             vital_ids,
             appointment_ids,
             medication_ids
-          });
+          }) || [];
+
+          scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
 
           // const vitalEvents = await eventService.getPageEventByData({
           //   startLimit,
