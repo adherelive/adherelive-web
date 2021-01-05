@@ -310,12 +310,10 @@ class ScheduleEventService {
         }
     };
 
-  getPendingEventsData = async data => {
+  getPendingEventsData = async ({appointments, medications, vitals}) => {
     try {
-      const { eventIds } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
-          event_id: eventIds,
           start_time: {
             [Op.gt]: [
               moment()
@@ -323,7 +321,18 @@ class ScheduleEventService {
                 .toISOString()
             ]
           },
-          status: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED]
+          status: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED],
+            [Op.or]: [
+                {
+                    ...appointments,
+                },
+                {
+                    ...medications,
+                },
+                {
+                    ...vitals,
+                }
+            ]
         },
         order: [["start_time", "ASC"]]
       });
