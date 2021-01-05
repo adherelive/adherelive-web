@@ -157,11 +157,22 @@ class EventController extends Controller {
         //   ...medicationEvents
         // ];
       }
-      // else {
-      //   scheduleEvents = await eventService.getPendingEventsData({
-      //     eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
-      //   });
-      // }
+      else {
+        scheduleEvents = await eventService.getPendingEventsData({
+          appointments: {
+            event_id: appointmentIds,
+            event_type: EVENT_TYPE.APPOINTMENT
+          },
+          medications: {
+            event_id: medicationIds,
+            event_type: EVENT_TYPE.MEDICATION_REMINDER
+          },
+          vitals: {
+            event_id: vitalIds,
+            event_type: EVENT_TYPE.VITALS
+          }
+        });
+      }
 
         if (scheduleEvents.length > 0) {
           const dateWiseEventData = {};
