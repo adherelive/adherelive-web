@@ -622,7 +622,7 @@ export const FEATURE_TYPE = {
   MEDICATION: "medication",
   VITAL: "vital",
   TERMS_OF_SERVICE: "terms_of_service",
-  PRIVACY_POLICY:"privacy_policy"
+  PRIVACY_POLICY: "privacy_policy"
 };
 
 export const BLANK_STATE = "";
@@ -810,3 +810,9 @@ export const CONSENT_TYPE = {
 
 export const S3_DOWNLOAD_FOLDER = "s3Downloads";
 export const PRESCRIPTION_PDF_FOLDER = "prescriptionPdfs";
+
+export const FEATURES = {
+  CHAT: "Chat",
+  VIDEO_CALL: "Video Call",
+  AUDIO_CALL: "Audio Call"
+};

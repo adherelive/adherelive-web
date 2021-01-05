@@ -14,6 +14,8 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorQualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import featuresService from "../../../services/features/features.service";
+import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 
 // m-api wrappers
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
@@ -25,6 +27,7 @@ import ClinicWrapper from "../../../ApiWrapper/mobile/doctorClinic";
 import QualificationWrapper from "../../../ApiWrapper/mobile/doctorQualification";
 import RegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
+import FeatureMappingWrapper from "../../../ApiWrapper/mobile/doctorPatientFeatureMapping";
 
 import Log from "../../../../libs/log";
 import {
@@ -35,7 +38,8 @@ import {
   PATIENT_MEAL_TIMINGS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
-  VERIFICATION_TYPE
+  VERIFICATION_TYPE,
+  FEATURES
 } from "../../../../constant";
 
 import { getFilePath } from "../../../helper/filePath";
@@ -211,6 +215,7 @@ class MobileDoctorController extends Controller {
       let patientData = null;
       let patientOtherDetails = {};
       let carePlanOtherDetails = {};
+      let patientFeatureIds = [];
 
       if (comorbidities) {
         patientOtherDetails["comorbidities"] = comorbidities;
@@ -225,6 +230,8 @@ class MobileDoctorController extends Controller {
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
+
+      const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
@@ -313,9 +320,24 @@ class MobileDoctorController extends Controller {
 
         await patientsService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
+
+        const features = await featuresService.getAllFeatures();
+
+        for (const feature of features) {
+          const { id: featureId } = feature;
+          const featureMappingData = await doctorPatientFeatureMappingService.create(
+            {
+              feature_id: featureId,
+              patient_id: patientData.getPatientId(),
+              doctor_id: doctor.get("id")
+            }
+          );
+          if (featureMappingData) {
+            patientFeatureIds.push(featureId);
+          }
+        }
       }
 
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData(
         {
           treatment_id,
@@ -465,6 +487,9 @@ class MobileDoctorController extends Controller {
           },
           medicines: {
             ...medicineApiData
+          },
+          features_mappings: {
+            [patientData.getPatientId()]: patientFeatureIds
           }
         },
         "Patient added successfully"
@@ -1822,6 +1847,146 @@ class MobileDoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+  toggleChatMessagePermission = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        params: { patient_id = null } = {},
+        userDetails: { userId } = {},
+        body = {}
+      } = req;
+
+      const { mute = false } = body;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      const featureData = await featuresService.getFeatureByName(FEATURES.CHAT);
+
+      if (featureData) {
+        const feature_id = featureData.get("id");
+
+        if (mute) {
+          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id,
+              feature_id
+            }
+          );
+        } else {
+          const patientFeature = await doctorPatientFeatureMappingService.create(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id: patient.getPatientId(),
+              feature_id
+            }
+          );
+        }
+      }
+
+      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+        {
+          patient_id,
+          doctor_id: doctor.get("id")
+        }
+      );
+
+      let patientFeatureIds = [];
+
+      for (const feature of patientFeatures) {
+        const featureWrapper = await FeatureMappingWrapper(feature);
+        const feature_id = featureWrapper.getFeatureId();
+        patientFeatureIds.push(feature_id);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          feature_mappings: {
+            [patient_id]: patientFeatureIds
+          }
+        },
+        "Chat permission updated successfully."
+      );
+    } catch (error) {
+      Logger.debug("toggleChatMessagePermission 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+  toggleVideoCallPermission = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        params: { patient_id = null } = {},
+        userDetails: { userId } = {},
+        body = {}
+      } = req;
+
+      const { block = false } = body;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      const featureData = await featuresService.getFeatureByName(
+        FEATURES.VIDEO_CALL
+      );
+
+      if (featureData) {
+        const feature_id = featureData.get("id");
+
+        if (block) {
+          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id,
+              feature_id
+            }
+          );
+        } else {
+          const patientFeature = await doctorPatientFeatureMappingService.create(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id: patient.getPatientId(),
+              feature_id
+            }
+          );
+        }
+      }
+
+      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+        {
+          patient_id,
+          doctor_id: doctor.get("id")
+        }
+      );
+
+      let patientFeatureIds = [];
+
+      for (const feature of patientFeatures) {
+        const featureWrapper = await FeatureMappingWrapper(feature);
+        const feature_id = featureWrapper.getFeatureId();
+        patientFeatureIds.push(feature_id);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          feature_mappings: {
+            [patient_id]: patientFeatureIds
+          }
+        },
+        "Video call permission updated successfully."
+      );
+    } catch (error) {
+      Logger.debug("toggleVideoCallPermission 500 ERROR", error);
       return raiseServerError(res);
     }
   };

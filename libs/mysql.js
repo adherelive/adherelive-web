@@ -28,6 +28,7 @@ import * as DoctorClinics from "../app/models/doctorClinics";
 import * as DoctorQualifications from "../app/models/doctorQualifications";
 import * as DoctorRegistrations from "../app/models/doctorRegistrations";
 import * as Doctors from "../app/models/doctors";
+import * as DoctorPatientFeaturesMapping from "../app/models/doctorPatientFeatureMapping";
 
 import * as EmailLogger from "../app/models/emailLogger";
 import * as Exercise from "../app/models/exercise";
@@ -109,6 +110,7 @@ const models = [
   DoctorRegistrations,
   Doctors,
   DoctorProviderMapping,
+  DoctorPatientFeaturesMapping,
 
   EmailLogger,
   Exercise,

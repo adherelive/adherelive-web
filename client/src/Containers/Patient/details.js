@@ -8,20 +8,19 @@ import {
   getAppointments,
   getAppointmentsDetails
 } from "../../modules/appointments";
-import {
-  requestConsent,
-    consentVerify
-} from "../../modules/patients";
+import { requestConsent, consentVerify } from "../../modules/patients";
 import { searchMedicine } from "../../modules/medicines";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
 import { DRAWER } from "../../constant";
 import { openPopUp, closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
-import { getLastVisitAlerts, markAppointmentComplete } from "../../modules/scheduleEvents/index";
-import {addCareplanForPatient} from "../../modules/patients";
-import {storeAppointmentDocuments} from "../../modules/uploadDocuments";
-
+import {
+  getLastVisitAlerts,
+  markAppointmentComplete
+} from "../../modules/scheduleEvents/index";
+import { addCareplanForPatient } from "../../modules/patients";
+import { storeAppointmentDocuments } from "../../modules/uploadDocuments";
 
 const mapStateToProps = (state, ownProps) => {
   const {
@@ -46,8 +45,10 @@ const mapStateToProps = (state, ownProps) => {
     twilio = {},
     symptoms = {},
     schedule_events = {},
+    features = {},
+    features_mappings = {}
   } = state;
-  console.log("4534543634534535634 ----> Container",care_plan_template_ids);
+  console.log("4534543634534535634 ----> Container", care_plan_template_ids);
   // const { id } = ownprops;
   const user_details = users["3"] || {};
   const {
@@ -83,6 +84,8 @@ const mapStateToProps = (state, ownProps) => {
     care_plan_template_ids,
     authenticated_user,
     schedule_events,
+    features,
+    features_mappings
   };
 };
 
@@ -115,16 +118,16 @@ const mapDispatchToProps = dispatch => {
     openPopUp: () => dispatch(openPopUp()),
     closePopUp: () => dispatch(closePopUp()),
     fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
-    requestConsent: (patientId) => dispatch(requestConsent(patientId)),
-    consentVerify: (data) => dispatch(consentVerify(data)),
-    markAppointmentComplete: (id) => dispatch(markAppointmentComplete(id)),
+    requestConsent: patientId => dispatch(requestConsent(patientId)),
+    consentVerify: data => dispatch(consentVerify(data)),
+    markAppointmentComplete: id => dispatch(markAppointmentComplete(id)),
     openAddCareplanDrawer: payload =>
       dispatch(open({ type: DRAWER.ADD_CAREPLAN, payload })),
-    addCareplanForPatient : (patient_id,data) => dispatch(addCareplanForPatient(patient_id,data)),
-    openEditPatientDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
-    storeAppointmentDocuments : (data) => dispatch(storeAppointmentDocuments(data))
-
- 
+    addCareplanForPatient: (patient_id, data) =>
+      dispatch(addCareplanForPatient(patient_id, data)),
+    openEditPatientDrawer: payload =>
+      dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
+    storeAppointmentDocuments: data => dispatch(storeAppointmentDocuments(data))
   };
 };
 

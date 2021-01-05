@@ -88,7 +88,11 @@ router.post(
   DoctorController.addPatient
 );
 
-router.post("/watchlist/:patient_id", DoctorController.addPatientToWatchlist);
+router.post(
+  "/watchlist/:patient_id",
+  Authenticate,
+  DoctorController.addPatientToWatchlist
+);
 
 router.post(
   "/consultations",
