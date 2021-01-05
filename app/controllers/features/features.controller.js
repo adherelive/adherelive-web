@@ -1,0 +1,121 @@
+import Controller from "../index";
+import Log from "../../../libs/log";
+
+import featuresService from "../../services/features/features.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
+import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+
+import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
+
+import { USER_CATEGORY } from "../../../constant";
+
+const FILE_NAME = "WEB FEATURE CONTROLLER";
+
+const Logger = new Log(FILE_NAME);
+
+class FeatureController extends Controller {
+  constructor() {
+    super();
+  }
+
+  getAllFeaturesMappingForUser = async (req, res) => {
+    const { raiseServerError, raiseSuccess } = this;
+    try {
+      const {
+        userDetails: { userData: { category } = {}, userCategoryId } = {}
+      } = req;
+
+      let featureMappings = {};
+      let features = {};
+      let careplanData = [];
+      let otherUserCategoryIds = [];
+
+      switch (category) {
+        case USER_CATEGORY.PATIENT:
+          careplanData =
+            (await carePlanService.getCarePlanByData({
+              patient_id: userCategoryId
+            })) || [];
+
+          for (let index = 0; index < careplanData.length; index++) {
+            const carePlanApiWrapper = await CarePlanWrapper(
+              careplanData[index]
+            );
+            otherUserCategoryIds.push(carePlanApiWrapper.getDoctorId());
+          }
+          break;
+        case USER_CATEGORY.DOCTOR:
+          careplanData =
+            (await carePlanService.getCarePlanByData({
+              doctor_id: userCategoryId
+            })) || [];
+
+          for (let index = 0; index < careplanData.length; index++) {
+            const carePlanApiWrapper = await CarePlanWrapper(
+              careplanData[index]
+            );
+            otherUserCategoryIds.push(carePlanApiWrapper.getPatientId());
+          }
+          break;
+      }
+
+      for (const otherUserCategoryId of otherUserCategoryIds) {
+        const patientId =
+          category === USER_CATEGORY.PATIENT
+            ? userCategoryId
+            : otherUserCategoryId;
+        const doctorId =
+          category === USER_CATEGORY.DOCTOR
+            ? userCategoryId
+            : otherUserCategoryId;
+        const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+          {
+            patient_id: patientId,
+            doctor_id: doctorId
+          }
+        );
+
+        let doctorFeatureIds = [];
+
+        for (const feature of patientFeatures) {
+          const featureWrapper = await FeatureMappingWrapper(feature);
+          const feature_id = featureWrapper.getFeatureId();
+          doctorFeatureIds.push(feature_id);
+        }
+        featureMappings = {
+          ...featureMappings,
+          ...{ [otherUserCategoryId]: doctorFeatureIds }
+        };
+      }
+
+      const featuresTypesData = await featuresService.getAllFeatures();
+
+      for (const featureData of featuresTypesData) {
+        const { id, name, details } = featureData;
+        features = { ...features, [id]: { id, name, details } };
+      }
+
+      const dataToSend = {
+        feature_mappings: {
+          ...featureMappings
+        },
+        features: {
+          ...features
+        }
+      };
+
+      return raiseSuccess(
+        res,
+        200,
+        { ...dataToSend },
+        "Features mapping fetched successfully."
+      );
+    } catch (error) {
+      Logger.debug("getAllFeaturesMappingForUser 500 error", error);
+      return raiseServerError(res, 500, {}, error.message);
+    }
+  };
+}
+
+export default new FeatureController();

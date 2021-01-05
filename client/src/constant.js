@@ -20,8 +20,8 @@ export const PATH = {
   PATIENT_CONSULTING: "/patient-consulting/:patient_id",
   PATIENT_CONSULTING_VIDEO: "/patient-consulting-video/:room_id",
   RESET_PASSWORD: "/reset-password/:link",
-  REGISTER_FROM_PROFILE:"/register-from-profile",
-  REGISTER_FROM_MY_PROFILE:"/register-from-my-profile",
+  REGISTER_FROM_PROFILE: "/register-from-profile",
+  REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"
@@ -39,7 +39,7 @@ export const PATH = {
       DETAILS: "/doctors/:id",
       PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
     },
-    CALENDER :"/calender"
+    CALENDER: "/calender"
   },
   TERMS_OF_SERVICE: "/terms-of-service",
   PRIVACY_POLICY: "/privacy-policy"
@@ -209,10 +209,10 @@ export const DRAWER = {
   PATIENT_DETAILS: "PATIENT_DETAILS",
   SYMPTOMS: "SYMPTOMS",
   NOTIFICATIONS: "NOTIFICATIONS",
-  EDIT_VITALS:"EDIT_VITALS",
+  EDIT_VITALS: "EDIT_VITALS",
   VITAL_RESPONSE_TIMELINE: "VITAL_RESPONSE_TIMELINE",
-  ADD_CAREPLAN : "ADD_CAREPLAN",
-  MEDICATION_RESPONSE_TIMELINE : "MEDICATION_RESPONSE_TIMELINE",
+  ADD_CAREPLAN: "ADD_CAREPLAN",
+  MEDICATION_RESPONSE_TIMELINE: "MEDICATION_RESPONSE_TIMELINE",
   ADD_CONSULTATION_FEE: "ADD_CONSULTATION_FEE",
   ADD_RAZORPAY_ACCOUNT_DETAILS: "ADD_RAZORPAY_ACCOUNT_DETAILS",
   EDIT_RAZORPAY_ACCOUNT_DETAILS: "EDIT_RAZORPAY_ACCOUNT_DETAILS",
@@ -1697,7 +1697,6 @@ export const ACCOUNT_TYPES = {
   [CURRENT]: "Current"
 };
 
-
 const MEDICAL_TEST = "1";
 const CONSULTATION = "2";
 const RADIOLOGY = "3";
@@ -1716,5 +1715,11 @@ export const APPOINTMENT_TYPE_TITLE = {
 
 export const PATIENT_CONSTANTS = {
   MAX_HEIGHT_ALLOWED: 999,
-  MAX_WEIGHT_ALLOWED: 999,
+  MAX_WEIGHT_ALLOWED: 999
+};
+
+export const FEATURES = {
+  CHAT: "Chat",
+  VIDEO_CALL: "Video Call",
+  AUDIO_CALL: "Audio Call"
 };

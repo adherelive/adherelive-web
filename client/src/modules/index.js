@@ -40,6 +40,8 @@ import repeat_intervals from "./vital_occurence";
 import vitals from "./vitals";
 import schedule_events from "./scheduleEvents";
 import account_details from "./accountDetails";
+import features from "./features";
+import features_mappings from "./featuresMappings";
 
 const rootReducer = combineReducers({
   auth,
@@ -82,7 +84,9 @@ const rootReducer = combineReducers({
   vitals,
   repeat_intervals,
   schedule_events,
-  account_details
+  account_details,
+  features,
+  features_mappings
 });
 
 export default (state, action) => {
