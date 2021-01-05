@@ -85,7 +85,11 @@ router.post(
   mDoctorController.addPatient
 );
 
-router.post("/watchlist/:patient_id", mDoctorController.addPatientToWatchlist);
+router.post(
+  "/watchlist/:patient_id",
+  Authenticate,
+  mDoctorController.addPatientToWatchlist
+);
 
 router.post(
   "/consultations",
@@ -141,6 +145,6 @@ router.post(
   Authenticate,
   validator.validateAddPatientData,
   mDoctorController.updatePatientAndCareplan
-)
+);
 
 module.exports = router;

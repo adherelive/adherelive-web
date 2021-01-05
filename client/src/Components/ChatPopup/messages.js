@@ -50,7 +50,7 @@ const messages = defineMessages({
   blankStateChatText: {
     id: "app.chatFullScreen.blank.state.chat.text",
     description: "",
-    defaultMessage: "Send \"Hi\" to start conversation"
+    defaultMessage: 'Send "Hi" to start conversation'
   },
   symptomMessageText: {
     id: "app.chatFullScreen.symptomMessageText",
@@ -62,6 +62,77 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Vitals"
   },
+  chatBlockedMessage: {
+    id: "app.chatFullScreen.chatPopUp.chatBlockedMessage",
+    description: "",
+    defaultMessage:
+      "Chat is disabled for this patient. Please enable chat to send message."
+  },
+  callBlockedMessage: {
+    id: "app.chatFullScreen.chatPopUp.callBlockedMessage",
+    description: "",
+    defaultMessage: "Call Disabled"
+  },
+  blockChatMessage: {
+    id: "app.chatFullScreen.chatPopUp.blockChatMessage",
+    description: "",
+    defaultMessage: "Disable Chat"
+  },
+  unblockChatMessage: {
+    id: "app.chatFullScreen.chatPopUp.unblockChatMessage",
+    description: "",
+    defaultMessage: "Enable Chat"
+  },
+  blockVideoCall: {
+    id: "app.chatFullScreen.chatPopUp.blockVideoCall",
+    description: "",
+    defaultMessage: "Disable Call"
+  },
+  unblockVideoCall: {
+    id: "app.chatFullScreen.chatPopUp.unblockVideoCall",
+    description: "",
+    defaultMessage: "Enable Call"
+  },
+  errorInBlockingChatPermission: {
+    id: "app.chatFullScreen.chatPopUp.errorInBlockingChatPermission",
+    description: "",
+    defaultMessage: "Error in disabling chat for patient."
+  },
+  errorInBlockingVideoPermission: {
+    id: "app.chatFullScreen.chatPopUp.errorInBlockingVideoPermission",
+    description: "",
+    defaultMessage: "Error in disabling call for patient."
+  },
+  successInBlockingChatPermission: {
+    id: "app.chatFullScreen.chatPopUp.successInBlockingChatPermission",
+    description: "",
+    defaultMessage: "Disabled chat for patient."
+  },
+  successInBlockingVideoPermission: {
+    id: "app.chatFullScreen.chatPopUp.successInBlockingVideoPermission",
+    description: "",
+    defaultMessage: "Disabled call for patient."
+  },
+  errorInUnBlockingChatPermission: {
+    id: "app.chatFullScreen.chatPopUp.errorInUnBlockingChatPermission",
+    description: "",
+    defaultMessage: "Error in enabling chat for patient."
+  },
+  errorInUnBlockingVideoPermission: {
+    id: "app.chatFullScreen.chatPopUp.errorInUnBlockingVideoPermission",
+    description: "",
+    defaultMessage: "Error in enabling call for patient."
+  },
+  successInUnBlockingChatPermission: {
+    id: "app.chatFullScreen.chatPopUp.successInUnBlockingChatPermission",
+    description: "",
+    defaultMessage: "Enabled chat for patient."
+  },
+  successInUnBlockingVideoPermission: {
+    id: "app.chatFullScreen.chatPopUp.successInUnBlockingVideoPermission",
+    description: "",
+    defaultMessage: "Enabled call for patient."
+  }
 });
 
 export default messages;

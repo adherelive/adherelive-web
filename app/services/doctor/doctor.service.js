@@ -133,6 +133,15 @@ class DoctorService {
       throw error;
     }
   };
+
+  getAllDoctorsOnly = async () => {
+    try {
+      const doctors = await Database.getModel(TABLE_NAME).findAll();
+      return doctors;
+    } catch (err) {
+      throw err;
+    }
+  };
 }
 
 export default new DoctorService();

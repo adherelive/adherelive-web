@@ -173,6 +173,11 @@ class EventController extends Controller {
           }
         });
       }
+      // else {
+      //   scheduleEvents = await eventService.getPendingEventsData({
+      //     eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
+      //   });
+      // }
 
         if (scheduleEvents.length > 0) {
           const dateWiseEventData = {};
