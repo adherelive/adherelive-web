@@ -2,8 +2,8 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
-import plus_white from "../../../Assets/images/plus_white.png";
-import chat_image from "../../../Assets/images/chat.svg";
+// import plus_white from "../../../Assets/images/plus_white.png";
+// import chat_image from "../../../Assets/images/chat.svg";
 import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
 import { doRequest } from "../../../Helper/network";
 import {
@@ -26,16 +26,14 @@ import {
 } from "../../../constant";
 import {
   Tabs,
-  Upload,
   Table,
-  Menu,
   Dropdown,
   Spin,
   message,
   Button
 } from "antd";
 import Modal from "antd/es/modal";
-import Collapse from "antd/es/collapse";
+import Menu from "antd/es/menu";
 
 import OtpInput from "react-otp-input";
 
@@ -52,12 +50,10 @@ import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 import PatientCarePlans from "./common/patientProfileCarePlans";
 
 import {
-  MailOutlined,
   PhoneOutlined,
   MessageOutlined,
   VideoCameraOutlined,
   CaretDownOutlined,
-  InboxOutlined
 } from "@ant-design/icons";
 import moment from "moment";
 import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
@@ -94,7 +90,6 @@ const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
 
 const { confirm } = Modal;
-const { Panel } = Collapse;
 
 const PATIENT_TABS = {
   ACTIONS: {
@@ -389,28 +384,42 @@ const PatientCard = ({
   openChat,
   patients,
   patient_id,
+  editPatient,
   editPatientOption
 }) => {
   const { details: { comorbidities, allergies } = {} } =
     patients[patient_id] || {};
+
+  const menu = (
+    <Menu>
+      <Menu.Item onClick={editPatient}>
+        <div>{formatMessage(messages.edit_patient)}</div>
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <div className="flex direction-column tac br10 bg-faint-grey">
       {/* <div className="flex justify-end pt20 pl20 pr20 pb6">
         <CaretDownOutlined className="pointer" />
       </div> */}
 
-      <div>
-        <Collapse
-          ghost={true}
-          expandIconPosition={"right"}
-          bordered={false}
-          expandIcon={() => <CaretDownOutlined className="pointer" />}
-        >
-          <Panel key={"1"} style={{ border: "none" }} className="br10">
-            <div className="flex   align-center tac">{editPatientOption()}</div>
-          </Panel>
-        </Collapse>
+      <div className="wp100 flex justify-end p10">
+        <Dropdown overlay={menu} placement={"bottomLeft"}>
+          <CaretDownOutlined className="pointer" />
+        </Dropdown>
       </div>
+      {/*<div>*/}
+      {/*  <Collapse*/}
+      {/*    ghost={true}*/}
+      {/*    expandIconPosition={"right"}*/}
+      {/*    bordered={false}*/}
+      {/*    expandIcon={() => <CaretDownOutlined className="pointer" />}*/}
+      {/*  >*/}
+      {/*    <Panel key={"1"} style={{ border: "none" }} className="br10">*/}
+      {/*      <div className="flex   align-center tac">{editPatientOption()}</div>*/}
+      {/*    </Panel>*/}
+      {/*  </Collapse>*/}
+      {/*</div>*/}
 
       <div className="flex">
         <div className="flex align-start">
@@ -677,6 +686,7 @@ class PatientDetails extends Component {
       fetchChatAccessToken,
       currentCarePlanId,
       getLastVisitAlerts,
+      searchMedicine,
       show_template_drawer = {}
     } = this.props;
 
@@ -726,7 +736,7 @@ class PatientDetails extends Component {
     getAppointments(patient_id);
 
     // }
-    // searchMedicine("");
+    searchMedicine("");
     let carePlanTemplateId = 0;
     for (let carePlan of Object.values(care_plans)) {
       let {
@@ -1599,8 +1609,8 @@ class PatientDetails extends Component {
     );
   };
 
-  handleEditPatientDrawer = e => {
-    e.preventDefault();
+  handleEditPatientDrawer = () => {
+    // e.preventDefault();
     let {
       patient_id: id,
       patients,
@@ -2090,6 +2100,7 @@ class PatientDetails extends Component {
                 openChat={openPopUp}
                 patients={patients}
                 patient_id={patient_id}
+                editPatient={this.handleEditPatientDrawer}
                 editPatientOption={this.editPatientOption}
               />
 

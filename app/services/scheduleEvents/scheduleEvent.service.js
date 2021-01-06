@@ -255,40 +255,38 @@ class ScheduleEventService {
         }
     };
 
-    // getUpcomingByData = async (data) => {
-    //     try {
-    //         const {vital_ids, appointment_ids, medication_ids, startLimit, endLimit} = data;
-    //         const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
-    //             offset: startLimit,
-    //             limit: endLimit,
-    //             where: {
-    //                 start_time: {
-    //                     [Op.gt]: moment().utc().toISOString(),
-    //                 },
-    //                 [Op.or]: [
-    //                     {
-    //                         event_id: appointment_ids,
-    //                         event_type: EVENT_TYPE.APPOINTMENT
-    //                     },
-    //                     {
-    //                         event_id: medication_ids,
-    //                         event_type: EVENT_TYPE.MEDICATION_REMINDER
-    //                     },
-    //                     {
-    //                         event_id: vital_ids,
-    //                         event_type: EVENT_TYPE.VITALS
-    //                     }
-    //                 ]
-    //             },
-    //             order: [
-    //                 ['start_time','ASC']
-    //             ]
-    //         });
-    //         return scheduleEvent;
-    //     } catch(error) {
-    //         throw error;
-    //     }
-    // };
+    getMissedByData = async (data) => {
+        try {
+            const {vital_ids, appointment_ids, medication_ids} = data;
+            return await Database.getModel(TABLE_NAME).findAll({
+                where: {
+                    date: {
+                      [Op.between]: [moment().utc().subtract(7, "days").toDate(), moment().utc().toDate()]
+                    },
+                    [Op.or]: [
+                        {
+                            event_id: appointment_ids,
+                            event_type: EVENT_TYPE.APPOINTMENT
+                        },
+                        {
+                            event_id: medication_ids,
+                            event_type: EVENT_TYPE.MEDICATION_REMINDER
+                        },
+                        {
+                            event_id: vital_ids,
+                            event_type: EVENT_TYPE.VITALS
+                        }
+                    ],
+                    status: EVENT_STATUS.EXPIRED
+                },
+                order: [
+                    ['start_time','DESC']
+                ]
+            });
+        } catch(error) {
+            throw error;
+        }
+    };
 
     getPageEventByData = async (data) => {
         try {
@@ -341,6 +339,16 @@ class ScheduleEventService {
       throw error;
     }
   };
+
+    getCount = async (data) => {
+      try {
+          return await Database.getModel(TABLE_NAME).count({
+              where: data
+          });
+      } catch(error) {
+          throw error;
+      }
+    };
 }
 
 export default ScheduleEventService;

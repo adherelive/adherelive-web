@@ -13,6 +13,9 @@ import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import * as EventHelper from "../../scheduleEvents/eventHelper";
+import SymptomService from "../../../services/symptom/symptom.service";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 const Log = new Logger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 
@@ -389,6 +392,121 @@ class EventController extends Controller {
 
     } catch(error) {
       Log.debug("markEventComplete 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getAllMissedEvents = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { userDetails: { userData: { category } = {} } = {} } = req;
+      Log.info(`CHARTS FOR AUTH: ${category}`);
+
+      let response = {};
+      let responseMessage = "No event data exists at the moment";
+
+      switch (category) {
+        case USER_CATEGORY.DOCTOR:
+          [response, responseMessage] = await EventHelper.doctorChart(
+              req
+          );
+          break;
+        // case USER_CATEGORY.PROVIDER:
+        //   [response, responseMessage] = await EventHelper.providerChart(
+        //       req
+        //   );
+        //   break;
+      }
+
+      return raiseSuccess(res, 200, { ...response }, responseMessage);
+    } catch (error) {
+      Log.debug("getAllMissedEvents 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getPatientMissedEvents = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const {params: {patient_id} = {}} = req;
+      Log.info(`params : patient_id = ${patient_id}`);
+
+      const carePlans = await CarePlanService.getMultipleCarePlanByData({
+        patient_id
+      }) || [];
+
+      let appointmentIds = [];
+      let medicationIds = [];
+      let vitalIds = [];
+
+      for(let index = 0; index < carePlans.length; index++) {
+        const carePlan = await CarePlanWrapper(carePlans[index]);
+        const {appointment_ids, medication_ids, vital_ids} = await carePlan.getAllInfo();
+
+        appointmentIds = [...appointmentIds, ...appointment_ids];
+        medicationIds = [...medicationIds, ...medication_ids];
+        vitalIds = [...vitalIds, ...vital_ids];
+      }
+
+      // symptoms
+      const symptomsCount = await SymptomService.getCount({
+        patient_id,
+      });
+
+      const EventService = new eventService();
+
+      return raiseSuccess(res, 200, {
+        missed_appointment: {
+          critical: await EventService.getCount({
+            event_type: EVENT_TYPE.APPOINTMENT,
+            event_id: appointmentIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: true
+          }),
+          non_critical: await EventService.getCount({
+            event_type: EVENT_TYPE.APPOINTMENT,
+            event_id: appointmentIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: false
+          }),
+        },
+
+        missed_medications: {
+          critical: await EventService.getCount({
+            event_type: EVENT_TYPE.MEDICATION_REMINDER,
+            event_id: medicationIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: true
+          }),
+          non_critical: await EventService.getCount({
+            event_type: EVENT_TYPE.MEDICATION_REMINDER,
+            event_id: medicationIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: false
+          }),
+        },
+        missed_vitals: {
+          critical: await EventService.getCount({
+            event_type: EVENT_TYPE.VITALS,
+            event_id: vitalIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: true
+          }),
+          non_critical: await EventService.getCount({
+            event_type: EVENT_TYPE.VITALS,
+            event_id: vitalIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: false
+          }),
+        },
+        missed_symptoms: {
+          critical: 0,
+          non_critical: symptomsCount
+        }
+      }, "Patient missed events fetched successfully");
+
+    } catch(error) {
+      Log.debug("getPatientMissedEvents 500 error", error);
       return raiseServerError(res);
     }
   };

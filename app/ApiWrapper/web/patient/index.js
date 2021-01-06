@@ -1,6 +1,9 @@
 import BasePatient from "../../../services/patients";
+
 import patientService from "../../../services/patients/patients.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
+import symptomService from "../../../services/symptom/symptom.service";
+
 import {completePath} from "../../../helper/filePath";
 import UserWrapper from "../../web/user";
 
@@ -64,10 +67,16 @@ class PatientWrapper extends BasePatient {
         const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
 
         let carePlanId = null;
+        // let appointmentIds = [];
+        // let medicationIds = [];
+        // let vitalIds = [];
+
+        // const {count: symptoms} = await symptomService.getSymptomCount({patient_id: getPatientId()});
 
         for(const carePlan of carePlans) {
             carePlanId = carePlan.get("id");
         }
+
         return {
             ...getBasicInfo(),
             care_plan_id: carePlanId

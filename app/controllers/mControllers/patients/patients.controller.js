@@ -1003,7 +1003,7 @@ class MPatientController extends Controller {
       // const { users } = await patient.getReferenceInfo();
       const users = await UserWrapper(null, patient.getUserId());
 
-      const { basic_info: { mobile_number } = {} } = users.getBasicInfo();
+      const { basic_info: { prefix, mobile_number, email } = {} } = users.getBasicInfo();
 
       Logger.debug("patient_id ---> ", mobile_number);
 
@@ -1018,19 +1018,46 @@ class MPatientController extends Controller {
         otp
       });
 
-      const emailPayload = {
-        title: "OTP Consent verification for patient",
-        toAddress: process.config.app.developer_email,
-        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-        templateData: {
-          title: "Patient",
-          mainBodyText: "OTP for adhere patient consent is",
-          subBodyText: otp,
-          host: process.config.WEB_URL,
-          contactTo: process.config.app.support_email
+      if(process.config.app.env === "development") {
+        const emailPayload = {
+          title: "OTP Consent verification for patient",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+          templateData: {
+            title: "Patient",
+            mainBodyText: "OTP for adhere patient consent is",
+            subBodyText: otp,
+            host: process.config.WEB_URL,
+            contactTo: process.config.app.support_email
+          }
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      } else {
+
+        if(email) {
+          const emailPayload = {
+            title: "OTP Consent verification for patient",
+            toAddress: email,
+            templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+            templateData: {
+              title: "Patient",
+              mainBodyText: "OTP for adhere patient consent is",
+              subBodyText: otp,
+              host: process.config.WEB_URL,
+              contactTo: process.config.app.support_email
+            }
+          };
+          Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
         }
-      };
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+
+        const smsPayload = {
+          // countryCode: prefix,
+          phoneNumber: `+${prefix}${mobile_number}`, // mobile_number
+          message: `Hello from Adhere! Your OTP for Consent Request is ${otp}`
+        };
+
+        Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      }
 
       return raiseSuccess(
         res,

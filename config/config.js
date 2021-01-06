@@ -50,7 +50,8 @@ module.exports = () => {
     },
     getstream: {
       key: process.env.GETSTREAM_API_KEY,
-      secretKey: process.env.GETSTREAM_API_SECRET
+      secretKey: process.env.GETSTREAM_API_SECRET,
+      appId: process.env.GETSTREAM_APP_ID,
     },
     aws: {
       access_key: process.env.AWS_ACCESS_KEY,
