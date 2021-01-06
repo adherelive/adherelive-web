@@ -70,12 +70,10 @@ class EventController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        query: { key = null } = {},
+        query: { type = EVENT_TYPE.ALL, key = null } = {},
         userDetails: { userData: { category }, userCategoryId } = {}
       } = req;
-      Log.info(`query : key = ${key}`);
-
-      const eventService = new EventService();
+      Log.info(`query : key = ${key} | type = ${type}`);
 
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(
@@ -85,6 +83,8 @@ class EventController extends Controller {
           "Please login as patient to continue"
         );
       }
+
+      const eventService = new EventService();
 
       const allCarePlanData = await CarePlanService.getMultipleCarePlanByData({
         patient_id: userCategoryId
@@ -117,13 +117,38 @@ class EventController extends Controller {
             parseInt(process.config.event.count) * (parseInt(key) - 1);
         const endLimit = parseInt(process.config.event.count);
 
-        scheduleEvents = await eventService.getUpcomingByData({
-          startLimit,
-          endLimit,
-          vital_ids: vitalIds,
-          appointment_ids: appointmentIds,
-          medication_ids: medicationIds
-        }) || [];
+        switch(type) {
+          case EVENT_TYPE.ALL:
+            scheduleEvents = await eventService.getUpcomingByData({
+              startLimit,
+              endLimit,
+              vital_ids: vitalIds,
+              appointment_ids: appointmentIds,
+              medication_ids: medicationIds
+            }) || [];
+            break;
+          case EVENT_TYPE.APPOINTMENT:
+            scheduleEvents = await eventService.getUpcomingByData({
+              startLimit,
+              endLimit,
+              appointment_ids: appointmentIds,
+            }) || [];
+            break;
+          case EVENT_TYPE.MEDICATION_REMINDER:
+            scheduleEvents = await eventService.getUpcomingByData({
+              startLimit,
+              endLimit,
+              medication_ids: medicationIds,
+            }) || [];
+            break;
+          case EVENT_TYPE.VITALS:
+            scheduleEvents = await eventService.getUpcomingByData({
+              startLimit,
+              endLimit,
+              vital_ids: vitalIds,
+            }) || [];
+            break;
+        }
 
         // scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
 

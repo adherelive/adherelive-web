@@ -222,7 +222,7 @@ class ScheduleEventService {
 
     getUpcomingByData = async (data) => {
         try {
-            const {vital_ids, appointment_ids, medication_ids, startLimit, endLimit} = data;
+            const {vital_ids = [], appointment_ids = [], medication_ids = [], startLimit, endLimit} = data;
             const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
                 offset: startLimit,
                 limit: endLimit,
