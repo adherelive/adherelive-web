@@ -165,7 +165,16 @@ class MissedMedicationsDrawer extends Component {
         nonCriticalMedicationIds.includes(event_id);
 
       if (isCritical) {
-        criticalList.push(PatientCard({ pId, pName, time, medicine_name }));
+        // criticalList.push(PatientCard({ pId, pName, time, medicine_name }));
+        criticalList.push(
+            <MissedMedicationCard
+                formatMessage={this.formatMessage}
+                name={pName}
+                time={start_time}
+                medicineName={medicine_name}
+                onClick={handlePatientDetailsRedirect(pId)}
+            />
+        );
       } else {
         nonCriticalList.push(
           <MissedMedicationCard
