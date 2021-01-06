@@ -1,62 +1,24 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
+import { withRouter } from "react-router-dom";
 
 import Table from "antd/es/table";
 import Icon from "antd/es/icon";
-import message from "antd/es/message";
-
 
 import generateRow from "./dataRow";
 import getColumn from "./header";
 
-class DoctorTable extends Component {
+import messages from "./messages";
+import {USER_CATEGORY} from "../../../constant";
+
+class ProviderTable extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            doctor_ids_state:[]
-        }
     }
 
     componentDidMount() {
-        const { doctor_ids } = this.props;
-        const {doctor_ids_state = [] } = this.state;
-
-        this.handleGetDoctorsForProvider();
-
-        if (doctor_ids.length !== doctor_ids_state) {
-            this.handleGetDoctorsForProvider();
-        }
-    }
-
-    componentDidUpdate(prevProps,prevState){
-        const { doctor_ids : prev_doctor_ids} = prevProps; 
-        const { doctor_ids } = this.props;
-
-        if (doctor_ids.length === prev_doctor_ids) {
-            this.handleGetDoctorsForProvider()
-        }
-    }
-
-    async handleGetDoctorsForProvider (){
-        try {
-            const { getAllDoctorsForProvider } = this.props;
-            
-            const response = await getAllDoctorsForProvider();
-            const { status, payload: { data = {} }  = {}} = response;
-
-           if(status){
-            const {data:{doctor_ids : doctor_ids_state = []} = {} } = data || {};
-            this.setState({doctor_ids_state});
-           }else{
-            const { doctor_ids : doctor_ids_state} = this.props;
-            this.setState({doctor_ids_state});
-           }
-
-           
-          } catch (err) {
-            console.log("err", err);
-            message.warn("Something wen't wrong. Please try again later");
-          }
+        const { getAllProviders } = this.props;
+        getAllProviders();
     }
 
     onSelectChange = selectedRowKeys => {
@@ -71,46 +33,55 @@ class DoctorTable extends Component {
     };
 
     getDataSource = () => {
-        const { users, doctors, doctor_ids, specialities } = this.props;
+        const { users,
+             providers,
+              provider_ids,
+              openEditProviderDrawer,
+              } = this.props;
+
+        console.log("7865467890",{providers,provider_ids});      
 
       
-        return doctor_ids.map(id => {
+        return Object.keys(providers).map(id => {
             return generateRow({
                 id,
                 users,
-                doctors,
-                specialities
+                providers,
+                openEditProviderDrawer,
+                
             });
         });
     };
 
-    onRowClick = key => event => {
-        const { history } = this.props;
-        history.push(`/doctors/${key}`);
-    };
+   
 
-    onRow = (record) => {
-        const { onRowClick } = this;
-        const { key } = record;
-        return {
-            onClick: onRowClick(key)
-        };
+    getTableTitle = () => {
+        const {intl: {formatMessage} = {}} = this.props;
+        const {auth : {authenticated_category = ''} = {}} = this.props;
+      return (
+        authenticated_category === USER_CATEGORY.ADMIN
+        ?
+        (<div className="fs22 fw600 m0">{formatMessage(messages.providers)}</div>)
+        :
+        null
+        
+      );
     };
 
     render() {
-        const { onRow, getLoadingComponent, getDataSource } = this;
+        const { 
+             getLoadingComponent, getDataSource, getTableTitle } = this;
+
         const {
             loading,
             pagination_bottom,
             intl: { formatMessage } = {}
         } = this.props;
 
-        console.log("provider doctor table props ===>",this.props);
-
         return (
             <Table
                 // onRow={onRow}
-                className="wp100"
+                className="wp100 mt40"
                 rowClassName={() => "pointer"}
                 loading={loading === true ? getLoadingComponent() : false}
                 columns={getColumn({
@@ -118,14 +89,15 @@ class DoctorTable extends Component {
                     className: "pointer"
                 })}
                 dataSource={getDataSource()}
-                scroll={{ x: 1600 }}
-                pagination={{ position: pagination_bottom ? "bottom" : "top" }}
-            // pagination={{
-            //     position: "bottom"
-            // }}
+                scroll={{ x: "100%" }}
+                // title={getTableTitle}
+                pagination={{
+                    position: "top",
+                    pageSize: 10
+                }}
             />
         );
     }
 }
 
-export default injectIntl(DoctorTable);
+export default withRouter(injectIntl(ProviderTable));

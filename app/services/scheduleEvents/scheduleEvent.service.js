@@ -340,6 +340,29 @@ class ScheduleEventService {
     }
   };
 
+  getAllEventStatusByData = async ({appointment, medication, vital}) => {
+      try {
+          return await Database.getModel(TABLE_NAME).findAll({
+              where: {
+                  [Op.or]: [
+                      {
+                          ...appointment
+                      },
+                      {
+                          ...medication
+                      },
+                      {
+                          ...vital
+                      }
+                  ]
+              },
+              attributes: ["status"],
+              raw: true
+          });
+      } catch (error) {
+          throw error;
+      }
+  };
     getCount = async (data) => {
       try {
           return await Database.getModel(TABLE_NAME).count({

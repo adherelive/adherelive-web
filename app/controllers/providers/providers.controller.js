@@ -1,9 +1,10 @@
 import Controller from "../index";
 import Log from "../../../libs/log";
 import moment from "moment";
+import isEmpty from "lodash/isEmpty";
 
 import userService from "../../services/user/user.service";
-import doctorService from "../../services/doctor/doctor.service";
+// import doctorService from "../../services/doctor/doctor.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
@@ -13,8 +14,9 @@ import registrationService from "../../services/doctorRegistration/doctorRegistr
 import degreeService from "../../services/degree/degree.service";
 import collegeService from "../../services/college/college.service";
 import councilService from "../../services/council/council.service";
-import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
+// import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import appointmentService from "../../services/appointment/appointment.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -27,29 +29,37 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
+// import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 
-import * as PaymentHelper from "../payments/helper";
+// import * as PaymentHelper from "../payments/helper";
 
+// import bcrypt from "bcrypt";
+
+import {
+  DOCUMENT_PARENT_TYPE,
+  EVENT_TYPE, SIGN_IN_CATEGORY,
+  USER_CATEGORY
+} from "../../../constant";
+import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+import { Sequelize } from "sequelize";
 import bcrypt from "bcrypt";
 
-import { DOCUMENT_PARENT_TYPE, EMAIL_TEMPLATE_NAME } from "../../../constant";
+// import { generatePassword } from "../helper/passwordGenerator";
 
-import { generatePassword } from "../helper/passwordGenerator";
+// import { USER_CATEGORY } from "../../../constant";
 
-import { USER_CATEGORY } from "../../../constant";
+// import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 
-import { Proxy_Sdk, EVENTS } from "../../proxySdk";
-
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 
 const Logger = new Log("WEB > PROVIDERS > CONTROLLER");
 
 const APPOINTMENT_QUERY_TYPE = {
-  DAY:"d",
-  MONTH:"m"
+  DAY: "d",
+  MONTH: "m"
 };
 
 class ProvidersController extends Controller {
@@ -365,12 +375,20 @@ class ProvidersController extends Controller {
   getAppointmentForDoctors = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      const { userDetails: { userId } = {}, query: { type = APPOINTMENT_QUERY_TYPE.DAY, value = null } = {} } = req;
+      const {
+        userDetails: { userId } = {},
+        query: { type = APPOINTMENT_QUERY_TYPE.DAY, value = null } = {}
+      } = req;
 
-        const validDate = moment(value).isValid();
-        if (!validDate) {
-          return raiseClientError(res, 402, {}, "Please enter correct date value");
-        }
+      const validDate = moment(value).isValid();
+      if (!validDate) {
+        return raiseClientError(
+          res,
+          402,
+          {},
+          "Please enter correct date value"
+        );
+      }
 
       const providerData = await providerService.getProviderByData({
         user_id: userId
@@ -406,21 +424,26 @@ class ProvidersController extends Controller {
       for (const doctorId of doctorIds) {
         let appointmentList = [];
 
-        switch(type) {
+        switch (type) {
           case APPOINTMENT_QUERY_TYPE.DAY:
             appointmentList = await appointmentService.getDayAppointmentForDoctor(
-                doctorId,
-                value
+              doctorId,
+              value
             );
             break;
           case APPOINTMENT_QUERY_TYPE.MONTH:
             appointmentList = await appointmentService.getMonthAppointmentForDoctor(
-                doctorId,
-                value
+              doctorId,
+              value
             );
             break;
           default:
-            return raiseClientError(res, 422, {}, "Please check selected value for getting upcoming schedules")
+            return raiseClientError(
+              res,
+              422,
+              {},
+              "Please check selected value for getting upcoming schedules"
+            );
         }
 
         if (appointmentList && appointmentList.length) {
@@ -548,58 +571,264 @@ class ProvidersController extends Controller {
     }
   };
 
-  // addPaymentProduct = async (req, res) => {
-  //   const { raiseSuccess, raiseServerError, raiseClientError } = this;
-  //   try {
-  //     const { body, userDetails: { userId } = {} } = req;
+  getPatientEvents = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      /*
+       *
+       * query params:
+       * type: EVENT_TYPE
+       * from: START_DATE
+       * to: END_DATE
+       *
+       * */
+      const {
+        query: { type, from, to } = {},
+        userDetails: { userCategoryId } = {}
+      } = req;
 
-  //     const providerData = await providerService.getProviderByData({
-  //       user_id: userId
-  //     });
-  //     const provider = await ProviderWrapper(providerData);
-  //     const providerId = provider.getProviderId();
+      // instantiate services
+      const eventService = new ScheduleEventService();
 
-  //     const dataToAdd = PaymentHelper.getFormattedData(body);
+      if (isEmpty(type) || isEmpty(from) || isEmpty(to)) {
+        return raiseClientError(res, 422, {}, "please check details entered");
+      }
 
-  //     const paymentProductService = new PaymentProductService();
-  //     const paymentProductData = await paymentProductService.addDoctorProduct({
-  //       ...dataToAdd,
-  //       creator_id: providerId,
-  //       creator_type: USER_CATEGORY.PROVIDER,
-  //       product_user_type: "patient"
-  //     });
+      // doctors for provider
+      const doctors =
+        (await doctorProviderMappingService.getAllDoctorIds(userCategoryId)) ||
+        [];
 
-  //     if (paymentProductData) {
-  //       let paymentProducts = {};
+      let doctorIds = [];
+      doctors.forEach(doctor => {
+        const { doctor_id } = doctor || {};
+        doctorIds.push(doctor_id);
+      });
 
-  //       const paymentProduct = await PaymentProductWrapper({
-  //         data: paymentProductData
-  //       });
-  //       paymentProducts[paymentProduct.getId()] = paymentProduct.getBasicInfo();
+      const carePlans =
+        (await carePlanService.getMultipleCarePlanByData({
+          doctor_id: doctorIds,
+          expired_on: null
+        })) || [];
 
-  //       return raiseSuccess(
-  //         res,
-  //         200,
-  //         {
-  //           payment_products: {
-  //             ...paymentProducts
-  //           }
-  //         },
-  //         "Consultation Product added successfully"
-  //       );
-  //     } else {
-  //       return raiseClientError(
-  //         res,
-  //         201,
-  //         {},
-  //         "Please check details given for the consultation product"
-  //       );
-  //     }
-  //   } catch (error) {
-  //     Logger.debug("addPaymentProduct 500 error ", error);
-  //     return raiseServerError(res);
-  //   }
-  // };
+      Logger.debug("carePlans", carePlans);
+
+      for (let i = 0; i < carePlans.length; i++) {
+        const carePlan = await CarePlanWrapper(carePlans[i]);
+        const {
+          care_plans,
+          patients,
+          care_plan_id,
+          patient_id
+        } = await carePlan.getReferenceInfo();
+
+        const { appointment_id, medication_id, vital_id } =
+          care_plans[care_plan_id] || {};
+
+        const events = await eventService.getAllEventByData({
+          [Sequelize.Op.or]: [
+            {
+              event_id: appointment_id,
+              event_type: EVENT_TYPE.APPOINTMENT
+            },
+            {
+              event_id: medication_id,
+              event_type: EVENT_TYPE.MEDICATION_REMINDER
+            },
+            {
+              event_id: vital_id,
+              event_type: EVENT_TYPE.VITALS
+            }
+          ]
+        });
+
+        /*
+         *
+         * todo: format patients :: schedule_events
+         *  USE SORT IF NECESSARY
+         *
+         * */
+      }
+    } catch (error) {
+      Logger.debug("getPatientEvents 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getAllProviders = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { userDetails: { userData: { category } = {} } = {} } = req;
+      if (category !== USER_CATEGORY.ADMIN) {
+        return raiseClientError(res, 401, {}, "Unauthorized");
+      }
+
+      const allProviders = (await providerService.getAllProviders()) || [];
+
+      let providerData = {};
+      let userData = {};
+      let providerIds = [];
+      for (let index = 0; index < allProviders.length; index++) {
+        const provider = await ProviderWrapper(allProviders[index]);
+        const { providers, users } = await provider.getReferenceInfo();
+        providerData = { ...providerData, ...providers };
+        userData = { ...userData, ...users };
+        providerIds.push(provider.getProviderId());
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          providers: {
+            ...providerData
+          },
+          users: {
+            ...userData
+          },
+          provider_ids: providerIds
+        },
+        "Providers fetched successfully"
+      );
+    } catch (error) {
+      Logger.debug("getAllProviders 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  addProvider = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        body: {
+          email,
+          password,
+          name,
+          prefix,
+          mobile_number,
+          address,
+        } = {}
+      } = req;
+
+      const providerExists =
+        (await userService.getUserData({
+          email,
+          category: USER_CATEGORY.PROVIDER
+        })) || null;
+
+      Logger.debug("1786381627682 providerExists --> ", providerExists);
+
+      if (providerExists) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Provider already exists for the email"
+        );
+      }
+
+      const activated_on = moment().utc().toISOString();
+
+      // create user
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      const hash = await bcrypt.hash(password, salt);
+
+      const user = await userService.addUser({
+        email,
+        prefix,
+        mobile_number,
+        activated_on,
+        password: hash,
+        category: USER_CATEGORY.PROVIDER,
+        sign_in_type: SIGN_IN_CATEGORY.BASIC,
+        onboarded: true,
+        verified: true,
+      });
+
+      const userData = await UserWrapper(user.get());
+
+      // create provider
+      const provider = await providerService.addProvider({
+        name,
+        address,
+        activated_on,
+        user_id: userData.getId(),
+      });
+      const providerData = await ProviderWrapper(provider);
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          providers: {
+            [providerData.getProviderId()]: providerData.getBasicInfo()
+          },
+          users: {
+            [userData.getId()]: userData.getBasicInfo()
+          }
+        },
+        "Provider added successfully"
+      );
+    } catch (error) {
+      Logger.debug("addProvider 500 error ", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updateProvider = async (req, res) => {
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    try {
+      Logger.info(`provider id : ${req.params.id}`);
+      const {params: {id} = {}, body = {}} = req;
+      const {
+        email,
+        name,
+        prefix,
+        mobile_number,
+        address,
+      } = body || {};
+
+      const existingProvider = await providerService.getProviderByData({
+        id
+      }) || null;
+
+      if(!existingProvider) {
+        return raiseClientError(res, 422, {}, "Provider does not exists");
+      }
+
+      const previousProvider = await ProviderWrapper(existingProvider);
+
+      // update user
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+
+      await userService.updateUser({
+        email,
+        prefix,
+        mobile_number,
+      }, previousProvider.getUserId());
+
+      // update provider
+      await providerService.updateProvider({
+        name,
+        address
+      }, id);
+
+      const updatedProvider = await ProviderWrapper(null, id);
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            ...await updatedProvider.getReferenceInfo()
+          },
+          "Provider updated successfully"
+      );
+
+    } catch(error) {
+      Logger.debug("updateProvider 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new ProvidersController();
