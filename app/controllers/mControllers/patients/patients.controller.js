@@ -9,6 +9,7 @@ import UserPreferenceService from "../../../services/userPreferences/userPrefere
 import ConsentService from "../../../services/consents/consent.service";
 import DoctorService from "../../../services/doctor/doctor.service";
 import doctorRegistrationService from "../../../services/doctorRegistration/doctorRegistration.service";
+import conditionService from "../../../services/condition/condition.service";
 
 // WRAPPERS ------------
 import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
@@ -1304,32 +1305,40 @@ class MPatientController extends Controller {
         appointment_ids = []
       } = await carePlanData.getAllInfo();
 
-      const condition = await ConditionWrapper(null, condition_id);
-      conditions[condition_id] = condition.getBasicInfo();
+      const conditionData = await conditionService.getByData({
+        id: condition_id
+      });
+      if (conditionData) {
+        const condition = await ConditionWrapper(conditionData);
+        conditions[condition_id] = condition.getBasicInfo();
+      }
 
       for (const medicationId of medication_ids) {
         const medication = await medicationReminderService.getMedication({
           id: medicationId
         });
-        const medicationWrapper = await MReminderWrapper(medication);
-        const medicineId = medicationWrapper.getMedicineId();
-        const medicineData = await medicineService.getMedicineByData({
-          id: medicineId
-        });
 
-        for (const medicine of medicineData) {
-          const medicineWrapper = await MedicineApiWrapper(medicine);
-          medicines = {
-            ...medicines,
-            ...{
-              [medicineWrapper.getMedicineId()]: medicineWrapper.getBasicInfo()
-            }
+        if (medication) {
+          const medicationWrapper = await MReminderWrapper(medication);
+          const medicineId = medicationWrapper.getMedicineId();
+          const medicineData = await medicineService.getMedicineByData({
+            id: medicineId
+          });
+
+          for (const medicine of medicineData) {
+            const medicineWrapper = await MedicineApiWrapper(medicine);
+            medicines = {
+              ...medicines,
+              ...{
+                [medicineWrapper.getMedicineId()]: medicineWrapper.getBasicInfo()
+              }
+            };
+          }
+          medications = {
+            ...medications,
+            ...{ [medicationId]: medicationWrapper.getBasicInfo() }
           };
         }
-        medications = {
-          ...medications,
-          ...{ [medicationId]: medicationWrapper.getBasicInfo() }
-        };
       }
 
       const now = moment();
@@ -1338,16 +1347,19 @@ class MPatientController extends Controller {
         const appointment = await appointmentService.getAppointmentById(
           appointmentId
         );
-        const appointmentWrapper = await AppointmentWrapper(appointment);
 
-        const startDate = appointmentWrapper.getStartTime();
-        const startDateObj = moment(startDate);
+        if (appointment) {
+          const appointmentWrapper = await AppointmentWrapper(appointment);
 
-        const diff = startDateObj.diff(now);
+          const startDate = appointmentWrapper.getStartTime();
+          const startDateObj = moment(startDate);
 
-        if (diff > 0) {
-          if (!nextAppointment || nextAppointment.diff(startDateObj) > 0) {
-            nextAppointment = startDateObj;
+          const diff = startDateObj.diff(now);
+
+          if (diff > 0) {
+            if (!nextAppointment || nextAppointment.diff(startDateObj) > 0) {
+              nextAppointment = startDateObj;
+            }
           }
         }
       }
@@ -1360,27 +1372,20 @@ class MPatientController extends Controller {
       }
 
       const patient = await patientService.getPatientByUserId(userId);
+
       const patientData = await PatientWrapper(patient);
 
       const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
 
       const {
         [doctor_id]: {
-          basic_info: {
-            signature_pic = "",
-            first_name = "",
-            last_name = "",
-            middle_name = ""
-          } = {}
+          basic_info: { signature_pic = "", full_name = "" } = {}
         } = {}
       } = doctors;
-      let doctorName = first_name;
-      doctorName = middle_name ? `${doctorName} ${middle_name}` : doctorName;
-      doctorName = last_name ? `${doctorName} ${last_name}` : doctorName;
 
       checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
 
-      const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${doctorName}.jpeg`;
+      const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
 
       const downloadImage = await downloadFileFromS3(
         getFilePath(signature_pic),
@@ -1390,6 +1395,7 @@ class MPatientController extends Controller {
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
         doctor_id
       );
+
       await doctorQualifications.forEach(async doctorQualification => {
         const doctorQualificationWrapper = await QualificationWrapper(
           doctorQualification
@@ -1424,8 +1430,11 @@ class MPatientController extends Controller {
       for (const id of user_ids) {
         const intId = parseInt(id);
         const user = await userService.getUserById(intId);
-        const userWrapper = await UserWrapper(user.get());
-        usersData = { ...usersData, ...{ [id]: userWrapper.getBasicInfo() } };
+
+        if (user) {
+          const userWrapper = await UserWrapper(user.get());
+          usersData = { ...usersData, ...{ [id]: userWrapper.getBasicInfo() } };
+        }
       }
 
       dataForPdf = {
