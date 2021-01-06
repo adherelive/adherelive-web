@@ -15,6 +15,18 @@ router.get(
 );
 
 router.get(
+    "/missed",
+    Authenticate,
+    EventController.getAllMissedEvents
+);
+
+router.get(
+    "/missed/:patient_id",
+    Authenticate,
+    EventController.getPatientMissedEvents
+);
+
+router.get(
     "/:patient_id",
     Authenticate,
     EventController.getAllEvents

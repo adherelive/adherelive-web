@@ -270,83 +270,83 @@ class MobileUserController extends Controller {
     }
   };
 
-  verifyOtp = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
-    try {
-      const { otp, user_id } = req.body;
-
-      const otpDetails = await otpVerificationService.getOtpByData({
-        otp,
-        user_id
-      });
-
-      Logger.debug("otpDetails --> ", otpDetails);
-
-      if (otpDetails.length > 0) {
-        const destroyOtp = await otpVerificationService.delete({ user_id });
-        const userDetails = await userService.getUserById(
-          otpDetails[0].get("user_id")
-        );
-
-        const userData = await UserWrapper(userDetails.get());
-        let permissions = {
-          permissions: []
-        };
-
-        if (userData.isActivated()) {
-          permissions = await userData.getPermissions();
-        }
-
-        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
-        const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userId: userData.getId()
-          },
-          secret,
-          {
-            expiresIn
-          }
-        );
-
-        const appNotification = new AppNotification();
-
-        const notificationToken = appNotification.getUserToken(`${user_id}`);
-        const feedId = base64.encode(`${user_id}`);
-
-        Logger.debug("userData ----> ", userData.isActivated());
-        return raiseSuccess(
-          res,
-          200,
-          {
-            accessToken,
-            notificationToken,
-            feedId,
-            users: {
-              [userData.getId()]: {
-                ...userData.getBasicInfo()
-              }
-            },
-            auth_user: userData.getId(),
-            auth_category: userData.getCategory(),
-            ...permissions
-          },
-          "Signed in successfully"
-        );
-      } else {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "OTP not correct. Please try again"
-        );
-      }
-    } catch (error) {
-      Logger.debug("verifyOtp 500 error", error);
-      raiseServerError(res);
-    }
-  };
+  // verifyOtp = async (req, res) => {
+  //   const { raiseServerError, raiseSuccess } = this;
+  //   try {
+  //     const { otp, user_id } = req.body;
+  //
+  //     const otpDetails = await otpVerificationService.getOtpByData({
+  //       otp,
+  //       user_id
+  //     });
+  //
+  //     Logger.debug("otpDetails --> ", otpDetails);
+  //
+  //     if (otpDetails.length > 0) {
+  //       const destroyOtp = await otpVerificationService.delete({ user_id });
+  //       const userDetails = await userService.getUserById(
+  //         otpDetails[0].get("user_id")
+  //       );
+  //
+  //       const userData = await UserWrapper(userDetails.get());
+  //       let permissions = {
+  //         permissions: []
+  //       };
+  //
+  //       if (userData.isActivated()) {
+  //         permissions = await userData.getPermissions();
+  //       }
+  //
+  //       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+  //
+  //       const secret = process.config.TOKEN_SECRET_KEY;
+  //       const accessToken = await jwt.sign(
+  //         {
+  //           userId: userData.getId()
+  //         },
+  //         secret,
+  //         {
+  //           expiresIn
+  //         }
+  //       );
+  //
+  //       const appNotification = new AppNotification();
+  //
+  //       const notificationToken = appNotification.getUserToken(`${user_id}`);
+  //       const feedId = base64.encode(`${user_id}`);
+  //
+  //       Logger.debug("userData ----> ", userData.isActivated());
+  //       return raiseSuccess(
+  //         res,
+  //         200,
+  //         {
+  //           accessToken,
+  //           notificationToken,
+  //           feedId,
+  //           users: {
+  //             [userData.getId()]: {
+  //               ...userData.getBasicInfo()
+  //             }
+  //           },
+  //           auth_user: userData.getId(),
+  //           auth_category: userData.getCategory(),
+  //           ...permissions
+  //         },
+  //         "Signed in successfully"
+  //       );
+  //     } else {
+  //       return this.raiseClientError(
+  //         res,
+  //         422,
+  //         {},
+  //         "OTP not correct. Please try again"
+  //       );
+  //     }
+  //   } catch (error) {
+  //     Logger.debug("verifyOtp 500 error", error);
+  //     raiseServerError(res);
+  //   }
+  // };
 
   doctorSignIn = async (req, res) => {
     try {
