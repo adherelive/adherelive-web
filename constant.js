@@ -21,7 +21,8 @@ export const EVENT_TYPE = {
   ARTICLE: "article",
   MEDICATION_REMINDER: "medication-reminder",
   CARE_PLAN_ACTIVATION: "careplan-activation",
-  APPOINTMENT_TIME_ASSIGNMENT: "appointment-time-assignment"
+  APPOINTMENT_TIME_ASSIGNMENT: "appointment-time-assignment",
+  ALL: "all",
 };
 
 export const VITALFIELD = {
