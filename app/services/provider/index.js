@@ -6,4 +6,8 @@ export default class Provider {
     getProviderId = () => {
         return this._data.get("id");
     }
+
+    getUserId = () => {
+        return this._data.get("user_id");
+    };
 }

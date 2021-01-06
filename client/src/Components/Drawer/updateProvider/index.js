@@ -1,0 +1,142 @@
+import React, { Component, Fragment } from "react";
+import { injectIntl } from "react-intl";
+import { Drawer, Select, Input } from "antd";
+import message from "antd/es/message";
+import Footer from "../footer";
+import Form from "antd/es/form";
+import messages from "./message";
+
+import UpdateProviderForm from  "./form";
+
+
+class updateProviderDrawer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+
+    this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
+      UpdateProviderForm
+    );
+  }
+
+  componentDidMount(){}
+
+  formatMessage = data => this.props.intl.formatMessage(data);
+
+  onClose = () => {
+    const { close } = this.props;
+    close();
+  };
+
+  handleSubmit = (e) =>{
+    e.preventDefault();
+    const { formRef = {}, formatMessage } = this;
+
+    const {
+      props: {
+        form: { validateFields, resetFields },
+      },
+    } = formRef;
+
+    validateFields(async (err, values) => {
+      if (!err) {
+
+        const {payload = {},providers={},users={},visible} = this.props;
+        const {provider_id=null} = payload;
+
+        let {
+          name='',
+          prefix='91',
+          mobile_number='',
+          email='',
+          address=''
+        } = values;
+
+
+        const data = {
+          name,
+          prefix,
+          mobile_number,
+          email,
+          address,
+          };
+
+       
+          try {
+            const {updateProvider}=this.props;
+            const response = await updateProvider(provider_id,data);
+        
+            const { status, payload: { message: msg } = {} } = response;
+            if (status) {
+              message.success(this.formatMessage(messages.updateProviderSuccess));
+              this.onClose();
+            } else {
+                message.warn(msg);
+            }
+          } catch (err) {
+            console.log("err", err);
+            message.warn(this.formatMessage(messages.somethingWentWrong));
+          }
+        
+      }
+
+    });
+  }
+
+  setFormRef = (formRef) => {
+    this.formRef = formRef;
+    if (formRef) {
+      this.setState({ formRef: true });
+    }
+  };
+
+  render() {
+    const {payload = {},providers={},users={},visible} = this.props;
+    const {provider_id=null} = payload;
+
+    const {
+      onClose,
+      formatMessage,
+      setFormRef,
+      handleSubmit,
+      FormWrapper,
+    } = this;
+
+    if (visible !== true) {
+      return null;
+    }
+
+    return (
+      <Fragment>
+        <Drawer
+          title={this.formatMessage(messages.updateProvider)}
+          placement="right"
+          maskClosable={false}
+          headerStyle={{
+            position: "sticky",
+            zIndex: "9999",
+            top: "0px"
+          }}
+          destroyOnClose={true}
+          onClose={onClose}
+          visible={visible}
+          width={`30%`}
+        >
+          {/* {this.renderUpdateProviderForm()} */}
+          <FormWrapper wrappedComponentRef={setFormRef} {...this.props} provider_id={provider_id}/>
+
+          <Footer
+            onSubmit={this.handleSubmit}
+            onClose={onClose}
+            submitText={this.formatMessage(messages.submit)}
+            submitButtonProps={null}
+            cancelComponent={null}
+          />
+        </Drawer>
+      </Fragment>
+    );
+  }
+}
+
+export default injectIntl(updateProviderDrawer);

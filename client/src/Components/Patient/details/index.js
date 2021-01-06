@@ -2288,6 +2288,7 @@ class PatientDetails extends Component {
               <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
               <AddCareplanDrawer patientId={patient_id} />
+              
               {templateDrawerVisible && (
                 <TemplateDrawer
                   visible={templateDrawerVisible}

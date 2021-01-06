@@ -7,7 +7,7 @@ import confirm from "antd/es/modal/confirm";
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
-import {CalendarTwoTone, FileOutlined} from "@ant-design/icons";
+import {CalendarTwoTone, FileOutlined,ProfileOutlined} from "@ant-design/icons";
 import messages from "./messages";
 import config from "../../config";
 
@@ -24,6 +24,7 @@ const SETTINGS = "settings";
 const CALENDER = "calender";
 const TOS_PP_EDITOR = "tos-pp-editor";
 const PRIVACY_POLICY = "privacy_policy";
+const ALL_PROVIDERS = "providers";
 
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
@@ -192,7 +193,11 @@ class SideMenu extends Component {
           case TOS_PP_EDITOR:
             history.push(PATH.ADMIN.TOS_PP_EDITOR)
               break;
-        break;
+          case ALL_PROVIDERS:
+            if (authenticated_category === USER_CATEGORY.ADMIN) {
+                history.push(PATH.ADMIN.ALL_PROVIDERS);
+            }
+            break;    
           case LOG_OUT:
             handleLogout();
             break;
@@ -348,16 +353,37 @@ class SideMenu extends Component {
 
         {authenticated_category === USER_CATEGORY.ADMIN
             ?
-            (<MenuItem
-                className="flex direction-column justify-center align-center p0"
-                key={TOS_PP_EDITOR}
-            >
-              <Tooltip placement="right" title={formatMessage(messages.tos_pp_editor)}>
-                <FileOutlined style={{color: "#fff"}}/>
-              </Tooltip>
-            </MenuItem>)
+            (
+                <MenuItem
+                  className="flex direction-column justify-center align-center p0"
+                  key={TOS_PP_EDITOR}
+                >
+                  <Tooltip placement="right" title={formatMessage(messages.tos_pp_editor)}>
+                    <FileOutlined style={{color: "#fff"}}/>
+                  </Tooltip>
+                </MenuItem>
+                
+            )
             :
             null}
+
+        {authenticated_category === USER_CATEGORY.ADMIN
+            ?
+            (
+              <MenuItem
+              className="flex direction-column justify-center align-center p0"
+              key={ALL_PROVIDERS}
+            >
+              <Tooltip placement="right" title={formatMessage(messages.all_providers)}>
+                {/* <FileOutlined style={{color: "#fff"}}/> */}
+                <ProfileOutlined style={{color: "#fff"}}/>
+              </Tooltip>
+          </MenuItem> 
+                
+            )
+            :
+            null}    
+    
 
         {/*<MenuItem*/}
         {/*  className="flex direction-column justify-center align-center p0"*/}

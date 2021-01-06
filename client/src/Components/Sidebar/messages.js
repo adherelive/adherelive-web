@@ -10,5 +10,10 @@ export default defineMessages({
         id: "app.dashboard.sidebar.menu.privacy.policy",
         description: "",
         defaultMessage: "Privacy Policy"
-    }
+    },
+    all_providers: {
+        id: "app.dashboard.sidebar.menu.all.providers",
+        description: "",
+        defaultMessage: "Providers"
+    },
 });

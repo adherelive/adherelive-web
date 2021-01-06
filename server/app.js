@@ -6,6 +6,7 @@ import schedule from "node-schedule";
 import Start from "../app/Crons/start";
 import Passed from "../app/Crons/passed";
 import RenewSubscription from "../app/Crons/renewSubscription";
+import activePatient from "../app/Crons/activePatient";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
@@ -24,13 +25,21 @@ const cors = require("cors");
 
 const app = express();
 
+/****************************  CRONS  *********************************/
+
+// CRONS RUNNING EVERY 1 MINUTE
 const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     // await Prior.getPriorEvents();
     await Passed.runObserver();
     await Start.runObserver();
 });
 
-// for crons running at start of every month
+// CRONS RUNNING EVERY 1 HOUR
+const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+   await activePatient.runObserver();
+});
+
+// CRONS RUNNING AT START OF EVERY MONTH
 const rule = new schedule.RecurrenceRule();
 rule.dayOfWeek=[new schedule.Range(0,6)];
 rule.hour = 0;
