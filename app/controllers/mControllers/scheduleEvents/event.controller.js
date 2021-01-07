@@ -13,6 +13,9 @@ import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import * as EventHelper from "../../scheduleEvents/eventHelper";
+import SymptomService from "../../../services/symptom/symptom.service";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 const Log = new Logger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 
@@ -70,12 +73,10 @@ class EventController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        query: { key = null } = {},
+        query: { type = EVENT_TYPE.ALL, key = null } = {},
         userDetails: { userData: { category }, userCategoryId } = {}
       } = req;
-      Log.info(`query : key = ${key}`);
-
-      const eventService = new EventService();
+      Log.info(`query : key = ${key} | type = ${type}`);
 
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(
@@ -86,11 +87,17 @@ class EventController extends Controller {
         );
       }
 
+      const eventService = new EventService();
+
       const allCarePlanData = await CarePlanService.getMultipleCarePlanByData({
         patient_id: userCategoryId
       }) || [];
 
       let scheduleEvents = [];
+
+      let vitalIds = [];
+      let appointmentIds = [];
+      let medicationIds = [];
 
       for(let i = 0; i < allCarePlanData.length; i++) {
         const carePlanData = allCarePlanData[i] || {};
@@ -102,47 +109,103 @@ class EventController extends Controller {
           vital_ids = []
         } = await carePlanWrapper.getAllInfo();
 
+        vitalIds = [...vitalIds, ...vital_ids];
+        appointmentIds = [...appointmentIds, ...appointment_ids];
+        medicationIds = [...medicationIds, ...medication_ids];
 
-        if (key) {
-          const startLimit =
-              parseInt(process.config.event.count) * (parseInt(key) - 1);
-          const endLimit = parseInt(process.config.event.count);
+      }
 
-          const vitalEvents = await eventService.getPageEventByData({
-            startLimit,
-            endLimit,
-            event_type: EVENT_TYPE.VITALS,
-            eventIds: vital_ids
-          });
+      if (key) {
+        const startLimit =
+            parseInt(process.config.event.count) * (parseInt(key) - 1);
+        const endLimit = parseInt(process.config.event.count);
 
-          const appointmentEvents = await eventService.getPageEventByData({
-            startLimit,
-            endLimit,
-            event_type: EVENT_TYPE.APPOINTMENT,
-            eventIds: appointment_ids
-          });
-
-          const medicationEvents = await eventService.getPageEventByData({
-            startLimit,
-            endLimit,
-            event_type: EVENT_TYPE.MEDICATION_REMINDER,
-            eventIds: medication_ids
-          });
-
-          scheduleEvents = [
-              ...scheduleEvents,
-            ...vitalEvents,
-            ...appointmentEvents,
-            ...medicationEvents
-          ];
-        } else {
-          scheduleEvents = await eventService.getPendingEventsData({
-            eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
-          });
+        switch(type) {
+          case EVENT_TYPE.ALL:
+            scheduleEvents = await eventService.getUpcomingByData({
+              startLimit,
+              endLimit,
+              vital_ids: vitalIds,
+              appointment_ids: appointmentIds,
+              medication_ids: medicationIds
+            }) || [];
+            break;
+          case EVENT_TYPE.APPOINTMENT:
+            scheduleEvents = await eventService.getUpcomingByData({
+              startLimit,
+              endLimit,
+              appointment_ids: appointmentIds,
+            }) || [];
+            break;
+          case EVENT_TYPE.MEDICATION_REMINDER:
+            scheduleEvents = await eventService.getUpcomingByData({
+              startLimit,
+              endLimit,
+              medication_ids: medicationIds,
+            }) || [];
+            break;
+          case EVENT_TYPE.VITALS:
+            scheduleEvents = await eventService.getUpcomingByData({
+              startLimit,
+              endLimit,
+              vital_ids: vitalIds,
+            }) || [];
+            break;
         }
 
-        Log.debug("21237193721 events --> ", scheduleEvents.length);
+        // scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
+
+        // Log.debug("21237193721 events --> ", scheduleEvents.length);
+
+        // const vitalEvents = await eventService.getPageEventByData({
+        //   startLimit,
+        //   endLimit,
+        //   event_type: EVENT_TYPE.VITALS,
+        //   eventIds: vital_ids
+        // });
+        //
+        // const appointmentEvents = await eventService.getPageEventByData({
+        //   startLimit,
+        //   endLimit,
+        //   event_type: EVENT_TYPE.APPOINTMENT,
+        //   eventIds: appointment_ids
+        // });
+        //
+        // const medicationEvents = await eventService.getPageEventByData({
+        //   startLimit,
+        //   endLimit,
+        //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        //   eventIds: medication_ids
+        // });
+        //
+        // scheduleEvents = [
+        //     ...scheduleEvents,
+        //   ...vitalEvents,
+        //   ...appointmentEvents,
+        //   ...medicationEvents
+        // ];
       }
+      else {
+        scheduleEvents = await eventService.getPendingEventsData({
+          appointments: {
+            event_id: appointmentIds,
+            event_type: EVENT_TYPE.APPOINTMENT
+          },
+          medications: {
+            event_id: medicationIds,
+            event_type: EVENT_TYPE.MEDICATION_REMINDER
+          },
+          vitals: {
+            event_id: vitalIds,
+            event_type: EVENT_TYPE.VITALS
+          }
+        });
+      }
+      // else {
+      //   scheduleEvents = await eventService.getPendingEventsData({
+      //     eventIds: [...appointment_ids, ...medication_ids, ...vital_ids]
+      //   });
+      // }
 
         if (scheduleEvents.length > 0) {
           const dateWiseEventData = {};
@@ -329,6 +392,121 @@ class EventController extends Controller {
 
     } catch(error) {
       Log.debug("markEventComplete 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getAllMissedEvents = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { userDetails: { userData: { category } = {} } = {} } = req;
+      Log.info(`CHARTS FOR AUTH: ${category}`);
+
+      let response = {};
+      let responseMessage = "No event data exists at the moment";
+
+      switch (category) {
+        case USER_CATEGORY.DOCTOR:
+          [response, responseMessage] = await EventHelper.doctorChart(
+              req
+          );
+          break;
+        // case USER_CATEGORY.PROVIDER:
+        //   [response, responseMessage] = await EventHelper.providerChart(
+        //       req
+        //   );
+        //   break;
+      }
+
+      return raiseSuccess(res, 200, { ...response }, responseMessage);
+    } catch (error) {
+      Log.debug("getAllMissedEvents 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getPatientMissedEvents = async (req, res) => {
+    const {raiseSuccess, raiseServerError} = this;
+    try {
+      const {params: {patient_id} = {}} = req;
+      Log.info(`params : patient_id = ${patient_id}`);
+
+      const carePlans = await CarePlanService.getMultipleCarePlanByData({
+        patient_id
+      }) || [];
+
+      let appointmentIds = [];
+      let medicationIds = [];
+      let vitalIds = [];
+
+      for(let index = 0; index < carePlans.length; index++) {
+        const carePlan = await CarePlanWrapper(carePlans[index]);
+        const {appointment_ids, medication_ids, vital_ids} = await carePlan.getAllInfo();
+
+        appointmentIds = [...appointmentIds, ...appointment_ids];
+        medicationIds = [...medicationIds, ...medication_ids];
+        vitalIds = [...vitalIds, ...vital_ids];
+      }
+
+      // symptoms
+      const symptomsCount = await SymptomService.getCount({
+        patient_id,
+      });
+
+      const EventService = new eventService();
+
+      return raiseSuccess(res, 200, {
+        missed_appointment: {
+          critical: await EventService.getCount({
+            event_type: EVENT_TYPE.APPOINTMENT,
+            event_id: appointmentIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: true
+          }),
+          non_critical: await EventService.getCount({
+            event_type: EVENT_TYPE.APPOINTMENT,
+            event_id: appointmentIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: false
+          }),
+        },
+
+        missed_medications: {
+          critical: await EventService.getCount({
+            event_type: EVENT_TYPE.MEDICATION_REMINDER,
+            event_id: medicationIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: true
+          }),
+          non_critical: await EventService.getCount({
+            event_type: EVENT_TYPE.MEDICATION_REMINDER,
+            event_id: medicationIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: false
+          }),
+        },
+        missed_vitals: {
+          critical: await EventService.getCount({
+            event_type: EVENT_TYPE.VITALS,
+            event_id: vitalIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: true
+          }),
+          non_critical: await EventService.getCount({
+            event_type: EVENT_TYPE.VITALS,
+            event_id: vitalIds,
+            status: EVENT_STATUS.EXPIRED,
+            critical: false
+          }),
+        },
+        missed_symptoms: {
+          critical: 0,
+          non_critical: symptomsCount
+        }
+      }, "Patient missed events fetched successfully");
+
+    } catch(error) {
+      Log.debug("getPatientMissedEvents 500 error", error);
       return raiseServerError(res);
     }
   };

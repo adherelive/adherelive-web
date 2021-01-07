@@ -14,6 +14,12 @@ const AdminDoctorPage = lazy(() =>
   )
 );
 
+const AdminProviderPage = lazy(() =>
+  import(
+    /* webpackChunkName: "AdminProviderPage" */ "../../../Containers/Pages/provider"
+  )
+);
+
 const AdminDoctorDetailsPage = lazy(() =>
   import(
     /* webpackChunkName: "AdminDoctorDetails" */ "../../../Containers/Pages/doctorDetails"
@@ -37,6 +43,9 @@ const PrivacyPolicy = lazy(() =>
         /* webpackChunkName: "PrivacyPolicyPage" */ "../../../Containers/Pages/PrivacyPolicy"
         )
 );
+
+
+
 
 const SideMenuComp = props => {
   const { location: { pathname = '' } = {} } = props;
@@ -84,6 +93,7 @@ class AdminDoctor extends Component {
                 />
                 <Route exact path={PATH.ADMIN.TOS_PP_EDITOR} component={TosPpEditorPage} />
                 <Route exact path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
+                <Route exact path={PATH.ADMIN.ALL_PROVIDERS} component={AdminProviderPage} />
                 <Route exact path={""} component={AdminDoctorPage} />
               </Switch>
             </div>

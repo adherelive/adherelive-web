@@ -8,4 +8,9 @@ export default {
         app_key: process.env.REACT_APP_ALOGLIA_APP_KEY,
         medicine_index: process.env.REACT_APP_MEDICINE_INDEX,
     },
+    ADHERE_LIVE_CONTACT_LINK: process.env.REACT_APP_ADHERE_LIVE_CONTACT_LINK,
+    mail: {
+        LOGIN_CONTACT_MESSAGE: process.env.REACT_APP_LOGIN_CONTACT_MESSAGE,
+        VERIFICATION_PENDING_MESSAGE: process.env.REACT_APP_VERIFICATION_PENDING_MESSAGE,
+    }
 };

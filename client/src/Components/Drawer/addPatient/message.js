@@ -169,8 +169,17 @@ const messages = defineMessages({
         id: "app.addPatient.address",
         description: "",
         defaultMessage: "Address"
-    }
-      
+    },
+    heightWarnText: {
+        id: "app.addPatient.height.warn.text",
+        description: "",
+        defaultMessage: "Please enter correct height value"
+    },
+    weightWarnText: {
+        id: "app.addPatient.weight.warn.text",
+        description: "",
+        defaultMessage: "Please enter correct weight value"
+    },
     
 });
 

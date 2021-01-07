@@ -30,7 +30,7 @@ export const db = database => {
       email: {
         type: DataTypes.STRING,
         allow_null: true,
-        unique: true,
+        // unique: true,
         set(val) {
           this.setDataValue("email", val.toLowerCase());
         }

@@ -769,7 +769,7 @@ class AdminDoctorDetails extends Component {
 
     const { activated_on } = users[user_id] || {};
     const disabled =
-      doctor_clinic_ids.length === 0 ||
+      // doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
       doctor_registration_ids.length === 0 ||
       activated_on !== null;

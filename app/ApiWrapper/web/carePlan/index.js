@@ -4,6 +4,7 @@ import VitalService from "../../../services/vitals/vital.service";
 
 // WRAPPERS...
 import DoctorWrapper from "../doctor";
+import PatientWrapper from "../patient";
 
 class CarePlanWrapper extends BaseCarePlan {
     constructor(data) {
@@ -63,12 +64,21 @@ class CarePlanWrapper extends BaseCarePlan {
       const {doctor, patient} = _data || {};
 
       let doctorData = {};
-        let doctor_id = null;
+      let doctor_id = null;
 
       if(doctor) {
           const doctors = await DoctorWrapper(doctor);
           doctorData[doctors.getDoctorId()] = await doctors.getAllInfo();
           doctor_id = doctors.getDoctorId();
+      }
+
+      let patientData = {};
+      let patient_id = null;
+
+      if(patient) {
+          const patients = await PatientWrapper(patient);
+          patientData[patients.getPatientId()] = await patients.getAllInfo();
+          patient_id = patients.getPatientId();
       }
 
       return {
@@ -78,7 +88,12 @@ class CarePlanWrapper extends BaseCarePlan {
           doctors: {
               ...doctorData
           },
-          doctor_id
+          patients: {
+              ...patientData
+          },
+          doctor_id,
+          patient_id,
+          care_plan_id: getCarePlanId()
       };
     };
 }

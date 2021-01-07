@@ -29,6 +29,18 @@ router.post(
   MobileMedicationReminder.createCarePlanMedication
 );
 
+router.get(
+  "/missed",
+  Authenticate,
+    EventController.getAllMissedEvents
+);
+
+router.get(
+    "/missed/:patient_id",
+    Authenticate,
+    EventController.getPatientMissedEvents
+);
+
 // VITALS
 
 router.get("/vitals/:id", Authenticate, EventController.getVitalEvent);

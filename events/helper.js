@@ -223,7 +223,7 @@ export const handleVitals = async vital => {
       vital_templates = {}
     } = vital || {};
 
-    const timings = await getUserPreferences(patient_id);
+    const timings = await getUserPreferences(patientUserId);
 
     const vitalData = await FeatureDetailService.getDetailsByData({
       feature_type: FEATURE_TYPE.VITAL

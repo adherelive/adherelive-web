@@ -6,7 +6,8 @@ import {
   FEATURE_TYPE,
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  S3_DOWNLOAD_FOLDER, NOTIFICATION_STAGES
+  S3_DOWNLOAD_FOLDER,
+  NOTIFICATION_STAGES
 } from "../../../../constant";
 import moment from "moment";
 
@@ -69,7 +70,12 @@ class MobileAppointmentController extends Controller {
         provider_name = null,
         critical = false
       } = body;
-      const { userId, userData: { category } = {}, userCategoryId, userCategoryData: {basic_info: {full_name} = {}} = {} } = userDetails || {};
+      const {
+        userId,
+        userData: { category } = {},
+        userCategoryId,
+        userCategoryData: { basic_info: { full_name } = {} } = {}
+      } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
@@ -165,9 +171,7 @@ class MobileAppointmentController extends Controller {
 
       const QueueService = new queueService();
 
-      await QueueService.sendMessage(
-        eventScheduleData
-      );
+      await QueueService.sendMessage(eventScheduleData);
 
       const appointmentJob = AppointmentJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -273,7 +277,12 @@ class MobileAppointmentController extends Controller {
         provider_name = null,
         critical = false
       } = body;
-      const { userId, userData: { category } = {}, userCategoryId, userCategoryData: {basic_info: {full_name} = {}} = {}} = userDetails || {};
+      const {
+        userId,
+        userData: { category } = {},
+        userCategoryId,
+        userCategoryData: { basic_info: { full_name } = {} } = {}
+      } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
@@ -412,8 +421,8 @@ class MobileAppointmentController extends Controller {
       await QueueService.sendMessage(eventScheduleData);
 
       const appointmentJob = AppointmentJob.execute(
-          NOTIFICATION_STAGES.UPDATE,
-          eventScheduleData
+        NOTIFICATION_STAGES.UPDATE,
+        eventScheduleData
       );
       await NotificationSdk.execute(appointmentJob);
 
@@ -521,23 +530,23 @@ class MobileAppointmentController extends Controller {
 
       Logger.debug("file ----> ", file);
 
-      const scheduleEventService = new ScheduleEventService();
+      // const scheduleEventService = new ScheduleEventService();
 
-      const eventForAppointment = await scheduleEventService.getEventByData({
-        event_id: appointment_id,
-        event_type: EVENT_TYPE.APPOINTMENT
-      });
+      // const eventForAppointment = await scheduleEventService.getEventByData({
+      //   event_id: appointment_id,
+      //   event_type: EVENT_TYPE.APPOINTMENT
+      // });
 
-      const scheduleData = await EventWrapper(eventForAppointment);
+      // const scheduleData = await EventWrapper(eventForAppointment);
 
-      if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "Cannot upload documents before appointment is complete"
-        );
-      }
+      // if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
+      //   return this.raiseClientError(
+      //     res,
+      //     422,
+      //     {},
+      //     "Cannot upload documents before appointment is complete"
+      //   );
+      // }
       let appointmentApiData = {};
       const appointmentDetails = await appointmentService.getAppointmentById(
         appointment_id

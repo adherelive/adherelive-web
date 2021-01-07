@@ -37,7 +37,11 @@ const addDoctorForm = Joi.object().keys({
     .label("Email entered is not valid"),
   is_provider: Joi.boolean()
     .optional()
+    .allow("", null),
+  doctor_id: Joi.number()
+    .optional()
     .allow("", null)
+    .label("Incorrect doctor selected")
 });
 
 const addPatientForm = Joi.object().keys({
@@ -293,15 +297,16 @@ const addClinicsForm = Joi.object().keys({
   clinics: Joi.array().items(
     Joi.object().keys({
       name: Joi.string()
-        .required()
-        .label("Clinic name is required"),
+        .optional()
+        .allow(null, ""),
       location: Joi.string()
-        .required()
-        .label("Location of clinic is required"),
+        .optional()
+        .allow("", null),
+      // .label("Location of clinic is required"),
       time_slots: Joi.object(),
       clinic_id: Joi.number()
-      .optional()
-      .allow("", null),
+        .optional()
+        .allow("", null)
     })
   )
 });

@@ -1,7 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
-import { PERMISSIONS, TABLE_DEFAULT_BLANK_FIELD } from "../../constant";
+import {
+  PERMISSIONS,
+  TABLE_DEFAULT_BLANK_FIELD,
+  FEATURES
+} from "../../constant";
 import plus_white from "../../Assets/images/plus_white.png";
 import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
@@ -71,14 +75,13 @@ class Dashboard extends Component {
       doctors = {},
       authenticated_user,
       closePopUp,
-      fetchChatAccessToken
+      fetchChatAccessToken,
+      getAllFeatures
     } = this.props;
     closePopUp();
     let doctorUserId = ""; //user_id of doctor
     for (let doc of Object.values(doctors)) {
-      let {
-        basic_info: { user_id, id = 1 } = {}
-      } = doc;
+      let { basic_info: { user_id, id = 1 } = {} } = doc;
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         doctorUserId = user_id;
       }
@@ -99,6 +102,7 @@ class Dashboard extends Component {
     }
     fetchChatAccessToken(authenticated_user);
     searchMedicine("");
+    getAllFeatures();
   }
 
   getMenu = () => {
@@ -265,7 +269,15 @@ class Dashboard extends Component {
     this.setState({ visibleModal: false });
   };
 
-  openVideoChatTab = () => {
+  openVideoChatTab = async () => {
+    await this.props.getAllFeatures();
+
+    const videoCallBlocked = this.checkVideoCallIsBlocked();
+
+    if (videoCallBlocked) {
+      message.error(this.formatMessage(messages.videoCallBlocked));
+      return;
+    }
     const {
       patients,
       twilio: { patientId: chatPatientId = 1 }
@@ -280,6 +292,44 @@ class Dashboard extends Component {
       `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
+  };
+
+  checkVideoCallIsBlocked = () => {
+    const { features_mappings = {} } = this.props;
+    let videoCallBlocked = false;
+    const videoCallFeatureId = this.getFeatureId(FEATURES.VIDEO_CALL);
+    const otherUserCategoryId = this.getOtherUserCategoryId();
+    const { [otherUserCategoryId]: mappingsData = [] } = features_mappings;
+
+    if (mappingsData.indexOf(videoCallFeatureId) >= 0) {
+      videoCallBlocked = false;
+    } else {
+      videoCallBlocked = true;
+    }
+
+    return videoCallBlocked;
+  };
+
+  getFeatureId = featureName => {
+    const { features = {} } = this.props;
+    const featuresIds = Object.keys(features);
+
+    for (const id of featuresIds) {
+      const { [id]: { name = null } = ({} = {}) } = features;
+
+      if (name === featureName) {
+        return parseInt(id, 10);
+      }
+    }
+
+    return null;
+  };
+
+  getOtherUserCategoryId = () => {
+    const {
+      twilio: { patientId = 1 }
+    } = this.props;
+    return patientId;
   };
 
   maximizeChat = () => {
@@ -397,9 +447,9 @@ class Dashboard extends Component {
           {/*    authPermissions.length === 0 ? "mt20" : ``*/}
           {/*  } `}*/}
           {/*>*/}
-              <div
-                  className={`flex direction-row justify-space-between align-center`}
-              >
+          <div
+            className={`flex direction-row justify-space-between align-center`}
+          >
             {/* <div className="fs28 fw700">{formatMessage(messages.dashboard)}</div> */}
             {docName !== "" ? (
               <div className="fs28 fw700">
@@ -421,11 +471,13 @@ class Dashboard extends Component {
                   trigger={["click"]}
                   placement="bottomRight"
                 >
-                     <Button type="primary" className="ml10 add-button " icon={"plus"}>
-                      <span className="fs16">Add</span>
-                    </Button>
-
-                    
+                  <Button
+                    type="primary"
+                    className="ml10 add-button "
+                    icon={"plus"}
+                  >
+                    <span className="fs16">Add</span>
+                  </Button>
                 </Dropdown>
               </div>
             )}
@@ -491,6 +543,7 @@ class Dashboard extends Component {
               }
               maximizeChat={this.maximizeChat}
               patientDp={patientDp}
+              patientId={chatPatientId}
             />
           </div>
         )}
@@ -541,14 +594,27 @@ class Dashboard extends Component {
 
         {/*{showVerifyModal && getVerifyModal()}*/}
         {/*{showModal && getVerifyModal()}*/}
-          {authPermissions.length === 0 ? (
-              <div className="fixed b0 p20 bg-light-grey wp100">
-                  <div className="fs18 fw700">{this.formatMessage(messages.important_note_text).toUpperCase()}</div>
-                  <div className="wp100 ht20 fs16 text-left">
-                      {this.formatMessage(messages.pending_verify_content_text)}
-                  </div>
-              </div>
-          ) : null}
+        {authPermissions.length === 0 ? (
+          <div className="fixed b0 p20 bg-light-grey wp100">
+            <div className="fs18 fw700">
+              {this.formatMessage(messages.important_note_text).toUpperCase()}
+            </div>
+            <div className="wp100 ht20 fs16 text-left">
+              {this.formatMessage(messages.pending_verify_content_text)}
+            </div>
+            <span className="wp100 ht20 fs16 text-left">
+              {this.formatMessage(messages.pending_verify_content_other_text)}
+            </span>{" "}
+            <a
+              href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.VERIFICATION_PENDING_MESSAGE}`}
+              target={"_blank"}
+            >
+              <span className="wp100 ht20 fs16 text-left">
+                {this.formatMessage(messages.adhere_support_text)}
+              </span>
+            </a>
+          </div>
+        ) : null}
       </Fragment>
     );
   }

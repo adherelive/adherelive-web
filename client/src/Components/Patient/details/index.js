@@ -2,11 +2,16 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
-import plus_white from "../../../Assets/images/plus_white.png";
-import chat_image from "../../../Assets/images/chat.svg";
+// import plus_white from "../../../Assets/images/plus_white.png";
+// import chat_image from "../../../Assets/images/chat.svg";
 import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
 import { doRequest } from "../../../Helper/network";
-import {REQUEST_TYPE, PATH, USER_CATEGORY, EVENT_STATUS} from "../../../constant";
+import {
+  REQUEST_TYPE,
+  PATH,
+  USER_CATEGORY,
+  EVENT_STATUS
+} from "../../../constant";
 
 import {
   GENDER,
@@ -16,20 +21,19 @@ import {
   PARTS,
   PART_LIST_CODES,
   DIAGNOSIS_TYPE,
-  TABLE_DEFAULT_BLANK_FIELD
+  TABLE_DEFAULT_BLANK_FIELD,
+  FEATURES
 } from "../../../constant";
 import {
   Tabs,
-  Upload,
   Table,
-  Menu,
   Dropdown,
   Spin,
   message,
   Button
 } from "antd";
 import Modal from "antd/es/modal";
-import Collapse from "antd/es/collapse";
+import Menu from "antd/es/menu";
 
 import OtpInput from "react-otp-input";
 
@@ -39,19 +43,17 @@ import MedicationTimelineDrawer from "../../../Containers/Drawer/medicationTimel
 
 // TABLES
 import VitalTable from "../../../Containers/Vitals/table";
-import MedicationTable from "../../../Containers/Medications/table"; 
+import MedicationTable from "../../../Containers/Medications/table";
 
 import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 
 import PatientCarePlans from "./common/patientProfileCarePlans";
 
 import {
-  MailOutlined,
   PhoneOutlined,
   MessageOutlined,
   VideoCameraOutlined,
   CaretDownOutlined,
-  InboxOutlined
 } from "@ant-design/icons";
 import moment from "moment";
 import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
@@ -85,11 +87,9 @@ import Tooltip from "antd/es/tooltip";
 
 const BLANK_TEMPLATE = "Blank Template";
 const { TabPane } = Tabs;
-const { Dragger } = Upload;
 const APPOINTMENT = "appointment";
 
 const { confirm } = Modal;
-const { Panel } = Collapse;
 
 const PATIENT_TABS = {
   ACTIONS: {
@@ -207,7 +207,7 @@ const columns_appointments = [
     title: "",
     dataIndex: "markComplete",
     key: "markComplete",
-    width: "30%",
+    width: "40%",
     render: ({
       id: appointment_id,
       end_time,
@@ -215,41 +215,52 @@ const columns_appointments = [
       markAppointmentComplete,
       formatMessage,
       uploadAppointmentDocs,
-               schedule_events,
+      schedule_events
     }) => {
       // const timeDifference = moment().diff(moment(end_time), "seconds");
 
-      const appointmentEvent = Object.keys(schedule_events).filter(id => {
-        const {event_id = {}} = schedule_events[id] || {};
+      const appointmentEvent =
+        Object.keys(schedule_events).filter(id => {
+          const { event_id = {} } = schedule_events[id] || {};
 
-        return event_id === appointment_id;
-      }) || [];
+          return event_id === appointment_id;
+        }) || [];
 
+      // if(appointmentEvent.length > 0) {
+      //   const {status} = schedule_events[appointmentEvent] || {};
+      //
+      //   if(status !== EVENT_STATUS.SCHEDULED && status !== EVENT_STATUS.COMPLETED) {
+      //     return null;
+      //   }
+      // }else{
+      //   return null;
+      // }
 
-      if(appointmentEvent.length > 0) {
-        const {status} = schedule_events[appointmentEvent] || {};
-
-        if(status !== EVENT_STATUS.SCHEDULED && status !== EVENT_STATUS.COMPLETED) {
-          return null;
-        }
-      }else{
-        return null;
-      }
-
-
-      if (active_event_id) {
-        return (
-          <div className="wp100 flex align-center justify-center pointer">
-            <Button
-              type={"primary"}
-              onClick={markAppointmentComplete(active_event_id)}
-            >
-              {formatMessage(messages.complete_text)}
-            </Button>
-          </div>
-        );
-      } else {
-        return (
+      // if (active_event_id) {
+      //   return (
+      //     <div className="wp100 flex align-center justify-center pointer">
+      //       <Button
+      //         type={"primary"}
+      //         onClick={markAppointmentComplete(active_event_id)}
+      //       >
+      //         {formatMessage(messages.complete_text)}
+      //       </Button>
+      //     </div>
+      //   );
+      // }
+      // else {}
+      return (
+        <div className="flex justify-space-between">
+          {active_event_id && (
+            <div className="wp100 flex align-center justify-center pointer">
+              <Button
+                type={"primary"}
+                onClick={markAppointmentComplete(active_event_id)}
+              >
+                {formatMessage(messages.complete_text)}
+              </Button>
+            </div>
+          )}
           <div className="wp100 flex align-center justify-center pointer">
             <Button
               type={"secondary"}
@@ -258,8 +269,8 @@ const columns_appointments = [
               {formatMessage(messages.upload_reports)}
             </Button>
           </div>
-        );
-      }
+        </div>
+      );
     }
   }
 ];
@@ -373,28 +384,42 @@ const PatientCard = ({
   openChat,
   patients,
   patient_id,
+  editPatient,
   editPatientOption
 }) => {
   const { details: { comorbidities, allergies } = {} } =
     patients[patient_id] || {};
+
+  const menu = (
+    <Menu>
+      <Menu.Item onClick={editPatient}>
+        <div>{formatMessage(messages.edit_patient)}</div>
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <div className="flex direction-column tac br10 bg-faint-grey">
       {/* <div className="flex justify-end pt20 pl20 pr20 pb6">
         <CaretDownOutlined className="pointer" />
       </div> */}
 
-      <div>
-        <Collapse
-          ghost={true}
-          expandIconPosition={"right"}
-          bordered={false}
-          expandIcon={() => <CaretDownOutlined className="pointer" />}
-        >
-          <Panel key={"1"} style={{ border: "none" }} className="br10">
-            <div className="flex   align-center tac">{editPatientOption()}</div>
-          </Panel>
-        </Collapse>
+      <div className="wp100 flex justify-end p10">
+        <Dropdown overlay={menu} placement={"bottomLeft"}>
+          <CaretDownOutlined className="pointer" />
+        </Dropdown>
       </div>
+      {/*<div>*/}
+      {/*  <Collapse*/}
+      {/*    ghost={true}*/}
+      {/*    expandIconPosition={"right"}*/}
+      {/*    bordered={false}*/}
+      {/*    expandIcon={() => <CaretDownOutlined className="pointer" />}*/}
+      {/*  >*/}
+      {/*    <Panel key={"1"} style={{ border: "none" }} className="br10">*/}
+      {/*      <div className="flex   align-center tac">{editPatientOption()}</div>*/}
+      {/*    </Panel>*/}
+      {/*  </Collapse>*/}
+      {/*</div>*/}
 
       <div className="flex">
         <div className="flex align-start">
@@ -406,10 +431,14 @@ const PatientCard = ({
         </div>
 
         <div className="flex direction-column align-start">
-          <div className="patient-name">
-            {patient_first_name} {patient_middle_name} {patient_last_name} (
-            {gender ? `${GENDER[gender].view} ` : ""}
-            {patient_age})
+          <div className="patient-name flex flex-wrap">
+            <div>
+              {patient_first_name} {patient_middle_name} {patient_last_name}
+            </div>
+            <div className="align-self-start">
+              ({gender ? `${GENDER[gender].view} ` : ""}
+              {patient_age})
+            </div>
           </div>
           <div className="patient-id mt6 mr0 mb0 ml0 warm-grey">PID: {uid}</div>
 
@@ -584,7 +613,6 @@ const PatientTreatmentCard = ({
           </div>
           <div className="fs16 fw700">{treatment_provider}</div>
         </div>
-
       </div>
     </div>
   );
@@ -658,6 +686,7 @@ class PatientDetails extends Component {
       fetchChatAccessToken,
       currentCarePlanId,
       getLastVisitAlerts,
+      searchMedicine,
       show_template_drawer = {}
     } = this.props;
 
@@ -707,7 +736,7 @@ class PatientDetails extends Component {
     getAppointments(patient_id);
 
     // }
-    // searchMedicine("");
+    searchMedicine("");
     let carePlanTemplateId = 0;
     for (let carePlan of Object.values(care_plans)) {
       let {
@@ -1222,10 +1251,52 @@ class PatientDetails extends Component {
   //   });
   // };
   openVideoChatTab = roomId => () => {
+    const videoCallBlocked = this.checkVideoCallIsBlocked();
+
+    if (videoCallBlocked) {
+      message.error(this.formatMessage(messages.videoCallBlocked));
+      return;
+    }
     window.open(
       `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
+  };
+
+  checkVideoCallIsBlocked = () => {
+    const { features_mappings = {} } = this.props;
+    let videoCallBlocked = false;
+    const videoCallFeatureId = this.getFeatureId(FEATURES.VIDEO_CALL);
+    const otherUserCategoryId = this.getOtherUserCategoryId();
+    const { [otherUserCategoryId]: mappingsData = [] } = features_mappings;
+
+    if (mappingsData.indexOf(videoCallFeatureId) >= 0) {
+      videoCallBlocked = false;
+    } else {
+      videoCallBlocked = true;
+    }
+
+    return videoCallBlocked;
+  };
+
+  getFeatureId = featureName => {
+    const { features = {} } = this.props;
+    const featuresIds = Object.keys(features);
+
+    for (const id of featuresIds) {
+      const { [id]: { name = null } = ({} = {}) } = features;
+
+      if (name === featureName) {
+        return parseInt(id, 10);
+      }
+    }
+
+    return null;
+  };
+
+  getOtherUserCategoryId = () => {
+    const { patient_id } = this.props;
+    return patient_id;
   };
 
   maximizeChat = () => {
@@ -1318,6 +1389,12 @@ class PatientDetails extends Component {
     });
   };
   openVideoChatTab = roomId => () => {
+    const videoCallBlocked = this.checkVideoCallIsBlocked();
+
+    if (videoCallBlocked) {
+      message.error(this.formatMessage(messages.videoCallBlocked));
+      return;
+    }
     window.open(
       `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
@@ -1532,8 +1609,8 @@ class PatientDetails extends Component {
     );
   };
 
-  handleEditPatientDrawer = e => {
-    e.preventDefault();
+  handleEditPatientDrawer = () => {
+    // e.preventDefault();
     let {
       patient_id: id,
       patients,
@@ -1811,8 +1888,7 @@ class PatientDetails extends Component {
       isOtherCarePlan
     } = this.state;
 
-    console.log("4534543634534535634 ---> DETAILS INDEX",carePlanTemplateIds);
-
+    console.log("4534543634534535634 ---> DETAILS INDEX", carePlanTemplateIds);
 
     const {
       formatMessage,
@@ -1828,7 +1904,7 @@ class PatientDetails extends Component {
       handleOtpVerify,
       handleOtpCancel,
       handleCarePlanChange,
-      getOtpModalFooter,
+      getOtpModalFooter
     } = this;
 
     if (loading) {
@@ -1903,9 +1979,9 @@ class PatientDetails extends Component {
       conditions[condition_id] || {};
     const { basic_info: { name: severity = "" } = {} } =
       severities[severity_id] || {};
-    
+
     const diagnosis_type_obj = DIAGNOSIS_TYPE[d_type] || {};
-    const diagnosis_type = diagnosis_type_obj["value"] || '';
+    const diagnosis_type = diagnosis_type_obj["value"] || "";
 
     let carePlan = care_plans[carePlanId] || {};
     let {
@@ -1957,7 +2033,7 @@ class PatientDetails extends Component {
         user_id,
         age,
         gender,
-        uid = "123456",
+        uid = "",
         user_id: patientUserId = ""
       }
     } = patients[patient_id] || {};
@@ -1995,7 +2071,7 @@ class PatientDetails extends Component {
       uploadDocsAppointmentId = null
     } = this.state;
 
-    console.log("289371283 patient_id detailsPage ", {patient_id});
+    console.log("289371283 patient_id detailsPage ", { patient_id });
 
     return (
       <Fragment>
@@ -2024,6 +2100,7 @@ class PatientDetails extends Component {
                 openChat={openPopUp}
                 patients={patients}
                 patient_id={patient_id}
+                editPatient={this.handleEditPatientDrawer}
                 editPatientOption={this.editPatientOption}
               />
 
@@ -2143,13 +2220,12 @@ class PatientDetails extends Component {
                               : null
                           }
                         /> */}
-                    
-                        <MedicationTable
-                         patientId={patient_id}
-                         carePlanId={carePlanId}
-                        isOtherCarePlan={isOtherCarePlan}
-                        />
 
+                        <MedicationTable
+                          patientId={patient_id}
+                          carePlanId={carePlanId}
+                          isOtherCarePlan={isOtherCarePlan}
+                        />
                       </TabPane>
                       <TabPane tab="Appointments" key="2">
                         <Table
@@ -2201,17 +2277,18 @@ class PatientDetails extends Component {
                 patientId={patient_id}
                 carePlanId={carePlanId}
               />
-               <EditMedicationReminder
+              <EditMedicationReminder
                 patientId={patient_id}
                 carePlanId={carePlanId}
               />
-              
+
               {/* <EditMedicationReminder/> */}
 
               <AddVitals carePlanId={carePlanId} />
               <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
               <AddCareplanDrawer patientId={patient_id} />
+              
               {templateDrawerVisible && (
                 <TemplateDrawer
                   visible={templateDrawerVisible}
@@ -2228,7 +2305,6 @@ class PatientDetails extends Component {
                 carePlan={carePlan}
                 carePlanId={carePlanId}
               />
-             
             </Fragment>
           )}
           {popUpVisible && (
@@ -2254,6 +2330,7 @@ class PatientDetails extends Component {
                     : ""
                 }
                 maximizeChat={this.maximizeChat}
+                patientId={patient_id}
               />
             </div>
           )}

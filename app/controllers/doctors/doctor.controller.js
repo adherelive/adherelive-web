@@ -25,6 +25,8 @@ import councilService from "../../services/council/council.service";
 import AccountDetailsService from "../../services/accountDetails/accountDetails.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
+import featuresService from "../../services/features/features.service";
+import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 
 // import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
@@ -44,9 +46,12 @@ import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
 import ProviderWrapper from "../../ApiWrapper/web/provider";
+import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
 
 import { createNewUser } from "../user/userHelper";
 import { generatePassword } from "../helper/passwordGenerator";
+
+import { addProviderDoctor } from "./providerHelper";
 
 import {
   ALLOWED_DOC_TYPE_DOCTORS,
@@ -57,7 +62,8 @@ import {
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
   VERIFICATION_TYPE,
-  PATIENT_MEAL_TIMINGS
+  PATIENT_MEAL_TIMINGS,
+  FEATURES
 } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
@@ -348,9 +354,9 @@ class DoctorController extends Controller {
       const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
         doctorWrapper.getDoctorId()
       );
-      const doctorClinics = await clinicService.getClinicForDoctor(
-        doctorWrapper.getDoctorId()
-      );
+      // const doctorClinics = await clinicService.getClinicForDoctor(
+      //   doctorWrapper.getDoctorId()
+      // );
 
       if (doctorQualifications.length === 0) {
         return this.raiseClientError(
@@ -366,14 +372,15 @@ class DoctorController extends Controller {
           {},
           "Doctor has not updated any registration details yet. Cannot be verified"
         );
-      } else if (doctorClinics.length === 0) {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "Doctor has not updated any clinic details yet. Cannot be verified"
-        );
       }
+      // else if (doctorClinics.length === 0) {
+      //   return this.raiseClientError(
+      //     res,
+      //     422,
+      //     {},
+      //     "Doctor has not updated any clinic details yet. Cannot be verified"
+      //   );
+      // }
 
       const {
         basic_info: { first_name, middle_name, last_name } = {}
@@ -406,9 +413,9 @@ class DoctorController extends Controller {
           mainBodyText: `Greetings from Adhere! We are really happy to inform you that your account has been verified.`,
           subBodyText:
             "To enable Add Patient option on your Dashboard, please click on verify and login via email and password for the account",
-          buttonText: "Verify",
+          buttonText: "Welcome",
           host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com"
+          contactTo: "info@adhere.live"
         }
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
@@ -432,9 +439,8 @@ class DoctorController extends Controller {
   addDoctor = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {
-        userDetails: { userId, userData: { category: userCategory } = {} } = {}
-      } = req;
+      const { userDetails: { userId } = {} } = req;
+
       const {
         name,
         city,
@@ -446,71 +452,43 @@ class DoctorController extends Controller {
         is_provider,
         email
       } = req.body;
+
+      if (is_provider) {
+        const resp = await addProviderDoctor(
+          req,
+          res,
+          raiseSuccess,
+          raiseClientError
+        );
+        return resp;
+      }
+
       const doctorName = name.split(" ");
       const user_data_to_update = {
         category,
         mobile_number,
         prefix,
-        onboarding_status:
-          userCategory === USER_CATEGORY.PROVIDER
-            ? null
-            : ONBOARDING_STATUS.PROFILE_REGISTERED
+        onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
       };
 
-      const mobileNumberExist = await userService.getUserByData({
-        mobile_number
-      }) || [];
+      const mobileNumberExist =
+        (await userService.getUserByData({
+          mobile_number
+        })) || [];
       if (mobileNumberExist && mobileNumberExist.length) {
         const prevUser = await UserWrapper(mobileNumberExist[0].get());
         const prevUserId = prevUser.getId();
-
-        if(userCategory === USER_CATEGORY.PROVIDER){
-          let doctorUserIdTemp = null;
-          const doctorUserDetailsTemp = await userService.getUserByEmail({ email });
-          if (doctorUserDetailsTemp) {
-            const doctorUserWrapper = await UserWrapper(doctorUserDetailsTemp);
-            doctorUserIdTemp = doctorUserWrapper.getId();
-            if (prevUserId !== doctorUserIdTemp) {
-              return this.raiseClientError(
-                res,
-                422,
-                {},
-                "This mobile number is already registered."
-              );
-            }
-          } 
-        }else{
-          if (prevUserId !== userId) {
-            return this.raiseClientError(
-              res,
-              422,
-              {},
-              "This mobile number is already registered."
-            );
-          }
+        if (prevUserId !== userId) {
+          return this.raiseClientError(
+            res,
+            422,
+            {},
+            "This mobile number is already registered."
+          );
         }
-
-        
       }
 
-      let doctorUserId = null;
-
-      if (is_provider) {
-        if (userCategory !== USER_CATEGORY.PROVIDER) {
-          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
-        }
-
-        const doctorUserDetails = await userService.getUserByEmail({ email });
-        if (doctorUserDetails) {
-          const doctorUserWrapper = await UserWrapper(doctorUserDetails);
-          doctorUserId = doctorUserWrapper.getId();
-        } else {
-          // const password = generatePassword();
-          doctorUserId = await createNewUser(email);
-        }
-      } else {
-        doctorUserId = userId;
-      }
+      let doctorUserId = userId;
 
       Logger.debug("Doctor user id is: ", doctorUserId);
 
@@ -567,22 +545,6 @@ class DoctorController extends Controller {
         user_id: doctorUserId
       });
       const doctorData = await DoctorWrapper(updatedDoctor);
-
-      if (!doctorExist && is_provider) {
-        const providerData = await providerService.getProviderByData({
-          user_id: userId
-        });
-        const provider = await ProviderWrapper(providerData);
-        const providerId = provider.getProviderId();
-        const doctorId = doctorData.getDoctorId();
-
-        if (providerId) {
-          const mappingData = { doctor_id: doctorId, provider_id: providerId };
-          const response = await doctorProviderMappingService.createDoctorProviderMapping(
-            mappingData
-          );
-        }
-      }
 
       return raiseSuccess(
         res,
@@ -895,6 +857,7 @@ class DoctorController extends Controller {
       let patientData = null;
       let patientOtherDetails = {};
       let carePlanOtherDetails = {};
+      let patientFeatureIds = [];
 
       if (comorbidities) {
         patientOtherDetails["comorbidities"] = comorbidities;
@@ -910,6 +873,9 @@ class DoctorController extends Controller {
       }
 
       Logger.debug("1789173127 userExists.length ---> ", userExists.length);
+
+      const doctor = await doctorService.getDoctorByData({ user_id: userId });
+
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
         userData = await UserWrapper(userExists[0].get());
@@ -1000,9 +966,24 @@ class DoctorController extends Controller {
 
         await patientsService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
+
+        const features = await featuresService.getAllFeatures();
+
+        for (const feature of features) {
+          const { id: featureId } = feature;
+          const featureMappingData = await doctorPatientFeatureMappingService.create(
+            {
+              feature_id: featureId,
+              patient_id: patientData.getPatientId(),
+              doctor_id: doctor.get("id")
+            }
+          );
+          if (featureMappingData) {
+            patientFeatureIds.push(featureId);
+          }
+        }
       }
 
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData(
         {
           treatment_id,
@@ -1033,7 +1014,6 @@ class DoctorController extends Controller {
         details,
         created_at: moment()
       });
-
 
       const carePlanData = await CarePlanWrapper(carePlan);
       const care_plan_id = await carePlanData.getCarePlanId();
@@ -1154,6 +1134,9 @@ class DoctorController extends Controller {
           },
           medicines: {
             ...medicineApiData
+          },
+          features_mappings: {
+            [patientData.getPatientId()]: patientFeatureIds
           }
         },
         "Patient added successfully"
@@ -1226,29 +1209,26 @@ class DoctorController extends Controller {
         if (id && id !== "0") {
           let collegeId = college_id;
           if (college_name !== "") {
-
-            const existingCollege  = await collegeService.getByData({
-              name:college_name
-            }) ;
+            const existingCollege = await collegeService.getByData({
+              name: college_name
+            });
 
             // Logger.debug("876546789653456789876789",existingCollege);
 
-            if(!existingCollege){
-
+            if (!existingCollege) {
               const college = await collegeService.create({
                 name: college_name,
                 user_created: true
               });
-  
+
               const collegeWrapper = await CollegeWrapper(college);
               collegeId = collegeWrapper.getCollegeId();
-
-            }else{
-              const existingCollegeWrapper = await CollegeWrapper(existingCollege);
+            } else {
+              const existingCollegeWrapper = await CollegeWrapper(
+                existingCollege
+              );
               collegeId = existingCollegeWrapper.getCollegeId();
             }
-
-            
           }
 
           const qualification = await qualificationService.updateQualification(
@@ -1542,7 +1522,6 @@ class DoctorController extends Controller {
           "Only images and pdf documents are allowed"
         );
       }
-
 
       let files = await uploadImageS3(doctorUserId, file);
 
@@ -2088,7 +2067,7 @@ class DoctorController extends Controller {
 
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
 
-      Logger.debug("76578937476238497923847238492342",userId);
+      Logger.debug("76578937476238497923847238492342", userId);
 
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
@@ -2104,7 +2083,7 @@ class DoctorController extends Controller {
       if (parseInt(doctor_id) > 0) {
         doctorWrapper = await DoctorWrapper(null, doctor_id);
       } else {
-        Logger.debug("76578937476238497923847238492342 ----> doctors",doctors);
+        Logger.debug("76578937476238497923847238492342 ----> doctors", doctors);
 
         if (!doctors) {
           return raiseClientError(res, 422, {}, "Doctor details not updated");
@@ -2246,7 +2225,7 @@ class DoctorController extends Controller {
           },
           doctors: {
             [doctorWrapper.getDoctorId()]: {
-              ...await doctorWrapper.getAllInfo(),
+              ...(await doctorWrapper.getAllInfo()),
               doctor_qualification_ids,
               doctor_clinic_ids,
               doctor_registration_ids
@@ -2311,17 +2290,21 @@ class DoctorController extends Controller {
       let doctor_clinic_ids = [];
 
       for (const clinic of clinics) {
-        const { name = "", location = "", time_slots = {} ,clinic_id=''} = clinic;
+        const {
+          name = "",
+          location = "",
+          time_slots = {},
+          clinic_id = ""
+        } = clinic;
 
         const details = {
           time_slots
         };
 
-        let newClinic = '';
+        let newClinic = "";
 
-        if(clinic_id){
-          
-          Logger.debug("76578976546786546789",clinic_id);
+        if (clinic_id) {
+          Logger.debug("76578976546786546789", clinic_id);
           if (name) {
             clinicDetails["name"] = name;
           }
@@ -2333,30 +2316,29 @@ class DoctorController extends Controller {
           }
 
           let id = clinic_id;
-           let clinic = await clinicService.updateClinic(
-            clinicDetails,
-            id
-          );        
+          let clinic = await clinicService.updateClinic(clinicDetails, id);
 
           newClinic = await clinicService.getClinicById(clinic_id);
 
-          Logger.debug("76578976546786546789 --->",newClinic);
-
-        }else{
-          newClinic = await clinicService.addClinic({
-            doctor_id: doctorData.getDoctorId(),
-            name,
-            location,
-            details
-          });
+          Logger.debug("76578976546786546789 --->", newClinic);
+        } else {
+          if (name && location) {
+            newClinic = await clinicService.addClinic({
+              doctor_id: doctorData.getDoctorId(),
+              name,
+              location,
+              details
+            });
+          }
         }
-       
 
-        const clinicData = await ClinicWrapper(newClinic);
-        clinicDetails[
-          clinicData.getDoctorClinicId()
-        ] = clinicData.getBasicInfo();
-        doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+        if (newClinic) {
+          const clinicData = await ClinicWrapper(newClinic);
+          clinicDetails[
+            clinicData.getDoctorClinicId()
+          ] = clinicData.getBasicInfo();
+          doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+        }
       }
 
       const userUpdate = await userService.updateUser(
@@ -2742,13 +2724,13 @@ class DoctorController extends Controller {
 
       const updatedCareplanDetails = await CarePlanWrapper(null, careplan_id);
 
-      return this.raiseSuccess(
+      return raiseSuccess(
         res,
         200,
         {
           care_plan_ids: [initialCarePlanData.getCarePlanId()],
           care_plans: {
-            [initialCarePlanData.getCarePlanId()]: updatedCareplanDetails.getBasicInfo()
+            [initialCarePlanData.getCarePlanId()]: await updatedCareplanDetails.getAllInfo()
           },
           patients: {
             [initialPatientData.getPatientId()]: updatedpatientDetails.getBasicInfo()
@@ -2758,6 +2740,146 @@ class DoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+  toggleChatMessagePermission = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        params: { patient_id = null } = {},
+        userDetails: { userId } = {},
+        body = {}
+      } = req;
+
+      const { mute = false } = body;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      const featureData = await featuresService.getFeatureByName(FEATURES.CHAT);
+
+      if (featureData) {
+        const feature_id = featureData.get("id");
+
+        if (mute) {
+          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id,
+              feature_id
+            }
+          );
+        } else {
+          const patientFeature = await doctorPatientFeatureMappingService.create(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id: patient.getPatientId(),
+              feature_id
+            }
+          );
+        }
+      }
+
+      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+        {
+          patient_id,
+          doctor_id: doctor.get("id")
+        }
+      );
+
+      let patientFeatureIds = [];
+
+      for (const feature of patientFeatures) {
+        const featureWrapper = await FeatureMappingWrapper(feature);
+        const feature_id = featureWrapper.getFeatureId();
+        patientFeatureIds.push(feature_id);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          feature_mappings: {
+            [patient_id]: patientFeatureIds
+          }
+        },
+        "Chat permission updated successfully."
+      );
+    } catch (error) {
+      Logger.debug("toggleChatMessagePermission 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+  toggleVideoCallPermission = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        params: { patient_id = null } = {},
+        userDetails: { userId } = {},
+        body = {}
+      } = req;
+
+      const { block = false } = body;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      const featureData = await featuresService.getFeatureByName(
+        FEATURES.VIDEO_CALL
+      );
+
+      if (featureData) {
+        const feature_id = featureData.get("id");
+
+        if (block) {
+          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id,
+              feature_id
+            }
+          );
+        } else {
+          const patientFeature = await doctorPatientFeatureMappingService.create(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id: patient.getPatientId(),
+              feature_id
+            }
+          );
+        }
+      }
+
+      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+        {
+          patient_id,
+          doctor_id: doctor.get("id")
+        }
+      );
+
+      let patientFeatureIds = [];
+
+      for (const feature of patientFeatures) {
+        const featureWrapper = await FeatureMappingWrapper(feature);
+        const feature_id = featureWrapper.getFeatureId();
+        patientFeatureIds.push(feature_id);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          feature_mappings: {
+            [patient_id]: patientFeatureIds
+          }
+        },
+        "Video call permission updated successfully."
+      );
+    } catch (error) {
+      Logger.debug("toggleVideoCallPermission 500 ERROR", error);
       return raiseServerError(res);
     }
   };

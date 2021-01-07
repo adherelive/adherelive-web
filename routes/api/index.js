@@ -33,6 +33,7 @@ import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
 import accountsRouter from "./accounts";
 import providersRouter from "./providers";
+import featuresRouter from "./features";
 
 router.use(async function(req, res, next) {
   try {
@@ -113,5 +114,6 @@ router.use("/symptoms", symptomRouter);
 router.use("/vitals", vitalRouter);
 router.use("/accounts", accountsRouter);
 router.use("/providers", providersRouter);
+router.use("/features", featuresRouter);
 
 module.exports = router;
