@@ -3,6 +3,7 @@ import providerService from "../../../services/provider/provider.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
+import UserWrapper from "../../web/user";
 
 class ProviderWrapper extends BaseProvider {
   constructor(data) {
@@ -54,6 +55,26 @@ class ProviderWrapper extends BaseProvider {
       activated_on,
       doctor_ids
     };
+  };
+
+  getReferenceInfo = async () => {
+    try {
+      const {_data, getBasicInfo, getProviderId} = this;
+      const {user} = _data;
+
+      const userData = await UserWrapper(user.get());
+
+      return {
+        providers: {
+          [getProviderId()]: getBasicInfo()
+        },
+        users: {
+          [userData.getId()] : userData.getBasicInfo()
+        },
+      };
+    } catch(error) {
+      throw error;
+    }
   };
 }
 

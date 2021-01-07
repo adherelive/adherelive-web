@@ -57,7 +57,7 @@ class ClinicRegister extends Component {
     clinics[key1] = {
       name: "",
       location: "",
-      timings: [],
+      timings: {},
       daySelected: {...DAY_SELECTED_DEFAULT},
       clinic_id: ""
     };
@@ -161,7 +161,7 @@ class ClinicRegister extends Component {
       clinics[key] = {
         name: "",
         location: "",
-        timings: [],
+        timings: {},
         daySelected: {...DAY_SELECTED_DEFAULT},
         clinic_id: ""
       };
@@ -418,6 +418,7 @@ class ClinicRegister extends Component {
   };
 
   validateClinics = newClinics => {
+    console.log("11983721 newClinics --> ", {newClinics});
     for (let edu of newClinics) {
       let { name = "", location = "", timings = [] } = edu;
 
@@ -453,10 +454,12 @@ class ClinicRegister extends Component {
     if (!newClinics.length) {
       message.error(this.formatMessage(messages.clinicDetails));
       return false;
-    } else if (!this.validateClinics(newClinics)) {
-      message.error(this.formatMessage(messages.allClinicDetails));
-      return false;
-    } else if (!this.duplicateClinics(newClinics)) {
+    }
+    // else if (!this.validateClinics(newClinics)) {
+    //   message.error(this.formatMessage(messages.allClinicDetails));
+    //   return false;
+    // }
+    else if (!this.duplicateClinics(newClinics)) {
       message.error(this.formatMessage(messages.duplicateClinics));
       return false;
     }
@@ -464,13 +467,12 @@ class ClinicRegister extends Component {
   };
 
   onNextClick = () => {
-    const { history, showVerifyModal } = this.props;
-    const { authenticated_category } = this.props;
+    const { history, showVerifyModal, authenticated_category } = this.props;
     const validate = this.validateData();
-    const { doctor_id } = this.state;
+    const { doctor_id, clinics = {} } = this.state;
+
     if (validate) {
-      const { clinics = {} } = this.state;
-      let newClinics = Object.values(clinics);
+        let newClinics = Object.values(clinics);
       for (let clinic of newClinics) {
         let { timings = {} } = clinic;
         let time_slots = {
@@ -517,6 +519,22 @@ class ClinicRegister extends Component {
         }
       });
     }
+    // else {
+    //   console.log("9873182371 clinics", {clinics});
+    //   let isEmpty = true;
+    //
+    //   Object.keys(clinics).forEach(id => {
+    //     const {name = "", location = ""} = clinics[id] || {};
+    //
+    //     isEmpty = !name && !location ? true : false;
+    //   });
+    //
+    //   if(isEmpty) {
+    //     history.replace(PATH.DASHBOARD);
+    //   } else {
+    //     message.error(this.formatMessage(messages.allClinicDetails));
+    //   }
+    // }
   };
 
   onBackClick = () => {

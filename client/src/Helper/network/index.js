@@ -37,7 +37,6 @@ export const doRequest = async requestdata => {
     onUploadProgress,
   };
   try {
-    console.log("12930819382 requestConfig ", {requestConfig});
     const response = await axios(requestConfig);
     return response.data;
   } catch (error) {

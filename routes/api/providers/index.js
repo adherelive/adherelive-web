@@ -9,13 +9,6 @@ const router = express.Router();
 
 router.get("/doctors", Authenticate, isProvider, ProvidersController.getAll);
 
-router.post(
-  "/mail-password",
-  Authenticate,
-  isProvider,
-  ProvidersController.mailPassword
-);
-
 router.get(
   "/appointments-count",
   Authenticate,
@@ -28,6 +21,20 @@ router.get(
   Authenticate,
   isProvider,
   ProvidersController.getAppointmentForDoctors
+);
+
+router.get(
+    "/patients",
+    Authenticate,
+    isProvider,
+    ProvidersController.getPatientEvents
+);
+
+router.post(
+    "/mail-password",
+    Authenticate,
+    isProvider,
+    ProvidersController.mailPassword
 );
 
 // router.post(

@@ -11,11 +11,11 @@ import algoliasearch from "algoliasearch/lite";
 import config from "../../../../config";
 import {
   InstantSearch,
-  Hits,
-  SearchBox,
-  Highlight,
-  connectSearchBox,
-  connectHighlight
+  // Hits,
+  // SearchBox,
+  // Highlight,
+  // connectSearchBox,
+  // connectHighlight
 } from "react-instantsearch-dom";
 
 const { Item: FormItem } = Form;
@@ -304,6 +304,15 @@ class Medicine extends Component {
    
   }
 
+  getLabel = () => {
+    return (
+        <Fragment>
+          <span className="form-label">{this.formatMessage(messages.addMedicine)}</span>
+          <span className="star-red">*</span>
+        </Fragment>
+    )
+  };
+
 
   render() {
     const {
@@ -319,7 +328,7 @@ class Medicine extends Component {
     } = this.props;
 
     return (
-      <FormItem label={this.formatMessage(messages.addMedicine)}>
+      <FormItem label={this.getLabel()}>
         {getFieldDecorator(FIELD_NAME, {
           initialValue: temp_medicine ? `${temp_medicine}` : ""
         })(

@@ -22,7 +22,7 @@ import france from '../../../Assets/images/france.png';
 import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
 import TextArea from "antd/lib/input/TextArea";
-import { FINAL,PROBABLE,DIAGNOSIS_TYPE } from "../../../constant";
+import {FINAL, PROBABLE, DIAGNOSIS_TYPE, PATIENT_CONSTANTS} from "../../../constant";
 
 const { Option } = Select;
 
@@ -393,18 +393,40 @@ class EditPatientDrawer extends Component {
 
 
     setWeight = (e) => {
-        e.preventDefault();
-        const weight = e.target.value.trim();
-        if(weight.length > 0) {
-            this.setState({weight});
+        const { value } = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if (value === "") {
+            this.setState({ weight: value });
+        } else {
+            if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
+                if (
+                    parseFloat(value) <= PATIENT_CONSTANTS.MAX_WEIGHT_ALLOWED &&
+                    parseFloat(value) > 0
+                ) {
+                    this.setState({ weight: value });
+                } else {
+                    message.warn(this.formatMessage(messages.weightWarnText));
+                }
+            }
         }
     };
 
     setHeight = (e) => {
-        e.preventDefault();
-        const height = e.target.value.trim();
-        if(height.length > 0) {
-            this.setState({height});
+        const { value } = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if (value === "") {
+            this.setState({ height: value });
+        } else {
+            if ((!isNaN(value) && reg.test(value)) || value === "-") {
+                if (
+                    parseFloat(value) <= PATIENT_CONSTANTS.MAX_HEIGHT_ALLOWED &&
+                    parseFloat(value) > 0
+                ) {
+                    this.setState({ height: value });
+                } else {
+                    message.warn(this.formatMessage(messages.heightWarnText));
+                }
+            }
         }
     };
 
@@ -481,8 +503,8 @@ class EditPatientDrawer extends Component {
                     addonBefore={prefixSelector}
                     className={"form-inputs-ap"}
                     placeholder={this.formatMessage(messages.phoneNo)}
-                    minLength={6}
-                    maxLength={20}
+                    minLength={10}
+                    maxLength={10}
                     value={mobile_number}
                     disabled={true}
                     />
@@ -527,26 +549,25 @@ class EditPatientDrawer extends Component {
                 <div className='form-headings-ap'>{this.formatMessage(messages.height)}</div>
                 <Input
                     className={"form-inputs-ap"}
+                    type={"number"}
                     placeholder={this.formatMessage(messages.height_placeholder)}
-                    // minLength={6}
-                    // maxLength={20}
                     value={height}
-                    // disabled={true}
                     onChange={this.setHeight}
-                    
+                    max={PATIENT_CONSTANTS.MAX_HEIGHT_ALLOWED}
+                    suffix={"cm"}
                 />
 
 
 
                 <div className='form-headings-ap'>{this.formatMessage(messages.weight)}</div>
                 <Input
+                    type={"number"}
                     className={"form-inputs-ap"}
                     placeholder={this.formatMessage(messages.weight_placeholder)}
-                    // minLength={6}
-                    // maxLength={20}
                     value={weight}
                     onChange={this.setWeight}
-                    // disabled={true}
+                    max={PATIENT_CONSTANTS.MAX_WEIGHT_ALLOWED}
+                    suffix={"kg"}
                     
                 />
 

@@ -494,7 +494,7 @@ const messages = defineMessages({
     edit_patient:{
         id: "app.patient_profile.edit.patient",
         description: "",
-        defaultMessage: "Edit Patient Details"
+        defaultMessage: "Edit"
     },
     upload_reports:{
         id: "app.patient_profile.upload.reports",

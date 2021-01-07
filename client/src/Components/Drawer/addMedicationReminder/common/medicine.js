@@ -92,7 +92,6 @@ class Medicine extends Component {
       final_generic_name = "";
     }
 
-
     if (!searching_medicine) {
       return (
         <div
@@ -201,27 +200,33 @@ class Medicine extends Component {
   onOptionSelect = value => {
     const { setFormulation } = this.props;
     setFormulation(value);
-    this.setState({medicine_id: value, temp_medicine: value});
+    this.setState({ medicine_id: value, temp_medicine: value });
   };
 
   dropdownVisible = open => {
-    this.setState({searching_medicine: open, temp_medicine: ""});
+    this.setState({ searching_medicine: open, temp_medicine: "" });
   };
 
   getParentNode = t => t.parentNode;
 
   handleOnBlur = () => {
     // console.log("867546756877654567",this.state);
-    const {medicine_id=null} = this.state;
-    if(medicine_id){
+    const { medicine_id = null } = this.state;
+    if (medicine_id) {
       this.setState({
-        temp_medicine:medicine_id
-      })
+        temp_medicine: medicine_id
+      });
     }
-   
-  }
+  };
 
-
+  getLabel = () => {
+    return (
+        <Fragment>
+          <span className="form-label">{this.formatMessage(messages.addMedicine)}</span>
+          <span className="star-red">*</span>
+        </Fragment>
+    )
+  };
 
   render() {
     const {
@@ -237,15 +242,10 @@ class Medicine extends Component {
     } = this.state;
 
     const { getMedicineOptions, handleMedicineSearch, getParentNode } = this;
-    // console.log("7654676546765467", this.state.value);
 
     return (
-      <FormItem label={this.formatMessage(messages.addMedicine)}>
-        {getFieldDecorator(
-          FIELD_NAME,
-
-          {}
-        )(
+      <FormItem label={this.getLabel()}>
+        {getFieldDecorator(FIELD_NAME, {})(
           <InstantSearch
             indexName={"adhere_medicine"}
             searchClient={this.algoliaClient()}
@@ -281,7 +281,6 @@ class Medicine extends Component {
                 return option.props.children;
               }}
               getPopupContainer={getParentNode}
-
               onBlur={this.handleOnBlur}
             >
               {getMedicineOptions()}

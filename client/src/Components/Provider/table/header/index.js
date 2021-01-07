@@ -3,10 +3,9 @@ import React from "react";
 import { TABLE_COLUMN } from "../helper";
 import messages from "../messages";
 import Name from "../dataColumn/name";
-import Verified from "../dataColumn/verified";
-import Speciality from "../dataColumn/speciality";
 import Address from "../dataColumn/address";
 import ContactDetails from "../dataColumn/contactDetails";
+import Edit from "../dataColumn/edit";
 
 export default props => {
   const { formatMessage } = props || {};
@@ -15,27 +14,29 @@ export default props => {
     {
       title: formatMessage(messages.name),
       ...TABLE_COLUMN.NAME,
-      render: doctorData => <Name {...doctorData} />
-    },
-    {
-      title: formatMessage(messages.verified),
-      ...TABLE_COLUMN.VERIFIED,
-      render: doctorData => <Verified {...doctorData} />
-    },
-    {
-      title: formatMessage(messages.speciality),
-      ...TABLE_COLUMN.SPECIALITY,
-      render: doctorData => <Speciality {...doctorData} />
+      render: providerData => <Name {...providerData} />
     },
     {
       title: formatMessage(messages.address),
       ...TABLE_COLUMN.ADDRESS,
-      render: doctorData => <Address {...doctorData} />
+      render: providerData => <Address {...providerData} />
     },
     {
       title: formatMessage(messages.contact_details),
       ...TABLE_COLUMN.CONTACT_DETAILS,
       render: userData => <ContactDetails {...userData} />
+    },
+    {
+      title:'',
+      ...TABLE_COLUMN.EDIT,
+      render : data => {
+        const {  providerData,
+          openEditProviderDrawer,
+        } = data;
+          return (
+            <Edit  {...providerData} openEditProviderDrawer={openEditProviderDrawer} />
+          )
+        }
     },
   ];
 };

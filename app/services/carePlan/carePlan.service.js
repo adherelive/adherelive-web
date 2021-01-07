@@ -77,14 +77,18 @@ class CarePlanService {
   };
 
   updateCarePlan = async (data, id) => {
+    const transaction = Database.initTransaction();
     try {
       const carePlan = await Database.getModel(TABLE_NAME).update(data, {
         where: {
           id
-        }
+        },
+        transaction
       });
+      transaction.commit();
       return carePlan;
     } catch (error) {
+      transaction.rollback();
       throw error;
     }
   };

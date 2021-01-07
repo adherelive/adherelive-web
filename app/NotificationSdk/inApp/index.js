@@ -6,7 +6,11 @@ const Log = new Logger("NOTIFICATION_SDK > IN_APP");
 
 class AppNotification {
     constructor() {
-        this.client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey);
+        Log.info(`key : ${process.config.getstream.key}`);
+        Log.info(`secretKey : ${process.config.getstream.secretKey}`);
+        Log.info(`appId : ${process.config.getstream.appId}`);
+
+        this.client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey, process.config.getstream.appId);
     }
 
     notify = (templates = []) => {
@@ -29,7 +33,7 @@ class AppNotification {
         try {
             // TODO: add get stream rest api call code here
             Log.debug("sendAppNotification --> ", template.actor.toString());
-            const client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey);
+            const client = stream.connect(process.config.getstream.key, process.config.getstream.secretKey, process.config.getstream.appId);
             const userToken = client.createUserToken(
                 template.actor.toString()
             );

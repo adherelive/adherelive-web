@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { DeleteTwoTone } from "@ant-design/icons";
+import { DeleteTwoTone, LoadingOutlined } from "@ant-design/icons";
 import uuid from "react-uuid";
 import { Input, DatePicker, Upload, message, Spin } from "antd";
 
@@ -400,7 +400,7 @@ class QualificationRegister extends Component {
       doctor_id = ""
     } = this.state;
 
-    this.setState({ docs: [...docs, ...files] }, async () => {
+    this.setState({ docs: [...docs, ...files], uploadProgress: false }, async () => {
 
       const { docs, education } = this.state;
       let newEducation = education;
@@ -488,7 +488,7 @@ class QualificationRegister extends Component {
   onUploadCompleteRegistration = async ({ files = [] }, key) => {
     let { docsReg = [], speciality_id = "", gender = "" } = this.state;
 
-    this.setState({ docsReg: [...docsReg, ...files] }, async () => {
+    this.setState({ docsReg: [...docsReg, ...files], uploadRegistrationProgress: false }, async () => {
       //  async () => {
 
       let {
@@ -615,6 +615,8 @@ class QualificationRegister extends Component {
 
     let { education = {} } = this.state;
 
+    this.setState({uploadProgress: true});
+
     let qualification = education[key];
 
     // let { degree_id = '', college_id = '', year = '' } = qualification;
@@ -695,6 +697,8 @@ class QualificationRegister extends Component {
     const { onUploadCompleteRegistration } = this;
 
     let { registration = {} } = this.state;
+
+    this.setState({uploadRegistrationProgress: true});
 
     let newReg = registration[key];
 
@@ -1226,11 +1230,11 @@ class QualificationRegister extends Component {
   }
 
   renderEducation = () => {
-    let { education = {}, educationKeys = [], fileList = [] } = this.state;
+    let { education = {}, educationKeys = [], fileList = [], uploadProgress = false } = this.state;
 
     const uploadButton = (
       <div>
-        <img src={plus} className={"w22 h22"} />
+        {uploadProgress ? <LoadingOutlined /> : <img src={plus} className={"w22 h22"}/>}
       </div>
     );
     return (
@@ -1303,7 +1307,6 @@ class QualificationRegister extends Component {
                 {this.formatMessage(messages.college)}
               </div>
 
-              {/* 1000000 */}
               <Select
                 onSearch={this.callHandleCollegeSearch(key)}
                 notFoundContent={
@@ -1414,12 +1417,13 @@ class QualificationRegister extends Component {
     let {
       registration = {},
       registrationKeys = [],
-      fileList = []
+      fileList = [],
+        uploadRegistrationProgress = false
     } = this.state;
 
     const uploadButton = (
       <div>
-        <img src={plus} className={"w22 h22"} />
+        {uploadRegistrationProgress ? <LoadingOutlined /> : <img src={plus} className={"w22 h22"}/>}
       </div>
     );
     return (
