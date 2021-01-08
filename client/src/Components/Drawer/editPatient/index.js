@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker } from "antd";
+import { Drawer, Select, Input, message, Button, Spin, Radio } from "antd";
 import moment from "moment";
 import throttle from "lodash-es/throttle";
 import {getName} from "../../../Helper/validation";
@@ -59,24 +59,25 @@ class EditPatientDrawer extends Component {
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
         this.handleTreatmentSearch = throttle(this.handleTreatmentSearch.bind(this), 2000);
         this.handleSeveritySearch = throttle(this.handleSeveritySearch.bind(this), 2000);
-        this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000); 
 
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        this.handleConditionSearch(' ');
+    }
 
     componentDidUpdate(prevProps,prevState) {
 
        const {visible : prev_visible} = prevProps;
         const {visible} = this.props;
-        const {users ={},conditions ={},severity ={},treatments ={}} = this.props;
-        const {patientData,carePlanData} = this.props.payload || {};
+        const {payload = {},users ={}} = this.props;
+        const {patientData,carePlanData} = payload || {};
         const {basic_info : {age,first_name ='',middle_name ='',last_name ='',user_id ='' , id :patient_id ='',height ='',weight ='' , gender ='',address = ''} = {} , 
         details : {allergies = '' , comorbidities = ''} = {} , dob =''} = patientData || {};
 
         const {basic_info : {mobile_number ='',prefix = ''} = {} } = users[user_id] || {};
         
-        const {basic_info : {id :careplan_id = ''} = {} , details  : {clinical_notes ='',condition_id = '' , severity_id = null , symptoms = null, treatment_id =null ,
+        const {basic_info : {id :careplan_id = ''} = {} , details  : {clinical_notes ='',condition_id = null , severity_id = null , symptoms = null, treatment_id =null ,
         diagnosis : { type = '2', description  = '' } = {}}= {}} =  carePlanData || {};
 
      
@@ -84,6 +85,7 @@ class EditPatientDrawer extends Component {
 
 
         if(prev_visible !== visible ){
+
             this.setState({
                 mobile_number,
                 name: `${first_name} ${getName(middle_name)} ${getName(last_name)}`,
@@ -367,14 +369,11 @@ class EditPatientDrawer extends Component {
 
     async handleSeveritySearch(data) {
         try {
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22");
             if (data) {
 
                 const { searchSeverity } = this.props;
                 this.setState({ fetchingSeverity: true });
                 const response = await searchSeverity(data);
-                console.log("RESPONSEEEEEEEEEEEEEEEEEE",response);
-                console.log("DATAAAAAAAAAAAAAAAAA",data)
                 const { status } = response;
                 if (status) {
                     this.setState({ fetchingSeverity: false });
@@ -439,6 +438,13 @@ class EditPatientDrawer extends Component {
     };
 
     renderEditPatient = () => {
+
+        const {payload = {},doctors = {},authenticated_user=null}=this.props;
+        const {carePlanData} = payload || {};
+        const {basic_info : {doctor_id= null,} = {} } =  carePlanData || {};
+        const {basic_info : {user_id : doctor_user_id = null} = {}} = doctors[doctor_id] || {};
+        const isTreatmentDisabled = (authenticated_user && doctor_user_id && authenticated_user === doctor_user_id)
+
         let dtToday = new Date();
 
         let month = dtToday.getMonth() + 1;
@@ -616,6 +622,7 @@ class EditPatientDrawer extends Component {
                     onChange={this.setClinicalNotes}
                     onPaste={this.setPastedClinicalNotes}
                     style={{resize:"none"}}
+                    disabled={!isTreatmentDisabled}
                 />
 
 
@@ -628,6 +635,7 @@ class EditPatientDrawer extends Component {
                     onChange={this.setSymptoms}
                     onPaste={this.setPastedSymptoms}
                     style={{resize:"none"}}
+                    disabled={!isTreatmentDisabled}
                 />
 
                 <div className='form-headings-ap flex  justify-space-between'>
@@ -638,7 +646,8 @@ class EditPatientDrawer extends Component {
                         </div>
                     </div>
                     <div>
-                        <Select  key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType} >
+                        <Select  key={`diagnonsis-${diagnosis_type}`} value={diagnosis_type} onChange={this.setDiagnosisType} 
+                        disabled={!isTreatmentDisabled}>
 
                             <Option 
                             value={DIAGNOSIS_TYPE[FINAL].diagnosis_type}
@@ -662,6 +671,7 @@ class EditPatientDrawer extends Component {
                     onChange={this.setDiagnosis}
                     onPaste={this.setPastedDiagnosis}
                     style={{resize:"none"}}
+                    disabled={!isTreatmentDisabled}
                 />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.condition)}</div>
@@ -670,7 +680,7 @@ class EditPatientDrawer extends Component {
                 <Select
                     className="form-inputs-ap drawer-select"
                     placeholder="Select Condition"
-                    value={this.state.condition}
+                    value={condition}
                     onChange={this.setCondition}
                     onSearch={this.handleConditionSearch}
                     notFoundContent={this.state.fetchingCondition ? <Spin size="small" /> : 'No match found'}
@@ -682,6 +692,7 @@ class EditPatientDrawer extends Component {
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
+                    disabled={!isTreatmentDisabled}
 
                 >
                     {this.getConditionOption()}
@@ -705,6 +716,7 @@ class EditPatientDrawer extends Component {
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
+                    disabled={!isTreatmentDisabled}
 
                 >
                     {this.getSeverityOption()}
@@ -728,6 +740,8 @@ class EditPatientDrawer extends Component {
                             .toLowerCase()
                             .indexOf(input.toLowerCase()) >= 0
                     }
+                    disabled={!isTreatmentDisabled}
+
                 >
                     {this.getTreatmentOption()}
                 </Select>
@@ -741,7 +755,6 @@ class EditPatientDrawer extends Component {
         
         const { mobile_number = '', date_of_birth = '', treatment = null , severity = null, condition = null, prefix = '',diagnosis_description='',diagnosis_type= '',careplan_id=null } = this.state;
         let age = date_of_birth ? moment().diff(moment(date_of_birth), 'years') : -1;
-        console.log("severity ------------------------->",typeof(severity));
         if (!prefix) {
             message.error(this.formatMessage(messages.prefixError))
             return false;

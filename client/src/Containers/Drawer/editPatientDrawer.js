@@ -8,13 +8,16 @@ import { searchSeverity } from "../../modules/severity";
 import {searchMedicine} from "../../modules/medicines";
 import {updatePatientAndCareplan} from "../../modules/doctors";
 const mapStateToProps = state => {
+  const { auth} = state;
+  const { authenticated_user, authenticated_category } = auth;
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
     users={},
     treatments = {},
     conditions = {},
     severity = {},
-    patients ={}
+    patients ={},
+    doctors={}
   } = state;
 
 
@@ -26,7 +29,9 @@ const mapStateToProps = state => {
     conditions,
     severity,
     patients,
-    users
+    users,
+    doctors,
+    authenticated_user
   };
 };
 

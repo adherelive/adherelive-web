@@ -6,12 +6,10 @@ import {
   TABLE_DEFAULT_BLANK_FIELD,
   FEATURES
 } from "../../constant";
-import plus_white from "../../Assets/images/plus_white.png";
 import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
 import Watchlist from "../../Containers/Patient/watchlist";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
-import EditPatientDrawer from "../../Containers/Drawer/editPatientDrawer";
 
 import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
@@ -24,15 +22,10 @@ import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../Helper/url/patients";
 import config from "../../config";
 import {
-  Drawer,
-  Icon,
   Select,
-  Input,
   message,
   Button,
   Spin,
-  Radio,
-  DatePicker,
   Menu,
   Dropdown,
   Modal
@@ -590,7 +583,6 @@ class Dashboard extends Component {
           {...this.props}
         />
 
-        <EditPatientDrawer />
 
         {/*{showVerifyModal && getVerifyModal()}*/}
         {/*{showModal && getVerifyModal()}*/}
