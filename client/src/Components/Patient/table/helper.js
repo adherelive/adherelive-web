@@ -44,10 +44,6 @@ export const TABLE_COLUMN = {
   DIAGNOSIS: {
     key: "DIAGNOSIS",
     dataIndex: "DIAGNOSIS"
-  },
-  EDIT: {
-    key: "EDIT",
-    dataIndex: "EDIT"
   }
 };
 

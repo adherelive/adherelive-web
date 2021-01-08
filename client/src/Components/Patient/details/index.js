@@ -2,15 +2,10 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
-// import plus_white from "../../../Assets/images/plus_white.png";
-// import chat_image from "../../../Assets/images/chat.svg";
 import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
 import { doRequest } from "../../../Helper/network";
 import {
-  REQUEST_TYPE,
-  PATH,
-  USER_CATEGORY,
-  EVENT_STATUS
+  REQUEST_TYPE
 } from "../../../constant";
 
 import {
@@ -54,6 +49,7 @@ import {
   MessageOutlined,
   VideoCameraOutlined,
   CaretDownOutlined,
+  
 } from "@ant-design/icons";
 import moment from "moment";
 import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
@@ -226,29 +222,6 @@ const columns_appointments = [
           return event_id === appointment_id;
         }) || [];
 
-      // if(appointmentEvent.length > 0) {
-      //   const {status} = schedule_events[appointmentEvent] || {};
-      //
-      //   if(status !== EVENT_STATUS.SCHEDULED && status !== EVENT_STATUS.COMPLETED) {
-      //     return null;
-      //   }
-      // }else{
-      //   return null;
-      // }
-
-      // if (active_event_id) {
-      //   return (
-      //     <div className="wp100 flex align-center justify-center pointer">
-      //       <Button
-      //         type={"primary"}
-      //         onClick={markAppointmentComplete(active_event_id)}
-      //       >
-      //         {formatMessage(messages.complete_text)}
-      //       </Button>
-      //     </div>
-      //   );
-      // }
-      // else {}
       return (
         <div className="flex justify-space-between">
           {active_event_id && (
@@ -313,37 +286,7 @@ const columns_appointments_non_editable = [
   }
 ];
 
-// const data_symptoms = [
-//   {
-//     key: "1",
-//     medicine: "Amoxil 2mg",
-//     in_take: "Twice, Daily",
-//     duration: "Till 3rd March",
-//   },
-//   {
-//     key: "2",
-//     medicine: "Insulin",
-//     in_take: "Mon at 10am, Wed at 2pm",
-//     duration: "till 2nd March",
-//   },
-// ];
 
-// const data_medication = [
-//   {
-//     key: "1",
-//     medicine: "Amoxil 2mg",
-//     in_take: "Twice, Daily",
-//     duration: "Till 3rd March",
-//     edit: { edit_image },
-//   },
-//   {
-//     key: "2",
-//     medicine: "Insulin",
-//     in_take: "Mon at 10am, Wed at 2pm",
-//     duration: "till 2nd March",
-//     edit: { edit_image },
-//   },
-// ];
 
 const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
   return (
@@ -1642,22 +1585,28 @@ class PatientDetails extends Component {
     let severity = "";
 
     let carePlanData = {};
-    for (let carePlan of Object.values(care_plans)) {
+    const {selectedCarePlanId = null} = this.state;
+    const carePlan = care_plans[selectedCarePlanId] || {};
+
+
       let { basic_info = {} } = carePlan || {};
       let {
         doctor_id: doctorId = 1,
         patient_id,
         id: carePlanId = 1
       } = basic_info;
-      if (`${doctorId}` === doctor_id) {
-        if (`${patient_id}` === id) {
+
           let {
+
             details: {
               treatment_id: cTreatment = "",
               condition_id: cCondition = "",
               severity_id: cSeverity = ""
             } = {}
           } = carePlan || {};
+
+
+
           let { basic_info: { name: treatmentName = "" } = {} } =
             treatments[cTreatment] || {};
           let { basic_info: { name: severityName = "" } = {} } =
@@ -1675,9 +1624,7 @@ class PatientDetails extends Component {
             condition,
             severity
           };
-        }
-      }
-    }
+     
 
     patientData = {
       ...patients[id],
