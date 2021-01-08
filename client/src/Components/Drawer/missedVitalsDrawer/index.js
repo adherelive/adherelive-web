@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { Drawer, Icon, Select, Input, message, Button, Spin, Radio, DatePicker } from "antd";
-import {getName} from "../../../Helper/validation";
-import moment from "moment";
+import { Drawer,message,Spin } from "antd";
+import MissedVitalCard from "../../Cards/patient/missedVital";
 
 import messages from "./message";
 
@@ -14,22 +13,16 @@ class MissedMedicationsDrawer extends Component {
           missed_vitals:{},
           criticalVitalIds:[],
           nonCriticalVitalIds:[],
+          fetching:false
         }
     }
 
 
     componentDidMount(){
-      this.handleGetMissedVitals();
+      // this.handleGetMissedVitals();
 
     }
     
-    componentDidUpdate(prevProps,prevState){
-      const {visible : prev_visible} = prevProps;
-      const {visible} = this.props;
-      if(prev_visible !== visible){
-        this.handleGetMissedVitals();
-      }
-    }
     formatMessage = data => this.props.intl.formatMessage(data);
 
     onClose = () => {
@@ -37,29 +30,37 @@ class MissedMedicationsDrawer extends Component {
         close();
     };
 
-    async handleGetMissedVitals(){
-      try {
-          const {getMissedVitalsForDoc} = this.props;
-          const response = await getMissedVitalsForDoc();
-          const { status, payload: {  data : {missed_vital_events = {}, critical_vital_event_ids = [],non_critical_vital_event_ids = []}  } = {} ,statusCode } =
-          response || {};
-              if (status && statusCode === 200 ) {
-                      this.setState({
-                          missed_vitals:missed_vital_events,
-                          criticalVitalIds:critical_vital_event_ids,
-                          nonCriticalVitalIds:non_critical_vital_event_ids,
-                  })
+  //   async handleGetMissedVitals(){
+  //     try {
+  //         const {getAllMissedScheduleEvents} = this.props;
+  //         this.setState({fetching:true});
+  //         const response = await getAllMissedScheduleEvents();
+  //         const { status, payload: {  data : {missed_vitals = {},
+  //           vital_ids : {critical=[],non_critical=[]} =  {}}  } = {} ,statusCode } =
+  //         response || {};
+  //             if (status && statusCode === 200 ) {
+  //                 this.setState({
+  //                     missed_vitals:missed_vitals,
+  //                     criticalVitalIds:critical,
+  //                     nonCriticalVitalIds:non_critical,
+  //                     fetching:false
+  //               })
+  //
+  //             } else{
+  //               this.setState({fetching:false});
+  //
+  //             }
+  //
+  //     } catch (err) {
+  //         console.log("err", err);
+  //         message.warn(this.formatMessage(messages.somethingWentWrong));
+  //         this.setState({fetching:false});
+  //
+  //     }
+  // }
 
-              } 
-          
-      } catch (err) {
-          console.log("err", err);
-          message.warn(this.formatMessage(messages.somethingWentWrong));
-      }
-  }
 
-
-    handlePatientDetailsRedirect = patient_id => {
+    handlePatientDetailsRedirect = patient_id => e => {
       const { history} = this.props;
       this.onClose();
       history.push(`/patients/${patient_id}`);
@@ -69,76 +70,70 @@ class MissedMedicationsDrawer extends Component {
   
     getVitalList = () => {
 
-
-
-        const PatientCard = ({pId,pName,vital_name}) => {
-          return (
-            <div 
-            className=" br5 bg-white flex-shrink-0 mt20 mb20 p10  ml10 mr10 chart-box-shadow  flex direction-column"
-            // className="flex direction-column tac br10 bg-lighter-grey mt20 mb20 p10  ml10 mr10"
-            >
-          
-          
-              <div className="flex direction-row align-start mt10 mb10 ">
-                <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.patient_name)}</div>
-                <div className=" pointer fs14 fw700 black-85 ml20 tab-color" onClick={() => this.handlePatientDetailsRedirect(pId)}>{pName}</div>
-              </div>
-
-              <div className="flex direction-row align-start mt10 mb10 ">
-                <div className="fs14 fw700 brown-grey">{this.formatMessage(messages.vital_name)}</div>
-                <div className="fs14 fw700 black-85 ml20">{vital_name}</div>
-              </div>
-
-          
-            </div>
-          );
-        };
-        
-
-
-        // const { missed_vitals ,criticalVitalIds,nonCriticalVitalIds,care_plans} = this.props;
-        const { missed_vitals ,criticalVitalIds,nonCriticalVitalIds} = this.state;
-
-        const {patients = {},care_plans = {}}=this.props;
+        const {patients = {}, missed_vitals = {}}=this.props;
         const vitalList = [];
         const criticalList = [];
         const nonCriticalList = [];
 
-        
-        for (let vital in missed_vitals ){
-       
+        const {handlePatientDetailsRedirect,formatMessage}=this;
 
-     
+        Object.keys(missed_vitals).forEach(id => {
+            console.log("182371923 vitals", {vitals: missed_vitals[id]});
+            const {critical, patient_id, vital_name, timings} = missed_vitals[id] || {};
 
-        const event_id = parseInt(vital);
+            const {basic_info: {id: patientId, full_name} = {}} = patients[patient_id] || {};
 
-
-
-
-        const {vital_templates : {basic_info : {name :vital_name = '' } ={}} ={} } = 
-        missed_vitals[vital]
-        const {patient_id = ''}=missed_vitals[vital];
-
-        const {basic_info : {id : pId = '', first_name = '',middle_name = '',last_name = ''} = {} }=patients[patient_id] || {};
-
-
-       
-        
-
-        let pName =`${first_name} ${getName(middle_name)} ${getName(last_name)}` ;
-        // console.log("pName =======>",patients);
-        // let td = moment(start_time);
-        // let time =start_time ? td.utc().format('HH:mm') : '--';
-
-        let isCritical = criticalVitalIds.includes(event_id) && !nonCriticalVitalIds.includes(event_id) ;
-        let isNoCritical = !criticalVitalIds.includes(event_id) && nonCriticalVitalIds.includes(event_id) ;
-        
-          if(isCritical){
-            criticalList.push(PatientCard({pId,pName,vital_name}))}
-          else {
-            nonCriticalList.push(PatientCard({pId,pName,vital_name}))}
-    
-    }
+            if(critical){
+                criticalList.push(
+                    <MissedVitalCard
+                        formatMessage={formatMessage}
+                        name={full_name}
+                        time={timings}
+                        vital={vital_name}
+                        onClick={handlePatientDetailsRedirect(patientId)}
+                    />
+                )}
+            else {
+                nonCriticalList.push(
+                    <MissedVitalCard
+                        formatMessage={formatMessage}
+                        name={full_name}
+                        time={timings}
+                        vital={vital_name}
+                        onClick={handlePatientDetailsRedirect(patientId)}
+                    />
+                )
+            }
+        });
+    //     for (let vital in missed_vitals ){
+    //       const eachVitalEventArray = missed_vitals[vital];
+    //       for(let eachVitalEvent of eachVitalEventArray){
+    //
+    //         const event_id = parseInt(vital);
+    //
+    //         const {
+    //           critical,
+    //           start_time,
+    //           details:{
+    //             vital_templates : {basic_info : {name :vitalName = '' } ={}} ={} ,
+    //             patient_id:patientId=''
+    //           }={},
+    //         } = eachVitalEvent;
+    //
+    //         timings.push(start_time);
+    //         patient_id=patientId;
+    //         vital_name=vitalName;
+    //         isCritical=critical;
+    //
+    //       }
+    //
+    //       const {basic_info : {id : pId = '', first_name = '',middle_name = '',last_name = ''} = {} }=patients[patient_id] || {};
+    //
+    //       let pName =`${first_name} ${getName(middle_name)} ${getName(last_name)}` ;
+    //
+    //
+    //
+    // }
     
     vitalList.push(
           <div >
@@ -155,32 +150,39 @@ class MissedMedicationsDrawer extends Component {
 
         return vitalList;
 
-    return null;
+    
 
      
       };
 
 
     render(){
+      const {visible=false} = this.props;
+      const {fetching}=this.state;
+
+      if (visible !== true) {
+        return null;
+      }
         return (
         <Fragment>
             <Drawer
-                bodyStyle={{backgroundColor:"#f5f5f5"}}
                 title={this.formatMessage(messages.vital_header)}
                 placement="right"
                 maskClosable={false}
-                headerStyle={{
-                    position: "sticky",
-                    zIndex: "9999",
-                    top: "0px"
-                }}
                 onClose={this.onClose}
-                visible={this.props.visible} 
+                visible={visible}
                 width={`30%`}
             >
+
               <div className="mt20 black-85 wp100">
-              {this.getVitalList()}
+                  {fetching
+                  ?
+                  <Spin size="small" className="flex align-center justify-center"/>
+                  :
+                  this.getVitalList()
+                  }
               </div>
+         
                
             </Drawer>
 

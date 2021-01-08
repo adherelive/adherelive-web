@@ -6,9 +6,7 @@ export const getAppointmentForParticipantUrl = (id) => {
   return `/appointments/${id}`;
 };
 
-export const getMissedAppointmentsForDoctorUrl = () => {
-  return `/appointments/missed`;
-}
+
 
 export const getAppointmentsDetailsUrl = () => {
   return `/appointments/details`;

@@ -81,11 +81,13 @@ const getFormattedData = async (events = []) => {
      *
      * ex., for medications....
      * missed_medications: {
-     *   [event_id]: [
-     *       {schedule_event_data_1},
-     *       {schedule_event_data_2},
+     *   [event_id]: {
+     *       [date]: [
+     *          {schedule_event_data_1},
+     *          {schedule_event_data_2},
+     *       ]
      *       ...
-     *   ],
+     *   },
      *   ...
      * },
      * medication_ids: {
@@ -110,14 +112,23 @@ const getFormattedData = async (events = []) => {
 
     for (let i = 0; i < events.length; i++) {
         const event = await EventWrapper(events[i]);
+        const {start_time, end_time, details: {medicines, patient_id, medications: {participant_id} = {}, vital_templates: {basic_info: {name: vital_name} = {}} = {}} = {}, critical} = event.getAllInfo();
+
 
         switch (event.getEventType()) {
             case EVENT_TYPE.MEDICATION_REMINDER:
                 if (!(event.getEventId() in medications)) {
-                    medications[event.getEventId()] = [];
-                    medications[event.getEventId()].push(event.getAllInfo());
+                    const timings = {};
+                    timings[event.getDate()] = [];
+                    timings[event.getDate()].push({start_time, end_time});
+                    medications[event.getEventId()] = {medicines, critical, participant_id, timings};
                 } else {
-                    medications[event.getEventId()].push(event.getAllInfo());
+                    const {timings} = medications[event.getEventId()] || {};
+                    if(!Object.keys(timings).includes(event.getDate())) {
+                        timings[event.getDate()] = [];
+                    }
+                    timings[event.getDate()].push({start_time, end_time});
+                    medications[event.getEventId()] = {...medications[event.getEventId()], timings};
                 }
 
                 // critical | non_critical
@@ -159,12 +170,27 @@ const getFormattedData = async (events = []) => {
                 }
                 break;
             case EVENT_TYPE.VITALS:
+
                 if (!(event.getEventId() in vitals)) {
-                    vitals[event.getEventId()] = [];
-                    vitals[event.getEventId()].push(event.getAllInfo());
+                    const timings = {};
+                    timings[event.getDate()] = [];
+                    timings[event.getDate()].push({start_time, end_time});
+                    vitals[event.getEventId()] = {patient_id, critical, vital_name, timings};
                 } else {
-                    vitals[event.getEventId()].push(event.getAllInfo());
+                    const {timings = {}} = vitals[event.getEventId()] || {};
+                    if(!Object.keys(timings).includes(event.getDate())) {
+                        timings[event.getDate()] = [];
+                    }
+                    timings[event.getDate()].push({start_time, end_time});
+                    vitals[event.getEventId()] = {...vitals[event.getEventId()], timings};
                 }
+
+                // if (!(event.getEventId() in vitals)) {
+                //     vitals[event.getEventId()] = [];
+                //     vitals[event.getEventId()].push(event.getAllInfo());
+                // } else {
+                //     vitals[event.getEventId()].push(event.getAllInfo());
+                // }
 
                 // critical | non_critical
                 if (event.getCriticalValue()) {
