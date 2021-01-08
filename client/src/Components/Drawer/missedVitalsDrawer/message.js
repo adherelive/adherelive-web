@@ -30,7 +30,7 @@ const messages = defineMessages({
     non_critical: {
         id: "app.missedVitals.not.critical",
         description: "",
-        defaultMessage: "Not critical"
+        defaultMessage: "Non critical"
     }, 
 
     
