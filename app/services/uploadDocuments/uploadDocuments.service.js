@@ -109,6 +109,16 @@ class UploadDocumentService {
             throw error;
         }
     };
+
+    deleteDocumentByData = async (data) => {
+        try {
+            return await Database.getModel(TABLE_NAME).destroy({
+                where: data
+            });
+        } catch(error) {
+            throw error;
+        }
+    };
    
 }
 

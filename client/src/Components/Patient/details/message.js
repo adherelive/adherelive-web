@@ -501,7 +501,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Upload Reports"
     },
-
+    reports:{
+        id: "app.patient_profile.reports",
+        description: "",
+        defaultMessage: "Reports"
+    },
 
 });
 

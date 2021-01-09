@@ -56,6 +56,7 @@ import * as RegionProviders from "../app/models/regionProviders";
 import * as Regions from "../app/models/regions";
 import * as RegistrationCouncils from "../app/models/registrationCouncil";
 import * as Reminders from "../app/models/reminders";
+import * as Reports from "../app/models/reports";
 
 import * as ScheduleEvents from "../app/models/scheduleEvents";
 import * as Severity from "../app/models/severity";
@@ -140,6 +141,7 @@ const models = [
   Regions,
   RegistrationCouncils,
   Reminders,
+  Reports,
 
   Severity,
   Speciality,

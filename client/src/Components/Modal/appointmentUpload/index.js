@@ -210,6 +210,7 @@ class AppointmentUploadModal extends Component {
 
     return appointment_document_ids.map(id => {
       const { basic_info: { document } = {} } = upload_documents[id] || {};
+
       const documentExtension = document.substring(
         document.length - 3,
         document.length

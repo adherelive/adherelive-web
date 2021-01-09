@@ -366,7 +366,8 @@ export const DOCUMENT_PARENT_TYPE = {
   SYMPTOM_AUDIO: "symptom_audio",
   SYMPTOM_PHOTO: "symptom_photo",
   SYMPTOM_VIDEO: "symptom_video",
-  APPOINTMENT_DOC: "appointment_doc"
+  APPOINTMENT_DOC: "appointment_doc",
+  REPORT: "report"
 };
 
 export const ONBOARDING_STATUS = {
