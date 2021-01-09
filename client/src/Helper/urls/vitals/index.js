@@ -16,6 +16,3 @@ export const getUpdateVitalURL = (id) => {
     return `/vitals/${id}`;
 };
 
-export const getMissedVitalsForDoctorUrl = () => {
-    return `/vitals/missed`;
-  }

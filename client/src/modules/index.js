@@ -42,6 +42,7 @@ import schedule_events from "./scheduleEvents";
 import account_details from "./accountDetails";
 import features from "./features";
 import features_mappings from "./featuresMappings";
+import reports from "./reports";
 
 const rootReducer = combineReducers({
   auth,
@@ -86,7 +87,8 @@ const rootReducer = combineReducers({
   schedule_events,
   account_details,
   features,
-  features_mappings
+  features_mappings,
+  reports
 });
 
 export default (state, action) => {

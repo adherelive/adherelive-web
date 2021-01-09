@@ -2,12 +2,20 @@ import React from "react";
 import moment from "moment";
 import messages from "../messages";
 
-const getTimings = (timings) => {
-  return timings.map(time => {
-      return (
-        <div>{moment(time).format("Do MMM YYYY (hh:mm A)")}</div>
-      );
-  });
+const getTimings = (timings = {}) => {
+    return Object.keys(timings).map(date => {
+        const startTimeArray = timings[date] || {};
+        const timesArr = startTimeArray.map(timeObj => {
+            const {end_time} = timeObj || {};
+            return moment(end_time).format("hh:mm A");
+        });
+        return (
+            <div className="flex wp100">
+                <div className="pr6 wp20">{moment(date).format("Do MMM")}</div>
+                <div className="wp80">{`(${timesArr.join(", ")})`}</div>
+            </div>
+        );
+    });
 };
 
 export default props => {
@@ -24,7 +32,7 @@ export default props => {
 
         {/*  todo: change the time array once driven from events & backend updated  */}
         <div className="flex direction-column align-start">
-            {getTimings([time])}
+            {getTimings(time)}
         </div>
     </div>
   );

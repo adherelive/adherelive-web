@@ -1,6 +1,6 @@
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getScheduleEventsUrl, getAppointmentCompleteUrl} from "../../Helper/urls/event";
+import {getScheduleEventsUrl, getAppointmentCompleteUrl,getAllMissedScheduleEventsUrl} from "../../Helper/urls/event";
 import {getCalenderDataCountForDayUrl,getCalenderDataForDayUrl} from "../../Helper/urls/provider";
 
 
@@ -26,6 +26,10 @@ export const GET_CALENDER_DATA_COUNT_FAILED = "GET_CALENDER_DATA_COUNT_FAILED";
 export const GET_CALENDER_DATA_FOR_DAY_START = "GET_CALENDER_DATA_FOR_DAY_START";
 export const GET_CALENDER_DATA_FOR_DAY_COMPLETED = "GET_CALENDER_DATA_FOR_DAY_COMPLETED";
 export const GET_CALENDER_DATA_FOR_DAY_FAILED = "GET_CALENDER_DATA_FOR_DAY_FAILED";
+
+export const GET_ALL_MISSED_SCHEDULE_EVENTS_START = "GET_ALL_MISSED_SCHEDULE_EVENTS_START";
+export const GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED = "GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED";
+export const GET_ALL_MISSED_SCHEDULE_EVENTS_FAILED = "GET_ALL_MISSED_SCHEDULE_EVENTS_FAILED";
 
 
 export const getScheduleEvents = payload => {
@@ -181,6 +185,37 @@ export const markAppointmentComplete = (id) => {
         return response;
     };
 };
+
+export const getAllMissedScheduleEvents = () => {
+    let response = {};
+    return async (dispatch) => {
+        try{
+            dispatch({type: GET_ALL_MISSED_SCHEDULE_EVENTS_START});
+
+            response = await doRequest({
+                method:REQUEST_TYPE.GET,
+                url:getAllMissedScheduleEventsUrl()
+            });
+
+            const {status,payload: {data,error} = {} } = response || {};
+            if(status === true){
+                dispatch({
+                    type:GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED,
+                    data:data
+                });
+            }else{
+                dispatch({
+                    type:GET_ALL_MISSED_SCHEDULE_EVENTS_FAILED,
+                    error
+                })
+            }
+
+        }catch(error){
+            console.log("GetAllMissedScheduleEvents Error --->",error);
+        }
+        return response;
+    }
+}
 
 function eventReducer(state, data) {
     const {schedule_events = {}} = data || {};

@@ -56,6 +56,23 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Account details Added successfully"
   },
+
+  // errors
+  valid_email_text: {
+    id: "app.addProvider.error.email.valid.text",
+    description: "",
+    defaultMessage: "Please enter valid email"
+  },
+  email_required_text: {
+    id: "app.addProvider.error.email.required.text",
+    description: "",
+    defaultMessage: "Email is required"
+  },
+  password_required_text: {
+    id: "app.addProvider.error.password.required.text",
+    description: "",
+    defaultMessage: "Password is required"
+  }
 });
 
 export default messages;

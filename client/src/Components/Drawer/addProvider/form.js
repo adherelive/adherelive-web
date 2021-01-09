@@ -39,6 +39,11 @@ class AddProviderForm extends Component {
     };
   }
 
+    componentDidMount() {
+        const { form: { validateFields } = {} } = this.props;
+        validateFields();
+    }
+
   getParentNode = t => t.parentNode;
 
   formatMessage = data => this.props.intl.formatMessage(data);
@@ -56,7 +61,6 @@ class AddProviderForm extends Component {
     let fieldsError = {};
     FIELDS.forEach(value => {
       const error = isFieldTouched(value) && getFieldError(value);
-      console.log("1982737192 error--->", {error, isFieldTouched: isFieldTouched(value), getFieldError: getFieldError(value)});
       fieldsError = { ...fieldsError, [value]: error };
     });
 
@@ -68,25 +72,31 @@ class AddProviderForm extends Component {
       );
 
     return (
-        <Form className="wp100 pb30 Form">
-            <div className="form-headings flex align-center justify-start">
-                {formatMessage(messages.email)}
-                <div className="star-red">*</div>
-            </div>
+        <Form className="wp100 pb30 Form" layout={"vertical"}>
+            {/*<div className="form-headings flex align-center justify-start">*/}
+            {/*    {formatMessage(messages.email)}*/}
+            {/*    <div className="star-red">*</div>*/}
+            {/*</div>*/}
 
           
           <FormItem
               validateStatus={fieldsError[EMAIL] ? "error" : ""}
               help={fieldsError[EMAIL] || ""}
+              label={formatMessage(messages.email)}
               // className={"mb20"}
+              hasFeedback={true}
           >
             {getFieldDecorator(EMAIL, {
-                // rules: [
-                //     {
-                //         required: true,
-                //         message:""
-                //     }
-                // ]
+                rules: [
+                    {
+                        type: "email",
+                        message: formatMessage(messages.valid_email_text)
+                    },
+                    {
+                        required: true,
+                        message: formatMessage(messages.email_required_text)
+                    }
+                ]
             })
             (
                 <Input
@@ -98,17 +108,27 @@ class AddProviderForm extends Component {
 
 
 
-          <div className="form-headings flex align-center justify-start">
-            {this.formatMessage(messages.password)}
-            <div className="star-red">*</div>
-          </div>
+          {/*<div className="form-headings flex align-center justify-start">*/}
+          {/*  {this.formatMessage(messages.password)}*/}
+          {/*  <div className="star-red">*</div>*/}
+          {/*</div>*/}
 
           <FormItem
+              validateStatus={fieldsError[PASSWORD] ? "error" : ""}
+              help={fieldsError[PASSWORD] || ""}
+              label={formatMessage(messages.password)}
           >
-            {getFieldDecorator(PASSWORD, {})
+            {getFieldDecorator(PASSWORD, {
+                rules: [
+                    {
+                        required: true,
+                        message: formatMessage(messages.password_required_text)
+                    }
+                ]
+            })
             (
             <Password
-            className={"form-inputs-ap "}
+            // className={"form-inputs-ap "}
             type="string"
             placeholder="Input password"
             iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
@@ -117,7 +137,7 @@ class AddProviderForm extends Component {
           </FormItem>
         
 
-          <div className="form-headings flex align-center justify-start mt-20">
+          <div className="form-headings flex align-center justify-start">
             {this.formatMessage(messages.confirm_password)}
             <div className="star-red">*</div>
           </div>
