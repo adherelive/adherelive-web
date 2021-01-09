@@ -34,6 +34,7 @@ import vitalRouter from "./vitals";
 import accountsRouter from "./accounts";
 import providersRouter from "./providers";
 import featuresRouter from "./features";
+import reportRouter from "./reports";
 
 router.use(async function(req, res, next) {
   try {
@@ -115,5 +116,6 @@ router.use("/vitals", vitalRouter);
 router.use("/accounts", accountsRouter);
 router.use("/providers", providersRouter);
 router.use("/features", featuresRouter);
+router.use("/reports", reportRouter);
 
 module.exports = router;

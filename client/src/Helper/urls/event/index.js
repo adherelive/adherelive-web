@@ -94,3 +94,8 @@ export const getScheduleEventsUrl = () => {
 export const getAppointmentCompleteUrl = (id) => {
   return `/events/${id}/complete`;
 };
+
+
+export const getAllMissedScheduleEventsUrl = () => {
+  return `/events/missed`;
+}

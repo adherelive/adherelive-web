@@ -16,9 +16,6 @@ export default data => {
       onRowClick,
       removePatientFromWatchlist
     },
-    // [TABLE_COLUMN.CONDITION.dataIndex]: {
-    //   patientData
-    // },
     [TABLE_COLUMN.DIAGNOSIS.dataIndex]: {
       patientData
     },
@@ -47,11 +44,6 @@ export default data => {
     },
     [TABLE_COLUMN.NEW_SYMPTOMS.dataIndex]: {
       patientData
-    },
-    [TABLE_COLUMN.EDIT.dataIndex]: {
-      patientData,
-      carePlanData,
-      openEditPatientDrawer
     },
   };
 };

@@ -16,10 +16,11 @@ import {
   removePatientFromWatchlist
 } from "../../modules/doctors";
 import { showVerifyModal } from "../../modules/pages/features";
-import { getMissedAppointmentsForDoc } from "../../modules/appointments";
-import { getMissedVitalsForDoc } from "../../modules/vitals";
-import { getMissedMedicationsForDoc } from "../../modules/medications";
 import { getAllFeatures } from "../../modules/featuresMappings";
+import { DRAWER } from "../../constant";
+import { open } from "../../modules/drawer";
+import {getAllMissedScheduleEvents} from "../../modules/scheduleEvents";
+
 
 const mapStateToProps = state => {
   const {
@@ -73,10 +74,14 @@ const mapDispatchToProps = dispatch => {
     removePatientFromWatchlist: patient_id =>
       dispatch(removePatientFromWatchlist(patient_id)),
     showVerifyModal: data => dispatch(showVerifyModal(data)),
-    getMissedAppointmentsForDoc: () => dispatch(getMissedAppointmentsForDoc()),
-    getMissedVitalsForDoc: () => dispatch(getMissedVitalsForDoc()),
-    getMissedMedicationsForDoc: () => dispatch(getMissedMedicationsForDoc()),
-    getAllFeatures: () => dispatch(getAllFeatures())
+    getAllFeatures: () => dispatch(getAllFeatures()),
+    openMissedMedicationDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_MEDICATION})),
+    openMissedAppointmentDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_APPOINTMENT})),
+    openMissedVitalDrawer: () =>
+    dispatch(open({ type: DRAWER.MISSED_VITAL})),
+    getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
   };
 };
 

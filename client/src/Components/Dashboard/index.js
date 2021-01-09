@@ -6,12 +6,10 @@ import {
   TABLE_DEFAULT_BLANK_FIELD,
   FEATURES
 } from "../../constant";
-import plus_white from "../../Assets/images/plus_white.png";
 import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
 import Watchlist from "../../Containers/Patient/watchlist";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
-import EditPatientDrawer from "../../Containers/Drawer/editPatientDrawer";
 
 import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
@@ -24,23 +22,18 @@ import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../Helper/url/patients";
 import config from "../../config";
 import {
-  Drawer,
-  Icon,
   Select,
-  Input,
   message,
   Button,
   Spin,
-  Radio,
-  DatePicker,
   Menu,
   Dropdown,
   Modal
 } from "antd";
 import SearchPatient from "../../Containers/SearchPatient";
-import MissedAppointmentsDrawer from "../Drawer/missedAppointmentsDrawer";
-import MissedVitalsDrawer from "../Drawer/missedVitalsDrawer";
-import MissedMedicationsDrawer from "../Drawer/missedMedicationsDrawer";
+import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment";
+import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
+import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
 
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
@@ -60,9 +53,6 @@ class Dashboard extends Component {
       graphsToShow: [],
       doctorUserId: 1,
       patient_ids: [],
-      appointmentDrawerVisible: false,
-      vitalDrawerVisisble: false,
-      medicationDrawerVisible: false,
       showModal: false
     };
   }
@@ -76,7 +66,8 @@ class Dashboard extends Component {
       authenticated_user,
       closePopUp,
       fetchChatAccessToken,
-      getAllFeatures
+      getAllFeatures,
+      getAllMissedScheduleEvents
     } = this.props;
     closePopUp();
     let doctorUserId = ""; //user_id of doctor
@@ -103,6 +94,7 @@ class Dashboard extends Component {
     fetchChatAccessToken(authenticated_user);
     searchMedicine("");
     getAllFeatures();
+    getAllMissedScheduleEvents();
   }
 
   getMenu = () => {
@@ -127,38 +119,17 @@ class Dashboard extends Component {
 
   chartClicked = name => {
     if (name === CHART_MISSED_APPOINTMENT) {
-      this.setState({
-        appointmentDrawerVisible: true
-      });
+      const {openMissedAppointmentDrawer} = this.props;
+      openMissedAppointmentDrawer();
     } else if (name === CHART_MISSED_ACTION) {
-      this.setState({
-        vitalDrawerVisisble: true
-      });
+      const {openMissedVitalDrawer} = this.props;
+      openMissedVitalDrawer();
     } else if (name === CHART_MISSED_MEDICATION) {
-      console.log("MEDI CLICKED");
-      this.setState({
-        medicationDrawerVisible: true
-      });
+      const {openMissedMedicationDrawer} = this.props;
+      openMissedMedicationDrawer();
     }
   };
 
-  closeAppointmentDrawer = () => {
-    this.setState({
-      appointmentDrawerVisible: false
-    });
-  };
-
-  closeVitalDrawer = () => {
-    this.setState({
-      vitalDrawerVisisble: false
-    });
-  };
-
-  closeMedicationDrawer = () => {
-    this.setState({
-      medicationDrawerVisible: false
-    });
-  };
 
   renderChartTabs = () => {
     const { graphs } = this.props;
@@ -572,25 +543,12 @@ class Dashboard extends Component {
         )}
         <NotificationDrawer visible={visible} />
 
-        <MissedAppointmentsDrawer
-          close={this.closeAppointmentDrawer}
-          visible={this.state.appointmentDrawerVisible}
-          {...this.props}
-        />
+        <MissedAppointmentsDrawer/>
 
-        <MissedVitalsDrawer
-          close={this.closeVitalDrawer}
-          visible={this.state.vitalDrawerVisisble}
-          {...this.props}
-        />
+        <MissedVitalsDrawer/>
 
-        <MissedMedicationsDrawer
-          close={this.closeMedicationDrawer}
-          visible={this.state.medicationDrawerVisible}
-          {...this.props}
-        />
+        <MissedMedicationsDrawer />
 
-        <EditPatientDrawer />
 
         {/*{showVerifyModal && getVerifyModal()}*/}
         {/*{showModal && getVerifyModal()}*/}

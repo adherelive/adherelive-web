@@ -38,7 +38,7 @@ const mapStateToProps = (state, ownProps) => {
     care_plan_templates = {},
     severity = {},
     show_template_drawer = {},
-    auth: { authPermissions = [], authenticated_user = 1 } = {},
+    auth: { authPermissions = [], authenticated_user = 1,authenticated_category } = {},
     chats,
     drawer,
     care_plan_template_ids = [],
@@ -48,6 +48,7 @@ const mapStateToProps = (state, ownProps) => {
     features = {},
     features_mappings = {}
   } = state;
+
   console.log("4534543634534535634 ----> Container", care_plan_template_ids);
   // const { id } = ownprops;
   const user_details = users["3"] || {};
@@ -85,7 +86,8 @@ const mapStateToProps = (state, ownProps) => {
     authenticated_user,
     schedule_events,
     features,
-    features_mappings
+    features_mappings,
+    authenticated_category
   };
 };
 
@@ -127,7 +129,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(addCareplanForPatient(patient_id, data)),
     openEditPatientDrawer: payload =>
       dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
-    storeAppointmentDocuments: data => dispatch(storeAppointmentDocuments(data))
+    storeAppointmentDocuments: data => dispatch(storeAppointmentDocuments(data)),
+    openAddReportsDrawer : (payload) =>  dispatch(open({ type: DRAWER.ADD_REPORT,payload })),
+
   };
 };
 

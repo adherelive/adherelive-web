@@ -317,9 +317,22 @@ class EventController extends Controller {
         let medicationIds = [];
         let vitalIds = [];
 
-        for(let index = 0; index < carePlans.length; index++) {
+        const EventService = new eventService();
+
+      for(let index = 0; index < carePlans.length; index++) {
           const carePlan = await CarePlanWrapper(carePlans[index]);
           const {appointment_ids, medication_ids, vital_ids} = await carePlan.getAllInfo();
+
+          // get appointment count
+
+        for(let id of appointmentIds) {
+          const criticalAppointment = await EventService.getCount({
+            event_type: EVENT_TYPE.APPOINTMENT,
+            event_id: id,
+            status: EVENT_STATUS.EXPIRED,
+            critical: true
+          });
+        }
 
           appointmentIds = [...appointmentIds, ...appointment_ids];
           medicationIds = [...medicationIds, ...medication_ids];
@@ -331,7 +344,6 @@ class EventController extends Controller {
           patient_id,
         });
 
-        const EventService = new eventService();
 
         return raiseSuccess(res, 200, {
           missed_appointment: {
