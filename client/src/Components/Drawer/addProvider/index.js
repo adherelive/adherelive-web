@@ -13,7 +13,7 @@ class addProviderDrawer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      disabledOk: true,
+      disabledOk: false,
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -29,13 +29,16 @@ class addProviderDrawer extends Component {
 
     if (isFieldsTouched()) {
       const isError = this.hasErrors(getFieldsError());
+      console.log("763132 isError --> ", {disabledOk, isError, isFieldsTouched: isFieldsTouched()});
 
       if (disabledOk !== isError && isFieldsTouched()) {
+      // if (isError && isFieldsTouched()) {
         this.setState({ disabledOk: isError });
       }
-    } else {
-      this.setState({ disabledOk: true });
     }
+    // else {
+    //   this.setState({ disabledOk: true });
+    // }
   };
 
   hasErrors = (fieldsError) => {
@@ -80,6 +83,7 @@ class addProviderDrawer extends Component {
     } = formRef;
 
     validateFields(async (err, values) => {
+      console.log("18731297 err --> ", err);
       if (!err) {
         let {
           name='',
@@ -120,6 +124,9 @@ class addProviderDrawer extends Component {
             message.warn(formatMessage(messages.somethingWentWrong));
           }
         
+      } else {
+        console.log("1882731 err --> ", {err});
+        return;
       }
 
     });
@@ -127,9 +134,9 @@ class addProviderDrawer extends Component {
 
   setFormRef = (formRef) => {
     this.formRef = formRef;
-    if (formRef) {
-      this.setState({ formRef: true });
-    }
+    // if (formRef) {
+    //   this.setState({ formRef: true });
+    // }
   };
 
   render() {
@@ -165,7 +172,8 @@ class addProviderDrawer extends Component {
           }}
           destroyOnClose={true}
           onClose={onClose}
-          visible={visible} 
+          // visible={visible}
+          visible={true}
           width={`30%`}
         >
           {/* {this.renderAddProviderForm()} */}

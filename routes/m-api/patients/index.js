@@ -57,6 +57,12 @@ router.get(
 );
 
 router.get(
+    "/:patient_id/reports",
+    Authenticated,
+    PatientController.getPatientReports
+);
+
+router.get(
   "/searchpatient",
   Authenticated,
   PatientController.searchPatientForDoctor

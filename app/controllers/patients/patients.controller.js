@@ -4,7 +4,6 @@ import Controller from "../";
 import userService from "../../../app/services/user/user.service";
 import patientService from "../../../app/services/patients/patients.service";
 import doctorService from "../../../app/services/doctor/doctor.service";
-import doctorsService from "../../../app/services/doctors/doctors.service";
 import minioService from "../../../app/services/minio/minio.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
@@ -19,6 +18,7 @@ import medicationReminderService from "../../services/medicationReminder/mRemind
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import otpVerificationService from "../../services/otpVerification/otpVerification.service";
 import ConsentService from "../../services/consents/consent.service";
+import ReportService from "../../services/reports/report.service";
 
 // WRAPPERS --------------------------------
 import VitalWrapper from "../../ApiWrapper/web/vitals";
@@ -34,6 +34,7 @@ import SymptomWrapper from "../../ApiWrapper/web/symptoms";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import ConsentWrapper from "../../ApiWrapper/web/consent";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import ReportWrapper from "../../ApiWrapper/web/reports";
 
 import Log from "../../../libs/log";
 import moment from "moment";
@@ -45,7 +46,7 @@ import {
 } from "../../../constant";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
-import carePlan from "../../ApiWrapper/web/carePlan";
+// import carePlan from "../../ApiWrapper/web/carePlan";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
@@ -874,7 +875,7 @@ class PatientController extends Controller {
       let doctorData = {};
       const patientIdsForThisDoc = [];
       const userIdsForForPatientForDoc = [];
-      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+      const doctor = await doctorService.getDoctorByUserId(parseInt(userId));
       const doctorDetails = await DoctorWrapper(doctor);
       doctorData[
         doctorDetails.getDoctorId()
@@ -1279,6 +1280,77 @@ class PatientController extends Controller {
       );
     } catch (error) {
       Logger.debug("ADD CAREPLAN PATIENT 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getPatientReports = async (req, res) => {
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    try {
+      const {params: {patient_id} = {}, userDetails: {userCategoryId} = {}} = req;
+      Logger.info(`params: patient_id = ${patient_id}`);
+
+      if(!patient_id) {
+        return raiseClientError(res, 422, {}, "Please select correct patient");
+      }
+
+      const reportService = new ReportService();
+      const allReports = await reportService.getAllReportByData({
+        patient_id
+      }) || [];
+
+      let reportData = {};
+      let documentData = {};
+
+      let doctorIds = [];
+
+      for(let index = 0; index < allReports.length; index++) {
+        const report = await ReportWrapper({data: allReports[index]});
+        const {reports, upload_documents} = await report.getReferenceInfo();
+
+        reportData = {...reportData, ...reports};
+        documentData = {...documentData, ...upload_documents};
+
+        // collect other doctor ids
+        if(report.getUploaderType() === USER_CATEGORY.DOCTOR && report.getUploaderId() !== userCategoryId) {
+          doctorIds.push(report.getUploaderId());
+        }
+      }
+
+      // get other doctor basic details
+      // todo: check with others if this data is already present for multi careplan
+      let doctorData = {};
+      if(doctorIds.length > 0) {
+        const allDoctors = await doctorService.getAllDoctorByData({
+          id: doctorIds
+        }) || [];
+
+        for(let index = 0; index < allDoctors.length; index++) {
+          const doctor = await DoctorWrapper(allDoctors[index]);
+          doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
+        }
+      }
+
+
+      return raiseSuccess(
+          res,
+          200,
+          {
+            reports: {
+              ...reportData
+            },
+            doctors: {
+              ...doctorData
+            },
+            upload_documents: {
+              ...documentData
+            },
+            report_ids: Object.keys(reportData)
+          }
+      );
+
+    } catch(error) {
+      Logger.debug("getPatientReports 500 error", error);
       return raiseServerError(res);
     }
   };

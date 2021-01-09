@@ -2,6 +2,7 @@
 import { DataTypes } from "sequelize";
 import { GENDER } from "../../constant";
 import { TABLE_NAME as userTableName } from "./users";
+import {TABLE_NAME as reportTableName} from "./reports";
 
 export const TABLE_NAME = "patients";
 
@@ -69,19 +70,11 @@ export const db = database => {
         allowNull: true
       },
       height :{
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true
       },
       weight:{
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      height :{
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      weight:{
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true
       },
       activated_on: {
@@ -134,5 +127,9 @@ export const associate = database => {
     database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
         foreignKey:"user_id",
         targetKey:"id"
+    });
+
+    database.models[TABLE_NAME].hasMany(database.models[reportTableName], {
+        foreignKey: "patient_id"
     });
 };

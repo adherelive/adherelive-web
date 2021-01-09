@@ -4,11 +4,9 @@ import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
 import { doRequest } from "../../../Helper/network";
-import {
-  REQUEST_TYPE
-} from "../../../constant";
 
 import {
+  REQUEST_TYPE,
   GENDER,
   PERMISSIONS,
   TABLET,
@@ -17,7 +15,8 @@ import {
   PART_LIST_CODES,
   DIAGNOSIS_TYPE,
   TABLE_DEFAULT_BLANK_FIELD,
-  FEATURES
+  FEATURES,
+  USER_CATEGORY
 } from "../../../constant";
 import {
   Tabs,
@@ -35,14 +34,28 @@ import OtpInput from "react-otp-input";
 // DRAWERS
 import VitalTimelineDrawer from "../../../Containers/Drawer/vitalTimeline";
 import MedicationTimelineDrawer from "../../../Containers/Drawer/medicationTimeline";
+import AddCareplanDrawer from "../../../Containers/Drawer/addCareplan";
+import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
+import AddVitals from "../../../Containers/Drawer/addVitals";
+import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
+import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
+import EditVitals from "../../../Containers/Drawer/editVitals";
+import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
+import SymptomsDrawer from "../../../Containers/Drawer/symptomsDrawer";
+import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
+import AddReportDrawer from "../../../Containers/Drawer/addReport";
+import EditReportDrawer from "../../../Containers/Drawer/editReport"
+
 
 // TABLES
 import VitalTable from "../../../Containers/Vitals/table";
 import MedicationTable from "../../../Containers/Medications/table";
+import ReportTable from "../../../Containers/Reports/table";
 
 import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 
 import PatientCarePlans from "./common/patientProfileCarePlans";
+
 
 import {
   PhoneOutlined,
@@ -52,20 +65,12 @@ import {
   
 } from "@ant-design/icons";
 import moment from "moment";
-import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
 
 // appointment upload modal
 import AppointmentUpload from "../../../Containers/Modal/appointmentUpload";
-
-import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
-import AddVitals from "../../../Containers/Drawer/addVitals";
-import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
-import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
-import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 import noMedication from "../../../Assets/images/no_medication@3x.png";
 import TemplateDrawer from "../../Drawer/medicationTemplateDrawer";
-import SymptomsDrawer from "../../../Containers/Drawer/symptomsDrawer";
 import ChatPopup from "../../../Containers/ChatPopup";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
@@ -73,10 +78,7 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from "../../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../../Helper/url/patients";
 import SymptomTabs from "../../../Containers/Symptoms";
-import AddCareplanDrawer from "../../../Containers/Drawer/addCareplan";
-// import messages from "../../Dashboard/message";
 import config from "../../../config";
-import EditVitals from "../../../Containers/Drawer/editVitals";
 import { getRoomId } from "../../../Helper/twilio";
 import { getFullName } from "../../../Helper/common";
 import Tooltip from "antd/es/tooltip";
@@ -91,7 +93,11 @@ const PATIENT_TABS = {
   ACTIONS: {
     name: "Actions",
     key: "4"
-  }
+  },
+  REPORTS:{
+    name: "Reports",
+    key: "5"
+  },
 };
 
 const columns_medication = [
@@ -234,14 +240,14 @@ const columns_appointments = [
               </Button>
             </div>
           )}
-          <div className="wp100 flex align-center justify-center pointer">
-            <Button
-              type={"secondary"}
-              onClick={uploadAppointmentDocs(appointment_id)}
-            >
-              {formatMessage(messages.upload_reports)}
-            </Button>
-          </div>
+          {/*<div className="wp100 flex align-center justify-center pointer">*/}
+          {/*  <Button*/}
+          {/*    type={"secondary"}*/}
+          {/*    onClick={uploadAppointmentDocs(appointment_id)}*/}
+          {/*  >*/}
+          {/*    {formatMessage(messages.upload_reports)}*/}
+          {/*  </Button>*/}
+          {/*</div>*/}
         </div>
       );
     }
@@ -254,7 +260,6 @@ const columns_appointments_non_editable = [
     dataIndex: "organizer",
     key: "organizer",
     width: "20%",
-
     ellipsis: true
   },
   {
@@ -877,9 +882,10 @@ class PatientDetails extends Component {
       handleMedicationReminder,
       handleSymptoms,
       handleVitals,
-      handleAddCareplan
+      handleAddCareplan,
+      handleAddReports
     } = this;
-    const { authPermissions = [] } = this.props;
+    const { authPermissions = [],authenticated_category } = this.props;
     return (
       <Menu>
         {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (
@@ -910,6 +916,11 @@ class PatientDetails extends Component {
             <div>{this.formatMessage(messages.newTreatmentPlan)}</div>
           </Menu.Item>
         )}
+        {(authenticated_category === USER_CATEGORY.DOCTOR || authenticated_category === USER_CATEGORY.PATIENT) && (
+          <Menu.Item onClick={handleAddReports}>
+            <div>{this.formatMessage(messages.reports)}</div>
+          </Menu.Item>
+        )}
       </Menu>
     );
   };
@@ -938,6 +949,15 @@ class PatientDetails extends Component {
       // patient_id
     });
   };
+
+  handleAddReports = e => {
+    const {openAddReportsDrawer} = this.props;
+    const { patient_id } = this.props;
+
+    openAddReportsDrawer({
+      patient_id
+    });
+  }
 
   handleMedicationReminder = e => {
     const { openMReminderDrawer, patient_id } = this.props;
@@ -2148,26 +2168,6 @@ class PatientDetails extends Component {
                   <div className="patient-tab mt20">
                     <Tabs defaultActiveKey="1">
                       <TabPane tab="Medication" key="1">
-                        {/* <Table
-                          columns={
-                            !isOtherCarePlan &&
-                            authPermissions.includes(
-                              PERMISSIONS.EDIT_MEDICATION
-                            )
-                              ? columns_medication
-                              : columns_medication_non_editable
-                          }
-                          dataSource={getMedicationData(carePlan)}
-                          onRow={
-                            !isOtherCarePlan &&
-                            authPermissions.includes(
-                              PERMISSIONS.EDIT_MEDICATION
-                            )
-                              ? onRowMedication
-                              : null
-                          }
-                        /> */}
-
                         <MedicationTable
                           patientId={patient_id}
                           carePlanId={carePlanId}
@@ -2194,9 +2194,6 @@ class PatientDetails extends Component {
                               : null
                           }
                         />
-                        {/*<div className="wp100">*/}
-                        {/*  /!* <AppointmentTable /> *!/*/}
-                        {/*</div>*/}
                       </TabPane>
 
                       <TabPane tab="Symptoms" key="3">
@@ -2211,6 +2208,11 @@ class PatientDetails extends Component {
                           carePlanId={carePlanId}
                           isOtherCarePlan={isOtherCarePlan}
                         />
+                      </TabPane>
+                      <TabPane 
+                      tab={PATIENT_TABS.REPORTS["name"]}
+                      key={PATIENT_TABS.REPORTS["key"]}>
+                        <ReportTable patientId={patient_id}/>
                       </TabPane>
                     </Tabs>
                   </div>
@@ -2229,12 +2231,13 @@ class PatientDetails extends Component {
                 carePlanId={carePlanId}
               />
 
-              {/* <EditMedicationReminder/> */}
+              <EditReportDrawer patient_id={patient_id}/>
 
               <AddVitals carePlanId={carePlanId} />
               <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
               <AddCareplanDrawer patientId={patient_id} />
+              <AddReportDrawer/>
               
               {templateDrawerVisible && (
                 <TemplateDrawer
@@ -2285,6 +2288,7 @@ class PatientDetails extends Component {
           <VitalTimelineDrawer />
           <MedicationTimelineDrawer />
           <EditPatientDrawer />
+          
         </div>
         <Modal
           visible={showOtpModal}
