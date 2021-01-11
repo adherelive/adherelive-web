@@ -1,6 +1,7 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as UserCategoryPermissionTableName } from "./userCategoryPermissions";
+import {TABLE_NAME as providerTableName} from "./providers";
 import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "users";
@@ -131,6 +132,11 @@ export const associate = database => {
   users.hasOne(patients, {
     sourceKey: "id",
     foreignKey: "user_id"
+  });
+
+  database.models[TABLE_NAME].hasOne(database.models[providerTableName], {
+     sourceKey:"id",
+     foreignKey:"user_id"
   });
 
   users.belongsToMany(permissions, {

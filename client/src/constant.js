@@ -178,6 +178,11 @@ export const MISSED_MEDICATION = "no_medication";
 export const MISSED_APPOINTMENTS = "no_appointment";
 export const MISSED_ACTIONS = "no_action";
 
+export const MISSED_MEDICATION_TEXT = "Missed Medication";
+export const MISSED_ACTION_TEXT = "Missed Actions";
+export const MISSED_APPOINTMENT_TEXT = "Missed Appointments";
+export const MISSED_SYMPTOM_TEXT = "Symptoms";
+
 export const PATIENT_BOX_CONTENT = {
   [SYMPTOMS]: {
     text: "Symptoms",

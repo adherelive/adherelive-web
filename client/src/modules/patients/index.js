@@ -1,7 +1,12 @@
 
 import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
-import {getAddPatientUrl,searchPatientFromNumUrl, getRequestConsentUrl, getConsentVerifyUrl,searchPatientForDoctorUrl,addCareplanForPatientUrl} from '../../Helper/urls/patients'
+import {getAddPatientUrl,searchPatientFromNumUrl,
+   getRequestConsentUrl, getConsentVerifyUrl,
+   searchPatientForDoctorUrl,addCareplanForPatientUrl,
+   } from '../../Helper/urls/patients'
+   
+import {getPatientMissedEventsUrl} from "../../Helper/urls/event";   
 
 export const ADD_PATIENT = "ADD_PATIENT";
 export const ADD_PATIENT_COMPLETED = "ADD_PATIENT_COMPLETED";
@@ -28,6 +33,10 @@ export const SEARCH_PATIENT_FOR_DOCTOR_FAILED = "SEARCH_PATIENT_FOR_DOCTOR_FAILE
 export const ADD_NEW_CAREPLAN = "ADD_NEW_CAREPLAN";
 export const ADD_NEW_CAREPLAN_COMPLETE = "ADD_NEW_CAREPLAN_COMPLETE";
 export const ADD_NEW_CAREPLAN_FAILED =  "ADD_NEW_CAREPLAN_FAILED"; 
+
+export const GET_PATIENT_MISSED_EVENTS_START = "GET_PATIENT_MISSED_EVENTS_START";
+export const GET_PATIENT_MISSED_EVENTS_COMPLETED = "GET_PATIENT_MISSED_EVENTS_COMPLETED";
+export const GET_PATIENT_MISSED_EVENTS_FAILED = "GET_PATIENT_MISSED_EVENTS_FAILED";
 
  export const requestConsent = (id) => {
    let response = {};
@@ -238,6 +247,39 @@ export const addCareplanForPatient = (id,payload) => {
     return response;
   };
 } 
+
+export const getPatientMissedEvents = (patient_id) =>{
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GET_PATIENT_MISSED_EVENTS_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getPatientMissedEventsUrl(patient_id)
+      });
+
+      const { status, payload: {data} = {} } =
+      response || {};
+
+      if (status === true) {
+        dispatch({
+          type: GET_PATIENT_MISSED_EVENTS_COMPLETED,
+          data
+        });
+      } else {
+        dispatch({
+          type:GET_PATIENT_MISSED_EVENTS_FAILED,
+        });
+      }
+    } catch (err) {
+      console.log("GET_PATIENT_MISSED_EVENTS_START err consentVerify", err);
+      throw err;
+    }
+
+    return response;
+  };
+}
 
 function patientReducer(state, data) {
   const {patients} = data || {};

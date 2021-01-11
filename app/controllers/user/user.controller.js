@@ -37,7 +37,7 @@ import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 import registrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
-import userPreferenceService from "../../services/userPreferences/userPreference.service";
+// import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../index";

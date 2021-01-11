@@ -48,6 +48,7 @@ export const getGraphs = () => {
       const { status, payload: { error = "", data: { charts = {} } = {} } = {} } =
         response || {};
 
+
       if (status === false) {
         dispatch({
           type: GET_GRAPHS_COMPLETED_WITH_ERROR,
@@ -80,6 +81,7 @@ export const updateGraphs = (payload) => {
         url: Graphs.addGraphsUrl(),
         data:payload
       });
+
 
       const { status, payload: { error = "", data: { charts = {} } = {} } = {} } =
         response || {};

@@ -28,7 +28,7 @@ const mapStateToProps = state => {
     auth: { authPermissions = [], authenticated_user = 1 } = {},
     treatments = {},
     conditions = {},
-    pages: { ui_features = {} } = {},
+    pages: { ui_features = {} ,dashboard ={}} = {},
     severity = {},
     chats,
     drawer,
@@ -52,7 +52,8 @@ const mapStateToProps = state => {
     authenticated_user,
     ui_features,
     features,
-    features_mappings
+    features_mappings,
+    dashboard
   };
 };
 

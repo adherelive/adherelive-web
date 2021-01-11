@@ -99,3 +99,7 @@ export const getAppointmentCompleteUrl = (id) => {
 export const getAllMissedScheduleEventsUrl = () => {
   return `/events/missed`;
 }
+
+export const getPatientMissedEventsUrl = (patient_id) => {
+  return `/events/missed/${patient_id}`
+}
