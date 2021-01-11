@@ -77,6 +77,15 @@ module.exports = {
             "4": {
               basic_info: {
                 id: 4,
+                name: "Subharti Hospital",
+                address: null,
+                city: null,
+                state: null
+              }
+            },
+            "5": {
+              basic_info: {
+                id: 5,
                 name: "Self",
                 address: null,
                 city: null,
