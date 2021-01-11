@@ -1303,11 +1303,12 @@ class PatientController extends Controller {
       let documentData = {};
 
       let doctorIds = [];
+      let reportIds = [];
 
       for(let index = 0; index < allReports.length; index++) {
         const report = await ReportWrapper({data: allReports[index]});
         const {reports, upload_documents} = await report.getReferenceInfo();
-
+        reportIds.push(report.getId());
         reportData = {...reportData, ...reports};
         documentData = {...documentData, ...upload_documents};
 
@@ -1345,8 +1346,9 @@ class PatientController extends Controller {
             upload_documents: {
               ...documentData
             },
-            report_ids: Object.keys(reportData)
-          }
+            report_ids: reportIds
+          },
+          "Reports for patient fetched successfully"
       );
 
     } catch(error) {
