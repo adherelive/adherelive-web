@@ -71,6 +71,8 @@ class ProviderWrapper extends BaseProvider {
         users: {
           [userData.getId()] : userData.getBasicInfo()
         },
+        user_id: userData.getId(),
+        provider_id: getProviderId()
       };
     } catch(error) {
       throw error;

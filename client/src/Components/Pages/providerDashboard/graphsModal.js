@@ -3,7 +3,7 @@ import { injectIntl } from "react-intl";
 import { 
     CHART_TITLE,
     NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, 
-} from "../../constant";
+} from "../../../constant";
 
 import { Button, Checkbox, Modal } from "antd";
 
@@ -57,16 +57,6 @@ class GraphsModal extends Component {
     }
 
 
-    handleChangeAddress = address => {
-        this.setState({ address });
-    };
-
-    handleSelect = address => {
-
-        this.setState({ address });
-    };
-
-
     render() {
         const { selectedGraphs = [] } = this.state;
 
@@ -92,8 +82,14 @@ class GraphsModal extends Component {
                             return (
                                 <div key={graph} className='flex justify-space-between wp100 mb8 mt4'>
                                     <div className='flex pointer'>
-                                        <Checkbox checked={selectedGraphs.includes(graph)} onChange={this.toggleGraphSelected(graph)}/>
-                                        <div className='ml10 fs16 fw700' onClick={this.toggleGraphSelected(graph)}>{CHART_TITLE[graph]}</div>
+                                        <Checkbox 
+                                        checked={selectedGraphs.includes(graph)} onChange={this.toggleGraphSelected(graph)}
+                                        />
+                                        <div className='ml10 fs16 fw700'
+                                         onClick={this.toggleGraphSelected(graph)}
+                                         >
+                                             {CHART_TITLE[graph]}
+                                         </div>
                                     </div>
                                 </div>
                             );

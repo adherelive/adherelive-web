@@ -8,10 +8,10 @@ import {TABLE_NAME as permissionTableName} from "../../models/permissions";
 import {TABLE_NAME as doctorTableName} from "../../models/doctors";
 import {TABLE_NAME as patientTableName} from "../../models/patients";
 import {TABLE_NAME as userDeviceTableName} from "../../models/userDevices";
-import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";;
+import {TABLE_NAME as carePlanTableName} from "../../models/carePlan";
+import {TABLE_NAME as providerTableName} from "../../models/providers";
 
 import Log from "../../../libs/log";
-import carePlan from "../../ApiWrapper/web/carePlan";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
@@ -34,7 +34,7 @@ class UserService {
                 where: {
                     id
                 },
-                include: [Database.getModel(doctorTableName), Database.getModel(patientTableName)]
+                include: [Database.getModel(doctorTableName), Database.getModel(patientTableName), Database.getModel(providerTableName)]
             });
             return user;
         } catch (err) {

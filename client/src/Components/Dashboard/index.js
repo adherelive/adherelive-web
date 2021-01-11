@@ -4,7 +4,10 @@ import messages from "./message";
 import {
   PERMISSIONS,
   TABLE_DEFAULT_BLANK_FIELD,
-  FEATURES
+  FEATURES,
+  MISSED_MEDICATION,
+  MISSED_APPOINTMENTS,
+  MISSED_ACTIONS
 } from "../../constant";
 import Tabs from "antd/es/tabs";
 import Patients from "../../Containers/Patient/table";
@@ -132,7 +135,18 @@ class Dashboard extends Component {
 
 
   renderChartTabs = () => {
-    const { graphs } = this.props;
+    const { graphs,dashboard={} } = this.props;
+    const {missed_medications={},medication_ids={},
+    missed_appointments={},appointment_ids={},
+    missed_vitals={},vital_ids={}}=dashboard;
+    const {critical:medication_critical=[],non_critical:medication_non_critical=[]}=medication_ids;
+    const {critical:vital_critical=[],non_critical:vital_non_critical=[]}=vital_ids;
+    const {critical:appointment_critical=[],non_critical:appointment_non_critical=[]}=appointment_ids;
+    const medication_total = medication_critical.length+medication_non_critical.length;
+    const vital_total = vital_critical.length+vital_non_critical.length;
+    const appointment_total = appointment_critical.length+appointment_non_critical.length;
+
+
 
     const { graphsToShow, graphLoading } = this.state;
 
@@ -146,7 +160,26 @@ class Dashboard extends Component {
     }
 
     const chartBlocks = graphsToShow.map(id => {
-      const { total, critical, name } = graphs[id] || {};
+      const { 
+         name ,type=''} = graphs[id] || {};
+      let total=0;
+      let critical = 0;
+
+
+    
+
+      if(type === MISSED_MEDICATION){
+        total = medication_total;
+        critical = medication_critical.length;
+     } else if(type === MISSED_APPOINTMENTS){
+        total = appointment_total;
+        critical = appointment_critical.length;
+
+     } else if(type === MISSED_ACTIONS){
+        total = vital_total;
+        critical = vital_critical.length;
+     }
+
       return (
         <div onClick={() => this.chartClicked(name)}>
           <Donut

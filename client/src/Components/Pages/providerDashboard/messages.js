@@ -21,6 +21,21 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Doctors"
   },
+  graphs: {
+    id: "app.provider.dashboard.graphs",
+    description: "",
+    defaultMessage: "Graphs"
+  },
+  somethingWentWrongError: {
+    id: "app.provider.dashboard.somethingWentWrongError",
+    description: "",
+    defaultMessage: "Something went wrong"
+  },
+  no_graph_text: {
+    id: "app.provider.dashboard.no.graph.text",
+    description: "",
+    defaultMessage: "Please add graphs from the menu above to display here"
+  },
   
 });
 

@@ -17,6 +17,7 @@ import councilService from "../../services/council/council.service";
 // import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import appointmentService from "../../services/appointment/appointment.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -746,6 +747,15 @@ class ProvidersController extends Controller {
       });
 
       const userData = await UserWrapper(user.get());
+
+      // add user preference
+      await userPreferenceService.addUserPreference({
+          user_id: userData.getId(),
+          details: {
+            charts: ["1", "2", "3"]
+          }
+      });
+
 
       // create provider
       const provider = await providerService.addProvider({

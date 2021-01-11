@@ -11,6 +11,7 @@ import Admin from "../../../app/controllers/admin/admin.controller";
 import Provider from "../../../app/controllers/providers/providers.controller";
 import Algolia from "../../../app/controllers/algolia/algolia.controller";
 import AccountsController from "../../../app/controllers/accounts/accounts.controller";
+import Graphs from "../../../app/controllers/graphs/graph.controller";
 import * as validator from "./validator";
 
 router.get("/details/:type", Admin.getTermsAndPolicy);
@@ -50,6 +51,9 @@ router.get(
 
 router.post("/providers", Authenticate, validator.validateAddProviderData, Provider.addProvider);
 
+// to add previous providers default graph user preference
+router.post("/providers/graphs", Authenticate, Graphs.updateProviderGraph)
+
 router.post("/providers/:id", Authenticate, validator.validateUpdateProviderData, Provider.updateProvider);
 
 router.post("/doctors/:id", Authenticate, Doctor.verifyDoctors);
@@ -61,6 +65,9 @@ router.post("/algolia/medicine", Authenticate, Algolia.updateMedicine);
 
 router.delete("/chats/delete", Authenticate, twilioController.deleteChat);
 
+// AD HOC APIS........
+
+// to enable previous patients features
 router.post("/enable-all-features", Authenticate, Admin.enableAllFeatures);
 
 module.exports = router;

@@ -1,13 +1,19 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer } from "antd";
-import { GENDER, PATIENT_BOX_CONTENT, MISSED_MEDICATION, MISSED_ACTIONS ,DIAGNOSIS_TYPE,FINAL,PROBABLE} from "../../../constant";
+import { GENDER, PATIENT_BOX_CONTENT, 
+  SYMPTOMS,MISSED_APPOINTMENTS,MISSED_MEDICATION, MISSED_ACTIONS ,DIAGNOSIS_TYPE,
+  FINAL,PROBABLE,
+  MISSED_MEDICATION_TEXT,
+  MISSED_ACTION_TEXT,
+  MISSED_APPOINTMENT_TEXT,
+  MISSED_SYMPTOM_TEXT} from "../../../constant";
 import messages from "./message";
 import moment from "moment";
+import message from "antd/es/message";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
 import MsgIcon from "../../../Assets/images/chat.png";
 // import config from "../../../config/config";
-
 
 // const { WEB_URL } = config;
 
@@ -17,7 +23,11 @@ class PatientDetailsDrawer extends Component {
     this.state = {
       carePlanId: 1,
       carePlanMedicationIds: [],
-      appointmentsListIds:[]
+      appointmentsListIds:[],
+      missed_appointment:{},
+      missed_vitals:{},
+      missed_medications:{},
+      missed_symptoms:{}
     };
   }
 
@@ -57,7 +67,7 @@ class PatientDetailsDrawer extends Component {
 
   componentDidUpdate(prevProps) {
    
-    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments, appointments={} } = this.props;
+    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments, appointments={} ,getPatientMissedEvents} = this.props;
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
@@ -75,12 +85,41 @@ class PatientDetailsDrawer extends Component {
     
     
     if (patient_id !== prev_patient_id) {
+      this.handleGetMissedEvents(patient_id);
       getMedications(patient_id);
       getAppointments(patient_id);
       this.setState({ carePlanId, carePlanMedicationIds,appointmentsListIds});
 
     }
     
+  }
+
+  async handleGetMissedEvents(patient_id){
+    try{
+      const {getPatientMissedEvents} = this.props;
+      const response = await getPatientMissedEvents(patient_id);
+
+      const {payload : { data={} } = {} ,status} = response || {};
+      const {
+        missed_appointment={},
+        missed_vitals={},
+        missed_medications={},
+        missed_symptoms={}
+      } = data || {};
+
+      if(status){
+        this.setState({
+          missed_appointment,
+          missed_vitals,
+          missed_medications,
+          missed_symptoms
+        })
+      }
+     
+    }catch(error){
+      console.log("error -->",error);
+      message.warn(this.formatMessage(messages.somethingWentWrong))
+    }
   }
   
   
@@ -233,6 +272,12 @@ class PatientDetailsDrawer extends Component {
         providers[provider_id] || {};
      const diagnosis_type = DIAGNOSIS_TYPE[type];
      const diagnosis = diagnosis_type["value"]; 
+     const {
+      missed_appointment={},
+      missed_vitals={},
+      missed_medications={},
+      missed_symptoms={}
+     }=this.state;
 
 
       return (
@@ -269,7 +314,34 @@ class PatientDetailsDrawer extends Component {
 
           <div className="mt20">
             {Object.keys(PATIENT_BOX_CONTENT).map(id => {
-              const { total = "1", critical = "0" } = reports[id] || {};
+              let critical=0;
+              let non_critical=0;
+              let total=0;
+              if(PATIENT_BOX_CONTENT[id]["text"] === MISSED_SYMPTOM_TEXT){
+                const  {critical : symptom_critical=0,non_critical : symptom_non_critical=0} = missed_symptoms;
+                critical = symptom_critical;
+                non_critical=symptom_non_critical;
+                total = symptom_critical+symptom_non_critical; 
+
+              }else  if(PATIENT_BOX_CONTENT[id]["text"] === MISSED_APPOINTMENT_TEXT){
+                const  {critical : appointment_critical=0,non_critical : appointment_non_critical=0} = missed_appointment;
+                critical = appointment_critical;
+                non_critical=appointment_non_critical;
+                total = appointment_critical+appointment_non_critical; 
+
+              }else  if(PATIENT_BOX_CONTENT[id]["text"] === MISSED_ACTION_TEXT){
+                const  {critical : vital_critical=0,non_critical : vital_non_critical=0} = missed_vitals;
+                critical = vital_critical;
+                non_critical=vital_non_critical;
+                total = vital_critical+vital_non_critical; 
+
+              }else  if(PATIENT_BOX_CONTENT[id]["text"] === MISSED_MEDICATION_TEXT){
+                const  {critical : medication_critical=0,non_critical : medication_non_critical=0} = missed_medications;
+                critical = medication_critical;
+                non_critical=medication_non_critical;
+                total = medication_critical+medication_non_critical; 
+              }
+
               return (
                 <div
                   key={id}
