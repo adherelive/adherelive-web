@@ -1,5 +1,7 @@
 import BaseMedicationReminder from "../../../services/medicationReminder";
+
 import mReminderService from "../../../services/medicationReminder/mReminder.service";
+import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
@@ -46,6 +48,10 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
 
     const currentDate = moment().endOf("day").utc().toDate();
 
+    // get careplan attached to medication
+    const medicationCareplan = await carePlanMedicationService.getCareplanByMedication({medication_id: getMReminderId()}) || null;
+    const {care_plan_id = null} = medicationCareplan || {};
+
     const scheduleEvents = await EventService.getAllPreviousByData({
       event_id: getMReminderId(),
       date: currentDate,
@@ -75,7 +81,8 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
           ...getBasicInfo(),
           remaining,
           total: scheduleEvents.length,
-          upcoming_event_id: latestPendingEventId
+          upcoming_event_id: latestPendingEventId,
+          care_plan_id
         },
       },
     };
