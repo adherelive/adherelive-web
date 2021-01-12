@@ -314,8 +314,8 @@ class QualificationRegister extends Component {
     let newRegistration = registration;
     newRegistration[key].number = e.target.value;
     const { value } = e.target;
-    const reg = /^-?\d*(\.\d*)?$/;
-    if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
+    const reg = /^[a-zA-Z0-9]*$/;
+    if ((reg.test(value)) || value === "" || value === "-") {
       this.setState({ registration: newRegistration });
     }
   };
