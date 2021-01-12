@@ -72,7 +72,7 @@ class MissedMedicationsDrawer extends Component {
   };
 
   getMedicationList = () => {
-    const { patients = {}, missed_medications } = this.props;
+    const { patients = {}, missed_medications = {} } = this.props;
     const { handlePatientDetailsRedirect,formatMessage } = this;
 
     const medicationList = [];
