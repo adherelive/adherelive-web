@@ -56,11 +56,19 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       event_id: getMReminderId(),
       date: currentDate,
       event_type: EVENT_TYPE.MEDICATION_REMINDER
-    });
+    }) || [];
 
     let medicationEvents = {};
     let remaining = 0;
-    let latestPendingEventId;
+    let latestPendingEventId = null;
+    let latestPendingDate = null;
+
+    // get next due date for medication
+    const nextDueEvent = await EventService.getEventByData({
+        status: EVENT_STATUS.PENDING
+    });
+
+    latestPendingDate = nextDueEvent.get("start_time") || null;
 
     const scheduleEventIds = [];
     for(const events of scheduleEvents) {
@@ -82,6 +90,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
           remaining,
           total: scheduleEvents.length,
           upcoming_event_id: latestPendingEventId,
+          upcoming_event_date: latestPendingDate,
           care_plan_id
         },
       },
