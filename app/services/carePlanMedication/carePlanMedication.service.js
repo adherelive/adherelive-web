@@ -38,12 +38,12 @@ class CarePlanMedicationService {
         }
       };
 
-    getSingleCarePlanMedicationByData = async (data) => {
+    getCareplanByMedication = async (data) => {
         try {
-            const carePlanMedication = await Database.getModel(TABLE_NAME).findOne({
-                where: data
+            return await Database.getModel(TABLE_NAME).findOne({
+                where: data,
+                attributes: ["care_plan_id"]
             });
-            return carePlanMedication;
         } catch(error) {
             throw error;
         }

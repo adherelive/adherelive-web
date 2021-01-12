@@ -36,6 +36,18 @@ class CarePlanAppointmentService {
         }
     };
 
+    getCareplanByAppointment = async (data) => {
+        try {
+            return await Database.getModel(TABLE_NAME).findOne({
+                where: data,
+                attributes: ["care_plan_id"]
+            });
+        } catch(error) {
+            throw error;
+        }
+    };
+
+
     getAppointmentsByCarePlanId = async (care_plan_id) => {
         try {
             const carePlanAppointments = await Database.getModel(TABLE_NAME).findAll({

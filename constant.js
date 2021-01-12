@@ -635,12 +635,12 @@ export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg", "svg", "png", "pdf"];
 
 const TABLET = "1";
 const SYRUP = "2";
-const SYRINGE = "3";
+const INJECTION = "3";
 
 export const MEDICINE_FORM_TYPE = {
   [TABLET]: { name: "tablet" },
   [SYRUP]: { name: "syrup" },
-  [SYRINGE]: { name: "syringe" }
+  [INJECTION]: { name: "injection" }
 };
 
 const HEAD = "1";
