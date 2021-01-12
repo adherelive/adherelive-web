@@ -315,6 +315,7 @@ class QualificationRegister extends Component {
     newRegistration[key].number = e.target.value;
     const { value } = e.target;
     const reg = /^[a-zA-Z0-9]*$/;
+    
     if ((reg.test(value)) || value === "" || value === "-") {
       this.setState({ registration: newRegistration });
     }
