@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer } from "antd";
-import { GENDER, PATIENT_BOX_CONTENT, 
-  SYMPTOMS,MISSED_APPOINTMENTS,MISSED_MEDICATION, MISSED_ACTIONS ,DIAGNOSIS_TYPE,
-  FINAL,PROBABLE,
+import { GENDER, PATIENT_BOX_CONTENT,MISSED_MEDICATION, MISSED_ACTIONS ,DIAGNOSIS_TYPE,
   MISSED_MEDICATION_TEXT,
   MISSED_ACTION_TEXT,
   MISSED_APPOINTMENT_TEXT,
@@ -13,6 +11,7 @@ import moment from "moment";
 import message from "antd/es/message";
 import ShareIcon from "../../../Assets/images/redirect3x.png";
 import MsgIcon from "../../../Assets/images/chat.png";
+import {getName} from "../../../Helper/validation"
 // import config from "../../../config/config";
 
 // const { WEB_URL } = config;
@@ -288,7 +287,7 @@ class PatientDetailsDrawer extends Component {
 
           <div className="wp100 flex justify-space-between align-center mt20">
             <div className="flex justify-space-around align-center">
-              <div className="pr10 fs24 fw600">{`${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name}`}</div>
+              <div className="pr10 fs24 fw600">{`${getName(first_name)}  ${getName(middle_name)} ${getName(last_name)}`}</div>
               <div className="pr10 fs20 fw500">{`(${gender ? `${GENDER[gender].view} ` : ''}${age ? age : '--'})`}</div>
               {/* <Icon type="wechat" width={20} /> */}
               <img
