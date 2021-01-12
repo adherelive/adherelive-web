@@ -547,7 +547,7 @@ class PatientController extends Controller {
 
       const symptomData = await SymptomService.getAllByData({
         patient_id,
-        care_plan_id: carePlan.getCarePlanId()
+        // care_plan_id: carePlan.getCarePlanId()
       });
 
       let uploadDocumentData = {};
