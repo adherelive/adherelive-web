@@ -48,6 +48,13 @@ router.get("/vitals/:id", Authenticate, EventController.getVitalEvent);
 // --------------- GET ALL RECENT EVENTS PATIENT DASHBOARD
 router.get("/", Authenticate, EventController.getAllEvents);
 
+// for alerts from last visit
+router.get(
+    "/:patient_id/last-visit",
+    Authenticate,
+    EventController.getLastVisitEvents
+);
+
 router.post(
   "/medication-status/:eventId",
   Authenticate,
