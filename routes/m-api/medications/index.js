@@ -19,11 +19,11 @@ router.get(
     MobileMedication.getMedicationDetails
 );
 
-router.get(
-  "/:id",
-  // Authenticate,
-  MobileMedication.getMedicationForId
-);
+// router.get(
+//   "/:id",
+//   // Authenticate,
+//   MobileMedication.getMedicationForId
+// );
 
 router.post(
   "/:id",
