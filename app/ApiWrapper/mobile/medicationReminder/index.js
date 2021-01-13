@@ -123,8 +123,10 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
 
     return {
       medications: {
-        ...medicationData,
-        event_ids: scheduleEventIds
+        [getMReminderId()]: {
+          ...medicationData,
+          event_ids: scheduleEventIds
+        },
       },
       schedule_events: {
         ...scheduleEventData

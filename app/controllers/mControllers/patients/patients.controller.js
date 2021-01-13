@@ -313,7 +313,7 @@ class MPatientController extends Controller {
         } = await medicationWrapper.getReferenceInfo();
         medicationApiData = {
           ...medicationApiData,
-          ...{ [medicationWrapper.getMReminderId()]: medications }
+          ...medications
         };
         scheduleEventApiData = { ...scheduleEventApiData, ...schedule_events };
         medicineId.push(medicationWrapper.getMedicineId());
