@@ -113,10 +113,10 @@ function printDoctorBlockData(doc, doctors, users, degrees, registrations) {
     .fontSize(BOLD_FONT_SIZE)
     .text(`Dr. ${doctorName}`, DOC_MARGIN);
   // .text("\n");
-
+  const fullDegree = degree ? `${degree}, MBBS` : "MBBS";
   doc
     .fontSize(NORMAL_FONT_SIZE)
-    .text(`${degree}`)
+    .text(`${fullDegree}`)
     .text(`${registrationNumber}`)
     .text(`${city}`)
     .text(`${doctorEmail}`)
@@ -229,7 +229,7 @@ function printCarePlanData(
 
   doc
     .text(
-      "EXAMINATION / LAB FINDINGS",
+      "DIAGNOSIS",
       DOC_MARGIN,
       relevantPointsEndLevel + DISTANCE_BETWEEN_ROWS
     )
