@@ -1783,8 +1783,20 @@ class MobileDoctorController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0];
+      let middle_name = patientName.length == 3 ? patientName[1] : "";
+      let last_name =
+        patientName.length == 3
+          ? patientName[2]
+          : patientName.length == 2
+          ? patientName[1]
+          : "";
+
+      const birth_date = moment(date_of_birth);
+      const age = getAge(date_of_birth);
+
       const patientUpdateData = {
-        ...prevBasicInfo,
         details: {
           ...previousDetails,
           allergies,
@@ -1792,7 +1804,14 @@ class MobileDoctorController extends Controller {
         },
         height,
         weight,
-        address
+        address,
+        gender,
+        birth_date,
+        age,
+        dob: date_of_birth,
+        first_name,
+        middle_name,
+        last_name
       };
 
       const updatedPatient = await patientService.update(
