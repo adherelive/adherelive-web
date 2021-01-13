@@ -1004,7 +1004,9 @@ class MPatientController extends Controller {
       // const { users } = await patient.getReferenceInfo();
       const users = await UserWrapper(null, patient.getUserId());
 
-      const { basic_info: { prefix, mobile_number, email } = {} } = users.getBasicInfo();
+      const {
+        basic_info: { prefix, mobile_number, email } = {}
+      } = users.getBasicInfo();
 
       Logger.debug("patient_id ---> ", mobile_number);
 
@@ -1019,7 +1021,7 @@ class MPatientController extends Controller {
         otp
       });
 
-      if(process.config.app.env === "development") {
+      if (process.config.app.env === "development") {
         const emailPayload = {
           title: "OTP Consent verification for patient",
           toAddress: process.config.app.developer_email,
@@ -1034,8 +1036,7 @@ class MPatientController extends Controller {
         };
         Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
       } else {
-
-        if(email) {
+        if (email) {
           const emailPayload = {
             title: "OTP Consent verification for patient",
             toAddress: email,
@@ -1303,7 +1304,10 @@ class MPatientController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { care_plan_id = null } = req.params;
-      const { userDetails: { userId = null } = {} } = req;
+      const {
+        userDetails: { userId = null } = {},
+        query: { current_time = null } = {}
+      } = req;
 
       const carePlanId = parseInt(care_plan_id);
 
@@ -1482,7 +1486,8 @@ class MPatientController extends Controller {
         nextAppointmentDuration,
         patients: {
           ...{ [patientData.getPatientId()]: patientData.getBasicInfo() }
-        }
+        },
+        currentTime: current_time
       };
 
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
@@ -1524,21 +1529,24 @@ class MPatientController extends Controller {
     }
   };
 
-
   getPatientReports = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {params: {patient_id} = {}, userDetails: {userCategoryId} = {}} = req;
+      const {
+        params: { patient_id } = {},
+        userDetails: { userCategoryId } = {}
+      } = req;
       Logger.info(`params: patient_id = ${patient_id}`);
 
-      if(!patient_id) {
+      if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
       }
 
       const reportService = new ReportService();
-      const allReports = await reportService.getAllReportByData({
-        patient_id
-      }) || [];
+      const allReports =
+        (await reportService.getAllReportByData({
+          patient_id
+        })) || [];
 
       let reportData = {};
       let documentData = {};
@@ -1547,15 +1555,18 @@ class MPatientController extends Controller {
 
       let reportIds = [];
 
-      for(let index = 0; index < allReports.length; index++) {
-        const report = await ReportWrapper({data: allReports[index]});
-        const {reports, upload_documents} = await report.getReferenceInfo();
+      for (let index = 0; index < allReports.length; index++) {
+        const report = await ReportWrapper({ data: allReports[index] });
+        const { reports, upload_documents } = await report.getReferenceInfo();
         reportIds.push(report.getId());
-        reportData = {...reportData, ...reports};
-        documentData = {...documentData, ...upload_documents};
+        reportData = { ...reportData, ...reports };
+        documentData = { ...documentData, ...upload_documents };
 
         // collect other doctor ids
-        if(report.getUploaderType() === USER_CATEGORY.DOCTOR && report.getUploaderId() !== userCategoryId) {
+        if (
+          report.getUploaderType() === USER_CATEGORY.DOCTOR &&
+          report.getUploaderId() !== userCategoryId
+        ) {
           doctorIds.push(report.getUploaderId());
         }
       }
@@ -1563,37 +1574,36 @@ class MPatientController extends Controller {
       // get other doctor basic details
       // todo: check with others if this data is already present for multi careplan
       let doctorData = {};
-      if(doctorIds.length > 0) {
-        const allDoctors = await DoctorService.getAllDoctorByData({
-          id: doctorIds
-        }) || [];
+      if (doctorIds.length > 0) {
+        const allDoctors =
+          (await DoctorService.getAllDoctorByData({
+            id: doctorIds
+          })) || [];
 
-        for(let index = 0; index < allDoctors.length; index++) {
+        for (let index = 0; index < allDoctors.length; index++) {
           const doctor = await DoctorWrapper(allDoctors[index]);
           doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
       }
 
-
       return raiseSuccess(
-          res,
-          200,
-          {
-            reports: {
-              ...reportData
-            },
-            doctors: {
-              ...doctorData
-            },
-            upload_documents: {
-              ...documentData
-            },
-            report_ids: reportIds
+        res,
+        200,
+        {
+          reports: {
+            ...reportData
           },
-          "Reports for patient fetched successfully"
+          doctors: {
+            ...doctorData
+          },
+          upload_documents: {
+            ...documentData
+          },
+          report_ids: reportIds
+        },
+        "Reports for patient fetched successfully"
       );
-
-    } catch(error) {
+    } catch (error) {
       Logger.debug("getPatientReports 500 error", error);
       return raiseServerError(res);
     }

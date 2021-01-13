@@ -30,7 +30,8 @@ export default async (pdfData, signatureImage) => {
         creationDate = "",
         medications = {},
         medicines = {},
-        nextAppointmentDuration = null
+        nextAppointmentDuration = null,
+        currentTime = ""
       } = pdfData;
       const doc = new PDFDocument({ margin: DOC_MARGIN, bufferPages: true });
 
@@ -87,7 +88,7 @@ export default async (pdfData, signatureImage) => {
         doc.y
       );
 
-      printFooter(doc, signatureImage, nextAppointmentDuration);
+      printFooter(doc, signatureImage, nextAppointmentDuration, currentTime);
       doc.end();
     } catch (err) {
       console.log("Error got in the generation of pdf is: ", err);
@@ -103,13 +104,14 @@ function printDoctorBlockData(doc, doctors, users, degrees, registrations) {
     degree = "",
     registrationNumber = "",
     email: doctorEmail = "",
-    mobile_number: doctorMobileNumber = ""
+    mobile_number: doctorMobileNumber = "",
+    prefix = ""
   } = formatDoctorsData(doctors, users, degrees, registrations);
 
   doc
     .fillColor("black")
     .fontSize(BOLD_FONT_SIZE)
-    .text(`${doctorName}`, DOC_MARGIN);
+    .text(`Dr. ${doctorName}`, DOC_MARGIN);
   // .text("\n");
 
   doc
@@ -117,7 +119,8 @@ function printDoctorBlockData(doc, doctors, users, degrees, registrations) {
     .text(`${degree}`)
     .text(`${registrationNumber}`)
     .text(`${city}`)
-    .text(`${doctorEmail} ${doctorMobileNumber}`);
+    .text(`${doctorEmail}`)
+    .text(`${prefix}-${doctorMobileNumber}`);
 
   doc
     .rect(0, 0, 700, doc.y)
@@ -138,7 +141,8 @@ function printPatientBlockData(doc, patients, users, creationDate) {
     gender = "",
     height = "",
     weight = "",
-    mobile_number = ""
+    mobile_number = "",
+    prefix = ""
   } = formatPatientData(patients, users);
 
   doc
@@ -168,13 +172,13 @@ function printPatientBlockData(doc, patients, users, creationDate) {
     .text("Age", 390, dateOfConsultationEnds + 4)
     .text(`${age}`, doc.x + 35, dateOfConsultationEnds + 4)
     .text("Gender", doc.x + 55, dateOfConsultationEnds + 4)
-    .text(`${gender}`, doc.x + 60, dateOfConsultationEnds + 4);
+    .text(`${gender ? gender : ""}`, doc.x + 60, dateOfConsultationEnds + 4);
 
   doc
     .fillColor("black")
     .fontSize(NORMAL_FONT_SIZE)
     .text("\n Mobile Number", DOC_MARGIN, patientNameEnds - NORMAL_FONT_SIZE)
-    .text(`${mobile_number}`, 190, patientNameEnds)
+    .text(`${prefix}-${mobile_number}`, 190, patientNameEnds)
     .text("\n Address", DOC_MARGIN, doc.y)
     .text(`${address ? address : ""}`, 190, doc.y - NORMAL_FONT_SIZE, {
       width: MAX_WIDTH
@@ -184,9 +188,9 @@ function printPatientBlockData(doc, patients, users, creationDate) {
 
   doc
     .text("Height", 390, patientNameEnds)
-    .text(`${height}`, 440, patientNameEnds)
+    .text(`${height} cm`, 440, patientNameEnds)
     .text("Weight", 390, patientNameEnds + DISTANCE_BETWEEN_ROWS)
-    .text(`${weight}`, 440, patientNameEnds + DISTANCE_BETWEEN_ROWS);
+    .text(`${weight} kg`, 440, patientNameEnds + DISTANCE_BETWEEN_ROWS);
 
   return addressEndRowLevel;
 }
@@ -281,7 +285,7 @@ function printCarePlanData(
   return suggestedInvestigationXLevelEnd;
 }
 
-function printFooter(doc, imageUrl, nextAppointmentDuration) {
+function printFooter(doc, imageUrl, nextAppointmentDuration, currentTime) {
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .text("Review After: ", DOC_MARGIN, doc.y + DISTANCE_BETWEEN_ROWS)
@@ -300,8 +304,10 @@ function printFooter(doc, imageUrl, nextAppointmentDuration) {
   }
 
   doc
+    .fontSize(SMALLEST_FONT_SIZE - 2)
+    .text(`${currentTime}`, 400, doc.y + 100)
     .fontSize(SMALLEST_FONT_SIZE)
-    .text("RMPs Signature & Stamp", 400, doc.y + 100);
+    .text("RMPs Signature & Stamp", 400, doc.y + 10);
 
   generateHr(doc, doc.y + NORMAL_FONT_SIZE);
 
@@ -366,7 +372,9 @@ function formatDoctorsData(doctors, users, degrees, registrations) {
     } = {}
   } = doctors;
   const {
-    [user_id]: { basic_info: { mobile_number = "", email = "" } = {} } = {}
+    [user_id]: {
+      basic_info: { mobile_number = "", email = "", prefix = "" } = {}
+    } = {}
   } = users;
   let name = first_name;
   name = middle_name ? `${name} ${middle_name}` : name;
@@ -388,7 +396,7 @@ function formatDoctorsData(doctors, users, degrees, registrations) {
         council: { basic_info: { name: council_name = "" } = {} } = {}
       } = {}
     } = registrations;
-    registrationNumber = registrationNumber + `${council_name}:${number}, `;
+    registrationNumber = registrationNumber + `Registration Number:${number}, `;
   }
 
   if (degree) {
@@ -409,7 +417,8 @@ function formatDoctorsData(doctors, users, degrees, registrations) {
     city,
     degree,
     registrationNumber,
-    signature_image
+    signature_image,
+    prefix
   };
 }
 
@@ -439,7 +448,9 @@ function formatPatientData(patients, users) {
   name = middle_name ? `${name} ${middle_name}` : name;
   name = last_name ? `${name} ${last_name}` : name;
 
-  const { [user_id]: { basic_info: { mobile_number = "" } = {} } = {} } = users;
+  const {
+    [user_id]: { basic_info: { mobile_number = "", prefix = "" } = {} } = {}
+  } = users;
 
   return {
     name,
@@ -450,7 +461,8 @@ function formatPatientData(patients, users) {
     weight,
     allergies,
     comorbidities,
-    mobile_number
+    mobile_number,
+    prefix
   };
 }
 
