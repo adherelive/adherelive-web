@@ -851,7 +851,7 @@ class DoctorController extends Controller {
 
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
-      const userExists = await userService.getPatientByMobile(mobile_number);
+      const userExists = await userService.getPatientByMobile(mobile_number) || [];
 
       let userData = null;
       let patientData = null;
@@ -876,6 +876,16 @@ class DoctorController extends Controller {
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0] || null;
+      let middle_name = patientName.length === 3 ? patientName[1] : null;
+      let last_name =
+          patientName.length === 3
+              ? patientName[2]
+              : patientName.length === 2
+              ? patientName[1]
+              : null;
+
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
         userData = await UserWrapper(userExists[0].get());
@@ -892,6 +902,12 @@ class DoctorController extends Controller {
             height,
             weight,
             address,
+            first_name,
+            middle_name,
+            last_name,
+            gender,
+            dob: date_of_birth,
+            age: getAge(moment(date_of_birth)),
             details: { ...previousDetails, ...patientOtherDetails }
           },
           patient_id
@@ -924,16 +940,6 @@ class DoctorController extends Controller {
         }
 
         let newUserId = userData.getId();
-
-        let patientName = name.trim().split(" ");
-        let first_name = patientName[0];
-        let middle_name = patientName.length == 3 ? patientName[1] : "";
-        let last_name =
-          patientName.length == 3
-            ? patientName[2]
-            : patientName.length == 2
-            ? patientName[1]
-            : "";
 
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
@@ -2645,11 +2651,11 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        mobile_number = "",
+        // mobile_number = "",
         name = "",
         gender = "",
         date_of_birth = "",
-        prefix = "",
+        // prefix = "",
         comorbidities = "",
         allergies = "",
         clinical_notes = "",
@@ -2676,6 +2682,17 @@ class DoctorController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
+      // split names of patient
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0] || null;
+      let middle_name = patientName.length === 3 ? patientName[1] : null;
+      let last_name =
+          patientName.length === 3
+              ? patientName[2]
+              : patientName.length === 2
+              ? patientName[1]
+              : null;
+
       const patientUpdateData = {
         ...prevBasicInfo,
         details: {
@@ -2683,9 +2700,15 @@ class DoctorController extends Controller {
           allergies,
           comorbidities
         },
+        first_name,
+        middle_name,
+        last_name,
+        gender,
         height,
         weight,
-        address
+        address,
+        dob: date_of_birth,
+        age: getAge(moment(date_of_birth)),
       };
 
       const updatedPatient = await patientService.update(
