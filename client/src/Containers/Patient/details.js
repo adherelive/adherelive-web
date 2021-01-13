@@ -21,6 +21,8 @@ import {
 } from "../../modules/scheduleEvents/index";
 import { addCareplanForPatient } from "../../modules/patients";
 import { storeAppointmentDocuments } from "../../modules/uploadDocuments";
+import { getSymptomTimeLine } from "../../modules/symptoms";
+import {fetchReports} from "../../modules/reports";
 
 const mapStateToProps = (state, ownProps) => {
   const {
@@ -46,7 +48,8 @@ const mapStateToProps = (state, ownProps) => {
     symptoms = {},
     schedule_events = {},
     features = {},
-    features_mappings = {}
+    features_mappings = {},
+    reports={}
   } = state;
 
   console.log("4534543634534535634 ----> Container", care_plan_template_ids);
@@ -87,7 +90,8 @@ const mapStateToProps = (state, ownProps) => {
     schedule_events,
     features,
     features_mappings,
-    authenticated_category
+    authenticated_category,
+    reports
   };
 };
 
@@ -131,6 +135,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
     storeAppointmentDocuments: data => dispatch(storeAppointmentDocuments(data)),
     openAddReportsDrawer : (payload) =>  dispatch(open({ type: DRAWER.ADD_REPORT,payload })),
+    getSymptomTimeLine: (patientId) => dispatch(getSymptomTimeLine(patientId)),
+    fetchPatientReports: (id)  => dispatch(fetchReports(id)),
+
 
   };
 };

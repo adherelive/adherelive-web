@@ -617,7 +617,9 @@ class PatientDetails extends Component {
       isOtherCarePlan: true,
       uploadDocsModalVisible: false,
       uploadDocsAppointmentId: null,
-      allAppointmentDocs: {}
+      allAppointmentDocs: {},
+      symptom_dates:[],
+      report_ids:[]
     };
   }
 
@@ -645,7 +647,10 @@ class PatientDetails extends Component {
     }
 
     fetchChatAccessToken(authenticated_user);
-
+    this.fetchSymptomsData();
+    this.fetchReportData();
+    
+  
     // if (showTd) {
     getPatientCarePlanDetails(patient_id).then(response => {
       let { status = false, payload = {} } = response;
@@ -697,6 +702,42 @@ class PatientDetails extends Component {
       }
     }
     this.setState({ carePlanTemplateId });
+  }
+
+
+
+  
+  fetchSymptomsData = async() => {
+    try{
+      const {getSymptomTimeLine,patient_id}=this.props;
+      const res = await  getSymptomTimeLine(patient_id); 
+      const { status = false, payload: { data : {symptom_dates} = {} } = {} } = res || {};
+      // console.log("43243234728323492",res);
+      if (status) {
+          this.setState({ symptom_dates });
+      }
+    }catch(error){
+      console.log("errrrrr--->",error);
+      message.warn(error);
+
+    }
+  }
+
+
+
+  fetchReportData = async() => {
+    try {
+      const {fetchPatientReports,patient_id} = this.props;
+      const {loading} = this.state;
+      const response = await fetchPatientReports(patient_id);
+      const {status, payload: {data: {report_ids = []} = {}} = {}} = response || {};
+      // console.log("43243234728323492 REPORTS ------>", response);
+      if(status === true) {
+          this.setState({report_ids, loading: false});
+      }
+  } catch(error) {
+      this.setState({loading: false});
+  }
   }
 
   markAppointmentComplete = id => async e => {
@@ -1839,7 +1880,8 @@ class PatientDetails extends Component {
       drawer: { visible: drawerVisible = false } = {},
       care_plan_template_ids = {},
       symptoms = {},
-      authenticated_user = null
+      authenticated_user = null,
+      reports ={}
     } = this.props;
 
     const {
@@ -1852,7 +1894,9 @@ class PatientDetails extends Component {
       showOtpModal,
       selectedCarePlanId,
       current_careplan_id,
-      isOtherCarePlan
+      isOtherCarePlan,
+      symptom_dates=[],
+      report_ids=[]
     } = this.state;
 
     console.log("4534543634534535634 ---> DETAILS INDEX", carePlanTemplateIds);
@@ -1891,6 +1935,16 @@ class PatientDetails extends Component {
         doctorId = id;
       }
     });
+
+    let reportsExist = false;
+    Object.keys(reports).forEach(id => {
+      const { basic_info: { patient_id : p_id } = {} } = reports[id] || {};
+      if(parseInt(patient_id) === parseInt(p_id)){
+        reportsExist=true;
+      }
+
+    });
+
 
     let { basic_info: { name: firstTemplateName = "" } = {} } =
       care_plan_templates[care_plan_template_ids[0]] || {};
@@ -1990,6 +2044,7 @@ class PatientDetails extends Component {
 
     let showTabs =
       cPAppointmentIds.length || cPMedicationIds.length || vitalIds.length
+       || symptom_dates.length ||report_ids.length || reportsExist
         ? true
         : false;
     const {

@@ -153,11 +153,11 @@ class MissedAppointmentsDrawer extends Component {
             <div>
                 <div>
                     <span className="fs18 fw700 brown-grey tac mb20">{this.formatMessage(messages.critical)}</span>
-                    {criticalList.length>0 ? criticalList : <div className="mt10 mb10">{"--"}</div> }
+                    {criticalList.length>0 ? criticalList : <div className="mt10 mb10">{this.formatMessage(messages.no_critical_missed)}</div> }
                 </div>
                 <div>
                     <span className="fs18 fw700 brown-grey tac" >{this.formatMessage(messages.non_critical)}</span>
-                    {nonCriticalList.length>0 ? nonCriticalList : <div className="mt10 mb10">{"--"}</div> }
+                    {nonCriticalList.length>0 ? nonCriticalList : <div className="mt10 mb10">{this.formatMessage(messages.no_non_critical_missed)}</div> }
                 </div>
             </div>
           );
