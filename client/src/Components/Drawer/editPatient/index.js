@@ -72,7 +72,7 @@ class EditPatientDrawer extends Component {
         const {visible} = this.props;
         const {payload = {},users ={}} = this.props;
         const {patientData,carePlanData} = payload || {};
-        const {basic_info : {age,first_name ='',middle_name ='',last_name ='',user_id ='' , id :patient_id ='',height ='',weight ='' , gender ='',address = ''} = {} , 
+        const {basic_info : {age,full_name = "",first_name ='',middle_name ='',last_name ='',user_id ='' , id :patient_id ='',height ='',weight ='' , gender ='',address = ''} = {} ,
         details : {allergies = '' , comorbidities = ''} = {} , dob =''} = patientData || {};
 
         const {basic_info : {mobile_number ='',prefix = ''} = {} } = users[user_id] || {};
@@ -88,7 +88,7 @@ class EditPatientDrawer extends Component {
 
             this.setState({
                 mobile_number,
-                name: `${first_name} ${getName(middle_name)} ${getName(last_name)}`,
+                name: full_name,
                 gender,
                 date_of_birth: moment(formattedDate),
                 severity:severity_id,
@@ -156,12 +156,12 @@ class EditPatientDrawer extends Component {
 
 
     setComorbidities = e => {
-        const  value  = e.target.value.trim();
-        
-        if (value.length>0 || value === '') {
-            this.setState({ comorbidities: value});
+        const value = e.target.value.trim();
+
+        if (value.length > 0 || value === "") {
+            this.setState({ comorbidities: e.target.value });
         }
-    }
+    };
 
     setPastedComorbidities = e => {
         e.preventDefault();
@@ -410,6 +410,22 @@ class EditPatientDrawer extends Component {
         }
     };
 
+    setName = e => {
+        const { value } = e.target;
+        const reg = /^[a-zA-Z][a-zA-Z\s]*$/;
+        if (reg.test(value) || value === "") {
+            this.setState({ name: e.target.value });
+        }
+    };
+
+    setGender = value => () => {
+        this.setState({ gender: value });
+    };
+
+    setDOB = e => {
+        this.setState({ date_of_birth: moment(e.target.value) });
+    };
+
     setHeight = (e) => {
         const { value } = e.target;
         const reg = /^-?\d*(\.\d*)?$/;
@@ -431,7 +447,7 @@ class EditPatientDrawer extends Component {
 
     setAddress = (e) => {
         e.preventDefault();
-        const address = e.target.value.trim();
+        const address = e.target.value;
         if(address.length > 0) {
             this.setState({address});
         }
@@ -462,7 +478,7 @@ class EditPatientDrawer extends Component {
         gender='',diagnosis_description='',clinical_notes='',
         diagnosis_type='2',severity=null,treatment=null,height='',weight='',symptoms='',address ='' } = this.state;
 
-       let setDOB = moment(date_of_birth).format('MM-DD-YYYY');
+       let setDOB = moment(date_of_birth).format('YYYY-MM-DD');
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -522,7 +538,8 @@ class EditPatientDrawer extends Component {
                     placeholder={this.formatMessage(messages.name)}
                     value={name}
                     className={"form-inputs-ap"}
-                    disabled={true}
+                    // disabled={true}
+                    onChange={this.setName}
                     
                 />
 
@@ -543,11 +560,12 @@ class EditPatientDrawer extends Component {
 
                     <Radio.Group buttonStyle="solid" 
                     value={gender}
-                    disabled={true}
+                                 // onChange={this.setGender}
+                    // disabled={true}
                     >
-                        <Radio.Button checked ={gender === MALE} value={MALE} >M</Radio.Button>
-                        <Radio.Button checked ={gender === FEMALE} value={FEMALE} >F</Radio.Button>
-                        <Radio.Button checked ={gender === OTHER} value={OTHER} >O</Radio.Button>
+                        <Radio.Button checked ={gender === MALE} value={MALE} onClick={this.setGender(MALE)}>M</Radio.Button>
+                        <Radio.Button checked ={gender === FEMALE} value={FEMALE} onClick={this.setGender(FEMALE)}>F</Radio.Button>
+                        <Radio.Button checked ={gender === OTHER} value={OTHER} onClick={this.setGender(OTHER)}>O</Radio.Button>
                     </Radio.Group>
                 </div>
 
@@ -579,12 +597,14 @@ class EditPatientDrawer extends Component {
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.dob)}<div className="star-red">*</div></div>
 
-                <Input className={"form-inputs-ap"}
-                //  type='date'
-                    placeholder={setDOB}
+                <Input
+                    className={"form-inputs-ap"}
+                    type="date"
+                    defaultValue={setDOB}
                     max={`${year}-${month}-${day}`}
-                    disabled={true}
-                    />
+                    onChange={this.setDOB}
+                    // disabled={isdisabled}
+                />
 
                 <div className='form-headings-ap flex align-center justify-start'>{this.formatMessage(messages.comorbidities)}</div>
 
@@ -805,7 +825,7 @@ class EditPatientDrawer extends Component {
         try {
             const {updatePatientAndCareplan} = this.props;
             const {careplan_id = null} = this.state;
-            const response = await updatePatientAndCareplan(careplan_id,{ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms,address});
+            const response = await updatePatientAndCareplan(careplan_id,{ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms,address: address.trim()});
             const { status, payload: { message : msg } = {} } = response;
 
             if(status){

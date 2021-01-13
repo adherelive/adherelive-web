@@ -121,7 +121,8 @@ class PatientDetailsDrawer extends Component {
         gender = "",
         height = "",
         weight = "",
-        address = ""
+        address = "",
+          full_name,
       } = {},
       dob,
       details: { allergies = "", comorbidities = "" } = {}
@@ -139,7 +140,7 @@ class PatientDetailsDrawer extends Component {
         date_of_birth: moment(formattedDate),
         height,
         weight,
-        name: `${first_name} ${getName(middle_name)} ${getName(last_name)}`,
+        name: full_name,
         addNewPatient: false,
         isdisabled: true,
         allergies,
@@ -270,15 +271,15 @@ class PatientDetailsDrawer extends Component {
 
     const { patients } = this.props;
     for (let id of patient_ids) {
-      const { basic_info: { first_name, middle_name, last_name } = {} } =
+      const { basic_info: { first_name, middle_name, last_name, full_name } = {} } =
         patients[id] || {};
       options.push(
         <Option
           key={id}
           value={id}
-          name={`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}
+          name={full_name}
         >
-          {`${first_name} ${getName(middle_name)} ${getName(last_name)}`}
+          {full_name}
         </Option>
       );
     }
@@ -754,7 +755,9 @@ class PatientDetailsDrawer extends Component {
       </div>
     );
 
-    let existingDOB = moment(date_of_birth).format("MM-DD-YYYY");
+    let existingDOB = moment(date_of_birth).format("YYYY-MM-DD");
+
+    console.log("237172397 existingDOB --> ", {existingDOB});
 
     return (
       <div className="form-block-ap ">
@@ -807,7 +810,7 @@ class PatientDetailsDrawer extends Component {
           value={name}
           className={"form-inputs-ap"}
           onChange={this.setName}
-          disabled={isdisabled}
+          // disabled={isdisabled}
         />
 
         <div className="form-headings-ap flex align-center justify-start">
@@ -827,7 +830,7 @@ class PatientDetailsDrawer extends Component {
           {this.formatMessage(messages.gender)}
         </div>
         <div className="add-patient-radio wp100 mt6 mb18 flex">
-          <Radio.Group buttonStyle="solid" disabled={isdisabled} value={gender}>
+          <Radio.Group buttonStyle="solid" value={gender}> {/*disabled = {isdisabled}*/}
             <Radio.Button value={MALE} onClick={this.setGender(MALE)}>
               M
             </Radio.Button>
@@ -871,23 +874,27 @@ class PatientDetailsDrawer extends Component {
           <div className="star-red">*</div>
         </div>
 
-        {isdisabled ? (
-          <Input
-            className={"form-inputs-ap"}
-            placeholder={`${date_of_birth ? existingDOB : "dd/mm/yyyy"}`}
-            max={`${year}-${month}-${day}`}
-            disabled={true}
-          />
-        ) : (
+        {/*{isdisabled ? (*/}
+        {/*  <Input*/}
+        {/*    className={"form-inputs-ap"}*/}
+        {/*    placeholder={`${date_of_birth ? existingDOB : "dd/mm/yyyy"}`}*/}
+        {/*    max={`${year}-${month}-${day}`}*/}
+        {/*    // disabled={true}*/}
+        {/*    type="date"*/}
+        {/*  />*/}
+        {/*) : (*/}
+
+        {/*todo: need to check bug with value and defaultValue*/}
           <Input
             className={"form-inputs-ap"}
             type="date"
-            // value={date_of_birth}
+            value={existingDOB}
+            // defaultValue={existingDOB}
             max={`${year}-${month}-${day}`}
             onChange={this.setDOB}
-            disabled={isdisabled}
+            // disabled={isdisabled}
           />
-        )}
+        {/*)}*/}
 
         <div className="form-headings-ap flex align-center justify-start">
           {this.formatMessage(messages.comorbidities)}

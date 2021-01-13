@@ -175,6 +175,11 @@ const messages = defineMessages({
         id: "app.signUp.privacyPolicy",
         description: "",
         defaultMessage: 'Privacy Policy'
+    },
+    adhereAssociation: {
+        id: "app.signUp.adhereAssociation",
+        description: "",
+        defaultMessage: 'Adhere in association with'
     }
 });
 
