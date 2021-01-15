@@ -142,7 +142,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        name: "Fluid Intake/Outtake (Urine)",
+        name: "Fluid Intake/Output (Urine)",
         unit: "",
         details: JSON.stringify({
           template: [

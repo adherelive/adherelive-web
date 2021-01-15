@@ -506,6 +506,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Reports"
     },
+    prescription:{
+        id: "app.patient_profile.prescription",
+        description: "",
+        defaultMessage: "Prescription"
+    },
 
 });
 

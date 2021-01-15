@@ -19,6 +19,9 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import otpVerificationService from "../../services/otpVerification/otpVerification.service";
 import ConsentService from "../../services/consents/consent.service";
 import ReportService from "../../services/reports/report.service";
+import conditionService from "../../services/condition/condition.service";
+import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
+import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
 
 // WRAPPERS --------------------------------
 import VitalWrapper from "../../ApiWrapper/web/vitals";
@@ -35,6 +38,7 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import ConsentWrapper from "../../ApiWrapper/web/consent";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import ReportWrapper from "../../ApiWrapper/web/reports";
+import ConditionWrapper from "../../ApiWrapper/web/conditions";
 
 import Log from "../../../libs/log";
 import moment from "moment";
@@ -42,11 +46,19 @@ import {
   BODY_VIEW,
   CONSENT_TYPE,
   EMAIL_TEMPLATE_NAME,
-  USER_CATEGORY
+  USER_CATEGORY,
+  S3_DOWNLOAD_FOLDER,
+  PRESCRIPTION_PDF_FOLDER
 } from "../../../constant";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 // import carePlan from "../../ApiWrapper/web/carePlan";
+import generatePDF from "../../helper/generateCarePlanPdf";
+import { downloadFileFromS3 } from "../user/userHelper";
+import { getFilePath } from "../../helper/filePath";
+import { checkAndCreateDirectory } from "../../helper/common";
+
+const path = require("path");
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
@@ -1356,6 +1368,229 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  generatePrescription = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { care_plan_id = null } = req.params;
+      const {userDetails: { userData: { category } = {}} = {}} = req;
+
+      const {
+        userDetails: { userId = null } = {},
+        query: { current_time = null } = {}
+      } = req;
+
+      const carePlanId = parseInt(care_plan_id);
+
+      let dataForPdf = {};
+
+      let usersData = {};
+      let qualifications = {};
+      let degrees = {};
+      let registrationsData = {};
+      let conditions = {};
+      let medications = {};
+      let medicines = {};
+      let nextAppointmentDuration = null;
+
+      if (!carePlanId) {
+        return raiseClientError(res, 422, {}, "Invalid Care plan.");
+      }
+
+      const carePlan = await carePlanService.getCarePlanById(carePlanId);
+      const carePlanData = await CarePlanWrapper(carePlan);
+      const curr_patient_id=carePlanData.getPatientId();
+
+      const carePlanCreatedDate = carePlanData.getCreatedAt();
+
+      const {
+        details: { condition_id = null } = {},
+        medication_ids = [],
+        appointment_ids = []
+      } = await carePlanData.getAllInfo();
+
+      const conditionData = await conditionService.getByData({
+        id: condition_id
+      });
+      if (conditionData) {
+        const condition = await ConditionWrapper(conditionData);
+        conditions[condition_id] = condition.getBasicInfo();
+      }
+
+      for (const medicationId of medication_ids) {
+        const medication = await medicationReminderService.getMedication({
+          id: medicationId
+        });
+
+        if (medication) {
+          const medicationWrapper = await MReminderWrapper(medication);
+          const medicineId = medicationWrapper.getMedicineId();
+          const medicineData = await medicineService.getMedicineByData({
+            id: medicineId
+          });
+
+          for (const medicine of medicineData) {
+            const medicineWrapper = await MedicineApiWrapper(medicine);
+            medicines = {
+              ...medicines,
+              ...{
+                [medicineWrapper.getMedicineId()]: medicineWrapper.getBasicInfo()
+              }
+            };
+          }
+          medications = {
+            ...medications,
+            ...{ [medicationId]: medicationWrapper.getBasicInfo() }
+          };
+        }
+      }
+
+      const now = moment();
+      let nextAppointment = null;
+      for (const appointmentId of appointment_ids) {
+        const appointment = await appointmentService.getAppointmentById(
+          appointmentId
+        );
+
+        if (appointment) {
+          const appointmentWrapper = await AppointmentWrapper(appointment);
+
+          const startDate = appointmentWrapper.getStartTime();
+          const startDateObj = moment(startDate);
+
+          const diff = startDateObj.diff(now);
+
+          if (diff > 0) {
+            if (!nextAppointment || nextAppointment.diff(startDateObj) > 0) {
+              nextAppointment = startDateObj;
+            }
+          }
+        }
+      }
+
+      if (nextAppointment) {
+        nextAppointmentDuration =
+          nextAppointment.diff(now, "days") !== 0
+            ? `${nextAppointment.diff(now, "days")} days`
+            : `${nextAppointment.diff(now, "hours")} hours`;
+      }
+
+
+
+      let patient = await patientService.getPatientByUserId(userId);
+      if(category === USER_CATEGORY.DOCTOR){
+        patient = await patientService.getPatientById(curr_patient_id);
+      }
+
+      const patientData = await PatientWrapper(patient);
+
+      const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
+
+      const {
+        [doctor_id]: {
+          basic_info: { signature_pic = "", full_name = "" } = {}
+        } = {}
+      } = doctors;
+
+      checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
+
+      const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
+
+
+      const downloadImage = await downloadFileFromS3(
+        getFilePath(signature_pic),
+        doctorSignImage
+      );
+
+
+
+      const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
+        doctor_id
+      );
+
+      await doctorQualifications.forEach(async doctorQualification => {
+        const doctorQualificationWrapper = await QualificationWrapper(
+          doctorQualification
+        );
+        const degreeId = doctorQualificationWrapper.getDegreeId();
+        const degreeWrapper = await DegreeWrapper(null, degreeId);
+        degrees[degreeId] = degreeWrapper.getBasicInfo();
+      });
+
+      const doctorRegistrations = await doctorRegistrationService.getRegistrationByDoctorId(
+        doctor_id
+      );
+
+      for (const doctorRegistration of doctorRegistrations) {
+        const registrationData = await RegistrationWrapper(doctorRegistration);
+        const council_id = registrationData.getCouncilId();
+        const councilWrapper = await CouncilWrapper(null, council_id);
+
+        const regData = registrationData.getBasicInfo();
+        const { basic_info: { number = "" } = {} } = regData;
+        registrationsData[registrationData.getDoctorRegistrationId()] = {
+          number,
+          council: councilWrapper.getBasicInfo()
+        };
+      }
+
+      const {
+        [`${doctor_id}`]: { basic_info: { user_id: doctorUserId = null } = {} }
+      } = doctors;
+
+      let user_ids = [doctorUserId, userId];
+      if (category === USER_CATEGORY.DOCTOR) {
+        const curr_data =  await patientData.getAllInfo();
+        const {basic_info : {user_id : curr_p_user_id = ''} = {}} = curr_data || {};       
+        user_ids = [doctorUserId, curr_p_user_id]; 
+      }
+
+      for (const id of user_ids) {
+        const intId = parseInt(id);
+        const user = await userService.getUserById(intId);
+
+        if (user) {
+          const userWrapper = await UserWrapper(user.get());
+          usersData = { ...usersData, ...{ [id]: userWrapper.getBasicInfo() } };
+        }
+      }
+
+      dataForPdf = {
+        users: { ...usersData },
+        medications,
+        medicines,
+        care_plans: {
+          [carePlanData.getCarePlanId()]: {
+            ...carePlanData.getBasicInfo()
+          }
+        },
+        doctors,
+        degrees,
+        conditions,
+        registrations: registrationsData,
+        creationDate: carePlanCreatedDate,
+        nextAppointmentDuration,
+        patients: {
+          ...{ [patientData.getPatientId()]: patientData.getBasicInfo() }
+        },
+        currentTime: current_time
+      };
+
+      checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
+      const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
+      const pdfFile = `${pdfFileName}.pdf`;
+
+      const options = {
+        root: path.join(__dirname, `../../../${PRESCRIPTION_PDF_FOLDER}/`)
+      };
+      return res.sendFile(pdfFile, options);
+    } catch (err) {
+      Logger.debug("3467238468327462387463287 Error got in the generate prescription: ", err);
+      return raiseServerError(res);
+    }
+  };
+
+
 }
 
 export default new PatientController();
