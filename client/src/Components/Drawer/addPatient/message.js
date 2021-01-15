@@ -180,6 +180,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Please enter correct weight value"
     },
+    none: {
+        id: "app.addPatient.none",
+        description: "",
+        defaultMessage: "None"
+    },
     
 });
 

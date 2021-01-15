@@ -3,7 +3,7 @@ import {doRequest} from "../../Helper/network";
 import {REQUEST_TYPE} from "../../constant";
 import {getAddPatientUrl,searchPatientFromNumUrl,
    getRequestConsentUrl, getConsentVerifyUrl,
-   searchPatientForDoctorUrl,addCareplanForPatientUrl,
+   searchPatientForDoctorUrl,addCareplanForPatientUrl
    } from '../../Helper/urls/patients'
    
 import {getPatientMissedEventsUrl} from "../../Helper/urls/event";   
@@ -37,6 +37,10 @@ export const ADD_NEW_CAREPLAN_FAILED =  "ADD_NEW_CAREPLAN_FAILED";
 export const GET_PATIENT_MISSED_EVENTS_START = "GET_PATIENT_MISSED_EVENTS_START";
 export const GET_PATIENT_MISSED_EVENTS_COMPLETED = "GET_PATIENT_MISSED_EVENTS_COMPLETED";
 export const GET_PATIENT_MISSED_EVENTS_FAILED = "GET_PATIENT_MISSED_EVENTS_FAILED";
+
+export const GENERATE_PRESCRIPTION_START = "GENERATE_PRESCRIPTION_START";
+export const GENERATE_PRESCRIPTION_COMPLETED = "GENERATE_PRESCRIPTION_COMPLETED";
+export const GENERATE_PRESCRIPTION_FAILED = "GENERATE_PRESCRIPTION_FAILED";
 
  export const requestConsent = (id) => {
    let response = {};

@@ -71,7 +71,10 @@ class ClinicRegister extends Component {
     this.setState({});
   }
 
+
+
   fetchData = async () => {
+   
     const url = window.location.href.split("/");
     const { authenticated_category } = this.props;
     const { getDoctorProfileDetails } = this.props;
@@ -90,6 +93,14 @@ class ClinicRegister extends Component {
 
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         docClinicIds = doctor_clinic_ids;
+      }
+
+      const url = window.location.href.split("/");
+      const current_doc_id=url.length > 4 ? url[url.length - 1] : 0;
+
+      if(authenticated_category === USER_CATEGORY.PROVIDER && parseInt(id) === parseInt(current_doc_id) ){
+        docClinicIds = doctor_clinic_ids;
+        await getDoctorProfileDetails(id);
       }
 
       if (authenticated_category === USER_CATEGORY.DOCTOR) {

@@ -218,3 +218,18 @@ export const createNewUser = async (email, password = null) => {
     throw error;
   }
 };
+
+export const downloadFileFromS3 = async (objectName, filePath) => {
+  try {
+    await minioService.createBucket();
+    const response = await minioService.downloadFileObject(
+      objectName,
+      filePath
+    );
+    console.log("Response got for the download is: ", response);
+    return true;
+  } catch (err) {
+    console.log("Error got in downloading file from s3: ", err);
+    return false;
+  }
+};

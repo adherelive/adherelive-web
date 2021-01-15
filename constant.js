@@ -485,11 +485,11 @@ export const MEDICATION_TIMING = {
     [TIME_KEY]: "1:30pm"
   },
   [BEFORE_EVENING_SNACK]: {
-    [TEXT_KEY]: "Before Evening Tea",
+    [TEXT_KEY]: "Before Evening Snacks",
     [TIME_KEY]: "5:30pm"
   },
   [AFTER_EVENING_SNACK]: {
-    [TEXT_KEY]: "After Evening Tea",
+    [TEXT_KEY]: "After Evening Snacks",
     [TIME_KEY]: "6pm"
   },
   [BEFORE_DINNER]: {
