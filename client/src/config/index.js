@@ -12,5 +12,7 @@ export default {
     mail: {
         LOGIN_CONTACT_MESSAGE: process.env.REACT_APP_LOGIN_CONTACT_MESSAGE,
         VERIFICATION_PENDING_MESSAGE: process.env.REACT_APP_VERIFICATION_PENDING_MESSAGE,
-    }
+    },
+    BACKEND_URL:process.env.REACT_APP_BACKEND_URL
+
 };

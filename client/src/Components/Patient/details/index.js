@@ -4,6 +4,10 @@ import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
 import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
 import { doRequest } from "../../../Helper/network";
+import {   generatePrescriptionUrl } from '../../../Helper/urls/patients';
+
+import config from "../../../config";
+
 
 import {
   REQUEST_TYPE,
@@ -16,7 +20,8 @@ import {
   DIAGNOSIS_TYPE,
   TABLE_DEFAULT_BLANK_FIELD,
   FEATURES,
-  USER_CATEGORY
+  USER_CATEGORY,
+  HOST
 } from "../../../constant";
 import {
   Tabs,
@@ -78,7 +83,6 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from "../../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../../Helper/url/patients";
 import SymptomTabs from "../../../Containers/Symptoms";
-import config from "../../../config";
 import { getRoomId } from "../../../Helper/twilio";
 import { getFullName } from "../../../Helper/common";
 import Tooltip from "antd/es/tooltip";
@@ -499,11 +503,23 @@ const PatientTreatmentCard = ({
   treatment_diagnosis_description,
   treatment_diagnosis_type,
   treatment_clinical_notes,
-  treatment_symptoms
+  treatment_symptoms,
+  selectedCarePlanId,
 }) => {
+
+  const time = moment().format("Do MMMM YYYY, hh:mm a");
   return (
     <div className="treatment mt20 tal bg-faint-grey">
-      <h3>{formatMessage(messages.treatment_details)}</h3>
+      <div className="header-div flex align-center justify-space-between">
+        <h3>{formatMessage(messages.treatment_details)}</h3>
+        <a
+        href={`${config.BACKEND_URL}${HOST}${generatePrescriptionUrl(selectedCarePlanId,time)}`}
+        target={"_blank"}
+        className="presc-link tab-color pointer"
+        >{formatMessage(messages.prescription)}</a>
+      </div>
+      
+     
 
       <div className="treatment-details pl16 pr16 ">
         <div className="flex direction-column mb14 mt20">
@@ -649,8 +665,9 @@ class PatientDetails extends Component {
     fetchChatAccessToken(authenticated_user);
     this.fetchSymptomsData();
     this.fetchReportData();
-    
   
+
+
     // if (showTd) {
     getPatientCarePlanDetails(patient_id).then(response => {
       let { status = false, payload = {} } = response;
@@ -706,7 +723,8 @@ class PatientDetails extends Component {
 
 
 
-  
+ 
+
   fetchSymptomsData = async() => {
     try{
       const {getSymptomTimeLine,patient_id}=this.props;
@@ -2142,6 +2160,7 @@ class PatientDetails extends Component {
               />
 
               <PatientTreatmentCard
+                selectedCarePlanId={selectedCarePlanId}
                 formatMessage={formatMessage}
                 treatment_name={treatment ? treatment : "--"}
                 treatment_condition={condition ? condition : "--"}

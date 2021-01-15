@@ -225,7 +225,7 @@ class ChatForm extends Component {
           beforeUpload={this.beforeUpload}
           showUploadList={false}
           multiple={false}
-          accept="image/*"
+          accept=".jpg,.jpeg,.png,.pdf,.mp4"
           className="chat-upload-component"
         >
           <div className="chat-upload-btn">

@@ -137,8 +137,6 @@ const mapDispatchToProps = dispatch => {
     openAddReportsDrawer : (payload) =>  dispatch(open({ type: DRAWER.ADD_REPORT,payload })),
     getSymptomTimeLine: (patientId) => dispatch(getSymptomTimeLine(patientId)),
     fetchPatientReports: (id)  => dispatch(fetchReports(id)),
-
-
   };
 };
 

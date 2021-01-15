@@ -42,6 +42,8 @@ import {
 } from "../../../constant";
 
 const { Option } = Select;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 const MALE = "m";
 const FEMALE = "f";
@@ -177,6 +179,27 @@ class PatientDetailsDrawer extends Component {
         address: ""
       });
     }
+  }
+
+  setComorbiditiesNone = (e) => {
+    e.preventDefault();
+    const {comorbidities=''}=this.state;
+    if(comorbidities === 'none'){
+      this.setState({comorbidities:''})
+      return;
+    }
+    this.setState({comorbidities:"none"})
+  }
+
+
+  setAllergiesNone = (e) => {
+    e.preventDefault();
+    const {allergies = ''}=this.state;
+    if(allergies === 'none'){
+      this.setState({allergies:''})
+      return;
+    }
+    this.setState({allergies:"none"})
   }
 
   getFormattedDate = dob => {
@@ -896,8 +919,21 @@ class PatientDetailsDrawer extends Component {
           />
         {/*)}*/}
 
-        <div className="form-headings-ap flex align-center justify-start">
+        <div className="form-headings-ap flex align-items-end justify-space-between">
+          <div className='flex direction-row flex-grow-1'>
           {this.formatMessage(messages.comorbidities)}
+          </div>
+          <div className="flex-grow-0">
+              <RadioGroup
+              className="flex justify-content-end "
+              buttonStyle="solid"
+              value={comorbidities}
+            >
+              <RadioButton value={"none"} 
+              onClick={this.setComorbiditiesNone} 
+              >{this.formatMessage(messages.none)}</RadioButton>
+            </RadioGroup>
+          </div>  
         </div>
 
         <TextArea
@@ -910,9 +946,24 @@ class PatientDetailsDrawer extends Component {
           style={{ resize: "none" }}
         />
 
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.allergies)}
-        </div>
+     
+
+      <div className="form-headings-ap flex align-items-end justify-space-between">
+          <div className='flex direction-row flex-grow-1'>
+            {this.formatMessage(messages.allergies)}
+          </div>
+          <div className="flex-grow-0">
+              <RadioGroup
+              className="flex justify-content-end "
+              buttonStyle="solid"
+              value={allergies}
+            >
+              <RadioButton value={"none"} 
+              onClick={this.setAllergiesNone} 
+              >{this.formatMessage(messages.none)}</RadioButton>
+            </RadioGroup>
+          </div>  
+      </div>
 
         <TextArea
           placeholder={this.formatMessage(messages.writeHere)}
