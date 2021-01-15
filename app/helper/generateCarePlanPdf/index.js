@@ -139,8 +139,8 @@ function printPatientBlockData(doc, patients, users, creationDate) {
     address = "",
     age = "",
     gender = "",
-    height = "",
-    weight = "",
+    height = null,
+    weight = null,
     mobile_number = "",
     prefix = ""
   } = formatPatientData(patients, users);
@@ -188,9 +188,9 @@ function printPatientBlockData(doc, patients, users, creationDate) {
 
   doc
     .text("Height", 390, patientNameEnds)
-    .text(`${height} cm`, 440, patientNameEnds)
+    .text(`${height === null ? "--" : height} cm`, 440, patientNameEnds)
     .text("Weight", 390, patientNameEnds + DISTANCE_BETWEEN_ROWS)
-    .text(`${weight} kg`, 440, patientNameEnds + DISTANCE_BETWEEN_ROWS);
+    .text(`${weight === null ? "--" : weight} kg`, 440, patientNameEnds + DISTANCE_BETWEEN_ROWS);
 
   return addressEndRowLevel;
 }
