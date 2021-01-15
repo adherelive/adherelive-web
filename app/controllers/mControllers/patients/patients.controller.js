@@ -1305,7 +1305,7 @@ class MPatientController extends Controller {
     try {
       const { care_plan_id = null } = req.params;
       const {
-        userDetails: { userId = null } = {},
+        userDetails: { userId = null, userData: { category = null } = {} } = {},
         query: { current_time = null } = {}
       } = req;
 
@@ -1330,6 +1330,7 @@ class MPatientController extends Controller {
       const carePlanData = await CarePlanWrapper(carePlan);
 
       const carePlanCreatedDate = carePlanData.getCreatedAt();
+      const carePlanPatientId = carePlanData.getPatientId();
 
       const {
         details: { condition_id = null } = {},
@@ -1403,9 +1404,19 @@ class MPatientController extends Controller {
             : `${nextAppointment.diff(now, "hours")} hours`;
       }
 
-      const patient = await patientService.getPatientByUserId(userId);
+      let patientUserId = userId;
+      let patient = null;
+      if (category === USER_CATEGORY.DOCTOR) {
+        patient = await patientService.getPatientById(carePlanPatientId);
+      } else {
+        patient = await patientService.getPatientByUserId(userId);
+      }
 
       const patientData = await PatientWrapper(patient);
+
+      if (category === USER_CATEGORY.DOCTOR) {
+        patientUserId = patientData.getUserId();
+      }
 
       const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
 
@@ -1458,7 +1469,7 @@ class MPatientController extends Controller {
         [`${doctor_id}`]: { basic_info: { user_id: doctorUserId = null } = {} }
       } = doctors;
 
-      const user_ids = [doctorUserId, userId];
+      const user_ids = [doctorUserId, patientUserId];
       for (const id of user_ids) {
         const intId = parseInt(id);
         const user = await userService.getUserById(intId);
