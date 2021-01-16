@@ -508,12 +508,14 @@ const PatientTreatmentCard = ({
 }) => {
 
   const time = moment().format("Do MMMM YYYY, hh:mm a");
+
+  console.log("1897312 config", {config});
   return (
     <div className="treatment mt20 tal bg-faint-grey">
       <div className="header-div flex align-center justify-space-between">
         <h3>{formatMessage(messages.treatment_details)}</h3>
         <a
-        href={`${config.BACKEND_URL}${HOST}${generatePrescriptionUrl(selectedCarePlanId,time)}`}
+        href={`${config.WEB_URL}${generatePrescriptionUrl(selectedCarePlanId,time)}`}
         target={"_blank"}
         className="presc-link tab-color pointer"
         >{formatMessage(messages.prescription)}</a>
