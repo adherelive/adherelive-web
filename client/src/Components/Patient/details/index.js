@@ -514,11 +514,20 @@ const PatientTreatmentCard = ({
     <div className="treatment mt20 tal bg-faint-grey">
       <div className="header-div flex align-center justify-space-between">
         <h3>{formatMessage(messages.treatment_details)}</h3>
-        <a
-        href={`${config.WEB_URL}${generatePrescriptionUrl(selectedCarePlanId,time)}`}
-        target={"_blank"}
-        className="presc-link tab-color pointer"
-        >{formatMessage(messages.prescription)}</a>
+        {
+          selectedCarePlanId 
+          ?
+          <a
+          href={`${config.WEB_URL}${generatePrescriptionUrl(selectedCarePlanId)}`}
+          target={"_blank"}
+          className="presc-link"
+          >
+            <Button type="ghost" >{formatMessage(messages.prescription)}</Button>
+          </a>
+          :
+         null
+        }
+      
       </div>
       
      
@@ -667,8 +676,7 @@ class PatientDetails extends Component {
     fetchChatAccessToken(authenticated_user);
     this.fetchSymptomsData();
     this.fetchReportData();
-  
-
+    this.fetchVitalDetails();
 
     // if (showTd) {
     getPatientCarePlanDetails(patient_id).then(response => {
@@ -742,6 +750,19 @@ class PatientDetails extends Component {
 
     }
   }
+
+
+  fetchVitalDetails = () => {
+    const { getVitalOccurence,searchVital } = this.props;
+    getVitalOccurence().then(res => {
+      const { status = false } = res;
+    });
+
+    searchVital('').then(res => {
+      const { status = false } = res;
+    })
+
+  };
 
 
 
@@ -1881,7 +1902,10 @@ class PatientDetails extends Component {
     this.setState({ photos: [...photos, ...photo] });
   };
 
+  
+
   render() {
+
     let {
       patients,
       patient_id,
@@ -1938,7 +1962,7 @@ class PatientDetails extends Component {
       getOtpModalFooter
     } = this;
 
-    if (loading) {
+    if (loading || !selectedCarePlanId) {
       return (
         <div className="page-loader hp100 wp100 flex align-center justify-center ">
           <Spin size="large"></Spin>
@@ -2067,6 +2091,8 @@ class PatientDetails extends Component {
        || symptom_dates.length ||report_ids.length || reportsExist
         ? true
         : false;
+
+    console.log("893891273 showTabs, vitalIds", {showTabs, vitalIds});
     const {
       basic_info: {
         first_name,
@@ -2077,7 +2103,7 @@ class PatientDetails extends Component {
         gender,
         uid = "",
         user_id: patientUserId = ""
-      }
+      } = {}
     } = patients[patient_id] || {};
 
     const roomId = getRoomId(doctorUserId, patientUserId);

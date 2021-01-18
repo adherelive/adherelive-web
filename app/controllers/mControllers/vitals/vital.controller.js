@@ -350,6 +350,8 @@ class VitalController extends Controller {
           createdTime
         });
 
+        Log.debug("182978312 prevResponse", prevResponse);
+
         const updateEvent = await EventService.update(
           {
             details: {

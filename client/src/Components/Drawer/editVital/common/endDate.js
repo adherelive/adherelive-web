@@ -108,6 +108,14 @@ class EndDate extends Component {
     let { end_date = '' } = vitals[vital_id] || {};
     const value = getFieldValue(FIELD_NAME);
 
+    const {vitalData = {}} = this.props;
+    const {end_date : existing_end_date= '' } = vitalData || {};
+    if(existing_end_date){
+      end_date=existing_end_date;
+    }
+
+
+
     return (
       <div className="wp100 flex align-center">
         <div className="pl8 wp100 ">

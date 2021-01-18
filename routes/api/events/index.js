@@ -52,4 +52,16 @@ router.post(
     EventController.markEventComplete
 );
 
+router.post(
+    "/:id/vitals/response",
+    Authenticate,
+    EventController.updateVitalResponse
+);
+
+router.delete(
+    "/:id/vitals/response",
+    Authenticate,
+    EventController.deleteVitalResponse
+);
+
 module.exports = router;

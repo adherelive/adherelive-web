@@ -87,7 +87,7 @@ class VitalName extends Component {
           // ]
         })(
           <Select
-              onFocus={handleVitals}
+            onFocus={handleVitals}
             onSearch={handleVitalSearch}
             notFoundContent={fetchingVitals ? <Spin size="small" /> : 'No match found'}
             className="drawer-select"

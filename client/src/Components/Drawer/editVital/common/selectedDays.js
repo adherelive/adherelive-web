@@ -37,6 +37,12 @@ class SelectedDays extends Component {
       form: { validateFields }
     } = this.props;
     validateFields();
+
+    const {vitalData = {}} = this.props;
+    const{repeat_days : existing_repeat_days =''}=vitalData||{};
+    if(existing_repeat_days){
+      this.setState({selectedDays:existing_repeat_days})
+    }
   }
 
   componentWillUnmount() {
@@ -149,7 +155,11 @@ class SelectedDays extends Component {
 
     const  {selectedDays} = this.state;
 
+    const {vitalData = {}} = this.props;
+    const{repeat_days : existing_repeat_days =''}=vitalData||{};
+
     const { handleCheckDays, formatMessage } = this;
+
     return (
       <div className="select-days-form-content">
         <div className="flex row">
@@ -164,7 +174,7 @@ class SelectedDays extends Component {
                 message:'Please select days for vitals!'
               }
             ],
-            initialValue: selectedDays
+            initialValue: existing_repeat_days ? existing_repeat_days : selectedDays
           })(<Input />)}
         </FormItem>
         <div className="flex-shrink-1 flex justify-space-evenly select-days">
