@@ -36,8 +36,7 @@ class EventExecutor {
 
   async sendSms(smsData, scheduledJobId) {
     try {
-      console.log("88127313 here sendSms");
-      let response = SmsManager.sendSms(smsData);
+      let response = await SmsManager.sendSms(smsData);
       Object.assign(
         smsData,
         response ? { status: "SENT" } : { status: "FAILED" }
