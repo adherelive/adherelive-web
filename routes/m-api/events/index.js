@@ -73,4 +73,16 @@ router.post(
     EventController.markEventCancelled
 );
 
+router.delete(
+    "/:id/vitals/response",
+    Authenticate,
+    EventController.deleteVitalResponse
+);
+
+router.post(
+    "/:id/vitals/response",
+    Authenticate,
+    EventController.updateVitalResponse
+);
+
 module.exports = router;

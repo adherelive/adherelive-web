@@ -27,6 +27,6 @@ export const addCareplanForPatientUrl = (id) => {
   return `/patients/addCareplanForPatient/${id}`;
 }
 
-export const generatePrescriptionUrl = (careplian_id,time) => {
-  return `/api/patients/generate_prescription/${careplian_id}?current_time=${time}`
+export const generatePrescriptionUrl = (careplian_id) => {
+  return `/api/patients/generate_prescription/${careplian_id}`
 }

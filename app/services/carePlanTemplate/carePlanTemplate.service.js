@@ -4,6 +4,7 @@ import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/careplanTemplate";
 import {TABLE_NAME as appointmentTemplateTableName} from "../../models/templateAppointments";
 import {TABLE_NAME as medicationTemplateTableName} from "../../models/templateMedications";
+import {TABLE_NAME as vitalTemplateTableName} from "../../models/templateVitals";
 import {TABLE_NAME as conditionTableName} from "../../models/conditions";
 import {TABLE_NAME as severityTableName} from "../../models/severity";
 import {TABLE_NAME as treatmentTableName} from "../../models/treatments";
@@ -19,6 +20,7 @@ class CarePlanTemplateService {
           Database.getModel(treatmentTableName),
           Database.getModel(appointmentTemplateTableName),
           Database.getModel(medicationTemplateTableName),
+            Database.getModel(vitalTemplateTableName)
         ]
       });
       return carePlanTemplate;
@@ -33,6 +35,7 @@ class CarePlanTemplateService {
         include: [
           Database.getModel(appointmentTemplateTableName),
           Database.getModel(medicationTemplateTableName),
+            Database.getModel(vitalTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -59,6 +62,7 @@ class CarePlanTemplateService {
           Database.getModel(treatmentTableName),
           Database.getModel(appointmentTemplateTableName),
           Database.getModel(medicationTemplateTableName),
+          Database.getModel(vitalTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -87,6 +91,7 @@ class CarePlanTemplateService {
           Database.getModel(treatmentTableName),
           Database.getModel(appointmentTemplateTableName),
           Database.getModel(medicationTemplateTableName),
+            Database.getModel(vitalTemplateTableName)
         ]
       });
       return carePlanTemplate;

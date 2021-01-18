@@ -5,6 +5,7 @@ import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePlanAppointments";
 import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlanMedications";
+// import {TABLE_NAME as carePlanVitalTableName} from "../../models/carePlanVitals";
 
 class CarePlanService {
   getCarePlanByData = async data => {
@@ -66,7 +67,12 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
-          Database.getModel(carePlanMedicationTableName)
+          Database.getModel(carePlanMedicationTableName),
+          // {
+          //   model: Database.getModel(carePlanVitalTableName),
+          //   raw: true,
+          //   attributes: ["vital_id"]
+          // }
         ],
         order: [["created_at", "ASC"]]
       });

@@ -56,6 +56,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Please fill all appointment details."
     },
+    vitalError: {
+        id: "app.medicationTemplate.vitalError",
+        description: "",
+        defaultMessage: "Please fill all vital details."
+    },
     medicationError: {
         id: "app.medicationTemplate.medicationError",
         description: "",
@@ -132,7 +137,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "A medication for this medicine already exist in this template."
     },
-
+    actions: {
+        id: "app.medicationTemplate.actions",
+        description: "",
+        defaultMessage: "Actions"
+    },
+    vitalExist: {
+        id: "app.medicationTemplate.vitalExist",
+        description: "",
+        defaultMessage: "An action for this vital already exist in this template."
+    },
 });
 
 export default messages;

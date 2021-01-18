@@ -818,3 +818,5 @@ export const FEATURES = {
   VIDEO_CALL: "Video Call",
   AUDIO_CALL: "Audio Call"
 };
+
+export const EVENT_LONG_TERM_VALUE = null;

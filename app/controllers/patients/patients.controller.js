@@ -58,6 +58,10 @@ import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
 
+// helpers
+import * as carePlanHelper from "../carePlans/carePlanHelper";
+import { getDoctorCurrentTime } from "../../helper/getUserTime";
+
 const path = require("path");
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
@@ -204,8 +208,8 @@ class PatientController extends Controller {
 
       for (const medication of medicationDetails) {
         const medicationWrapper = await MReminderWrapper(medication);
-        const {medications} = await medicationWrapper.getAllInfo();
-        medicationApiData = {...medicationApiData, ...medications};
+        const { medications } = await medicationWrapper.getAllInfo();
+        medicationApiData = { ...medicationApiData, ...medications };
         // medicationApiData[
         //   medicationWrapper.getMReminderId()
         // ] = medicationWrapper.getBasicInfo();
@@ -249,9 +253,10 @@ class PatientController extends Controller {
   };
 
   getPatientCarePlanDetails = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.debug("4356457454625344574635235435464");
       const { id: patient_id = 1 } = req.params;
+      Logger.info(`params: patient_id = ${patient_id}`);
       const {
         userDetails: {
           userId,
@@ -260,226 +265,373 @@ class PatientController extends Controller {
         } = {}
       } = req;
 
-      let show = false;
+      if (!patient_id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct patient to continue"
+        );
+      }
+
+      // get all careplans attached to patient
+      const carePlans =
+        (await carePlanService.getMultipleCarePlanByData({
+          patient_id
+        })) || [];
+
+      let treatmentIds = [];
+
+      let carePlanApiDetails = {};
+      let carePlanIds = [];
+      let latestCarePlanId = null;
 
       let doctorData = {};
 
-      let carePlanApiDetails = {};
+      let appointmentApiDetails = {};
+      let medicationApiDetails = {};
+      let scheduleEventData = {};
+
       let templateMedicationData = {};
-      let template_medication_ids = [];
 
       let templateAppointmentData = {};
-      let template_appointment_ids = [];
-      let medicine_ids = [];
 
       let otherCarePlanTemplates = {};
-      let appointmentApiDetails = {};
-      let scheduleEventData = {};
-      let medicationApiDetails = {};
       let medicineApiData = {};
-
-      let carePlanAppointmentData = {};
-      let appointment_ids = [];
-
-      let carePlanMedicationData = {};
-      let medication_ids = [];
-
       let carePlanTemplateIds = [];
 
-      let latestCarePlan = null;
-      let latestCarePlanId = null;
+      // for care plan templates
+      let templateVitalData = {};
 
-      const carePlanIds = [];
+      // for vitals
+      let vitalTemplateData = {};
 
-      const carePlans = await carePlanService.getMultipleCarePlanByData({
-        patient_id
-      });
-      for (const carePlan of carePlans) {
-        const carePlanData = await CarePlanWrapper(carePlan);
-        const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
-        doctorData = { ...doctorData, ...doctors };
-        if (category === USER_CATEGORY.DOCTOR && doctor_id === userCategoryId) {
-          if (
-            moment(carePlanData.getCreatedAt()).diff(
-              moment(latestCarePlan),
-              "minutes"
-            ) > 0
-          ) {
-            latestCarePlan = carePlanData.getCreatedAt();
-            latestCarePlanId = carePlanData.getCarePlanId();
-          }
-
-          if (latestCarePlan === null) {
-            latestCarePlan = carePlanData.getCreatedAt();
-            latestCarePlanId = carePlanData.getCarePlanId();
-          }
-        }
-
+      if (carePlans.length > 0) {
         const {
-          treatment_id,
-          severity_id,
-          condition_id
-        } = carePlanData.getCarePlanDetails();
-
-        const carePlanTemplates = await carePlanTemplateService.getCarePlanTemplateData(
-          {
-            treatment_id,
-            severity_id,
-            condition_id,
-            user_id: userId
-          }
-        );
-
-        let carePlanTemplateData = null;
-
-        if (carePlanData.getCarePlanTemplateId()) {
-          const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
-            carePlanData.getCarePlanTemplateId()
-          );
-          carePlanTemplateData = await CarePlanTemplateWrapper(
-            carePlanTemplate
-          );
-          const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(
-            carePlanData.getCarePlanTemplateId()
-          );
-
-          for (const medication of medications) {
-            const medicationData = await TemplateMedicationWrapper(medication);
-            templateMedicationData[
-              medicationData.getTemplateMedicationId()
-            ] = medicationData.getBasicInfo();
-            template_medication_ids.push(
-              medicationData.getTemplateMedicationId()
-            );
-            medicine_ids.push(medicationData.getTemplateMedicineId());
-          }
-
-          const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
-            carePlanData.getCarePlanTemplateId()
-          );
-
-          for (const appointment of appointments) {
-            const appointmentData = await TemplateAppointmentWrapper(
-              appointment
-            );
-            templateAppointmentData[
-              appointmentData.getTemplateAppointmentId()
-            ] = appointmentData.getBasicInfo();
-            template_appointment_ids.push(
-              appointmentData.getTemplateAppointmentId()
-            );
-          }
-        }
-
-        const carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(
-          carePlanData.getCarePlanId()
-        );
-
-        for (const carePlanAppointment of carePlanAppointments) {
-          appointment_ids.push(carePlanAppointment.get("appointment_id"));
-        }
-
-        const appointments = await appointmentService.getAppointmentByData({
-          id: appointment_ids
-        });
-        if (appointments.length > 0) {
-          for (const appointment of appointments) {
-            const appointmentData = await AppointmentWrapper(appointment);
-
-            const {
-              appointments,
-              schedule_events
-            } = await appointmentData.getReferenceInfo();
-            appointmentApiDetails = {
-              ...appointmentApiDetails,
-              ...appointments
-            };
-            scheduleEventData = { ...scheduleEventData, ...schedule_events };
-            // appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
-          }
-        }
-        const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(
-          carePlanData.getCarePlanId()
-        );
-
-        for (const carePlanMedication of carePlanMedications) {
-          medication_ids.push(carePlanMedication.get("medication_id"));
-        }
-
-        const medications = await medicationReminderService.getMedicationsForParticipant(
-          { id: medication_ids }
-        );
-        if (medications.length > 0) {
-          for (const medication of medications) {
-            const medicationWrapper = await MReminderWrapper(medication);
-            const {medications: medicationData} = await medicationWrapper.getAllInfo();
-            medicationApiDetails = {...medicationApiDetails, ...medicationData};
-            medicine_ids.push(medicationWrapper.getMedicineId());
-          }
-        }
-
-        const medicineData = await medicineService.getMedicineByData({
-          id: medicine_ids
+          care_plans,
+          medicines,
+            medications,
+            appointments,
+            doctors,
+            schedule_events,
+            care_plan_ids,
+            current_careplan_id
+        } = await carePlanHelper.getCareplanData({
+          carePlans,
+          userCategory: category,
+          doctorId: userCategoryId
         });
 
-        for (const medicine of medicineData) {
-          const medicineWrapper = await MedicineApiWrapper(medicine);
-          medicineApiData[
-            medicineWrapper.getMedicineId()
-          ] = medicineWrapper.getBasicInfo();
-        }
 
-        if (carePlanTemplateData || carePlanTemplates.length > 0) {
-          Logger.debug(`786534546789098765234569090114 ---> ${patient_id} All Careplan Templates`,carePlanTemplates);
+        // care plans
+        carePlanApiDetails = {...carePlanApiDetails, ...care_plans};
 
-          for (const carePlanTemplate of carePlanTemplates) {
-            carePlanTemplateData = await CarePlanTemplateWrapper(
-              carePlanTemplate
-            );
-            Logger.debug(`786534546789098765234569090114 ---> ${patient_id} CARE PLAN TEMP Data`,carePlanTemplate);
+        // care plan ids
+        carePlanIds = [...care_plan_ids];
 
-            const {
-              care_plan_templates,
-              template_appointments,
-              template_medications,
-              medicines
-            } = await carePlanTemplateData.getReferenceInfo();
+        // latest care plan id
+        latestCarePlanId = current_careplan_id;
 
+        // doctors
+        doctorData = {...doctorData, ...doctors};
 
-            carePlanTemplateIds = [...new Set([...carePlanTemplateIds, ...Object.keys(care_plan_templates)])];
+        // appointments
+        appointmentApiDetails = {...appointmentApiDetails, ...appointments};
 
-            // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
-            otherCarePlanTemplates = {
-              ...otherCarePlanTemplates,
-              ...care_plan_templates
-            };
-            templateAppointmentData = {
-              ...templateAppointmentData,
-              ...template_appointments
-            };
-            templateMedicationData = {
-              ...templateMedicationData,
-              ...template_medications
-            };
-            medicineApiData = { ...medicineApiData, ...medicines };
-          }
-        } else {
-          carePlanTemplateIds.push("1");
-          otherCarePlanTemplates["1"] = {
-            basic_info: {
-              id: "1",
-              name: "Blank Template"
-            }
-          };
-        }
+        // medications
+        medicationApiDetails = {...medicationApiDetails, ...medications};
 
-        Logger.debug(`786534546789098765234569090114 ---> ${patient_id}`,carePlanTemplateIds);
+        // schedule events
+        scheduleEventData = {...scheduleEventData, ...schedule_events};
 
-        carePlanApiDetails[
-          carePlanData.getCarePlanId()
-        ] = await carePlanData.getAllInfo();
-        carePlanIds.push(carePlanData.getCarePlanId());
+        // medicines
+        medicineApiData = { ...medicineApiData, ...medicines };
+
+        // get all treatment ids from careplan for templates
+        Object.keys(care_plans).forEach(id => {
+          const { details: { treatment_id } = {} } = care_plans[id] || {};
+          treatmentIds.push(treatment_id);
+        });
       }
+
+      // get all careplan templates for user(doctor)
+      const carePlanTemplates =
+        (await carePlanTemplateService.getCarePlanTemplateData({
+          user_id: userId,
+          treatment_id: treatmentIds
+        })) || [];
+
+      if (carePlanTemplates.length > 0) {
+        for (let index = 0; index < carePlanTemplates.length; index++) {
+          const carePlanTemplate = await CarePlanTemplateWrapper(
+            carePlanTemplates[index]
+          );
+
+          const {
+            care_plan_templates,
+            template_appointments,
+            template_medications,
+              template_vitals,
+              vital_templates,
+            medicines
+          } = await carePlanTemplate.getReferenceInfo();
+
+          carePlanTemplateIds = [
+            ...new Set([
+              ...carePlanTemplateIds,
+              ...Object.keys(care_plan_templates)
+            ])
+          ];
+
+          // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+          otherCarePlanTemplates = {
+            ...otherCarePlanTemplates,
+            ...care_plan_templates
+          };
+          templateAppointmentData = {
+            ...templateAppointmentData,
+            ...template_appointments
+          };
+          templateMedicationData = {
+            ...templateMedicationData,
+            ...template_medications
+          };
+
+          templateVitalData = {
+            ...templateVitalData,
+            ...template_vitals
+          };
+
+          vitalTemplateData = {
+            ...vitalTemplateData,
+            ...vital_templates
+          };
+          medicineApiData = { ...medicineApiData, ...medicines };
+        }
+      } else {
+        carePlanTemplateIds.push("1");
+        otherCarePlanTemplates["1"] = {
+          basic_info: {
+            id: "1",
+            name: "Blank Template"
+          }
+        };
+      }
+
+      // for (const carePlan of carePlans) {
+      //   const carePlanData = await CarePlanWrapper(carePlan);
+      //   const { doctors, doctor_id } = await carePlanData.getReferenceInfo();
+      //   doctorData = { ...doctorData, ...doctors };
+      //   if (category === USER_CATEGORY.DOCTOR && doctor_id === userCategoryId) {
+      //     if (
+      //       moment(carePlanData.getCreatedAt()).diff(
+      //         moment(latestCarePlan),
+      //         "minutes"
+      //       ) > 0
+      //     ) {
+      //       latestCarePlan = carePlanData.getCreatedAt();
+      //       latestCarePlanId = carePlanData.getCarePlanId();
+      //     }
+      //
+      //     if (latestCarePlan === null) {
+      //       latestCarePlan = carePlanData.getCreatedAt();
+      //       latestCarePlanId = carePlanData.getCarePlanId();
+      //     }
+      //   }
+      //
+      //   const {
+      //     treatment_id,
+      //   } = carePlanData.getCarePlanDetails();
+      //
+      //   treatmentIds.push(treatment_id);
+      //
+      //   // const carePlanTemplates = await carePlanTemplateService.getCarePlanTemplateData(
+      //   //     {
+      //   //       treatment_id,
+      //   //       severity_id,
+      //   //       condition_id,
+      //   //       user_id: userId
+      //   //     }
+      //   // );
+      //
+      //   let carePlanTemplateData = null;
+      //
+      //   Logger.info(`care plan template ---> ${carePlanData.getCarePlanTemplateId()}`);
+      //   if (carePlanData.getCarePlanTemplateId()) {
+      //     const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateById(
+      //       carePlanData.getCarePlanTemplateId()
+      //     );
+      //     carePlanTemplateData = await CarePlanTemplateWrapper(
+      //       carePlanTemplate
+      //     );
+      //
+      //     // get template attached to careplan
+      //     const {
+      //       care_plan_templates,
+      //       template_appointments,
+      //       template_medications,
+      //       medicines
+      //     } = await carePlanTemplateData.getReferenceInfo();
+      //
+      //
+      //     carePlanTemplateIds = [...new Set([...carePlanTemplateIds, ...Object.keys(care_plan_templates)])];
+      //
+      //     // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+      //     otherCarePlanTemplates = {
+      //       ...otherCarePlanTemplates,
+      //       ...care_plan_templates
+      //     };
+      //     templateAppointmentData = {
+      //       ...templateAppointmentData,
+      //       ...template_appointments
+      //     };
+      //     templateMedicationData = {
+      //       ...templateMedicationData,
+      //       ...template_medications
+      //     };
+      //     medicineApiData = { ...medicineApiData, ...medicines };
+      //
+      //     // const medications = await templateMedicationService.getMedicationsByCarePlanTemplateId(
+      //     //   carePlanData.getCarePlanTemplateId()
+      //     // );
+      //     //
+      //     // for (const medication of medications) {
+      //     //   const medicationData = await TemplateMedicationWrapper(medication);
+      //     //   templateMedicationData[
+      //     //     medicationData.getTemplateMedicationId()
+      //     //   ] = medicationData.getBasicInfo();
+      //     //   template_medication_ids.push(
+      //     //     medicationData.getTemplateMedicationId()
+      //     //   );
+      //     //   medicine_ids.push(medicationData.getTemplateMedicineId());
+      //     // }
+      //     //
+      //     // const appointments = await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
+      //     //   carePlanData.getCarePlanTemplateId()
+      //     // );
+      //     //
+      //     // for (const appointment of appointments) {
+      //     //   const appointmentData = await TemplateAppointmentWrapper(
+      //     //     appointment
+      //     //   );
+      //     //   templateAppointmentData[
+      //     //     appointmentData.getTemplateAppointmentId()
+      //     //   ] = appointmentData.getBasicInfo();
+      //     //   template_appointment_ids.push(
+      //     //     appointmentData.getTemplateAppointmentId()
+      //     //   );
+      //     // }
+      //   }
+      //
+      //   const carePlanAppointments = await carePlanAppointmentService.getAppointmentsByCarePlanId(
+      //     carePlanData.getCarePlanId()
+      //   );
+      //
+      //   for (const carePlanAppointment of carePlanAppointments) {
+      //     appointment_ids.push(carePlanAppointment.get("appointment_id"));
+      //   }
+      //
+      //   const appointments = await appointmentService.getAppointmentByData({
+      //     id: appointment_ids
+      //   });
+      //   if (appointments.length > 0) {
+      //     for (const appointment of appointments) {
+      //       const appointmentData = await AppointmentWrapper(appointment);
+      //
+      //       const {
+      //         appointments,
+      //         schedule_events
+      //       } = await appointmentData.getReferenceInfo();
+      //       appointmentApiDetails = {
+      //         ...appointmentApiDetails,
+      //         ...appointments
+      //       };
+      //       scheduleEventData = { ...scheduleEventData, ...schedule_events };
+      //       // appointmentApiDetails[appointmentData.getAppointmentId()] = appointmentData.getBasicInfo();
+      //     }
+      //   }
+      //   const carePlanMedications = await carePlanMedicationService.getMedicationsByCarePlanId(
+      //     carePlanData.getCarePlanId()
+      //   );
+      //
+      //   for (const carePlanMedication of carePlanMedications) {
+      //     medication_ids.push(carePlanMedication.get("medication_id"));
+      //   }
+      //
+      //   const medications = await medicationReminderService.getMedicationsForParticipant(
+      //     { id: medication_ids }
+      //   );
+      //   if (medications.length > 0) {
+      //     for (const medication of medications) {
+      //       const medicationWrapper = await MReminderWrapper(medication);
+      //       const {medications: medicationData} = await medicationWrapper.getAllInfo();
+      //       medicationApiDetails = {...medicationApiDetails, ...medicationData};
+      //       medicine_ids.push(medicationWrapper.getMedicineId());
+      //     }
+      //   }
+      //
+      //   const medicineData = await medicineService.getMedicineByData({
+      //     id: medicine_ids
+      //   });
+      //
+      //   for (const medicine of medicineData) {
+      //     const medicineWrapper = await MedicineApiWrapper(medicine);
+      //     medicineApiData[
+      //       medicineWrapper.getMedicineId()
+      //     ] = medicineWrapper.getBasicInfo();
+      //   }
+      //
+      //   if (carePlanTemplateData || carePlanTemplates.length > 0) {
+      //     // Logger.debug(`786534546789098765234569090114 ---> ${patient_id} All Careplan Templates`,carePlanTemplates);
+      //     //
+      //     // for (const carePlanTemplate of carePlanTemplates) {
+      //     //   carePlanTemplateData = await CarePlanTemplateWrapper(
+      //     //     carePlanTemplate
+      //     //   );
+      //     //   Logger.debug(`786534546789098765234569090114 ---> ${patient_id} CARE PLAN TEMP Data`,carePlanTemplate);
+      //     //
+      //     //   const {
+      //     //     care_plan_templates,
+      //     //     template_appointments,
+      //     //     template_medications,
+      //     //     medicines
+      //     //   } = await carePlanTemplateData.getReferenceInfo();
+      //     //
+      //     //
+      //     //   carePlanTemplateIds = [...new Set([...carePlanTemplateIds, ...Object.keys(care_plan_templates)])];
+      //     //
+      //     //   // carePlanTemplateIds.push(...Object.keys(care_plan_templates));
+      //     //   otherCarePlanTemplates = {
+      //     //     ...otherCarePlanTemplates,
+      //     //     ...care_plan_templates
+      //     //   };
+      //     //   templateAppointmentData = {
+      //     //     ...templateAppointmentData,
+      //     //     ...template_appointments
+      //     //   };
+      //     //   templateMedicationData = {
+      //     //     ...templateMedicationData,
+      //     //     ...template_medications
+      //     //   };
+      //     //   medicineApiData = { ...medicineApiData, ...medicines };
+      //     // }
+      //   } else {
+      //     carePlanTemplateIds.push("1");
+      //     otherCarePlanTemplates["1"] = {
+      //       basic_info: {
+      //         id: "1",
+      //         name: "Blank Template"
+      //       }
+      //     };
+      //   }
+      //
+      //   Logger.debug(`786534546789098765234569090114 ---> ${patient_id}`,carePlanTemplateIds);
+      //
+      //   carePlanApiDetails[
+      //     carePlanData.getCarePlanId()
+      //   ] = await carePlanData.getAllInfo();
+      //   carePlanIds.push(carePlanData.getCarePlanId());
+      // }
 
       const symptomData = await SymptomService.getAllByData({ patient_id });
 
@@ -496,7 +648,7 @@ class PatientController extends Controller {
         }
       }
 
-      return this.raiseSuccess(
+      return raiseSuccess(
         res,
         200,
         {
@@ -530,6 +682,12 @@ class PatientController extends Controller {
           template_medications: {
             ...templateMedicationData
           },
+          template_vitals: {
+            ...templateVitalData,
+          },
+          vital_templates: {
+            ...vitalTemplateData,
+          },
           medicines: {
             ...medicineApiData
           },
@@ -542,7 +700,7 @@ class PatientController extends Controller {
     } catch (error) {
       // Logger.debug("get careplan 500 error ---> ", error);
       console.log("GET PATIENT DETAILS ERROR careplan --> ", error);
-      return this.raiseServerError(res);
+      return raiseServerError(res);
     }
   };
 
@@ -558,7 +716,7 @@ class PatientController extends Controller {
       const carePlan = await CarePlanWrapper(carePlanData);
 
       const symptomData = await SymptomService.getAllByData({
-        patient_id,
+        patient_id
         // care_plan_id: carePlan.getCarePlanId()
       });
 
@@ -1010,7 +1168,9 @@ class PatientController extends Controller {
       const patient = await PatientWrapper(null, patient_id);
 
       const { users } = await patient.getReferenceInfo();
-      const { basic_info: { prefix, mobile_number, email } = {} } = users[patient.getUserId()];
+      const { basic_info: { prefix, mobile_number, email } = {} } = users[
+        patient.getUserId()
+      ];
 
       Logger.debug("patient_id ---> ", mobile_number);
 
@@ -1025,7 +1185,7 @@ class PatientController extends Controller {
         otp
       });
 
-      if(process.config.app.env === "development") {
+      if (process.config.app.env === "development") {
         const emailPayload = {
           title: "OTP Consent verification for patient",
           toAddress: process.config.app.developer_email,
@@ -1040,8 +1200,7 @@ class PatientController extends Controller {
         };
         Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
       } else {
-
-        if(email) {
+        if (email) {
           const emailPayload = {
             title: "OTP Consent verification for patient",
             toAddress: email,
@@ -1297,19 +1456,23 @@ class PatientController extends Controller {
   };
 
   getPatientReports = async (req, res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const {params: {patient_id} = {}, userDetails: {userCategoryId} = {}} = req;
+      const {
+        params: { patient_id } = {},
+        userDetails: { userCategoryId } = {}
+      } = req;
       Logger.info(`params: patient_id = ${patient_id}`);
 
-      if(!patient_id) {
+      if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
       }
 
       const reportService = new ReportService();
-      const allReports = await reportService.getAllReportByData({
-        patient_id
-      }) || [];
+      const allReports =
+        (await reportService.getAllReportByData({
+          patient_id
+        })) || [];
 
       let reportData = {};
       let documentData = {};
@@ -1317,15 +1480,18 @@ class PatientController extends Controller {
       let doctorIds = [];
       let reportIds = [];
 
-      for(let index = 0; index < allReports.length; index++) {
-        const report = await ReportWrapper({data: allReports[index]});
-        const {reports, upload_documents} = await report.getReferenceInfo();
+      for (let index = 0; index < allReports.length; index++) {
+        const report = await ReportWrapper({ data: allReports[index] });
+        const { reports, upload_documents } = await report.getReferenceInfo();
         reportIds.push(report.getId());
-        reportData = {...reportData, ...reports};
-        documentData = {...documentData, ...upload_documents};
+        reportData = { ...reportData, ...reports };
+        documentData = { ...documentData, ...upload_documents };
 
         // collect other doctor ids
-        if(report.getUploaderType() === USER_CATEGORY.DOCTOR && report.getUploaderId() !== userCategoryId) {
+        if (
+          report.getUploaderType() === USER_CATEGORY.DOCTOR &&
+          report.getUploaderId() !== userCategoryId
+        ) {
           doctorIds.push(report.getUploaderId());
         }
       }
@@ -1333,37 +1499,36 @@ class PatientController extends Controller {
       // get other doctor basic details
       // todo: check with others if this data is already present for multi careplan
       let doctorData = {};
-      if(doctorIds.length > 0) {
-        const allDoctors = await doctorService.getAllDoctorByData({
-          id: doctorIds
-        }) || [];
+      if (doctorIds.length > 0) {
+        const allDoctors =
+          (await doctorService.getAllDoctorByData({
+            id: doctorIds
+          })) || [];
 
-        for(let index = 0; index < allDoctors.length; index++) {
+        for (let index = 0; index < allDoctors.length; index++) {
           const doctor = await DoctorWrapper(allDoctors[index]);
           doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
       }
 
-
       return raiseSuccess(
-          res,
-          200,
-          {
-            reports: {
-              ...reportData
-            },
-            doctors: {
-              ...doctorData
-            },
-            upload_documents: {
-              ...documentData
-            },
-            report_ids: reportIds
+        res,
+        200,
+        {
+          reports: {
+            ...reportData
           },
-          "Reports for patient fetched successfully"
+          doctors: {
+            ...doctorData
+          },
+          upload_documents: {
+            ...documentData
+          },
+          report_ids: reportIds
+        },
+        "Reports for patient fetched successfully"
       );
-
-    } catch(error) {
+    } catch (error) {
       Logger.debug("getPatientReports 500 error", error);
       return raiseServerError(res);
     }
@@ -1373,12 +1538,9 @@ class PatientController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { care_plan_id = null } = req.params;
-      const {userDetails: { userData: { category } = {}} = {}} = req;
+      const { userDetails: { userData: { category } = {} } = {} } = req;
 
-      const {
-        userDetails: { userId = null } = {},
-        query: { current_time = null } = {}
-      } = req;
+      const { userDetails: { userId = null } = {} } = req;
 
       const carePlanId = parseInt(care_plan_id);
 
@@ -1399,7 +1561,7 @@ class PatientController extends Controller {
 
       const carePlan = await carePlanService.getCarePlanById(carePlanId);
       const carePlanData = await CarePlanWrapper(carePlan);
-      const curr_patient_id=carePlanData.getPatientId();
+      const curr_patient_id = carePlanData.getPatientId();
 
       const carePlanCreatedDate = carePlanData.getCreatedAt();
 
@@ -1475,10 +1637,8 @@ class PatientController extends Controller {
             : `${nextAppointment.diff(now, "hours")} hours`;
       }
 
-
-
       let patient = await patientService.getPatientByUserId(userId);
-      if(category === USER_CATEGORY.DOCTOR){
+      if (category === USER_CATEGORY.DOCTOR) {
         patient = await patientService.getPatientById(curr_patient_id);
       }
 
@@ -1496,13 +1656,10 @@ class PatientController extends Controller {
 
       const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
 
-
       const downloadImage = await downloadFileFromS3(
         getFilePath(signature_pic),
         doctorSignImage
       );
-
-
 
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
         doctor_id
@@ -1540,9 +1697,10 @@ class PatientController extends Controller {
 
       let user_ids = [doctorUserId, userId];
       if (category === USER_CATEGORY.DOCTOR) {
-        const curr_data =  await patientData.getAllInfo();
-        const {basic_info : {user_id : curr_p_user_id = ''} = {}} = curr_data || {};       
-        user_ids = [doctorUserId, curr_p_user_id]; 
+        const curr_data = await patientData.getAllInfo();
+        const { basic_info: { user_id: curr_p_user_id = "" } = {} } =
+          curr_data || {};
+        user_ids = [doctorUserId, curr_p_user_id];
       }
 
       for (const id of user_ids) {
@@ -1573,7 +1731,9 @@ class PatientController extends Controller {
         patients: {
           ...{ [patientData.getPatientId()]: patientData.getBasicInfo() }
         },
-        currentTime: current_time
+        currentTime: getDoctorCurrentTime(doctorUserId).format(
+          "Do MMMM YYYY, hh:mm a"
+        )
       };
 
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
@@ -1585,12 +1745,13 @@ class PatientController extends Controller {
       };
       return res.sendFile(pdfFile, options);
     } catch (err) {
-      Logger.debug("3467238468327462387463287 Error got in the generate prescription: ", err);
+      Logger.debug(
+        "3467238468327462387463287 Error got in the generate prescription: ",
+        err
+      );
       return raiseServerError(res);
     }
   };
-
-
 }
 
 export default new PatientController();

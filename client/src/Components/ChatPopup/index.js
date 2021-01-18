@@ -102,19 +102,22 @@ const Header = ({
           onClick={maximizeChat}
         />
 
+        <Dropdown
+          overlay={getMenu()}
+          trigger={["click"]}
+          placement="bottomRight"
+          className="mr20"
+        >
+          <MoreOutlined className="text-white fs25 pointer" />
+        </Dropdown>
+
         <img
           src={Close}
           className="callIcon-header-PopUp mr20"
           onClick={close}
         />
 
-        <Dropdown
-          overlay={getMenu()}
-          trigger={["click"]}
-          placement="bottomRight"
-        >
-          <MoreOutlined className="text-white fs25 pointer" />
-        </Dropdown>
+       
       </div>
     </div>
   );

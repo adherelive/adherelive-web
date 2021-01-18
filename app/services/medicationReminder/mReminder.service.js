@@ -60,6 +60,19 @@ class MReminderService {
       throw err;
     }
   };
+
+  getAllMedicationByData = async (data) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+        include: [
+            Database.getModel(medicineTableName)
+        ]
+      });
+    } catch(error) {
+      throw error;
+    }
+  };
 }
 
 export default new MReminderService();

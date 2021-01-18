@@ -83,6 +83,8 @@ class VitalTimeline extends Component {
 
     let currentTemplate = {};
 
+    console.log("819287213 ", {details, template});
+
     template.forEach(data => {
       const { id } = data || {};
       if (id === responseId) {

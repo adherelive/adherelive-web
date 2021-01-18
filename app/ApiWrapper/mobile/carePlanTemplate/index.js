@@ -2,11 +2,14 @@
 import BaseCarePlanTemplate from "../../../services/carePlanTemplate";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import medicineService from "../../../services/medicine/medicine.service";
+import vitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 
 // wrapper
 import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
 import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 import MedicineWrapper from "../../../ApiWrapper/mobile/medicine";
+import TemplateVitalWrapper from "../../mobile/templateVital";
+import VitalTemplateWrapper from "../../mobile/vitalTemplates";
 
 class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
   constructor(data) {
@@ -73,6 +76,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       getBasic,
       getTemplateAppointments,
       getTemplateMedications,
+        getTemplateVitals,
       _data
     } = this;
 
@@ -106,6 +110,38 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       // medicines[medicineData.getMedicineId()] = medicineData.getBasicInfo();
     }
 
+    // vital templates (careplan_template)
+    let templateVitalIds = [];
+    let templateVitals = {};
+
+    // vital templates (vitals)
+    let vitalTemplateIds = [];
+
+    const allVitals = getTemplateVitals();
+    if(allVitals.length > 0){
+      for(let index = 0; index < allVitals.length; index++) {
+        const templateVital = await TemplateVitalWrapper({data: allVitals[index]});
+        templateVitals[templateVital.getId()] = templateVital.getBasicInfo();
+        templateVitalIds.push(templateVital.getId());
+        vitalTemplateIds.push(templateVital.getVitalTemplateId());
+      }
+    }
+
+    // get vital templates
+    let vitalTemplates = {};
+
+    const allVitalTemplates = await vitalTemplateService.getAllByData({
+      id: vitalTemplateIds
+    }) || [];
+
+    if(allVitalTemplates.length > 0) {
+      for(let index = 0; index < allVitalTemplates.length; index++) {
+        const vitalTemplate = await VitalTemplateWrapper({data: allVitalTemplates[index]});
+        vitalTemplates[vitalTemplate.getVitalTemplateId()] = vitalTemplate.getBasicInfo();
+      }
+    }
+
+
     const medicineData = await medicineService.getMedicineByData({
       id: medicineIds
     });
@@ -120,7 +156,8 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         [this.getCarePlanTemplateId()]: {
           ...this.getBasicInfo(),
           template_appointment_ids: appointmentIds,
-          template_medication_ids: medicationIds
+          template_medication_ids: medicationIds,
+          template_vital_ids: templateVitalIds
         }
       },
       template_appointments: {
@@ -129,8 +166,14 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       template_medications: {
         ...templateMedications
       },
+      template_vitals: {
+        ...templateVitals,
+      },
       medicines: {
         ...medicines
+      },
+      vital_templates: {
+        ...vitalTemplates,
       }
     };
   };

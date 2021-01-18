@@ -14,6 +14,7 @@ class Formulation extends Component {
             form: { validateFields }
         } = this.props;
         validateFields();
+
     }
     componentWillUnmount() {
         const {
@@ -41,6 +42,8 @@ class Formulation extends Component {
 
 
         let { description = null } = vitals[vital_id] || {};
+        const {vitalData = {}} = this.props;
+        const{description : existing_description=''}=vitalData||{};
 
         return (
             <div className="mb20 select-days-form-content">
@@ -51,7 +54,7 @@ class Formulation extends Component {
                     help={error || ""}
                 >
                     {getFieldDecorator(FIELD_NAME, {
-                        initialValue: description
+                        initialValue: existing_description? existing_description : description
                     })(
                         <TextArea
                             autoFocus

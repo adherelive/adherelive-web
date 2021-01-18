@@ -1,8 +1,11 @@
 import { PRESCRIPTION_PDF_FOLDER } from "../../../constant";
+// import {MEDICINE_UNITS} from "../../../client/src/constant";
+import moment from "moment";
+import PDFDocument from "pdfkit";
 
-const PDFDocument = require("pdfkit");
+// const PDFDocument = require("pdfkit");
 const fs = require("fs");
-const moment = require("moment");
+// const moment = require("moment");
 
 const DOC_MARGIN = 30;
 const NORMAL_FONT_SIZE = 12;
@@ -257,7 +260,8 @@ function printCarePlanData(
       strength,
       frequency,
       startDate,
-      endDate
+      // endDate,
+      duration
     } = medicationData;
 
     const medicineData = `${medicineName} (${medicineType})`;
@@ -271,13 +275,13 @@ function printCarePlanData(
       .text(`${medicineData}`, doc.x + 15, doc.y - SHORT_FONT_SIZE + 1)
       .fontSize(NORMAL_FONT_SIZE - 1)
       .text(
-        `Strength: ${strength}, Frequency: ${
+        `${strength}, ${
           frequency ? frequency : ""
-        }, Duration: ${startDate}-${endDate}`,
+        }, For ${duration} day(s) starting ${startDate}`,
         suggestedInvestigationXLevelEnd + 250,
         doc.y
       )
-      .text(`${description}`, suggestedInvestigationXLevelEnd + 250, doc.y);
+      .text(`${description ? description : ""}`, suggestedInvestigationXLevelEnd + 250, doc.y);
 
     docYLevel = doc.y + NORMAL_FONT_SIZE;
   }
@@ -469,20 +473,33 @@ function formatPatientData(patients, users) {
 function formatMedicationsData(medications, medicines) {
   // have to send the list of objects containing instruction medicine name, medicine type, strength, frequency, duration,
   let medicationsList = [];
+
   const medicationIds = Object.keys(medications);
   for (const medicationId of medicationIds) {
     let medicationDataObj = {};
     const {
       [medicationId]: {
-        basic_info: { start_date = "", end_date = "", description = "" } = {},
-        details: {
-          medicine_id = null,
-          when_to_take = [],
-          medicine_type = "",
-          strength = ""
-        } = {}
+        basic_info: { start_date = "", end_date = "", description = "", details = null } = {},
+          details: mobileDetails = null
       }
     } = medications;
+
+    let mainDetails = {};
+
+    if(mobileDetails) {
+      mainDetails = {...mobileDetails};
+    } else {
+      mainDetails = {...details};
+    }
+
+    const {
+      medicine_id = null,
+      when_to_take = [],
+      medicine_type = "",
+      strength = "",
+        unit = "",
+        quantity = null
+    } = mainDetails || {};
 
     const {
       [medicine_id]: { basic_info: { name = "", type = "" } = {} } = {}
@@ -492,9 +509,7 @@ function formatMedicationsData(medications, medicines) {
 
     // const duration = endDateObj.diff(startDateObj, "days");
 
-    const startDate = `${startDateObj.get("year")}/${startDateObj.get(
-      "month"
-    )}/${startDateObj.get("date")}`;
+    const startDate = `${startDateObj.format("LL")}`;
     let endDate = "";
 
     if (end_date) {
@@ -508,10 +523,12 @@ function formatMedicationsData(medications, medicines) {
       description,
       medicineName: name ? name.toUpperCase() : name,
       medicineType: type,
-      strength,
-      frequency: when_to_take.length,
+      // strength,
+      strength: `${quantity ? `${quantity} Tab(s)` : `${strength} ${unit.toUpperCase()}`}`,
+      frequency: getWhenToTakeText(when_to_take.length),
       startDate,
-      endDate
+      endDate,
+      duration: end_date ? moment(end_date).diff(moment(start_date), "days") : "Long term" // todo: change text here after discussion
     };
 
     medicationsList.push(medicationDataObj);
@@ -519,6 +536,19 @@ function formatMedicationsData(medications, medicines) {
 
   return medicationsList;
 }
+
+const getWhenToTakeText = (number) => {
+  switch(number) {
+    case 1:
+      return `Once a day`;
+    case 2:
+      return `Twice a day`;
+    case 3:
+      return `Thrice a day`;
+    default:
+      return "";
+  }
+};
 
 function generateHr(doc, y) {
   doc
