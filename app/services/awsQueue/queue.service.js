@@ -73,6 +73,8 @@ export default class QueueService {
   sendBatchMessage = async (dataArr) => {
     try {
       const formattedData = [];
+
+      console.log("18231873 data --> ", dataArr);
       dataArr.forEach((data, index) => {
         const stringData = JSON.stringify(data);
         const params = {

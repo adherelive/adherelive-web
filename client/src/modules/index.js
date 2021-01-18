@@ -23,6 +23,7 @@ import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
 import template_medications from "./templateMedications";
+import template_vitals from "./templateVitals"
 import care_plan_templates from "./carePlanTemplates";
 import upload_documents from "./uploadDocuments";
 import show_template_drawer from "./showDrawer";
@@ -69,6 +70,7 @@ const rootReducer = combineReducers({
   upload_documents,
   template_appointments,
   template_medications,
+  template_vitals,
   care_plan_templates,
   show_template_drawer,
   colleges,

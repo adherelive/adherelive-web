@@ -63,6 +63,10 @@ class VitalOccurence extends Component {
 
     const { getStagesOption, getParentNode, handleVitalSearch } = this;
 
+    
+    const {vitalData = {}} = this.props;
+    const{repeat_interval_id : existing_repeat_interval_id =''}=vitalData||{};
+
     const options = Object.keys(repeat_intervals).map(id => {
       const { text = '' } = repeat_intervals[id] || {};
       return (
@@ -85,7 +89,7 @@ class VitalOccurence extends Component {
     return (
       <FormItem>
         {getFieldDecorator(FIELD_NAME, {
-          initialValue:repeat_interval_id
+          initialValue:existing_repeat_interval_id ? existing_repeat_interval_id : repeat_interval_id
         })(
           <Select
             notFoundContent={!fetchingVitals ? <Spin size="small" /> : 'No match found'}

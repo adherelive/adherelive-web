@@ -66,6 +66,7 @@ import * as Symptoms from "../app/models/symptoms";
 
 import * as TemplateAppointments from "../app/models/templateAppointments";
 import * as TemplateMedications from "../app/models/templateMedications";
+import * as TemplateVitals from "../app/models/templateVitals";
 import * as TreatmentConditionMapping from "../app/models/treatmentConditionMapping";
 import * as Treatments from "../app/models/treatments";
 import * as Transactions from "../app/models/transactions";
@@ -150,6 +151,7 @@ const models = [
 
   TemplateAppointments,
   TemplateMedications,
+  TemplateVitals,
   TreatmentConditionMapping,
   Treatments,
   Transactions,

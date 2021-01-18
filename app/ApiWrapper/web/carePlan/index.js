@@ -42,7 +42,7 @@ class CarePlanWrapper extends BaseCarePlan {
         const {_data, getBasicInfo, getCarePlanId} = this;
         const {care_plan_appointments = [], care_plan_medications = []} = _data || {};
 
-        const vitals = await VitalService.getAllByData({care_plan_id: getCarePlanId()});
+        const vitals = await VitalService.getAllByData({care_plan_id: getCarePlanId()}) || [];
 
         const vitalIds = [];
         if(vitals.length > 0) {

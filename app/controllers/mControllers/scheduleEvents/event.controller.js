@@ -11,12 +11,12 @@ import CarePlanService from "../../../services/carePlan/carePlan.service";
 import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
 import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
+import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import * as EventHelper from "../../scheduleEvents/eventHelper";
 import SymptomService from "../../../services/symptom/symptom.service";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
-import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
 
 const Log = new Logger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 
@@ -717,6 +717,193 @@ class EventController extends Controller {
       }
     } catch (error) {
       Log.debug("getLastVisitEvents 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  deleteVitalResponse = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {params: {id}, query: {index} = {}} = req;
+      Log.info(`params: event_id: ${id} | query : index : ${index}`);
+
+      if(!id || !index) {
+        return raiseClientError(res, 422, {}, "Please enter valid event id and index for the response");
+      }
+
+      const EventService = new eventService();
+
+      const eventData = await EventService.getEventByData({
+        id,
+      });
+
+      let eventId = null;
+
+      if(eventData) {
+        const event = await EventWrapper(eventData);
+        let { response: prevResponse = [] } = event.getDetails() || {};
+        eventId = event.getEventId();
+        const afterDeleteResponse = prevResponse.splice(index, 1);
+
+        await EventService.update(
+            {
+              details: {
+                ...event.getDetails(),
+                response: prevResponse
+              },
+            },
+            id
+        );
+
+        if(eventId) {
+          const vital = await VitalWrapper({id: eventId});
+          const completeEvents = await EventService.getAllPassedByData({
+            event_id: vital.getVitalId(),
+            event_type: EVENT_TYPE.VITALS,
+            date: vital.getStartDate(),
+            sort: "DESC"
+          });
+
+          let dateWiseVitalData = {};
+
+          const timelineDates = [];
+
+          if (completeEvents.length > 0) {
+            for (const scheduleEvent of completeEvents) {
+              const event = await EventWrapper(scheduleEvent);
+              if (dateWiseVitalData.hasOwnProperty(event.getDate())) {
+                dateWiseVitalData[event.getDate()].push(event.getAllInfo());
+              } else {
+                dateWiseVitalData[event.getDate()] = [];
+                dateWiseVitalData[event.getDate()].push(event.getAllInfo());
+                timelineDates.push(event.getDate());
+              }
+            }
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                  vital_timeline: {
+                    ...dateWiseVitalData
+                  },
+                  vital_date_ids: timelineDates
+                },
+                "Vital responses deleted and updated successfully"
+            );
+          } else {
+            return raiseSuccess(
+                res,
+                200,
+                {},
+                "Vital Response deleted successfully"
+            );
+          }
+        }
+
+
+      } else {
+        return raiseClientError(res, 422, {}, "No event present for the event id mentioned");
+      }
+
+    } catch(error) {
+      Log.debug("deleteVitalResponse 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  updateVitalResponse = async (req, res) => {
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    try {
+      const {params: {id}, query: {index} = {}, body : {value = {}} = {}} = req;
+      Log.info(`params: event_id: ${id} | query : index : ${index}`);
+      Log.debug("body : value ", value);
+
+      if(!id || !index) {
+        return raiseClientError(res, 422, {}, "Please enter valid event id and index for the response");
+      }
+
+      const EventService = new eventService();
+
+      const eventData = await EventService.getEventByData({
+        id,
+      });
+
+      let eventId = null;
+
+      if(eventData) {
+        const event = await EventWrapper(eventData);
+        let {response: prevResponse = []} = event.getDetails() || {};
+        eventId = event.getEventId();
+
+        const response = prevResponse[index];
+
+        prevResponse.splice(index, 1, {
+            value,
+            createdTime: response.createdTime
+        });
+
+        await EventService.update(
+            {
+              details: {
+                ...event.getDetails(),
+                response: prevResponse
+              },
+            },
+            id
+        );
+        if(eventId) {
+          const vital = await VitalWrapper({id: eventId});
+          const completeEvents = await EventService.getAllPassedByData({
+            event_id: vital.getVitalId(),
+            event_type: EVENT_TYPE.VITALS,
+            date: vital.getStartDate(),
+            sort: "DESC"
+          }) || [];
+
+          let dateWiseVitalData = {};
+
+          const timelineDates = [];
+
+          if (completeEvents.length > 0) {
+            for (const scheduleEvent of completeEvents) {
+              const event = await EventWrapper(scheduleEvent);
+              if (dateWiseVitalData.hasOwnProperty(event.getDate())) {
+                dateWiseVitalData[event.getDate()].push(event.getAllInfo());
+              } else {
+                dateWiseVitalData[event.getDate()] = [];
+                dateWiseVitalData[event.getDate()].push(event.getAllInfo());
+                timelineDates.push(event.getDate());
+              }
+            }
+
+            return raiseSuccess(
+                res,
+                200,
+                {
+                  vital_timeline: {
+                    ...dateWiseVitalData
+                  },
+                  vital_date_ids: timelineDates
+                },
+                "Vital responses deleted and updated successfully"
+            );
+          } else {
+            return raiseSuccess(
+                res,
+                200,
+                {},
+                "Vital Response deleted successfully"
+            );
+          }
+        }
+
+
+      } else {
+        return raiseClientError(res, 422, {}, "No event present for the event id mentioned");
+      }
+    } catch(error) {
+      Log.debug("updateVitalResponse500 error", error);
       return raiseServerError(res);
     }
   };

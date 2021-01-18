@@ -28,4 +28,9 @@ export default class CarePlanTemplate {
         const {template_medications} = this._data;
         return template_medications;
     };
+
+    getTemplateVitals = () => {
+        const {template_vitals = []} = this._data;
+        return template_vitals;
+    }
 }

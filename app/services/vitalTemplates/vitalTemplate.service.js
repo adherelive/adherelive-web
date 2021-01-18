@@ -29,6 +29,16 @@ class VitalTemplateService {
             throw error;
         }
     };
+
+    getAllByData = async (data) => {
+        try {
+            return await Database.getModel(TABLE_NAME).findAll({
+                where: data
+            });
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new VitalTemplateService();
