@@ -103,3 +103,11 @@ export const getAllMissedScheduleEventsUrl = () => {
 export const getPatientMissedEventsUrl = (patient_id) => {
   return `/events/missed/${patient_id}`
 }
+
+export const getEditVitalResponseUrl = ({id, index}) => {
+  return `/events/${id}/vitals/response?index=${index}`;
+};
+
+export const getDeleteVitalResponseUrl = ({id, index}) => {
+  return `/events/${id}/vitals/response?index=${index}`;
+};
