@@ -416,5 +416,10 @@ export default defineMessages({
     description: "",
     defaultMessage: "Enter instructions",
   },
+  vital: {
+    id: "medication_reminder.drawer.vital",
+    description: "",
+    defaultMessage: "Vital"
+  },
 
 });
