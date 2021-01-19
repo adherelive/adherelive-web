@@ -1442,7 +1442,7 @@ class MPatientController extends Controller {
     try {
       const { care_plan_id = null } = req.params;
       const {
-        userDetails: { userId = null, userData: { category = null } = {} } = {},
+        userDetails: { userId = null, userData: { category = "" } = {} } = {},
       } = req;
 
       const carePlanId = parseInt(care_plan_id);
@@ -1543,7 +1543,7 @@ class MPatientController extends Controller {
       let patientUserId = userId;
       let patient = null;
       if (category === USER_CATEGORY.DOCTOR) {
-        patient = await patientService.getPatientById(carePlanPatientId);
+        patient = await patientService.getPatientById({id: carePlanPatientId});
       } else {
         patient = await patientService.getPatientByUserId(userId);
       }

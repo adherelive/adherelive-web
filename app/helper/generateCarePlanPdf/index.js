@@ -442,7 +442,8 @@ function formatPatientData(patients, users) {
         address = "",
         height = "",
         weight = "",
-        user_id = null
+        user_id = null,
+          full_name = "",
       } = {},
       details: { allergies = "", comorbidities = "" } = {}
     } = {}
@@ -455,6 +456,8 @@ function formatPatientData(patients, users) {
   const {
     [user_id]: { basic_info: { mobile_number = "", prefix = "" } = {} } = {}
   } = users;
+
+  console.log("189273812 full_name --> ", full_name);
 
   return {
     name,
