@@ -159,7 +159,7 @@ class EditVital extends Component {
               message.error(msg);
             }
           } catch (error) {
-            console.log("add medication reminder ui error -----> ", error);
+            console.log("add vital reminder ui error -----> ", error);
           }
         }
 
@@ -216,11 +216,11 @@ class EditVital extends Component {
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading, deleteMedicationOfTemplate, hideMedication, addMedication } = this.props;
+    const { loading, deleteVitalOfTemplate, hideVital, addVital } = this.props;
 
-    if (addMedication) {
+    if (addVital) {
       return (
-        <Button onClick={hideMedication} style={{ marginRight: 8 }}>
+        <Button onClick={hideVital} style={{ marginRight: 8 }}>
           Cancel
         </Button>
       );
@@ -231,9 +231,9 @@ class EditVital extends Component {
         type={"danger"}
         ghost
         className="fs14 no-border style-delete"
-        onClick={deleteMedicationOfTemplate ? deleteMedicationOfTemplate : handleDelete}
+        onClick={deleteVitalOfTemplate ? deleteVitalOfTemplate : handleDelete}
         loading={loading}
-        disabled={true}
+        disabled={deleteVitalOfTemplate ? false : true}
       >
         <div className="flex align-center delete-text">
           <div className="ml4">Delete</div>
@@ -288,7 +288,9 @@ class EditVital extends Component {
           top: "0px"
         }}
         className="ant-drawer"
-        title={formatMessage(messages.title)}
+        // title={formatMessage(messages.title)}
+        title={editVital ? formatMessage(messages.vital) : addVital ? 'Add Vital' : formatMessage(messages.title)}
+
       >
         <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
         <Footer

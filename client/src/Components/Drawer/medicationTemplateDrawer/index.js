@@ -83,7 +83,6 @@ class TemplateDrawer extends Component {
         let newAppoints = {};
         let newVitals = {};
 
-        console.log("4534543634534535634 CDM-->",this.props);
 
         let carePlanTemplateId = Object.keys(carePlanTemplateIds).length ? parseInt(carePlanTemplateIds[0]) : 0;
 
@@ -139,9 +138,13 @@ class TemplateDrawer extends Component {
 
             
 
+
                 const s_date=moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
                 const e_date=moment().add(parseInt(duration), 'days').format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
 
+                if(duration === null){
+                    e_date = null;
+                }
                 newVital.id=id;
                 newVital.vital_template_id=vital_template_id;
                 newVital.repeat_days=repeat_days;
@@ -256,6 +259,11 @@ class TemplateDrawer extends Component {
 
                 const s_date=moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
                 const e_date=moment().add(parseInt(duration), 'days').format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+
+                if(duration === null){
+                    e_date = null;
+                }
+
 
                 newVital.id=id;
                 newVital.vital_template_id=vital_template_id;
@@ -476,7 +484,7 @@ class TemplateDrawer extends Component {
         } else if (innerFormType == EVENT_TYPE.APPOINTMENT) {
             delete appointments[innerFormKey];
             appointmentKeys.splice(appointmentKeys.indexOf(innerFormKey), 1);
-        }else if (innerFormKey == EVENT_TYPE.VITALS){
+        }else if (innerFormType == EVENT_TYPE.VITALS){
             delete vitals[innerFormKey];
             vitalKeys.splice(vitalKeys.indexOf(innerFormKey), 1);
         }
@@ -890,7 +898,12 @@ class TemplateDrawer extends Component {
         newVital.repeat_interval_id=repeat_interval_id;
         newVital.description=description;
         newVital.start_date=moment(start_date);
-        newVital.end_date=moment(end_date);
+        if(end_date === null){
+            newVital.end_date=end_date;
+        }else{
+            newVital.end_date=moment(end_date);
+        }
+
 
         vitals[innerFormKey] = newVital;
 
@@ -900,6 +913,9 @@ class TemplateDrawer extends Component {
         });      
 
     }
+
+
+ 
 
     addMedication = (data) => {
         const { end_date = "",

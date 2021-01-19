@@ -5,6 +5,7 @@ import edit_image from "../../../Assets/images/edit.svg";
 import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
 import { doRequest } from "../../../Helper/network";
 import {   generatePrescriptionUrl } from '../../../Helper/urls/patients';
+import ShareIcon from "../../../Assets/images/redirect3x.png";
 
 import config from "../../../config";
 
@@ -522,7 +523,15 @@ const PatientTreatmentCard = ({
           target={"_blank"}
           className="presc-link"
           >
-            <Button type="ghost" >{formatMessage(messages.prescription)}</Button>
+            <Button type="ghost flex align-center justify-space-evenly" >
+             <span className="fs14" > {formatMessage(messages.prescription)}</span>
+            <img 
+             title={"Generate Prescription"}
+             src={ShareIcon}
+             alt="prescription icon"
+             className="pointer w15 ml14"
+             ></img></Button>
+            
           </a>
           :
          null

@@ -109,7 +109,7 @@ class EndDate extends Component {
     const value = getFieldValue(FIELD_NAME);
 
     const {vitalData = {}} = this.props;
-    const {end_date : existing_end_date= '' } = vitalData || {};
+    const {end_date : existing_end_date= null } = vitalData || {};
     if(existing_end_date){
       end_date=existing_end_date;
     }

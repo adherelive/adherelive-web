@@ -247,7 +247,7 @@ class ChatForm extends Component {
               {" "}
               {/*formatMessage(messages.consultationFeeText)*/}
               <SwapOutlined
-                className="text-white fs20 pointer"
+                className="text-white fs20 pointer chat-form-icon"
                 onClick={this.handleConsultationModal}
               />
             </Tooltip>
@@ -260,11 +260,13 @@ class ChatForm extends Component {
             showUploadList={false}
             multiple={false}
             accept=".jpg,.jpeg,.png,.pdf,.mp4"
-            className="chat-upload-component"
+            className="flex align-center chat-upload-component"
           >
-            <div className="chat-upload-btn">
-              {/* <Icon type="paper-clip" className='h20 mt6' /> */}
-              <img src={PaperClip} className="h30 mt6 pointer" />
+            <div
+            className="chat-upload-btn"
+           >
+              {/* <img src={PaperClip} className="h30 mt6 pointer chat-form-icon" /> */}
+               <Icon type="paper-clip" className="text-white fs20 pointer chat-form-icon" />
             </div>
           </Upload>
         </Form>
