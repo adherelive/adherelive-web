@@ -1542,7 +1542,7 @@ class PatientController extends Controller {
 
       const { userDetails: { userId = null } = {} } = req;
 
-      const carePlanId = parseInt(care_plan_id);
+      // const carePlanId = parseInt(care_plan_id);
 
       let dataForPdf = {};
 
@@ -1555,13 +1555,15 @@ class PatientController extends Controller {
       let medicines = {};
       let nextAppointmentDuration = null;
 
-      if (!carePlanId) {
+      if (!care_plan_id) {
         return raiseClientError(res, 422, {}, "Invalid Care plan.");
       }
 
-      const carePlan = await carePlanService.getCarePlanById(carePlanId);
+      const carePlan = await carePlanService.getCarePlanById(care_plan_id);
       const carePlanData = await CarePlanWrapper(carePlan);
       const curr_patient_id = carePlanData.getPatientId();
+
+      Logger.info(`98172712983 curr_patient_id : ${curr_patient_id}`);
 
       const carePlanCreatedDate = carePlanData.getCreatedAt();
 
@@ -1637,9 +1639,12 @@ class PatientController extends Controller {
             : `${nextAppointment.diff(now, "hours")} hours`;
       }
 
-      let patient = await patientService.getPatientByUserId(userId);
+      let patient = null;
+
       if (category === USER_CATEGORY.DOCTOR) {
-        patient = await patientService.getPatientById(curr_patient_id);
+        patient = await patientService.getPatientById({id:curr_patient_id});
+      } else {
+        patient = await patientService.getPatientByUserId(userId);
       }
 
       const patientData = await PatientWrapper(patient);

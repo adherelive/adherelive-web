@@ -239,7 +239,8 @@ class MobileMReminderController extends Controller {
         description,
         start_time,
         critical = false,
-        care_plan_id = 0
+        care_plan_id = 0,
+        medication_ids = [],
       } = body;
       const {
         userId,
@@ -252,47 +253,47 @@ class MobileMReminderController extends Controller {
       );
 
       const medicineApiWrapper = await MedicineApiWrapper(medicineDetails);
-
-      const dataToSave = {
-        participant_id: patient_id, // todo: patient_id
-        organizer_type: category,
-        organizer_id: userId,
-        medicine_id,
-        description,
-        start_date,
-        end_date,
-        details: {
-          medicine_id,
-          medicine_type,
-          start_time: start_time ? start_time : moment(),
-          end_time: start_time ? start_time : moment(),
-          repeat,
-          repeat_days,
-          repeat_interval,
-          quantity,
-          strength,
-          unit,
-          when_to_take,
-          medication_stage,
-          critical
-        }
-      };
-
-      const mReminderDetails = await medicationReminderService.addMReminder(
-        dataToSave
-      );
+      //
+      // const dataToSave = {
+      //   participant_id: patient_id, // todo: patient_id
+      //   organizer_type: category,
+      //   organizer_id: userId,
+      //   medicine_id,
+      //   description,
+      //   start_date,
+      //   end_date,
+      //   details: {
+      //     medicine_id,
+      //     medicine_type,
+      //     start_time: start_time ? start_time : moment(),
+      //     end_time: start_time ? start_time : moment(),
+      //     repeat,
+      //     repeat_days,
+      //     repeat_interval,
+      //     quantity,
+      //     strength,
+      //     unit,
+      //     when_to_take,
+      //     medication_stage,
+      //     critical
+      //   }
+      // };
+      //
+      // const mReminderDetails = await medicationReminderService.addMReminder(
+      //   dataToSave
+      // );
 
       let carePlanApiData = {};
 
       if (care_plan_id) {
-        const data_to_create = {
-          care_plan_id,
-          medication_id: mReminderDetails.get("id")
-        };
+        // const data_to_create = {
+        //   care_plan_id,
+        //   medication_id: mReminderDetails.get("id")
+        // };
 
-        const newMedication = await carePlanMedicationService.addCarePlanMedication(
-          data_to_create
-        );
+        // const newMedication = await carePlanMedicationService.addCarePlanMedication(
+        //   data_to_create
+        // );
         const carePlan = await carePlanService.getCarePlanById(care_plan_id);
 
         const carePlanAppointmentIds = await getCarePlanAppointmentIds(

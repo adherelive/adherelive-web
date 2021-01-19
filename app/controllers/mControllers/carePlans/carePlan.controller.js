@@ -22,12 +22,16 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
-import Log from "../../../../libs/log_new";
+// import Log from "../../../../libs/log_new";
 import queueService from "../../../services/awsQueue/queue.service";
 // import SqsQueueService from "../../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import * as carePlanHelper from "./carePlanHelper";
+
+import Logger from "../../../../libs/log";
+
+const Log = new Logger("MOBILE > CARE_PLAN > CONTROLLER");
 
 class CarePlanController extends Controller {
   constructor() {
@@ -98,6 +102,8 @@ class CarePlanController extends Controller {
       let appointmentApiDetails = {};
       let appointment_ids = [];
       let appointmentEventData = [];
+
+      let carePlanScheduleData = {};
 
       let appointmentsArr = [];
       let medicationsArr = [];
@@ -223,7 +229,8 @@ class CarePlanController extends Controller {
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
       const patient = await PatientWrapper(null, patient_id);
 
-      const carePlanScheduleData = {
+      carePlanScheduleData = {
+        ...carePlanScheduleData,
         type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
         event_id: care_plan_id,
         critical: false,
@@ -237,14 +244,16 @@ class CarePlanController extends Controller {
         }
       };
 
-      const sqsResponseforCareplan = await QueueService.sendMessage(
-        carePlanScheduleData
-      );
-
-      Log.debug("sqsResponse for care plan---> ", sqsResponseforCareplan);
+      // const sqsResponseforCareplan = await QueueService.sendMessage(
+      //   carePlanScheduleData
+      // );
+      //
+      // Log.debug("sqsResponse for care plan---> ", sqsResponseforCareplan);
 
       let medicationApiDetails = {};
       let medication_ids = [];
+
+      let medicineApiDetails = {};
 
       if (medicationsData.length > 0) {
         for (const medication of medicationsData) {
@@ -261,11 +270,58 @@ class CarePlanController extends Controller {
               strength = "",
               start_time = "",
               repeat_interval = "",
-              medication_stage = ""
+              medication_stage = "",
+                critical = false,
             } = {},
             medicine_id = "",
             medicine_type = "1"
           } = medication;
+
+          const dataToSave = {
+            participant_id: patient_id,
+            organizer_type: category,
+            organizer_id: userId,
+            medicine_id,
+            description,
+            start_date,
+            end_date,
+            details: {
+              medicine_id,
+              medicine_type,
+              start_time: start_time ? start_time : moment(),
+              end_time: start_time ? start_time : moment(),
+              repeat,
+              repeat_days,
+              repeat_interval,
+              quantity,
+              strength,
+              unit,
+              when_to_take,
+              medication_stage,
+              critical
+            }
+          };
+
+          const mReminderDetails = await medicationReminderService.addMReminder(
+              dataToSave
+          );
+
+          const medicationWrapper = await MedicationWrapper(mReminderDetails);
+
+          const data_to_create = {
+            care_plan_id,
+            medication_id: medicationWrapper.getMReminderId()
+          };
+
+          let newMedication = await carePlanMedicationService.addCarePlanMedication(
+              data_to_create
+          );
+
+          const {medications, medicines} = await medicationWrapper.getReferenceInfo();
+          medicationApiDetails = {...medicationApiDetails, ...medications};
+          medicineApiDetails = {...medicineApiDetails, ...medicines};
+
+          medication_ids.push(medicationWrapper.getMReminderId());
 
           medicationsArr.push({
             medicine_id,
@@ -284,6 +340,11 @@ class CarePlanController extends Controller {
           });
         }
       }
+
+      carePlanScheduleData = {
+        ...carePlanScheduleData,
+        medication_ids
+      };
 
       // vitals ----------------------------------------
       const {
@@ -329,7 +390,8 @@ class CarePlanController extends Controller {
       // sending batch message of appointments and vitals
       const sqsResponse = await QueueService.sendBatchMessage([
         ...appointmentEventData,
-        ...vitalEventsData
+        ...vitalEventsData,
+        carePlanScheduleData
       ]);
 
       return this.raiseSuccess(
@@ -422,124 +484,185 @@ class CarePlanController extends Controller {
 
       const patient_id = carePlan.get("patient_id");
 
-      // console.log("event data got is: ", eventData);
       const {
         details: {
           medications = {},
+            medication_ids = [],
           actor: { id: organizer_id = null, category } = {}
         } = {}
       } = eventData;
       const medicationsData = JSON.parse(medications);
-      console.log("medication data got is: ", medicationsData);
 
       let medicationApiDetails = {};
-      let medication_ids = [];
+      // let medicationIds = [];
+      let medicineApiDetails = {};
 
-      for (const medication of medicationsData) {
-        console.log(
-          "medication value for current medication data is: ",
-          medication
-        );
+      let eventScheduleData = [];
+
+      for(let index = 0; index < medication_ids.length; index++) {
+
+        // Log.debug("1698727 medications", medicationsData);
+        // Log.debug("1698727 index", index);
+        // const currentMedication =
         const {
           schedule_data: {
             end_date = "",
-            description = "",
             start_date = "",
-            unit = "",
-            when_to_take = "",
-            repeat = "",
-            quantity = "",
-            repeat_days = [],
-            strength = "",
-            start_time = "",
-            repeat_interval = "",
-            medication_stage = ""
           } = {},
-          medicine_id = "",
-          medicine_type = "1"
-        } = medication;
+        } = medicationsData[index];
 
-        const duration = moment(start_date).diff(moment(end_date), "days");
-        console.log(
-          "difference in milliseconds is: ",
-          duration,
-          start_date,
-          end_date
-        );
+        const duration = end_date ? moment(end_date).diff(moment(start_date), "days") : EVENT_LONG_TERM_VALUE;
 
-        const updatedStartDate = new moment().utc();
-        const updatedEndDate = new moment.utc(updatedStartDate).add(
-          duration,
-          "days"
-        );
+        const updatedStartDate = moment().utc();
+        const updatedEndDate = duration ? moment(updatedStartDate).utc().add(
+            duration,
+            "days"
+        ) : EVENT_LONG_TERM_VALUE;
 
-        console.log("updated times are: ", updatedStartDate, updatedEndDate);
-
-        const dataToSave = {
-          participant_id: patient_id,
-          organizer_type: category,
-          organizer_id,
-          description,
+        await medicationReminderService.updateMedication({
           start_date: updatedStartDate,
-          end_date: updatedEndDate,
-          medicine_id,
-          details: {
-            medicine_id,
-            medicine_type,
-            start_time: start_time ? start_time : moment(),
-            end_time: start_time ? start_time : moment(),
-            repeat,
-            repeat_days,
-            repeat_interval,
-            quantity,
-            strength,
-            unit,
-            when_to_take,
-            medication_stage
-          }
-        };
+          end_date: updatedEndDate
+        }, medication_ids[index]);
 
-        const mReminderDetails = await medicationReminderService.addMReminder(
-          dataToSave
-        );
+        const medication = await MedicationWrapper(null, medication_ids[index]);
 
-        const data_to_create = {
-          care_plan_id,
-          medication_id: mReminderDetails.get("id")
-        };
-
-        const newMedication = await carePlanMedicationService.addCarePlanMedication(
-          data_to_create
-        );
-        console.log("MEDICATIONNNNNNN=======>", medication);
-
-        const medicationData = await MedicationWrapper(mReminderDetails);
-        medicationApiDetails[
-          medicationData.getMReminderId()
-        ] = medicationData.getBasicInfo();
-        medication_ids.push(medicationData.getMReminderId());
+        // medicationApiDetails[
+        //     medication.getMReminderId()
+        //     ] = await medication.getAllInfo();
+        const {medications, medicines} = await medication.getReferenceInfo();
+        medicationApiDetails = {...medicationApiDetails, ...medications};
+        // medicationIds.push(medication.getMReminderId());
+        medicineApiDetails = {...medicineApiDetails, ...medicines};
 
         const patient = await PatientWrapper(null, patient_id);
 
-        const eventScheduleData = {
+        const {details: {when_to_take} = {}} = medication.getDetails();
+
+        eventScheduleData.push({
           patient_id: patient.getUserId(),
           type: EVENT_TYPE.MEDICATION_REMINDER,
-          event_id: mReminderDetails.getId,
-          details: mReminderDetails.getBasicInfo.details,
+          event_id: medication.getMReminderId(),
+          details: medication.getDetails(),
           status: EVENT_STATUS.SCHEDULED,
-          start_date,
-          end_date,
+          start_date: medication.getStartDate(),
+          end_date: medication.getEndDate(),
           when_to_take,
           participant_one: patient.getUserId(),
           participant_two: organizer_id
-        };
+        });
 
-        const QueueService = new queueService();
-        const sqsResponse = await QueueService.sendMessage(eventScheduleData);
-        Log.debug("sqsResponse ---> ", sqsResponse);
+        // const QueueService = new queueService();
+        // const sqsResponse = await QueueService.sendMessage(eventScheduleData);
+        // Log.debug("sqsResponse ---> ", sqsResponse);
       }
 
-      const updateEventStatusResponse = await scheduleEventService.update(
+      const QueueService = new queueService();
+      await QueueService.sendBatchMessage(eventScheduleData);
+      // for (const medication of medicationsData) {
+      //   console.log(
+      //     "medication value for current medication data is: ",
+      //     medication
+      //   );
+      //   const {
+      //     schedule_data: {
+      //       end_date = "",
+      //       description = "",
+      //       start_date = "",
+      //       unit = "",
+      //       when_to_take = "",
+      //       repeat = "",
+      //       quantity = "",
+      //       repeat_days = [],
+      //       strength = "",
+      //       start_time = "",
+      //       repeat_interval = "",
+      //       medication_stage = ""
+      //     } = {},
+      //     medicine_id = "",
+      //     medicine_type = "1"
+      //   } = medication;
+      //
+      //   const duration = moment(start_date).diff(moment(end_date), "days");
+      //   console.log(
+      //     "difference in milliseconds is: ",
+      //     duration,
+      //     start_date,
+      //     end_date
+      //   );
+      //
+      //   const updatedStartDate = new moment().utc();
+      //   const updatedEndDate = new moment.utc(updatedStartDate).add(
+      //     duration,
+      //     "days"
+      //   );
+      //
+      //   console.log("updated times are: ", updatedStartDate, updatedEndDate);
+      //
+      //   const dataToSave = {
+      //     participant_id: patient_id,
+      //     organizer_type: category,
+      //     organizer_id,
+      //     description,
+      //     start_date: updatedStartDate,
+      //     end_date: updatedEndDate,
+      //     medicine_id,
+      //     details: {
+      //       medicine_id,
+      //       medicine_type,
+      //       start_time: start_time ? start_time : moment(),
+      //       end_time: start_time ? start_time : moment(),
+      //       repeat,
+      //       repeat_days,
+      //       repeat_interval,
+      //       quantity,
+      //       strength,
+      //       unit,
+      //       when_to_take,
+      //       medication_stage
+      //     }
+      //   };
+      //
+      //   const mReminderDetails = await medicationReminderService.addMReminder(
+      //     dataToSave
+      //   );
+      //
+      //   const data_to_create = {
+      //     care_plan_id,
+      //     medication_id: mReminderDetails.get("id")
+      //   };
+      //
+      //   const newMedication = await carePlanMedicationService.addCarePlanMedication(
+      //     data_to_create
+      //   );
+      //   console.log("MEDICATIONNNNNNN=======>", medication);
+      //
+      //   const medicationData = await MedicationWrapper(mReminderDetails);
+      //   medicationApiDetails[
+      //     medicationData.getMReminderId()
+      //   ] = medicationData.getBasicInfo();
+      //   medication_ids.push(medicationData.getMReminderId());
+      //
+      //   const patient = await PatientWrapper(null, patient_id);
+      //
+      //   const eventScheduleData = {
+      //     patient_id: patient.getUserId(),
+      //     type: EVENT_TYPE.MEDICATION_REMINDER,
+      //     event_id: mReminderDetails.getId,
+      //     details: mReminderDetails.getBasicInfo.details,
+      //     status: EVENT_STATUS.SCHEDULED,
+      //     start_date,
+      //     end_date,
+      //     when_to_take,
+      //     participant_one: patient.getUserId(),
+      //     participant_two: organizer_id
+      //   };
+      //
+      //   const QueueService = new queueService();
+      //   const sqsResponse = await QueueService.sendMessage(eventScheduleData);
+      //   Log.debug("sqsResponse ---> ", sqsResponse);
+      // }
+
+      await scheduleEventService.update(
         {
           status: EVENT_STATUS.COMPLETED
         },
@@ -557,13 +680,16 @@ class CarePlanController extends Controller {
             }
           },
           medications: {
-            ...medicationApiDetails
+            ...medicationApiDetails,
+          },
+          medicines: {
+            ...medicineApiDetails,
           }
         },
         "Care plan activated successfully."
       );
     } catch (error) {
-      console.log("Activate careplan error: ", error);
+      Log.debug("activateCarePlan 500 error", error);
       return this.raiseServerError(res, 500);
     }
   };

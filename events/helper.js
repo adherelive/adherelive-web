@@ -518,6 +518,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
 export const handleCarePlans = async data => {
   try {
     const {
+      medication_ids,
       patient_id,
       critical,
       event_id,
@@ -539,6 +540,7 @@ export const handleCarePlans = async data => {
       event_type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
       details: {
         medications: details,
+        medication_ids,
         actor,
         participants
       }

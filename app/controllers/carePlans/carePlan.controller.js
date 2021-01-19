@@ -27,6 +27,7 @@ import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
 
 import * as carePlanHelper from "./carePlanHelper";
+import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 
@@ -209,13 +210,14 @@ class CarePlanController extends Controller {
         }
       };
 
-      const sqsResponseforCareplan = await QueueService.sendMessage(
-        carePlanScheduleData
-      );
-
-      Log.debug("sqsResponse for care plan---> ", sqsResponseforCareplan);
+      // const sqsResponseforCareplan = await QueueService.sendMessage(
+      //   carePlanScheduleData
+      // );
+      //
+      // Log.debug("sqsResponse for care plan---> ", sqsResponseforCareplan);
 
       let medicationApiDetails = {};
+      let medicineApiDetails = {};
       let medication_ids = [];
 
       // medications ---------------------------------
@@ -234,15 +236,66 @@ class CarePlanController extends Controller {
               strength = "",
               start_time = "",
               repeat_interval = "",
-              medication_stage = ""
+              medication_stage = "",
+                critical = false
             } = {},
             medicine_id = "",
             medicine_type = "1"
           } = medication;
 
+          // add medication
+
+
+          const dataToSave = {
+            participant_id: patient_id,
+            organizer_type: category,
+            organizer_id: userId,
+            medicine_id,
+            description,
+            start_date,
+            end_date,
+            details: {
+              medicine_id,
+              medicine_type,
+              start_time: start_time ? start_time : moment(),
+              end_time: start_time ? start_time : moment(),
+              repeat,
+              repeat_days,
+              repeat_interval,
+              quantity,
+              strength,
+              unit,
+              when_to_take,
+              medication_stage,
+              critical
+            }
+          };
+
+          const mReminderDetails = await medicationReminderService.addMReminder(
+              dataToSave
+          );
+
+          const medicationWrapper = await MedicationWrapper(mReminderDetails);
+
+          const data_to_create = {
+            care_plan_id,
+            medication_id: medicationWrapper.getMReminderId()
+          };
+
+          let newMedication = await carePlanMedicationService.addCarePlanMedication(
+              data_to_create
+          );
+
+          const {medications, medicines} = await medicationWrapper.getReferenceInfo();
+          medicationApiDetails = {...medicationApiDetails, ...medications};
+          medicineApiDetails = {...medicineApiDetails, ...medicines};
+
+          medication_ids.push(medicationWrapper.getMReminderId());
+
           medicationsArr.push({
             medicine_id,
             schedule_data: {
+              critical,
               unit,
               repeat,
               quantity,
@@ -257,6 +310,11 @@ class CarePlanController extends Controller {
           });
         }
       }
+
+      eventScheduleData.push({
+        ...carePlanScheduleData,
+        medication_ids
+      });
 
       // vitals ----------------------------------------
       const {
@@ -323,6 +381,9 @@ class CarePlanController extends Controller {
           },
           medications: {
             ...medicationApiDetails
+          },
+          medicines: {
+            ...medicineApiDetails,
           },
           vitals,
           vital_templates,

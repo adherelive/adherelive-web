@@ -34,4 +34,6 @@ export default class MedicationReminder {
     getStartDate = () => {
         return this._data.get("start_date");
     };
+
+    getEndDate = () => this._data.get("end_date");
 }
