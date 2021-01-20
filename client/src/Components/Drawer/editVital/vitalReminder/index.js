@@ -289,7 +289,7 @@ class EditVital extends Component {
         }}
         className="ant-drawer"
         // title={formatMessage(messages.title)}
-        title={editVital ? formatMessage(messages.vital) : addVital ? 'Add Vital' : formatMessage(messages.title)}
+        title={editVital ? formatMessage(messages.vital) : addVital ? formatMessage(messages.addVital) : formatMessage(messages.title)}
 
       >
         <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />

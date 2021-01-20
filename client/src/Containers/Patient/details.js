@@ -58,7 +58,6 @@ const mapStateToProps = (state, ownProps) => {
     vital_templates={}
   } = state;
 
-  console.log("4534543634534535634 ----> Container", care_plan_template_ids);
   // const { id } = ownprops;
   const user_details = users["3"] || {};
   const {
