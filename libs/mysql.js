@@ -32,6 +32,7 @@ import * as DoctorPatientFeaturesMapping from "../app/models/doctorPatientFeatur
 
 import * as EmailLogger from "../app/models/emailLogger";
 import * as Exercise from "../app/models/exercise";
+import * as EventHistory from "../app/models/eventHistory";
 
 import * as FeatureDetails from "../app/models/featureDetails";
 import * as Features from "../app/models/features";
@@ -116,6 +117,7 @@ const models = [
 
   EmailLogger,
   Exercise,
+  EventHistory,
 
   FeatureDetails,
   Features,
