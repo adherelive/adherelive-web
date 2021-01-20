@@ -56,21 +56,21 @@ const DoctorProfilePage = lazy(() =>
   )
 );
 
-const DoctorSettingsePage = lazy(() =>
+const DoctorSettingsPage = lazy(() =>
   import(
-    /* webpackChunkName: "DoctorSettingsePage" */ "../../Containers/Pages/doctorSettingsPage"
+    /* webpackChunkName: "DoctorSettingsPage" */ "../../Containers/Pages/doctorSettingsPage"
   )
 );
 
 const TermsOfService = lazy(() =>
   import(
-    /* webpackChunkName: "TermsOfServicePage" */ "../../Containers/Pages/TermsOfService"
+    /* webpackChunkName: "TermsOfServiceAuthPage" */ "../../Containers/Pages/TermsOfService"
   )
 );
 
 const PrivacyPolicy = lazy(() =>
   import(
-    /* webpackChunkName: "PrivacyPolicyPage" */ "../../Containers/Pages/PrivacyPolicy"
+    /* webpackChunkName: "PrivacyPolicyAuthPage" */ "../../Containers/Pages/PrivacyPolicy"
   )
 );
 
@@ -121,6 +121,7 @@ class Doctors extends Component {
       pathname.includes("privacy-policy")
     );
     const { authRedirection } = this.props;
+    console.log("192837172893 PrivacyPolicy in auth dashboard-->", typeof Dashboard);
     return (
       <Fragment>
         <Router>
@@ -137,16 +138,6 @@ class Doctors extends Component {
                 )}
                 {/* {!onboarded &&category=="doctor" && <Redirect to={PATH.REGISTER_PROFILE} />} */}
                 {/*{this.state.redirecting && <Redirect to={this.state.redirecting}/>}*/}
-                <Route
-                  exact
-                  path={PATH.TERMS_OF_SERVICE}
-                  component={TermsOfService}
-                />
-                <Route
-                  exact
-                  path={PATH.PRIVACY_POLICY}
-                  component={PrivacyPolicy}
-                />
                 <Route
                   exact
                   path={PATH.PATIENT.DETAILS}
@@ -205,25 +196,36 @@ class Doctors extends Component {
                 <Route
                   exact
                   path={PATH.SETTINGS}
-                  component={DoctorSettingsePage}
+                  component={DoctorSettingsPage}
                 />
 
                 <Route
                   exact
                   path={PATH.CONSULTATION_FEE}
-                  component={DoctorSettingsePage}
+                  component={DoctorSettingsPage}
                 />
 
                 <Route
                   exact
                   path={PATH.BILLING}
-                  component={DoctorSettingsePage}
+                  component={DoctorSettingsPage}
                 />
 
                 <Route
                   exact
                   path={PATH.PAYMENT_DETAILS}
-                  component={DoctorSettingsePage}
+                  component={DoctorSettingsPage}
+                />
+
+                <Route
+                    exact
+                    path={PATH.TERMS_OF_SERVICE}
+                    component={TermsOfService}
+                />
+                <Route
+                    exact
+                    path={PATH.PRIVACY_POLICY}
+                    component={PrivacyPolicy}
                 />
 
                 {/* <Route

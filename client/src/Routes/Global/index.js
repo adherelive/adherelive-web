@@ -70,6 +70,8 @@ export default class Global extends Component {
   render() {
     const { authRedirection } = this.props;
     const { redirecting } = this.state;
+
+    console.log("0277224792834 TermsOfService ", typeof TermsOfService);
     return (
       <BrowserRouter>
         <Switch>
