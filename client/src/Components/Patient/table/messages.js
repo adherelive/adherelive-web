@@ -55,7 +55,17 @@ const messages = defineMessages({
     id: "app.patient.table.watchlist",
     description: "",
     defaultMessage: "Watchlist"
-  }
+  },
+  addedToWatchlist: {
+    id: "app.patient.table.addedToWatchlist",
+    description: "",
+    defaultMessage: "added to watchlist"
+  },
+  removedFromWatchlist: {
+    id: "app.patient.table.removedFromWatchlist",
+    description: "",
+    defaultMessage: "removed from watchlist"
+  },
 });
 
 export default messages;

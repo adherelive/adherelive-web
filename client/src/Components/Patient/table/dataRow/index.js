@@ -3,7 +3,7 @@ import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 export default data => {
   const { id,addToWatchlist, onRowClick,removePatientFromWatchlist} = data;
   const formattedData = formatPatientTableData(data);
-  const { patientData, treatmentData, doctorData, providerData, chatData, carePlanData ,openEditPatientDrawer} =
+  const { patientData, treatmentData, doctorData, providerData, chatData, carePlanData} =
     formattedData || {};
 
   return {
@@ -27,9 +27,6 @@ export default data => {
       treatmentData,
       carePlanData
     },
-    // [TABLE_COLUMN.AGE.dataIndex]: {
-    //   patientData
-    // },
     [TABLE_COLUMN.START_DATE.dataIndex]: {
       treatmentData,
       carePlanData

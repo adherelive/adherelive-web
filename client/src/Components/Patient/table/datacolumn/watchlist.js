@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-// import Icon from "antd/es/rate";
 import message from "antd/es/message";
 import { getFullName } from "../../../../Helper/common";
 import { Icon } from "antd";
+import messages from "../messages";
 
 class Watchlist extends Component {
   constructor(props) {
@@ -30,7 +30,6 @@ class Watchlist extends Component {
       doctorData: {
         watchlist_patient_ids: prev_watchlist_patient_ids = []
       } = {},
-      removePatientFromWatchlist: prev_removePatientFromWatchlist
     } = prevProps || {};
 
     const {
@@ -48,6 +47,8 @@ class Watchlist extends Component {
     }
   }
 
+  formatMessage = data => this.props.intl.formatMessage(data);
+  
   addThisToWatchlist = e => {
     e.preventDefault();
     const {
@@ -65,7 +66,7 @@ class Watchlist extends Component {
             first_name,
             middle_name,
             last_name
-          })} added to watchlist`
+          })} ${this.formatMessage(messages.addedToWatchlist)}`
         );
       } else {
         message.warn(errMessage);
@@ -94,7 +95,7 @@ class Watchlist extends Component {
             first_name,
             middle_name,
             last_name
-          })} removed from watchlist`
+          })} ${this.formatMessage(messages.removedFromWatchlist)}`
         );
       } else {
         message.warn(errMessage);
@@ -117,7 +118,6 @@ class Watchlist extends Component {
         className=" flex align-center justify-space-between"
         onClick={this.stopEventBubbling}
       >
-        {/* <Rate count={1} value={isAdded ? 1 : 0} onChange={this.addThisToWatchlist}/> */}
         {isAdded ? (
           <Icon
             type="eye-invisible"

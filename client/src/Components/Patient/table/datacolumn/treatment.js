@@ -5,7 +5,6 @@ export default props => {
   const { carePlanData } = props || {};
   const { treatment=''} = carePlanData || {};
 
-  // const { patientData: { treatment } = {} } = props || {};
 
   return (
     <div>{treatment ? treatment : TABLE_DEFAULT_BLANK_FIELD}</div>

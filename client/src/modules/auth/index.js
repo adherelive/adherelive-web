@@ -486,11 +486,12 @@ export const facebookSignIn = (data) => {
 };
 
 export const getInitialData = () => {
+  let response = {};
   return async (dispatch) => {
     try {
       dispatch({ type: GETTING_INITIAL_DATA });
 
-      const response = await doRequest({
+      response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Auth.getInitialData(),
       });
@@ -530,6 +531,7 @@ export const getInitialData = () => {
       console.log("err getinitial", err);
       throw err;
     }
+    return response;
   };
 };
 

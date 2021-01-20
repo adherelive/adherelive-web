@@ -6,7 +6,7 @@ import {
 } from "../../constant";
 
 import { Button, Checkbox, Modal } from "antd";
-
+import messages from "./message";
 
 
 const graphs = [
@@ -32,8 +32,7 @@ class GraphsModal extends Component {
         let { handleOk } = this.props;
 
         handleOk(selectedGraphs);
-        // this.setState({
-        // });
+     
     }
 
     toggleGraphSelected = (graph) => () => {
@@ -66,6 +65,8 @@ class GraphsModal extends Component {
         this.setState({ address });
     };
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
 
     render() {
         const { selectedGraphs = [] } = this.state;
@@ -79,10 +80,10 @@ class GraphsModal extends Component {
                 onOk={this.handleSave}
                 footer={[
                     <Button key="back" onClick={this.handleClose}>
-                        Return
+                        {this.formatMessage(messages.return)}
                     </Button>,
                     <Button key="submit" type="primary" onClick={this.handleSave}>
-                        Submit
+                        {this.formatMessage(messages.submit)}
                     </Button>,
                 ]}
             >
