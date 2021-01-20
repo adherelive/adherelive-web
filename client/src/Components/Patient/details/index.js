@@ -523,7 +523,7 @@ const PatientTreatmentCard = ({
           target={"_blank"}
           className="presc-link"
           >
-            <Button type="ghost flex align-center justify-space-evenly" >
+            <Button type="ghost" className="flex align-center justify-space-evenly" >
              <span className="fs14" > {formatMessage(messages.prescription)}</span>
             <img 
              title={"Generate Prescription"}
@@ -1952,7 +1952,6 @@ class PatientDetails extends Component {
       report_ids=[]
     } = this.state;
 
-    console.log("4534543634534535634 ---> DETAILS INDEX", carePlanTemplateIds);
 
     const {
       formatMessage,

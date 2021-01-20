@@ -137,22 +137,22 @@ class TemplateDrawer extends Component {
                 } = {} } = template_vitals[vId];
 
             
-
-
-                const s_date=moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
-                const e_date=moment().add(parseInt(duration), 'days').format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+                const s_date=moment().toISOString();
+                const e_date=moment().add(parseInt(duration), 'days').toISOString();
 
                 if(duration === null){
                     e_date = null;
                 }
-                newVital.id=id;
-                newVital.vital_template_id=vital_template_id;
-                newVital.repeat_days=repeat_days;
-                newVital.repeat_interval_id=repeat_interval_id;
-                newVital.description=description;
-                newVital.start_date=s_date;
-                newVital.end_date=e_date;
-                templateVitals[vId] = newVital;
+                
+                templateVitals[vId] = {
+                    id,
+                    vital_template_id,
+                    repeat_days,
+                    repeat_interval_id,
+                    description,
+                    start_date:s_date,
+                    end_date:e_date
+                };
             }
 
             if (Object.keys(templateMedications).length) {
@@ -257,24 +257,23 @@ class TemplateDrawer extends Component {
                         description = '',duration = '',repeat_days=[],repeat_interval_id=''
                 } = {} } = template_vitals[vId];
 
-                const s_date=moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
-                const e_date=moment().add(parseInt(duration), 'days').format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+                const s_date=moment().toISOString();
+                let e_date=moment().add(parseInt(duration), 'days').toISOString();
 
                 if(duration === null){
                     e_date = null;
                 }
 
-
-                newVital.id=id;
-                newVital.vital_template_id=vital_template_id;
-                newVital.repeat_days=repeat_days;
-                newVital.repeat_interval_id=repeat_interval_id;
-                newVital.description=description;
-                newVital.start_date=s_date;
-                newVital.end_date=e_date;
-                templateVitals[vId] = newVital;
+                templateVitals[vId] = {
+                    id,
+                    vital_template_id,
+                    repeat_days,
+                    repeat_interval_id,
+                    description,
+                    start_date:s_date,
+                    end_date:e_date
+                };
             }
-
 
             if (Object.keys(templateMedications).length) {
                 for (let medication of Object.values(templateMedications)) {
@@ -318,7 +317,6 @@ class TemplateDrawer extends Component {
     getCarePlanTemplateOptions = () => {
         const { carePlanTemplateIds = [] } = this.state;
         const { care_plan_templates = {} } = this.props;
-        console.log("4534543634534535634",carePlanTemplateIds);
         const templates = Object.values(carePlanTemplateIds).map(templateId => {
             const { basic_info: { name = '' } = {} } = care_plan_templates[templateId];
             return (
@@ -891,26 +889,42 @@ class TemplateDrawer extends Component {
         } = data;
 
         const { basic_info: { name = '' } = {} } = vital_templates[vital_template_id];
-
-        newVital.vital_template_id=vital_template_id;
-        newVital.repeat_days=repeat_days;
-        newVital.vital = name;
-        newVital.repeat_interval_id=repeat_interval_id;
-        newVital.description=description;
-        newVital.start_date=moment(start_date);
-        if(end_date === null){
-            newVital.end_date=end_date;
-        }else{
-            newVital.end_date=moment(end_date);
+        let vitalExist = false;
+        
+        for (let key of Object.keys(vitals)) {
+            let { vital_template_id: vId = '' } = vitals[key];
+            const vital = vitals[key];
+            if (parseInt(vital_template_id) === parseInt(vId) && key.toString() !== innerFormKey.toString() ) {
+                vitalExist = true;
+            }
         }
 
+        const s_date = moment(start_date);
+        let e_date='';
+        if(end_date === null){
+            e_date=end_date;
+        }else{
+            e_date=moment(end_date);
+        }
+        if (vitalExist) {
+            message.error(this.formatMessage(messages.vitalExist));
+        } else {
 
-        vitals[innerFormKey] = newVital;
+            vitals[innerFormKey] = {
+                vital_template_id,
+                repeat_days,
+                vital:name,
+                repeat_interval_id,
+                description,
+                start_date:s_date,
+                end_date:e_date
+            };
 
-        this.setState({ vitals, templateEdited: true }, () => {
-            this.onCloseInner();
-            this.props.dispatchClose();
-        });      
+            this.setState({ vitals, templateEdited: true }, () => {
+                this.onCloseInner();
+                this.props.dispatchClose();
+            });   
+        }   
 
     }
 
@@ -980,19 +994,11 @@ class TemplateDrawer extends Component {
 
         const { basic_info: { name = '' } = {} } = vital_templates[vital_template_id];
 
-        newVital.vital_template_id=vital_template_id;
-        newVital.repeat_days=repeat_days;
-        newVital.vital = name;
-        newVital.repeat_interval_id=repeat_interval_id;
-        newVital.description=description;
-        newVital.start_date=moment(start_date);
-        newVital.end_date=moment(end_date);
-
-
+      
         let key = uuid();
         let vitalExist = false;
         for (let vital of Object.values(vitals)) {
-            let { vital_id: vId = 1 } = vital;
+            let { vital_template_id: vId = '' } = vital;
             if (parseInt(vital_template_id) === parseInt(vId)) {
                 vitalExist = true;
             }
@@ -1002,7 +1008,16 @@ class TemplateDrawer extends Component {
             message.error(this.formatMessage(messages.vitalExist));
         } else {
             vitalKeys.push(key);
-            vitals[key] = newVital;
+            vitals[key] = {
+                vital_template_id,
+                repeat_days,
+                vital:name,
+                repeat_interval_id,
+                description,
+                start_date:moment(start_date),
+                end_date:moment(end_date)
+
+            };
             this.setState({ vitals, vitalKeys, templateEdited: true }, () => {
                 this.closeAddVital();
             });
