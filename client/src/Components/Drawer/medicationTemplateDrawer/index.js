@@ -1117,6 +1117,7 @@ class TemplateDrawer extends Component {
         if (visible !== true) {
             return null;
         }
+
        
         return (
             <Fragment>

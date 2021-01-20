@@ -25,7 +25,6 @@ import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../Helper/url/patients";
 import config from "../../config";
 import {
-  Select,
   message,
   Button,
   Spin,
@@ -40,7 +39,7 @@ import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
 
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
-const { Option } = Select;
+
 const { TabPane } = Tabs;
 
 const CHART_MISSED_MEDICATION = "Missed Medication";
@@ -61,7 +60,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const { addToWatchlist, authPermissions = [] } = this.props;
+    const {  authPermissions = [] } = this.props;
     const {
       searchMedicine,
       getGraphs,
@@ -136,9 +135,10 @@ class Dashboard extends Component {
 
   renderChartTabs = () => {
     const { graphs,dashboard={} } = this.props;
-    const {missed_medications={},medication_ids={},
-    missed_appointments={},appointment_ids={},
-    missed_vitals={},vital_ids={}}=dashboard;
+    const {
+      medication_ids={},
+      appointment_ids={},
+      vital_ids={}}=dashboard;
     const {critical:medication_critical=[],non_critical:medication_non_critical=[]}=medication_ids;
     const {critical:vital_critical=[],non_critical:vital_non_critical=[]}=vital_ids;
     const {critical:appointment_critical=[],non_critical:appointment_non_critical=[]}=appointment_ids;
@@ -181,7 +181,7 @@ class Dashboard extends Component {
      }
 
       return (
-        <div onClick={() => this.chartClicked(name)}>
+        <div key={`donut-div-${id}`} onClick={() => this.chartClicked(name)}>
           <Donut
             key={id}
             id={id}
@@ -213,7 +213,7 @@ class Dashboard extends Component {
   };
 
   addPatient = data => {
-    const { addPatient, authenticated_user, getInitialData } = this.props;
+    const { addPatient, authenticated_user } = this.props;
 
     const { basic_info: { id = 1 } = {} } = authenticated_user || {};
     addPatient(data).then(response => {
@@ -233,7 +233,6 @@ class Dashboard extends Component {
       let currentCarePlanId = care_plan_ids[0];
       let patient_id = patient_ids ? patient_ids[0] : 0;
       if (status) {
-        // getInitialData().then(() => {
 
         this.props.history.push({
           pathname: `/patients/${patient_id}`,
@@ -349,13 +348,11 @@ class Dashboard extends Component {
 
   getVerifyModal = () => {
     const { showVerifyModal = false } = this.props;
-    const { showModal } = this.state;
     return (
       <div className="wp100 flex justify-center align-center">
         <Modal
           className="mt62"
-          visible={showVerifyModal} //showModal
-          // title={' '}
+          visible={showVerifyModal} 
           closable
           mask
           maskClosable
@@ -433,8 +430,7 @@ class Dashboard extends Component {
       visible,
       graphsToShow,
       visibleModal,
-      doctorUserId,
-      showModal
+      doctorUserId
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
@@ -446,15 +442,10 @@ class Dashboard extends Component {
     return (
       <Fragment>
         <div className=" dashboard p20">
-          {/*<div*/}
-          {/*  className={`flex direction-row justify-space-between align-center ${*/}
-          {/*    authPermissions.length === 0 ? "mt20" : ``*/}
-          {/*  } `}*/}
-          {/*>*/}
+          
           <div
             className={`flex direction-row justify-space-between align-center`}
           >
-            {/* <div className="fs28 fw700">{formatMessage(messages.dashboard)}</div> */}
             {docName !== "" ? (
               <div className="fs28 fw700">
                 {formatMessage(messages.welcome)}, {docName}
@@ -487,7 +478,6 @@ class Dashboard extends Component {
             )}
           </div>
 
-          {/* <div className="mt10 flex align-center"> */}
           <section className="horizontal-scroll-wrapper pr10 mt10">
             {renderChartTabs()}
           </section>
@@ -516,9 +506,7 @@ class Dashboard extends Component {
               }
               key="2"
             >
-              {/* <Patients /> */}
               <Watchlist />
-              {/*add watchlist table here*/}
             </TabPane>
           </Tabs>
         </div>
@@ -583,8 +571,6 @@ class Dashboard extends Component {
         <MissedMedicationsDrawer />
 
 
-        {/*{showVerifyModal && getVerifyModal()}*/}
-        {/*{showModal && getVerifyModal()}*/}
         {authPermissions.length === 0 ? (
           <div className="fixed b0 p20 bg-light-grey wp100">
             <div className="fs18 fw700">

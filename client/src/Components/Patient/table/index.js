@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Table, Icon } from "antd";
 import generateRow from "./dataRow";
-import { PERMISSIONS } from '../../../constant'
 import getColumn from "./header";
-import { getPatientDetailsUrl } from "../../../Helper/url/patients";
 
 class PatientTable extends Component {
   constructor(props) {
@@ -16,7 +14,6 @@ class PatientTable extends Component {
     event.preventDefault();
     const { openPatientDetailsDrawer } = this.props;
     openPatientDetailsDrawer({ patient_id: key });
-    // history.push(getPatientDetailsUrl(key));
   };
 
   onRow = (record, rowIndex) => {
@@ -40,7 +37,6 @@ class PatientTable extends Component {
 
   getDataSource = () => {
     const {
-      patient_ids,
       chat_ids,
       patients,
       doctors,
@@ -91,15 +87,12 @@ class PatientTable extends Component {
 
     const {
       loading,
-      pagination_bottom,
-      authPermissions = [],
       intl: { formatMessage } = {},
     } = this.props;
 
     return (
       <Table
         
-        // onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
         columns={getColumn({
@@ -108,7 +101,6 @@ class PatientTable extends Component {
         })}
         dataSource={getDataSource()}
         scroll={{ x: 1600 }}
-        // pagination={{ position: pagination_bottom ? "bottom" : "top" }}
         pagination={{
           position: "bottom",
         }}

@@ -5,9 +5,6 @@ import { injectIntl } from "react-intl";
 class editPatientColumn extends Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   isAdded: false
-    // };
   }
 
   componentDidMount(){}

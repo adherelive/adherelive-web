@@ -15,14 +15,12 @@ export default class Routes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            loading: true,
         };
     }
 
     componentDidMount() {
         this.getInitialData();
-        const { getInitialData } = this.props;
-        getInitialData();
     }
 
     getInitialData = async () => {
@@ -56,6 +54,8 @@ export default class Routes extends Component {
                 </div>
             );
         }
+
+        console.log("12987321738 authenticated", {authenticated});
 
         return (
             <Fragment>
