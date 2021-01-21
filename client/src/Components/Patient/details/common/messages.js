@@ -61,10 +61,10 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Treatment"
     },
-    request_consent_text: {
+    request_access_text: {
         id: "app.patients.common.request.consent.text",
         description: "",
-        defaultMessage: "Request Consent"
+        defaultMessage: "Request Access"
     },
     with_you_text: {
         id: "app.patients.common.with.you.text",
@@ -75,6 +75,11 @@ const messages = defineMessages({
         id: "app.patients.common.treatment.plans.text",
         description: "",
         defaultMessage: "Treatment Plans"
+    },
+    patientOtherTreatmentPlans : {
+        id: "app.patients.common.treatment.plans.otherTreatmentPlans",
+        description: "",
+        defaultMessage: "Patient has other treatment plans"
     },
 });
 
