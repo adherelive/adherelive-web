@@ -39,7 +39,7 @@ class ActivePatient {
                 doctors.forEach(doctor => {
                     const {doctor_id} = doctor || {};
                     doctorIds = [...doctorIds, doctor_id];
-                })
+                });
 
             }
             Log.debug("doctor IDS", doctorIds);

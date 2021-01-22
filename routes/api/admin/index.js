@@ -52,7 +52,7 @@ router.get(
 router.post("/providers", Authenticate, validator.validateAddProviderData, Provider.addProvider);
 
 // to add previous providers default graph user preference
-router.post("/providers/graphs", Authenticate, Graphs.updateProviderGraph)
+router.post("/providers/graphs", Authenticate, Graphs.updateProviderGraph);
 
 router.post("/providers/:id", Authenticate, validator.validateUpdateProviderData, Provider.updateProvider);
 

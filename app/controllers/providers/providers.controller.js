@@ -48,6 +48,11 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import { Sequelize } from "sequelize";
 import bcrypt from "bcrypt";
 
+// helper
+import * as ProviderHelper from "./helper";
+import accountDetailsService from "../../services/accountDetails/accountDetails.service";
+import AccountsWrapper from "../../ApiWrapper/web/accountsDetails";
+
 // import { generatePassword } from "../helper/passwordGenerator";
 
 // import { USER_CATEGORY } from "../../../constant";
@@ -669,12 +674,25 @@ class ProvidersController extends Controller {
       let providerData = {};
       let userData = {};
       let providerIds = [];
+      let userIds = [];
       for (let index = 0; index < allProviders.length; index++) {
         const provider = await ProviderWrapper(allProviders[index]);
-        const { providers, users } = await provider.getReferenceInfo();
+        const { providers, users, user_id, provider_id } = await provider.getReferenceInfo();
         providerData = { ...providerData, ...providers };
         userData = { ...userData, ...users };
-        providerIds.push(provider.getProviderId());
+        userIds.push(user_id);
+        providerIds.push(provider_id);
+      }
+
+      // provider accounts
+      let providerAccountsData = {};
+      const allAccounts = await accountDetailsService.getAllAccountsForUser(userIds) || [];
+
+      if(allAccounts.length > 0) {
+        for(let index = 0; index < allAccounts.length; index++) {
+          const account = await AccountsWrapper(allAccounts[index]);
+          providerAccountsData[account.getId()] = account.getBasicInfo();
+        }
       }
 
       return raiseSuccess(
@@ -686,6 +704,9 @@ class ProvidersController extends Controller {
           },
           users: {
             ...userData
+          },
+          account_details: {
+            ...providerAccountsData,
           },
           provider_ids: providerIds
         },
@@ -708,6 +729,18 @@ class ProvidersController extends Controller {
           prefix,
           mobile_number,
           address,
+
+            // account details
+            account_type,
+            customer_name,
+            account_number,
+            ifsc_code,
+            use_as_main = false,
+            upi_id,
+
+            // razorpay accounts
+          razorpay_account_id,
+          razorpay_account_name,
         } = {}
       } = req;
 
@@ -717,7 +750,7 @@ class ProvidersController extends Controller {
           category: USER_CATEGORY.PROVIDER
         })) || null;
 
-      Logger.debug("1786381627682 providerExists --> ", providerExists);
+      Logger.debug("providerExists --> ", providerExists);
 
       if (providerExists) {
         return raiseClientError(
@@ -766,6 +799,35 @@ class ProvidersController extends Controller {
       });
       const providerData = await ProviderWrapper(provider);
 
+      // add provider account
+      let providerAccountData = {};
+
+      // check for valid account details to be added
+      if(account_type) {
+        const accountData = ProviderHelper.validateAccountData({
+          account_type,
+          account_number,
+          customer_name,
+          ifsc_code,
+          use_as_main,
+          upi_id,
+          razorpay_account_id,
+          razorpay_account_name
+        });
+
+        if(Object.keys(accountData).length > 0) {
+          const accountDetails = await accountDetailsService.addAccountDetails(
+              {
+                ...accountData,
+                user_id: userData.getId()
+              }
+          );
+
+          const providerAccount = await AccountsWrapper(accountDetails);
+          providerAccountData[providerAccount.getId()] = providerAccount.getBasicInfo();
+        }
+      }
+
       return raiseSuccess(
         res,
         200,
@@ -775,6 +837,9 @@ class ProvidersController extends Controller {
           },
           users: {
             [userData.getId()]: userData.getBasicInfo()
+          },
+          account_details: {
+            ...providerAccountData,
           }
         },
         "Provider added successfully"
@@ -796,6 +861,17 @@ class ProvidersController extends Controller {
         prefix,
         mobile_number,
         address,
+
+        // account details
+        account_type,
+        customer_name,
+        account_number,
+        ifsc_code,
+        upi_id,
+
+        // razorpay accounts
+        razorpay_account_id,
+        razorpay_account_name,
       } = body || {};
 
       const existingProvider = await providerService.getProviderByData({
@@ -825,11 +901,40 @@ class ProvidersController extends Controller {
 
       const updatedProvider = await ProviderWrapper(null, id);
 
+      // update account
+      const previousAccount = await accountDetailsService.getByData({
+        user_id: previousProvider.getUserId()
+      }) || null;
+
+      let updatedAccountData = {};
+
+      if(previousAccount) {
+        const account = await AccountsWrapper(previousAccount);
+
+        const accountData = ProviderHelper.validateAccountData({
+          account_type,
+          account_number,
+          customer_name,
+          ifsc_code,
+          upi_id,
+          razorpay_account_id,
+          razorpay_account_name
+        });
+
+        await accountDetailsService.update(accountData, account.getId());
+
+        const updatedAccount = await AccountsWrapper(null, account.getId());
+        updatedAccountData[updatedAccount.getId()] = updatedAccount.getBasicInfo();
+      }
+
       return raiseSuccess(
           res,
           200,
           {
-            ...await updatedProvider.getReferenceInfo()
+            ...await updatedProvider.getReferenceInfo(),
+            account_details: {
+              ...updatedAccountData
+            },
           },
           "Provider updated successfully"
       );

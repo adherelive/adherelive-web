@@ -19,6 +19,10 @@ export default class PaymentProduct {
         return this._data.creator_type;
     };
 
+    getForUserId = () => this._data.for_user_id;
+
+    getForUserType = () => this._data.for_user_type;
+
     getAmount = () => {
         return parseInt(this._data.amount);
     };
