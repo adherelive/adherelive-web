@@ -165,10 +165,10 @@ export const searchPatientFromNum = (value) => {
           payload: { error },
         });
       } else if (status === true) {
-        dispatch({
-          type:SEARCH_PATIENT_COMPLETE,
-          data: data,
-        });
+        // dispatch({
+        //   type:SEARCH_PATIENT_COMPLETE,
+        //   data: data,
+        // });
       }
 
 
