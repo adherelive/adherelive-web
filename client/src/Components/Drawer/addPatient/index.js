@@ -77,7 +77,8 @@ class PatientDetailsDrawer extends Component {
       height: "",
       weight: "",
       symptoms: "",
-      address: ""
+      address: "",
+      patients: {},
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -104,16 +105,17 @@ class PatientDetailsDrawer extends Component {
   componentDidMount() {}
 
   componentDidUpdate(prevProps, prevState) {
-    const { patients } = this.props;
+    // const { patients } = this.state;
     const {
       selectedPatientId,
       isdisabled,
       addNewPatient,
-      mobile_number
+      mobile_number,
+        patients,
     } = this.state;
     const {
       selectedPatientId: prev_selectedPatientId = null,
-      addNewPatient: prev_addNewPatient
+      addNewPatient: prev_addNewPatient,
     } = prevState;
     const {
       basic_info: {
@@ -227,7 +229,7 @@ class PatientDetailsDrawer extends Component {
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
       this.setState({ mobile_number: e.target.value });
-      if (value.length >= 6 && value.length <= 20) {
+      if (value.length === 10) {
         {
           this.handlePatientSearch(value);
         }
@@ -247,18 +249,19 @@ class PatientDetailsDrawer extends Component {
     try {
       if (data) {
         this.setState({ fetchingPatients: true });
-        const { searchPatientFromNum, patients } = this.props;
+        const { searchPatientFromNum } = this.props;
         const response = await searchPatientFromNum(data);
         const {
           status,
-          payload: { data: { patient_ids: response_patient_ids = [] } } = {}
+          payload: { data: { patient_ids: response_patient_ids = [], patients } } = {}
         } = response || {};
         // console.log("Patient search Response =====>",response);
         if (status) {
           if (response_patient_ids.length > 0) {
             this.setState({
               patient_ids: response_patient_ids,
-              fetchingPatients: false
+              fetchingPatients: false,
+              patients,
             });
           } else {
             this.setState({
@@ -280,7 +283,7 @@ class PatientDetailsDrawer extends Component {
   }
 
   getPatientOptions = () => {
-    const { patient_ids } = this.state;
+    const { patient_ids, patients } = this.state;
     let options = [];
     options.push(
       <Option
@@ -292,7 +295,6 @@ class PatientDetailsDrawer extends Component {
       </Option>
     );
 
-    const { patients } = this.props;
     for (let id of patient_ids) {
       const { basic_info: { first_name, middle_name, last_name, full_name } = {} } =
         patients[id] || {};
