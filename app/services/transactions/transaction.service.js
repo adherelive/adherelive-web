@@ -33,6 +33,26 @@ class TransactionService {
         }
     };
 
+    getAllByData = async (data) => {
+        try {
+            const transaction = await Database.getModel(TABLE_NAME).findAll({
+                where: data,
+                raw: true,
+                nest: true,
+                include: [
+                    {
+                        model: Database.getModel(paymentProductTableName),
+                        // as: paymentProductTableName,
+                        exclude: ["created_at","updated_at"]
+                    }
+                ]
+            });
+            return transaction;
+        } catch(error) {
+            throw error;
+        }
+    };
+
   updateTransaction = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {

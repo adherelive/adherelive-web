@@ -25,7 +25,7 @@ class PaymentController extends Controller {
     try {
       const {
         body,
-        userDetails: { userCategoryId, userData: { category = null } = {} } = {}
+        userDetails: { userCategoryId, userData: { category = "" } = {} } = {}
       } = req;
 
       let doctorId = userCategoryId;
@@ -63,8 +63,10 @@ class PaymentController extends Controller {
         const paymentProductData = await paymentProductService.addDoctorProduct(
           {
             ...dataToAdd,
-            creator_id: doctorId,
-            creator_type: USER_CATEGORY.DOCTOR,
+            creator_id: userCategoryId,
+            creator_type: category,
+            for_user_id: doctorId,
+            for_user_type: USER_CATEGORY.DOCTOR,
             product_user_type: "patient" // todo: change to constant in model
           }
         );
@@ -136,7 +138,7 @@ class PaymentController extends Controller {
       const {
         userDetails: {
           userCategoryId,
-          userData: { category = null } = {}
+          userData: { category = "" } = {}
         } = {},
         query: { doctor_id = null } = {}
       } = req;
@@ -157,11 +159,11 @@ class PaymentController extends Controller {
       const paymentProductService = new PaymentProductService();
       const doctorPaymentProductData = await paymentProductService.getAllCreatorTypeProducts(
         {
-          creator_type: USER_CATEGORY.DOCTOR,
-          creator_id: doctorId,
+          for_user_type: USER_CATEGORY.DOCTOR,
+          for_user_id: doctorId,
           product_user_type: "patient"
         }
-      );
+      ) || [];
 
       let paymentProductData = [...doctorPaymentProductData];
 

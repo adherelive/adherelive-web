@@ -14,6 +14,9 @@ import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import SubscriptionWrapper from "../../../ApiWrapper/mobile/subscriptions";
 import AccountDetailsWrapper from "../../../ApiWrapper/mobile/accountDetails";
 
+// used for web as no ui for provider on mobile
+import ProviderWrapper from "../../../ApiWrapper/web/provider";
+
 // MODELS ...
 import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";
 
@@ -23,6 +26,8 @@ import { generateTransactionId } from "../../../helper/payment";
 import * as TransactionHelper from "./helper";
 import { USER_CATEGORY } from "../../../../constant";
 import { PAYMENT_TYPE } from "../../../models/paymentProducts";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
 
 const Log = new Logger("TRANSACTIONS > MOBILE > CONTROLLER");
 
@@ -49,14 +54,33 @@ class TransactionController extends Controller {
 
       const transactionService = new TransactionService();
 
+      let requestorId = paymentProduct.getCreatorId();
+      let requestorType = paymentProduct.getCreatorType();
+
+      if(paymentProduct.getCreatorType() === USER_CATEGORY.DOCTOR) {
+        // check for provider added doctor
+
+        const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+            paymentProduct.getCreatorId()
+        );
+
+        if (doctorProvider) {
+          const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+              doctorProvider
+          );
+          requestorId = doctorProviderWrapper.getProviderId();
+          requestorType = USER_CATEGORY.PROVIDER;
+        }
+      }
+
       if (isUpi) {
         const generateTransaction = await transactionService.createTransaction({
           payment_product_id,
           transaction_id: generateTransactionId(userId),
           mode: UPI,
           amount: paymentProduct.getAmount(),
-          requestor_id: paymentProduct.getCreatorId(),
-          requestor_type: paymentProduct.getCreatorType(),
+          requestor_id: requestorId,
+          requestor_type: requestorType,
           payee_id: userCategoryId,
           payee_type: category
           // transaction_response: {
@@ -114,8 +138,8 @@ class TransactionController extends Controller {
               transaction_id: generateTransactionId(userId),
               mode: CHECKOUT,
               amount: paymentProduct.getAmount(),
-              requestor_id: paymentProduct.getCreatorId(),
-              requestor_type: paymentProduct.getCreatorType(),
+              requestor_id: requestorId,
+              requestor_type: requestorType,
               payee_id: userCategoryId,
               payee_type: category,
               transaction_response: {
@@ -309,7 +333,7 @@ class TransactionController extends Controller {
           }
         }
 
-        let accountId = null;
+        let accountUserId = null;
 
         switch (transaction.getRequestorType()) {
           case USER_CATEGORY.DOCTOR:
@@ -317,14 +341,29 @@ class TransactionController extends Controller {
               null,
               transaction.getRequestorId()
             );
-            const accountDetails = await accountDetailService.getCurrentAccountByUserId(
-              doctor.getUserId()
+            accountUserId = doctor.getUserId();
+            // const accountDetails = await accountDetailService.getCurrentAccountByUserId(
+            //   doctor.getUserId()
+            // );
+            // const account = await AccountDetailsWrapper(accountDetails);
+            // accountId = account.getRazorpayAccountId();
+            break;
+          case USER_CATEGORY.PROVIDER:
+            const provider = await ProviderWrapper(
+              null,
+                transaction.getRequestorId()
             );
-            const account = await AccountDetailsWrapper(accountDetails);
-            accountId = account.getRazorpayAccountId();
+            accountUserId = provider.getUserId();
+            break;
           default:
             break;
         }
+
+        const accountDetails = await accountDetailService.getCurrentAccountByUserId(
+            accountUserId
+        );
+        const account = await AccountDetailsWrapper(accountDetails);
+        const accountId = account.getRazorpayAccountId();
 
         if (accountId) {
           // TODO: make payment to doctor or provider account
