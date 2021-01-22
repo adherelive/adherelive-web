@@ -223,10 +223,10 @@ class SideMenu extends Component {
         <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item className="pl24 pr80" key={LOG_OUT}>Logout
+        <Menu.Item className="pl24 pr80" key={SETTINGS}>Settings
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item className="pl24 pr80" key={SETTINGS}>Settings
+        <Menu.Item className="pl24 pr80" key={LOG_OUT}>Logout
         </Menu.Item>
       </Menu>
     );
