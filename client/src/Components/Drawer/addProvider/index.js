@@ -46,14 +46,7 @@ class addProviderDrawer extends Component {
 
     console.log("198273178 fieldsError --> ", {fieldsError});
     return Object.keys(fieldsError).some((field) => fieldsError[field]);
-    // for (let err of Object.keys(fieldsError)) {
-    //   if (err !== whenToTakeMedicineField.fieLd_name && fieldsError[err]) {
-    //     hasError = true;
-    //   } else if (err === whenToTakeMedicineField.fieLd_name) {
-    //     hasError = Object.values(fieldsError[err]).some((field) => fieldsError[field]);
-    //   }
-    // }
-    // return hasError;
+    
   };
 
 
@@ -83,7 +76,7 @@ class addProviderDrawer extends Component {
     } = formRef;
 
     validateFields(async (err, values) => {
-      console.log("18731297 err --> ", err);
+
       if (!err) {
         let {
           name='',
@@ -92,7 +85,14 @@ class addProviderDrawer extends Component {
           email='',
           address='',
           password='',
-          confirm_password=''
+          confirm_password='',
+          account_type='',
+          customer_name='',
+          account_number='',
+          ifsc_code='',
+          upi_id='',
+          razorpay_account_id='',
+          razorpay_account_name='' 
         } = values;
 
 
@@ -103,14 +103,20 @@ class addProviderDrawer extends Component {
           email,
           address,
           password,
-          confirm_password
+          confirm_password,
+          account_type,
+          customer_name,
+          account_number,
+          ifsc_code,
+          upi_id,
+          razorpay_account_id,
+          razorpay_account_name 
           };
 
        
           try {
             const {addProvider}=this.props;
             const response = await addProvider(data);
-        
             const { status, payload: { message: msg } = {} } = response;
             if (status) {
               message.success(formatMessage(messages.addProviderSuccess));
@@ -125,7 +131,17 @@ class addProviderDrawer extends Component {
           }
         
       } else {
-        console.log("1882731 err --> ", {err});
+        console.log("18731297 err --> ", err);
+        let allErrors = '';
+        for(let each in err){
+          const {errors = [] } = err[each] || {};
+          for(let error of errors ){
+            const {message = ''} = error;
+            allErrors = allErrors + message+".";
+          }
+        }
+        message.warn(allErrors);
+
         return;
       }
 

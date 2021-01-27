@@ -868,6 +868,7 @@ class ProvidersController extends Controller {
         account_number,
         ifsc_code,
         upi_id,
+        use_as_main,
 
         // razorpay accounts
         razorpay_account_id,
@@ -925,7 +926,40 @@ class ProvidersController extends Controller {
 
         const updatedAccount = await AccountsWrapper(null, account.getId());
         updatedAccountData[updatedAccount.getId()] = updatedAccount.getBasicInfo();
+
+        Logger.debug("783453267478657894235236476289347523846923",{account_details: {
+          ...updatedAccountData
+        },
+        updatedAccount});
+      } else {
+        // check for valid account details to be added
+        if(account_type) {
+          const accountData = ProviderHelper.validateAccountData({
+            account_type,
+            account_number,
+            customer_name,
+            ifsc_code,
+            use_as_main,
+            upi_id,
+            razorpay_account_id,
+            razorpay_account_name
+          });
+
+          if(Object.keys(accountData).length > 0) {
+            const accountDetails = await accountDetailsService.addAccountDetails(
+                {
+                  ...accountData,
+                  user_id: updatedProvider.getUserId()
+                }
+            );
+
+            const providerAccount = await AccountsWrapper(accountDetails);
+            updatedAccountData[providerAccount.getId()] = providerAccount.getBasicInfo();
+          }
+        }
       }
+
+  
 
       return raiseSuccess(
           res,
