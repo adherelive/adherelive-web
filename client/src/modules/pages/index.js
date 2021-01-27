@@ -11,6 +11,7 @@ import vital_ids from "./vitals";
 import ui_features from "./features";
 import dashboard from "./dashboard";
 import report_ids from "./reports";
+import transaction_ids from "./transactions";
 
 const rootReducer = combineReducers({
   patient_ids,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   ui_features,
   dashboard,
   report_ids,
+  transaction_ids
 });
 
 export default (state, action) => {

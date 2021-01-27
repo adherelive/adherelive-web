@@ -24,7 +24,8 @@ class TransactionWrapper extends BaseTransaction {
       payee_id,
       payee_type,
       status,
-      transaction_response
+      transaction_response,
+        updated_at
     } = _data;
 
     return {
@@ -44,7 +45,8 @@ class TransactionWrapper extends BaseTransaction {
         id: payee_id,
         category: payee_type
       },
-      transaction_response
+      transaction_response,
+      updated_at
     };
   };
 

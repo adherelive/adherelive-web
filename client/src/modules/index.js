@@ -44,6 +44,8 @@ import account_details from "./accountDetails";
 import features from "./features";
 import features_mappings from "./featuresMappings";
 import reports from "./reports";
+import transactions from "./transactions";
+import payment_products from "./paymentProducts"; 
 
 const rootReducer = combineReducers({
   auth,
@@ -90,7 +92,9 @@ const rootReducer = combineReducers({
   account_details,
   features,
   features_mappings,
-  reports
+  reports,
+  transactions,
+  payment_products
 });
 
 export default (state, action) => {

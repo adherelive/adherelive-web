@@ -45,7 +45,8 @@ class TransactionService {
                         // as: paymentProductTableName,
                         exclude: ["created_at","updated_at"]
                     }
-                ]
+                ],
+                order: [["updated_at","DESC"]]
             });
             return transaction;
         } catch(error) {
