@@ -39,3 +39,8 @@ export const checkAndCreateDirectory = directoryPath => {
     fs.mkdirSync(directoryPath);
   }
 };
+
+export const getRoomId = (doctor, patient) => {
+  // console.log("21380138012 config", config, process.env);
+  return`${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
+};
