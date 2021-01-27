@@ -5,7 +5,7 @@ import { getDoctorPaymentProduct } from "../../modules/doctors";
 import { getVitalOccurence } from "../../modules/vital_occurence";
 
 import { fetchChatAccessToken } from "../../modules/twilio";
-import { addMessageOfChat } from "../../modules/chatMessages";
+import { addMessageOfChat, raiseChatNotification} from "../../modules/chatMessages";
 
 import {
   toggleChatPermission,
@@ -53,7 +53,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(toggleChatPermission(patientId, data)),
     toggleVideoPermission: (patientId, data) =>
       dispatch(toggleVideoPermission(patientId, data)),
-    getAllFeatures: () => dispatch(getAllFeatures())
+    getAllFeatures: () => dispatch(getAllFeatures()),
+    raiseChatNotification: (data) => dispatch(raiseChatNotification(data))
   };
 };
 

@@ -127,7 +127,7 @@ class ChatForm extends Component {
     this.setState({ newMessage: event.target.value });
   };
 
-  sendMessage = event => {
+  sendMessage = async(event) => {
     if (event) {
       event.preventDefault();
     }
@@ -135,13 +135,17 @@ class ChatForm extends Component {
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
       this.setState({ newMessage: "" });
-      this.props.channel.sendMessage(message);
+      const resp = await this.props.channel.sendMessage(message);
+      if(message){
+        this.props.raiseChatNotification(message)
+      }
     }
     if (this.state.fileList.length > 0) {
       for (let i = 0; i < this.state.fileList.length; ++i) {
         const formData = new FormData();
         formData.append("file", this.state.fileList[i]);
-        this.props.channel.sendMessage(formData);
+        const respo = await this.props.channel.sendMessage(formData);
+        this.props.raiseChatNotification(this.props.formatMessage(messages.newDocumentUploadedNotify))
       }
       this.setState({ fileList: [] });
     }
@@ -168,9 +172,9 @@ class ChatForm extends Component {
     this.setState({ viewConsultationModal: false });
   };
 
-  sendPaymentMessage = ({ name, type, amount, productId }) => e => {
+  sendPaymentMessage = ({ name, type, amount, productId }) => async(e) => {
     e.preventDefault();
-    this.props.channel.sendMessage(
+    const response = await this.props.channel.sendMessage(
       JSON.stringify({
         meta: {
           name,
@@ -180,6 +184,9 @@ class ChatForm extends Component {
         }
       })
     );
+
+    const notificationMessage = this.props.formatMessage(messages.newPaymentAddedNotify, {name})
+    this.props.raiseChatNotification(notificationMessage)
 
     this.setState({ viewConsultationModal: false });
   };
@@ -396,7 +403,7 @@ class TwilioChat extends Component {
     this.initChat();
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data, ...rest) => this.props.intl.formatMessage(data, ...rest);
 
   initChat = () => {
     this.chatClient = new Chat(this.state.token);
@@ -764,6 +771,21 @@ class TwilioChat extends Component {
     }
   };
 
+  raiseChatNotification = (message) => {
+    const {
+      patientId = null,
+      patients = {}
+    } = this.props;
+
+    const {
+      [patientId]: { basic_info: { user_id: patientUserId = null } = {} } = {}
+    } = patients;
+
+    const data = { message, receiver_id: patientUserId}
+
+    const resp = this.props.raiseChatNotification(data)
+  }
+
   render() {
     const { getDoctorConsultations } = this.props;
     const { ChatForm, handleReply } = this;
@@ -841,6 +863,7 @@ class TwilioChat extends Component {
                 channel={this.channel}
                 formatMessage={this.formatMessage}
                 getDoctorConsultations={getDoctorConsultations}
+                raiseChatNotification={this.raiseChatNotification}
               />
             </div>
           )}

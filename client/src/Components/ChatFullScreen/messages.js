@@ -119,7 +119,22 @@ const messages = defineMessages({
     description: "",
     defaultMessage:
       "You can not call this user as call feature is disabled for this user."
-  }
+  },
+  newPaymentAddedNotify: {
+    id: "app.chatFullScreen.newPaymentAddedNotify",
+    description: "",
+    defaultMessage: "Payment request for {name} is added."
+  },
+  newDocumentUploadedNotify: {
+    id: "app.chatFullScreen.newDocumentUploadedNotify",
+    description: "",
+    defaultMessage: "A new document is uploaded. Tap here to know more."
+  },
+  defaultNewMessage: {
+    id: "app.chatFullScreen.defaultNewMessage",
+    description: "",
+    defaultMessage: "---"
+  },
 });
 
 export default messages;

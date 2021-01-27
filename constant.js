@@ -820,3 +820,8 @@ export const FEATURES = {
 };
 
 export const EVENT_LONG_TERM_VALUE = null;
+
+export const MESSAGE_TYPES = {
+  USER_MESSAGE:"USER_MESSAGE",
+  BOT_MESSAGE:"BOT_MESSAGE"
+};
