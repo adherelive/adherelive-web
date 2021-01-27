@@ -660,6 +660,7 @@ class UserController extends Controller {
         const feedId = base64.encode(`${userId}`);
 
         let response = {
+          ...referenceData,
           users: {
             ...userApiData
           },
@@ -683,7 +684,6 @@ class UserController extends Controller {
           conditions: {
             ...conditionApiDetails
           },
-          ...referenceData,
           ...permissions,
           severity_ids: severityIds,
           treatment_ids: treatmentIds,
