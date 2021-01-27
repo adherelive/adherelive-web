@@ -56,6 +56,9 @@ export const getProviderTransactions = async req => {
     let transactionData = {};
     let transactionIds = [];
     let paymentProductData = {};
+    let userData = {};
+    let doctorData = {};
+    let patientData = {};
 
     let patientIds = [];
 
@@ -84,12 +87,12 @@ export const getProviderTransactions = async req => {
       id: doctorIds
     }) || [];
 
-    let doctorData = {};
-
     if(allDoctors.length > 0) {
       for(let index = 0; index < allDoctors.length; index++) {
         const doctor = await DoctorWrapper(allDoctors[index]);
-        doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
+        const {users, doctors} = await doctor.getReferenceInfo();
+        doctorData = {...doctorData, ...doctors};
+        userData = {...userData, ...users};
       }
     }
 
@@ -99,11 +102,12 @@ export const getProviderTransactions = async req => {
       id: patientIds
     }) || [];
 
-    let patientData = {};
 
     if(allPatients.length > 0) {
       for(let index = 0; index < allPatients.length; index++) {
         const patient = await PatientWrapper(allPatients[index]);
+        const {users} = await patient.getReferenceInfo();
+        userData = {...userData, ...users};
         patientData[patient.getPatientId()] = await patient.getAllInfo();
       }
     }
@@ -120,6 +124,9 @@ export const getProviderTransactions = async req => {
       },
       patients: {
         ...patientData,
+      },
+      users: {
+        ...userData,
       },
       transaction_ids: transactionIds,
     };

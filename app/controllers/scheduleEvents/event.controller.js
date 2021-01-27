@@ -44,7 +44,7 @@ class EventController extends Controller {
 
       const latestSymptom = await SymptomService.getLastUpdatedData({
         patient_id
-      });
+      }) || [];
       if (latestSymptom.length > 0) {
         for (const symptoms of latestSymptom) {
           const symptom = await SymptomWrapper({ data: symptoms });

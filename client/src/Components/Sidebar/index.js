@@ -7,7 +7,7 @@ import confirm from "antd/es/modal/confirm";
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
-import {CalendarTwoTone, FileOutlined,ProfileOutlined} from "@ant-design/icons";
+import {CalendarTwoTone, FileOutlined,ProfileOutlined , AccountBookOutlined} from "@ant-design/icons";
 import messages from "./messages";
 import config from "../../config";
 
@@ -25,6 +25,7 @@ const CALENDER = "calender";
 const TOS_PP_EDITOR = "tos-pp-editor";
 const PRIVACY_POLICY = "privacy_policy";
 const ALL_PROVIDERS = "providers";
+const TRANSACTION_DETAILS = "transaction_details";
 
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
@@ -104,9 +105,6 @@ class SideMenu extends Component {
           }
         }
         break;
-      // case PRIVACY_POLICY:
-      //   history.push(PATH.PRIVACY_POLICY);
-      //   break;
       case PROFILE:
         if(onboarded){
           history.push(PATH.PROFILE);
@@ -127,6 +125,11 @@ class SideMenu extends Component {
           history.push(PATH.PROVIDER.CALENDER)
         }
         break;
+      case TRANSACTION_DETAILS :
+        if (authenticated_category === USER_CATEGORY.PROVIDER) {
+            history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
+        }
+        break;   
       case LOG_OUT:
         handleLogout();
         break;
@@ -167,9 +170,6 @@ class SideMenu extends Component {
               }
             }
             break;
-          // case PRIVACY_POLICY:
-          //   history.push(PATH.PRIVACY_POLICY);
-          //   break;
           case PROFILE:
             if(onboarded){
               history.push(PATH.PROFILE);
@@ -198,6 +198,11 @@ class SideMenu extends Component {
                 history.push(PATH.ADMIN.ALL_PROVIDERS);
             }
             break;    
+          case TRANSACTION_DETAILS:
+            if (authenticated_category === USER_CATEGORY.PROVIDER) {
+                history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
+            }
+            break;   
           case LOG_OUT:
             handleLogout();
             break;
@@ -288,18 +293,11 @@ class SideMenu extends Component {
           className="flex direction-column justify-center align-center p0"
           key={DASHBOARD}
         >
-          <Tooltip placement="right" title={"Dashboard"}>
+          <Tooltip placement="right" title={this.formatMessage(messages.dashboard)}>
             <img alt={"Dashboard Icon"} src={dashboardIcon} />
           </Tooltip>
         </MenuItem>
         {authenticated_category == USER_CATEGORY.DOCTOR ? (
-          // <SubMenu
-          //   key="profile"
-          //   title={initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
-          // >
-          //   <Menu.Item key={PROFILE}>Profile</Menu.Item>
-          //   <Menu.Item key={LOG_OUT}>Logout</Menu.Item>
-          // </SubMenu>
 
           <MenuItem
             key={SUB_MENU}
@@ -316,9 +314,7 @@ class SideMenu extends Component {
             className="flex direction-column justify-center align-center p0"
             key={LOG_OUT}
           >
-            <Tooltip placement="right" title={"Log Out"}>
-              {/* {  profile_pic?(<img src={profile_pic} className='sidebar-dp'/>):
-              (<UserOutlined className="sidebar-bottom-custom text-white"/>)} */}
+            <Tooltip placement="right" title={this.formatMessage(messages.logOut)}>
               {initials ? (
                 <Avatar src={dp}>{initials}</Avatar>
               ) : (
@@ -332,8 +328,7 @@ class SideMenu extends Component {
             className="flex direction-column justify-center align-center p0"
             key={NOTIFICATIONS}
         >
-          <Tooltip placement="right" title={"Notifications"}>
-            {/* <img alt={"Notification Icon"} className={'w22'} src={notificationIcon} />  */}
+          <Tooltip placement="right" title={this.formatMessage(messages.notifications)}>
             <Icon type="bell" theme="twoTone" twoToneColor='white'/>
           </Tooltip>
         </MenuItem>}
@@ -344,7 +339,7 @@ class SideMenu extends Component {
             className="flex direction-column justify-center align-center p0"
             key={CALENDER}
           >
-            <Tooltip placement="right" title={"calender"}>
+            <Tooltip placement="right" title={this.formatMessage(messages.calender)}>
               <CalendarTwoTone   theme="twoTone" twoToneColor='white' />
             </Tooltip>
           </MenuItem>)
@@ -375,7 +370,6 @@ class SideMenu extends Component {
               key={ALL_PROVIDERS}
             >
               <Tooltip placement="right" title={formatMessage(messages.all_providers)}>
-                {/* <FileOutlined style={{color: "#fff"}}/> */}
                 <ProfileOutlined style={{color: "#fff"}}/>
               </Tooltip>
           </MenuItem> 
@@ -383,19 +377,20 @@ class SideMenu extends Component {
             )
             :
             null}    
-    
 
-        {/*<MenuItem*/}
-        {/*  className="flex direction-column justify-center align-center p0"*/}
-        {/*  key={LOG_OUT}*/}
-        {/*>*/}
-        {/*  <Tooltip placement="right" title={"Log Out"}>*/}
-        {/*    /!* {profile_pic ? (<img src={profile_pic} className='sidebar-dp' />) :*/}
-        {/*      (<UserOutlined className="sidebar-bottom-custom text-white" />)}  *!/*/}
-        {/* {initials ?*/}
-        {/*      <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}*/}
-        {/*  </Tooltip>*/}
-        {/*</MenuItem>*/}
+          {authenticated_category === USER_CATEGORY.PROVIDER
+          ?
+          (<MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={TRANSACTION_DETAILS}
+          >
+            <Tooltip placement="right" title={this.formatMessage(messages.transactionDetails)}>
+              {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
+              <Icon style={{color: "#fff"}} type="swap" />
+            </Tooltip>
+          </MenuItem>)
+         :
+          null}    
 
       </Menu>
     );

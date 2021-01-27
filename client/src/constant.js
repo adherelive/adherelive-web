@@ -40,7 +40,8 @@ export const PATH = {
       DETAILS: "/doctors/:id",
       PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
     },
-    CALENDER: "/calender"
+    CALENDER: "/calender",
+    TRANSACTION_DETAILS:"/transaction_details"
   },
   TERMS_OF_SERVICE: "/terms-of-service",
   PRIVACY_POLICY: "/privacy-policy"
@@ -379,6 +380,7 @@ export const EVENT_STATUS = {
   EXPIRED: "expired",
   CANCELLED: "cancelled"
 };
+
 
 //request type
 export const REQUEST_TYPE = {
@@ -1736,3 +1738,10 @@ export const FEATURES = {
   VIDEO_CALL: "Video Call",
   AUDIO_CALL: "Audio Call"
 };
+
+
+export const TABLE_STATUS = {
+  TRANSACTION_TABLE:"transaction_table",
+  ADMIN_DOCTOR_TABLE:"admin_doctor_table"
+}
+

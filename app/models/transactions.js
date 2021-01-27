@@ -79,7 +79,11 @@ export const db = database => {
         type: DataTypes.ENUM,
         values: TRANSACTION_STATUS,
         defaultValue: STATUS.PENDING
-      }
+      },
+        updated_at: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        }
     },
     {
       underscored: true,

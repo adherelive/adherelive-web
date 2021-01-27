@@ -8,6 +8,7 @@ import SpecialityWrapper from "../../web/speciality";
 import CarePlanWrapper from "../../web/carePlan";
 import ConsentWrapper from "../../web/consent";
 import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
+import UserWrapper from "../../web/user";
 
 class DoctorWrapper extends BaseDoctor {
   constructor(data) {
@@ -15,25 +16,33 @@ class DoctorWrapper extends BaseDoctor {
   }
 
   getReferenceInfo = async () => {
-    const { _data } = this;
-    const { speciality } = _data || {};
+    const { _data, getAllInfo, getDoctorId } = this;
+    const { speciality, user } = _data || {};
+
+    let specialityData = {};
+    let userData = {};
 
     if (speciality) {
       const specialityDetails = await SpecialityWrapper(speciality);
+      specialityData[specialityDetails.getSpecialityId()] = specialityDetails.getBasicInfo();
+    }
 
-      console.log("speciality ----> ", _data);
+    if(user) {
+      const users = await UserWrapper(user.get());
+      userData[users.getId()] = users.getBasicInfo();
+    }
 
       return {
-        // doctors: {
-        //   [getDoctorId()] : getBasicInfo()
-        // },
+        doctors: {
+          [getDoctorId()] : await getAllInfo()
+        },
         specialities: {
-          [specialityDetails.getSpecialityId()]: specialityDetails.getBasicInfo()
+          ...specialityData,
+        },
+        users: {
+          ...userData,
         }
       };
-    } else {
-      return {};
-    }
   };
 
   getBasicInfo = () => {
