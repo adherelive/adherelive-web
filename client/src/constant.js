@@ -1746,6 +1746,7 @@ export const TABLE_STATUS = {
 };
 
 
+
 export const TRANSACTION_STATUS = {
   PENDING: "pending",
   COMPLETED: "completed",
@@ -1754,4 +1755,3 @@ export const TRANSACTION_STATUS = {
   EXPIRED: "expired",
   ACCEPTED: "accepted"
 };
-
