@@ -1,7 +1,6 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import { withRouter } from "react-router-dom";
-import moment from "moment";
 
 import Table from "antd/es/table";
 
@@ -74,13 +73,6 @@ class TransactionTable extends Component {
             });
         });
     };
-  
-
-    onChange(pagination, filters, sorter, extra) {
-        console.log('params', pagination, filters, sorter, extra);
-    }
-
-
 
     getParentNode = t => t.parentNode;
 
@@ -92,28 +84,26 @@ class TransactionTable extends Component {
              getLoadingComponent,
              getDataSource,
              formatMessage ,
-             onChange ,
              getParentNode} = this;
 
         return (
             <Table
-                // onRow={onRow}
-                className="wp100 mt40"
-                rowClassName={() => "pointer"}
-                loading={loading === true ? getLoadingComponent() : false}
-                columns={getColumn({
-                    formatMessage,
-                    className: "pointer"
-                })}
-                onChange={onChange}
-                getPopupContainer={getParentNode}
-                dataSource={getDataSource()}
-                scroll={{ x: 1600 }}
-                pagination={{
-                    position: "top",
-                    pageSize: 10
-                }}
-            />
+                    // onRow={onRow}
+                    className="wp100 mt40"
+                    rowClassName={() => "pointer"}
+                    loading={loading === true ? getLoadingComponent() : false}
+                    columns={getColumn({
+                        formatMessage,
+                        className: "pointer"
+                    })}
+                    getPopupContainer={getParentNode}
+                    dataSource={getDataSource()}
+                    scroll={{ x: 1600 }}
+                    pagination={{
+                        position: "top",
+                        pageSize: 10
+                    }}
+                />
         );
     }
 }

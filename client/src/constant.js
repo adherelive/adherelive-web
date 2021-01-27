@@ -1743,5 +1743,15 @@ export const FEATURES = {
 export const TABLE_STATUS = {
   TRANSACTION_TABLE:"transaction_table",
   ADMIN_DOCTOR_TABLE:"admin_doctor_table"
-}
+};
+
+
+export const TRANSACTION_STATUS = {
+  PENDING: "pending",
+  COMPLETED: "completed",
+  STARTED: "started",
+  CANCELLED: "cancelled",
+  EXPIRED: "expired",
+  ACCEPTED: "accepted"
+};
 

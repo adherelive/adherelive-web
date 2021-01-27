@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TABLE_COLUMN } from "../helper";
+import { TABLE_COLUMN, getTransactionFilters } from "../helper";
 import messages from "../messages";
 import TransactionId from "../dataColumn/id";
 import Doctor from "../dataColumn/doctor";
@@ -66,6 +66,11 @@ export default props => {
         return (
           <Status transactionData={transactionData} transaction_ids={transaction_ids} />
         );
+      },
+      filters: getTransactionFilters() || [],
+      onFilter: (value, record) => {
+        const {transactionData: {status} = {}} = record[TABLE_COLUMN.STATUS.dataIndex] || {};
+        return value === status;
       },
     },
     {
