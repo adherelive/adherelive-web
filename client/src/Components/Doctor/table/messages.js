@@ -51,7 +51,21 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Doctors"
   },
-
+  active_header : {
+    id: "app.doctor.tableactive.header",
+    description: "",
+    defaultMessage: "Active"
+  },
+  active : {
+    id: "app.doctor.active",
+    description: "",
+    defaultMessage: "Active"
+  },
+  inactive : {
+    id: "app.doctor.tableactive.inactive",
+    description: "",
+    defaultMessage: "Inactive"
+  },
 });
 
 export default messages;

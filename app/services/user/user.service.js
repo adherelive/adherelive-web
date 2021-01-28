@@ -77,7 +77,18 @@ class UserService {
                 where: {
                     id
                 },
-                include: [Database.getModel(doctorTableName), Database.getModel(patientTableName)]
+                include: [
+                    {
+                        model:Database.getModel(doctorTableName),
+                        paranoid:false
+                    },
+                    {
+                        model:Database.getModel(patientTableName),
+                        paranoid:false
+                    }
+                ],
+                paranoid:false
+                
             });
             return user;
         } catch (err) {
@@ -88,7 +99,8 @@ class UserService {
     getUserByData = async data => {
         try {
             const user = await Database.getModel(TABLE_NAME).findAll({
-                where: data
+                where: data,
+                paranoid: false
             });
             return user;
         } catch (err) {
@@ -223,6 +235,34 @@ class UserService {
             throw error;
         }
         
+    }
+
+
+    deleteUser = async ({id}) => {
+        try {
+          const users = await Database.getModel(TABLE_NAME).destroy({
+            where: {
+                id
+            }
+          });
+          return users;
+        } catch(err) {
+          throw err;
+        }
+      };
+
+    activateUser = async ({id}) => {
+        try {
+            const users = await Database.getModel(TABLE_NAME).update({"deleted_at":null}, {
+                where: {
+                    id
+                },
+                paranoid:false,
+            });
+            return users;
+            } catch(err) {
+            throw err;
+            }
     }
 
  

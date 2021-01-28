@@ -32,7 +32,7 @@ export default props => {
       </div>
       <div className="wp100 ml10">
           <span className="fs16 fw700 black-65">{full_name ? `${full_name} (${gender ? gender.toUpperCase() : ""})`
-              : TABLE_DEFAULT_BLANK_FIELD}`</span>
+              : TABLE_DEFAULT_BLANK_FIELD}</span>
           <div className="ellipsis wp100 mt5">
               <TableStatus displayProps={displayProps} />
           </div>

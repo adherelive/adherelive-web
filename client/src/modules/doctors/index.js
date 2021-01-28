@@ -13,7 +13,9 @@ import {
   addDoctorPaymentPoductUrl,
   addRazorpayIdUrl,
   patientWatchlistUrl,
-  updatePatientAndCareplanUrl
+  updatePatientAndCareplanUrl,
+  deactivateDoctorURL,
+  activateDoctorURL
 } from "../../Helper/urls/doctor";
 
 import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
@@ -95,6 +97,14 @@ export const UPDATE_PATIENT_AND_CAREPLAN_FAILED =
 export const ADD_RAZORPAY_ID = "ADD_RAZORPAY_ID";
 export const ADD_RAZORPAY_ID_COMPLETE = "ADD_RAZORPAY_ID_COMPLETE";
 export const ADD_RAZORPAY_ID_FAILED = "ADD_RAZORPAY_ID_FAILED";
+
+export const DEACTIVATE_DOCTOR_START = "DEACTIVATE_DOCTOR_START";
+export const DEACTIVATE_DOCTOR_COMPLETE = "DEACTIVATE_DOCTOR_COMPLETE";
+export const DEACTIVATE_DOCTOR_FAILED = "DEACTIVATE_DOCTOR_FAILED";
+
+export const ACTIVATE_DOCTOR_START = "ACTIVATE_DOCTOR_START";
+export const ACTIVATE_DOCTOR_COMPLETE = "ACTIVATE_DOCTOR_COMPLETE";
+export const ACTIVATE_DOCTOR_FAILED = "ACTIVATE_DOCTOR_FAILED";
 
 export const updateDoctor = (user_id, updateData) => {
   let response = {};
@@ -565,6 +575,67 @@ export const addRazorpayId = (id, payload) => {
     return response;
   };
 };
+
+export const deactivateDoctor = (doctor_id) => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: DEACTIVATE_DOCTOR_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.DELETE,
+        url: deactivateDoctorURL(doctor_id)
+      });
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: DEACTIVATE_DOCTOR_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: DEACTIVATE_DOCTOR_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("DEACTIVATE_DOCTOR ERROR --> ", error);
+    }
+    return response;
+  };
+};
+
+
+export const activateDoctor = (user_id) => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: ACTIVATE_DOCTOR_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: activateDoctorURL(user_id)
+      });
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: ACTIVATE_DOCTOR_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: ACTIVATE_DOCTOR_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("ACTIVATE_DOCTOR ERROR --> ", error);
+    }
+    return response;
+  };
+};
+
+
 
 // export const getAccountDetails = () => {
 //   let response = {};

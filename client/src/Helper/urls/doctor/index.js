@@ -1,3 +1,5 @@
+import doctors from "../../../modules/doctors";
+
 export const getdoctorProfileRegisterUrl = () => {
   return `/doctors/`;
 };
@@ -99,3 +101,10 @@ export const addDoctorPaymentPoductUrl = () => {
 export const updatePatientAndCareplanUrl = (careplan_id) => {
   return `/doctors/updatePatient_careplan/${careplan_id}`;
 };
+export const deactivateDoctorURL = doctor_id => {
+  return `/doctors/${doctor_id}`;
+};
+
+export const activateDoctorURL = user_id => {
+  return `/doctors/activate/${user_id}`;
+}
