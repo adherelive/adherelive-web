@@ -100,18 +100,18 @@ class UserMessageJob extends ChatJob {
         const now = moment();
         const currentTimeStamp = now.unix();
         for (const participant of participants) {
-            // if (participant !== actorId) {
-            templateData.push({
-                actor: actorId,
-                object: `${participant}`,
-                foreign_id: ``,
-                verb: `user_message:${currentTimeStamp}`,
-                message: `by ${actorCategory} ${name}`,
-                event: MESSAGE_TYPES.USER_MESSAGE,
-                time: `${currentTime}`,
-                create_time: `${currentTime}`
-            });
-            // }
+            if (participant !== actorId) {
+                templateData.push({
+                    actor: actorId,
+                    object: `${participant}`,
+                    foreign_id: ``,
+                    verb: `user_message:${currentTimeStamp}`,
+                    message: `by ${actorCategory} ${name}`,
+                    event: MESSAGE_TYPES.USER_MESSAGE,
+                    time: `${currentTime}`,
+                    create_time: `${currentTime}`
+                });
+            }
         }
         return templateData;
     };
