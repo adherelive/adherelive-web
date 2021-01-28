@@ -5,13 +5,18 @@ import { TABLE_NAME as specialityTableName } from "../../models/specialities";
 import { TABLE_NAME as userTableName } from "../../models/users";
 
 class DoctorService {
-  getDoctorByData = async data => {
+  getDoctorByData = async (data, paranoid = true) => {
     try {
-      const doctor = await Database.getModel(TABLE_NAME).findOne({
+      return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: Database.getModel(specialityTableName)
+        include: [
+          {
+            model: Database.getModel(userTableName),
+            paranoid
+          },
+          Database.getModel(specialityTableName)
+        ]
       });
-      return doctor;
     } catch (error) {
       throw error;
     }

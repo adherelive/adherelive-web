@@ -32,7 +32,8 @@ class UserWrapper extends BaseUser {
       category,
       activated_on,
       // system_generated_password,
-      prefix
+      prefix,
+      deleted_at
     } = _data || {};
     return {
       basic_info: {
@@ -46,7 +47,8 @@ class UserWrapper extends BaseUser {
       onboarded,
       onboarding_status,
       category,
-      activated_on
+      activated_on,
+      deleted_at
       // system_generated_password
     };
   };

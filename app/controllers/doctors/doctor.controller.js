@@ -147,7 +147,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { id } = {} } = req;
-      const doctors = await doctorService.getDoctorByData({ id });
+      const doctors = await doctorService.getDoctorByData({ id }, false);
 
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
@@ -435,6 +435,88 @@ class DoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  deactivateDoctor = async(req,res) => {
+    const {raiseSuccess,raiseServerError} =this;
+    try{
+      const {  userDetails: { userId = null, userData: { category } = {} } = {} ,
+      params:{doctor_id}={}} = req;
+
+      if (category !== USER_CATEGORY.ADMIN && category !== USER_CATEGORY.PROVIDER) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to deactivate Doctor.`
+        );
+      }
+
+      const doctorDetails = await doctorService.getDoctorByData({ id : doctor_id });
+
+      const doctorWrapper = await DoctorWrapper(doctorDetails);
+
+      const userDetails = await userService.deleteUser(
+        {id:doctorWrapper.getUserId()}
+      );
+
+      const updatedUser = await UserWrapper(null, doctorWrapper.getUserId());
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...await updatedUser.getReferenceInfo()
+        },
+        "Doctor deactivated successfully"
+      );
+
+    }catch(error){
+      Logger.debug("DELETE DOCTOR 500 error", error);
+      return raiseServerError(res);
+    }
+
+  }
+
+  activateDoctor = async(req,res) => {
+    const {raiseSuccess,raiseServerError} =this;
+    try{
+      const { userDetails: { userId = null, userData: { category } = {} } = {} ,
+      params:{user_id}={}} = req;
+
+      const {params = {}} = req;
+
+      if (category !== USER_CATEGORY.ADMIN && category !== USER_CATEGORY.PROVIDER ) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to activate Doctor.`
+        );
+      }
+
+
+      const userDetails = await userService.activateUser(
+        {id:user_id}
+      );
+
+      const updatedUser = await UserWrapper(null, user_id);
+
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...await updatedUser.getReferenceInfo()
+        },
+        "Doctor activated successfully"
+      );
+
+    }catch(error){
+      Logger.debug("ACTIVATE DOCTOR 500 error", error);
+      return raiseServerError(res);
+    }
+
+  }
 
   addDoctor = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
@@ -2226,9 +2308,6 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          users: {
-            [userWrapper.getId()]: userWrapper.getBasicInfo()
-          },
           doctors: {
             [doctorWrapper.getDoctorId()]: {
               ...(await doctorWrapper.getAllInfo()),
@@ -2258,7 +2337,10 @@ class DoctorController extends Controller {
           },
           registration_councils: {
             ...councilData
-          }
+          },
+          users: {
+            [userWrapper.getId()]: userWrapper.getBasicInfo()
+          },
         },
         "Doctor details fetched successfully"
       );

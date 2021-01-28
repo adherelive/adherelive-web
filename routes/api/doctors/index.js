@@ -147,4 +147,9 @@ router.get(
 
 router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
 
+router.delete("/:doctor_id",Authenticate,DoctorController.deactivateDoctor);
+
+router.post("/activate/:user_id",Authenticate,DoctorController.activateDoctor);
+
+
 module.exports = router;

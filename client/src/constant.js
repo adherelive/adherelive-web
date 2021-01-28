@@ -1755,3 +1755,8 @@ export const TRANSACTION_STATUS = {
   EXPIRED: "expired",
   ACCEPTED: "accepted"
 };
+
+export const ACCOUNT_STATUS = {
+  INACTIVE:"INACTIVE",
+  ACTIVE:"ACTIVE"
+};

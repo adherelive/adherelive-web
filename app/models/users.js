@@ -82,11 +82,15 @@ export const db = database => {
       verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
-      }
+      },
       // system_generated_password: {
       //   type: DataTypes.BOOLEAN,
       //   defaultValue: false
-      // }
+      // },
+      deleted_at: {
+        type: DataTypes.DATE
+
+    },
     },
     {
       underscored: true,
@@ -104,7 +108,8 @@ export const db = database => {
             onboarded: this.onboarded,
             onboarding_status: this.onboarding_status,
             prefix: this.prefix,
-            verified: this.verified
+            verified: this.verified,
+            deleted_at:this.deleted_at
             // system_generated_password: this.system_generated_password
           };
         }

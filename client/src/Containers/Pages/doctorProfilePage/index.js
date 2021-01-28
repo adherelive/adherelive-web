@@ -1,7 +1,8 @@
 import { connect } from "react-redux";
 import DoctorProfilePage from "../../../Components/Pages/doctorProfilePage";
 import { withRouter } from "react-router-dom";
-import { updateDoctor, getDoctorProfileDetails ,verifyDoctor} from "../../../modules/doctors";
+import { updateDoctor, getDoctorProfileDetails ,verifyDoctor,
+  deactivateDoctor,activateDoctor} from "../../../modules/doctors";
 import {searchSpecialties} from "../../../modules/specialities";
 import { searchCouncil}  from "../../../modules/councils";
 import {
@@ -64,7 +65,9 @@ const mapDispatchToProps = dispatch => {
     deleteDoctorQualificationImage: (qualificationId, document) =>
     dispatch(deleteDoctorQualificationImage(qualificationId, document)),
     deleteDoctorRegistrationImage: (registrationId, document) =>
-    dispatch(deleteDoctorRegistrationImage(registrationId, document))
+    dispatch(deleteDoctorRegistrationImage(registrationId, document)),
+    deactivateDoctor : (doctor_id) => dispatch(deactivateDoctor(doctor_id)) ,
+    activateDoctor : (user_id) => dispatch(activateDoctor(user_id)) 
   };
 };
 
@@ -78,8 +81,11 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
         deleteDoctorQualificationImage,
         deleteDoctorRegistrationImage,
         searchCouncil ,
-        verifyDoctor
+        verifyDoctor,
+        deactivateDoctor,
+        activateDoctor
     } = dispatchProps;
+
     const {
       auth,
       users,
@@ -130,8 +136,9 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
       searchCollege: searchCollege,
       deleteDoctorQualificationImage: deleteDoctorQualificationImage,
       deleteDoctorRegistrationImage: deleteDoctorRegistrationImage,
-      searchCouncil: searchCouncil
-
+      searchCouncil: searchCouncil,
+      deactivateDoctor,
+      activateDoctor
     };
   };
 
