@@ -65,7 +65,12 @@ class VitalOccurence extends Component {
 
     
     const {vitalData = {}} = this.props;
-    const{repeat_interval_id : existing_repeat_interval_id =''}=vitalData||{};
+    let{repeat_interval_id : existing_repeat_interval_id =''}=vitalData||{};
+
+    if(!existing_repeat_interval_id){
+      const {details :{ repeat_interval_id : vital_repeat_int_id  = ''} = {} }=vitalData || {};
+      existing_repeat_interval_id = vital_repeat_int_id;
+    }
 
     const options = Object.keys(repeat_intervals).map(id => {
       const { text = '' } = repeat_intervals[id] || {};

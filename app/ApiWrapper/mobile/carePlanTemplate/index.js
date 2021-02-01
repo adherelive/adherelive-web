@@ -25,7 +25,8 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       severity_id,
       condition_id,
       user_id,
-      details = {}
+      details = {},
+      createdAt = null
     } = _data || {};
 
     return {
@@ -37,7 +38,8 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         condition_id,
         user_id
       },
-      details
+      details,
+      created_at: createdAt
     };
   };
 
@@ -79,11 +81,6 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         getTemplateVitals,
       _data
     } = this;
-
-    console.log(
-      "92881293 getTemplateAppointments ---> ",
-      getTemplateMedications()
-    );
 
     let templateAppointments = [];
     let templateMedications = [];
@@ -174,7 +171,8 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       },
       vital_templates: {
         ...vitalTemplates,
-      }
+      },
+      care_plan_template_id: this.getCarePlanTemplateId()
     };
   };
 }

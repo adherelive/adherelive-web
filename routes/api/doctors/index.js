@@ -5,6 +5,7 @@ import { isDoctor } from "../middleware/doctor";
 import { isDoctorOrProvider } from "../middleware/isDoctorOrProvider";
 import DoctorController from "../../../app/controllers/doctors/doctor.controller";
 import PaymentController from "../../../app/controllers/payments/payment.controller";
+import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
 import * as validator from "./validator";
 
 const router = express.Router();
@@ -143,6 +144,12 @@ router.get(
   "/consultations/default",
   Authenticate,
   PaymentController.getAllAdminPaymentProduct
+);
+
+router.get(
+    "/treatment/templates",
+    Authenticate,
+    CarePlanTemplate.getAllForDoctor
 );
 
 router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);

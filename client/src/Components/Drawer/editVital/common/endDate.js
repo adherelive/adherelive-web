@@ -75,7 +75,7 @@ class EndDate extends Component {
   };
 
   getInitialValue = () => {
-    const { purpose, event = {}, events = {} } = this.props;
+    const { purpose, event = {}, events = {},vitalData={} } = this.props;
 
     let initialValue = this.getNewEndDate();
     if (purpose) {
@@ -84,6 +84,13 @@ class EndDate extends Component {
       const actualEndDate = new moment(endDate);
       initialValue =
         actualEndDate < initialValue ? initialValue : actualEndDate;
+    }
+
+    if(vitalData){
+      const {details : {duration =null } = {}} = vitalData || {};
+      if(duration){
+        initialValue = moment().add((parseInt(duration)+1),'days');
+      }
     }
     return initialValue;
   };

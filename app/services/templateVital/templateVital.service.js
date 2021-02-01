@@ -12,4 +12,41 @@ export default class TemplateVitalService {
             throw error;
         }
     }
+
+    deleteVital = async (data) => {
+      try {
+            return await Database.getModel(TABLE_NAME).destroy({
+                where: data,
+                include: []
+            });
+      } catch(error) {
+          throw error;
+      }
+    };
+
+    create = async (data) => {
+        try {
+            const templateVital = await Database.getModel(TABLE_NAME).create(data);
+            return templateVital;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    update = async (data, id) => {
+        const transaction = await Database.initTransaction();
+        try {
+            const templateVital = await Database.getModel(TABLE_NAME).update(data, {
+                where: {
+                    id
+                },
+                transaction
+            });
+            await transaction.commit();
+            return templateVital;
+        } catch(error) {
+            await transaction.rollback();
+            throw error;
+        }
+    };
 }

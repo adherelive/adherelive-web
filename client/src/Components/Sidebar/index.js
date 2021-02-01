@@ -26,6 +26,7 @@ const TOS_PP_EDITOR = "tos-pp-editor";
 const PRIVACY_POLICY = "privacy_policy";
 const ALL_PROVIDERS = "providers";
 const TRANSACTION_DETAILS = "transaction_details";
+const TEMPLATES="templates";
 
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
@@ -203,6 +204,11 @@ class SideMenu extends Component {
                 history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
             }
             break;   
+          case TEMPLATES:
+            if(authenticated_category === USER_CATEGORY.DOCTOR){
+              history.push(PATH.TEMPLATES);
+            }  
+            break;
           case LOG_OUT:
             handleLogout();
             break;
@@ -229,6 +235,10 @@ class SideMenu extends Component {
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={SETTINGS}>Settings
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item className="pl24 pr80" key={TEMPLATES}>
+          {this.formatMessage(messages.templates)}
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={LOG_OUT}>Logout

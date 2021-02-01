@@ -57,18 +57,31 @@ class Medicine extends Component {
     let defaultHit = [];
 
     const {medicationData} = this.props;
+    const {templatePage = false} = medicationData || {};
+
 
     let medicine_id = null;
     let medicineName = "";
     
-    // for template edit medication
-    if(medicationData){
+    // for template edit medication from patient details page
+    if(medicationData && !templatePage){
       const {medicine_id : template_medicine_id, medicine : name  } =  medicationData || {};
       if(template_medicine_id){
         medicine_id = template_medicine_id;
         medicineName = name;
       }
-    }else{
+    }else if(medicationData && templatePage){
+      // for template from settings page
+      const {medicine_id : template_medicine_id  } =  medicationData || {};
+      const { basic_info: { name, id } = {} } = medicines[template_medicine_id] || {};
+
+      if(template_medicine_id){
+        medicine_id = template_medicine_id;
+        medicineName = name;
+      }
+
+    }
+    else{
       // for default valMedicine of edit medication w/t template
     const  { basic_info: { details: { medicine_id : med_id = null } = {} } = {} } =
     medications[medication_id] || {};
@@ -76,9 +89,6 @@ class Medicine extends Component {
     const { basic_info: { name, id } = {} } = medicines[medicine_id] || {};
     medicineName=name;
     }
-
-
-
 
     this.index.search(medicineName).then(({ hits }) => {
 

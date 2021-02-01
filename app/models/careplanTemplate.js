@@ -26,7 +26,7 @@ export const db = database => {
       },
       treatment_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: {
             tableName: treatmentTableName
@@ -66,7 +66,11 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
-      }
+      },
+        // created_at: {
+        //   allowNull: true,
+        //   type: DataTypes.DATE
+        // },
     },
     {
       underscored: true,

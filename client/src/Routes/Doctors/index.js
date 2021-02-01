@@ -74,6 +74,12 @@ const PrivacyPolicy = lazy(() =>
   )
 );
 
+const TemplatePage = lazy(() => 
+    import (
+        /* webpackChunkName: "TemplatePage" */ "../../Containers/Pages/doctorTemplateSettingsPage"
+    )
+);
+
 const PatientDetailsComp = props => {
   const { match: { params: { patient_id } = {} } = {} } = props;
   return <PatientDetails patient_id={patient_id} />;
@@ -228,6 +234,12 @@ class Doctors extends Component {
                     component={PrivacyPolicy}
                 />
 
+                <Route
+                    exact
+                    path={PATH.TEMPLATES}
+                    component={TemplatePage}
+                />
+                
                 {/* <Route
                   exact
                   path={PATH.DASHBOARD}

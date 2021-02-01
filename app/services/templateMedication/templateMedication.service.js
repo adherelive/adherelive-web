@@ -45,6 +45,33 @@ class TemplateMedicationService {
             throw error;
         }
       };
+
+    deleteMedication = async (data) => {
+        try {
+            return await Database.getModel(TABLE_NAME).destroy({
+                where: data
+            });
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    update = async (data, id) => {
+        const transaction = await Database.initTransaction();
+        try {
+            const templateMedication = await Database.getModel(TABLE_NAME).update(data, {
+                where: {
+                    id
+                },
+                transaction
+            });
+            await transaction.commit();
+            return templateMedication;
+        } catch(error) {
+            await transaction.rollback();
+            throw error;
+        }
+    };
 }
 
 export default new TemplateMedicationService();
