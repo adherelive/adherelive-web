@@ -8,6 +8,8 @@ export default class Doctor {
         return this._data.get("user_id");
     };
 
+    getFullName = () => this._data.get("full_name");
+
     getDoctorId = () => {
         return this._data.get("id");
     }

@@ -107,6 +107,18 @@ class CarePlanService {
       throw error;
     }
   };
+
+  getAllPatients = async (data) => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+        attributes: ["patient_id"]
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default new CarePlanService();
