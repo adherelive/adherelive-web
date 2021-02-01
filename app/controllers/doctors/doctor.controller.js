@@ -45,11 +45,13 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+// import ProviderWrapper from "../../ApiWrapper/web/provider";
 import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
 
-import { createNewUser } from "../user/userHelper";
-import { generatePassword } from "../helper/passwordGenerator";
+import AuthJob from "../../JobSdk/Auth/observer";
+import NotificationSdk from "../../NotificationSdk";
+// import { createNewUser } from "../user/userHelper";
+// import { generatePassword } from "../helper/passwordGenerator";
 
 import { addProviderDoctor } from "./providerHelper";
 
@@ -63,7 +65,7 @@ import {
   USER_CATEGORY,
   VERIFICATION_TYPE,
   PATIENT_MEAL_TIMINGS,
-  FEATURES
+  FEATURES, NOTIFICATION_VERB
 } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
@@ -459,6 +461,37 @@ class DoctorController extends Controller {
         {id:doctorWrapper.getUserId()}
       );
 
+      // get all patients for the doctor to notify
+      const allPatients = await carePlanService.getAllPatients({doctor_id: doctorWrapper.getDoctorId()}) || [];
+
+      Logger.debug("allPatients", allPatients);
+
+      let patientUserIds = [];
+
+      if(allPatients.length > 0) {
+        for(let index = 0; index < allPatients.length; index++) {
+          const {patient_id} = allPatients[index] || {};
+          const patient = await PatientWrapper(null, patient_id);
+          patientUserIds.push(patient.getUserId());
+        }
+      }
+
+      // notify
+      const deactivateJob = AuthJob.execute(
+        NOTIFICATION_VERB.DEACTIVATE_DOCTOR,
+          {
+            actor: {
+              id: doctorWrapper.getUserId(),
+              details: {
+                name: doctorWrapper.getFullName()
+              }
+            },
+            participants: patientUserIds
+          }
+      );
+
+      await NotificationSdk.execute(deactivateJob);
+
       const updatedUser = await UserWrapper(null, doctorWrapper.getUserId());
 
       return raiseSuccess(
@@ -483,8 +516,6 @@ class DoctorController extends Controller {
       const { userDetails: { userId = null, userData: { category } = {} } = {} ,
       params:{user_id}={}} = req;
 
-      const {params = {}} = req;
-
       if (category !== USER_CATEGORY.ADMIN && category !== USER_CATEGORY.PROVIDER ) {
         return this.raiseClientError(
           res,
@@ -501,12 +532,48 @@ class DoctorController extends Controller {
 
       const updatedUser = await UserWrapper(null, user_id);
 
+      const {doctor_id, ...rest} = await updatedUser.getReferenceInfo();
+
+      const {doctors: {[doctor_id]: {basic_info: {full_name} = {}} = {}} = {}} = rest || {};
+
+      // get all patients for the doctor to notify
+      const allPatients = await carePlanService.getAllPatients({doctor_id}) || [];
+
+      Logger.debug("allPatients", allPatients);
+
+      let patientUserIds = [];
+
+      if(allPatients.length > 0) {
+        for(let index = 0; index < allPatients.length; index++) {
+          const {patient_id} = allPatients[index] || {};
+          const patient = await PatientWrapper(null, patient_id);
+          patientUserIds.push(patient.getUserId());
+        }
+      }
+
+      // notify
+      const deactivateJob = AuthJob.execute(
+          NOTIFICATION_VERB.ACTIVATE_DOCTOR,
+          {
+            actor: {
+              id: user_id,
+              details: {
+                name: full_name
+              }
+            },
+            participants: patientUserIds
+          }
+      );
+
+      await NotificationSdk.execute(deactivateJob);
+
 
       return raiseSuccess(
         res,
         200,
         {
-          ...await updatedUser.getReferenceInfo()
+          ...rest,
+          doctor_id
         },
         "Doctor activated successfully"
       );
