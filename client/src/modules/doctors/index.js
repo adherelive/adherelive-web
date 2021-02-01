@@ -18,6 +18,7 @@ import {
   activateDoctorURL
 } from "../../Helper/urls/doctor";
 
+
 import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
 
 import { accountDetailsUrl } from "../../Helper/urls/accounts";

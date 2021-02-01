@@ -510,18 +510,6 @@ class CarePlanController extends Controller {
         show = true;
       }
 
-      console.log(
-        "CARE PLAN OF PATIENTTTT===========>>>>>>>",
-        patient_id,
-        carePlanId,
-        shown,
-        carePlanMedications,
-        carePlanAppointments,
-        show,
-        carePlanTemplateId,
-        carePlanMedicationsExists,
-        carePlanAppointmentsExists
-      );
       if (shown == false) {
         let details = cPdetails;
         details.shown = true;

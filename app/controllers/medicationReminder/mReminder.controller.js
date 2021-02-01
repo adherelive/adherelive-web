@@ -510,41 +510,48 @@ class MReminderController extends Controller {
   };
 
   getMedicationDetails = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       // Logger.debug("test", medicationReminderDetails);
-      const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+      const { params: { patient_id  } = {}, userDetails: { userId } = {} } = req;
       Logger.info(`params: patient_id : ${patient_id}`);
 
-      if (!parseInt(patient_id)) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Please select valid patient to continue"
-        );
-      }
-      const patient = await PatientWrapper(null, patient_id);
-      const timingPreference = await userPreferenceService.getPreferenceByData({
-        user_id: patient.getUserId()
-      });
-      const options = await UserPreferenceWrapper(timingPreference);
-      const { timings: userTimings = {} } = options.getAllDetails();
+      // if (!parseInt(patient_id)) {
+      //   return raiseClientError(
+      //     res,
+      //     422,
+      //     {},
+      //     "Please select valid patient to continue"
+      //   );
+      // }
 
-      const medicationTimings = medicationHelper.getTimings(userTimings);
       let timings = {};
 
-      medicationTimings.sort((activityA, activityB) => {
-        const { time: a } = activityA || {};
-        const { time: b } = activityB || {};
-        if (moment(a).isBefore(moment(b))) return -1;
 
-        if (moment(a).isAfter(moment(b))) return 1;
-      });
+      if(parseInt(patient_id) !== 0) {
+        const patient = await PatientWrapper(null, patient_id);
+        const timingPreference = await userPreferenceService.getPreferenceByData({
+          user_id: patient.getUserId()
+        });
+        const options = await UserPreferenceWrapper(timingPreference);
+        const { timings: userTimings = {} } = options.getAllDetails();
 
-      medicationTimings.forEach((timing, index) => {
-        timings[`${index + 1}`] = timing;
-      });
+        const medicationTimings = medicationHelper.getTimings(userTimings);
+
+        medicationTimings.sort((activityA, activityB) => {
+          const { time: a } = activityA || {};
+          const { time: b } = activityB || {};
+          if (moment(a).isBefore(moment(b))) return -1;
+
+          if (moment(a).isAfter(moment(b))) return 1;
+        });
+
+        medicationTimings.forEach((timing, index) => {
+          timings[`${index + 1}`] = timing;
+        });
+      } else {
+        timings = MEDICATION_TIMING;
+      }
 
       const medicationReminderDetails = {
         [KEY_REPEAT_TYPE]: REPEAT_TYPE,
@@ -556,6 +563,9 @@ class MReminderController extends Controller {
         [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
       };
 
+      Logger.debug("8943748297387489999 Patient id ====>",{patient_id,medicationReminderDetails});
+
+
       return raiseSuccess(
         res,
         200,
@@ -565,7 +575,7 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      console.log("Get m-reminder details error ----> ", error);
+      console.log("8943748297387489999 Get m-reminder details error ----> ", error);
       return raiseServerError(res, 500, error.message, "something went wrong");
     }
   };

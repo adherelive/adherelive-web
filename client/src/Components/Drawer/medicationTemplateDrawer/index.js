@@ -609,11 +609,6 @@ class TemplateDrawer extends Component {
                                     <div className='drawer-block-description'>{date ? `After ${moment(date).diff(moment(), 'days')} days` : time_gap ? `After ${time_gap - 1} days` : ''}</div>
                                     <div className='drawer-block-description'>{`Notes:${description}`}</div>
                                 </div>
-                                {/* <DeleteTwoTone
-                                className={"mr8"}
-                                onClick={this.deleteAppointment(key)}
-                                twoToneColor="#cc0000"
-                            /> */}
                             </div>
                         );
                     })

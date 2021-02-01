@@ -39,10 +39,16 @@ class SelectedDays extends Component {
     validateFields();
 
     const {vitalData = {}} = this.props;
-    const{repeat_days : existing_repeat_days =''}=vitalData||{};
+    let{repeat_days : existing_repeat_days =''}=vitalData||{};
     if(existing_repeat_days){
       this.setState({selectedDays:existing_repeat_days})
     }
+    else{
+      const {details : {repeat_days : vital_repeat_days_new = []} ={}} = vitalData || {};
+      existing_repeat_days = vital_repeat_days_new;
+      this.setState({selectedDays:existing_repeat_days})
+    }
+
   }
 
   componentWillUnmount() {
@@ -56,7 +62,8 @@ class SelectedDays extends Component {
   
   getselectedDayRadio = () => {
     
-      const {selectedDays} = this.state;
+      let {selectedDays} = this.state;
+      const {vitalData = {}} = this.props;
       const {
         form: { getFieldValue }
         } = this.props;
@@ -154,10 +161,14 @@ class SelectedDays extends Component {
     } = this.props;
 
     const  {selectedDays} = this.state;
-
     const {vitalData = {}} = this.props;
-    const{repeat_days : existing_repeat_days =''}=vitalData||{};
+    let{repeat_days : existing_repeat_days =''}=vitalData||{};
+    if(!existing_repeat_days){
+      const {details : {repeat_days : vital_repeat_days_new = []} ={}} = vitalData || {};
+      existing_repeat_days = vital_repeat_days_new;
+    }
 
+   
     const { handleCheckDays, formatMessage } = this;
 
     return (

@@ -41,4 +41,9 @@ export default defineMessages({
         description:"",
         defaultMessage:"Dashboard"
     },
+    templates:{
+        id:"app.dashboard.sidebar.menu.templatesText",
+        description:"",
+        defaultMessage:"Treatment plan Templates"
+    },
 });

@@ -34,7 +34,7 @@ import specialities from "./specialities";
 import twilio from "./twilio";
 import symptoms from "./symptoms";
 import chatMessages from "./chatMessages";
-import care_plan_template_ids from "./carePlanTemplateIds";
+// import care_plan_template_ids from "./carePlanTemplateIds";
 import notifications from "./notifications";
 import vital_templates from "./vital_templates";
 import repeat_intervals from "./vital_occurence";
@@ -82,7 +82,6 @@ const rootReducer = combineReducers({
   specialities,
   twilio,
   chatMessages,
-  care_plan_template_ids,
   notifications,
   symptoms,
   vital_templates,

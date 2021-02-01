@@ -13,7 +13,9 @@ class CarePlanTemplateService {
   getCarePlanTemplateById = async id => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findOne({
-        where: id,
+        where: {
+          id
+        },
         include: [
           Database.getModel(conditionTableName),
           Database.getModel(severityTableName),
@@ -40,6 +42,27 @@ class CarePlanTemplateService {
       });
       return carePlanTemplate;
     } catch (error) {
+      throw error;
+    }
+  };
+
+  update = async (data, id) => {
+    const transaction = await Database.initTransaction();
+    try {
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).update(data, {
+        where: {
+          id
+        },
+        include: [
+          Database.getModel(appointmentTemplateTableName),
+          Database.getModel(medicationTemplateTableName),
+          Database.getModel(vitalTemplateTableName),
+        ],
+      });
+      await transaction.commit();
+      return carePlanTemplate;
+    } catch (error) {
+      await transaction.rollback();
       throw error;
     }
   };
@@ -73,7 +96,7 @@ class CarePlanTemplateService {
 
   getCarePlanTemplateData = async data => {
     try {
-      const { user_id, treatment_id } = data;
+      const { user_id, treatment_id, ...rest } = data;
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
@@ -83,7 +106,8 @@ class CarePlanTemplateService {
             {
               user_id: { [Op.eq]: user_id }
             }
-          ]
+          ],
+          ...rest
         },
         include: [
           Database.getModel(conditionTableName),
@@ -92,7 +116,8 @@ class CarePlanTemplateService {
           Database.getModel(appointmentTemplateTableName),
           Database.getModel(medicationTemplateTableName),
             Database.getModel(vitalTemplateTableName)
-        ]
+        ],
+        order: [["updated_at", "DESC"]]
       });
       return carePlanTemplate;
     } catch (error) {
@@ -114,6 +139,47 @@ class CarePlanTemplateService {
   addCarePlanTemplate = async data => {
     try {
       const carePlanTemplate = await Database.getModel(TABLE_NAME).create(data);
+      return carePlanTemplate;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  deleteTemplate = async (data) => {
+    try {
+      return await Database.getModel(TABLE_NAME).destroy({
+        where: data
+      });
+    } catch(error) {
+      throw error;
+    }
+  };
+
+  getAllTemplatesForDoctor = async (data) => {
+    try {
+      const { user_id, ...rest } = data;
+      const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.or]: [
+            {
+              user_id: {[Op.eq]: null}
+            },
+            {
+              user_id: { [Op.eq]: user_id }
+            }
+          ],
+          ...rest
+        },
+        include: [
+          Database.getModel(conditionTableName),
+          Database.getModel(severityTableName),
+          Database.getModel(treatmentTableName),
+          Database.getModel(appointmentTemplateTableName),
+          Database.getModel(medicationTemplateTableName),
+          Database.getModel(vitalTemplateTableName)
+        ],
+        order: [["updated_at", "DESC"]]
+      });
       return carePlanTemplate;
     } catch (error) {
       throw error;

@@ -12,7 +12,7 @@ import {
   CUSTOM_REPEAT_OPTIONS,
   MEDICINE_FORM_TYPE,
   USER_CATEGORY,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES, DAYS
 } from "../../../../constant";
 import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
@@ -402,39 +402,45 @@ class MobileMReminderController extends Controller {
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
       Logger.info(`params: patient_id : ${patient_id}`);
 
-      if (!parseInt(patient_id)) {
-        return raiseClientError(
-            res,
-            422,
-            {},
-            "Please select valid patient to continue"
-        );
-      }
-      const patient = await PatientWrapper(null, patient_id);
-      const timingPreference = await userPreferenceService.getPreferenceByData({
-        user_id: patient.getUserId()
-      });
-      const options = await UserPreferenceWrapper(timingPreference);
-      const { timings: userTimings = {} } = options.getAllDetails();
-
-      const medicationTimings = medicationHelper.getTimings(userTimings);
+      // if (!parseInt(patient_id)) {
+      //   return raiseClientError(
+      //       res,
+      //       422,
+      //       {},
+      //       "Please select valid patient to continue"
+      //   );
+      // }
       let timings = {};
 
-      medicationTimings.sort((activityA, activityB) => {
-        const { time: a } = activityA || {};
-        const { time: b } = activityB || {};
-        if (moment(a).isBefore(moment(b))) return -1;
 
-        if (moment(a).isAfter(moment(b))) return 1;
-      });
+      if(parseInt(patient_id) !== 0) {
+        const patient = await PatientWrapper(null, patient_id);
+        const timingPreference = await userPreferenceService.getPreferenceByData({
+          user_id: patient.getUserId()
+        });
+        const options = await UserPreferenceWrapper(timingPreference);
+        const { timings: userTimings = {} } = options.getAllDetails();
 
-      medicationTimings.forEach((timing, index) => {
-        timings[`${index + 1}`] = timing;
-      });
+        const medicationTimings = medicationHelper.getTimings(userTimings);
+
+        medicationTimings.sort((activityA, activityB) => {
+          const { time: a } = activityA || {};
+          const { time: b } = activityB || {};
+          if (moment(a).isBefore(moment(b))) return -1;
+
+          if (moment(a).isAfter(moment(b))) return 1;
+        });
+
+        medicationTimings.forEach((timing, index) => {
+          timings[`${index + 1}`] = timing;
+        });
+      } else {
+        timings = MEDICATION_TIMING;
+      }
 
       const medicationReminderDetails = {
         [KEY_REPEAT_TYPE]: REPEAT_TYPE,
-        [KEY_DAYS]: DAYS_MOBILE,
+        [KEY_DAYS]: DAYS,
         [KEY_TIMING]: timings,
         [KEY_DOSE]: DOSE_AMOUNT,
         [KEY_UNIT]: DOSE_UNIT,

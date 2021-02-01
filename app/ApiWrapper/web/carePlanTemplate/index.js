@@ -25,7 +25,8 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
             severity_id,
             condition_id,
             user_id,
-            details = {}
+            details = {},
+            createdAt = null
         } = _data || {};
 
         return {
@@ -37,7 +38,8 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
                 condition_id,
                 user_id
             },
-            details
+            details,
+            created_at: createdAt
         };
     };
 
@@ -88,21 +90,25 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
         let medicationIds = [];
         let medicineIds = [];
 
-        for (const templateAppointment of getTemplateAppointments()) {
-            const data = await TemplateAppointmentWrapper(templateAppointment);
-            templateAppointments[
-                data.getTemplateAppointmentId()
-                ] = data.getBasicInfo();
-            appointmentIds.push(data.getTemplateAppointmentId());
+        if(getTemplateAppointments().length > 0) {
+            for (const templateAppointment of getTemplateAppointments()) {
+                const data = await TemplateAppointmentWrapper(templateAppointment);
+                templateAppointments[
+                    data.getTemplateAppointmentId()
+                    ] = data.getBasicInfo();
+                appointmentIds.push(data.getTemplateAppointmentId());
+            }
         }
 
-        for (const templateMedication of getTemplateMedications()) {
-            const data = await TemplateMedicationWrapper(templateMedication);
-            templateMedications[data.getTemplateMedicationId()] = data.getBasicInfo();
-            medicationIds.push(data.getTemplateMedicationId());
-            medicineIds.push(data.getTemplateMedicineId());
-            // const medicineData = await MedicineWrapper(data.getMedicines());
-            // medicines[medicineData.getMedicineId()] = medicineData.getBasicInfo();
+        if(getTemplateMedications().length > 0) {
+            for (const templateMedication of getTemplateMedications()) {
+                const data = await TemplateMedicationWrapper(templateMedication);
+                templateMedications[data.getTemplateMedicationId()] = data.getBasicInfo();
+                medicationIds.push(data.getTemplateMedicationId());
+                medicineIds.push(data.getTemplateMedicineId());
+                // const medicineData = await MedicineWrapper(data.getMedicines());
+                // medicines[medicineData.getMedicineId()] = medicineData.getBasicInfo();
+            }
         }
 
         // vital templates (careplan_template)
