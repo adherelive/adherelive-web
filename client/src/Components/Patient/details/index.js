@@ -1911,6 +1911,35 @@ class PatientDetails extends Component {
     this.setState({ photos: [...photos, ...photo] });
   };
 
+  getUseTemplateComponent = (isOtherCarePlan, noMedication, firstTemplateName) => {
+    const {formatMessage} = this;
+    return (
+        <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
+          <img src={noMedication} className="w200 h200" />
+          <div className="fs20 fw700">
+            {formatMessage(messages.nothing_to_show)}
+          </div>
+          {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
+          {!isOtherCarePlan && (
+              <div
+                  className="use-template-button"
+                  onClick={this.showTemplateDrawer}
+              >
+                <div>
+                  {firstTemplateName === BLANK_TEMPLATE
+                      ? formatMessage(messages.create_template)
+                      : formatMessage(messages.use_template)}
+                </div>
+              </div>
+          )}
+          {/* ) :
+                  showUseTemplate ? (
+                    <div className='use-template-button' onClick={this.handleMedicationReminder}>
+                      <div>{formatMessage(messages.add_medication)}</div>
+                    </div>) : <div />} */}
+        </div>
+    )
+  };
   
 
   render() {
@@ -1967,7 +1996,8 @@ class PatientDetails extends Component {
       handleOtpVerify,
       handleOtpCancel,
       handleCarePlanChange,
-      getOtpModalFooter
+      getOtpModalFooter,
+      getUseTemplateComponent
     } = this;
 
     if (loading || !selectedCarePlanId) {
@@ -2100,7 +2130,6 @@ class PatientDetails extends Component {
         ? true
         : false;
 
-    console.log("893891273 showTabs, vitalIds", {showTabs, vitalIds});
     const {
       basic_info: {
         first_name,
@@ -2248,62 +2277,47 @@ class PatientDetails extends Component {
               {/*</div>*/}
 
               {!showTabs && (
-                <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
-                  <img src={noMedication} className="w200 h200" />
-                  <div className="fs20 fw700">
-                    {formatMessage(messages.nothing_to_show)}
-                  </div>
-                  {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
-                  {!isOtherCarePlan && (
-                    <div
-                      className="use-template-button"
-                      onClick={this.showTemplateDrawer}
-                    >
-                      <div>
-                        {firstTemplateName === BLANK_TEMPLATE
-                          ? formatMessage(messages.create_template)
-                          : formatMessage(messages.use_template)}
-                      </div>
-                    </div>
-                  )}
-                  {/* ) :
-                  showUseTemplate ? (
-                    <div className='use-template-button' onClick={this.handleMedicationReminder}>
-                      <div>{formatMessage(messages.add_medication)}</div>
-                    </div>) : <div />} */}
-                </div>
+                getUseTemplateComponent(isOtherCarePlan, noMedication, firstTemplateName)
               )}
               {showTabs && (
                 <div className="flex-grow-1 direction-column align-center">
                   <div className="patient-tab mt20">
                     <Tabs defaultActiveKey="1">
                       <TabPane tab="Medication" key="1">
-                        <MedicationTable
-                          patientId={patient_id}
-                          carePlanId={carePlanId}
-                          isOtherCarePlan={isOtherCarePlan}
-                        />
+                        {(cPMedicationIds.length > 0 || cPAppointmentIds.length > 0) ? (<MedicationTable
+                            patientId={patient_id}
+                            carePlanId={carePlanId}
+                            isOtherCarePlan={isOtherCarePlan}
+                        />) : (
+                            <div className="mt20">
+                              {getUseTemplateComponent(isOtherCarePlan, noMedication, firstTemplateName)}
+                            </div>
+                        )}
                       </TabPane>
                       <TabPane tab="Appointments" key="2">
-                        <Table
-                          columns={
-                            !isOtherCarePlan &&
-                            authPermissions.includes(
-                              PERMISSIONS.EDIT_APPOINTMENT
-                            )
-                              ? columns_appointments
-                              : columns_appointments_non_editable
-                          }
-                          dataSource={getAppointmentsData(carePlan, docName)}
-                          onRow={
-                            !isOtherCarePlan &&
-                            authPermissions.includes(
-                              PERMISSIONS.EDIT_APPOINTMENT
-                            )
-                              ? onRowAppointment
-                              : null
-                          }
-                        />
+                        {(cPMedicationIds.length > 0 || cPAppointmentIds.length > 0) ? (<Table
+                            columns={
+                              !isOtherCarePlan &&
+                              authPermissions.includes(
+                                  PERMISSIONS.EDIT_APPOINTMENT
+                              )
+                                  ? columns_appointments
+                                  : columns_appointments_non_editable
+                            }
+                            dataSource={getAppointmentsData(carePlan, docName)}
+                            onRow={
+                              !isOtherCarePlan &&
+                              authPermissions.includes(
+                                  PERMISSIONS.EDIT_APPOINTMENT
+                              )
+                                  ? onRowAppointment
+                                  : null
+                            }
+                        />) : (
+                            <div className="mt20">
+                              {getUseTemplateComponent(isOtherCarePlan, noMedication, firstTemplateName)}
+                            </div>
+                        )}
                       </TabPane>
 
                       <TabPane tab="Symptoms" key="3">
