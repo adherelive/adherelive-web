@@ -1,5 +1,5 @@
 import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
+import { REQUEST_TYPE , DELETE_TEMPLATE_RELATED_TYPE } from "../../constant";
 import { 
     createCareplanTemplateUrl,
     duplicateCareplanTemplateUrl,
@@ -172,11 +172,11 @@ export const deleteCareplanTemplateRelated = ({careplan_template_id,other_id,oth
 
             if(!other_type){
                 url=deleteCareplanTemplate(careplan_template_id);
-            }else if (other_type === 'medication'){
+            }else if (other_type === DELETE_TEMPLATE_RELATED_TYPE.MEDICATION){
                 url=deleteCareplanTemplateMedication(careplan_template_id,other_id);
-            }else if (other_type === 'appointment'){
+            }else if (other_type === DELETE_TEMPLATE_RELATED_TYPE.APPOINTMENT){
                 url = deleteCareplanTemplateAppointment(careplan_template_id,other_id);
-            }else if (other_type === 'vital'){
+            }else if (other_type === DELETE_TEMPLATE_RELATED_TYPE.VITAL){
                 url = deleteCareplanTemplateVital(careplan_template_id,other_id);
             }
 

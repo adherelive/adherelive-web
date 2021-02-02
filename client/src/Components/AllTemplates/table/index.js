@@ -3,9 +3,6 @@ import { injectIntl } from "react-intl";
 import { Table, Icon } from "antd";
 import generateRow from "./dataRow";
 import getColumn from "./header";
-import TemplatePageCreateDrawer from "../../../Containers/Drawer/allTemplatesPageCreateTemplate";
-import message from "antd/es/message";
-import messages from "../../Drawer/allTemplatesPageEditTemplate/message";
 
 class TemplateTable extends Component {
   constructor(props) {
@@ -111,8 +108,6 @@ class TemplateTable extends Component {
             position: "top",
             pageSize: 10
           }}
-          // style={{width:"100%"}}
-          // title={"Template table"}
         />
       </Fragment>
     );

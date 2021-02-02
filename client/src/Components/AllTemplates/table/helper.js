@@ -9,10 +9,6 @@ export const TABLE_COLUMN = {
         width: 300,
         dataIndex: "CREATED_AT"
     },
-    // DUPLICATE: {
-    //   key: "DUPLICATE",
-    //   dataIndex: "DUPLICATE"
-    // },
     EDIT: {
       key: "EDIT",
       dataIndex: "EDIT",
@@ -23,15 +19,8 @@ export const TABLE_COLUMN = {
   export const formatTemplateTableData = data => {
     let {
         id,
-        // authenticated_category,
-        // authenticated_user,
-        // care_plan_template_ids,
         care_plan_templates,
-        // createCareplanTemplate,
-        // doctors,
-        // getAllTemplatesForDoctor,
         medicines,
-        // openCreateCareplanTemplateDrawer,
         template_appointments,
         template_medications,
         template_vitals,

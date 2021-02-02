@@ -1,7 +1,7 @@
 import { Drawer } from "antd";
 import React,{Component , Fragment} from "react";
 import {injectIntl} from "react-intl";
-import { MEDICATION_TIMING,DAYS,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
+import { DELETE_TEMPLATE_RELATED_TYPE,MEDICATION_TIMING,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
 import moment from "moment";
 import message from "antd/es/message";
 import Icon from "antd/es/icon";
@@ -15,7 +15,6 @@ import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from 'react-uuid';
 import messages from "./message";
-import appointmentType from "../editMedicationReminder/common/appointmentType";
 import Input from "antd/es/input";
 
 class TemplatePageCreateDrawer extends Component{
@@ -311,7 +310,7 @@ class TemplatePageCreateDrawer extends Component{
             const response = await deleteCareplanTemplateRelated({
                 careplan_template_id:carePlanTemplateId,
                 other_id,
-                other_type:'medication'
+                other_type:DELETE_TEMPLATE_RELATED_TYPE.MEDICATION
             });
             const {status,statusCode,payload:{data={},message:msg=''} = {} } = response;
             if(status){
@@ -338,7 +337,7 @@ class TemplatePageCreateDrawer extends Component{
             const response = await deleteCareplanTemplateRelated({
                 careplan_template_id:carePlanTemplateId,
                 other_id,
-                other_type:'appointment'
+                other_type:DELETE_TEMPLATE_RELATED_TYPE.APPOINTMENT
             });
 
             const {status,statusCode,payload:{data={},message:msg=''} = {} } = response;
@@ -366,7 +365,7 @@ class TemplatePageCreateDrawer extends Component{
             const response = await deleteCareplanTemplateRelated({
                 careplan_template_id:carePlanTemplateId,
                 other_id,
-                other_type:'vital'
+                other_type:DELETE_TEMPLATE_RELATED_TYPE.VITAL
             });
 
             const {status,statusCode,payload:{data={},message:msg=''} = {} } = response;
@@ -704,8 +703,8 @@ class TemplatePageCreateDrawer extends Component{
 
         return (
             <div className='template-block'>
-                <div className='wp100 flex align-center justify-space-between'>
-                 <div className='form-category-headings-ap '>{this.formatMessage(messages.name_text)}</div>      
+                <div className='wp100 flex direction-row align-center '>
+                 <div className='form-category-headings-ap mr0-I'>{this.formatMessage(messages.name_text)}</div><div className="star-red fs22">*</div>      
                 </div>
 
                 <div className='wp100 flex align-center justify-space-between'>
@@ -715,6 +714,7 @@ class TemplatePageCreateDrawer extends Component{
                         onChange={this.setTemplateName}
                         style={{width:"100%",alignSelf:"flex-start"}}
                         value={name}
+                        required={true}
                     />
                 </div>
                     
@@ -1328,7 +1328,7 @@ class TemplatePageCreateDrawer extends Component{
 
     render() {
         let { showInner, innerFormType, innerFormKey, medications, showAddMedicationInner,
-            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name } = this.state;
+            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name ,templateEdited=false } = this.state;
         const { onClose, renderTemplateDetails } = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
    
@@ -1421,7 +1421,7 @@ class TemplatePageCreateDrawer extends Component{
                             {this.formatMessage(messages.delete)}
                         </Button>
                         <Button onClick={this.onSubmit} type="primary"
-                        disabled={!name}
+                        disabled={!name || !templateEdited}
                         >
                             {this.formatMessage(messages.submit)}
                         </Button>
