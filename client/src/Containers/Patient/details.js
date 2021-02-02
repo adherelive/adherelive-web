@@ -47,7 +47,7 @@ const mapStateToProps = (state, ownProps) => {
     auth: { authPermissions = [], authenticated_user = 1,authenticated_category } = {},
     chats,
     drawer,
-    care_plan_template_ids = [],
+    pages: { care_plan_template_ids = [] } = {},
     twilio = {},
     symptoms = {},
     schedule_events = {},

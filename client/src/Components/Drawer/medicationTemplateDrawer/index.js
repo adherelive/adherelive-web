@@ -84,6 +84,9 @@ class TemplateDrawer extends Component {
         let newVitals = {};
 
 
+        // console.log("32786428457523476834234532847 carePlanTemplateIds===>",carePlanTemplateIds)
+
+
         let carePlanTemplateId = Object.keys(carePlanTemplateIds).length ? parseInt(carePlanTemplateIds[0]) : 0;
 
 
@@ -504,6 +507,7 @@ class TemplateDrawer extends Component {
         let firstTemplateId = carePlanTemplateIds[0];
         let { basic_info: { name = '' } = {} } = care_plan_templates[firstTemplateId] || {};
         let showDropDown = name === BLANK_TEMPLATE ? false : true;
+        // console.log("32786428457523476834234532847",{l:Object.keys(carePlanTemplateIds).length,showDropDown,care_plan_templates,firstTemplateId,carePlanTemplateIds});
         return (
             <div className='template-block'>
                 {Object.keys(carePlanTemplateIds).length && showDropDown ? (<Select value={carePlanTemplateId} className={'template-drawer-select wp100'} onChange={this.setTemplateId}>{this.getCarePlanTemplateOptions()}</Select>) : null}
