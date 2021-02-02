@@ -3,10 +3,6 @@ import React from "react";
 import { TABLE_COLUMN } from "../helper";
 import messages from "../messages";
 import Name from "../dataColumn/name";
-import Medications from "../dataColumn/medications";
-import Appointments from "../dataColumn/appointments";
-import Vitals from "../dataColumn/vitals";
-import Duplicate from "../dataColumn/duplicate";
 import Edit from "../dataColumn/edit";
 import CreatedAt from "../dataColumn/created";
 

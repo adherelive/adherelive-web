@@ -1,7 +1,7 @@
 import { Drawer } from "antd";
 import React,{Component , Fragment} from "react";
 import {injectIntl} from "react-intl";
-import { MEDICATION_TIMING,DAYS,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
+import { MEDICATION_TIMING,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
 import moment from "moment";
 import message from "antd/es/message";
 import Icon from "antd/es/icon";
@@ -15,7 +15,6 @@ import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
 import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from 'react-uuid';
 import messages from "./message";
-import appointmentType from "../editMedicationReminder/common/appointmentType";
 import Input from "antd/es/input";
 
 class TemplatePageCreateDrawer extends Component{
@@ -346,8 +345,8 @@ class TemplatePageCreateDrawer extends Component{
 
         return (
             <div className='template-block'>
-                <div className='wp100 flex align-center justify-space-between'>
-                 <div className='form-category-headings-ap '>{this.formatMessage(messages.name_text)}</div>      
+                <div className='wp100 flex direction-row align-center '>
+                 <div className='form-category-headings-ap mr0-I'>{this.formatMessage(messages.name_text)}</div><div className="star-red fs22">*</div>      
                 </div>
 
                 <div className='wp100 flex align-center justify-space-between'>
@@ -356,6 +355,7 @@ class TemplatePageCreateDrawer extends Component{
                         className={"form-inputs wp100 "}
                         onChange={this.setTemplateName}
                         style={{width:"100%",alignSelf:"flex-start"}}
+                        required={true}
                     />
                 </div>
                     

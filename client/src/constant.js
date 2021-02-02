@@ -1780,3 +1780,9 @@ export const ACCOUNT_STATUS = {
   INACTIVE:"INACTIVE",
   ACTIVE:"ACTIVE"
 };
+
+export const DELETE_TEMPLATE_RELATED_TYPE={
+  MEDICATION:"medication",
+  APPOINTMENT:"appointment",
+  VITAL:"vital"
+}
