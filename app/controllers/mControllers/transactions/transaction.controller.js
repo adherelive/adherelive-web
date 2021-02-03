@@ -56,7 +56,8 @@ class TransactionController extends Controller {
       let requestorId = paymentProduct.getCreatorId();
       let requestorType = paymentProduct.getCreatorType();
 
-      if (paymentProduct.getCreatorType() === USER_CATEGORY.DOCTOR) {
+      // todo-v: change for provider | in order to create order for razorpay
+      if (paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR) {
         // check for provider added doctor
 
         const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
