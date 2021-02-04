@@ -55,7 +55,8 @@ class Dashboard extends Component {
       graphsToShow: [],
       doctorUserId: 1,
       patient_ids: [],
-      showModal: false
+      showModal: false,
+      loading:false
     };
   }
 
@@ -71,6 +72,11 @@ class Dashboard extends Component {
       getAllFeatures,
       getAllMissedScheduleEvents
     } = this.props;
+
+    this.setState({loading:true});
+
+
+
     closePopUp();
     let doctorUserId = ""; //user_id of doctor
     for (let doc of Object.values(doctors)) {
@@ -86,7 +92,9 @@ class Dashboard extends Component {
         payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {}
       } = response;
       if (status) {
-        this.setState({ graphsToShow: [...charts], graphLoading: false });
+        this.setState({ graphsToShow: [...charts], graphLoading: false ,loading:false });
+      }else{
+        this.setState({loading:false});
       }
     });
 
@@ -430,13 +438,18 @@ class Dashboard extends Component {
       visible,
       graphsToShow,
       visibleModal,
-      doctorUserId
+      doctorUserId,
+      loading=false
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
     console.log("198381239 roomId", roomId);
-    if (Object.keys(graphs).length === 0) {
-      return <Loading className={"wp100 mt20"} />;
+    
+    if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
+      return (
+      <div className="hvh100 flex direction-column align-center justify-center" >
+        <Loading className={"wp100"} />
+      </div>);
     }
 
     return (

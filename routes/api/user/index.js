@@ -22,6 +22,13 @@ router.post(
 );
 
 router.post(
+    "/consent",
+    Authenticate,
+    userController.giveConsent
+);
+
+
+router.post(
     "/sign-up",
     validator.validateCredentialsData,
     userController.signUp,

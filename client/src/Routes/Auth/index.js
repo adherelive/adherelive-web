@@ -21,42 +21,36 @@ const Admin = lazy(() =>
 const Provider = lazy(() => 
   import(/* webpackChunkName: "ProviderRouter" */ "../Provider") )
 
+const Common = lazy(() =>
+    import(
+        /* webpackChunkName: "Consent" */ "../Common"
+        )
+);
+
 export default class Authenticated extends Component {
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      // redirecting: this.props.authRedirection
-    };
-  }
-  componentDidMount() {
-    // this.setState((prevState, prevProps) => {
-    //   return {
-    //     redirecting: false
-    //   };
-    // });
-    // const {getInitialData} = this.props;
-    // getInitialData();
-    
-  }
   render() {
-    const { redirecting } = this.state;
     const {
-      authRedirection,
-      authenticated_user,
       authenticated_category,
-      users,
+      hasConsent = false,
     } = this.props;
     return (
       <Fragment>
-            {authenticated_category === USER_CATEGORY.DOCTOR && (
-              <Doctors {...this.props} />
-            )}
-            { (authenticated_category === USER_CATEGORY.ADMIN) && (
-              <Admin {...this.props} />
-            )}
-            { (authenticated_category === USER_CATEGORY.PROVIDER) && (
-              <Provider {...this.props} />
+            {!hasConsent ? (<Common/>) : (
+              <Fragment>
+                {authenticated_category === USER_CATEGORY.DOCTOR && (
+                    <Doctors {...this.props} />
+                )}
+                { (authenticated_category === USER_CATEGORY.ADMIN) && (
+                    <Admin {...this.props} />
+                )}
+                { (authenticated_category === USER_CATEGORY.PROVIDER) && (
+                    <Provider {...this.props} />
+                )}
+              </Fragment>
             )}
       </Fragment>
     );

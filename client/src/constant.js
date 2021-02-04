@@ -46,6 +46,7 @@ export const PATH = {
   TERMS_OF_SERVICE: "/terms-of-service",
   PRIVACY_POLICY: "/privacy-policy",
   TEMPLATES:"/templates",
+  CONSENT:"/consent"
 };
 
 export const HTTP_CODE_SERVER_ERROR = 500;

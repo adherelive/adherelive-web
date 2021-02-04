@@ -710,7 +710,7 @@ class DoctorSettingsPage extends Component {
 
           {selectedKey === BILLING && (
             <div className="wp70 flex direction-column justify-space-between">
-              <div className="flex direction-column align-center justify-center">
+              <div className="flex direction-column align-center justify-center fs20 fw600">
               {this.formatMessage(messages.billingDisplay)}
               </div>
             </div>
