@@ -13,6 +13,8 @@ export default class User {
         return this._data.id;
     }
 
+    getConsent = () => this._data.has_consent;
+
     getUserId() {
         return this._data.user_id;
     }

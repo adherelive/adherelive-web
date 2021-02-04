@@ -87,6 +87,11 @@ export const db = database => {
       //   type: DataTypes.BOOLEAN,
       //   defaultValue: false
       // },
+      
+      has_consent:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       deleted_at: {
         type: DataTypes.DATE
 
@@ -109,7 +114,8 @@ export const db = database => {
             onboarding_status: this.onboarding_status,
             prefix: this.prefix,
             verified: this.verified,
-            deleted_at:this.deleted_at
+            deleted_at:this.deleted_at,
+            has_consent:this.has_consent
             // system_generated_password: this.system_generated_password
           };
         }

@@ -24,7 +24,8 @@ class MUserWrapper extends BaseUser {
       activated_on,
       verified,
       onboarded,
-      onboarding_status
+      onboarding_status,
+        has_consent
       // system_generated_password
     } = _data || {};
     return {
@@ -41,7 +42,8 @@ class MUserWrapper extends BaseUser {
       // system_generated_password,
       sign_in_type,
       category,
-      activated_on
+      activated_on,
+      has_consent
     };
   };
 

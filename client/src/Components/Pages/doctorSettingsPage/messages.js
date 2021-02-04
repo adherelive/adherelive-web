@@ -114,7 +114,7 @@ const messages = defineMessages({
   billingDisplay: {
     id: "app.admin.doctors.settings.delete.billingDisplay",
     description: "",
-    defaultMessage: "Billing Display"
+    defaultMessage: "No billing details yet"
   },  warnNote :{
     id: "app.admin.doctors.settings.delete.warnNote",
     description: "",
