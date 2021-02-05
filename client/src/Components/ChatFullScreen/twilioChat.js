@@ -35,6 +35,7 @@ import {
 // import Button from "antd/es/button";
 import Menu from "antd/es/menu";
 import Dropdown from "antd/es/dropdown";
+import {CHAT_MESSAGE_TYPE} from "../../constant";
 // import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
 
 export const MENU_ITEMS = {
@@ -172,15 +173,22 @@ class ChatForm extends Component {
     this.setState({ viewConsultationModal: false });
   };
 
-  sendPaymentMessage = ({ name, type, amount, productId }) => async(e) => {
+  sendPaymentMessage = (data) => async(e) => {
+    const {authenticated_user, authenticated_category} = this.props;
     e.preventDefault();
+    const { name, type, amount, productId } = data || {};
     const response = await this.props.channel.sendMessage(
       JSON.stringify({
         meta: {
           name,
-          type,
+          payment_type: type,
+          type: CHAT_MESSAGE_TYPE.CONSULTATION,
           amount,
           productId
+        },
+        author: {
+          id: authenticated_user,
+          category: authenticated_category
         }
       })
     );
@@ -207,7 +215,7 @@ class ChatForm extends Component {
             name,
             type,
             amount,
-            productId: id
+            productId: id,
           })}
         >
           <div className="flex justify-space-between align-center bw1 br5 p10">
@@ -864,6 +872,7 @@ class TwilioChat extends Component {
                 formatMessage={this.formatMessage}
                 getDoctorConsultations={getDoctorConsultations}
                 raiseChatNotification={this.raiseChatNotification}
+                {...this.props}
               />
             </div>
           )}
