@@ -57,7 +57,8 @@ export const CHAT_MESSAGE_DETAILS = {
 export const USER_ADHERE_BOT = "adhere_bot";
 export const CHAT_MESSAGE_TYPE = {
   SYMPTOM: "symptoms",
-  VITAL: "vitals"
+  VITAL: "vitals",
+  CONSULTATION:"consultation_fees",
 };
 
 export const TEXT_KEY = "text";
