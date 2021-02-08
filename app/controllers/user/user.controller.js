@@ -199,6 +199,9 @@ class UserController extends Controller {
         email
       });
 
+      Logger.debug("983675754629384652479238094862387",{user});
+
+      
       if (!user) {
         return this.raiseClientError(res, 422, user, "Email doesn't exists");
       }

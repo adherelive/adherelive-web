@@ -59,6 +59,9 @@ class UserService {
             },
             {
               category: USER_CATEGORY.ADMIN
+            },
+            {
+              category: USER_CATEGORY.PROVIDER
             }
           ]
         }
