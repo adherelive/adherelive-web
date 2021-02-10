@@ -303,6 +303,7 @@ class DoctorController extends Controller {
           users: {
             [userWrapper.getId()]: userWrapper.getBasicInfo()
           },
+          ...(await doctorWrapper.getReferenceInfo()),
           doctors: {
             [doctorWrapper.getDoctorId()]: {
               ...doctorWrapper.getBasicInfo(),
@@ -311,7 +312,6 @@ class DoctorController extends Controller {
               doctor_registration_ids
             }
           },
-          ...(await doctorWrapper.getReferenceInfo()),
           doctor_qualifications: {
             ...doctorQualificationApiDetails
           },
