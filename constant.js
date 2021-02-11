@@ -520,7 +520,8 @@ export const MEDICATION_TIMING = {
 
 export const MEDICINE_TYPE = {
   TABLET: "tablet",
-  INJECTION: "injection"
+  INJECTION: "injection",
+  SYRUP: "syrup"
 };
 
 export const VERIFICATION_TYPE = {

@@ -20,7 +20,7 @@ export const db = database => {
       },
       type: {
         type: DataTypes.ENUM,
-        values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
+        values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION, MEDICINE_TYPE.SYRUP],
         defaultValue: MEDICINE_TYPE.TABLET
       },
       description: {
@@ -28,6 +28,10 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
+      },
+      creator_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
       }
     },
     {
