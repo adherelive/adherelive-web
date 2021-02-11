@@ -13,6 +13,7 @@ module.exports = () => {
       support_email: process.env.SUPPORT_EMAIL,
       appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
       default_currency: process.env.DEFAULT_CURRENCY,
+      medicine_data: process.env.MEDICINE_INSTANCE
     },
     algolia: {
       app_id: process.env.ALGOLIA_APP_ID,
