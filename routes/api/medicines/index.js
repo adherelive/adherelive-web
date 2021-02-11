@@ -10,4 +10,7 @@ router.get(
     Medicine.getAll
 );
 
+
+router.post("/", Authenticate, Medicine.addMedicine);
+
 module.exports = router;

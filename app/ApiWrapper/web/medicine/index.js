@@ -8,13 +8,14 @@ class MedicineWrapper extends BaseMedicine {
 
     getBasicInfo = () => {
         const {_data} = this;
-        const {id, name, type, description} = _data || {};
+        const {id, name, type, description, creator_id} = _data || {};
         return {
             basic_info: {
                 id,
                 name,
                 type,
-                description
+                description,
+                creator_id
             }
         };
     };
@@ -26,13 +27,14 @@ class MedicineWrapper extends BaseMedicine {
         _arrData.forEach(data => {
             setCurrentData(data);
             const medicineData = getExistingData();
-            const {id, name, type, description} = medicineData || {};
+            const {id, name, type, description, creator_id} = medicineData || {};
             cumulativeData[id] = {
                 basic_info: {
                     id,
                     name,
                     type,
-                    description
+                    description,
+                    creator_id
                 }
             };
         });
