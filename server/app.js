@@ -13,7 +13,6 @@ import mApiRouter from "../routes/m-api";
 
 import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
-import moment from "moment";
 
 Database.init();
 
