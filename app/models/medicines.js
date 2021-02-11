@@ -19,8 +19,8 @@ export const db = database => {
         allowNull: false
       },
       type: {
-        type: DataTypes.ENUM,
-        values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION, MEDICINE_TYPE.SYRUP],
+        type: DataTypes.STRING,
+        // values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION, MEDICINE_TYPE.SYRUP],
         defaultValue: MEDICINE_TYPE.TABLET
       },
       description: {
