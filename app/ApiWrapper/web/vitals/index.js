@@ -106,21 +106,36 @@ class VitalWrapper extends BaseVital {
   };
 
   getReferenceInfo = async () => {
-    const { _data } = this;
+    const { _data, getAllInfo, getVitalTemplateId } = this;
     const { vital_template, care_plan } = _data || {};
 
     const vitalTemplateData = {};
     const carePlanData = {};
 
-    const vitalTemplates = await VitalTemplateWrapper({ data: vital_template });
-    vitalTemplateData[
-      vitalTemplates.getVitalTemplateId()
-    ] = vitalTemplates.getBasicInfo();
+    let wrapperQuery = {};
+    if(vital_template) {
+      wrapperQuery = {
+        data: vital_template
+      };
 
-    const carePlans = await CarePlanWrapper(care_plan);
-    carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
+    } else {
+     wrapperQuery = {
+       id: getVitalTemplateId()
+     };
+    }
+
+    const vitalTemplates = await VitalTemplateWrapper(wrapperQuery);
+    vitalTemplateData[
+        vitalTemplates.getVitalTemplateId()
+        ] = vitalTemplates.getBasicInfo();
+
+    if(care_plan) {
+      const carePlans = await CarePlanWrapper(care_plan);
+      carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
+    }
 
     return {
+      ...await getAllInfo(),
       vital_templates: {
         ...vitalTemplateData
       },

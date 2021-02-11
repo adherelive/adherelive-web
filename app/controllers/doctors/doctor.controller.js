@@ -45,11 +45,13 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+// import ProviderWrapper from "../../ApiWrapper/web/provider";
 import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
 
-import { createNewUser } from "../user/userHelper";
-import { generatePassword } from "../helper/passwordGenerator";
+import AuthJob from "../../JobSdk/Auth/observer";
+import NotificationSdk from "../../NotificationSdk";
+// import { createNewUser } from "../user/userHelper";
+// import { generatePassword } from "../helper/passwordGenerator";
 
 import { addProviderDoctor } from "./providerHelper";
 
@@ -63,7 +65,7 @@ import {
   USER_CATEGORY,
   VERIFICATION_TYPE,
   PATIENT_MEAL_TIMINGS,
-  FEATURES
+  FEATURES, NOTIFICATION_VERB
 } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
@@ -147,7 +149,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { id } = {} } = req;
-      const doctors = await doctorService.getDoctorByData({ id });
+      const doctors = await doctorService.getDoctorByData({ id }, false);
 
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
@@ -301,6 +303,7 @@ class DoctorController extends Controller {
           users: {
             [userWrapper.getId()]: userWrapper.getBasicInfo()
           },
+          ...(await doctorWrapper.getReferenceInfo()),
           doctors: {
             [doctorWrapper.getDoctorId()]: {
               ...doctorWrapper.getBasicInfo(),
@@ -309,7 +312,6 @@ class DoctorController extends Controller {
               doctor_registration_ids
             }
           },
-          ...(await doctorWrapper.getReferenceInfo()),
           doctor_qualifications: {
             ...doctorQualificationApiDetails
           },
@@ -435,6 +437,153 @@ class DoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  deactivateDoctor = async(req,res) => {
+    const {raiseSuccess,raiseServerError} =this;
+    try{
+      const {  userDetails: { userId = null, userData: { category } = {} } = {} ,
+      params:{doctor_id}={}} = req;
+
+      if (category !== USER_CATEGORY.ADMIN && category !== USER_CATEGORY.PROVIDER) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to deactivate Doctor.`
+        );
+      }
+
+      const doctorDetails = await doctorService.getDoctorByData({ id : doctor_id });
+
+      const doctorWrapper = await DoctorWrapper(doctorDetails);
+
+      const userDetails = await userService.deleteUser(
+        {id:doctorWrapper.getUserId()}
+      );
+
+      // get all patients for the doctor to notify
+      const allPatients = await carePlanService.getAllPatients({doctor_id: doctorWrapper.getDoctorId()}) || [];
+
+      Logger.debug("allPatients", allPatients);
+
+      let patientUserIds = [];
+
+      if(allPatients.length > 0) {
+        for(let index = 0; index < allPatients.length; index++) {
+          const {patient_id} = allPatients[index] || {};
+          const patient = await PatientWrapper(null, patient_id);
+          patientUserIds.push(patient.getUserId());
+        }
+      }
+
+      // notify
+      const deactivateJob = AuthJob.execute(
+        NOTIFICATION_VERB.DEACTIVATE_DOCTOR,
+          {
+            actor: {
+              id: doctorWrapper.getUserId(),
+              details: {
+                name: doctorWrapper.getFullName()
+              }
+            },
+            participants: patientUserIds
+          }
+      );
+
+      await NotificationSdk.execute(deactivateJob);
+
+      const updatedUser = await UserWrapper(null, doctorWrapper.getUserId());
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...await updatedUser.getReferenceInfo()
+        },
+        "Doctor deactivated successfully"
+      );
+
+    }catch(error){
+      Logger.debug("DELETE DOCTOR 500 error", error);
+      return raiseServerError(res);
+    }
+
+  }
+
+  activateDoctor = async(req,res) => {
+    const {raiseSuccess,raiseServerError} =this;
+    try{
+      const { userDetails: { userId = null, userData: { category } = {} } = {} ,
+      params:{user_id}={}} = req;
+
+      if (category !== USER_CATEGORY.ADMIN && category !== USER_CATEGORY.PROVIDER ) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to activate Doctor.`
+        );
+      }
+
+
+      const userDetails = await userService.activateUser(
+        {id:user_id}
+      );
+
+      const updatedUser = await UserWrapper(null, user_id);
+
+      const {doctor_id, ...rest} = await updatedUser.getReferenceInfo();
+
+      const {doctors: {[doctor_id]: {basic_info: {full_name} = {}} = {}} = {}} = rest || {};
+
+      // get all patients for the doctor to notify
+      const allPatients = await carePlanService.getAllPatients({doctor_id}) || [];
+
+      Logger.debug("allPatients", allPatients);
+
+      let patientUserIds = [];
+
+      if(allPatients.length > 0) {
+        for(let index = 0; index < allPatients.length; index++) {
+          const {patient_id} = allPatients[index] || {};
+          const patient = await PatientWrapper(null, patient_id);
+          patientUserIds.push(patient.getUserId());
+        }
+      }
+
+      // notify
+      const deactivateJob = AuthJob.execute(
+          NOTIFICATION_VERB.ACTIVATE_DOCTOR,
+          {
+            actor: {
+              id: user_id,
+              details: {
+                name: full_name
+              }
+            },
+            participants: patientUserIds
+          }
+      );
+
+      await NotificationSdk.execute(deactivateJob);
+
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...rest,
+          doctor_id
+        },
+        "Doctor activated successfully"
+      );
+
+    }catch(error){
+      Logger.debug("ACTIVATE DOCTOR 500 error", error);
+      return raiseServerError(res);
+    }
+
+  }
 
   addDoctor = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
@@ -851,7 +1000,7 @@ class DoctorController extends Controller {
 
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
-      const userExists = await userService.getPatientByMobile(mobile_number);
+      const userExists = await userService.getPatientByMobile(mobile_number) || [];
 
       let userData = null;
       let patientData = null;
@@ -876,6 +1025,16 @@ class DoctorController extends Controller {
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0] || null;
+      let middle_name = patientName.length === 3 ? patientName[1] : null;
+      let last_name =
+          patientName.length === 3
+              ? patientName[2]
+              : patientName.length === 2
+              ? patientName[1]
+              : null;
+
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
         userData = await UserWrapper(userExists[0].get());
@@ -892,6 +1051,12 @@ class DoctorController extends Controller {
             height,
             weight,
             address,
+            first_name,
+            middle_name,
+            last_name,
+            gender,
+            dob: date_of_birth,
+            age: getAge(moment(date_of_birth)),
             details: { ...previousDetails, ...patientOtherDetails }
           },
           patient_id
@@ -924,16 +1089,6 @@ class DoctorController extends Controller {
         }
 
         let newUserId = userData.getId();
-
-        let patientName = name.trim().split(" ");
-        let first_name = patientName[0];
-        let middle_name = patientName.length == 3 ? patientName[1] : "";
-        let last_name =
-          patientName.length == 3
-            ? patientName[2]
-            : patientName.length == 2
-            ? patientName[1]
-            : "";
 
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
@@ -2220,9 +2375,6 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          users: {
-            [userWrapper.getId()]: userWrapper.getBasicInfo()
-          },
           doctors: {
             [doctorWrapper.getDoctorId()]: {
               ...(await doctorWrapper.getAllInfo()),
@@ -2252,7 +2404,10 @@ class DoctorController extends Controller {
           },
           registration_councils: {
             ...councilData
-          }
+          },
+          users: {
+            [userWrapper.getId()]: userWrapper.getBasicInfo()
+          },
         },
         "Doctor details fetched successfully"
       );
@@ -2645,11 +2800,11 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
-        mobile_number = "",
+        // mobile_number = "",
         name = "",
         gender = "",
         date_of_birth = "",
-        prefix = "",
+        // prefix = "",
         comorbidities = "",
         allergies = "",
         clinical_notes = "",
@@ -2676,6 +2831,17 @@ class DoctorController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
+      // split names of patient
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0] || null;
+      let middle_name = patientName.length === 3 ? patientName[1] : null;
+      let last_name =
+          patientName.length === 3
+              ? patientName[2]
+              : patientName.length === 2
+              ? patientName[1]
+              : null;
+
       const patientUpdateData = {
         ...prevBasicInfo,
         details: {
@@ -2683,9 +2849,15 @@ class DoctorController extends Controller {
           allergies,
           comorbidities
         },
+        first_name,
+        middle_name,
+        last_name,
+        gender,
         height,
         weight,
-        address
+        address,
+        dob: date_of_birth,
+        age: getAge(moment(date_of_birth)),
       };
 
       const updatedPatient = await patientService.update(

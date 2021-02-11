@@ -5,13 +5,14 @@ import { signOut } from "../../modules/auth";
 
 const mapStateToProps = (state) => {
   const { auth, users ,doctors} = state;
-  const { authenticated_user, authenticated_category } = auth;
+  const { authenticated_user, authenticated_category, hasConsent } = auth;
 
   return {
     authenticated_user,
     users,
     doctors,
     authenticated_category,
+    hasConsent,
   };
 };
 

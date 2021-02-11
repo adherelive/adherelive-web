@@ -19,6 +19,8 @@ import repeatDaysField from "../common/selectedDays";
 import moment from "moment";
 import instructions from "../common/instructions";
 import vitalOccurence from "../common/vitalOccurence";
+import vitalNameField from "../common/vitalName";
+
 
 class EditVital extends Component {
   constructor(props) {
@@ -73,16 +75,15 @@ class EditVital extends Component {
   };
 
   handleSubmit = async () => {
-    const {
+    let {
       // form: { validateFields },
       updateVital,
-      getMedications,
-      addMedication,
-      patientId,
-      editMedication,
+      editVital,
+      addVital,
       close,
       payload: { id: vital_id } = {},
     } = this.props;
+
     const { formRef = {}, formatMessage } = this;
     const {
       props: {
@@ -90,7 +91,11 @@ class EditVital extends Component {
       },
     } = formRef;
 
+    const { vitalData = {} } = this.props;
+
+
     validateFields(async (err, values) => {
+
       if (!err) {
         const { when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
@@ -99,8 +104,12 @@ class EditVital extends Component {
         const repeatDays = values[repeatDaysField.field_name];
         const description = values[instructions.field_name];
         const repeat_interval_id = values[vitalOccurence.field_name];
+        const vital_template_id = values[vitalNameField.field_name] ? values[vitalNameField.field_name] : '';
+
+
         data_to_submit = {
-          id: vital_id,
+          id: vital_id ? vital_id : '',
+          vital_template_id: vital_template_id ? vital_template_id : '',
           repeat_interval_id,
           description,
           [startDateField.field_name]:
@@ -115,7 +124,10 @@ class EditVital extends Component {
                 .clone()
                 .toISOString()
               : endDate,
+
         };
+
+
         if (repeatDays) {
           data_to_submit = {
             ...data_to_submit,
@@ -129,19 +141,28 @@ class EditVital extends Component {
         else if (endDate && moment(endDate).isBefore(moment(startDate))) {
           message.error('Please select valid dates for vitals')
         }
-        try {
-          const response = await updateVital(data_to_submit);
-          const { status, payload: { message: msg } = {} } = response;
-          if (status === true) {
-            message.success(msg);
-            close();
-          } else {
-            message.error(msg);
-          }
-        } catch (error) {
-          console.log("add medication reminder ui error -----> ", error);
+        else if (editVital) {
+          console.log("18923172 data within", {data: data_to_submit});
+          editVital(data_to_submit);
         }
-        
+        else if (addVital) {
+          addVital(data_to_submit);
+        }
+        else{
+          try {
+            const response = await updateVital(data_to_submit);
+            const { status, payload: { message: msg } = {} } = response;
+            if (status === true) {
+              message.success(msg);
+              close();
+            } else {
+              message.error(msg);
+            }
+          } catch (error) {
+            console.log("add vital reminder ui error -----> ", error);
+          }
+        }
+
       } else {
         message.error(formatMessage(messages.fill_all_details));
       }
@@ -176,8 +197,7 @@ class EditVital extends Component {
     const { basic_info: { name } = {} } = medicines[medicine_id] || {};
 
     confirm({
-      title: `Are you sure you want to delete medication of ${name} for ${first_name} ${
-        middle_name ? `${middle_name} ` : ""
+      title: `Are you sure you want to delete medication of ${name} for ${first_name} ${middle_name ? `${middle_name} ` : ""
         }${last_name ? last_name : ""}?`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
@@ -196,11 +216,11 @@ class EditVital extends Component {
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading, deleteMedicationOfTemplate, hideMedication, addMedication } = this.props;
+    const { loading, deleteVitalOfTemplate, hideVital, addVital } = this.props;
 
-    if (addMedication) {
+    if (addVital) {
       return (
-        <Button onClick={hideMedication} style={{ marginRight: 8 }}>
+        <Button onClick={hideVital} style={{ marginRight: 8 }}>
           Cancel
         </Button>
       );
@@ -211,9 +231,9 @@ class EditVital extends Component {
         type={"danger"}
         ghost
         className="fs14 no-border style-delete"
-        onClick={deleteMedicationOfTemplate ? deleteMedicationOfTemplate : handleDelete}
+        onClick={deleteVitalOfTemplate ? deleteVitalOfTemplate : handleDelete}
         loading={loading}
-        disabled={true}
+        disabled={deleteVitalOfTemplate ? false : true}
       >
         <div className="flex align-center delete-text">
           <div className="ml4">Delete</div>
@@ -226,13 +246,15 @@ class EditVital extends Component {
   render() {
     const {
       visible,
-      medicationVisible,
-      editMedication,
-      addMedication,
-      hideMedication,
       loading = false,
       intl: { formatMessage },
+      editVital,
+      addVital,
+      hideVital,
+      vitalVisible = false,
+      vitalData = {}
     } = this.props;
+
     const {
       onClose,
       setFormRef,
@@ -242,16 +264,22 @@ class EditVital extends Component {
     } = this;
     const { disabledOk } = this.state;
 
+    const enableSubmit = () => {
+      this.setState({ disabledOk: true });
+    }
+
     const submitButtonProps = {
       disabled: disabledOk,
       loading: loading,
     };
 
+
+
     return (
       <Drawer
+        onClose={editVital || addVital ? hideVital : onClose}
+        visible={editVital || addVital ? vitalVisible : visible}
         width={"35%"}
-        onClose={onClose}
-        visible={visible}
         destroyOnClose={true}
         maskClosable={false}
         headerStyle={{
@@ -260,7 +288,9 @@ class EditVital extends Component {
           top: "0px"
         }}
         className="ant-drawer"
-        title={formatMessage(messages.title)}
+        // title={formatMessage(messages.title)}
+        title={editVital ? formatMessage(messages.vital) : addVital ? formatMessage(messages.addVital) : formatMessage(messages.title)}
+
       >
         <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
         <Footer
@@ -270,6 +300,7 @@ class EditVital extends Component {
           submitText={formatMessage(messages.update_button_text)}
           submitButtonProps={submitButtonProps}
           cancelComponent={getDeleteButton()}
+          enableSubmit={this.enableSubmit}
         />
       </Drawer>
     );

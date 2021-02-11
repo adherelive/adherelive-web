@@ -84,10 +84,15 @@ class MReminderWrapper extends BaseMedicationReminder {
     };
   };
   getReferenceInfo = async () => {
-    const {getAllInfo, _data} = this;
+    const {getAllInfo, getMedicineId, _data} = this;
     const {medicine} = _data || {};
     let medicineData = null;
+
+    if(medicine) {
       medicineData = await MedicineWrapper(medicine);
+    } else {
+      medicineData = await MedicineWrapper(null, getMedicineId())
+    }
 
 
     return {

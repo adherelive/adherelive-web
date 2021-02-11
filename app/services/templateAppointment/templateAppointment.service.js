@@ -44,6 +44,33 @@ class TemplateAppointmentService {
             throw error;
         }
       };
+
+    deleteAppointment = async (data) => {
+        try {
+            return await Database.getModel(TABLE_NAME).destroy({
+               where: data
+            });
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    update = async (data, id) => {
+        const transaction = await Database.initTransaction();
+        try {
+            const templateAppointment = await Database.getModel(TABLE_NAME).update(data, {
+                where: {
+                    id
+                },
+                transaction
+            });
+            await transaction.commit();
+            return templateAppointment;
+        } catch(error) {
+            await transaction.rollback();
+            throw error;
+        }
+    };
 }
 
 export default new TemplateAppointmentService();

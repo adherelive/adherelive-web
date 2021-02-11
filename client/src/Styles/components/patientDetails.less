@@ -98,7 +98,31 @@
   border-radius: @10px;
 }
 
-.treatment > h3,
+.treatment > .header-div{
+  width: 100%;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.09);
+  .presc-link,h3{
+    margin: 0;
+    padding: @15px;
+
+  }
+
+  .presc-link{
+    text-decoration: none !important;
+    Button{
+      text-decoration: none !important;
+      color: rgba(0, 0, 0, 0.65) !important;
+      border-color: #d9d9d9 !important;
+    }
+     Button:hover{
+      text-decoration: none !important;
+      color: rgba(0, 0, 0, 0.65) !important;
+      cursor: pointer !important; 
+      border-color: #d9d9d9 !important;
+     }
+  }
+}
+
 .patient-alerts > h3 {
   margin: 0;
   padding: @15px;
@@ -404,4 +428,15 @@
   height: 52px;
   line-height: 52px;
   font-size: 14px !important;
+}
+
+.timeline-hover {
+  .edit-delete-vitals {
+    display: none;
+  }
+  &:hover {
+    .edit-delete-vitals {
+      display: flex;
+    }
+  }
 }

@@ -42,6 +42,8 @@ import {
 } from "../../../constant";
 
 const { Option } = Select;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 const MALE = "m";
 const FEMALE = "f";
@@ -75,7 +77,8 @@ class PatientDetailsDrawer extends Component {
       height: "",
       weight: "",
       symptoms: "",
-      address: ""
+      address: "",
+      patients: {},
     };
     this.handleConditionSearch = throttle(
       this.handleConditionSearch.bind(this),
@@ -102,16 +105,17 @@ class PatientDetailsDrawer extends Component {
   componentDidMount() {}
 
   componentDidUpdate(prevProps, prevState) {
-    const { patients } = this.props;
+    // const { patients } = this.state;
     const {
       selectedPatientId,
       isdisabled,
       addNewPatient,
-      mobile_number
+      mobile_number,
+        patients,
     } = this.state;
     const {
       selectedPatientId: prev_selectedPatientId = null,
-      addNewPatient: prev_addNewPatient
+      addNewPatient: prev_addNewPatient,
     } = prevState;
     const {
       basic_info: {
@@ -121,7 +125,8 @@ class PatientDetailsDrawer extends Component {
         gender = "",
         height = "",
         weight = "",
-        address = ""
+        address = "",
+          full_name,
       } = {},
       dob,
       details: { allergies = "", comorbidities = "" } = {}
@@ -139,7 +144,7 @@ class PatientDetailsDrawer extends Component {
         date_of_birth: moment(formattedDate),
         height,
         weight,
-        name: `${first_name} ${getName(middle_name)} ${getName(last_name)}`,
+        name: full_name,
         addNewPatient: false,
         isdisabled: true,
         allergies,
@@ -178,6 +183,27 @@ class PatientDetailsDrawer extends Component {
     }
   }
 
+  setComorbiditiesNone = (e) => {
+    e.preventDefault();
+    const {comorbidities=''}=this.state;
+    if(comorbidities === 'none'){
+      this.setState({comorbidities:''})
+      return;
+    }
+    this.setState({comorbidities:"none"})
+  }
+
+
+  setAllergiesNone = (e) => {
+    e.preventDefault();
+    const {allergies = ''}=this.state;
+    if(allergies === 'none'){
+      this.setState({allergies:''})
+      return;
+    }
+    this.setState({allergies:"none"})
+  }
+
   getFormattedDate = dob => {
     let date = new Date(dob);
     let year = date.getFullYear();
@@ -203,7 +229,7 @@ class PatientDetailsDrawer extends Component {
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
       this.setState({ mobile_number: e.target.value });
-      if (value.length >= 6 && value.length <= 20) {
+      if (value.length === 10) {
         {
           this.handlePatientSearch(value);
         }
@@ -223,18 +249,19 @@ class PatientDetailsDrawer extends Component {
     try {
       if (data) {
         this.setState({ fetchingPatients: true });
-        const { searchPatientFromNum, patients } = this.props;
+        const { searchPatientFromNum } = this.props;
         const response = await searchPatientFromNum(data);
         const {
           status,
-          payload: { data: { patient_ids: response_patient_ids = [] } } = {}
+          payload: { data: { patient_ids: response_patient_ids = [], patients } } = {}
         } = response || {};
         // console.log("Patient search Response =====>",response);
         if (status) {
           if (response_patient_ids.length > 0) {
             this.setState({
               patient_ids: response_patient_ids,
-              fetchingPatients: false
+              fetchingPatients: false,
+              patients,
             });
           } else {
             this.setState({
@@ -256,7 +283,7 @@ class PatientDetailsDrawer extends Component {
   }
 
   getPatientOptions = () => {
-    const { patient_ids } = this.state;
+    const { patient_ids, patients } = this.state;
     let options = [];
     options.push(
       <Option
@@ -268,17 +295,16 @@ class PatientDetailsDrawer extends Component {
       </Option>
     );
 
-    const { patients } = this.props;
     for (let id of patient_ids) {
-      const { basic_info: { first_name, middle_name, last_name } = {} } =
+      const { basic_info: { first_name, middle_name, last_name, full_name } = {} } =
         patients[id] || {};
       options.push(
         <Option
           key={id}
           value={id}
-          name={`${first_name}  ${getName(middle_name)} ${getName(last_name)}`}
+          name={full_name}
         >
-          {`${first_name} ${getName(middle_name)} ${getName(last_name)}`}
+          {full_name}
         </Option>
       );
     }
@@ -754,7 +780,9 @@ class PatientDetailsDrawer extends Component {
       </div>
     );
 
-    let existingDOB = moment(date_of_birth).format("MM-DD-YYYY");
+    let existingDOB = moment(date_of_birth).format("YYYY-MM-DD");
+
+    console.log("237172397 existingDOB --> ", {existingDOB});
 
     return (
       <div className="form-block-ap ">
@@ -807,7 +835,7 @@ class PatientDetailsDrawer extends Component {
           value={name}
           className={"form-inputs-ap"}
           onChange={this.setName}
-          disabled={isdisabled}
+          // disabled={isdisabled}
         />
 
         <div className="form-headings-ap flex align-center justify-start">
@@ -827,7 +855,7 @@ class PatientDetailsDrawer extends Component {
           {this.formatMessage(messages.gender)}
         </div>
         <div className="add-patient-radio wp100 mt6 mb18 flex">
-          <Radio.Group buttonStyle="solid" disabled={isdisabled} value={gender}>
+          <Radio.Group buttonStyle="solid" value={gender}> {/*disabled = {isdisabled}*/}
             <Radio.Button value={MALE} onClick={this.setGender(MALE)}>
               M
             </Radio.Button>
@@ -871,26 +899,43 @@ class PatientDetailsDrawer extends Component {
           <div className="star-red">*</div>
         </div>
 
-        {isdisabled ? (
-          <Input
-            className={"form-inputs-ap"}
-            placeholder={`${date_of_birth ? existingDOB : "dd/mm/yyyy"}`}
-            max={`${year}-${month}-${day}`}
-            disabled={true}
-          />
-        ) : (
+        {/*{isdisabled ? (*/}
+        {/*  <Input*/}
+        {/*    className={"form-inputs-ap"}*/}
+        {/*    placeholder={`${date_of_birth ? existingDOB : "dd/mm/yyyy"}`}*/}
+        {/*    max={`${year}-${month}-${day}`}*/}
+        {/*    // disabled={true}*/}
+        {/*    type="date"*/}
+        {/*  />*/}
+        {/*) : (*/}
+
+        {/*todo: need to check bug with value and defaultValue*/}
           <Input
             className={"form-inputs-ap"}
             type="date"
-            // value={date_of_birth}
+            value={existingDOB}
+            // defaultValue={existingDOB}
             max={`${year}-${month}-${day}`}
             onChange={this.setDOB}
-            disabled={isdisabled}
+            // disabled={isdisabled}
           />
-        )}
+        {/*)}*/}
 
-        <div className="form-headings-ap flex align-center justify-start">
+        <div className="form-headings-ap flex align-items-end justify-space-between">
+          <div className='flex direction-row flex-grow-1'>
           {this.formatMessage(messages.comorbidities)}
+          </div>
+          <div className="flex-grow-0">
+              <RadioGroup
+              className="flex justify-content-end "
+              buttonStyle="solid"
+              value={comorbidities}
+            >
+              <RadioButton value={"none"} 
+              onClick={this.setComorbiditiesNone} 
+              >{this.formatMessage(messages.none)}</RadioButton>
+            </RadioGroup>
+          </div>  
         </div>
 
         <TextArea
@@ -903,9 +948,24 @@ class PatientDetailsDrawer extends Component {
           style={{ resize: "none" }}
         />
 
-        <div className="form-headings-ap flex align-center justify-start">
-          {this.formatMessage(messages.allergies)}
-        </div>
+     
+
+      <div className="form-headings-ap flex align-items-end justify-space-between">
+          <div className='flex direction-row flex-grow-1'>
+            {this.formatMessage(messages.allergies)}
+          </div>
+          <div className="flex-grow-0">
+              <RadioGroup
+              className="flex justify-content-end "
+              buttonStyle="solid"
+              value={allergies}
+            >
+              <RadioButton value={"none"} 
+              onClick={this.setAllergiesNone} 
+              >{this.formatMessage(messages.none)}</RadioButton>
+            </RadioGroup>
+          </div>  
+      </div>
 
         <TextArea
           placeholder={this.formatMessage(messages.writeHere)}

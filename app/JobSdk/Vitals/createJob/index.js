@@ -1,7 +1,7 @@
 import VitalJob from "../";
 import moment from "moment";
 import { getFullName } from "../../../helper/common";
-import { EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import { EVENT_TYPE } from "../../../../constant";
 
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 

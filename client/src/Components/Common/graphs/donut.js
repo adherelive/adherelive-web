@@ -7,6 +7,7 @@ import messages from "./message";
 export default function donutGraph(props) {
   const { id, data: graphContent, total, title, formatMessage } = props || {};
   const { dark, light } = GRAPH_COLORS[id] || {};
+  // console.log("4534724664274243234",props);
   const { className } = GRAPH_COLORS[id] || {};
   const labels = [formatMessage(messages.compliant_text),formatMessage(messages.critical_text)]
   // const labels = [CHART_TITLE[id] === "Adherence" ? formatMessage(messages.compliant_text) : formatMessage(messages.critical_text),

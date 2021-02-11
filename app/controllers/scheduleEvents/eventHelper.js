@@ -1,79 +1,104 @@
 import Logger from "../../../libs/log";
 
 const Log = new Logger("EVENT HELPER");
-import { EVENT_TYPE } from "../../../constant";
+import {EVENT_TYPE, USER_CATEGORY} from "../../../constant";
 
 // services
 import CarePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
+import patientService from "../../services/patients/patients.service";
 
 // wrappers
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+import PatientWrapper from "../../ApiWrapper/web/patient";
 
 export const doctorChart = async req => {
-  try {
-    const { userDetails: { userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    try {
+        const {userDetails: {userCategoryId: doctor_id} = {}} = req;
+        Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
 
-    const eventService = new EventService();
 
-    // get all careplans(treatments) attached to doctor
-    const carePlans =
-      (await CarePlanService.getCarePlanByData({
-        doctor_id
-      })) || [];
+        return await getAllDataForDoctors(doctor_id);
 
-    Log.debug("ALL CARE_PLANS", carePlans);
-
-    let appointmentIds = [];
-    let medicationIds = [];
-    let vitalIds = [];
-
-    // extract all event_ids from careplan attached to doctor
-    for (let i = 0; i < carePlans.length; i++) {
-      const carePlan = await CarePlanWrapper(carePlans[i]);
-      const {
-        appointment_ids,
-        medication_ids,
-        vital_ids
-      } = await carePlan.getAllInfo();
-
-      appointmentIds = [...appointmentIds, ...appointment_ids];
-      medicationIds = [...medicationIds, ...medication_ids];
-      vitalIds = [...vitalIds, ...vital_ids];
+    } catch (error) {
+        Log.debug("doctorChart catch error", error);
+        throw error;
     }
-
-    // fetch all schedule events in latest -> last order for each event_ids collected
-      // missed range : 1 WEEK
-    const scheduleEvents =
-      (await eventService.getMissedByData({
-        appointment_ids: appointmentIds,
-        medication_ids: medicationIds,
-        vital_ids: vitalIds
-      })) || [];
-
-    Log.debug("ALL SCHEDULE_EVENTS", scheduleEvents);
-
-    return [
-      { ...(await getFormattedData(scheduleEvents)) },
-      "Missed events fetched successfully"
-    ];
-  } catch (error) {
-    Log.debug("doctorChart catch error", error);
-    throw error;
-  }
 };
 
-export const providerChart = async () => {
-  try {
-  } catch (error) {
-    throw error;
-  }
+export const providerChart = async (req) => {
+    try {
+        const {userDetails: {userCategoryId: provider_id} = {}} = req;
+        Log.info(`PROVIDER ID (provider_id) : ${provider_id}`);
+
+        // get all doctors attached to provider
+        const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
+
+        Log.debug("doctorData", doctorData);
+        const doctorIds = doctorData.map(data => data.doctor_id);
+        Log.debug("doctorIds", doctorData);
+        return await getAllDataForDoctors(doctorIds, USER_CATEGORY.PROVIDER);
+    } catch (error) {
+        throw error;
+    }
 };
 
 // HELPERS
-const getFormattedData = async (events = []) => {
+const getAllDataForDoctors = async (doctor_id, category = USER_CATEGORY.PROVIDER) => {
+    try {
+        Log.debug("doctor_id", doctor_id);
+        const eventService = new EventService();
+        // get all careplans(treatments) attached to doctor
+        const carePlans =
+            (await CarePlanService.getCarePlanByData({
+                doctor_id
+            })) || [];
+
+        Log.debug("ALL CARE_PLANS", carePlans);
+
+        let appointmentIds = [];
+        let medicationIds = [];
+        let vitalIds = [];
+
+        // extract all event_ids from careplan attached to doctor
+        for (let i = 0; i < carePlans.length; i++) {
+            const carePlan = await CarePlanWrapper(carePlans[i]);
+            const {
+                appointment_ids,
+                medication_ids,
+                vital_ids
+            } = await carePlan.getAllInfo();
+
+            appointmentIds = [...appointmentIds, ...appointment_ids];
+            medicationIds = [...medicationIds, ...medication_ids];
+            vitalIds = [...vitalIds, ...vital_ids];
+        }
+
+        // fetch all schedule events in latest -> last order for each event_ids collected
+        // missed range : 1 WEEK
+        const scheduleEvents =
+            (await eventService.getMissedByData({
+                appointment_ids: appointmentIds,
+                medication_ids: medicationIds,
+                vital_ids: vitalIds
+            })) || [];
+
+        Log.debug("ALL SCHEDULE_EVENTS", scheduleEvents);
+
+        return [
+            {...(await getFormattedData(scheduleEvents, category))},
+            "Missed events fetched successfully"
+        ];
+    } catch (error) {
+        Log.debug("getAllDataForDoctors catch error", error);
+        throw error;
+    }
+};
+
+
+const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) => {
     /*
      *
      * separate schedule_event data into :: appointments | medications | vitals
@@ -110,21 +135,37 @@ const getFormattedData = async (events = []) => {
     let vital_critical_ids = [];
     let vital_non_critical_ids = [];
 
+    let patientIds = [];
+
     for (let i = 0; i < events.length; i++) {
         const event = await EventWrapper(events[i]);
-        const {start_time, end_time, details: {medicines, patient_id, medications: {participant_id} = {}, vital_templates: {basic_info: {name: vital_name} = {}} = {}} = {}, critical} = event.getAllInfo();
-
+        const {
+            start_time,
+            end_time,
+            details: {
+                medicines,
+                patient_id,
+                medications: {participant_id} = {},
+                vital_templates: {basic_info: {name: vital_name} = {}} = {},
+                participant_one = {},
+                participant_two = {}
+            } = {},
+            critical
+        } = event.getAllInfo();
 
         switch (event.getEventType()) {
             case EVENT_TYPE.MEDICATION_REMINDER:
                 if (!(event.getEventId() in medications)) {
+                    if (category === USER_CATEGORY.PROVIDER) {
+                        patientIds.push(participant_id);
+                    }
                     const timings = {};
                     timings[event.getDate()] = [];
                     timings[event.getDate()].push({start_time, end_time});
                     medications[event.getEventId()] = {medicines, critical, participant_id, timings};
                 } else {
                     const {timings} = medications[event.getEventId()] || {};
-                    if(!Object.keys(timings).includes(event.getDate())) {
+                    if (!Object.keys(timings).includes(event.getDate())) {
                         timings[event.getDate()] = [];
                     }
                     timings[event.getDate()].push({start_time, end_time});
@@ -151,6 +192,13 @@ const getFormattedData = async (events = []) => {
                 break;
 
             case EVENT_TYPE.APPOINTMENT:
+                if (category === USER_CATEGORY.PROVIDER) {
+                    if(participant_one.category === USER_CATEGORY.PATIENT) {
+                        patientIds.push(participant_one.id);
+                    } else {
+                        patientIds.push(participant_two.id);
+                    }
+                }
                 if (!(event.getEventId() in appointments)) {
                     appointments[event.getEventId()] = [];
                     appointments[event.getEventId()].push(event.getAllInfo());
@@ -178,7 +226,7 @@ const getFormattedData = async (events = []) => {
                     vitals[event.getEventId()] = {patient_id, critical, vital_name, timings};
                 } else {
                     const {timings = {}} = vitals[event.getEventId()] || {};
-                    if(!Object.keys(timings).includes(event.getDate())) {
+                    if (!Object.keys(timings).includes(event.getDate())) {
                         timings[event.getDate()] = [];
                     }
                     timings[event.getDate()].push({start_time, end_time});
@@ -207,6 +255,21 @@ const getFormattedData = async (events = []) => {
         }
     }
 
+    Log.debug("patientIds ---> ", patientIds);
+
+    let patientData = {};
+
+    if(patientIds.length > 0) {
+        const allPatients = await patientService.getPatientByData({
+            id: patientIds
+        }) || [];
+
+        for(let index = 0; index < allPatients.length; index++) {
+            const patient = await PatientWrapper(allPatients[index]);
+            patientData[patient.getPatientId()] = patient.getBasicInfo();
+        }
+    }
+
     return {
         // medications
         missed_medications: medications,
@@ -227,6 +290,11 @@ const getFormattedData = async (events = []) => {
         vital_ids: {
             critical: vital_critical_ids,
             non_critical: vital_non_critical_ids,
+        },
+
+        // for provider related api call
+        patients: {
+            ...patientData
         }
     };
 };

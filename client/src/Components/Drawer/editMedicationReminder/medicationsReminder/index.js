@@ -35,8 +35,11 @@ class EditMedicationReminder extends Component {
   }
 
   componentDidMount() {
-    const { getMedicationDetails, patientId } = this.props;
-    getMedicationDetails(patientId);
+    const { getMedicationDetails, patientId  } = this.props;
+    const {addMedication,editMedication}=this.props;
+
+      getMedicationDetails(patientId);
+
   }
 
   hasErrors = (fieldsError) => {
@@ -327,6 +330,7 @@ class EditMedicationReminder extends Component {
       disabled: disabledOk,
       loading: loading,
     };
+    console.log("782345237648723427",medicationVisible);
 
     return (
       <Drawer

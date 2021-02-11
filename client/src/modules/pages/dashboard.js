@@ -1,6 +1,7 @@
 import { GET_ALL_MISSED_SCHEDULE_EVENTS_COMPLETED } from "../scheduleEvents";
 
 function missedEventReducer(state, data) {
+
   const {
     missed_medications = {},
     missed_appointments = {},

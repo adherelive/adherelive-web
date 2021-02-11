@@ -27,9 +27,6 @@ const PrivacyPolicy = lazy(() =>
 
 
 
-
-
-
 export default class Global extends Component {
   constructor(props) {
     super(props);
@@ -70,6 +67,7 @@ export default class Global extends Component {
   render() {
     const { authRedirection } = this.props;
     const { redirecting } = this.state;
+
     return (
       <BrowserRouter>
         <Switch>

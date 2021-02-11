@@ -244,7 +244,9 @@ export const NOTIFICATION_VERB = {
   MRL_GENERATION: "MRL_GENERATION",
   VITAL_CREATE: "VITAL_CREATE",
   VITAL_START: "VITAL_START",
-  CARE_PLAN_CREATE: "CAREPLAN_CREATE"
+  CARE_PLAN_CREATE: "CAREPLAN_CREATE",
+  DEACTIVATE_DOCTOR: "DEACTIVATE_DOCTOR",
+  ACTIVATE_DOCTOR:"ACTIVATE_DOCTOR"
 };
 
 export const NOTIFICATION_STAGES = {
@@ -456,53 +458,63 @@ export const AFTER_WAKEUP = "1";
 export const BEFORE_BREAKFAST = "2";
 export const AFTER_BREAKFAST = "3";
 export const BEFORE_LUNCH = "4";
-export const AFTER_LUNCH = "5";
-export const BEFORE_EVENING_SNACK = "6";
-export const AFTER_EVENING_SNACK = "7";
-export const BEFORE_DINNER = "8";
-export const AFTER_DINNER = "9";
-export const BEFORE_SLEEP = "10";
+export const WITH_LUNCH = "5";
+export const AFTER_LUNCH = "6";
+export const BEFORE_EVENING_SNACK = "7";
+export const AFTER_EVENING_SNACK = "8";
+export const BEFORE_DINNER = "9";
+export const WITH_DINNER = "10";
+export const AFTER_DINNER = "11";
+export const BEFORE_SLEEP = "12";
 
 export const MEDICATION_TIMING = {
   [AFTER_WAKEUP]: {
     [TEXT_KEY]: "After Wake Up",
-    [TIME_KEY]: "7am"
+    [TIME_KEY]: "2020-09-24T02:30:00.000Z"
   },
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
-    [TIME_KEY]: "8am"
+    [TIME_KEY]:"2020-09-24T03:00:00.000Z"
   },
   [AFTER_BREAKFAST]: {
     [TEXT_KEY]: "After Breakfast",
-    [TIME_KEY]: "9am"
+    [TIME_KEY]: "2020-09-24T04:00:00.000Z"
   },
   [BEFORE_LUNCH]: {
     [TEXT_KEY]: "Before Lunch",
-    [TIME_KEY]: "12:30pm"
+    [TIME_KEY]: "2020-09-24T07:00:00.000Z"
+  },
+  [WITH_LUNCH]: {
+    [TEXT_KEY]: "With Lunch",
+    [TIME_KEY]: "2020-09-24T07:30:00.000Z"
   },
   [AFTER_LUNCH]: {
     [TEXT_KEY]: "After Lunch",
-    [TIME_KEY]: "1:30pm"
+    [TIME_KEY]: "2020-09-24T08:00:00.000Z"
   },
   [BEFORE_EVENING_SNACK]: {
-    [TEXT_KEY]: "Before Evening Tea",
-    [TIME_KEY]: "5:30pm"
+    [TEXT_KEY]: "Before Evening Snacks",
+    [TIME_KEY]: "2020-09-24T10:00:00.000Z"
   },
   [AFTER_EVENING_SNACK]: {
-    [TEXT_KEY]: "After Evening Tea",
-    [TIME_KEY]: "6pm"
+    [TEXT_KEY]: "After Evening Snacks",
+    [TIME_KEY]: "2020-09-24T11:00:00.000Z"
   },
   [BEFORE_DINNER]: {
     [TEXT_KEY]: "Before Dinner",
-    [TIME_KEY]: "7:30pm"
+    [TIME_KEY]: "2020-09-24T14:00:00.000Z"
+  },
+  [WITH_DINNER]: {
+    [TEXT_KEY]: "With Dinner",
+    [TIME_KEY]: "2020-09-24T14:30:00.000Z"
   },
   [AFTER_DINNER]: {
     [TEXT_KEY]: "After Dinner",
-    [TIME_KEY]: "8:30pm"
+    [TIME_KEY]: "2020-09-24T15:00:00.000Z"
   },
   [BEFORE_SLEEP]: {
     [TEXT_KEY]: "Before Sleeping",
-    [TIME_KEY]: "10:30pm"
+    [TIME_KEY]: "2020-09-24T17:30:00.000Z"
   }
 };
 
@@ -635,12 +647,12 @@ export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg", "svg", "png", "pdf"];
 
 const TABLET = "1";
 const SYRUP = "2";
-const SYRINGE = "3";
+const INJECTION = "3";
 
 export const MEDICINE_FORM_TYPE = {
   [TABLET]: { name: "tablet" },
   [SYRUP]: { name: "syrup" },
-  [SYRINGE]: { name: "syringe" }
+  [INJECTION]: { name: "injection" }
 };
 
 const HEAD = "1";
@@ -817,4 +829,12 @@ export const FEATURES = {
   CHAT: "Chat",
   VIDEO_CALL: "Video Call",
   AUDIO_CALL: "Audio Call"
+};
+
+export const EVENT_LONG_TERM_VALUE = null;
+
+export const TEMPLATE_DUPLICATE_TEXT = " Copy";
+export const MESSAGE_TYPES = {
+  USER_MESSAGE:"USER_MESSAGE",
+  BOT_MESSAGE:"BOT_MESSAGE"
 };

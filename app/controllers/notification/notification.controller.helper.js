@@ -3,7 +3,8 @@ import {
   NOTIFICATION_VERB,
   EVENT_TYPE,
   NOTIFICATION_STAGES,
-  EVENT_STATUS
+  EVENT_STATUS,
+  MESSAGE_TYPES
 } from "../../../constant";
 
 // lodash
@@ -40,6 +41,10 @@ const {
   VITALS,
   CARE_PLAN_ACTIVATION
 } = EVENT_TYPE;
+
+const {
+  USER_MESSAGE
+} = MESSAGE_TYPES
 
 const Log = new Logger("WEB > NOTIFICATION > CONTROLLER > HELPER");
 
@@ -502,6 +507,51 @@ const carePlanNotification = async data => {
   }
 };
 
+const chatMessageNotification = async data => {
+  try {
+    Log.debug("chatMessageNotification data", data);
+    const {
+      data: {
+        actor,
+        foreign_id,
+        id,
+        message,
+        time,
+        verb,
+        start_time: notification_start_time,
+        create_time: notification_create_time
+      } = {},
+      loggedInUser,
+      is_read,
+      group_id
+    } = data;
+
+    let notification_data = {
+        [`${id}`]: {
+          is_read,
+          group_id,
+          foreign_id,
+          time,
+          event_id: null,
+          notification_id: id,
+          type: USER_MESSAGE,
+          actor,
+          verb,
+          message,
+          start_time: notification_start_time,
+          create_time: notification_create_time
+        }
+      };
+
+      return {
+        notifications: notification_data
+      };
+  } catch (error) {
+    Log.debug("chatMessageNotification 500 error", error);
+    return {};
+  }
+};
+
 export const getDataForNotification = async data => {
   try {
     const { data: { event } = {} } = data;
@@ -517,6 +567,8 @@ export const getDataForNotification = async data => {
         return await vitalsNotification(data);
       case CARE_PLAN_ACTIVATION:
         return await carePlanNotification(data);
+      case USER_MESSAGE:
+        return await chatMessageNotification(data);
     }
   } catch (error) {
     Log.debug("getDataForNotification 500 error", error);

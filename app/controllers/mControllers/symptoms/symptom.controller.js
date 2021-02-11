@@ -22,10 +22,15 @@ import {
   DOCUMENT_PARENT_TYPE,
   USER_CATEGORY,
   ALLOWED_VIDEO_EXTENSIONS,
-  EVENT_TYPE
+  EVENT_TYPE,
+  MESSAGE_TYPES
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
+
+
+import ChatJob from "../../../JobSdk/Chat/observer";
+import NotificationSdk from "../../../NotificationSdk";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
 
@@ -160,6 +165,26 @@ class SymptomController extends Controller {
           patientData.getUserId(),
           chatJSON
         );
+
+        const eventData = {
+          participants: [doctorData.getUserId(), patientData.getUserId()],
+          actor: {
+            id: patientData.getUserId(),
+            details: {
+              name: patientData.getFullName(),
+              category: USER_CATEGORY.PATIENT
+            }
+          },
+          details: {
+            message: `A new symptom is added.`
+          }
+        };
+  
+        const chatJob = ChatJob.execute(
+          MESSAGE_TYPES.USER_MESSAGE,
+          eventData
+        );
+        await NotificationSdk.execute(chatJob);
       }
 
       return raiseSuccess(

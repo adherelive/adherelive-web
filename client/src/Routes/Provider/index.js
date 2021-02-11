@@ -66,6 +66,15 @@ const PrivacyPolicy = lazy(() =>
   )
 );
 
+
+const ProviderTransactionPage = lazy(() => 
+    import(
+      /* webpackChunkName: "ProviderTransactionPage" */ "../../Containers/Pages/providerTransactionPage"
+
+    )
+);
+
+
 const ProviderDoctorDetailsComp = props => {
   const { match: { params: { id } = {} } = {} } = props;
   return <ProviderDoctorDetailsPage id={id} />;
@@ -164,6 +173,13 @@ class ProviderDoctor extends Component {
                   path={PATH.PROVIDER.CALENDER}
                   component={DoctorCalenderPage}
                 />
+
+                <Route
+                 exact
+                 path={PATH.PROVIDER.TRANSACTION_DETAILS}
+                 component={ProviderTransactionPage}
+                />
+
 
                 <Route exact path={""} component={ProviderDoctorPage} />
               </Switch>

@@ -22,13 +22,17 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import JobSdk from "../../../JobSdk";
 import NotificationSdk from "../../../NotificationSdk";
+
+
+import ChatJob from "../../../JobSdk/Chat/observer";
 import {
   DAYS,
   EVENT_STATUS,
   EVENT_TYPE,
   FEATURE_TYPE,
   NOTIFICATION_STAGES,
-  USER_CATEGORY
+  USER_CATEGORY,
+  MESSAGE_TYPES
 } from "../../../../constant";
 import SqsQueueService from "../../../services/awsQueue/queue.service";
 
@@ -350,6 +354,8 @@ class VitalController extends Controller {
           createdTime
         });
 
+        Log.debug("182978312 prevResponse", prevResponse);
+
         const updateEvent = await EventService.update(
           {
             details: {
@@ -391,6 +397,26 @@ class VitalController extends Controller {
         patientData.getUserId(),
         chatJSON
       );
+
+      const eventData = {
+        participants: [doctorData.getUserId(), patientData.getUserId()],
+        actor: {
+          id: patientData.getUserId(),
+          details: {
+            name: patientData.getFullName(),
+            category: USER_CATEGORY.PATIENT
+          }
+        },
+        details: {
+          message: `Recorded a reading for ${vitalTemplate.getName()}.`
+        }
+      };
+
+      const chatJob = ChatJob.execute(
+        MESSAGE_TYPES.USER_MESSAGE,
+        eventData
+      );
+      await NotificationSdk.execute(chatJob);
 
       return raiseSuccess(
         res,

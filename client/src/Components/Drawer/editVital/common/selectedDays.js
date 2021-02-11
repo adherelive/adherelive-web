@@ -37,6 +37,18 @@ class SelectedDays extends Component {
       form: { validateFields }
     } = this.props;
     validateFields();
+
+    const {vitalData = {}} = this.props;
+    let{repeat_days : existing_repeat_days =''}=vitalData||{};
+    if(existing_repeat_days){
+      this.setState({selectedDays:existing_repeat_days})
+    }
+    else{
+      const {details : {repeat_days : vital_repeat_days_new = []} ={}} = vitalData || {};
+      existing_repeat_days = vital_repeat_days_new;
+      this.setState({selectedDays:existing_repeat_days})
+    }
+
   }
 
   componentWillUnmount() {
@@ -50,7 +62,8 @@ class SelectedDays extends Component {
   
   getselectedDayRadio = () => {
     
-      const {selectedDays} = this.state;
+      let {selectedDays} = this.state;
+      const {vitalData = {}} = this.props;
       const {
         form: { getFieldValue }
         } = this.props;
@@ -148,8 +161,16 @@ class SelectedDays extends Component {
     } = this.props;
 
     const  {selectedDays} = this.state;
+    const {vitalData = {}} = this.props;
+    let{repeat_days : existing_repeat_days =''}=vitalData||{};
+    if(!existing_repeat_days){
+      const {details : {repeat_days : vital_repeat_days_new = []} ={}} = vitalData || {};
+      existing_repeat_days = vital_repeat_days_new;
+    }
 
+   
     const { handleCheckDays, formatMessage } = this;
+
     return (
       <div className="select-days-form-content">
         <div className="flex row">
@@ -164,7 +185,7 @@ class SelectedDays extends Component {
                 message:'Please select days for vitals!'
               }
             ],
-            initialValue: selectedDays
+            initialValue: existing_repeat_days ? existing_repeat_days : selectedDays
           })(<Input />)}
         </FormItem>
         <div className="flex-shrink-1 flex justify-space-evenly select-days">

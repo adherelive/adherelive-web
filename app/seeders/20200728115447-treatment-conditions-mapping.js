@@ -47,12 +47,12 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
-      {
-        condition_id: "3",
-        treatment_id: "5",
-        created_at: new Date(),
-        updated_at: new Date()
-      },
+      // {
+      //   condition_id: "3",
+      //   treatment_id: "5",
+      //   created_at: new Date(),
+      //   updated_at: new Date()
+      // },
       {
         condition_id: "4",
         treatment_id: "1",

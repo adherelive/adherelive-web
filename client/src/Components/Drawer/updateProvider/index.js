@@ -7,6 +7,7 @@ import Form from "antd/es/form";
 import messages from "./message";
 
 import UpdateProviderForm from  "./form";
+import { SAVINGS, CURRENT, ACCOUNT_TYPES } from "../../../constant";
 
 
 class updateProviderDrawer extends Component {
@@ -50,18 +51,33 @@ class updateProviderDrawer extends Component {
           prefix='91',
           mobile_number='',
           email='',
-          address=''
+          address='',
+          account_type='',
+          customer_name='',
+          account_number='',
+          ifsc_code='',
+          upi_id='',
+          razorpay_account_id='',
+          razorpay_account_name='' 
         } = values;
 
 
-        const data = {
+        let data = {};
+        
+          data = {
           name,
           prefix,
           mobile_number,
           email,
           address,
-          };
-
+          account_type,
+          customer_name,
+          account_number,
+          ifsc_code,
+          upi_id,
+          razorpay_account_id,
+          razorpay_account_name 
+          }
        
           try {
             const {updateProvider}=this.props;
@@ -79,6 +95,19 @@ class updateProviderDrawer extends Component {
             message.warn(this.formatMessage(messages.somethingWentWrong));
           }
         
+      }else{
+        console.log("18731297 err --> ", err);
+        let allErrors = '';
+        for(let each in err){
+          const {errors = [] } = err[each] || {};
+          for(let error of errors ){
+            const {message = ''} = error;
+            allErrors = allErrors + message+".";
+          }
+        }
+        message.warn(allErrors);
+
+        return;
       }
 
     });

@@ -85,4 +85,11 @@ router.post(
     PatientController.createNewCareplanforPatient
 )
 
+router.get(
+    "/generate_prescription/:care_plan_id",
+    Authenticated,
+    PatientController.generatePrescription
+);
+  
+
 module.exports = router;

@@ -69,13 +69,11 @@ export const formatPatientTableData = data => {
   Object.keys(doctors).forEach(id => {
     const { basic_info: { user_id } = {} } = doctors[id] || {};
 
-    // console.log("872981231 ", { user_id, authenticated_user });
 
     if (user_id === authenticated_user) {
       doctor_id = id;
     }
   });
-  // console.log("872981231 ", { doctor_id });
 
   let patientData = patients[id] || {};
   let treatment = "";
@@ -129,8 +127,7 @@ export const formatPatientTableData = data => {
     chats: patientChatIds = []
   } = patientData || {};
 
-  const { basic_info: { first_name, middle_name, last_name } = {} } =
-    doctors[doctor_id] || {};
+ 
 
   const {} = users[user_id] || {};
   let chatData = {};

@@ -35,6 +35,7 @@ import {
 // import Button from "antd/es/button";
 import Menu from "antd/es/menu";
 import Dropdown from "antd/es/dropdown";
+import {CHAT_MESSAGE_TYPE} from "../../constant";
 // import { USER_ADHERE_BOT, CHAT_MESSAGE_TYPE, PARTS, PART_LIST_BACK, PART_LIST_CODES, PART_LIST_FRONT, BODY,PARTS_GRAPH,BODY_VIEW,BODY_SIDE } from "../../constant";
 
 export const MENU_ITEMS = {
@@ -127,7 +128,7 @@ class ChatForm extends Component {
     this.setState({ newMessage: event.target.value });
   };
 
-  sendMessage = event => {
+  sendMessage = async(event) => {
     if (event) {
       event.preventDefault();
     }
@@ -135,13 +136,17 @@ class ChatForm extends Component {
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
       this.setState({ newMessage: "" });
-      this.props.channel.sendMessage(message);
+      const resp = await this.props.channel.sendMessage(message);
+      if(message){
+        this.props.raiseChatNotification(message)
+      }
     }
     if (this.state.fileList.length > 0) {
       for (let i = 0; i < this.state.fileList.length; ++i) {
         const formData = new FormData();
         formData.append("file", this.state.fileList[i]);
-        this.props.channel.sendMessage(formData);
+        const respo = await this.props.channel.sendMessage(formData);
+        this.props.raiseChatNotification(this.props.formatMessage(messages.newDocumentUploadedNotify))
       }
       this.setState({ fileList: [] });
     }
@@ -168,18 +173,28 @@ class ChatForm extends Component {
     this.setState({ viewConsultationModal: false });
   };
 
-  sendPaymentMessage = ({ name, type, amount, productId }) => e => {
+  sendPaymentMessage = (data) => async(e) => {
+    const {authenticated_user, authenticated_category} = this.props;
     e.preventDefault();
-    this.props.channel.sendMessage(
+    const { name, type, amount, productId } = data || {};
+    const response = await this.props.channel.sendMessage(
       JSON.stringify({
         meta: {
           name,
-          type,
+          payment_type: type,
+          type: CHAT_MESSAGE_TYPE.CONSULTATION,
           amount,
           productId
+        },
+        author: {
+          id: authenticated_user,
+          category: authenticated_category
         }
       })
     );
+
+    const notificationMessage = this.props.formatMessage(messages.newPaymentAddedNotify, {name})
+    this.props.raiseChatNotification(notificationMessage)
 
     this.setState({ viewConsultationModal: false });
   };
@@ -200,7 +215,7 @@ class ChatForm extends Component {
             name,
             type,
             amount,
-            productId: id
+            productId: id,
           })}
         >
           <div className="flex justify-space-between align-center bw1 br5 p10">
@@ -247,7 +262,7 @@ class ChatForm extends Component {
               {" "}
               {/*formatMessage(messages.consultationFeeText)*/}
               <SwapOutlined
-                className="text-white fs20 pointer"
+                className="text-white fs20 pointer br50 h36 w36 p8 bg-lighter-sky-blue"
                 onClick={this.handleConsultationModal}
               />
             </Tooltip>
@@ -260,11 +275,12 @@ class ChatForm extends Component {
             showUploadList={false}
             multiple={false}
             accept=".jpg,.jpeg,.png,.pdf,.mp4"
-            className="chat-upload-component"
+            className="flex align-center chat-upload-component"
           >
-            <div className="chat-upload-btn">
-              {/* <Icon type="paper-clip" className='h20 mt6' /> */}
-              <img src={PaperClip} className="h30 mt6 pointer" />
+            <div
+            className="chat-upload-btn"
+           >
+               <Icon type="paper-clip" className="text-white fs20 pointer br50 h36 w36 p8 bg-lighter-sky-blue" />
             </div>
           </Upload>
         </Form>
@@ -395,7 +411,7 @@ class TwilioChat extends Component {
     this.initChat();
   };
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data, ...rest) => this.props.intl.formatMessage(data, ...rest);
 
   initChat = () => {
     this.chatClient = new Chat(this.state.token);
@@ -763,6 +779,21 @@ class TwilioChat extends Component {
     }
   };
 
+  raiseChatNotification = (message) => {
+    const {
+      patientId = null,
+      patients = {}
+    } = this.props;
+
+    const {
+      [patientId]: { basic_info: { user_id: patientUserId = null } = {} } = {}
+    } = patients;
+
+    const data = { message, receiver_id: patientUserId}
+
+    const resp = this.props.raiseChatNotification(data)
+  }
+
   render() {
     const { getDoctorConsultations } = this.props;
     const { ChatForm, handleReply } = this;
@@ -840,6 +871,8 @@ class TwilioChat extends Component {
                 channel={this.channel}
                 formatMessage={this.formatMessage}
                 getDoctorConsultations={getDoctorConsultations}
+                raiseChatNotification={this.raiseChatNotification}
+                {...this.props}
               />
             </div>
           )}

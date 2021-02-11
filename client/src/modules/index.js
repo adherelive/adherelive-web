@@ -23,6 +23,7 @@ import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
 import template_medications from "./templateMedications";
+import template_vitals from "./templateVitals"
 import care_plan_templates from "./carePlanTemplates";
 import upload_documents from "./uploadDocuments";
 import show_template_drawer from "./showDrawer";
@@ -33,7 +34,7 @@ import specialities from "./specialities";
 import twilio from "./twilio";
 import symptoms from "./symptoms";
 import chatMessages from "./chatMessages";
-import care_plan_template_ids from "./carePlanTemplateIds";
+// import care_plan_template_ids from "./carePlanTemplateIds";
 import notifications from "./notifications";
 import vital_templates from "./vital_templates";
 import repeat_intervals from "./vital_occurence";
@@ -43,6 +44,8 @@ import account_details from "./accountDetails";
 import features from "./features";
 import features_mappings from "./featuresMappings";
 import reports from "./reports";
+import transactions from "./transactions";
+import payment_products from "./paymentProducts"; 
 
 const rootReducer = combineReducers({
   auth,
@@ -69,6 +72,7 @@ const rootReducer = combineReducers({
   upload_documents,
   template_appointments,
   template_medications,
+  template_vitals,
   care_plan_templates,
   show_template_drawer,
   colleges,
@@ -78,7 +82,6 @@ const rootReducer = combineReducers({
   specialities,
   twilio,
   chatMessages,
-  care_plan_template_ids,
   notifications,
   symptoms,
   vital_templates,
@@ -88,7 +91,9 @@ const rootReducer = combineReducers({
   account_details,
   features,
   features_mappings,
-  reports
+  reports,
+  transactions,
+  payment_products
 });
 
 export default (state, action) => {

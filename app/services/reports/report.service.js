@@ -53,7 +53,8 @@ export default class ReportService {
         try {
             return await Database.getModel(TABLE_NAME).findAll({
                 where: data,
-                raw: true
+                raw: true,
+                order: [["test_date", "DESC"]]
             });
         } catch(error) {
             throw error;

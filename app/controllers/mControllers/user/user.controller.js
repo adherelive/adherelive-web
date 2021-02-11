@@ -111,19 +111,20 @@ class MobileUserController extends Controller {
       });
 
       if(process.config.app.env === "development") {
-        const emailPayload = {
-          title: "OTP Verification for patient",
-          toAddress: process.config.app.developer_email,
-          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-          templateData: {
-            title: "Patient",
-            mainBodyText: "OTP for adhere patient login is",
-            subBodyText: otp,
-            host: process.config.WEB_URL,
-            contactTo: process.config.app.support_email
-          }
-        };
-        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        // const emailPayload = {
+        //   title: "OTP Verification for patient",
+        //   toAddress: process.config.app.developer_email,
+        //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+        //   templateData: {
+        //     title: "Patient",
+        //     mainBodyText: "OTP for adhere patient login is",
+        //     subBodyText: otp,
+        //     host: process.config.WEB_URL,
+        //     contactTo: process.config.app.support_email
+        //   }
+        // };
+        // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        Logger.info(`OTP :::: ${otp}`);
       } else {
 
         if(apiUserDetails.getEmail()) {
@@ -210,7 +211,7 @@ class MobileUserController extends Controller {
           otpDetails[0].get("user_id")
         );
 
-        const userData = await UserWrapper(userDetails.get());
+        const userData = await MUserWrapper(userDetails.get());
         let permissions = {
           permissions: []
         };
@@ -252,6 +253,7 @@ class MobileUserController extends Controller {
             },
             auth_user: userData.getId(),
             auth_category: userData.getCategory(),
+            hasConsent: userData.getConsent(),
             ...permissions
           },
           "Signed in successfully"
@@ -434,6 +436,7 @@ class MobileUserController extends Controller {
             },
             auth_user: apiUserDetails.getId(),
             auth_category: apiUserDetails.getCategory(),
+            hasConsent: apiUserDetails.getConsent(),
             ...permissions
           },
           "Signed in successfully"
@@ -560,17 +563,13 @@ class MobileUserController extends Controller {
   }
 
   onAppStart = async (req, res, next) => {
-    console.log(
-      "--------------------CHALK-------------------",
-      req.userDetails
-    );
     let response;
     try {
       if (req.userDetails.exists) {
         const {
           userId,
           userData,
-          userData: { category } = {}
+          userData: { category, has_consent } = {}
         } = req.userDetails;
         // const user = await userService.getUserById(userId);
 
@@ -828,7 +827,8 @@ class MobileUserController extends Controller {
           condition_ids: conditionIds,
           treatment_ids: treatmentIds,
           auth_user: userId,
-          auth_category: category
+          auth_category: category,
+          hasConsent: has_consent,
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
@@ -2230,6 +2230,88 @@ class MobileUserController extends Controller {
       return this.raiseServerError(res);
     }
   };
+
+  giveConsent = async (req,res) => {
+    const {raiseClientError} = this;
+    try{
+      const {userDetails: {userId} = {}, body: {agreeConsent} = {}} = req;
+
+      Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
+
+      if(!agreeConsent) {
+        return raiseClientError(res, 422, {}, "Cannot proceed without accepting Terms of Service");
+      }
+
+      //update
+      await userService.updateUser(
+          {
+            has_consent: agreeConsent
+          },
+          userId
+      );
+
+
+      const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+      const secret = process.config.TOKEN_SECRET_KEY;
+      const accessToken = await jwt.sign(
+          {
+            userId
+          },
+          secret,
+          {
+            expiresIn
+          }
+      );
+
+      const appNotification = new AppNotification();
+
+      const notificationToken = appNotification.getUserToken(
+          `${userId}`
+      );
+      // const feedId = base64.encode(`${userId}`);
+
+      const userRef = await userService.getUserData({ id: userId });
+
+      const apiUserDetails = await MUserWrapper(userRef.get());
+
+      // let permissions = {
+      //   permissions: []
+      // };
+
+      // if (apiUserDetails.isActivated()) {
+      //   permissions = await apiUserDetails.getPermissions();
+      // }
+
+      const dataToSend = {
+        ...(await apiUserDetails.getReferenceInfo()),
+        auth_user: apiUserDetails.getId(),
+        notificationToken: notificationToken,
+        feedId: `${userId}`,
+        hasConsent: apiUserDetails.getConsent(),
+        auth_category: apiUserDetails.getCategory()
+      };
+
+      res.cookie("accessToken", accessToken, {
+        expires: new Date(
+            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+        ),
+        httpOnly: true
+      });
+
+      return this.raiseSuccess(
+          res,
+          200,
+          { ...dataToSend },
+          "Initial data retrieved successfully"
+      );
+
+
+    }catch(error){
+      Logger.debug("giveConsent 500 error ----> ", error);
+      return this.raiseServerError(res);
+    }
+  }
 }
 
 export default new MobileUserController();

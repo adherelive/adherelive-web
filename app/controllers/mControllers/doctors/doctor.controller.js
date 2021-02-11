@@ -233,6 +233,17 @@ class MobileDoctorController extends Controller {
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
+      // name split
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0] || null;
+      let middle_name = patientName.length == 3 ? patientName[1] : null;
+      let last_name =
+          patientName.length == 3
+              ? patientName[2]
+              : patientName.length == 2
+              ? patientName[1]
+              : null;
+
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
         userData = await UserWrapper(userExists[0].get());
@@ -245,6 +256,12 @@ class MobileDoctorController extends Controller {
             height,
             weight,
             address,
+            first_name,
+            middle_name,
+            last_name,
+            gender,
+            dob: date_of_birth,
+            age: getAge(moment(date_of_birth)),
             details: { ...previousDetails, ...patientOtherDetails }
           },
           patient_id
@@ -278,16 +295,6 @@ class MobileDoctorController extends Controller {
         }
 
         let newUserId = userData.getId();
-
-        let patientName = name.trim().split(" ");
-        let first_name = patientName[0];
-        let middle_name = patientName.length == 3 ? patientName[1] : "";
-        let last_name =
-          patientName.length == 3
-            ? patientName[2]
-            : patientName.length == 2
-            ? patientName[1]
-            : "";
 
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
@@ -1783,8 +1790,20 @@ class MobileDoctorController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0];
+      let middle_name = patientName.length == 3 ? patientName[1] : "";
+      let last_name =
+        patientName.length == 3
+          ? patientName[2]
+          : patientName.length == 2
+          ? patientName[1]
+          : "";
+
+      const birth_date = moment(date_of_birth);
+      const age = getAge(date_of_birth);
+
       const patientUpdateData = {
-        ...prevBasicInfo,
         details: {
           ...previousDetails,
           allergies,
@@ -1792,7 +1811,14 @@ class MobileDoctorController extends Controller {
         },
         height,
         weight,
-        address
+        address,
+        gender,
+        birth_date,
+        age,
+        dob: date_of_birth,
+        first_name,
+        middle_name,
+        last_name
       };
 
       const updatedPatient = await patientService.update(

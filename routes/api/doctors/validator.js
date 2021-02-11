@@ -154,7 +154,7 @@ const addQualificationRegistrationForm = Joi.object().keys({
         .required()
         .label("Expiry date is required"),
       number: Joi.string()
-        .regex(/^\d+$/)
+        .regex(/^[a-zA-Z0-9]*$/)
         .required()
         .label("Please enter valid registration number"),
       registration_council_id: Joi.string()
@@ -263,7 +263,7 @@ const addRegistrationStepForm = Joi.object().keys({
       .required()
       .label("Expiry date is required"),
     number: Joi.string()
-      .regex(/^\d+$/)
+      .regex(/^[a-zA-Z0-9]*$/)
       .required()
       .label("Please enter valid registration number"),
     registration_council_id: Joi.string()

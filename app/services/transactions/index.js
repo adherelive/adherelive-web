@@ -19,6 +19,10 @@ export default class Transaction {
         return this._data.requestor_id;
     };
 
+    getPayeeId = () => this._data.payee_id;
+
+    getPayeeType = () => this._data.payee_type;
+
     getPaymentProduct = () => {
       return this._data.payment_products;
     };

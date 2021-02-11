@@ -4,9 +4,15 @@ import moment from "moment";
 import Loading from "../../Common/Loading";
 import messages from "./messages";
 import Timeline from "antd/es/timeline";
+import message from "antd/es/message";
 import ClockCircleOutlined from "@ant-design/icons/es/icons/ClockCircleOutlined";
 import CheckCircleOutlined from "@ant-design/icons/es/icons/CheckCircleOutlined";
-import RightCircleFilled from "@ant-design/icons/es/icons/RightCircleFilled";
+import DeleteOutlined from "@ant-design/icons/es/icons/DeleteOutlined";
+import editIcon from "../../../Assets/images/edit.svg";
+import Modal from "antd/es/modal";
+import Button from "antd/es/button";
+import Form from "antd/es/form";
+import Input from "antd/es/input";
 
 const { Item: TimelineItem } = Timeline;
 
@@ -43,6 +49,8 @@ class VitalTimeline extends Component {
   componentDidMount() {
     this.getTimelineData();
   }
+
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const {id: prevId} = prevProps;
@@ -83,6 +91,8 @@ class VitalTimeline extends Component {
 
     let currentTemplate = {};
 
+    console.log("819287213 ", {details, template});
+
     template.forEach(data => {
       const { id } = data || {};
       if (id === responseId) {
@@ -92,40 +102,100 @@ class VitalTimeline extends Component {
     return currentTemplate;
   };
 
+  openEditVitalResponseModal = (data) => (e) => {
+    e.preventDefault();
+    const {response: {value = {}} = {}} = data || {};
+    this.setState({vitalResponseData: data, updateValue: {...value}, modalVisible: true});
+  };
+
+  handleEditVitalResponse = (data) => async (e) => {
+    e.preventDefault();
+    const {editVitalResponse} = this.props;
+    const {updateValue} = this.state;
+    console.log("018238129 updateValue --> ", {updateValue});
+    // editVitalResponse(data);
+    try {
+      this.setState({responseLoading: true});
+      const response = await editVitalResponse({...data, value: updateValue});
+      const {status, payload: {data: {vital_date_ids, vital_timeline} = {}, message: responseMessage = ""} = {}} = response;
+      if(status === true) {
+        this.setState({vital_date_ids, vital_timeline, modalVisible: false, responseLoading: false});
+        message.success(responseMessage);
+      } else {
+        this.setState({responseLoading: false});
+        message.warn(responseMessage);
+      }
+    } catch(error) {
+      this.setState({responseLoading: false});
+      console.log("handleEditVitalResponse catch error", error);
+    }
+  };
+
+  handleDeleteVitalResponse = (data) => async (e) => {
+    e.preventDefault();
+    const {deleteVitalResponse} = this.props;
+    try {
+      const response = await deleteVitalResponse(data);
+      const {status, payload: {data: {vital_date_ids, vital_timeline} = {}, message: responseMessage = ""} = {}} = response;
+      if(status === true) {
+        this.setState({vital_date_ids, vital_timeline});
+        message.success(responseMessage);
+      } else {
+        message.warn(responseMessage);
+      }
+    } catch(error) {
+      console.log("handleDeleteVitalResponse catch error", error);
+    }
+  };
+
   getEventsForDay = events => {
     const { intl: { formatMessage } = {} } = this.props;
-    const { getVitalTemplate } = this;
+    const { getVitalTemplate, openEditVitalResponseModal, handleDeleteVitalResponse } = this;
 
     return events.map(event => {
       const { id, status, end_time, details = {} ,updated_at = '' } = event || {};
       // const { response: { value = {}, currentTime } = {} } = details;
       const {response = []} = details;
-      console.log("183908309123 details ---> ", {details});
 
       if(response.length > 0) {
-        return response.map(res => {
+        return response.map((res, responseIndex) => {
           const {value = {}, createdTime} = res || {};
           switch (status) {
             case COMPLETED:
               return (
-                  <TimelineItem
+                  <Fragment>
+                  {Object.keys(value).length > 0 && <TimelineItem
                       key={id}
                       dot={TIMELINE_STATUS[status].dot}
                       color={TIMELINE_STATUS[status].color}
-                      className="pl10"
+                      className="pl10 timeline-hover wp100"
                   >
                     <div className="mb6 fs16 fw500">{moment(createdTime).format("LT")}</div>
-                    {Object.keys(value).map((fieldId, index) => {
-                      const { label, placeholder } = getVitalTemplate(fieldId, event);
+                    {/*<div className="">*/}
+                      {Object.keys(value).map((fieldId, index) => {
+                        const { label, placeholder } = getVitalTemplate(fieldId, event);
 
-                      return (
-                          <div
-                              key={`${id}-${fieldId}-${index}`}
-                              className="mb4 fs14 fw500"
-                          >{`${label}: ${value[fieldId]} ${placeholder}`}</div>
-                      );
-                    })}
-                  </TimelineItem>
+                        return (
+                            <div
+                                key={`${id}-${fieldId}-${index}`}
+                                className="mb4 fs14 fw500"
+                            >{`${label}: ${value[fieldId]} ${placeholder}`}</div>
+                        );
+                      })}
+                      <div className="edit-delete-vitals flex align-center"> {/*edit-delete-vitals*/}
+                        {/*  EDIT  */}
+                        {/*<div onClick={openEditVitalResponseModal({response: res,event, id, index: responseIndex})}>*/}
+                          <Button type={"secondary"} onClick={openEditVitalResponseModal({response: res,event, id, index: responseIndex})}>{this.formatMessage(messages.edit_response_btn)}</Button>
+                        {/*</div>*/}
+
+                        {/*  DELETE  */}
+                        {/*<div onClick={handleDeleteVitalResponse({id, index: responseIndex})}>*/}
+                          <Button type={"danger"} ghost className="ml10 fs14 no-border" onClick={handleDeleteVitalResponse({id, index: responseIndex})}>{this.formatMessage(messages.delete_response_btn)}</Button>
+                        {/*</div>*/}
+                      </div>
+                    {/*</div>*/}
+                  </TimelineItem>}
+                  </Fragment>
               );
             case EXPIRED:
               return (
@@ -178,19 +248,80 @@ class VitalTimeline extends Component {
     });
   };
 
+  closeModal = (e) => {
+    this.setState({modalVisible: false});
+  };
+
+  handleResponseUpdate = (fieldId) => (e) => {
+    e.preventDefault();
+    console.log("1908381293 fieldId, value", {fieldId, value: e.target.value});
+    let {updateValue = {}} = this.state;
+
+    updateValue[fieldId] = e.target.value;
+    this.setState({updateValue});
+  };
+
+  getVitalResponseModal = () => {
+    const {modalVisible = false,vitalResponseData = {}, responseLoading} = this.state;
+    const {closeModal, getVitalTemplate, handleResponseUpdate} = this;
+
+    console.log("18737129 vitalResponseData", {vitalResponseData});
+
+    const {response, event, id, index} = vitalResponseData || {};
+    const {value} = response || {};
+
+    return (
+        <Modal
+          visible={modalVisible}
+          onCancel={closeModal}
+          onOk={this.handleEditVitalResponse({id, index})}
+          closable
+          title={this.formatMessage(messages.edit_response_title_text)}
+          okButtonProps={
+            {
+              loading: responseLoading
+            }
+          }
+        >
+          {Object.keys(value).map((fieldId, index) => {
+            const { label, placeholder } = getVitalTemplate(fieldId, event);
+
+            return (
+                <Fragment>
+                  <div
+                      key={`${id}-${fieldId}-${index}`}
+                      className="mb4 fs14 fw500"
+                  >{`${label}:`}</div>
+
+                  <Input
+                    defaultValue={value[fieldId]}
+                    suffix={placeholder}
+                    onChange={handleResponseUpdate(fieldId)}
+                    className="mb20"
+                  />
+                </Fragment>
+            );
+          })}
+        </Modal>
+    );
+  };
+
   render() {
-    const {id} = this.props;
-    const { loading } = this.state;
-    const { getTimeline } = this;
+    // const {id} = this.props;
+    const { loading, modalVisible } = this.state;
+    const { getTimeline, getVitalResponseModal } = this;
 
     if (loading === true) {
       return <Loading />;
     }
 
     return (
-      <div className="wp100 flex direction-column align-start">
-        <Timeline>{getTimeline()}</Timeline>
-      </div>
+        <Fragment>
+          <div className="wp100 flex direction-column align-start">
+            <Timeline className="wp100">{getTimeline()}</Timeline>
+          </div>
+          {modalVisible && getVitalResponseModal()}
+        </Fragment>
     );
   }
 }

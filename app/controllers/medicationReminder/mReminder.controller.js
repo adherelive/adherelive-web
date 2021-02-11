@@ -6,21 +6,22 @@ import userPreferenceService from "../../services/userPreferences/userPreference
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import medicineService from "../../services/medicine/medicine.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-import doctorService from "../../services/doctor/doctor.service";
+// import doctorService from "../../services/doctor/doctor.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 // API WRAPPERS ----------------------------------------------
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../ApiWrapper/web/medicine";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import PatientWrapper from "../../ApiWrapper/web/patient";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
+// import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
-
-import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+
+import * as medicationHelper from "./medicationHelper";
 
 import {
   CUSTOM_REPEAT_OPTIONS,
@@ -61,16 +62,6 @@ const KEY_DOSE = "dose";
 const KEY_UNIT = "dose_unit";
 const KEY_CUSTOM_REPEAT_OPTIONS = "custom_repeat_options";
 const KEY_MEDICINE_TYPE = "medicine_type";
-
-const medicationReminderDetails = {
-  [KEY_REPEAT_TYPE]: REPEAT_TYPE,
-  [KEY_DAYS]: DAYS,
-  [KEY_TIMING]: MEDICATION_TIMING,
-  [KEY_DOSE]: DOSE_AMOUNT,
-  [KEY_UNIT]: DOSE_UNIT,
-  [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
-  [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
-};
 
 class MReminderController extends Controller {
   constructor() {
@@ -519,124 +510,48 @@ class MReminderController extends Controller {
   };
 
   getMedicationDetails = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       // Logger.debug("test", medicationReminderDetails);
-      const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+      const { params: { patient_id  } = {}, userDetails: { userId } = {} } = req;
       Logger.info(`params: patient_id : ${patient_id}`);
 
-      if (!parseInt(patient_id)) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "Please select valid patient to continue"
-        );
-      }
-      const patient = await PatientWrapper(null, patient_id);
-      const timingPreference = await userPreferenceService.getPreferenceByData({
-        user_id: patient.getUserId()
-      });
-      const options = await UserPreferenceWrapper(timingPreference);
-      const { timings: userTimings = {} } = options.getAllDetails();
+      // if (!parseInt(patient_id)) {
+      //   return raiseClientError(
+      //     res,
+      //     422,
+      //     {},
+      //     "Please select valid patient to continue"
+      //   );
+      // }
 
-      const medicationTimings = [];
       let timings = {};
 
-      Object.keys(userTimings).forEach(id => {
-        const { value } = userTimings[id] || {};
 
-        switch (id) {
-          case WAKE_UP:
-            medicationTimings.push({
-              text: "After Wake Up",
-              time: moment(value).toISOString()
-            });
-            break;
-          case SLEEP:
-            medicationTimings.push({
-              text: "Before Sleep",
-              time: moment(value).toISOString()
-            });
-            break;
-          case BREAKFAST:
-            medicationTimings.push(
-              {
-                text: "Before Breakfast",
-                time: moment(value)
-                  .subtract(30, "minutes")
-                  .toISOString()
-              },
-              {
-                text: "After Breakfast",
-                time: moment(value)
-                  .add(30, "minutes")
-                  .toISOString()
-              }
-            );
-            break;
-          case LUNCH:
-            medicationTimings.push(
-              {
-                text: "Before Lunch",
-                time: moment(value)
-                  .subtract(30, "minutes")
-                  .toISOString()
-              },
-              {
-                text: "After Lunch",
-                time: moment(value)
-                  .add(30, "minutes")
-                  .toISOString()
-              }
-            );
-            break;
-          case EVENING:
-            medicationTimings.push(
-              {
-                text: "Before Evening Tea",
-                time: moment(value)
-                  .subtract(30, "minutes")
-                  .toISOString()
-              },
-              {
-                text: "After Evening Tea",
-                time: moment(value)
-                  .add(30, "minutes")
-                  .toISOString()
-              }
-            );
-            break;
-          case DINNER:
-            medicationTimings.push(
-              {
-                text: "Before Dinner",
-                time: moment(value)
-                  .subtract(30, "minutes")
-                  .toISOString()
-              },
-              {
-                text: "After Dinner",
-                time: moment(value)
-                  .add(30, "minutes")
-                  .toISOString()
-              }
-            );
-            break;
-        }
-      });
+      if(parseInt(patient_id) !== 0) {
+        const patient = await PatientWrapper(null, patient_id);
+        const timingPreference = await userPreferenceService.getPreferenceByData({
+          user_id: patient.getUserId()
+        });
+        const options = await UserPreferenceWrapper(timingPreference);
+        const { timings: userTimings = {} } = options.getAllDetails();
 
-      medicationTimings.sort((activityA, activityB) => {
-        const { time: a } = activityA || {};
-        const { time: b } = activityB || {};
-        if (moment(a).isBefore(moment(b))) return -1;
+        const medicationTimings = medicationHelper.getTimings(userTimings);
 
-        if (moment(a).isAfter(moment(b))) return 1;
-      });
+        medicationTimings.sort((activityA, activityB) => {
+          const { time: a } = activityA || {};
+          const { time: b } = activityB || {};
+          if (moment(a).isBefore(moment(b))) return -1;
 
-      medicationTimings.forEach((timing, index) => {
-        timings[`${index + 1}`] = timing;
-      });
+          if (moment(a).isAfter(moment(b))) return 1;
+        });
+
+        medicationTimings.forEach((timing, index) => {
+          timings[`${index + 1}`] = timing;
+        });
+      } else {
+        timings = MEDICATION_TIMING;
+      }
 
       const medicationReminderDetails = {
         [KEY_REPEAT_TYPE]: REPEAT_TYPE,
@@ -648,6 +563,9 @@ class MReminderController extends Controller {
         [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
       };
 
+      Logger.debug("8943748297387489999 Patient id ====>",{patient_id,medicationReminderDetails});
+
+
       return raiseSuccess(
         res,
         200,
@@ -657,7 +575,7 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      console.log("Get m-reminder details error ----> ", error);
+      console.log("8943748297387489999 Get m-reminder details error ----> ", error);
       return raiseServerError(res, 500, error.message, "something went wrong");
     }
   };

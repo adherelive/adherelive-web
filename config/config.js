@@ -29,7 +29,7 @@ module.exports = () => {
     },
     email: {
       USER: process.env.SENDGRID_USER,
-      KEY: process.env.SENDGRID_PASSWORD,
+      KEY: process.env.SENDGRID_API_KEY,
       FROM: process.env.SENDGRID_FROM_ADDRESS,
       FROM_NAME: process.env.SENDGRID_FROM_NAME
     },

@@ -1,6 +1,7 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as UserCategoryPermissionTableName } from "./userCategoryPermissions";
+import {TABLE_NAME as providerTableName} from "./providers";
 import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "users";
@@ -81,11 +82,20 @@ export const db = database => {
       verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
-      }
+      },
       // system_generated_password: {
       //   type: DataTypes.BOOLEAN,
       //   defaultValue: false
-      // }
+      // },
+      
+      has_consent:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
+      deleted_at: {
+        type: DataTypes.DATE
+
+    },
     },
     {
       underscored: true,
@@ -103,7 +113,9 @@ export const db = database => {
             onboarded: this.onboarded,
             onboarding_status: this.onboarding_status,
             prefix: this.prefix,
-            verified: this.verified
+            verified: this.verified,
+            deleted_at:this.deleted_at,
+            has_consent:this.has_consent
             // system_generated_password: this.system_generated_password
           };
         }
@@ -131,6 +143,11 @@ export const associate = database => {
   users.hasOne(patients, {
     sourceKey: "id",
     foreignKey: "user_id"
+  });
+
+  database.models[TABLE_NAME].hasOne(database.models[providerTableName], {
+     sourceKey:"id",
+     foreignKey:"user_id"
   });
 
   users.belongsToMany(permissions, {

@@ -55,7 +55,7 @@ class PatientAlerts extends Component {
         const {text} = symptoms[id] || {};
 
         return (
-            <div key={`symptom-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6">
+            <div key={`symptom-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6 tal">
                 <div className="wp30 pl16 bl-dark-aqua fw600">{formatMessage(messages.symptom_added_text)}</div>
                 <div className="wp70 fw600">{text}</div>
                 {/*<div className="wp40">{`${moment(time).format("LL")} ${moment(time).format("LT")}`}</div>*/}
@@ -68,13 +68,13 @@ class PatientAlerts extends Component {
         const {status, details} = data || {};
 
         return (
-            <div key={`medication-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6">
+            <div key={`medication-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6 tal">
                 {status === EVENT_STATUS.EXPIRED ? (
-                    <div className="wp30 pl16 fw600 bl-warning-red">{formatMessage(messages.missed_medication)}</div>
+                    <div className="wp30 pl16 fw600 bl-warning-red ">{formatMessage(messages.missed_medication)}</div>
                 ) : (
-                    <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.taken_medication)}</div>
+                    <div className="wp30 pl16 fw600 bl-green ">{formatMessage(messages.taken_medication)}</div>
                 )}
-                <div className="wp70 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+                <div className="wp70 fw600 ">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
             </div>
         );
     };
@@ -84,7 +84,7 @@ class PatientAlerts extends Component {
         const {status} = data || {};
 
         return (
-            <div key={`appointment-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6">
+            <div key={`appointment-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6 tal">
                 {status === EVENT_STATUS.EXPIRED ? (
                     <div className="wp30 pl16 fw600 bl-warning-red">{formatMessage(messages.missed_appointment)}</div>
                 ) : (
@@ -100,13 +100,13 @@ class PatientAlerts extends Component {
         const {status, details: {vital_templates: {basic_info: {name} = {}} = {}} = {}} = data || {};
 
         return (
-            <div key={`vital-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6">
+            <div key={`vital-${time}`} className="wp100 flex align-center pt10 pb10 pl6 pr6 tal">
                 {status === EVENT_STATUS.EXPIRED ? (
-                    <div className="wp15 pl16 fw600 bl-warning-red">{formatMessage(messages.missed_vital)}</div>
+                    <div className="wp30 pl16 fw600 bl-warning-red">{formatMessage(messages.missed_vital)}</div>
                 ) : (
                     <div className="wp30 pl16 fw600 bl-green">{formatMessage(messages.completed_vital)}</div>
                 )}
-                <div className="wp75 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
+                <div className="wp50 fw600">{`${moment(time).format("DD MMM, YYYY")} (${moment(time).format("LT")})`}</div>
                 <div className="wp20 fw500 word-wrap">{`(${name})`}</div>
             </div>
         );

@@ -81,7 +81,7 @@ class ProviderTable extends Component {
         return (
             <Table
                 // onRow={onRow}
-                className="wp100 mt40"
+                className="wp100 mt40 mb40"
                 rowClassName={() => "pointer"}
                 loading={loading === true ? getLoadingComponent() : false}
                 columns={getColumn({

@@ -54,6 +54,14 @@ export const db = database => {
         values: USER_CATEGORY_ARRAY,
         allowNull: false
       },
+        for_user_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        for_user_type: {
+            type: DataTypes.ENUM,
+            values: USER_CATEGORY_ARRAY,
+        },
         product_user_type: {
             type: DataTypes.ENUM,
             values: PRODUCT_USER_TYPES,

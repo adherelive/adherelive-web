@@ -38,13 +38,12 @@ class Medicine extends Component {
   }
 
   componentDidMount() {
-    const {addMedication , medicationData} = this.props;
-    if(addMedication && !medicationData){
+    const {addMedication , medicationData,editMedication} = this.props;
+    if(addMedication  && !medicationData ){
         this.handleMedicineSearch(" ");
-        return;
+    } else {
+      this.getDefaultMedicine();
     }
-
-    this.getDefaultMedicine();
   }
 
   getDefaultMedicine = () => {
@@ -54,29 +53,49 @@ class Medicine extends Component {
       medicines = {}
     } = this.props;
 
-    let { basic_info: { details: { medicine_id = null } = {} } = {} } =
-    medications[medication_id] || {};
-
-    const { basic_info: { name } = {} } = medicines[medicine_id] || {};
 
     let defaultHit = [];
 
-    const {medicationData ={}} = this.props;
-    if(medicationData){
-      const {medicine_id : template_medicine_id  } =  medicationData || {};
+    const {medicationData} = this.props;
+    const {templatePage = false} = medicationData || {};
+
+
+    let medicine_id = null;
+    let medicineName = "";
+    
+    // for template edit medication from patient details page
+    if(medicationData && !templatePage){
+      const {medicine_id : template_medicine_id, medicine : name  } =  medicationData || {};
       if(template_medicine_id){
         medicine_id = template_medicine_id;
+        medicineName = name;
       }
+    }else if(medicationData && templatePage){
+      // for template from settings page
+      const {medicine_id : template_medicine_id  } =  medicationData || {};
+      const { basic_info: { name, id } = {} } = medicines[template_medicine_id] || {};
+
+      if(template_medicine_id){
+        medicine_id = template_medicine_id;
+        medicineName = name;
+      }
+
+    }
+    else{
+      // for default valMedicine of edit medication w/t template
+    const  { basic_info: { details: { medicine_id : med_id = null } = {} } = {} } =
+    medications[medication_id] || {};
+    medicine_id=med_id;
+    const { basic_info: { name, id } = {} } = medicines[medicine_id] || {};
+    medicineName=name;
     }
 
-    this.index.search(name).then(({ hits }) => {
+    this.index.search(medicineName).then(({ hits }) => {
 
         defaultHit = hits.filter(hit => hit.medicine_id === medicine_id);
-      console.log("19831829 defaultHit inside--> ",medicine_id, hits, defaultHit);
       this.setState({hits: defaultHit, temp_medicine: medicine_id});
     });
 
-    console.log("19831829 defaultHit --> ", defaultHit);
   };
 
   
@@ -100,22 +119,7 @@ class Medicine extends Component {
       medications[medication_id] || {};
 
     const { basic_info: { name: med_name = "" } = {} } = medicines[medicine_id] || {};
-    //
-    // if (!temp_medicine) {
-    //   defaultOption.push(
-    //     <Option key={`opt-${medicine_id}`} value={`${medicine_id}`}>
-    //         <Tooltip title="Name">
-    //           <div className="fs18 fw800 black-85 medicine-selected">
-    //             <span>{med_name}</span>
-    //           </div>
-    //         </Tooltip>
-    //     </Option>
-    //   );
-    //
-    //   return defaultOption;
-    // }
-
-    // console.log("10982309123 hits ---> ", hits);
+   
 
 
     return Object.values(hits).map(function(hit, index) {
@@ -129,10 +133,9 @@ class Medicine extends Component {
       let final_generic_name = generic_name;
 
       if (name === generic_name) {
-        console.log("675456789763445", name);
         final_generic_name = "";
       }
-      // console.log("10982309123 medicine_id, type of medicine_id ", medicine_id, typeof medicine_id);
+
 
       return (
         <Option key={`opt-${medicine_id}`} value={medicine_id}>
@@ -286,20 +289,17 @@ class Medicine extends Component {
     }
     
     if(medicine_id){
-      // console.log("867546756877654567 --> 1",this.state);
 
        this.setState({
         temp_medicine:medicine_id
       })
     }else if (default_medicine_id){
-      // console.log("867546756877654567 --> 2",this.state);
 
       this.setState({
         temp_medicine:default_medicine_id
       })
     }
 
-    // console.log("867546756877654567",this.state);
 
    
   }
@@ -325,7 +325,9 @@ class Medicine extends Component {
 
     const {
       form: { getFieldDecorator },
+      medicines,
     } = this.props;
+
 
     return (
       <FormItem label={this.getLabel()}>

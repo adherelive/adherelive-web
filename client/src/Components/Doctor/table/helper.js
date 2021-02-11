@@ -24,6 +24,11 @@ export const TABLE_COLUMN = {
     key: "ADDRESS",
     dataIndex: "ADDRESS",
     width: 300
+  },
+  ACTIVE: {
+    key: "ACTIVE",
+    dataIndex: "ACTIVE",
+    width: 300
   }
 };
 

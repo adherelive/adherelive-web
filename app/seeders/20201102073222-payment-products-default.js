@@ -11,6 +11,7 @@ module.exports = {
         type: PAYMENT_TYPE.ONE_TIME,
         creator_type: USER_CATEGORY.ADMIN,
         product_user_type: "patient",
+        for_user_id: 0,
         created_at: new Date(),
         updated_at: new Date()
       },
@@ -19,6 +20,7 @@ module.exports = {
         type: PAYMENT_TYPE.ONE_TIME,
         creator_type: USER_CATEGORY.ADMIN,
         product_user_type: "patient",
+        for_user_id: 0,
         created_at: new Date(),
         updated_at: new Date()
       },
@@ -27,6 +29,7 @@ module.exports = {
         type: PAYMENT_TYPE.RECURRING,
         creator_type: USER_CATEGORY.ADMIN,
         product_user_type: "patient",
+        for_user_id: 0,
         created_at: new Date(),
         updated_at: new Date()
       }

@@ -475,6 +475,8 @@ class EditVitalForm extends Component {
 
     const startDate = getFieldValue(startDateField.field_name);
 
+    const temp_name = getFieldValue("vital_template_id");
+
     return (
       <Fragment>
         <Form className="event-form pb80 wp100 Form">

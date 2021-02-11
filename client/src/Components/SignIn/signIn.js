@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Button, Input, Form, message } from "antd";
 import messages from "./message";
-
+import { withRouter } from "react-router-dom";
+import {PATH} from "../../constant";
 const { Item: FormItem } = Form;
 const { Password } = Input;
 
@@ -24,19 +25,27 @@ class SignIn extends Component {
     const {
       form: { validateFields },
       signIn,
-      getInitialData
+      getInitialData,
+      history
     } = this.props;
+    
     this.setState({ loading: true });
     validateFields(async (err, { email, password }) => {
       if (!err) {
         try {
           const response = await signIn({ email, password });
-          console.log("1234567890------->", email, password, err, response);
-          const { status = false, statusCode } = response;
+          const { status = false, statusCode , payload :{ data={} ,message:resp_msg}={}} = response;
+          const {users={},auth_user='', hasConsent} = data || {};
+
           if (status) {
             message.success(this.formatMessage(messages.loginSuccessfull), 4);
-            getInitialData();
-          } else {
+            if(hasConsent){
+              getInitialData();
+            }else{
+              history.push(PATH.CONSENT);
+            }
+          }
+          else{
             if (statusCode === 422) {
               message.error(this.formatMessage(messages.emailDoesNotxist), 4);
             } else {
@@ -70,7 +79,8 @@ class SignIn extends Component {
     });
     const { handleSignIn } = this;
     return (
-      <Form onSubmit={handleSignIn} className="login-form">
+
+                <Form onSubmit={handleSignIn} className="login-form">
         <FormItem
           validateStatus={fieldsError[EMAIL] ? "error" : ""}
           help={fieldsError[EMAIL] || ""}
@@ -140,8 +150,10 @@ class SignIn extends Component {
           </div>
         </FormItem>
       </Form>
+  
+
     );
   }
 }
 
-export default Form.create({ name: "signin_form" })(injectIntl(SignIn));
+export default withRouter(Form.create({ name: "signin_form" })(injectIntl(SignIn)));

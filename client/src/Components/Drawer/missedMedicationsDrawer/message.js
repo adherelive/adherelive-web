@@ -42,7 +42,16 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Non critical"
     }, 
-    
+    no_critical_missed:{
+        id: "app.missedMedications.no.critical.missed",
+        description: "",
+        defaultMessage: "No missed critical medication"
+    }, 
+    no_non_critical_missed:{
+        id: "app.missedMedications.no.non.critical.missed",
+        description: "",
+        defaultMessage: "No missed non critical medication"
+    }, 
     
 });
 

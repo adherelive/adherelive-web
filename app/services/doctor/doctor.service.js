@@ -2,15 +2,21 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/doctors";
 import { TABLE_NAME as watchlistTableName } from "../../models/doctor_patient_watchlist";
 import { TABLE_NAME as specialityTableName } from "../../models/specialities";
+import { TABLE_NAME as userTableName } from "../../models/users";
 
 class DoctorService {
-  getDoctorByData = async data => {
+  getDoctorByData = async (data, paranoid = true) => {
     try {
-      const doctor = await Database.getModel(TABLE_NAME).findOne({
+      return await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: Database.getModel(specialityTableName)
+        include: [
+          {
+            model: Database.getModel(userTableName),
+            paranoid
+          },
+          Database.getModel(specialityTableName)
+        ]
       });
-      return doctor;
     } catch (error) {
       throw error;
     }
@@ -20,7 +26,7 @@ class DoctorService {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findAll({
         where: data,
-        include: Database.getModel(specialityTableName)
+        include: [Database.getModel(userTableName), Database.getModel(specialityTableName)]
       });
       return doctor;
     } catch (error) {

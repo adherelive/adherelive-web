@@ -21,6 +21,11 @@ import {
 } from "../../modules/scheduleEvents/index";
 import { addCareplanForPatient } from "../../modules/patients";
 import { storeAppointmentDocuments } from "../../modules/uploadDocuments";
+import { getSymptomTimeLine } from "../../modules/symptoms";
+import {fetchReports} from "../../modules/reports";
+import { getVitalOccurence } from "../../modules/vital_occurence";
+import { searchVital } from "../../modules/vital_templates";
+
 
 const mapStateToProps = (state, ownProps) => {
   const {
@@ -35,21 +40,24 @@ const mapStateToProps = (state, ownProps) => {
     conditions = {},
     template_medications = {},
     template_appointments = {},
+    template_vitals = {},
     care_plan_templates = {},
     severity = {},
     show_template_drawer = {},
     auth: { authPermissions = [], authenticated_user = 1,authenticated_category } = {},
     chats,
     drawer,
-    care_plan_template_ids = [],
+    pages: { care_plan_template_ids = [] } = {},
     twilio = {},
     symptoms = {},
     schedule_events = {},
     features = {},
-    features_mappings = {}
+    features_mappings = {},
+    reports={},
+    repeat_intervals={},
+    vital_templates={}
   } = state;
 
-  console.log("4534543634534535634 ----> Container", care_plan_template_ids);
   // const { id } = ownprops;
   const user_details = users["3"] || {};
   const {
@@ -75,6 +83,7 @@ const mapStateToProps = (state, ownProps) => {
     care_plan_templates,
     template_appointments,
     template_medications,
+    template_vitals,
     show_template_drawer,
     currentCarePlanId,
     authPermissions,
@@ -87,7 +96,10 @@ const mapStateToProps = (state, ownProps) => {
     schedule_events,
     features,
     features_mappings,
-    authenticated_category
+    authenticated_category,
+    reports,
+    repeat_intervals,
+    vital_templates
   };
 };
 
@@ -131,6 +143,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
     storeAppointmentDocuments: data => dispatch(storeAppointmentDocuments(data)),
     openAddReportsDrawer : (payload) =>  dispatch(open({ type: DRAWER.ADD_REPORT,payload })),
+    getSymptomTimeLine: (patientId) => dispatch(getSymptomTimeLine(patientId)),
+    fetchPatientReports: (id)  => dispatch(fetchReports(id)),
+    getVitalOccurence: () => dispatch(getVitalOccurence()),
+    searchVital: data => dispatch(searchVital(data)),
 
   };
 };

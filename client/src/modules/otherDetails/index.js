@@ -15,10 +15,11 @@ const UPDATE_TERMS_AND_POLICY_COMPLETED = "UPDATE_TERMS_AND_POLICY_COMPLETED";
 const UPDATE_TERMS_AND_POLICY_FAILED = "UPDATE_TERMS_AND_POLICY_FAILED";
 
 export const getMedicationDetails = (patientId) => {
+    let response = {};
     return async dispatch => {
         try {
             dispatch({type: GET_MEDICATION_DETAILS_START});
-            const response = await doRequest({
+             response = await doRequest({
                 method: REQUEST_TYPE.GET,
                 url: getMedicationDetailsUrl(patientId),
             });
@@ -26,7 +27,8 @@ export const getMedicationDetails = (patientId) => {
             if(status === true) {
                 dispatch({
                     type: GET_MEDICATION_DETAILS_COMPLETE,
-                    payload: data
+                    payload: data,
+                    data
                 });
             } else {
                 dispatch({
@@ -36,6 +38,7 @@ export const getMedicationDetails = (patientId) => {
         } catch(error) {
             console.log("GET MEDICATION DETAILS error ---> ", error);
         }
+        return response;
     };
 };
 

@@ -7,6 +7,7 @@ import { getMedications } from "../../modules/medications";
 import { setPatientForChat } from "../../modules/twilio";
 import { openPopUp } from "../../modules/chat";
 import {getAppointments , getAppointmentsDetails }  from '../../modules/appointments';
+import {getPatientMissedEvents} from "../../modules/patients";
 
 const mapStateToProps = (state) => {
   const {
@@ -51,7 +52,9 @@ const mapDispatchToProps = (dispatch) => {
     setPatientForChat: (patient_id) => dispatch(setPatientForChat(patient_id)),
     openPopUp: () => dispatch(openPopUp()),
     getAppointments :(id) => dispatch(getAppointments(id)),
-    getAppointmentsDetails : () => dispatch(getAppointmentsDetails())
+    getAppointmentsDetails : () => dispatch(getAppointmentsDetails()),
+    getPatientMissedEvents : (patient_id) => dispatch(getPatientMissedEvents(patient_id))
+
   };
 };
 

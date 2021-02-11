@@ -9,16 +9,20 @@ const RadioGroup = Radio.Group;
 
 const { Item: FormItem } = Form;
 
-const AFTER_WAKEUP = "1";
-const BEFORE_BREAKFAST = "2";
-const AFTER_BREAKFAST = "3";
-const BEFORE_LUNCH = "4";
-const AFTER_LUNCH = "5";
-const BEFORE_EVENING_TEA = "6";
-const AFTER_EVENING_TEA = "7";
-const BEFORE_DINNER = "8";
-const AFTER_DINNER = "9";
-const BEFORE_SLEEP = "10";
+
+
+export const AFTER_WAKEUP = "1";
+export const BEFORE_BREAKFAST = "2";
+export const AFTER_BREAKFAST = "3";
+export const BEFORE_LUNCH = "4";
+export const WITH_LUNCH = "5";
+export const AFTER_LUNCH = "6";
+export const BEFORE_EVENING_SNACK = "7";
+export const AFTER_EVENING_SNACK = "8";
+export const BEFORE_DINNER = "9";
+export const WITH_DINNER = "10";
+export const AFTER_DINNER = "11";
+export const BEFORE_SLEEP = "12";
 
 const BEFORE_MEALS_ARRAY_OD = [BEFORE_BREAKFAST];
 const AFTER_MEALS_ARRAY_OD = [AFTER_BREAKFAST];
@@ -27,8 +31,9 @@ const AFTER_MEALS_ARRAY_BD = [AFTER_BREAKFAST, AFTER_LUNCH];
 const BEFORE_MEALS_ARRAY_TDS = [BEFORE_BREAKFAST, BEFORE_LUNCH, BEFORE_DINNER];
 const AFTER_MEALS_ARRAY_TDS = [AFTER_BREAKFAST, AFTER_LUNCH, AFTER_DINNER];
 
-const ALL_OPTIONS_ARRAY = [AFTER_WAKEUP,BEFORE_BREAKFAST,AFTER_BREAKFAST,BEFORE_LUNCH,
-  AFTER_LUNCH,BEFORE_EVENING_TEA,AFTER_EVENING_TEA,BEFORE_DINNER,AFTER_DINNER,BEFORE_SLEEP];
+const ALL_OPTIONS_ARRAY = [AFTER_WAKEUP,BEFORE_BREAKFAST,AFTER_BREAKFAST,BEFORE_LUNCH,WITH_LUNCH,
+  AFTER_LUNCH,BEFORE_EVENING_SNACK,AFTER_EVENING_SNACK,BEFORE_DINNER,
+  WITH_DINNER,AFTER_DINNER,BEFORE_SLEEP];
 
 const { Option } = Select;
 
@@ -74,7 +79,8 @@ class WhenToTakeMedication extends Component {
       medications,
       medicationData = {},
       payload: { id: medication_id } = {},
-      addMedication
+      addMedication,
+      editMedication
     } = this.props;
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } =
       medications[medication_id] || {};
@@ -88,6 +94,7 @@ class WhenToTakeMedication extends Component {
     let {
       schedule_data: { when_to_take: frequency = [] } = {}
     } = medicationData;
+
 
     if (when_to_take.length === 1) {
       if (when_to_take[0] === BEFORE_MEALS_ARRAY_OD[0]) {
@@ -127,10 +134,13 @@ class WhenToTakeMedication extends Component {
       statusList[0] = frequency[0];
       when_to_take = frequency;
     }
-    if (addMedication) {
+    if (addMedication ) {
       statusList[0] = ["4"];
       when_to_take = ["4"];
     }
+
+  
+
     this.setState({
       selected_timing: statusList,
       selected_timing_overall: [...when_to_take]
@@ -312,7 +322,8 @@ class WhenToTakeMedication extends Component {
       medications,
       payload: { id: medication_id } = {},
       medicationData = {},
-      addMedication
+      addMedication,
+      editMedication
     } = this.props;
     // const { count } = this.state;
     const {
@@ -323,23 +334,34 @@ class WhenToTakeMedication extends Component {
     } = this;
     const {
       getFieldDecorator,
-      getFieldValue
+      getFieldValue,
+      setFieldsValue
     } = form;
+
+
+    let keysTemp=getFieldValue("keys");
 
     const { nugget_selected } = this.state;
 
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } =
       medications[medication_id] || {};
     let {
-      schedule_data: { when_to_take: frequency = [] } = {}
+      schedule_data: { when_to_take: frequency = [] } = {},
+      details: { when_to_take: frequency2 = [] } = {},
     } = medicationData;
 
     if (frequency.length) {
       when_to_take = frequency;
     }
+
+    if(frequency2.length){
+      when_to_take=frequency2
+    }
+
     if (addMedication) {
       when_to_take = ["4"];
     }
+
     getFieldDecorator("keys", {
       initialValue: when_to_take.map((id, index) => parseInt(id) - 1)
     });
@@ -358,6 +380,18 @@ class WhenToTakeMedication extends Component {
 
       initialValuesArray = frequency;
     }
+
+
+    if(editMedication){
+      const {templatePage =false}=medicationData || {};
+      if(templatePage && keysTemp){
+        keys=keysTemp;
+      }else if(keysTemp){
+        keys=keysTemp;
+      }
+    }
+
+
 
     return keys.map((k, index) => {
       return (
@@ -503,7 +537,6 @@ class WhenToTakeMedication extends Component {
     const { getFieldValue, setFieldsValue } = form;
     const keys = getFieldValue("keys") || [];
     this.setState({ nugget_selected: 2 });
-
 
     if (keys.length === 1) {
       setFieldsValue({

@@ -113,7 +113,19 @@ const messages = defineMessages({
     description: "",
     defaultMessage:
       "You can not call this user as call feature is blocked for this user."
-  }
+  },
+  return: {
+    id: "app.dashboard.return",
+    description: "",
+    defaultMessage:
+      "Return"
+  },
+  submit: {
+    id: "app.dashboard.submit",
+    description: "",
+    defaultMessage:
+      "Submit"
+  },
 });
 
 export default messages;

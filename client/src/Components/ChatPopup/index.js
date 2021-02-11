@@ -102,19 +102,22 @@ const Header = ({
           onClick={maximizeChat}
         />
 
+        <Dropdown
+          overlay={getMenu()}
+          trigger={["click"]}
+          placement="bottomRight"
+          className="mr20"
+        >
+          <MoreOutlined className="text-white fs25 pointer" />
+        </Dropdown>
+
         <img
           src={Close}
           className="callIcon-header-PopUp mr20"
           onClick={close}
         />
 
-        <Dropdown
-          overlay={getMenu()}
-          trigger={["click"]}
-          placement="bottomRight"
-        >
-          <MoreOutlined className="text-white fs25 pointer" />
-        </Dropdown>
+       
       </div>
     </div>
   );
@@ -164,7 +167,7 @@ class ChatForm extends Component {
     this.setState({ newMessage: event.target.value });
   };
 
-  sendMessage = event => {
+  sendMessage = async(event) => {
     if (event) {
       event.preventDefault();
     }
@@ -172,13 +175,19 @@ class ChatForm extends Component {
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
       this.setState({ newMessage: "" });
-      this.props.channel.sendMessage(message);
+      const resp = await this.props.channel.sendMessage(message);
+
+      if(message){
+        this.props.raiseChatNotification(message)
+      }
     }
     if (this.state.fileList.length > 0) {
       for (let i = 0; i < this.state.fileList.length; ++i) {
         const formData = new FormData();
         formData.append("file", this.state.fileList[i]);
-        this.props.channel.sendMessage(formData);
+        const respo = await this.props.channel.sendMessage(formData);
+
+        this.props.raiseChatNotification(this.props.formatMessage(messages.newDocumentUploadedNotify))
       }
       this.setState({ fileList: [] });
     }
@@ -225,7 +234,7 @@ class ChatForm extends Component {
           beforeUpload={this.beforeUpload}
           showUploadList={false}
           multiple={false}
-          accept="image/*"
+          accept=".jpg,.jpeg,.png,.pdf,.mp4"
           className="chat-upload-component"
         >
           <div className="chat-upload-btn">
@@ -802,6 +811,21 @@ class ChatPopUp extends Component {
     }
   };
 
+  raiseChatNotification = (message) => {
+    const {
+      patientId = null,
+      patients = {}
+    } = this.props;
+
+    const {
+      [patientId]: { basic_info: { user_id: patientUserId = null } = {} } = {}
+    } = patients;
+
+    const data = { message, receiver_id: patientUserId}
+
+    const resp = this.props.raiseChatNotification(data)
+  }
+
   render() {
     const { ChatForm } = this;
     const { chatMessages, roomId } = this.props;
@@ -881,6 +905,7 @@ class ChatPopUp extends Component {
                   messages={this.messages}
                   channel={this.channel}
                   formatMessage={this.formatMessage}
+                  raiseChatNotification={this.raiseChatNotification}
                 />
               </div>
             </div>
