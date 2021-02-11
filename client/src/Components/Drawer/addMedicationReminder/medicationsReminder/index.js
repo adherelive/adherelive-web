@@ -5,6 +5,7 @@ import { injectIntl } from "react-intl";
 import moment from "moment";
 import { MEDICINE_UNITS } from "../../../../constant";
 import AddMedicationReminderForm from "./form";
+import AddMedicineDrawer from "../../addNewMedicine";
 
 import participants from "../common/participants";
 
@@ -22,7 +23,10 @@ class AddMedicationReminder extends Component {
     this.state = {
       disabledOk: true,
       fieldChanged: false,
-      members: []
+      members: [],
+      medicineDrawerVisible:false,
+      medicineValue:'',
+      newMedicineId:null
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(AddMedicationReminderForm);
   }
@@ -46,6 +50,14 @@ class AddMedicationReminder extends Component {
       this.setState({ disabledOk: isError, fieldChanged: true });
     }
   };
+
+  openMedicineDrawer = () => {
+    this.setState({medicineDrawerVisible:true})
+  }
+
+  closeMedicineDrawer = ()=> {
+    this.setState({medicineDrawerVisible:false});
+  }
 
   handleCancel = e => {
     if (e) {
@@ -252,6 +264,15 @@ class AddMedicationReminder extends Component {
     });
   };
 
+  setMedicineVal = (value) => {
+    this.setState({medicineValue:value});
+  }
+
+  setNewMedicineId = (id) => {
+    this.setState({newMedicineId:id});
+  }
+
+
   render() {
     const {
       visible,
@@ -264,7 +285,9 @@ class AddMedicationReminder extends Component {
     //   disabled: disabledSubmit,
     //   loading: loading
     // };
-    const { members } = this.state;
+    const { members ,medicineDrawerVisible=false,medicineValue='',newMedicineId=null} = this.state;
+    const {addNewMedicine}=this.props;
+    
 
     
     return (
@@ -285,10 +308,22 @@ class AddMedicationReminder extends Component {
         className="ant-drawer"
         title={formatMessage(messages.title)}
       >
-        <FormWrapper
-          wrappedComponentRef={setFormRef}
-          {...this.props}
-        />
+          <FormWrapper
+            wrappedComponentRef={setFormRef}
+            {...this.props }
+            openAddMedicineDrawer={this.openMedicineDrawer }
+            setMedicineVal={this.setMedicineVal}
+            newMedicineId={newMedicineId}
+          />
+
+          <AddMedicineDrawer 
+            visible={medicineDrawerVisible} 
+            close={this.closeMedicineDrawer}
+            input={medicineValue}
+            addNewMedicine={addNewMedicine}
+            setNewMedicineId={this.setNewMedicineId}
+          />
+
         <Footer
           onSubmit={handleSubmit}
           onClose={onClose}
@@ -296,6 +331,8 @@ class AddMedicationReminder extends Component {
           submitButtonProps={{}}
           cancelComponent={null}
         />
+      
+
       </Drawer>
     );
   }

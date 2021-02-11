@@ -98,7 +98,7 @@ export default class AlgoliaService {
        
         const result = await index.saveObjects(updatedMedicine, {
           autoGenerateObjectIDIfNotExist: true
-        });
+        }).wait();
   
         console.log("result ----. ", result);
   

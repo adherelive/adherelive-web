@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "antd";
+import {PoweroffOutlined} from "@ant-design/icons";
 
 export default props => {
     const {
@@ -11,7 +12,8 @@ export default props => {
         cancelText,
         submitText,
         cancelButtonProps = {},
-        submitButtonProps = {}
+        submitButtonProps = {},
+        submitting=false
     } = props;
 
     const CancelButton = (
@@ -26,6 +28,8 @@ export default props => {
             className="mr10"
             type="primary"
             {...submitButtonProps}
+            icon={submitting ? <PoweroffOutlined /> : null }
+            loading={submitting}
         >
             {submitText}
         </Button>

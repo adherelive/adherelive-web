@@ -19,6 +19,7 @@ import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import repeatDaysField from "../common/selectedDays";
 import moment from "moment";
+import AddMedicineDrawer from "../../addNewMedicine";
 
 class EditMedicationReminder extends Component {
   constructor(props) {
@@ -28,6 +29,9 @@ class EditMedicationReminder extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
+      medicineDrawerVisible:false,
+      medicineValue:'',
+      newMedicineId:null
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       EditMedicationReminderForm
@@ -40,6 +44,22 @@ class EditMedicationReminder extends Component {
 
       getMedicationDetails(patientId);
 
+  }
+
+  openMedicineDrawer = () => {
+    this.setState({medicineDrawerVisible:true})
+  }
+
+  closeMedicineDrawer = ()=> {
+    this.setState({medicineDrawerVisible:false});
+  }
+
+  setMedicineVal = (value) => {
+    this.setState({medicineValue:value});
+  }
+
+  setNewMedicineId = (id) => {
+    this.setState({newMedicineId:id});
   }
 
   hasErrors = (fieldsError) => {
@@ -332,6 +352,9 @@ class EditMedicationReminder extends Component {
     };
     console.log("782345237648723427",medicationVisible);
 
+    const {medicineDrawerVisible=false,medicineValue='',newMedicineId=null} = this.state;
+    const {addNewMedicine}=this.props;
+
     return (
       <Drawer
         width={"35%"}
@@ -348,7 +371,23 @@ class EditMedicationReminder extends Component {
         
         title={editMedication ? formatMessage(messages.medication) : addMedication ? 'Add Medication' : formatMessage(messages.title)}
       >
-        <FormWrapper wrappedComponentRef={setFormRef} enableSubmit={this.enableSubmit} {...this.props} />
+        <FormWrapper 
+        wrappedComponentRef={setFormRef} 
+        enableSubmit={this.enableSubmit} 
+        {...this.props}
+        openAddMedicineDrawer={this.openMedicineDrawer }
+        setMedicineVal={this.setMedicineVal}
+        newMedicineId={newMedicineId}
+        />
+       
+        <AddMedicineDrawer 
+            visible={medicineDrawerVisible} 
+            close={this.closeMedicineDrawer}
+            input={medicineValue}
+            addNewMedicine={addNewMedicine}
+            setNewMedicineId={this.setNewMedicineId}
+        />
+
         <Footer
           className="flex justify-space-between"
           onSubmit={handleSubmit}
