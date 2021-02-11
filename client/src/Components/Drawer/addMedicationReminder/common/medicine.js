@@ -4,8 +4,8 @@ import Form from "antd/es/form";
 import Select from "antd/es/select";
 import Spin from "antd/es/spin";
 import Tooltip from "antd/es/tooltip";
+import Button from "antd/es/button";
 import { EditOutlined } from "@ant-design/icons";
-
 import messages from "../message";
 import algoliasearch from "algoliasearch";
 import config from "../../../../config";
@@ -17,6 +17,9 @@ import {
   connectSearchBox,
   connectHighlight
 } from "react-instantsearch-dom";
+
+import {TABLET} from "../../../../constant";
+
 
 const { Item: FormItem } = Form;
 const { Option } = Select;
@@ -31,9 +34,9 @@ class Medicine extends Component {
       hits: {},
       searching_medicine: true,
       medicine_name: "",
-      medicine_id: ""
+      medicine_id: "",
+      inputText:'',
     };
-
     const algoliaClient = this.algoliaClient();
     this.index = algoliaClient.initIndex(config.algolia.medicine_index);
   }
@@ -47,6 +50,51 @@ class Medicine extends Component {
     // });
   }
 
+  componentDidUpdate(prevProps,prevState){
+    const {newMedicineId:prev_newMedicineId = null} = prevProps;
+    const {newMedicineId}=this.props;
+    const {
+      form: { setFieldsValue, getFieldValue },
+      setFormulation
+    } = this.props;
+    if(prev_newMedicineId!==newMedicineId){
+      const {medicines = {}} =this.props;
+      const {basic_info:{name='',id=null}={}}=medicines[newMedicineId] || {};
+      const medicineId = parseInt(id);
+      setFieldsValue({ [FIELD_NAME]: medicineId });
+      this.setState({
+        medicine_name: name,
+        searching_medicine: false,
+        medicineId
+      });
+      setFormulation(medicineId);
+      this.getNewDefaultMedicine(medicineId,name);
+      this.setState({ medicine_id: medicineId, temp_medicine: medicineId });
+    } 
+  }
+
+  getNewDefaultMedicine = (medicine_id,medicineName) => {
+    let defaultHit = [];
+    this.handleMedicineSearch(medicineName);
+    // new index
+    // const client = this.algoliaClient();
+    // const index = client.initIndex(config.algolia.medicine_index);
+
+    this.index.search(medicineName
+     ).then(({ hits }) => {
+        defaultHit = hits.filter(hit => {
+          const X = hit.medicine_id;
+          return(hit.medicine_id === medicine_id)
+        });
+      this.setState({hits: defaultHit, temp_medicine: medicine_id});
+    });
+  };
+
+  setInputText = (value) => {
+    console.log("08381293810923  setInputText",{value});
+    this.setState({inputText:value});
+  }
+
   getMedicineOptions = () => {
     const algoliaClient = this.algoliaClient();
     const index = algoliaClient.initIndex(config.algolia.medicine_index);
@@ -54,13 +102,16 @@ class Medicine extends Component {
     let list = [];
     const { searchOptions } = this;
 
-    return Object.values(hits).map(function(hit, index) {
+    const options = [];
+
+    for(let index in hits){
+      
       const {
         medicine_id = null,
         name = "",
         generic_name = "",
         objectID = null
-      } = hit;
+      } = hits[index];
       let final_name = name;
       let final_generic_name = generic_name;
 
@@ -69,14 +120,47 @@ class Medicine extends Component {
         final_generic_name = "";
       }
 
-      return (
-        <Option key={`opt-${medicine_id}`} value={medicine_id}>
-          {searchOptions(hit, index)}
-        </Option>
-      );
-    });
+      let hit = hits[index];
+      options.push(
+      <Option key={`opt-${medicine_id}`} value={medicine_id}>
+      {searchOptions(hit, index)}
+    </Option>)
+    }
+
+       
+    if(options.length === 0){
+      const {inputText=''}=this.state;
+      options.push(
+        <div
+         key={"no-match-medicine-div"}
+         className="flex align-center justify-center" 
+         onClickCapture={this.handleAddMedicineOpen}
+         >
+          <Button 
+          type={"default"}
+          size="small"
+          key={"no-match-medicine"}
+          onClick={this.handleAddMedicineOpen} >{`${this.formatMessage(messages.addMedicine)} "${inputText}"`}</Button>
+        </div>
+      )
+    }
+
+    return options;
+
   };
 
+  handleAddMedicineOpen = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const {openAddMedicineDrawer,setMedicineVal}=this.props;
+    const {inputText =''}=this.state;
+    setMedicineVal(inputText);
+    openAddMedicineDrawer();
+    const {newMedicineId = null}=this.props;
+
+  }
+
+ 
   searchOptions = (hit, index) => {
     const {
       medicine_id = null,
@@ -102,7 +186,7 @@ class Medicine extends Component {
           <Tooltip title={this.formatMessage(messages.name)}>
             {" "}
             {/* formatMessage here */}
-            <div className="fs18 fw800 black-85 medicine-selected">
+            <div className="fs18 fw800 black-85 medicine-selected pr10">
               <span
                 dangerouslySetInnerHTML={{
                   __html: hit._highlightResult.name.value
@@ -176,12 +260,32 @@ class Medicine extends Component {
 
   handleMedicineSearch = value => {
     this.searchValue(value);
+    this.setInputText(value);
   };
 
   async searchValue(value) {
     try {
+      const {doctors ={},authenticated_user=null} = this.props ;
+
+      let doctor_id=null;
+
+      for(let each in doctors){
+        const {basic_info : {
+          id:docId = null,
+          user_id=null
+        } ={}} = doctors[each] || {};
+
+        if(user_id === authenticated_user){
+          doctor_id=docId;
+        }
+
+      }
       const { value: state_value = "" } = this.state;
-      const res = await this.index.search(value);
+
+      const res = await this.index.search(value ,
+        {
+          filters : `creator_id:${doctor_id} OR public_medicine:true`
+        });
       const { hits = {} } = res;
       if (value !== state_value) {
         this.setState({
@@ -242,12 +346,14 @@ class Medicine extends Component {
     } = this.state;
 
     const { getMedicineOptions, handleMedicineSearch, getParentNode } = this;
+    const {newMedicineId=null}=this.props;
+    console.log("08381293810923 temp_medicine render",{temp_medicine, type_temp_medicine: typeof temp_medicine});
 
     return (
       <FormItem label={this.getLabel()}>
         {getFieldDecorator(FIELD_NAME, {})(
           <InstantSearch
-            indexName={"adhere_medicine"}
+            indexName={config.algolia.medicine_index}
             searchClient={this.algoliaClient()}
           >
             {/*{*/}

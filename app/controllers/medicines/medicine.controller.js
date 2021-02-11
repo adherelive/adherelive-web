@@ -75,7 +75,7 @@ class MedicineController extends Controller {
 
             if(medicineDetails) {
                 const medicine_id = medicineDetails.get("id");
-                const response = algoliaService.addNewMedicineData(medicine_id);
+                const response = await algoliaService.addNewMedicineData(medicine_id);
                 medicineApiDetails =  await MedicineWrapper(null, medicine_id)
             }
 

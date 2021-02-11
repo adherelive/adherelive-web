@@ -5,11 +5,18 @@ import { close } from "../../modules/drawer";
 import { getMedications, addMedicationReminder, addCarePlanMedicationReminder } from "../../modules/medications";
 import { getMedicationDetails } from "../../modules/otherDetails";
 import { getAppointments } from "../../modules/appointments";
-import { searchMedicine } from "../../modules/medicines";
+import { searchMedicine,addMedicine } from "../../modules/medicines";
+import { open } from "../../modules/drawer";
+
+
 const mapStateToProps = state => {
+  const { auth} = state;
+  const { authenticated_user, authenticated_category } = auth;
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} },
-    other_details: { medication_details = {} } = {}, medicines
+    other_details: { medication_details = {} } = {}, medicines,
+    doctors={},
+
   } = state;
 
   
@@ -19,7 +26,10 @@ const mapStateToProps = state => {
     loading,
     payload,
     medication_details,
-    medicines
+    medicines,
+    doctors,
+    authenticated_category,
+    authenticated_user
   };
 };
 
@@ -32,6 +42,7 @@ const mapDispatchToProps = dispatch => {
     searchMedicine: data => dispatch(searchMedicine(data)),
     getMedications: (id) => dispatch(getMedications(id)),
     getAppointments: (id) => dispatch(getAppointments(id)),
+    addNewMedicine : (data) => dispatch(addMedicine(data)), 
   };
 };
 
