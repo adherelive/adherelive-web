@@ -16,4 +16,34 @@ export default defineMessages({
         description: "",
         defaultMessage: "Providers"
     },
+    calender : {
+        id: "app.dashboard.sidebar.menu.calender",
+        description: "",
+        defaultMessage: "Calender"
+    },
+    transactionDetails : {
+        id: "app.dashboard.sidebar.menu.transactionDetails",
+        description: "",
+        defaultMessage: "Transaction Details"
+    },
+    notifications:{
+        id:"app.dashboard.sidebar.menu.notifications",
+        description:"",
+        defaultMessage:"Notifications"
+    },
+    logOut:{
+        id:"app.dashboard.sidebar.menu.logOut",
+        description:"",
+        defaultMessage:"Log Out"
+    },
+    dashboard:{
+        id:"app.dashboard.sidebar.menu.dashboardText",
+        description:"",
+        defaultMessage:"Dashboard"
+    },
+    templates:{
+        id:"app.dashboard.sidebar.menu.templatesText",
+        description:"",
+        defaultMessage:"Treatment plan Templates"
+    },
 });

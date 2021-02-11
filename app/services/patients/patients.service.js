@@ -3,7 +3,6 @@ import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/patients";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import Log from "../../../libs/log";
-import Lookups from "twilio/lib/rest/Lookups";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
@@ -67,7 +66,8 @@ class PatientsService {
   getPatientByData = async data => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
+        include: [Database.getModel(userTableName)]
       });
       return patient;
     } catch (error) {

@@ -132,7 +132,22 @@ const messages = defineMessages({
     id: "app.chatFullScreen.chatPopUp.successInUnBlockingVideoPermission",
     description: "",
     defaultMessage: "Enabled call for patient."
-  }
+  },
+  newPaymentAddedNotify: {
+    id: "app.chatFullScreen.chatPopUp.newPaymentAddedNotify",
+    description: "",
+    defaultMessage: "Payment request for {name} is added."
+  },
+  newDocumentUploadedNotify: {
+    id: "app.chatFullScreen.chatPopUp.newDocumentUploadedNotify",
+    description: "",
+    defaultMessage: "A new document is uploaded. Tap here to know more."
+  },
+  defaultNewMessage: {
+    id: "app.chatFullScreen.chatPopUp.defaultNewMessage",
+    description: "",
+    defaultMessage: "---"
+  },
 });
 
 export default messages;

@@ -3,7 +3,6 @@ import PatientTable from "../../Components/Patient/table";
 import { withRouter } from "react-router-dom";
 import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
-import {searchPatientFromNum} from "../../modules/patients";
 import {addToWatchlist,removePatientFromWatchlist} from "../../modules/doctors";
 
 const mapStateToProps = state => {

@@ -76,7 +76,6 @@ class EndDate extends Component {
 
   getInitialValue = () => {
     const { purpose, event = {}, events = {} } = this.props;
-
     let initialValue = this.getNewEndDate();
     if (purpose) {
       const { eventId } = event;
@@ -85,6 +84,7 @@ class EndDate extends Component {
       initialValue =
         actualEndDate < initialValue ? initialValue : actualEndDate;
     }
+
     return initialValue;
   };
 
@@ -107,12 +107,24 @@ class EndDate extends Component {
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
     let { basic_info: { end_date } = {} } = medications[medication_id] || {};
-    let { schedule_data: { end_date:endDate = '' } = {} } = medicationData;
+    let { schedule_data: { end_date:endDate = '' } = {} , templatePage=false } = medicationData || {} ;
     if (Object.keys(medicationData).length) {
       end_date = endDate ? endDate : moment().add(5, 'days');
     }
 
-   
+    if(medicationData && templatePage){
+      const {schedule_data : {duration =null } = {}} = medicationData || {};
+
+      if(duration){
+        end_date = moment().add((parseInt(duration)+1),'days');
+      }else if(duration === null){
+        end_date = '';
+      }
+     
+    }
+
+
+    
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pl8 wp100">

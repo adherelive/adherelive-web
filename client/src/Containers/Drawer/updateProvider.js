@@ -9,7 +9,8 @@ const mapStateToProps = state => {
   const {
     drawer: { visible, loading, data: { type, payload = {} } = {} }, 
     providers={},
-    users={}
+    users={},
+    account_details={}
   } = state;
 
   return {
@@ -17,7 +18,8 @@ const mapStateToProps = state => {
     loading,
     payload,
     providers,
-    users
+    users,
+    account_details
   };
 };
 

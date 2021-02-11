@@ -40,10 +40,13 @@ export const PATH = {
       DETAILS: "/doctors/:id",
       PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
     },
-    CALENDER: "/calender"
+    CALENDER: "/calender",
+    TRANSACTION_DETAILS:"/transaction_details"
   },
   TERMS_OF_SERVICE: "/terms-of-service",
-  PRIVACY_POLICY: "/privacy-policy"
+  PRIVACY_POLICY: "/privacy-policy",
+  TEMPLATES:"/templates",
+  CONSENT:"/consent"
 };
 
 export const HTTP_CODE_SERVER_ERROR = 500;
@@ -54,55 +57,68 @@ export const CHAT_MESSAGE_DETAILS = {
 export const USER_ADHERE_BOT = "adhere_bot";
 export const CHAT_MESSAGE_TYPE = {
   SYMPTOM: "symptoms",
-  VITAL: "vitals"
+  VITAL: "vitals",
+  CONSULTATION:"consultation_fees",
 };
 
 export const TEXT_KEY = "text";
 export const TIME_KEY = "time";
 
-export const BEFORE_BREAKFAST = "1";
-export const AFTER_BREAKFAST = "2";
+
 export const NOON = "3";
+export const AFTER_WAKEUP = "1";
+export const BEFORE_BREAKFAST = "2";
+export const AFTER_BREAKFAST = "3";
 export const BEFORE_LUNCH = "4";
-export const AFTER_LUNCH = "5";
-export const BEFORE_EVENING_SNACK = "6";
-export const AFTER_EVENING_SNACK = "7";
-export const BEFORE_DINNER = "8";
-export const AFTER_DINNER = "9";
-export const BEFORE_SLEEP = "10";
+export const WITH_LUNCH = "5";
+export const AFTER_LUNCH = "6";
+export const BEFORE_EVENING_SNACK = "7";
+export const AFTER_EVENING_SNACK = "8";
+export const BEFORE_DINNER = "9";
+export const WITH_DINNER = "10";
+export const AFTER_DINNER = "11";
+export const BEFORE_SLEEP = "12";
 
 export const MEDICATION_TIMING = {
+  [AFTER_WAKEUP]: {
+    [TEXT_KEY]: "After Wake Up",
+    [TIME_KEY]: "8:00am"
+  },
   [BEFORE_BREAKFAST]: {
     [TEXT_KEY]: "Before Breakfast",
-    [TIME_KEY]: "8:00am"
+    [TIME_KEY]:"8:30am"
   },
   [AFTER_BREAKFAST]: {
     [TEXT_KEY]: "After Breakfast",
-    [TIME_KEY]: "9:00am"
-  },
-  [NOON]: {
-    [TEXT_KEY]: "Noon",
-    [TIME_KEY]: "12:00pm"
+    [TIME_KEY]: "9:30am"
   },
   [BEFORE_LUNCH]: {
     [TEXT_KEY]: "Before Lunch",
     [TIME_KEY]: "12:30pm"
+  },
+  [WITH_LUNCH]: {
+    [TEXT_KEY]: "With Lunch",
+    [TIME_KEY]: "1:00pm"
   },
   [AFTER_LUNCH]: {
     [TEXT_KEY]: "After Lunch",
     [TIME_KEY]: "1:30pm"
   },
   [BEFORE_EVENING_SNACK]: {
-    [TEXT_KEY]: "Before Evening Snack",
-    [TIME_KEY]: "5:30pm"
+    [TEXT_KEY]: "Before Evening Snacks",
+    [TIME_KEY]: "3:30pm"
   },
   [AFTER_EVENING_SNACK]: {
-    [TEXT_KEY]: "After Evening Snack",
-    [TIME_KEY]: "6:00pm"
+    [TEXT_KEY]: "After Evening Snacks",
+    [TIME_KEY]: "4:30pm"
   },
   [BEFORE_DINNER]: {
     [TEXT_KEY]: "Before Dinner",
     [TIME_KEY]: "7:30pm"
+  },
+  [WITH_DINNER]: {
+    [TEXT_KEY]: "With Dinner",
+    [TIME_KEY]: "8:00pm"
   },
   [AFTER_DINNER]: {
     [TEXT_KEY]: "After Dinner",
@@ -110,9 +126,14 @@ export const MEDICATION_TIMING = {
   },
   [BEFORE_SLEEP]: {
     [TEXT_KEY]: "Before Sleeping",
-    [TIME_KEY]: "10:30pm"
-  }
+    [TIME_KEY]: "11:00pm"
+  },
+  [NOON]: {
+    [TEXT_KEY]: "Noon",
+    [TIME_KEY]: "12:00pm"
+  },
 };
+
 
 export const MEDICATION_TIMING_HOURS = {
   [BEFORE_BREAKFAST]: 8,
@@ -178,6 +199,11 @@ export const MISSED_MEDICATION = "no_medication";
 export const MISSED_APPOINTMENTS = "no_appointment";
 export const MISSED_ACTIONS = "no_action";
 
+export const MISSED_MEDICATION_TEXT = "Missed Medication";
+export const MISSED_ACTION_TEXT = "Missed Actions";
+export const MISSED_APPOINTMENT_TEXT = "Missed Appointments";
+export const MISSED_SYMPTOM_TEXT = "Symptoms";
+
 export const PATIENT_BOX_CONTENT = {
   [SYMPTOMS]: {
     text: "Symptoms",
@@ -224,7 +250,9 @@ export const DRAWER = {
   EDIT_REPORT: "EDIT_REPORT",
   MISSED_MEDICATION:"MISSED_MEDICATION",
   MISSED_APPOINTMENT:"MISSED_APPOINTMENT",
-  MISSED_VITAL:"MISSED_VITAL"
+  MISSED_VITAL:"MISSED_VITAL",
+  CREATE_CAREPLAN_TEMPLATE:"CREATE_CAREPLAN_TEMPLATE",
+  EDIT_CAREPLAN_TEMPLATE:"EDIT_CAREPLAN_TEMPLATE"
 };
 
 export const USER_CATEGORY = {
@@ -374,6 +402,7 @@ export const EVENT_STATUS = {
   EXPIRED: "expired",
   CANCELLED: "cancelled"
 };
+
 
 //request type
 export const REQUEST_TYPE = {
@@ -1731,3 +1760,31 @@ export const FEATURES = {
   VIDEO_CALL: "Video Call",
   AUDIO_CALL: "Audio Call"
 };
+
+
+export const TABLE_STATUS = {
+  TRANSACTION_TABLE:"transaction_table",
+  ADMIN_DOCTOR_TABLE:"admin_doctor_table"
+};
+
+
+
+export const TRANSACTION_STATUS = {
+  PENDING: "pending",
+  COMPLETED: "completed",
+  STARTED: "started",
+  CANCELLED: "cancelled",
+  EXPIRED: "expired",
+  ACCEPTED: "accepted"
+};
+
+export const ACCOUNT_STATUS = {
+  INACTIVE:"INACTIVE",
+  ACTIVE:"ACTIVE"
+};
+
+export const DELETE_TEMPLATE_RELATED_TYPE={
+  MEDICATION:"medication",
+  APPOINTMENT:"appointment",
+  VITAL:"vital"
+}

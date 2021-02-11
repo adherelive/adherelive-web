@@ -20,48 +20,63 @@ export default class SqsObserver {
 
       if (eventMessage) {
         for (const message of eventMessage) {
-          const data = JSON.parse(message.Body);
+          const data = JSON.parse(message.Body) || null;
 
           Log.debug("observer message --> ", data);
-          const { type = "" } = data || {};
 
-          let response = false;
-
-          switch (type) {
-            case EVENT_TYPE.APPOINTMENT:
-              response = await handleAppointments(data);
-              break;
-            case EVENT_TYPE.MEDICATION_REMINDER:
-              response = await handleMedications(data);
-              break;
-            case EVENT_TYPE.VITALS:
-              response = await handleVitals(data);
-              break;
-            case EVENT_TYPE.CARE_PLAN_ACTIVATION:
-              response = await handleCarePlans(data);
-              break;
-            case EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT:
-              response = await handleAppointmentsTimeAssignment(data);
-              break;
-            default:
-              response = false;
-              break;
-          }
-
-          Log.info(`response ${response}`);
-          Log.info(`message.ReceiptHandle ${message.ReceiptHandle}`);
-
-          if (response === true) {
-            const deleteMessage = await service.deleteMessage(
-              message.ReceiptHandle
-            );
-
-            Log.debug("deleteMessage 81723912 ", deleteMessage);
+          if(Array.isArray(data)) {
+            for(let index = 0; index < data.length; index++) {
+              await this.execute({data: data[index], service, message});
+            }
+          } else {
+            await this.execute({data, service, message});
           }
         }
       }
     } catch (error) {
       Log.debug("observe catch error", error);
+    }
+  };
+
+  execute = async ({data, service, message}) => {
+    try {
+      const { type = "" } = data || {};
+
+      let response = false;
+
+      switch (type) {
+        case EVENT_TYPE.APPOINTMENT:
+          response = await handleAppointments(data);
+          break;
+        case EVENT_TYPE.MEDICATION_REMINDER:
+          response = await handleMedications(data);
+          break;
+        case EVENT_TYPE.VITALS:
+          response = await handleVitals(data);
+          break;
+        case EVENT_TYPE.CARE_PLAN_ACTIVATION:
+          response = await handleCarePlans(data);
+          break;
+        case EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT:
+          response = await handleAppointmentsTimeAssignment(data);
+          break;
+        default:
+          response = false;
+          break;
+      }
+
+      Log.info(`response ${response}`);
+      Log.info(`message.ReceiptHandle ${message.ReceiptHandle}`);
+
+      if (response === true) {
+        const deleteMessage = await service.deleteMessage(
+            message.ReceiptHandle
+        );
+
+        Log.debug("deleteMessage 81723912 ", deleteMessage);
+      }
+    } catch(error) {
+      Log.debug("execute catch error", error);
     }
   };
 }

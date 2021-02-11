@@ -26,3 +26,7 @@ export const searchPatientForDoctorUrl = (value) => {
 export const addCareplanForPatientUrl = (id) => {
   return `/patients/addCareplanForPatient/${id}`;
 }
+
+export const generatePrescriptionUrl = (careplian_id) => {
+  return `/api/patients/generate_prescription/${careplian_id}`
+}

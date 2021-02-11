@@ -1,12 +1,15 @@
 import BaseAppointment from "../../../services/appointment";
-import appointmentService from "../../../services/appointment/appointment.service";
-import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
-import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import {
   EVENT_STATUS,
   EVENT_TYPE,
   DOCUMENT_PARENT_TYPE
 } from "../../../../constant";
+
+import appointmentService from "../../../services/appointment/appointment.service";
+import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
+import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
+
 import EventWrapper from "../../common/scheduleEvents";
 import UploadDocumentWrapper from "../../mobile/uploadDocument";
 
@@ -68,9 +71,12 @@ class MAppointmentWrapper extends BaseAppointment {
 
   getAllInfo = async () => {
     const { getBasicInfo, getAppointmentId, _data } = this;
+
     const { id } = _data;
 
-    // console.log("817389127", {data: this._data.get("id"), func: getAppointmentId()});
+    // get careplan attached to medication
+    const appointmentCareplan = await carePlanAppointmentService.getCareplanByAppointment({appointment_id: id}) || null;
+    const {care_plan_id = null} = appointmentCareplan || {};
 
     const scheduleEventService = new ScheduleEventService();
     const scheduleEventData = await scheduleEventService.getAllEventByData({
@@ -114,7 +120,8 @@ class MAppointmentWrapper extends BaseAppointment {
         [`${id}`]: {
           ...getBasicInfo(),
           active_event_id: activeEventId,
-          appointment_document_ids: uploadDocumentIds
+          appointment_document_ids: uploadDocumentIds,
+          care_plan_id
         }
       },
       schedule_events: {

@@ -45,14 +45,15 @@ class DoctorTable extends Component {
 
     getDataSource = () => {
         const { users, doctors, doctor_ids, specialities } = this.props;
-
+        const {intl: {formatMessage} = {}} = this.props;
       
         return doctor_ids.map(id => {
             return generateRow({
                 id,
                 users,
                 doctors,
-                specialities
+                specialities,
+                formatMessage
             });
         });
     };

@@ -17,7 +17,7 @@ import * as serviceWorker from "./serviceWorker";
 import "./Styles/index.less";
 
 const Desktop = lazy(() =>
-  import(/* webpackChunkName: "DesktopWrapper" */ "./AppWrapper")
+  import(/* webpackChunkName: "DesktopWrapper" */ "./Containers/Routes")
 );
 
 const middleware = [thunk, retainState];

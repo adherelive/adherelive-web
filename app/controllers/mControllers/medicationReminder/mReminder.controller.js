@@ -12,7 +12,7 @@ import {
   CUSTOM_REPEAT_OPTIONS,
   MEDICINE_FORM_TYPE,
   USER_CATEGORY,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES, DAYS
 } from "../../../../constant";
 import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
@@ -32,6 +32,7 @@ import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent
 import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
+import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
 // WRAPPERS...
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
@@ -39,7 +40,10 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import MobileMReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
 import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import MedicationWrapper from "../../../ApiWrapper/web/medicationReminder";
+import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
+import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
+
+import * as medicationHelper from "../../medicationReminder/medicationHelper";
 
 const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -51,16 +55,6 @@ const KEY_DOSE = "dose";
 const KEY_UNIT = "dose_unit";
 const KEY_CUSTOM_REPEAT_OPTIONS = "custom_repeat_options";
 const KEY_MEDICINE_TYPE = "medicine_type";
-
-const medicationReminderDetails = {
-  [KEY_REPEAT_TYPE]: REPEAT_TYPE,
-  [KEY_DAYS]: DAYS_MOBILE,
-  [KEY_TIMING]: MEDICATION_TIMING,
-  [KEY_DOSE]: DOSE_AMOUNT,
-  [KEY_UNIT]: DOSE_UNIT,
-  [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
-  [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
-};
 
 class MobileMReminderController extends Controller {
   constructor() {
@@ -245,7 +239,7 @@ class MobileMReminderController extends Controller {
         description,
         start_time,
         critical = false,
-        care_plan_id = 0
+        care_plan_id = 0,
       } = body;
       const {
         userId,
@@ -258,7 +252,7 @@ class MobileMReminderController extends Controller {
       );
 
       const medicineApiWrapper = await MedicineApiWrapper(medicineDetails);
-
+      
       const dataToSave = {
         participant_id: patient_id, // todo: patient_id
         organizer_type: category,
@@ -283,7 +277,7 @@ class MobileMReminderController extends Controller {
           critical
         }
       };
-
+      
       const mReminderDetails = await medicationReminderService.addMReminder(
         dataToSave
       );
@@ -395,12 +389,9 @@ class MobileMReminderController extends Controller {
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
-      console.log("Add m-reminder error ----> ", error);
+      Logger.debug("Add medication error", error);
       return this.raiseServerError(
         res,
-        500,
-        error.message,
-        "something went wrong"
       );
     }
   };
@@ -408,7 +399,54 @@ class MobileMReminderController extends Controller {
   getMedicationDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      // Logger.debug("test", medicationReminderDetails);
+      const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+      Logger.info(`params: patient_id : ${patient_id}`);
+
+      // if (!parseInt(patient_id)) {
+      //   return raiseClientError(
+      //       res,
+      //       422,
+      //       {},
+      //       "Please select valid patient to continue"
+      //   );
+      // }
+      let timings = {};
+
+
+      if(parseInt(patient_id) !== 0) {
+        const patient = await PatientWrapper(null, patient_id);
+        const timingPreference = await userPreferenceService.getPreferenceByData({
+          user_id: patient.getUserId()
+        });
+        const options = await UserPreferenceWrapper(timingPreference);
+        const { timings: userTimings = {} } = options.getAllDetails();
+
+        const medicationTimings = medicationHelper.getTimings(userTimings);
+
+        medicationTimings.sort((activityA, activityB) => {
+          const { time: a } = activityA || {};
+          const { time: b } = activityB || {};
+          if (moment(a).isBefore(moment(b))) return -1;
+
+          if (moment(a).isAfter(moment(b))) return 1;
+        });
+
+        medicationTimings.forEach((timing, index) => {
+          timings[`${index + 1}`] = timing;
+        });
+      } else {
+        timings = MEDICATION_TIMING;
+      }
+
+      const medicationReminderDetails = {
+        [KEY_REPEAT_TYPE]: REPEAT_TYPE,
+        [KEY_DAYS]: DAYS,
+        [KEY_TIMING]: timings,
+        [KEY_DOSE]: DOSE_AMOUNT,
+        [KEY_UNIT]: DOSE_UNIT,
+        [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
+        [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
+      };
       return raiseSuccess(
         res,
         200,

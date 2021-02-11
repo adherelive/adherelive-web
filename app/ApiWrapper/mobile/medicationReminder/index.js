@@ -1,5 +1,7 @@
 import BaseMedicationReminder from "../../../services/medicationReminder";
+
 import mReminderService from "../../../services/medicationReminder/mReminder.service";
+import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
@@ -46,15 +48,29 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
 
     const currentDate = moment().endOf("day").utc().toDate();
 
+    // get careplan attached to medication
+    const medicationCareplan = await carePlanMedicationService.getCareplanByMedication({medication_id: getMReminderId()}) || null;
+    const {care_plan_id = null} = medicationCareplan || {};
+
     const scheduleEvents = await EventService.getAllPreviousByData({
       event_id: getMReminderId(),
       date: currentDate,
       event_type: EVENT_TYPE.MEDICATION_REMINDER
-    });
+    }) || [];
 
     let medicationEvents = {};
     let remaining = 0;
-    let latestPendingEventId;
+    let latestPendingEventId = null;
+    let latestPendingDate = null;
+
+    // get next due date for medication
+    const nextDueEvent = await EventService.getEventByData({
+        status: EVENT_STATUS.PENDING,
+      event_id: getMReminderId(),
+      event_type: EVENT_TYPE.MEDICATION_REMINDER
+    }) || null;
+
+    latestPendingDate = nextDueEvent ? nextDueEvent.get("start_time") : null;
 
     const scheduleEventIds = [];
     for(const events of scheduleEvents) {
@@ -75,7 +91,9 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
           ...getBasicInfo(),
           remaining,
           total: scheduleEvents.length,
-          upcoming_event_id: latestPendingEventId
+          upcoming_event_id: latestPendingEventId,
+          upcoming_event_date: latestPendingDate,
+          care_plan_id
         },
       },
     };
@@ -105,8 +123,10 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
 
     return {
       medications: {
-        ...medicationData,
-        event_ids: scheduleEventIds
+        [getMReminderId()]: {
+          ...medicationData,
+          event_ids: scheduleEventIds
+        },
       },
       schedule_events: {
         ...scheduleEventData

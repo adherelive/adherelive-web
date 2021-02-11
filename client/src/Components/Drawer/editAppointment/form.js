@@ -66,11 +66,14 @@ class EditAppointmentForm extends Component {
 
     let { basic_info: { details: { type = '' } = {} } = {} } = appointments[appointment_id] || {};
 
-    const { schedule_data: { appointment_type = '' } = {} } = appointmentData || {};
-    type = appointment_type ? appointment_type : type;
+    const { schedule_data: { appointment_type = '' } = {} , 
+    details:{appointment_type : details_appointment_type= ''} ={}  } = appointmentData || {};
+    
+    const appt_tye = appointment_type?appointment_type:details_appointment_type;
+    type = appt_tye ? appt_tye : type;
+
     let { static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
     let descArray = type_description[type] ? type_description[type] : [];
-
     this.setState({ typeDescription: descArray });
   }
   
@@ -434,10 +437,11 @@ class EditAppointmentForm extends Component {
       getTimePicker
     } = this;
     let pId = patientId ? patientId.toString() : patient_id;
-    let { basic_info: { description, start_date, start_time, end_time, details: { treatment_id = "", reason = '', type = '', type_description = '', critical = false } = {} } = {}, provider_id = 0, provider_name = '' } = appointments[appointment_id] || {};
+    let { basic_info: { description, start_date, start_time, end_time, details: { treatment_id = "", 
+    reason = '', type = '', type_description = '', critical = false } = {} } = {}, 
+    provider_id = 0, provider_name = '' } = appointments[appointment_id] || {};
     provider_id = provider_name ? provider_name : provider_id;
 
-    console.log("8917239938  ", {start_time, end_time});
 
 
 
@@ -449,7 +453,9 @@ class EditAppointmentForm extends Component {
 
 
 
-    const { reason: res = '', provider_id: provId = 0, provider_name: provName = '', schedule_data: { description: des = '', date: Date = '', start_time: startTime = '', end_time: endTime = '', appointment_type = '', type_description: typeDes = '', critical: critic = false } = {} } = appointmentData || {};
+    let { reason: res = '', provider_id: provId = 0, provider_name: provName = '', schedule_data: { description: des = '', date: Date = '', start_time: startTime = '',
+     end_time: endTime = '', appointment_type = '', type_description: typeDes = '', 
+     critical: critic = false } = {} } = appointmentData || {};
     description = des ? des : description;
     reason = res ? res : reason;
     type = appointment_type ? appointment_type : type;
@@ -465,6 +471,20 @@ class EditAppointmentForm extends Component {
 
     }
 
+    let appt_type_desc = '';
+
+    const {schedule_data = {} } = appointmentData || {};
+    
+    if(!type || !type_description || !schedule_data){
+      let { details : {appointment_type : appt_type = '' , type_description : appt_desc ='' , date = ''} = {} , } = appointmentData || {};
+      type_description =appt_desc;
+      type = appt_type;
+      start_date = date;
+    }
+
+   
+
+
     if (!start_time) {
       let minutesToAdd = 30 - (moment().minutes()) % 30;
       start_time = moment().add('minutes', minutesToAdd);
@@ -479,6 +499,8 @@ class EditAppointmentForm extends Component {
       // let minutesToAdd = 30 - (moment().minutes()) % 30;
       start_date = moment().add('days', 2)
     }
+
+    console.log("34874234832869237",{type_description,type,appointmentData});
 
 
 
@@ -676,12 +698,6 @@ class EditAppointmentForm extends Component {
             // getCalendarContainer={this.getParentNode}
             />
           )}
-          {/*<img*/}
-          {/*  alt=""*/}
-          {/*  className="calendar clickable new-calendar"*/}
-          {/*  onClick={openCalendar}*/}
-          {/*  src={calendar}*/}
-          {/*/>*/}
         </FormItem>
 
 

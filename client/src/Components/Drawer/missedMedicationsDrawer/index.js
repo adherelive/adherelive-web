@@ -72,7 +72,7 @@ class MissedMedicationsDrawer extends Component {
   };
 
   getMedicationList = () => {
-    const { patients = {}, missed_medications } = this.props;
+    const { patients = {}, missed_medications = {} } = this.props;
     const { handlePatientDetailsRedirect,formatMessage } = this;
 
     const medicationList = [];
@@ -164,7 +164,7 @@ class MissedMedicationsDrawer extends Component {
           {criticalList.length > 0 ? (
             criticalList
           ) : (
-            <div className="mt10 mb10">{"--"}</div>
+            <div className="mt10 mb10">{this.formatMessage(messages.no_critical_missed)}</div>
           )}
         </div>
         <div>
@@ -174,7 +174,7 @@ class MissedMedicationsDrawer extends Component {
           {nonCriticalList.length > 0 ? (
             nonCriticalList
           ) : (
-            <div className="mt10 mb10">{"--"}</div>
+            <div className="mt10 mb10">{this.formatMessage(messages.no_non_critical_missed)}</div>
           )}
         </div>
       </div>

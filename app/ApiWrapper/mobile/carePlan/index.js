@@ -46,17 +46,9 @@ class CarePlanWrapper extends BaseCarePlan {
     const { care_plan_appointments = [], care_plan_medications = [] } =
       _data || {};
 
-    console.log("83183029 ", {
-      care_plan_appointments: care_plan_appointments.map(appointment =>
-        appointment.get("appointment_id")
-      ),
-      care_plan_medications: care_plan_medications.map(medication =>
-        medication.get("medication_id")
-      )
-    });
     const vitals = await VitalService.getAllByData({
       care_plan_id: getCarePlanId()
-    });
+    }) || [];
 
     const vitalIds = [];
     if (vitals.length > 0) {

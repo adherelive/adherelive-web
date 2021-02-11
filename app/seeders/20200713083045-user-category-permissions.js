@@ -152,6 +152,12 @@ module.exports = {
       },
       {
         category: USER_CATEGORY.PROVIDER,
+        permission_id: "8",
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        category: USER_CATEGORY.PROVIDER,
         permission_id: "10",
         created_at: new Date(),
         updated_at: new Date()

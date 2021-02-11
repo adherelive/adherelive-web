@@ -15,6 +15,21 @@ const messages = defineMessages({
         id: "app.vital.timeline.not.recorded.text",
         description: "",
         defaultMessage: "Not Recorded"
+    },
+    edit_response_btn: {
+        id: "app.vital.timeline.edit.response.button.text",
+        description: "",
+        defaultMessage: "Edit"
+    },
+    delete_response_btn: {
+        id: "app.vital.timeline.delete.response.button.text",
+        description: "",
+        defaultMessage: "Delete"
+    },
+    edit_response_title_text: {
+        id: "app.vital.timeline.edit.response.title.text",
+        description: "",
+        defaultMessage: "Vital Response"
     }
 });
 

@@ -18,18 +18,10 @@ export default class PaymentProductService {
     }
   };
 
-  getAllCreatorTypeProducts = async ({
-    creator_type = USER_CATEGORY.ADMIN,
-    creator_id = null,
-    product_user_type = "patient"
-  }) => {
+  getAllCreatorTypeProducts = async (data) => {
     try {
       const paymentProducts = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-          creator_type,
-          creator_id,
-          product_user_type
-        },
+        where: data,
         raw: true
       });
       return paymentProducts;

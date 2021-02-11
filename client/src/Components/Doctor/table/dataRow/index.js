@@ -1,14 +1,14 @@
 import { TABLE_COLUMN, formatDoctorTableData } from "../helper";
 
 export default data => {
-  const { id } = data;
+  const { id  , formatMessage} = data;
   const formattedData = formatDoctorTableData(data);
   const { userData, doctorData, specialityData } =
     formattedData || {};
   return {
     key: id,
     [TABLE_COLUMN.NAME.dataIndex]: {
-      doctorData
+      doctorData , userData , formatMessage
     },
     [TABLE_COLUMN.VERIFIED.dataIndex]: {
       userData

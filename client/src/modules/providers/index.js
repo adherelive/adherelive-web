@@ -6,6 +6,12 @@ import {
   updateProviderUrl
 } from "../../Helper/urls/provider";
 
+import {getAllTransactionsUrl} from "../../Helper/urls/transactions"
+
+export const GET_ALL_TRANSACTIONS_START = "GET_ALL_TRANSACTIONS_START";
+export const GET_ALL_TRANSACTIONS_COMPLETE = "GET_ALL_TRANSACTIONS_COMPLETE";
+export const GET_ALL_TRANSACTIONS_FAILED = "GET_ALL_TRANSACTIONS_FAILED";
+
 export const GET_ALL_PROVIDERS_START = "GET_ALL_PROVIDERS_START";
 export const GET_ALL_PROVIDERS_COMPLETE = "GET_ALL_PROVIDERS_COMPLETE";
 export const GET_ALL_PROVIDERS_FAILED = "GET_ALL_PROVIDERS_FAILED";
@@ -52,6 +58,37 @@ export const getAllProviders = () => {
   };
 }
 
+export const getAllTransactions = () => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: GET_ALL_TRANSACTIONS_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getAllTransactionsUrl()
+      });
+
+      // console.log("78654546576877653546576654565768 --------->",response);
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_ALL_TRANSACTIONS_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: GET_ALL_TRANSACTIONS_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("GET_ALL_TRANSACTIONS ERROR --> ", error);
+    }
+    return response;
+  };
+}
 
 export const addProvider = (payload) => {
   let response = {};

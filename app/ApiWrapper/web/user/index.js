@@ -10,6 +10,7 @@ import permissionService from "../../../services/permission/permission.service";
 // WRAPPER
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
+import ProviderWrapper from "../provider";
 
 import PermissionWrapper from "../permission";
 
@@ -31,7 +32,9 @@ class UserWrapper extends BaseUser {
       category,
       activated_on,
       // system_generated_password,
-      prefix
+      prefix,
+      deleted_at,
+      has_consent
     } = _data || {};
     return {
       basic_info: {
@@ -45,14 +48,16 @@ class UserWrapper extends BaseUser {
       onboarded,
       onboarding_status,
       category,
-      activated_on
+      activated_on,
+      deleted_at,
+      has_consent
       // system_generated_password
     };
   };
 
   getCategoryInfo = async () => {
     const { _data } = this;
-    const { doctor = null, patient = null } = _data || {};
+    const { doctor = null, patient = null, provider = null } = _data || {};
 
     if (doctor) {
       const doctorData = await DoctorWrapper(doctor);
@@ -65,6 +70,12 @@ class UserWrapper extends BaseUser {
       return {
         userCategoryData: patientData.getBasicInfo(),
         userCategoryId: patientData.getPatientId()
+      };
+    } else if(provider) {
+      const providerData = await ProviderWrapper(provider);
+      return {
+        userCategoryData: providerData.getBasicInfo(),
+        userCategoryId: providerData.getProviderId()
       };
     }
   };

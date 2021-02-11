@@ -59,6 +59,11 @@ export const GETTING_INITIAL_DATA_COMPLETED = "GETTING_INITIAL_DATA_COMPLETED";
 export const GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR =
   "GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR";
 
+export const GIVE_USER_CONSENT_START = "GIVE_USER_CONSENT_START";
+export const GIVE_USER_CONSENT_COMPLETED = "GIVE_USER_CONSENT_COMPLETED";
+export const GIVE_USER_CONSENT_COMPLETED_WITH_ERROR =
+  "GIVE_USER_CONSENT_COMPLETED_WITH_ERROR";
+
 export const RESET_ERROR = "RESET_ERROR";
 
 export const RESET_UNAUTHORIZED_ERROR = "RESET_UNAUTHORIZED_ERROR";
@@ -159,6 +164,8 @@ export const signIn = (payload) => {
       } else if (status === true) {
         const { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '',
           feedId = '' } = data;
+
+         const {has_consent=false} =  users[auth_user] || {};
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
         let authRedirection = setAuthRedirectSignIn(users[auth_user]);
 
@@ -170,7 +177,8 @@ export const signIn = (payload) => {
             authRedirection,
             authCategory: auth_category,
             authPermissions: permissions, notificationToken,
-            feedId
+            feedId,
+            hasConsent:has_consent
           },
           data,
         });
@@ -322,7 +330,7 @@ export const verifyUser = (link) => {
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user]);
-
+        const {has_consent = false} = users[auth_user] || {};
         dispatch({
           type: VALIDATING_LINK_COMPLETED,
           payload: {
@@ -330,7 +338,8 @@ export const verifyUser = (link) => {
             authenticatedUser: auth_user,
             authRedirection,
             authCategory: auth_category,
-            authPermissions: permissions
+            authPermissions: permissions,
+            hasConsent:has_consent
           },
           data
         });
@@ -433,12 +442,14 @@ export const googleSignIn = (data) => {
         const { lastUrl = false } = data;
         const { _id, users } = response.payload.data;
         let authRedirection = "/";
+        const {has_consent=false} = users[_id] || {};
         dispatch({
           type: GOOGLE_SIGNING_COMPLETED,
           payload: {
             users: response.payload.data.users,
             authenticatedUser: _id,
             authRedirection,
+            hasConsent:has_consent
           },
         });
       }
@@ -469,12 +480,14 @@ export const facebookSignIn = (data) => {
         const { lastUrl = false } = data || {};
         const { _id, users = {} } = response.payload.data || {};
         let authRedirection = "/";
+        const {has_consent=false}  = users[_id] || {};
         dispatch({
           type: FACEBOOK_SIGNING_COMPLETED,
           payload: {
             users,
             authenticatedUser: _id,
             authRedirection,
+            hasConsent:has_consent
           },
         });
       }
@@ -486,11 +499,12 @@ export const facebookSignIn = (data) => {
 };
 
 export const getInitialData = () => {
+  let response = {};
   return async (dispatch) => {
     try {
       dispatch({ type: GETTING_INITIAL_DATA });
 
-      const response = await doRequest({
+      response = await doRequest({
         method: REQUEST_TYPE.GET,
         url: Auth.getInitialData(),
       });
@@ -510,7 +524,7 @@ export const getInitialData = () => {
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user], true);
-
+        const {has_consent=false} = users[auth_user] || {};
 
         dispatch({
           type: GETTING_INITIAL_DATA_COMPLETED,
@@ -521,7 +535,8 @@ export const getInitialData = () => {
             authCategory: auth_category,
             authPermissions: permissions,
             notificationToken,
-            feedId
+            feedId,
+            hasConsent:has_consent
           },
           data,
         });
@@ -530,6 +545,56 @@ export const getInitialData = () => {
       console.log("err getinitial", err);
       throw err;
     }
+    return response;
+  };
+};
+
+export const giveUserConsent = (payload) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: GIVE_USER_CONSENT_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: Auth.giveUserConsentUrl(),
+        data:payload
+      });
+
+      const { status, payload: { error = "", data = {} } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: GIVE_USER_CONSENT_COMPLETED_WITH_ERROR,
+          payload: { error },
+        });
+      } else if (status === true) {
+        const { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '',
+          feedId = '' } = data;
+        // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
+        let authRedirection = setAuthRedirectSignIn(users[auth_user]);
+        const {has_consent = false} = users[auth_user] ||{};
+
+        dispatch({
+          type: GIVE_USER_CONSENT_COMPLETED,
+          payload: {
+            users,
+            authenticatedUser: auth_user,
+            authRedirection,
+            authCategory: auth_category,
+            authPermissions: permissions, notificationToken,
+            feedId,
+            hasConsent:has_consent
+          },
+          data,
+        });
+      }
+    } catch (err) {
+      console.log("err GET_USER_CONSENT", err);
+      throw err;
+    }
+    return response;
   };
 };
 
@@ -551,6 +616,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,
         feedId: payload.feedId,
+        hasConsent:payload.hasConsent
       };
 
     case VALIDATING_LINK_COMPLETED:
@@ -559,7 +625,8 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated_user: payload.authenticatedUser,
         authenticated_category: payload.authCategory,
         authRedirection: payload.authRedirection,
-        authPermissions: payload.authPermissions
+        authPermissions: payload.authPermissions,
+        hasConsent:payload.hasConsent
       }
 
     case GETTING_INITIAL_DATA_COMPLETED_WITH_ERROR:
@@ -572,6 +639,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
+        hasConsent:payload.hasConsent
       };
     case GOOGLE_SIGNING_COMPLETED_WITH_ERROR:
       return {
@@ -583,6 +651,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated: true,
         authenticated_user: payload.authenticatedUser,
         authRedirection: payload.authRedirection,
+        hasConsent:payload.hasConsent
       };
     case FACEBOOK_SIGNING_COMPLETED_WITH_ERROR:
       return {
@@ -596,6 +665,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authRedirection: "/sign-in",
       };
     case SIGNING_COMPLETED:
+
       return {
         authenticated: true,
         authenticated_category: payload.authCategory,
@@ -604,7 +674,19 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,
         feedId: payload.feedId,
+        hasConsent:payload.hasConsent
       };
+    case GIVE_USER_CONSENT_COMPLETED:
+      return {
+        authenticated: true,
+        authenticated_category: payload.authCategory,
+        authenticated_user: payload.authenticatedUser,
+        authRedirection: payload.authRedirection,
+        authPermissions: payload.authPermissions,
+        notificationToken: payload.notificationToken,
+        feedId: payload.feedId,
+        hasConsent:payload.hasConsent
+      };  
     default:
       return state;
   }

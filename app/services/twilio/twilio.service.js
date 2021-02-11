@@ -140,17 +140,24 @@ class TwilioService {
           return channels;
         })
         .then(channels => {
+          let channelsName = [];
           for (let i = 0; i < channels.length; i++) {
-            const deleteChannel = client.chat
-              .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
-              .channels(`${channels[i].sid}`)
-              .remove()
-              .then(response => {
-                console.log("delete success response", response);
-              })
-              .catch(err => {
-                console.log("delete catch error", err);
-              });
+            const {sid, uniqueName} = channels[i] || {};
+
+            if(uniqueName && uniqueName.includes(process.config.twilio.CHANNEL_SERVER)) {
+              const deleteChannel = client.chat
+                .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
+                .channels(sid)
+                .remove()
+                .then(response => {
+                  console.log("delete success response", response);
+                  channelsName.push(uniqueName);
+                })
+                .catch(err => {
+                  console.log("delete catch error", err);
+                });
+            }
+            console.log("DELETED CHANNEL NAMES AND COUNT", {channelsName, count: channelsName.length});
           }
         });
 

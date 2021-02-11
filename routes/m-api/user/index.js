@@ -1,3 +1,5 @@
+import userController from "../../../app/controllers/user/user.controller";
+
 const express = require("express");
 const router = express.Router();
 import mUserController from "../../../app/controllers/mControllers/user/user.controller";
@@ -15,6 +17,12 @@ router.post(
     "/sign-in",
     validator.validateSignInData,
     mUserController.signIn,
+);
+
+router.post(
+    "/consent",
+    Authenticate,
+    mUserController.giveConsent
 );
 
 router.post(

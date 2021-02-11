@@ -6,6 +6,8 @@ import {
   getUpdateVitalURL,
 } from "../../Helper/urls/vitals";
 
+import {getEditVitalResponseUrl, getDeleteVitalResponseUrl} from "../../Helper/urls/event";
+
 import {getPatientVitalsURL} from "../../Helper/urls/patients";
 
 export const ADD_VITAL_START = "ADD_VITAL_START";
@@ -24,6 +26,13 @@ export const UPDATE_VITAL_START = "UPDATE_VITAL_START";
 export const UPDATE_VITAL_COMPLETED = "UPDATE_VITAL_COMPLETED";
 export const UPDATE_VITAL_FAILED = "UPDATE_VITAL_FAILED";
 
+export const EDIT_VITAL_RESPONSE_START = "EDIT_VITAL_RESPONSE_START";
+export const EDIT_VITAL_RESPONSE_COMPLETED = "EDIT_VITAL_RESPONSE_COMPLETED";
+export const EDIT_VITAL_RESPONSE_FAILED = "EDIT_VITAL_RESPONSE_FAILED";
+
+export const DELETE_VITAL_RESPONSE_START = "DELETE_VITAL_RESPONSE_START";
+export const DELETE_VITAL_RESPONSE_COMPLETED = "DELETE_VITAL_RESPONSE_COMPLETED";
+export const DELETE_VITAL_RESPONSE_FAILED = "DELETE_VITAL_RESPONSE_FAILED";
 
 export const addVital = (payload) => {
   let response = {};
@@ -133,6 +142,62 @@ export const updateVital = (payload) => {
   };
 };
 
+/****************  EDIT VITAL RESPONSE  ****************/
+
+export const editVitalResponse = ({id, index, value}) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: EDIT_VITAL_RESPONSE_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: getEditVitalResponseUrl({id, index}),
+        data: {value},
+      });
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+      response || {};
+      if (status === true) {
+        dispatch({ type: EDIT_VITAL_RESPONSE_COMPLETED, payload: data, data });
+      } else {
+        dispatch({ type: EDIT_VITAL_RESPONSE_FAILED, payload: error });
+      }
+    } catch (error) {
+      console.log("editVitalResponse error ----> ", error);
+      dispatch({ type: EDIT_VITAL_RESPONSE_FAILED });
+    }
+    return response;
+  };
+};
+
+/****************  DELETE VITAL RESPONSE  ****************/
+
+export const deleteVitalResponse = ({id, index}) => {
+  let response = {};
+  return async (dispatch) => {
+    try {
+      dispatch({ type: DELETE_VITAL_RESPONSE_START });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.DELETE,
+        url: getDeleteVitalResponseUrl({id, index}),
+      });
+
+      const { status, payload: { data = {}, error = {} } = {} } =
+      response || {};
+      if (status === true) {
+        dispatch({ type: DELETE_VITAL_RESPONSE_COMPLETED, payload: data, data });
+      } else {
+        dispatch({ type: DELETE_VITAL_RESPONSE_FAILED, payload: error });
+      }
+    } catch (error) {
+      console.log("deleteVitalResponse error ----> ", error);
+      dispatch({ type: DELETE_VITAL_RESPONSE_FAILED });
+    }
+    return response;
+  };
+};
 
 function vitalsReducer(state, payload) {
   const { vitals = {} } = payload || {};

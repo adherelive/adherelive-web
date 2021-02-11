@@ -1,23 +1,19 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-// import messages from "./message";
-import { CHART_TITLE,
-    //  NO_ADHERENCE,
-      NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, 
-    //   TEST_TWO, TEST_ONE 
-    } from "../../constant";
+import { 
+    CHART_TITLE,
+    NO_ACTION, NO_APPOINTMENT, NO_MEDICATION, 
+} from "../../constant";
 
 import { Button, Checkbox, Modal } from "antd";
-
+import messages from "./message";
 
 
 const graphs = [
-    // NO_ADHERENCE,
      NO_ACTION, NO_APPOINTMENT, NO_MEDICATION,
-    //   TEST_ONE, TEST_TWO
     ];
 
-class ClinicRegister extends Component {
+class GraphsModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,8 +32,7 @@ class ClinicRegister extends Component {
         let { handleOk } = this.props;
 
         handleOk(selectedGraphs);
-        // this.setState({
-        // });
+     
     }
 
     toggleGraphSelected = (graph) => () => {
@@ -70,6 +65,8 @@ class ClinicRegister extends Component {
         this.setState({ address });
     };
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
 
     render() {
         const { selectedGraphs = [] } = this.state;
@@ -83,10 +80,10 @@ class ClinicRegister extends Component {
                 onOk={this.handleSave}
                 footer={[
                     <Button key="back" onClick={this.handleClose}>
-                        Return
+                        {this.formatMessage(messages.return)}
                     </Button>,
                     <Button key="submit" type="primary" onClick={this.handleSave}>
-                        Submit
+                        {this.formatMessage(messages.submit)}
                     </Button>,
                 ]}
             >
@@ -109,4 +106,4 @@ class ClinicRegister extends Component {
 
     }
 }
-export default injectIntl(ClinicRegister);
+export default injectIntl(GraphsModal);

@@ -37,7 +37,7 @@ import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 import registrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
-import userPreferenceService from "../../services/userPreferences/userPreference.service";
+// import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import userWrapper from "../../ApiWrapper/web/user";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import Controller from "../index";
@@ -199,6 +199,9 @@ class UserController extends Controller {
         email
       });
 
+      Logger.debug("983675754629384652479238094862387",{user});
+
+      
       if (!user) {
         return this.raiseClientError(res, 422, user, "Email doesn't exists");
       }
@@ -222,6 +225,8 @@ class UserController extends Controller {
 
       const doLogin = passwordMatch || providerDoctorFirstLogin ? true : false;
 
+      const consent = user.get("has_consent");
+
       if (doLogin) {
         if (providerDoctorFirstLogin) {
           const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -234,6 +239,17 @@ class UserController extends Controller {
             user.get("id")
           );
         }
+
+        // if(!consent){
+        //   return this.raiseClientError(
+        //       res,
+        //       422,
+        //       {
+        //         userId : user.get("id")
+        //       },
+        //       "User consent required to proceed further."
+        //     );
+        // }
 
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
@@ -280,7 +296,8 @@ class UserController extends Controller {
           auth_user: apiUserDetails.getId(),
           notificationToken: notificationToken,
           feedId: `${user.get("id")}`,
-          auth_category: apiUserDetails.getCategory()
+          auth_category: apiUserDetails.getCategory(),
+          hasConsent: apiUserDetails.getConsent(),
         };
 
         res.cookie("accessToken", accessToken, {
@@ -308,7 +325,7 @@ class UserController extends Controller {
           res,
           200,
           { ...dataToSend },
-          "initial data retrieved successfully"
+          "Initial data retrieved successfully"
         );
       } else {
         return this.raiseClientError(res, 401, {}, "Invalid Credentials");
@@ -318,6 +335,88 @@ class UserController extends Controller {
       return this.raiseServerError(res);
     }
   };
+
+  giveConsent = async (req,res) => {
+    const {raiseClientError} = this;
+    try{
+      const {userDetails: {userId} = {}, body: {agreeConsent} = {}} = req;
+
+      Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
+
+      if(!agreeConsent) {
+        return raiseClientError(res, 422, {}, "Cannot proceed without accepting Terms of Service");
+      }
+
+      //update
+      await userService.updateUser(
+          {
+            has_consent: agreeConsent
+          },
+          userId
+      );
+
+
+      const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+      const secret = process.config.TOKEN_SECRET_KEY;
+      const accessToken = await jwt.sign(
+          {
+            userId
+          },
+          secret,
+          {
+            expiresIn
+          }
+      );
+
+      const appNotification = new AppNotification();
+
+      const notificationToken = appNotification.getUserToken(
+          `${userId}`
+      );
+      // const feedId = base64.encode(`${userId}`);
+
+      const userRef = await userService.getUserData({ id: userId });
+
+      const apiUserDetails = await UserWrapper(userRef.get());
+
+      // let permissions = {
+      //   permissions: []
+      // };
+
+      // if (apiUserDetails.isActivated()) {
+      //   permissions = await apiUserDetails.getPermissions();
+      // }
+
+      const dataToSend = {
+        ...(await apiUserDetails.getReferenceInfo()),
+        auth_user: apiUserDetails.getId(),
+        notificationToken: notificationToken,
+        feedId: `${userId}`,
+        hasConsent: apiUserDetails.getConsent(),
+        auth_category: apiUserDetails.getCategory()
+      };
+
+      res.cookie("accessToken", accessToken, {
+        expires: new Date(
+            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+        ),
+        httpOnly: true
+      });
+
+      return this.raiseSuccess(
+          res,
+          200,
+          { ...dataToSend },
+          "Initial data retrieved successfully"
+      );
+
+
+    }catch(error){
+      Logger.debug("giveConsent 500 error ----> ", error);
+      return this.raiseServerError(res);
+    }
+  }
 
   async signInGoogle(req, res) {
     const authCode = req.body.tokenId;
@@ -660,6 +759,7 @@ class UserController extends Controller {
         const feedId = base64.encode(`${userId}`);
 
         let response = {
+          ...referenceData,
           users: {
             ...userApiData
           },
@@ -683,7 +783,6 @@ class UserController extends Controller {
           conditions: {
             ...conditionApiDetails
           },
-          ...referenceData,
           ...permissions,
           severity_ids: severityIds,
           treatment_ids: treatmentIds,
