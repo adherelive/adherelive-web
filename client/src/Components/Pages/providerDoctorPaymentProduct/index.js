@@ -6,10 +6,11 @@ import Button from "antd/es/button";
 import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultationFee";
 import ConsultationFeeTable from "../../../Containers/ConsultationFees";
 
-// import ConsultationFeeTable from "../doctorSettingsPage/consultationFeeTable/index";
+// import DoctorConsultationFeeTable from "../../../Containers/DoctorConsultationFee";
 
 import messages from "./messages";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import Loading from "../../Common/Loading";
 
 class ProviderDoctorPaymentProduct extends Component {
   constructor(props) {
@@ -19,7 +20,8 @@ class ProviderDoctorPaymentProduct extends Component {
       defaultPaymentsProducts: {},
       doctorPaymentProducts: {},
       noDoctorPaymentProducts: true,
-      isUpdated: false
+      isUpdated: false,
+      loading:false
     };
   }
 
@@ -31,7 +33,7 @@ class ProviderDoctorPaymentProduct extends Component {
 
   async handleGetDoctorPaymentProduct(id) {
     try {
-      this.setState({ fetchingDoctorPayments: true });
+      this.setState({ fetchingDoctorPayments: true ,loading:true});
       const { getDoctorPaymentProduct } = this.props;
       const response = await getDoctorPaymentProduct({ doctor_id: id });
       const {
@@ -43,13 +45,15 @@ class ProviderDoctorPaymentProduct extends Component {
         this.setState({
           fetchingDoctorPayments: false,
           doctorPaymentProducts: payment_products,
-          noDoctorPaymentProducts: false
+          noDoctorPaymentProducts: false,
+          loading:false
         });
       } else if (!status && statusCode === 201) {
         this.setState({
           fetchingDoctorPayments: false,
           doctorPaymentProducts: {},
-          noDoctorPaymentProducts: true
+          noDoctorPaymentProducts: true,
+          loading:false
         });
       } else {
         this.setState({ fetchingDoctorPayments: false });
@@ -114,7 +118,13 @@ class ProviderDoctorPaymentProduct extends Component {
   };
 
   consultationFeeDisplay = () => {
-    const { noDoctorPaymentProducts, doctorPaymentProducts } = this.state;
+    const { noDoctorPaymentProducts, doctorPaymentProducts ,loading = false} = this.state;
+    const { match: { params: { id :doctor_id = null } = {} } = {} } = this.props;
+
+
+    if (loading) {
+      return <Loading />;
+    }
 
     return (
       <div className="wp100 flex p10 direction-column justify-space-between">
@@ -130,6 +140,11 @@ class ProviderDoctorPaymentProduct extends Component {
                 deleteDoctorProduct={this.deleteDoctorProduct}
                 editDoctorProduct={this.displayEditDoctorPaymentProduct}
               />
+
+              {/* <DoctorConsultationFeeTable
+                doctor_id={doctor_id}
+              /> */}
+
             </div>
           )}
         </div>

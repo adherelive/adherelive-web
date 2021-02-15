@@ -192,6 +192,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Are you sure you want to delete this template ?"
     },
+    submitting:{
+        id: "app.allTemplatesEditDrawer.submitting",
+        description: "",
+        defaultMessage: "Submitting"
+    },
 });
 
 export default messages;

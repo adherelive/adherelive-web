@@ -30,6 +30,7 @@ class EditVital extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
+      submitting:false
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       EditVitalForm
@@ -150,6 +151,7 @@ class EditVital extends Component {
         }
         else{
           try {
+            this.setState({submitting:true});
             const response = await updateVital(data_to_submit);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
@@ -158,7 +160,11 @@ class EditVital extends Component {
             } else {
               message.error(msg);
             }
+            
+            this.setState({submitting:false});
+
           } catch (error) {
+            this.setState({submitting:false});
             console.log("add vital reminder ui error -----> ", error);
           }
         }
@@ -262,7 +268,7 @@ class EditVital extends Component {
       handleSubmit,
       getDeleteButton,
     } = this;
-    const { disabledOk } = this.state;
+    const { disabledOk , submitting = false } = this.state;
 
     const enableSubmit = () => {
       this.setState({ disabledOk: true });
@@ -301,6 +307,7 @@ class EditVital extends Component {
           submitButtonProps={submitButtonProps}
           cancelComponent={getDeleteButton()}
           enableSubmit={this.enableSubmit}
+          submitting={submitting}
         />
       </Drawer>
     );

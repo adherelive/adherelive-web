@@ -17,6 +17,8 @@ import uuid from 'react-uuid';
 import messages from "./message";
 import Input from "antd/es/input";
 
+import Footer from "../footer";
+
 class TemplatePageCreateDrawer extends Component{
     constructor(props){
         super(props)
@@ -34,7 +36,8 @@ class TemplatePageCreateDrawer extends Component{
             showAddMedicationInner: false,
             showAddAppointmentInner: false,
             showAddVitalInner: false,
-            showAreYouSureModal: false
+            showAreYouSureModal: false,
+            submitting:false
         };
     }
 
@@ -225,6 +228,7 @@ class TemplatePageCreateDrawer extends Component{
         if (validate) {
           
             try{
+                this.setState({submitting:true});
                 const response  = await createCareplanTemplate({medicationsData, appointmentsData,vitalsData, name });
                 const {payload : {data = {} , message : res_msg = ''} , status, statusCode } = response || {};
                 if (status){
@@ -249,9 +253,11 @@ class TemplatePageCreateDrawer extends Component{
                 }else{
                     message.error(res_msg);
                 }
+                this.setState({submitting:false});
 
             }catch(error){
                 console.log("error -->",error);
+                this.setState({submitting:false});
                 message.warn(error);
             }
             
@@ -876,7 +882,8 @@ class TemplatePageCreateDrawer extends Component{
 
     render() {
         let { showInner, innerFormType, innerFormKey, medications, showAddMedicationInner,
-            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name } = this.state;
+            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name ,
+            submitting=false} = this.state;
         const { onClose, renderTemplateDetails } = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
    
@@ -958,10 +965,17 @@ class TemplatePageCreateDrawer extends Component{
                   
                     {showAddVitalInner && <EditVitalDrawer vitalVisible={showAddVitalInner} addVital={this.addVital} hideVital={this.closeAddVital} />} 
 
-                  
-                  
+                    
+                    <Footer
+                        onSubmit={this.onSubmit}
+                        onClose={this.onClose}
+                        submitText={this.formatMessage(messages.submit)}
+                        submitButtonProps={{}}
+                        cancelComponent={null}
+                        submitting={submitting}
+                    />
 
-                    <div className='add-patient-footer'>
+                    {/* <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                             {this.formatMessage(messages.cancel)}
                         </Button>
@@ -970,7 +984,7 @@ class TemplatePageCreateDrawer extends Component{
                         >
                             {this.formatMessage(messages.submit)}
                         </Button>
-                    </div>
+                    </div> */}
                 </Drawer>
             </Fragment>
         );

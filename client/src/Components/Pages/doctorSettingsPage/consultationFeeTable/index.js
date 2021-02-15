@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { injectIntl } from "react-intl";
-import { Table, Icon } from "antd";
+import { Table, Icon, Empty } from "antd";
 import generateRow from "./datarow";
 // import { PERMISSIONS } from '../../../constant'
 import getColumn from "./header";
+import messages from "./messages"; 
 
 class ConsultationFeeTable extends Component {
   constructor(props) {
@@ -37,6 +38,8 @@ class ConsultationFeeTable extends Component {
       indicator: antIcon
     };
   };
+
+  formatMessage = data =>  this.props.intl.formatMessage(data);
 
   getDataSource = () => {
     const {
@@ -84,6 +87,10 @@ class ConsultationFeeTable extends Component {
       intl: { formatMessage } = {}
     } = this.props;
 
+    const locale = {
+      emptyText: this.formatMessage(messages.emptyConsultationTable)
+    };
+    
     return (
       <Table
         // onRow={authPermissions.includes(PERMISSIONS.VIEW_PATIENT) ? onRow : null}
@@ -99,6 +106,7 @@ class ConsultationFeeTable extends Component {
           position: "top",
           // pageSize: 6
         }}
+        locale={locale}
       />
     );
   }

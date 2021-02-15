@@ -80,6 +80,13 @@ const TemplatePage = lazy(() =>
     )
 );
 
+const DoctorTransactionPage = lazy(() => 
+    import(
+      /* webpackChunkName: "DoctorTransactionPage" */ "../../Containers/Pages/doctorTransactionPage"
+
+    )
+);
+
 const PatientDetailsComp = props => {
   const { match: { params: { patient_id } = {} } = {} } = props;
   return <PatientDetails patient_id={patient_id} />;
@@ -239,6 +246,14 @@ class Doctors extends Component {
                     path={PATH.TEMPLATES}
                     component={TemplatePage}
                 />
+
+
+                <Route
+                 exact
+                 path={PATH.DOCTOR.TRANSACTION_DETAILS}
+                 component={DoctorTransactionPage}
+                />
+
                 
                 {/* <Route
                   exact

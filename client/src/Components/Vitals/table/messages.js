@@ -25,6 +25,11 @@ const messages = defineMessages({
     id: "app.vital.table.edit",
     description: "",
     defaultMessage: "Edit"
+  },
+  emptyVitalTable: {
+    id: "app.vital.table.emptyVitalTable",
+    description: "",
+    defaultMessage: "No Action Data added yet"
   }
 });
 

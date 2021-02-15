@@ -4,7 +4,7 @@ import generateRow from "./dataRow";
 import {PERMISSIONS} from "../../../constant";
 import getColumn from "./header";
 import Table from "antd/es/table";
-
+import messages from "./messages";
 
 class MedicationTable extends Component {
     constructor(props) {
@@ -85,7 +85,13 @@ class MedicationTable extends Component {
         }   //TODOj
     };
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
     render() {
+        const locale = {
+            emptyText: this.formatMessage(messages.emptyMedicationTable)
+          };
+
         const {
             intl: { formatMessage } = {},
         } = this.props;
@@ -104,6 +110,8 @@ class MedicationTable extends Component {
                 pagination={{
                     position: "bottom",
                 }}
+
+                locale={locale}
             />
         );
     }

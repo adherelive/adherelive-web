@@ -6,7 +6,7 @@ import getColumn from "./header";
 import Table from "antd/es/table";
 
 import ReportDocumentModal from "../../Modal/reportDocuments";
-
+import messages from "./message";
 
 class ReportTable extends Component {
     constructor(props) {
@@ -103,12 +103,18 @@ class ReportTable extends Component {
     //     }
     // };
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
     render() {
         const {
             intl: { formatMessage } = {},
         } = this.props;
         const {modalVisible, documentData} = this.state;
         const { getDataSource, closeModal } = this;
+
+        const reportLocale = {
+            emptyText:this.formatMessage(messages.emptyReports)
+        }
 
         return (
             <Fragment>
@@ -124,6 +130,7 @@ class ReportTable extends Component {
                     pagination={{
                         position: "bottom",
                     }}
+                    locale={reportLocale}
                 />
                 <ReportDocumentModal visible={modalVisible} documentData={documentData} onClose={closeModal} formatMessage={formatMessage}/>
             </Fragment>

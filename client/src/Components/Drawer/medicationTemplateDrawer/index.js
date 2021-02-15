@@ -716,7 +716,7 @@ class TemplateDrawer extends Component {
 
     onPreSubmit = () => {
         let { medications = {}, appointments = {},vitals={}, templateMedicationIDs, templateAppointmentIDs,templateVitalIDs, templateEdited } = this.state;
-        let templateDataExists = (Object.values(medications).length || Object.values(appointments).length) || Object.value(vitals).length ? true : false;
+        let templateDataExists = (Object.values(medications).length || Object.values(appointments).length) || Object.values(vitals).length ? true : false;
 
         if (templateDataExists) {
             if (Object.values(medications).length === templateMedicationIDs.length ||

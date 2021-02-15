@@ -43,13 +43,11 @@ class editReportDrawer extends Component{
   // }
   
   componentDidUpdate(){
-    console.log("786578326427348234762427394823 ################################# componentDidUpdate");
   }
 
 
   async getAllReportsData(){
    try{
-    console.log("786578326427348234762427394823 #################################");
 
     const {payload : {report_id},patient_id} = this.props;
     const {getAllReports} = this.props;
@@ -266,7 +264,6 @@ class editReportDrawer extends Component{
             });
         }
 
-    console.log("287423 new_documents", {newDocuments});
     this.setState({new_documents: [...new_documents, ...newDocuments]});
   };
 

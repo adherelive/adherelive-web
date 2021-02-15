@@ -1,14 +1,27 @@
 import { connect } from "react-redux";
-import DoctorCalender from "../../../Components/Pages/doctorCalender";
+import ProviderDoctorCalender from "../../../Components/Pages/providerDoctorCalender";
 import { withRouter } from "react-router-dom";
 // import {open} from "../../../modules/drawer";
 // import {DRAWER} from "../../../constant";
 import {getCalenderDataCountForDay ,getCalenderDataForDay} from "../../../modules/scheduleEvents";
 
 const mapStateToProps = state => {
-  const {} = state;
+  const {
+    users={},
+    doctors={},
+    patients={},
+    date_wise_appointments={},
+    appointments={}
+  } = state;
 
-  return {};
+  return {
+    users,
+    doctors,
+    patients,
+    date_wise_appointments,
+    appointments
+  };
+
 };
 
 const mapDispatchToProps = dispatch => {
@@ -19,5 +32,5 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(DoctorCalender)
+  connect(mapStateToProps, mapDispatchToProps)(ProviderDoctorCalender)
 );

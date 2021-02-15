@@ -17,6 +17,7 @@ class AddAppointment extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -123,6 +124,7 @@ class AddAppointment extends Component {
           message.error('Please select valid timings for appointment.')
         } else {
           try {
+            this.setState({submitting:true});
             const response = await addCarePlanAppointment(data, carePlanId);
             const {
               status,
@@ -147,8 +149,10 @@ class AddAppointment extends Component {
                 message.warn(errorMessage);
               }
             }
+            this.setState({submitting:false});
 
           } catch (error) {
+            this.setState({submitting:false});
           }
         }
       }
@@ -182,7 +186,7 @@ class AddAppointment extends Component {
       hideAppointment,
       appointmentVisible,
       editAppointment } = this.props;
-    const { disabledSubmit } = this.state;
+    const { disabledSubmit , submitting=false } = this.state;
 
 
     const {
@@ -238,6 +242,7 @@ class AddAppointment extends Component {
             submitText={formatMessage(messages.submit_text)}
             submitButtonProps={submitButtonProps}
             cancelComponent={null}
+            submitting={submitting}
           />
         </Drawer>
       </Fragment>

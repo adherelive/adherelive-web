@@ -66,6 +66,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Inactive"
   },
+  emptyDoctorTable:{
+    id: "app.doctor.table.emptyDoctorTable",
+    description: "",
+    defaultMessage: "No Doctors added for the user yet"
+  },
 });
 
 export default messages;

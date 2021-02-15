@@ -43,6 +43,9 @@ export const PATH = {
     CALENDER: "/calender",
     TRANSACTION_DETAILS:"/transaction_details"
   },
+  DOCTOR:{
+    TRANSACTION_DETAILS:"/transaction_details"
+  },
   TERMS_OF_SERVICE: "/terms-of-service",
   PRIVACY_POLICY: "/privacy-policy",
   TEMPLATES:"/templates",

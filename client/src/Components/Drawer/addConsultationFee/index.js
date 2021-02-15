@@ -17,6 +17,7 @@ import moment from "moment";
 import throttle from "lodash-es/throttle";
 
 import messages from "./message";
+import Footer from "../footer";
 
 const { Option } = Select;
 
@@ -34,46 +35,58 @@ class addNewConsultationDrawer extends Component {
       fetchingAdminPayments: false,
       consultationFeeId: null,
       consultation:"",
-      payload: null
+      payload: null,
+      submitting:false
     };
   }
 
-  componentDidMount() {}
-
-  componentDidUpdate(prevProps, prevState) {
-    const { consultation } = this.state;
-    const { consultation: prev_consultation } = prevState;
-    if (consultation !== prev_consultation) {
-      this.setFieldValues();
-    }
-    this.updateConsultationFeeData();
-
+  componentDidMount() {
+    const {payload ={}} = this.props;
   }
 
-  updateConsultationFeeData = () => {
-    const { payload: updatedPayload = {} } = this.props;
-    const { payload } = this.state;
-    if (updatedPayload !== payload) {
-      const {
-        basic_info: { name = "", amount = "", type = "", id = null } = {}
-      } = updatedPayload;
+  componentDidUpdate(prevProps, prevState) {
 
-      console.log("3424234242432",type);
+    // const { consultation } = this.state;
+    // const { consultation: prev_consultation } = prevState;
+    // if (consultation !== prev_consultation) {
+    //   this.setFieldValues();
+    // }
+    // this.updateConsultationFeeData();
 
-      
-      this.setState({
-        newConsultationName: name,
-        newConsultationFee: amount,
-        newConsultationType: type,
-        payload: updatedPayload,
-        consultationFeeId: id,
-      });
-      if(type){
-        this.setState({consultation:parseInt(type) });
+    const {visible : prev_visible = false} = prevProps || {}; 
+    const {visible = false} = this.props || {};
+
+    if(visible && visible !== prev_visible){
+      const {payload :{basic_info = {} } } = this.props;
+      const {payload : updatedPayload ={}} = this.props;
+      if(basic_info){
+        const {payload :{basic_info : {name = "", amount = "", type = "", id = null} = {}} = {} } = 
+        this.props;
+
+        if(id){
+          this.setState({
+            newConsultationName: name,
+            newConsultationFee: amount,
+            newConsultationType: type,
+            payload: updatedPayload,
+            consultationFeeId: id,
+          })
+
+          if(type){
+            const newConsultationTypeText =  CONSULTATION_FEE_TYPE_TEXT[type];
+            this.setState({
+              consultation:parseInt(type),
+              newConsultationTypeText
+             });
+          }
+          
+        }
+      }else{
+        this.setFieldValues();
       }
     }
-  };
 
+  }
   
   setFee = e => {
     const { value } = e.target;
@@ -308,6 +321,9 @@ class addNewConsultationDrawer extends Component {
     try {
       const { addDoctorPaymentProduct, setIsUpdated } = this.props;
       const { close } = this.props;
+
+      this.setState({submitting:true});
+
       const response = await addDoctorPaymentProduct(data);
       const { consultationFeeId = null } = this.state;
       const {
@@ -326,8 +342,10 @@ class addNewConsultationDrawer extends Component {
       } else {
         message.warn(payload_message);
       }
+      this.setState({submitting:false});
     } catch (err) {
       console.log("err ", err);
+      this.setState({submitting:false});
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
@@ -342,7 +360,8 @@ class addNewConsultationDrawer extends Component {
       newConsultationTypeText: "",
       newConsultationFee: "",
       fetchingAdminPayments: false,
-      consultation : ""
+      consultation : "",
+      consultationFeeId: null
     });
     close();
   };
@@ -350,7 +369,7 @@ class addNewConsultationDrawer extends Component {
   render() {
     const { visible } = this.props;
     const { onClose, renderAddNewConsultationFee } = this;
-    const { consultationFeeId ,consultation} = this.state;
+    const { consultationFeeId ,consultation , submitting=false} = this.state;
     const title = consultationFeeId
       ? this.formatMessage(messages.editConsultationFee)
       : this.formatMessage(messages.addConsultationFee);
@@ -376,16 +395,25 @@ class addNewConsultationDrawer extends Component {
         >
           {renderAddNewConsultationFee()}
 
-          {consultation !== "" ? (
-            <div className="add-patient-footer">
-              <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-                {this.formatMessage(messages.cancel)}
-              </Button>
-              <Button onClick={this.onSubmit} type="primary">
-                {this.formatMessage(messages.submit)}
-              </Button>
-            </div>
-          ) : null}
+          {consultation !== "" ? 
+             <Footer
+              onSubmit={this.onSubmit}
+              onClose={this.onClose}
+              submitText={this.formatMessage(messages.submit)}
+              submitButtonProps={{}}
+              cancelComponent={null}
+              submitting={submitting}
+            />
+
+            // <div className="add-patient-footer">
+            //   <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+            //     {this.formatMessage(messages.cancel)}
+            //   </Button>
+            //   <Button onClick={this.onSubmit} type="primary">
+            //     {this.formatMessage(messages.submit)}
+            //   </Button>
+            // </div>
+           : null}
         </Drawer>
       </Fragment>
     );
