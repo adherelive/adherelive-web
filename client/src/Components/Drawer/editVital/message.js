@@ -426,5 +426,10 @@ export default defineMessages({
     description: "",
     defaultMessage: "Add Vital"
   },
+  fill_all_details: {
+    id: "app.vital.edit.drawer.fillAll",
+    description: "",
+    defaultMessage: "Please Fill All Details"
+  },
 
 });

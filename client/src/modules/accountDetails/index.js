@@ -131,10 +131,15 @@ export const deleteAccountDetails = (id) => {
       });
 
       const { status, payload: { data, error } = {} } = response || {};
+
+      if(id){
+        data["id"] = id;
+      }
       if (status === true) {
         dispatch({
           type: DELETE_ACCOUNT_DETAILS_COMPLETE,
           data: data,
+          payload:data
         });
       } else {
         dispatch({
@@ -196,9 +201,25 @@ function accountDetailsReducer(state, data) {
   }
 }
 
+function deleteAccountDetailsComplete(state,data) {
+  const {id} = data || {};
+  if(id){
+    const {[id.toString()]:detail, ...rest} = state;
+    return{
+      ...rest
+    };
+
+  }else{
+    return state;
+  }
+  
+}
+
 export default (state = {}, action) => {
   const { type, payload } = action || {};
   switch (type) {
+    case DELETE_ACCOUNT_DETAILS_COMPLETE:
+      return deleteAccountDetailsComplete(state,payload);
     default:
       return accountDetailsReducer(state, payload);
   }

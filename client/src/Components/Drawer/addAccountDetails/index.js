@@ -19,6 +19,7 @@ import switzerland from "../../../Assets/images/switzerland.png";
 import france from "../../../Assets/images/france.png";
 
 import messages from "./message";
+import Footer from "../footer";
 
 const { Option } = Select;
 
@@ -33,7 +34,8 @@ class addAccountDetailsDrawer extends Component {
       ifsc_code: "",
       account_type: "",
       use_as_main: false,
-      upi_id: ""
+      upi_id: "",
+      submitting:false
     };
   }
 
@@ -433,6 +435,7 @@ class addAccountDetailsDrawer extends Component {
     use_as_main = false,
     upi_id
   }) => {
+
     this.handleSubmit({
       customer_name,
       account_mobile_number,
@@ -456,6 +459,8 @@ class addAccountDetailsDrawer extends Component {
     upi_id
   }) {
     try {
+      this.setState({submitting:true});
+
       const { addAccountDetails, updateAccountDetailsAdded } = this.props;
       const response = await addAccountDetails({
         customer_name,
@@ -475,8 +480,12 @@ class addAccountDetailsDrawer extends Component {
       } else {
           message.warn(msg);
       }
+
+      this.setState({submitting:false});
+
     } catch (err) {
       console.log("err", err);
+      this.setState({submitting:false});
       message.warn(this.formatMessage(messages.somethingWentWrong));
     }
   }
@@ -516,6 +525,8 @@ class addAccountDetailsDrawer extends Component {
       //  renderAddNewConsultationFee
     } = this;
 
+    const {submitting = false} = this.state;
+
     if (visible !== true) {
       return null;
     }
@@ -537,14 +548,34 @@ class addAccountDetailsDrawer extends Component {
           width={`30%`}
         >
           {renderAddAccountDetailsForm()}
-          <div className="add-patient-footer">
+
+         <Footer
+            onSubmit={this.onSubmit}
+            onClose={this.onClose}
+            submitText={this.formatMessage(messages.submit)}
+            submitButtonProps={{}}
+
+            cancelComponent={
+              <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+              {this.formatMessage(messages.cancel)}
+            </Button>
+            }
+
+            submitting={submitting}
+
+          /> 
+
+        
+          {/* <div className="add-patient-footer">
             <Button onClick={this.onClose} style={{ marginRight: 8 }}>
               {this.formatMessage(messages.cancel)}
             </Button>
             <Button onClick={this.onSubmit} type="primary">
               {this.formatMessage(messages.submit)}
             </Button>
-          </div>
+          </div> */}
+
+          
         </Drawer>
       </Fragment>
     );

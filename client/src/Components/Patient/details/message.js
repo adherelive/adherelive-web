@@ -511,6 +511,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Prescription"
     },
+    emptyAppointmentTable: {
+        id: "app.appointment.table.emptyAppointmentTable",
+        description: "",
+        defaultMessage: "No Appointment Data added yet"
+      },
 
 });
 

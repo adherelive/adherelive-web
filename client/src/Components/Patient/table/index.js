@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 import { Table, Icon } from "antd";
 import generateRow from "./dataRow";
 import getColumn from "./header";
+import messages from "./messages";
 
 class PatientTable extends Component {
   constructor(props) {
@@ -90,6 +91,10 @@ class PatientTable extends Component {
       intl: { formatMessage } = {},
     } = this.props;
 
+    const patientLocale = {
+      emptyText:formatMessage(messages.emptyPatientTable)
+    }
+
     return (
       <Table
         
@@ -104,6 +109,7 @@ class PatientTable extends Component {
         pagination={{
           position: "bottom",
         }}
+        locale={patientLocale}
         
       />
     );

@@ -41,6 +41,9 @@ import {
   PATIENT_CONSTANTS
 } from "../../../constant";
 
+import {PoweroffOutlined} from "@ant-design/icons";
+
+
 const { Option } = Select;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -1232,7 +1235,7 @@ class PatientDetailsDrawer extends Component {
   formatMessage = data => this.props.intl.formatMessage(data);
 
   onClose = () => {
-    const { close } = this.props;
+    const { close  , submitting=false} = this.props;
     this.setState({
       mobile_number: "",
       name: "",
@@ -1264,7 +1267,7 @@ class PatientDetailsDrawer extends Component {
   };
 
   render() {
-    const { visible } = this.props;
+    const { visible ,submitting=false } = this.props;
     const { onClose, renderAddPatient } = this;
 
     if (visible !== true) {
@@ -1287,11 +1290,17 @@ class PatientDetailsDrawer extends Component {
         >
           {renderAddPatient()}
           <div className="add-patient-footer">
-            <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+            <Button onClick={this.onClose} style={{ marginRight: 8 }}
+             >
               {this.formatMessage(messages.cancel)}
             </Button>
-            <Button onClick={this.onSubmit} type="primary">
-              {this.formatMessage(messages.submit)}
+            <Button onClick={this.onSubmit} type="primary"
+            icon={submitting ? <PoweroffOutlined /> : null }
+            loading={submitting}
+            >
+              {
+              this.formatMessage(messages.submit)
+              }
             </Button>
           </div>
         </Drawer>

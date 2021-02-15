@@ -24,6 +24,7 @@ class AddMedicationReminder extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
+      submitting:false,
       medicineDrawerVisible:false,
       medicineValue:'',
       newMedicineId:null
@@ -242,15 +243,19 @@ class AddMedicationReminder extends Component {
           message.error('Please select valid dates for medication')
         } else {
           try {
+            this.setState({submitting:true});
             const response = await addCarePlanMedicationReminder(data_to_submit, carePlanId);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
+              this.setState({submitting:false});
               message.success(msg);
               // getMedications(patient_id);
             } else {
+              this.setState({submitting:false});
               message.error(msg);
             }
           } catch (error) {
+            this.setState({submitting:false});
             console.log("add medication reminder ui error -----> ", error);
           }
         }
@@ -285,7 +290,7 @@ class AddMedicationReminder extends Component {
     //   disabled: disabledSubmit,
     //   loading: loading
     // };
-    const { members ,medicineDrawerVisible=false,medicineValue='',newMedicineId=null} = this.state;
+    const { members ,submitting=false ,medicineDrawerVisible=false,medicineValue='',newMedicineId=null} = this.state;
     const {addNewMedicine}=this.props;
     
 
@@ -330,6 +335,7 @@ class AddMedicationReminder extends Component {
           submitText={formatMessage(messages.add_button_text)}
           submitButtonProps={{}}
           cancelComponent={null}
+          submitting={submitting}
         />
       
 

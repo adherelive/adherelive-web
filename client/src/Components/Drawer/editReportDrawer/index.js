@@ -33,7 +33,8 @@ class editReportDrawer extends Component {
       name: "",
       test_date: "",
       exisiting_documents: [],
-      enableModal:false
+      enableModal:false,
+      submitting:false
     };
   }
 
@@ -448,7 +449,7 @@ class editReportDrawer extends Component {
         const { originFileObj = {} } = file;
         data.set("files", originFileObj);
 
-        this.setState({ uploading: true });
+        this.setState({ uploading: true , submitting:true });
         const response = await uploadReport(patient_id, data);
         const {
           status = false,
@@ -473,7 +474,7 @@ class editReportDrawer extends Component {
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({ uploading: false });
+      this.setState({ uploading: false,submitting:false });
     }
   }
 
@@ -526,10 +527,12 @@ class editReportDrawer extends Component {
       } else {
         message.warn(respMessage);
       }
+
+      this.setState({submitting:false});
     } catch (error) {
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({ uploading: false });
+      this.setState({ uploading: false , submitting:false });
     }
   }
 
@@ -609,7 +612,7 @@ class editReportDrawer extends Component {
       handleSubmit
     } = this;
 
-    const { viewModalVisible, viewModalSrc ,enableModal} = this.state;
+    const { viewModalVisible, viewModalSrc ,enableModal,submitting=false} = this.state;
     console.log("786578326427348234762427394823 enableModal  --->",(viewModalVisible && enableModal));
 
 
@@ -646,6 +649,7 @@ class editReportDrawer extends Component {
             submitButtonProps={submitButtonProps}
             submitText={formatMessage(messages.submit)}
             cancelComponent={null}
+            submitting={submitting}
           />
         </Drawer>
         <Modal

@@ -50,7 +50,7 @@ const ProviderDoctorPaymentPage = lazy(() =>
 
 const DoctorCalenderPage = lazy(() =>
   import(
-    /* webpackChunkName: "DoctorCalenderPage" */ "../../Containers/Pages/doctorCalender"
+    /* webpackChunkName: "DoctorCalenderPage" */ "../../Containers/Pages/providerDoctorCalender"
   )
 );
 

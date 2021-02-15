@@ -30,7 +30,12 @@ const messages = defineMessages({
     id: "app.medication.table.edit",
     description: "",
     defaultMessage: "Edit"
-  }
+  },
+  emptyMedicationTable:{
+    id: "app.medication.table.emptyMedicationTable",
+    description: "",
+    defaultMessage: "No Medication Data added yet"
+  },
 });
 
 export default messages;

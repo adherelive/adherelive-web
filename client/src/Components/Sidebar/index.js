@@ -203,6 +203,9 @@ class SideMenu extends Component {
             if (authenticated_category === USER_CATEGORY.PROVIDER) {
                 history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
             }
+            if (authenticated_category === USER_CATEGORY.DOCTOR) {
+              history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
+          }
             break;   
           case TEMPLATES:
             if(authenticated_category === USER_CATEGORY.DOCTOR){
@@ -261,6 +264,8 @@ class SideMenu extends Component {
     } = this.props;
     let dp = "";
     let initials = "";
+
+
     for (let doctor of Object.values(doctors)) {
       let {
         basic_info: {
@@ -284,6 +289,8 @@ class SideMenu extends Component {
         .map(n => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
         .join("");
     }
+
+    const {doctor_provider_id =null } = this.props ; 
 
     return (
       <Menu
@@ -388,7 +395,7 @@ class SideMenu extends Component {
             :
             null}    
 
-          {authenticated_category === USER_CATEGORY.PROVIDER
+          {authenticated_category === USER_CATEGORY.PROVIDER ||  ( authenticated_category === USER_CATEGORY.DOCTOR && ( doctor_provider_id === null  &&  Object.keys(doctors).length > 0 ))
           ?
           (<MenuItem
             className="flex direction-column justify-center align-center p0"

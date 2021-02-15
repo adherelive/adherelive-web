@@ -310,7 +310,11 @@ export const deleteDoctorPaymentProduct = payload => {
       });
 
       const { status, payload: { data, error } = {} } = response || {};
+      const {id = null} = payload;
       if (status === true) {
+        if(id){
+          data["id"] = id;
+        }
         dispatch({
           type: DELETE_DOCTOR_PAYMENT_PRODUCT_COMPLETE,
           data: data,

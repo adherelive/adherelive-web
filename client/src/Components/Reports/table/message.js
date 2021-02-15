@@ -20,7 +20,12 @@ const messages = defineMessages({
     id: "app.reports.table.edit",
     description: "",
     defaultMessage: "Edit"
-  }
+  },
+  emptyReports:{
+    id: "app.reports.table.emptyReports",
+    description: "",
+    defaultMessage: "No Report Data added yet"
+  },
 });
 
 export default messages;

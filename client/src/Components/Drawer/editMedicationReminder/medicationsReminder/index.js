@@ -29,6 +29,7 @@ class EditMedicationReminder extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
+      submitting:false,
       medicineDrawerVisible:false,
       medicineValue:'',
       newMedicineId:null
@@ -228,6 +229,7 @@ class EditMedicationReminder extends Component {
           addMedication(data_to_submit);
         } else {
           try {
+            this.setState({submitting:true});
             const response = await updateMedicationReminder(data_to_submit);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
@@ -239,7 +241,10 @@ class EditMedicationReminder extends Component {
               console.log("87689076567890",msg);
               message.error(msg);
             }
+
+            this.setState({submitting:false});
           } catch (error) {
+            this.setState({submitting:false});
             console.log("add medication reminder ui error -----> ", error);
           }
         }
@@ -344,7 +349,7 @@ class EditMedicationReminder extends Component {
       handleSubmit,
       getDeleteButton,
     } = this;
-    const { disabledOk } = this.state;
+    const { disabledOk , submitting=false } = this.state;
 
     const submitButtonProps = {
       disabled: disabledOk,
@@ -395,6 +400,7 @@ class EditMedicationReminder extends Component {
           submitText={formatMessage(messages.update_button_text)}
           submitButtonProps={submitButtonProps}
           cancelComponent={getDeleteButton()}
+          submitting={submitting}
         />
       </Drawer>
     );

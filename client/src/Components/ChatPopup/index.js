@@ -65,7 +65,7 @@ const Header = ({
             className="doctor-name-chat-header-popup pointer"
             onClick={onHeaderClick}
           >
-            {patientName}
+            {patientName.length > 10 ? `${patientName.substring(0, 11)}..` : patientName}
           </div>
           <div className="doctor-name-chat-header-online-popup ml10">
             {otherTyping

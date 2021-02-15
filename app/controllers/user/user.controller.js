@@ -568,6 +568,7 @@ class UserController extends Controller {
 
         let treatmentIds = [];
         let conditionIds = [];
+        let doctorProviderId=null;
 
         switch (category) {
           case USER_CATEGORY.PATIENT:
@@ -592,6 +593,7 @@ class UserController extends Controller {
                   doctorProvider
                 );
                 const providerId = doctorProviderWrapper.getProviderId();
+                doctorProviderId=providerId;
                 const providerWrapper = await ProvidersWrapper(
                   null,
                   providerId
@@ -788,7 +790,11 @@ class UserController extends Controller {
           treatment_ids: treatmentIds,
           condition_ids: conditionIds,
           auth_user: userId,
-          auth_category: category
+          auth_category: category,
+          [category === USER_CATEGORY.DOCTOR  ? "doctor_provider_id" : ""]:
+            category === USER_CATEGORY.DOCTOR
+            ? doctorProviderId
+            : "",  
         };
 
         if (category !== USER_CATEGORY.PROVIDER) {

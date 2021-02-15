@@ -66,6 +66,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "removed from watchlist"
   },
+  emptyPatientTable: {
+    id: "app.patient.table.emptyPatientTable",
+    description: "",
+    defaultMessage: "No Patient added yet"
+  }
 });
 
 export default messages;

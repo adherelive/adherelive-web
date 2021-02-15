@@ -56,7 +56,8 @@ class Dashboard extends Component {
       doctorUserId: 1,
       patient_ids: [],
       showModal: false,
-      loading:false
+      loading:false,
+      submitting:false
     };
   }
 
@@ -224,6 +225,7 @@ class Dashboard extends Component {
     const { addPatient, authenticated_user } = this.props;
 
     const { basic_info: { id = 1 } = {} } = authenticated_user || {};
+    this.setState({submitting:true});
     addPatient(data).then(response => {
       let {
         status = false,
@@ -248,12 +250,15 @@ class Dashboard extends Component {
         });
 
         // })
+        this.setState({submitting:false});
       } else {
         if (statusCode === 422) {
           message.error(this.formatMessage(messages.patientExistError));
         } else {
           message.error(this.formatMessage(messages.somethingWentWrongError));
         }
+
+        this.setState({submitting:false});
       }
     });
   };
@@ -439,7 +444,8 @@ class Dashboard extends Component {
       graphsToShow,
       visibleModal,
       doctorUserId,
-      loading=false
+      loading=false,
+      submitting=false
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
@@ -565,6 +571,7 @@ class Dashboard extends Component {
           visible={visible}
           submit={this.addPatient}
           patients={patients}
+          submitting={submitting}
         />
 
         {visibleModal && (

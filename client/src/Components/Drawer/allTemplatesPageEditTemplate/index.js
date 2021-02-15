@@ -16,6 +16,7 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from 'react-uuid';
 import messages from "./message";
 import Input from "antd/es/input";
+import {PoweroffOutlined}  from "@ant-design/icons";
 
 class TemplatePageCreateDrawer extends Component{
     constructor(props){
@@ -42,7 +43,8 @@ class TemplatePageCreateDrawer extends Component{
             deleteMedicationKeys:[],
             deleteAppointmentKeys:[],
             deleteVitalKeys:[],
-            templateEdited:false
+            templateEdited:false,
+            submitting:false
 
         };
     }
@@ -545,7 +547,7 @@ class TemplatePageCreateDrawer extends Component{
                 const deleteMedArr=deleteMedicationKeys;
                 const deleteAppArr = deleteAppointmentKeys;
                 const deleteVitalArr = deleteVitalKeys;
-            
+                this.setState({submitting:true});
                 const response  = await updateCareplanTemplate(carePlanTemplateId,{medicationsData, appointmentsData,vitalsData, name });
 
                 const {payload : {data = {} , message : res_msg = ''} , status, statusCode } = response || {};
@@ -591,9 +593,11 @@ class TemplatePageCreateDrawer extends Component{
                 }else{
                     message.error(res_msg);
                 }
+                this.setState({submitting:false});
 
             }catch(error){
                 console.log("error -->",error);
+                this.setState({submitting:false});
                 message.warn(error);
             }
             
@@ -1328,7 +1332,8 @@ class TemplatePageCreateDrawer extends Component{
 
     render() {
         let { showInner, innerFormType, innerFormKey, medications, showAddMedicationInner,
-            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name ,templateEdited=false } = this.state;
+            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name ,templateEdited=false,
+            submitting=false } = this.state;
         const { onClose, renderTemplateDetails } = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
    
@@ -1422,8 +1427,12 @@ class TemplatePageCreateDrawer extends Component{
                         </Button>
                         <Button onClick={this.onSubmit} type="primary"
                         disabled={!name || !templateEdited}
-                        >
-                            {this.formatMessage(messages.submit)}
+                        icon={submitting ? <PoweroffOutlined /> : null }
+                        loading={submitting}
+                    >
+                        {
+                          this.formatMessage(messages.submit)
+                        }
                         </Button>
                     </div>
                 </Drawer>

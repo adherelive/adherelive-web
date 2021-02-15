@@ -19,6 +19,7 @@ class EditAppointment extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -152,7 +153,7 @@ class EditAppointment extends Component {
           addAppointment(data);
         } else {
           try {
-
+            this.setState({submitting:true});
             const response = await updateAppointment(data);
             const {
               status,
@@ -178,7 +179,10 @@ class EditAppointment extends Component {
               message.warn('Something went wrong, Please try again!');
             }
 
+            this.setState({submitting:false});
+
           } catch (error) {
+            this.setState({submitting:false});
             console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }
         }
@@ -271,7 +275,7 @@ class EditAppointment extends Component {
       addAppointment,
       appointmentVisible = false,
       hideAppointment } = this.props;
-    const { disabledSubmit } = this.state;
+    const { disabledSubmit , submitting=false } = this.state;
     const {
       onClose,
       formatMessage,
@@ -326,6 +330,7 @@ class EditAppointment extends Component {
             submitText={formatMessage(messages.submit_text)}
             submitButtonProps={submitButtonProps}
             cancelComponent={getDeleteButton()}
+            submitting={submitting}
           />
         </Drawer>
       </Fragment>

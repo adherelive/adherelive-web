@@ -10,7 +10,7 @@ export default class PaymentProductService {
     try {
       const paymentProducts = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        raw: true
+        raw: true,
       });
       return paymentProducts;
     } catch (error) {
@@ -50,7 +50,7 @@ export default class PaymentProductService {
         },
         transaction
       });
-      transaction.commit();
+      await transaction.commit();
       return paymentProduct;
     } catch (error) {
       transaction.rollback();
@@ -59,18 +59,12 @@ export default class PaymentProductService {
   };
 
   deleteDoctorProduct = async ({
-    id = null,
-    name = "",
-    type = "",
-    amount = null
+    id = null
   }) => {
     try {
       const deletedDoctorProduct = await Database.getModel(TABLE_NAME).destroy({
         where: {
-          id,
-          name,
-          type,
-          amount
+          id
         }
       });
       //   Logger.debug("7657890765",deletedDoctorProduct);

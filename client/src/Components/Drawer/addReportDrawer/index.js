@@ -32,7 +32,8 @@ class addReportDrawer extends Component{
             uploading: false,
             documents :[],
             name:'',
-            test_date:''
+            test_date:'',
+            submitting:false
         }
     }
 
@@ -317,7 +318,8 @@ class addReportDrawer extends Component{
           data.set("files",originFileObj);
 
 
-          this.setState({uploading: true});
+          this.setState({uploading: true,
+            submitting:true});
           const response = await uploadReport(patient_id,data);
           const {
             status = false,
@@ -343,7 +345,7 @@ class addReportDrawer extends Component{
     }catch(error){
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({ uploading: false });
+      this.setState({ uploading: false , submitting:false });
 
     }
   }
@@ -379,12 +381,14 @@ class addReportDrawer extends Component{
           uploading: false,
           documents :[],
           name:'',
-          test_date:''
+          test_date:'',
+          submitting:false
         })
         close();
         message.success(respMessage);
 
       } else {
+        this.setState({submitting:false});
         message.warn(respMessage);
       }
       
@@ -392,7 +396,7 @@ class addReportDrawer extends Component{
     }catch(error){
       console.log("error", error);
       message.warn(this.formatMessage(messages.somethingWentWrong));
-      this.setState({ uploading: false });
+      this.setState({ uploading: false , submitting:false  });
     }
   }
 
@@ -466,7 +470,7 @@ class addReportDrawer extends Component{
     }
     render(){
         const {visible} = this.props;
-        const {name,documents,test_date} = this.state;
+        const {name,documents,test_date,submitting=false} = this.state;
 
         const {
           onClose,
@@ -511,6 +515,7 @@ class addReportDrawer extends Component{
                     submitButtonProps={submitButtonProps}
                     submitText={formatMessage(messages.submit)}
                     cancelComponent={null}
+                    submitting={submitting}
                   />  
             
             </Drawer>
