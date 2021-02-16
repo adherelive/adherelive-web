@@ -37,7 +37,7 @@ class PushNotification {
             const req = https.request(options, function(res) {
                 res.on("data", function(data) {
                     console.log("Response:", template);
-                    console.log("Data:",data);
+                    console.log("Data:",JSON.parse(data));
                 });
 
                 res.on("error", function(err) {

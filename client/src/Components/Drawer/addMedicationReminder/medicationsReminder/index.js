@@ -5,7 +5,7 @@ import { injectIntl } from "react-intl";
 import moment from "moment";
 import { MEDICINE_UNITS } from "../../../../constant";
 import AddMedicationReminderForm from "./form";
-import AddMedicineDrawer from "../../addNewMedicine";
+import AddMedicineDrawer from "../../../../Containers/Drawer/addMedicine";
 
 import participants from "../common/participants";
 
@@ -53,7 +53,7 @@ class AddMedicationReminder extends Component {
   };
 
   openMedicineDrawer = () => {
-    this.setState({medicineDrawerVisible:true})
+    this.setState({medicineDrawerVisible:true});
   }
 
   closeMedicineDrawer = ()=> {
@@ -325,7 +325,7 @@ class AddMedicationReminder extends Component {
             visible={medicineDrawerVisible} 
             close={this.closeMedicineDrawer}
             input={medicineValue}
-            addNewMedicine={addNewMedicine}
+            // addNewMedicine={addNewMedicine}
             setNewMedicineId={this.setNewMedicineId}
           />
 

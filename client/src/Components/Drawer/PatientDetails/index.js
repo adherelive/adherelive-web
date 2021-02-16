@@ -242,12 +242,14 @@ class PatientDetailsDrawer extends Component {
     if (id) {
 
       let carePlanId = 1;
+
       for (let carePlan of Object.values(care_plans)) {
 
         let { basic_info: { id: cpId = 1, doctor_id = null, patient_id = null }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
 
+
         if (doctorId === `${doctor_id}`) {
-          if(`${patient_id}` === id) {
+          if(patient_id === id) {
             carePlanId = cpId;
           }
         }

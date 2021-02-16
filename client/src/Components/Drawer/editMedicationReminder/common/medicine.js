@@ -152,7 +152,7 @@ class Medicine extends Component {
 
     this.index.search(medicineName,
       {
-        filters : `creator_id:${doctor_id} OR public_medicine:true`
+        filters : `creator_id:${doctor_id} OR public_medicine:true OR public_medicine:1`
       }).then(({ hits }) => {
 
         defaultHit = hits.filter(hit => hit.medicine_id === medicine_id);
@@ -230,7 +230,6 @@ class Medicine extends Component {
       let final_generic_name = generic_name;
 
       if (name === generic_name) {
-        console.log("675456789763445", name);
         final_generic_name = "";
       }
 
@@ -393,7 +392,7 @@ class Medicine extends Component {
 
     index.search(value,
       {
-        filters : `creator_id:${doctor_id} OR public_medicine:true`
+        filters : `creator_id:${doctor_id} OR public_medicine:true OR public_medicine:1`
       }).then(({ hits }) => {
         
 

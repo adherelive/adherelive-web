@@ -519,37 +519,42 @@ class CarePlanController extends Controller {
             "days"
         ) : EVENT_LONG_TERM_VALUE;
 
-        await medicationReminderService.updateMedication({
-          start_date: updatedStartDate,
-          end_date: updatedEndDate
-        }, medication_ids[index]);
+        // check for medication
+        const medicationExists = await medicationReminderService.getMedication({id: medication_ids[index]}) || null;
 
-        const medication = await MedicationWrapper(null, medication_ids[index]);
+        if(medicationExists) {
+          await medicationReminderService.updateMedication({
+            start_date: updatedStartDate,
+            end_date: updatedEndDate
+          }, medication_ids[index]);
 
-        // medicationApiDetails[
-        //     medication.getMReminderId()
-        //     ] = await medication.getAllInfo();
-        const {medications, medicines} = await medication.getReferenceInfo();
-        medicationApiDetails = {...medicationApiDetails, ...medications};
-        // medicationIds.push(medication.getMReminderId());
-        medicineApiDetails = {...medicineApiDetails, ...medicines};
+          const medication = await MedicationWrapper(null, medication_ids[index]);
 
-        const patient = await PatientWrapper(null, patient_id);
+          // medicationApiDetails[
+          //     medication.getMReminderId()
+          //     ] = await medication.getAllInfo();
+          const {medications, medicines} = await medication.getReferenceInfo();
+          medicationApiDetails = {...medicationApiDetails, ...medications};
+          // medicationIds.push(medication.getMReminderId());
+          medicineApiDetails = {...medicineApiDetails, ...medicines};
 
-        const {details: {when_to_take} = {}} = medication.getDetails();
+          const patient = await PatientWrapper(null, patient_id);
 
-        eventScheduleData.push({
-          patient_id: patient.getUserId(),
-          type: EVENT_TYPE.MEDICATION_REMINDER,
-          event_id: medication.getMReminderId(),
-          details: medication.getDetails(),
-          status: EVENT_STATUS.SCHEDULED,
-          start_date: medication.getStartDate(),
-          end_date: medication.getEndDate(),
-          when_to_take,
-          participant_one: patient.getUserId(),
-          participant_two: organizer_id
-        });
+          const {details: {when_to_take} = {}} = medication.getDetails();
+
+          eventScheduleData.push({
+            patient_id: patient.getUserId(),
+            type: EVENT_TYPE.MEDICATION_REMINDER,
+            event_id: medication.getMReminderId(),
+            details: medication.getDetails(),
+            status: EVENT_STATUS.SCHEDULED,
+            start_date: medication.getStartDate(),
+            end_date: medication.getEndDate(),
+            when_to_take,
+            participant_one: patient.getUserId(),
+            participant_two: organizer_id
+          });
+        }
 
         // const QueueService = new queueService();
         // const sqsResponse = await QueueService.sendMessage(eventScheduleData);

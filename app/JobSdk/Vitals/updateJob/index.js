@@ -49,6 +49,7 @@ class UpdateJob extends VitalJob {
         }
 
         templateData.push({
+            small_icon: process.config.app.icon_android,
             app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
             headings: { en: `Vital Update` },
             contents: {

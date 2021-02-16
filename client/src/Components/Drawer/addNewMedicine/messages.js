@@ -41,6 +41,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Please fill all the fields"
     },
+    genericName: {
+        id: "app.addMedicine.drawer.genericName",
+        description: "",
+        defaultMessage: "Generic Name"
+    },
 });
 
 export default messages;

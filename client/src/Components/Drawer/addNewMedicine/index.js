@@ -1,11 +1,11 @@
-import React , {Component} from "react";
+import React , {Component, Fragment} from "react";
 import {injectIntl} from "react-intl";
 import Drawer from "antd/es/drawer";
 import Input from "antd/es/input";
 import Radio from "antd/es/radio";
 import message from "antd/es/message";
 import Footer from "../footer";
-import {MEDICINE_TYPE} from "../../../constant";
+import {MEDICINE_TYPE, USER_CATEGORY} from "../../../constant";
 import messages from "./messages";
 
 
@@ -19,6 +19,7 @@ class NewMedicineDrawer extends Component{
         this.state={
             name:'',
             type:'',
+            generic_name: "",
             submitting:false
         }
     }
@@ -47,14 +48,19 @@ class NewMedicineDrawer extends Component{
             type:''
         })
         close();
-        
     }
 
     setName = (e) => {
         e.preventDefault();
         const {value} = e.target;
-        this.setState({name:value})
+        this.setState({name:value, generic_name: value})
     }
+
+    setGenericName = (e) => {
+      e.preventDefault();
+      const {value} = e.target;
+      this.setState({generic_name: value})
+    };
 
     setTypeValue = (e) => {
         e.preventDefault();
@@ -64,7 +70,9 @@ class NewMedicineDrawer extends Component{
 
 
     getDrawerFields = () => {
-        const {name=''}=this.state;
+        const {auth: {authenticated_category} = {}} = this.props;
+
+        const {name='', generic_name = ''}=this.state;
         return (
             <div className="form-block-ap ">
               <div className="form-headings flex align-center justify-start">
@@ -80,6 +88,23 @@ class NewMedicineDrawer extends Component{
                 required={true}
                 value={name}
               />
+
+                {authenticated_category === USER_CATEGORY.ADMIN && (
+                    <Fragment>
+                        <div className="form-headings flex align-center justify-start">
+                            {this.formatMessage(messages.genericName)}
+                        </div>
+
+                        <Input
+                            className={"form-inputs-ap"}
+                            placeholder={"Add Generic Name"}
+                            type="text"
+                            onChange={this.setGenericName}
+                            // required={true}
+                            value={generic_name}
+                        />
+                    </Fragment>
+                    )}
 
                 <div className="form-headings flex align-center justify-start">
                     {this.formatMessage(messages.formulation)}
@@ -98,27 +123,30 @@ class NewMedicineDrawer extends Component{
               </RadioGroup>
             </div>
         )   
-          
     }
 
     handleSubmit = async() => {
         try{
-            const {name='',type=''}=this.state;
+            const {addNewMedicine,addAdminMedicine, setNewMedicineId, auth: {authenticated_category} = {}} = this.props;
+            const {name='',type='', generic_name = ""}=this.state;
+
+            const addMedicine = authenticated_category === USER_CATEGORY.ADMIN ? addAdminMedicine : addNewMedicine;
+
             if(name === '' || type ===''){
                 message.error(this.formatMessage(messages.fillFieldsError));
                 return;
             }
 
-            const {addNewMedicine,setNewMedicineId} = this.props;
-            const medicine_data = {name,type};
             this.setState({submitting:true});
-            const response = await addNewMedicine({medicine_data});
+            const response = await addMedicine({name, type, generic_name});
             const {status,statusCode,payload : {data={},message:respMsg=''}={}} = response || {};
             if(status){
                 const {medicines = {}} = data || {};
                 const medId = Object.keys(medicines)[0];
                 const {basic_info:{id=null}={}} = medicines[medId] || {};
-                setNewMedicineId(id);
+                if(setNewMedicineId) {
+                    setNewMedicineId(id);
+                }
                 message.success(respMsg);
                 this.onClose();
             }else{
@@ -136,7 +164,7 @@ class NewMedicineDrawer extends Component{
     render (){
         const {visible = false , close}=this.props;
         const {submitting =false} = this.state;
-        console.log("98347523462378463254879234",{state:this.state,props:this.props});
+        console.log("98347523462378463254879234",{props: this.props});
         return (
             <div>
                 <Drawer

@@ -14,13 +14,15 @@ module.exports = () => {
       appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
       default_currency: process.env.DEFAULT_CURRENCY,
       medicine_data: process.env.MEDICINE_INSTANCE,
-      careplan_activation_reschedule_hours: process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS
+      careplan_activation_reschedule_hours: process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
+      icon_android: process.env.ANDROID_ICON_NAME
     },
     algolia: {
       app_id: process.env.ALGOLIA_APP_ID,
       app_key: process.env.ALGOLIA_APP_KEY,
       backend_key: process.env.ALGOLIA_BACKEND_KEY,
-      medicine_index: process.env.ALGOLIA_MEDICINE_INDEX
+      medicine_index: process.env.ALGOLIA_MEDICINE_INDEX,
+      object_id_prefix: process.env.ALGOLIA_OBJECT_ID_PREFIX
     },
     razorpay: {
       key: process.env.RAZORPAY_KEY,
@@ -125,7 +127,8 @@ module.exports = () => {
     INVITE_EXPIRE_TIME: process.env.INVITE_EXPIRE_TIME,
     MSG91_AUTH_KEY: process.env.MSG91_AUTH_KEY,
     MSG91_SMS_URL: process.env.MSG91_SMS_URL,
-    MSG91_SENDER: process.env.MSG91_SENDER
+    MSG91_SENDER: process.env.MSG91_SENDER,
+    ADMIN_MEDICINE_ONE_PAGE_LIMIT: process.env.ADMIN_MEDICINE_ONE_PAGE_LIMIT
   };
 };
 

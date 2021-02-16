@@ -12,7 +12,7 @@ import isEmpty from "lodash/isEmpty";
 
 // SERVICES -------->
 import AppointmentService from "../../services/appointment/appointment.service";
-// import MedicationService from "../../services/medicationReminder/mReminder.service";
+import MedicationService from "../../services/medicationReminder/mReminder.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import VitalService from "../../services/vitals/vital.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
@@ -100,12 +100,16 @@ const medicationNotification = async data => {
       verbString.toUpperCase() === MEDICATION_CREATE ||
       verbString.toUpperCase() === MEDICATION_REMINDER_START
     ) {
-      const event = await MedicationWrapper(null, eventId);
-      const { medications, medicines } = await event.getReferenceInfo();
 
-      eventData = { ...eventData, ...medications };
-      medicineData = { ...medicineData, medicines };
-      participants = event.getParticipants();
+      const medication = await MedicationService.getMedication({id: eventId});
+      if(medication) {
+        const event = await MedicationWrapper(medication);
+        const { medications, medicines } = await event.getReferenceInfo();
+  
+        eventData = { ...eventData, ...medications };
+        medicineData = { ...medicineData, medicines };
+        participants = event.getParticipants();
+      }
     }
 
     if (eventData && eventData === null) {
