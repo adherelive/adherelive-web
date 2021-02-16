@@ -4,5 +4,7 @@ export default {
   algolia: {
     app_id: process.env.REACT_APP_ALOGLIA_APP_ID,
     app_key: process.env.REACT_APP_ALOGLIA_APP_KEY,
-  }
+  },
+  REACT_APP_ADMIN_MEDICINE_ONE_PAGE_LIMIT:process.env.REACT_APP_ADMIN_MEDICINE_ONE_PAGE_LIMIT
+
 };

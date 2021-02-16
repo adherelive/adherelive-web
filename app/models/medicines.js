@@ -32,7 +32,11 @@ export const db = database => {
       creator_id: {
         type: DataTypes.INTEGER,
         allowNull: true
-      }
+      },
+      public_medicine: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
     },
     {
       underscored: true,

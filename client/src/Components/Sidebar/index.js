@@ -27,6 +27,7 @@ const PRIVACY_POLICY = "privacy_policy";
 const ALL_PROVIDERS = "providers";
 const TRANSACTION_DETAILS = "transaction_details";
 const TEMPLATES="templates";
+const MEDICINES = "medicines";
 
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
@@ -198,15 +199,19 @@ class SideMenu extends Component {
             if (authenticated_category === USER_CATEGORY.ADMIN) {
                 history.push(PATH.ADMIN.ALL_PROVIDERS);
             }
-            break;    
+            break;
           case TRANSACTION_DETAILS:
             if (authenticated_category === USER_CATEGORY.PROVIDER) {
                 history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
-            }
-            if (authenticated_category === USER_CATEGORY.DOCTOR) {
+            } else if (authenticated_category === USER_CATEGORY.DOCTOR) {
               history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
-          }
-            break;   
+            }
+            break;
+          case MEDICINES:
+            if(authenticated_category === USER_CATEGORY.ADMIN) {
+              history.push(PATH.ADMIN.ALL_MEDICINES);
+            }
+            break;
           case TEMPLATES:
             if(authenticated_category === USER_CATEGORY.DOCTOR){
               history.push(PATH.TEMPLATES);
@@ -407,7 +412,21 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>)
          :
-          null}    
+          null}
+
+        {authenticated_category === USER_CATEGORY.ADMIN
+            ?
+            (<MenuItem
+                className="flex direction-column justify-center align-center p0"
+                key={MEDICINES}
+            >
+              <Tooltip placement="right" title={this.formatMessage(messages.medicineText)}>
+                {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
+                <Icon style={{color: "#fff"}} type="medicine-box" />
+              </Tooltip>
+            </MenuItem>)
+            :
+            null}
 
       </Menu>
     );

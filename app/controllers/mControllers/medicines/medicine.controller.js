@@ -45,7 +45,7 @@ class MobileMedicineController extends Controller {
     addMedicine = async(req, res) => {
         const {raiseServerError, raiseSuccess} = this;
         try{
-            const { body: {medicine_data = {}} = {}, userDetails = {}} = req;
+            const { body = {}, userDetails = {}} = req;
 
             const algoliaService = new AlgoliaService()
 
@@ -53,13 +53,14 @@ class MobileMedicineController extends Controller {
                 userCategoryData: { basic_info: { id: categoryId = null } = {} } = {}
               } = userDetails || {};
 
-            const { name = "", type = "" } = medicine_data;
+            const { name = "", type = "" } = body;
 
             const new_medicine_data = {
                 name,
                 creator_id: categoryId,
                 created_at: new Date(),
-                type
+                type,
+                public_medicine: false
             }
  
             const medicineDetails = await medicineService.add(new_medicine_data)

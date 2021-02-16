@@ -6,7 +6,6 @@ import { getMedications, addMedicationReminder, addCarePlanMedicationReminder } 
 import { getMedicationDetails } from "../../modules/otherDetails";
 import { getAppointments } from "../../modules/appointments";
 import { searchMedicine,addMedicine } from "../../modules/medicines";
-import { open } from "../../modules/drawer";
 
 
 const mapStateToProps = state => {

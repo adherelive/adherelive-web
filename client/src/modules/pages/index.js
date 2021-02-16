@@ -13,6 +13,9 @@ import dashboard from "./dashboard";
 import report_ids from "./reports";
 import transaction_ids from "./transactions";
 import care_plan_template_ids from "./careplanTemplates";
+import admin_medicines from "./adminMedicines";
+import admin_search_medicines from "./adminSearchMedicines";
+
 
 const rootReducer = combineReducers({
   patient_ids,
@@ -28,7 +31,9 @@ const rootReducer = combineReducers({
   dashboard,
   report_ids,
   transaction_ids,
-  care_plan_template_ids
+  care_plan_template_ids,
+  admin_medicines,
+  admin_search_medicines
 });
 
 export default (state, action) => {

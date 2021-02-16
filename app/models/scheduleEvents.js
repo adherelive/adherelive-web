@@ -77,7 +77,7 @@ export const db = database => {
               // will accept update changes from all event types
 
               // if(event_type === EVENT_TYPE.VITALS) {
-                database.models[eventHistoryTableName].create({
+                return database.models[eventHistoryTableName].create({
                     schedule_event_id:id,
                    data: previousValues
                 });

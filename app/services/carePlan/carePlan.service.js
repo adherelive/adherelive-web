@@ -7,6 +7,9 @@ import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePla
 import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlanMedications";
 // import {TABLE_NAME as carePlanVitalTableName} from "../../models/carePlanVitals";
 
+import { TABLE_NAME as medicationTableName } from "../../models/medicationReminders";
+import { TABLE_NAME as medicineTableName } from "../../models/medicines";
+
 class CarePlanService {
   getCarePlanByData = async data => {
     try {
@@ -16,7 +19,17 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
-          Database.getModel(carePlanMedicationTableName)
+          {
+            model: Database.getModel(carePlanMedicationTableName),
+            include: {
+              model: Database.getModel(medicationTableName),
+              include: {
+                model: Database.getModel(medicineTableName),
+                required: true
+              },
+              required: true
+            }
+           }
         ]
       });
       return carePlan;
@@ -33,7 +46,17 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
-          Database.getModel(carePlanMedicationTableName)
+          {
+           model: Database.getModel(carePlanMedicationTableName),
+           include: {
+             model: Database.getModel(medicationTableName),
+             include: {
+               model: Database.getModel(medicineTableName),
+               required: true
+             },
+             required: true
+           }
+          }
         ]
       });
       return carePlan;
@@ -50,7 +73,17 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
-          Database.getModel(carePlanMedicationTableName)
+          {
+            model: Database.getModel(carePlanMedicationTableName),
+            include: {
+              model: Database.getModel(medicationTableName),
+              include: {
+                model: Database.getModel(medicineTableName),
+                required: true
+              },
+              required: true
+            }
+           }
         ]
       });
       return carePlan;
@@ -67,7 +100,17 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
-          Database.getModel(carePlanMedicationTableName),
+          {
+            model: Database.getModel(carePlanMedicationTableName),
+            include: {
+              model: Database.getModel(medicationTableName),
+              include: {
+                model: Database.getModel(medicineTableName),
+                required: true
+              },
+              required: true
+            }
+           }
           // {
           //   model: Database.getModel(carePlanVitalTableName),
           //   raw: true,

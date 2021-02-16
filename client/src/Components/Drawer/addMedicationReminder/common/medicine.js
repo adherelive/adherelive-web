@@ -284,7 +284,7 @@ class Medicine extends Component {
 
       const res = await this.index.search(value ,
         {
-          filters : `creator_id:${doctor_id} OR public_medicine:true`
+          filters : `creator_id:${doctor_id} OR public_medicine:true OR public_medicine:1`
         });
       const { hits = {} } = res;
       if (value !== state_value) {

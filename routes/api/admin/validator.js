@@ -137,6 +137,18 @@ const updateProviderSchema = Joi.object().keys({
         .allow("", null)
 });
 
+const addMedicineSchema = Joi.object().keys({
+    name: Joi.string()
+    .required()
+    .label("Please enter valid medicine name"),
+    type: Joi.string()
+      .required()
+      .label("Please select valid medicine type"),
+    generic_name: Joi.string()
+        .optional()
+        .allow("", null)
+});
+
 export const validateAddProviderData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = addProviderSchema.validate(data);
@@ -149,6 +161,16 @@ export const validateAddProviderData = (req, res, next) => {
 export const validateUpdateProviderData = (req, res, next) => {
   const { body: data = {} } = req;
   const isValid = updateProviderSchema.validate(data);
+  if (isValid && isValid.error != null) {
+    return validationError(res, isValid);
+  }
+  next();
+};
+
+
+export const validateAddMedicineData = (req, res, next) => {
+  const { body: data = {} } = req;
+  const isValid = addMedicineSchema.validate(data);
   if (isValid && isValid.error != null) {
     return validationError(res, isValid);
   }
