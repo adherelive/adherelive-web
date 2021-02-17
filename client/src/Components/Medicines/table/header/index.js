@@ -59,7 +59,7 @@ export default props => {
         render: (data={}) => {
           return <MedicineName {...data} />;
         },
-        ...getColumnSearchProps(TABLE_COLUMN.MEDICINE_NAME.dataIndex)
+        ...getColumnSearchProps(TABLE_COLUMN.MEDICINE_NAME.dataIndex),
       },
       {
         title: formatMessage(messages.creatorName),
