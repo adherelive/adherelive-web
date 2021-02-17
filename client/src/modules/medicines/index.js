@@ -34,10 +34,10 @@ export const DELETE_MEDICINE_FAILED="DELETE_MEDICINE_FAILED";
 const PRIVATE="private";
 const PUBLIC="public";
 
-const RESET_SEARCH_PUBLIC="RESET_SEARCH_PUBLIC";
-const RESET_SEARCH_PRIVATE="RESET_SEARCH_PRIVATE";
+export const RESET_SEARCH_PUBLIC="RESET_SEARCH_PUBLIC";
+export const RESET_SEARCH_PRIVATE="RESET_SEARCH_PRIVATE";
 
-const MAP_MEDICINE_TO_PUBLIC="MAP_MEDICINE_TO_PUBLIC";
+export const MAP_MEDICINE_TO_PUBLIC="MAP_MEDICINE_TO_PUBLIC";
 
 
 
@@ -199,6 +199,7 @@ export const deleteMedicine = ({medicine_id,offset}) =>{
             });
 
             const {status, payload: {data, message = ""} = {}} = response || {};
+
             
 
             if(status === true) {
@@ -206,11 +207,14 @@ export const deleteMedicine = ({medicine_id,offset}) =>{
                     data["medicine_id"]=medicine_id;
                     data["offset"]=offset;
                 }
+              
                 dispatch({
-                    type: DELETE_MEDICINE_COMPLETED,
+                    type: "DELETE_MEDICINE_COMPLETED",
                     data,
                     payload:data
                 });
+                
+
             } else {
                 dispatch({
                     type: DELETE_MEDICINE_FAILED,

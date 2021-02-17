@@ -208,9 +208,12 @@ class DoctorService {
             },
             {
               middle_name: {
-                [Op.like]: `%${middleName}%`
+                [Op.or]:[
+                  {[Op.like]: `%${middleName}%`},
+                  {[Op.like]: `%${firstName}%`}
+                ]
               }
-            },
+            },  
             {
               last_name: {
                 [Op.like]: `%${lastName}%`
