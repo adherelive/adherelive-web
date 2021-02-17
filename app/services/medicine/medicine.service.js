@@ -49,7 +49,8 @@ class MedicineService {
                 }
               
             
-          }
+          },
+          order: [["updated_at","DESC"]]
         });
     
       console.log("329847562389462364872384122 ************************************8******8888",{data, offset, limit, public_medicine, doctorIds,medicine});

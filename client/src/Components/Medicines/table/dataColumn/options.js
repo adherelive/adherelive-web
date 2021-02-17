@@ -19,7 +19,8 @@ export default props => {
   formatMessage,
   mapMedicineToPublic,
   getPublicMedicines,
-  currentTab
+  currentTab,
+    changeTab
    } = props || {};
   const {basic_info : {name='' ,id:medicine_id=null , public_medicine=false} } = medicineData || {};
 
@@ -52,6 +53,9 @@ export default props => {
               resp = await getPrivateMedicines({value:searchText,offset});
             }
             mapMedicineToPublic(medicine);
+
+            // change tab back to public
+            changeTab(ALL_TABS.PUBLIC);
             message.success(resp_message);
             changeLoading(false);
             console.log("382742849718654217836912837",{medicine});

@@ -20,7 +20,8 @@ class AdminMedicine extends Component {
     super(props);
     this.state={
       totalPublicMedicinesCount : 0,
-      totalPrivateMedicinesCount : 0
+      totalPrivateMedicinesCount : 0,
+        currentTab: ALL_TABS.PUBLIC
     }
   }
   componentDidMount(){
@@ -60,6 +61,10 @@ class AdminMedicine extends Component {
 
     }
   }
+
+  changeTab = (tab) => {
+    this.setState({currentTab: tab});
+  };
   
 
   formatMessage = (message, ...rest) =>
@@ -90,20 +95,19 @@ class AdminMedicine extends Component {
 
 
   getTabContent = () => {
-    const { formatMessage } = this;
-    const {totalPublicMedicinesCount,totalPrivateMedicinesCount}=this.state;
+    const { formatMessage, changeTab } = this;
+    const {totalPublicMedicinesCount,totalPrivateMedicinesCount, currentTab}=this.state;
 
 
         return (
             <Fragment>
-                <Tabs defaultActiveKey={ALL_TABS.PUBLIC}
-                >
-                    <TabPane tab={formatMessage(messages.public_text)} key={ALL_TABS.PUBLIC} 
+                <Tabs defaultActiveKey={ALL_TABS.PUBLIC} activeKey={currentTab} onTabClick={changeTab}>
+                    <TabPane tab={formatMessage(messages.public_text)} key={ALL_TABS.PUBLIC}
                      >
-                      <MedicineTable currentTab={ALL_TABS.PUBLIC} totalPublicMedicinesCount={totalPublicMedicinesCount} />
+                      <MedicineTable currentTab={ALL_TABS.PUBLIC} totalPublicMedicinesCount={totalPublicMedicinesCount} changeTab={changeTab}/>
                     </TabPane>
                     <TabPane tab={formatMessage(messages.creator_text)} key={ALL_TABS.CREATOR}>
-                     <MedicineTable currentTab={ALL_TABS.CREATOR} totalPrivateMedicinesCount={totalPrivateMedicinesCount} />
+                     <MedicineTable currentTab={ALL_TABS.CREATOR} totalPrivateMedicinesCount={totalPrivateMedicinesCount} changeTab={changeTab}/>
                     </TabPane>
                 </Tabs>
             </Fragment>

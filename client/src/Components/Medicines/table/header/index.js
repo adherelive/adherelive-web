@@ -15,7 +15,7 @@ const ALL_TABS = {
 };
 
 export default props => {
-  const { formatMessage , currentTab, getColumnSearchProps} = props || {};
+  const { formatMessage , currentTab, getColumnSearchProps, changeTab} = props || {};
 
   // if(currentTab === ALL_TABS.PUBLIC){
   //   return [
@@ -103,6 +103,7 @@ export default props => {
           deleteMedicine={deleteMedicine}
           getPublicMedicines={getPublicMedicines}
           currentTab={currentTab}
+                         changeTab={changeTab}
            />)
       }
       }
