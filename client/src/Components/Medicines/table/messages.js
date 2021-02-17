@@ -86,4 +86,9 @@ export default defineMessages({
         description: "",
         defaultMessage: "This action is irreversible and will delete all the medications, reminders and templates attached to this medicine. "
     },
+    availableWarn:{
+        id: "app.medicines.table.availableWarn",
+        description: "",
+        defaultMessage: "After being public,this Medicine will be visible to all the doctors"
+    },
 });

@@ -1,8 +1,7 @@
-
-const GET_PUBLIC_MEDICINES_COMPLETED="GET_PUBLIC_MEDICINES_COMPLETED";
+import {MAP_MEDICINE_TO_PUBLIC,GET_PUBLIC_MEDICINES_COMPLETED,DELETE_MEDICINE_COMPLETED} from "../../medicines";
 const PUBLIC = "public";
-const MAP_MEDICINE_TO_PUBLIC = "MAP_MEDICINE_TO_PUBLIC";
-const DELETE_MEDICINE_COMPLETED ="DELETE_MEDICINE_COMPLETED";
+
+
  function getPublicAdminMedicinesReducer(state, data) {
      const {offset=0,medicines,type=''} = data || {};
      const public_medicines =  {...state,[offset]: medicines};
@@ -33,13 +32,20 @@ const DELETE_MEDICINE_COMPLETED ="DELETE_MEDICINE_COMPLETED";
 
  function deleteMedicineReducer(state,data){
     const {medicine_id , offset = null} = data || {};
-    console.log("98327548237469238048230490",{medicine_id,offset});
     if(medicine_id){
         const {[medicine_id.toString()]:medicine , ...rest} =  state[offset] || {};
-        console.log("98327548237469238048230490 @@@@@@@@@@@@@@@@",{medicine,rest:{...rest},current:state[offset]});
-        return {
-            ...rest
+        
+        if(medicine){
+            let updatedMed = {...state};
+            updatedMed[offset] = {...rest};
+            return {
+                ...updatedMed
+            }
+        }else{
+            return state;
         }
+    } else {
+        return state;
     }
   
 }
@@ -47,6 +53,7 @@ const DELETE_MEDICINE_COMPLETED ="DELETE_MEDICINE_COMPLETED";
   
   export default (state = [], action) => {
     const { type, data } = action;
+
 
     switch (type) {
       case GET_PUBLIC_MEDICINES_COMPLETED:

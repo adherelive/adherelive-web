@@ -172,10 +172,8 @@ class MedicineTable extends Component {
     const key = parseInt(currentPage) - 1 || 0;
     const { searchPrivateText = "", searchPublicText = "" } = this.state;
 
-    console.log("98327548237469238048230490 getDataaaaaaaaaaaaaa ", {
-      props_public_medicines,
-      props_private_medicines
-    });
+    console.log("9817231287 currentPage", {currentPage, key, props_public_medicines, props_search_public_medicines, searchPublicText});
+
     if (key >= 0) {
       if (currentTab === ALL_TABS.PUBLIC) {
         if (props_public_medicines[key] && searchPublicText === "") {
@@ -200,6 +198,8 @@ class MedicineTable extends Component {
 
     const { loading = true } = this.state;
     const { changeLoading } = this;
+
+    console.log("272391872398 currentTab", {currentTab, public_medicines, private_medicines});
 
     if (currentTab === ALL_TABS.PUBLIC) {
       return Object.keys(public_medicines)
@@ -472,6 +472,12 @@ class MedicineTable extends Component {
 
     const obj = public_medicines["0"] || {};
 
+    const total= currentTab === ALL_TABS.PUBLIC
+    ?searchPublicText === '' ? totalPublicMedicinesCount : searchPublicCount
+    :searchPrivateText === '' ? totalPrivateMedicinesCount : searchPrivateCount;
+
+    console.log("3785463254729847923864832")
+
     return (
       <Table
         className="medicine-table"
@@ -490,7 +496,7 @@ class MedicineTable extends Component {
         pagination={{
           position: "bottom",
           pageSize:
-            currentPage === 1
+            currentPage === 1 && currentTab === ALL_TABS.PUBLIC
               ? Object.keys(obj).length
                 ? Object.keys(obj).length
                 : parseInt(pageSize)

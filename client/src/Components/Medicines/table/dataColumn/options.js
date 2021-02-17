@@ -27,9 +27,18 @@ export default props => {
 
   const handleMakeMedicinePublic = (e) => {
     e.preventDefault();
+    
     confirm({
       title: `${formatMessage(messages.publicMessage)} '${name}' ${formatMessage(messages.public)} ? `,
-      content:'',
+      content:(
+        <div className="pt16">
+        <p className="red">
+          <span className="fw600">{"Note"}</span>
+          {` :${formatMessage(messages.availableWarn)}`}
+        </p>
+      </div>
+      ),
+      // modalOptions={{ dismissible: false }}
       onOk: async() => {
         const {changeLoading}=props;
         try{
@@ -67,7 +76,10 @@ export default props => {
           console.log("error",error);
         }
       },
-      onCancel() {}
+      onCancel() {},
+      maskClosable:false,
+      keyboard:false
+      
     });
   }
 
@@ -103,11 +115,11 @@ export default props => {
           const {status,payload:{message:resp_msg = ''}={}} = response;
           if(status){
             message.success(resp_msg);
-            if(currentTab === ALL_TABS.PUBLIC){
-              const resp = await getPublicMedicines({offset});
-            }else{
-              const resp = await getPrivateMedicines({offset});
-            }
+            // if(currentTab === ALL_TABS.PUBLIC){
+            //   const resp = await getPublicMedicines({offset});
+            // }else{
+            //   const resp = await getPrivateMedicines({offset});
+            // }
           }else{
             message.error(resp_msg);
           }
@@ -115,7 +127,9 @@ export default props => {
           console.log("Error ===>",{error });
         }
       },
-      onCancel() {}
+      onCancel() {},
+      maskClosable:false,
+      keyboard:false
     });
   }
 
