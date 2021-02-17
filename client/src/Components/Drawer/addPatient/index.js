@@ -299,13 +299,21 @@ class PatientDetailsDrawer extends Component {
     );
 
     for (let id of patient_ids) {
-      const { basic_info: { first_name, middle_name, last_name, full_name } = {} } =
+      const { basic_info: { first_name, middle_name, last_name, full_name  : patient_full_name} = {} } =
         patients[id] || {};
+
+        let full_name = patient_full_name;
+        if(!patient_full_name || patient_full_name==='' || patient_full_name === null){
+          full_name = `Adhere patient ${id}`;
+        }
       options.push(
         <Option
           key={id}
           value={id}
           name={full_name}
+          className={`${!patient_full_name || patient_full_name==='' || patient_full_name === null 
+          ? "italic fw600" 
+          : ""}`}
         >
           {full_name}
         </Option>

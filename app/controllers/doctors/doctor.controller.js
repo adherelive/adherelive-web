@@ -1025,7 +1025,11 @@ class DoctorController extends Controller {
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
-      let patientName = name.trim().split(" ");
+      let patientName='';
+      if(name){
+        patientName = name.trim().split(" ");
+      }
+
       let first_name = patientName[0] || null;
       let middle_name = patientName.length === 3 ? patientName[1] : null;
       let last_name =
@@ -2371,10 +2375,16 @@ class DoctorController extends Controller {
         ] = councilWrapper.getBasicInfo();
       }
 
+
+      const refInfo = await doctorWrapper.getReferenceInfo();
+      const {doctors  : docss= {} , users :userss = {} } = refInfo;
+      Logger.debug("2864235427654723867432648327",{refInfo,doctors:docss,users:userss});
+
       return raiseSuccess(
         res,
         200,
         {
+          ...(await doctorWrapper.getReferenceInfo()),
           doctors: {
             [doctorWrapper.getDoctorId()]: {
               ...(await doctorWrapper.getAllInfo()),
@@ -2383,7 +2393,6 @@ class DoctorController extends Controller {
               doctor_registration_ids
             }
           },
-          ...(await doctorWrapper.getReferenceInfo()),
           doctor_qualifications: {
             ...doctorQualificationApiDetails
           },
@@ -2832,7 +2841,10 @@ class DoctorController extends Controller {
         initialPatientData.getBasicInfo() || {};
 
       // split names of patient
-      let patientName = name.trim().split(" ");
+      let patientName='';
+      if(name){
+        patientName = name.trim().split(" ");
+      }
       let first_name = patientName[0] || null;
       let middle_name = patientName.length === 3 ? patientName[1] : null;
       let last_name =

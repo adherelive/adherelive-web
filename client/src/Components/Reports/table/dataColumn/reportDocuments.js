@@ -15,7 +15,8 @@ const getDocumentComp = (documents, total) => {
             const isImage = extension === "png" || extension === "jpeg" || extension === "jpg" || extension === "svg" || false;
             comps.push(
                 <Fragment key={`small-report-document-${id}`}>
-                    {isImage ? (<div className="ml6">
+                    {isImage ? (
+                    <div className="ml6">
                         <img src={src} alt={name} className="w30 h30 br5"/>
                     </div>) : (
                         <div className="ml6 w30 h30 br5 bg-light-grey flex align-center justify-center">
