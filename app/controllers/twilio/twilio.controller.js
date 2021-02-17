@@ -98,6 +98,8 @@ class TwilioController extends Controller {
     try {
       const allChannels = await twilioService.getAllMessages();
 
+      Log.debug("all Channels", allChannels);
+
       return raiseSuccess(
           res,
           200,

@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 import { Table, Icon } from "antd";
 import Input from "antd/es/input";
 import Button from "antd/es/button";
+import moment from "moment";
 
 import generateRow from "./dataRow";
 import getColumn from "./header";
@@ -179,10 +180,17 @@ class MedicineTable extends Component {
     const {loading = true} = this.state;
     const {changeLoading}=this;
 
-    console.log("782657387923785623789233",{public_medicines,key});
-    
       if(currentTab === ALL_TABS.PUBLIC){
-        return Object.keys(public_medicines).map(id => {
+        return Object.keys(public_medicines).sort((medA, medB) => {
+          const {updated_at: aUpdatedAt} = public_medicines[medA] || {};
+          const {updated_at: bUpdatedAt} = public_medicines[medB] || {};
+
+          if(moment(aUpdatedAt).diff(moment(bUpdatedAt), "seconds") > 0) {
+            return -1;
+          } else {
+            return 1;
+          }
+        }).map(id => {
           const medicineData = public_medicines[id] || {};
           const {basic_info: {creator_id = null} = {}} = medicineData || {};
           const doctorData = doctors[creator_id] || {};
@@ -421,6 +429,7 @@ class MedicineTable extends Component {
       admin_medicines: {
         public_medicines={}
       } = {},
+      changeTab,
     } = this.props;
 
     const obj = public_medicines["0"] || {};
@@ -435,6 +444,7 @@ class MedicineTable extends Component {
           formatMessage,
           className: "pointer",
           currentTab,
+          changeTab,
           getColumnSearchProps: this.getColumnSearchProps
         })}
         dataSource={getDataSource()}

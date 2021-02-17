@@ -27,7 +27,7 @@ class CarePlanService {
                 model: Database.getModel(medicineTableName),
                 required: true
               },
-              required: true
+              // required: true
             }
            }
         ]
@@ -54,7 +54,7 @@ class CarePlanService {
                model: Database.getModel(medicineTableName),
                required: true
              },
-             required: true
+             // required: true
            }
           }
         ]
@@ -81,7 +81,7 @@ class CarePlanService {
                 model: Database.getModel(medicineTableName),
                 required: true
               },
-              required: true
+              // required: true
             }
            }
         ]
@@ -108,7 +108,7 @@ class CarePlanService {
                 model: Database.getModel(medicineTableName),
                 required: true
               },
-              required: true
+              // required: true
             }
            }
           // {
