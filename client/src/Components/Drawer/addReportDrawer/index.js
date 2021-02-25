@@ -195,7 +195,6 @@ class addReportDrawer extends Component{
 
   handleUploadChange = ({file}) => {
     const {documents = []} = this.state;
-    console.log("287423 file ---> ", {file});
 
     let newDocuments = [];
     
@@ -206,7 +205,6 @@ class addReportDrawer extends Component{
             const {name} = document || {};
             return name === file.name;
         });
-        console.log("287423 Existing --->",existing);
         if(existing.length === 0) {
             newDocuments.push({
                 name: file.name,
@@ -215,7 +213,6 @@ class addReportDrawer extends Component{
             });
         }
 
-    console.log("287423 documents", {newDocuments});
     this.setState({documents: [...documents, ...newDocuments]});
   };
 

@@ -12,6 +12,7 @@ import {
   DOCUMENT_PARENT_TYPE,
   ONBOARDING_STATUS
 } from "../../../../constant";
+import {completePath} from "../../../helper/filePath";
 
 export const doctorQualificationData = async userId => {
   try {
@@ -111,8 +112,8 @@ export const uploadImageS3 = async (userId, file) => {
     hash = String(hash);
 
     const folder = "adhere";
-    // const file_name = hash.substring(4) + "_Education_"+fileExt;
-    const file_name = hash.substring(4) + "/" + imageName + "/" + fileExt;
+    // const file_name = hash.substring(4) + "/" + imageName + "/" + fileExt;
+    const file_name = `${folder}/${hash.substring(4)}/${imageName}/${fileExt}`;
 
     const metaData = {
       "Content-Type":
@@ -121,17 +122,19 @@ export const uploadImageS3 = async (userId, file) => {
 
     console.log("816575641 ---------------> ", file_name);
 
-    const file_link =
-      process.config.minio.MINIO_S3_HOST +
-      "/" +
-      process.config.minio.MINIO_BUCKET_NAME +
-      "/" +
-      file_name;
-    const fileUrl = folder + "/" + file_name;
+    // const file_link =
+    //   process.config.minio.MINIO_S3_HOST +
+    //   "/" +
+    //   process.config.minio.MINIO_BUCKET_NAME +
+    //   "/" +
+    //   file_name;
+
+    // const fileUrl = `${folder}/${file_name}`;
+    const fileUrl = "/" + file_name;
     await minioService.saveBufferObject(file.buffer, file_name, metaData);
 
     // console.log("file urlll: ", process.config.minio.MINI);
-    let files = [file_link];
+    let files = [completePath(fileUrl)];
     return files;
   } catch (error) {
     console.log(" UPLOAD  CATCH ERROR ", error);

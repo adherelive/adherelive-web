@@ -401,6 +401,7 @@ class QualificationRegister extends Component {
       doctor_id = ""
     } = this.state;
 
+    console.log("324868736427842340003724 QUALLLLLLLLLll",{docs,files,key,state:this.state});
     this.setState({ docs: [...docs, ...files], uploadProgress: false }, async () => {
 
       const { docs, education } = this.state;
@@ -465,6 +466,8 @@ class QualificationRegister extends Component {
             docs: [],
             education: newEducation
           });
+
+          this.fetchData();
         } else {
           let length = newEducation[key].photos.length;
           newEducation[key].photo = newPhoto.slice(0, length - docs.length);
@@ -578,6 +581,9 @@ class QualificationRegister extends Component {
             docsReg: [],
             registration: newRegistration
           });
+
+          this.fetchData();
+
         } else {
           let length = newRegistration[key].photos.length;
           newRegistration[key].photo = newPhoto.slice(
@@ -657,7 +663,7 @@ class QualificationRegister extends Component {
 
         let newEducation = education;
         newEducation[key].photo  = newUnuploadedArr;
-        this.setState({ education: newEducation }, async () => {
+        this.setState({ education: newEducation,uploadProgress:false }, async () => {
           console.log("7865789",this.state);
         });
       }
@@ -725,7 +731,7 @@ class QualificationRegister extends Component {
 
         let newRegistration = registration;
         newRegistration[key].photo  = newUnuploadedArr;
-        this.setState({ registration: newRegistration }, async () => {
+        this.setState({ registration: newRegistration ,uploadRegistrationProgress:false}, async () => {
           console.log("7865789765678909876 --> After",this.state.registration);
         });
       }
@@ -1233,6 +1239,8 @@ class QualificationRegister extends Component {
   renderEducation = () => {
     let { education = {}, educationKeys = [], fileList = [], uploadProgress = false } = this.state;
 
+    console.log("08109380192 education, educationKeys", {education, educationKeys, fileList});
+
     const uploadButton = (
       <div>
         {uploadProgress ? <LoadingOutlined /> : <img src={plus} className={"w22 h22"}/>}
@@ -1362,9 +1370,12 @@ class QualificationRegister extends Component {
                 {this.formatMessage(messages.photo)}
               </div>
               <div className="qualification-photo-uploads">
-                {photos.map(pic => {
+                {photos.map((pic, index) => {
+
+                  console.log("324868736427842340003724 PICCCCC",{pic});
+
                   return (
-                    <div key={pic} className={"qualification-avatar-uploader"}>
+                    <div key={`qualification-${index}`} className={"qualification-avatar-uploader"}>
                       <img src={pic} className="wp100 hp100 br4" />
                       <div className="overlay"></div>
                       <div className="button">
@@ -1529,9 +1540,9 @@ class QualificationRegister extends Component {
                 {this.formatMessage(messages.photo)}
               </div>
               <div className="qualification-photo-uploads">
-                {photos.map(pic => {
+                {photos.map((pic, index) => {
                   return (
-                    <div key={pic} className={"qualification-avatar-uploader"}>
+                    <div key={`registration-${index}`} className={"qualification-avatar-uploader"}>
                       <img src={pic} className="wp100 hp100 br4" />
                       <div className="overlay"></div>
                       <div className="button">

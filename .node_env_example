@@ -5,7 +5,7 @@ APP_NAME=
 API_URL=
 WEB_URL=https://adhere-test.tripock.com
 APP_URL=https://adhere-test.tripock.com
-S3_HOST=http://localhost:9001
+S3_HOST=amazonaws.com
 INVITE_LINK=/validation/
 
 RESET_PASSWORD_LINK=http://localhost:3000/reset-password/
@@ -90,6 +90,9 @@ MINIO_VOLUME_NAME=adhere_storage_stack
 MINIO_REGION=us-east-1
 MINIO_ENDPOINT=minio1
 MINIO_BUCKET_NAME=adhere
+
+###### S3 #######
+S3_EXPIRY_TIME=30
 
 GETSTREAM_API_KEY=ywtzg5hdvp7t
 GETSTREAM_API_SECRET=zbrxan8wdzg3phz6qffj8jnx4jraxvxu7zc3zzkqqvzaumb6mwjqfxh6jf7fc42w
