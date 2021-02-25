@@ -457,8 +457,7 @@ const carePlanNotification = async data => {
       const { event_id = null, status = null } = scheduleEventData;
       if (
         status === EVENT_STATUS.COMPLETED ||
-        status === EVENT_STATUS.CANCELLED ||
-        status === EVENT_STATUS.PENDING
+        status === EVENT_STATUS.CANCELLED 
       ) {
         responseTaken = true;
       }
