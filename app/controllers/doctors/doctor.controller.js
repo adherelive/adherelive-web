@@ -73,12 +73,12 @@ import getUniversalLink from "../../helper/universalLink";
 import getAge from "../../helper/getAge";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
-import { uploadImageS3 } from "../mControllers/user/userHelper";
+import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
-import doctor from "../../ApiWrapper/web/doctor";
-import college from "../../ApiWrapper/web/college";
+// import doctor from "../../ApiWrapper/web/doctor";
+// import college from "../../ApiWrapper/web/college";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 
@@ -657,11 +657,9 @@ class DoctorController extends Controller {
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-            : null,
+          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
           signature_pic: signature_pic
-            ? signature_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -768,9 +766,7 @@ class DoctorController extends Controller {
         doctor_data["last_name"] = last_name;
       }
       if (profile_pic) {
-        doctor_data["profile_pic"] = profile_pic.split(
-          process.config.minio.MINIO_BUCKET_NAME
-        )[1];
+        doctor_data["profile_pic"] = getFilePath(profile_pic);
       }
       if (gender) {
         doctor_data["gender"] = gender;
@@ -971,6 +967,7 @@ class DoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor Not Found.");
       }
     } catch (error) {
+      Logger.debug("932647583246723908478783246",{error});
       Logger.debug("update doctor 500 error", error);
       return raiseServerError(res);
     }
@@ -1631,7 +1628,7 @@ class DoctorController extends Controller {
         );
       }
 
-      let files = await uploadImageS3(doctorUserId, file);
+      let files = await uploadImageS3(doctorUserId, file, "qualification");
       let qualification_id = 0;
       // let doctor = await doctorService.getDoctorByUserId(userId);
 

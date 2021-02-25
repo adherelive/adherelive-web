@@ -132,7 +132,7 @@ class ReportController extends Controller {
       const report = await ReportWrapper({data: allReports[0]});
       let doctors = {};
 
-      if(category === USER_CATEGORY.DOCTOR && userCategoryId !== report.getUploaderId()) {
+      if(category === USER_CATEGORY.DOCTOR && userCategoryId === report.getUploaderId()) {
         const doctor = await DoctorWrapper(null, report.getUploaderId());
         doctors[doctor.getDoctorId()] = await doctor.getAllInfo();
       }

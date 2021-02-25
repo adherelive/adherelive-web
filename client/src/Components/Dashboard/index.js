@@ -403,15 +403,11 @@ class Dashboard extends Component {
     });
     const {
       basic_info: {
-        first_name: doc_first_name,
-        middle_name: doc_middle_name,
-        last_name: doc_last_name
+          full_name
       } = {}
     } = doctors[doctorID] || {};
-    docName = doc_first_name
-      ? `Dr. ${doc_first_name} ${
-          doc_middle_name ? `${doc_middle_name} ` : ""
-        }${doc_last_name}`
+    docName = full_name
+      ? `Dr. ${full_name}`
       : TABLE_DEFAULT_BLANK_FIELD;
 
     const {

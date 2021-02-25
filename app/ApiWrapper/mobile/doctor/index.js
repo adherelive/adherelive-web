@@ -23,8 +23,6 @@ class MDoctorWrapper extends BaseDoctor {
     if (speciality) {
       const specialityDetails = await SpecialityWrapper(speciality);
 
-      console.log("speciality ----> ", _data);
-
       return {
         // doctors: {
         //   [getDoctorId()] : getBasicInfo()

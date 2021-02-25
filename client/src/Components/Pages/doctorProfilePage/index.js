@@ -2320,9 +2320,16 @@ class DoctorProfilePage extends Component {
                   const { basic_info: { document, parent_id } = {} } =
                     upload_documents[id] || {};
                   if (verified_doctor) {
-                    const documentType =
-                      document.substring(document.length - 3) || null;
+                    // const documentType =
+                    //   document.substring(document.length - 3) || null;
+                    
+                    const arr = document.split("?")[0];
+                    let documentType;
+                    if(arr.length){
+                      documentType = arr.substr(arr.length - 3);
+                    }
                     if (documentType) {
+                     
                       if (documentType !== "jpg" && documentType !== "png") {
                         return (
                           <a
@@ -2620,8 +2627,13 @@ class DoctorProfilePage extends Component {
                       </div>
                     );
                   } else {
-                    const documentType =
-                      document.substring(document.length - 3) || null;
+                    // const documentType =
+                    //   document.substring(document.length - 3) || null;
+                    const arr = document.split("?")[0];
+                    let documentType;
+                    if(arr.length){
+                      documentType = arr.substr(arr.length - 3);
+                    }
                     if (documentType) {
                       if (documentType !== "jpg" && documentType !== "png") {
                         return (

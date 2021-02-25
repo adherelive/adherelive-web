@@ -304,7 +304,7 @@ function printFooter(doc, imageUrl, nextAppointmentDuration, currentTime) {
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 50, { width: 120, height: 40 });
   } catch (err) {
-    console.log("ERROR in signature pic");
+    console.log("ERROR in signature pic", err);
   }
 
   doc

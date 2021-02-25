@@ -38,6 +38,8 @@ router.use(async (req, res, next) => {
   next();
 });
 
+// ---------------------------- GET ----------------------------
+
 router.get("/doctors", Authenticate, Doctor.getAll);
 
 router.get("/doctors/:id", Authenticate, Doctor.getAllAdminDoctorDetails);
@@ -49,6 +51,12 @@ router.get(
     Authenticate,
     AccountsController.getDoctorAccountDetails
 );
+
+router.get("/medicines", Authenticate, Medicine.getMedicinesForAdmin);
+
+router.get("/chats", Authenticate, twilioController.getAllChats);
+
+// ---------------------------- POST ----------------------------
 
 router.post("/providers", Authenticate, validator.validateAddProviderData, Provider.addProvider);
 
@@ -65,16 +73,16 @@ router.post("/details", Authenticate, Admin.updateTermsAndPolicy);
 router.post("/algolia/medicine", Authenticate, Algolia.updateMedicine);
 
 router.post("/medicines", Authenticate, validator.validateAddMedicineData, Medicine.addMedicineByAdmin);
+
 router.post("/medicines/:id/public", Authenticate, Medicine.makeMedicinePublic);
-router.get("/medicines", Authenticate, Medicine.getMedicinesForAdmin)
-router.delete("/medicines/:id", Authenticate, Medicine.deleteMedicine)
-
-router.delete("/chats/delete", Authenticate, twilioController.deleteChat);
-router.get("/chats", Authenticate, twilioController.getAllChats);
-
-// AD HOC APIS........
 
 // to enable previous patients features
 router.post("/enable-all-features", Authenticate, Admin.enableAllFeatures);
+
+// ---------------------------- DELETE ----------------------------
+
+router.delete("/medicines/:id", Authenticate, Medicine.deleteMedicine)
+
+router.delete("/chats/delete", Authenticate, twilioController.deleteChat);
 
 module.exports = router;

@@ -86,6 +86,9 @@ module.exports = () => {
       MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
       MINIO_S3_HOST: process.env.S3_HOST
     },
+    s3: {
+      EXPIRY_TIME: process.env.EXPIRY_TIME
+    },
     GOOGLE_KEYS: {
       CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,

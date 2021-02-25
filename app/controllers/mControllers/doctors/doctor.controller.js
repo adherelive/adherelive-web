@@ -130,10 +130,10 @@ class MobileDoctorController extends Controller {
         let doctor_data = {
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           signature_pic: signature_pic
-            ? signature_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(signature_pic)
             : null,
           first_name,
           middle_name,

@@ -55,6 +55,7 @@ import UserWrapper from "../../../ApiWrapper/web/user";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
+import {completePath, getFilePath} from "../../../helper/filePath";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -904,9 +905,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          files: [
-            `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${files[0]}`
-          ]
+          files
         },
         "files uploaded successfully"
       );
@@ -949,7 +948,7 @@ class MobileUserController extends Controller {
         let doctor_data = {
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -964,7 +963,7 @@ class MobileUserController extends Controller {
           user_id,
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -1046,7 +1045,7 @@ class MobileUserController extends Controller {
 
         city = docCity;
         profile_pic = docPic
-          ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}`
+          ? completePath(docPic)
           : docPic;
       }
 
@@ -1345,13 +1344,12 @@ class MobileUserController extends Controller {
     const { qualificationId = 1 } = req.params;
     let { document = "" } = req.body;
     try {
-      console.log("DOCUMNENTTTTTTTTTT", req.body, document);
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = qualificationId;
       const documentToCheck = document.includes(
         process.config.minio.MINIO_BUCKET_NAME
       )
-        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        ? getFilePath(document)
         : document;
       let documentToDelete = await documentService.getDocumentByData(
         parent_type,
@@ -1359,12 +1357,6 @@ class MobileUserController extends Controller {
         documentToCheck
       );
 
-      console.log(
-        "DOCUMNENTTTTTTTTTT1111111",
-        req.body,
-        document,
-        documentToDelete
-      );
       await documentToDelete.destroy();
       return this.raiseSuccess(
         res,
@@ -1382,8 +1374,6 @@ class MobileUserController extends Controller {
     let { gender = "", speciality = "", qualification = {} } = req.body;
     const { userId = 1 } = req.params;
     try {
-      console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
-
       let user = userService.getUserById(userId);
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
@@ -1425,7 +1415,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1451,7 +1441,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1709,7 +1699,7 @@ class MobileUserController extends Controller {
                   document: photo.includes(
                     process.config.minio.MINIO_BUCKET_NAME
                   )
-                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    ? getFilePath(photo)
                     : photo
                 });
               }
@@ -1737,7 +1727,7 @@ class MobileUserController extends Controller {
                   document: photo.includes(
                     process.config.minio.MINIO_BUCKET_NAME
                   )
-                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    ? getFilePath(photo)
                     : photo
                 });
               }
@@ -1784,7 +1774,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1815,7 +1805,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: registration_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1845,7 +1835,7 @@ class MobileUserController extends Controller {
       const documentToCheck = document.includes(
         process.config.minio.MINIO_BUCKET_NAME
       )
-        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        ? getFilePath(document)
         : document;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       let documentToDelete = await documentService.getDocumentByData(

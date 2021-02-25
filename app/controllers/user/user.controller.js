@@ -1,3 +1,5 @@
+import {completePath, getFilePath} from "../../helper/filePath";
+
 const { OAuth2Client } = require("google-auth-library");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
@@ -890,7 +892,7 @@ class UserController extends Controller {
         let doctor_data = {
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -905,7 +907,7 @@ class UserController extends Controller {
           user_id,
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -989,7 +991,7 @@ class UserController extends Controller {
 
         city = docCity;
         profile_pic = docPic
-          ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}`
+          ? completePath(docPic)
           : null;
       }
 
@@ -1369,7 +1371,7 @@ class UserController extends Controller {
         parent_type,
         parent_id,
         document.includes(process.config.minio.MINIO_BUCKET_NAME)
-          ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+          ? getFilePath(document)
           : document
       );
       console.log(
@@ -1404,7 +1406,7 @@ class UserController extends Controller {
         parent_type,
         parent_id,
         document.includes(process.config.minio.MINIO_BUCKET_NAME)
-          ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+          ? getFilePath(document)
           : document
       );
 
@@ -1557,7 +1559,7 @@ class UserController extends Controller {
             parent_type,
             parent_id,
             photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-              ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+              ? getFilePath(photo)
               : photo
           );
 
@@ -1567,7 +1569,7 @@ class UserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1588,7 +1590,7 @@ class UserController extends Controller {
             parent_type,
             parent_id,
             photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-              ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+              ? getFilePath(photo)
               : photo
           );
 
@@ -1625,7 +1627,7 @@ class UserController extends Controller {
             parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
             parent_id: registration_id,
             document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-              ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+              ? getFilePath(photo)
               : photo
             // .includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
           });
@@ -1690,7 +1692,7 @@ class UserController extends Controller {
 
         for (let photo of photos) {
           let document = photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-            ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(photo)
             : photo;
           let docExist = await documentService.getDocumentByData(
             parent_type,
@@ -1704,7 +1706,7 @@ class UserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1722,7 +1724,7 @@ class UserController extends Controller {
             parent_type,
             parent_id,
             photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-              ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+              ? getFilePath(photo)
               : photo
           );
 
@@ -1766,7 +1768,7 @@ class UserController extends Controller {
             parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
             parent_id: qualification_id,
             document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-              ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+              ? getFilePath(photo)
               : photo
           });
           // }

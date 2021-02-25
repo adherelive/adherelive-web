@@ -303,7 +303,7 @@ class editReportDrawer extends Component {
       const { basic_info = {} } = each;
       const { id = "", document: src = "", name = "" } = basic_info;
 
-      const documentExtension = src.substring(src.length - 3, src.length);
+      const documentExtension = name.substring(name.length - 3, name.length);
 
       return (
         <div>
