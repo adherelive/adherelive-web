@@ -77,6 +77,7 @@ import * as UserCategoryPermissions from "../app/models/userCategoryPermissions"
 import * as UserDevices from "../app/models/userDevices";
 import * as UserPreferences from "../app/models/userPreferences";
 import * as Users from "../app/models/users";
+import * as UserFavourites from "../app/models/userFavourites";
 import * as UserVerifications from "../app/models/userVerifications";
 
 import * as Vitals from "../app/models/vitals";
@@ -85,6 +86,7 @@ import * as Watchlist from "../app/models/doctor_patient_watchlist";
 
 import * as AccountDetails from "../app/models/accountDetails";
 import * as DoctorProviderMapping from "../app/models/doctorProviderMapping";
+
 
 // Models List...
 const models = [
@@ -163,6 +165,7 @@ const models = [
   UserDevices,
   UserPreferences,
   Users,
+  UserFavourites,
   UserVerifications,
 
   Vitals,

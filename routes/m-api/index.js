@@ -32,6 +32,7 @@ import transactionRouter from "./transactions";
 import accountsRouter from "./accounts";
 import featuresRouter from "./features";
 import reportRouter from "./reports";
+import userFavourites from "./userFavourites";
 
 router.use(async (req, res, next) => {
   try {
@@ -106,5 +107,6 @@ router.use("/transactions", transactionRouter);
 router.use("/accounts", accountsRouter);
 router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
+router.use("/favourites",userFavourites);
 
 module.exports = router;

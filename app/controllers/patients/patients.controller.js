@@ -807,7 +807,6 @@ class PatientController extends Controller {
       const allVitals = await VitalService.getAllByData({
         care_plan_id: carePlan.get("id")
       });
-      Logger.debug("786768767876757687", allVitals);
 
       let vitalDetails = {};
       let vitalTemplateDetails = {};

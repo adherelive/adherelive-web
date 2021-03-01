@@ -1,7 +1,11 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { InputNumber, Form, Radio } from "antd";
 import messages from "../message";
+
+// antd models
+import InputNumber from "antd/es/input-number";
+import Form from "antd/es/form";
+import Radio from "antd/es/radio";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -9,6 +13,7 @@ const RadioGroup = Radio.Group;
 const { Item: FormItem } = Form;
 
 const FIELD_NAME = "quantity";
+const MAXIMUM_LENGTH = 10000;
 
 
 class MedicineQuantity extends Component {
@@ -97,7 +102,8 @@ class MedicineQuantity extends Component {
             rules: [
               {
                 type: "number",
-                message: "Quantity should be a number"
+                max: MAXIMUM_LENGTH,
+                message: "Please enter valid quantity"
               }
             ],
             initialValue: getInitialValue()
@@ -113,5 +119,6 @@ const Field = injectIntl(MedicineQuantity);
 
 export default {
   field_name: FIELD_NAME,
+  maximum_length: MAXIMUM_LENGTH,
   render: props => <Field {...props} />
 };

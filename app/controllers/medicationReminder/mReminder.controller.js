@@ -40,7 +40,7 @@ import {
   LUNCH,
   EVENING,
   DINNER,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES, MEDICINE_FORMULATION
 } from "../../../constant";
 import Log from "../../../libs/log";
 import {
@@ -560,7 +560,7 @@ class MReminderController extends Controller {
         [KEY_DOSE]: DOSE_AMOUNT,
         [KEY_UNIT]: DOSE_UNIT,
         [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
-        [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
+        [KEY_MEDICINE_TYPE]: MEDICINE_FORMULATION
       };
 
       Logger.debug("8943748297387489999 Patient id ====>",{patient_id,medicationReminderDetails});

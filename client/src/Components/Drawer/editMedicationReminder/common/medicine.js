@@ -18,6 +18,8 @@ import {
   // connectHighlight
 } from "react-instantsearch-dom";
 import Button from "antd/es/button";
+import message from "antd/es/message";
+import {TagFilled,TagOutlined} from "@ant-design/icons";
 
 const { Item: FormItem } = Form;
 const { Option } = Select;
@@ -31,25 +33,58 @@ class Medicine extends Component {
       value: "",
       hits: {},
       searching_medicine: false,
-      medicine_name: ""
+      medicine_name: "",
+      default_added:false,
     };
 
     const algoliaClient = this.algoliaClient();
     this.index = algoliaClient.initIndex(config.algolia.medicine_index);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {addMedication , medicationData,editMedication} = this.props;
+    
+    await this.handleGetFavouritesMeds();
     if(addMedication  && !medicationData ){
-        this.handleMedicineSearch(" ");
-    } else {
-      this.getDefaultMedicine();
+        const {
+            favourites_data ={},
+            favourite_medicine_ids =[] } = this.props;
+    
+    
+        if(favourite_medicine_ids.length === 0){
+            this.handleMedicineSearch(" ");
+        }
+
+    } 
+    else {
+        this.getDefaultMedicine();
     }
   }
+
+  handleGetFavouritesMeds = async() => {
+    try{
+      const {getFavourites} = this.props;
+      const response = await getFavourites({type:"medicine"});
+      const {status,statusCode,payload:{data:resp_data={},message:resp_msg=''} ={} } = response;
+      if(!status){
+          message.error(resp_msg);
+      }
+    }catch(error){
+        console.log("38926745237469732084 error =========>",{error});
+    }
+}
 
   componentDidUpdate(prevProps,prevState){
     const {newMedicineId:prev_newMedicineId = null} = prevProps;
     const {newMedicineId}=this.props;
+    const {favourite_medicine_ids:prev_favourite_medicine_ids = []} = prevProps;
+    const {favourite_medicine_ids = []}=this.props;
+    if(favourite_medicine_ids.length === 0
+       &&
+       prev_favourite_medicine_ids.length !==favourite_medicine_ids.length ){
+      this.handleMedicineSearch(" ");
+    }
+
     const {
       form: { setFieldsValue, getFieldValue },
       enableSubmit
@@ -70,6 +105,186 @@ class Medicine extends Component {
     } 
   }
 
+
+  setFavMedicineValue = (medicine_id, medicine_name) => () =>{
+      const medId = parseInt(medicine_id);
+    const {
+        form: { setFieldsValue, getFieldValue },
+        setFormulation,
+        enableSubmit
+      } = this.props;
+      setFieldsValue({ [FIELD_NAME]: medId });
+      this.setState({
+        medicine_name: medicine_name,
+        searching_medicine: false
+      });
+  }
+
+   
+getFavOption = (medicine_id,medicine_name) => {
+    const {setMedicineValue , favourite_medicine_ids=[]}=this.props;
+    const {searching_medicine=true}=this.state;
+    return (
+        <div
+          key={medicine_id}
+          className="pointer flex wp100  align-center justify-space-between"
+        >
+          <Tooltip title={"Name"}>
+            {" "}
+            {/* formatMessage here */}
+            <div className="fs18 fw800 black-85 medicine-selected pr10">
+              <span
+              >
+                  {medicine_name}
+              </span>
+            </div>
+          </Tooltip>
+         <Tooltip title="Unmark" >
+         {searching_medicine && medicine_id && favourite_medicine_ids.includes(medicine_id.toString())
+             ? 
+             <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+              onClick={this.handleremoveFavourites(medicine_id)}
+             /> 
+             :
+             searching_medicine?
+            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+              onClick = {this.handleAddFavourites(medicine_id)}
+            /> 
+            :
+            ""}
+         </Tooltip>
+        </div>
+      );
+}
+
+handleAddFavourites = (id) => async(e) => {
+    try{
+      e.preventDefault();
+      e.stopPropagation();
+        const {markFavourite} = this.props;
+        const data = {
+            type:"medicine",
+            id
+        }
+
+
+        const response = await markFavourite(data);
+        const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+        if(status){
+          message.success(resp_msg);
+        }else{
+          message.error(resp_msg);
+        }
+
+    }catch(error){
+        console.log("error",error);
+    }
+}
+
+  handleremoveFavourites = (id) => async(e) => {
+    try{
+      e.preventDefault();
+      e.stopPropagation();
+        const {removeFavourite} = this.props;
+        const data = {
+            type:"medicine",
+            typeId:id
+        }
+
+        const response = await removeFavourite(data);
+        const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+        if(status){
+          message.success(resp_msg);
+        }else{
+          message.error(resp_msg);
+        }
+    }catch(error){
+        console.log("error",{error});
+    }
+}
+
+
+getFavouriteOptions = () => {
+
+    const {favourites_data , setFavMedicineValue,
+      medications,
+    payload: { id: medication_id } = {},
+    medicines} = this.props;
+    const options = [];
+
+    const {temp_medicine=null}=this.state;
+
+   
+
+    for(let each in favourites_data ){
+        const {basic_info = {}, marked_favourites_data = {}} = favourites_data[each] || {};
+        const {marked_favourite_type = ''} = basic_info;
+        if(marked_favourite_type === "medicine"){
+
+            const key = Object.keys(marked_favourites_data)[0] || null;
+
+
+            const {basic_info : {name :medicine_name= '' , id :medicine_id= null} = {} } = marked_favourites_data[key];
+
+            options.push(
+                <Option key={`opt-${medicine_id}`} value={medicine_id}
+                onMouseDown={this.handleOnMouseDownPreventDef}
+                onClick={this.setFavMedicineValue(medicine_id, medicine_name)}
+                >
+                {this.getFavOption(medicine_id, medicine_name)}
+                
+                </Option>
+            )
+        }
+    }
+
+ 
+
+    const {default_added = false}=this.state;
+      if(default_added === false){
+        const {basic_info:{details:{medicine_id : medId = null } ={}}={}}=medications[medication_id]||{};
+        const {basic_info:{name:def_name='',id:def_id=null}={}} = medicines[medId] || {};
+        options.push(
+            <Option key={`opt-${def_id}`} value={def_id}
+            onMouseDown={this.handleOnMouseDownPreventDef}
+            onClick={this.setFavMedicineValue(def_id, def_name)}
+            >
+            {this.getFavOption(def_id, def_name)}
+            
+            </Option>
+        )
+
+      this.setState({default_added:true});
+    }
+
+    const {basic_info:{name:temp_name='',id:temp_id=null}={}} = medicines[temp_medicine] || {};
+
+    if(temp_name !== "" && temp_id !== null){
+      options.push(
+        <Option key={`opt-${temp_id}`} value={temp_id}
+        onMouseDown={this.handleOnMouseDownPreventDef}
+        onClick={this.setFavMedicineValue(temp_id, temp_name)}
+        >
+        {this.getFavOption(temp_id, temp_name)}
+        
+        </Option>
+      )
+    }
+    
+
+
+    return options;
+   
+}
+
+
+  isSearchingMedicine = e => {
+    e.preventDefault();
+    this.setState({ searching_medicine: true });
+  };
+
+
+
   getNewDefaultMedicine = (medicine_id,medicineName) => {
     let defaultHit = [];
     this.handleMedicineSearch(medicineName);
@@ -88,7 +303,6 @@ class Medicine extends Component {
   };
 
   setInputText = (value) => {
-    console.log("382742347729378428349832",{value});
     this.setState({inputText:value});
   }
 
@@ -98,6 +312,9 @@ class Medicine extends Component {
       payload: { id: medication_id } = {},
       medicines = {}
     } = this.props;
+
+    const {temp_medicine=null}=this.state;
+
 
 
     let defaultHit = [];
@@ -292,6 +509,8 @@ class Medicine extends Component {
       final_generic_name = "";
     }
 
+    const {favourite_medicine_ids = []}=this.props;
+
     if (!searching_medicine) {
       this.setMedicineValue(medicine_id, name);
       return (
@@ -342,6 +561,22 @@ class Medicine extends Component {
             </div>
           </Tooltip>
         </div>
+        <div>
+          <Tooltip
+            title={favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString()) ? "Unmark" : "Mark" }
+          >
+            {favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString())
+             ? 
+             <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+              onClick={this.handleremoveFavourites(medicine_id)}
+             /> 
+             :
+            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+              onClick = {this.handleAddFavourites(medicine_id)}
+            /> }
+
+          </Tooltip>
+        </div>
       </div>
     );
   };
@@ -350,7 +585,7 @@ class Medicine extends Component {
     e.preventDefault();
     const {
       form: { setFieldsValue, getFieldValue },
-      setFormulation,
+      // setFormulation,
       enableSubmit
     } = this.props;
     setFieldsValue({ [FIELD_NAME]: medicine_id });
@@ -412,11 +647,16 @@ class Medicine extends Component {
     } = this.props;
     this.setState({ medicine_id: value, temp_medicine: value });
     enableSubmit();
-
   };
 
   dropdownVisible = open => {
+    const{searching_medicine=false}=this.state;
+    const {temp_medicine = ''}=this.state;
     this.setState({ searching_medicine: open, temp_medicine: "" });
+    if(open === false){
+      this.setState({inputText:''});
+    }
+
   };
 
   getParentNode = t => t.parentNode;
@@ -450,7 +690,7 @@ class Medicine extends Component {
     }else if (default_medicine_id){
 
       this.setState({
-        temp_medicine:default_medicine_id
+        temp_medicine:default_medicine_id,
       })
     }
 
@@ -472,14 +712,18 @@ class Medicine extends Component {
     const {
       fetchingMedicines,
       medicine_name: med_name = "",
-      temp_medicine = ""
+      temp_medicine = "",
+      inputText='',
+      searching_medicine=false
     } = this.state;
 
-    const { getMedicineOptions, handleMedicineSearch, getParentNode } = this;
+
+    const { getMedicineOptions, handleMedicineSearch, getParentNode,getFavouriteOptions } = this;
 
     const {
       form: { getFieldDecorator },
       medicines,
+      favourite_medicine_ids=[]
     } = this.props;
 
 
@@ -514,7 +758,14 @@ class Medicine extends Component {
               onBlur={this.handleOnBlur}
 
             >
-              {getMedicineOptions()}
+                {
+                  inputText === '' && favourite_medicine_ids.length>0 
+                //   && temp_medicine == ''
+                  ?
+                  getFavouriteOptions()
+                  :
+                  getMedicineOptions()
+                  }
             </Select>
           </InstantSearch>
         )}

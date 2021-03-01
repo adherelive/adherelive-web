@@ -15,6 +15,7 @@ import transaction_ids from "./transactions";
 import care_plan_template_ids from "./careplanTemplates";
 import admin_medicines from "./adminMedicines";
 import admin_search_medicines from "./adminSearchMedicines";
+import favourite_medicine_ids from "./favouriteMedicineIds";
 
 
 const rootReducer = combineReducers({
@@ -33,7 +34,8 @@ const rootReducer = combineReducers({
   transaction_ids,
   care_plan_template_ids,
   admin_medicines,
-  admin_search_medicines
+  admin_search_medicines,
+  favourite_medicine_ids
 });
 
 export default (state, action) => {
