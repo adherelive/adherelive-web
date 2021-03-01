@@ -151,6 +151,20 @@ class TemplatePageCreateDrawer extends Component{
                         description=''
                     } = {}
             } = medication || {};
+
+            // console.log("198623861283 check", {
+            //    condition: !medicine_id || !unit || !repeat || (unit !== 'ml' && !quantity) ||  !repeat_days.length ||
+            //        !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length,
+            //     medicine_id,
+            //     unit,
+            //     repeat,
+            //     quantity,
+            //     repeat_days,
+            //     medicine_type,
+            //     strength,
+            //     duration,
+            //     when_to_take
+            // });
            
             if (!medicine_id || !unit || !repeat || (unit !== 'ml' && !quantity) ||  !repeat_days.length ||
                 !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length) {
