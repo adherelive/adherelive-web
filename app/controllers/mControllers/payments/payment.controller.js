@@ -157,7 +157,7 @@ class PaymentController extends Controller {
           "Default consultation products fetched successfully"
         );
       } else {
-        return raiseClientError(
+        return raiseSuccess(
           res,
           201,
           {},
@@ -201,7 +201,7 @@ class PaymentController extends Controller {
           "Default consultation products fetched successfully"
         );
       } else {
-        return raiseClientError(
+        return raiseSuccess(
           res,
           201,
           {},

@@ -6,6 +6,13 @@ import {getMedications, updateMedication, deleteMedication} from "../../modules/
 import {getMedicationDetails} from "../../modules/otherDetails";
 import {searchMedicine,addMedicine} from "../../modules/medicines";
 import {getPatientCarePlanDetails} from "../../modules/carePlans";
+
+import {
+  markFavourite , 
+  getFavourites , 
+  removeFavourite} from "../../modules/favouritesData/index";
+
+  
 const mapStateToProps = state => {
   const { auth} = state;
   const { authenticated_user, authenticated_category } = auth;
@@ -15,7 +22,9 @@ const mapStateToProps = state => {
     medications,
     medicines,
     patients,
-    doctors={}
+    doctors={},
+    favourites_data={},
+    pages:{favourite_medicine_ids = []} ={}
   } = state;
 
 
@@ -29,7 +38,9 @@ const mapStateToProps = state => {
     patients,
     doctors,
     authenticated_user,
-    authenticated_category
+    authenticated_category,
+    favourites_data,
+    favourite_medicine_ids
   };
 };
 
@@ -43,6 +54,9 @@ const mapDispatchToProps = dispatch => {
     getMedications: (id) => dispatch(getMedications(id)),
     getPatientCarePlanDetails:(patientId)=>dispatch(getPatientCarePlanDetails(patientId)),
     addNewMedicine : (data) => dispatch(addMedicine(data)), 
+    markFavourite : (payload) => dispatch(markFavourite(payload)),
+    getFavourites : ({type}) => dispatch(getFavourites({type})),
+    removeFavourite: ({typeId,type}) => dispatch(removeFavourite({typeId,type}))
   };
 };
 

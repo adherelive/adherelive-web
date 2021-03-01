@@ -1,23 +1,13 @@
 import React, { Component, Fragment } from "react";
-import { Select, Form, Radio } from "antd";
+import { Select, Form } from "antd";
 import { injectIntl } from "react-intl";
-import { SYRINGE, SYRUP, TABLET, MEDICINE_UNITS } from '../../../../constant';
+import { MEDICINE_UNITS } from '../../../../constant';
 import messages from "../message";
 import unitField from "./medicationStrengthUnit";
 
-import chooseMedicationField from "./medicationStage";
-
 const FIELD_NAME = "formulation";
 
-
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-
-const units = [
-    { key: "mg", value: "mg" },
-    { key: "ml", value: "ml" }
-];
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 const { Item: FormItem } = Form;
 
 class Formulation extends Component {
@@ -52,13 +42,62 @@ class Formulation extends Component {
         setFieldsValue({ [unitField.field_name]: MEDICINE_UNITS.ML });
     }
 
+    getStringFormat = (str) => {
+        return str ? `${str.charAt(0).toUpperCase()}${str.substring(1, str.length)}` : "";
+    };
+
+    getOptions = (items, category) => {
+        const {getStringFormat} = this;
+
+        return items.map((item) => {
+            const {name, defaultUnit, id} = item || {};
+
+            return (
+                <Option key={`${category}:${defaultUnit}:${name}`} value={id} title={name}>{getStringFormat(name)}</Option>
+            );
+        });
+    };
+
+    getFormulationOptions = () => {
+        const {medication_details: {medicine_type} = {}} = this.props;
+        const {getOptions, getStringFormat} = this;
+
+        return Object.keys(medicine_type).map(id => {
+           const {items, name} = medicine_type[id] || {};
+
+           return (
+             <OptGroup label={getStringFormat(name)}>
+                   {getOptions(items, id)}
+             </OptGroup>
+           );
+        });
+    };
+
+    handleSelect = (...args) => {
+        const { setUnitMg, setUnitMl } = this;
+        const {key = ""} = args[1] || {};
+
+        const formulationUnit = key ? key.split(":")[1] : null;
+
+        switch(formulationUnit) {
+            case MEDICINE_UNITS.MG:
+                setUnitMg();
+                break;
+            case MEDICINE_UNITS.ML:
+                setUnitMl();
+                break;
+            default:
+                break;
+        }
+    };
+
     render() {
         const { form } = this.props;
+        const {getFormulationOptions, handleSelect} = this;
         const {
             getFieldDecorator,
             getFieldError,
-            getFieldValue,
-            isFieldTouched
+            isFieldTouched,
         } = form;
         const error = isFieldTouched(FIELD_NAME) && getFieldError(FIELD_NAME);
 
@@ -74,15 +113,23 @@ class Formulation extends Component {
                     help={error || ""}
                 >
                     {getFieldDecorator(FIELD_NAME, {})(
-                        <RadioGroup
-                            className="flex justify-content-end radio-formulation"
-                            buttonStyle="solid"
-                            disabled={!getFieldValue(chooseMedicationField.field_name)}
+                        <Select
+                            className="full-width"
+                            placeholder=""
+                            showSearch
+                            autoComplete="off"
+                            optionFilterProp="children"
+                            suffixIcon={null}
+                            // filterOption={(input, option) =>
+                            //     option.props.children
+                            //         .toLowerCase()
+                            //         .indexOf(input.toLowerCase()) >= 0
+                            // }
+                            getPopupContainer={this.getParentNode}
+                            onSelect={handleSelect}
                         >
-                            <RadioButton value={SYRUP} onClick={this.setUnitMl}>{this.formatMessage(messages.syrup)}</RadioButton>
-                            <RadioButton value={TABLET} onClick={this.setUnitMg}>{this.formatMessage(messages.tablet)}</RadioButton>
-                            <RadioButton value={SYRINGE} onClick={this.setUnitMl}>{this.formatMessage(messages.syringe)}</RadioButton>
-                        </RadioGroup>
+                            {getFormulationOptions()}
+                        </Select>
                     )}
                 </FormItem>
             </div>

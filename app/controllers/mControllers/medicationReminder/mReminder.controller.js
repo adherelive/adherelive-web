@@ -5,14 +5,14 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   REPEAT_TYPE,
-  DAYS_MOBILE,
+  // DAYS_MOBILE,
   MEDICATION_TIMING,
   DOSE_AMOUNT,
   DOSE_UNIT,
   CUSTOM_REPEAT_OPTIONS,
-  MEDICINE_FORM_TYPE,
+  // MEDICINE_FORM_TYPE,
   USER_CATEGORY,
-  NOTIFICATION_STAGES, DAYS
+  NOTIFICATION_STAGES, DAYS, MEDICINE_FORMULATION
 } from "../../../../constant";
 import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
@@ -445,7 +445,7 @@ class MobileMReminderController extends Controller {
         [KEY_DOSE]: DOSE_AMOUNT,
         [KEY_UNIT]: DOSE_UNIT,
         [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
-        [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
+        [KEY_MEDICINE_TYPE]: MEDICINE_FORMULATION
       };
       return raiseSuccess(
         res,

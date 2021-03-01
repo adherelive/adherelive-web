@@ -25,6 +25,7 @@ export const EVENT_TYPE = {
   ALL: "all",
 };
 
+
 export const VITALFIELD = {
   TEMPERATURE_UNIT: "temperatureUnit",
   TEMPERATURE: "temperature",
@@ -656,6 +657,80 @@ export const MEDICINE_FORM_TYPE = {
   [INJECTION]: { name: "injection" }
 };
 
+// MEDICINE FORMULATION ----------------------------------------------
+
+export const CATEGORY_ONE = {
+  index: "1",
+  name:"",
+  items: [
+    {name: "CAPSULE", defaultUnit: MG, id: 1},
+    {name: "SUSPENSION", defaultUnit: MG, id: 2},
+    {name: "GELS", defaultUnit: ML, id: 3},
+    {name:"LOTIONS", defaultUnit: ML, id: 4},
+    {name:"LINIMENTS", defaultUnit: ML, id: 5},
+    {name: "LOZENGES", defaultUnit: MG, id: 6}
+  ]
+};
+
+export const CATEGORY_TWO = {
+  index: "2",
+  name:"",
+  items: [
+    {name:"SPRAY", defaultUnit: ML, id: 7},
+    {name:"NEBULISER", defaultUnit: MG, id: 8},
+    {name:"CREAM", defaultUnit: ML, id: 9},
+    {name:"OINTMENT", defaultUnit: ML, id: 10},
+  ],
+};
+
+
+export const CATEGORY_THREE = {
+  index: "3",
+  name:"",
+  items: [
+    {name:"RECTAL SUPPOSITORY", defaultUnit: MG, id: 11},
+    {name:"RECTAL ENEMA", defaultUnit: MG, id: 12},
+    {name:"PESSARIES OF VAGINAL", defaultUnit: MG, id: 13},
+  ],
+};
+
+export const CATEGORY_FOUR = {
+  index: "4",
+  name:"",
+  items: [
+    {name:"INHALER", defaultUnit: ML, id: 14},
+  ],
+};
+
+export const CATEGORY_FIVE = {
+  index: "5",
+  name:"INJECTION",
+  items: [
+    {name:"I/D INTRDERMAL", defaultUnit: ML, id: 15},
+    {name:"S/C SUBCUTANEOUS", defaultUnit: ML, id: 16},
+    {name:"I/M INTRAMUSCULAR", defaultUnit: ML, id: 17},
+    {name:"I/V INTRAVENOUS", defaultUnit: ML, id: 18},
+  ],
+};
+
+export const MEDICINE_FORMULATION = {
+  [CATEGORY_ONE.index]: {
+    ...CATEGORY_ONE
+  },
+  [CATEGORY_TWO.index]: {
+    ...CATEGORY_TWO
+  },
+  [CATEGORY_THREE.index]: {
+    ...CATEGORY_THREE
+  },
+  [CATEGORY_FOUR.index]: {
+    ...CATEGORY_FOUR
+  },
+  [CATEGORY_FIVE.index]: {
+    ...CATEGORY_FIVE
+  },
+};
+
 const HEAD = "1";
 const RIGHT_EYE = "2";
 const LEFT_EYE = "3";
@@ -839,3 +914,21 @@ export const MESSAGE_TYPES = {
   USER_MESSAGE:"USER_MESSAGE",
   BOT_MESSAGE:"BOT_MESSAGE"
 };
+
+
+export const USER_FAV_USER_CATEGORY=[
+  USER_CATEGORY.PATIENT, 
+  USER_CATEGORY.DOCTOR, 
+  USER_CATEGORY.ADMIN,
+  USER_CATEGORY.CARE_TAKER, 
+  USER_CATEGORY.PROVIDER
+]
+
+
+export const FAVOURITE_TYPE = {
+  MEDICINE: "medicine",
+};
+
+export const USER_FAV_ALL_TYPES=[
+  FAVOURITE_TYPE.MEDICINE
+]

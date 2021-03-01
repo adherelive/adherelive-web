@@ -78,7 +78,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       const scheduleEvent = await EventWrapper(events);
         scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
-        if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
+        if(scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
           if(!latestPendingEventId) {
             latestPendingEventId = scheduleEvent.getScheduleEventId();
           }
