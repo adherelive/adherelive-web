@@ -502,6 +502,8 @@ getFavouriteOptions = () => {
       objectID = null
     } = hit;
     const { value, searching_medicine, temp_medicine } = this.state;
+    const {formatMessage} = this;
+
     let final_name = name;
     let final_generic_name = generic_name;
 
@@ -563,7 +565,7 @@ getFavouriteOptions = () => {
         </div>
         <div>
           <Tooltip
-            title={favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString()) ? "Unmark" : "Mark" }
+            title={favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString()) ? formatMessage(messages.unMark) : formatMessage(messages.mark) }
           >
             {favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString())
              ? 
