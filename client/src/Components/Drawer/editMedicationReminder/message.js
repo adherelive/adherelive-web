@@ -407,9 +407,14 @@ export default defineMessages({
     description: "",
     defaultMessage: "Name",
   },
-  addMedicine:{
-    id: "medication_reminder.add.drawer.addMedicine",
+  unMark: {
+    id: "medication_reminder.edit.drawer.unMark.favourite",
     description: "",
-    defaultMessage: "Add medicine",
+    defaultMessage: "Un-check",
+  },
+  mark: {
+    id: "medication_reminder.edit.drawer.mark.favourite",
+    description: "",
+    defaultMessage: "Mark favourite",
   }
 });
