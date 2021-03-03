@@ -176,7 +176,7 @@ class TemplatePageCreateDrawer extends Component{
             //     when_to_take
             // });
            
-            if (!medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  !repeat_days.length ||
+            if (!medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  (when_to_take.length > 0 && !repeat_days.length) ||
                 !medicine_type || (!duration && duration !== null) || !strength) {
                
                 message.error("Medication Error");
