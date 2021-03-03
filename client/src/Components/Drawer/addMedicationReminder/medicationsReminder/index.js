@@ -129,7 +129,7 @@ class AddMedicationReminder extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         console.log('8326589623895723956832', values);
-        const { when_to_take = [], keys = [] } = values || {};
+        const { when_to_take_abbr = "", when_to_take = [], keys = [] } = values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
@@ -148,6 +148,7 @@ class AddMedicationReminder extends Component {
           description,
           critical,
           when_to_take: keys.map(id => when_to_take[id]) || [],
+          when_to_take_abbr,
           // when_to_take: when_to_take.map(id => `${id}`),
           id: patient_id,
 

@@ -362,6 +362,11 @@ export default defineMessages({
     description: "",
     defaultMessage: "TDS",
   },
+  sos: {
+    id: "medication_reminder.drawer.sos",
+    description: "",
+    defaultMessage: "SOS",
+  },
   oneWeek: {
     id: "medication_reminder.drawer.oneWeek",
     description: "",
@@ -416,5 +421,10 @@ export default defineMessages({
     id: "medication_reminder.edit.drawer.mark.favourite",
     description: "",
     defaultMessage: "Mark favourite",
-  }
+  },
+  sosMessage: {
+    id: "medication_reminder.edit.drawer.sos.message",
+    description: "",
+    defaultMessage: "Take Whenever Required",
+  },
 });

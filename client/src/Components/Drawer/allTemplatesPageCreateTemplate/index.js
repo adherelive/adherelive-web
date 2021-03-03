@@ -1,7 +1,16 @@
 import { Drawer } from "antd";
 import React,{Component , Fragment} from "react";
 import {injectIntl} from "react-intl";
-import { MEDICATION_TIMING,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
+import {
+    MEDICATION_TIMING,
+    DAYS_TEXT_NUM_SHORT,
+    EVENT_TYPE,
+    MEDICATION_TIMING_HOURS,
+    MEDICATION_TIMING_MINUTES,
+    TABLET,
+    SYRUP,
+    MEDICINE_UNITS
+} from "../../../constant";
 import moment from "moment";
 import message from "antd/es/message";
 import Icon from "antd/es/icon";
@@ -153,8 +162,9 @@ class TemplatePageCreateDrawer extends Component{
             } = medication || {};
 
             // console.log("198623861283 check", {
-            //    condition: !medicine_id || !unit || !repeat || (unit !== 'ml' && !quantity) ||  !repeat_days.length ||
+            //    condition: !medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  !repeat_days.length ||
             //        !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length,
+            //     otherCondition: unit !== MEDICINE_UNITS.ML && !quantity,
             //     medicine_id,
             //     unit,
             //     repeat,
@@ -166,8 +176,8 @@ class TemplatePageCreateDrawer extends Component{
             //     when_to_take
             // });
            
-            if (!medicine_id || !unit || !repeat || (unit !== 'ml' && !quantity) ||  !repeat_days.length ||
-                !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length) {
+            if (!medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  !repeat_days.length ||
+                !medicine_type || (!duration && duration !== null) || !strength) {
                
                 message.error("Medication Error");
                 return false;
@@ -436,28 +446,41 @@ class TemplatePageCreateDrawer extends Component{
                     }
 
                     if (moment(start_date).isSame(moment(), 'D')) {
-                        for (let wtt of when_to_take) {
-                            let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
-                            minDiff = minDiff === 0 && newMinDiff > 0 ? newMinDiff : newMinDiff > 0 && newMinDiff < minDiff ? newMinDiff : minDiff;
-                            closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
+                        if(when_to_take.length > 0) {
+                            for (let wtt of when_to_take) {
+                                let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
+                                minDiff = minDiff === 0 && newMinDiff > 0 ? newMinDiff : newMinDiff > 0 && newMinDiff < minDiff ? newMinDiff : minDiff;
+                                closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
+                            }
                         }
                     }
                     let medTimingsToShow = '';
-                    for (let wtt in when_to_take) {
-                        let timing_temp = MEDICATION_TIMING[when_to_take[wtt]];
-                        let txt='';
-                        let time_temp = '';
-                        if (timing_temp){
-                            txt=MEDICATION_TIMING[when_to_take[wtt]].text;
-                            time_temp = MEDICATION_TIMING[when_to_take[wtt]].time;
-                        }
-                        medTimingsToShow += `${txt} `;
-                        medTimingsToShow += `(${time_temp})${wtt < when_to_take.length - 1 ? ', ' : ''}`
-                    }
-                    nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
-                    
 
-                    let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
+                    if(when_to_take.length > 0) {
+                        for (let wtt in when_to_take) {
+                            let timing_temp = MEDICATION_TIMING[when_to_take[wtt]];
+                            let txt='';
+                            let time_temp = '';
+                            if (timing_temp){
+                                txt=MEDICATION_TIMING[when_to_take[wtt]].text;
+                                time_temp = MEDICATION_TIMING[when_to_take[wtt]].time;
+                            }
+                            medTimingsToShow += `${txt} `;
+                            medTimingsToShow += `(${time_temp})${wtt < when_to_take.length - 1 ? ', ' : ''}`
+                        }
+                    }
+                    console.log("0237127301 closestWhenToTake", closestWhenToTake);
+
+                    // todo: change later when re-fractoring
+
+                    let nextDue = null;
+
+                    if(when_to_take.length > 0) {
+                        nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
+                        nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
+                    } else {
+                        nextDue = this.formatMessage(messages.sosMessage);
+                    }
 
                     return (
                         <div className='flex wp100 flex-grow-1 align-center' key={key}>
