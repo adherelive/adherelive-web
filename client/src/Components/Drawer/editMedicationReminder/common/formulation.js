@@ -136,11 +136,11 @@ class Formulation extends Component {
               autoComplete="off"
               optionFilterProp="children"
               suffixIcon={null}
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
-              }
+              // filterOption={(input, option) =>
+              //   option.props.children
+              //     .toLowerCase()
+              //     .indexOf(input.toLowerCase()) >= 0
+              // }
               getPopupContainer={this.getParentNode}
               onSelect={handleSelect}
             >

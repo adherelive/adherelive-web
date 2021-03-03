@@ -197,6 +197,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Submitting"
     },
+    sosMessage: {
+        id: "app.allTemplatesEditDrawer.sosMessage",
+        description: "",
+        defaultMessage: "Take Whenever Required"
+    }
 });
 
 export default messages;

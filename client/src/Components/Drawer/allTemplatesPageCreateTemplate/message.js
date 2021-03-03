@@ -177,6 +177,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Are you sure you want to cancel ?"
     },
+    sosMessage: {
+        id: "app.allTemplatesAddDrawer.sosMessage",
+        description: "",
+        defaultMessage: "Take Whenever Required"
+    }
 });
 
 export default messages;

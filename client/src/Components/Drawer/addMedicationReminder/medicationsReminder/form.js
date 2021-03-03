@@ -625,7 +625,10 @@ class AddMedicationReminderForm extends Component {
           {medicineUnit !== MEDICINE_UNITS.ML && (<div id="quantity">{medicineQuantityField.render(this.props)}</div>)}
           
           
-          <div id="timing">{whenToTakeMedicineField.render(this.props)}</div>
+          {/*<div id="timing"></div>*/}
+
+          {whenToTakeMedicineField.render(this.props)}
+
 
           <RepeatFields
             {...this.props}

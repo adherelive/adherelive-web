@@ -4,6 +4,7 @@ import { Form, Input, Tag } from "antd";
 import { DAYS,ALTERNATE_DAYS } from "../../../../constant";
 import startDate from "./startDate";
 import endDate from "./endDate";
+import whenToTake, {WHEN_TO_TAKE_BUTTONS} from "./whenTotakeMedicaine";
 import messages from '../message';
 import moment from "moment";
 import { Radio } from "antd";
@@ -111,11 +112,17 @@ class SelectedDays extends Component {
       selectedDaysRadio = null;
     }
     let diff = end ? moment(end).diff(moment(start), 'days') : 1;
-    let selectedRadio = end ? null : 3;
-    if( diff == 7 ){
-      selectedRadio = 1;
-    } else if( diff == 14 ){
-      selectedRadio = 2;
+    // let selectedRadio = end ? null : 3;
+    // if( diff == 7 ){
+    //   selectedRadio = 1;
+    // } else if( diff == 14 ){
+    //   selectedRadio = 2;
+    // }
+
+    const isSos = getFieldValue(whenToTake.field_name_abbr) === WHEN_TO_TAKE_BUTTONS.SOS.id;
+
+    if(isSos) {
+      return null;
     }
 
 

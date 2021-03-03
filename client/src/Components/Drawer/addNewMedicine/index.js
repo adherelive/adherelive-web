@@ -164,7 +164,6 @@ class NewMedicineDrawer extends Component{
     render (){
         const {visible = false , close}=this.props;
         const {submitting =false} = this.state;
-        console.log("98347523462378463254879234",{props: this.props});
         return (
             <div>
                 <Drawer

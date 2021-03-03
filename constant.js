@@ -932,3 +932,11 @@ export const FAVOURITE_TYPE = {
 export const USER_FAV_ALL_TYPES=[
   FAVOURITE_TYPE.MEDICINE
 ]
+
+
+export const WHEN_TO_TAKE_ABBREVATIONS = {
+  OD: 1,
+  BD: 2,
+  TDS: 3,
+  SOS: 4
+};
