@@ -18,7 +18,7 @@ export const PATH = {
   REGISTER_CLINICS: "/register-clinics",
   PROVIDER_REGISTER_CLINICS: "/register-clinics/:doctor_id",
   PATIENT_CONSULTING: "/patient-consulting/:patient_id",
-  PATIENT_CONSULTING_VIDEO: "/patient-consulting-video/:room_id",
+  PATIENT_CONSULTING_VIDEO: "/patient/consulting/video/:room_id",
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE: "/register-from-profile",
   REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",

@@ -46,7 +46,7 @@ const ChatFullScreen = lazy(() =>
 
 const TwilioVideo = lazy(() =>
   import(
-    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/twilioVideo"
+    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/agoraVideo"
   )
 );
 
@@ -99,7 +99,9 @@ const SideMenuComp = props => {
     !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy")
+      pathname.includes("privacy-policy") ||
+      pathname.includes("video")
+
     )
   ) {
     return <SideMenu {...props} />;
@@ -134,7 +136,6 @@ class Doctors extends Component {
       pathname.includes("privacy-policy")
     );
     const { authRedirection } = this.props;
-    console.log("192837172893 PrivacyPolicy in auth dashboard-->", typeof Dashboard);
     return (
       <Fragment>
         <Router>
@@ -142,7 +143,7 @@ class Doctors extends Component {
             <SideMenuComp {...this.props} />
             <div
               className={
-                isNotChatComponent ? `container` : "container-chat-page "
+                isNotChatComponent ? pathname.includes("video") ? "video-page" : `container` : "container-chat-page"
               }
             >
               <Switch>

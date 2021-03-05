@@ -21,7 +21,8 @@ import {
   TABLE_DEFAULT_BLANK_FIELD,
   FEATURES,
   USER_CATEGORY,
-  HOST
+  HOST,
+  PATH
 } from "../../../constant";
 import { Tabs, Table, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
@@ -312,21 +313,22 @@ const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
 
 const PatientCard = ({
   patient_display_picture = userDp,
-  patient_first_name = "Patient one",
-  patient_middle_name,
-  patient_last_name,
+  // patient_first_name = "Patient one",
+  // patient_middle_name,
+  // patient_last_name,
   patientFullName,
   gender = "m",
   patient_age = "--",
   uid = "123456",
   patient_phone_number,
-  patient_email_id,
+  // patient_email_id,
   formatMessage,
   openChat,
   patients,
   patient_id,
   editPatient,
-  editPatientOption
+  // editPatientOption,
+  openVideoScreen
 }) => {
   const { details: { comorbidities, allergies } = {} } =
     patients[patient_id] || {};
@@ -403,7 +405,10 @@ const PatientCard = ({
               </Tooltip>
             </div>
 
-            <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer">
+            <div
+              className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer"
+              onClick={openVideoScreen}
+            >
               <Tooltip
                 placement={"bottom"}
                 title={formatMessage(messages.video_icon_text)}
@@ -1924,6 +1929,25 @@ class PatientDetails extends Component {
     );
   };
 
+  openVideoScreen = () => {
+    const { care_plans, doctors, patients } = this.props;
+    const { selectedCarePlanId } = this.state;
+
+    const { basic_info: { doctor_id, patient_id } = {} } =
+      care_plans[selectedCarePlanId] || {};
+    const { basic_info: { user_id: doctorUserId } = {} } =
+      doctors[doctor_id] || {};
+    const { basic_info: { user_id: patientUserID } = {} } =
+      patients[patient_id] || {};
+
+    const roomId = getRoomId(doctorUserId, patientUserID);
+
+    window.open(
+        `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+        "_blank"
+    );
+  };
+
   render() {
     let {
       patients,
@@ -1951,12 +1975,12 @@ class PatientDetails extends Component {
       loading,
       templateDrawerVisible = false,
       carePlanTemplateId = 0,
-      carePlanTemplateExists = false,
+      // carePlanTemplateExists = false,
       carePlanTemplateIds = [],
       patientCarePlanIds = [],
       showOtpModal,
       selectedCarePlanId,
-      current_careplan_id,
+      // current_careplan_id,
       isOtherCarePlan,
       symptom_dates = [],
       report_ids = []
@@ -1966,23 +1990,24 @@ class PatientDetails extends Component {
       formatMessage,
       getMenu,
       getAppointmentsData,
-      getMedicationData,
+      // getMedicationData,
       onCloseTemplate,
       onRowAppointment,
-      onRowMedication,
-      onRowSymptoms,
+      // onRowMedication,
+      // onRowSymptoms,
       handleRequestConsent,
       getConsentDetails,
-      handleOtpVerify,
+      // handleOtpVerify,
       handleOtpCancel,
       handleCarePlanChange,
       getOtpModalFooter,
-      getUseTemplateComponent
+      getUseTemplateComponent,
+      openVideoScreen
     } = this;
 
-    const AppointmentLocale = {
-      emptyText: this.formatMessage(messages.emptyAppointmentTable)
-    };
+    // const AppointmentLocale = {
+    //   emptyText: this.formatMessage(messages.emptyAppointmentTable)
+    // };
 
     if (loading || !selectedCarePlanId) {
       return (
@@ -2195,6 +2220,7 @@ class PatientDetails extends Component {
                 patient_id={patient_id}
                 editPatient={this.handleEditPatientDrawer}
                 editPatientOption={this.editPatientOption}
+                openVideoScreen={openVideoScreen}
               />
 
               {/* {this.editPatientOption()} */}

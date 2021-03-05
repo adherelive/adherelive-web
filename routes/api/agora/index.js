@@ -1,0 +1,13 @@
+const express = require("express");
+const router = express.Router();
+
+import agoraController from "../../../app/controllers/agora/agora.controller";
+import Authenticated from "../middleware/auth";
+
+router.get(
+    "/video/token/:id",
+    Authenticated,
+    agoraController.generateVideoAccessToken
+  );
+  
+module.exports = router;
