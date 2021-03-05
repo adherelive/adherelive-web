@@ -113,6 +113,10 @@ module.exports = () => {
       key: process.env.ONE_SIGNAL_KEY,
       urgent_channel_id: process.env.URGENT_CHANNEL_ID
     },
+    agora: {
+      app_id: process.env.AGORA_APP_ID,
+      app_certificate: process.env.AGORA_APP_CERTIFICATE,
+    },
     cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,
     APP_URL: process.env.APP_URL,

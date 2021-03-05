@@ -33,6 +33,7 @@ import accountsRouter from "./accounts";
 import featuresRouter from "./features";
 import reportRouter from "./reports";
 import userFavourites from "./userFavourites";
+import agoraRouter from "./agora";
 
 router.use(async (req, res, next) => {
   try {
@@ -90,6 +91,7 @@ router.use("/care-plans", mCarePlanRouter);
 router.use("/medicines", mMedicineRouter);
 router.use("/charts", chartRouter);
 router.use("/twilio", twilioRouter);
+router.use("/agora", agoraRouter);
 
 router.use("/colleges", collegeRouter);
 router.use("/degrees", degreeRouter);

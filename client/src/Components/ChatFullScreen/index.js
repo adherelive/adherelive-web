@@ -167,7 +167,7 @@ class ChatFullScreen extends Component {
     let { patients = {}, getDoctorConsultations } = this.props;
 
     const {
-      basic_info: { first_name = "", middle_name = "", last_name = "" } = {},
+      basic_info: { first_name = "", middle_name = "", last_name = "", full_name = "" } = {},
       details: { profile_pic: patientDp = "" } = {}
     } = patients[patientId] || {};
     return (
@@ -193,13 +193,7 @@ class ChatFullScreen extends Component {
               updateReplyMessageId={this.updateReplyMessageId}
               roomId={roomId}
               placeVideoCall={this.openVideoChatTab}
-              patientName={
-                first_name
-                  ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${
-                      last_name ? `${last_name}` : ""
-                    }`
-                  : ""
-              }
+              patientName={full_name}
               patientDp={patientDp}
               patientId={patientId}
             />
