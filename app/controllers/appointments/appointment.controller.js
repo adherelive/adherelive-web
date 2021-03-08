@@ -52,6 +52,8 @@ import { checkAndCreateDirectory } from "../../helper/common";
 
 import { downloadFileFromS3 } from "../mControllers/user/userHelper";
 
+// HELPERS...
+import * as AppointmentHelper from "./helper";
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
 const Logger = new Log(FILE_NAME);
@@ -698,11 +700,21 @@ class AppointmentController extends Controller {
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
+      const {userDetails: {userData: {category}, userCategoryId} = {}} = req;
       const appointmentDetails = await featureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.APPOINTMENT
       });
 
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+
+      const {type_description} = appointmentData.getFeatureDetails() || {};
+
+      const userTypeData = {
+        id: userCategoryId,
+        category,
+      };
+
+      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description);
 
       return raiseSuccess(
         res,

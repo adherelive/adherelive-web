@@ -139,6 +139,16 @@ const messages = defineMessages({
     id: "app.chatFullScreen.waitingForPatient",
     description: "",
     defaultMessage: "Waiting for {name} to connect"
+  },
+  startCall: {
+    id: "app.chatFullScreen.startCall",
+    description: "",
+    defaultMessage: "Start Call"
+  },
+  endCall: {
+    id: "app.chatFullScreen.endCall",
+    description: "",
+    defaultMessage: "End Call"
   }
 });
 

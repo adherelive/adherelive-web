@@ -15,6 +15,7 @@ import UserDpPlaceholder from "../../Assets/images/ico-placeholder-userdp.svg";
 import { USER_CATEGORY } from "../../constant";
 import messages from "./messages";
 import Loading from "../Common/Loading";
+import Tooltip from "antd/es/tooltip";
 
 class AgoraVideo extends Component {
   constructor(props) {
@@ -120,7 +121,7 @@ class AgoraVideo extends Component {
 
     const { appId, channel, token } = this.getVideoOptions();
 
-    this.setState({loading: true});
+    this.setState({ loading: true });
     const uid = await this.rtc.client.join(
       appId,
       channel,
@@ -145,9 +146,14 @@ class AgoraVideo extends Component {
       const playerContainer = document.getElementById(user.uid);
       playerContainer && playerContainer.remove();
     });
-    this.setState({loading: true});
+    this.setState({ loading: true });
     await this.rtc.client.leave();
-    this.setState({ remoteUid: null, isStart: true, remoteAdded: false, loading: false });
+    this.setState({
+      remoteUid: null,
+      isStart: true,
+      remoteAdded: false,
+      loading: false
+    });
   };
 
   toggleVideo = async () => {
@@ -199,65 +205,61 @@ class AgoraVideo extends Component {
   };
 
   getVideoButtons = () => {
-    const {isVideoOn} = this.state;
-    const {toggleVideo} = this;
+    const { isVideoOn } = this.state;
+    const { toggleVideo } = this;
 
     return (
-        <div className="ml24">
-          {isVideoOn ? (
-              <img src={VideoIcon} onClick={toggleVideo} alt="chatIcon" />
-          ) : (
-              <img
-                  src={VideoDisabledIcon}
-                  onClick={toggleVideo}
-                  alt="chatIcon"
-              />
-          )}
-        </div>
+      <div className="ml24">
+        {isVideoOn ? (
+          <img src={VideoIcon} onClick={toggleVideo} alt="chatIcon" />
+        ) : (
+          <img src={VideoDisabledIcon} onClick={toggleVideo} alt="chatIcon" />
+        )}
+      </div>
     );
   };
 
   getAudioButtons = () => {
-    const {isAudioOn} = this.state;
-    const {toggleAudio} = this;
+    const { isAudioOn } = this.state;
+    const { toggleAudio } = this;
 
     return (
-        <div className="ml24">
-          {isAudioOn ? (
-              <img src={AudioIcon} onClick={toggleAudio} alt="chatIcon" />
-          ) : (
-              <img
-                  src={AudioDisabledIcon}
-                  onClick={toggleAudio}
-                  alt="chatIcon"
-              />
-          )}
-        </div>
+      <div className="ml24">
+        {isAudioOn ? (
+          <img src={AudioIcon} onClick={toggleAudio} alt="chatIcon" />
+        ) : (
+          <img src={AudioDisabledIcon} onClick={toggleAudio} alt="chatIcon" />
+        )}
+      </div>
     );
   };
 
   getCallButtons = () => {
-    const {isStart} = this.state;
-    const {startVideoCall, leaveCall} = this;
+    const { isStart } = this.state;
+    const { startVideoCall, leaveCall, formatMessage } = this;
 
     return (
-        <div className="ml24">
-          {isStart ? (
-              <img
-                  src={StartCallIcon}
-                  onClick={startVideoCall}
-                  alt="chatIcon"
-                  className="pointer"
-              />
-          ) : (
-              <img
-                  src={EndCallIcon}
-                  onClick={leaveCall}
-                  alt="chatIcon"
-                  className="pointer"
-              />
-          )}
-        </div>
+      <div className="ml24">
+        {isStart ? (
+          <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
+            <img
+              src={StartCallIcon}
+              onClick={startVideoCall}
+              alt="chatIcon"
+              className="pointer"
+            />
+          </Tooltip>
+        ) : (
+          <Tooltip title={formatMessage(messages.endCall)} placement={"top"}>
+            <img
+              src={EndCallIcon}
+              onClick={leaveCall}
+              alt="chatIcon"
+              className="pointer"
+            />
+          </Tooltip>
+        )}
+      </div>
     );
   };
 
@@ -268,7 +270,7 @@ class AgoraVideo extends Component {
       formatMessage,
       getVideoButtons,
       getAudioButtons,
-      getCallButtons,
+      getCallButtons
     } = this;
 
     const {
@@ -286,9 +288,9 @@ class AgoraVideo extends Component {
         {/*   REMOTE VIEW   */}
         <div id={"agora-remote"} className="wp100 hp100">
           {loading && (
-              <div className="hp100 wp100 flex direction-column align-center justify-center z1">
-                <Loading className={"wp100"} />
-              </div>
+            <div className="hp100 wp100 flex direction-column align-center justify-center z1">
+              <Loading className={"wp100"} />
+            </div>
           )}
           {!remoteAdded && (
             <div className="flex direction-column align-center justify-center hp100">

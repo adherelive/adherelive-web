@@ -162,7 +162,7 @@ class NewMedicineDrawer extends Component{
     }
 
     render (){
-        const {visible = false , close}=this.props;
+        const {visible = false}=this.props;
         const {submitting =false} = this.state;
         return (
             <div>

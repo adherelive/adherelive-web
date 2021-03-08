@@ -605,9 +605,9 @@ export const AGE_TYPE = {
 
 /*------------------------------- APPOINTMENT DETAILS ---------------------------------*/
 
-const MEDICAL_TEST = "1";
-const CONSULTATION = "2";
-const RADIOLOGY = "3";
+export const MEDICAL_TEST = "1";
+export const CONSULTATION = "2";
+export const RADIOLOGY = "3";
 
 export const APPOINTMENT_TYPE = {
   [MEDICAL_TEST]: {
