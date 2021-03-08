@@ -16,6 +16,7 @@ class UserFavouritesWrapper extends BaseUserFavourites {
             user_category_type,
             marked_favourite_id,
             marked_favourite_type,
+            details,
             created_at,
             updated_at,
             deleted_at
@@ -28,6 +29,7 @@ class UserFavouritesWrapper extends BaseUserFavourites {
                 marked_favourite_id,
                 marked_favourite_type,
             },
+            details,
             created_at,
             updated_at,
             deleted_at

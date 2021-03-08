@@ -31,10 +31,10 @@ class UserFavouritesController extends Controller {
 
         const
          {
-          type='',id=''
+          type='',id='', details = {}
          } = body;
 
-         const data = {
+         let data = {
            user_category_id:userCategoryId,
            user_category_type:category,
            marked_favourite_id:id,
@@ -43,7 +43,7 @@ class UserFavouritesController extends Controller {
 
 
         const existing = await UserFavouritesService.findExistingFavourite(data);
-        
+       
         if(existing){
           return this.raiseClientError(
             res,
@@ -53,8 +53,8 @@ class UserFavouritesController extends Controller {
           );
         }
 
+        data = {...data, details}
         const record = await UserFavouritesService.markFavourite(data);
-
 
         let favourites_data = {};
 

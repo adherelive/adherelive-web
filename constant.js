@@ -944,3 +944,583 @@ export const WHEN_TO_TAKE_ABBREVATIONS = {
   TDS: 3,
   SOS: 4
 };
+
+
+export const RADIOLOGY_SUB_TYPES = {
+  CT_SCAN: "CT SCAN",
+  NUCLEAR_MEDICINE: "NUCLEAR MEDICINE",
+  ULTRASOUND: "ULTRASOUND",
+  XRAY: "X-RAY",
+  MRI: "MRI",
+  ECHO_AND_DOPPLER: "ECHO AND DOPPLER",
+  CT_ANGIO: "CT ANGIO"
+}
+
+export const RADIOLOGY_SUB_CATEGORY_DATA = {
+  "1": {name: RADIOLOGY_SUB_TYPES.CT_SCAN, id: 1},
+  "2": {name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE, id: 2},
+  "3": {name: RADIOLOGY_SUB_TYPES.ULTRASOUND, id: 3 },
+  "4": {name: RADIOLOGY_SUB_TYPES.XRAY, id: 4},
+  "5": {name: RADIOLOGY_SUB_TYPES.MRI, id: 5},
+  "6": {name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER, id: 6},
+  "7": {name: RADIOLOGY_SUB_TYPES.CT_ANGIO, id: 7}
+}
+
+export const RADIOLOGY_CATEGORY_DATA = {
+  [RADIOLOGY_SUB_TYPES.CT_SCAN]: {
+    "1": {
+      index: 1,
+      name: "",
+      items:  [
+        "CECT ANY OTHER SPECIFIC REGION",
+        "CECT HEAD",
+        "CECT CHEST",
+        "CECT + NCCT HEAD",
+        "3D RECONSTRUCTION OF SPECIFIC PART/EXTRA REGION",
+        "ADDITIONAL CT SCAN SECTION",
+        "CECT LOWER ABDOMEN",
+        "CECT PNS (CORONAL & AXIAL)",
+        "CECT + HRCT CHEST",
+        "NCCT KUB",
+        "NCCT JOINTS / SPINE (ANY ONE REGION)",
+        "NCCT HEAD",
+        "DENTAL CT",
+        "SIDROSCAN",
+        "NCCT + HRCT CHEST",
+        "NCCT ANY OTHER SPECIFIC REGION",
+        "NCCT CHEST",
+        "HRCT CHEST",
+        "CT UROGRAPHY",
+        "HRCT TEMPORAL BONE",
+        "CT TRIPLE PHASE",
+        "CT THORAX",
+        "CT GUIDED BIOPSY (EXCLUDING HISTOPATH. CHARG.)",
+        "CT ANGIOGRAPHY",
+        "CONTRAST CT SCAN",
+        "CECT WHOLE ABDOMEN",
+        "CECT UPPER ABDOMEN"
+      ]
+    },
+    "2": {
+      index: 2,
+      name: "HEAD",
+      items: [
+        "HEAD (PLAIN)",
+        "HEAD (CONTRAST)",
+        ".+ ANY SCREENING (e.g. PNS)",
+        "HEAD - CV JUNCTION",
+        "HEAD - SELLA TURCICA-AXIAL /or CORONAL (EACH)- PLAIN",
+        "HEAD - SELLA TURCICA-AXIAL /or CORONAL (EACH)- CONTRAST",
+        "HEAD - SELLA TURCICA-AXIAL + CORONAL - PLAIN",
+        "HEAD - SELLA TURCICA-AXIAL+ CORONAL -CONTRAST"
+      ]
+    },
+    "3": {
+      index: 3,
+      name: "EAR",
+      items: [
+        "EAR + HRCT - PLAIN",
+        "EAR + HRCT - CONTRAST"
+      ]
+    },
+    "4": {
+      index: 4,
+      name: "ORBIT",
+      items: [
+        "ORBIT AXIAL & CORONAL (CONTRAST)"
+      ]
+    },
+    "5": {
+      index: 5,
+      name: "FACE",
+      items: [
+        "FACE (PLAIN)",
+        "FACE (CONTRAST)",
+        "PNS - AXIAL /or/ CORONAL (EACH) - PLAIN",
+        "PNS - AXIAL /or/ CORONAL (EACH) - CONTRAST",
+        "PNS - AXIAL & CORONAL - PLAIN",
+        "PNS - AXIAL & CORONAL - CONTRAST"
+      ]
+    },
+    "6": {
+      index: 6,
+      name: "DENTAL",
+      items: [
+        "DENTA SCAN (PLAIN)"
+      ]
+    },
+    "7": {
+      index: 7,
+      name: "NECK",
+      items: [
+        "NECK (PLAIN)",
+        "NECK (CONTRAST)",
+        "NECK & UPPER CHEST (PLAIN)",
+        "NECK & UPPER CHEST (CONTRAST)"
+      ]
+    },
+    "8": {
+      index: 8,
+      name: "CHEST",
+      items: [
+        "CHEST - HRCT (PLAIN)",
+        "CHEST - THORAX (CONTRAST)",
+        "CHEST WITH PULMONARY ANGIO (PLAIN)",
+        "CHEST WITH PULMONARY ANGIO (CONTRAST)",
+        "CHEST - LOWER CHEST & UPPER ABDOMEN (PLAIN)",
+        "CHEST - LOWER CHEST & UPPER ABDOMEN (CONTRAST)",
+        "CHEST + PULMONARY ANGIO + HRCT CHEST (PLAIN)",
+        "CHEST + PULMONARY ANGIO + HRCT CHEST (CONTRAST)",
+        "CHEST - HRCT + CECT + BRONCHOSCOPY (PLAIN)",
+        "CHEST - HRCT + CECT + BRONCHOSCOPY (CONTRAST)"
+      ]
+    },
+    "9": {
+      index: 9,
+      name: "SPINE",
+      items: [
+        "SPINE - CERVICAL (CONTRAST)",
+        "SPINE - DORSAL (CONTRAST)",
+        "SPINE - DORSO LUMBAR (PLAIN)",
+        "SPINE - DORSO LUMBAR (CONTRAST)",
+        "SPINE - LUMBO SACRAL (LS) - CONTRAST",
+        "SPINE - SACROILIAC JOINTS"
+      ]
+    },
+    "10": {
+      index: 10,
+      name: "ABDOMEN",
+      items: [
+        "ABDOMEN - UPPER (CONTRAST)",
+        "ABDOMEN - LOWER (CONTRAST)",
+        "ABDOMEN - WHOLE ABDOMEN (CONTRAST)",
+        "ABDOMEN - WHOLE ABDOMEN WITH UROGRAPHY",
+        "ABDOMEN - WHOLE ABDOMEN WITH RENAL ANGIO (CONTRAST)",
+        "ABDOMEN - WHOLE ABDOMEN WITH ABDOMINAL ANGIOGRAPHY (CONTRAST)",
+        "ABDOMEN - UPPER ABDOMEN WITH BI- PHASIC/TRIPHASIC LIVER (CONTRAST",
+        "ABDOMEN - WHOLE ABDOMEN WITH BI-PHASIC/ TRIPHASIC LIVER (CONTRAST)",
+        "ABDOMEN - WHOLE ABDOMEN WITH ABDOMINAL ANGIO (CONTRAST)"
+      ]
+    },
+    "11": {
+      index: 11,
+      name: "EXTREMITIES",
+      items: [
+        "EXTREMITIES AND JOINTS (PLAIN)",
+        "EXTREMITIES AND JOINTS (CONTRAST)",
+        "EXTREMITIES - MUSCULOSKELETAL (PER REGION) - PLAIN",
+        "EXTREMITIES - MUSCULOSKELETAL (PER REGION) - CONTRAST",
+        "CT BONY PART WITH 3-D RECONSTRUCTIONS"
+      ]
+    }
+  },
+  [RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE]: {
+    "1": {
+      index: 1,
+      name: "",
+      items: [
+        "SESTA MIBI / Thallium Tumor",
+        "SPECT ECD Brain Scan",
+        "SPECT HMPAO Brain Scan",
+        "SPECT Stress Thallium",
+        "Stress Renal Testing",
+        "Strontium Therapy-89 (4mci)",
+        "Testicular Perfusion Scan",
+        "Hepatobilliary Scan (HIDA)",
+        "Iodine Therapy-131 (5mci)",
+        "Lung Perfusion Scan",
+        "Lung Ventilation Scan",
+        "GI Bleeding Detection",
+        "Gated SPECT",
+        "GHA Brain Scan",
+        "Phosphorous Therapy-32(10mci)",
+        "Mackels Diverticulum Scan",
+        "Lymphoscintigraphy",
+        "Gastro Oesophagial Reflux",
+        "Gastric Emptying Time",
+        "SPECT Thallium Scan With Dobutamine",
+        "DVT (Venography)",
+        "Dobutamine MUGA",
+        "Captopril Renal Scan",
+        "Liver Scan And Hepatic Blood Flow",
+        "VQ Scan",
+        "Thyroid Scan",
+        "Bone Ciprofloxacin Scan",
+        "Baseline & Captopril Renal Scan",
+        "I-131 MIBG Scan",
+        "Mammoscitigraphy",
+        "Parathyroid Scan",
+        "Renal DMSA, Renal Scan",
+        "Cysternography",
+        "Cardiac Resting MUGA",
+        "Bone Marrow Scan",
+        "Whole Body SESTA MIBI Scan",
+        "EC Renal Scan",
+        "Vesico-Ureteric Reflux/DRCG",
+        "Renal DTPA Renal Scan/GFR",
+        "Bone Scan SPECT",
+        "Whole Body Bone Scan",
+        "Samarium Therapy",
+        "Salivary Gland Scan"
+      ]
+    },
+  },
+  [RADIOLOGY_SUB_TYPES.ULTRASOUND]: {
+    "1": {
+      index: 1,
+      name: "",
+      items: [
+        "BETA SCAN/ U/S ORBITAL",
+        "U/S WHOLE ABDOMEN (Abd + Pelvis)",
+        "U/S PELVIS",
+        "U/S ABDOMEN",
+        "U/S BREAST",
+        "U/S FOLLICULAR STUDY tvs 5",
+        "U/S FOLLICULAR STUDY (SINGLE DAY) tvs",
+        "U/S SCROTUM",
+        "U/S SOFT TISSUE",
+        "U/S THYROID",
+        "U/S TRUS",
+        "U/S CHEST",
+        "FNAC-USG GUIDED",
+        "ABSCESS DRAINAGE - USG GUIDED",
+        "USG TVS",
+        "USG ABDOMEN + TVS",
+        "U/S OTHERS (Small Parts, Superficial)",
+        "U/S FOLLICULAR STUDY (SINGLE DAY)"
+      ]
+    },
+    "2": {
+      index: 2,
+      name: "OBSTETRIC ULTRASOUND",
+      items: [
+        "3D / 4D ULTRASOUND",
+        "3D / 4D ULTRASOUND - TWINS",
+        "FETAL COLOUR DOPPLER/ DOPPLER FOR PREGNANCY",
+        "FETAL COLOUR DOPPLER/ DOPPLER FOR PREGNANCY - TWINS",
+        "LEVEL II USG FOR FETAL WELLBEING",
+        "U/S OBSTETRIC TVS STUDY",
+        "U/S OBSTETRIC WITH WHOLE ABDOMEN",
+        "USG BIOPHYSICAL PROFILE",
+        "USG TWINS",
+        "ANOMALY SCAN",
+        "USG FOLLICULAR MONITORING ONE CYCLE(TVS 5)",
+        "USG LEVEL I FOETAL WELL BEING",
+        "USG LEVEL II DETAILED SCAN",
+        "USG LOWER ABDOMEN WITH FILM",
+        "USG LOWER ABDOMEN WITHOUT FILM/SCREENING ONLY",
+        "USG WHOLE ABDOMEN WITHOUT FILM/SCREENING ONLY",
+        "USG PROCEDURE/PIGTAIL/BIOPSY",
+        "USG TRUS GUIDED BIOPSY",
+        "USG TRANS CRANIAL SONOGRAPHY",
+        "USG TRANSRECTAL SONOGRAPHY (TRUS)",
+        "USG CONFIRMATION OF PREGNANCY",
+        "USG COLOUR DOPPLER OBSTETRICS",
+        "USG ANY SINGLE SYSTEM WITHOUT FILM/SCREENING ONLY",
+        "FIBROSCAN",
+        "USG ANY SINGLE SYSTEM WITH FILM",
+        "USG (B-SCAN)",
+        "COLOUR DOPPLER (ARTERIAL OR VENOUS - ANY ONE)",
+        "USG TRANSVAGINAL SONOGRAPHY (TVS)",
+        "USG WHOLE ABDOMEN WITH FILM",
+        "USG GUIDED FNAC",
+        "USG HRS ALL PARTS"
+      ]
+    },
+  },
+  [RADIOLOGY_SUB_TYPES.XRAY]: {
+    "1": {
+      index: 1,
+      name: "X RAY (DIGITAL)",
+      items: [
+        "XRAY BARIUM ENEMA",
+        "XRAY BARIUM MEAL",
+        "XRAY BARIUM MEAL FOLLOW THRU."
+      ]
+    },
+    "2": {
+      index: 2,
+      name: "",
+      items: [
+        "XRAY BARIUM SWALLOW",
+        "XRAY CERVICAL SPINE AP/ LATERAL VIEWS",
+        "XRAY CERVICAL SPINE AP VIEW",
+        "XRAY CERVICAL SPINE LATERAL VIEW",
+        "XRAY CERVICAL SPINE OBLIQUE VIEW",
+        "XRAY DORSAL SPINE AP/ LATERAL VIEWS",
+        "XRAY DORSAL SPINE OBLIQUE VIEW",
+        "XRAY DORSAL SPINE AP VIEW",
+        "XRAY DORSAL SPINE LATERAL VIEW",
+        "XRAY LS SPINE LATERAL VIEW",
+        "XRAY L.S SPINE AP/ LATERAL VIEWS",
+        "XRAY LUMBAR SPINE AP VIEW",
+        "XRAY LUMBAR SPINE OBLIQUE VIEW",
+        "XRAY CHEST P.A",
+        "XRAY CHEST LATERAL VIEW",
+        "XRAY CHEST AP VIEW",
+        "XRAY RIBS - AP VIEW",
+        "XRAY CHEST DECUBITUS VIEW",
+        "XRAY FISTULOGRAM / SINOGRAM",
+        "XRAY H S G",
+        "XRAY I V P",
+        "XRAY T TUBE CHOLANGIOGRAM",
+        "XRAY MCU",
+        "XRAY RGU",
+        "MCU + RGU",
+        "XRAY KUB",
+        "XRAY ABDOMEN ERECT VIEW",
+        "XRAY ANKLE - AP & LATERAL VIEWS",
+        "XRAY ANKLE - AP VIEW",
+        "XRAY ANKLE - LATERAL VIEW",
+        "XRAY SHOULDER - AP & LATERAL VIEWS",
+        "XRAY SHOULDER - AP VIEW",
+        "XRAY SHOULDER - LATERAL VIEW",
+        "XRAY WHOLE SPINE",
+        "XRAY TM JOINTS - RIGHT OBLIQUE VIEW",
+        "XRAY TM JOINTS - LEFT OBLIQUE VIEW"
+      ]
+    },
+    "3": {
+      index: 3,
+      name: "",
+      items: [
+        "XRAY SACROILIAC JOINTS - AP VIEW",
+        "XRAY SACROILIAC JOINTS - RIGHT OBLIQUE VIEW",
+        "XRAY SACROILIAC JOINTS - LEFT OBLIQUE VIEW",
+        "XRAY WRIST JOINT AP & LATERAL VIEWS",
+        "XRAY WRIST JOINT - AP VIEW",
+        "XRAY WRIST JOINT - LATERAL VIEW",
+        "XRAY PELVIS - AP & LATERAL VIEWS",
+        "XRAY PELVIS AP VIEW",
+        "XRAY PELVIS LATERAL VIEW",
+        "XRAY PNS-WATER'S VIEW/CALDWELL'S VIEW",
+        "XRAY NASAL BONE LATERAL VIEW",
+        "XRAY SKULL AP & LATERAL VIEWS",
+        "XRAY SKULL AP VIEW",
+        "XRAY SKULL LATERAL VIEW",
+        "XRAY SACROCOCCYX AP & LATERAL VIEWS",
+        "XRAY SACROCOCCYX AP VIEW",
+        "XRAY SACROCOCCYX LATERAL VIEW",
+        "XRAY ARM/ FOREARM - AP & LATERAL VIEWS",
+        "XRAY ARM/ FOREARM - AP VIEW",
+        "XRAY ARM/ FOREARM - LATERAL VIEW",
+        "XRAY ELBOW - AP & LATERAL VIEWS",
+        "XRAY ELBOW AP VIEW",
+        "XRAY ELBOW LATERAL VIEW",
+        "XRAY HAND - AP & LATERAL VIEWS",
+        "XRAY HAND - AP VIEW",
+        "XRAY HAND - LATERAL VIEW",
+        "XRAY BOTH HIP JOINT - AP VIEW",
+        "XRAY HIP JOINT - LATERAL VIEW",
+        "XRAY HIP JOINT - OBLIQUE VIEW",
+        "XRAY HIP - AP VIEW",
+        "XRAY HIP - LATERAL VIEW",
+        "XRAY HIP - OBLIQUE VIEW",
+        "XRAY THIGH/ LEG - AP & LATERAL VIEWS",
+        "XRAY THIGH/ LEG - AP VIEW",
+        "XRAY THIGH/ LEG - LATERAL VIEW",
+        "XRAY KNEE JOINT AP & LATERAL VIEWS",
+        "XRAY KNEE JOINT AP VIEW"
+      ]
+    },
+    "4": {
+      index: 4,
+      name: "",
+      items: [
+        "XRAY KNEE JOINT LATERAL VIEW",
+        "XRAY BOTH KNEES SKYLINE VIEW",
+        "XRAY FOOT AP & LATERAL VIEWS",
+        "XRAY FOOT AP VIEW",
+        "XRAY FOOT LATERAL VIEW",
+        "XRAY MASTOIDS (BOTH) SHULLER'S VIEW",
+        "XRAY STYLOID PROCESS"
+      ]
+    },
+    "5": {
+      index: 5,
+      name: "MAMMOGRAPHY",
+      items: [
+        "MAMMOGRAM (BOTH BREASTS )",
+        "MAMMOGRRAM (ONE BREAST)"
+      ]
+    },
+    "6": {
+      index: 6,
+      name: "OPG",
+      items: [
+        "ORTHO PANTOMOGRAPH",
+        "CEPHALOGRAM",
+        "TEMPORO MANDIBULAR JOINT",
+        "SUBMENTOVERTEX",
+        "REVERSE TOWNE'S VIEW",
+        "OBLIQUE LATERAL - BODY"
+      ]
+    },
+    "7": {
+      index: 7,
+      name: "DEXA-BONE DENSITOMETRY",
+      items: [
+        "DEXA - TWO SITES",
+        "DEXA - THREE SITES",
+        "WHOLE BODY DEXA including BODY FAT ANALYSIS"
+      ]
+    },
+  },
+  [RADIOLOGY_SUB_TYPES.MRI]: {
+    "1": {
+      index: 1,
+      name: "",
+      items: [
+        "MRI BRAIN PLAIN",
+        "MRI SCREENING",
+        "MRI ANGIOGRAPHY (MRA)",
+        "MRI ORBITS",
+        "MRI CP & IAM",
+        "MRI - NECK",
+        "MRI + MRA",
+        "MR VENOGRAPHY",
+        "MRI + MR VENOGRAPHY",
+        "MRI PITUITARY GLAND"
+      ]
+    },
+    "2": {
+      index: 2,
+      name: "",
+      items: [
+        "MRI CERVICAL SPINE",
+        "MRI DORSAL SPINE",
+        "MRI LUMBOSACRAL SPINE",
+        "MRI CERVICODORSAL SPINE",
+        "MRI DORSO LUMBOSACRAL SPINE",
+        "MRI WHOLE SPINE",
+        "MRI CHEST",
+        "MRI UPPER ABDOMEN",
+        "MRI LOWER ABDOMEN",
+        "MRI WHOLE ABDOMEN",
+        "MRCP",
+        "MRI T.M. JOINT",
+        "MRI WRIST JOINT",
+        "MRI KNEE JOINT",
+        "MRI SHOULDER JOINT",
+        "MRI HIP JOINT",
+        "MRI FOOT",
+        "MRI LEG",
+        "MRI THIGH",
+        "MRI ARM",
+        "MRI FOREARM",
+        "MRI ORBIT",
+        "MRI NECK",
+        "MRI PELVIS",
+        "MRI TEMPORAL BONE (EAR)",
+        "MRI ANESTHESIA/ SEDATION",
+        "MRI WHOLE SPINE SCREENING",
+        "MRI SI JOINT",
+        "MRI BRAIN + MRA + MRV",
+        "MR PERFUSION",
+        "MRCP WITH CONTRAST (MAGNETIC RESONANCE CHOLANGIO/PANCREATA GRAPHY",
+        "MRCP WITHOUT CONTRAST (MAGNETIC RESONANCE CHOLANGIO/PANCREATA GRAPHY",
+        "MRI BRAIN / NECK / MRS",
+        "MRI BRAIN + MRA + MRV WITH CONTRAST",
+        "MRI FOR ONE REGION ONLY",
+        "MRI HEAD CONTRAST",
+        "MRI ORBIT",
+        "MRI SCREENING(SINGLE PART)",
+        "MRI WHOLE ABDOMEN",
+        "MRI WHOLE SPINE SCREENING (CERVICAL, DORSAL, LUMBAR)",
+        "MRV",
+        "MRI CONTRAST MEDIUM / DYE",
+        "HEAD (STROKE PROTOCOL WITH DIFFUSION)",
+        "HEAD + MRA",
+        "MR ANGIOGRAPHY (ANY ONE EXTREMITY, REGION)",
+        "HEAD + MRA + NECK",
+        "HEAD + MRS",
+        "HEAD + MRV",
+        "HEAD EPILEPSY"
+      ]
+    },
+  },
+  [RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER]: {
+    "1": {
+      index: 1,
+      name: "",
+      items: [
+        "ECHOCARDIOGRAPHY - COLOUR DOPPLER",
+        "PENILE DOPPLER",
+        "COLOUR DOPPLER (ARTERY) - ONE LEG",
+        "COLOUR DOPPLER (ARTERY) - BOTH LEG",
+        "COLOUR DOPPLER (VENOUS) - ONE LEG",
+        "COLOUR DOPPLER (VENOUS) - BOTH LEG",
+        "COLOUR DOPPLER (ARTERY/VENOUS) - ONE LEG",
+        "COLOUR DOPPLER (ARTERY/VENOUS) - BOTH LEG"
+      ]
+    },
+  },
+  [RADIOLOGY_SUB_TYPES.CT_ANGIO]: {
+    "1": {
+      index: 1,
+      name: "",
+      items: [
+        "ANGIOGRAPHY - CEREBRAL (Brain)/NECK/ PULMONARY/ AORTIC/ ABDOMEN/ RENAL (PLAIN)",
+        "ANGIOGRAPHY - CEREBRAL (Brain)/NECK/ PULMONARY/ AORTIC/ ABDOMEN/ RENAL (CONTRAST)",
+        "ANGIOGRAPHY - ANGIO BRAIN & NECK (PLAIN)",
+        "ANGIOGRAPHY - ANGIO BRAIN & NECK (CONTRAST)",
+        "ANGIOGRAPHY - PERIPHERAL ANGIOGRAPHY (LOWER LIMB)-CONTRAST",
+        "ANGIOGRAPHY - PERIPHERAL ANGIOGRAPHY (UPPER LIMB)-CONTRAST",
+        "ANGIOGRAPHY - RENAL ANGIOGRAPHY + UROGRAPHY (CONTRAST)",
+        "ANGIOGRAPHY - CORONARY"
+      ]
+    },
+  }
+}
+
+export const RADIOLOGY_DATA = {
+  "1": {
+    id: 1,
+    name: RADIOLOGY_SUB_TYPES.CT_SCAN,
+    data : {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.CT_SCAN]
+    }
+  },
+  "2": {
+    id: 2,
+    name: RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE,
+    data : {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.NUCLEAR_MEDICINE]
+    }
+  },
+  "3": {
+    id: 3,
+    name: RADIOLOGY_SUB_TYPES.ULTRASOUND,
+    data : {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.ULTRASOUND]
+    }
+  },
+  "4": {
+    id: 4,
+    name: RADIOLOGY_SUB_TYPES.XRAY,
+    data : {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.XRAY]
+    }
+  },
+  "5": {
+    id: 5,
+    name: RADIOLOGY_SUB_TYPES.MRI,
+    data : {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.MRI]
+    }
+  },
+  "6": {
+    id: 6,
+    name: RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER,
+    data : {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.ECHO_AND_DOPPLER]
+    }
+  },
+  "7": {
+    id: 7,
+    name: RADIOLOGY_SUB_TYPES.CT_ANGIO,
+    data : {
+      ...RADIOLOGY_CATEGORY_DATA[RADIOLOGY_SUB_TYPES.CT_ANGIO]
+    }
+  },
+}

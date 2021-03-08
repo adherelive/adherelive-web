@@ -29,10 +29,10 @@ class UserFavouritesController extends Controller {
 
         const
          {
-          type='',id=''
+          type='',id='', details = {}
          } = body;
 
-         const data = {
+         let data = {
            user_category_id:userCategoryId,
            user_category_type:category,
            marked_favourite_id:id,
@@ -51,6 +51,7 @@ class UserFavouritesController extends Controller {
           );
         }
 
+        data = {...data, details}
         const record = await UserFavouritesService.markFavourite(data);
         Log.debug("23874237904127868452176379012",{record});
 

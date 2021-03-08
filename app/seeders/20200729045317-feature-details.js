@@ -1,6 +1,6 @@
 "use strict";
 
-import { FEATURE_TYPE, REPEAT_INTERVAL } from "../../constant";
+import { FEATURE_TYPE, REPEAT_INTERVAL, RADIOLOGY_SUB_CATEGORY_DATA, RADIOLOGY_DATA } from "../../constant";
 import { TABLE_NAME } from "../models/featureDetails";
 
 module.exports = {
@@ -9,14 +9,18 @@ module.exports = {
       {
         feature_type: FEATURE_TYPE.APPOINTMENT,
         details: JSON.stringify({
+          radiology_type_data: RADIOLOGY_DATA,
           appointment_type: {
             "1": {
+              id: "1",
               title: "Medical Tests"
             },
             "2": {
+              id: "2",
               title: "Consultation"
             },
             "3": {
+              id: "3",
               title: "Radiology"
             }
           },
@@ -44,7 +48,7 @@ module.exports = {
               "HIV -1 & HIV-2"
             ],
             "2": ["At Clinic", "At Home", "Telephone"],
-            "3": ["MRI", "CT Scan", "Ultrasound", "X-Ray"]
+            "3": RADIOLOGY_SUB_CATEGORY_DATA
           },
           providers: {
             "1": {
