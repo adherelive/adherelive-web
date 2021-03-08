@@ -35,6 +35,9 @@ export const db = database => {
         values: USER_FAV_ALL_TYPES,
         required: true,
         allowNull:false
+      },
+      details: {
+        type: DataTypes.JSON
       }
     },
     {
