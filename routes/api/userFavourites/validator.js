@@ -9,8 +9,8 @@ const createFavourite = Joi.object().keys({
     .label("Please enter valid favourite type"),
   id: Joi.number()
     .required()
-    .label("Please enter valid favourite Id")
- 
+    .label("Please enter valid favourite Id"),
+  details: Joi.object().optional()
 });
 
 const getFavourites = Joi.object().keys({
