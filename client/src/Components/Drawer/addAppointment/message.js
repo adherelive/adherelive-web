@@ -394,6 +394,16 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Write reason for cancelling this appointment"
   },
+  radiology: {
+    id: "cancel.modal.radiology",
+    description: "",
+    defaultMessage: "Radiology"
+  },
+  radiologyTypeDesc: {
+    id: "cancel.modal.radiologyTypeDesc",
+    description: "",
+    defaultMessage: "Radiology Type Description"
+  },
 });
 
 export default message;

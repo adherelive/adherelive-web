@@ -22,7 +22,7 @@ import message from "antd/es/message";
 import { visible } from "chalk";
 
 const { Item: FormItem } = Form;
-const { Option } = Select;
+const { Option ,OptGroup} = Select;
 
 const PATIENT = "patient";
 const DATE = "date";
@@ -35,6 +35,7 @@ const APPOINTMENT_TYPE = "type";
 const APPOINTMENT_TYPE_DESCRIPTION = "type_description";
 const PROVIDER_ID = "provider_id";
 const REASON = "reason";
+const RADIOLOGY_TYPE='radiology_type';
 
 const FIELDS = [
   PATIENT,
@@ -45,7 +46,8 @@ const FIELDS = [
   DESCRIPTION,
   APPOINTMENT_TYPE,
   APPOINTMENT_TYPE_DESCRIPTION,
-  PROVIDER_ID
+  PROVIDER_ID,
+  RADIOLOGY_TYPE
 ];
 
 class AddAppointmentForm extends Component {
@@ -56,7 +58,8 @@ class AddAppointmentForm extends Component {
       fetchingTypes: false,
       typeDescription: [],
       timeModalVisible: false,
-      descDropDownOpen:false
+      descDropDownOpen:false,
+      radiologyTypeSelected:null
     };
   }
 
@@ -320,6 +323,10 @@ class AddAppointmentForm extends Component {
     } = this.props;
     let descArray = type_description[value] ? type_description[value] : [];
 
+    if(value !== RADIOLOGY){    
+      this.setState({radiologyTypeSelected:null})
+    }
+
     this.setState({ typeDescription: descArray });
   };
 
@@ -339,6 +346,12 @@ class AddAppointmentForm extends Component {
     return newTypes;
   };
 
+  setRadiologyTypeSelected = (id)=>() =>{
+    const IdStr = id.toString();
+    this.setState({radiologyTypeSelected:IdStr});
+    const {static_templates:{appointments:{radiology_type_data = {}}={}}={}} = this.props;
+    const temp = radiology_type_data[IdStr];
+  }
   getTypeDescriptionOption = () => {
     let { typeDescription = [] ,descDropDownOpen=false} = this.state;
     const {favourite_medical_test_ids = []}=this.props;
@@ -356,6 +369,7 @@ class AddAppointmentForm extends Component {
       for (let each in typeDescription) {
         let desc  = typeDescription[each];
 
+        console.log("6325462798487923402 ^^^^^^^ ",{desc});
 
         if(favourite_medical_test_ids.includes(each.toString())){
           favTypes.push(
@@ -444,11 +458,34 @@ class AddAppointmentForm extends Component {
 
        
       }
-    else{
-
-      for (let desc of typeDescription) {
+    else if(typeValue === RADIOLOGY){
+      for (let each in  typeDescription) {
+        // let desc = typeDescription[each];
+        const {id = null , name : desc =''} = typeDescription[each];
+        console.log("6325462798487923402",{desc,typeDescription});
         newTypes.push(
-          <Option key={desc} value={desc}>
+          <Option key={desc} value={desc}
+            onClick={this.setRadiologyTypeSelected(id)}
+          >
+            {desc}
+          </Option>
+        );
+      }
+      return newTypes;
+
+    
+    }  
+    else{  
+      //TODO-j
+
+      for (let each in  typeDescription) {
+        // let desc = typeDescription[each];
+        const {id = null , name : desc =''} = typeDescription[each];
+        console.log("6325462798487923402",{desc,typeDescription});
+        newTypes.push(
+          <Option key={desc} value={desc}
+            onClick={this.setRadiologyTypeSelected(id)}
+          >
             {desc}
           </Option>
         );
@@ -456,6 +493,7 @@ class AddAppointmentForm extends Component {
       return newTypes;
 
     }
+     
   };
 
   handleProviderSearch = data => {
@@ -611,6 +649,53 @@ class AddAppointmentForm extends Component {
     }
 }
 
+  getStringFormat = (str) => {
+    return str ? `${str.charAt(0).toUpperCase()}${str.substring(1, str.length)}` : "";
+  };
+
+  getOptions = (items, category) => {
+    const {getStringFormat} = this;
+
+    return items.map((item) => {
+      console.log("49865732849089230423 ##@@#@#@#@#@@@@@@@@@@@@@@" ,{item,items,category});
+
+        return (
+            <Option key={`${category}:${item}-radiology-type`} value={item} title={category}>{item}</Option>
+        );
+    });
+  };
+
+ 
+
+  getRadiologyTypeDescriptionOption = () => {
+    const {radiologyTypeSelected=null}=this.state;
+    const {static_templates:{appointments:{radiology_type_data = {}}={}}={}} = this.props;
+    const radiology_type = radiology_type_data[radiologyTypeSelected];
+
+    const {getStringFormat}=this;
+    const {data={},name=''} = radiology_type || {};
+
+      // return (
+      //   <Option
+      //   key={"KEY"} val={"VAL"}>
+      //     VALLLL
+      //   </Option>
+      // )
+
+    return Object.values(data).map(value => {
+      const {items, name} = value || {};
+      // console.log("49865732849089230423",{value,items,name,radiology_type_data,radiologyTypeSelected,radiology_type});
+
+
+      return (
+        <OptGroup label={getStringFormat(name)}>
+              {this.getOptions(items, name)}
+        </OptGroup>
+      );
+   });
+
+  };
+
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue
@@ -618,7 +703,8 @@ class AddAppointmentForm extends Component {
        favourite_medical_test_ids,
        favourites_data
     } = this.props;
-    // console.log("326546327468234628374931712 >>>>>>>>>>>>>>>>>>",{favourite_medical_test_ids , favourites_data});
+    const {radiologyTypeSelected = null} = this.state;
+    console.log("6325462798487923402 >>>>>>>>>>>>>>>>>>",{radiologyTypeSelected});
     const { timeModalVisible } = this.state;
     const {
       formatMessage,
@@ -639,6 +725,9 @@ class AddAppointmentForm extends Component {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
+
+    const typeValue = getFieldValue(APPOINTMENT_TYPE);
+
 
     return (
         <Form className="fw700 wp100 pb30 Form">
@@ -704,7 +793,11 @@ class AddAppointmentForm extends Component {
               className="form-label"
               // title={formatMessage(messages.appointmentTypeDescription)}
             >
-              {formatMessage(messages.appointmentTypeDescription)}
+              {typeValue === RADIOLOGY
+              ?
+              `${formatMessage(messages.radiology)} ${formatMessage(messages.appointmentTypeDescription)}`
+              :
+              formatMessage(messages.appointmentTypeDescription)}
             </label>
 
             <div className="star-red">*</div>
@@ -737,6 +830,54 @@ class AddAppointmentForm extends Component {
               </Select>
             )}
           </FormItem>
+
+          {typeValue === RADIOLOGY
+          ?
+          (
+            <div>
+              <div className="flex mt24 direction-row flex-grow-1">
+            <label
+              htmlFor="type description"
+              className="form-label"
+            >
+              
+              {formatMessage(messages.radiologyTypeDesc)} 
+            
+            </label>
+
+            <div className="star-red">*</div>
+          </div>
+          <FormItem
+          >
+            {getFieldDecorator(
+              RADIOLOGY_TYPE,
+              {}
+            )(
+              <Select
+                disabled={radiologyTypeSelected === null}
+                notFoundContent={"No match found"}
+                className="drawer-select"
+                placeholder="Choose Radiology Type Description"
+                showSearch
+                defaultActiveFirstOption={true}
+                autoComplete="off"
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {this.getRadiologyTypeDescriptionOption()}
+              </Select>
+            )}
+          </FormItem>
+            </div>
+          )
+          :
+            null
+        }
+         
 
           <div className="flex mt24 direction-row flex-grow-1">
             <label
@@ -776,6 +917,7 @@ class AddAppointmentForm extends Component {
               </Select>
             )}
           </FormItem>
+
 
           <FormItem className="flex-1 wp100 critical-checkbox">
             {getFieldDecorator(
