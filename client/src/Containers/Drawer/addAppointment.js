@@ -5,11 +5,18 @@ import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { getMedications } from "../../modules/medications";
 import { getAppointments, addAppointment, addCarePlanAppointment } from "../../modules/appointments";
+import {
+    markFavourite , 
+    getFavourites , 
+    removeFavourite} from "../../modules/favouritesData/index";
 
+    
 const mapStateToProps = state => {
     const {
         drawer: { visible, loading, data: { type, payload = {} } = {} },
-        patients, treatments, care_plans, static_templates, providers
+        patients, treatments, care_plans, static_templates, providers,
+        favourites_data={},
+        pages:{favourite_medical_test_ids = []} ={}
     } = state
     return {
         visible: visible && type === DRAWER.ADD_APPOINTMENT,
@@ -19,7 +26,9 @@ const mapStateToProps = state => {
         patients,
         care_plans,
         static_templates,
-        providers
+        providers,
+        favourites_data,
+        favourite_medical_test_ids
     };
 };
 
@@ -28,9 +37,11 @@ const mapDispatchToProps = dispatch => {
         close: () => dispatch(close()),
         addAppointment: data => dispatch(addAppointment(data)),
         addCarePlanAppointment: (data, carePlanId) => dispatch(addCarePlanAppointment(data, carePlanId)),
-
         getMedications: (id) => dispatch(getMedications(id)),
         getAppointments: (id) => dispatch(getAppointments(id)),
+        markFavourite : (payload) => dispatch(markFavourite(payload)),
+        getFavourites : ({type}) => dispatch(getFavourites({type})),
+        removeFavourite: ({typeId,type}) => dispatch(removeFavourite({typeId,type}))
     };
 };
 

@@ -96,6 +96,8 @@ export const removeFavourite = ({typeId,type}) => {
 
                 if(type === "medicine"){
                     data["removed_medicine_id"] = typeId.toString();
+                }else if (type === "medical_tests"){
+                    data["removed_medical_test_id"] = typeId.toString();
                 }
                 dispatch({
                     type: REMOVE_FAVOURITE_COMPLETED,
