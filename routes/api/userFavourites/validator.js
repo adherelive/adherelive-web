@@ -1,10 +1,10 @@
 import Joi from "@hapi/joi";
 import { validationError } from "../helper";
-import { FAVOURITE_TYPE } from "../../../constant";
+import { FAVOURITE_TYPE, USER_FAV_ALL_TYPES } from "../../../constant";
 
 const createFavourite = Joi.object().keys({
   type: Joi.string()
-    .valid(FAVOURITE_TYPE.MEDICINE)
+    .valid(...USER_FAV_ALL_TYPES)
     .required()
     .label("Please enter valid favourite type"),
   id: Joi.number()
@@ -15,7 +15,7 @@ const createFavourite = Joi.object().keys({
 
 const getFavourites = Joi.object().keys({
     type: Joi.string()
-      .valid(FAVOURITE_TYPE.MEDICINE)
+      .valid(...USER_FAV_ALL_TYPES)
       .required()
       .label("Please enter valid favourite type")
    

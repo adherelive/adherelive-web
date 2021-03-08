@@ -44,14 +44,13 @@ class UserFavouritesWrapper extends BaseUserFavourites {
         const {id} = _data || {};
         
         let marked_favourites_data = {};
-        let basic_info ={};
+        const basic_info = await getBasicInfo();
 
         switch (getMarkedFavouriteType()) {
             case FAVOURITE_TYPE.MEDICINE:
                 const id =  getMarkedFavouriteId();
                 const medicine = await MedicineWrapper(null, id );
                 const ref_info = await  medicine.getAllInfo();
-                basic_info = await getBasicInfo();
                 const medicineId = await medicine.getMedicineId();
                 marked_favourites_data[medicineId] = {...ref_info};
 
