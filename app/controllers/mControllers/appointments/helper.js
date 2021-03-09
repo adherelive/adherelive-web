@@ -1,17 +1,13 @@
-import Logger from "../../../libs/log";
-import {FAVOURITE_TYPE, MEDICAL_TEST} from "../../../constant";
+import Logger from "../../../../libs/log";
+import {FAVOURITE_TYPE, MEDICAL_TEST} from "../../../../constant";
 
 // SERVICES
-import FavoriteService from "../../services/userFavourites/userFavourites.service";
+import FavoriteService from "../../../services/userFavourites/userFavourites.service";
 
-const Log = new Logger("APPOINTMENT > HELPER");
+const Log = new Logger("MOBILE > APPOINTMENT > HELPER");
 
 export const getFavoriteInDetails = async (userTypeData, typeDescription, type) => {
     try {
-
-        // get favorites for "1" : medical_tests & "3" : radiology
-
-        // MEDICAL_TESTS
         let response = {};
 
         switch(type) {
@@ -28,7 +24,7 @@ export const getFavoriteInDetails = async (userTypeData, typeDescription, type) 
         return response
 
     } catch(error) {
-        Log.debug("getFavouriteInDetails error", error);
+        Log.debug("mgetFavouriteInDetails error", error);
         return null;
     }
 };
@@ -67,7 +63,7 @@ const medicalTestFavorites = async (userTypeData, types) => {
         return updatedTypes;
         
     } catch(error) {
-        Log.debug("medicalTestFavorites error", error);
+        Log.debug("m-medicalTestFavorites error", error);
     }
 };
 
@@ -120,6 +116,6 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
         return types;
         
     } catch(error) {
-        Log.debug("medicalTestFavorites error", error);
+        Log.debug("m-radiologyTypeFavorites error", error);
     }
 };

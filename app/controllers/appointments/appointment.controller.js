@@ -12,7 +12,9 @@ import {
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
   S3_DOWNLOAD_FOLDER,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES,
+  FAVOURITE_TYPE,
+  MEDICAL_TEST
 } from "../../../constant";
 import moment from "moment";
 
@@ -707,21 +709,30 @@ class AppointmentController extends Controller {
 
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
-      const {type_description} = appointmentData.getFeatureDetails() || {};
+      let featureDetails = appointmentData.getFeatureDetails();
+
+      const {type_description, radiology_type_data} =  featureDetails || {};
 
       const userTypeData = {
         id: userCategoryId,
         category,
       };
 
-      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description);
+      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
+
+      featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
+
+      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
+
+      featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
+
 
       return raiseSuccess(
         res,
         200,
         {
           static_templates: {
-            appointments: { ...appointmentData.getFeatureDetails() }
+            appointments: { ...featureDetails }
           }
         },
         "Appointment details fetched successfully"
