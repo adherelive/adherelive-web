@@ -1194,7 +1194,6 @@ export const RADIOLOGY_CATEGORY_DATA = {
       index: 2,
       name: "OBSTETRIC ULTRASOUND",
       items: [
-        "3D / 4D ULTRASOUND",
         "3D / 4D ULTRASOUND - TWINS",
         "FETAL COLOUR DOPPLER/ DOPPLER FOR PREGNANCY",
         "FETAL COLOUR DOPPLER/ DOPPLER FOR PREGNANCY - TWINS",
@@ -1231,18 +1230,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
   [RADIOLOGY_SUB_TYPES.XRAY]: {
     "1": {
       index: 1,
-      name: "X RAY (DIGITAL)",
-      items: [
-        "XRAY BARIUM ENEMA",
-        "XRAY BARIUM MEAL",
-        "XRAY BARIUM MEAL FOLLOW THRU."
-      ]
-    },
-    "2": {
-      index: 2,
       name: "",
       items: [
-        "XRAY BARIUM SWALLOW",
         "XRAY CERVICAL SPINE AP/ LATERAL VIEWS",
         "XRAY CERVICAL SPINE AP VIEW",
         "XRAY CERVICAL SPINE LATERAL VIEW",
@@ -1280,8 +1269,8 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY TM JOINTS - LEFT OBLIQUE VIEW"
       ]
     },
-    "3": {
-      index: 3,
+    "2": {
+      index: 2,
       name: "",
       items: [
         "XRAY SACROILIAC JOINTS - AP VIEW",
@@ -1320,11 +1309,12 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY THIGH/ LEG - AP VIEW",
         "XRAY THIGH/ LEG - LATERAL VIEW",
         "XRAY KNEE JOINT AP & LATERAL VIEWS",
-        "XRAY KNEE JOINT AP VIEW"
+        "XRAY KNEE JOINT AP VIEW",
+        "XRAY KNEE JOINT AP & LATERAL VIEWS (ERECT STANDING)"
       ]
     },
-    "4": {
-      index: 4,
+    "3": {
+      index: 3,
       name: "",
       items: [
         "XRAY KNEE JOINT LATERAL VIEW",
@@ -1336,16 +1326,16 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "XRAY STYLOID PROCESS"
       ]
     },
-    "5": {
-      index: 5,
+    "4": {
+      index: 4,
       name: "MAMMOGRAPHY",
       items: [
         "MAMMOGRAM (BOTH BREASTS )",
         "MAMMOGRRAM (ONE BREAST)"
       ]
     },
-    "6": {
-      index: 6,
+    "5": {
+      index: 5,
       name: "OPG",
       items: [
         "ORTHO PANTOMOGRAPH",
@@ -1356,13 +1346,24 @@ export const RADIOLOGY_CATEGORY_DATA = {
         "OBLIQUE LATERAL - BODY"
       ]
     },
-    "7": {
-      index: 7,
+    "6": {
+      index: 6,
       name: "DEXA-BONE DENSITOMETRY",
       items: [
         "DEXA - TWO SITES",
         "DEXA - THREE SITES",
         "WHOLE BODY DEXA including BODY FAT ANALYSIS"
+      ]
+    },
+    "7": {
+      index: 7,
+      name: "",
+      items: [
+        "X RAY DIGITAL- (CONTRAST)",
+        "XRAY BARIUM ENEMA",
+        "XRAY BARIUM MEAL",
+        "XRAY BARIUM MEAL FOLLOW THRU.",
+        "XRAY BARIUM SWALLOW",
       ]
     },
   },
