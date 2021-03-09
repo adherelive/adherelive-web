@@ -7,7 +7,8 @@ import {
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
   S3_DOWNLOAD_FOLDER,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES,
+  RADIOLOGY
 } from "../../../../constant";
 import moment from "moment";
 
@@ -68,7 +69,8 @@ class MobileAppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
-        critical = false
+        critical = false,
+        radiology_type=""
       } = body;
       const {
         userId,
@@ -124,7 +126,8 @@ class MobileAppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical
+          critical,
+          [type === RADIOLOGY && "radiology_type" ]:type === RADIOLOGY && radiology_type 
         }
       };
 
@@ -275,7 +278,8 @@ class MobileAppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
-        critical = false
+        critical = false,
+        radiology_type="",
       } = body;
       const {
         userId,
@@ -356,7 +360,8 @@ class MobileAppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical
+          critical,
+          [type === RADIOLOGY && "radiology_type" ]:type === RADIOLOGY && radiology_type
         }
       };
 

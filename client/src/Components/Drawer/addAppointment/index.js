@@ -68,10 +68,9 @@ class AddAppointment extends Component {
         } = values;
 
 
-        console.log("6325462798487923402 FORMMMMMMMM%%%%%%%%%%%%%%%%%%%%%%",{values});
-        if(type === RADIOLOGY){
-          type_description = radiology_type;
-        }
+        // if(type === RADIOLOGY){
+        //   type_description = radiology_type;
+        // }
 
         let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
 
@@ -123,6 +122,10 @@ class AddAppointment extends Component {
             critical,
             treatment_id: treatment,
           };
+
+          if(type === RADIOLOGY){
+            data["radiology_type"] = radiology_type;
+          }
 
         if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
           message.error('Please fill all mandatory details.')

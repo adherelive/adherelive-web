@@ -42,16 +42,16 @@ class UserFavouritesController extends Controller {
          }
 
 
-        const existing = await UserFavouritesService.findExistingFavourite(data);
+        // const existing = await UserFavouritesService.findExistingFavourite(data);
        
-        if(existing){
-          return this.raiseClientError(
-            res,
-            422,
-            {},
-            `Already Marked Favourite for user`
-          );
-        }
+        // if(existing){
+        //   return this.raiseClientError(
+        //     res,
+        //     422,
+        //     {},
+        //     `Already Marked Favourite for user`
+        //   );
+        // }
 
         data = {...data, details}
         const record = await UserFavouritesService.markFavourite(data);

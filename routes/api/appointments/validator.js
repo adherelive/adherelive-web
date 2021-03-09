@@ -33,6 +33,7 @@ const appointmentFormSchema = Joi.object().keys({
   // description: Joi.string().optional(),
   treatment_id: Joi.number().optional().allow(""),
   // TODO: rr_rule here?
+  radiology_type:Joi.string().optional().allow(""),
 });
 
 const validateStartTime = (startTime) => {

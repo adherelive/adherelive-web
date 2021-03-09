@@ -19,7 +19,6 @@ import StarOutlined from "@ant-design/icons/StarOutlined";
 import StarFilled from "@ant-design/icons/StarFilled";
 import Tooltip from "antd/es/tooltip";
 import message from "antd/es/message";
-import { visible } from "chalk";
 
 const { Item: FormItem } = Form;
 const { Option ,OptGroup} = Select;
@@ -59,6 +58,7 @@ class AddAppointmentForm extends Component {
       typeDescription: [],
       timeModalVisible: false,
       descDropDownOpen:false,
+      radiologyDropDownVisible:false,
       radiologyTypeSelected:null
     };
   }
@@ -66,6 +66,7 @@ class AddAppointmentForm extends Component {
   componentDidMount() {
     this.scrollToTop();
     this.getMedicalTestFavourites();
+    this.getRadiologyFavourites();
     
   }
 
@@ -79,7 +80,21 @@ class AddAppointmentForm extends Component {
       }
 
     }catch(error){
-      console.log("errrrorrrr ===>",error);
+      console.log("MedicalTests Get errrrorrrr ===>",error);
+    }
+  }
+
+  getRadiologyFavourites = async () => {
+    try{
+      const {getFavourites}=this.props;
+      const RadiologyResponse = await getFavourites({type: FAVOURITE_TYPE.RADIOLOGY});
+      const {status,statusCode,payload:{data={},message:resp_msg=''} = {}} = RadiologyResponse || {};
+      if(!status){
+        message.error(resp_msg);
+      }
+
+    }catch(error){
+      console.log("RadiologyResponse Get errrrorrrr ===>",error);
     }
   }
 
@@ -124,11 +139,7 @@ class AddAppointmentForm extends Component {
     } = this.props;
     const { patients: { basic_info: { first_name, last_name } = {} } = {} } =
       patients[patient_id] || {};
-    // if (first_name && last_name) {
     return `${patient_id}`;
-    // } else {
-    // return null;
-    // }
   };
 
   getPatientOptions = () => {
@@ -587,21 +598,79 @@ class AddAppointmentForm extends Component {
     }
 }
 
-
+//======================================================================================>>>>
 
   getOptions = (items, each) => {
-    const {radiologyTypeSelected =null}=this.state;
+    const {radiologyTypeSelected =null , radiologyDropDownVisible=false}=this.state;
+    const {favourites_data = {}}=this.props;
+
     let subOptions = [];
     for(let itemId in items){
-      console.log("9862345263987498234 &&&&&&",{radiologyTypeSelected,each,itemId});
+
+      let markedFlag=false;
+      let recordId=null ;
+
+      for(let favDataId in favourites_data){
+        const {basic_info :{marked_favourite_id = null , marked_favourite_type=''}={},
+          details:{
+          sub_category_id=null,
+          selected_radiology_index =null } ={}
+        } = favourites_data[favDataId];
+
+
+        if(marked_favourite_type !== FAVOURITE_TYPE.RADIOLOGY){
+          continue;
+        }else{
+
+          // console.log("9862345263987498234 &&&&&& >>>>>>> ",{marked_favourite_id,radiologyTypeSelected,
+          //   sub_category_id,each,
+          //   selected_radiology_index,itemId});
+
+          if(
+            marked_favourite_id.toString() === radiologyTypeSelected.toString() &&
+            sub_category_id.toString() === each.toString() &&
+            selected_radiology_index.toString() === itemId.toString()
+          ){
+            markedFlag=true;
+            recordId=favDataId;
+          }
+        }
+      }
+
       let item = items[itemId];
       subOptions.push(
-        <Option key={`${each}:${item}-radiology-type`} value={item} title={each}
-          onClick={this.handleAddRadiologyFavourites({
-            id:radiologyTypeSelected,sub_category_id:each,selected_radiology_index:itemId
-          })}
+        <Option key={`${each}:${item}-radiology-type`} value={item} 
+        className="pointer flex wp100  align-center justify-space-between"
         >
           {item}
+          {
+            radiologyDropDownVisible
+            ?
+            (
+              <Tooltip 
+                placement="topLeft"
+                title={markedFlag ? 'Unmark' : 'Mark favourite'} 
+              >
+    
+          {markedFlag
+              ?  
+                <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
+                  onClick={this.handleremoveRadiologyFavourites(recordId)}
+                /> 
+              :
+              <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
+                onClick={this.handleAddRadiologyFavourites({
+                  id:radiologyTypeSelected,sub_category_id:each,selected_radiology_index:itemId
+                })}
+                />
+          }     
+    
+          </Tooltip>
+            )
+            :
+            null
+          }
+          
         </Option>
       )
     }
@@ -617,7 +686,6 @@ class AddAppointmentForm extends Component {
     const radiology_type = radiology_type_data[radiologyTypeSelected];
 
     const {data={},name : radiology_type_name=''} = radiology_type || {};
-    // console.log("9862345263987498234 +++++++>>>>>>>>>>>>>>>>>>>>",{data});
     let options = [];
     for (let each in data){
       const {items,name} = data[each] || {};
@@ -627,7 +695,6 @@ class AddAppointmentForm extends Component {
         options.push(everyOption);
       } 
     }
-
 
     return options;
 
@@ -652,6 +719,7 @@ class AddAppointmentForm extends Component {
           const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
           if(status){
             message.success(resp_msg);
+            this.getRadiologyFavourites();
           }else{
             message.error(resp_msg);
           }
@@ -672,6 +740,7 @@ class AddAppointmentForm extends Component {
           const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
           if(status){
             message.success(resp_msg);
+            this.getRadiologyFavourites();
           }else{
             message.error(resp_msg);
           }
@@ -681,6 +750,9 @@ class AddAppointmentForm extends Component {
   }
 
 
+  RadiologyDropDownVisibleChange = (open)=>{
+    this.setState({radiologyDropDownVisible:open});
+  }
 
   render() {
     const {
@@ -821,9 +893,17 @@ class AddAppointmentForm extends Component {
           >
             {getFieldDecorator(
               RADIOLOGY_TYPE,
-              {}
+              {
+                rules: [
+                  {
+                    required: true,
+                    message: formatMessage(messages.error_radio_type_required),
+                  },
+                ],
+              }
             )(
               <Select
+              onDropdownVisibleChange={this.RadiologyDropDownVisibleChange}
                 disabled={radiologyTypeSelected === null}
                 notFoundContent={"No match found"}
                 className="drawer-select"
