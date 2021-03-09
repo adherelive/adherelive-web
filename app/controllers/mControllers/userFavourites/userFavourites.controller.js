@@ -141,8 +141,10 @@ class UserFavouritesController extends Controller {
         {
           favourites_data,
           user_data:userData,
-          favourite_medicine_ids,
-          favourite_medical_test_ids
+          [type===FAVOURITE_TYPE.MEDICINE && "favourite_medicine_ids"]:
+          type===FAVOURITE_TYPE.MEDICINE && favourite_medicine_ids,
+          [type === FAVOURITE_TYPE.MEDICAL_TESTS && "favourite_medical_test_ids"]:
+          type === FAVOURITE_TYPE.MEDICAL_TESTS && favourite_medical_test_ids
         },
         "Get User Favourites successful"
         );

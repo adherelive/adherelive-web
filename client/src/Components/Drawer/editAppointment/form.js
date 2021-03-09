@@ -428,7 +428,7 @@ class EditAppointmentForm extends Component {
 
     if(typeValue === MEDICAL_TEST ){
       for (let each in typeDescription) {
-        let desc  = typeDescription[each];
+        const {name:desc=''} = typeDescription[each];
 
 
         if(favourite_medical_test_ids.includes(each.toString())){
@@ -708,7 +708,8 @@ class EditAppointmentForm extends Component {
         }
       }
 
-      let item = items[itemId];
+      console.log("8367524890234872379",{eachhhhhh:items[itemId]})
+      const {favorite_id=null,name : item=''}= items[itemId];
       subOptions.push(
         <Option key={`${each}:${item}-radiology-type`} value={item} 
         className="pointer flex wp100  align-center justify-space-between"
