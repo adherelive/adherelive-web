@@ -708,7 +708,7 @@ class EditAppointmentForm extends Component {
         }
       }
 
-      console.log("8367524890234872379",{eachhhhhh:items[itemId]})
+      // console.log("8367524890234872379",{eachhhhhh:items[itemId]})
       const {favorite_id=null,name : item=''}= items[itemId];
       subOptions.push(
         <Option key={`${each}:${item}-radiology-type`} value={item} 

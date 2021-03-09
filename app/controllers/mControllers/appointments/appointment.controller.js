@@ -74,7 +74,7 @@ class MobileAppointmentController extends Controller {
         provider_id = null,
         provider_name = null,
         critical = false,
-        radiology_type=""
+        radiology_type = ""
       } = body;
       const {
         userId,
@@ -131,7 +131,7 @@ class MobileAppointmentController extends Controller {
           type,
           type_description,
           critical,
-          [type === RADIOLOGY && "radiology_type" ]:type === RADIOLOGY && radiology_type 
+          radiology_type
         }
       };
 
@@ -283,7 +283,7 @@ class MobileAppointmentController extends Controller {
         provider_id = null,
         provider_name = null,
         critical = false,
-        radiology_type="",
+        radiology_type = ""
       } = body;
       const {
         userId,
@@ -365,7 +365,7 @@ class MobileAppointmentController extends Controller {
           type,
           type_description,
           critical,
-          [type === RADIOLOGY && "radiology_type" ]:type === RADIOLOGY && radiology_type
+          radiology_type
         }
       };
 
