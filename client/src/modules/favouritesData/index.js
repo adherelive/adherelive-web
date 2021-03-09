@@ -1,6 +1,9 @@
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
-import { markFavouriteUrl , getFavouritesUrl , removeFavouritesUrl } from "../../Helper/urls/markFavourite";
+import { markFavouriteUrl , 
+    getFavouritesUrl , 
+    removeFavouritesUrl , 
+    removeFavouriteRecordUrl } from "../../Helper/urls/markFavourite";
 
 export const MARK_FAVOURITE = "MARK_FAVOURITE";
 export const MARK_FAVOURITE_COMPLETED = "MARK_FAVOURITE_COMPLETED";
@@ -14,6 +17,10 @@ export const GET_FAVOURITES_FAILED = "GET_FAVOURITES_FAILED";
 export const REMOVE_FAVOURITE = "REMOVE_FAVOURITE";
 export const REMOVE_FAVOURITE_COMPLETED = "REMOVE_FAVOURITE_COMPLETED";
 export const REMOVE_FAVOURITE_FAILED = "REMOVE_FAVOURITE_FAILED";
+
+export const REMOVE_FAVOURITE_RECORD = "REMOVE_FAVOURITE_RECORD";
+export const REMOVE_FAVOURITE_RECORD_COMPLETED = "REMOVE_FAVOURITE_RECORD_COMPLETED";
+export const REMOVE_FAVOURITE_RECORD_FAILED = "REMOVE_FAVOURITE_RECORD_FAILED";
 
 export const markFavourite = (payload) => {
     let response = {};
@@ -96,6 +103,8 @@ export const removeFavourite = ({typeId,type}) => {
 
                 if(type === "medicine"){
                     data["removed_medicine_id"] = typeId.toString();
+                }else if (type === "medical_tests"){
+                    data["removed_medical_test_id"] = typeId.toString();
                 }
                 dispatch({
                     type: REMOVE_FAVOURITE_COMPLETED,
@@ -113,6 +122,45 @@ export const removeFavourite = ({typeId,type}) => {
         return response;
     }
 };
+
+export const removeFavouriteByRecordId = (id) => {
+    let response = {};
+    return async dispatch => {
+        try {
+            response = await doRequest({
+                method: REQUEST_TYPE.DELETE,
+                url: removeFavouriteRecordUrl(id),
+            });
+
+            const { status, payload: { data : resp_data, message = "" } = {} } = response || {};
+            let data=resp_data;
+            if (status === true) {
+                // const {removed_favourites_data = {}} = data;
+                // const key = Object.keys(removed_favourites_data)[0];
+
+                // data["removed_record_key"] = key;
+
+                // if(type === "medicine"){
+                //     data["removed_medicine_id"] = typeId.toString();
+                // }else if (type === "medical_tests"){
+                //     data["removed_medical_test_id"] = typeId.toString();
+                // }
+                dispatch({
+                    type: REMOVE_FAVOURITE_RECORD_COMPLETED,
+                    data
+                });
+            } else {
+                dispatch({
+                    type: REMOVE_FAVOURITE_RECORD_FAILED,
+                    message
+                });
+            }
+        } catch (error) {
+            console.log("REMOVE_FAVOURITE  RECORDDDD MODULE catch error -> ", error);
+        }
+        return response;
+    }
+}
 
 
 

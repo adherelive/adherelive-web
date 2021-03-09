@@ -7,16 +7,22 @@ import DatePicker from "antd/es/date-picker";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
 import { Checkbox } from "antd";
-import message from "./message";
+import messages from "./message";
 import moment from "moment";
 import calendar from "../../../Assets/images/calendar1.svg";
 
 import { ClockCircleOutlined } from "@ant-design/icons";
 import Dropdown from "antd/es/dropdown";
 import TimeKeeper from "react-timekeeper";
+import {FAVOURITE_TYPE , USER_FAV_ALL_TYPES , MEDICAL_TEST , CONSULTATION, RADIOLOGY} from "../../../constant";
+import StarOutlined from "@ant-design/icons/StarOutlined";
+import StarFilled from "@ant-design/icons/StarFilled";
+import Tooltip from "antd/es/tooltip";
+import message from "antd/es/message";
+import { visible } from "chalk";
 
 const { Item: FormItem } = Form;
-const { Option } = Select;
+const { Option ,OptGroup} = Select;
 
 const PATIENT = "patient";
 const DATE = "date";
@@ -29,6 +35,7 @@ const APPOINTMENT_TYPE = "type";
 const APPOINTMENT_TYPE_DESCRIPTION = "type_description";
 const PROVIDER_ID = "provider_id";
 const REASON = "reason";
+const RADIOLOGY_TYPE='radiology_type';
 
 const FIELDS = [
   PATIENT,
@@ -39,7 +46,8 @@ const FIELDS = [
   DESCRIPTION,
   APPOINTMENT_TYPE,
   APPOINTMENT_TYPE_DESCRIPTION,
-  PROVIDER_ID
+  PROVIDER_ID,
+  RADIOLOGY_TYPE
 ];
 
 class AddAppointmentForm extends Component {
@@ -49,12 +57,30 @@ class AddAppointmentForm extends Component {
       fetchingPatients: false,
       fetchingTypes: false,
       typeDescription: [],
-      timeModalVisible: false
+      timeModalVisible: false,
+      descDropDownOpen:false,
+      radiologyTypeSelected:null
     };
   }
 
   componentDidMount() {
     this.scrollToTop();
+    this.getMedicalTestFavourites();
+    
+  }
+
+  getMedicalTestFavourites = async() => {
+    try{
+      const {getFavourites}=this.props;
+      const MedicalTestsResponse = await getFavourites({type: FAVOURITE_TYPE.MEDICAL_TESTS});
+      const {status,statusCode,payload:{data={},message:resp_msg=''} = {}} = MedicalTestsResponse || {};
+      if(!status){
+        message.error(resp_msg);
+      }
+
+    }catch(error){
+      console.log("errrrorrrr ===>",error);
+    }
   }
 
   scrollToTop = () => {
@@ -184,62 +210,7 @@ class AddAppointmentForm extends Component {
     });
   };
 
-  // handleStartTimeChange = time => {
-  //   const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-  //   // const startTime = getFieldValue(START_TIME);
-  //   const startDate = getFieldValue(DATE);
-  //   if (startDate) {
-  //     const newMonth = startDate.get("month");
-  //     const newDate = startDate.get("date");
-  //     const newYear = startDate.get("year");
-  //     let newEventStartTime;
-  //     let newEventEndTime;
-  //     newEventStartTime = time
-  //       ? moment(time)
-  //           .clone()
-  //           .set({ month: newMonth, year: newYear, date: newDate })
-  //       : null;
-  //     newEventEndTime = newEventStartTime
-  //       ? moment(newEventStartTime).add("minutes", 30)
-  //       : null;
-  //     setFieldsValue({
-  //       [START_TIME]: newEventStartTime,
-  //       [END_TIME]: newEventEndTime
-  //     });
-  //   } else {
-  //     setFieldsValue({
-  //       [END_TIME]: time ? moment(time).add("minutes", 30) : null
-  //     });
-  //   }
-  // };
-  //
-  // handleEndTimeChange = time => {
-  //   const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-  //   const startTime = getFieldValue(START_TIME);
-  //   const startDate = getFieldValue(DATE);
-  //   if (startDate) {
-  //     const newMonth = startDate.get("month");
-  //     const newDate = startDate.get("date");
-  //     const newYear = startDate.get("year");
-  //     let newEventStartTime;
-  //     let newEventEndTime;
-  //     newEventStartTime = startTime
-  //       ? moment(startTime)
-  //           .clone()
-  //           .set({ month: newMonth, year: newYear, date: newDate })
-  //       : null;
-  //     newEventEndTime = time
-  //       ? time.clone().set({ month: newMonth, year: newYear, date: newDate })
-  //       : null;
-  //     setFieldsValue({
-  //       [START_TIME]: newEventStartTime,
-  //       [END_TIME]: newEventEndTime
-  //     });
-  //   } else {
-  //     setFieldsValue({ [END_TIME]: moment(time) });
-  //   }
-  // };
-
+  
   getPatientName = () => {
     const { patients, payload: { patient_id } = {} } = this.props;
     const { basic_info: { first_name, middle_name, last_name } = {} } =
@@ -297,6 +268,10 @@ class AddAppointmentForm extends Component {
     } = this.props;
     let descArray = type_description[value] ? type_description[value] : [];
 
+    if(value !== RADIOLOGY){    
+      this.setState({radiologyTypeSelected:null})
+    }
+
     this.setState({ typeDescription: descArray });
   };
 
@@ -316,17 +291,147 @@ class AddAppointmentForm extends Component {
     return newTypes;
   };
 
+  setRadiologyTypeSelected = (id)=>() =>{
+    const IdStr = id.toString();
+    this.setState({radiologyTypeSelected:IdStr});
+    const {static_templates:{appointments:{radiology_type_data = {}}={}}={}} = this.props;
+    const temp = radiology_type_data[IdStr];
+  }
+
+
   getTypeDescriptionOption = () => {
-    let { typeDescription = [] } = this.state;
+    let { typeDescription = [] ,descDropDownOpen=false} = this.state;
+    const {favourite_medical_test_ids = []}=this.props;
     let newTypes = [];
-    for (let desc of typeDescription) {
-      newTypes.push(
-        <Option key={desc} value={desc}>
-          {desc}
-        </Option>
-      );
+    let favTypes = [];
+    let unFavTypes=[];
+    const {
+      form: { getFieldValue
+       },
+    } = this.props;
+
+    const typeValue  = getFieldValue(APPOINTMENT_TYPE);
+
+    if(typeValue === MEDICAL_TEST ){
+      for (let each in typeDescription) {
+        let desc  = typeDescription[each];
+
+
+        if(favourite_medical_test_ids.includes(each.toString())){
+          favTypes.push(
+            <Option key={desc} value={desc}>
+            <div
+            key={`${desc}-div`}
+            className="pointer flex wp100  align-center justify-space-between"
+          >
+            {desc}
+            {
+              descDropDownOpen 
+              ?
+              (<Tooltip 
+                placement="topLeft"
+                title={favourite_medical_test_ids.includes(each.toString()) ? 'Unmark' : 'Mark favourite'} 
+              >
+    
+          {favourite_medical_test_ids.includes(each.toString())
+              ?  
+                <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
+                  onClick={this.handleremoveMedicalTestFavourites(each)}
+                /> 
+              :
+              <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
+                  onClick = {this.handleAddMedicalTestFavourites(each)}
+                />
+          }     
+    
+              </Tooltip>)
+              :
+              null
+            }
+          
+          </div>
+            
+          </Option>
+          
+        )
+        }else{
+          unFavTypes.push(
+            <Option key={desc} value={desc}>
+            <div
+            key={`${desc}-div`}
+            className="pointer flex wp100  align-center justify-space-between"
+          >
+            {desc}
+            {
+              descDropDownOpen 
+              ?
+              (<Tooltip 
+                placement="topLeft"
+                title={favourite_medical_test_ids.includes(each.toString()) ? 'Unmark' : 'Mark favourite'} 
+              >
+    
+          {favourite_medical_test_ids.includes(each.toString())
+              ?  
+                <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
+                  onClick={this.handleremoveMedicalTestFavourites(each)}
+                /> 
+              :
+              <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
+                  onClick = {this.handleAddMedicalTestFavourites(each)}
+                />
+          }     
+    
+              </Tooltip>)
+              :
+              null
+            }
+          
+          </div>
+            
+          </Option>
+          )
+        }
+      }
+
+      for (let each of favTypes){
+        newTypes.push(each);
+      }
+      for (let each of unFavTypes){
+        newTypes.push(each);
+      }
+
+      return newTypes;
+
+       
+      }
+    else if(typeValue === RADIOLOGY){
+      for (let each in  typeDescription) {
+        const {id = null , name : desc =''} = typeDescription[each];
+        newTypes.push(
+          <Option key={desc} value={desc}
+            onClick={this.setRadiologyTypeSelected(id)}
+          >
+            {desc}
+          </Option>
+        );
+      }
+      return newTypes;
+
+    
+    }  
+    else{  
+      for (let each in typeDescription) {
+        let desc = typeDescription[each];
+        newTypes.push(
+          <Option key={desc} value={desc}>
+            {desc}
+          </Option>
+        );
+      }
+      return newTypes;
+
     }
-    return newTypes;
+     
   };
 
   handleProviderSearch = data => {
@@ -425,10 +530,166 @@ class AddAppointmentForm extends Component {
     );
   };
 
+ 
+
+  DescDropDownVisibleChange = (open) => {
+    this.setState({descDropDownOpen:open});
+  }
+
+
+
+
+
+  handleAddMedicalTestFavourites = (id) => async(e) => {
+    try{
+      e.preventDefault();
+      e.stopPropagation();
+        const {markFavourite} = this.props;
+        const data = {
+            type:FAVOURITE_TYPE.MEDICAL_TESTS,
+            id
+        }
+
+
+        const response = await markFavourite(data);
+        const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+        if(status){
+          message.success(resp_msg);
+        }else{
+          message.error(resp_msg);
+        }
+
+    }catch(error){
+        console.log("error",error);
+    }
+}
+
+  handleremoveMedicalTestFavourites = (id) => async(e) => {
+    try{
+      
+      e.preventDefault();
+      e.stopPropagation();
+        const {removeFavourite} = this.props;
+        const data = {
+            type:FAVOURITE_TYPE.MEDICAL_TESTS,
+            typeId:id
+        }
+
+        const response = await removeFavourite(data);
+        const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+        if(status){
+          message.success(resp_msg);
+        }else{
+          message.error(resp_msg);
+        }
+    }catch(error){
+        console.log("error",{error});
+    }
+}
+
+
+
+  getOptions = (items, each) => {
+    const {radiologyTypeSelected =null}=this.state;
+    let subOptions = [];
+    for(let itemId in items){
+      console.log("9862345263987498234 &&&&&&",{radiologyTypeSelected,each,itemId});
+      let item = items[itemId];
+      subOptions.push(
+        <Option key={`${each}:${item}-radiology-type`} value={item} title={each}
+          onClick={this.handleAddRadiologyFavourites({
+            id:radiologyTypeSelected,sub_category_id:each,selected_radiology_index:itemId
+          })}
+        >
+          {item}
+        </Option>
+      )
+    }
+
+    return subOptions;
+  };
+
+ 
+
+  getRadiologyTypeDescriptionOption = () => {
+    const {radiologyTypeSelected=null}=this.state;
+    const {static_templates:{appointments:{radiology_type_data = {}}={}}={}} = this.props;
+    const radiology_type = radiology_type_data[radiologyTypeSelected];
+
+    const {data={},name : radiology_type_name=''} = radiology_type || {};
+    // console.log("9862345263987498234 +++++++>>>>>>>>>>>>>>>>>>>>",{data});
+    let options = [];
+    for (let each in data){
+      const {items,name} = data[each] || {};
+      let subOptions = this.getOptions(items,each) || [];
+
+      for(let everyOption of subOptions){
+        options.push(everyOption);
+      } 
+    }
+
+
+    return options;
+
+  };
+
+
+    handleAddRadiologyFavourites = ({id,sub_category_id,selected_radiology_index}) => async(e) => {
+      try{
+        e.preventDefault();
+        e.stopPropagation();
+          const {markFavourite} = this.props;
+          const data = {
+              type:FAVOURITE_TYPE.RADIOLOGY,
+              id,
+              details:{
+                sub_category_id,
+                selected_radiology_index
+              }
+          }
+
+          const response = await markFavourite(data);
+          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+          if(status){
+            message.success(resp_msg);
+          }else{
+            message.error(resp_msg);
+          }
+
+      }catch(error){
+          console.log("error",error);
+      }
+  }
+
+    handleremoveRadiologyFavourites = (recordID) => async(e) => {
+      try{
+        
+        e.preventDefault();
+        e.stopPropagation();
+          const {removeFavouriteRecord} = this.props;
+          
+          const response = await removeFavouriteRecord(recordID);
+          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+          if(status){
+            message.success(resp_msg);
+          }else{
+            message.error(resp_msg);
+          }
+      }catch(error){
+          console.log("error",{error});
+      }
+  }
+
+
+
   render() {
     const {
-      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue }
+      form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue
+       },
+       favourite_medical_test_ids,
+       favourites_data
     } = this.props;
+    const {radiologyTypeSelected = null} = this.state;
     const { timeModalVisible } = this.state;
     const {
       formatMessage,
@@ -450,31 +711,19 @@ class AddAppointmentForm extends Component {
       fieldsError = { ...fieldsError, [value]: error };
     });
 
+    const typeValue = getFieldValue(APPOINTMENT_TYPE);
+
+
     return (
         <Form className="fw700 wp100 pb30 Form">
           <FormItem
-            // label={formatMessage(message.patient)}
+            // label={formatMessage(messages.patient)}
             className="mb-24"
           >
             {getFieldDecorator(PATIENT, {
               initialValue: getInitialValue()
             })(
               <div />
-              //   <Select
-              //     className="user-select drawer-select"
-              //     // onSearch={fetchPatients}
-              //     placeholder={getPatientName()}
-              //     notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
-              //     showSearch={true}
-              //     disabled={getInitialValue() ? true : false}
-              //     // todo: update when patients are there
-              //     filterOption={false}
-              //     suffixIcon={null}
-              //     removeIcon={null}
-              //     clearIcon={null}
-              //   >
-              //     {getPatientOptions()}
-              //   </Select>
             )}
           </FormItem>
 
@@ -482,16 +731,16 @@ class AddAppointmentForm extends Component {
             <label
               htmlFor="type"
               className="form-label"
-              title={formatMessage(message.appointmentType)}
+              title={formatMessage(messages.appointmentType)}
             >
-              {formatMessage(message.appointmentType)}
+              {formatMessage(messages.appointmentType)}
             </label>
 
             <div className="star-red">*</div>
           </div>
 
           <FormItem
-          // label={formatMessage(message.appointmentType)}
+          // label={formatMessage(messages.appointmentType)}
           // className='mt24'
           >
             {getFieldDecorator(
@@ -512,15 +761,19 @@ class AddAppointmentForm extends Component {
             <label
               htmlFor="type description"
               className="form-label"
-              // title={formatMessage(message.appointmentTypeDescription)}
+              // title={formatMessage(messages.appointmentTypeDescription)}
             >
-              {formatMessage(message.appointmentTypeDescription)}
+              {typeValue === RADIOLOGY
+              ?
+              `${formatMessage(messages.radiology)} ${formatMessage(messages.appointmentTypeDescription)}`
+              :
+              formatMessage(messages.appointmentTypeDescription)}
             </label>
 
             <div className="star-red">*</div>
           </div>
           <FormItem
-          // label={formatMessage(message.appointmentTypeDescription)}
+          // label={formatMessage(messages.appointmentTypeDescription)}
           // className='mt24'
           >
             {getFieldDecorator(
@@ -528,6 +781,7 @@ class AddAppointmentForm extends Component {
               {}
             )(
               <Select
+                onDropdownVisibleChange={this.DescDropDownVisibleChange}
                 disabled={!appointmentType}
                 notFoundContent={"No match found"}
                 className="drawer-select"
@@ -547,19 +801,67 @@ class AddAppointmentForm extends Component {
             )}
           </FormItem>
 
-          <div className="flex mt24 direction-row flex-grow-1">
+          {typeValue === RADIOLOGY
+          ?
+          (
+            <div>
+              <div className="flex mt24 direction-row flex-grow-1">
             <label
-              htmlFor="provider"
+              htmlFor="type description"
               className="form-label"
-              title={formatMessage(message.provider)}
             >
-              {formatMessage(message.provider)}
+              
+              {formatMessage(messages.radiologyTypeDesc)} 
+            
             </label>
 
             <div className="star-red">*</div>
           </div>
           <FormItem
-          // label={formatMessage(message.provider)}
+          >
+            {getFieldDecorator(
+              RADIOLOGY_TYPE,
+              {}
+            )(
+              <Select
+                disabled={radiologyTypeSelected === null}
+                notFoundContent={"No match found"}
+                className="drawer-select"
+                placeholder="Choose Radiology Type Description"
+                showSearch
+                defaultActiveFirstOption={true}
+                autoComplete="off"
+                optionFilterProp="children"
+                // filterOption={(input, option) =>
+                //   option.props.children
+                //     .toLowerCase()
+                //     .indexOf(input.toLowerCase()) >= 0
+                // }
+              >
+                {this.getRadiologyTypeDescriptionOption()}
+              </Select>
+            )}
+          </FormItem>
+            </div>
+          )
+          :
+            null
+        }
+         
+
+          <div className="flex mt24 direction-row flex-grow-1">
+            <label
+              htmlFor="provider"
+              className="form-label"
+              title={formatMessage(messages.provider)}
+            >
+              {formatMessage(messages.provider)}
+            </label>
+
+            <div className="star-red">*</div>
+          </div>
+          <FormItem
+          // label={formatMessage(messages.provider)}
           // className='mt24'
           >
             {getFieldDecorator(
@@ -586,6 +888,7 @@ class AddAppointmentForm extends Component {
             )}
           </FormItem>
 
+
           <FormItem className="flex-1 wp100 critical-checkbox">
             {getFieldDecorator(
               CRITICAL,
@@ -597,25 +900,20 @@ class AddAppointmentForm extends Component {
             <label
               htmlFor="date"
               className="form-label"
-              title={formatMessage(message.start_date)}
+              title={formatMessage(messages.start_date)}
             >
-              {formatMessage(message.start_date)}
+              {formatMessage(messages.start_date)}
             </label>
 
             <div className="star-red">*</div>
           </div>
 
           <FormItem
-            // label={formatMessage(message.start_date)}
+            // label={formatMessage(messages.start_date)}
             className="full-width mt-10 ant-date-custom-ap-date"
           >
             {getFieldDecorator(DATE, {
-              // rules: [
-              //   {
-              //     required: true,
-              //     message: formatMessage(message.error_select_date),
-              //   },
-              // ],
+        
               initialValue: moment()
             })(
               <DatePicker
@@ -626,12 +924,7 @@ class AddAppointmentForm extends Component {
                 // getCalendarContainer={this.getParentNode}
               />
             )}
-            {/*<img*/}
-            {/*  alt=""*/}
-            {/*  className="calendar clickable new-calendar"*/}
-            {/*  onClick={openCalendar}*/}
-            {/*  src={calendar}*/}
-            {/*/>*/}
+           
           </FormItem>
 
           <div className="wp100 mt-6 flex justify-space-between align-center flex-1">
@@ -640,15 +933,15 @@ class AddAppointmentForm extends Component {
                 <label
                   htmlFor="start_time"
                   className="form-label"
-                  title={formatMessage(message.start_time)}
+                  title={formatMessage(messages.start_time)}
                 >
-                  {formatMessage(message.start_time)}
+                  {formatMessage(messages.start_time)}
                 </label>
 
                 <div className="star-red">*</div>
               </div>
               <FormItem
-                // label={formatMessage(message.start_time)}
+                // label={formatMessage(messages.start_time)}
                 className="flex-grow-1 mt-4"
                 validateStatus={fieldsError[START_TIME] ? "error" : ""}
                 help={fieldsError[START_TIME] || ""}
@@ -657,15 +950,6 @@ class AddAppointmentForm extends Component {
                   START_TIME,
                   {}
                 )(
-                  // <TimePicker
-                  //   use12Hours
-                  //   onChange={handleStartTimeChange}
-                  //   minuteStep={15}
-                  //   format="h:mm a"
-                  //   className="wp100 ant-time-custom"
-                  //   onClick={openTimeModal}
-                  //   // getPopupContainer={this.getParentNode}
-                  // />
                   <Dropdown overlay={getTimePicker(START_TIME)}>
                     <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
                       <div>{getStartTime()}</div>
@@ -681,15 +965,15 @@ class AddAppointmentForm extends Component {
                 <label
                   htmlFor="end_time"
                   className="form-label"
-                  title={formatMessage(message.end_time)}
+                  title={formatMessage(messages.end_time)}
                 >
-                  {formatMessage(message.end_time)}
+                  {formatMessage(messages.end_time)}
                 </label>
 
                 <div className="star-red">*</div>
               </div>
               <FormItem
-                // label={formatMessage(message.end_time)}
+                // label={formatMessage(messages.end_time)}
                 className="flex-grow-1 mt-4"
                 validateStatus={fieldsError[END_TIME] ? "error" : ""}
                 help={fieldsError[END_TIME] || ""}
@@ -698,14 +982,6 @@ class AddAppointmentForm extends Component {
                   END_TIME,
                   {}
                 )(
-                  // <TimePicker
-                  //   use12Hours
-                  //   minuteStep={15}
-                  //   onChange={handleEndTimeChange}
-                  //   format="h:mm a"
-                  //   className="wp100 ant-time-custom"
-                  //   // getPopupContainer={this.getParentNode}
-                  // />
                   <Dropdown overlay={getTimePicker(END_TIME)}>
                     <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
                       <div>{getEndTime()}</div>
@@ -718,25 +994,12 @@ class AddAppointmentForm extends Component {
           </div>
 
           <FormItem
-            // label={formatMessage(message.treatment_text)}
-            // className="full-width ant-date-custom"
             className="mb-24"
           >
             {getFieldDecorator(TREATMENT, {
               initialValue: getTreatment()
             })(
               <div />
-              // <Select
-              //   className="form-inputs-ap drawer-select"
-              //   autoComplete="off"
-              //   placeholder="Select Treatment"
-              //   disabled={getTreatment() ? true : false}
-              //   // onSelect={this.setTreatment}
-              //   // onDeselect={handleDeselect}
-              //   suffixIcon={null}
-              // >
-              //   {this.getTreatmentOption()}
-              // </Select>
             )}
           </FormItem>
 
@@ -744,30 +1007,30 @@ class AddAppointmentForm extends Component {
             <label
               htmlFor="purpose"
               className="form-label"
-              title={formatMessage(message.purpose_text)}
+              title={formatMessage(messages.purpose_text)}
             >
-              {formatMessage(message.purpose_text)}
+              {formatMessage(messages.purpose_text)}
             </label>
 
             <div className="star-red">*</div>
           </div>
 
           <FormItem
-            // label={formatMessage(message.purpose_text)}
+            // label={formatMessage(messages.purpose_text)}
             className="full-width ant-date-custom"
           >
             {getFieldDecorator(REASON, {
               rules: [
                 {
                   pattern: new RegExp(/^[a-zA-Z][a-zA-Z\s]*$/),
-                  message: formatMessage(message.error_valid_purpose)
+                  message: formatMessage(messages.error_valid_purpose)
                 }
               ]
             })(
               <Input
                 autoFocus
                 className="mt4"
-                placeholder={formatMessage(message.purpose_text_placeholder)}
+                placeholder={formatMessage(messages.purpose_text_placeholder)}
               />
             )}
           </FormItem>
@@ -776,13 +1039,13 @@ class AddAppointmentForm extends Component {
             <label
               htmlFor="notes"
               className="form-label"
-              title={formatMessage(message.description_text)}
+              title={formatMessage(messages.description_text)}
             >
-              {formatMessage(message.description_text)}
+              {formatMessage(messages.description_text)}
             </label>
           </div>
           <FormItem
-            // label={formatMessage(message.description_text)}
+            // label={formatMessage(messages.description_text)}
             className="full-width ant-date-custom"
           >
             {getFieldDecorator(DESCRIPTION)(
@@ -791,7 +1054,7 @@ class AddAppointmentForm extends Component {
                 className="mt4"
                 maxLength={1000}
                 placeholder={formatMessage(
-                  message.description_text_placeholder
+                  messages.description_text_placeholder
                 )}
                 rows={4}
               />

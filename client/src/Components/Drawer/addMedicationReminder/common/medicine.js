@@ -23,6 +23,8 @@ import message from "antd/es/message";
 import {TABLET} from "../../../../constant";
 import {TagFilled,TagOutlined} from "@ant-design/icons";
 
+import StarOutlined from "@ant-design/icons/StarOutlined";
+import StarFilled from "@ant-design/icons/StarFilled";
 
 // import FavouriteMedicines from "../../../../Containers/Favourites/medicine";
 
@@ -261,15 +263,16 @@ class Medicine extends Component {
         </div>
         <div>
           <Tooltip
+            placement="topLeft"
             title={favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString()) ? formatMessage(messages.unMark) : formatMessage(messages.mark) }
           >
             {favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString())
              ? 
-             <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+             <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
               onClick={this.handleremoveFavourites(medicine_id)}
              /> 
              :
-            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+            <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
               onClick = {this.handleAddFavourites(medicine_id)}
             /> }
 
@@ -415,15 +418,17 @@ getFavOption = (medicine_id,medicine_name) => {
               </span>
             </div>
           </Tooltip>
-         <Tooltip title="Unmark" >
+         <Tooltip title="Unmark" 
+          placement="topLeft"
+          >
          {searching_medicine && medicine_id && favourite_medicine_ids.includes(medicine_id.toString())
              ? 
-             <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+             <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
               onClick={this.handleremoveFavourites(medicine_id)}
              /> 
              :
              searching_medicine?
-            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+            <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
               onClick = {this.handleAddFavourites(medicine_id)}
             /> 
             :
@@ -498,7 +503,7 @@ getFavouriteOptions = () => {
             const {basic_info : {name :medicine_name= '' , id :medicine_id= null} = {} } = marked_favourites_data[key];
             options.push(
                 <Option key={`opt-${medicine_id}`} value={medicine_id}
-                onMouseDown={this.handleOnMouseDownPreventDef}
+                // onMouseDown={this.handleOnMouseDownPreventDef}
                 onClick={this.setFavMedicineValue(medicine_id, medicine_name)}
                 >
                 {this.getFavOption(medicine_id, medicine_name)}

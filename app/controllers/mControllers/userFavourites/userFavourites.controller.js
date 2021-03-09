@@ -111,7 +111,9 @@ class UserFavouritesController extends Controller {
        
         const userData = {};
         const currentUser = await UserWrapper(null, userId);
-         const favourite_medicine_ids = [];
+        const favourite_medicine_ids = [];
+        const favourite_medical_test_ids=[];
+
         userData[currentUser.getId()] = currentUser.getBasicInfo();
 
         if(favourites && favourites.length){
@@ -124,7 +126,10 @@ class UserFavouritesController extends Controller {
               const medicineId = await eachFavourite.getMarkedFavouriteId();
               Log.debug("983246238747523746790283",{medicineId});
               await favourite_medicine_ids.push(medicineId.toString());
-            }
+            }else if(type === FAVOURITE_TYPE.MEDICAL_TESTS){
+              const medicalTestId = await eachFavourite.getMarkedFavouriteId();
+              await favourite_medical_test_ids.push(medicalTestId.toString());
+            } 
             favourites_data[id] = {...ref_info};
           }
         }
@@ -136,7 +141,8 @@ class UserFavouritesController extends Controller {
         {
           favourites_data,
           user_data:userData,
-          favourite_medicine_ids
+          favourite_medicine_ids,
+          favourite_medical_test_ids
         },
         "Get User Favourites successful"
         );
