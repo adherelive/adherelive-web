@@ -760,16 +760,18 @@ class EditAppointmentForm extends Component {
     let options = [];
     for (let each in data){
       const {items,name} = data[each] || {};
-      let subOptions = this.getOptions(items,each) || [];
+      options.push
+      (<OptGroup label={name}>
+          {this.getOptions(items,each)}
+      </OptGroup>
+      )
 
-      for(let everyOption of subOptions){
-        options.push(everyOption);
-      } 
     }
 
     return options;
 
   };
+
 
 
     handleAddRadiologyFavourites = ({id,sub_category_id,selected_radiology_index}) => async(e) => {
