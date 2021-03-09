@@ -13,6 +13,7 @@ import {
   DOCUMENT_PARENT_TYPE,
   S3_DOWNLOAD_FOLDER,
   NOTIFICATION_STAGES,
+  RADIOLOGY,
   FAVOURITE_TYPE,
   MEDICAL_TEST
 } from "../../../constant";
@@ -81,6 +82,7 @@ class AppointmentController extends Controller {
         reason = "",
         type = null,
         type_description = null,
+        radiology_type = "",
         provider_id = null,
         provider_name = null,
         critical = false
@@ -168,6 +170,7 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
+          radiology_type,
           critical
         },
         provider_id,
@@ -251,7 +254,8 @@ class AppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
-        critical = false
+        critical = false,
+        radiology_type="",
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -310,6 +314,9 @@ class AppointmentController extends Controller {
         );
       }
 
+
+      Logger.debug("827354523879472634237238473 TYPE",{type,TYPETYPE:typeof(type)});
+
       const appointment_data = {
         participant_one_type: category,
         participant_one_id: userCategoryId,
@@ -330,7 +337,8 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical
+          critical,
+          [type === RADIOLOGY && "radiology_type" ]:type === RADIOLOGY && radiology_type 
         }
       };
 
@@ -441,9 +449,10 @@ class AppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
-        critical = false
+        critical = false,
         // participant_one_type = "",
         // participant_one_id = "",
+        radiology_type="",
       } = body;
 
       const {
@@ -524,6 +533,7 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
+          radiology_type,
           critical
         }
       };

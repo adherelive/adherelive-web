@@ -1,10 +1,10 @@
-import Logger from "../../../libs/log";
-import {FAVOURITE_TYPE, MEDICAL_TEST} from "../../../constant";
+import Logger from "../../../../libs/log";
+import {FAVOURITE_TYPE, MEDICAL_TEST} from "../../../../constant";
 
 // SERVICES
-import FavoriteService from "../../services/userFavourites/userFavourites.service";
+import FavoriteService from "../../../services/userFavourites/userFavourites.service";
 
-const Log = new Logger("APPOINTMENT > HELPER");
+const Log = new Logger("MOBILE > APPOINTMENT > HELPER");
 
 export const getFavoriteInDetails = async (userTypeData, typeDescription, type) => {
     try {
@@ -16,12 +16,15 @@ export const getFavoriteInDetails = async (userTypeData, typeDescription, type) 
                 response = { ...typeDescription, ...{[MEDICAL_TEST]: medicalTestTypes}}
                 return response;
             case FAVOURITE_TYPE.RADIOLOGY:
-                const radiologyTypes = await radiologyTypeFavorites(userTypeData, typeDescription);
+                const radiologyTypes = await radiologyTypeFavorites(userTypeData, typeDescription)
                 response = radiologyTypes;
                 return response;
         }
+
+        return response
+
     } catch(error) {
-        Log.debug("getFavouriteInDetails error", error);
+        Log.debug("mgetFavouriteInDetails error", error);
         return null;
     }
 };
@@ -60,7 +63,7 @@ const medicalTestFavorites = async (userTypeData, types) => {
         return updatedTypes;
         
     } catch(error) {
-        Log.debug("medicalTestFavorites error", error);
+        Log.debug("m-medicalTestFavorites error", error);
     }
 };
 
@@ -85,7 +88,7 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
         }
 
         const favIndicesList = Object.keys(favoriteIndices);
-        
+
         for(const typeId of Object.keys(types)) {
 
             let {[typeId]: { data = {}, id = null, name: typeName} = {}} = types;
@@ -113,6 +116,6 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
         return types;
         
     } catch(error) {
-        Log.debug("medicalTestFavorites error", error);
+        Log.debug("m-radiologyTypeFavorites error", error);
     }
 };

@@ -25,7 +25,6 @@ import StarOutlined from "@ant-design/icons/StarOutlined";
 import StarFilled from "@ant-design/icons/StarFilled";
 import Tooltip from "antd/es/tooltip";
 import message from "antd/es/message";
-import { visible } from "chalk";
 
 const { Item: FormItem } = Form;
 const { Option, OptGroup } = Select;
@@ -64,9 +63,9 @@ class AddAppointmentForm extends Component {
       fetchingTypes: false,
       typeDescription: [],
       timeModalVisible: false,
-      descDropDownOpen: false,
-      radiologyDropDownVisible: false,
-      radiologyTypeSelected: null
+      descDropDownOpen:false,
+      radiologyDropDownVisible:false,
+      radiologyTypeSelected:null
     };
   }
 
@@ -74,6 +73,7 @@ class AddAppointmentForm extends Component {
     this.scrollToTop();
     this.getMedicalTestFavourites();
     this.getRadiologyFavourites();
+    
   }
 
   getMedicalTestFavourites = async () => {
@@ -96,21 +96,16 @@ class AddAppointmentForm extends Component {
   };
 
   getRadiologyFavourites = async () => {
-    try {
-      const { getFavourites } = this.props;
-      const RadiologyResponse = await getFavourites({
-        type: FAVOURITE_TYPE.RADIOLOGY
-      });
-      const {
-        status,
-        statusCode,
-        payload: { data = {}, message: resp_msg = "" } = {}
-      } = RadiologyResponse || {};
-      if (!status) {
+    try{
+      const {getFavourites}=this.props;
+      const RadiologyResponse = await getFavourites({type: FAVOURITE_TYPE.RADIOLOGY});
+      const {status,statusCode,payload:{data={},message:resp_msg=''} = {}} = RadiologyResponse || {};
+      if(!status){
         message.error(resp_msg);
       }
-    } catch (error) {
-      console.log("RadiologyResponse Get errrrorrrr ===>", error);
+
+    }catch(error){
+      console.log("RadiologyResponse Get errrrorrrr ===>",error);
     }
   };
 
@@ -155,11 +150,7 @@ class AddAppointmentForm extends Component {
     } = this.props;
     const { patients: { basic_info: { first_name, last_name } = {} } = {} } =
       patients[patient_id] || {};
-    // if (first_name && last_name) {
     return `${patient_id}`;
-    // } else {
-    // return null;
-    // }
   };
 
   getPatientOptions = () => {
@@ -697,82 +688,79 @@ class AddAppointmentForm extends Component {
 
   //======================================================================================>>>>
 
-  // getOptions = (items, each) => {
-  //   const {
-  //     radiologyTypeSelected = null,
-  //     radiologyDropDownVisible = false
-  //   } = this.state;
-  //   const { favourites_data = {} } = this.props;
-
+//======================================================================================>>>>
 
   getOptions = (items, each) => {
-    const {radiologyTypeSelected =null}=this.state;
-    let subOptions = [];
-    for (let itemId in items) {
-      let markedFlag = false;
-      let recordId = null;
+    const {radiologyTypeSelected =null , radiologyDropDownVisible=false}=this.state;
+    const {favourites_data = {}}=this.props;
 
-      for (let favDataId in favourites_data) {
-        const {
-          basic_info: {
-            marked_favourite_id = null,
-            marked_favourite_type = ""
-          } = {},
-          details: {
-            sub_category_id = null,
-            selected_radiology_index = null
-          } = {}
+    let subOptions = [];
+    for(let itemId in items){
+
+      let markedFlag=false;
+      let recordId=null ;
+
+      for(let favDataId in favourites_data){
+        const {basic_info :{marked_favourite_id = null , marked_favourite_type=''}={},
+          details:{
+          sub_category_id=null,
+          selected_radiology_index =null } ={}
         } = favourites_data[favDataId];
 
-        if (marked_favourite_type !== FAVOURITE_TYPE.RADIOLOGY) {
+
+        if(marked_favourite_type !== FAVOURITE_TYPE.RADIOLOGY){
           continue;
-        } else {
+        }else{
+
           // console.log("9862345263987498234 &&&&&& >>>>>>> ",{marked_favourite_id,radiologyTypeSelected,
           //   sub_category_id,each,
           //   selected_radiology_index,itemId});
 
-          if (
-            marked_favourite_id.toString() ===
-              radiologyTypeSelected.toString() &&
+          if(
+            marked_favourite_id.toString() === radiologyTypeSelected.toString() &&
             sub_category_id.toString() === each.toString() &&
             selected_radiology_index.toString() === itemId.toString()
-          ) {
-            markedFlag = true;
-            recordId = favDataId;
+          ){
+            markedFlag=true;
+            recordId=favDataId;
           }
         }
       }
-      console.log("8367524890234872379", { eachhhhhh: items[itemId] });
-      const { favorite_id = null, name: item = "" } = items[itemId];
+      // console.log("8367524890234872379",{eachhhhhh:items[itemId]})
+      const {favorite_id=null,name : item=''}= items[itemId];
       subOptions.push(
-        <Option
-          key={`${each}:${item}-radiology-type`}
-          value={item}
-          className="pointer flex wp100  align-center justify-space-between"
+        <Option key={`${each}:${item}-radiology-type`} value={item} 
+        className="pointer flex wp100  align-center justify-space-between"
         >
           {item}
-          {radiologyDropDownVisible ? (
-            <Tooltip
-              placement="topLeft"
-              title={markedFlag ? "Unmark" : "Mark favourite"}
-            >
-              {markedFlag ? (
-                <StarFilled
-                  style={{ fontSize: "20px", color: "#f9c216" }}
+          {
+            radiologyDropDownVisible
+            ?
+            (
+              <Tooltip 
+                placement="topLeft"
+                title={markedFlag ? 'Unmark' : 'Mark favourite'} 
+              >
+    
+          {markedFlag
+              ?  
+                <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
                   onClick={this.handleremoveRadiologyFavourites(recordId)}
+                /> 
+              :
+              <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
+                onClick={this.handleAddRadiologyFavourites({
+                  id:radiologyTypeSelected,sub_category_id:each,selected_radiology_index:itemId
+                })}
                 />
-              ) : (
-                <StarOutlined
-                  style={{ fontSize: "20px", color: "#f9c216" }}
-                  onClick={this.handleAddRadiologyFavourites({
-                    id: radiologyTypeSelected,
-                    sub_category_id: each,
-                    selected_radiology_index: itemId
-                  })}
-                />
-              )}
-            </Tooltip>
-          ) : null}
+          }     
+    
+          </Tooltip>
+            )
+            :
+            null
+          }
+          
         </Option>
       );
     }
@@ -787,80 +775,73 @@ class AddAppointmentForm extends Component {
     } = this.props;
     const radiology_type = radiology_type_data[radiologyTypeSelected];
 
-    const { data = {}, name: radiology_type_name = "" } = radiology_type || {};
+    const {data={},name : radiology_type_name=''} = radiology_type || {};
     let options = [];
-    for (let each in data) {
-      const { items, name } = data[each] || {};
-      options.push(
-        <OptGroup label={name}>{this.getOptions(items, each)}</OptGroup>
-      );
-    }
+    for (let each in data){
+      const {items,name} = data[each] || {};
+      options.push
+      (<OptGroup label={name}>
+          {this.getOptions(items,each)}
+      </OptGroup>
+      )
 
+    }
 
     return options;
   };
 
-  handleAddRadiologyFavourites = ({
-    id,
-    sub_category_id,
-    selected_radiology_index
-  }) => async e => {
-    try {
-      e.preventDefault();
-      e.stopPropagation();
-      const { markFavourite } = this.props;
-      const data = {
-        type: FAVOURITE_TYPE.RADIOLOGY,
-        id,
-        details: {
-          sub_category_id,
-          selected_radiology_index
-        }
-      };
 
-      const response = await markFavourite(data);
-      const {
-        status,
-        statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
-      } = response;
-      if (status) {
-        message.success(resp_msg);
-        this.getRadiologyFavourites();
-      } else {
-        message.error(resp_msg);
+    handleAddRadiologyFavourites = ({id,sub_category_id,selected_radiology_index}) => async(e) => {
+      try{
+        e.preventDefault();
+        e.stopPropagation();
+          const {markFavourite} = this.props;
+          const data = {
+              type:FAVOURITE_TYPE.RADIOLOGY,
+              id,
+              details:{
+                sub_category_id,
+                selected_radiology_index
+              }
+          }
+
+          const response = await markFavourite(data);
+          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+          if(status){
+            message.success(resp_msg);
+            this.getRadiologyFavourites();
+          }else{
+            message.error(resp_msg);
+          }
+
+      }catch(error){
+          console.log("error",error);
       }
-    } catch (error) {
-      console.log("error", error);
-    }
   };
 
-  handleremoveRadiologyFavourites = recordID => async e => {
-    try {
-      e.preventDefault();
-      e.stopPropagation();
-      const { removeFavouriteRecord } = this.props;
-
-      const response = await removeFavouriteRecord(recordID);
-      const {
-        status,
-        statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
-      } = response;
-      if (status) {
-        message.success(resp_msg);
-        this.getRadiologyFavourites();
-      } else {
-        message.error(resp_msg);
+    handleremoveRadiologyFavourites = (recordID) => async(e) => {
+      try{
+        
+        e.preventDefault();
+        e.stopPropagation();
+          const {removeFavouriteRecord} = this.props;
+          
+          const response = await removeFavouriteRecord(recordID);
+          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+          if(status){
+            message.success(resp_msg);
+            this.getRadiologyFavourites();
+          }else{
+            message.error(resp_msg);
+          }
+      }catch(error){
+          console.log("error",{error});
       }
-    } catch (error) {
-      console.log("error", { error });
-    }
   };
 
-  RadiologyDropDownVisibleChange = open => {
-    this.setState({ radiologyDropDownVisible: open });
-  };
+  RadiologyDropDownVisibleChange = (open)=>{
+    this.setState({radiologyDropDownVisible:open});
+  }
 
   render() {
     const {

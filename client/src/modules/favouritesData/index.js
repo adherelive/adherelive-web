@@ -1,5 +1,5 @@
 import { doRequest } from "../../Helper/network";
-import { REQUEST_TYPE } from "../../constant";
+import { FAVOURITE_TYPE, REQUEST_TYPE } from "../../constant";
 import { markFavouriteUrl , 
     getFavouritesUrl , 
     removeFavouritesUrl , 
@@ -135,16 +135,10 @@ export const removeFavouriteByRecordId = (id) => {
             const { status, payload: { data : resp_data, message = "" } = {} } = response || {};
             let data=resp_data;
             if (status === true) {
-                // const {removed_favourites_data = {}} = data;
-                // const key = Object.keys(removed_favourites_data)[0];
+                
 
-                // data["removed_record_key"] = key;
-
-                // if(type === "medicine"){
-                //     data["removed_medicine_id"] = typeId.toString();
-                // }else if (type === "medical_tests"){
-                //     data["removed_medical_test_id"] = typeId.toString();
-                // }
+                data["removed_record_id"]=id;
+                
                 dispatch({
                     type: REMOVE_FAVOURITE_RECORD_COMPLETED,
                     data
@@ -164,11 +158,25 @@ export const removeFavouriteByRecordId = (id) => {
 
 
 
-function removeFavouriteRecord(state, data) {
+function removeFavouriteReducer(state, data) {
 
-    const { removed_record_key  } = data || {};
+    const { removed_record_key   } = data || {};
     if (removed_record_key) {
         const { [removed_record_key.toString()]:record , ...rest} = state || {};
+
+        return {
+            ...rest
+        };
+    } else {
+        return state;
+    }
+}
+
+function removeFavouriteRecord(state,data) {
+
+    const { removed_record_id   } = data || {};
+    if (removed_record_id) {
+        const { [removed_record_id.toString()]:record , ...rest} = state || {};
 
         return {
             ...rest
@@ -199,7 +207,9 @@ export default (state = {}, payload) => {
         case GET_FAVOURITES_COMPLETED:
             return getFavouriteReducer(state, data);
         case REMOVE_FAVOURITE_COMPLETED:
-            return removeFavouriteRecord(state,data);    
+            return removeFavouriteReducer(state,data); 
+        case REMOVE_FAVOURITE_RECORD_COMPLETED:
+            return removeFavouriteRecord(state,data);        
         default:
             return getFavouriteReducer(state, data);
     }

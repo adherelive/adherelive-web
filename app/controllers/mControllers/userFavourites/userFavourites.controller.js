@@ -38,22 +38,22 @@ class UserFavouritesController extends Controller {
            user_category_id:userCategoryId,
            user_category_type:category,
            marked_favourite_id:id,
-           marked_favourite_type:type
+           marked_favourite_type:type,
+           details
          }
 
 
-        const existing = await UserFavouritesService.findExistingFavourite(data);
+        // const existing = await UserFavouritesService.findExistingFavourite(data);
        
-        if(existing){
-          return this.raiseClientError(
-            res,
-            422,
-            {},
-            `Already Marked Favourite for user`
-          );
-        }
+        // if(existing){
+        //   return this.raiseClientError(
+        //     res,
+        //     422,
+        //     {},
+        //     `Already Marked Favourite for user`
+        //   );
+        // }
 
-        data = {...data, details}
         const record = await UserFavouritesService.markFavourite(data);
 
         let favourites_data = {};
@@ -141,8 +141,10 @@ class UserFavouritesController extends Controller {
         {
           favourites_data,
           user_data:userData,
-          favourite_medicine_ids,
-          favourite_medical_test_ids
+          [type===FAVOURITE_TYPE.MEDICINE && "favourite_medicine_ids"]:
+          type===FAVOURITE_TYPE.MEDICINE && favourite_medicine_ids,
+          [type === FAVOURITE_TYPE.MEDICAL_TESTS && "favourite_medical_test_ids"]:
+          type === FAVOURITE_TYPE.MEDICAL_TESTS && favourite_medical_test_ids
         },
         "Get User Favourites successful"
         );
