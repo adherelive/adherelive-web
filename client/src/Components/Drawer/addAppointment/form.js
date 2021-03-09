@@ -63,9 +63,9 @@ class AddAppointmentForm extends Component {
       fetchingTypes: false,
       typeDescription: [],
       timeModalVisible: false,
-      descDropDownOpen:false,
-      radiologyDropDownVisible:false,
-      radiologyTypeSelected:null
+      descDropDownOpen: false,
+      radiologyDropDownVisible: false,
+      radiologyTypeSelected: null
     };
   }
 
@@ -73,7 +73,6 @@ class AddAppointmentForm extends Component {
     this.scrollToTop();
     this.getMedicalTestFavourites();
     this.getRadiologyFavourites();
-    
   }
 
   getMedicalTestFavourites = async () => {
@@ -96,16 +95,21 @@ class AddAppointmentForm extends Component {
   };
 
   getRadiologyFavourites = async () => {
-    try{
-      const {getFavourites}=this.props;
-      const RadiologyResponse = await getFavourites({type: FAVOURITE_TYPE.RADIOLOGY});
-      const {status,statusCode,payload:{data={},message:resp_msg=''} = {}} = RadiologyResponse || {};
-      if(!status){
+    try {
+      const { getFavourites } = this.props;
+      const RadiologyResponse = await getFavourites({
+        type: FAVOURITE_TYPE.RADIOLOGY
+      });
+      const {
+        status,
+        statusCode,
+        payload: { data = {}, message: resp_msg = "" } = {}
+      } = RadiologyResponse || {};
+      if (!status) {
         message.error(resp_msg);
       }
-
-    }catch(error){
-      console.log("RadiologyResponse Get errrrorrrr ===>",error);
+    } catch (error) {
+      console.log("RadiologyResponse Get errrrorrrr ===>", error);
     }
   };
 
@@ -280,7 +284,10 @@ class AddAppointmentForm extends Component {
   };
 
   handleTypeSelect = value => {
-    const { form: { setFieldsValue } = {}, static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
+    const {
+      form: { setFieldsValue } = {},
+      static_templates: { appointments: { type_description = {} } = {} } = {}
+    } = this.props;
 
     // resetFields([APPOINTMENT_TYPE_DESCRIPTION]);
     setFieldsValue({ [APPOINTMENT_TYPE_DESCRIPTION]: null });
@@ -342,22 +349,22 @@ class AddAppointmentForm extends Component {
           <div className="pointer flex wp100  align-center justify-space-between">
             {name}
             {descDropDownOpen ? (
-            <Tooltip
-              placement="topLeft"
-              title={favorite_id ? "Unmark" : "Mark favourite"}
-            >
-              {favorite_id ? (
-                <StarFilled
-                  style={{ fontSize: "20px", color: "#f9c216" }}
-                  onClick={this.handleremoveMedicalTestFavourites(index)}
-                />
-              ) : (
-                <StarOutlined
-                  style={{ fontSize: "20px", color: "#f9c216" }}
-                  onClick={this.handleAddMedicalTestFavourites(index)}
-                />
-              )}
-            </Tooltip>
+              <Tooltip
+                placement="topLeft"
+                title={favorite_id ? "Unmark" : "Mark favourite"}
+              >
+                {favorite_id ? (
+                  <StarFilled
+                    style={{ fontSize: "20px", color: "#f9c216" }}
+                    onClick={this.handleremoveMedicalTestFavourites(index)}
+                  />
+                ) : (
+                  <StarOutlined
+                    style={{ fontSize: "20px", color: "#f9c216" }}
+                    onClick={this.handleAddMedicalTestFavourites(index)}
+                  />
+                )}
+              </Tooltip>
             ) : null}
           </div>
         </Option>
@@ -366,26 +373,26 @@ class AddAppointmentForm extends Component {
   };
 
   getRadiologyOptions = () => {
-    const {typeDescription = []} = this.state;
-    const {setRadiologyTypeSelected} = this;
+    const { typeDescription = [] } = this.state;
+    const { setRadiologyTypeSelected } = this;
 
     return Object.keys(typeDescription).map((id, index) => {
-      const {name} = typeDescription[id] || {};
+      const { name } = typeDescription[id] || {};
       return (
-          <Option
-              key={`${id}-${name}`}
-              value={name}
-              onClick={setRadiologyTypeSelected(id)}
-          >
-            {name}
-          </Option>
+        <Option
+          key={`${id}-${name}`}
+          value={name}
+          onClick={setRadiologyTypeSelected(id)}
+        >
+          {name}
+        </Option>
       );
     });
   };
 
   getTypeDescriptionOption = () => {
     const {
-      form: { getFieldValue },
+      form: { getFieldValue }
     } = this.props;
     const {
       getMedicalTestOptions,
@@ -617,16 +624,18 @@ class AddAppointmentForm extends Component {
   };
 
   handleTypeDescriptionUpdate = async () => {
-    const {form: {getFieldValue} = {}, getAppointmentsDetails} = this.props;
+    const { form: { getFieldValue } = {}, getAppointmentsDetails } = this.props;
 
     const response = await getAppointmentsDetails();
-    const {status, payload: {data} = {}} = response || {};
-    if(status === true) {
-      const {static_templates: { appointments: { type_description = {} } = {} } = {}} = data || {};
+    const { status, payload: { data } = {} } = response || {};
+    if (status === true) {
+      const {
+        static_templates: { appointments: { type_description = {} } = {} } = {}
+      } = data || {};
       const value = getFieldValue(APPOINTMENT_TYPE) || null;
       const descArray = type_description[value] ? type_description[value] : [];
 
-      this.setState({typeDescription: descArray});
+      this.setState({ typeDescription: descArray });
     }
   };
 
@@ -635,7 +644,7 @@ class AddAppointmentForm extends Component {
       e.preventDefault();
       e.stopPropagation();
       const { markFavourite } = this.props;
-      const {handleTypeDescriptionUpdate} = this;
+      const { handleTypeDescriptionUpdate } = this;
       const data = {
         type: FAVOURITE_TYPE.MEDICAL_TESTS,
         id
@@ -663,7 +672,7 @@ class AddAppointmentForm extends Component {
       e.preventDefault();
       e.stopPropagation();
       const { removeFavourite } = this.props;
-      const {handleTypeDescriptionUpdate} = this;
+      const { handleTypeDescriptionUpdate } = this;
       const data = {
         type: FAVOURITE_TYPE.MEDICAL_TESTS,
         typeId: id
@@ -688,84 +697,121 @@ class AddAppointmentForm extends Component {
 
   //======================================================================================>>>>
 
-//======================================================================================>>>>
+  //======================================================================================>>>>
 
-  getOptions = (items, each) => {
-    const {radiologyTypeSelected =null , radiologyDropDownVisible=false}=this.state;
-    const {favourites_data = {}}=this.props;
+  getRadiologyDescriptionOptions = (items, each) => {
+    const {
+      radiologyTypeSelected = null,
+      radiologyDropDownVisible = false
+    } = this.state;
 
-    let subOptions = [];
-    for(let itemId in items){
+    return items.map((item, index) => {
+      const { name, favorite_id } = item || {};
 
-      let markedFlag=false;
-      let recordId=null ;
-
-      for(let favDataId in favourites_data){
-        const {basic_info :{marked_favourite_id = null , marked_favourite_type=''}={},
-          details:{
-          sub_category_id=null,
-          selected_radiology_index =null } ={}
-        } = favourites_data[favDataId];
-
-
-        if(marked_favourite_type !== FAVOURITE_TYPE.RADIOLOGY){
-          continue;
-        }else{
-
-          // console.log("9862345263987498234 &&&&&& >>>>>>> ",{marked_favourite_id,radiologyTypeSelected,
-          //   sub_category_id,each,
-          //   selected_radiology_index,itemId});
-
-          if(
-            marked_favourite_id.toString() === radiologyTypeSelected.toString() &&
-            sub_category_id.toString() === each.toString() &&
-            selected_radiology_index.toString() === itemId.toString()
-          ){
-            markedFlag=true;
-            recordId=favDataId;
-          }
-        }
-      }
-      // console.log("8367524890234872379",{eachhhhhh:items[itemId]})
-      const {favorite_id=null,name : item=''}= items[itemId];
-      subOptions.push(
-        <Option key={`${each}:${item}-radiology-type`} value={item} 
-        className="pointer flex wp100  align-center justify-space-between"
+      return (
+        <Option
+          key={`${each}:${name}-radiology-type`}
+          value={name}
+          className="pointer flex wp100  align-center justify-space-between"
         >
-          {item}
-          {
-            radiologyDropDownVisible
-            ?
-            (
-              <Tooltip 
-                placement="topLeft"
-                title={markedFlag ? 'Unmark' : 'Mark favourite'} 
-              >
-    
-          {markedFlag
-              ?  
-                <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
-                  onClick={this.handleremoveRadiologyFavourites(recordId)}
-                /> 
-              :
-              <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
-                onClick={this.handleAddRadiologyFavourites({
-                  id:radiologyTypeSelected,sub_category_id:each,selected_radiology_index:itemId
-                })}
+          {name}
+          {radiologyDropDownVisible ? (
+            <Tooltip
+              placement="topLeft"
+              title={favorite_id ? "Unmark" : "Mark favourite"}
+            >
+              {favorite_id ? (
+                <StarFilled
+                  style={{ fontSize: "20px", color: "#f9c216" }}
+                  onClick={this.handleremoveRadiologyFavourites(favorite_id)}
                 />
-          }     
-    
-          </Tooltip>
-            )
-            :
-            null
-          }
-          
+              ) : (
+                <StarOutlined
+                  style={{ fontSize: "20px", color: "#f9c216" }}
+                  onClick={this.handleAddRadiologyFavourites({
+                    id: radiologyTypeSelected,
+                    sub_category_id: each,
+                    selected_radiology_index: index
+                  })}
+                />
+              )}
+            </Tooltip>
+          ) : null}
         </Option>
       );
-    }
+    });
 
-    return subOptions;
+    // let subOptions = [];
+    // for (let itemId in items) {
+    //   let markedFlag = false;
+    //   let recordId = null;
+    //
+    //   for (let favDataId in favourites_data) {
+    //     const {
+    //       basic_info: {
+    //         marked_favourite_id = null,
+    //         marked_favourite_type = ""
+    //       } = {},
+    //       details: {
+    //         sub_category_id = null,
+    //         selected_radiology_index = null
+    //       } = {}
+    //     } = favourites_data[favDataId];
+    //
+    //     if (marked_favourite_type !== FAVOURITE_TYPE.RADIOLOGY) {
+    //       continue;
+    //     } else {
+    //       // console.log("9862345263987498234 &&&&&& >>>>>>> ",{marked_favourite_id,radiologyTypeSelected,
+    //       //   sub_category_id,each,
+    //       //   selected_radiology_index,itemId});
+    //
+    //       if (
+    //         marked_favourite_id.toString() ===
+    //           radiologyTypeSelected.toString() &&
+    //         sub_category_id.toString() === each.toString() &&
+    //         selected_radiology_index.toString() === itemId.toString()
+    //       ) {
+    //         markedFlag = true;
+    //         recordId = favDataId;
+    //       }
+    //     }
+    //   }
+    //   // console.log("8367524890234872379",{eachhhhhh:items[itemId]})
+    //   const { favorite_id = null, name: item = "" } = items[itemId];
+    //   subOptions.push(
+    //     <Option
+    //       key={`${each}:${item}-radiology-type`}
+    //       value={item}
+    //       className="pointer flex wp100  align-center justify-space-between"
+    //     >
+    //       {item}
+    //       {radiologyDropDownVisible ? (
+    //         <Tooltip
+    //           placement="topLeft"
+    //           title={markedFlag ? "Unmark" : "Mark favourite"}
+    //         >
+    //           {markedFlag ? (
+    //             <StarFilled
+    //               style={{ fontSize: "20px", color: "#f9c216" }}
+    //               onClick={this.handleremoveRadiologyFavourites(recordId)}
+    //             />
+    //           ) : (
+    //             <StarOutlined
+    //               style={{ fontSize: "20px", color: "#f9c216" }}
+    //               onClick={this.handleAddRadiologyFavourites({
+    //                 id: radiologyTypeSelected,
+    //                 sub_category_id: each,
+    //                 selected_radiology_index: itemId
+    //               })}
+    //             />
+    //           )}
+    //         </Tooltip>
+    //       ) : null}
+    //     </Option>
+    //   );
+    // }
+    //
+    // return subOptions;
   };
 
   getRadiologyTypeDescriptionOption = () => {
@@ -775,73 +821,89 @@ class AddAppointmentForm extends Component {
     } = this.props;
     const radiology_type = radiology_type_data[radiologyTypeSelected];
 
-    const {data={},name : radiology_type_name=''} = radiology_type || {};
-    let options = [];
-    for (let each in data){
-      const {items,name} = data[each] || {};
-      options.push
-      (<OptGroup label={name}>
-          {this.getOptions(items,each)}
-      </OptGroup>
-      )
+    console.log(
+      "0271273819823 radiology_type_data, radiologyTypeSelected, radiology_type",
+      { radiology_type_data, radiologyTypeSelected, radiology_type }
+    );
 
+    const { data: radiologyTypeDescription = {} } = radiology_type || {};
+
+    return Object.keys(radiologyTypeDescription).map(id => {
+      const { items, name } = radiologyTypeDescription[id] || {};
+
+      return (
+        <OptGroup label={name} key={`${name}`}>
+          {this.getRadiologyDescriptionOptions(items, id)}
+        </OptGroup>
+      );
+    });
+  };
+
+  handleAddRadiologyFavourites = ({
+    id,
+    sub_category_id,
+    selected_radiology_index
+  }) => async e => {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const { markFavourite } = this.props;
+      const {handleTypeDescriptionUpdate} = this;
+      const data = {
+        type: FAVOURITE_TYPE.RADIOLOGY,
+        id,
+        details: {
+          sub_category_id,
+          selected_radiology_index
+        }
+      };
+
+      const response = await markFavourite(data);
+      const {
+        status,
+        statusCode,
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+      } = response;
+      if (status) {
+        message.success(resp_msg);
+        // this.getRadiologyFavourites();
+        await handleTypeDescriptionUpdate();
+      } else {
+        message.error(resp_msg);
+      }
+    } catch (error) {
+      console.log("error", error);
     }
-
-    return options;
   };
 
+  handleremoveRadiologyFavourites = recordID => async e => {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const { removeFavouriteRecord } = this.props;
+      const {handleTypeDescriptionUpdate} = this;
 
-    handleAddRadiologyFavourites = ({id,sub_category_id,selected_radiology_index}) => async(e) => {
-      try{
-        e.preventDefault();
-        e.stopPropagation();
-          const {markFavourite} = this.props;
-          const data = {
-              type:FAVOURITE_TYPE.RADIOLOGY,
-              id,
-              details:{
-                sub_category_id,
-                selected_radiology_index
-              }
-          }
-
-          const response = await markFavourite(data);
-          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
-          if(status){
-            message.success(resp_msg);
-            this.getRadiologyFavourites();
-          }else{
-            message.error(resp_msg);
-          }
-
-      }catch(error){
-          console.log("error",error);
+      const response = await removeFavouriteRecord(recordID);
+      const {
+        status,
+        statusCode,
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+      } = response;
+      if (status) {
+        message.success(resp_msg);
+        // this.getRadiologyFavourites();
+        await handleTypeDescriptionUpdate();
+      } else {
+        message.error(resp_msg);
       }
+    } catch (error) {
+      console.log("error", { error });
+    }
   };
 
-    handleremoveRadiologyFavourites = (recordID) => async(e) => {
-      try{
-        
-        e.preventDefault();
-        e.stopPropagation();
-          const {removeFavouriteRecord} = this.props;
-          
-          const response = await removeFavouriteRecord(recordID);
-          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
-          if(status){
-            message.success(resp_msg);
-            this.getRadiologyFavourites();
-          }else{
-            message.error(resp_msg);
-          }
-      }catch(error){
-          console.log("error",{error});
-      }
+  RadiologyDropDownVisibleChange = open => {
+    this.setState({ radiologyDropDownVisible: open });
   };
-
-  RadiologyDropDownVisibleChange = (open)=>{
-    this.setState({radiologyDropDownVisible:open});
-  }
 
   render() {
     const {
