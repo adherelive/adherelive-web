@@ -29,8 +29,17 @@ const medicalTestFavorites = async (userTypeData, types) => {
             marked_favourite_type: FAVOURITE_TYPE.MEDICAL_TESTS
         }) || [];
 
+        const favoriteMedicalTestFormatted = await formatMedicalTestFavorite(allMedicalTestFavorites);
         
     } catch(error) {
         Log.debug("medicalTestFavorites error", error);
     }
+};
+
+const formatMedicalTestFavorite = async (favorites) => {
+  try {
+        Log.debug("favorites", favorites);
+  } catch(error) {
+      Log.debug("formatMedicalTestFavorite error", error);
+  }
 };
