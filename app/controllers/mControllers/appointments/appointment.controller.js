@@ -8,7 +8,8 @@ import {
   DOCUMENT_PARENT_TYPE,
   S3_DOWNLOAD_FOLDER,
   NOTIFICATION_STAGES,
-  RADIOLOGY
+  RADIOLOGY,
+  FAVOURITE_TYPE
 } from "../../../../constant";
 import moment from "moment";
 
@@ -42,6 +43,9 @@ import documentService from "../../../services/uploadDocuments/uploadDocuments.s
 // WRAPPERS...
 import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
+
+
+import * as AppointmentHelper from "./helper";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
@@ -482,18 +486,39 @@ class MobileAppointmentController extends Controller {
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
+
+      const {userDetails: {userData: {category}, userCategoryId} = {}} = req;
       const appointmentDetails = await featureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.APPOINTMENT
       });
 
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
+      let featureDetails = appointmentData.getFeatureDetails();
+
+      const {type_description, radiology_type_data} =  featureDetails || {};
+
+      const userTypeData = {
+        id: userCategoryId,
+        category,
+      };
+
+      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
+
+      featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
+
+      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
+
+      featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
+
+
+
       return raiseSuccess(
         res,
         200,
         {
           static_templates: {
-            appointments: { ...appointmentData.getFeatureDetails() }
+            appointments: { ...featureDetails }
           }
         },
         "Appointment details fetched successfully"
