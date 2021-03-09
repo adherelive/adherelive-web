@@ -86,7 +86,7 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
             const {marked_favourite_id =  null, id = null, 
                 details: {sub_category_id = null, selected_radiology_index = null} = {}} = radiologyFavorite;
 
-            if(marked_favourite_id && sub_category_id && selected_radiology_index) {
+            if(marked_favourite_id !== null && sub_category_id !== null && selected_radiology_index !== null) {
                 favoriteIndices[`${marked_favourite_id}-${sub_category_id}-${selected_radiology_index}`] = id;
             }
         }

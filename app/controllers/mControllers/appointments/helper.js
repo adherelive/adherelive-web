@@ -82,13 +82,13 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
             const {marked_favourite_id =  null, id = null, 
                 details: {sub_category_id = null, selected_radiology_index = null} = {}} = radiologyFavorite;
 
-            if(marked_favourite_id && sub_category_id && selected_radiology_index) {
+            if(marked_favourite_id !== null && sub_category_id !== null && selected_radiology_index !== null) {
                 favoriteIndices[`${marked_favourite_id}-${sub_category_id}-${selected_radiology_index}`] = id;
             }
         }
 
         const favIndicesList = Object.keys(favoriteIndices);
-        
+
         for(const typeId of Object.keys(types)) {
 
             let {[typeId]: { data = {}, id = null, name: typeName} = {}} = types;
