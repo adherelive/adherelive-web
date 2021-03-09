@@ -341,7 +341,7 @@ class AddAppointmentForm extends Component {
             ?
             (<Tooltip 
               placement="topLeft"
-              title={favourite_medical_test_ids.includes(index.toString()) ? 'Unmark' : 'Mark favourite'} 
+              // title={favourite_medical_test_ids.includes(index.toString()) ? 'Unmark' : 'Mark favourite'} 
             >
   
         {favourite_medical_test_ids.includes(index.toString())
