@@ -325,96 +325,57 @@ class AddAppointmentForm extends Component {
 
     if(typeValue === MEDICAL_TEST ){
       for (let each in typeDescription) {
-        const {name:desc=''} = typeDescription[each];
+
+        // console.log("324762348792034823974",{EACH:typeDescription[each]});
+        const {name:desc='' , favorite_id=null,index=null} = typeDescription[each];
+
+        newTypes.push(
+          <Option key={desc} value={desc}>
+          <div
+          key={`${desc}-div`}
+          className="pointer flex wp100  align-center justify-space-between"
+        >
+          {desc}
+          {
+            descDropDownOpen 
+            ?
+            (<Tooltip 
+              placement="topLeft"
+              title={favourite_medical_test_ids.includes(index.toString()) ? 'Unmark' : 'Mark favourite'} 
+            >
+  
+        {favourite_medical_test_ids.includes(index.toString())
+            ?  
+              <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
+                onClick={this.handleremoveMedicalTestFavourites(index)}
+              /> 
+            :
+            <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
+                onClick = {this.handleAddMedicalTestFavourites(index)}
+              />
+        }     
+  
+            </Tooltip>)
+            :
+            null
+          }
+        
+        </div>
+          
+        </Option>
+        
+      )
+    } 
 
 
-        if(favourite_medical_test_ids.includes(each.toString())){
-          favTypes.push(
-            <Option key={desc} value={desc}>
-            <div
-            key={`${desc}-div`}
-            className="pointer flex wp100  align-center justify-space-between"
-          >
-            {desc}
-            {
-              descDropDownOpen 
-              ?
-              (<Tooltip 
-                placement="topLeft"
-                title={favourite_medical_test_ids.includes(each.toString()) ? 'Unmark' : 'Mark favourite'} 
-              >
-    
-          {favourite_medical_test_ids.includes(each.toString())
-              ?  
-                <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
-                  onClick={this.handleremoveMedicalTestFavourites(each)}
-                /> 
-              :
-              <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
-                  onClick = {this.handleAddMedicalTestFavourites(each)}
-                />
-          }     
-    
-              </Tooltip>)
-              :
-              null
-            }
-          
-          </div>
-            
-          </Option>
-          
-        )
-        }else{
-          unFavTypes.push(
-            <Option key={desc} value={desc}>
-            <div
-            key={`${desc}-div`}
-            className="pointer flex wp100  align-center justify-space-between"
-          >
-            {desc}
-            {
-              descDropDownOpen 
-              ?
-              (<Tooltip 
-                placement="topLeft"
-                title={favourite_medical_test_ids.includes(each.toString()) ? 'Unmark' : 'Mark favourite'} 
-              >
-    
-          {favourite_medical_test_ids.includes(each.toString())
-              ?  
-                <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
-                  onClick={this.handleremoveMedicalTestFavourites(each)}
-                /> 
-              :
-              <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
-                  onClick = {this.handleAddMedicalTestFavourites(each)}
-                />
-          }     
-    
-              </Tooltip>)
-              :
-              null
-            }
-          
-          </div>
-            
-          </Option>
-          )
-        }
-      }
 
-      for (let each of favTypes){
-        newTypes.push(each);
-      }
-      for (let each of unFavTypes){
-        newTypes.push(each);
-      }
+   
 
       return newTypes;
 
        
       }
+
     else if(typeValue === RADIOLOGY){
       for (let each in  typeDescription) {
         const {id = null , name : desc =''} = typeDescription[each];
@@ -555,17 +516,32 @@ class AddAppointmentForm extends Component {
     try{
       e.preventDefault();
       e.stopPropagation();
-        const {markFavourite} = this.props;
+
+        const {markFavourite,getAppointmentsDetails} = this.props;
         const data = {
             type:FAVOURITE_TYPE.MEDICAL_TESTS,
             id
         }
 
+        const {
+          form: {  getFieldValue
+           }
+        } = this.props;
+        
 
         const response = await markFavourite(data);
         const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
         if(status){
           message.success(resp_msg);
+          await getAppointmentsDetails();
+          let {
+            static_templates: { appointments: { type_description = {} } = {} } = {}
+          } = this.props;
+         
+          const typeValue = getFieldValue(APPOINTMENT_TYPE);
+          console.log("78423849237467236748",{typeValue,STATE:this.state});
+          let descArray = type_description[typeValue] ? type_description[typeValue] : [];
+          this.setState({ typeDescription: descArray });
         }else{
           message.error(resp_msg);
         }
@@ -580,7 +556,11 @@ class AddAppointmentForm extends Component {
       
       e.preventDefault();
       e.stopPropagation();
-        const {removeFavourite} = this.props;
+        const {removeFavourite , getAppointmentsDetails} = this.props;
+        const {
+          form: {  getFieldValue
+           }
+        } = this.props;
         const data = {
             type:FAVOURITE_TYPE.MEDICAL_TESTS,
             typeId:id
@@ -590,6 +570,15 @@ class AddAppointmentForm extends Component {
         const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
         if(status){
           message.success(resp_msg);
+          await getAppointmentsDetails();
+          let {
+            static_templates: { appointments: { type_description = {} } = {} } = {}
+          } = this.props;
+         
+          const typeValue = getFieldValue(APPOINTMENT_TYPE);
+          console.log("78423849237467236748",{typeValue,STATE:this.state});
+          let descArray = type_description[typeValue] ? type_description[typeValue] : []; 
+          this.setState({ typeDescription: descArray });
         }else{
           message.error(resp_msg);
         }
