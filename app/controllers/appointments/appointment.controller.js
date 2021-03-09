@@ -12,7 +12,9 @@ import {
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
   S3_DOWNLOAD_FOLDER,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES,
+  FAVOURITE_TYPE,
+  MEDICAL_TEST
 } from "../../../constant";
 import moment from "moment";
 
@@ -613,7 +615,6 @@ class AppointmentController extends Controller {
     try {
       const { params: { id } = {}, userDetails: { userId } = {} } = req;
 
-      console.log("PATIENT IDDD OF GET APPOINTMENT", id);
       const appointmentList = await appointmentService.getAppointmentForPatient(
         id
       );
@@ -637,7 +638,6 @@ class AppointmentController extends Controller {
           schedule_events,
           upload_documents
         } = await appointmentWrapper.getAllInfo();
-        Logger.debug("1982378128 ", schedule_events, upload_documents);
         appointmentApiData = { ...appointmentApiData, ...appointments };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
         uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
@@ -707,21 +707,30 @@ class AppointmentController extends Controller {
 
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
-      const {type_description} = appointmentData.getFeatureDetails() || {};
+      let featureDetails = appointmentData.getFeatureDetails();
+
+      const {type_description, radiology_type_data} =  featureDetails || {};
 
       const userTypeData = {
         id: userCategoryId,
         category,
       };
 
-      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description);
+      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
+
+      featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
+
+      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
+
+      featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
+
 
       return raiseSuccess(
         res,
         200,
         {
           static_templates: {
-            appointments: { ...appointmentData.getFeatureDetails() }
+            appointments: { ...featureDetails }
           }
         },
         "Appointment details fetched successfully"
