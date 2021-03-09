@@ -210,62 +210,7 @@ class AddAppointmentForm extends Component {
     });
   };
 
-  // handleStartTimeChange = time => {
-  //   const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-  //   // const startTime = getFieldValue(START_TIME);
-  //   const startDate = getFieldValue(DATE);
-  //   if (startDate) {
-  //     const newMonth = startDate.get("month");
-  //     const newDate = startDate.get("date");
-  //     const newYear = startDate.get("year");
-  //     let newEventStartTime;
-  //     let newEventEndTime;
-  //     newEventStartTime = time
-  //       ? moment(time)
-  //           .clone()
-  //           .set({ month: newMonth, year: newYear, date: newDate })
-  //       : null;
-  //     newEventEndTime = newEventStartTime
-  //       ? moment(newEventStartTime).add("minutes", 30)
-  //       : null;
-  //     setFieldsValue({
-  //       [START_TIME]: newEventStartTime,
-  //       [END_TIME]: newEventEndTime
-  //     });
-  //   } else {
-  //     setFieldsValue({
-  //       [END_TIME]: time ? moment(time).add("minutes", 30) : null
-  //     });
-  //   }
-  // };
-  //
-  // handleEndTimeChange = time => {
-  //   const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
-  //   const startTime = getFieldValue(START_TIME);
-  //   const startDate = getFieldValue(DATE);
-  //   if (startDate) {
-  //     const newMonth = startDate.get("month");
-  //     const newDate = startDate.get("date");
-  //     const newYear = startDate.get("year");
-  //     let newEventStartTime;
-  //     let newEventEndTime;
-  //     newEventStartTime = startTime
-  //       ? moment(startTime)
-  //           .clone()
-  //           .set({ month: newMonth, year: newYear, date: newDate })
-  //       : null;
-  //     newEventEndTime = time
-  //       ? time.clone().set({ month: newMonth, year: newYear, date: newDate })
-  //       : null;
-  //     setFieldsValue({
-  //       [START_TIME]: newEventStartTime,
-  //       [END_TIME]: newEventEndTime
-  //     });
-  //   } else {
-  //     setFieldsValue({ [END_TIME]: moment(time) });
-  //   }
-  // };
-
+  
   getPatientName = () => {
     const { patients, payload: { patient_id } = {} } = this.props;
     const { basic_info: { first_name, middle_name, last_name } = {} } =
@@ -352,6 +297,8 @@ class AddAppointmentForm extends Component {
     const {static_templates:{appointments:{radiology_type_data = {}}={}}={}} = this.props;
     const temp = radiology_type_data[IdStr];
   }
+
+
   getTypeDescriptionOption = () => {
     let { typeDescription = [] ,descDropDownOpen=false} = this.state;
     const {favourite_medical_test_ids = []}=this.props;
@@ -369,7 +316,6 @@ class AddAppointmentForm extends Component {
       for (let each in typeDescription) {
         let desc  = typeDescription[each];
 
-        console.log("6325462798487923402 ^^^^^^^ ",{desc});
 
         if(favourite_medical_test_ids.includes(each.toString())){
           favTypes.push(
@@ -384,7 +330,7 @@ class AddAppointmentForm extends Component {
               ?
               (<Tooltip 
                 placement="topLeft"
-                // title={favourite_medical_test_ids.includes(each.toString()) ? 'Unmark' : 'Mark favourite'} 
+                title={favourite_medical_test_ids.includes(each.toString()) ? 'Unmark' : 'Mark favourite'} 
               >
     
           {favourite_medical_test_ids.includes(each.toString())
@@ -421,7 +367,7 @@ class AddAppointmentForm extends Component {
               ?
               (<Tooltip 
                 placement="topLeft"
-                // title={favourite_medical_test_ids.includes(each.toString()) ? 'Unmark' : 'Mark favourite'} 
+                title={favourite_medical_test_ids.includes(each.toString()) ? 'Unmark' : 'Mark favourite'} 
               >
     
           {favourite_medical_test_ids.includes(each.toString())
@@ -460,9 +406,7 @@ class AddAppointmentForm extends Component {
       }
     else if(typeValue === RADIOLOGY){
       for (let each in  typeDescription) {
-        // let desc = typeDescription[each];
         const {id = null , name : desc =''} = typeDescription[each];
-        console.log("6325462798487923402",{desc,typeDescription});
         newTypes.push(
           <Option key={desc} value={desc}
             onClick={this.setRadiologyTypeSelected(id)}
@@ -476,16 +420,10 @@ class AddAppointmentForm extends Component {
     
     }  
     else{  
-      //TODO-j
-
-      for (let each in  typeDescription) {
-        // let desc = typeDescription[each];
-        const {id = null , name : desc =''} = typeDescription[each];
-        console.log("6325462798487923402",{desc,typeDescription});
+      for (let each in typeDescription) {
+        let desc = typeDescription[each];
         newTypes.push(
-          <Option key={desc} value={desc}
-            onClick={this.setRadiologyTypeSelected(id)}
-          >
+          <Option key={desc} value={desc}>
             {desc}
           </Option>
         );
@@ -649,20 +587,26 @@ class AddAppointmentForm extends Component {
     }
 }
 
-  getStringFormat = (str) => {
-    return str ? `${str.charAt(0).toUpperCase()}${str.substring(1, str.length)}` : "";
-  };
 
-  getOptions = (items, category) => {
-    const {getStringFormat} = this;
 
-    return items.map((item) => {
-      console.log("49865732849089230423 ##@@#@#@#@#@@@@@@@@@@@@@@" ,{item,items,category});
+  getOptions = (items, each) => {
+    const {radiologyTypeSelected =null}=this.state;
+    let subOptions = [];
+    for(let itemId in items){
+      console.log("9862345263987498234 &&&&&&",{radiologyTypeSelected,each,itemId});
+      let item = items[itemId];
+      subOptions.push(
+        <Option key={`${each}:${item}-radiology-type`} value={item} title={each}
+          onClick={this.handleAddRadiologyFavourites({
+            id:radiologyTypeSelected,sub_category_id:each,selected_radiology_index:itemId
+          })}
+        >
+          {item}
+        </Option>
+      )
+    }
 
-        return (
-            <Option key={`${category}:${item}-radiology-type`} value={item} title={category}>{item}</Option>
-        );
-    });
+    return subOptions;
   };
 
  
@@ -672,29 +616,71 @@ class AddAppointmentForm extends Component {
     const {static_templates:{appointments:{radiology_type_data = {}}={}}={}} = this.props;
     const radiology_type = radiology_type_data[radiologyTypeSelected];
 
-    const {getStringFormat}=this;
-    const {data={},name=''} = radiology_type || {};
+    const {data={},name : radiology_type_name=''} = radiology_type || {};
+    // console.log("9862345263987498234 +++++++>>>>>>>>>>>>>>>>>>>>",{data});
+    let options = [];
+    for (let each in data){
+      const {items,name} = data[each] || {};
+      let subOptions = this.getOptions(items,each) || [];
 
-      // return (
-      //   <Option
-      //   key={"KEY"} val={"VAL"}>
-      //     VALLLL
-      //   </Option>
-      // )
-
-    return Object.values(data).map(value => {
-      const {items, name} = value || {};
-      // console.log("49865732849089230423",{value,items,name,radiology_type_data,radiologyTypeSelected,radiology_type});
+      for(let everyOption of subOptions){
+        options.push(everyOption);
+      } 
+    }
 
 
-      return (
-        <OptGroup label={getStringFormat(name)}>
-              {this.getOptions(items, name)}
-        </OptGroup>
-      );
-   });
+    return options;
 
   };
+
+
+    handleAddRadiologyFavourites = ({id,sub_category_id,selected_radiology_index}) => async(e) => {
+      try{
+        e.preventDefault();
+        e.stopPropagation();
+          const {markFavourite} = this.props;
+          const data = {
+              type:FAVOURITE_TYPE.RADIOLOGY,
+              id,
+              details:{
+                sub_category_id,
+                selected_radiology_index
+              }
+          }
+
+          const response = await markFavourite(data);
+          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+          if(status){
+            message.success(resp_msg);
+          }else{
+            message.error(resp_msg);
+          }
+
+      }catch(error){
+          console.log("error",error);
+      }
+  }
+
+    handleremoveRadiologyFavourites = (recordID) => async(e) => {
+      try{
+        
+        e.preventDefault();
+        e.stopPropagation();
+          const {removeFavouriteRecord} = this.props;
+          
+          const response = await removeFavouriteRecord(recordID);
+          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
+          if(status){
+            message.success(resp_msg);
+          }else{
+            message.error(resp_msg);
+          }
+      }catch(error){
+          console.log("error",{error});
+      }
+  }
+
+
 
   render() {
     const {
@@ -704,7 +690,6 @@ class AddAppointmentForm extends Component {
        favourites_data
     } = this.props;
     const {radiologyTypeSelected = null} = this.state;
-    console.log("6325462798487923402 >>>>>>>>>>>>>>>>>>",{radiologyTypeSelected});
     const { timeModalVisible } = this.state;
     const {
       formatMessage,
@@ -739,21 +724,6 @@ class AddAppointmentForm extends Component {
               initialValue: getInitialValue()
             })(
               <div />
-              //   <Select
-              //     className="user-select drawer-select"
-              //     // onSearch={fetchPatients}
-              //     placeholder={getPatientName()}
-              //     notFoundContent={fetchingPatients ? <Spin size="small" /> : 'No match found'}
-              //     showSearch={true}
-              //     disabled={getInitialValue() ? true : false}
-              //     // todo: update when patients are there
-              //     filterOption={false}
-              //     suffixIcon={null}
-              //     removeIcon={null}
-              //     clearIcon={null}
-              //   >
-              //     {getPatientOptions()}
-              //   </Select>
             )}
           </FormItem>
 
@@ -862,11 +832,11 @@ class AddAppointmentForm extends Component {
                 defaultActiveFirstOption={true}
                 autoComplete="off"
                 optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.props.children
-                    .toLowerCase()
-                    .indexOf(input.toLowerCase()) >= 0
-                }
+                // filterOption={(input, option) =>
+                //   option.props.children
+                //     .toLowerCase()
+                //     .indexOf(input.toLowerCase()) >= 0
+                // }
               >
                 {this.getRadiologyTypeDescriptionOption()}
               </Select>
@@ -943,12 +913,7 @@ class AddAppointmentForm extends Component {
             className="full-width mt-10 ant-date-custom-ap-date"
           >
             {getFieldDecorator(DATE, {
-              // rules: [
-              //   {
-              //     required: true,
-              //     message: formatMessage(messages.error_select_date),
-              //   },
-              // ],
+        
               initialValue: moment()
             })(
               <DatePicker
@@ -959,12 +924,7 @@ class AddAppointmentForm extends Component {
                 // getCalendarContainer={this.getParentNode}
               />
             )}
-            {/*<img*/}
-            {/*  alt=""*/}
-            {/*  className="calendar clickable new-calendar"*/}
-            {/*  onClick={openCalendar}*/}
-            {/*  src={calendar}*/}
-            {/*/>*/}
+           
           </FormItem>
 
           <div className="wp100 mt-6 flex justify-space-between align-center flex-1">
@@ -990,15 +950,6 @@ class AddAppointmentForm extends Component {
                   START_TIME,
                   {}
                 )(
-                  // <TimePicker
-                  //   use12Hours
-                  //   onChange={handleStartTimeChange}
-                  //   minuteStep={15}
-                  //   format="h:mm a"
-                  //   className="wp100 ant-time-custom"
-                  //   onClick={openTimeModal}
-                  //   // getPopupContainer={this.getParentNode}
-                  // />
                   <Dropdown overlay={getTimePicker(START_TIME)}>
                     <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
                       <div>{getStartTime()}</div>
@@ -1031,14 +982,6 @@ class AddAppointmentForm extends Component {
                   END_TIME,
                   {}
                 )(
-                  // <TimePicker
-                  //   use12Hours
-                  //   minuteStep={15}
-                  //   onChange={handleEndTimeChange}
-                  //   format="h:mm a"
-                  //   className="wp100 ant-time-custom"
-                  //   // getPopupContainer={this.getParentNode}
-                  // />
                   <Dropdown overlay={getTimePicker(END_TIME)}>
                     <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
                       <div>{getEndTime()}</div>
@@ -1051,25 +994,12 @@ class AddAppointmentForm extends Component {
           </div>
 
           <FormItem
-            // label={formatMessage(messages.treatment_text)}
-            // className="full-width ant-date-custom"
             className="mb-24"
           >
             {getFieldDecorator(TREATMENT, {
               initialValue: getTreatment()
             })(
               <div />
-              // <Select
-              //   className="form-inputs-ap drawer-select"
-              //   autoComplete="off"
-              //   placeholder="Select Treatment"
-              //   disabled={getTreatment() ? true : false}
-              //   // onSelect={this.setTreatment}
-              //   // onDeselect={handleDeselect}
-              //   suffixIcon={null}
-              // >
-              //   {this.getTreatmentOption()}
-              // </Select>
             )}
           </FormItem>
 

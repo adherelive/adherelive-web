@@ -8,7 +8,8 @@ import { getAppointments, addAppointment, addCarePlanAppointment } from "../../m
 import {
     markFavourite , 
     getFavourites , 
-    removeFavourite} from "../../modules/favouritesData/index";
+    removeFavourite,
+    removeFavouriteByRecordId} from "../../modules/favouritesData/index";
 
     
 const mapStateToProps = state => {
@@ -41,7 +42,8 @@ const mapDispatchToProps = dispatch => {
         getAppointments: (id) => dispatch(getAppointments(id)),
         markFavourite : (payload) => dispatch(markFavourite(payload)),
         getFavourites : ({type}) => dispatch(getFavourites({type})),
-        removeFavourite: ({typeId,type}) => dispatch(removeFavourite({typeId,type}))
+        removeFavourite: ({typeId,type}) => dispatch(removeFavourite({typeId,type})),
+        removeFavouriteRecord :(id) => dispatch(removeFavouriteByRecordId(id))
     };
 };
 
