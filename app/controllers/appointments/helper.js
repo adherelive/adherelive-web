@@ -16,7 +16,7 @@ export const getFavoriteInDetails = async (userTypeData, typeDescription, type) 
                 response = { ...typeDescription, ...{[MEDICAL_TEST]: medicalTestTypes}}
                 return response;
             case FAVOURITE_TYPE.RADIOLOGY:
-                const radiologyTypes = await radiologyTypeFavorites(userTypeData, typeDescription)
+                const radiologyTypes = await radiologyTypeFavorites(userTypeData, typeDescription);
                 response = radiologyTypes;
                 return response;
         }

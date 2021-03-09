@@ -4,7 +4,7 @@ import AddAppointmentDrawer from "../../Components/Drawer/addAppointment";
 import { close } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 import { getMedications } from "../../modules/medications";
-import { getAppointments, addAppointment, addCarePlanAppointment } from "../../modules/appointments";
+import { getAppointments, addAppointment, addCarePlanAppointment, getAppointmentsDetails } from "../../modules/appointments";
 import {
     markFavourite , 
     getFavourites , 
@@ -43,7 +43,8 @@ const mapDispatchToProps = dispatch => {
         markFavourite : (payload) => dispatch(markFavourite(payload)),
         getFavourites : ({type}) => dispatch(getFavourites({type})),
         removeFavourite: ({typeId,type}) => dispatch(removeFavourite({typeId,type})),
-        removeFavouriteRecord :(id) => dispatch(removeFavouriteByRecordId(id))
+        removeFavouriteRecord :(id) => dispatch(removeFavouriteByRecordId(id)),
+        getAppointmentsDetails: () => dispatch(getAppointmentsDetails())
     };
 };
 
