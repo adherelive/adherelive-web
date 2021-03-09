@@ -126,7 +126,8 @@ class CarePlanController extends Controller {
             provider_name = null,
             type = "",
             type_description = "",
-            critical = false
+            critical = false,
+            radiology_type = ""
           } = appointmentsData[i];
 
           const { id: participant_two_id, category: participant_two_type } =
@@ -175,7 +176,8 @@ class CarePlanController extends Controller {
               reason,
               type,
               type_description,
-              critical
+              critical,
+              radiology_type
             }
           };
 
@@ -205,7 +207,8 @@ class CarePlanController extends Controller {
               description,
               type_description,
               critical,
-              appointment_type: type
+              appointment_type: type,
+              radiology_type
             }
           });
 

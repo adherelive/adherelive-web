@@ -23,6 +23,7 @@ const appointmentFormSchema = Joi.object().keys({
   provider_id: Joi.number().optional().allow(""),
   provider_name: Joi.string().optional().allow(""),
   type_description:Joi.string().required(),
+  radiology_type:Joi.string().optional().allow(""),
   critical: Joi.boolean().optional().allow(""),
   organizer: Joi.object()
     .keys({

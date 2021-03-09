@@ -81,6 +81,7 @@ class AppointmentController extends Controller {
         reason = "",
         type = null,
         type_description = null,
+        radiology_type = "",
         provider_id = null,
         provider_name = null,
         critical = false
@@ -168,6 +169,7 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
+          radiology_type,
           critical
         },
         provider_id,
@@ -441,6 +443,7 @@ class AppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
+        radiology_type = "",
         critical = false
         // participant_one_type = "",
         // participant_one_id = "",
@@ -524,6 +527,7 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
+          radiology_type,
           critical
         }
       };
