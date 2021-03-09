@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, Select, Input, message, Button, TimePicker, Modal } from "antd";
 
-import { MEDICATION_TIMING,DAYS,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
+import { MEDICATION_TIMING,DAYS,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP, RADIOLOGY } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
@@ -1034,19 +1034,21 @@ class TemplateDrawer extends Component {
             critical,
             type = '',
             type_description = '',
+            radiology_type='',
             provider_id = 0,
             provider_name = '',
             participant_two = {},
             start_time = {},
             treatment_id = "",
             reason = '' } = data;
+
         let newAppointment = appointments[innerFormKey];
         newAppointment.reason = reason;
         if (provider_id) {
             newAppointment.provider_id = provider_id;
         }
         newAppointment.provider_name = provider_name;
-        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, appointment_type: type, type_description };
+        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, appointment_type: type, type_description , radiology_type };
         appointments[innerFormKey] = newAppointment;
         this.setState({ appointments, templateEdited: true }, () => {
             this.onCloseInner();
@@ -1063,6 +1065,7 @@ class TemplateDrawer extends Component {
             critical,
             type = '',
             type_description = '',
+            radiology_type='',
             provider_id = 0,
             provider_name = '',
             participant_two = {},
@@ -1072,7 +1075,7 @@ class TemplateDrawer extends Component {
         let newAppointment = {};
 
 
-        if (!date || !start_time || !end_time || !treatment_id) {
+        if (!date || !start_time || !end_time || !treatment_id || (type === RADIOLOGY && !radiology_type)) {
             message.error(this.formatMessage(messages.appointmentError));
             return;
         }
@@ -1082,7 +1085,7 @@ class TemplateDrawer extends Component {
             newAppointment.provider_id = provider_id;
         }
         newAppointment.provider_name = provider_name;
-        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description };
+        newAppointment.schedule_data = { description, end_time, participant_two, start_time, date, treatment_id, critical, type, type_description ,radiology_type};
         appointments[key] = newAppointment;
         appointmentKeys.push(key);
         this.setState({ appointments, appointmentKeys, templateEdited: true }, () => {
@@ -1117,7 +1120,7 @@ class TemplateDrawer extends Component {
             return null;
         }
 
-       
+       console.log("3946534782342736472734823 RENDDDDER==========>>",{state:this.state});
         return (
             <Fragment>
                 <Drawer

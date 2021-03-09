@@ -77,17 +77,22 @@ class EditAppointmentForm extends Component {
 
     let { basic_info: { details: { type = '' , type_description :type_desc_initial ='' } = {} } = {} } = appointments[appointment_id] || {};
 
-    const { schedule_data: { appointment_type = '' } = {} , 
+    const { schedule_data: { appointment_type = '' , type : shedule_data_type='' ,type_description : scheduled_data_type_desc = ''  } = {} , 
     details:{appointment_type : details_appointment_type= ''} ={}  } = appointmentData || {};
     
     const appt_tye = appointment_type?appointment_type:details_appointment_type;
-    type = appt_tye ? appt_tye : type;
+    type = appt_tye ? appt_tye : shedule_data_type ? shedule_data_type: type;
 
     let { static_templates: { appointments: {radiology_type_data  = {} } = {} } = {} } = this.props;
 
     let { static_templates: { appointments: { type_description = {} } = {} } = {} } = this.props;
     let descArray = type_description[type] ? type_description[type] : [];
     this.setState({ typeDescription: descArray });
+    
+    if(!type_desc_initial){
+      type_desc_initial = scheduled_data_type_desc;
+    }
+
 
 
 
@@ -97,7 +102,7 @@ class EditAppointmentForm extends Component {
       for(let each in radiology_type_data){
         const {name='',id=null}=radiology_type_data[each];
 
-        if(name == type_desc_initial){
+        if(name === type_desc_initial){
           radiology_id = id;
           break;
         }
@@ -107,8 +112,12 @@ class EditAppointmentForm extends Component {
       this.setState({
         radiologyTypeSelected:radiology_id
       })
+
+     
+      
     }
 
+    
     this.getMedicalTestFavourites();
     this.getRadiologyFavourites();
     
@@ -428,7 +437,6 @@ class EditAppointmentForm extends Component {
 
     if(typeValue === MEDICAL_TEST ){
       for (let each in typeDescription) {
-            // console.log("324762348792034823974",{EACH:typeDescription[each]});
             const {name:desc='' , favorite_id=null,index=null} = typeDescription[each];
 
             newTypes.push(
@@ -606,7 +614,6 @@ class EditAppointmentForm extends Component {
           } = this.props;
          
           const typeValue = getFieldValue(APPOINTMENT_TYPE);
-          console.log("78423849237467236748",{typeValue,STATE:this.state});
           let descArray = type_description[typeValue] ? type_description[typeValue] : [];
           this.setState({ typeDescription: descArray });
         }else{
@@ -644,7 +651,6 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
         } = this.props;
        
         const typeValue = getFieldValue(APPOINTMENT_TYPE);
-        console.log("78423849237467236748",{typeValue,STATE:this.state});
         let descArray = type_description[typeValue] ? type_description[typeValue] : []; 
         this.setState({ typeDescription: descArray });
       }else{
@@ -693,7 +699,6 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
         }
       }
 
-      // console.log("8367524890234872379",{eachhhhhh:items[itemId]})
       const {favorite_id=null,name : item=''}= items[itemId];
       subOptions.push(
         <Option key={`${each}:${item}-radiology-type`} value={item} 
@@ -852,12 +857,13 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
 
 
 
-    let { reason: res = '', provider_id: provId = 0, provider_name: provName = '', schedule_data: { description: des = '', date: Date = '', start_time: startTime = '',
-     end_time: endTime = '', appointment_type = '', type_description: typeDes = '', 
-     critical: critic = false } = {} } = appointmentData || {};
+    let { reason: res = '', provider_id: provId = 0, provider_name: provName = '',
+     schedule_data: { description: des = '', date: Date = '', start_time: startTime = '',
+     end_time: endTime = '', appointment_type = '',type : schedule_data_type='', type_description: typeDes = '', 
+     critical: critic = false , radiology_type : scheduled_data_radiology_type = '' } = {} } = appointmentData || {};
     description = des ? des : description;
     reason = res ? res : reason;
-    type = appointment_type ? appointment_type : type;
+    type = appointment_type ? appointment_type : schedule_data_type ? schedule_data_type : type;
     type_description = typeDes ? typeDes : type_description;
     provider_id = provName ? provName : provId ? provId : provider_id;
     critical = critic ? critic : critical;
@@ -873,6 +879,12 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
     let appt_type_desc = '';
 
     const {schedule_data = {} } = appointmentData || {};
+
+    if(!radiology_type){
+      radiology_type = scheduled_data_radiology_type;
+    }
+
+
     
     if(!type || !type_description || !schedule_data){
       let { details : {radiology_type : radio_type='',appointment_type : appt_type = '' , type_description : appt_desc ='' , date = ''} = {} , } = appointmentData || {};
@@ -907,6 +919,7 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
     });
 
     const typeValue = getFieldValue(APPOINTMENT_TYPE);
+
 
     return (
       <Form className="fw700 wp100 pb30 Form">
