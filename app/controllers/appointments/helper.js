@@ -55,9 +55,9 @@ const medicalTestFavorites = async (userTypeData, types) => {
             let favoriteId = null;
             if(favIndicesList.indexOf(`${idx}`) > -1) {
                 favoriteId = favoriteIndices[idx]
-                favTypesList.push({name: type, favorite_id: favoriteId})
+                favTypesList.push({name: type, favorite_id: favoriteId, index: idx})
             } else {
-                notFavTypesList.push({name: type, favorite_id: favoriteId})
+                notFavTypesList.push({name: type, favorite_id: favoriteId, index: idx})
             }
 
             
