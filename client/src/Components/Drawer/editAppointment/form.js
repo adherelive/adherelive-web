@@ -557,6 +557,7 @@ class EditAppointmentForm extends Component {
     });
   };
 
+
   getRadiologyOptions = () => {
     const { typeDescription = [] } = this.state;
     const { setRadiologyTypeSelected } = this;
