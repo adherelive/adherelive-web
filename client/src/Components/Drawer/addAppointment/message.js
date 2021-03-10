@@ -409,6 +409,16 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Radiology Type Description Required"
   },
+  markFav: {
+    id: "app.drawer.add.appointment.markFav",
+    description: "",
+    defaultMessage: "Mark favourite"
+  },
+  unMarkFav: {
+    id: "app.drawer.add.appointment.unMarkFav",
+    description: "",
+    defaultMessage: "Un-mark favourite"
+  },
 });
 
 export default message;

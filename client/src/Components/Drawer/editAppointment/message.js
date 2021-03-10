@@ -433,7 +433,17 @@ const message = defineMessages({
     id: "app.drawer.edit.appointment.error_radio_type_required",
     description: "",
     defaultMessage: "Radiology Type Description Required"
-  } 
+  },
+  markFav: {
+    id: "app.drawer.edit.appointment.markFav",
+    description: "",
+    defaultMessage: "Mark favourite"
+  },
+  unMarkFav: {
+    id: "app.drawer.edit.appointment.unMarkFav",
+    description: "",
+    defaultMessage: "Un-mark favourite"
+  },
 });
 
 export default message;

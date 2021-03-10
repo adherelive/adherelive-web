@@ -351,7 +351,7 @@ class AddAppointmentForm extends Component {
             {descDropDownOpen ? (
               <Tooltip
                 placement="topLeft"
-                title={favorite_id ? "Unmark" : "Mark favourite"}
+                title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
               >
                 {favorite_id ? (
                   <StarFilled
@@ -718,7 +718,7 @@ class AddAppointmentForm extends Component {
           {radiologyDropDownVisible ? (
             <Tooltip
               placement="topLeft"
-              title={favorite_id ? "Unmark" : "Mark favourite"}
+              title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
             >
               {favorite_id ? (
                 <StarFilled
