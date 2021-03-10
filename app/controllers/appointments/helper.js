@@ -86,17 +86,25 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
 
         const favIndicesList = Object.keys(favoriteIndices);
 
-        for(const typeId of Object.keys(types)) {
-            let data = {};
+        console.log("013812309821 types", {types});
 
-            let {[typeId]: { data : typeData = {}, id = null, name: typeName} = {}} = types || {};
+        for(const typeId of Object.keys(types)) {
+
+            const {[typeId]: { data = {}, id = null, name: typeName} = {}} = types || {};
+
+            let typeData = {...data};
 
             const subTypesIds = Object.keys(typeData);
 
+            console.log("013812309821 subTypesIds", {subTypesIds, typeData});
+
             for(const subTypeId of subTypesIds) {
                 const {[subTypeId]: { index = null, items = [], name: subTypeName = ""} = {}} = typeData || {};
+
+                console.log("013812309821 items", {items});
                 let updatedItems = [];
                 for(const [idx, type] of items.entries()) {
+                    console.log("0138123098212 items", {idx, type});
                     let favoriteId = null;
                     if(favIndicesList.indexOf(`${id}-${index}-${idx}`) !== -1) {
                         favoriteId = favoriteIndices[`${id}-${index}-${idx}`]
@@ -105,11 +113,11 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
                     updatedItems.push({name: type, favorite_id: favoriteId})
                 }
 
-                data = {...typeData, [subTypeId]: {name: subTypeName, index, items: updatedItems}}
+                typeData = {...typeData, [subTypeId]: {name: subTypeName, index, items: updatedItems}}
 
             }
 
-            types = {...types, [typeId]: {id, data, name: typeName} }
+            types = {...types, [typeId]: {id, data: typeData, name: typeName} }
         } 
         return types;
         
