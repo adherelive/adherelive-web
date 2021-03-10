@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component , Fragment } from "react";
 import { injectIntl } from "react-intl";
 
 import Form from "antd/es/form";
@@ -417,102 +417,191 @@ class EditAppointmentForm extends Component {
     const IdStr = id.toString();
     this.setState({radiologyTypeSelected:IdStr});
     const {static_templates:{appointments:{radiology_type_data = {}}={}}={}} = this.props;
-    const temp = radiology_type_data[IdStr];
+    // const temp = radiology_type_data[IdStr];
   }
 
 
-  getTypeDescriptionOption = () => {
-    let { typeDescription = [] ,descDropDownOpen=false} = this.state;
-    const {favourite_medical_test_ids = []}=this.props;
-    let newTypes = [];
-    let favTypes = [];
-    let unFavTypes=[];
-    const {
-      form: { getFieldValue
-       },
-    } = this.props;
+  // getTypeDescriptionOption = () => {
+  //   let { typeDescription = [] ,descDropDownOpen=false} = this.state;
+  //   const {favourite_medical_test_ids = []}=this.props;
+  //   let newTypes = [];
+  //   let favTypes = [];
+  //   let unFavTypes=[];
+  //   const {
+  //     form: { getFieldValue
+  //      },
+  //   } = this.props;
 
-    const typeValue  = getFieldValue(APPOINTMENT_TYPE);
+  //   const typeValue  = getFieldValue(APPOINTMENT_TYPE);
 
-    if(typeValue === MEDICAL_TEST ){
-      for (let each in typeDescription) {
-            const {name:desc='' , favorite_id=null,index=null} = typeDescription[each];
+  //   if(typeValue === MEDICAL_TEST ){
+  //     for (let each in typeDescription) {
+  //           const {name:desc='' , favorite_id=null,index=null} = typeDescription[each];
 
-            newTypes.push(
-              <Option key={desc} value={desc}>
-              <div
-              key={`${desc}-div`}
-              className="pointer flex wp100  align-center justify-space-between"
-            >
-              {desc}
-              {
-                descDropDownOpen 
-                ?
-                (<Tooltip 
-                  placement="topLeft"
-                  // title={favourite_medical_test_ids.includes(index.toString()) ? 'Unmark' : 'Mark favourite'} 
-                >
+  //           newTypes.push(
+  //             <Option key={desc} value={desc}>
+  //             <div
+  //             key={`${desc}-div`}
+  //             className="pointer flex wp100  align-center justify-space-between"
+  //           >
+  //             {desc}
+  //             {
+  //               descDropDownOpen 
+  //               ?
+  //               (<Tooltip 
+  //                 placement="topLeft"
+  //                 // title={favourite_medical_test_ids.includes(index.toString()) ? 'Unmark' : 'Mark favourite'} 
+  //               >
       
-            {favourite_medical_test_ids.includes(index.toString())
-                ?  
-                  <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
-                    onClick={this.handleremoveMedicalTestFavourites(index)}
-                  /> 
-                :
-                <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
-                    onClick = {this.handleAddMedicalTestFavourites(index)}
-                  />
-            }     
+  //           {favourite_medical_test_ids.includes(index.toString())
+  //               ?  
+  //                 <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
+  //                   onClick={this.handleremoveMedicalTestFavourites(index)}
+  //                 /> 
+  //               :
+  //               <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
+  //                   onClick = {this.handleAddMedicalTestFavourites(index)}
+  //                 />
+  //           }     
       
-                </Tooltip>)
-                :
-                null
-              }
+  //               </Tooltip>)
+  //               :
+  //               null
+  //             }
             
-            </div>
+  //           </div>
               
-            </Option>
+  //           </Option>
             
-          )
-        } 
+  //         )
+  //       } 
 
-      return newTypes;
+  //     return newTypes;
 
        
-      }
-    else if(typeValue === RADIOLOGY){
-      for (let each in  typeDescription) {
-        const {id = null , name : desc =''} = typeDescription[each];
-        newTypes.push(
-          <Option key={desc} value={desc}
-            onClick={this.setRadiologyTypeSelected(id)}
-          >
-            {desc}
-          </Option>
-        );
-      }
-      return newTypes;
+  //     }
+  //   else if(typeValue === RADIOLOGY){
+  //     for (let each in  typeDescription) {
+  //       const {id = null , name : desc =''} = typeDescription[each];
+  //       newTypes.push(
+  //         <Option key={desc} value={desc}
+  //           onClick={this.setRadiologyTypeSelected(id)}
+  //         >
+  //           {desc}
+  //         </Option>
+  //       );
+  //     }
+  //     return newTypes;
 
     
-    }  
-    else{  
-      for (let each in typeDescription) {
-        let desc = typeDescription[each];
-        newTypes.push(
-          <Option key={desc} value={desc}>
-            {desc}
-          </Option>
-        );
-      }
-      return newTypes;
+  //   }  
+  //   else{  
+  //     for (let each in typeDescription) {
+  //       let desc = typeDescription[each];
+  //       newTypes.push(
+  //         <Option key={desc} value={desc}>
+  //           {desc}
+  //         </Option>
+  //       );
+  //     }
+  //     return newTypes;
 
-    }
+  //   }
      
+  // };
+
+
+  getOtherOptions = () => {
+    const { typeDescription = {} } = this.state;
+
+    return Object.keys(typeDescription).map((description, index) => {
+      return (
+        <Option key={`${index}-${description}`} value={description}>
+          {description}
+        </Option>
+      );
+    });
   };
+
+  getMedicalTestOptions = () => {
+    const { typeDescription = [], descDropDownOpen = false } = this.state;
+
+    return typeDescription.map(description => {
+      const { name, favorite_id, index } = description || {};
+
+      return (
+        <Option key={`${index}-${name}`} value={name}>
+          <div className="pointer flex wp100  align-center justify-space-between">
+            {name}
+            {descDropDownOpen ? (
+              <Tooltip
+                placement="topLeft"
+                title={favorite_id ? "Unmark" : "Mark favourite"}
+              >
+                {favorite_id ? (
+                  <StarFilled
+                    style={{ fontSize: "20px", color: "#f9c216" }}
+                    onClick={this.handleremoveMedicalTestFavourites(index)}
+                  />
+                ) : (
+                  <StarOutlined
+                    style={{ fontSize: "20px", color: "#f9c216" }}
+                    onClick={this.handleAddMedicalTestFavourites(index)}
+                  />
+                )}
+              </Tooltip>
+            ) : null}
+          </div>
+        </Option>
+      );
+    });
+  };
+
+  getRadiologyOptions = () => {
+    const { typeDescription = [] } = this.state;
+    const { setRadiologyTypeSelected } = this;
+
+    return Object.keys(typeDescription).map((id, index) => {
+      const { name } = typeDescription[id] || {};
+      return (
+        <Option
+          key={`${id}-${name}`}
+          value={name}
+          onClick={setRadiologyTypeSelected(id)}
+        >
+          {name}
+        </Option>
+      );
+    });
+  };
+
+  getTypeDescriptionOption = () => {
+    const {
+      form: { getFieldValue }
+    } = this.props;
+    const {
+      getMedicalTestOptions,
+      getRadiologyOptions,
+      getOtherOptions
+    } = this;
+
+    const typeValue = getFieldValue(APPOINTMENT_TYPE);
+
+    switch (typeValue) {
+      case MEDICAL_TEST:
+        return getMedicalTestOptions();
+      case RADIOLOGY:
+        return getRadiologyOptions();
+      default:
+        return getOtherOptions();
+    }
+  };
+
+
 
   handleProviderSearch = (data) => {
     try {
-      const { form: { setFieldsValue, getFieldValue } = {} } = this.props;
+      const { form: { setFieldsValue } = {} } = this.props;
       if (data) {
 
         setFieldsValue({ [PROVIDER_ID]: data });
@@ -582,241 +671,220 @@ class EditAppointmentForm extends Component {
     this.setState({descDropDownOpen:open});
   }
 
+  handleTypeDescriptionUpdate = async () => {
+    const { form: { getFieldValue } = {}, getAppointmentsDetails } = this.props;
+
+    const response = await getAppointmentsDetails();
+    const { status, payload: { data } = {} } = response || {};
+    if (status === true) {
+      const {
+        static_templates: { appointments: { type_description = {} } = {} } = {}
+      } = data || {};
+      const value = getFieldValue(APPOINTMENT_TYPE) || null;
+      const descArray = type_description[value] ? type_description[value] : [];
+
+      this.setState({ typeDescription: descArray });
+    }
+  };
 
 
 
 
-  handleAddMedicalTestFavourites = (id) => async(e) => {
-    try{
+  handleAddMedicalTestFavourites = id => async e => {
+    try {
       e.preventDefault();
       e.stopPropagation();
-
-        const {markFavourite,getAppointmentsDetails} = this.props;
-        const data = {
-            type:FAVOURITE_TYPE.MEDICAL_TESTS,
-            id
-        }
-
-        const {
-          form: {  getFieldValue
-           }
-        } = this.props;
-        
-
-        const response = await markFavourite(data);
-        const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
-        if(status){
-          message.success(resp_msg);
-          await getAppointmentsDetails();
-          let {
-            static_templates: { appointments: { type_description = {} } = {} } = {}
-          } = this.props;
-         
-          const typeValue = getFieldValue(APPOINTMENT_TYPE);
-          let descArray = type_description[typeValue] ? type_description[typeValue] : [];
-          this.setState({ typeDescription: descArray });
-        }else{
-          message.error(resp_msg);
-        }
-
-    }catch(error){
-        console.log("error",error);
-    }
-}
-
-
-handleremoveMedicalTestFavourites = (id) => async(e) => {
-  try{
-    
-    e.preventDefault();
-    e.stopPropagation();
-      const {removeFavourite , getAppointmentsDetails} = this.props;
-      const {
-        form: {  getFieldValue
-         }
-      } = this.props;
+      const { markFavourite } = this.props;
+      const { handleTypeDescriptionUpdate } = this;
       const data = {
-          type:FAVOURITE_TYPE.MEDICAL_TESTS,
-          typeId:id
-      }
+        type: FAVOURITE_TYPE.MEDICAL_TESTS,
+        id
+      };
 
-      const response = await removeFavourite(data);
-      const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
-      if(status){
+      const response = await markFavourite(data);
+      const {
+        status,
+        statusCode,
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+      } = response;
+      if (status) {
         message.success(resp_msg);
-        await getAppointmentsDetails();
-        let {
-          static_templates: { appointments: { type_description = {} } = {} } = {}
-        } = this.props;
-       
-        const typeValue = getFieldValue(APPOINTMENT_TYPE);
-        let descArray = type_description[typeValue] ? type_description[typeValue] : []; 
-        this.setState({ typeDescription: descArray });
-      }else{
+        await handleTypeDescriptionUpdate();
+      } else {
         message.error(resp_msg);
       }
-  }catch(error){
-      console.log("error",{error});
-  }
-}
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  handleremoveMedicalTestFavourites = id => async e => {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const { removeFavourite } = this.props;
+      const { handleTypeDescriptionUpdate } = this;
+      const data = {
+        type: FAVOURITE_TYPE.MEDICAL_TESTS,
+        typeId: id
+      };
+
+      const response = await removeFavourite(data);
+      const {
+        status,
+        statusCode,
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+      } = response;
+      if (status) {
+        message.success(resp_msg);
+        await handleTypeDescriptionUpdate();
+      } else {
+        message.error(resp_msg);
+      }
+    } catch (error) {
+      console.log("error", { error });
+    }
+  };
+
 
 
 
     //======================================================================================>>>>
 
-  getOptions = (items, each) => {
-    const {radiologyTypeSelected =null , radiologyDropDownVisible=false}=this.state;
-    const {favourites_data = {}}=this.props;
+  getRadiologyDescriptionOptions = (items, each) => {
+    const {
+      radiologyTypeSelected = null,
+      radiologyDropDownVisible = false
+    } = this.state;
 
-    let subOptions = [];
-    for(let itemId in items){
+    return items.map((item, index) => {
+      const { name, favorite_id } = item || {};
 
-      let markedFlag=false;
-      let recordId=null ;
-
-      for(let favDataId in favourites_data){
-        const {basic_info :{marked_favourite_id = null , marked_favourite_type=''}={},
-          details:{
-          sub_category_id=null,
-          selected_radiology_index =null } ={}
-        } = favourites_data[favDataId];
-
-
-        if(marked_favourite_type !== FAVOURITE_TYPE.RADIOLOGY){
-          continue;
-        }else{
-
-        
-          if(
-            marked_favourite_id.toString() === radiologyTypeSelected.toString() &&
-            sub_category_id.toString() === each.toString() &&
-            selected_radiology_index.toString() === itemId.toString()
-          ){
-            markedFlag=true;
-            recordId=favDataId;
-          }
-        }
-      }
-
-      const {favorite_id=null,name : item=''}= items[itemId];
-      subOptions.push(
-        <Option key={`${each}:${item}-radiology-type`} value={item} 
-        className="pointer flex wp100  align-center justify-space-between"
+      return (
+        <Option
+          key={`${each}:${name}-radiology-type`}
+          value={name}
+          className="pointer flex wp100  align-center justify-space-between"
         >
-          {item}
-          {
-            radiologyDropDownVisible
-            ?
-            (
-              <Tooltip 
-                placement="topLeft"
-                title={markedFlag ? 'Unmark' : 'Mark favourite'} 
-              >
-    
-          {markedFlag
-              ?  
-                <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
-                  onClick={this.handleremoveRadiologyFavourites(recordId)}
-                /> 
-              :
-              <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
-                onClick={this.handleAddRadiologyFavourites({
-                  id:radiologyTypeSelected,sub_category_id:each,selected_radiology_index:itemId
-                })}
+          {name}
+          {radiologyDropDownVisible ? (
+            <Tooltip
+              placement="topLeft"
+              title={favorite_id ? "Unmark" : "Mark favourite"}
+            >
+              {favorite_id ? (
+                <StarFilled
+                  style={{ fontSize: "20px", color: "#f9c216" }}
+                  onClick={this.handleremoveRadiologyFavourites(favorite_id)}
                 />
-          }     
-    
-          </Tooltip>
-            )
-            :
-            null
-          }
-          
+              ) : (
+                <StarOutlined
+                  style={{ fontSize: "20px", color: "#f9c216" }}
+                  onClick={this.handleAddRadiologyFavourites({
+                    id: radiologyTypeSelected,
+                    sub_category_id: each,
+                    selected_radiology_index: index
+                  })}
+                />
+              )}
+            </Tooltip>
+          ) : null}
         </Option>
-      )
-    }
+      );
+    });
 
-    return subOptions;
   };
-
- 
 
   getRadiologyTypeDescriptionOption = () => {
-    const {radiologyTypeSelected=null}=this.state;
-    const {static_templates:{appointments:{radiology_type_data = {}}={}}={}} = this.props;
+    const { radiologyTypeSelected = null } = this.state;
+    const {
+      static_templates: { appointments: { radiology_type_data = {} } = {} } = {}
+    } = this.props;
     const radiology_type = radiology_type_data[radiologyTypeSelected];
 
-    const {data={},name : radiology_type_name=''} = radiology_type || {};
-    let options = [];
-    for (let each in data){
-      const {items,name} = data[each] || {};
-      options.push
-      (<OptGroup label={name}>
-          {this.getOptions(items,each)}
-      </OptGroup>
-      )
+    console.log(
+      "0271273819823 radiology_type_data, radiologyTypeSelected, radiology_type",
+      { radiology_type_data, radiologyTypeSelected, radiology_type }
+    );
 
-    }
+    const { data: radiologyTypeDescription = {} } = radiology_type || {};
 
-    return options;
+    return Object.keys(radiologyTypeDescription).map(id => {
+      const { items, name } = radiologyTypeDescription[id] || {};
 
+      return (
+        <OptGroup label={name} key={`${name}`}>
+          {this.getRadiologyDescriptionOptions(items, id)}
+        </OptGroup>
+      );
+    });
   };
 
+  handleAddRadiologyFavourites = ({
+    id,
+    sub_category_id,
+    selected_radiology_index
+  }) => async e => {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const { markFavourite } = this.props;
+      const {handleTypeDescriptionUpdate} = this;
+      const data = {
+        type: FAVOURITE_TYPE.RADIOLOGY,
+        id,
+        details: {
+          sub_category_id,
+          selected_radiology_index
+        }
+      };
 
-
-    handleAddRadiologyFavourites = ({id,sub_category_id,selected_radiology_index}) => async(e) => {
-      try{
-        e.preventDefault();
-        e.stopPropagation();
-          const {markFavourite} = this.props;
-          const data = {
-              type:FAVOURITE_TYPE.RADIOLOGY,
-              id,
-              details:{
-                sub_category_id,
-                selected_radiology_index
-              }
-          }
-
-          const response = await markFavourite(data);
-          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
-          if(status){
-            message.success(resp_msg);
-            this.getRadiologyFavourites();
-          }else{
-            message.error(resp_msg);
-          }
-
-      }catch(error){
-          console.log("error",error);
+      const response = await markFavourite(data);
+      const {
+        status,
+        statusCode,
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+      } = response;
+      if (status) {
+        message.success(resp_msg);
+        // this.getRadiologyFavourites();
+        await handleTypeDescriptionUpdate();
+      } else {
+        message.error(resp_msg);
       }
-  }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
-    handleremoveRadiologyFavourites = (recordID) => async(e) => {
-      try{
-        
-        e.preventDefault();
-        e.stopPropagation();
-          const {removeFavouriteRecord} = this.props;
-          
-          const response = await removeFavouriteRecord(recordID);
-          const {status,statusCode,payload:{data : resp_data = {} , message : resp_msg= ''} = {}} = response;
-          if(status){
-            message.success(resp_msg);
-            this.getRadiologyFavourites();
-          }else{
-            message.error(resp_msg);
-          }
-      }catch(error){
-          console.log("error",{error});
+  handleremoveRadiologyFavourites = recordID => async e => {
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      const { removeFavouriteRecord } = this.props;
+      const {handleTypeDescriptionUpdate} = this;
+
+      const response = await removeFavouriteRecord(recordID);
+      const {
+        status,
+        statusCode,
+        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+      } = response;
+      if (status) {
+        message.success(resp_msg);
+        // this.getRadiologyFavourites();
+        await handleTypeDescriptionUpdate();
+      } else {
+        message.error(resp_msg);
       }
-  }
+    } catch (error) {
+      console.log("error", { error });
+    }
+  };
 
-
-  RadiologyDropDownVisibleChange = (open)=>{
-    this.setState({radiologyDropDownVisible:open});
-  }
-
+  RadiologyDropDownVisibleChange = open => {
+    this.setState({ radiologyDropDownVisible: open });
+  };
  
 
   render() {
@@ -883,18 +951,13 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
       radiology_type = scheduled_data_radiology_type;
     }
 
-
-    
     if(!type || !type_description || !schedule_data){
       let { details : {radiology_type : radio_type='',appointment_type : appt_type = '' , type_description : appt_desc ='' , date = ''} = {} , } = appointmentData || {};
       type_description =appt_desc;
       type = appt_type;
       start_date = date;
-      radiology_type=radio_type;
+      radiology_type=radio_type ? radio_type : radiology_type ;
     }
-
-   
-
 
     if (!start_time) {
       let minutesToAdd = 30 - (moment().minutes()) % 30;
@@ -917,7 +980,11 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
       fieldsError = { ...fieldsError, [value]: error };
     });
 
+    let appointmentType = getFieldValue(APPOINTMENT_TYPE) || null;
+
     const typeValue = getFieldValue(APPOINTMENT_TYPE);
+
+    console.log("3287456235468236452368489",{radiology_type});
 
 
     return (
@@ -964,75 +1031,123 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
           )}
         </FormItem>
 
-        <div className='flex mt24 direction-row flex-grow-1'>
-          <label
-            htmlFor="type description"
-            className="form-label"
-            title={formatMessage(messages.appointmentTypeDescription)}
-          >
-            {typeValue === RADIOLOGY
-              ?
-              `${formatMessage(messages.radiology)} ${formatMessage(messages.appointmentTypeDescription)}`
-              :
-              formatMessage(messages.appointmentTypeDescription)}
-          </label>
+        {/* //////// */}
 
-          <div className="star-red">*</div>
-        </div>
-        <FormItem
-        // label={formatMessage(messages.appointmentTypeDescription)}
-        // className='mt24'
-        >
-          {getFieldDecorator(APPOINTMENT_TYPE_DESCRIPTION, {
-            rules: [
-              {
-                required: true,
-                message: formatMessage(messages.error_appointment_type_description),
-              },
-            ],
-            initialValue: type_description ? type_description : null
-          })(
-            <Select
-              // onSearch={handleMedicineSearch}
-              onDropdownVisibleChange={this.DescDropDownVisibleChange}
-              notFoundContent={formatMessage(messages.noMatchFound)}
-              className="drawer-select"
-              placeholder={formatMessage(messages.chooseTypeDescription)}
-              showSearch
-              defaultActiveFirstOption={true}
-              autoComplete="off"
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
-              }
+        {typeValue !== RADIOLOGY && (
+          <Fragment>
+            <div className="flex mt24 direction-row flex-grow-1">
+              <label
+                htmlFor="type description"
+                className="form-label"
+                // title={formatMessage(messages.appointmentTypeDescription)}
+              >
+                {formatMessage(messages.appointmentTypeDescription)}
+              </label>
 
+              <div className="star-red">*</div>
+            </div>
+            <FormItem
+            // label={formatMessage(messages.appointmentTypeDescription)}
+            // className='mt24'
             >
-              {this.getTypeDescriptionOption()}
-            </Select>
-          )}
-        </FormItem>
+              {getFieldDecorator(
+                APPOINTMENT_TYPE_DESCRIPTION,
+                {
+                  rules: [
+                    {
+                      required: true,
+                      message: formatMessage(messages.error_appointment_type_description),
+                    },
+                  ],
+                  initialValue: type_description ? type_description : null
+                }
+              )(
+                <Select
+                  onDropdownVisibleChange={this.DescDropDownVisibleChange}
+                  disabled={!appointmentType}
+                  notFoundContent={"No match found"}
+                  className="drawer-select"
+                  placeholder="Choose Type Description"
+                  showSearch
+                  defaultActiveFirstOption={true}
+                  autoComplete="off"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.props.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {this.getTypeDescriptionOption()}
+                </Select>
+              )}
+            </FormItem>
+          </Fragment>
+        )}
 
-        {typeValue === RADIOLOGY
-          ?
-          (
-            <div>
-              <div className="flex mt24 direction-row flex-grow-1">
-            <label
-              htmlFor="type description"
-              className="form-label"
+        {typeValue === RADIOLOGY && (
+          <Fragment>
+            <div className="flex mt24 direction-row flex-grow-1">
+              <label
+                htmlFor="type description"
+                className="form-label"
+                // title={formatMessage(messages.appointmentTypeDescription)}
+              >
+                {typeValue === RADIOLOGY
+                  ? `${formatMessage(messages.radiology)} ${formatMessage(
+                      messages.appointmentTypeDescription
+                    )}`
+                  : formatMessage(messages.appointmentTypeDescription)}
+              </label>
+
+              <div className="star-red">*</div>
+            </div>
+            <FormItem
+            // label={formatMessage(messages.appointmentTypeDescription)}
+            // className='mt24'
             >
-              
-              {formatMessage(messages.radiologyTypeDesc)} 
-            
-            </label>
+              {getFieldDecorator(
+                APPOINTMENT_TYPE_DESCRIPTION,
+                {
+                  rules: [
+                    {
+                      required: true,
+                      message: formatMessage(messages.error_appointment_type_description),
+                    },
+                  ],
+                  initialValue: type_description ? type_description : null
+                }
+              )(
+                <Select
+                  onDropdownVisibleChange={this.DescDropDownVisibleChange}
+                  disabled={!appointmentType}
+                  notFoundContent={"No match found"}
+                  className="drawer-select"
+                  placeholder="Choose Type Description"
+                  showSearch
+                  defaultActiveFirstOption={true}
+                  autoComplete="off"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.props.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {this.getTypeDescriptionOption()}
+                </Select>
+              )}
+            </FormItem>
 
-            <div className="star-red">*</div>
-          </div>
-          <FormItem
-          >
-             {getFieldDecorator(
+            <div className="flex mt24 direction-row flex-grow-1">
+              <label htmlFor="type description" className="form-label">
+                {formatMessage(messages.radiologyTypeDesc)}
+              </label>
+
+              <div className="star-red">*</div>
+            </div>
+            <FormItem>
+            {getFieldDecorator(
               RADIOLOGY_TYPE,
               {
                 rules: [
@@ -1044,32 +1159,31 @@ handleremoveMedicalTestFavourites = (id) => async(e) => {
                 initialValue: radiology_type ? radiology_type : null
               }
             )(
-              <Select
-                onDropdownVisibleChange={this.RadiologyDropDownVisibleChange}
-                disabled={radiologyTypeSelected === null}
-                notFoundContent={"No match found"}
-                className="drawer-select"
-                placeholder="Choose Radiology Type Description"
-                showSearch
-                defaultActiveFirstOption={true}
-                autoComplete="off"
-                optionFilterProp="children"
-                // filterOption={(input, option) =>
-                //   option.props.children
-                //     .toLowerCase()
-                //     .indexOf(input.toLowerCase()) >= 0
-                // }
-              >
-                {this.getRadiologyTypeDescriptionOption()}
-              </Select>
-            )}
-          </FormItem>
-            </div>
-          )
-          :
-            null
-        }
+                <Select
+                  onDropdownVisibleChange={this.RadiologyDropDownVisibleChange}
+                  disabled={radiologyTypeSelected === null}
+                  notFoundContent={"No match found"}
+                  className="drawer-select"
+                  placeholder="Choose Radiology Type Description"
+                  showSearch
+                  defaultActiveFirstOption={true}
+                  autoComplete="off"
+                  optionFilterProp="children"
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
+                >
+                  {this.getRadiologyTypeDescriptionOption()}
+                </Select>
+              )}
+            </FormItem>
+          </Fragment>
+        )}
 
+        
+        {/* //////// */}
 
         <div className='flex mt24 direction-row flex-grow-1'>
           <label

@@ -323,13 +323,13 @@ class AddAppointmentForm extends Component {
       static_templates: { appointments: { radiology_type_data = {} } = {} } = {}
     } = this.props;
 
-    const temp = radiology_type_data[IdStr];
+    // const temp = radiology_type_data[IdStr];
   };
 
   getOtherOptions = () => {
-    const { typeDescription = [] } = this.state;
+    const { typeDescription = {} } = this.state;
 
-    return typeDescription.map((description, index) => {
+    return Object.keys(typeDescription).map((description, index) => {
       return (
         <Option key={`${index}-${description}`} value={description}>
           {description}
