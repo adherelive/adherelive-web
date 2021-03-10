@@ -710,11 +710,20 @@ class AddAppointmentForm extends Component {
 
       return (
         <Option
-          key={`${each}:${name}-radiology-type`}
-          value={name}
-          className="pointer flex wp100  align-center justify-space-between"
-        >
-          {name}
+        key={`${each}:${name}-radiology-type`}
+        value={name}
+        className="pointer flex wp100  align-center justify-space-between "
+      >
+        <div className="wp100 flex align-center justify-space-between" >
+          <div className="wp90  ellipsis " >
+            <Tooltip title={name} >
+              {
+              name
+              }
+            </Tooltip>
+          </div>
+
+          <div className="wp10" >
           {radiologyDropDownVisible ? (
             <Tooltip
               placement="topLeft"
@@ -737,7 +746,10 @@ class AddAppointmentForm extends Component {
               )}
             </Tooltip>
           ) : null}
-        </Option>
+
+          </div>
+        </div>
+      </Option>
       );
     });
 

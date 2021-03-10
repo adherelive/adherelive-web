@@ -765,31 +765,43 @@ class EditAppointmentForm extends Component {
         <Option
           key={`${each}:${name}-radiology-type`}
           value={name}
-          className="pointer flex wp100  align-center justify-space-between"
+          className="pointer flex wp100  align-center justify-space-between "
         >
-          {name}
-          {radiologyDropDownVisible ? (
-            <Tooltip
-              placement="topLeft"
-              title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
-            >
-              {favorite_id ? (
-                <StarFilled
-                  style={{ fontSize: "20px", color: "#f9c216" }}
-                  onClick={this.handleremoveRadiologyFavourites(favorite_id)}
-                />
-              ) : (
-                <StarOutlined
-                  style={{ fontSize: "20px", color: "#f9c216" }}
-                  onClick={this.handleAddRadiologyFavourites({
-                    id: radiologyTypeSelected,
-                    sub_category_id: each,
-                    selected_radiology_index: index
-                  })}
-                />
-              )}
-            </Tooltip>
-          ) : null}
+          <div className="wp100 flex align-center justify-space-between" >
+            <div className="wp90  ellipsis " >
+              <Tooltip title={name} >
+                {
+                name
+                }
+              </Tooltip>
+            </div>
+
+            <div className="wp10" >
+            {radiologyDropDownVisible ? (
+              <Tooltip
+                placement="topLeft"
+                title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
+              >
+                {favorite_id ? (
+                  <StarFilled
+                    style={{ fontSize: "20px", color: "#f9c216" }}
+                    onClick={this.handleremoveRadiologyFavourites(favorite_id)}
+                  />
+                ) : (
+                  <StarOutlined
+                    style={{ fontSize: "20px", color: "#f9c216" }}
+                    onClick={this.handleAddRadiologyFavourites({
+                      id: radiologyTypeSelected,
+                      sub_category_id: each,
+                      selected_radiology_index: index
+                    })}
+                  />
+                )}
+              </Tooltip>
+            ) : null}
+
+            </div>
+          </div>
         </Option>
       );
     });
@@ -1164,7 +1176,7 @@ class EditAppointmentForm extends Component {
                   onDropdownVisibleChange={this.RadiologyDropDownVisibleChange}
                   disabled={radiologyTypeSelected === null}
                   notFoundContent={"No match found"}
-                  className="drawer-select"
+                  className="drawer-select radiology-type-select"
                   placeholder="Choose Radiology Type Description"
                   showSearch
                   defaultActiveFirstOption={true}
