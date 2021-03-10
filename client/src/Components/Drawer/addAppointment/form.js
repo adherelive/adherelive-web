@@ -700,15 +700,22 @@ class AddAppointmentForm extends Component {
   //======================================================================================>>>>
 
   getRadiologyDescriptionOptions = (items, each) => {
-    const {
-      radiologyTypeSelected = null,
-      radiologyDropDownVisible = false
-    } = this.state;
+  
+    let subOptions = [];
 
-    return items.map((item, index) => {
-      const { name, favorite_id } = item || {};
+    for(let index in items){
 
-      return (
+
+      const {
+        radiologyTypeSelected = null,
+        radiologyDropDownVisible = false
+      } = this.state;
+
+      let item = items[index];
+      let { name, favorite_id } = item || {};
+      console.log("936423645263894782309487923  Option *******+++++++++***** ",{option:item,index})
+
+      subOptions.push(
         <Option
           key={`${each}:${name}-radiology-type`}
           value={name}
@@ -739,7 +746,46 @@ class AddAppointmentForm extends Component {
           ) : null}
         </Option>
       );
-    });
+    }
+
+    return subOptions;
+
+    // return items.map((item, index) => {
+      
+    //   const { name, favorite_id } = item || {};
+    //   console.log("63525483297084927389748823798 =====================>>>>>>",{items,item,index,name,favorite_id});
+    //   return (
+    //     <Option
+    //       key={`${each}:${name}-radiology-type`}
+    //       value={name}
+    //       className="pointer flex wp100  align-center justify-space-between"
+    //     >
+    //       {name}
+    //       {radiologyDropDownVisible ? (
+    //         <Tooltip
+    //           placement="topLeft"
+    //           title={favorite_id ? "Unmark" : "Mark favourite"}
+    //         >
+    //           {favorite_id ? (
+    //             <StarFilled
+    //               style={{ fontSize: "20px", color: "#f9c216" }}
+    //               onClick={this.handleremoveRadiologyFavourites(favorite_id)}
+    //             />
+    //           ) : (
+    //             <StarOutlined
+    //               style={{ fontSize: "20px", color: "#f9c216" }}
+    //               onClick={this.handleAddRadiologyFavourites({
+    //                 id: radiologyTypeSelected,
+    //                 sub_category_id: each,
+    //                 selected_radiology_index: index
+    //               })}
+    //             />
+    //           )}
+    //         </Tooltip>
+    //       ) : null}
+    //     </Option>
+    //   );
+    // });
 
     // let subOptions = [];
     // for (let itemId in items) {
@@ -823,15 +869,31 @@ class AddAppointmentForm extends Component {
 
     const { data: radiologyTypeDescription = {} } = radiology_type || {};
 
-    return Object.keys(radiologyTypeDescription).map(id => {
-      const { items, name } = radiologyTypeDescription[id] || {};
+    let options = [];
+    for (let id in radiologyTypeDescription){
+      let { items, name } = radiologyTypeDescription[id] || {};
 
-      return (
+      console.log("936423645263894782309487923  OptGroup =========>>>>> ",{EACH:radiologyTypeDescription[id],id})
+      
+      options.push(
         <OptGroup label={name} key={`${name}`}>
           {this.getRadiologyDescriptionOptions(items, id)}
         </OptGroup>
-      );
-    });
+      )
+    }
+
+    return options;
+
+    // return Object.keys(radiologyTypeDescription).map(id => {
+    //   console.log("63525483297084927389748823798",{LENGTH:Object.keys(radiologyTypeDescription).length,radiologyTypeDescription,Each:radiologyTypeDescription[id]});
+    //   const { items, name } = radiologyTypeDescription[id] || {};
+
+    //   return (
+    //     <OptGroup label={name} key={`${name}`}>
+    //       {this.getRadiologyDescriptionOptions(items, id)}
+    //     </OptGroup>
+    //   );
+    // });
   };
 
   handleAddRadiologyFavourites = ({
