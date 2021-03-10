@@ -87,25 +87,25 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
         const favIndicesList = Object.keys(favoriteIndices);
 
         for(const typeId of Object.keys(types)) {
+            let data = {};
 
-            let {[typeId]: { data = {}, id = null, name: typeName} = {}} = types;
+            let {[typeId]: { data : typeData = {}, id = null, name: typeName} = {}} = types || {};
 
-            const subTypesIds = Object.keys(data);
+            const subTypesIds = Object.keys(typeData);
 
             for(const subTypeId of subTypesIds) {
-                const {[subTypeId]: { index = null, items = [], name: subTypeName = ""} = {}} = data;
+                const {[subTypeId]: { index = null, items = [], name: subTypeName = ""} = {}} = typeData || {};
                 let updatedItems = [];
                 for(const [idx, type] of items.entries()) {
                     let favoriteId = null;
                     if(favIndicesList.indexOf(`${id}-${index}-${idx}`) !== -1) {
                         favoriteId = favoriteIndices[`${id}-${index}-${idx}`]
-                        
                     }
 
                     updatedItems.push({name: type, favorite_id: favoriteId})
                 }
 
-                data = {...data, [subTypeId]: {name: subTypeName, index, items: updatedItems}}
+                data = {...typeData, [subTypeId]: {name: subTypeName, index, items: updatedItems}}
 
             }
 
