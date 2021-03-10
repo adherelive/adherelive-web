@@ -24,6 +24,7 @@ class UserFavouritesWrapper extends BaseUserFavourites {
 
         return {
             basic_info: {
+                id,
                 user_category_id,
                 user_category_type,
                 marked_favourite_id,
@@ -38,15 +39,12 @@ class UserFavouritesWrapper extends BaseUserFavourites {
 
     getReferenceInfo = async () => {
       const {
-          _data,
           getMarkedFavouriteType , getMarkedFavouriteId,
           getBasicInfo
         } = this;
 
-        const {id} = _data || {};
-        
         let marked_favourites_data = {};
-        const basic_info = await getBasicInfo();
+        const basic_info = getBasicInfo();
 
         switch (getMarkedFavouriteType()) {
             case FAVOURITE_TYPE.MEDICINE:
@@ -55,7 +53,6 @@ class UserFavouritesWrapper extends BaseUserFavourites {
                 const ref_info = await  medicine.getAllInfo();
                 const medicineId = await medicine.getMedicineId();
                 marked_favourites_data[medicineId] = {...ref_info};
-
                 break;
             default:
                 break;

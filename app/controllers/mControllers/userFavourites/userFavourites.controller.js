@@ -34,13 +34,13 @@ class UserFavouritesController extends Controller {
           type='',id='', details = {}
          } = body;
 
-         let data = {
+         const data = {
            user_category_id:userCategoryId,
            user_category_type:category,
            marked_favourite_id:id,
            marked_favourite_type:type,
            details
-         }
+         };
 
 
         // const existing = await UserFavouritesService.findExistingFavourite(data);
