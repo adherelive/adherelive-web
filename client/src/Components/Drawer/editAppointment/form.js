@@ -49,7 +49,8 @@ class EditAppointmentForm extends Component {
       typeDescription: [],
       descDropDownOpen:false,
       radiologyDropDownVisible:false,
-      radiologyTypeSelected:null
+      radiologyTypeSelected:null,
+      typeDescValue:''
     };
   }
 
@@ -812,6 +813,28 @@ class EditAppointmentForm extends Component {
   RadiologyDropDownVisibleChange = open => {
     this.setState({ radiologyDropDownVisible: open });
   };
+
+
+  handleTypeDescriptionSelect = (value) => {
+    
+    const {
+      form: { setFieldsValue , getFieldValue , rese } = {},
+      static_templates: { appointments: { type_description = {} } = {} } = {}
+    } = this.props;
+
+
+    const {typeDescValue=''} = this.state;
+    
+    
+    console.log("3784273547683294723094",{typeDescValue,value,flag1:value != typeDescValue});
+
+
+    if(value != typeDescValue){
+      setFieldsValue({[RADIOLOGY_TYPE]:null})
+    }
+
+    this.setState({typeDescValue:value});
+  }
  
 
   render() {
@@ -990,6 +1013,7 @@ class EditAppointmentForm extends Component {
                 }
               )(
                 <Select
+                  onChange={this.handleTypeDescriptionSelect}
                   onDropdownVisibleChange={this.DescDropDownVisibleChange}
                   disabled={!appointmentType}
                   notFoundContent={"No match found"}
@@ -1046,6 +1070,7 @@ class EditAppointmentForm extends Component {
                 }
               )(
                 <Select
+                  onChange={this.handleTypeDescriptionSelect}
                   onDropdownVisibleChange={this.DescDropDownVisibleChange}
                   disabled={!appointmentType}
                   notFoundContent={"No match found"}
