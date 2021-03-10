@@ -119,7 +119,8 @@ class TemplatePageCreateDrawer extends Component{
                         critical,
                         description='',
                         appointment_type='',
-                        type_description=''
+                        type_description='',
+                        radiology_type='',
                     }={},
                     provider_id='',
                     provider_name=''
@@ -141,7 +142,8 @@ class TemplatePageCreateDrawer extends Component{
                         critical,
                         description,
                         appointment_type,
-                        type_description
+                        type_description,
+                        radiology_type
                     },
                     provider_id,
                     provider_name
@@ -498,7 +500,8 @@ class TemplatePageCreateDrawer extends Component{
                     // critical ='',
                     // description ='',
                     appointment_type='',
-                    type_description=''
+                    type_description='',
+                    radiology_type
                 } = {},
                 provider_id ='',
                 // provider_name =''
@@ -1072,6 +1075,7 @@ class TemplatePageCreateDrawer extends Component{
             critical,
             type = '',
             type_description = '',
+            radiology_type='',
             provider_id = 0,
             provider_name = '',
             participant_two = {},
@@ -1100,7 +1104,8 @@ class TemplatePageCreateDrawer extends Component{
                 critical,
                 description,
                 appointment_type:type,
-                type_description
+                type_description,
+                radiology_type
             },
             provider_id,
             provider_name
@@ -1247,6 +1252,7 @@ class TemplatePageCreateDrawer extends Component{
             critical,
             type = '',
             type_description = '',
+            radiology_type='',
             provider_id = 0,
             provider_name = '',
             start_time = {},
@@ -1274,7 +1280,8 @@ class TemplatePageCreateDrawer extends Component{
                 critical,
                 description,
                 appointment_type:type,
-                type_description
+                type_description,
+                radiology_type
             },
             provider_id,
             provider_name

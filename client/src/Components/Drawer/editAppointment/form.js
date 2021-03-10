@@ -78,7 +78,7 @@ class EditAppointmentForm extends Component {
     let { basic_info: { details: { type = '' , type_description :type_desc_initial ='' } = {} } = {} } = appointments[appointment_id] || {};
 
     const { schedule_data: { appointment_type = '' , type : shedule_data_type='' ,type_description : scheduled_data_type_desc = ''  } = {} , 
-    details:{appointment_type : details_appointment_type= ''} ={}  } = appointmentData || {};
+    details:{appointment_type : details_appointment_type= '' , type_description : details_type_desc = ''  } ={}  } = appointmentData || {};
     
     const appt_tye = appointment_type?appointment_type:details_appointment_type;
     type = appt_tye ? appt_tye : shedule_data_type ? shedule_data_type: type;
@@ -90,11 +90,10 @@ class EditAppointmentForm extends Component {
     this.setState({ typeDescription: descArray });
     
     if(!type_desc_initial){
-      type_desc_initial = scheduled_data_type_desc;
+      type_desc_initial = scheduled_data_type_desc ? scheduled_data_type_desc : details_type_desc ;
     }
 
-
-
+    // console.log("8946547385972034823749",{type_desc_initial,details_type_desc});
 
     if(type === RADIOLOGY){
 
