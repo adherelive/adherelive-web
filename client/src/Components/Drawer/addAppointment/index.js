@@ -10,6 +10,7 @@ import message from "antd/es/message";
 import messages from "./message";
 import AddAppointmentForm from "./form";
 import Footer from "../footer";
+import { RADIOLOGY } from "../../../constant";
 
 class AddAppointment extends Component {
   constructor(props) {
@@ -63,7 +64,14 @@ class AddAppointment extends Component {
           end_time,
           description = "",
           treatment = "",
+          radiology_type=""
         } = values;
+
+
+        // if(type === RADIOLOGY){
+        //   type_description = radiology_type;
+        // }
+
         let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
 
         let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
@@ -114,6 +122,10 @@ class AddAppointment extends Component {
             critical,
             treatment_id: treatment,
           };
+
+          if(type === RADIOLOGY){
+            data["radiology_type"] = radiology_type;
+          }
 
         if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
           message.error('Please fill all mandatory details.')

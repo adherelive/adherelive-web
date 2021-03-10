@@ -139,6 +139,36 @@ const messages = defineMessages({
     id: "app.chatFullScreen.waitingForPatient",
     description: "",
     defaultMessage: "Waiting for {name} to connect"
+  },
+  startCall: {
+    id: "app.chatFullScreen.startCall",
+    description: "",
+    defaultMessage: "Start Call"
+  },
+  endCall: {
+    id: "app.chatFullScreen.endCall",
+    description: "",
+    defaultMessage: "End Call"
+  },
+  muteAudio: {
+    id: "app.chatFullScreen.muteAudio",
+    description: "",
+    defaultMessage: "Mute"
+  },
+  unMuteAudio: {
+    id: "app.chatFullScreen.unMuteAudio",
+    description: "",
+    defaultMessage: "Un-Mute"
+  },
+  disableVideo: {
+    id: "app.chatFullScreen.disableVideo",
+    description: "",
+    defaultMessage: "Disable Video"
+  },
+  enableVideo: {
+    id: "app.chatFullScreen.enableVideo",
+    description: "",
+    defaultMessage: "Enable Video"
   }
 });
 

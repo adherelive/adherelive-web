@@ -15,6 +15,7 @@ import UserDpPlaceholder from "../../Assets/images/ico-placeholder-userdp.svg";
 import { USER_CATEGORY } from "../../constant";
 import messages from "./messages";
 import Loading from "../Common/Loading";
+import Tooltip from "antd/es/tooltip";
 
 class AgoraVideo extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class AgoraVideo extends Component {
       selfUid: null,
       isVideoOn: true,
       isAudioOn: true,
-      isStart: true,
+      isStart: false,
       remoteAdded: false,
       remoteDisconnect: false
     };
@@ -120,7 +121,7 @@ class AgoraVideo extends Component {
 
     const { appId, channel, token } = this.getVideoOptions();
 
-    this.setState({loading: true});
+    this.setState({ loading: true });
     const uid = await this.rtc.client.join(
       appId,
       channel,
@@ -133,7 +134,7 @@ class AgoraVideo extends Component {
     const playerContainer = document.createElement("div");
     playerContainer.className = "videoPlayer";
     playerContainer.id = uid.toString();
-    this.setState({ loading: false, isStart: false });
+    this.setState({ loading: false, isStart: true });
   };
 
   leaveCall = async () => {
@@ -145,9 +146,14 @@ class AgoraVideo extends Component {
       const playerContainer = document.getElementById(user.uid);
       playerContainer && playerContainer.remove();
     });
-    this.setState({loading: true});
+    this.setState({ loading: true });
     await this.rtc.client.leave();
-    this.setState({ remoteUid: null, isStart: true, remoteAdded: false, loading: false });
+    this.setState({
+      remoteUid: null,
+      isStart: false,
+      remoteAdded: false,
+      loading: false
+    });
   };
 
   toggleVideo = async () => {
@@ -199,65 +205,77 @@ class AgoraVideo extends Component {
   };
 
   getVideoButtons = () => {
-    const {isVideoOn} = this.state;
-    const {toggleVideo} = this;
+    const { isStart = false, isVideoOn } = this.state;
+    const { toggleVideo, formatMessage } = this;
+
+    if(!isStart) {
+      return null;
+    }
 
     return (
-        <div className="ml24">
-          {isVideoOn ? (
-              <img src={VideoIcon} onClick={toggleVideo} alt="chatIcon" />
-          ) : (
-              <img
-                  src={VideoDisabledIcon}
-                  onClick={toggleVideo}
-                  alt="chatIcon"
-              />
-          )}
-        </div>
+      <div className="ml24">
+        {isVideoOn ? (
+            <Tooltip title={formatMessage(messages.disableVideo)} placement={"top"}>
+          <img src={VideoIcon} onClick={toggleVideo} alt="chatIcon" />
+            </Tooltip>
+        ) : (
+            <Tooltip title={formatMessage(messages.enableVideo)} placement={"top"}>
+          <img src={VideoDisabledIcon} onClick={toggleVideo} alt="chatIcon" />
+            </Tooltip>
+        )}
+      </div>
     );
   };
 
   getAudioButtons = () => {
-    const {isAudioOn} = this.state;
-    const {toggleAudio} = this;
+    const { isStart = false, isAudioOn } = this.state;
+    const { toggleAudio, formatMessage } = this;
+
+    if(!isStart) {
+      return null;
+    }
 
     return (
-        <div className="ml24">
-          {isAudioOn ? (
-              <img src={AudioIcon} onClick={toggleAudio} alt="chatIcon" />
-          ) : (
-              <img
-                  src={AudioDisabledIcon}
-                  onClick={toggleAudio}
-                  alt="chatIcon"
-              />
-          )}
-        </div>
+      <div className="ml24">
+        {isAudioOn ? (
+            <Tooltip title={formatMessage(messages.muteAudio)} placement={"top"}>
+          <img src={AudioIcon} onClick={toggleAudio} alt="chatIcon" />
+            </Tooltip>
+        ) : (
+            <Tooltip title={formatMessage(messages.unMuteAudio)} placement={"top"}>
+          <img src={AudioDisabledIcon} onClick={toggleAudio} alt="chatIcon" />
+            </Tooltip>
+        )}
+      </div>
     );
   };
 
   getCallButtons = () => {
-    const {isStart} = this.state;
-    const {startVideoCall, leaveCall} = this;
+    const { isStart } = this.state;
+    const { startVideoCall, leaveCall, formatMessage } = this;
 
     return (
-        <div className="ml24">
-          {isStart ? (
-              <img
-                  src={StartCallIcon}
-                  onClick={startVideoCall}
-                  alt="chatIcon"
-                  className="pointer"
-              />
-          ) : (
-              <img
-                  src={EndCallIcon}
-                  onClick={leaveCall}
-                  alt="chatIcon"
-                  className="pointer"
-              />
-          )}
-        </div>
+      <div className="ml24">
+        {!isStart ? (
+          <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
+            <img
+              src={StartCallIcon}
+              onClick={startVideoCall}
+              alt="chatIcon"
+              className="pointer"
+            />
+          </Tooltip>
+        ) : (
+          <Tooltip title={formatMessage(messages.endCall)} placement={"top"}>
+            <img
+              src={EndCallIcon}
+              onClick={leaveCall}
+              alt="chatIcon"
+              className="pointer"
+            />
+          </Tooltip>
+        )}
+      </div>
     );
   };
 
@@ -268,7 +286,7 @@ class AgoraVideo extends Component {
       formatMessage,
       getVideoButtons,
       getAudioButtons,
-      getCallButtons,
+      getCallButtons
     } = this;
 
     const {
@@ -286,9 +304,9 @@ class AgoraVideo extends Component {
         {/*   REMOTE VIEW   */}
         <div id={"agora-remote"} className="wp100 hp100">
           {loading && (
-              <div className="hp100 wp100 flex direction-column align-center justify-center z1">
-                <Loading className={"wp100"} />
-              </div>
+            <div className="hp100 wp100 flex direction-column align-center justify-center z1">
+              <Loading className={"wp100"} />
+            </div>
           )}
           {!remoteAdded && (
             <div className="flex direction-column align-center justify-center hp100">
@@ -299,7 +317,7 @@ class AgoraVideo extends Component {
               />
 
               <div className="text-white mt20">
-                {!isStart ? (
+                {isStart ? (
                   <span>
                     {formatMessage(
                       {
