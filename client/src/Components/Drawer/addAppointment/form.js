@@ -821,11 +821,6 @@ class AddAppointmentForm extends Component {
     } = this.props;
     const radiology_type = radiology_type_data[radiologyTypeSelected];
 
-    console.log(
-      "0271273819823 radiology_type_data, radiologyTypeSelected, radiology_type",
-      { radiology_type_data, radiologyTypeSelected, radiology_type }
-    );
-
     const { data: radiologyTypeDescription = {} } = radiology_type || {};
 
     return Object.keys(radiologyTypeDescription).map(id => {
