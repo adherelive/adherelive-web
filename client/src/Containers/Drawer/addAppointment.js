@@ -44,7 +44,6 @@ const mapDispatchToProps = dispatch => {
         getFavourites : ({type}) => dispatch(getFavourites({type})),
         removeFavourite: ({typeId,type}) => dispatch(removeFavourite({typeId,type})),
         removeFavouriteRecord :(id) => dispatch(removeFavouriteByRecordId(id)),
-        getAppointmentsDetails: () => dispatch(getAppointmentsDetails())
     };
 };
 
