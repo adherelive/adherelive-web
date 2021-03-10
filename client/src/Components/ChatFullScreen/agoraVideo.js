@@ -32,7 +32,7 @@ class AgoraVideo extends Component {
       selfUid: null,
       isVideoOn: true,
       isAudioOn: true,
-      isStart: true,
+      isStart: false,
       remoteAdded: false,
       remoteDisconnect: false
     };
@@ -134,7 +134,7 @@ class AgoraVideo extends Component {
     const playerContainer = document.createElement("div");
     playerContainer.className = "videoPlayer";
     playerContainer.id = uid.toString();
-    this.setState({ loading: false, isStart: false });
+    this.setState({ loading: false, isStart: true });
   };
 
   leaveCall = async () => {
@@ -150,7 +150,7 @@ class AgoraVideo extends Component {
     await this.rtc.client.leave();
     this.setState({
       remoteUid: null,
-      isStart: true,
+      isStart: false,
       remoteAdded: false,
       loading: false
     });
@@ -208,7 +208,7 @@ class AgoraVideo extends Component {
     const { isStart = false, isVideoOn } = this.state;
     const { toggleVideo, formatMessage } = this;
 
-    if(isStart) {
+    if(!isStart) {
       return null;
     }
 
@@ -231,7 +231,7 @@ class AgoraVideo extends Component {
     const { isStart = false, isAudioOn } = this.state;
     const { toggleAudio, formatMessage } = this;
 
-    if(isStart) {
+    if(!isStart) {
       return null;
     }
 
@@ -256,7 +256,7 @@ class AgoraVideo extends Component {
 
     return (
       <div className="ml24">
-        {isStart ? (
+        {!isStart ? (
           <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
             <img
               src={StartCallIcon}
@@ -317,7 +317,7 @@ class AgoraVideo extends Component {
               />
 
               <div className="text-white mt20">
-                {!isStart ? (
+                {isStart ? (
                   <span>
                     {formatMessage(
                       {
