@@ -351,7 +351,7 @@ class AddAppointmentForm extends Component {
             {descDropDownOpen ? (
               <Tooltip
                 placement="topLeft"
-                title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
+                // title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
               >
                 {favorite_id ? (
                   <StarFilled
@@ -411,112 +411,6 @@ class AddAppointmentForm extends Component {
         return getOtherOptions();
     }
 
-    // if (typeValue === MEDICAL_TEST) {
-    //   for (let each in typeDescription) {
-    //     const { name: desc = "" } = typeDescription[each];
-    //
-    //     if (favourite_medical_test_ids.includes(each.toString())) {
-    //       favTypes.push(
-    //         <Option key={desc} value={desc}>
-    //           <div
-    //             key={`${desc}-div`}
-    //             className="pointer flex wp100  align-center justify-space-between"
-    //           >
-    //             {desc}
-    //             {descDropDownOpen ? (
-    //               <Tooltip
-    //                 placement="topLeft"
-    //                 title={
-    //                   favourite_medical_test_ids.includes(each.toString())
-    //                     ? "Unmark"
-    //                     : "Mark favourite"
-    //                 }
-    //               >
-    //                 {favourite_medical_test_ids.includes(each.toString()) ? (
-    //                   <StarFilled
-    //                     style={{ fontSize: "20px", color: "#f9c216" }}
-    //                     onClick={this.handleremoveMedicalTestFavourites(each)}
-    //                   />
-    //                 ) : (
-    //                   <StarOutlined
-    //                     style={{ fontSize: "20px", color: "#f9c216" }}
-    //                     onClick={this.handleAddMedicalTestFavourites(each)}
-    //                   />
-    //                 )}
-    //               </Tooltip>
-    //             ) : null}
-    //           </div>
-    //         </Option>
-    //       );
-    //     } else {
-    //       unFavTypes.push(
-    //         <Option key={desc} value={desc}>
-    //           <div
-    //             key={`${desc}-div`}
-    //             className="pointer flex wp100  align-center justify-space-between"
-    //           >
-    //             {desc}
-    //             {descDropDownOpen ? (
-    //               <Tooltip
-    //                 placement="topLeft"
-    //                 title={
-    //                   favourite_medical_test_ids.includes(each.toString())
-    //                     ? "Unmark"
-    //                     : "Mark favourite"
-    //                 }
-    //               >
-    //                 {favourite_medical_test_ids.includes(each.toString()) ? (
-    //                   <StarFilled
-    //                     style={{ fontSize: "20px", color: "#f9c216" }}
-    //                     onClick={this.handleremoveMedicalTestFavourites(each)}
-    //                   />
-    //                 ) : (
-    //                   <StarOutlined
-    //                     style={{ fontSize: "20px", color: "#f9c216" }}
-    //                     onClick={this.handleAddMedicalTestFavourites(each)}
-    //                   />
-    //                 )}
-    //               </Tooltip>
-    //             ) : null}
-    //           </div>
-    //         </Option>
-    //       );
-    //     }
-    //   }
-    //
-    //   for (let each of favTypes) {
-    //     newTypes.push(each);
-    //   }
-    //   for (let each of unFavTypes) {
-    //     newTypes.push(each);
-    //   }
-    //
-    //   return newTypes;
-    // } else if (typeValue === RADIOLOGY) {
-    //   for (let each in typeDescription) {
-    //     const { id = null, name: desc = "" } = typeDescription[each];
-    //     newTypes.push(
-    //       <Option
-    //         key={desc}
-    //         value={desc}
-    //         onClick={this.setRadiologyTypeSelected(id)}
-    //       >
-    //         {desc}
-    //       </Option>
-    //     );
-    //   }
-    //   return newTypes;
-    // } else {
-    //   for (let each in typeDescription) {
-    //     let desc = typeDescription[each];
-    //     newTypes.push(
-    //       <Option key={desc} value={desc}>
-    //         {desc}
-    //       </Option>
-    //     );
-    //   }
-    //   return newTypes;
-    // }
   };
 
   handleProviderSearch = data => {
@@ -753,77 +647,7 @@ class AddAppointmentForm extends Component {
       );
     });
 
-    // let subOptions = [];
-    // for (let itemId in items) {
-    //   let markedFlag = false;
-    //   let recordId = null;
-    //
-    //   for (let favDataId in favourites_data) {
-    //     const {
-    //       basic_info: {
-    //         marked_favourite_id = null,
-    //         marked_favourite_type = ""
-    //       } = {},
-    //       details: {
-    //         sub_category_id = null,
-    //         selected_radiology_index = null
-    //       } = {}
-    //     } = favourites_data[favDataId];
-    //
-    //     if (marked_favourite_type !== FAVOURITE_TYPE.RADIOLOGY) {
-    //       continue;
-    //     } else {
-    //       // console.log("9862345263987498234 &&&&&& >>>>>>> ",{marked_favourite_id,radiologyTypeSelected,
-    //       //   sub_category_id,each,
-    //       //   selected_radiology_index,itemId});
-    //
-    //       if (
-    //         marked_favourite_id.toString() ===
-    //           radiologyTypeSelected.toString() &&
-    //         sub_category_id.toString() === each.toString() &&
-    //         selected_radiology_index.toString() === itemId.toString()
-    //       ) {
-    //         markedFlag = true;
-    //         recordId = favDataId;
-    //       }
-    //     }
-    //   }
-    //   // console.log("8367524890234872379",{eachhhhhh:items[itemId]})
-    //   const { favorite_id = null, name: item = "" } = items[itemId];
-    //   subOptions.push(
-    //     <Option
-    //       key={`${each}:${item}-radiology-type`}
-    //       value={item}
-    //       className="pointer flex wp100  align-center justify-space-between"
-    //     >
-    //       {item}
-    //       {radiologyDropDownVisible ? (
-    //         <Tooltip
-    //           placement="topLeft"
-    //           title={markedFlag ? "Unmark" : "Mark favourite"}
-    //         >
-    //           {markedFlag ? (
-    //             <StarFilled
-    //               style={{ fontSize: "20px", color: "#f9c216" }}
-    //               onClick={this.handleremoveRadiologyFavourites(recordId)}
-    //             />
-    //           ) : (
-    //             <StarOutlined
-    //               style={{ fontSize: "20px", color: "#f9c216" }}
-    //               onClick={this.handleAddRadiologyFavourites({
-    //                 id: radiologyTypeSelected,
-    //                 sub_category_id: each,
-    //                 selected_radiology_index: itemId
-    //               })}
-    //             />
-    //           )}
-    //         </Tooltip>
-    //       ) : null}
-    //     </Option>
-    //   );
-    // }
-    //
-    // return subOptions;
+    
   };
 
   getRadiologyTypeDescriptionOption = () => {
@@ -1109,90 +933,7 @@ class AddAppointmentForm extends Component {
           </Fragment>
         )}
 
-        {/*<div className="flex mt24 direction-row flex-grow-1">*/}
-        {/*  <label*/}
-        {/*    htmlFor="type description"*/}
-        {/*    className="form-label"*/}
-        {/*    // title={formatMessage(messages.appointmentTypeDescription)}*/}
-        {/*  >*/}
-        {/*    {typeValue === RADIOLOGY*/}
-        {/*      ? `${formatMessage(messages.radiology)} ${formatMessage(*/}
-        {/*          messages.appointmentTypeDescription*/}
-        {/*        )}`*/}
-        {/*      : formatMessage(messages.appointmentTypeDescription)}*/}
-        {/*  </label>*/}
-
-        {/*  <div className="star-red">*</div>*/}
-        {/*</div>*/}
-        {/*<FormItem*/}
-        {/*// label={formatMessage(messages.appointmentTypeDescription)}*/}
-        {/*// className='mt24'*/}
-        {/*>*/}
-        {/*  {getFieldDecorator(*/}
-        {/*    APPOINTMENT_TYPE_DESCRIPTION,*/}
-        {/*    {}*/}
-        {/*  )(*/}
-        {/*    <Select*/}
-        {/*      onDropdownVisibleChange={this.DescDropDownVisibleChange}*/}
-        {/*      disabled={!appointmentType}*/}
-        {/*      notFoundContent={"No match found"}*/}
-        {/*      className="drawer-select"*/}
-        {/*      placeholder="Choose Type Description"*/}
-        {/*      showSearch*/}
-        {/*      defaultActiveFirstOption={true}*/}
-        {/*      autoComplete="off"*/}
-        {/*      optionFilterProp="children"*/}
-        {/*      filterOption={(input, option) =>*/}
-        {/*        option.props.children*/}
-        {/*          .toLowerCase()*/}
-        {/*          .indexOf(input.toLowerCase()) >= 0*/}
-        {/*      }*/}
-        {/*    >*/}
-        {/*      {this.getTypeDescriptionOption()}*/}
-        {/*    </Select>*/}
-        {/*  )}*/}
-        {/*</FormItem>*/}
-
-        {/*{typeValue === RADIOLOGY ? (*/}
-        {/*  <div>*/}
-        {/*    <div className="flex mt24 direction-row flex-grow-1">*/}
-        {/*      <label htmlFor="type description" className="form-label">*/}
-        {/*        {formatMessage(messages.radiologyTypeDesc)}*/}
-        {/*      </label>*/}
-
-        {/*      <div className="star-red">*</div>*/}
-        {/*    </div>*/}
-        {/*    <FormItem>*/}
-        {/*      {getFieldDecorator(RADIOLOGY_TYPE, {*/}
-        {/*        rules: [*/}
-        {/*          {*/}
-        {/*            required: true,*/}
-        {/*            message: formatMessage(messages.error_radio_type_required)*/}
-        {/*          }*/}
-        {/*        ]*/}
-        {/*      })(*/}
-        {/*        <Select*/}
-        {/*          onDropdownVisibleChange={this.RadiologyDropDownVisibleChange}*/}
-        {/*          disabled={radiologyTypeSelected === null}*/}
-        {/*          notFoundContent={"No match found"}*/}
-        {/*          className="drawer-select"*/}
-        {/*          placeholder="Choose Radiology Type Description"*/}
-        {/*          showSearch*/}
-        {/*          defaultActiveFirstOption={true}*/}
-        {/*          autoComplete="off"*/}
-        {/*          optionFilterProp="children"*/}
-        {/*          // filterOption={(input, option) =>*/}
-        {/*          //   option.props.children*/}
-        {/*          //     .toLowerCase()*/}
-        {/*          //     .indexOf(input.toLowerCase()) >= 0*/}
-        {/*          // }*/}
-        {/*        >*/}
-        {/*          {this.getRadiologyTypeDescriptionOption()}*/}
-        {/*        </Select>*/}
-        {/*      )}*/}
-        {/*    </FormItem>*/}
-        {/*  </div>*/}
-        {/*) : null}*/}
+      
 
         <div className="flex mt24 direction-row flex-grow-1">
           <label

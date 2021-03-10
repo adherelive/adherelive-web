@@ -421,96 +421,6 @@ class EditAppointmentForm extends Component {
   }
 
 
-  // getTypeDescriptionOption = () => {
-  //   let { typeDescription = [] ,descDropDownOpen=false} = this.state;
-  //   const {favourite_medical_test_ids = []}=this.props;
-  //   let newTypes = [];
-  //   let favTypes = [];
-  //   let unFavTypes=[];
-  //   const {
-  //     form: { getFieldValue
-  //      },
-  //   } = this.props;
-
-  //   const typeValue  = getFieldValue(APPOINTMENT_TYPE);
-
-  //   if(typeValue === MEDICAL_TEST ){
-  //     for (let each in typeDescription) {
-  //           const {name:desc='' , favorite_id=null,index=null} = typeDescription[each];
-
-  //           newTypes.push(
-  //             <Option key={desc} value={desc}>
-  //             <div
-  //             key={`${desc}-div`}
-  //             className="pointer flex wp100  align-center justify-space-between"
-  //           >
-  //             {desc}
-  //             {
-  //               descDropDownOpen 
-  //               ?
-  //               (<Tooltip 
-  //                 placement="topLeft"
-  //                 // title={favourite_medical_test_ids.includes(index.toString()) ? 'Unmark' : 'Mark favourite'} 
-  //               >
-      
-  //           {favourite_medical_test_ids.includes(index.toString())
-  //               ?  
-  //                 <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
-  //                   onClick={this.handleremoveMedicalTestFavourites(index)}
-  //                 /> 
-  //               :
-  //               <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
-  //                   onClick = {this.handleAddMedicalTestFavourites(index)}
-  //                 />
-  //           }     
-      
-  //               </Tooltip>)
-  //               :
-  //               null
-  //             }
-            
-  //           </div>
-              
-  //           </Option>
-            
-  //         )
-  //       } 
-
-  //     return newTypes;
-
-       
-  //     }
-  //   else if(typeValue === RADIOLOGY){
-  //     for (let each in  typeDescription) {
-  //       const {id = null , name : desc =''} = typeDescription[each];
-  //       newTypes.push(
-  //         <Option key={desc} value={desc}
-  //           onClick={this.setRadiologyTypeSelected(id)}
-  //         >
-  //           {desc}
-  //         </Option>
-  //       );
-  //     }
-  //     return newTypes;
-
-    
-  //   }  
-  //   else{  
-  //     for (let each in typeDescription) {
-  //       let desc = typeDescription[each];
-  //       newTypes.push(
-  //         <Option key={desc} value={desc}>
-  //           {desc}
-  //         </Option>
-  //       );
-  //     }
-  //     return newTypes;
-
-  //   }
-     
-  // };
-
-
   getOtherOptions = () => {
     const { typeDescription = {} } = this.state;
 
@@ -536,7 +446,7 @@ class EditAppointmentForm extends Component {
             {descDropDownOpen ? (
               <Tooltip
                 placement="topLeft"
-                title={favorite_id ? this.formatMessage(messages.markFav) : this.formatMessage(messages.unMarkFav)}
+                // title={favorite_id ? this.formatMessage(messages.markFav) : this.formatMessage(messages.unMarkFav)}
               >
                 {favorite_id ? (
                   <StarFilled
