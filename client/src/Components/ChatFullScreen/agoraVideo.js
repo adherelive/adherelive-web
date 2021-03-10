@@ -32,7 +32,7 @@ class AgoraVideo extends Component {
       selfUid: null,
       isVideoOn: true,
       isAudioOn: true,
-      isStart: true,
+      isStart: false,
       remoteAdded: false,
       remoteDisconnect: false
     };
@@ -134,7 +134,7 @@ class AgoraVideo extends Component {
     const playerContainer = document.createElement("div");
     playerContainer.className = "videoPlayer";
     playerContainer.id = uid.toString();
-    this.setState({ loading: false, isStart: false });
+    this.setState({ loading: false, isStart: true });
   };
 
   leaveCall = async () => {
@@ -150,7 +150,7 @@ class AgoraVideo extends Component {
     await this.rtc.client.leave();
     this.setState({
       remoteUid: null,
-      isStart: true,
+      isStart: false,
       remoteAdded: false,
       loading: false
     });
@@ -205,30 +205,46 @@ class AgoraVideo extends Component {
   };
 
   getVideoButtons = () => {
-    const { isVideoOn } = this.state;
-    const { toggleVideo } = this;
+    const { isStart = false, isVideoOn } = this.state;
+    const { toggleVideo, formatMessage } = this;
+
+    if(!isStart) {
+      return null;
+    }
 
     return (
       <div className="ml24">
         {isVideoOn ? (
+            <Tooltip title={formatMessage(messages.disableVideo)} placement={"top"}>
           <img src={VideoIcon} onClick={toggleVideo} alt="chatIcon" />
+            </Tooltip>
         ) : (
+            <Tooltip title={formatMessage(messages.enableVideo)} placement={"top"}>
           <img src={VideoDisabledIcon} onClick={toggleVideo} alt="chatIcon" />
+            </Tooltip>
         )}
       </div>
     );
   };
 
   getAudioButtons = () => {
-    const { isAudioOn } = this.state;
-    const { toggleAudio } = this;
+    const { isStart = false, isAudioOn } = this.state;
+    const { toggleAudio, formatMessage } = this;
+
+    if(!isStart) {
+      return null;
+    }
 
     return (
       <div className="ml24">
         {isAudioOn ? (
+            <Tooltip title={formatMessage(messages.muteAudio)} placement={"top"}>
           <img src={AudioIcon} onClick={toggleAudio} alt="chatIcon" />
+            </Tooltip>
         ) : (
+            <Tooltip title={formatMessage(messages.unMuteAudio)} placement={"top"}>
           <img src={AudioDisabledIcon} onClick={toggleAudio} alt="chatIcon" />
+            </Tooltip>
         )}
       </div>
     );
@@ -240,7 +256,7 @@ class AgoraVideo extends Component {
 
     return (
       <div className="ml24">
-        {isStart ? (
+        {!isStart ? (
           <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
             <img
               src={StartCallIcon}
@@ -301,7 +317,7 @@ class AgoraVideo extends Component {
               />
 
               <div className="text-white mt20">
-                {!isStart ? (
+                {isStart ? (
                   <span>
                     {formatMessage(
                       {
