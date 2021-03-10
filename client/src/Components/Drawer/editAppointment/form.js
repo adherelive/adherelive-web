@@ -682,9 +682,13 @@ class EditAppointmentForm extends Component {
           className="pointer flex wp100  align-center justify-space-between "
         >
           <div className="wp100 flex align-center justify-space-between" >
-              <Tooltip title={name} >
-                {getRadiologyDescriptionName(name)}
-              </Tooltip>
+            {radiologyDropDownVisible ? (
+                <Tooltip title={name} className="ellipsis">
+                  {name}
+                </Tooltip>
+            ) : (
+                <Tooltip title={name}>{name}</Tooltip>
+            )}
 
             <div className="wp10" >
             {radiologyDropDownVisible ? (

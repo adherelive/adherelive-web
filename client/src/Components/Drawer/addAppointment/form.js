@@ -410,7 +410,6 @@ class AddAppointmentForm extends Component {
       default:
         return getOtherOptions();
     }
-
   };
 
   handleProviderSearch = data => {
@@ -594,7 +593,7 @@ class AddAppointmentForm extends Component {
   //======================================================================================>>>>
 
   getRadiologyDescriptionName = (name = "") => {
-    return name.length > 30 ? `${name.substring(0,31)}..` : name;
+    return name.length > 30 ? `${name.substring(0, 31)}..` : name;
   };
 
   getRadiologyDescriptionOptions = (items, each) => {
@@ -602,53 +601,64 @@ class AddAppointmentForm extends Component {
       radiologyTypeSelected = null,
       radiologyDropDownVisible = false
     } = this.state;
-    const {getRadiologyDescriptionName} = this;
-    
+    const { getRadiologyDescriptionName } = this;
+
+    console.log(
+      "3289123712 radiologyDropDownVisible",
+      radiologyDropDownVisible
+    );
     return items.map((item, index) => {
       const { name, favorite_id } = item || {};
 
       return (
         <Option
-        key={`${each}:${name}-radiology-type`}
-        value={name}
-        className="pointer flex wp100  align-center justify-space-between "
-      >
-        <div className="wp100 flex align-center justify-space-between" >
-            <Tooltip title={name}>
-              {getRadiologyDescriptionName(name)}
-            </Tooltip>
+          key={`${each}:${name}-radiology-type`}
+          value={name}
+          className="pointer flex wp100  align-center justify-space-between "
+        >
+          <div className="wp100 flex align-center justify-space-between">
+            {radiologyDropDownVisible ? (
+              <Tooltip title={name} className="ellipsis">
+                {name}
+              </Tooltip>
+            ) : (
+              <Tooltip title={name}>{name}</Tooltip>
+            )}
 
-          <div className="wp10" >
-          {radiologyDropDownVisible ? (
-            <Tooltip
-              placement="topLeft"
-              title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
-            >
-              {favorite_id ? (
-                <StarFilled
-                  style={{ fontSize: "20px", color: "#f9c216" }}
-                  onClick={this.handleremoveRadiologyFavourites(favorite_id)}
-                />
-              ) : (
-                <StarOutlined
-                  style={{ fontSize: "20px", color: "#f9c216" }}
-                  onClick={this.handleAddRadiologyFavourites({
-                    id: radiologyTypeSelected,
-                    sub_category_id: each,
-                    selected_radiology_index: index
-                  })}
-                />
-              )}
-            </Tooltip>
-          ) : null}
-
+            <div className="wp10">
+              {radiologyDropDownVisible ? (
+                <Tooltip
+                  placement="topLeft"
+                  title={
+                    favorite_id
+                      ? this.formatMessage(messages.unMarkFav)
+                      : this.formatMessage(messages.markFav)
+                  }
+                >
+                  {favorite_id ? (
+                    <StarFilled
+                      style={{ fontSize: "20px", color: "#f9c216" }}
+                      onClick={this.handleremoveRadiologyFavourites(
+                        favorite_id
+                      )}
+                    />
+                  ) : (
+                    <StarOutlined
+                      style={{ fontSize: "20px", color: "#f9c216" }}
+                      onClick={this.handleAddRadiologyFavourites({
+                        id: radiologyTypeSelected,
+                        sub_category_id: each,
+                        selected_radiology_index: index
+                      })}
+                    />
+                  )}
+                </Tooltip>
+              ) : null}
+            </div>
           </div>
-        </div>
-      </Option>
+        </Option>
       );
     });
-
-    
   };
 
   getRadiologyTypeDescriptionOption = () => {
@@ -680,7 +690,7 @@ class AddAppointmentForm extends Component {
       e.preventDefault();
       e.stopPropagation();
       const { markFavourite } = this.props;
-      const {handleTypeDescriptionUpdate} = this;
+      const { handleTypeDescriptionUpdate } = this;
       const data = {
         type: FAVOURITE_TYPE.RADIOLOGY,
         id,
@@ -713,7 +723,7 @@ class AddAppointmentForm extends Component {
       e.preventDefault();
       e.stopPropagation();
       const { removeFavouriteRecord } = this.props;
-      const {handleTypeDescriptionUpdate} = this;
+      const { handleTypeDescriptionUpdate } = this;
 
       const response = await removeFavouriteRecord(recordID);
       const {
@@ -933,8 +943,6 @@ class AddAppointmentForm extends Component {
             </FormItem>
           </Fragment>
         )}
-
-      
 
         <div className="flex mt24 direction-row flex-grow-1">
           <label
