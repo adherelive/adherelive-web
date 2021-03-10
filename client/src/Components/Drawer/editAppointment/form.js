@@ -661,12 +661,16 @@ class EditAppointmentForm extends Component {
 
 
     //======================================================================================>>>>
+  getRadiologyDescriptionName = (name = "") => {
+    return name.length > 30 ? `${name.substring(0,31)}..` : name;
+  };
 
   getRadiologyDescriptionOptions = (items, each) => {
     const {
       radiologyTypeSelected = null,
       radiologyDropDownVisible = false
     } = this.state;
+    const {getRadiologyDescriptionName} = this;
 
     return items.map((item, index) => {
       const { name, favorite_id } = item || {};
@@ -678,13 +682,9 @@ class EditAppointmentForm extends Component {
           className="pointer flex wp100  align-center justify-space-between "
         >
           <div className="wp100 flex align-center justify-space-between" >
-            <div className="wp90  ellipsis " >
               <Tooltip title={name} >
-                {
-                name
-                }
+                {getRadiologyDescriptionName(name)}
               </Tooltip>
-            </div>
 
             <div className="wp10" >
             {radiologyDropDownVisible ? (
