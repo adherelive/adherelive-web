@@ -514,7 +514,7 @@ class EditAppointmentForm extends Component {
   getOtherOptions = () => {
     const { typeDescription = {} } = this.state;
 
-    return Object.keys(typeDescription).map((description, index) => {
+    return Object.values(typeDescription).map((description, index) => {
       return (
         <Option key={`${index}-${description}`} value={description}>
           {description}
