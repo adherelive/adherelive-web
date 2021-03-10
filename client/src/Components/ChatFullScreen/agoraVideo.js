@@ -205,30 +205,46 @@ class AgoraVideo extends Component {
   };
 
   getVideoButtons = () => {
-    const { isVideoOn } = this.state;
-    const { toggleVideo } = this;
+    const { isStart = false, isVideoOn } = this.state;
+    const { toggleVideo, formatMessage } = this;
+
+    if(isStart) {
+      return null;
+    }
 
     return (
       <div className="ml24">
         {isVideoOn ? (
+            <Tooltip title={formatMessage(messages.disableVideo)} placement={"top"}>
           <img src={VideoIcon} onClick={toggleVideo} alt="chatIcon" />
+            </Tooltip>
         ) : (
+            <Tooltip title={formatMessage(messages.enableVideo)} placement={"top"}>
           <img src={VideoDisabledIcon} onClick={toggleVideo} alt="chatIcon" />
+            </Tooltip>
         )}
       </div>
     );
   };
 
   getAudioButtons = () => {
-    const { isAudioOn } = this.state;
-    const { toggleAudio } = this;
+    const { isStart = false, isAudioOn } = this.state;
+    const { toggleAudio, formatMessage } = this;
+
+    if(isStart) {
+      return null;
+    }
 
     return (
       <div className="ml24">
         {isAudioOn ? (
+            <Tooltip title={formatMessage(messages.muteAudio)} placement={"top"}>
           <img src={AudioIcon} onClick={toggleAudio} alt="chatIcon" />
+            </Tooltip>
         ) : (
+            <Tooltip title={formatMessage(messages.unMuteAudio)} placement={"top"}>
           <img src={AudioDisabledIcon} onClick={toggleAudio} alt="chatIcon" />
+            </Tooltip>
         )}
       </div>
     );
