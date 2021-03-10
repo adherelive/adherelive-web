@@ -146,6 +146,7 @@ class Medicine extends Component {
          key={"no-match-medicine-div"}
          className="flex align-center justify-center" 
          onClickCapture={this.handleAddMedicineOpen}
+         className="add-new-medicine-button-div"
          >
           <Button 
           type={"default"}

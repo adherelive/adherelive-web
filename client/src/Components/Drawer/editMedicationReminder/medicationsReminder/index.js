@@ -19,7 +19,7 @@ import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import repeatDaysField from "../common/selectedDays";
 import moment from "moment";
-import AddMedicineDrawer from "../../addNewMedicine";
+import AddMedicineDrawer from "../../../../Containers/Drawer/addMedicine";
 
 class EditMedicationReminder extends Component {
   constructor(props) {
@@ -386,12 +386,13 @@ class EditMedicationReminder extends Component {
         newMedicineId={newMedicineId}
         />
        
+
         <AddMedicineDrawer 
-            visible={medicineDrawerVisible} 
-            close={this.closeMedicineDrawer}
-            input={medicineValue}
-            addNewMedicine={addNewMedicine}
-            setNewMedicineId={this.setNewMedicineId}
+          visible={medicineDrawerVisible} 
+          close={this.closeMedicineDrawer}
+          input={medicineValue}
+          // addNewMedicine={addNewMedicine}
+          setNewMedicineId={this.setNewMedicineId}
         />
 
         <Footer

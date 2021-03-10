@@ -6,11 +6,14 @@ import {DRAWER} from "../../constant";
 import {close} from "../../modules/drawer";
 
 const mapStateToProps = state => {
-    const {auth = {}, drawer: {data: {type} = {}, visible} = {}} = state;
+    const {auth = {}, drawer: {data: {type} = {}, visible} = {},
+    other_details: { medication_details = {} } = {}
+    } = state;
 
     return {
         auth,
-        visible: visible && type === DRAWER.ADD_MEDICINES
+        visible: visible && type === DRAWER.ADD_MEDICINES,
+        medication_details
     };
 };
 
@@ -23,7 +26,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-    const {visible: drawerVisible, auth} = stateProps;
+    const {visible: drawerVisible, auth , medication_details} = stateProps;
 
     const {addNewMedicine, close : closeDrawer, addAdminMedicine} = dispatchProps;
 
@@ -36,7 +39,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         setNewMedicineId,
         input,
         addAdminMedicine,
-        auth
+        auth,
+        medication_details
     };
 };
 
