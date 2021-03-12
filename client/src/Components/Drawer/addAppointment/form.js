@@ -328,7 +328,7 @@ class AddAppointmentForm extends Component {
   };
 
   getOtherOptions = () => {
-    const { typeDescription = {} } = this.state;
+    const { typeDescription = [] } = this.state;
 
     return Object.values(typeDescription).map((description, index) => {
       return (
@@ -374,7 +374,7 @@ class AddAppointmentForm extends Component {
   };
 
   getRadiologyOptions = () => {
-    const { typeDescription = [] } = this.state;
+    const { typeDescription = {} } = this.state;
     const { setRadiologyTypeSelected } = this;
 
     return Object.keys(typeDescription).map((id, index) => {

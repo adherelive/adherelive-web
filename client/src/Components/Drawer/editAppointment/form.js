@@ -423,7 +423,7 @@ class EditAppointmentForm extends Component {
 
 
   getOtherOptions = () => {
-    const { typeDescription = {} } = this.state;
+    const { typeDescription = [] } = this.state;
     console.log("7325473254654723654823548237 =======>>>>",{typeDescription});
 
     return Object.values(typeDescription).map((description, index) => {
@@ -471,7 +471,7 @@ class EditAppointmentForm extends Component {
 
 
   getRadiologyOptions = () => {
-    const { typeDescription = [] } = this.state;
+    const { typeDescription = {} } = this.state;
     const { setRadiologyTypeSelected } = this;
 
     return Object.keys(typeDescription).map((id, index) => {
