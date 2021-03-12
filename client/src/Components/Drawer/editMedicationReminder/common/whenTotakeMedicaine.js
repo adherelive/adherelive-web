@@ -179,6 +179,9 @@ class WhenToTakeMedication extends Component {
       } else if (when_to_take[0] === AFTER_MEALS_ARRAY_OD[0]) {
         this.setState({ nugget_selected: 2 });
       }
+      getFieldDecorator(FIELD_NAME_ABBR, {
+        initialValue: WHEN_TO_TAKE_BUTTONS.OD.id
+      });
     } else if (when_to_take.length === 2) {
       if (
         when_to_take[0] === BEFORE_MEALS_ARRAY_BD[0] &&
@@ -191,6 +194,9 @@ class WhenToTakeMedication extends Component {
       ) {
         this.setState({ nugget_selected: 2 });
       }
+      getFieldDecorator(FIELD_NAME_ABBR, {
+        initialValue: WHEN_TO_TAKE_BUTTONS.BD.id
+      });
     } else if (when_to_take.length === 3) {
       if (
         when_to_take[0] === BEFORE_MEALS_ARRAY_TDS[0] &&
@@ -205,8 +211,10 @@ class WhenToTakeMedication extends Component {
       ) {
         this.setState({ nugget_selected: 2 });
       }
+      getFieldDecorator(FIELD_NAME_ABBR, {
+        initialValue: WHEN_TO_TAKE_BUTTONS.TDS.id
+      });
     } else if(when_to_take.length === 0) {
-      console.log("017389312 here, when_to_take", {when_to_take, frequency});
       getFieldDecorator(FIELD_NAME_ABBR, {
         initialValue: WHEN_TO_TAKE_BUTTONS.SOS.id
       });
@@ -509,7 +517,7 @@ class WhenToTakeMedication extends Component {
   };
 
   onClickOd = () => {
-    const { form } = this.props;
+    const { form, enableSubmit } = this.props;
     const { setFieldsValue } = form;
 
     // const { selected_timing } = this.state;
@@ -530,9 +538,10 @@ class WhenToTakeMedication extends Component {
       keys: [0]
     });
     setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_OD, [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.OD.id });
+    enableSubmit();
   };
   onClickBd = () => {
-    const { form } = this.props;
+    const { form , enableSubmit} = this.props;
     const { setFieldsValue } = form;
 
     // const { selected_timing } = this.state;
@@ -550,13 +559,12 @@ class WhenToTakeMedication extends Component {
       keys: [0, 1]
     });
     setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_BD, [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.BD.id });
+    enableSubmit();
   };
 
   onClickTds = () => {
-    const { form } = this.props;
+    const { form, enableSubmit } = this.props;
     const { setFieldsValue } = form;
-
-    const { selected_timing } = this.state;
     const {WHEN_TO_TAKE_BUTTONS, getKeys} = this;
     const keys = getKeys();
     // const keys = form.getFieldValue("keys");
@@ -572,10 +580,12 @@ class WhenToTakeMedication extends Component {
       [FIELD_NAME]: AFTER_MEALS_ARRAY_TDS,
       [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.TDS.id
     });
+    enableSubmit();
   };
 
   onCLickSos = () => {
-    const { form: { setFieldsValue } = {}
+    const { form: { setFieldsValue } = {},
+    enableSubmit
     } = this.props;
     const {WHEN_TO_TAKE_BUTTONS} = this;
     // const {getKeys} = this;
@@ -593,6 +603,7 @@ class WhenToTakeMedication extends Component {
       [FIELD_NAME]: [],
       [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.SOS.id
     });
+    enableSubmit();
     // setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_TDS});
   };
 
@@ -701,8 +712,6 @@ class WhenToTakeMedication extends Component {
   getRadioOptions = () => {
     const { WHEN_TO_TAKE_BUTTONS = {}, getKeys } = this;
     const keys = getKeys();
-
-    console.log("0281329312 WHEN_TO_TAKE_BUTTONS", { WHEN_TO_TAKE_BUTTONS });
 
     return Object.keys(WHEN_TO_TAKE_BUTTONS).map(index => {
       const { id, setter, text, whenToTakeCount } =

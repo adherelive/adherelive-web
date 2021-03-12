@@ -37,19 +37,19 @@ class NotificationDrawer extends Component {
                 GETSTREAM_APP_ID
             );
 
-            let clientFeed = client.feed("notification", feedId);
-            console.log('546768546468587587578', notificationToken, feedId, client, clientFeed.get({ limit: 7 }));
+            // let clientFeed = client.feed("notification", feedId);
+            // console.log('546768546468587587578', notificationToken, feedId, client, clientFeed.get({ limit: 7 }));
 
-            this.setState({ clientFeed });
-            clientFeed.get({ limit: 7 }).then(data => {
-                this.getNotificationFromActivities(data);
-            });
+            // this.setState({ clientFeed });
+            // clientFeed.get({ limit: 7 }).then(data => {
+            //     this.getNotificationFromActivities(data);
+            // });
 
-            clientFeed.subscribe(data => {
-                clientFeed.get({ limit: 7 }).then(res => {
-                    this.getNotificationFromActivities(res);
-                });
-            });
+            // clientFeed.subscribe(data => {
+            //     clientFeed.get({ limit: 7 }).then(res => {
+            //         this.getNotificationFromActivities(res);
+            //     });
+            // });
         }
     }
 

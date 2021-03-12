@@ -445,7 +445,6 @@ class Dashboard extends Component {
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
-    console.log("198381239 roomId", roomId);
     
     if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
       return (
