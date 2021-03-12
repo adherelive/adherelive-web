@@ -722,8 +722,13 @@ class WhenToTakeMedication extends Component {
   };
 
   getWhenToTakeButtons = () => {
-    const { form: { getFieldDecorator } = {} } = this.props;
+
+    const { form: { getFieldDecorator } = {} ,  payload = {},medications } = this.props;
     const { WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions } = this;
+    const {id :medication_id= null}=payload || {};
+    const {basic_info:{details:{when_to_take_abbr=null}={}}={}} = medications[medication_id] || {};
+
+    // console.log("763425462387947230942",{props:this.props,payload,when_to_take_abbr});
 
     // const keys = getKeys();
     if (Object.keys(WHEN_TO_TAKE_BUTTONS).length > 0) {
@@ -731,7 +736,9 @@ class WhenToTakeMedication extends Component {
         <Fragment>
           {getFieldDecorator(
             FIELD_NAME_ABBR,
-            {}
+            {
+              initialValue:when_to_take_abbr
+            }
           )(
             <RadioGroup
               className="flex justify-content-end radio-formulation flex-wrap"
