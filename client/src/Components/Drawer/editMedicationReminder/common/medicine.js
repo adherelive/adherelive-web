@@ -19,7 +19,7 @@ import {
 } from "react-instantsearch-dom";
 import Button from "antd/es/button";
 import message from "antd/es/message";
-import {TagFilled,TagOutlined} from "@ant-design/icons";
+import {TagFilled,TagOutlined , StarOutlined, StarFilled} from "@ant-design/icons";
 
 const { Item: FormItem } = Form;
 const { Option } = Select;
@@ -139,15 +139,16 @@ getFavOption = (medicine_id,medicine_name) => {
               </span>
             </div>
           </Tooltip>
-         <Tooltip title="Unmark" >
+         <Tooltip title="Unmark"
+         placement="topLeft" >
          {searching_medicine && medicine_id && favourite_medicine_ids.includes(medicine_id.toString())
              ? 
-             <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+             <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
               onClick={this.handleremoveFavourites(medicine_id)}
              /> 
              :
              searching_medicine?
-            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+            <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
               onClick = {this.handleAddFavourites(medicine_id)}
             /> 
             :
@@ -567,15 +568,16 @@ getFavouriteOptions = () => {
         </div>
         <div>
           <Tooltip
+            placement="topLeft"
             title={favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString()) ? formatMessage(messages.unMark) : formatMessage(messages.mark) }
           >
             {favourite_medicine_ids && favourite_medicine_ids.includes(medicine_id.toString())
              ? 
-             <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+             <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
               onClick={this.handleremoveFavourites(medicine_id)}
              /> 
              :
-            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+            <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
               onClick = {this.handleAddFavourites(medicine_id)}
             /> }
 
