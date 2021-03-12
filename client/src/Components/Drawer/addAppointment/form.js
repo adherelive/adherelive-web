@@ -288,7 +288,6 @@ class AddAppointmentForm extends Component {
       static_templates: { appointments: { type_description = {} } = {} } = {}
     } = this.props;
 
-    // resetFields([APPOINTMENT_TYPE_DESCRIPTION]);
     setFieldsValue({ [APPOINTMENT_TYPE_DESCRIPTION]: null });
     let descArray = type_description[value] ? type_description[value] : [];
 
@@ -316,13 +315,7 @@ class AddAppointmentForm extends Component {
   };
 
   setRadiologyTypeSelected = id => () => {
-    const IdStr = id.toString();
-    this.setState({ radiologyTypeSelected: IdStr });
-    const {
-      static_templates: { appointments: { radiology_type_data = {} } = {} } = {}
-    } = this.props;
-
-    // const temp = radiology_type_data[IdStr];
+    this.setState({ radiologyTypeSelected: `${id}` });
   };
 
   getOtherOptions = () => {
@@ -348,22 +341,24 @@ class AddAppointmentForm extends Component {
           <div className="pointer flex wp100  align-center justify-space-between">
             {name}
             {descDropDownOpen ? (
-              <Tooltip
-                placement="topLeft"
-                // title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
-              >
-                {favorite_id ? (
-                  <StarFilled
-                    style={{ fontSize: "20px", color: "#f9c216" }}
-                    onClick={this.handleremoveMedicalTestFavourites(index)}
-                  />
-                ) : (
-                  <StarOutlined
-                    style={{ fontSize: "20px", color: "#f9c216" }}
-                    onClick={this.handleAddMedicalTestFavourites(index)}
-                  />
-                )}
-              </Tooltip>
+              // <Tooltip
+              //   placement="topLeft"
+              //   // title={favorite_id ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav)}
+              // >
+                <Fragment>
+                  {favorite_id ? (
+                      <StarFilled
+                          style={{ fontSize: "20px", color: "#f9c216" }}
+                          onClick={this.handleremoveMedicalTestFavourites(index)}
+                      />
+                  ) : (
+                      <StarOutlined
+                          style={{ fontSize: "20px", color: "#f9c216" }}
+                          onClick={this.handleAddMedicalTestFavourites(index)}
+                      />
+                  )}
+                </Fragment>
+              // </Tooltip>
             ) : null}
           </div>
         </Option>
@@ -493,7 +488,6 @@ class AddAppointmentForm extends Component {
       timeValue = getFieldValue(END_TIME);
     }
 
-    console.log("182731289 timeValue --> ", { timeValue, type });
     return (
       <TimeKeeper
         time={
@@ -585,25 +579,12 @@ class AddAppointmentForm extends Component {
     }
   };
 
-  //======================================================================================>>>>
-
-  //======================================================================================>>>>
-
-  getRadiologyDescriptionName = (name = "") => {
-    return name.length > 30 ? `${name.substring(0, 31)}..` : name;
-  };
-
   getRadiologyDescriptionOptions = (items, each) => {
     const {
       radiologyTypeSelected = null,
       radiologyDropDownVisible = false
     } = this.state;
-    const { getRadiologyDescriptionName } = this;
 
-    console.log(
-      "3289123712 radiologyDropDownVisible",
-      radiologyDropDownVisible
-    );
     return items.map((item, index) => {
       const { name, favorite_id } = item || {};
 
@@ -700,8 +681,7 @@ class AddAppointmentForm extends Component {
       const response = await markFavourite(data);
       const {
         status,
-        statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: { message: resp_msg = "" } = {}
       } = response;
       if (status) {
         message.success(resp_msg);
@@ -725,12 +705,10 @@ class AddAppointmentForm extends Component {
       const response = await removeFavouriteRecord(recordID);
       const {
         status,
-        statusCode,
-        payload: { data: resp_data = {}, message: resp_msg = "" } = {}
+        payload: {message: resp_msg = "" } = {}
       } = response;
       if (status) {
         message.success(resp_msg);
-        // this.getRadiologyFavourites();
         await handleTypeDescriptionUpdate();
       } else {
         message.error(resp_msg);
@@ -748,14 +726,12 @@ class AddAppointmentForm extends Component {
   handleTypeDescriptionSelect = (value) => {
     
     const {
-      form: { setFieldsValue , getFieldValue , rese } = {},
-      static_templates: { appointments: { type_description = {} } = {} } = {}
+      form: { setFieldsValue } = {},
     } = this.props;
 
 
     const {typeDescValue=''} = this.state;
     
-
     if(value != typeDescValue){
       setFieldsValue({[RADIOLOGY_TYPE]:null})
     }
@@ -766,11 +742,8 @@ class AddAppointmentForm extends Component {
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError, getFieldValue },
-      favourite_medical_test_ids,
-      favourites_data
     } = this.props;
     const { radiologyTypeSelected = null } = this.state;
-    const { timeModalVisible } = this.state;
     const {
       formatMessage,
       getInitialValue,
@@ -844,10 +817,7 @@ class AddAppointmentForm extends Component {
 
               <div className="star-red">*</div>
             </div>
-            <FormItem
-            // label={formatMessage(messages.appointmentTypeDescription)}
-            // className='mt24'
-            >
+            <FormItem>
               {getFieldDecorator(
                 APPOINTMENT_TYPE_DESCRIPTION,
                 {}
@@ -893,10 +863,7 @@ class AddAppointmentForm extends Component {
 
               <div className="star-red">*</div>
             </div>
-            <FormItem
-            // label={formatMessage(messages.appointmentTypeDescription)}
-            // className='mt24'
-            >
+            <FormItem>
               {getFieldDecorator(
                 APPOINTMENT_TYPE_DESCRIPTION,
                 {}
@@ -949,11 +916,6 @@ class AddAppointmentForm extends Component {
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  // filterOption={(input, option) =>
-                  //   option.props.children
-                  //     .toLowerCase()
-                  //     .indexOf(input.toLowerCase()) >= 0
-                  // }
                 >
                   {this.getRadiologyTypeDescriptionOption()}
                 </Select>
