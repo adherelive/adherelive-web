@@ -257,7 +257,7 @@ class AgoraVideo extends Component {
     const { startVideoCall, leaveCall, formatMessage } = this;
 
     return (
-      <div className="ml24">
+      <div className={`${isStart && "ml24"}`}>
         {!isStart ? (
           // <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
           //   <img
@@ -318,10 +318,10 @@ class AgoraVideo extends Component {
             </div>
           )}
           {!remoteAdded && (
-            <div className="flex direction-column align-center justify-center hp100">
+            <div className="flex direction-column align-center justify-center hp100 ">
               <img
                 src={profile_pic || UserDpPlaceholder}
-                className="pointer h80 w80 br50"
+                className="pointer h80 w80 br50 "
                 alt="userDp"
               />
 
@@ -343,7 +343,7 @@ class AgoraVideo extends Component {
           )}
         </div>
 
-        <div className="absolute b10 wp100 flex justify-center">
+        <div className="absolute b10 wp100 flex justify-center ">
           {/*   AUDIO   */}
           {getAudioButtons()}
 
