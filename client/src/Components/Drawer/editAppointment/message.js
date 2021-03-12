@@ -442,7 +442,7 @@ const message = defineMessages({
   unMarkFav: {
     id: "app.drawer.edit.appointment.unMarkFav",
     description: "",
-    defaultMessage: "Un-mark favourite"
+    defaultMessage: "Un-check"
   },
   somethingWentWrong: {
     id: "app.drawer.edit.appointment.somethingWentWrong",
