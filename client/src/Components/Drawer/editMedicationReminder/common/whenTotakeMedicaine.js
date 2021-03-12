@@ -4,12 +4,12 @@ import { injectIntl } from "react-intl";
 import messages from "../message";
 import moment from "moment";
 
+import { WHEN_TO_TAKE_BUTTONS } from "../../addMedicationReminder/common/whenTotakeMedicaine";
+
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 const { Item: FormItem } = Form;
-
-
 
 export const AFTER_WAKEUP = "1";
 export const BEFORE_BREAKFAST = "2";
@@ -31,13 +31,25 @@ const AFTER_MEALS_ARRAY_BD = [AFTER_BREAKFAST, AFTER_LUNCH];
 const BEFORE_MEALS_ARRAY_TDS = [BEFORE_BREAKFAST, BEFORE_LUNCH, BEFORE_DINNER];
 const AFTER_MEALS_ARRAY_TDS = [AFTER_BREAKFAST, AFTER_LUNCH, AFTER_DINNER];
 
-const ALL_OPTIONS_ARRAY = [AFTER_WAKEUP,BEFORE_BREAKFAST,AFTER_BREAKFAST,BEFORE_LUNCH,WITH_LUNCH,
-  AFTER_LUNCH,BEFORE_EVENING_SNACK,AFTER_EVENING_SNACK,BEFORE_DINNER,
-  WITH_DINNER,AFTER_DINNER,BEFORE_SLEEP];
+const ALL_OPTIONS_ARRAY = [
+  AFTER_WAKEUP,
+  BEFORE_BREAKFAST,
+  AFTER_BREAKFAST,
+  BEFORE_LUNCH,
+  WITH_LUNCH,
+  AFTER_LUNCH,
+  BEFORE_EVENING_SNACK,
+  AFTER_EVENING_SNACK,
+  BEFORE_DINNER,
+  WITH_DINNER,
+  AFTER_DINNER,
+  BEFORE_SLEEP
+];
 
 const { Option } = Select;
 
 const FIELD_NAME = "when_to_take";
+const FIELD_NAME_ABBR = "when_to_take_abbr";
 
 let key_field = 1;
 
@@ -68,19 +80,80 @@ class WhenToTakeMedication extends Component {
     const {
       form: { validateFields }
     } = this.props;
-    const { setWhenToTakeInitialValues } = this;
+    const { setWhenToTakeInitialValues, formatWhenToTakeButtons } = this;
     validateFields();
     setWhenToTakeInitialValues();
+    formatWhenToTakeButtons();
   }
 
-  setWhenToTakeInitialValues = () => {
+  formatWhenToTakeButtons = () => {
+    const {
+      formatMessage,
+      onClickOd,
+      onClickBd,
+      onClickTds,
+      onCLickSos,
+      getKeys
+    } = this;
+    this.WHEN_TO_TAKE_BUTTONS = { ...WHEN_TO_TAKE_BUTTONS };
 
+    const keys = getKeys();
+    Object.keys(WHEN_TO_TAKE_BUTTONS).forEach(index => {
+      const { id, whenToTakeCount } = WHEN_TO_TAKE_BUTTONS[index] || {};
+
+      let additionalData = {};
+
+      // set initial value for button
+      // if(keys.length === whenToTakeCount) {
+      //   getFieldDecorator(FIELD_NAME_ABBR, {
+      //     initialValue: id
+      //   });
+      // }
+
+      switch (whenToTakeCount) {
+        case WHEN_TO_TAKE_BUTTONS.OD.whenToTakeCount:
+          additionalData = {
+            setter: onClickOd,
+            text: formatMessage(messages.od)
+          };
+          break;
+        case WHEN_TO_TAKE_BUTTONS.BD.whenToTakeCount:
+          additionalData = {
+            setter: onClickBd,
+            text: formatMessage(messages.bd)
+          };
+          break;
+        case WHEN_TO_TAKE_BUTTONS.TDS.whenToTakeCount:
+          additionalData = {
+            setter: onClickTds,
+            text: formatMessage(messages.tds)
+          };
+          break;
+        case WHEN_TO_TAKE_BUTTONS.SOS.whenToTakeCount:
+          additionalData = {
+            setter: onCLickSos,
+            text: formatMessage(messages.sos)
+          };
+          break;
+        default:
+          break;
+      }
+
+      this.WHEN_TO_TAKE_BUTTONS[index] = {
+        ...this.WHEN_TO_TAKE_BUTTONS[index],
+        ...additionalData
+      };
+    });
+  };
+
+  setWhenToTakeInitialValues = () => {
     const {
       medications,
       medicationData = {},
       payload: { id: medication_id } = {},
       addMedication,
-      editMedication
+      // editMedication,
+        form: {getFieldDecorator} = {},
     } = this.props;
     let { basic_info: { details: { when_to_take = [] } = {} } = {} } =
       medications[medication_id] || {};
@@ -91,10 +164,14 @@ class WhenToTakeMedication extends Component {
       statusList[index] = id;
     });
 
+    if (addMedication) {
+      statusList[0] = ["4"];
+      when_to_take = ["4"];
+    }
+
     let {
       schedule_data: { when_to_take: frequency = [] } = {}
     } = medicationData;
-
 
     if (when_to_take.length === 1) {
       if (when_to_take[0] === BEFORE_MEALS_ARRAY_OD[0]) {
@@ -128,24 +205,25 @@ class WhenToTakeMedication extends Component {
       ) {
         this.setState({ nugget_selected: 2 });
       }
+    } else if(when_to_take.length === 0) {
+      console.log("017389312 here, when_to_take", {when_to_take, frequency});
+      getFieldDecorator(FIELD_NAME_ABBR, {
+        initialValue: WHEN_TO_TAKE_BUTTONS.SOS.id
+      });
     }
 
     if (frequency.length) {
       statusList[0] = frequency[0];
       when_to_take = frequency;
     }
-    if (addMedication ) {
-      statusList[0] = ["4"];
-      when_to_take = ["4"];
-    }
-
-  
 
     this.setState({
       selected_timing: statusList,
       selected_timing_overall: [...when_to_take]
     });
   };
+
+  getKeys = () => this.props.form.getFieldValue("keys");
 
   componentDidUpdate(prevProps) {
     const { medication_details } = this.props;
@@ -189,7 +267,6 @@ class WhenToTakeMedication extends Component {
       } else {
       }
     });
-
 
     const remaining_status = total_status.filter(
       s => !selected_timing_overall.includes(s)
@@ -332,14 +409,9 @@ class WhenToTakeMedication extends Component {
       getInitialValue,
       formatMessage
     } = this;
-    const {
-      getFieldDecorator,
-      getFieldValue,
-      setFieldsValue
-    } = form;
+    const { getFieldDecorator, getFieldValue, setFieldsValue } = form;
 
-
-    let keysTemp=getFieldValue("keys");
+    let keysTemp = getFieldValue("keys");
 
     const { nugget_selected } = this.state;
 
@@ -347,15 +419,15 @@ class WhenToTakeMedication extends Component {
       medications[medication_id] || {};
     let {
       schedule_data: { when_to_take: frequency = [] } = {},
-      details: { when_to_take: frequency2 = [] } = {},
+      details: { when_to_take: frequency2 = [] } = {}
     } = medicationData;
 
     if (frequency.length) {
       when_to_take = frequency;
     }
 
-    if(frequency2.length){
-      when_to_take=frequency2
+    if (frequency2.length) {
+      when_to_take = frequency2;
     }
 
     if (addMedication) {
@@ -381,17 +453,22 @@ class WhenToTakeMedication extends Component {
       initialValuesArray = frequency;
     }
 
-
-    if(editMedication){
-      const {templatePage =false}=medicationData || {};
-      if(templatePage && keysTemp){
-        keys=keysTemp;
-      }else if(keysTemp){
-        keys=keysTemp;
+    if (editMedication) {
+      const { templatePage = false } = medicationData || {};
+      if (templatePage && keysTemp) {
+        keys = keysTemp;
+      } else if (keysTemp) {
+        keys = keysTemp;
       }
     }
 
-
+    if (keys.length === 0) {
+      return (
+          <div className="pt10 pb10 fs16 fw600">
+            {formatMessage(messages.sosMessage)}
+          </div>
+      );
+    }
 
     return keys.map((k, index) => {
       return (
@@ -425,7 +502,6 @@ class WhenToTakeMedication extends Component {
                 )}
               </FormItem>
             </div>
-          
           </div>
         </Fragment>
       );
@@ -436,8 +512,12 @@ class WhenToTakeMedication extends Component {
     const { form } = this.props;
     const { setFieldsValue } = form;
 
-    const { selected_timing } = this.state;
-    const keys = form.getFieldValue("keys");
+    // const { selected_timing } = this.state;
+    const { getKeys, WHEN_TO_TAKE_BUTTONS } = this;
+
+    // const keys = form.getFieldValue("keys");
+
+    const keys = getKeys();
     if (keys.length === 3) {
       this.remove(keys[2]);
       this.remove(keys[1]);
@@ -449,14 +529,17 @@ class WhenToTakeMedication extends Component {
     setFieldsValue({
       keys: [0]
     });
-    setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_OD });
+    setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_OD, [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.OD.id });
   };
   onClickBd = () => {
     const { form } = this.props;
     const { setFieldsValue } = form;
 
-    const { selected_timing } = this.state;
-    const keys = form.getFieldValue("keys");
+    // const { selected_timing } = this.state;
+
+    const { getKeys, WHEN_TO_TAKE_BUTTONS } = this;
+    // const keys = form.getFieldValue("keys");
+    const keys = getKeys();
     if (keys.length === 3) {
       this.remove(keys[2]);
     } else if (keys.length === 1) {
@@ -466,7 +549,7 @@ class WhenToTakeMedication extends Component {
     setFieldsValue({
       keys: [0, 1]
     });
-    setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_BD });
+    setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_BD, [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.BD.id });
   };
 
   onClickTds = () => {
@@ -474,7 +557,9 @@ class WhenToTakeMedication extends Component {
     const { setFieldsValue } = form;
 
     const { selected_timing } = this.state;
-    const keys = form.getFieldValue("keys");
+    const {WHEN_TO_TAKE_BUTTONS, getKeys} = this;
+    const keys = getKeys();
+    // const keys = form.getFieldValue("keys");
     if (keys.length === 2) {
       this.add();
     } else if (keys.length === 1) {
@@ -484,54 +569,74 @@ class WhenToTakeMedication extends Component {
     this.setState({ nugget_selected: null });
     setFieldsValue({
       keys: [0, 1, 2],
-      [FIELD_NAME]: AFTER_MEALS_ARRAY_TDS
+      [FIELD_NAME]: AFTER_MEALS_ARRAY_TDS,
+      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.TDS.id
     });
+  };
 
+  onCLickSos = () => {
+    const { form: { setFieldsValue } = {}
+    } = this.props;
+    const {WHEN_TO_TAKE_BUTTONS} = this;
+    // const {getKeys} = this;
+
+    // const keys = getKeys();
+    // if (keys.length === 2) {
+    //   this.add();
+    // } else if (keys.length === 1) {
+    //   this.add();
+    //   this.add();
+    // }
+    // this.setState({nugget_selected:null});
+    setFieldsValue({
+      keys: [],
+      [FIELD_NAME]: [],
+      [FIELD_NAME_ABBR]: WHEN_TO_TAKE_BUTTONS.SOS.id
+    });
+    // setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_TDS});
   };
 
   setAllMealsBefore = e => {
-
     e.preventDefault();
     const { form, enableSubmit } = this.props;
     const { getFieldValue, setFieldsValue } = form;
     const keys = getFieldValue("keys") || [];
     this.setState({ nugget_selected: 1 });
 
-
-
     if (keys.length === 1) {
-      setFieldsValue({
-        keys: [0],
-      },async()=>{
-        setFieldsValue({[FIELD_NAME]:BEFORE_MEALS_ARRAY_OD
-        })
-        enableSubmit();
-
-      });
+      setFieldsValue(
+        {
+          keys: [0]
+        },
+        async () => {
+          setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_OD });
+          enableSubmit();
+        }
+      );
     } else if (keys.length === 2) {
-      setFieldsValue({
-        keys: [0, 1],
-      },async()=>{
-        setFieldsValue({[FIELD_NAME]:BEFORE_MEALS_ARRAY_BD
-        })
-        enableSubmit();
-
-      });
+      setFieldsValue(
+        {
+          keys: [0, 1]
+        },
+        async () => {
+          setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_BD });
+          enableSubmit();
+        }
+      );
     } else if (keys.length === 3) {
-      setFieldsValue({
-        keys: [0, 1, 2],
-      },async()=>{
-        setFieldsValue({[FIELD_NAME]:BEFORE_MEALS_ARRAY_TDS
-        })
-        enableSubmit();
-
-      });
+      setFieldsValue(
+        {
+          keys: [0, 1, 2]
+        },
+        async () => {
+          setFieldsValue({ [FIELD_NAME]: BEFORE_MEALS_ARRAY_TDS });
+          enableSubmit();
+        }
+      );
     }
-  
   };
 
   setAllMealsAfter = e => {
-
     e.preventDefault();
     const { form, enableSubmit } = this.props;
     const { getFieldValue, setFieldsValue } = form;
@@ -539,32 +644,35 @@ class WhenToTakeMedication extends Component {
     this.setState({ nugget_selected: 2 });
 
     if (keys.length === 1) {
-      setFieldsValue({
-        keys: [0],
-      },async()=>{
-        setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_OD
-        })
-        enableSubmit();
-      });
-
-
+      setFieldsValue(
+        {
+          keys: [0]
+        },
+        async () => {
+          setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_OD });
+          enableSubmit();
+        }
+      );
     } else if (keys.length === 2) {
-      setFieldsValue({
-        keys: [0, 1],
-      },async()=>{
-        setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_BD
-        })
-        enableSubmit();
-      });
-
+      setFieldsValue(
+        {
+          keys: [0, 1]
+        },
+        async () => {
+          setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_BD });
+          enableSubmit();
+        }
+      );
     } else if (keys.length === 3) {
-      setFieldsValue({
-        keys: [0, 1, 2],
-      },async()=>{
-        setFieldsValue({[FIELD_NAME]:AFTER_MEALS_ARRAY_TDS
-        })
-        enableSubmit();
-      });
+      setFieldsValue(
+        {
+          keys: [0, 1, 2]
+        },
+        async () => {
+          setFieldsValue({ [FIELD_NAME]: AFTER_MEALS_ARRAY_TDS });
+          enableSubmit();
+        }
+      );
     }
   };
 
@@ -590,14 +698,64 @@ class WhenToTakeMedication extends Component {
     });
   };
 
+  getRadioOptions = () => {
+    const { WHEN_TO_TAKE_BUTTONS = {}, getKeys } = this;
+    const keys = getKeys();
+
+    console.log("0281329312 WHEN_TO_TAKE_BUTTONS", { WHEN_TO_TAKE_BUTTONS });
+
+    return Object.keys(WHEN_TO_TAKE_BUTTONS).map(index => {
+      const { id, setter, text, whenToTakeCount } =
+        WHEN_TO_TAKE_BUTTONS[index] || {};
+
+      return (
+        <RadioButton
+          value={id}
+          checked={keys.length === whenToTakeCount}
+          onClick={setter}
+          className="mb10"
+        >
+          {text}
+        </RadioButton>
+      );
+    });
+  };
+
+  getWhenToTakeButtons = () => {
+    const { form: { getFieldDecorator } = {} } = this.props;
+    const { WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions } = this;
+
+    // const keys = getKeys();
+    if (Object.keys(WHEN_TO_TAKE_BUTTONS).length > 0) {
+      return (
+        <Fragment>
+          {getFieldDecorator(
+            FIELD_NAME_ABBR,
+            {}
+          )(
+            <RadioGroup
+              className="flex justify-content-end radio-formulation flex-wrap"
+              buttonStyle="solid"
+            >
+              {getRadioOptions()}
+            </RadioGroup>
+          )}
+        </Fragment>
+      );
+    } else {
+      return null;
+    }
+  };
+
   render() {
     const { form } = this.props;
     const {
       getFormItems,
       formatMessage,
-      onClickOd,
-      onClickBd,
-      onClickTds
+      // onClickOd,
+      // onClickBd,
+      // onClickTds,
+      getWhenToTakeButtons
     } = this;
     const { getFieldValue } = form;
     const keys = getFieldValue("keys") || [];
@@ -616,57 +774,61 @@ class WhenToTakeMedication extends Component {
 
             <div className="star-red">*</div>
           </div>
-          
         </div>
 
-        <RadioGroup
-          className="flex justify-content-end radio-formulation mb10"
-          buttonStyle="solid"
-        >
-          <RadioButton
-            value={1}
-            checked={keys.length === 1}
-            onClick={onClickOd}
-          >
-            {this.formatMessage(messages.od)}
-          </RadioButton>
-          <RadioButton
-            value={2}
-            checked={keys.length === 2}
-            onClick={onClickBd}
-          >
-            {this.formatMessage(messages.bd)}
-          </RadioButton>
-          <RadioButton
-            value={3}
-            checked={keys.length === 3}
-            onClick={onClickTds}
-          >
-            {this.formatMessage(messages.tds)}
-          </RadioButton>
-        </RadioGroup>
+        {/*<RadioGroup*/}
+        {/*  className="flex justify-content-end radio-formulation mb10"*/}
+        {/*  buttonStyle="solid"*/}
+        {/*>*/}
+        {/*  <RadioButton*/}
+        {/*    value={1}*/}
+        {/*    checked={keys.length === 1}*/}
+        {/*    onClick={onClickOd}*/}
+        {/*  >*/}
+        {/*    {this.formatMessage(messages.od)}*/}
+        {/*  </RadioButton>*/}
+        {/*  <RadioButton*/}
+        {/*    value={2}*/}
+        {/*    checked={keys.length === 2}*/}
+        {/*    onClick={onClickBd}*/}
+        {/*  >*/}
+        {/*    {this.formatMessage(messages.bd)}*/}
+        {/*  </RadioButton>*/}
+        {/*  <RadioButton*/}
+        {/*    value={3}*/}
+        {/*    checked={keys.length === 3}*/}
+        {/*    onClick={onClickTds}*/}
+        {/*  >*/}
+        {/*    {this.formatMessage(messages.tds)}*/}
+        {/*  </RadioButton>*/}
+        {/*</RadioGroup>*/}
+
+        {getWhenToTakeButtons()}
+
         {getFormItems()}
 
-        <RadioGroup
-          className="flex justify-content-end radio-formulation mb10"
-          buttonStyle="solid"
-          value={nugget_selected}
-        >
-          <RadioButton
-            value={1}
-            checked={nugget_selected === 1}
-            onClick={this.setAllMealsBefore}
+        {keys.length !== 0 && (
+          <RadioGroup
+            className="flex justify-content-end radio-formulation mb10"
+            buttonStyle="solid"
+            value={nugget_selected}
           >
-            Before Meals
-          </RadioButton>
-          <RadioButton
-            value={2}
-            checked={nugget_selected === 2}
-            onClick={this.setAllMealsAfter}
-          >
-            After Meals
-          </RadioButton>
-        </RadioGroup>
+            <RadioButton
+              value={1}
+              checked={nugget_selected === 1}
+              onClick={this.setAllMealsBefore}
+            >
+              Before Meals
+            </RadioButton>
+            <RadioButton
+              value={2}
+              checked={nugget_selected === 2}
+              onClick={this.setAllMealsAfter}
+            >
+              After Meals
+            </RadioButton>
+          </RadioGroup>
+        )}
       </Fragment>
     );
     // }
@@ -677,5 +839,6 @@ const Field = injectIntl(WhenToTakeMedication);
 
 export default {
   fieLd_name: FIELD_NAME,
+  field_name_abbr: FIELD_NAME_ABBR,
   render: props => <Field {...props} />
 };

@@ -1,7 +1,17 @@
 import { Drawer } from "antd";
 import React,{Component , Fragment} from "react";
 import {injectIntl} from "react-intl";
-import { DELETE_TEMPLATE_RELATED_TYPE,MEDICATION_TIMING,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
+import {
+    DELETE_TEMPLATE_RELATED_TYPE,
+    MEDICATION_TIMING,
+    DAYS_TEXT_NUM_SHORT,
+    EVENT_TYPE,
+    MEDICATION_TIMING_HOURS,
+    MEDICATION_TIMING_MINUTES,
+    TABLET,
+    SYRUP,
+    MEDICINE_UNITS
+} from "../../../constant";
 import moment from "moment";
 import message from "antd/es/message";
 import Icon from "antd/es/icon";
@@ -109,7 +119,8 @@ class TemplatePageCreateDrawer extends Component{
                         critical,
                         description='',
                         appointment_type='',
-                        type_description=''
+                        type_description='',
+                        radiology_type='',
                     }={},
                     provider_id='',
                     provider_name=''
@@ -131,7 +142,8 @@ class TemplatePageCreateDrawer extends Component{
                         critical,
                         description,
                         appointment_type,
-                        type_description
+                        type_description,
+                        radiology_type
                     },
                     provider_id,
                     provider_name
@@ -455,9 +467,24 @@ class TemplatePageCreateDrawer extends Component{
                         description=''
                     } = {}
             } = medication || {};
+
+            // console.log("198623861283 check", {
+            //     condition: !medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  !repeat_days.length ||
+            //         !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length,
+            //     otherCondition: unit !== MEDICINE_UNITS.ML && !quantity,
+            //     medicine_id,
+            //     unit,
+            //     repeat,
+            //     quantity,
+            //     repeat_days,
+            //     medicine_type,
+            //     strength,
+            //     duration,
+            //     when_to_take
+            // });
            
-            if (!medicine_id || !unit || !repeat || (unit !== 'ml' && !quantity) ||  !repeat_days.length ||
-                !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length) {
+            if (!medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  (when_to_take.length > 0 && !repeat_days.length) ||
+                !medicine_type || (!duration && duration !== null) || !strength) {
                
                 message.error("Medication Error");
                 return false;
@@ -470,29 +497,30 @@ class TemplatePageCreateDrawer extends Component{
                 time_gap =null,
                 details: {
                     date ='',
-                    critical ='',
-                    description ='',
+                    // critical ='',
+                    // description ='',
                     appointment_type='',
-                    type_description=''
+                    type_description='',
+                    radiology_type
                 } = {},
                 provider_id ='',
-                provider_name =''
+                // provider_name =''
             } = appointment || {};
 
             if (!reason || (!time_gap && time_gap!==null) || !date || !appointment_type
                 || !type_description || !provider_id  ) {
               
-                 console.log("386428376483724632874",{
-                        reason:!reason,
-                        time_gap:(!time_gap && time_gap!==null),
-                        date:!date,
-                        appointment_type:!appointment_type,
-                        type_description:!type_description,
-                        provider_id:!provider_id,
-                        appointment:appointment,
-                        dateIsssss:date,
-                        appointmentsData
-                    });
+                 // console.log("386428376483724632874",{
+                 //        reason:!reason,
+                 //        time_gap:(!time_gap && time_gap!==null),
+                 //        date:!date,
+                 //        appointment_type:!appointment_type,
+                 //        type_description:!type_description,
+                 //        provider_id:!provider_id,
+                 //        appointment:appointment,
+                 //        dateIsssss:date,
+                 //        appointmentsData
+                 //    });
 
                     
                 message.error(this.formatMessage(messages.appointmentError));
@@ -779,28 +807,38 @@ class TemplatePageCreateDrawer extends Component{
                     }
 
                     if (moment(start_date).isSame(moment(), 'D')) {
-                        for (let wtt of when_to_take) {
-                            let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
-                            minDiff = minDiff === 0 && newMinDiff > 0 ? newMinDiff : newMinDiff > 0 && newMinDiff < minDiff ? newMinDiff : minDiff;
-                            closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
+                        if(when_to_take.length > 0) {
+                            for (let wtt of when_to_take) {
+                                let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
+                                minDiff = minDiff === 0 && newMinDiff > 0 ? newMinDiff : newMinDiff > 0 && newMinDiff < minDiff ? newMinDiff : minDiff;
+                                closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
+                            }
                         }
                     }
                     let medTimingsToShow = '';
-                    for (let wtt in when_to_take) {
-                        let timing_temp = MEDICATION_TIMING[when_to_take[wtt]];
-                        let txt='';
-                        let time_temp = '';
-                        if (timing_temp){
-                            txt=MEDICATION_TIMING[when_to_take[wtt]].text;
-                            time_temp = MEDICATION_TIMING[when_to_take[wtt]].time;
+
+                    if(when_to_take.length > 0) {
+                        for (let wtt in when_to_take) {
+                            let timing_temp = MEDICATION_TIMING[when_to_take[wtt]];
+                            let txt='';
+                            let time_temp = '';
+                            if (timing_temp){
+                                txt=MEDICATION_TIMING[when_to_take[wtt]].text;
+                                time_temp = MEDICATION_TIMING[when_to_take[wtt]].time;
+                            }
+                            medTimingsToShow += `${txt} `;
+                            medTimingsToShow += `(${time_temp})${wtt < when_to_take.length - 1 ? ', ' : ''}`
                         }
-                        medTimingsToShow += `${txt} `;
-                        medTimingsToShow += `(${time_temp})${wtt < when_to_take.length - 1 ? ', ' : ''}`
                     }
                     nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
-                    
-                    let whenTotakeTime = when_to_take.length>0 ? MEDICATION_TIMING[when_to_take[0]].time : '';
-                    let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${whenTotakeTime}`;
+
+                    let nextDue = null;
+                    if(when_to_take.length > 0) {
+                        const whenTotakeTime = when_to_take.length>0 ? MEDICATION_TIMING[when_to_take[0]].time : '';
+                        nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${whenTotakeTime}`;
+                    } else {
+                        nextDue = this.formatMessage(messages.sosMessage);
+                    }
 
                     return (
                         <div className='flex wp100 flex-grow-1 align-center' key={key}>
@@ -1037,6 +1075,7 @@ class TemplatePageCreateDrawer extends Component{
             critical,
             type = '',
             type_description = '',
+            radiology_type='',
             provider_id = 0,
             provider_name = '',
             participant_two = {},
@@ -1065,7 +1104,8 @@ class TemplatePageCreateDrawer extends Component{
                 critical,
                 description,
                 appointment_type:type,
-                type_description
+                type_description,
+                radiology_type
             },
             provider_id,
             provider_name
@@ -1212,6 +1252,7 @@ class TemplatePageCreateDrawer extends Component{
             critical,
             type = '',
             type_description = '',
+            radiology_type='',
             provider_id = 0,
             provider_name = '',
             start_time = {},
@@ -1239,7 +1280,8 @@ class TemplatePageCreateDrawer extends Component{
                 critical,
                 description,
                 appointment_type:type,
-                type_description
+                type_description,
+                radiology_type
             },
             provider_id,
             provider_name
@@ -1349,6 +1391,8 @@ class TemplatePageCreateDrawer extends Component{
         if (visible !== true) {
             return null;
         }
+
+        console.log("1872312983 in edit", {innerFormKey, innerFormType});
        
         return (
             <Fragment>

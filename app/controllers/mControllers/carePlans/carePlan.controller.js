@@ -15,7 +15,7 @@ import {
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails
 } from "./carePlanHelper";
-import {EVENT_LONG_TERM_VALUE, EVENT_STATUS, EVENT_TYPE, USER_CATEGORY} from "../../../../constant";
+import {EVENT_LONG_TERM_VALUE, EVENT_STATUS, EVENT_TYPE, USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS} from "../../../../constant";
 import doctorService from "../../../services/doctor/doctor.service";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
@@ -126,7 +126,8 @@ class CarePlanController extends Controller {
             provider_name = null,
             type = "",
             type_description = "",
-            critical = false
+            critical = false,
+            radiology_type = ""
           } = appointmentsData[i];
 
           const { id: participant_two_id, category: participant_two_type } =
@@ -175,7 +176,8 @@ class CarePlanController extends Controller {
               reason,
               type,
               type_description,
-              critical
+              critical,
+              radiology_type
             }
           };
 
@@ -205,7 +207,8 @@ class CarePlanController extends Controller {
               description,
               type_description,
               critical,
-              appointment_type: type
+              appointment_type: type,
+              radiology_type
             }
           });
 
@@ -264,6 +267,7 @@ class CarePlanController extends Controller {
               start_date = "",
               unit = "",
               when_to_take = "",
+              when_to_take_abbr = null,
               repeat = "",
               quantity = "",
               repeat_days = [],
@@ -297,6 +301,7 @@ class CarePlanController extends Controller {
               strength,
               unit,
               when_to_take,
+              when_to_take_abbr,
               medication_stage,
               critical
             }
@@ -333,6 +338,7 @@ class CarePlanController extends Controller {
               strength,
               repeat_days,
               when_to_take,
+              when_to_take_abbr,
               repeat_interval,
               medicine_type,
               duration: end_date ? moment(end_date).diff(moment(start_date), "days") : EVENT_LONG_TERM_VALUE
@@ -540,20 +546,22 @@ class CarePlanController extends Controller {
 
           const patient = await PatientWrapper(null, patient_id);
 
-          const {details: {when_to_take} = {}} = medication.getDetails();
+          const {details: {when_to_take, when_to_take_abbr = null} = {}} = medication.getDetails();
 
-          eventScheduleData.push({
-            patient_id: patient.getUserId(),
-            type: EVENT_TYPE.MEDICATION_REMINDER,
-            event_id: medication.getMReminderId(),
-            details: medication.getDetails(),
-            status: EVENT_STATUS.SCHEDULED,
-            start_date: medication.getStartDate(),
-            end_date: medication.getEndDate(),
-            when_to_take,
-            participant_one: patient.getUserId(),
-            participant_two: organizer_id
-          });
+          if(when_to_take_abbr !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
+            eventScheduleData.push({
+              patient_id: patient.getUserId(),
+              type: EVENT_TYPE.MEDICATION_REMINDER,
+              event_id: medication.getMReminderId(),
+              details: medication.getDetails(),
+              status: EVENT_STATUS.SCHEDULED,
+              start_date: medication.getStartDate(),
+              end_date: medication.getEndDate(),
+              when_to_take,
+              participant_one: patient.getUserId(),
+              participant_two: organizer_id
+            });
+          }
         }
 
         // const QueueService = new queueService();

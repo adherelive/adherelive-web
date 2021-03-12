@@ -18,7 +18,7 @@ export const PATH = {
   REGISTER_CLINICS: "/register-clinics",
   PROVIDER_REGISTER_CLINICS: "/register-clinics/:doctor_id",
   PATIENT_CONSULTING: "/patient-consulting/:patient_id",
-  PATIENT_CONSULTING_VIDEO: "/patient-consulting-video/:room_id",
+  PATIENT_CONSULTING_VIDEO: "/patient/consulting/video/:room_id",
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE: "/register-from-profile",
   REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",
@@ -1739,9 +1739,9 @@ export const ACCOUNT_TYPES = {
   [CURRENT]: "Current"
 };
 
-const MEDICAL_TEST = "1";
-const CONSULTATION = "2";
-const RADIOLOGY = "3";
+export const MEDICAL_TEST = "1";
+export const CONSULTATION = "2";
+export const RADIOLOGY = "3";
 
 export const APPOINTMENT_TYPE_TITLE = {
   [MEDICAL_TEST]: {
@@ -1793,3 +1793,16 @@ export const DELETE_TEMPLATE_RELATED_TYPE={
   APPOINTMENT:"appointment",
   VITAL:"vital"
 }
+
+
+export const FAVOURITE_TYPE = {
+  MEDICINE: "medicine",
+  MEDICAL_TESTS: "medical_tests",
+  RADIOLOGY: "radiology"
+};
+
+export const USER_FAV_ALL_TYPES=[
+  FAVOURITE_TYPE.MEDICINE,
+  FAVOURITE_TYPE.MEDICAL_TESTS,
+  FAVOURITE_TYPE.RADIOLOGY
+]

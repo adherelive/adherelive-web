@@ -419,6 +419,31 @@ const message = defineMessages({
     description: "",
     defaultMessage: "No match found"
   },
+  radiology: {
+    id: "app.drawer.edit.appointment.radiology",
+    description: "",
+    defaultMessage: "Radiology"
+  },
+  radiologyTypeDesc: {
+    id: "app.drawer.edit.appointment.radiologyTypeDesc",
+    description: "",
+    defaultMessage: "Radiology Type Description"
+  },
+  error_radio_type_required: {
+    id: "app.drawer.edit.appointment.error_radio_type_required",
+    description: "",
+    defaultMessage: "Radiology Type Description Required"
+  },
+  markFav: {
+    id: "app.drawer.edit.appointment.markFav",
+    description: "",
+    defaultMessage: "Mark favourite"
+  },
+  unMarkFav: {
+    id: "app.drawer.edit.appointment.unMarkFav",
+    description: "",
+    defaultMessage: "Un-mark favourite"
+  },
 });
 
 export default message;

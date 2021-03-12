@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
-import { USER_CATEGORY } from "../../../constant";
+import { USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS } from "../../../constant";
 import { raiseClientError } from "../../helper";
 import Response from "../../../app/helper/responseFormat";
 
@@ -36,9 +36,26 @@ const medicationReminderFormSchema = Joi.object().keys({
   quantity: Joi.number()
     .optional()
     .allow(null),
-  when_to_take: Joi.array().optional(),
+  when_to_take_abbr: Joi.number().optional(),
+  when_to_take: Joi.array().when('when_to_take_abbr', {
+    is: Joi.exist(),
+    then: Joi.when("when_to_take_abbr", {
+      is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
+      then: Joi.optional(),
+      otherwise: Joi.required()
+    }),
+    otherwise: Joi.required()
+  }),
   repeat: Joi.string().required(),
-  repeat_days: Joi.array(),
+  repeat_days: Joi.array().when('when_to_take_abbr', {
+    is: Joi.exist(),
+    then: Joi.when("when_to_take_abbr", {
+      is: WHEN_TO_TAKE_ABBREVATIONS.SOS,
+      then: Joi.optional(),
+      otherwise: Joi.required()
+    }),
+    otherwise: Joi.required()
+  }),
   repeat_interval: Joi.number().optional(),
   start_date: Joi.date().required(),
   end_date: Joi.date()

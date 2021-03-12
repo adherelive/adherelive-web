@@ -394,6 +394,31 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Write reason for cancelling this appointment"
   },
+  radiology: {
+    id: "app.drawer.add.appointment.radiology",
+    description: "",
+    defaultMessage: "Radiology"
+  },
+  radiologyTypeDesc: {
+    id: "app.drawer.add.appointment.radiologyTypeDesc",
+    description: "",
+    defaultMessage: "Radiology Type Description"
+  },
+  error_radio_type_required: {
+    id: "app.drawer.add.appointment.error_radio_type_required",
+    description: "",
+    defaultMessage: "Radiology Type Description Required"
+  },
+  markFav: {
+    id: "app.drawer.add.appointment.markFav",
+    description: "",
+    defaultMessage: "Mark favourite"
+  },
+  unMarkFav: {
+    id: "app.drawer.add.appointment.unMarkFav",
+    description: "",
+    defaultMessage: "Un-mark favourite"
+  },
 });
 
 export default message;

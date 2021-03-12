@@ -19,7 +19,7 @@ import startDateField from "../common/startDate";
 import endDateField from "../common/endDate";
 import repeatDaysField from "../common/selectedDays";
 import moment from "moment";
-import AddMedicineDrawer from "../../addNewMedicine";
+import AddMedicineDrawer from "../../../../Containers/Drawer/addMedicine";
 
 class EditMedicationReminder extends Component {
   constructor(props) {
@@ -172,7 +172,7 @@ class EditMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        const { when_to_take = [], keys = [] } = values || {};
+        const { when_to_take = [], keys = [], when_to_take_abbr = null } = values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
@@ -186,6 +186,7 @@ class EditMedicationReminder extends Component {
           strength,
           unit,
           critical,
+          when_to_take_abbr,
           when_to_take: keys.map((id) => when_to_take[id]) || [],
           // when_to_take: when_to_take.map(id => `${id}`),
           participant_id: pId,
@@ -385,12 +386,13 @@ class EditMedicationReminder extends Component {
         newMedicineId={newMedicineId}
         />
        
+
         <AddMedicineDrawer 
-            visible={medicineDrawerVisible} 
-            close={this.closeMedicineDrawer}
-            input={medicineValue}
-            addNewMedicine={addNewMedicine}
-            setNewMedicineId={this.setNewMedicineId}
+          visible={medicineDrawerVisible} 
+          close={this.closeMedicineDrawer}
+          input={medicineValue}
+          // addNewMedicine={addNewMedicine}
+          setNewMedicineId={this.setNewMedicineId}
         />
 
         <Footer

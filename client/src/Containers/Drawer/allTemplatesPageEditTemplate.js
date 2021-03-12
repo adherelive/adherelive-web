@@ -31,8 +31,6 @@ const mapStateToProps = state => {
     visible: visible && type === DRAWER.EDIT_CAREPLAN_TEMPLATE,
     loading,
     payload,
-    vital_templates,
-    repeat_intervals,
     authenticated_user,
     authenticated_category,
     doctors,

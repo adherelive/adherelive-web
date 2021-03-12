@@ -31,30 +31,30 @@ class UserFavouritesController extends Controller {
 
         const
          {
-          type='',id=''
+          type='',id='', details = {}
          } = body;
 
          const data = {
            user_category_id:userCategoryId,
            user_category_type:category,
            marked_favourite_id:id,
-           marked_favourite_type:type
-         }
+           marked_favourite_type:type,
+           details
+         };
 
 
-        const existing = await UserFavouritesService.findExistingFavourite(data);
-        
-        if(existing){
-          return this.raiseClientError(
-            res,
-            422,
-            {},
-            `Already Marked Favourite for user`
-          );
-        }
+        // const existing = await UserFavouritesService.findExistingFavourite(data);
+       
+        // if(existing){
+        //   return this.raiseClientError(
+        //     res,
+        //     422,
+        //     {},
+        //     `Already Marked Favourite for user`
+        //   );
+        // }
 
         const record = await UserFavouritesService.markFavourite(data);
-
 
         let favourites_data = {};
 
@@ -111,7 +111,9 @@ class UserFavouritesController extends Controller {
        
         const userData = {};
         const currentUser = await UserWrapper(null, userId);
-         const favourite_medicine_ids = [];
+        const favourite_medicine_ids = [];
+        const favourite_medical_test_ids=[];
+
         userData[currentUser.getId()] = currentUser.getBasicInfo();
 
         if(favourites && favourites.length){
@@ -124,7 +126,10 @@ class UserFavouritesController extends Controller {
               const medicineId = await eachFavourite.getMarkedFavouriteId();
               Log.debug("983246238747523746790283",{medicineId});
               await favourite_medicine_ids.push(medicineId.toString());
-            }
+            }else if(type === FAVOURITE_TYPE.MEDICAL_TESTS){
+              const medicalTestId = await eachFavourite.getMarkedFavouriteId();
+              await favourite_medical_test_ids.push(medicalTestId.toString());
+            } 
             favourites_data[id] = {...ref_info};
           }
         }
@@ -136,7 +141,10 @@ class UserFavouritesController extends Controller {
         {
           favourites_data,
           user_data:userData,
-          favourite_medicine_ids
+          [type===FAVOURITE_TYPE.MEDICINE && "favourite_medicine_ids"]:
+          type===FAVOURITE_TYPE.MEDICINE && favourite_medicine_ids,
+          [type === FAVOURITE_TYPE.MEDICAL_TESTS && "favourite_medical_test_ids"]:
+          type === FAVOURITE_TYPE.MEDICAL_TESTS && favourite_medical_test_ids
         },
         "Get User Favourites successful"
         );
