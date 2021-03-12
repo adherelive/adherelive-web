@@ -6,6 +6,8 @@ import {algoliaSearchHelper} from "../../../../Helper/algoliaSearch";
 import message from "antd/es/message";
 import Tooltip from "antd/es/tooltip";
 import {TagFilled,TagOutlined} from "@ant-design/icons";
+import Button from "antd/es/button";
+import messages from "../message";
  
 const { Item: FormItem } = Form;
 const { Option } = Select;
@@ -29,6 +31,8 @@ class Medicine extends Component{
         const defaultHits = await algoliaSearchHelper(' ');
         this.setState({defaultHits});
     }
+
+    formatMessage = (data) => this.props.intl.formatMessage(data);
 
     handleGetFavouritesMeds = async() => {
         try{
@@ -58,70 +62,130 @@ class Medicine extends Component{
         } </span>;
     }
 
-    getSearchingResultOptions = (hits) => {
+    getSearchingResultOptions = ({hits,isDefault}) => {
         let options =[];
-        const {inputText='' , searching=false}=this.state;
         const {favourite_medicine_ids =[]}=this.props;
+        const {inputText='', searching=false, medicine_name : med_name='',medicine_id:med_id=null}=this.state;
+
         for(let each in hits){
             const {name='' ,medicine_id = null,generic_name=''} = hits[each] || {};
             const text1 = this.getHighlightedText(name,inputText);
             const text2 = this.getHighlightedText(generic_name,inputText);
-            options.push(
-                <Option  key = {`opt-${name}-${medicine_id}`} value={medicine_id}
-                className="pointer flex wp100  align-center justify-space-between"
-            >
-
-                <div>
-                    <span
-                    className="block fs16"
-                    >{searching ? 
-                        text1
-                        :
-                        name
-                    }</span>
-                    {
-                        searching
-                        ?
+            if( isDefault ? medicine_id !== med_id : true ){ // check for add last selected option only for default hits case and not searching --->
+                options.push(
+                    <Option  key = {`opt-${name}-${medicine_id}`} value={medicine_id}
+                    className="pointer flex wp100  align-center justify-space-between"
+                >
+    
+                    <div>
                         <span
-                        className="block mt10"
-                        >
-                        {searching ? 
-                            text2
+                        className="block fs16"
+                        >{searching ? 
+                            text1
                             :
-                            generic_name
+                            name
+                        }</span>
+                        {
+                            searching
+                            ?
+                            <span
+                            className="block mt10"
+                            >
+                            {searching ? 
+                                text2
+                                :
+                                generic_name
+                            }
+                            </span>
+                            :
+                            null
                         }
-                        </span>
+                    </div>
+    
+                    {
+                        searching ?
+    
+                        (
+                        <Tooltip
+                            title={favourite_medicine_ids.includes(medicine_id.toString()) ? "Unmark" : "Mark" }
+                            >
+                            {favourite_medicine_ids.includes(medicine_id.toString())
+                            ? 
+                            <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+                            onClick={this.handleremoveFavourites(medicine_id)}
+                            /> 
+                            :
+                            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                            onClick = {this.handleAddFavourites(medicine_id)}
+                            /> }
+    
+                        </Tooltip>
+                        )
                         :
                         null
                     }
-                </div>
+                </Option>
+                )
+            }
+           
+            
+        }
 
+        // console.log("2386456234723094",{med_id,med_name});
+
+        if(isDefault && med_id !== null){ //display selected option with other options only for default case
+            options.push(
+                <Option key={`opt-${med_id}`} value={med_id}
+                className="pointer flex wp100  align-center justify-space-between"
+                >
+                <span>{med_name}</span>
                 {
                     searching ?
 
                     (
-                    <Tooltip
-                        title={favourite_medicine_ids.includes(medicine_id.toString()) ? "Unmark" : "Mark" }
-                        >
-                        {favourite_medicine_ids.includes(medicine_id.toString())
-                        ? 
-                        <TagFilled style={{ fontSize: '20px', color: '#08c' }}
-                        onClick={this.handleremoveFavourites(medicine_id)}
-                        /> 
-                        :
-                        <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
-                        onClick = {this.handleAddFavourites(medicine_id)}
-                        /> }
+                        <Tooltip
+                    title={favourite_medicine_ids.includes(med_id.toString()) ? "Unmark" : "Mark" }
+                    >
+                    {favourite_medicine_ids.includes(med_id.toString())
+                    ? 
+                    <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+                    onClick={this.handleremoveFavourites(med_id)}
+                    /> 
+                    :
+                    <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                    onClick = {this.handleAddFavourites(med_id)}
+                    /> }
 
-                    </Tooltip>
+                     </Tooltip>
                     )
                     :
                     null
                 }
-            </Option>
+                
+                </Option>
             )
-            
         }
+
+           
+    if(options.length === 0 && !isDefault ){ // searching and no opt found
+        const {inputText=''}=this.state;
+        options.push(
+          <div
+           key={"no-match-medicine-div"}
+           className="flex align-center justify-center"
+           onClickCapture={this.handleAddMedicineOpen}
+           className="add-new-medicine-button-div"
+            >
+             <Button 
+            type={"ghost"}
+            size="small"
+            key={"no-match-medicine"}
+            className="add-new-medicine-button"
+            onClick={this.handleAddMedicineOpen} >{`${this.formatMessage(messages.addMedicine)} `}<span className="fw800" >{` "${inputText}"`}</span></Button>
+          </div>
+        )
+      }
+
 
         return options;
     }
@@ -232,13 +296,13 @@ class Medicine extends Component{
         const {favourite_medicine_ids = []}=this.props;
 
         if(inputText.length >0 ){ // searching data
-            return this.getSearchingResultOptions(hits);
+            return this.getSearchingResultOptions({hits:hits,isDefault:false});
         }
         else{
             if(favourite_medicine_ids.length > 0){
                 return this.getFavouriteOptions();
             }else{
-                return this.getSearchingResultOptions(defaultHits);
+                return this.getSearchingResultOptions({hits:defaultHits,isDefault:true});
             }
         }
         
