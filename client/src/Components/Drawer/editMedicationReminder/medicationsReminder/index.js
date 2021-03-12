@@ -356,7 +356,6 @@ class EditMedicationReminder extends Component {
       disabled: disabledOk,
       loading: loading,
     };
-    console.log("782345237648723427",medicationVisible);
 
     const {medicineDrawerVisible=false,medicineValue='',newMedicineId=null} = this.state;
     const {addNewMedicine}=this.props;
