@@ -870,11 +870,11 @@ class AddAppointmentForm extends Component {
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.props.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
                 >
                   {this.getTypeDescriptionOption()}
                 </Select>
@@ -919,11 +919,11 @@ class AddAppointmentForm extends Component {
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.props.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
                 >
                   {this.getTypeDescriptionOption()}
                 </Select>
