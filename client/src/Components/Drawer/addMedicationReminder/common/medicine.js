@@ -5,7 +5,7 @@ import Select from "antd/es/select";
 import {algoliaSearchHelper} from "../../../../Helper/algoliaSearch";
 import message from "antd/es/message";
 import Tooltip from "antd/es/tooltip";
-import {TagFilled,TagOutlined} from "@ant-design/icons";
+import {StarFilled,StarOutlined} from "@ant-design/icons";
 import Button from "antd/es/button";
 import messages from "../message";
  
@@ -111,11 +111,11 @@ class Medicine extends Component{
                             >
                             {favourite_medicine_ids.includes(medicine_id.toString())
                             ? 
-                            <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+                            <StarFilled style={{ fontSize: '20px', color: '#08c' }}
                             onClick={this.handleremoveFavourites(medicine_id)}
                             /> 
                             :
-                            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                            <StarOutlined style={{ fontSize: '20px', color: '#08c' }} 
                             onClick = {this.handleAddFavourites(medicine_id)}
                             /> }
     
@@ -148,11 +148,11 @@ class Medicine extends Component{
                     >
                     {favourite_medicine_ids.includes(med_id.toString())
                     ? 
-                    <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+                    <StarFilled style={{ fontSize: '20px', color: '#08c' }}
                     onClick={this.handleremoveFavourites(med_id)}
                     /> 
                     :
-                    <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                    <StarOutlined style={{ fontSize: '20px', color: '#08c' }} 
                     onClick = {this.handleAddFavourites(med_id)}
                     /> }
 
@@ -225,11 +225,11 @@ class Medicine extends Component{
                             >
                             {favourite_medicine_ids.includes(medicine_id.toString())
                             ? 
-                            <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+                            <StarFilled style={{ fontSize: '20px', color: '#08c' }}
                             onClick={this.handleremoveFavourites(medicine_id)}
                             /> 
                             :
-                            <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                            <StarOutlined style={{ fontSize: '20px', color: '#08c' }} 
                             onClick = {this.handleAddFavourites(medicine_id)}
                             /> }
     
@@ -265,11 +265,11 @@ class Medicine extends Component{
                     >
                     {favourite_medicine_ids.includes(med_id.toString())
                     ? 
-                    <TagFilled style={{ fontSize: '20px', color: '#08c' }}
+                    <StarFilled style={{ fontSize: '20px', color: '#08c' }}
                     onClick={this.handleremoveFavourites(med_id)}
                     /> 
                     :
-                    <TagOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                    <StarOutlined style={{ fontSize: '20px', color: '#08c' }} 
                     onClick = {this.handleAddFavourites(med_id)}
                     /> }
 
