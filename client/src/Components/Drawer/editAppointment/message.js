@@ -442,7 +442,47 @@ const message = defineMessages({
   unMarkFav: {
     id: "app.drawer.edit.appointment.unMarkFav",
     description: "",
-    defaultMessage: "Un-mark favourite"
+    defaultMessage: "Un-check"
+  },
+  somethingWentWrong: {
+    id: "app.drawer.edit.appointment.somethingWentWrong",
+    description: "",
+    defaultMessage: "Something went wrong, please try again"
+  },
+  fillMandatory: {
+    id: "app.drawer.edit.appointment.fillMandatory",
+    description: "",
+    defaultMessage: "Please fill all mandatory details."
+  },
+  pastTimeError: {
+    id: "app.drawer.edit.appointment.pastTimeError",
+    description: "",
+    defaultMessage: "Cannot create appointment for past time."
+  },
+  validTimingError: {
+    id: "app.drawer.edit.appointment.validTimingError",
+    description: "",
+    defaultMessage: "Please select valid timings for appointment."
+  },
+  placeholderAppointmentType: {
+    id: "app.drawer.edit.appointment.placeholderAppointmentType",
+    description: "",
+    defaultMessage: "Choose Appointment Type"
+  },
+  placeholderTypeDesc : {
+    id: "app.drawer.edit.appointment.placeholderTypeDesc",
+    description: "",
+    defaultMessage: "Choose Type Description"
+  },
+  placeholderRadiologyTypeDesc: {
+    id: "app.drawer.edit.appointment.placeholderRadiologyTypeDesc",
+    description: "",
+    defaultMessage: "Choose Radiology Type Description"
+  },
+  placeholderProvider: {
+    id: "app.drawer.edit.appointment.placeholderProvider",
+    description: "",
+    defaultMessage: "Choose Provider"
   },
 });
 

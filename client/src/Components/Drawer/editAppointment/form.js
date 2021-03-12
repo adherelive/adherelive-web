@@ -4,7 +4,6 @@ import { injectIntl } from "react-intl";
 import Form from "antd/es/form";
 import Select from "antd/es/select";
 import DatePicker from "antd/es/date-picker";
-import TimePicker from "antd/es/time-picker";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
 import { Checkbox } from "antd";
@@ -15,7 +14,7 @@ import calendar from "../../../Assets/images/calendar1.svg";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import Dropdown from "antd/es/dropdown";
 import TimeKeeper from "react-timekeeper";
-import {FAVOURITE_TYPE , USER_FAV_ALL_TYPES , MEDICAL_TEST , CONSULTATION, RADIOLOGY} from "../../../constant";
+import {FAVOURITE_TYPE ,  MEDICAL_TEST , RADIOLOGY} from "../../../constant";
 import StarOutlined from "@ant-design/icons/StarOutlined";
 import StarFilled from "@ant-design/icons/StarFilled";
 import Tooltip from "antd/es/tooltip";
@@ -93,8 +92,6 @@ class EditAppointmentForm extends Component {
     if(!type_desc_initial){
       type_desc_initial = scheduled_data_type_desc ? scheduled_data_type_desc : details_type_desc ;
     }
-
-    // console.log("8946547385972034823749",{type_desc_initial,details_type_desc});
 
     if(type === RADIOLOGY){
 
@@ -423,7 +420,7 @@ class EditAppointmentForm extends Component {
 
 
   getOtherOptions = () => {
-    const { typeDescription = {} } = this.state;
+    const { typeDescription = [] } = this.state;
 
     return Object.values(typeDescription).map((description, index) => {
       return (
@@ -470,7 +467,7 @@ class EditAppointmentForm extends Component {
 
 
   getRadiologyOptions = () => {
-    const { typeDescription = [] } = this.state;
+    const { typeDescription = {} } = this.state;
     const { setRadiologyTypeSelected } = this;
 
     return Object.keys(typeDescription).map((id, index) => {
@@ -824,10 +821,6 @@ class EditAppointmentForm extends Component {
 
 
     const {typeDescValue=''} = this.state;
-    
-    
-    console.log("3784273547683294723094",{typeDescValue,value,flag1:value != typeDescValue});
-
 
     if(value != typeDescValue){
       setFieldsValue({[RADIOLOGY_TYPE]:null})
@@ -934,9 +927,6 @@ class EditAppointmentForm extends Component {
 
     const typeValue = getFieldValue(APPOINTMENT_TYPE);
 
-    console.log("3287456235468236452368489",{radiology_type});
-
-
     return (
       <Form className="fw700 wp100 pb30 Form">
         <FormItem
@@ -971,7 +961,7 @@ class EditAppointmentForm extends Component {
           })(
             <Select
               className="drawer-select"
-              placeholder={formatMessage(messages.chooseAppointmentType)}
+              placeholder={formatMessage(messages.placeholderAppointmentType)}
               onSelect={this.handleTypeSelect}
               autoFocus={true}
 
@@ -1018,16 +1008,16 @@ class EditAppointmentForm extends Component {
                   disabled={!appointmentType}
                   notFoundContent={"No match found"}
                   className="drawer-select"
-                  placeholder="Choose Type Description"
+                  placeholder={formatMessage(messages.placeholderTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.props.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
                 >
                   {this.getTypeDescriptionOption()}
                 </Select>
@@ -1075,16 +1065,16 @@ class EditAppointmentForm extends Component {
                   disabled={!appointmentType}
                   notFoundContent={"No match found"}
                   className="drawer-select"
-                  placeholder="Choose Type Description"
+                  placeholder={formatMessage(messages.placeholderTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.props.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
                 >
                   {this.getTypeDescriptionOption()}
                 </Select>
@@ -1116,7 +1106,7 @@ class EditAppointmentForm extends Component {
                   disabled={radiologyTypeSelected === null}
                   notFoundContent={"No match found"}
                   className="drawer-select radiology-type-select"
-                  placeholder="Choose Radiology Type Description"
+                  placeholder={formatMessage(messages.placeholderRadiologyTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
@@ -1160,7 +1150,7 @@ class EditAppointmentForm extends Component {
             <Select
               notFoundContent={null}
               className="drawer-select"
-              placeholder={formatMessage(messages.chooseProvider)}
+              placeholder={formatMessage(messages.placeholderProvider)}
               showSearch
               // defaultActiveFirstOption={true}
               autoComplete="off"

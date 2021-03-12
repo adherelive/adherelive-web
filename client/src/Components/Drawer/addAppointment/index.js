@@ -128,12 +128,12 @@ class AddAppointment extends Component {
           }
 
         if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
-          message.error('Please fill all mandatory details.')
+          message.error(this.formatMessage(messages.fillMandatory))
         } else if (moment(date).isSame(moment(), 'day') && moment(start_time).diff(moment(), "minutes") < 0) {
-          message.error('Cannot create appointment for past time.')
+          message.error(this.formatMessage(messages.pastTimeError))
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
-          message.error('Please select valid timings for appointment.')
+          message.error(this.formatMessage(messages.validTimingError))
         } else {
           try {
             this.setState({submitting:true});
@@ -156,7 +156,7 @@ class AddAppointment extends Component {
               // getAppointments(patient_id);
             } else {
               if (code === 500) {
-                message.warn('Something went wrong, please try again.');
+                message.warn(formatMessage(messages.somethingWentWrong));
               } else {
                 message.warn(errorMessage);
               }

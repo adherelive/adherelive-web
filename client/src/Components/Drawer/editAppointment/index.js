@@ -145,12 +145,12 @@ class EditAppointment extends Component {
           }
 
         if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
-          message.error('Please fill all mandatory details.')
+          message.error(formatMessage(messages.fillMandatory))
         } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
-          message.error('Cannot create appointment for past time.')
+          message.error(formatMessage(messages.pastTimeError))
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
-          message.error('Please select valid timings for appointment.')
+          message.error(formatMessage(messages.validTimingError))
         } else if (editAppointment) {
 
           // this.setState({ disabledSubmit: true });
@@ -185,7 +185,7 @@ class EditAppointment extends Component {
               message.success(formatMessage(messages.edit_appointment_success));
               getAppointments(pId);
             } else {
-              message.warn('Something went wrong, Please try again!');
+              message.warn(formatMessage(messages.somethingWentWrong));
             }
 
             this.setState({submitting:false});
