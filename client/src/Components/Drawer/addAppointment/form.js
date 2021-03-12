@@ -16,9 +16,7 @@ import Dropdown from "antd/es/dropdown";
 import TimeKeeper from "react-timekeeper";
 import {
   FAVOURITE_TYPE,
-  USER_FAV_ALL_TYPES,
   MEDICAL_TEST,
-  CONSULTATION,
   RADIOLOGY
 } from "../../../constant";
 import StarOutlined from "@ant-design/icons/StarOutlined";
@@ -421,8 +419,6 @@ class AddAppointmentForm extends Component {
       }
     } catch (err) {
       console.log("err", err);
-      // message.warn("Something wen't wrong. Please try again later");
-      // this.setState({ fetchingMedicines: false });
     }
   };
 
@@ -759,9 +755,6 @@ class AddAppointmentForm extends Component {
 
     const {typeDescValue=''} = this.state;
     
-    
-    console.log("3784273547683294723094",{typeDescValue,value,flag1:value != typeDescValue});
-
 
     if(value != typeDescValue){
       setFieldsValue({[RADIOLOGY_TYPE]:null})

@@ -419,6 +419,26 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Un-mark favourite"
   },
+  somethingWentWrong: {
+    id: "app.drawer.add.appointment.somethingWentWrong",
+    description: "",
+    defaultMessage: "Something went wrong, please try again"
+  },
+  fillMandatory: {
+    id: "app.drawer.add.appointment.fillMandatory",
+    description: "",
+    defaultMessage: "Please fill all mandatory details."
+  },
+  pastTimeError: {
+    id: "app.drawer.add.appointment.pastTimeError",
+    description: "",
+    defaultMessage: "Cannot create appointment for past time."
+  },
+  validTimingError: {
+    id: "app.drawer.add.appointment.validTimingError",
+    description: "",
+    defaultMessage: "Please select valid timings for appointment."
+  },
 });
 
 export default message;

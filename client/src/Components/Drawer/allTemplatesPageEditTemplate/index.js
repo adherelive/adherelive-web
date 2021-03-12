@@ -448,6 +448,7 @@ class TemplatePageCreateDrawer extends Component{
     validateData = (medicationsData, appointmentsData, vitalsData,name) => {
 
         if(!name){
+            message.error(this.formatMessage(messages.giveName));
             return false;
         }
 

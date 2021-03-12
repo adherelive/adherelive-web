@@ -4,7 +4,6 @@ import { injectIntl } from "react-intl";
 import Form from "antd/es/form";
 import Select from "antd/es/select";
 import DatePicker from "antd/es/date-picker";
-import TimePicker from "antd/es/time-picker";
 import Input from "antd/es/input";
 import TextArea from "antd/es/input/TextArea";
 import { Checkbox } from "antd";
@@ -15,7 +14,7 @@ import calendar from "../../../Assets/images/calendar1.svg";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import Dropdown from "antd/es/dropdown";
 import TimeKeeper from "react-timekeeper";
-import {FAVOURITE_TYPE , USER_FAV_ALL_TYPES , MEDICAL_TEST , CONSULTATION, RADIOLOGY} from "../../../constant";
+import {FAVOURITE_TYPE ,  MEDICAL_TEST , RADIOLOGY} from "../../../constant";
 import StarOutlined from "@ant-design/icons/StarOutlined";
 import StarFilled from "@ant-design/icons/StarFilled";
 import Tooltip from "antd/es/tooltip";
@@ -93,8 +92,6 @@ class EditAppointmentForm extends Component {
     if(!type_desc_initial){
       type_desc_initial = scheduled_data_type_desc ? scheduled_data_type_desc : details_type_desc ;
     }
-
-    // console.log("8946547385972034823749",{type_desc_initial,details_type_desc});
 
     if(type === RADIOLOGY){
 
@@ -424,7 +421,6 @@ class EditAppointmentForm extends Component {
 
   getOtherOptions = () => {
     const { typeDescription = [] } = this.state;
-    console.log("7325473254654723654823548237 =======>>>>",{typeDescription});
 
     return Object.values(typeDescription).map((description, index) => {
       return (
@@ -825,10 +821,6 @@ class EditAppointmentForm extends Component {
 
 
     const {typeDescValue=''} = this.state;
-    
-    
-    console.log("3784273547683294723094",{typeDescValue,value,flag1:value != typeDescValue});
-
 
     if(value != typeDescValue){
       setFieldsValue({[RADIOLOGY_TYPE]:null})
@@ -934,9 +926,6 @@ class EditAppointmentForm extends Component {
     let appointmentType = getFieldValue(APPOINTMENT_TYPE) || null;
 
     const typeValue = getFieldValue(APPOINTMENT_TYPE);
-
-    console.log("3287456235468236452368489",{radiology_type});
-
 
     return (
       <Form className="fw700 wp100 pb30 Form">
