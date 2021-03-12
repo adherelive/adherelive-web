@@ -8,7 +8,6 @@ import Tooltip from "antd/es/tooltip";
 import Button from "antd/es/button";
 import messages from "../message";
 
-import message from "antd/es/message";
 import {TagFilled,TagOutlined , StarOutlined, StarFilled} from "@ant-design/icons";
 
 const { Item: FormItem } = Form;
