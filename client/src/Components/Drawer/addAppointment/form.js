@@ -16,9 +16,7 @@ import Dropdown from "antd/es/dropdown";
 import TimeKeeper from "react-timekeeper";
 import {
   FAVOURITE_TYPE,
-  USER_FAV_ALL_TYPES,
   MEDICAL_TEST,
-  CONSULTATION,
   RADIOLOGY
 } from "../../../constant";
 import StarOutlined from "@ant-design/icons/StarOutlined";
@@ -328,7 +326,7 @@ class AddAppointmentForm extends Component {
   };
 
   getOtherOptions = () => {
-    const { typeDescription = {} } = this.state;
+    const { typeDescription = [] } = this.state;
 
     return Object.values(typeDescription).map((description, index) => {
       return (
@@ -374,7 +372,7 @@ class AddAppointmentForm extends Component {
   };
 
   getRadiologyOptions = () => {
-    const { typeDescription = [] } = this.state;
+    const { typeDescription = {} } = this.state;
     const { setRadiologyTypeSelected } = this;
 
     return Object.keys(typeDescription).map((id, index) => {
@@ -421,8 +419,6 @@ class AddAppointmentForm extends Component {
       }
     } catch (err) {
       console.log("err", err);
-      // message.warn("Something wen't wrong. Please try again later");
-      // this.setState({ fetchingMedicines: false });
     }
   };
 
@@ -759,9 +755,6 @@ class AddAppointmentForm extends Component {
 
     const {typeDescValue=''} = this.state;
     
-    
-    console.log("3784273547683294723094",{typeDescValue,value,flag1:value != typeDescValue});
-
 
     if(value != typeDescValue){
       setFieldsValue({[RADIOLOGY_TYPE]:null})
@@ -830,7 +823,7 @@ class AddAppointmentForm extends Component {
           )(
             <Select
               className="drawer-select"
-              placeholder="Choose Appointment Type"
+              placeholder={formatMessage(messages.placeholderAppointmentType)}
               onSelect={this.handleTypeSelect}
             >
               {this.getTypeOption()}
@@ -865,16 +858,16 @@ class AddAppointmentForm extends Component {
                   disabled={!appointmentType}
                   notFoundContent={"No match found"}
                   className="drawer-select"
-                  placeholder="Choose Type Description"
+                  placeholder={formatMessage(messages.placeholderTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.props.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
                 >
                   {this.getTypeDescriptionOption()}
                 </Select>
@@ -914,16 +907,16 @@ class AddAppointmentForm extends Component {
                   disabled={!appointmentType}
                   notFoundContent={"No match found"}
                   className="drawer-select"
-                  placeholder="Choose Type Description"
+                  placeholder={formatMessage(messages.placeholderTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.props.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
                 >
                   {this.getTypeDescriptionOption()}
                 </Select>
@@ -951,7 +944,7 @@ class AddAppointmentForm extends Component {
                   disabled={radiologyTypeSelected === null}
                   notFoundContent={"No match found"}
                   className="drawer-select"
-                  placeholder="Choose Radiology Type Description"
+                  placeholder={formatMessage(messages.placeholderRadiologyTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
@@ -991,7 +984,7 @@ class AddAppointmentForm extends Component {
             <Select
               notFoundContent={null}
               className="drawer-select"
-              placeholder="Choose Provider"
+              placeholder={formatMessage(messages.placeholderProvider)}
               showSearch
               // defaultActiveFirstOption={true}
               autoComplete="off"

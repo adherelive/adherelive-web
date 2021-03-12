@@ -141,6 +141,7 @@ class TemplatePageCreateDrawer extends Component{
     validateData = (medicationsData, appointmentsData, vitalsData,name) => {
 
         if(!name){
+            message.error(this.formatMessage(messages.giveName));
             return false;
         }
 
@@ -925,8 +926,8 @@ class TemplatePageCreateDrawer extends Component{
     render() {
         let { showInner, innerFormType, innerFormKey, medications, showAddMedicationInner,
             appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name ,
-            submitting=false} = this.state;
-        const { onClose, renderTemplateDetails } = this;
+            submitting=false , medicationKeys=[],appointmentKeys=[],vitalKeys=[]} = this.state;
+        const { onClose, renderTemplateDetails} = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
    
         let appointmentData = innerFormKey && innerFormType == EVENT_TYPE.APPOINTMENT ? appointments[innerFormKey] : {};
@@ -941,6 +942,10 @@ class TemplatePageCreateDrawer extends Component{
         if (visible !== true) {
             return null;
         }
+
+        // const submitButtonProps = {
+        //     disabled:!name || (!medicationKeys.length && !appointmentKeys.length && !vitalKeys.length)
+        // }
 
        
         return (
@@ -1015,6 +1020,7 @@ class TemplatePageCreateDrawer extends Component{
                         submitButtonProps={{}}
                         cancelComponent={null}
                         submitting={submitting}
+                        // submitButtonProps={submitButtonProps}
                     />
 
                     {/* <div className='add-patient-footer'>
