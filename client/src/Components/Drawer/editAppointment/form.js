@@ -961,7 +961,7 @@ class EditAppointmentForm extends Component {
           })(
             <Select
               className="drawer-select"
-              placeholder={formatMessage(messages.chooseAppointmentType)}
+              placeholder={formatMessage(messages.placeholderAppointmentType)}
               onSelect={this.handleTypeSelect}
               autoFocus={true}
 
@@ -1008,7 +1008,7 @@ class EditAppointmentForm extends Component {
                   disabled={!appointmentType}
                   notFoundContent={"No match found"}
                   className="drawer-select"
-                  placeholder="Choose Type Description"
+                  placeholder={formatMessage(messages.placeholderTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
@@ -1065,7 +1065,7 @@ class EditAppointmentForm extends Component {
                   disabled={!appointmentType}
                   notFoundContent={"No match found"}
                   className="drawer-select"
-                  placeholder="Choose Type Description"
+                  placeholder={formatMessage(messages.placeholderTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
@@ -1106,7 +1106,7 @@ class EditAppointmentForm extends Component {
                   disabled={radiologyTypeSelected === null}
                   notFoundContent={"No match found"}
                   className="drawer-select radiology-type-select"
-                  placeholder="Choose Radiology Type Description"
+                  placeholder={formatMessage(messages.placeholderRadiologyTypeDesc)}
                   showSearch
                   defaultActiveFirstOption={true}
                   autoComplete="off"
@@ -1150,7 +1150,7 @@ class EditAppointmentForm extends Component {
             <Select
               notFoundContent={null}
               className="drawer-select"
-              placeholder={formatMessage(messages.chooseProvider)}
+              placeholder={formatMessage(messages.placeholderProvider)}
               showSearch
               // defaultActiveFirstOption={true}
               autoComplete="off"

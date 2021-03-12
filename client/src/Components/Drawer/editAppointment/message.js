@@ -464,6 +464,26 @@ const message = defineMessages({
     description: "",
     defaultMessage: "Please select valid timings for appointment."
   },
+  placeholderAppointmentType: {
+    id: "app.drawer.edit.appointment.placeholderAppointmentType",
+    description: "",
+    defaultMessage: "Choose Appointment Type"
+  },
+  placeholderTypeDesc : {
+    id: "app.drawer.edit.appointment.placeholderTypeDesc",
+    description: "",
+    defaultMessage: "Choose Type Description"
+  },
+  placeholderRadiologyTypeDesc: {
+    id: "app.drawer.edit.appointment.placeholderRadiologyTypeDesc",
+    description: "",
+    defaultMessage: "Choose Radiology Type Description"
+  },
+  placeholderProvider: {
+    id: "app.drawer.edit.appointment.placeholderProvider",
+    description: "",
+    defaultMessage: "Choose Provider"
+  },
 });
 
 export default message;
