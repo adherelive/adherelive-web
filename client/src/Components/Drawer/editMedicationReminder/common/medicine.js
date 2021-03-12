@@ -55,6 +55,18 @@ class Medicine extends Component{
         }
     }
 
+    handleAddMedicineOpen = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("472384623897482394890793284",{props:this.props});
+        const {openAddMedicineDrawer,setMedicineVal}=this.props;
+        const {inputText =''}=this.state;
+        setMedicineVal(inputText);
+        openAddMedicineDrawer();
+        const {newMedicineId = null}=this.props;
+    
+    }
+
     setDefaultMedicine = () => {
 
         const {
@@ -151,11 +163,11 @@ class Medicine extends Component{
                             >
                             {favourite_medicine_ids.includes(medicine_id.toString())
                             ? 
-                            <StarFilled style={{ fontSize: '20px', color: '#08c' }}
+                            <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
                             onClick={this.handleremoveFavourites(medicine_id)}
                             /> 
                             :
-                            <StarOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                            <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
                             onClick = {this.handleAddFavourites(medicine_id)}
                             /> }
     
@@ -188,11 +200,11 @@ class Medicine extends Component{
                     >
                     {favourite_medicine_ids.includes(med_id.toString())
                     ? 
-                    <StarFilled style={{ fontSize: '20px', color: '#08c' }}
+                    <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
                     onClick={this.handleremoveFavourites(med_id)}
                     /> 
                     :
-                    <StarOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                    <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
                     onClick = {this.handleAddFavourites(med_id)}
                     /> }
 
@@ -262,11 +274,11 @@ class Medicine extends Component{
                             >
                             {favourite_medicine_ids.includes(medicine_id.toString())
                             ? 
-                            <StarFilled style={{ fontSize: '20px', color: '#08c' }}
+                            <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
                             onClick={this.handleremoveFavourites(medicine_id)}
                             /> 
                             :
-                            <StarOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                            <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
                             onClick = {this.handleAddFavourites(medicine_id)}
                             /> }
     
@@ -302,11 +314,11 @@ class Medicine extends Component{
                     >
                     {favourite_medicine_ids.includes(med_id.toString())
                     ? 
-                    <StarFilled style={{ fontSize: '20px', color: '#08c' }}
+                    <StarFilled style={{ fontSize: '20px', color: '#f9c216' }}
                     onClick={this.handleremoveFavourites(med_id)}
                     /> 
                     :
-                    <StarOutlined style={{ fontSize: '20px', color: '#08c' }} 
+                    <StarOutlined style={{ fontSize: '20px', color: '#f9c216' }} 
                     onClick = {this.handleAddFavourites(med_id)}
                     /> }
 

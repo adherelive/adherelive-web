@@ -190,6 +190,19 @@ class Medicine extends Component{
         return options;
     }
 
+    handleAddMedicineOpen = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("472384623897482394890793284",{props:this.props});
+        const {openAddMedicineDrawer,setMedicineVal}=this.props;
+        const {inputText =''}=this.state;
+        setMedicineVal(inputText);
+        openAddMedicineDrawer();
+        const {newMedicineId = null}=this.props;
+    
+    }
+    
+
     getFavouriteOptions = () => {
         const {favourite_medicine_ids=[],favourites_data , setFavMedicineValue , medicines ={} } = this.props;
         const { searching=false}=this.state;
