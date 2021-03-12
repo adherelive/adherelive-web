@@ -424,6 +424,7 @@ class EditAppointmentForm extends Component {
 
   getOtherOptions = () => {
     const { typeDescription = {} } = this.state;
+    console.log("7325473254654723654823548237 =======>>>>",{typeDescription});
 
     return Object.values(typeDescription).map((description, index) => {
       return (
@@ -1023,11 +1024,11 @@ class EditAppointmentForm extends Component {
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.props.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
                 >
                   {this.getTypeDescriptionOption()}
                 </Select>
@@ -1080,11 +1081,11 @@ class EditAppointmentForm extends Component {
                   defaultActiveFirstOption={true}
                   autoComplete="off"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.props.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  // filterOption={(input, option) =>
+                  //   option.props.children
+                  //     .toLowerCase()
+                  //     .indexOf(input.toLowerCase()) >= 0
+                  // }
                 >
                   {this.getTypeDescriptionOption()}
                 </Select>
