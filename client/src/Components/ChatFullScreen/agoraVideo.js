@@ -16,6 +16,7 @@ import { USER_CATEGORY } from "../../constant";
 import messages from "./messages";
 import Loading from "../Common/Loading";
 import Tooltip from "antd/es/tooltip";
+import { Button } from "antd";
 
 class AgoraVideo extends Component {
   constructor(props) {
@@ -117,6 +118,7 @@ class AgoraVideo extends Component {
   };
 
   startVideoCall = async () => {
+
     const { auth: { authenticated_user } = {} } = this.props;
 
     const { appId, channel, token } = this.getVideoOptions();
@@ -257,14 +259,21 @@ class AgoraVideo extends Component {
     return (
       <div className="ml24">
         {!isStart ? (
-          <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
-            <img
-              src={StartCallIcon}
-              onClick={startVideoCall}
-              alt="chatIcon"
-              className="pointer"
-            />
-          </Tooltip>
+          // <Tooltip title={formatMessage(messages.startCall)} placement={"top"}>
+          //   <img
+          //     src={StartCallIcon}
+          //     onClick={startVideoCall}
+          //     alt="chatIcon"
+          //     className="pointer"
+          //   />
+          // </Tooltip>
+          <Button
+            type={"primary"}
+            className={"mb40"}
+            onClick={startVideoCall}
+          >
+            {formatMessage(messages.startCall)}
+          </Button>
         ) : (
           <Tooltip title={formatMessage(messages.endCall)} placement={"top"}>
             <img
