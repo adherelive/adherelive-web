@@ -635,6 +635,7 @@ export const APPOINTMENT_TYPE_DESCRIPTION = {
 
 export const FEATURE_TYPE = {
   APPOINTMENT: "appointment",
+  PREV_VERSION_APPOINTMENT: "prev_version_appointment",
   MEDICATION: "medication",
   VITAL: "vital",
   TERMS_OF_SERVICE: "terms_of_service",

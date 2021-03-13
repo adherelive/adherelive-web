@@ -487,31 +487,38 @@ class MobileAppointmentController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
 
-      const {userDetails: {userData: {category}, userCategoryId} = {}} = req;
-      const appointmentDetails = await featureDetailService.getDetailsByData({
-        feature_type: FEATURE_TYPE.APPOINTMENT
-      });
+      const {userDetails: {userData: {category}, userCategoryId} = {}, 
+             headers: {version = null} = {}, headers = {}} = req;
 
-      const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+      let featureDetails = {}
 
-      let featureDetails = appointmentData.getFeatureDetails();
-
-      const {type_description, radiology_type_data} =  featureDetails || {};
-
-      const userTypeData = {
-        id: userCategoryId,
-        category,
-      };
-
-      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
-
-      featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
-
-      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
-
-      featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
-
-
+      if(version) {
+        const appointmentDetails = await featureDetailService.getDetailsByData({
+          feature_type: FEATURE_TYPE.APPOINTMENT
+        });
+  
+        const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+        featureDetails = appointmentData.getFeatureDetails();
+        const {type_description, radiology_type_data} =  featureDetails || {};
+  
+        const userTypeData = {
+          id: userCategoryId,
+          category,
+        };
+  
+        const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
+        featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
+        const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
+        featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
+   
+      } else {
+        const prevVersionsAppointmentDetails = await featureDetailService.getDetailsByData({
+          feature_type: FEATURE_TYPE.PREV_VERSION_APPOINTMENT
+        });
+  
+        const prevVersionsAppointmentData = await FeatureDetailsWrapper(prevVersionsAppointmentDetails);
+        featureDetails = prevVersionsAppointmentData.getFeatureDetails();
+      }
 
       return raiseSuccess(
         res,
