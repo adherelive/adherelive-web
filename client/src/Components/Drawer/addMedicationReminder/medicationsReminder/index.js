@@ -3,7 +3,7 @@ import { Drawer, Form, message } from "antd";
 import { injectIntl } from "react-intl";
 
 import moment from "moment";
-import { MEDICINE_UNITS } from "../../../../constant";
+import { MEDICINE_UNITS, WHEN_TO_TAKE_ABBR_TYPES } from "../../../../constant";
 import AddMedicationReminderForm from "./form";
 import AddMedicineDrawer from "../../../../Containers/Drawer/addMedicine";
 
@@ -169,74 +169,12 @@ class AddMedicationReminder extends Component {
           };
 
         }
-        
-       // ---------------------------------->>
-       // to check if after selecting dates and then days, if days fall within the dates
-         
-        // if(repeatDays && startDate && endDate) {
-         
-        //   console.log(typeof(repeatDays));
-        //   const daysArray=[];
-        //   let day="";
-        //   for(let i=0;i<repeatDays.length;i++){
-           
-        //     if(repeatDays[i]=="," || i==repeatDays.length-1){
-        //       daysArray.push(day);
-        //       day="";
-        //     }
-        //     else{
-        //       day =day+repeatDays[i];
-        //     }
-        //   }
-         
-        //   const findDayNumber={
-        //     "Mon":1,
-        //     "Tue":2,
-        //     "Wed":3,
-        //     "Thu":4,
-        //     "Fri":5,
-        //     "Sat":6,
-        //     "Sun":7,
-        //   }
-         
-        //   let flag =true;
-         
-        //   for(let i=0;i<daysArray.length;i++){
-           
-        //       let repeatDaysNumber = findDayNumber[daysArray[i]];
-        //       const startDateNumber = startDate._d.getDay();
-        //       const endDateNumber = endDate._d.getDay();
-             
-        //       if(repeatDaysNumber<startDateNumber && repeatDaysNumber>=startDateNumber && repeatDaysNumber <=endDateNumber )
-        //       {
-        //         continue;
-        //       }
-        //       else if(repeatDaysNumber>startDateNumber && (repeatDaysNumber>=startDateNumber || repeatDaysNumber <=endDateNumber) )
-        //       {
-        //         continue;
-        //       }
-        //       else if(startDateNumber  ==  endDateNumber){
-               
-        //         continue;
-               
-        //       }else{
-               
-        //         flag = false;
-        //         break;
-        //       }
-        //   }
-        //   if(flag == false){
-        //     message.warn('Please select valid dates for medication');
-        //   }
-        // }
-       
-      // ------------------------ <<<<<<<<<<<<<<<<<<<<<<<
-  
+      
       
     
       
         
-        if (!medicine_id || !unit || (unit === MEDICINE_UNITS.MG && !quantity) || !strength || !when_to_take || !startDate) {
+        if (!medicine_id || !unit || (unit === MEDICINE_UNITS.MG && !quantity) || !strength || (when_to_take_abbr!==WHEN_TO_TAKE_ABBR_TYPES.SOS && !when_to_take) || !startDate) {
 
           message.error('Please fill all details.')
         }
