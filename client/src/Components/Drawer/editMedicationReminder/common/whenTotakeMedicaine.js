@@ -742,11 +742,14 @@ class WhenToTakeMedication extends Component {
 
     const {medicationData}=this.props;
     if(medicationData){
-      // console.log("327546235423786479812742376 medicationData",{medicationData})
+      // console.log("327546235423786479812742376 medicationData",{medicationData,props:this.props})
       let {
-        schedule_data: {when_to_take:schedule_data_when_to_take=[], when_to_take_abbr : schedule_data_when_to_take_abbr='' } = {}
+        schedule_data: {when_to_take:schedule_data_when_to_take=[], when_to_take_abbr : schedule_data_when_to_take_abbr='' } = {},
+        details: {when_to_take:details_when_to_take=[], when_to_take_abbr : details_when_to_take_abbr='' } = {}
       } = medicationData;
-      when_to_take_abbr=schedule_data_when_to_take_abbr;
+      
+      when_to_take_abbr=schedule_data_when_to_take_abbr ? schedule_data_when_to_take_abbr : details_when_to_take_abbr ;
+      schedule_data_when_to_take = schedule_data_when_to_take ? schedule_data_when_to_take : details_when_to_take;
 
       if(!when_to_take_abbr){
         if(schedule_data_when_to_take.length ===1){
