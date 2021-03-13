@@ -5,6 +5,7 @@ import messages from "../message";
 import moment from "moment";
 
 import { WHEN_TO_TAKE_BUTTONS } from "../../addMedicationReminder/common/whenTotakeMedicaine";
+import {WHEN_TO_TAKE_ABBR_TYPES} from "../../../../constant";
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -735,7 +736,35 @@ class WhenToTakeMedication extends Component {
     const { form: { getFieldDecorator } = {} ,  payload = {},medications } = this.props;
     const { WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions } = this;
     const {id :medication_id= null}=payload || {};
-    const {basic_info:{details:{when_to_take_abbr=null}={}}={}} = medications[medication_id] || {};
+    let {basic_info:{details:{when_to_take_abbr=null}={}}={}} = medications[medication_id] || {};
+
+
+
+    const {medicationData}=this.props;
+    if(medicationData){
+      // console.log("327546235423786479812742376 medicationData",{medicationData})
+      let {
+        schedule_data: {when_to_take:schedule_data_when_to_take=[], when_to_take_abbr : schedule_data_when_to_take_abbr='' } = {}
+      } = medicationData;
+      when_to_take_abbr=schedule_data_when_to_take_abbr;
+
+      if(!when_to_take_abbr){
+        if(schedule_data_when_to_take.length ===1){
+          when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.OD;
+        }
+        else if(schedule_data_when_to_take.length ===2){
+          when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.BD;
+        }
+        else if(schedule_data_when_to_take.length ===3){
+          when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.TD;
+        }
+        else if(schedule_data_when_to_take.length ===0){
+          when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.SOS;
+        }
+      }
+    }
+
+    
 
     // console.log("763425462387947230942",{props:this.props,payload,when_to_take_abbr});
 
