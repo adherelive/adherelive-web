@@ -1806,3 +1806,10 @@ export const USER_FAV_ALL_TYPES=[
   FAVOURITE_TYPE.MEDICAL_TESTS,
   FAVOURITE_TYPE.RADIOLOGY
 ]
+
+export const WHEN_TO_TAKE_ABBR_TYPES={
+  OD:"1",
+  BD:"2",
+  TD:"3",
+  SOS:"4"
+}

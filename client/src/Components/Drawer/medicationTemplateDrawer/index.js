@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Drawer, Icon, Select, Input, message, Button, TimePicker, Modal } from "antd";
 
-import { MEDICATION_TIMING,DAYS,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP, RADIOLOGY } from "../../../constant";
+import {WHEN_TO_TAKE_ABBR_TYPES, MEDICATION_TIMING,DAYS,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP, RADIOLOGY } from "../../../constant";
 import moment from "moment";
 import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
 import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
@@ -82,6 +82,8 @@ class TemplateDrawer extends Component {
         let newMedics = {};
         let newAppoints = {};
         let newVitals = {};
+
+        console.log("327546235423786479812742376",{template_medications});
 
 
         // console.log("32786428457523476834234532847 carePlanTemplateIds===>",carePlanTemplateIds)
@@ -558,7 +560,13 @@ class TemplateDrawer extends Component {
                     nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
                     
 
-                    let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
+                    let nextDue = '';
+                    
+                    if(MEDICATION_TIMING[when_to_take[0]]){
+                        nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${MEDICATION_TIMING[when_to_take[0]].time}`;
+                    }else{
+                        nextDue = this.formatMessage(messages.sosMessage);   
+                    }
 
                     return (
                         <div className='flex wp100 flex-grow-1 align-center' key={key}>
@@ -668,14 +676,20 @@ class TemplateDrawer extends Component {
     validateData = (medicationsData, appointmentsData, vitalData) => {
 
         for (let medication of medicationsData) {
-            const { medicine = "", medicineType = "", medicine_id = "",
+            let { medicine = "", medicineType = "", medicine_id = "",
                 schedule_data: { quantity = 0, repeat = "", repeat_days = [], start_date = moment(),
-                    start_time = moment(), strength = 0, unit = "", when_to_take = [] } = {} } = medication;
+                    start_time = moment(), strength = 0, unit = "", when_to_take = [] , when_to_take_abbr=''} = {} } = medication;
 
-            if (!medicine || !medicineType || !medicine_id || (unit !== 'ml' && !quantity) || !repeat || !repeat_days.length || !start_date
-                || !start_time || !strength || !unit || !when_to_take.length) {
+            if(when_to_take.length === 0){
+                when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.SOS; 
+            }
+
+            if (!medicine || !medicineType || !medicine_id || (unit !== '2' && !quantity) || !repeat || ( when_to_take_abbr !==WHEN_TO_TAKE_ABBR_TYPES.SOS && !repeat_days.length) || !start_date
+                || !start_time || !strength || !unit || ( when_to_take_abbr !==WHEN_TO_TAKE_ABBR_TYPES.SOS && !when_to_take.length) ) {
+                // console.log("327546235423786479812742376 #################",{medication,flag:!start_time,flag2:(unit !== '2' && !quantity),flag3:!strength });
                 message.error(this.formatMessage(messages.medicationError));
                 return false;
+                
             }
         }
 
@@ -855,7 +869,8 @@ class TemplateDrawer extends Component {
             unit = "",
             description = '',
             medicine_type = "",
-            when_to_take = ["3"] } = data;
+            when_to_take = ["3"],
+            when_to_take_abbr='' } = data;
 
         const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
 
@@ -864,7 +879,7 @@ class TemplateDrawer extends Component {
         newMedication.medicineType = type;
         newMedication.schedule_data = {
             end_date: moment(end_date), start_date: moment(start_date),
-            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time),
+            unit, when_to_take,when_to_take_abbr, repeat, quantity, repeat_days, strength, start_time: moment(start_time),
             medicine_type, description
         };
         medications[innerFormKey] = newMedication;
@@ -942,7 +957,9 @@ class TemplateDrawer extends Component {
             strength = '',
             unit = "",
             description = '',
-            when_to_take = ["3"] } = data;
+            when_to_take = ["3"],
+            when_to_take_abbr='' } = data;
+        console.log("327546235423786479812742376 =====> addMedication",{data})    
         let { medications = {}, medicationKeys = [] } = this.state;
         let { medicines } = this.props;
         let newMedication = {};
@@ -952,7 +969,7 @@ class TemplateDrawer extends Component {
         newMedication.medicineType = type;
         newMedication.schedule_data = {
             end_date: moment(end_date), start_date: moment(start_date),
-            unit, when_to_take, repeat, quantity, repeat_days, strength, start_time: moment(start_time),
+            unit, when_to_take,when_to_take_abbr, repeat, quantity, repeat_days, strength, start_time: moment(start_time),
             medicine_type, description
         };
         let key = uuid();

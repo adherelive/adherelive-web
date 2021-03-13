@@ -170,7 +170,8 @@ class TemplatePageCreateDrawer extends Component{
                         description='',
                         repeat_days=[],
                         when_to_take=[],
-                        medicine_type=''
+                        medicine_type='',
+                        when_to_take_abbr=''
                     } = {},
                    
                 } = template_medications[mId] || {};
@@ -188,7 +189,8 @@ class TemplatePageCreateDrawer extends Component{
                         repeat_days,
                         when_to_take,
                         medicine_type,
-                        description
+                        description,
+                        when_to_take_abbr
                     }
         
                 }
@@ -464,6 +466,7 @@ class TemplatePageCreateDrawer extends Component{
                         strength ='',
                         repeat_days =[],
                         when_to_take = [],
+                        when_to_take_abbr='',
                         medicine_type ='',
                         description=''
                     } = {}
@@ -778,7 +781,8 @@ class TemplatePageCreateDrawer extends Component{
                             strength ='',
                             repeat_days =[],
                             when_to_take =[],
-                            medicine_type=''
+                            medicine_type='',
+                            when_to_take_abbr=''
                         } = {}
         
                     } = medications[key];
@@ -963,7 +967,8 @@ class TemplatePageCreateDrawer extends Component{
             unit = "",
             description = '',
             medicine_type = "",
-            when_to_take = ["3"] } = data;
+            when_to_take = ["3"],
+            when_to_take_abbr='' } = data;
 
         const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
 
@@ -983,7 +988,8 @@ class TemplatePageCreateDrawer extends Component{
                 repeat_days,
                 when_to_take,
                 medicine_type,
-                description
+                description,
+                when_to_take_abbr
             }
 
         }
@@ -1137,7 +1143,8 @@ class TemplatePageCreateDrawer extends Component{
             strength = '',
             unit = "", 
             description = '',
-            when_to_take = ["3"] 
+            when_to_take = ["3"] ,
+            when_to_take_abbr=''
         } = data;
 
             
@@ -1163,7 +1170,8 @@ class TemplatePageCreateDrawer extends Component{
                 repeat_days,
                 when_to_take,
                 medicine_type,
-                description
+                description,
+                when_to_take_abbr
             }
 
         }
