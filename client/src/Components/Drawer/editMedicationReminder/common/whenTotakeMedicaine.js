@@ -732,42 +732,63 @@ class WhenToTakeMedication extends Component {
   };
 
   getWhenToTakeButtons = () => {
-
-    const { form: { getFieldDecorator } = {} ,  payload = {},medications } = this.props;
+    const { form: { getFieldDecorator } = {} ,  payload = {},medications, medicationData : templateMedication = null } = this.props;
     const { WHEN_TO_TAKE_BUTTONS = {}, getRadioOptions } = this;
     const {id :medication_id= null}=payload || {};
-    let {basic_info:{details:{when_to_take_abbr=null}={}}={}} = medications[medication_id] || {};
+    const {basic_info:{details:{when_to_take_abbr : existingWhenToTake=null}={}}={}} = medications[medication_id] || {};
 
+    let whenToTake = null;
 
+    if(templateMedication) {
+      // console.log("327546235423786479812742376 templateMedication",{templateMedication,props:this.props});
 
-    const {medicationData}=this.props;
-    if(medicationData){
-      // console.log("327546235423786479812742376 medicationData",{medicationData,props:this.props})
-      let {
-        schedule_data: {when_to_take:schedule_data_when_to_take=[], when_to_take_abbr : schedule_data_when_to_take_abbr='' } = {},
-        details: {when_to_take:details_when_to_take=[], when_to_take_abbr : details_when_to_take_abbr='' } = {}
-      } = medicationData;
+      // const {
+      //   schedule_data,
+      //   details
+      // } = templateMedication || {};
+
+      const {schedule_data: {when_to_take_abbr} = {}} = templateMedication || {};
+
+      whenToTake = when_to_take_abbr;
+
+      // let {
+      //   schedule_data: {when_to_take:schedule_data_when_to_take=[], when_to_take_abbr : schedule_data_when_to_take_abbr='' } = {},
+      //   details: {when_to_take:details_when_to_take=[], when_to_take_abbr : details_when_to_take_abbr='' } = {}
+      // } = templateMedication;
       
-      when_to_take_abbr=schedule_data_when_to_take_abbr ? schedule_data_when_to_take_abbr : details_when_to_take_abbr ;
-      schedule_data_when_to_take = schedule_data_when_to_take ? schedule_data_when_to_take : details_when_to_take;
+      // when_to_take_abbr=schedule_data_when_to_take_abbr ? schedule_data_when_to_take_abbr : details_when_to_take_abbr ;
+      // schedule_data_when_to_take = schedule_data_when_to_take ? schedule_data_when_to_take : details_when_to_take;
 
-      if(!when_to_take_abbr){
-        if(schedule_data_when_to_take.length ===1){
-          when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.OD;
-        }
-        else if(schedule_data_when_to_take.length ===2){
-          when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.BD;
-        }
-        else if(schedule_data_when_to_take.length ===3){
-          when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.TD;
-        }
-        else if(schedule_data_when_to_take.length ===0){
-          when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.SOS;
-        }
-      }
+      // if(!when_to_take_abbr){
+      //   if(schedule_data_when_to_take.length ===1){
+      //     when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.OD;
+      //   }
+      //   else if(schedule_data_when_to_take.length ===2){
+      //     when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.BD;
+      //   }
+      //   else if(schedule_data_when_to_take.length ===3){
+      //     when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.TD;
+      //   }
+      //   else if(schedule_data_when_to_take.length ===0){
+      //     when_to_take_abbr = WHEN_TO_TAKE_ABBR_TYPES.SOS;
+      //   }
+      // }
     }
 
-    
+    if(!existingWhenToTake) {
+      if(!whenToTake) {
+        whenToTake = WHEN_TO_TAKE_ABBR_TYPES.OD;  
+      }
+    } else {
+      whenToTake = existingWhenToTake;
+    }
+
+    // if(!whenToTake && !existingWhenToTake) {
+    //   whenToTake = WHEN_TO_TAKE_ABBR_TYPES.OD;
+    // } else {
+    //   console.log("873189273 here", {existingWhenToTake, whenToTake});
+    //   whenToTake = existingWhenToTake;
+    // }
 
     // console.log("763425462387947230942",{props:this.props,payload,when_to_take_abbr});
 
@@ -778,7 +799,7 @@ class WhenToTakeMedication extends Component {
           {getFieldDecorator(
             FIELD_NAME_ABBR,
             {
-              initialValue:when_to_take_abbr
+              initialValue:whenToTake
             }
           )(
             <RadioGroup
