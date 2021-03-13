@@ -192,7 +192,7 @@ class Medicine extends Component{
           <div
            key={"no-match-medicine-div"}
            className="flex align-center justify-center"
-           onClickCapture={this.handleAddMedicineOpen}
+        //    onClickCapture={this.handleAddMedicineOpen}
            className="add-new-medicine-button-div"
             >
              <Button 
@@ -211,10 +211,13 @@ class Medicine extends Component{
 
     handleAddMedicineOpen = (e) => {
         e.preventDefault();
-        e.stopPropagation();
-        console.log("472384623897482394890793284",{props:this.props});
-        const {openAddMedicineDrawer,setMedicineVal}=this.props;
+        // e.stopPropagation();
+        // console.log("472384623897482394890793284",{props:this.props});
+        const {openAddMedicineDrawer,setMedicineVal,
+        form:{setFieldsValue}={}}=this.props;
         const {inputText =''}=this.state;
+        this.setState({medicine_id:null,medicine:''});
+        setFieldsValue({[FIELD_NAME]:''});
         setMedicineVal(inputText);
         openAddMedicineDrawer();
         const {newMedicineId = null}=this.props;

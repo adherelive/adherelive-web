@@ -93,8 +93,7 @@ class Medicine extends Component{
 
     handleAddMedicineOpen = (e) => {
         e.preventDefault();
-        e.stopPropagation();
-        console.log("472384623897482394890793284",{props:this.props});
+        // e.stopPropagation();
         const {openAddMedicineDrawer,setMedicineVal}=this.props;
         const {inputText =''}=this.state;
         setMedicineVal(inputText);
@@ -255,13 +254,14 @@ class Medicine extends Component{
         }
 
            
-    if(options.length === 0 && !isDefault ){ // searching and no opt found
+    if(options.length === 0 && !isDefault && med_id){ // searching and no opt found
         const {inputText=''}=this.state;
         options.push(
-          <div
+         <Option key={`opt-${med_id}-new-med`} value={med_id} >
+              <div
            key={"no-match-medicine-div"}
            className="flex align-center justify-center"
-           onClickCapture={this.handleAddMedicineOpen}
+        //    onClickCapture={this.handleAddMedicineOpen}
            className="add-new-medicine-button-div"
             >
              <Button 
@@ -271,6 +271,7 @@ class Medicine extends Component{
             className="add-new-medicine-button"
             onClick={this.handleAddMedicineOpen} >{`${this.formatMessage(messages.addMedicine)} `}<span className="fw800" >{` "${inputText}"`}</span></Button>
           </div>
+         </Option>
         )
       }
 
