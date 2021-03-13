@@ -34,12 +34,29 @@ class Medicine extends Component{
 
         const {
             payload: { id: medication_id } = {},
-            medications={},
-            medicines={}
+            medicines={},
+            medicationData={}
           } = this.props;
 
         
         this.setState({defaultHits});
+
+        let {medicine_id=null,medicine=''} = medicationData || {};
+
+        if(medicationData && medicine_id){
+            const medStrId=medicine_id.toString();
+            
+            if(!medicine){
+                const {basic_info:{name:medicine_name=''}={}} = medicines[medStrId] || {};
+                medicine = medicine_name;
+            }
+
+
+            this.setState({
+                medicine_id:medStrId,
+                medicine_name:medicine
+            });
+        }
        
 
     }
@@ -366,13 +383,14 @@ class Medicine extends Component{
 
 
     onOptionSelect = value => {
-        const {medicines = {}}=this.props;
+        const {medicines = {} , enableSubmit}=this.props;
         const {
             form: { setFieldsValue, getFieldValue },
           } = this.props;
         const {basic_info:{name:med_name='',id:temp_id=null}={}} = medicines[value] || {};
         this.setState({ medicine_id: value, inputText:'' ,medicine_name:med_name});
         setFieldsValue({ [FIELD_NAME]: value });
+        enableSubmit();
     };
 
     handleAddFavourites = (id) => async(e) => {
@@ -429,6 +447,7 @@ class Medicine extends Component{
             favourite_medicine_ids=[]
           } = this.props;
         
+        // console.log("45238646283743284 =================>>>>>>>>",{props:this.props});  
         return (
         <FormItem label={"Medicine"}>
              {getFieldDecorator(FIELD_NAME, {
