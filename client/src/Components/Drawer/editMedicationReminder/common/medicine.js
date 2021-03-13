@@ -65,10 +65,29 @@ class Medicine extends Component{
 
     componentDidUpdate(prevProps,prevState){
         const {visible:prev_visible=false}=prevProps;
-        const {visible = false}=this.props;
+        const {visible = false,enableSubmit}=this.props;
         const {medicine_id=null}=this.state;
         if(visible && medicine_id === null ){
             this.setDefaultMedicine();
+        }
+
+        const {newMedicineId:prev_newMedicineId = null} = prevProps;
+        const {newMedicineId}=this.props;
+        const {
+        form: { setFieldsValue, getFieldValue },
+        setFormulation
+        } = this.props;
+        if(prev_newMedicineId!==newMedicineId){
+            const {medicines = {}} =this.props;
+            const {basic_info:{name='',id=null}={}}=medicines[newMedicineId] || {};
+            const medicineId = parseInt(id);
+            setFieldsValue({ [FIELD_NAME]: medicineId });
+            this.setState({
+                medicine_name: name,
+                medicine_id:medicineId
+            });
+            enableSubmit();
+        
         }
     }
 

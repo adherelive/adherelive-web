@@ -32,6 +32,25 @@ class Medicine extends Component{
         this.setState({defaultHits});
     }
 
+    componentDidUpdate(prevProps,prevState){
+        const {newMedicineId:prev_newMedicineId = null} = prevProps;
+        const {newMedicineId}=this.props;
+        const {
+        form: { setFieldsValue, getFieldValue },
+        setFormulation
+        } = this.props;
+        if(prev_newMedicineId!==newMedicineId){
+        const {medicines = {}} =this.props;
+        const {basic_info:{name='',id=null}={}}=medicines[newMedicineId] || {};
+        const medicineId = parseInt(id);
+        setFieldsValue({ [FIELD_NAME]: medicineId });
+        this.setState({
+            medicine_name: name,
+            medicine_id:medicineId
+        });
+        } 
+    }
+
     formatMessage = (data) => this.props.intl.formatMessage(data);
 
     handleGetFavouritesMeds = async() => {
