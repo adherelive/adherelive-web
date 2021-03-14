@@ -157,6 +157,7 @@ class TemplatePageCreateDrawer extends Component{
                         strength ='',
                         repeat_days =[],
                         when_to_take = [],
+                        when_to_take_abbr='',
                         medicine_type ='',
                         description=''
                     } = {}
@@ -417,7 +418,8 @@ class TemplatePageCreateDrawer extends Component{
                             strength ='',
                             repeat_days =[],
                             when_to_take ='',
-                            medicine_type=''
+                            medicine_type='',
+                            when_to_take_abbr=''
                         } = {}
         
                     } = medications[key];
@@ -605,7 +607,8 @@ class TemplatePageCreateDrawer extends Component{
             unit = "",
             description = '',
             medicine_type = "",
-            when_to_take = ["3"] } = data;
+            when_to_take = ["3"],
+            when_to_take_abbr='' } = data;
 
             console.log("98871632254238987821835362854623548",{data});
 
@@ -628,7 +631,8 @@ class TemplatePageCreateDrawer extends Component{
                 repeat_days,
                 when_to_take,
                 medicine_type,
-                description
+                description,
+                when_to_take_abbr
             }
 
         }
@@ -764,7 +768,8 @@ class TemplatePageCreateDrawer extends Component{
             strength = '',
             unit = "", 
             description = '',
-            when_to_take = ["3"] 
+            when_to_take = ["3"] ,
+            when_to_take_abbr=''
         } = data;
 
             
@@ -790,7 +795,8 @@ class TemplatePageCreateDrawer extends Component{
                 repeat_days,
                 when_to_take,
                 medicine_type,
-                description
+                description,
+                when_to_take_abbr
             }
 
         }

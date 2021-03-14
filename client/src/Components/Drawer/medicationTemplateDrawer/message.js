@@ -147,6 +147,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "An action for this vital already exist in this template."
     },
+    sosMessage:{
+        id: "app.medicationTemplate.sosMessage",
+        description: "",
+        defaultMessage: "Take Whenever Required"
+    },
 });
 
 export default messages;
