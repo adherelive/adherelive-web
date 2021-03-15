@@ -446,6 +446,11 @@ export default defineMessages({
     description: "",
     defaultMessage: "Take Whenever Required",
   },
+  medicineLabel: {
+    id: "medication_reminder.add.drawer.medicine.label",
+    description: "",
+    defaultMessage: "Medicine",
+  },
 
   // error
   whenToTakeError: {
