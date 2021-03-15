@@ -52,8 +52,10 @@ class Formulation extends Component {
         return items.map((item) => {
             const {name, defaultUnit, id} = item || {};
 
+
+      const strId = id.toString();
             return (
-                <Option key={`${category}:${defaultUnit}:${name}`} value={id} title={name}>{getStringFormat(name)}</Option>
+                <Option key={`${category}:${defaultUnit}:${name}`} value={strId} title={name}>{getStringFormat(name)}</Option>
             );
         });
     };

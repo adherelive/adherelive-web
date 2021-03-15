@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { Select, Form } from "antd";
-import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 import { injectIntl } from "react-intl";
 import { MEDICINE_UNITS, MEDICINE_TYPE } from '../../../../constant';
 // import chooseMedicationField from "./medicationStage";
