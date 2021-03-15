@@ -34,7 +34,7 @@ import otpVerificationService from "../../../services/otpVerification/otpVerific
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
-import { doctorQualificationData, uploadImageS3 } from "./userHelper";
+import { doctorQualificationData, uploadImageS3, getServerSpecificConstants } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
   EMAIL_TEMPLATE_NAME,
@@ -593,6 +593,8 @@ class MobileUserController extends Controller {
         let treatmentIds = [];
         let conditionIds = [];
 
+        const serverConstants = getServerSpecificConstants()
+
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
@@ -830,6 +832,7 @@ class MobileUserController extends Controller {
           auth_user: userId,
           auth_category: category,
           hasConsent: has_consent,
+          server_constants: serverConstants
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");

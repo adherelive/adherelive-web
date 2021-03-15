@@ -155,3 +155,25 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
     return false;
   }
 };
+
+
+export const getServerSpecificConstants  = () => {
+  const server_constants = {
+    GETSTREAM_API_KEY: process.config.getstream.key,
+    GETSTREAM_APP_ID: process.config.getstream.appId,
+
+    TWILIO_CHANNEL_SERVER: process.config.twilio.CHANNEL_SERVER,
+
+    AGORA_APP_ID: process.config.agora.app_id,
+
+    RAZORPAY_KEY :process.config.razorpay.key,
+
+    ALGOLIA_APP_ID: process.config.algolia.app_id,
+    ALGOLIA_APP_KEY: process.config.algolia.app_key,
+    ALGOLIA_MEDICINE_INDEX: process.config.algolia.medicine_index,
+    ONE_SIGNAL_APP_ID: process.config.one_signal.app_id
+  } 
+
+
+  return server_constants;
+}
