@@ -489,7 +489,8 @@ class TemplatePageCreateDrawer extends Component{
            
             if (!medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  (when_to_take.length > 0 && !repeat_days.length) ||
                 !medicine_type || (!duration && duration !== null) || !strength) {
-               
+                    // console.log("8932648723648723462387",{flag1:!medicine_type,flag2:(!duration && duration !== null),flag3:!strength,duration});
+
                 message.error("Medication Error");
                 return false;
             }

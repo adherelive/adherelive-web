@@ -44,16 +44,17 @@ class Medicine extends Component{
         let {medicine_id=null,medicine=''} = medicationData || {};
 
         if(medicationData && medicine_id){
-            const medStrId=medicine_id.toString();
+            // const medStrId=medicine_id.toString();
+            const medIdInt = parseInt(medicine_id);
             
             if(!medicine){
-                const {basic_info:{name:medicine_name=''}={}} = medicines[medStrId] || {};
+                const {basic_info:{name:medicine_name=''}={}} = medicines[medIdInt] || {};
                 medicine = medicine_name;
             }
 
 
             this.setState({
-                medicine_id:medStrId,
+                medicine_id:medIdInt,
                 medicine_name:medicine
             });
         }
@@ -471,7 +472,7 @@ class Medicine extends Component{
         return (
         <FormItem label={"Medicine"}>
              {getFieldDecorator(FIELD_NAME, {
-            initialValue: medicine_id ? `${medicine_id}` : ""
+            initialValue: medicine_id ? medicine_id : ""
             })(
                 <Select
                 onSearch={this.handleSearch}
