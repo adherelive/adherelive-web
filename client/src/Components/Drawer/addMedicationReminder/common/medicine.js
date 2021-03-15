@@ -93,6 +93,12 @@ class Medicine extends Component {
     );
   }
 
+  isMedicineFavorite = (id) => {
+    const {favourite_medicine_ids = []} = this.props;
+
+    return favourite_medicine_ids.includes(parseInt(id));
+  };
+
   getSearchingResultOptions = ({ hits, isDefault }) => {
     let options = [];
     const { favourite_medicine_ids = [] } = this.props;
@@ -102,11 +108,13 @@ class Medicine extends Component {
       medicine_name: med_name = "",
       medicine_id: selectedMedicineId = null,
     } = this.state;
-    const { getHighlightedText } = this;
+    const { getHighlightedText, isMedicineFavorite } = this;
 
     for (let each in hits) {
       const { name = "", medicine_id = null, generic_name = "" } =
         hits[each] || {};
+
+        // default without selected
 
       if (isDefault ? medicine_id !== selectedMedicineId : true) {
         // check for add last selected option only for default hits case and not searching --->
@@ -132,12 +140,12 @@ class Medicine extends Component {
             {searching ? (
               <Tooltip
                 title={
-                  favourite_medicine_ids.includes(medicine_id.toString())
+                  isMedicineFavorite(medicine_id)
                     ? "Unmark"
                     : "Mark"
                 }
               >
-                {favourite_medicine_ids.includes(medicine_id.toString()) ? (
+                {isMedicineFavorite(medicine_id) ? (
                   <StarFilled
                     style={{ fontSize: "20px", color: "#f9c216" }}
                     onClick={this.handleremoveFavourites(medicine_id)}
@@ -169,14 +177,12 @@ class Medicine extends Component {
           {searching ? (
             <Tooltip
               title={
-                favourite_medicine_ids.includes(selectedMedicineId.toString())
+                isMedicineFavorite(selectedMedicineId)
                   ? "Unmark"
                   : "Mark"
               }
             >
-              {favourite_medicine_ids.includes(
-                selectedMedicineId.toString()
-              ) ? (
+              {isMedicineFavorite(selectedMedicineId) ? (
                 <StarFilled
                   style={{ fontSize: "20px", color: "#f9c216" }}
                   onClick={this.handleremoveFavourites(selectedMedicineId)}
@@ -234,7 +240,6 @@ class Medicine extends Component {
     setFieldsValue({ [FIELD_NAME]: "" });
     setMedicineVal(inputText);
     openAddMedicineDrawer();
-    const { newMedicineId = null } = this.props;
   };
 
   getFavouriteOptions = () => {
