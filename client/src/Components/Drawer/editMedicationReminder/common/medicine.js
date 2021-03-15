@@ -194,7 +194,7 @@ class Medicine extends Component{
     
                         (
                         <Tooltip
-                            title={favourite_medicine_ids.includes(medicine_id.toString()) ? "Unmark" : "Mark" }
+                            title={favourite_medicine_ids.includes(medicine_id.toString()) ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav) }
                             >
                             {favourite_medicine_ids.includes(medicine_id.toString())
                             ? 
@@ -231,7 +231,7 @@ class Medicine extends Component{
 
                     (
                         <Tooltip
-                    title={favourite_medicine_ids.includes(med_id.toString()) ? "Unmark" : "Mark" }
+                    title={favourite_medicine_ids.includes(med_id.toString()) ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav) }
                     >
                     {favourite_medicine_ids.includes(med_id.toString())
                     ? 
@@ -307,7 +307,7 @@ class Medicine extends Component{
     
                             (
                                 <Tooltip
-                            title={favourite_medicine_ids.includes(medicine_id.toString()) ? "Unmark" : "Mark" }
+                            title={favourite_medicine_ids.includes(medicine_id.toString()) ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav) }
                             >
                             {favourite_medicine_ids.includes(medicine_id.toString())
                             ? 
@@ -347,7 +347,7 @@ class Medicine extends Component{
 
                     (
                         <Tooltip
-                    title={favourite_medicine_ids.includes(med_id.toString()) ? "Unmark" : "Mark" }
+                    title={favourite_medicine_ids.includes(med_id.toString()) ? this.formatMessage(messages.unMarkFav) : this.formatMessage(messages.markFav) }
                     >
                     {favourite_medicine_ids.includes(med_id.toString())
                     ? 

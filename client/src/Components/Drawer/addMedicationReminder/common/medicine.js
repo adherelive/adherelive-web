@@ -142,8 +142,8 @@ class Medicine extends Component {
               <Tooltip
                 title={
                   isMedicineFavorite(medicine_id)
-                    ? "Unmark"
-                    : "Mark"
+                    ? this.formatMessage(messages.unMark)
+                    : this.formatMessage(messages.mark)
                 }
               >
                 {isMedicineFavorite(medicine_id) ? (
@@ -179,8 +179,8 @@ class Medicine extends Component {
             <Tooltip
               title={
                 isMedicineFavorite(selectedMedicineId)
-                  ? "Unmark"
-                  : "Mark"
+                  ? this.formatMessage(messages.unMark)
+                  : this.formatMessage(messages.mark)
               }
             >
               {isMedicineFavorite(selectedMedicineId) ? (
@@ -284,8 +284,8 @@ class Medicine extends Component {
                 <Tooltip
                   title={
                     favourite_medicine_ids.includes(medicine_id.toString())
-                      ? "Unmark"
-                      : "Mark"
+                      ? this.formatMessage(messages.unMark)
+                      : this.formatMessage(messages.mark)
                   }
                 >
                   {favourite_medicine_ids.includes(medicine_id.toString()) ? (
@@ -322,8 +322,8 @@ class Medicine extends Component {
             <Tooltip
               title={
                 favourite_medicine_ids.includes(med_id.toString())
-                  ? "Unmark"
-                  : "Mark"
+                  ? this.formatMessage(messages.unMark)
+                  : this.formatMessage(messages.mark)
               }
             >
               {favourite_medicine_ids.includes(med_id.toString()) ? (
