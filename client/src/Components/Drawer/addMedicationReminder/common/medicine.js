@@ -11,11 +11,11 @@ import algoliasearch from "algoliasearch";
 import config from "../../../../config";
 import {
   InstantSearch,
-  Hits,
-  SearchBox,
-  Highlight,
-  connectSearchBox,
-  connectHighlight
+  // Hits,
+  // SearchBox,
+  // Highlight,
+  // connectSearchBox,
+  // connectHighlight
 } from "react-instantsearch-dom";
 
 import message from "antd/es/message";
@@ -550,7 +550,7 @@ getFavouriteOptions = () => {
         {getFieldDecorator(FIELD_NAME, {})(
           <InstantSearch
             indexName={config.algolia.medicine_index}
-            searchClient={this.algoliaClient()}
+            searchClient={this.algoliaClient}
           >
             {/*{*/}
             {/*  !searching_medicine*/}
