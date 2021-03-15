@@ -448,7 +448,6 @@ class Medicine extends Component {
       onDropdownVisibleChange,
     } = this;
 
-
     return (
       <FormItem label={formatMessage(messages.medicineLabel)}>
         {getFieldDecorator(
