@@ -3,7 +3,8 @@ import { Select, Form } from "antd";
 import dropDownIcon from "../../../../Assets/images/material-icons-black-arrow-drop-down.svg";
 import { injectIntl } from "react-intl";
 import { MEDICINE_UNITS, MEDICINE_TYPE } from '../../../../constant';
-import chooseMedicationField from "./medicationStage";
+// import chooseMedicationField from "./medicationStage";
+import chooseMedicationField from "./medicine";
 
 const FIELD_NAME = "unit";
 
