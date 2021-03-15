@@ -250,6 +250,7 @@ class EditMedicationReminder extends Component {
           }
         }
       } else {
+        console.log("err",{err});
         message.error(formatMessage(messages.fill_all_details));
       }
     });

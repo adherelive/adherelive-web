@@ -427,4 +427,14 @@ export default defineMessages({
     description: "",
     defaultMessage: "Take Whenever Required",
   },
+  markFav: {
+    id: "medication_reminder.edit.drawer.markFav",
+    description: "",
+    defaultMessage: "Mark favourite"
+  },
+  unMarkFav: {
+    id: "medication_reminder.edit.drawer.unMarkFav",
+    description: "",
+    defaultMessage: "Un-check"
+  },
 });

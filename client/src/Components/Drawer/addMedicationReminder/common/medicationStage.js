@@ -48,6 +48,7 @@ class MedicationStage extends Component {
   componentDidUpdate(prevProps, prevState) {
     console.log("PREV PROPS =====>", prevProps);
     console.log("Prosssssssssss ----->", this.props);
+
   }
 
   Hits = ({ hits }) => {

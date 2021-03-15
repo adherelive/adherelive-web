@@ -6,7 +6,6 @@ import {
   Redirect,
   useLocation,
 } from "react-router-dom";
-import SideMenu from "../../Components/Sidebar";
 import BlankState from "../../Containers/BlankState";
 import { PATH, USER_CATEGORY } from "../../constant";
 
@@ -41,6 +40,9 @@ export default class Authenticated extends Component {
       <Fragment>
             {!hasConsent ? (<Common/>) : (
               <Fragment>
+                {/* video chat T&C */}
+
+                {/* Sidebar */}
                 {authenticated_category === USER_CATEGORY.DOCTOR && (
                     <Doctors {...this.props} />
                 )}
