@@ -83,7 +83,6 @@ class Medicine extends Component {
     if(favourite_medicine_ids.length === 0
        &&
        prev_favourite_medicine_ids.length !==favourite_medicine_ids.length ){
-      console.log("2354542634237423646234263 ^^^^^^^^^^^^^^^^^^^^");   
       this.handleMedicineSearch(" ");
     }
     const {
@@ -324,7 +323,6 @@ class Medicine extends Component {
   formatMessage = message => this.props.intl.formatMessage(message);
 
   handleMedicineSearch = value => {
-    console.log("2354542634237423646234263 ##########");
     this.searchValue(value);
     this.setInputText(value);
   };
@@ -554,14 +552,13 @@ getFavouriteOptions = () => {
     const { getMedicineOptions, handleMedicineSearch, getParentNode , getFavouriteOptions } = this;
     const {newMedicineId=null}=this.props;
 
-    console.log("2354542634237423646234263 $$$$$$$$$$$$$$$ ");
 
     return (
       <FormItem label={this.getLabel()}>
         {getFieldDecorator(FIELD_NAME, {})(
           <InstantSearch
             indexName={config.algolia.medicine_index}
-            searchClient={this.algoliaClient()}
+            searchClient={this.algoliaClient}
           >
             {/*{*/}
             {/*  !searching_medicine*/}

@@ -740,7 +740,7 @@ getFavouriteOptions = () => {
         })(
           <InstantSearch
             indexName={config.algolia.medicine_index}
-            searchClient={this.algoliaClient()}
+            searchClient={this.algoliaClient}
           >
             <Select
               onSearch={handleMedicineSearch}
