@@ -96,7 +96,8 @@ class Medicine extends Component {
   isMedicineFavorite = (id) => {
     const {favourite_medicine_ids = []} = this.props;
 
-    return favourite_medicine_ids.includes(parseInt(id));
+    // return favourite_medicine_ids.includes(parseInt(id));
+    return favourite_medicine_ids.includes(id.toString());
   };
 
   getSearchingResultOptions = ({ hits, isDefault }) => {
