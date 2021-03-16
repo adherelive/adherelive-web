@@ -7,6 +7,7 @@ import Start from "../app/Crons/start";
 import Passed from "../app/Crons/passed";
 import RenewSubscription from "../app/Crons/renewSubscription";
 import activePatient from "../app/Crons/activePatient";
+import RemoveDocuments from "../app/Crons/removeDocuments";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
@@ -31,6 +32,14 @@ const cron = schedule.scheduleJob("*/1 * * * *", async () => {
     // await Prior.getPriorEvents();
     await Passed.runObserver();
     await Start.runObserver();
+});
+
+const perDayUtcRule = new schedule.RecurrenceRule();
+perDayUtcRule.hour = 0;
+perDayUtcRule.tz = 'Etc/UTC';
+
+const removeDocumentPerDayCron = schedule.scheduleJob(perDayUtcRule, async() => {
+  await RemoveDocuments.runObserver();
 });
 
 // CRONS RUNNING EVERY 1 HOUR
