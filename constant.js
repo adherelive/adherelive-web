@@ -370,7 +370,8 @@ export const DOCUMENT_PARENT_TYPE = {
   SYMPTOM_PHOTO: "symptom_photo",
   SYMPTOM_VIDEO: "symptom_video",
   APPOINTMENT_DOC: "appointment_doc",
-  REPORT: "report"
+  REPORT: "report",
+  PRESCRIPTION_PDF: "prescription_pdf"
 };
 
 export const ONBOARDING_STATUS = {
