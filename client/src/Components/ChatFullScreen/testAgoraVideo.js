@@ -109,7 +109,7 @@ class TestAgoraVideo extends Component {
 
     window.open(
       `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
-      "_blank"
+      "_self"
     );
   };
 
