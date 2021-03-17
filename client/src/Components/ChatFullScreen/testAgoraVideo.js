@@ -99,12 +99,17 @@ class TestAgoraVideo extends Component {
     );
   };
 
-  openVideoChatTab = roomId => () => {
+  openVideoChatTab =  () => {
 
+    const {
+      match: { params: { room_id : roomId } = {} } = {}
+    } = this.props;
+
+    // console.log("32564572354754327 =================>>>>",{roomId});
 
     window.open(
       `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
-      "_self"
+      "_blank"
     );
   };
 
@@ -131,14 +136,13 @@ class TestAgoraVideo extends Component {
   };
 
   getStartCallButton = () => {
-      const {roomId=null}=this.state;
       const {startVideoCall , formatMessage , openVideoChatTab} = this;
       
       return (
         <Button
         type={"primary"}
         className={"mb40"}
-        onClick={openVideoChatTab(roomId)}
+        onClick={openVideoChatTab}
       >
         {formatMessage(messages.startCall)}
       </Button>
@@ -155,8 +159,7 @@ class TestAgoraVideo extends Component {
 
     const patientUserId = getPatientFromRoomId(room_id);
     const doctorUserId = getDoctorFromRoomId(room_id);
-    const roomId = getRoomId(doctorUserId, patientUserId);
-    
+
 
     let remoteData = {};
     let selfData = {};
@@ -179,9 +182,9 @@ class TestAgoraVideo extends Component {
     } else {
       // todo: to modify and refractor based on future requirements
     }
-    if(roomId === null){
-        this.setState({roomId});
-    }
+
+  
+
     return { remoteData, selfData };
   };
 
