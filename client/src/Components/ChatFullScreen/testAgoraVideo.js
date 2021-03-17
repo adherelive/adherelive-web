@@ -265,7 +265,7 @@ class TestAgoraVideo extends Component {
                     ?
                     (
                       <div className="absolute z999 t10 l10 text-white wp100 hp100 flex direction-column align-center justify-center" >
-                        <span className="fs16 fw800" >Video is Disabled</span>
+                        <span className="fs16 fw800" >{this.formatMessage(messages.videoOff)}</span>
                       </div>
                     )
                     :
@@ -290,7 +290,7 @@ class TestAgoraVideo extends Component {
                       {!isAudioOn
                       &&
                       <span className="red ml24" >
-                         {`Audio is off`}
+                         {this.formatMessage(messages.audioOff)}
                       </span>
                     }
                     </div>

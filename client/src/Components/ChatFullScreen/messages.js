@@ -185,6 +185,16 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Check your audio and video"
   },
+  audioOff:{
+    id: "app.chatFullScreen.audioOff",
+    description: "",
+    defaultMessage: "Audio is disabled"
+  },
+  videoOff:{
+    id: "app.chatFullScreen.videoOff",
+    description: "",
+    defaultMessage: "Video is disabled"
+  },
 });
 
 export default messages;
