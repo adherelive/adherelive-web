@@ -1942,9 +1942,15 @@ class PatientDetails extends Component {
 
     const roomId = getRoomId(doctorUserId, patientUserID);
 
+    // window.open(
+    //     `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+    //     "_blank"
+    // );
+    const route=`${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`;
+    // console.log("362645326452373276",{route})
     window.open(
-        `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
-        "_blank"
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
+      "_blank"
     );
   };
 
