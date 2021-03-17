@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { PATH } from "../../../constant";
 import SideMenu from "../../../Components/Sidebar";
+import BlankState from "../../../Components/Common/BlankState";
 
 const AdminDoctorPage = lazy(() =>
   import(
@@ -132,7 +133,8 @@ class AdminDoctor extends Component {
                   path={PATH.ADMIN.ALL_MEDICINES}
                   component={AdminMedicines}
                 />
-                <Route exact path={""} component={AdminDoctorPage} />
+                <Route exact path={PATH.DASHBOARD} component={AdminDoctorPage} />
+                <Route path={""} component={BlankState} />
               </Switch>
             </div>
           </div>
