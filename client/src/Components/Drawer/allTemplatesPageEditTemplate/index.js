@@ -953,9 +953,14 @@ class TemplatePageCreateDrawer extends Component{
 
     }
 
+    getDuration = (startDate, endDate) => {
+        return moment(endDate).startOf("day").diff(moment(startDate).startOf("day"), "days");
+    };
+
     editMedication = (data) => {
         let { medications = {}, innerFormKey = '' , medicationIds={}} = this.state;
         let { medicines } = this.props;
+        const {getDuration} = this;
         let newMedication = medications[innerFormKey];
         const { end_date = "",
             medicine_id = "",
@@ -973,7 +978,7 @@ class TemplatePageCreateDrawer extends Component{
 
         const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
 
-        let duration = moment(end_date).diff(moment(start_date),'days');
+        let duration = getDuration(start_date, end_date);
         if(!end_date){
             duration=null;
         }
@@ -1402,7 +1407,6 @@ class TemplatePageCreateDrawer extends Component{
             return null;
         }
 
-        console.log("1872312983 in edit", {innerFormKey, innerFormType});
        
         return (
             <Fragment>
