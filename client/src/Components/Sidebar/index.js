@@ -232,7 +232,7 @@ class SideMenu extends Component {
 
   menu = () => {
     return (
-      <Menu className="l70 b10 position fixed" key={"sub"} onClick={this.handleItemSelect}>
+      <Menu className="l70 b20 fixed" key={"sub"} onClick={this.handleItemSelect}>
         <Menu.Item className="pl24 pr80" key={PRIVACY_POLICY}>
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacy_policy_text)}
@@ -323,7 +323,7 @@ class SideMenu extends Component {
 
           <MenuItem
             key={SUB_MENU}
-            className="flex direction-column justify-center align-center p0 logout_button"
+            className="flex direction-column justify-center align-center p0"
           >
             <Dropdown overlay={this.menu} overlayClassName="relative">
               <div className="flex direction-column justify-center align-center wp250 hp100">

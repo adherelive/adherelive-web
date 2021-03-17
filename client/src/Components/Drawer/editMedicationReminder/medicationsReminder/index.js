@@ -10,7 +10,7 @@ import Button from "antd/es/button";
 import EditMedicationReminderForm from "./form";
 
 import participants from "../common/participants";
-import { MEDICINE_UNITS } from '../../../../constant'
+import { MEDICINE_UNITS } from "../../../../constant";
 import messages from "../message";
 import Footer from "../../footer";
 import startTimeField from "../common/startTime";
@@ -29,10 +29,10 @@ class EditMedicationReminder extends Component {
       disabledOk: true,
       fieldChanged: false,
       members: [],
-      submitting:false,
-      medicineDrawerVisible:false,
-      medicineValue:'',
-      newMedicineId:null
+      submitting: false,
+      medicineDrawerVisible: false,
+      medicineValue: "",
+      newMedicineId: null,
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
       EditMedicationReminderForm
@@ -40,28 +40,27 @@ class EditMedicationReminder extends Component {
   }
 
   componentDidMount() {
-    const { getMedicationDetails, patientId  } = this.props;
-    const {addMedication,editMedication}=this.props;
+    const { getMedicationDetails, patientId } = this.props;
+    const { addMedication, editMedication } = this.props;
 
-      getMedicationDetails(patientId);
-
+    getMedicationDetails(patientId);
   }
 
   openMedicineDrawer = () => {
-    this.setState({medicineDrawerVisible:true})
-  }
+    this.setState({ medicineDrawerVisible: true });
+  };
 
-  closeMedicineDrawer = ()=> {
-    this.setState({medicineDrawerVisible:false});
-  }
+  closeMedicineDrawer = () => {
+    this.setState({ medicineDrawerVisible: false });
+  };
 
   setMedicineVal = (value) => {
-    this.setState({medicineValue:value});
-  }
+    this.setState({ medicineValue: value });
+  };
 
   setNewMedicineId = (id) => {
-    this.setState({newMedicineId:id});
-  }
+    this.setState({ newMedicineId: id });
+  };
 
   hasErrors = (fieldsError) => {
     let hasError = false;
@@ -70,7 +69,9 @@ class EditMedicationReminder extends Component {
       if (err !== whenToTakeMedicineField.fieLd_name && fieldsError[err]) {
         hasError = true;
       } else if (err === whenToTakeMedicineField.fieLd_name) {
-        hasError = Object.values(fieldsError[err]).some((field) => fieldsError[field]);
+        hasError = Object.values(fieldsError[err]).some(
+          (field) => fieldsError[field]
+        );
       }
     }
     return hasError;
@@ -78,7 +79,7 @@ class EditMedicationReminder extends Component {
 
   enableSubmit = () => {
     this.setState({ disabledOk: false });
-  }
+  };
 
   onFormFieldChanges = (props) => {
     const {
@@ -142,12 +143,14 @@ class EditMedicationReminder extends Component {
 
   onClose = () => {
     const { close } = this.props;
-    this.setState({
-      disabledOk: true,
-    }, () => {
-      close();
-
-    });
+    this.setState(
+      {
+        disabledOk: true,
+      },
+      () => {
+        close();
+      }
+    );
     // close();
   };
 
@@ -172,13 +175,28 @@ class EditMedicationReminder extends Component {
 
     validateFields(async (err, values) => {
       if (!err) {
-        const { when_to_take = [], keys = [], when_to_take_abbr = null } = values || {};
+        const { when_to_take = [], keys = [], when_to_take_abbr = null } =
+          values || {};
         let data_to_submit = {};
         const startTime = values[startTimeField.field_name];
         const startDate = values[startDateField.field_name];
         const endDate = values[endDateField.field_name];
         const repeatDays = values[repeatDaysField.field_name];
-        const { medicine_id, quantity, strength, unit, critical, formulation: medicine_type, special_instruction: description } = values || {};
+
+        console.log("1823127 before", {
+          startDate,
+          endDate,
+          diff: endDate.diff(startDate, "days"),
+        });
+        const {
+          medicine_id,
+          quantity,
+          strength,
+          unit,
+          critical,
+          formulation: medicine_type,
+          special_instruction: description,
+        } = values || {};
         data_to_submit = {
           id: medication_id,
           medicine_id,
@@ -200,15 +218,11 @@ class EditMedicationReminder extends Component {
               : startTime,
           [startDateField.field_name]:
             startDate && startDate !== null
-              ? startDate
-                .clone()
-                .toISOString()
+              ? startDate.clone().toISOString()
               : startDate,
           [endDateField.field_name]:
             endDate && endDate !== null
-              ? endDate
-                .clone()
-                .toISOString()
+              ? endDate.clone().toISOString()
               : endDate,
         };
         if (repeatDays) {
@@ -217,40 +231,51 @@ class EditMedicationReminder extends Component {
             [repeatDaysField.field_name]: repeatDays.split(","),
           };
         }
-        if (!medicine_id || !unit ||  (unit === MEDICINE_UNITS.MG && !quantity)  || !strength || !when_to_take || !startDate) {
-
-          message.error('Please fill all details.')
-        }
-        else if (endDate && moment(endDate).isBefore(moment(startDate))) {
-          message.error('Please select valid dates for medication')
+        if (
+          !medicine_id ||
+          !unit ||
+          (unit === MEDICINE_UNITS.MG && !quantity) ||
+          !strength ||
+          !when_to_take ||
+          !startDate
+        ) {
+          message.error("Please fill all details.");
+        } else if (endDate && moment(endDate).isBefore(moment(startDate))) {
+          message.error("Please select valid dates for medication");
         } else if (editMedication) {
+          console.log("1823127 after", {
+            startDate: data_to_submit.start_date,
+            endDate: data_to_submit.end_date,
+            diff: moment(data_to_submit.end_date).diff(
+              moment(data_to_submit.start_date),
+              "days"
+            ),
+          });
           editMedication(data_to_submit);
         } else if (addMedication) {
-
           addMedication(data_to_submit);
         } else {
           try {
-            this.setState({submitting:true});
+            this.setState({ submitting: true });
             const response = await updateMedicationReminder(data_to_submit);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
-
               // this.setState({ disabledOk: true });
               message.success(msg);
               getMedications(pId);
             } else {
-              console.log("87689076567890",msg);
+              console.log("87689076567890", msg);
               message.error(msg);
             }
 
-            this.setState({submitting:false});
+            this.setState({ submitting: false });
           } catch (error) {
-            this.setState({submitting:false});
+            this.setState({ submitting: false });
             console.log("add medication reminder ui error -----> ", error);
           }
         }
       } else {
-        console.log("err",{err});
+        console.log("err", { err });
         message.error(formatMessage(messages.fill_all_details));
       }
     });
@@ -279,7 +304,6 @@ class EditMedicationReminder extends Component {
 
     const { basic_info: { first_name, middle_name, last_name } = {} } =
       patients[patient_id] || {};
-    console.log("2130982039 patients --> ", {patients, id, patient_id});
     const { basic_info: { details: { medicine_id } = {} } = {} } =
       medications[id] || {};
     const { basic_info: { name } = {} } = medicines[medicine_id] || {};
@@ -287,13 +311,18 @@ class EditMedicationReminder extends Component {
     confirm({
       title: `Are you sure you want to delete medication of ${name} for ${first_name} ${
         middle_name ? `${middle_name} ` : ""
-        }${last_name ? last_name : ""}?`,
+      }${last_name ? last_name : ""}?`,
       content: <div>{warnNote()}</div>,
       onOk: async () => {
         this.setState({ loading: true });
-        const { deleteMedication, getMedications, getPatientCarePlanDetails } = this.props;
+        const {
+          deleteMedication,
+          getMedications,
+          getPatientCarePlanDetails,
+        } = this.props;
         const response = await deleteMedication(id);
-        const { status, payload: {message: respMessage = ""} = {} } = response || {};
+        const { status, payload: { message: respMessage = "" } = {} } =
+          response || {};
         if (status === true) {
           getPatientCarePlanDetails(patient_id);
           getMedications(patient_id);
@@ -302,13 +331,18 @@ class EditMedicationReminder extends Component {
           message.warn(respMessage);
         }
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
 
   getDeleteButton = () => {
     const { handleDelete } = this;
-    const { loading, deleteMedicationOfTemplate, hideMedication, addMedication } = this.props;
+    const {
+      loading,
+      deleteMedicationOfTemplate,
+      hideMedication,
+      addMedication,
+    } = this.props;
 
     if (addMedication) {
       return (
@@ -323,14 +357,15 @@ class EditMedicationReminder extends Component {
         type={"danger"}
         ghost
         className="fs14 no-border style-delete"
-        onClick={deleteMedicationOfTemplate ? deleteMedicationOfTemplate : handleDelete}
+        onClick={
+          deleteMedicationOfTemplate ? deleteMedicationOfTemplate : handleDelete
+        }
         loading={loading}
       >
         <div className="flex align-center delete-text">
           <div className="ml4">Delete</div>
         </div>
       </Button>
-
     );
   };
 
@@ -351,15 +386,19 @@ class EditMedicationReminder extends Component {
       handleSubmit,
       getDeleteButton,
     } = this;
-    const { disabledOk , submitting=false } = this.state;
+    const { disabledOk, submitting = false } = this.state;
 
     const submitButtonProps = {
       disabled: disabledOk,
       loading: loading,
     };
 
-    const {medicineDrawerVisible=false,medicineValue='',newMedicineId=null} = this.state;
-    const {addNewMedicine}=this.props;
+    const {
+      medicineDrawerVisible = false,
+      medicineValue = "",
+      newMedicineId = null,
+    } = this.state;
+    const { addNewMedicine } = this.props;
 
     return (
       <Drawer
@@ -371,24 +410,28 @@ class EditMedicationReminder extends Component {
         headerStyle={{
           position: "sticky",
           zIndex: "9999",
-          top: "0px"
+          top: "0px",
         }}
         className="ant-drawer"
-        
-        title={editMedication ? formatMessage(messages.medication) : addMedication ? 'Add Medication' : formatMessage(messages.title)}
+        title={
+          editMedication
+            ? formatMessage(messages.medication)
+            : addMedication
+            ? "Add Medication"
+            : formatMessage(messages.title)
+        }
       >
-        <FormWrapper 
-        wrappedComponentRef={setFormRef} 
-        enableSubmit={this.enableSubmit} 
-        {...this.props}
-        openAddMedicineDrawer={this.openMedicineDrawer }
-        setMedicineVal={this.setMedicineVal}
-        newMedicineId={newMedicineId}
+        <FormWrapper
+          wrappedComponentRef={setFormRef}
+          enableSubmit={this.enableSubmit}
+          {...this.props}
+          openAddMedicineDrawer={this.openMedicineDrawer}
+          setMedicineVal={this.setMedicineVal}
+          newMedicineId={newMedicineId}
         />
-       
 
-        <AddMedicineDrawer 
-          visible={medicineDrawerVisible} 
+        <AddMedicineDrawer
+          visible={medicineDrawerVisible}
           close={this.closeMedicineDrawer}
           input={medicineValue}
           // addNewMedicine={addNewMedicine}

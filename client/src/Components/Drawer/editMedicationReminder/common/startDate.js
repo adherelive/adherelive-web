@@ -67,12 +67,14 @@ class StartDate extends Component {
     const {  getInitialValue } = this;
     // const repeat = getFieldValue(repeatTypeField.field_name);
 
-    let { basic_info: { start_date } = {} } = medications[medication_id] || {};
+    const { basic_info: { start_date } = {} } = medications[medication_id] || {};
 
 
-    let { schedule_data: { start_date: startDate = '' } = {} } = medicationData;
+    let finalStartDate = start_date;
+    const { schedule_data: { start_date: startDate = '', duration } = {} } = medicationData;
+    
     if (Object.keys(medicationData).length) {
-      start_date = startDate ? startDate : moment();
+      finalStartDate = startDate ? startDate : moment();
     }
     const value = getFieldValue(FIELD_NAME);
 
@@ -85,7 +87,7 @@ class StartDate extends Component {
           </div>
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
-              initialValue: start_date ? moment(start_date) : getInitialValue(),
+              initialValue: finalStartDate ? moment(finalStartDate) : getInitialValue(),
             })(
               <DatePicker
                 className={`full-width ${FIELD_NAME} ant-date-custom-med wp100 edit-apoint-start-date`}
