@@ -67,11 +67,28 @@ class AgoraVideo extends Component {
      await this.setfVideoOff();
     }
 
-    // console.log("8637823472364723467238",{isAudioOnParam,isVideoOnParam,state:this.state});
     
     }catch(error){
       console.log("error in initial video call setup===>",error);
     }
+  }
+
+  async componentDidUpdate(prevProps,prevState){
+    const {isStart : prev_isStart = false } = prevState;
+    const {isStart=false} = this.state;
+    const {isAudioOn=false,isVideoOn = false}=this.state;
+
+    if(isStart && isStart !== prev_isStart){
+      if(!isAudioOn){
+         await this.setAudioOff();
+      }
+
+      if(!isVideoOn){
+         await this.setfVideoOff();
+      }
+    }
+
+
   }
 
   componentWillUnmount() {

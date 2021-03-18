@@ -195,6 +195,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Video is Off"
   },
+  adhereLive:{
+    id: "app.chatFullScreen.adhereLive",
+    description: "",
+    defaultMessage: "Adhere.Live"
+  },
 });
 
 export default messages;

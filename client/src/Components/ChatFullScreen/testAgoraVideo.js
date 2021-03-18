@@ -15,6 +15,7 @@ import messages from "./messages";
 import Loading from "../Common/Loading";
 import Tooltip from "antd/es/tooltip";
 import { Button,message,Progress } from "antd";
+import Logo from "../../Assets/images/logo3x.png";
 
 import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getRoomId } from "../../Helper/twilio";
@@ -238,7 +239,11 @@ class TestAgoraVideo extends Component {
   getHeader = () => {
     return(
       <div className="fs24 fw800 mt40" >
-        {this.formatMessage(messages.checkAudioVideo)}
+        {/* {this.formatMessage(messages.checkAudioVideo)} */}
+        <img className="company-logo" src={Logo} alt="Adherence logo" />
+        <span className="fs28 medium italic black-85" >
+          {this.formatMessage(messages.adhereLive)}
+        </span>
       </div>
     )
   }
@@ -252,7 +257,7 @@ class TestAgoraVideo extends Component {
 
     return (    
           <div className="hp100 wp100 flex direction-column align-center justify-center" >
-                <div className="hp50 wp100 relative " id="test-container" >
+                <div className="hp50 wp100 relative class-test-container" id="test-container" >
 
                     {!isVideoOn
                     ?
@@ -323,28 +328,32 @@ class TestAgoraVideo extends Component {
     } = getVideoParticipants();
 
     return (
-          <div className="flex direction-column wp100 hp100" >
-          <div className="flex direction-column align-center justify-center wp100 hp100" >
-              <img
-              src={profile_pic || UserDpPlaceholder}
-              className="pointer h80 w80 br50 "
-              alt="userDp"
-              />
-              <div className="fs16 fw800 mt20">
-                  
-                  <span>
-                      {
-                      `${formatMessage(messages.readyToCall)} ${full_name} ?`
-                      }
-                  </span>
-              </div>
-              <div className="flex direction-row align-center justify-center mt20 " > 
-                {this.getStartCallButton()}
-              </div>
-          </div>
+            <div className="flex direction-column align-center justify-center wp100 hp100 " >
+                <div className="flex wp100  align-center justify-center " >
+                  <div className=" mauto  " >
+                    <img
+                    src={profile_pic || UserDpPlaceholder}
+                    className="pointer h120 w120 br50  "
+                    alt="userDp"
+                    />
+                  </div>  
+                </div>
+
+                <div className="fs20 fw800 mt20 flex wp100 align-center justify-center  ">
+                    
+                    <span>
+                        {
+                        `${formatMessage(messages.readyToCall)} ${full_name} ?`
+                        }
+                    </span>
+                </div>
+
+                <div className="flex wp100 align-center justify-center mt20  " > 
+                  {this.getStartCallButton()}
+                </div>
+            </div>
           
           
-      </div>
     )
   }
 
@@ -357,18 +366,18 @@ class TestAgoraVideo extends Component {
     const {getHeader,getAudioVideoSection,getStartCallSection}=this;
 
     return (
-      <div className="ml100 flex direction-column hp100 wp100">
+      <div className="ml-vp4 flex direction-column hp100 wp100">
         
           <div>
             {getHeader()}
           </div>   
 
           <div className="flex direction-row hp100 wp100" >
-              <div className="hp100  wp50" >
+              <div className="hp100  wvp48 " >
                 {getAudioVideoSection()}
               </div>
 
-              <div className="hp100  wp50" >
+              <div className=" flex align-center justify-center hp100   wvp48 " >
                 {getStartCallSection()}
               </div>
             
