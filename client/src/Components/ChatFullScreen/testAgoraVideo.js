@@ -18,7 +18,7 @@ import { Button,message,Progress } from "antd";
 
 import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getRoomId } from "../../Helper/twilio";
-
+import { AudioMutedOutlined } from "@ant-design/icons"
 
 class TestAgoraVideo extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class TestAgoraVideo extends Component {
       testing:false,
       audioLevel:0,
       isVideoOn:false,
-      isAudioOn:false,
+      isAudioOn:true,
       roomId:null
     };
   }
@@ -235,45 +235,24 @@ class TestAgoraVideo extends Component {
     });
   }
 
-  render() {
-    const {loading , testing=false , audioLevel=0 , isVideoOn=false , isAudioOn=false } = this.state;
+  getHeader = () => {
+    return(
+      <div className="fs24 fw800 mt40" >
+        {this.formatMessage(messages.checkAudioVideo)}
+      </div>
+    )
+  }
+
+  getAudioVideoSection = () => {
+    const {isVideoOn=false,isAudioOn=false , audioLevel=0}=this.state;
     const {
-      getVideoParticipants,
-      formatMessage,
       getVideoButtons,
       getAudioButtons,
     } = this;
 
-    const {
-      remoteData: {
-        basic_info: { full_name } = {},
-        details: { profile_pic } = {}
-      } = {}
-    } = getVideoParticipants();
-
-    // console.log("642354754236 local stream audio level $$$$$$$$$$$$$$$$$$ ", audioLevel);
-
-
-    // console.log("642354754236 ====>>>> RenderRRRRRR")
-
-    return (
-      <div className="wp100 hp100">
-
-        <div className="flex direction-row  justify-center wp100 mt40 ">
-              <div className="fs24 fw800 flex align-start wp78 " >
-                  {this.formatMessage(messages.checkAudioVideo)}
-              </div>
-        </div>
-
-        {/*   REMOTE VIEW   */}
-        <div  className="wp100 hp100 flex directon-row algin-center justify-space-between">
-          {loading && (
-            <div className="hp100 wp100 flex direction-column align-center justify-center z1">
-              <Loading className={"wp100"} />
-            </div>
-          )}
-          <div className=" hp100 wp70 flex direction-column align-center justify-center" >
-                <div className="hp50 wp70 relative" id="test-container" >
+    return (    
+          <div className="hp100 wp100 flex direction-column align-center justify-center" >
+                <div className="hp50 wp100 relative " id="test-container" >
 
                     {!isVideoOn
                     ?
@@ -285,7 +264,7 @@ class TestAgoraVideo extends Component {
                     :
                     null
                     }
-                    <div className="absolute b10 wp100 flex justify-center ">
+                    <div className="absolute b10 wp100 flex justify-center  ">
                         <div className="flex align-center justify-center wp100" >
                             <div className="flex z999" >
                                 {/*   AUDIO   */}
@@ -297,23 +276,23 @@ class TestAgoraVideo extends Component {
                         </div>
                     </div>
                 </div>
-               
-                <div className="flex direction-row  justify-center wp100 mt40 ">
-                    <div className="fs16 fw800 flex align-start wp70 " >
+              
+                <div className="flex direction-row wp100 mt40  ">
+                    <div className="fs16 fw800 flex align-start  " >
                       {this.formatMessage(messages.audioCheck)}
                       {!isAudioOn
                       &&
-                      <span className="red ml24" >
-                         {this.formatMessage(messages.audioOff)}
+                      <span className="red ml24 " >
+                        <AudioMutedOutlined color="red" />
                       </span>
                     }
                     </div>
                     
                 </div>
 
-                <div className="flex direction-row align-center justify-center wp100 mt28" > 
+                <div className="flex direction-row align-center justify-center wp100 mt28 " > 
                     
-                    <div className="wp70" >
+                    <div className="wp100" >
                         <Progress  
                         strokeLinecap="square"
                         percent={isAudioOn? audioLevel : 0}
@@ -327,37 +306,72 @@ class TestAgoraVideo extends Component {
                         />
                     </div>
                 </div>    
-        </div>
-           
-        <div className="wp30 hp100  flex direction-column align-center justify-center" >
-                <div className="flex direction-column" >
-                    <div className="flex direction-column align-center" >
-                        <img
-                        src={profile_pic || UserDpPlaceholder}
-                        className="pointer h80 w80 br50 "
-                        alt="userDp"
-                        />
-                        <div className="fs16 fw800 mt20">
-                            
-                            <span>
-                                {
-                                `${formatMessage(messages.readyToCall)} ${full_name}`
-                                }
-                            </span>
-                        </div>
-                    </div>
-                    <div className="flex direction-row align-center justify-center mt20" > 
-                        {this.getStartCallButton()}
-                    </div>
-                    
-                </div>    
-        </div>
+          </div>
+    )
+  }
 
+
+  getStartCallSection = () => {
+
+    const {formatMessage,getVideoParticipants}=this;
+
+    const {
+      remoteData: {
+        basic_info: { full_name } = {},
+        details: { profile_pic } = {}
+      } = {}
+    } = getVideoParticipants();
+
+    return (
+          <div className="flex direction-column wp100 hp100" >
+          <div className="flex direction-column align-center justify-center wp100 hp100" >
+              <img
+              src={profile_pic || UserDpPlaceholder}
+              className="pointer h80 w80 br50 "
+              alt="userDp"
+              />
+              <div className="fs16 fw800 mt20">
+                  
+                  <span>
+                      {
+                      `${formatMessage(messages.readyToCall)} ${full_name}`
+                      }
+                  </span>
+              </div>
+              <div className="flex direction-row align-center justify-center mt20 " > 
+                {this.getStartCallButton()}
+              </div>
+          </div>
+          
+          
+      </div>
+    )
+  }
+
+  render() {
+
+    const {getHeader,getAudioVideoSection,getStartCallSection}=this;
+
+    return (
+      <div className="ml100 flex direction-column hp100 wp100">
         
-        </div>
+          <div>
+            {getHeader()}
+          </div>   
+
+          <div className="flex direction-row hp100 wp100" >
+              <div className="hp100  wp50" >
+                {getAudioVideoSection()}
+              </div>
+
+              <div className="hp100  wp50" >
+                {getStartCallSection()}
+              </div>
+            
+          </div>      
 
       </div>
-    );
+    )
   }
 }
 
