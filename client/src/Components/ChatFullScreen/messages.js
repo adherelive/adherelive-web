@@ -169,7 +169,37 @@ const messages = defineMessages({
     id: "app.chatFullScreen.enableVideo",
     description: "",
     defaultMessage: "Enable Video"
-  }
+  },
+  readyToCall:{
+    id: "app.chatFullScreen.readyToCall",
+    description: "",
+    defaultMessage: "Ready to call"
+  },
+  audioCheck:{
+    id: "app.chatFullScreen.audioCheck",
+    description: "",
+    defaultMessage: "Audio Check"
+  },
+  checkAudioVideo:{
+    id: "app.chatFullScreen.checkAudioVideo",
+    description: "",
+    defaultMessage: "Check your audio and video"
+  },
+  audioOff:{
+    id: "app.chatFullScreen.audioOff",
+    description: "",
+    defaultMessage: "Audio is Off"
+  },
+  videoOff:{
+    id: "app.chatFullScreen.videoOff",
+    description: "",
+    defaultMessage: "Video is Off"
+  },
+  adhereLive:{
+    id: "app.chatFullScreen.adhereLive",
+    description: "",
+    defaultMessage: "Adhere.Live"
+  },
 });
 
 export default messages;

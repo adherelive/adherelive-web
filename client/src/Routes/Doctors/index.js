@@ -50,6 +50,12 @@ const TwilioVideo = lazy(() =>
   )
 );
 
+const TestTwilioVideo = lazy(() =>
+  import(
+    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/testAgoraVideo"
+  )
+);
+
 const DoctorProfilePage = lazy(() =>
   import(
     /* webpackChunkName: "DoctorProfilePage" */ "../../Containers/Pages/doctorProfilePage"
@@ -171,6 +177,11 @@ class Doctors extends Component {
                   exact
                   path={PATH.PATIENT_CONSULTING}
                   component={ChatFullScreen}
+                />
+                <Route
+                  exact
+                  path={PATH.TEST_PATIENT_CONSULTING_VIDEO}
+                  component={TestTwilioVideo}
                 />
                 <Route
                   exact

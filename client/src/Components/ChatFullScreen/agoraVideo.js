@@ -39,14 +39,56 @@ class AgoraVideo extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    this.initialSetup();
+  }
+
+  initialSetup = async() => {
+    try{
+
     const {
       fetchVideoAccessToken,
       match: { params: { room_id } = {} } = {}
     } = this.props;
 
-    fetchVideoAccessToken(getPatientFromRoomId(room_id));
-    this.init();
+    await fetchVideoAccessToken(getPatientFromRoomId(room_id));
+    await this.init();
+    await this.startVideoCall();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAudioOnParam = urlParams.get('isAudioOn') === "true";
+    const isVideoOnParam = urlParams.get('isVideoOn') === "true";
+
+    if(!isAudioOnParam){
+     await this.setAudioOff();
+    }
+
+    if(!isVideoOnParam){
+     await this.setfVideoOff();
+    }
+
+    
+    }catch(error){
+      console.log("error in initial video call setup===>",error);
+    }
+  }
+
+  async componentDidUpdate(prevProps,prevState){
+    const {isStart : prev_isStart = false } = prevState;
+    const {isStart=false} = this.state;
+    const {isAudioOn=false,isVideoOn = false}=this.state;
+
+    if(isStart && isStart !== prev_isStart){
+      if(!isAudioOn){
+         await this.setAudioOff();
+      }
+
+      if(!isVideoOn){
+         await this.setfVideoOff();
+      }
+    }
+
+
   }
 
   componentWillUnmount() {
@@ -163,6 +205,16 @@ class AgoraVideo extends Component {
     await this.rtc.localVideoTrack.setEnabled(!isVideoOn);
     this.setState({ isVideoOn: !isVideoOn });
   };
+
+  setfVideoOff = async() => {
+    await this.rtc.localVideoTrack.setEnabled(false);
+    this.setState({ isVideoOn: false });
+  }
+
+  setAudioOff = async() => {
+    await this.rtc.localAudioTrack.setEnabled(false);
+    this.setState({ isAudioOn: false });
+  }
 
   toggleAudio = async () => {
     const { isAudioOn } = this.state;

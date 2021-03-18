@@ -1301,7 +1301,7 @@ class PatientDetails extends Component {
       return;
     }
     window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
   };
@@ -1430,18 +1430,6 @@ class PatientDetails extends Component {
         }
       }
     });
-  };
-  openVideoChatTab = roomId => () => {
-    const videoCallBlocked = this.checkVideoCallIsBlocked();
-
-    if (videoCallBlocked) {
-      message.error(this.formatMessage(messages.videoCallBlocked));
-      return;
-    }
-    window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
-      "_blank"
-    );
   };
 
   maximizeChat = () => {
@@ -1943,8 +1931,8 @@ class PatientDetails extends Component {
     const roomId = getRoomId(doctorUserId, patientUserID);
 
     window.open(
-        `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
-        "_blank"
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
+      "_blank"
     );
   };
 

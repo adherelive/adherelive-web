@@ -302,7 +302,7 @@ function printCarePlanData(
         suggestedInvestigationXLevelEnd + 250,
         doc.y
       )
-      .text(`${description ? description : ""}`, suggestedInvestigationXLevelEnd + 250, doc.y);
+      .text(`Note: ${description ? description : ""}`, suggestedInvestigationXLevelEnd + 250, doc.y+10);
 
     docYLevel = doc.y + NORMAL_FONT_SIZE;
   }
@@ -478,8 +478,6 @@ function formatPatientData(patients, users) {
   const {
     [user_id]: { basic_info: { mobile_number = "", prefix = "" } = {} } = {}
   } = users;
-
-  console.log("189273812 full_name --> ", full_name);
 
   return {
     name,

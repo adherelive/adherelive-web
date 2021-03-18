@@ -69,6 +69,8 @@ class ChatFullScreen extends Component {
   };
 
   openVideoChatTab = async () => {
+    const { roomId = "" } = this.state;
+    
     await this.props.getAllFeatures();
 
     const videoCallBlocked = this.checkVideoCallIsBlocked();
@@ -78,9 +80,8 @@ class ChatFullScreen extends Component {
       return;
     }
 
-    const { roomId = "" } = this.state;
     window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
   };
