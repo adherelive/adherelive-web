@@ -4,6 +4,8 @@ import "./style.less";
 import { injectIntl } from "react-intl";
 import messages from './messages';
 
+import {PATH} from "../../constant";
+
 class BlankState extends Component {
   componentDidMount() {
     const {
@@ -19,7 +21,7 @@ class BlankState extends Component {
     e.preventDefault();
     // this.props.resetUnauthorizedError();
 
-    this.props.history.replace("/");
+    this.props.history.push(PATH.LANDING_PAGE);
   };
 
   // componentWillUnmount() {
