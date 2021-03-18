@@ -48,6 +48,11 @@ class TestAgoraVideo extends Component {
     
   }
 
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+    // this.rtc.client.removeAllListeners();
+  }
+
   componentDidUpdate(prevProps,prevState){
   }
 
@@ -104,11 +109,12 @@ class TestAgoraVideo extends Component {
     const {
       match: { params: { room_id : roomId } = {} } = {}
     } = this.props;
+    const {isAudioOn=false,isVideoOn=false}=this.state;
 
     // console.log("32564572354754327 =================>>>>",{roomId});
 
     window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}?isAudioOn=${isAudioOn}&isVideoOn=${isVideoOn}`,
       "_self"
     );
   };
@@ -216,7 +222,7 @@ class TestAgoraVideo extends Component {
       console.log("37468236483274",{audioTrack});
       videoTrack.play("test-container");
       this.setState({isAudioOn:true,isVideoOn:true});
-      setInterval(() => {
+      this.intervalID = setInterval(() => {
         const level = audioTrack.getVolumeLevel();
         console.log("642354754236 local stream audio level", level);
         const vol = level*1000;
@@ -242,7 +248,7 @@ class TestAgoraVideo extends Component {
       } = {}
     } = getVideoParticipants();
 
-    // console.log("642354754236 =============>>>",{audioLevel});
+    console.log("642354754236 =============>>>",{audioLevel});
 
 
     return (
@@ -305,7 +311,7 @@ class TestAgoraVideo extends Component {
                     <div className="wp70" >
                         <Progress  
                         strokeLinecap="square"
-                        percent={audioLevel}
+                        percent={isAudioOn? audioLevel : 0}
                         status="active" 
                         showInfo={false} 
                         strokeWidth={10}
