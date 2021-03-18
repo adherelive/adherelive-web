@@ -12,13 +12,13 @@ import VideoDisabledIcon from "../../Assets/images/ico-vc-video-off.png";
 import UserDpPlaceholder from "../../Assets/images/ico-placeholder-userdp.svg";
 import { USER_CATEGORY } from "../../constant";
 import messages from "./messages";
-import Loading from "../Common/Loading";
+// import Loading from "../Common/Loading";
 import Tooltip from "antd/es/tooltip";
-import { Button,message,Progress } from "antd";
+import { Button,Progress } from "antd";
 import Logo from "../../Assets/images/logo3x.png";
 
 import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
-import { getRoomId } from "../../Helper/twilio";
+// import { getRoomId } from "../../Helper/twilio";
 import { AudioMutedOutlined } from "@ant-design/icons"
 
 class TestAgoraVideo extends Component {
@@ -223,7 +223,6 @@ class TestAgoraVideo extends Component {
     .then(([videoTrack, audioTrack]) => {
       this.rtc.localVideoTrack = videoTrack;
       this.rtc.localAudioTrack = audioTrack;
-      console.log("37468236483274",{audioTrack});
       videoTrack.play("test-container");
       this.setState({isAudioOn:true,isVideoOn:true});
       this.intervalID = setInterval(() => {
