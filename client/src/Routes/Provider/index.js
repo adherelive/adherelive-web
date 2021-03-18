@@ -7,7 +7,7 @@ import {
   useLocation,
   withRouter
 } from "react-router-dom";
-// import BlankState from "../../Containers/BlankState";
+import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
 import SideMenu from "../../Components/Sidebar";
 
@@ -181,7 +181,8 @@ class ProviderDoctor extends Component {
                 />
 
 
-                <Route exact path={""} component={ProviderDoctorPage} />
+                <Route exact path={PATH.DASHBOARD} component={ProviderDoctorPage} />
+                <Route path={""} component={BlankState} />
               </Switch>
             </div>
           </div>

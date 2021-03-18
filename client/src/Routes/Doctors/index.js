@@ -7,7 +7,7 @@ import {
   withRouter
 } from "react-router-dom";
 import SideMenu from "../../Components/Sidebar";
-// import BlankState from "../../Containers/BlankState";
+import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
 
 const PatientDetails = lazy(() =>
@@ -273,7 +273,7 @@ class Doctors extends Component {
                   component={Dashboard}
                 /> */}
                 <Route exact path="/" component={Dashboard} />
-                <Route path="" component={Dashboard} />
+                <Route path="" component={BlankState} />
               </Switch>
             </div>
           </div>

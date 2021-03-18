@@ -37,6 +37,8 @@ import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment"
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
 import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
 
+import BlankState from "../Common/BlankState";
+
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
 
