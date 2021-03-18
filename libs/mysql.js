@@ -208,6 +208,12 @@ class Database {
 
   static initTransaction = () => Database.connection.transaction();
 
+
+  static performRawQuery = async(query) => {
+    const database = await Database.getDatabase();
+    return await database.queryInterface.sequelize.query(query)
+  };
+
   static init = async () => {
     try {
       const database = await Database.getDatabase();

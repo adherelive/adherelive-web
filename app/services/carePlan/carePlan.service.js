@@ -162,6 +162,60 @@ class CarePlanService {
       throw error;
     }
   }
+
+  getDistinctPatientCounts = async(doctorId) => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).count({
+        where: {
+          doctor_id: doctorId
+        },
+        distinct: true,
+        col: 'patient_id'
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  getPaginatedDataOfPatients = async(offset, limit, doctorId, watchlistPatientIds, watchlist) => {
+    try {
+      let query = "";
+      if(watchlist) {
+        query = `select t1.id as care_plan_id, t1.details as care_plan_details, 
+        t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
+        t3.* from ${TABLE_NAME} as t1 join 
+        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME}
+        where patient_id in (${watchlistPatientIds})
+         group by patient_id) as t2
+         on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
+         join ${patientTableName} as t3
+         on t1.patient_id = t3.id
+         where t1.doctor_id = ${doctorId} and
+         t1.patient_id in (${watchlistPatientIds})
+         limit ${limit}
+         offset ${offset};`
+      } else {
+        query = `select t1.id as care_plan_id, t1.details as care_plan_details, 
+        t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
+        t3.* from ${TABLE_NAME} as t1 join 
+        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} group by patient_id) as t2
+         on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
+         join ${patientTableName} as t3
+         on t1.patient_id = t3.id
+         where t1.doctor_id = ${doctorId}
+         limit ${limit}
+         offset ${offset};`
+      }
+
+      const [patients, metaData] = await Database.performRawQuery(query);
+
+      
+      return patients;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 export default new CarePlanService();
