@@ -350,6 +350,10 @@ class TestAgoraVideo extends Component {
 
   render() {
 
+    const {audioLevel}=this.state;
+
+    // console.log("642354754236 local stream audio level ###################### ", audioLevel);
+
     const {getHeader,getAudioVideoSection,getStartCallSection}=this;
 
     return (
