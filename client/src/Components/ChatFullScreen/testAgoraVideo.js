@@ -334,7 +334,7 @@ class TestAgoraVideo extends Component {
                   
                   <span>
                       {
-                      `${formatMessage(messages.readyToCall)} ${full_name}`
+                      `${formatMessage(messages.readyToCall)} ${full_name} ?`
                       }
                   </span>
               </div>
