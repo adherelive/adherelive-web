@@ -305,7 +305,7 @@ class Dashboard extends Component {
     const roomId = getRoomId(doctorUserId, patientUserId);
 
     window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
   };
