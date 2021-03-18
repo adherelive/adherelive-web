@@ -188,12 +188,12 @@ const messages = defineMessages({
   audioOff:{
     id: "app.chatFullScreen.audioOff",
     description: "",
-    defaultMessage: "Audio is disabled"
+    defaultMessage: "Audio is Off"
   },
   videoOff:{
     id: "app.chatFullScreen.videoOff",
     description: "",
-    defaultMessage: "Video is disabled"
+    defaultMessage: "Video is Off"
   },
 });
 
