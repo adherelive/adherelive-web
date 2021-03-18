@@ -2016,6 +2016,73 @@ class MobileDoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+
+  getPaginatedDataForPatients = async(req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try { 
+      const {
+        userDetails: { userId, userData = {} } = {},
+        query = {}
+      } = req;
+
+      const { offset=0, watchlist = false } = query || {};
+
+      const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+
+      const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
+      const endLimit = parseInt(limit, 10);
+
+      const doctor = await doctorService.getDoctorByData({
+        user_id: userId
+      });
+
+      const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
+
+      let doctorId = null, patients = {}, watchlistPatientIds = [];
+
+      if(doctor) {
+        const doctorData = await DoctorWrapper(doctor);
+        doctorId = doctorData.getDoctorId();
+
+        
+        const doctorAllInfo = await doctorData.getAllInfo();
+        const { watchlist_patient_ids = []} = doctorAllInfo || {};
+        watchlistPatientIds = watchlist_patient_ids;
+      }
+      const count = await carePlanService.getDistinctPatientCounts(doctorId);
+
+      const allPatients = await carePlanService.getPaginatedDataOfPatients(offsetLimit, endLimit, doctorId, watchlistPatientIds, getWatchListPatients);
+
+      for(const patient of allPatients) {
+        const formattedPatientData = patient
+
+        const { id } = formattedPatientData;
+        let watchlist = false;
+
+        if(watchlistPatientIds.indexOf(id) !== -1) {
+          watchlist = true;
+        }
+
+        patients[id] = {...formattedPatientData, watchlist};
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          total: count,
+          page_size: limit,
+          patients
+        },
+        "Patients data fetched successfully."
+      );
+      
+    } catch (error) {
+      Logger.debug("getPaginatedDataForPatients 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
 }
 
 export default new MobileDoctorController();

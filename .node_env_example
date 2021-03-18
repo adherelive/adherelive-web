@@ -161,3 +161,6 @@ ANDROID_ICON_NAME=ic_stat_onesignal_default
 # for account shivang.upadhyay@tripock.com (Password@123)
 AGORA_APP_ID=940210e9a0114300849c7404fe2dede1
 AGORA_APP_CERTIFICATE=fb75d4f1d5b74888adb5e30e82dac80d
+
+
+PATIENT_LIST_SIZE_LIMIT=10
