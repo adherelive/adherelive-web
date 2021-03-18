@@ -30,7 +30,7 @@ const getHeader = ({ intl: { formatMessage } = {} }) => (
 
 const handleRedirect = (props) => (e) => {
   e.preventDefault();
-  props.history.push(PATH.DASHBOARD);
+  props.history.push(PATH.LANDING_PAGE);
 };
 
 const BlankState = (props) => {
