@@ -50,19 +50,8 @@ class TestAgoraVideo extends Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
-    // this.rtc.client.removeAllListeners();
   }
 
-  componentDidUpdate(prevProps,prevState){
-  }
-
-//   componentWillUnmount() {
-//     this.rtc.client.removeAllListeners();
-//   }
-
- 
-
- 
     
   formatMessage = (message, data) =>
     this.props.intl.formatMessage(message, data);
@@ -77,9 +66,23 @@ class TestAgoraVideo extends Component {
   toggleAudio = async () => {
     const { isAudioOn } = this.state;
     const temp = await this.rtc;
+    const newAudioStatus = !isAudioOn;
     // console.log("642354754236 ==============>>>>",{RTC:temp, audioTrack: this.rtc.localAudioTrack})
     await this.rtc.localAudioTrack.setEnabled(!isAudioOn);
     this.setState({ isAudioOn: !isAudioOn });
+    if(!newAudioStatus){
+      // console.log("642354754236 ///////////////////////////////////////");
+      clearInterval(this.intervalID);
+    }else{
+      const audioTrack = this.rtc.localAudioTrack;
+      this.intervalID = setInterval(() => {
+        const level = audioTrack.getVolumeLevel();
+        // console.log("642354754236 local stream audio level ###################### ", level);
+        const vol = level*1000;
+        this.setState({audioLevel:vol});
+        
+      }, 1000);
+    }
   };
 
  
@@ -224,7 +227,7 @@ class TestAgoraVideo extends Component {
       this.setState({isAudioOn:true,isVideoOn:true});
       this.intervalID = setInterval(() => {
         const level = audioTrack.getVolumeLevel();
-        console.log("642354754236 local stream audio level", level);
+        // console.log("642354754236 local stream audio level ###################### ", level);
         const vol = level*1000;
         this.setState({audioLevel:vol});
         
@@ -248,8 +251,10 @@ class TestAgoraVideo extends Component {
       } = {}
     } = getVideoParticipants();
 
-    console.log("642354754236 =============>>>",{audioLevel});
+    // console.log("642354754236 local stream audio level $$$$$$$$$$$$$$$$$$ ", audioLevel);
 
+
+    // console.log("642354754236 ====>>>> RenderRRRRRR")
 
     return (
       <div className="wp100 hp100">
