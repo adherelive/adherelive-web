@@ -112,6 +112,11 @@ class AgoraVideo extends Component {
   };
 
   init = () => {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAudioOnParam = urlParams.get('isAudioOn') === "true";
+    const isVideoOnParam = urlParams.get('isVideoOn') === "true";
+
     this.rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
 
     this.rtc.client.on("user-published", async (user, mediaType) => {
@@ -130,12 +135,18 @@ class AgoraVideo extends Component {
 
         const childContainer1 = document.getElementById("agora-remote");
         childContainer1.appendChild(playerContainer);
-        remoteVideoTrack.play(playerContainer);
+
+        if(isVideoOnParam){
+          remoteVideoTrack.play(playerContainer);
+        }
+        
       }
 
       if (mediaType === "audio") {
         const remoteAudioTrack = user.audioTrack;
-        remoteAudioTrack.play();
+        if(isAudioOnParam){
+          remoteAudioTrack.play();
+        }
       }
     });
 
