@@ -41,6 +41,8 @@ class TestAgoraVideo extends Component {
       isAudioOn:true,
       roomId:null
     };
+
+    this.audioInterval = null;
   }
 
   componentDidMount() {
@@ -50,8 +52,23 @@ class TestAgoraVideo extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.intervalID);
+    // clearInterval(this.intervalID);
+    this.removeAudioInterval();
   }
+
+  createAudioInterval = () => {
+    const audioTrack = this.rtc.localAudioTrack;
+    this.audioInterval = setInterval(() => {
+      const level = audioTrack.getVolumeLevel();
+      const vol = level*1000;
+      this.setState({audioLevel:vol});
+      
+    }, 1000);
+  };
+
+  removeAudioInterval = () => {
+    clearInterval(this.audioInterval);
+  };
 
     
   formatMessage = (message, data) =>
@@ -66,23 +83,26 @@ class TestAgoraVideo extends Component {
 
   toggleAudio = async () => {
     const { isAudioOn } = this.state;
-    const temp = await this.rtc;
+    const {createAudioInterval, removeAudioInterval} = this;
+
     const newAudioStatus = !isAudioOn;
-    // console.log("642354754236 ==============>>>>",{RTC:temp, audioTrack: this.rtc.localAudioTrack})
     await this.rtc.localAudioTrack.setEnabled(!isAudioOn);
     this.setState({ isAudioOn: !isAudioOn });
     if(!newAudioStatus){
       // console.log("642354754236 ///////////////////////////////////////");
-      clearInterval(this.intervalID);
+      // clearInterval(this.intervalID);
+      removeAudioInterval();
+
     }else{
-      const audioTrack = this.rtc.localAudioTrack;
-      this.intervalID = setInterval(() => {
-        const level = audioTrack.getVolumeLevel();
-        // console.log("642354754236 local stream audio level ###################### ", level);
-        const vol = level*1000;
-        this.setState({audioLevel:vol});
+      createAudioInterval();
+      // const audioTrack = this.rtc.localAudioTrack;
+      // this.intervalID = setInterval(() => {
+      //   const level = audioTrack.getVolumeLevel();
+      //   // console.log("642354754236 local stream audio level ###################### ", level);
+      //   const vol = level*1000;
+      //   this.setState({audioLevel:vol});
         
-      }, 1000);
+      // }, 1000);
     }
   };
 
@@ -225,13 +245,14 @@ class TestAgoraVideo extends Component {
       this.rtc.localAudioTrack = audioTrack;
       videoTrack.play("test-container");
       this.setState({isAudioOn:true,isVideoOn:true});
-      this.intervalID = setInterval(() => {
-        const level = audioTrack.getVolumeLevel();
-        // console.log("642354754236 local stream audio level ###################### ", level);
-        const vol = level*1000;
-        this.setState({audioLevel:vol});
+      this.createAudioInterval();
+      // this.intervalID = setInterval(() => {
+      //   const level = audioTrack.getVolumeLevel();
+      //   // console.log("642354754236 local stream audio level ###################### ", level);
+      //   const vol = level*1000;
+      //   this.setState({audioLevel:vol});
         
-      }, 1000);
+      // }, 1000);
     });
   }
 
@@ -254,9 +275,9 @@ class TestAgoraVideo extends Component {
       getAudioButtons,
     } = this;
 
-    return (    
+    return (
           <div className="hp100 wp100 flex direction-column align-center justify-center" >
-                <div className="hp50 wp100 relative class-test-container" id="test-container" >
+                <div className="hp60 wp100 relative class-test-container bg-black br10" id="test-container" >
 
                     {!isVideoOn
                     ?
@@ -357,11 +378,7 @@ class TestAgoraVideo extends Component {
   }
 
   render() {
-
     const {audioLevel}=this.state;
-
-    // console.log("642354754236 local stream audio level ###################### ", audioLevel);
-
     const {getHeader,getAudioVideoSection,getStartCallSection}=this;
 
     return (
@@ -371,12 +388,12 @@ class TestAgoraVideo extends Component {
             {getHeader()}
           </div>   
 
-          <div className="flex direction-row hp100 wp100" >
-              <div className="hp100  wvp48 " >
+          <div className="flex align-center hp100 wp100" >
+              <div className="hp100 wp50" >
                 {getAudioVideoSection()}
               </div>
 
-              <div className=" flex align-center justify-center hp100   wvp48 " >
+              <div className="flex align-center justify-center wp50" >
                 {getStartCallSection()}
               </div>
             
