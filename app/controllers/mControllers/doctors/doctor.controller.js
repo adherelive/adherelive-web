@@ -2039,7 +2039,7 @@ class MobileDoctorController extends Controller {
 
       const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
 
-      let doctorId = null, patients = {}, watchlistPatientIds = [];
+      let doctorId = null, patients = {}, watchlistPatientIds = [], count = 0;
 
       if(doctor) {
         const doctorData = await DoctorWrapper(doctor);
@@ -2050,7 +2050,12 @@ class MobileDoctorController extends Controller {
         const { watchlist_patient_ids = []} = doctorAllInfo || {};
         watchlistPatientIds = watchlist_patient_ids;
       }
-      const count = await carePlanService.getDistinctPatientCounts(doctorId);
+
+      if(getWatchListPatients) {
+        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+      } else {
+        count = await carePlanService.getDistinctPatientCounts(doctorId);
+      }
 
       const allPatients = await carePlanService.getPaginatedDataOfPatients(offsetLimit, endLimit, doctorId, watchlistPatientIds, getWatchListPatients);
 

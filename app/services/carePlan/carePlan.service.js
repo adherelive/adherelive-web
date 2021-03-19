@@ -178,6 +178,22 @@ class CarePlanService {
     }
   }
 
+  getWatchlistedDistinctPatientCounts = async(doctorId, watchlistPatientIds) => {
+    try {
+      const carePlan = await Database.getModel(TABLE_NAME).count({
+        where: {
+          doctor_id: doctorId,
+          patient_id: watchlistPatientIds
+        },
+        distinct: true,
+        col: 'patient_id'
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   getPaginatedDataOfPatients = async(offset, limit, doctorId, watchlistPatientIds, watchlist) => {
     try {
       let query = "";
@@ -186,7 +202,7 @@ class CarePlanService {
         t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
         t3.* from ${TABLE_NAME} as t1 join 
         (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME}
-        where patient_id in (${watchlistPatientIds})
+        where patient_id in (${watchlistPatientIds}) and doctor_id=${doctorId} 
          group by patient_id) as t2
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
@@ -199,7 +215,7 @@ class CarePlanService {
         query = `select t1.id as care_plan_id, t1.details as care_plan_details, 
         t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
         t3.* from ${TABLE_NAME} as t1 join 
-        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} group by patient_id) as t2
+        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} where doctor_id=${doctorId} group by patient_id) as t2
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
