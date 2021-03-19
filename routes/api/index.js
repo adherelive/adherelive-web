@@ -84,7 +84,7 @@ router.use(async function(req, res, next) {
     }
     next();
   } catch (err) {
-    console.log("API INDEX CATCH ERROR ", err);
+    Log.debug("API INDEX CATCH ERROR ", err);
     req.userDetails = {
       exists: false
     };
