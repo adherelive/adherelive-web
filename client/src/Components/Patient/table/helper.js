@@ -33,14 +33,6 @@ export const TABLE_COLUMN = {
     key: "DOCTOR",
     dataIndex: "DOCTOR"
   },
-  PROVIDER: {
-    key: "PROVIDER",
-    dataIndex: "PROVIDER"
-  },
-  NEW_SYMPTOMS: {
-    key: "NEW_SYMPTOMS",
-    dataIndex: "NEW_SYMPTOMS"
-  },
   DIAGNOSIS: {
     key: "DIAGNOSIS",
     dataIndex: "DIAGNOSIS"

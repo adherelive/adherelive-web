@@ -50,7 +50,7 @@ class Formulation extends Component {
 
         return (
             <div className="mb20 select-days-form-content">
-                <span className="form-label">{this.formatMessage(messages.specialInstruction)}</span>
+                <span className="form-label mb-4">{this.formatMessage(messages.specialInstruction)}</span>
 
                 <FormItem
                     validateStatus={error ? "error" : ""}

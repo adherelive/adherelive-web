@@ -6,6 +6,7 @@ import {getName} from "../../Helper/validation"
 import { withRouter } from "react-router-dom";
 import throttle from "lodash-es/throttle";
 import debounce from "lodash-es/debounce";
+import { SearchOutlined }from "@ant-design/icons";
 
 
 import { Drawer, Icon, Select, Input,  Button, Spin, Radio, DatePicker, Menu, Dropdown,Tooltip,Avatar } from "antd";
@@ -168,12 +169,12 @@ class SearchPatient extends Component{
         const {searchInput=''} = this.state;
         const { formatMessage } = this;
         return (
-            <div className="flex direction-row justify-space-between align-center w400">  
+            <div className="flex direction-row justify-space-between align-center w400 ">  
 
                 <Select
                 placeholder={this.formatMessage(messages.searchPatient)}
                 value={this.formatMessage(messages.searchPatient)}
-                className="ha w400"
+                className=" w400  patient-search "
                 notFoundContent={this.state.fetchingPatients ? <Spin size="small" /> : '' }
                 showSearch
                 onSearch={this.setInput}
@@ -187,7 +188,9 @@ class SearchPatient extends Component{
                         .indexOf(option.props.children.toString().toLowerCase()) > -1
                     
                 }
-
+                
+                suffixIcon={<SearchOutlined className="patient-search-icon" />}
+                
                 >
                     {this.getPatientOptions()}
                 </Select>

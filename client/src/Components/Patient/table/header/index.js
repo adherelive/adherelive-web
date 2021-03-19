@@ -7,8 +7,6 @@ import Diagnosis from "../datacolumn/diagnosis";
 import Treatment from "../datacolumn/treatment";
 import Severity from "../datacolumn/severity";
 import StartDate from "../datacolumn/startDate";
-import Provider from "../datacolumn/provider";
-import NewSymptoms from "../datacolumn/newSymptoms";
 
 
 export default props => {
@@ -48,21 +46,6 @@ export default props => {
       title: formatMessage(messages.start_date),
       ...TABLE_COLUMN.START_DATE,
       render: carePlanData => <StartDate {...carePlanData} />
-    },
-    {
-      title: formatMessage(messages.provider),
-      ...TABLE_COLUMN.PROVIDER,
-      render: data => {
-        const { patientData, providerData } = data;
-        return (
-          <Provider patientData={patientData} providerData={providerData} />
-        );
-      }
-    },
-    {
-      title: formatMessage(messages.new_symptoms),
-      ...TABLE_COLUMN.NEW_SYMPTOMS,
-      render: patientData => <NewSymptoms {...patientData} />
     }
   ];
 };

@@ -70,6 +70,16 @@ const messages = defineMessages({
     id: "app.patient.table.emptyPatientTable",
     description: "",
     defaultMessage: "No Patient added yet"
+  },
+  removeFromWatchlist: {
+    id: "app.patient.table.removeFromWatchlist",
+    description: "",
+    defaultMessage: "Remove from watchlist"
+  },
+  addToWatchlist: {
+    id: "app.patient.table.addToWatchlist",
+    description: "",
+    defaultMessage: "Add to watchlist"
   }
 });
 
