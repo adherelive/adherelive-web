@@ -2039,7 +2039,7 @@ class MobileDoctorController extends Controller {
 
       const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
 
-      let doctorId = null, patients = {}, watchlistPatientIds = [], count = 0;
+      let doctorId = null, patients = {}, watchlistPatientIds = [], count = 0, patientIds = [];
 
       if(doctor) {
         const doctorData = await DoctorWrapper(doctor);
@@ -2063,6 +2063,7 @@ class MobileDoctorController extends Controller {
         const formattedPatientData = patient
 
         const { id, details = {} } = formattedPatientData;
+        patientIds.push(id);
         let watchlist = false;
 
         const { profile_pic } = details;
@@ -2084,6 +2085,7 @@ class MobileDoctorController extends Controller {
         {
           total: count,
           page_size: limit,
+          patient_ids: patientIds,
           patients
         },
         "Patients data fetched successfully."
