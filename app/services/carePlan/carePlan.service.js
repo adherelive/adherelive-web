@@ -209,6 +209,7 @@ class CarePlanService {
          on t1.patient_id = t3.id
          where t1.doctor_id = ${doctorId} and
          t1.patient_id in (${watchlistPatientIds})
+         order by t3.first_name
          limit ${limit}
          offset ${offset};`
       } else {
@@ -220,6 +221,7 @@ class CarePlanService {
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
          where t1.doctor_id = ${doctorId}
+         order by t3.first_name
          limit ${limit}
          offset ${offset};`
       }

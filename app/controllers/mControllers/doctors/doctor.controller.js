@@ -42,7 +42,7 @@ import {
   FEATURES
 } from "../../../../constant";
 
-import { getFilePath } from "../../../helper/filePath";
+import { getFilePath, completePath } from "../../../helper/filePath";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
@@ -2062,14 +2062,20 @@ class MobileDoctorController extends Controller {
       for(const patient of allPatients) {
         const formattedPatientData = patient
 
-        const { id } = formattedPatientData;
+        const { id, details = {} } = formattedPatientData;
         let watchlist = false;
+
+        const { profile_pic } = details;
+        const updatedDetails =  {
+          ...details,
+          profile_pic: profile_pic ? completePath(profile_pic) : null,
+      };
 
         if(watchlistPatientIds.indexOf(id) !== -1) {
           watchlist = true;
         }
 
-        patients[id] = {...formattedPatientData, watchlist};
+        patients[id] = {...formattedPatientData, watchlist, details: updatedDetails};
       }
 
       return raiseSuccess(
