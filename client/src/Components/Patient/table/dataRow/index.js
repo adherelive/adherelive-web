@@ -35,12 +35,5 @@ export default data => {
       patientData,
       doctorData
     },
-    [TABLE_COLUMN.PROVIDER.dataIndex]: {
-      patientData,
-      providerData
-    },
-    [TABLE_COLUMN.NEW_SYMPTOMS.dataIndex]: {
-      patientData
-    },
   };
 };

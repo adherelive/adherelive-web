@@ -74,19 +74,19 @@ class AgoraVideo extends Component {
   }
 
   async componentDidUpdate(prevProps,prevState){
-    const {isStart : prev_isStart = false } = prevState;
-    const {isStart=false} = this.state;
-    const {isAudioOn=false,isVideoOn = false}=this.state;
+    // const {isStart : prev_isStart = false } = prevState;
+    // const {isStart=false} = this.state;
+    // const {isAudioOn=false,isVideoOn = false}=this.state;
 
-    if(isStart && isStart !== prev_isStart){
-      if(!isAudioOn){
-         await this.setAudioOff();
-      }
+    // if(isStart && isStart !== prev_isStart){
+    //   if(!isAudioOn){
+    //      await this.setAudioOff();
+    //   }
 
-      if(!isVideoOn){
-         await this.setfVideoOff();
-      }
-    }
+    //   if(!isVideoOn){
+    //      await this.setfVideoOff();
+    //   }
+    // }
 
 
   }
@@ -203,12 +203,13 @@ class AgoraVideo extends Component {
     });
     this.setState({ loading: true });
     await this.rtc.client.leave();
-    this.setState({
-      remoteUid: null,
-      isStart: false,
-      remoteAdded: false,
-      loading: false
-    });
+    // this.setState({
+    //   remoteUid: null,
+    //   isStart: false,
+    //   remoteAdded: false,
+    //   loading: false
+    // });
+    window.close();
   };
 
   toggleVideo = async () => {
@@ -377,7 +378,7 @@ class AgoraVideo extends Component {
         <div id={"agora-remote"} className="wp100 hp100">
           {loading && (
             <div className="hp100 wp100 flex direction-column align-center justify-center z1">
-              <Loading className={"wp100"} />
+              <Loading className={"wp100"} color="white" />
             </div>
           )}
           {!remoteAdded && (
@@ -411,7 +412,12 @@ class AgoraVideo extends Component {
           {getAudioButtons()}
 
           {/*   CALL   */}
-          {getCallButtons()}
+          {
+            !loading
+            &&
+            getCallButtons()
+          }
+          
 
           {/*   VIDEO   */}
           {getVideoButtons()}

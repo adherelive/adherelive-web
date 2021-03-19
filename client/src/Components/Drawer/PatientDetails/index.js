@@ -463,7 +463,7 @@ class PatientDetailsDrawer extends Component {
     return (
       <Fragment>
         <Drawer
-          mask={false}
+          mask={true}
           title="   "
           placement="right"
           // closable={false}
