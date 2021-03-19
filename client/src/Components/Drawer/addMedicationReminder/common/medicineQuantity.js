@@ -43,7 +43,7 @@ class MedicineQuantity extends Component {
 
   getInitialValue = () => {
     const { purpose, event: { data = {} } = {} } = this.props;
-    let initialValue;
+    let initialValue = 1;
     if (purpose) {
       initialValue = data[FIELD_NAME];
     }
@@ -107,7 +107,7 @@ class MedicineQuantity extends Component {
               }
             ],
             initialValue: getInitialValue()
-          })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
+          })(<InputNumber min={0.01} style={{ width: "100%" }}/>)}
         </FormItem>
       </Fragment>
     );

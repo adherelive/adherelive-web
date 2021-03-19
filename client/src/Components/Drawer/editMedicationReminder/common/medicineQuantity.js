@@ -113,7 +113,7 @@ class MedicineQuantity extends Component {
                 message: "Please enter valid quantity"
               }
             ],
-            initialValue: quantity ? quantity : null
+            initialValue: quantity ? quantity : 1
           })(<InputNumber min={0.01} style={{ width: "100%" }} />)}
         </FormItem>
       </Fragment>

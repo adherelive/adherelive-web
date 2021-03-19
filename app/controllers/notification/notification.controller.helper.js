@@ -78,7 +78,16 @@ const medicationNotification = async data => {
     let eventId = null;
     let responseTaken = false;
 
-    const verbString = verb.split(":")[0];
+    const verbString = verb.split(":")[0].toUpperCase() || null;
+
+    // CREATE
+    if(verbString === MEDICATION_CREATE) {
+
+    } else {
+
+    }
+
+    // START
 
     if (verbString.toUpperCase() === MEDICATION_CREATE) {
       eventId = parseInt(foreign_id, 10);
