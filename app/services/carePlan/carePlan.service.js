@@ -117,7 +117,7 @@ class CarePlanService {
           //   attributes: ["vital_id"]
           // }
         ],
-        order: [["created_at", "ASC"]]
+        order: [["created_at", "DESC"]]
       });
       return carePlan;
     } catch (error) {
