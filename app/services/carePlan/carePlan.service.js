@@ -194,7 +194,9 @@ class CarePlanService {
     }
   }
 
-  getPaginatedDataOfPatients = async(offset, limit, doctorId, watchlistPatientIds, watchlist) => {
+  getPaginatedDataOfPatients = async(data) => {
+    const {offset, limit, doctorId, watchlistPatientIds, watchlist, sortByName} = data;
+    const sortBy = sortByName? "t3.first_name": "t3.created_at desc";
     try {
       let query = "";
       if(watchlist) {
@@ -209,7 +211,7 @@ class CarePlanService {
          on t1.patient_id = t3.id
          where t1.doctor_id = ${doctorId} and
          t1.patient_id in (${watchlistPatientIds})
-         order by t3.first_name
+         order by ${sortBy}
          limit ${limit}
          offset ${offset};`
       } else {
@@ -221,7 +223,7 @@ class CarePlanService {
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
          where t1.doctor_id = ${doctorId}
-         order by t3.first_name
+         order by ${sortBy}
          limit ${limit}
          offset ${offset};`
       }

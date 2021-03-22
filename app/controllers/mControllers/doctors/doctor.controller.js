@@ -2022,11 +2022,11 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try { 
       const {
-        userDetails: { userId, userData = {} } = {},
+        userDetails: { userId } = {},
         query = {}
       } = req;
 
-      const { offset=0, watchlist = false } = query || {};
+      const { offset=0, watchlist = 0, sort_by_name = 1 } = query || {};
 
       const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
 
@@ -2038,6 +2038,7 @@ class MobileDoctorController extends Controller {
       });
 
       const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
+      const sortByName = parseInt(sort_by_name, 10) === 0? 0: 1;
 
       let doctorId = null, patients = {}, watchlistPatientIds = [], count = 0, patientIds = [];
 
@@ -2057,28 +2058,38 @@ class MobileDoctorController extends Controller {
         count = await carePlanService.getDistinctPatientCounts(doctorId);
       }
 
-      const allPatients = await carePlanService.getPaginatedDataOfPatients(offsetLimit, endLimit, doctorId, watchlistPatientIds, getWatchListPatients);
-
-      for(const patient of allPatients) {
-        const formattedPatientData = patient
-
-        const { id, details = {} } = formattedPatientData;
-        patientIds.push(id);
-        let watchlist = false;
-
-        const { profile_pic } = details;
-        const updatedDetails =  {
-          ...details,
-          profile_pic: profile_pic ? completePath(profile_pic) : null,
-      };
-
-        if(watchlistPatientIds.indexOf(id) !== -1) {
-          watchlist = true;
+      if(count > 0) {
+        const data = {
+          offset: offsetLimit,
+          limit: endLimit,
+          doctorId,
+          watchlistPatientIds,
+          watchlist: getWatchListPatients,
+          sortByName
         }
+        const allPatients = await carePlanService.getPaginatedDataOfPatients(data);
 
-        patients[id] = {...formattedPatientData, watchlist, details: updatedDetails};
+        for(const patient of allPatients) {
+          const formattedPatientData = patient
+  
+          const { id, details = {} } = formattedPatientData;
+          patientIds.push(id);
+          let watchlist = false;
+  
+          const { profile_pic } = details;
+          const updatedDetails =  {
+            ...details,
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
+        };
+  
+          if(watchlistPatientIds.indexOf(id) !== -1) {
+            watchlist = true;
+          }
+  
+          patients[id] = {...formattedPatientData, watchlist, details: updatedDetails};
+        }
       }
-
+      
       return raiseSuccess(
         res,
         200,
