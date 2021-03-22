@@ -10,7 +10,7 @@ import AudioDisabledIcon from "../../Assets/images/ico-vc-audio-off.png";
 import VideoIcon from "../../Assets/images/ico-vc-video.png";
 import VideoDisabledIcon from "../../Assets/images/ico-vc-video-off.png";
 import UserDpPlaceholder from "../../Assets/images/ico-placeholder-userdp.svg";
-import { USER_CATEGORY } from "../../constant";
+import { USER_CATEGORY,LOCAL_STORAGE } from "../../constant";
 import messages from "./messages";
 // import Loading from "../Common/Loading";
 import Tooltip from "antd/es/tooltip";
@@ -136,7 +136,8 @@ class TestAgoraVideo extends Component {
     const {isAudioOn=false,isVideoOn=false}=this.state;
 
     // console.log("32564572354754327 =================>>>>",{roomId});
-
+    localStorage.removeItem(LOCAL_STORAGE.LOCAL_IS_AUDIO_ON);
+    localStorage.removeItem(LOCAL_STORAGE.LOCAL_IS_VIDEO_ON);
     window.open(
       `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}?isAudioOn=${isAudioOn}&isVideoOn=${isVideoOn}`,
       "_self"
@@ -380,6 +381,7 @@ class TestAgoraVideo extends Component {
   render() {
     const {audioLevel}=this.state;
     const {getHeader,getAudioVideoSection,getStartCallSection}=this;
+    console.log("237642354623542387 @@@@@@@@@@@@",{localStorage});
 
     return (
       <div className="ml-vp4 flex direction-column hp100 wp100">

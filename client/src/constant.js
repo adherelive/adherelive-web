@@ -1814,3 +1814,9 @@ export const WHEN_TO_TAKE_ABBR_TYPES={
   TD:"3",
   SOS:"4"
 }
+
+
+export const LOCAL_STORAGE = {
+  LOCAL_IS_AUDIO_ON:"localIsAudioOn",
+  LOCAL_IS_VIDEO_ON:"localIsVideoOn"
+}

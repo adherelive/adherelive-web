@@ -12,7 +12,7 @@ import AudioDisabledIcon from "../../Assets/images/ico-vc-audio-off.png";
 import VideoIcon from "../../Assets/images/ico-vc-video.png";
 import VideoDisabledIcon from "../../Assets/images/ico-vc-video-off.png";
 import UserDpPlaceholder from "../../Assets/images/ico-placeholder-userdp.svg";
-import { USER_CATEGORY } from "../../constant";
+import { USER_CATEGORY , LOCAL_STORAGE } from "../../constant";
 import messages from "./messages";
 import Loading from "../Common/Loading";
 import Tooltip from "antd/es/tooltip";
@@ -58,37 +58,27 @@ class AgoraVideo extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const isAudioOnParam = urlParams.get('isAudioOn') === "true";
     const isVideoOnParam = urlParams.get('isVideoOn') === "true";
+    const localAudioVal  = localStorage.getItem(LOCAL_STORAGE.LOCAL_IS_AUDIO_ON);
+    const localVideoVal = localStorage.getItem(LOCAL_STORAGE.LOCAL_IS_VIDEO_ON);
+    const localAudioBoolean = localAudioVal === "true";
+    const localVideoBoolean = localVideoVal === "true";
 
-    if(!isAudioOnParam){
+    if((!localAudioVal && !isAudioOnParam) || (localAudioVal && !localAudioBoolean) ){
      await this.setAudioOff();
     }
 
-    if(!isVideoOnParam){
+    if((!localVideoVal && !isVideoOnParam) || (localVideoVal && !localVideoBoolean) ){
      await this.setfVideoOff();
     }
 
+ 
+
+    // console.log("237642354623542387 &&&&&&&&&&&&&&&&&&&&&&&&&&",{localAudioVal,localVideoVal,localStorage,localAudioBoolean,localVideoBoolean});
+   
     
     }catch(error){
       console.log("error in initial video call setup===>",error);
     }
-  }
-
-  async componentDidUpdate(prevProps,prevState){
-    // const {isStart : prev_isStart = false } = prevState;
-    // const {isStart=false} = this.state;
-    // const {isAudioOn=false,isVideoOn = false}=this.state;
-
-    // if(isStart && isStart !== prev_isStart){
-    //   if(!isAudioOn){
-    //      await this.setAudioOff();
-    //   }
-
-    //   if(!isVideoOn){
-    //      await this.setfVideoOff();
-    //   }
-    // }
-
-
   }
 
   componentWillUnmount() {
@@ -113,9 +103,6 @@ class AgoraVideo extends Component {
 
   init = () => {
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const isAudioOnParam = urlParams.get('isAudioOn') === "true";
-    const isVideoOnParam = urlParams.get('isVideoOn') === "true";
 
     this.rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
 
@@ -132,21 +119,16 @@ class AgoraVideo extends Component {
         const playerContainer = document.createElement("div");
         playerContainer.className = "videoPlayer";
         playerContainer.id = user.uid.toString();
-
         const childContainer1 = document.getElementById("agora-remote");
         childContainer1.appendChild(playerContainer);
-
-        if(isVideoOnParam){
-          remoteVideoTrack.play(playerContainer);
-        }
-        
+        remoteVideoTrack.play(playerContainer);
+         
       }
 
       if (mediaType === "audio") {
         const remoteAudioTrack = user.audioTrack;
-        if(isAudioOnParam){
-          remoteAudioTrack.play();
-        }
+        remoteAudioTrack.play();
+        
       }
     });
 
@@ -173,6 +155,11 @@ class AgoraVideo extends Component {
   startVideoCall = async () => {
 
     const { auth: { authenticated_user } = {} } = this.props;
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAudioOnParam = urlParams.get('isAudioOn') === "true";
+    const isVideoOnParam = urlParams.get('isVideoOn') === "true";
+    const localAudioVal  = localStorage.getItem(LOCAL_STORAGE.LOCAL_IS_AUDIO_ON);
+    const localVideoVal = localStorage.getItem(LOCAL_STORAGE.LOCAL_IS_VIDEO_ON);
 
     const { appId, channel, token } = this.getVideoOptions();
 
@@ -185,11 +172,24 @@ class AgoraVideo extends Component {
     );
     await this.publishTrack();
     this.setState({ selfUid: uid });
-    this.rtc.localVideoTrack.play("agora-self");
+
+    
+    if( (!localVideoVal && isVideoOnParam) || (localVideoVal === "true") ){
+      // console.log("237642354623542387",{isVideoOnParam,flag1:(!localVideoVal && isVideoOnParam),flag2:(localVideoVal === "true")});
+
+      this.rtc.localVideoTrack.play("agora-self");
+    }
+    
     const playerContainer = document.createElement("div");
     playerContainer.className = "videoPlayer";
     playerContainer.id = uid.toString();
     this.setState({ loading: false, isStart: true });
+    const isAudioOnFlag = (!localAudioVal && isAudioOnParam) || (localAudioVal === "true");
+    // console.log("87345275632465236",{isAudioOnFlag});
+    if ( !isAudioOnFlag ){
+      this.setAudioOff();
+    }
+
   };
 
   leaveCall = async () => {
@@ -209,29 +209,45 @@ class AgoraVideo extends Component {
     //   remoteAdded: false,
     //   loading: false
     // });
+    localStorage.removeItem(LOCAL_STORAGE.LOCAL_IS_AUDIO_ON);
+    localStorage.removeItem(LOCAL_STORAGE.LOCAL_IS_VIDEO_ON);
     window.close();
   };
 
   toggleVideo = async () => {
     const { isVideoOn } = this.state;
+    const newState = !isVideoOn;
     await this.rtc.localVideoTrack.setEnabled(!isVideoOn);
     this.setState({ isVideoOn: !isVideoOn });
+    localStorage.setItem(LOCAL_STORAGE.LOCAL_IS_VIDEO_ON,newState);
+
+    if(newState){
+      this.rtc.localVideoTrack.play("agora-self");
+    }
+    
   };
 
   setfVideoOff = async() => {
     await this.rtc.localVideoTrack.setEnabled(false);
     this.setState({ isVideoOn: false });
+
+
   }
 
   setAudioOff = async() => {
     await this.rtc.localAudioTrack.setEnabled(false);
     this.setState({ isAudioOn: false });
+
+
   }
 
   toggleAudio = async () => {
     const { isAudioOn } = this.state;
+    const newState = !isAudioOn;
     await this.rtc.localAudioTrack.setEnabled(!isAudioOn);
     this.setState({ isAudioOn: !isAudioOn });
+    localStorage.setItem(LOCAL_STORAGE.LOCAL_IS_AUDIO_ON,newState);
+
   };
 
   getVideoParticipants = () => {
@@ -368,6 +384,7 @@ class AgoraVideo extends Component {
         details: { profile_pic } = {}
       } = {}
     } = getVideoParticipants();
+
 
     return (
       <div className="wp100 hp100 bg-black relative">
