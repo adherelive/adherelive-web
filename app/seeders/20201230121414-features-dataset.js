@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../../models/features";
+import { TABLE_NAME } from "../models/features";
 
 module.exports = {
   up: queryInterface => {
