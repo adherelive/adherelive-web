@@ -181,8 +181,8 @@ class ProviderDoctor extends Component {
                 />
 
 
-                <Route exact path={PATH.DASHBOARD} component={ProviderDoctorPage} />
-                <Route path={""} component={BlankState} />
+                <Route path={PATH.LANDING_PAGE} component={ProviderDoctorPage} />
+                {/* <Route path={""} component={BlankState} /> */}
               </Switch>
             </div>
           </div>

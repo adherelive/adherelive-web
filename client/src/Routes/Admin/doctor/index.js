@@ -133,8 +133,8 @@ class AdminDoctor extends Component {
                   path={PATH.ADMIN.ALL_MEDICINES}
                   component={AdminMedicines}
                 />
-                <Route exact path={PATH.DASHBOARD} component={AdminDoctorPage} />
-                <Route path={""} component={BlankState} />
+                <Route  path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
+                {/* <Route path={""} component={BlankState} /> */}
               </Switch>
             </div>
           </div>

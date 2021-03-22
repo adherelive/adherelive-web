@@ -63,7 +63,7 @@ class TimingModal extends Component {
   }
 
   componentDidMount() {
-    const { timings = {}, daySelected } = this.props;
+    const { timings = {}, daySelected , oneDaySelected } = this.props;
     let newTimings = {};
 
     for (let day in timings) {
@@ -82,6 +82,9 @@ class TimingModal extends Component {
       newTimings[day].timingsKeys = dayTimingKeys;
     }
     this.setState({ dayTimings: newTimings, daySelected });
+    if (this.checkAnyDaySelected(daySelected) > 0 && !oneDaySelected) {
+      this.setState({ oneDaySelected: true });
+    }
   }
 
   componentDidUpdate() {
@@ -154,6 +157,19 @@ class TimingModal extends Component {
     newDayTimings[day].timingsKeys = initalDayTimingKeys;
 
     newDaySelected[day] = !isDaySelected;
+    const flag = newDaySelected[day];
+    if(!flag){
+      let removedDayTiming={};
+      let removedDayTimingKeys = [];
+      const newKey = uuid();
+      removedDayTiming[newKey] = { startTime: "", endTime: "" };
+      removedDayTimingKeys.push(newKey);
+      newDayTimings[day].timings = removedDayTiming;
+      newDayTimings[day].timingsKeys = removedDayTimingKeys;
+    }
+
+    
+    
     // let key = uuid();
     // let dayTiming = {};
     // dayTiming[key] = { startTime: "", endTime: "" };

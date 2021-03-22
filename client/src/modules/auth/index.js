@@ -97,7 +97,7 @@ function setAuthRedirect(user, isInitial = false) {
     }
   } else if (category === USER_CATEGORY.PROVIDER) {
     if (!isInitial) {
-      authRedirect = PATH.PROVIDER;
+      authRedirect = PATH.LANDING_PAGE;
     }
   } else if (category === USER_CATEGORY.ADMIN || category === USER_CATEGORY.PROVIDER) {
     if (!isInitial) {
@@ -130,7 +130,7 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     }
   }  else if (category === USER_CATEGORY.PROVIDER) {
     if (!isInitial) {
-      authRedirect = PATH.PROVIDER;
+      authRedirect = PATH.LANDING_PAGE;
     }
   }  else if (category === USER_CATEGORY.ADMIN ) {
     if (!isInitial) {
