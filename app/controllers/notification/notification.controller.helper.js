@@ -4,7 +4,8 @@ import {
   EVENT_TYPE,
   NOTIFICATION_STAGES,
   EVENT_STATUS,
-  MESSAGE_TYPES
+  MESSAGE_TYPES,
+  AGORA_CALL_NOTIFICATION_TYPES
 } from "../../../constant";
 
 // lodash
@@ -564,6 +565,52 @@ const chatMessageNotification = async data => {
   }
 };
 
+
+const missedCallNotification = async data => {
+  try {
+    Log.debug("missedCallNotification data", data);
+    const {
+      data: {
+        actor,
+        foreign_id,
+        id,
+        message,
+        time,
+        verb,
+        start_time: notification_start_time,
+        create_time: notification_create_time
+      } = {},
+      loggedInUser,
+      is_read,
+      group_id
+    } = data;
+
+    let notification_data = {
+        [`${id}`]: {
+          is_read,
+          group_id,
+          foreign_id,
+          time,
+          event_id: null,
+          notification_id: id,
+          type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
+          actor,
+          verb,
+          message,
+          start_time: notification_start_time,
+          create_time: notification_create_time
+        }
+      };
+
+      return {
+        notifications: notification_data
+      };
+  } catch (error) {
+    Log.debug("missedCallNotification 500 error", error);
+    return {};
+  }
+};
+
 export const getDataForNotification = async data => {
   try {
     const { data: { event } = {} } = data;
@@ -581,6 +628,8 @@ export const getDataForNotification = async data => {
         return await carePlanNotification(data);
       case USER_MESSAGE:
         return await chatMessageNotification(data);
+      case AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL:
+        return await missedCallNotification(data)
     }
   } catch (error) {
     Log.debug("getDataForNotification 500 error", error);

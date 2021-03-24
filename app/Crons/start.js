@@ -64,7 +64,6 @@ class StartCron {
       Log.info(`START count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
       Log.debug("scheduleEvents 500 error ---->", error);
-      // Log.errLog(500, "getPriorEvents", error.getMessage());
     }
   };
 
