@@ -2,9 +2,16 @@ import agoraService from "../../services/agora/agora.service";
 import Controller from "../";
 import {
     USER_CATEGORY,
+    AGORA_CALL_NOTIFICATION_TYPES,
+    EVENT_STATUS
   } from "../../../constant";
 
 import Log from "../../../libs/log_new";
+
+
+import AgoraJob from "../../JobSdk/Agora/observer";
+import NotificationSdk from "../../NotificationSdk";
+
 Log.fileName("WEB > AGORA > CONTROLLER");
 
 class AgoraController extends Controller {
@@ -31,6 +38,49 @@ class AgoraController extends Controller {
         } catch (error) {
             Log.debug("generateVideoAccessToken 50 error", error);
             return this.raiseServerError(res, 500, {}, "Error in video calling.");
+        }
+    }
+
+    missedCall = async(req, res) => {
+        try {
+            const {params: {id = null} = {}, userDetails: {userId,
+                 userData: { category } = {},
+                 userCategoryData: { basic_info: { full_name } = {} } = {}} = {}} = req;
+
+            let doctorUserId = null, patientUserId = null;
+            if(category === USER_CATEGORY.DOCTOR) {
+                doctorUserId = userId;
+                patientUserId = id;
+            } else if (category === USER_CATEGORY.PATIENT) {
+                doctorUserId = id;
+                patientUserId = userId;
+            }
+            const roomId = agoraService.getRoomId(doctorUserId, patientUserId);
+            const participantTwoId = category === USER_CATEGORY.DOCTOR? patientUserId: doctorUserId;
+
+            const eventScheduleData = {
+                type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
+                event_id: roomId,
+                event_type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
+                details: {},
+                roomId,
+                participants: [userId, participantTwoId],
+                actor: {
+                    id: userId,
+                    details: { name: full_name, category }
+                }
+            };
+
+            const agoraJob = AgoraJob.execute(
+                EVENT_STATUS.EXPIRED,
+                eventScheduleData
+            );
+            await NotificationSdk.execute(agoraJob);
+
+            return this.raiseSuccess(res, 200, {}, "Notification raised successfully for missed call.");
+        } catch (error) {
+            Log.debug("missedCall 500 error", error);
+            return this.raiseServerError(res, 500, {}, "Error in sending missed call notification.");
         }
     }
 }
