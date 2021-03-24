@@ -52,6 +52,7 @@ import bcrypt from "bcrypt";
 import * as ProviderHelper from "./helper";
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
 import AccountsWrapper from "../../ApiWrapper/web/accountsDetails";
+import { getFilePath } from "../../helper/filePath";
 
 // import { generatePassword } from "../helper/passwordGenerator";
 
@@ -730,6 +731,9 @@ class ProvidersController extends Controller {
           mobile_number,
           address,
 
+          // ui details
+          icon,
+
             // account details
             account_type,
             customer_name,
@@ -795,6 +799,9 @@ class ProvidersController extends Controller {
         name,
         address,
         activated_on,
+        details: {
+          icon: getFilePath(icon)
+        },
         user_id: userData.getId(),
       });
       const providerData = await ProviderWrapper(provider);
@@ -870,6 +877,9 @@ class ProvidersController extends Controller {
         upi_id,
         use_as_main,
 
+        // customizations
+        icon,
+
         // razorpay accounts
         razorpay_account_id,
         razorpay_account_name,
@@ -897,7 +907,11 @@ class ProvidersController extends Controller {
       // update provider
       await providerService.updateProvider({
         name,
-        address
+        address,
+        details: {
+          ...previousProvider.getDetails(),
+          // icon: getFilePath(icon)
+        }
       }, id);
 
       const updatedProvider = await ProviderWrapper(null, id);

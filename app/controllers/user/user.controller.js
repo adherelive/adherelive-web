@@ -835,11 +835,14 @@ class UserController extends Controller {
   uploadImage = async (req, res) => {
     const { userDetails, body } = req;
     const { userId = "3" } = userDetails || {};
-    console.log("BODYYYYYYYYYYYYYYYY", req.file);
     const file = req.file;
+
+    const {type} = body || {};
+
+    Logger.debug("file", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
-      let files = await uploadImageS3(userId, file);
+      let files = await uploadImageS3(userId, file, type);
       return this.raiseSuccess(
         res,
         200,

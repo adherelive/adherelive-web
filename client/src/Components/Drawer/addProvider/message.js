@@ -116,6 +116,21 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "This will remove all the account details"
   },
+  customization: {
+    id: "app.addProvider.customization",
+    description: "",
+    defaultMessage: "Customizations"
+  },
+  iconUpload: {
+    id: "app.addProvider.icon.upload",
+    description: "",
+    defaultMessage: "Logo"
+  },
+  iconUploadText: {
+    id: "app.addProvider.icon.upload.text",
+    description: "",
+    defaultMessage: "Upload"
+  },
 
   // errors
   valid_email_text: {
@@ -163,7 +178,6 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Address is required"
   },
-  
 });
 
 export default messages;
