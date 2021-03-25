@@ -6,13 +6,13 @@ import {
     EVENT_STATUS
   } from "../../../constant";
 
-import Log from "../../../libs/log_new";
+import Logger from "../../../libs/log";
 
 
 import AgoraJob from "../../JobSdk/Agora/observer";
 import NotificationSdk from "../../NotificationSdk";
 
-Log.fileName("WEB > AGORA > CONTROLLER");
+const Log = new Logger("WEB > AGORA > CONTROLLER");
 
 class AgoraController extends Controller {
     constructor() {
@@ -43,20 +43,20 @@ class AgoraController extends Controller {
 
     missedCall = async(req, res) => {
         try {
-            const {params: {id = null} = {}, userDetails: {userId,
+            const {body: { roomId } = {}, userDetails: {userId,
                  userData: { category } = {},
                  userCategoryData: { basic_info: { full_name } = {} } = {}} = {}} = req;
 
-            let doctorUserId = null, patientUserId = null;
-            if(category === USER_CATEGORY.DOCTOR) {
-                doctorUserId = userId;
-                patientUserId = id;
-            } else if (category === USER_CATEGORY.PATIENT) {
-                doctorUserId = id;
-                patientUserId = userId;
-            }
-            const roomId = agoraService.getRoomId(doctorUserId, patientUserId);
-            const participantTwoId = category === USER_CATEGORY.DOCTOR? patientUserId: doctorUserId;
+            // let doctorUserId = null, patientUserId = null;
+            // if(category === USER_CATEGORY.DOCTOR) {
+            //     doctorUserId = userId;
+            //     patientUserId = id;
+            // } else if (category === USER_CATEGORY.PATIENT) {
+            //     doctorUserId = id;
+            //     patientUserId = userId;
+            // }
+            // const roomId = agoraService.getRoomId(doctorUserId, patientUserId);
+            // const participantTwoId = category === USER_CATEGORY.DOCTOR? patientUserId: doctorUserId;
 
             const eventScheduleData = {
                 type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
@@ -64,7 +64,7 @@ class AgoraController extends Controller {
                 event_type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
                 details: {},
                 roomId,
-                participants: [userId, participantTwoId],
+                // participants: [userId, participantTwoId],
                 actor: {
                     id: userId,
                     details: { name: full_name, category }
@@ -83,6 +83,38 @@ class AgoraController extends Controller {
             return this.raiseServerError(res, 500, {}, "Error in sending missed call notification.");
         }
     }
+
+    startCall = async (req, res) => {
+        try {
+          const {
+            body: { roomId } = {},
+            userDetails: {
+              userId,
+              userData: { category } = {},
+              userCategoryData: { basic_info: { full_name } = {} } = {}
+            } = {}
+          } = req;
+    
+          const agoraJob = AgoraJob.execute(EVENT_STATUS.STARTED, {
+            roomId,
+            actor: {
+              id: userId,
+              details: { name: full_name, category }
+            }
+          });
+          await NotificationSdk.execute(agoraJob);
+    
+          return this.raiseSuccess(
+            res,
+            200,
+            {},
+            "Calling info sent to participant"
+          );
+        } catch (error) {
+          Log.debug("startAppointment error", error);
+          return this.raiseServerError(res);
+        }
+      };
 }
 
 export default new AgoraController();

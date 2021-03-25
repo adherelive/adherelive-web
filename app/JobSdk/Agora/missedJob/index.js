@@ -69,14 +69,17 @@ class MissedJob extends AgoraJob {
     getInAppTemplate = () => {
         const { getAgoraData } = this;
         const {
-          participants = [],
+        //   participants = [],
           actor: {
             id: actorId,
             details: { name, category: actorCategory } = {}
           } = {},
           event_id,
-          event_type
+          event_type,
+          roomId
         } = getAgoraData() || {};
+
+        const participants = roomId.split(`-${process.config.twilio.CHANNEL_SERVER}-`);
     
         const templateData = [];
 

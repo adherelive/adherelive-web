@@ -11,10 +11,17 @@ router.get(
 );
 
 
-router.get(
-  "/missed-call/:id",
+router.post(
+  "/missed",
   Authenticated,
   agoraController.missedCall
 )
+
+router.post(
+  "/start",
+  Authenticated,
+  agoraController.startCall
+);
+
   
 module.exports = router;
