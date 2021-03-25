@@ -112,19 +112,19 @@ class MobileUserController extends Controller {
       });
 
       if(process.config.app.env === "development") {
-        // const emailPayload = {
-        //   title: "OTP Verification for patient",
-        //   toAddress: process.config.app.developer_email,
-        //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-        //   templateData: {
-        //     title: "Patient",
-        //     mainBodyText: "OTP for adhere patient login is",
-        //     subBodyText: otp,
-        //     host: process.config.WEB_URL,
-        //     contactTo: process.config.app.support_email
-        //   }
-        // };
-        // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        const emailPayload = {
+          title: "OTP Verification for patient",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+          templateData: {
+            title: "Patient",
+            mainBodyText: "OTP for adhere patient login is",
+            subBodyText: otp,
+            host: process.config.WEB_URL,
+            contactTo: process.config.app.support_email
+          }
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
         Logger.info(`OTP :::: ${otp}`);
       } else {
 

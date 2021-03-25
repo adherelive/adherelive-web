@@ -82,7 +82,40 @@ class AgoraController extends Controller {
             Log.debug("missedCall 500 error", error);
             return this.raiseServerError(res, 500, {}, "Error in sending missed call notification.");
         }
-    }
+    };
+
+    startCall = async (req, res) => {
+        try {
+          const {
+            body: { roomId } = {},
+            userDetails: {
+              userId,
+              userData: { category } = {},
+              userCategoryData: { basic_info: { full_name } = {} } = {}
+            } = {}
+          } = req;
+    
+          const agoraJob = AgoraJob.execute(EVENT_STATUS.STARTED, {
+            roomId,
+            actor: {
+              id: userId,
+              details: { name: full_name, category }
+            }
+          });
+          await NotificationSdk.execute(agoraJob);
+    
+          return this.raiseSuccess(
+            res,
+            200,
+            {},
+            "Calling info sent to participant"
+          );
+        } catch (error) {
+          Log.debug("startAppointment error", error);
+          return this.raiseServerError(res);
+        }
+      };
+    
 }
 
 export default new AgoraController();

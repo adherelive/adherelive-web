@@ -48,7 +48,7 @@ class AgoraVideo extends Component {
 
     const {
       fetchVideoAccessToken,
-      match: { params: { room_id } = {} } = {}
+      room_id,
     } = this.props;
 
     await fetchVideoAccessToken(getPatientFromRoomId(room_id));
@@ -91,7 +91,7 @@ class AgoraVideo extends Component {
   getVideoOptions = () => {
     const {
       agora: { video_token } = {},
-      match: { params: { room_id } = {} } = {}
+      room_id
     } = this.props;
 
     return {
@@ -154,7 +154,7 @@ class AgoraVideo extends Component {
 
   startVideoCall = async () => {
 
-    const { auth: { authenticated_user } = {} } = this.props;
+    const { auth: { authenticated_user } = {}, startCall } = this.props;
     const urlParams = new URLSearchParams(window.location.search);
     const isAudioOnParam = urlParams.get('isAudioOn') === "true";
     const isVideoOnParam = urlParams.get('isVideoOn') === "true";
@@ -173,7 +173,9 @@ class AgoraVideo extends Component {
     await this.publishTrack();
     this.setState({ selfUid: uid });
 
-    
+    // notify other participant
+    await startCall();
+
     if( (!localVideoVal && isVideoOnParam) || (localVideoVal === "true") ){
       // console.log("237642354623542387",{isVideoOnParam,flag1:(!localVideoVal && isVideoOnParam),flag2:(localVideoVal === "true")});
 
@@ -193,6 +195,8 @@ class AgoraVideo extends Component {
   };
 
   leaveCall = async () => {
+    const {missedCall} = this.props;
+    const {remoteAdded} = this.state;
     // const { rtc, options } = this;
     await this.rtc.localVideoTrack.close();
     await this.rtc.localAudioTrack.close();
@@ -203,12 +207,19 @@ class AgoraVideo extends Component {
     });
     this.setState({ loading: true });
     await this.rtc.client.leave();
+
+    // notify missed call to other participant
+    if(!remoteAdded) {
+      await missedCall();
+    }
+  
     // this.setState({
     //   remoteUid: null,
     //   isStart: false,
     //   remoteAdded: false,
     //   loading: false
     // });
+
     localStorage.removeItem(LOCAL_STORAGE.LOCAL_IS_AUDIO_ON);
     localStorage.removeItem(LOCAL_STORAGE.LOCAL_IS_VIDEO_ON);
     window.close();
@@ -252,7 +263,7 @@ class AgoraVideo extends Component {
 
   getVideoParticipants = () => {
     const {
-      match: { params: { room_id } = {} } = {},
+      room_id,
       doctors,
       patients,
       auth: { authenticated_category } = {}

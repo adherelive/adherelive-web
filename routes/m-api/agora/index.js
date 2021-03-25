@@ -16,5 +16,11 @@ router.get(
   Authenticated,
   agoraController.missedCall
 )
+
+router.post(
+  "/start",
+  Authenticated,
+  agoraController.startCall
+);
   
 module.exports = router;
