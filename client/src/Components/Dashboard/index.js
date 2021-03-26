@@ -10,8 +10,8 @@ import {
   MISSED_ACTIONS
 } from "../../constant";
 import Tabs from "antd/es/tabs";
-import Patients from "../../Containers/Patient/table";
-import Watchlist from "../../Containers/Patient/watchlist";
+import Patients from "../../Containers/Patient/paginatedTable";
+// import Watchlist from "../../Containers/Patient/watchlist";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 
 import ChatPopup from "../../Containers/ChatPopup";
@@ -48,6 +48,16 @@ const CHART_MISSED_MEDICATION = "Missed Medication";
 const CHART_MISSED_APPOINTMENT = "Missed Appointment";
 const CHART_MISSED_ACTION = "Missed Action";
 
+export const CURRENT_TAB = {
+  ALL_PATIENTS:"1",
+  WATCHLIST:"2"
+};
+
+export const SORTING_TYPE={
+  SORT_BY_DATE:"0",
+  SORT_BY_NAME:"1"   
+}
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -59,7 +69,9 @@ class Dashboard extends Component {
       patient_ids: [],
       showModal: false,
       loading:false,
-      submitting:false
+      submitting:false,
+      currentTab:CURRENT_TAB.ALL_PATIENTS,
+      sortingType:SORTING_TYPE.SORT_BY_NAME
     };
   }
 
@@ -392,6 +404,21 @@ class Dashboard extends Component {
     showVerifyModal(false);
   };
 
+  changeTab = (tab) => {
+    this.setState({currentTab: tab});
+  };
+
+  toggleSort = async() => {
+    const {sortingType = SORTING_TYPE.SORT_BY_NAME}=this.state;
+
+    if(sortingType === SORTING_TYPE.SORT_BY_DATE){
+      await this.setState({sortingType:SORTING_TYPE.SORT_BY_NAME});
+    }else{
+      await this.setState({sortingType:SORTING_TYPE.SORT_BY_DATE});
+    }
+
+  }
+
   render() {
     const { doctors = {}, authenticated_user } = this.props;
     let doctorID = null;
@@ -425,7 +452,7 @@ class Dashboard extends Component {
       twilio: { patientId: chatPatientId = 1 }
     } = this.props;
 
-    const { formatMessage, renderChartTabs, getVerifyModal } = this;
+    const { formatMessage, renderChartTabs, getVerifyModal , changeTab , toggleSort} = this;
 
     let {
       basic_info: {
@@ -443,7 +470,9 @@ class Dashboard extends Component {
       visibleModal,
       doctorUserId,
       loading=false,
-      submitting=false
+      submitting=false,
+      currentTab=CURRENT_TAB.ALL_PATIENTS,
+      sortingType
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
@@ -454,6 +483,7 @@ class Dashboard extends Component {
         <Loading className={"wp100"} />
       </div>);
     }
+
 
     return (
       <Fragment>
@@ -502,16 +532,19 @@ class Dashboard extends Component {
             {formatMessage(messages.patients)}
           </div>
 
-          <Tabs tabPosition="top">
+          <Tabs tabPosition="top"
+          defaultActiveKey={CURRENT_TAB.ALL_PATIENTS} activeKey={currentTab} onTabClick={changeTab}
+          >
             <TabPane
               tab={
                 <span className="fs16 fw600">
                   {formatMessage(messages.summary)}
                 </span>
               }
-              key="1"
+              key={CURRENT_TAB.ALL_PATIENTS}
+              
             >
-              <Patients />
+              <Patients currentTab={currentTab} toggleSort={toggleSort} sortingType={sortingType} />
             </TabPane>
 
             <TabPane
@@ -520,9 +553,10 @@ class Dashboard extends Component {
                   {formatMessage(messages.watchList)}
                 </span>
               }
-              key="2"
+              key={CURRENT_TAB.WATCHLIST}
             >
-              <Watchlist />
+              <Patients currentTab={currentTab} toggleSort={toggleSort} sortingType={sortingType} />
+              {/* <Watchlist currentTab={currentTab} toggleSort={toggleSort} sortingType={sortingType} /> */}
             </TabPane>
           </Tabs>
         </div>

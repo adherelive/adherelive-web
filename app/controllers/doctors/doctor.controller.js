@@ -6,6 +6,7 @@ import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 import doctorsService from "../../services/doctors/doctors.service";
 import patientsService from "../../services/patients/patients.service";
+import treatmentService from "../../services/treatment/treatment.service";
 
 import patientService from "../../../app/services/patients/patients.service";
 
@@ -47,6 +48,7 @@ import CouncilWrapper from "../../ApiWrapper/web/council";
 import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
 // import ProviderWrapper from "../../ApiWrapper/web/provider";
 import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
+import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 
 import AuthJob from "../../JobSdk/Auth/observer";
 import NotificationSdk from "../../NotificationSdk";
@@ -67,7 +69,7 @@ import {
   PATIENT_MEAL_TIMINGS,
   FEATURES, NOTIFICATION_VERB
 } from "../../../constant";
-import { getFilePath } from "../../helper/filePath";
+import { getFilePath , completePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
 import getAge from "../../helper/getAge";
@@ -3064,6 +3066,203 @@ class DoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+
+  getPaginatedDataForPatients = async(req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try { 
+      const {
+        userDetails: { userId } = {},
+        query = {}
+      } = req;
+
+      const { 
+            offset=0, 
+            watchlist = 0,
+            sort_by_name = 1,
+            name_order = 1,
+            created_at_order = 1,
+            searchTreatmentText='',
+            searchDisagnosisType='',
+            seachDiagnosisText=''
+           } = query || {};
+     
+
+      Logger.debug("783425462354725436211",{query});
+
+      const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+
+      const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
+      const endLimit = parseInt(limit, 10);
+
+      const doctor = await doctorService.getDoctorByData({
+        user_id: userId
+      });
+
+      const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
+      const sortByName = parseInt(sort_by_name, 10) === 0? 0: 1;
+      const createdAtOrder = parseInt(created_at_order, 10) === 0? 0: 1;
+      const nameOrder = parseInt(name_order, 10) === 0? 0: 1;
+
+      let doctorId = null, patients = {}, paginatedPatientData = {}, watchlistPatientIds = [], count = 0, patientIds = [];
+
+      if(doctor) {
+        const doctorData = await DoctorWrapper(doctor);
+        doctorId = doctorData.getDoctorId();
+
+        
+        const doctorAllInfo = await doctorData.getAllInfo();
+        const { watchlist_patient_ids = []} = doctorAllInfo || {};
+        watchlistPatientIds = watchlist_patient_ids;
+      }
+
+      if(getWatchListPatients) {
+        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+      } else {
+        count = await carePlanService.getDistinctPatientCounts(doctorId);
+      }
+
+      if(count > 0) {
+        const data = {
+          offset: offsetLimit,
+          limit: endLimit,
+          doctorId,
+          watchlistPatientIds,
+          watchlist: getWatchListPatients,
+          sortByName,
+          createdAtOrder,
+          nameOrder
+        }
+
+        
+        let matchingTreatmentIds = [];
+        let treatmentIds = '';
+        if(searchTreatmentText){
+          const treatments = await treatmentService.searchByName(searchTreatmentText);
+          for(let each in treatments){
+            const treatment = treatments[each];
+            const treatmentData = await TreatmentWrapper(treatment);
+            let treatmentId = treatmentData.getTreatmentId();
+            matchingTreatmentIds.push(treatmentId);
+  
+          }
+          treatmentIds = matchingTreatmentIds.toString();
+  
+        }
+
+        let careplansForDiagnosisType={};
+        let careplansForDiagnosisDesc={};
+        let careplansForTreatmentType={};
+        let crIdsForMatchingDiagnosisType =[];
+        let crIdsForMatchingDiagnosisDesc =[];
+        let crIdsForMatchingTreatmentType =[];
+
+        if(searchDisagnosisType){
+          careplansForDiagnosisType = await carePlanService.searchDiagnosisType(searchDisagnosisType);
+        }
+
+        if(seachDiagnosisText){
+          careplansForDiagnosisDesc = await carePlanService.searchDiagnosisDescription(seachDiagnosisText);
+        }
+
+        if(treatmentIds.length>0){
+          careplansForTreatmentType = await carePlanService.searchtreatmentIds(treatmentIds);
+        }
+
+        
+        for(const each in careplansForDiagnosisType){
+          const formattedCareplanData = careplansForDiagnosisType[each];
+          const {careplan_id} = formattedCareplanData;
+          crIdsForMatchingDiagnosisType.push(careplan_id);
+
+        }
+
+        for(const each in careplansForDiagnosisDesc){
+          const formattedCareplanData = careplansForDiagnosisDesc[each];
+          const {careplan_id} = formattedCareplanData;
+          crIdsForMatchingDiagnosisDesc.push(careplan_id);
+
+        }
+
+        for(const each in careplansForTreatmentType){
+          const formattedCareplanData = careplansForTreatmentType[each];
+          const {careplan_id} = formattedCareplanData;
+          crIdsForMatchingTreatmentType.push(careplan_id);
+
+        }
+
+        const allPatients = await carePlanService.getPaginatedDataOfPatients(data);
+
+        console.log("35732432542730078783246722223 ======>>>>> ",{allPatients,crIdsForMatchingTreatmentType})
+
+
+        for(const patient of allPatients) {
+          const formattedPatientData = patient;
+  
+          const { id, details = {},care_plan_id } = formattedPatientData;
+
+          if(crIdsForMatchingDiagnosisType.length && crIdsForMatchingDiagnosisType.length>0 
+            ||
+            crIdsForMatchingDiagnosisDesc.length && crIdsForMatchingDiagnosisDesc.length>0
+            ||
+            crIdsForMatchingTreatmentType.length && crIdsForMatchingTreatmentType.length>0
+          ){
+              
+              if(crIdsForMatchingDiagnosisType.length && crIdsForMatchingDiagnosisType.length>0){
+                if(!crIdsForMatchingDiagnosisType.includes(care_plan_id)){
+                  continue;
+                }
+              }else if(crIdsForMatchingDiagnosisDesc.length && crIdsForMatchingDiagnosisDesc.length>0){
+                if(!crIdsForMatchingDiagnosisDesc.includes(care_plan_id)){
+                  continue;
+                }
+              }else if(crIdsForMatchingTreatmentType.length && crIdsForMatchingTreatmentType.length>0){
+                if(!crIdsForMatchingTreatmentType.includes(care_plan_id)){
+                  continue;
+                }
+              }
+          }
+          patientIds.push(id);
+          let watchlist = false;
+  
+          const { profile_pic } = details;
+          const updatedDetails =  {
+            ...details,
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
+          };
+  
+          if(watchlistPatientIds.indexOf(id) !== -1) {
+            watchlist = true;
+          }
+  
+          paginatedPatientData[id] = {...formattedPatientData, watchlist, details: updatedDetails};
+          const patientWrapper = await PatientWrapper(null, id);
+          patients[id] = await patientWrapper.getAllInfo();
+        }
+      }
+
+      
+      
+      return raiseSuccess(
+        res,
+        200,
+        {
+          total: count,
+          page_size: limit,
+          patient_ids: patientIds,
+          paginated_patients_data: paginatedPatientData,
+          patients,
+        },
+        "Patients data fetched successfully."
+      );
+      
+    } catch (error) {
+      Logger.debug("getPaginatedDataForPatients 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
+
+
 }
 
 export default new DoctorController();
