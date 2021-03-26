@@ -60,10 +60,10 @@ class TestAgoraVideo extends Component {
     const audioTrack = this.rtc.localAudioTrack;
     this.audioInterval = setInterval(() => {
       const level = audioTrack.getVolumeLevel();
-      const vol = level*1000;
+      const vol = level*100;
       this.setState({audioLevel:vol});
       
-    }, 1000);
+    }, 300);
   };
 
   removeAudioInterval = () => {
