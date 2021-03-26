@@ -36,11 +36,6 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Start Date"
   },
-  createdAt: {
-    id: "app.patient.table.createdAt",
-    description: "",
-    defaultMessage: "Created At"
-  },
   doctor: {
     id: "app.patient.table.doctor",
     description: "",
@@ -86,16 +81,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "Add to watchlist"
   },
-  searchText: {
-    id: "app.patient.table.searchText",
+  createdAt: {
+    id: "app.patient.table.createdAt",
     description: "",
-    defaultMessage: "Search"
-  },
-  resetText: {
-      id: "app.patient.table.resetText",
-      description: "",
-      defaultMessage: "Reset"
-  },
+    defaultMessage: "Created At"
+  }
 });
 
 export default messages;

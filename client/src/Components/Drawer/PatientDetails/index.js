@@ -215,7 +215,8 @@ class PatientDetailsDrawer extends Component {
   };
 
   getPatientDetailContent = () => {
-    const { auth = {}, treatments = {}, doctors = {}, conditions = {}, severity: severities = {}, providers, patients, payload, care_plans, users = {}} = this.props;
+    const { auth = {}, treatments = {}, doctors = {}, conditions = {},
+     severity: severities = {}, providers, patients, payload, care_plans, users = {}} = this.props;
 
     const {
       formatMessage,
@@ -262,7 +263,10 @@ class PatientDetailsDrawer extends Component {
       const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
       const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
       const {
-        basic_info: { user_id = null, first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
+        basic_info: { 
+          user_id = null, first_name, middle_name, last_name, age = "--", gender, uid = '123456'
+         } = {}
+         ,
         reports = [],
         provider_id,
       } = patients[id] || {};

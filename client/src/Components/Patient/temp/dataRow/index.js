@@ -1,20 +1,26 @@
 import { TABLE_COLUMN, formatPatientTableData } from "../helper";
 
 export default data => {
-  const { id,addToWatchlist, onRowClick,removePatientFromWatchlist} = data;
+  const { id,addToWatchlist, onRowClick,removePatientFromWatchlist,
+    currentTab,handleGetPatients,tabChanged , offset , paginated_patient_ids} = data;
+
   const formattedData = formatPatientTableData(data);
-  const { patientData, treatmentData, doctorData, providerData, chatData, carePlanData} =
+  const { patientData, treatmentData, doctorData,  carePlanData} =
     formattedData || {};
 
   return {
     key: id,
     [TABLE_COLUMN.PID.dataIndex]: {
       patientData,
-      chatData,
       addToWatchlist,
       doctorData,
       onRowClick,
-      removePatientFromWatchlist
+      removePatientFromWatchlist,
+      currentTab,
+      handleGetPatients,
+      tabChanged,
+      offset,
+      paginated_patient_ids
     },
     [TABLE_COLUMN.DIAGNOSIS.dataIndex]: {
       patientData
