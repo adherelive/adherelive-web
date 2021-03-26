@@ -29,6 +29,8 @@ const TRANSACTION_DETAILS = "transaction_details";
 const TEMPLATES="templates";
 const MEDICINES = "medicines";
 
+const ADD_ACCOUNT = "add_account";
+
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
 class SideMenu extends Component {
@@ -112,6 +114,9 @@ class SideMenu extends Component {
           history.push(PATH.PROFILE);
         }
         break;
+        case ADD_ACCOUNT:
+          history.push(PATH.SIGN_IN);
+          break;
       case SETTINGS:
         if(onboarded){
           history.push(PATH.SETTINGS);
@@ -177,6 +182,9 @@ class SideMenu extends Component {
               history.push(PATH.PROFILE);
             }
             break;
+            case ADD_ACCOUNT:
+              history.push(PATH.SIGN_IN);
+              break;
           case SETTINGS:
             if(onboarded){
               history.push(PATH.SETTINGS);
@@ -230,9 +238,24 @@ class SideMenu extends Component {
     }
   };
 
+  getMultipleAccountMenu = () => {
+    return null;
+  }
+
+  handleAddAccount = (e) => {
+    this.props.history.push(PATH.SIGN_IN);
+  };
+
   menu = () => {
+    const {getMultipleAccountMenu, handleAddAccount} = this;
     return (
       <Menu className="l70 b20 fixed" key={"sub"} onClick={this.handleItemSelect}>
+        {getMultipleAccountMenu()}
+
+        <Menu.Item className="pl24 pr80" key={ADD_ACCOUNT}>
+          Add Account
+        </Menu.Item>
+
         <Menu.Item className="pl24 pr80" key={PRIVACY_POLICY}>
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacy_policy_text)}
