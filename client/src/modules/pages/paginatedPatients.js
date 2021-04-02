@@ -2,13 +2,25 @@
 import { doRequest } from "../../Helper/network";
 import { REQUEST_TYPE } from "../../constant";
 
-import {getPatientsPaginatedUrl} from "../../Helper/urls/doctor";
+import {getPatientsPaginatedUrl,
+  getSearchTreatmentPaginatedPatientsUrl,
+  getSearchDiagnosisPaginatedPatientsUrl} from "../../Helper/urls/patients";
 
 export const GET_PATIENT_PAGINATED = "GET_PATIENT_PAGINATED";
 export const GET_PATIENT_PAGINATED_COMPLETED = "GET_PATIENT_PAGINATED_COMPLETED";
 export const GET_PATIENT_PAGINATED_FAILED = "GET_PATIENT_PAGINATED_FAILED"; 
 
-export const getPatientsPaginated = ({offset,watchlist,sort_by_name,created_at_order,name_order}) => {
+
+export const GET_SEARCH_TREATMENT_PATIENTS = "GET_SEARCH_TREATMENT_PATIENTS";
+export const GET_SEARCH_TREATMENT_PATIENTS_COMPLETED = "GET_SEARCH_TREATMENT_PATIENTS_COMPLETED";
+export const GET_SEARCH_TREATMENT_PATIENTS_FAILED = "GET_SEARCH_TREATMENT_PATIENTS_FAILED"; 
+
+export const GET_SEARCH_DIAGNOSIS_PATIENTS = "GET_SEARCH_DIAGNOSIS_PATIENTS";
+export const GET_SEARCH_DIAGNOSIS_PATIENTS_COMPLETED = "GET_SEARCH_DIAGNOSIS_PATIENTS_COMPLETED";
+export const GET_SEARCH_DIAGNOSIS_PATIENTS_FAILED = "GET_SEARCH_DIAGNOSIS_PATIENTS_FAILED"; 
+
+
+export const getPatientsPaginated = ({sort_createdAt,sort_name,filter_diagnosis,filter_treatment,offset,watchlist=0}) => {
     let response = {};
     return async (dispatch) => {
       try {
@@ -16,7 +28,7 @@ export const getPatientsPaginated = ({offset,watchlist,sort_by_name,created_at_o
   
         response = await doRequest({
           method: REQUEST_TYPE.GET,
-          url: getPatientsPaginatedUrl({offset,watchlist,sort_by_name,created_at_order,name_order})
+          url: getPatientsPaginatedUrl({sort_createdAt,sort_name,filter_diagnosis,filter_treatment,offset,watchlist})
         });
   
         let { status, payload: {data={}} = {} } =
@@ -27,7 +39,6 @@ export const getPatientsPaginated = ({offset,watchlist,sort_by_name,created_at_o
         if (status === true) {
           data["watchlist"] = watchlist.toString();
           data["offset"]=offset.toString();
-          data["sort_by_name"]=sort_by_name;
           dispatch({
             type: GET_PATIENT_PAGINATED_COMPLETED,
             data
@@ -44,8 +55,82 @@ export const getPatientsPaginated = ({offset,watchlist,sort_by_name,created_at_o
   
       return response;
     };
+}
+
+
+  export const searchTreatmentPaginatedPatients = ( { filter_treatment,offset,watchlist=0 } ) => {
+    let response = {};
+    return async (dispatch) => {
+      try {
+        dispatch({ type: GET_SEARCH_TREATMENT_PATIENTS });
+
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: getSearchTreatmentPaginatedPatientsUrl({ filter_treatment,offset,watchlist })
+        });
+
+        let { status, payload: {data={}} = {} } =
+        response || {};
+
+        if (status === true) {
+
+          data["watchlist"] = watchlist.toString();
+          data["offset"]=offset.toString();
+          data["patient_table_search"]=true;
+          dispatch({
+            type: GET_SEARCH_TREATMENT_PATIENTS_COMPLETED,
+            data
+          });
+        } else {
+          dispatch({
+            type:GET_SEARCH_TREATMENT_PATIENTS_FAILED,
+          });
+        }
+      } catch (err) {
+        console.log("GET_SEARCH_TREATMENT_PATIENTS err ======>>>>>", err);
+        throw err;
+      }
+
+      return response;
+    };
   }
 
+
+  export const searchDiagnosisPaginatedPatients = ( { filter_diagnosis,offset,watchlist=0 } ) => {
+    let response = {};
+    return async (dispatch) => {
+      try {
+        dispatch({ type: GET_SEARCH_DIAGNOSIS_PATIENTS });
+
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: getSearchDiagnosisPaginatedPatientsUrl({ filter_diagnosis,offset,watchlist })
+        });
+
+        let { status, payload: {data={}} = {} } =
+        response || {};
+
+        if (status === true) {
+          data["watchlist"] = watchlist.toString();
+          data["offset"]=offset.toString();
+          data["patient_table_search"]=true;
+          dispatch({
+            type: GET_SEARCH_DIAGNOSIS_PATIENTS_COMPLETED,
+            data
+          });
+        } else {
+          dispatch({
+            type:GET_SEARCH_DIAGNOSIS_PATIENTS_FAILED,
+          });
+        }
+      } catch (err) {
+        console.log("GET_SEARCH_DIAGNOSIS_PATIENTS err ======>>>>>", err);
+        throw err;
+      }
+
+      return response;
+    };
+  }
 
 function paginatedPatientReducer(state, data) {
     const {paginated_patients_data} = data || {};

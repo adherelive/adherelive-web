@@ -90,6 +90,12 @@ router.get(
     Authenticated,
     PatientController.generatePrescription
 );
+
+router.get(
+    "/pagination",
+    Authenticated,
+    PatientController.getAllPatientsPagination
+);
   
 
 module.exports = router;

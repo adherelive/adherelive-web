@@ -1820,3 +1820,6 @@ export const LOCAL_STORAGE = {
   LOCAL_IS_AUDIO_ON:"localIsAudioOn",
   LOCAL_IS_VIDEO_ON:"localIsVideoOn"
 }
+
+export const ASCEND = "ascend";
+export const DESCEND = "descend";

@@ -46,7 +46,6 @@ export const TABLE_COLUMN = {
   export const formatPatientTableData = data => {
     let {
       id,
-      patients,
       doctors,
       treatments = {},
       severity: severities = {},
@@ -54,11 +53,16 @@ export const TABLE_COLUMN = {
       users,
       care_plans,
       authenticated_user,
-      openEditPatientDrawer
+      openEditPatientDrawer,
+      paginatedPatientData
     } = data || {};
+    
+
+    const {care_plans : data_care_plans ={},patients = {}}=paginatedPatientData || {};
+
+
   
-    let doctor_id = null;
-  
+    let doctor_id = null ;
     Object.keys(doctors).forEach(id => {
       const { basic_info: { user_id = null } = {} } = doctors[id] || {};
   
@@ -68,7 +72,6 @@ export const TABLE_COLUMN = {
       }
     });
   
-    let patientData = patients[id] || {};
     let treatment = "";
     let condition = "";
     let severity = "";
@@ -76,13 +79,13 @@ export const TABLE_COLUMN = {
     let carePlanData = {};
 
     const {
-      care_plan_details : {
+      details : {
         treatment_id: cTreatment = "",
         condition_id: cCondition = "",
         severity_id: cSeverity = ""
       } = {} ,
-      care_plan_id : carePlanId =''
-    } = patientData || {};
+      id : carePlanId =''
+    } = data_care_plans || {};
 
     let { basic_info: { name: treatmentName = "" } = {} } =treatments[cTreatment] || {};
 
@@ -95,22 +98,23 @@ export const TABLE_COLUMN = {
     severity = severityName;
 
     carePlanData = {
-      ...care_plans[carePlanId],
+      ...data_care_plans,
       treatment,
       condition,
       severity
     };
+
+
     
     
-    patientData = { ...patients[id], treatment, condition, severity ,carePlanData  };
+    const patientData = { ...patients  };
   
-    const { basic_info: { name: carePlanName } = {}, activated_on } =
-      care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized
+    // const { basic_info: { name: carePlanName } = {}, activated_on } =
+      // care_plans["1"] || {}; // todo: constant for now as careplan runs from seeder as design is not finalized
   
     const treatmentData = treatments[cTreatment] || {};
     const doctorData = doctors[doctor_id] || {};
 
-    console.log("87364823546254362 ==== ===========>>>>",{patients,patientData,treatmentData,doctorData});
   
   
     return {
@@ -120,5 +124,6 @@ export const TABLE_COLUMN = {
       carePlanData,
       openEditPatientDrawer
     };
+
   };
   

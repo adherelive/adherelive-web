@@ -1,6 +1,7 @@
 import Database from "../../../libs/mysql";
+import {QueryTypes} from "sequelize";
 
-import { TABLE_NAME } from "../../models/carePlan";
+import {TABLE_NAME} from "../../models/carePlan";
 import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePlanAppointments";
@@ -9,6 +10,8 @@ import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlan
 
 import { TABLE_NAME as medicationTableName } from "../../models/medicationReminders";
 import { TABLE_NAME as medicineTableName } from "../../models/medicines";
+
+
 
 
 class CarePlanService {
@@ -292,6 +295,73 @@ class CarePlanService {
       throw err;
     }
   }
+
+  
+
+  getPaginatedPatients = async ({doctor_id, order, filter,offset,limit,watchlist,watchlistPatientIds}) => {
+
+    // const patientWatchlistedIds = watchlistPatientIds.length ? watchlistPatientIds.toString() : null ;
+
+    // console.log("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
+
+    let  finalFilter = filter ? filter :  `carePlan.doctor_id = ${doctor_id}`;
+   
+
+
+    const finalOrder = order ? order : `patient.created_at DESC`;
+    let query ='';
+
+      query = `
+    SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
+      carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
+      JOIN 
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE doctor_id=${doctor_id} GROUP BY patient_id)
+      AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
+      JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
+        WHERE ${finalFilter} ${watchlist}
+      ORDER BY ${finalOrder}
+      LIMIT ${limit}
+      OFFSET ${offset};
+    `;
+
+      const countQuery = `
+    SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
+      carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
+      JOIN 
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE doctor_id=${doctor_id} GROUP BY patient_id)
+      AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
+      JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
+        WHERE ${finalFilter} ${watchlist}
+      ORDER BY ${finalOrder};
+      `;
+    // }
+
+    try {
+      const carePlans = await Database.performRawQuery(query, {raw: true, type: QueryTypes.SELECT});
+
+      const carePlanCount = await Database.performRawQuery(countQuery, {raw: true, type: QueryTypes.SELECT}) || [];
+
+      // console.log("910238102 carePlanCount", carePlanCount);
+      return [carePlanCount.length, carePlans];
+
+      // return carePlans;
+      // return await Database.getModel(TABLE_NAME).findAll({
+      //   where: {
+      //     doctor_id
+      //   },
+      //     include: [
+      //       {
+      //         model: Database.getModel(patientTableName),
+      //         where: ""
+      //       },
+      //     ],
+      //     order: [["first_name", "ASC"]],
+      //     raw: true,
+      //   });
+    } catch(error) {
+      throw error;
+    }
+  };
 
 
 

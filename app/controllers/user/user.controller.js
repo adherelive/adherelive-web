@@ -9,7 +9,7 @@ import base64 from "js-base64";
 import bcrypt from "bcrypt";
 
 import Log from "../../../libs/log";
-import fs from "fs";
+// import fs from "fs";
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
 // import doctorService from "../../services/doctor/doctor.service";

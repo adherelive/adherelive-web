@@ -17,9 +17,8 @@ import admin_medicines from "./adminMedicines";
 import admin_search_medicines from "./adminSearchMedicines";
 import favourite_medicine_ids from "./favouriteMedicineIds";
 import favourite_medical_test_ids  from "./favourteMedicalTestIds";
-import paginated_patient_ids from "./paginatedPatientIds";
-import paginated_patients from "./paginatedPatients";
-
+import paginated_patient_data from "./paginatedPatientsData";
+import search_patient_table from "./searchPatientTable"; 
 
 const rootReducer = combineReducers({
   patient_ids,
@@ -40,8 +39,8 @@ const rootReducer = combineReducers({
   admin_search_medicines,
   favourite_medicine_ids,
   favourite_medical_test_ids,
-  paginated_patient_ids,
-  paginated_patients
+  paginated_patient_data,
+  search_patient_table
 });
 
 export default (state, action) => {

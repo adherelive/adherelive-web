@@ -1,4 +1,4 @@
-import React , {Component} from "react";
+import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { Table, Icon } from "antd";
 import generateRow from "./dataRow";
@@ -6,8 +6,6 @@ import getColumn from "./header";
 import messages from "./messages";
 import message from "antd/es/message";
 import {CURRENT_TAB }  from "../../Dashboard";
-import { TABLE_COLUMN } from "./helper";
-import config from "../../../config";
 
 export const SORTING_TYPE={
     SORT_BY_DATE:"0",
@@ -16,19 +14,15 @@ export const SORTING_TYPE={
 
 class patientTable extends Component{
     constructor(props){
-        super(props)
+        super(props);
         this.state={
             offset:0,
+            pageSize:0,
             loading:false,
             total:null,
-            tabChanged:false,
-            created_at_order:1,
-            name_order:1,
-            sort_by_name:"1",
+            tabChanged:false
         }
     }
-
-    formatMessage = (data) => this.props.intl.formatMessage(data);
 
     async componentDidMount(){
         this.handleGetPatients();
@@ -36,38 +30,29 @@ class patientTable extends Component{
     
     }
 
-    async componentDidUpdate(prevProps,prevState){
-        const {currentTab : prev_currentTab = '' }=prevProps;
-        const {currentTab = '' } =this.props;
-        const { tabChanged=false } = this.state;
+
+    async componentDidUpdate (prevProps,prevState){
+        const {currentTab : prev_currentTab ='', sortingType:prev_sortingType = SORTING_TYPE.SORT_BY_NAME }=prevProps;
+        const {currentTab ='' , sortingType = SORTING_TYPE.SORT_BY_NAME } =this.props;
+        const { offset , tabChanged=false } = this.state;
 
         if(currentTab !== prev_currentTab){
-            await this.setState({sort_by_name:"1",name_order:1});
+
             await this.handleGetPatients(true);
             await this.setState({tabChanged:true});
         }else if(tabChanged && currentTab === prev_currentTab ){
-            await this.setState({tabChanged:false});
+            this.setState({tabChanged:false});
+        }
+
+        if(sortingType !== prev_sortingType){
+            await this.handleGetPatients();
         }
     }
 
-
-    getLoadingComponent = () => {
-        const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
-        return {
-          indicator: antIcon
-        };
-    };
-
-
     handleGetPatients = async(tabChanged=false) => {
         try{
-            const {
-                getPatientsPaginated  
-            } = this.props;
-
-
-
-            let {offset : state_offset = 0 , created_at_order=1,name_order=1,sort_by_name="1"  }  =this.state; 
+            const {getPatientsPaginated  , sortingType = "1"} = this.props;
+            let {offset : state_offset = 0  }  =this.state; 
             const {currentTab = CURRENT_TAB.ALL_PATIENTS} = this.props;
             let is_watchlist_flag = "0";
             if(tabChanged === true ){
@@ -80,26 +65,21 @@ class patientTable extends Component{
 
             const payload = {
                 offset : state_offset,
-                sort_by_name,
-                watchlist: is_watchlist_flag,
-                created_at_order,
-                name_order
-
+                sort_by_name:sortingType,
+                watchlist: is_watchlist_flag
             };
-
-
             this.setState({loading:true});
             const response = await getPatientsPaginated(payload);
             const { status , statusCode , payload : { data ={} , message : msg = ''} = {} } = response || {};
-            const {offset='',pageSize=null , total=null}={} = data || {};
-
+            const {offset='',pageSize='' , total=null}={} = data || {};
 
             if(!status){
                 message.warn(msg);
             }
             else{
                 const intOffset = parseInt(offset);
-                this.setState({offset:intOffset});
+                const intPageSize = parseInt(pageSize);
+                this.setState({offset:intOffset,pageSize:intPageSize,total});
             }
 
             this.setState({loading:false});
@@ -109,14 +89,6 @@ class patientTable extends Component{
             console.log("87238543284286342387 error ========>",{error});
         }
     }
-
-    onRowClick = (key) => (event) => {
-        event.preventDefault();
-        const { openPatientDetailsDrawer } = this.props;
-        console.log("23876423542635482",{key});
-        openPatientDetailsDrawer({ patient_id: key });
-    };
-      
 
     getDataSource = () => {
         const {
@@ -222,28 +194,29 @@ class patientTable extends Component{
             paginated_patient_ids
           };
 
-        // console.log("8753465264523754263",{patientIdsArr,arrayOfIds,doc_watchlist_patient_ids});  
 
-        // if(sortingType === SORTING_TYPE.SORT_BY_DATE){
-        //     return patientIdsArr.map(id => {
+        if(sortingType === SORTING_TYPE.SORT_BY_DATE){
+            return patientIdsArr.map(id => {
     
-        //         return generateRow({id, ...props});
-        //     });
+                return generateRow({id, ...props});
+            });
     
-        // }else{
-        //     return patientIdsArr.map(id => {
+        }else{
+            return patientIdsArr.map(id => {
     
-        //         return generateRow({id, ...props});
-        //     });
+                return generateRow({id, ...props});
+            });
 
-        // }
-
-        return patientIdsArr.map(id => {
-    
-            return generateRow({id, ...props});
-        });
+        }
 
     };
+
+
+  onRowClick = (key) => (event) => {
+    event.preventDefault();
+    const { openPatientDetailsDrawer } = this.props;
+    openPatientDetailsDrawer({ patient_id: key });
+  };
 
 
   onPageChange = async (page, pageSize) => {
@@ -256,62 +229,29 @@ class patientTable extends Component{
     }
   };
 
-  onChange = async (pagination, filters, sorter, extra) => {
-      
-
-    const { columnKey , order  } = sorter;
-    console.log("2736428468273647823 ==========>>>>>>>>",{order});
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
 
-    if(columnKey === TABLE_COLUMN.CREATED_AT.key){
-        if(!order){
-            await this.setState({sort_by_name:"1"})
-        }else{
-            
-            if(order === "ascend"){
-                await this.setState({created_at_order:1,sort_by_name:"0"});
-            }else if(order === "descend"){
-                await this.setState({created_at_order:0,sort_by_name:"0"});
-            }
-
-        }
-        
-
-        this.handleGetPatients();
-
-
-    }else if(columnKey === TABLE_COLUMN.PID.key){
-        if(!order){
-            await this.setState({name_order:1,sort_by_name:"1"})
-        }else{
-            
-            if(order === "ascend"){
-                await this.setState({name_order:0,created_at_order:1,sort_by_name:"1"});
-            }else if(order === "descend"){
-                await this.setState({name_order:1,sort_by_name:"1"});
-            }
-
-        }
-        
-
-        this.handleGetPatients();
-    }
-
-  }
+  getLoadingComponent = () => {
+    const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+    return {
+      indicator: antIcon
+    };
+  };
 
     render(){
 
-        const pageSize = config.REACT_APP_ADMIN_MEDICINE_ONE_PAGE_LIMIT;
-
         const { getDataSource, onPageChange , formatMessage , getLoadingComponent  }=this;
-        const { loading = false , total =null , tabChanged =false} = this.state;
-        // console.log("2736428468273647823 RENDErRRrrrRRRrrRRRrrRRR",{pageSize,total});
+        const {pageSize = 10 , loading = false , total =null , tabChanged =false} = this.state;
 
+        const {toggleSort , sortingType = SORTING_TYPE.SORT_BY_NAME} =this.props;
         const patientLocale = {
             emptyText:formatMessage(messages.emptyPatientTable)
         }
-        
-        return  ( // TODO-j -----> Sort in between tab change , filter diagnosis , search
+
+
+
+        return  (
             <Table
                 className="medicine-table"
                 rowClassName={() => "pointer"}
@@ -319,7 +259,8 @@ class patientTable extends Component{
                 columns={getColumn({
                     formatMessage,
                     className: "pointer",
-                    tabChanged
+                    toggleSort,
+                    sortingType
                     })}
                 dataSource={getDataSource()}
                 scroll={{ x: 1600 }}
@@ -334,7 +275,6 @@ class patientTable extends Component{
                     
                 }}
                 locale={patientLocale}
-                onChange={this.onChange}
 
                 
             />
