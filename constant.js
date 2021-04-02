@@ -1532,3 +1532,14 @@ export const RADIOLOGY_DATA = {
     }
   },
 }
+
+export const DIAGNOSIS_TYPE = {
+  FINAL: {
+    id: "1",
+    text:"final"
+  },
+  PROBABLE: {
+    id: "2",
+    text:"probable"
+  }
+}

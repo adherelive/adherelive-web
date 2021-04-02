@@ -10,8 +10,9 @@ import {
   MISSED_ACTIONS
 } from "../../constant";
 import Tabs from "antd/es/tabs";
+// import Patients from "../../Containers/Patient/paginatedTable";
 import Patients from "../../Containers/Patient/paginatedTable";
-// import Watchlist from "../../Containers/Patient/watchlist";
+import Watchlist from "../../Containers/Patient/paginatedWatchlist";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 
 import ChatPopup from "../../Containers/ChatPopup";
@@ -58,6 +59,14 @@ export const SORTING_TYPE={
   SORT_BY_NAME:"1"   
 }
 
+export const SORT_CREATEDAT="sort_createdAt";
+export const SORT_NAME="sort_name";
+export const FILTER_DIAGNOSIS="filter_diagnosis";
+export const FILTER_TREATMENT="filter_treatment";
+export const OFFSET="offset";
+
+
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -71,9 +80,93 @@ class Dashboard extends Component {
       loading:false,
       submitting:false,
       currentTab:CURRENT_TAB.ALL_PATIENTS,
-      sortingType:SORTING_TYPE.SORT_BY_NAME
+      allPatientsTab:{
+        sort_createdAt:1,
+        sort_name:null,
+        filter_diagnosis:'',
+        filter_treatment:'',
+        offset:0
+      },
+      watchlistTab:{
+        sort_createdAt:1,
+        sort_name:null,
+        filter_diagnosis:'',
+        filter_treatment:'',
+        offset:0
+      }
     };
   }
+
+
+  changeTabState = ({currentTab,type,value}) => {
+
+    console.log("362575427356423648236427",{currentTab,type,value});
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState[type]=value;
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+
+  }
+
+  sortByName = ({currentTab}) => {
+
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState["sort_createdAt"]=null;
+    newState["sort_name"]=1;
+
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+
+  }
+
+  sortByCreatedAt = ({currentTab}) => {
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState["sort_createdAt"]=1;
+    newState["sort_name"]=null;
+
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+  }
+  
 
   componentDidMount() {
     const {  authPermissions = [] } = this.props;
@@ -408,16 +501,7 @@ class Dashboard extends Component {
     this.setState({currentTab: tab});
   };
 
-  toggleSort = async() => {
-    const {sortingType = SORTING_TYPE.SORT_BY_NAME}=this.state;
 
-    if(sortingType === SORTING_TYPE.SORT_BY_DATE){
-      await this.setState({sortingType:SORTING_TYPE.SORT_BY_NAME});
-    }else{
-      await this.setState({sortingType:SORTING_TYPE.SORT_BY_DATE});
-    }
-
-  }
 
   render() {
     const { doctors = {}, authenticated_user } = this.props;
@@ -439,6 +523,9 @@ class Dashboard extends Component {
       ? `Dr. ${full_name}`
       : TABLE_DEFAULT_BLANK_FIELD;
 
+    // console.log("198237837128 getCookie", this.getCookie("accessToken"));
+
+
     const {
       graphs,
       treatments,
@@ -452,7 +539,7 @@ class Dashboard extends Component {
       twilio: { patientId: chatPatientId = 1 }
     } = this.props;
 
-    const { formatMessage, renderChartTabs, getVerifyModal , changeTab , toggleSort} = this;
+    const { formatMessage, renderChartTabs, getVerifyModal , changeTab } = this;
 
     let {
       basic_info: {
@@ -472,7 +559,8 @@ class Dashboard extends Component {
       loading=false,
       submitting=false,
       currentTab=CURRENT_TAB.ALL_PATIENTS,
-      sortingType
+      allPatientsTab,
+      watchlistTab
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
@@ -544,7 +632,21 @@ class Dashboard extends Component {
               key={CURRENT_TAB.ALL_PATIENTS}
               
             >
-              <Patients currentTab={currentTab} toggleSort={toggleSort} sortingType={sortingType} />
+              {
+                currentTab === CURRENT_TAB.ALL_PATIENTS
+                &&
+                (
+                  <Patients
+                currentTab={currentTab} 
+                tabState={allPatientsTab}
+                changeTabState={this.changeTabState}
+                sortByName={this.sortByName}
+                sortByCreatedAt={this.sortByCreatedAt}
+
+              />
+
+                )
+              }
             </TabPane>
 
             <TabPane
@@ -555,8 +657,19 @@ class Dashboard extends Component {
               }
               key={CURRENT_TAB.WATCHLIST}
             >
-              <Patients currentTab={currentTab} toggleSort={toggleSort} sortingType={sortingType} />
-              {/* <Watchlist currentTab={currentTab} toggleSort={toggleSort} sortingType={sortingType} /> */}
+
+              {
+                currentTab === CURRENT_TAB.WATCHLIST
+                &&
+                <Watchlist 
+                currentTab={currentTab} 
+                tabState={watchlistTab}
+                changeTabState={this.changeTabState}
+                sortByName={this.sortByName}
+                sortByCreatedAt={this.sortByCreatedAt}
+              
+              />
+              }
             </TabPane>
           </Tabs>
         </div>

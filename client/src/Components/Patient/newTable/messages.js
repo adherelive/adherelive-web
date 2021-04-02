@@ -85,7 +85,17 @@ const messages = defineMessages({
     id: "app.patient.table.createdAt",
     description: "",
     defaultMessage: "Created At"
-  }
+  },
+  searchText: {
+    id: "app.patient.table.searchText",
+    description: "",
+    defaultMessage: "Search"
+  },
+  resetText: {
+      id: "app.patient.table.resetText",
+      description: "",
+      defaultMessage: "Reset"
+  },
 });
 
 export default messages;
