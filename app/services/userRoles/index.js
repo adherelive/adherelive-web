@@ -24,7 +24,7 @@ export default class UserRoles {
     }
 
     getUserId = () => {
-        return this._data.get("user_id");
+        return this._data.get("user_identity");
     }
 
     getUserRoleCategoryId = () => {

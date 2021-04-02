@@ -71,7 +71,7 @@ class UserRolesService {
     try {
       const userRoles = await Database.getModel(TABLE_NAME).findAll({
         where: {
-            user_id
+            user_identity:user_id
           },
       });
       return userRoles;
