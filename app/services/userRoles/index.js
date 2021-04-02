@@ -18,4 +18,23 @@ export default class UserRoles {
     getCategoryType = () => {
         return this._data.category_type
     }
+
+    getUserRoleId = () => {
+        return this._data.get("id");
+    }
+
+    getUserId = () => {
+        return this._data.get("user_id");
+    }
+
+    getUserRoleCategoryId = () => {
+        return this._data.get("category_id");
+    }
+
+    getUserRoleCategoryType = () => {
+        return this._data.get("category_type");
+    }
+    
 }
+
+

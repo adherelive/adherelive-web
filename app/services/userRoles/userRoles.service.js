@@ -53,6 +53,45 @@ class UserRolesService {
       throw error;
     }
   };
+
+  getUserRoleById = async id => {
+    try {
+      const userRole = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+            id
+          },
+      });
+      return userRole;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getUserRolesByUserId = async user_id => {
+    try {
+      const userRoles = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+            user_id
+          },
+      });
+      return userRoles;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
+  getAllByData = async data => {
+    try {
+      const userRoles = await Database.getModel(TABLE_NAME).findAll({
+        where: data
+      });
+      return userRoles;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 }
 
 export default new UserRolesService();
