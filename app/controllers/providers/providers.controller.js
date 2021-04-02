@@ -910,7 +910,7 @@ class ProvidersController extends Controller {
         address,
         details: {
           ...previousProvider.getDetails(),
-          // icon: getFilePath(icon)
+          icon: getFilePath(icon)
         }
       }, id);
 
