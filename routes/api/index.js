@@ -46,7 +46,7 @@ import userRoles from "./userRoles";
 
 router.use(async function(req, res, next) {
   try {
-    let accessToken, userAccessToken, userId = null, userRoleId, userRoleData;
+    let accessToken, userId = null, userRoleId, userRoleData;
     const { cookies = {} } = req;
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
@@ -55,21 +55,16 @@ router.use(async function(req, res, next) {
     //  ----- FOR API TEST POSTMAN ------
 
     // console.log("------------ ACCESS TOKEN ---------> ", req.headers);
-    const { accesstoken: aT = "", user_identification_token = "" } = req.headers || {};
+    const { accesstoken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
-      userAccessToken = user_identification_token
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
 
-    if(userAccessToken) {
-      const decodedUserToken = await jwt.verify(userAccessToken, secret);
-      const { userId: userTokenUserId = null } = decodedUserToken || {};
-      userId = userTokenUserId;
-    } else if (accessToken) {
+    if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
+      const { userRoleId: decodedUserRoleId = null, userId: decodedUserTokenUserId = null } = decodedAccessToken || {};
       const userRoleDetails = await userRolesService.getUserRoleById(decodedUserRoleId);
       if(userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);

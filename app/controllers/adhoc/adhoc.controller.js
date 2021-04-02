@@ -30,6 +30,7 @@ class AdhocController extends Controller {
                     const { category_id = null} = categoryData || {};
 
                     const userRole = await userRolesService.create({
+                        id: userId,
                         user_identity: userId,
                         category_id,
                         category_type: category

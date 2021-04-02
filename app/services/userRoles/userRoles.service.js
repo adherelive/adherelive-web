@@ -67,6 +67,21 @@ class UserRolesService {
     }
   };
 
+  getFirstUserRole = async (userIdentity) => {
+    try {
+      const userRole = await Database.getModel(TABLE_NAME).findOne({
+        where: {
+          user_identity: userIdentity,
+        },
+        order: [["created_at", "ASC"]]
+      });
+      return userRole;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  
   getUserRolesByUserId = async user_id => {
     try {
       const userRoles = await Database.getModel(TABLE_NAME).findAll({

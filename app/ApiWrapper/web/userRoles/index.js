@@ -31,7 +31,8 @@ class UserRoleWrapper extends BaseUserRole {
             category_id,
             category_type,
             createdAt:created_at,
-            updatedAt:updated_at
+            updatedAt:updated_at,
+            deletedAt:deleted_at
         } = _data || {};
 
 
@@ -41,11 +42,11 @@ class UserRoleWrapper extends BaseUserRole {
                 id,
                 user_identity,
                 category_id,
-                category_type,
-                created_at,
-                updated_at
-            }
-            
+                category_type
+            },
+            updated_at,
+            deleted_at,
+            created_at
         };
     };
 

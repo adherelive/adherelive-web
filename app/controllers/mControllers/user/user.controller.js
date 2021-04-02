@@ -33,6 +33,7 @@ import uploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+import userRolesService from '../../../services/userRoles/userRoles.service';
 
 import { doctorQualificationData, uploadImageS3, getServerSpecificConstants } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
@@ -52,6 +53,7 @@ import MSeverityWrapper from "../../../ApiWrapper/mobile/severity";
 import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
+import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
@@ -375,6 +377,13 @@ class MobileUserController extends Controller {
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
 
+      const userRole = await userRolesService.getFirstUserRole(user.get("id"));
+      if(!userRole) {
+        return this.raiseClientError(res, 422, user, "User doesn't exists");
+      }
+      const userRoleWrapper = await UserRolesWrapper(userRole);
+      const userRoleId = userRoleWrapper.getId();
+
       let passwordMatch = false;
 
       const providerDoctorFirstLogin =
@@ -404,7 +413,7 @@ class MobileUserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: user.get("id")
+            userRoleId
           },
           secret,
           {
@@ -415,9 +424,9 @@ class MobileUserController extends Controller {
         const appNotification = new AppNotification();
 
         const notificationToken = appNotification.getUserToken(
-          `${user.get("id")}`
+          `${userRoleId}`
         );
-        const feedId = base64.encode(`${user.get("id")}`);
+        const feedId = base64.encode(`${userRoleId}`);
 
         const apiUserDetails = await MUserWrapper(user.get());
 
@@ -442,6 +451,7 @@ class MobileUserController extends Controller {
               }
             },
             auth_user: apiUserDetails.getId(),
+            auth_user_role: userRoleId,
             auth_category: apiUserDetails.getCategory(),
             hasConsent: apiUserDetails.getConsent(),
             ...permissions
@@ -499,6 +509,23 @@ class MobileUserController extends Controller {
           user_id: user.get("id")
         });
       }
+
+
+      // const doctor = await doctorService.getDoctorByData({
+      //   user_id: user.get("id")
+      // });
+
+      // // todo: this will be  
+      // const doctorData = await DoctorWrapper(doctor);
+      // const userRole = await userRolesService.create({
+      //   user_identity: user.get("id"),
+      //   category_type: USER_CATEGORY.DOCTOR,
+      //   category_id: doctorData.getDoctorId()
+      // });
+
+      // const userRoleWrapper = await UserRolesWrapper(userRole);
+      // const userRoleId = userRoleWrapper.getId();
+
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
