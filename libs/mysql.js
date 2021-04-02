@@ -51,6 +51,7 @@ import * as ProductPlans from "../app/models/productPlans";
 import * as ProviderMembers from "../app/models/providerMembers";
 import * as Providers from "../app/models/providers";
 import * as PaymentProducts from "../app/models/paymentProducts";
+import * as Profiles from "../app/models/profiles";
 
 import * as RegionFeatures from "../app/models/regionFeatures";
 import * as RegionProviders from "../app/models/regionProviders";
@@ -140,6 +141,7 @@ const models = [
   Providers,
   ProviderMembers,
   PaymentProducts,
+  Profiles,
 
   RegionFeatures,
   RegionProviders,

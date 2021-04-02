@@ -38,6 +38,7 @@ import reportRouter from "./reports";
 import transactionRouter from "./transactions";
 import userFavourites from "./userFavourites";
 import agoraRouter from "./agora";
+import adhocRouter from "./adhoc";
 
 router.use(async function(req, res, next) {
   try {
@@ -122,6 +123,7 @@ router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
 router.use("/transactions", transactionRouter);
 router.use("/favourites",userFavourites);
-router.use("/agora", agoraRouter)
+router.use("/agora", agoraRouter);
+router.use("/adhoc", adhocRouter);
 
 module.exports = router;
