@@ -16,11 +16,9 @@ import PatientWrapper from "../../web/patient";
 
 import { USER_CATEGORY} from "../../../../constant";
 
-
 class UserRoleWrapper extends BaseUserRole {
     constructor(data) {
         super(data);
-        console.log("USER ROLE WRAPPER DATA",data);
     }
 
 
@@ -29,7 +27,7 @@ class UserRoleWrapper extends BaseUserRole {
         const { _data } = this;
         const {
             id,
-            user_id,
+            user_identity,
             category_id,
             category_type,
             createdAt:created_at,
@@ -41,7 +39,7 @@ class UserRoleWrapper extends BaseUserRole {
         return {
             basic_info: {
                 id,
-                user_id,
+                user_identity,
                 category_id,
                 category_type,
                 created_at,
@@ -61,25 +59,31 @@ class UserRoleWrapper extends BaseUserRole {
         const getUserRoleUserCategoryType = await this.getUserRoleCategoryType();
 
         let user_category_data = {};
+        let category ='';
+        let doctors = {};
+        let admins = {};
+        let providers= {};
+        let patients = {};
 
         switch (getUserRoleUserCategoryType) {
             case USER_CATEGORY.PROVIDER:
                 const providerData = await providerService.getProviderByData({id:getUserRoleUserCategoryId});
                 const providerDataWrapper = await  ProviderWrapper(providerData);
                 const providerAllInfo = await providerDataWrapper.getAllInfo();
-                user_category_data = {...providerAllInfo,
-                    user_category_id:getUserRoleUserCategoryId,
-                    user_category_type:getUserRoleUserCategoryType
+                const providerId = await providerDataWrapper.getProviderId();
+
+                providers = {
+                    [providerId]:{...providerAllInfo}
                 }
 
                 break;
             case USER_CATEGORY.DOCTOR:
                 const doctorData = await doctorService.getDoctorByData({id:getUserRoleUserCategoryId});
-                const DoctorDataWrapper  = await DoctorWrapper(doctorData);
-                const doctorAllInfo = await DoctorDataWrapper.getAllInfo();
-                user_category_data = {...doctorAllInfo,
-                    user_category_id:getUserRoleUserCategoryId,
-                    user_category_type:getUserRoleUserCategoryType
+                const doctorDataWrapper  = await DoctorWrapper(doctorData);
+                const doctorAllInfo = await doctorDataWrapper.getAllInfo();
+                const doctorId = await doctorDataWrapper.getDoctorId();
+                doctors = {
+                    [doctorId]:{...doctorAllInfo}
                 }
                 const doctor_id = getUserRoleUserCategoryId;
                 const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
@@ -87,31 +91,37 @@ class UserRoleWrapper extends BaseUserRole {
                   );
 
 
-                  let providerId = null ;
+                  let provider_id = null ;
                   if (doctorProvider) {
 
                     const doctorProviderWrapper = await DoctorProviderMappingWrapper(
                       doctorProvider
                     );
-                    providerId = await doctorProviderWrapper.getProviderId();
+                    provider_id = await doctorProviderWrapper.getProviderId();
 
 
-                    const providerData = await ProviderWrapper(null, providerId);
+                    const providerData = await ProviderWrapper(null, provider_id);
                     const providerAllInfo =await  providerData.getAllInfo();
 
-                    user_category_data = { ...user_category_data , 
-                        provider_data : { ...providerAllInfo } };
+                    // user_category_data = { 
+                    //     ...user_category_data , 
+                    //     linked_provider_id:provider_id,
+                    //     provider : { [provider_id] : { ...providerAllInfo} }
+                    //  };
+                    providers =  { [provider_id] : { ...providerAllInfo} };
                   }  
+
 
                 break;    
             case USER_CATEGORY.PATIENT:
                 const patientData = await patientService.getPatientByData({id:getUserRoleUserCategoryId});
                 const patientDatawrapper = await PatientWrapper(patientData);
-                const patietAllInfo = patientDatawrapper.getAllInfo();
-                user_category_data = {...patietAllInfo,
-                    user_category_id:getUserRoleUserCategoryId,
-                    user_category_type:getUserRoleUserCategoryType
+                const patietAllInfo = await patientDatawrapper.getAllInfo();
+                const patientId = await patientDatawrapper.getPatientId();
+                patients = {
+                    [patientId]:{...patietAllInfo}
                 }
+
                 break;    
             case USER_CATEGORY.ADMIN:
                 user_category_data = {};
@@ -122,10 +132,12 @@ class UserRoleWrapper extends BaseUserRole {
 
         console.log("9837462534762379482793452346",{user_category_data});
         
-
         return {
             ...getBasicInfo(),
-            user_category_data
+            doctors,
+            patients,
+            providers,
+            admins
         }
     };
 

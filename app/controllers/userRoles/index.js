@@ -10,6 +10,9 @@ import userService from "../../../app/services/user/user.service";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import UserWrapper from "../../ApiWrapper/web/user";
 
+import { USER_CATEGORY} from "../../../constant";
+
+
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
 
 class UserRoleController extends Controller {
@@ -37,37 +40,59 @@ class UserRoleController extends Controller {
               const userRoles = await userRoleService.getUserRolesByUserId(userId);
               let userRoleApiData = {};
               let userData = {};
+              let user_role_ids = [];
+              let doctors = {};
+              let patients = {};
+              let providers = {};
+              let admins = {};
 
 
 
               for(let i=0;i<userRoles.length;i++){
+                console.log("328946327423547325472 *******************");
+
                 const each = userRoles[i];
                 const userRoleWrapper = await UserRoleWrapper(each);
                 const userRoleAllInfo = await userRoleWrapper.getAllInfo();
-                console.log("37472575264672368462346532478237492122",{userRoles,userRoleAllInfo});
                 const userRoleId = await userRoleWrapper.getUserRoleId();
-                userRoleApiData[userRoleId] =await userRoleWrapper.getAllInfo();
+                userRoleApiData[userRoleId] = await userRoleWrapper.getBasicInfo();
+                user_role_ids.push(userRoleId);
+                const {doctors : userRoleDoctors = {} , providers : userRoleProviders ={} , admins :userRoleAdmins = {} , patients : userRolePatients = {}} = userRoleAllInfo || {};
+                doctors = {...doctors,...userRoleDoctors };
+                providers = { ...providers ,...userRoleProviders };
+                admins = {...admins , ...userRoleAdmins };
+                patients = { ...patients , ...userRolePatients };
+                console.log("32894632742354732547211 @@@@@@@@@@@@@@@@@@@@@@@@@@",{userRoleAllInfo});
+
               }
+
+
 
               if(userRoles.length){
                 const firstUserRole = userRoles[0];
                 const userRoleWrapper = await UserRoleWrapper(firstUserRole);
                 const userId = await userRoleWrapper.getUserId();
                 const user = await userService.getUserById(userId);
-                console.log("3728457325475247652472534",{user});
                 const userDataWrapper = await UserWrapper(user);
                 userData = await userDataWrapper.getBasicInfo();
 
               }
+
+              console.log("328946327423547325472 $$$$$$$$$$$$$$$$$$$$$$$$$");
 
               
                 return raiseSuccess(
                 res,
                 200,
                 {
-                  userRoles:{...userRoleApiData},
+                  user_roles:{...userRoleApiData},
                   userId,
-                  user_data:{ ...userData }
+                  users:{ [userId] : {...userData} },
+                  user_role_ids,
+                  doctors,
+                  providers,
+                  patients,
+                  admins
                 },
                 "UserRole data success"
                 );
