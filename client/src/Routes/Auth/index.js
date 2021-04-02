@@ -1,13 +1,5 @@
 import React, { lazy, Component, Fragment } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-  useLocation,
-} from "react-router-dom";
-import BlankState from "../../Containers/BlankState";
-import { PATH, USER_CATEGORY } from "../../constant";
+import { USER_CATEGORY } from "../../constant";
 
 const Doctors = lazy(() =>
   import(/* webpackChunkName: "DoctorsRouter" */ "../Doctors")

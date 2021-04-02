@@ -257,9 +257,6 @@ class SideMenu extends Component {
 
 
   render() {
-    const { selectedKeys } = this.state;
-    const { handleItemSelect } = this;
-
     const {
       authenticated_user = 0,
       users = {},
@@ -267,6 +264,8 @@ class SideMenu extends Component {
       authenticated_category,
         intl: {formatMessage} = {}
     } = this.props;
+    const { handleItemSelect } = this;
+    
     let dp = "";
     let initials = "";
 
