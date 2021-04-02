@@ -37,6 +37,8 @@ class UserRoleController extends Controller {
               const decodedAccessToken = await jwt.verify(accessToken, secret);
               const { userId = null } = decodedAccessToken || {};
 
+              // console.log("8768236487236487236487326472364732",{decodedAccessToken});
+
               const userRoles = await userRoleService.getUserRolesByUserId(userId);
               let userRoleApiData = {};
               let userData = {};
@@ -49,7 +51,6 @@ class UserRoleController extends Controller {
 
 
               for(let i=0;i<userRoles.length;i++){
-                console.log("328946327423547325472 *******************");
 
                 const each = userRoles[i];
                 const userRoleWrapper = await UserRoleWrapper(each);
@@ -57,12 +58,18 @@ class UserRoleController extends Controller {
                 const userRoleId = await userRoleWrapper.getUserRoleId();
                 userRoleApiData[userRoleId] = await userRoleWrapper.getBasicInfo();
                 user_role_ids.push(userRoleId);
-                const {doctors : userRoleDoctors = {} , providers : userRoleProviders ={} , admins :userRoleAdmins = {} , patients : userRolePatients = {}} = userRoleAllInfo || {};
-                doctors = {...doctors,...userRoleDoctors };
-                providers = { ...providers ,...userRoleProviders };
+
+                const {
+                    doctors : userRoleDoctors = {} ,
+                    providers : userRoleProviders ={} , 
+                    admins :userRoleAdmins = {} , 
+                    patients : userRolePatients = {}
+                  } = userRoleAllInfo || {};
+
+                doctors = { ...doctors, ...userRoleDoctors };
+                providers = { ...providers , ...userRoleProviders };
                 admins = {...admins , ...userRoleAdmins };
                 patients = { ...patients , ...userRolePatients };
-                console.log("32894632742354732547211 @@@@@@@@@@@@@@@@@@@@@@@@@@",{userRoleAllInfo});
 
               }
 
@@ -78,7 +85,6 @@ class UserRoleController extends Controller {
 
               }
 
-              console.log("328946327423547325472 $$$$$$$$$$$$$$$$$$$$$$$$$");
 
               
                 return raiseSuccess(
