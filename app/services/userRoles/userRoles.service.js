@@ -53,6 +53,22 @@ class UserRolesService {
       throw error;
     }
   };
+
+  getFirstUserRole = async (userIdentity) => {
+    try {
+      const userRole = await Database.getModel(TABLE_NAME).findOne({
+        where: {
+          user_identity: userIdentity,
+        },
+        order: [["created_at", "ASC"]]
+      });
+      return userRole;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
 }
 
 export default new UserRolesService();

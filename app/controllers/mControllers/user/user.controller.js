@@ -375,6 +375,13 @@ class MobileUserController extends Controller {
 
       // TODO: UNCOMMENT below code after signup done for password check or seeder
 
+      const userRole = await userRolesService.getFirstUserRole(user.get("id"));
+      if(!userRole) {
+        return this.raiseClientError(res, 422, user, "User doesn't exists");
+      }
+      const userRoleWrapper = await UserRolesWrapper(userRole);
+      const userRoleId = userRoleWrapper.getId();
+
       let passwordMatch = false;
 
       const providerDoctorFirstLogin =
@@ -404,7 +411,7 @@ class MobileUserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: user.get("id")
+            userRoleId
           },
           secret,
           {
@@ -415,9 +422,9 @@ class MobileUserController extends Controller {
         const appNotification = new AppNotification();
 
         const notificationToken = appNotification.getUserToken(
-          `${user.get("id")}`
+          `${userRoleId}`
         );
-        const feedId = base64.encode(`${user.get("id")}`);
+        const feedId = base64.encode(`${userRoleId}`);
 
         const apiUserDetails = await MUserWrapper(user.get());
 
@@ -442,6 +449,7 @@ class MobileUserController extends Controller {
               }
             },
             auth_user: apiUserDetails.getId(),
+            auth_user_role: userRoleId,
             auth_category: apiUserDetails.getCategory(),
             hasConsent: apiUserDetails.getConsent(),
             ...permissions

@@ -20,6 +20,7 @@ import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
+import userRolesService from '../../services/userRoles/userRoles.service';
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -31,6 +32,7 @@ import SeverityWrapper from "../../ApiWrapper/web/severity";
 import ConditionWrapper from "../../ApiWrapper/web/conditions";
 import ProvidersWrapper from "../../ApiWrapper/web/provider";
 import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
+import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 
 import doctorService from "../../services/doctors/doctors.service";
 // import patientService from "../../services/patients/patients.service";
@@ -209,6 +211,14 @@ class UserController extends Controller {
         return this.raiseClientError(res, 422, user, "Email doesn't exists");
       }
 
+      const userRole = await userRolesService.getFirstUserRole(user.get("id"));
+      if(!userRole) {
+        return this.raiseClientError(res, 422, user, "User doesn't exists");
+      }
+
+      const userRoleWrapper = await UserRolesWrapper(userRole);
+      const userRoleId = userRoleWrapper.getId();
+
       // let verified = user.get("verified");
       //
       // if (!verified) {
@@ -259,7 +269,7 @@ class UserController extends Controller {
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: user.get("id")
+            userRoleId
           },
           secret,
           {
@@ -270,9 +280,9 @@ class UserController extends Controller {
         const appNotification = new AppNotification();
 
         const notificationToken = appNotification.getUserToken(
-          `${user.get("id")}`
+          `${userRoleId}`
         );
-        const feedId = base64.encode(`${user.get("id")}`);
+        const feedId = base64.encode(`${userRoleId}`);
 
         // Logger.debug("notificationToken --> ", notificationToken);
         // Logger.debug("feedId --> ", feedId);
@@ -297,8 +307,9 @@ class UserController extends Controller {
           // ...permissions,
           ...(await apiUserDetails.getReferenceData()),
           auth_user: apiUserDetails.getId(),
+          auth_user_role: userRoleId,
           notificationToken: notificationToken,
-          feedId: `${user.get("id")}`,
+          feedId,
           auth_category: apiUserDetails.getCategory(),
           hasConsent: apiUserDetails.getConsent(),
         };
