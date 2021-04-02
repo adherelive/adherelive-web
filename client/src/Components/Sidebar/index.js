@@ -318,7 +318,12 @@ class SideMenu extends Component {
         .join("");
     }
 
-    const {doctor_provider_id =null } = this.props ; 
+    const {doctor_provider_id =null , providers = {} } = this.props ; 
+    const {details : {icon : provider_icon = '' } ={} , basic_info : { name = '' } ={} } = providers[doctor_provider_id] || {};
+
+    const providerInitials =  `${name ? name[0].toUpperCase() : ""}`;
+
+    // console.log("327485235476325423645236",{doctor_provider_id,providers,providerInitials,name});
 
     return (
       <Menu
@@ -449,7 +454,22 @@ class SideMenu extends Component {
               </Tooltip>
             </MenuItem>)
             :
-            null}
+            null
+          }
+          {
+            doctor_provider_id
+            &&
+            <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            // key={DASHBOARD}
+            >
+              <Tooltip placement="right" title={this.formatMessage(messages.providerIcon)}>
+                <img  alt={"Provider Icon"} src={provider_icon}
+                 className="w35 h35"
+                  />
+              </Tooltip>
+            </MenuItem>
+          }
 
       </Menu>
     );

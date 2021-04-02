@@ -3,9 +3,11 @@ import Form from "antd/es/form";
 import Upload from "antd/es/upload";
 import Icon from "antd/es/icon";
 
-import { DeleteTwoTone } from "@ant-design/icons";
+import { DeleteTwoTone , EyeTwoTone } from "@ant-design/icons";
 import LoadingStatus from "../../../Common/Loading";
 import messages from "../message";
+import Modal from "antd/es/modal";
+import Button from "antd/es/button";
 
 const { Item: FormItem } = Form;
 
@@ -16,12 +18,32 @@ class Field extends Component {
     super(props);
     this.state = {
       imageUrl: null,
+      viewModalVisible: false,
+      viewModalSrc: "",
     };
   }
 
   componentDidMount() {
     this.getInitial();
   }
+
+  handleDocumentViewClose = () => {
+    this.setState({
+      viewModalVisible: false,
+      viewModalSrc: ""
+    });
+  };
+
+  handleDocumentViewOpen = src => () => {
+  
+    this.setState({
+      viewModalVisible: true,
+      viewModalSrc: src
+    });
+
+  
+  
+};
 
   getInitial = () => {
     const {provider_id, providers = {}, form: {setFieldsValue} = {}} = this.props;
@@ -101,16 +123,22 @@ class Field extends Component {
     const {imageUrl} = this.state;
     const {handleIconRemove} = this;
     return (
-      <div className={"qualification-avatar-uploader"}>
-        <img src={imageUrl} alt={"provider-icon"} className="wp100 hp100 br4" />
+      <div className={"qualification-avatar-uploader "}>
+        <img src={imageUrl} alt={"provider-icon"} className="wp100 hp100 br4"  />
         <div className="overlay"></div>
-        <div className="button">
+        <div className="button absolute tp45 l0 wp100 flex justify-center align-space-evenly doc-container">
           {" "}
           <DeleteTwoTone
-            className={"del"}
+            className={"del doc-opt"}
             onClick={handleIconRemove}
             twoToneColor="#fff"
           />{" "}
+          <EyeTwoTone
+            className="w20"
+            className={"del doc-opt ml16"}
+            onClick={this.handleDocumentViewOpen(imageUrl)}
+            twoToneColor="#fff"
+          />
         </div>
       </div>
     );
@@ -118,7 +146,7 @@ class Field extends Component {
 
   render() {
     const { form } = this.props;
-    const { imageUrl } = this.state;
+    const { imageUrl ,viewModalVisible= false, viewModalSrc =''} = this.state;
     const {
       formatMessage,
       fieldsError,
@@ -141,6 +169,25 @@ class Field extends Component {
               imageUrl ? getLogo() : getFormContent()
             )}
           </FormItem>
+          <Modal
+          visible={viewModalVisible}
+          closable
+          mask
+          maskClosable
+          onCancel={this.handleDocumentViewClose}
+          width={`50%`}
+          footer={[
+            <Button key="back" onClick={this.handleDocumentViewClose}>
+              Close
+            </Button>
+          ]}
+        >
+          <img
+            src={viewModalSrc}
+            alt="qualification document"
+            className="wp100"
+          />
+        </Modal>
       </Fragment>
     );
   }

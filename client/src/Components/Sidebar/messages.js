@@ -50,5 +50,10 @@ export default defineMessages({
         id:"app.dashboard.sidebar.menu.medicine.text",
         description:"",
         defaultMessage:"All Medicines"
-    }
+    },
+    providerIcon: {
+        id:"app.dashboard.sidebar.menu.provider.icon",
+        description:"",
+        defaultMessage:"Linked Provider Icon"
+    },
 });
