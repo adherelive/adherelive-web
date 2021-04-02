@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 import { TABLE_NAME as userTableName } from "./users";
 import { USER_CATEGORY} from "../../constant";
 
-export const TABLE_NAME = "profiles";
+export const TABLE_NAME = "user_roles";
 
 export const db = database => {
   database.define(
@@ -14,7 +14,7 @@ export const db = database => {
         primaryKey: true,
         autoIncrement: true
       },
-      user_id: {
+      user_identity: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -40,8 +40,8 @@ export const db = database => {
       getterMethods: {
         getBasicInfo() {
           return {
-            profile_id: this.id,
-            user_id: this.user_id,
+            id: this.id,
+            user_identity: this.user_identity,
             category_id: this.category_id,
             category_type: this.category_type
           };
@@ -53,7 +53,7 @@ export const db = database => {
 
 export const associate = database => {
   database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
-    foreignKey: "user_id",
+    foreignKey: "user_identity",
     targetKey: "id"
   });
 };

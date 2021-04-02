@@ -1,4 +1,4 @@
-export default class Profiles {
+export default class UserRoles {
     constructor(data) {
         this._data = data;
     }
@@ -8,7 +8,7 @@ export default class Profiles {
     };
 
     getUserId = () => {
-        return this._data.user_id;
+        return this._data.user_identity;
     }
 
     getCategoryId = () => {

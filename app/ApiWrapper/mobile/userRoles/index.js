@@ -1,7 +1,7 @@
-import BaseProfile from "../../../services/profiles";
-import profileService from "../../../services/profiles/profiles.service";
+import BaseUserRole from "../../../services/userRoles";
+import userRolesService from "../../../services/userRoles/userRoles.service";
 
-class MProfileWrapper extends BaseProfile {
+class MUserRoleWrapper extends BaseUserRole {
     constructor(data) {
         super(data);
     }
@@ -10,7 +10,7 @@ class MProfileWrapper extends BaseProfile {
         const {_data} = this;
         const {
             id,
-            user_id,
+            user_identity,
             category_id,
             category_type,
             created_at,
@@ -21,7 +21,7 @@ class MProfileWrapper extends BaseProfile {
         return {
             basic_info: {
                 id,
-                user_id,
+                user_identity,
                 category_id,
                 category_type
             },
@@ -34,8 +34,8 @@ class MProfileWrapper extends BaseProfile {
 
 export default async (data = null, id = null) => {
     if(data) {
-        return new MProfileWrapper(data);
+        return new MUserRoleWrapper(data);
     }
-    const profile = await profileService.getProfileById(id);
-    return new MProfileWrapper(profile);
+    const profile = await userRolesService.getUserRoleById(id);
+    return new MUserRoleWrapper(profile);
 }

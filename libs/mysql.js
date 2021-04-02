@@ -51,7 +51,6 @@ import * as ProductPlans from "../app/models/productPlans";
 import * as ProviderMembers from "../app/models/providerMembers";
 import * as Providers from "../app/models/providers";
 import * as PaymentProducts from "../app/models/paymentProducts";
-import * as Profiles from "../app/models/profiles";
 
 import * as RegionFeatures from "../app/models/regionFeatures";
 import * as RegionProviders from "../app/models/regionProviders";
@@ -80,6 +79,7 @@ import * as UserPreferences from "../app/models/userPreferences";
 import * as Users from "../app/models/users";
 import * as UserFavourites from "../app/models/userFavourites";
 import * as UserVerifications from "../app/models/userVerifications";
+import * as UserRoles from "../app/models/userRoles";
 
 import * as Vitals from "../app/models/vitals";
 import * as VitalTemplates from "../app/models/vitalTemplates";
@@ -141,7 +141,6 @@ const models = [
   Providers,
   ProviderMembers,
   PaymentProducts,
-  Profiles,
 
   RegionFeatures,
   RegionProviders,
@@ -169,6 +168,7 @@ const models = [
   Users,
   UserFavourites,
   UserVerifications,
+  UserRoles,
 
   Vitals,
   VitalTemplates,

@@ -1,5 +1,5 @@
 import UserWrapper from "../../app/ApiWrapper/mobile/user";
-import ProfileWrapper from "../../app/ApiWrapper/mobile/profile";
+import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
 
 const express = require("express");
 const router = express.Router();
@@ -14,7 +14,7 @@ import mCarePlanRouter from "./carePlans";
 import chartRouter from "./graphs";
 
 import userService from "../../app/services/user/user.service";
-import profileService from "../../app/services/profiles/profiles.service";
+import userRolesService from "../../app/services/userRoles/userRoles.service";
 
 
 import jwt from "jsonwebtoken";
@@ -42,7 +42,7 @@ import adhocRouter from "./adhoc";
 
 router.use(async (req, res, next) => {
   try {
-    let accessToken, userAccessToken, userId = null, profileId, profileData;
+    let accessToken, userAccessToken, userId = null, userRoleId, userRoleData;
     const { authorization = "", user_identification_token = "" } = req.headers || {};
     const bearer = authorization.split(" ");
     const userToken = user_identification_token.split(" ")
@@ -61,24 +61,26 @@ router.use(async (req, res, next) => {
       userId = userTokenUserId;
     } else if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const { profileId: decodedProfileId = null } = decodedAccessToken || {};
-      const profileDetails = await profileService.getProfileById(decodedProfileId);
-      if(profileDetails) {
-        const profile = await ProfileWrapper(profileDetails);
-        userId = profile.getUserId();
-        profileId = decodedProfileId;;
-        profileData = profile.getBasicInfo();
+      const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
+      const userRoleDetails = await userRolesService.getUserRoleById(decodedUserRoleId);
+      if(userRoleDetails) {
+        const userRole = await UserRoleWrapper(userRoleDetails);
+        userId = userRole.getUserId();
+        userRoleId = decodedUserRoleId;;
+        userRoleData = userRole.getBasicInfo();
       } else {
         req.userDetails = {
           exists: false
         };
         next();
+        return;
       }
     } else {
       req.userDetails = {
         exists: false
       };
       next();
+      return;
     }
 
     const userData = await userService.getUser(userId);
@@ -88,8 +90,8 @@ router.use(async (req, res, next) => {
         (await user.getCategoryInfo()) || {};
       req.userDetails = {
         exists: true,
-        profileId,
-        profileData,
+        userRoleId,
+        userRoleData,
         userId,
         userData: userData.getBasicInfo,
         userCategoryData,
@@ -101,12 +103,14 @@ router.use(async (req, res, next) => {
       };
     }
     next();
+    return;
   } catch (err) {
     console.log("89127381723 err -->", err);
     req.userDetails = {
       exists: false
     };
     next();
+    return;
   }
 });
 

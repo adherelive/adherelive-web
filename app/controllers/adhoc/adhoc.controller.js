@@ -1,7 +1,7 @@
 
 // services
 import userService from "../../services/user/user.service";
-import profileService from "../../services/profiles/profiles.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
 
 // wrappers
 import UserWrapper from "../../ApiWrapper/web/user";
@@ -17,7 +17,7 @@ class AdhocController extends Controller {
         super();
     }
 
-    migrateAllUsersToProfile = async (req, res) => {
+    migrateAllUsersToUserRoles = async (req, res) => {
         try {
             const users = await userService.getAll();
             if(users && users.length) {
@@ -29,30 +29,30 @@ class AdhocController extends Controller {
 
                     const { category_id = null} = categoryData || {};
 
-                    const profile = await profileService.createProfile({
-                        user_id: userId,
+                    const userRole = await userRolesService.create({
+                        user_identity: userId,
                         category_id,
                         category_type: category
                     });
                 }
             }
-            return this.raiseSuccess(res, 200, {}, "All users migrated successfully to profiles.");
+            return this.raiseSuccess(res, 200, {}, "All users migrated successfully to user roles.");
         } catch (error) {
-            Log.debug("migrateAllUsersToProfile 50 error", error);
-            return this.raiseServerError(res, 500, {}, "Error in migrating users data to profiles.");
+            Log.debug("migrateAllUsersToUserRoles 50 error", error);
+            return this.raiseServerError(res, 500, {}, "Error in migrating users data to user roles.");
         }
     }
 
     testApi = async (req, res) => {
         try {
             const { userDetails: {userId,
-                profileId,
-                profileData,
+                userRoleId,
+                userRoleData,
                 userData = {},
                 userCategoryData = {}} = {}} = req;
 
             return this.raiseSuccess(res, 200, {
-                profileId, profileData,
+                userRoleId, userRoleData,
                 userId, userData, userCategoryData
             }, "Test api successfull.");
         } catch (error) {

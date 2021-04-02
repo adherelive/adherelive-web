@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/profiles";
+import { TABLE_NAME } from "../app/models/userRoles";
 
 import { TABLE_NAME as userTableName } from "../app/models/users";
 import { USER_CATEGORY} from "../constant";
@@ -13,7 +13,7 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true
         },
-        user_id: {
+        user_identity: {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: {

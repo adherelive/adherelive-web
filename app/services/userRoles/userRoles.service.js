@@ -1,22 +1,22 @@
 import Database from "../../../libs/mysql";
 
 // TABLES
-import { TABLE_NAME } from "../../models/profiles";
+import { TABLE_NAME } from "../../models/userRoles";
 
-class ProfileService {
+class UserRolesService {
   constructor() {}
 
   async getAll() {
     try {
-      const profiles = await Database.getModel(TABLE_NAME).findAll();
-      return profiles;
+      const userRoles = await Database.getModel(TABLE_NAME).findAll();
+      return userRoles;
     } catch (err) {
       console.log(err);
       throw err;
     }
   }
 
-  async createProfile(data) {
+  async create(data) {
     const transaction = await Database.initTransaction();
     try {
       const response = await Database.getModel(TABLE_NAME).create(data, {
@@ -30,29 +30,29 @@ class ProfileService {
     }
   }
 
-  getAllProfilesByData = async data => {
+  getAllUserRolesByData = async data => {
     try {
-      const profile = await Database.getModel(TABLE_NAME).findAll({
+      const userRoles = await Database.getModel(TABLE_NAME).findAll({
         where: data
       });
-      return profile;
+      return userRoles;
     } catch (error) {
       throw error;
     }
   };
 
-  getProfileById = async id => {
+  getUserRoleById = async id => {
     try {
-      const profile = await Database.getModel(TABLE_NAME).findOne({
+      const userRole = await Database.getModel(TABLE_NAME).findOne({
         where: {
           id
         },
       });
-      return profile;
+      return userRole;
     } catch (error) {
       throw error;
     }
   };
 }
 
-export default new ProfileService();
+export default new UserRolesService();
