@@ -68,6 +68,7 @@ import { getCarePlanSeverityDetails } from "../carePlans/carePlanHelper";
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
 import AppNotification from "../../NotificationSdk/inApp";
+import AdhocJob from "../../JobSdk/Adhoc/observer";
 
 const Logger = new Log("WEB USER CONTROLLER");
 
@@ -334,6 +335,11 @@ class UserController extends Controller {
       }
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
+
+      // notification
+      const crashJob = await AdhocJob.execute("crash", {apiName: "signIn"});
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
       return this.raiseServerError(res);
     }
   };

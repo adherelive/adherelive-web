@@ -56,6 +56,7 @@ import UserWrapper from "../../../ApiWrapper/web/user";
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
 import {completePath, getFilePath} from "../../../helper/filePath";
+import AdhocJob from "../../../JobSdk/Adhoc/observer";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -190,6 +191,11 @@ class MobileUserController extends Controller {
       // }
     } catch (error) {
       console.log("error sign in  --> ", error);
+
+       // notification
+       const crashJob = await AdhocJob.execute("crash", {apiName: "signIn(patient)"});
+       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
       return this.raiseServerError(res);
     }
   };
@@ -447,7 +453,12 @@ class MobileUserController extends Controller {
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.message);
+
+      // notification
+      const crashJob = await AdhocJob.execute("crash", {apiName: "signIn(doctor)"});
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
+      return this.raiseServerError(res);
     }
   };
 

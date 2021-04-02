@@ -410,7 +410,8 @@ export const EMAIL_TEMPLATE_NAME = {
   FORGOT_PASSWORD: "forgotPassword",
   INVITATION: "invitation",
   VERIFIED_DOCTOR: "verifiedDoctor",
-  OTP_VERIFICATION: "otpVerification"
+  OTP_VERIFICATION: "otpVerification",
+  SERVER_CRASH:"serverCrash",
 };
 
 export const OBJECT_NAME = {
