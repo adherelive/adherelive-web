@@ -42,6 +42,24 @@ class AdhocController extends Controller {
             return this.raiseServerError(res, 500, {}, "Error in migrating users data to profiles.");
         }
     }
+
+    testApi = async (req, res) => {
+        try {
+            const { userDetails: {userId,
+                profileId,
+                profileData,
+                userData = {},
+                userCategoryData = {}} = {}} = req;
+
+            return this.raiseSuccess(res, 200, {
+                profileId, profileData,
+                userId, userData, userCategoryData
+            }, "Test api successfull.");
+        } catch (error) {
+            Log.debug("testApi 500 error", error);
+            return this.raiseServerError(res, 500, {}, "Error in test api.");
+        }
+    }
 }
 
 export default new AdhocController();

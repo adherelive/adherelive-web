@@ -1,4 +1,5 @@
 import UserWrapper from "../../app/ApiWrapper/mobile/user";
+import ProfileWrapper from "../../app/ApiWrapper/mobile/profile";
 
 const express = require("express");
 const router = express.Router();
@@ -13,6 +14,9 @@ import mCarePlanRouter from "./carePlans";
 import chartRouter from "./graphs";
 
 import userService from "../../app/services/user/user.service";
+import profileService from "../../app/services/profiles/profiles.service";
+
+
 import jwt from "jsonwebtoken";
 
 import collegeRouter from "./college";
@@ -34,38 +38,63 @@ import featuresRouter from "./features";
 import reportRouter from "./reports";
 import userFavourites from "./userFavourites";
 import agoraRouter from "./agora";
+import adhocRouter from "./adhoc";
 
 router.use(async (req, res, next) => {
   try {
-    let accessToken;
-    const { authorization = "" } = req.headers || {};
+    let accessToken, userAccessToken, userId = null, profileId, profileData;
+    const { authorization = "", user_identification_token = "" } = req.headers || {};
     const bearer = authorization.split(" ");
+    const userToken = user_identification_token.split(" ")
     if (bearer.length === 2) {
       accessToken = bearer[1];
     }
+    if(userToken.length === 2) {
+      userAccessToken = userToken[1];
+    }
 
-    if (accessToken) {
-      const secret = process.config.TOKEN_SECRET_KEY;
+    const secret = process.config.TOKEN_SECRET_KEY;
+
+    if(userAccessToken) {
+      const decodedUserToken = await jwt.verify(userAccessToken, secret);
+      const { userId: userTokenUserId = null } = decodedUserToken || {};
+      userId = userTokenUserId;
+    } else if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const { userId = null } = decodedAccessToken || {};
-
-      const userData = await userService.getUser(userId);
-      const user = await UserWrapper(userData);
-      const { userCategoryData, userCategoryId } =
-        (await user.getCategoryInfo()) || {};
-      if (user) {
-        req.userDetails = {
-          exists: true,
-          userId: decodedAccessToken.userId,
-          userData: userData.getBasicInfo,
-          userCategoryData,
-          userCategoryId
-        };
+      const { profileId: decodedProfileId = null } = decodedAccessToken || {};
+      const profileDetails = await profileService.getProfileById(decodedProfileId);
+      if(profileDetails) {
+        const profile = await ProfileWrapper(profileDetails);
+        userId = profile.getUserId();
+        profileId = decodedProfileId;;
+        profileData = profile.getBasicInfo();
       } else {
         req.userDetails = {
           exists: false
         };
+        next();
       }
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+      next();
+    }
+
+    const userData = await userService.getUser(userId);
+    if (userData) {
+      const user = await UserWrapper(userData);
+      const { userCategoryData, userCategoryId } =
+        (await user.getCategoryInfo()) || {};
+      req.userDetails = {
+        exists: true,
+        profileId,
+        profileData,
+        userId,
+        userData: userData.getBasicInfo,
+        userCategoryData,
+        userCategoryId
+      };
     } else {
       req.userDetails = {
         exists: false
@@ -110,5 +139,6 @@ router.use("/accounts", accountsRouter);
 router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
 router.use("/favourites",userFavourites);
+router.use("/adhoc", adhocRouter);
 
 module.exports = router;

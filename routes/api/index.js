@@ -4,7 +4,10 @@ const router = express.Router();
 import jwt from "jsonwebtoken";
 
 import userService from "../../app/services/user/user.service";
+import profileService from "../../app/services/profiles/profiles.service";
+
 import UserWrapper from "../../app/ApiWrapper/web/user";
+import ProfileWrapper from "../../app/ApiWrapper/mobile/profile";
 
 import Logger from "../../libs/log";
 const Log = new Logger("API > INDEX");
@@ -42,7 +45,7 @@ import adhocRouter from "./adhoc";
 
 router.use(async function(req, res, next) {
   try {
-    let accessToken;
+    let accessToken, userAccessToken, userId = null, profileId, profileData;
     const { cookies = {} } = req;
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
@@ -51,33 +54,54 @@ router.use(async function(req, res, next) {
     //  ----- FOR API TEST POSTMAN ------
 
     // console.log("------------ ACCESS TOKEN ---------> ", req.headers);
-    const { accesstoken: aT = "" } = req.headers || {};
+    const { accesstoken: aT = "", user_identification_token = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
+      userAccessToken = user_identification_token
     }
 
-    if (accessToken) {
-      const secret = process.config.TOKEN_SECRET_KEY;
-      const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const { userId = null } = decodedAccessToken || {};
+    const secret = process.config.TOKEN_SECRET_KEY;
 
-      const userData = await userService.getUser(userId);
-      const user = await UserWrapper(userData);
-      const { userCategoryData = {}, userCategoryId } =
-        (await user.getCategoryInfo()) || {};
-      if (user) {
-        req.userDetails = {
-          exists: true,
-          userId: userId,
-          userData: userData.getBasicInfo,
-          userCategoryData,
-          userCategoryId
-        };
+    if(userAccessToken) {
+      const decodedUserToken = await jwt.verify(userAccessToken, secret);
+      const { userId: userTokenUserId = null } = decodedUserToken || {};
+      userId = userTokenUserId;
+    } else if (accessToken) {
+      const decodedAccessToken = await jwt.verify(accessToken, secret);
+      const { profileId: decodedProfileId = null } = decodedAccessToken || {};
+      const profileDetails = await profileService.getProfileById(decodedProfileId);
+      if(profileDetails) {
+        const profile = await ProfileWrapper(profileDetails);
+        userId = profile.getUserId();
+        profileId = decodedProfileId;
+        profileData = profile.getBasicInfo();
       } else {
         req.userDetails = {
-          exists: false.use()
+          exists: false
         };
+        next();
       }
+    } else {
+      req.userDetails = {
+        exists: false
+      };
+      next();
+    }
+
+    const userData = await userService.getUser(userId);
+    if (userData) {
+      const user = await UserWrapper(userData);
+      const { userCategoryData, userCategoryId } =
+        (await user.getCategoryInfo()) || {};
+      req.userDetails = {
+        exists: true,
+        profileId,
+        profileData,
+        userId,
+        userData: userData.getBasicInfo,
+        userCategoryData,
+        userCategoryId
+      };
     } else {
       req.userDetails = {
         exists: false

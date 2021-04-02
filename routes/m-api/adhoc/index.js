@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 import adhocController from "../../../app/controllers/adhoc/adhoc.controller";
-import Authenticated from "../middleware/auth";
+import Authenticated from "../middlewares/auth";
 
 router.post(
     "/populate-profiles",

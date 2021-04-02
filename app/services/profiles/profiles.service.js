@@ -29,6 +29,30 @@ class ProfileService {
       throw err;
     }
   }
+
+  getAllProfilesByData = async data => {
+    try {
+      const profile = await Database.getModel(TABLE_NAME).findAll({
+        where: data
+      });
+      return profile;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getProfileById = async id => {
+    try {
+      const profile = await Database.getModel(TABLE_NAME).findOne({
+        where: {
+          id
+        },
+      });
+      return profile;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 
 export default new ProfileService();
