@@ -40,6 +40,8 @@ const addProviderSchema = Joi.object().keys({
     .required()
     .label("Please enter correct address"),
 
+    // custom ui
+    icon: Joi.string().optional().allow(null, ''),
   // account details
     razorpay_account_id: Joi.string().optional().allow("", null),
     razorpay_account_name: Joi.string().optional().allow("", null),
@@ -101,6 +103,9 @@ const updateProviderSchema = Joi.object().keys({
     .trim()
     .required()
     .label("Please enter correct address"),
+
+     // custom ui
+     icon: Joi.string().optional().allow(null, ''),
 
     // account details
     razorpay_account_id: Joi.string().optional().allow("", null),

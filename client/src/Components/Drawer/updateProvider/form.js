@@ -9,6 +9,8 @@ import Button from "antd/es/button";
 import confirm from "antd/es/modal/confirm";
 
 import prefixField from "../../Prefix";
+
+import Customization from "../addProvider/customization";
 import { SAVINGS, CURRENT, ACCOUNT_TYPES } from "../../../constant";
 
 const { Item: FormItem } = Form;
@@ -318,6 +320,8 @@ class UpdateProviderForm extends Component {
           />
       )}
       </FormItem>
+
+      <Customization {...this.props} />
 
 
       {/* <---------------------------------- ACCOUNT DETAILS ------------------------------------> */}
