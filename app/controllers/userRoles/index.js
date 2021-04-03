@@ -25,31 +25,11 @@ class UserRoleController extends Controller {
         try {
             const {
                 userDetails: {
-                  userCategoryId,
-                  userData: { category = "" } = {}
+                  userId = null
                 } = {},
                 body = {}
               } = req;
 
-              const { query: { accessToken = '' } = {} } = req;
-
-              const secret = process.config.TOKEN_SECRET_KEY;
-              const decodedAccessToken = await jwt.verify(accessToken, secret);
-              const { userRoleId = null } = decodedAccessToken || {};
-
-
-              const userRole = await userRoleService.getUserRoleById(userRoleId);    
-
-              // console.log("37642836546325465324623463287462387",{userRoleId,userRole})
-
-
-              if(userRole){
-
-                const userRoleData = await UserRoleWrapper(userRole);
-
-
-
-                const userId = await userRoleData.getUserId();
   
                 const userRoles = await userRoleService.getUserRolesByUserId(userId);
                 let userRoleApiData = {};
@@ -102,7 +82,6 @@ class UserRoleController extends Controller {
                   200,
                   {
                     user_roles:{...userRoleApiData},
-                    userId,
                     users:{ [userId] : {...userData} },
                     user_role_ids,
                     doctors,
@@ -110,20 +89,9 @@ class UserRoleController extends Controller {
                     patients,
                     admins
                   },
-                  "UserRole data success"
+                  "User role data fetched successfully"
                   );
-              }else{
-
-                return raiseClientError(
-                  res,
-                  422,
-                  {
-                    
-                  },
-                  "No Matching UserRole data found"
-                  );
-
-              }
+              
          
         } catch (error) {
           Log.debug("get UserRole Data 500 error", error);
