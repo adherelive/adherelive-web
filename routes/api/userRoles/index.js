@@ -4,7 +4,7 @@ import Authenticate from "../middleware/auth";
 import userRolesController from "../../../app/controllers/userRoles";
 
 
-router.post(
+router.get(
     "/",
     Authenticate,
     userRolesController.getUserRoles,

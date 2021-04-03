@@ -56,8 +56,8 @@ class UserRoleWrapper extends BaseUserRole {
         const {_data, getBasicInfo,getUserId} = this;
 
 
-        const getUserRoleUserCategoryId = await this.getUserRoleCategoryId();
-        const getUserRoleUserCategoryType = await this.getUserRoleCategoryType();
+        const getUserRoleUserCategoryId = await this.getCategoryId();
+        const getUserRoleUserCategoryType = await this.getCategoryType();
 
         let user_category_data = {};
         let category ='';

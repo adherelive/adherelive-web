@@ -49,23 +49,12 @@ class UserRolesService {
         },
       });
       return userRole;
+
     } catch (error) {
       throw error;
     }
   };
 
-  getUserRoleById = async id => {
-    try {
-      const userRole = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-            id
-          },
-      });
-      return userRole;
-    } catch (error) {
-      throw error;
-    }
-  };
 
   getFirstUserRole = async (userIdentity) => {
     try {
