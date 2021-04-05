@@ -49,10 +49,53 @@ class UserRolesService {
         },
       });
       return userRole;
+
     } catch (error) {
       throw error;
     }
   };
+
+
+  getFirstUserRole = async (userIdentity) => {
+    try {
+      const userRole = await Database.getModel(TABLE_NAME).findOne({
+        where: {
+          user_identity: userIdentity,
+        },
+        order: [["created_at", "ASC"]]
+      });
+      return userRole;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  
+  getUserRolesByUserId = async user_id => {
+    try {
+      const userRoles = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+            user_identity:user_id
+          },
+      });
+      return userRoles;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
+  getAllByData = async data => {
+    try {
+      const userRoles = await Database.getModel(TABLE_NAME).findAll({
+        where: data
+      });
+      return userRoles;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 }
 
 export default new UserRolesService();

@@ -18,4 +18,7 @@ export default class UserRoles {
     getCategoryType = () => {
         return this._data.category_type
     }
+
 }
+
+

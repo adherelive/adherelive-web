@@ -42,24 +42,16 @@ import adhocRouter from "./adhoc";
 
 router.use(async (req, res, next) => {
   try {
-    let accessToken, userAccessToken, userId = null, userRoleId, userRoleData;
-    const { authorization = "", user_identification_token = "" } = req.headers || {};
+    let accessToken, userId = null, userRoleId, userRoleData;
+    const { authorization = "" } = req.headers || {};
     const bearer = authorization.split(" ");
-    const userToken = user_identification_token.split(" ")
     if (bearer.length === 2) {
       accessToken = bearer[1];
-    }
-    if(userToken.length === 2) {
-      userAccessToken = userToken[1];
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
 
-    if(userAccessToken) {
-      const decodedUserToken = await jwt.verify(userAccessToken, secret);
-      const { userId: userTokenUserId = null } = decodedUserToken || {};
-      userId = userTokenUserId;
-    } else if (accessToken) {
+    if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
       const userRoleDetails = await userRolesService.getUserRoleById(decodedUserRoleId);
