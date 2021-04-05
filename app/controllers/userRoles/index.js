@@ -1,6 +1,7 @@
 import Controller from "../index";
 import Logger from "../../../libs/log";
 import jwt from "jsonwebtoken";
+import base64 from "js-base64";
 
 // SERVICES --------------------------------
 import userRoleService from "../../../app/services/userRoles/userRoles.service";
@@ -11,6 +12,8 @@ import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import UserWrapper from "../../ApiWrapper/web/user";
 
 import { USER_CATEGORY} from "../../../constant";
+import AppNotification from "../../NotificationSdk/inApp";
+
 
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
@@ -97,7 +100,89 @@ class UserRoleController extends Controller {
           Log.debug("get UserRole Data 500 error", error);
           return raiseServerError(res);
         }
+  };
+
+  getRoleIdData = async(req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try{
+      const {
+        userDetails: {
+          userId = null,
+          userRoleId = null
+        } = {},
+        body = {}
+      } = req;
+
+      const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+      const user = await userService.getUserById(userId);
+
+      if (!user) {
+        return raiseClientError(res, 422, user, "User doesn't exists");
+      }
+
+      const secret = process.config.TOKEN_SECRET_KEY;
+      // const accessToken = await jwt.sign(
+      //   {
+      //     userRoleId
+      //   },
+      //   secret,
+      //   {
+      //     expiresIn
+      //   }
+      // );
+
+      const appNotification = new AppNotification();
+
+      const notificationToken = appNotification.getUserToken(
+        `${userRoleId}`
+      );
+      const feedId = base64.encode(`${userRoleId}`);
+
+      const userRef = await userService.getUserData({ id: user.get("id") });
+
+      const apiUserDetails = await UserWrapper(userRef.get());
+
+      let permissions = {
+        permissions: []
       };
+
+      if (apiUserDetails.isActivated()) {
+        permissions = await apiUserDetails.getPermissions();
+        Log.debug("675546767890876678", apiUserDetails.getBasicInfo());
+      }
+
+      const dataToSend = {
+        ...(await apiUserDetails.getReferenceData()),
+        auth_user: apiUserDetails.getId(),
+        auth_user_role: userRoleId,
+        notificationToken: notificationToken,
+        feedId,
+        auth_category: apiUserDetails.getCategory(),
+        hasConsent: apiUserDetails.getConsent(),
+      };
+
+      return raiseSuccess(
+        res,
+        200,
+        { ...dataToSend },
+        "User-role User data retrieved successfully"
+      );
+     
+  
+  } catch (error) {
+    Log.debug("get User-role User data 500 error ----> ", error);
+
+    // notification
+
+
+    // const crashJob = await AdhocJob.execute("crash", {apiName: "signIn"});
+    // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
+    return raiseServerError(res);
+  }
+  };
+    
 
 }
 
