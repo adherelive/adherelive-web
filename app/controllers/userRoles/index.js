@@ -106,12 +106,15 @@ class UserRoleController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try{
       const {
-        userDetails: {
-          userId = null,
-          userRoleId = null
-        } = {},
-        body = {}
+        userDetails  =  {},
+        body : {userRoleId = null} = {}
       } = req;
+
+
+
+      const userRoleWrapper  = await UserRoleWrapper(null,userRoleId);
+
+      const userId = await userRoleWrapper.getUserId();
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
@@ -122,15 +125,15 @@ class UserRoleController extends Controller {
       }
 
       const secret = process.config.TOKEN_SECRET_KEY;
-      // const accessToken = await jwt.sign(
-      //   {
-      //     userRoleId
-      //   },
-      //   secret,
-      //   {
-      //     expiresIn
-      //   }
-      // );
+      const accessToken = await jwt.sign(
+        {
+          userRoleId
+        },
+        secret,
+        {
+          expiresIn
+        }
+      );
 
       const appNotification = new AppNotification();
 
@@ -161,6 +164,15 @@ class UserRoleController extends Controller {
         auth_category: apiUserDetails.getCategory(),
         hasConsent: apiUserDetails.getConsent(),
       };
+
+
+      res.cookie("accessToken", accessToken, {
+        expires: new Date(
+          Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+        ),
+        httpOnly: true
+      });
+
 
       return raiseSuccess(
         res,

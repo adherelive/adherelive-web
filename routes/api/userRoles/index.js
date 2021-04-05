@@ -3,7 +3,7 @@ const router = express.Router();
 import Authenticate from "../middleware/auth";
 import userRolesController from "../../../app/controllers/userRoles";
 
-router.get(
+router.post(
     "/switch-role-id",
     Authenticate,
     userRolesController.switchRoleId,
