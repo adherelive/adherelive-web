@@ -4,9 +4,9 @@ import Authenticate from "../middleware/auth";
 import userRolesController from "../../../app/controllers/userRoles";
 
 router.get(
-    "/user-data",
+    "/switch-role-id",
     Authenticate,
-    userRolesController.getRoleIdData,
+    userRolesController.switchRoleId,
 );
 
 

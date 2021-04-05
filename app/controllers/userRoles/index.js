@@ -102,7 +102,7 @@ class UserRoleController extends Controller {
         }
   };
 
-  getRoleIdData = async(req, res) => {
+  switchRoleId = async(req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try{
       const {
@@ -166,18 +166,18 @@ class UserRoleController extends Controller {
         res,
         200,
         { ...dataToSend },
-        "User-role User data retrieved successfully"
+        "User data for RoleId retrieved successfully"
       );
      
   
   } catch (error) {
-    Log.debug("get User-role User data 500 error ----> ", error);
+    Log.debug("switchRoleId data 500 error ----> ", error);
 
     // notification
 
 
-    // const crashJob = await AdhocJob.execute("crash", {apiName: "signIn"});
-    // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+    const crashJob = await AdhocJob.execute("crash", {apiName: "switchRoleId"});
+    Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
 
     return raiseServerError(res);
   }
