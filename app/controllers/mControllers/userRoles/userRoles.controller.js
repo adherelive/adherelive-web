@@ -106,13 +106,9 @@ class UserRoleController extends Controller {
           userDetails  =  {},
           body : {userRoleId = null} = {}
         } = req;
-  
-  
-  
+
         const userRoleWrapper  = await UserRoleWrapper(null,userRoleId);
-  
         const userId = await userRoleWrapper.getUserId();
-  
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
   
         const user = await userService.getUserById(userId);
@@ -140,7 +136,6 @@ class UserRoleController extends Controller {
         const feedId = base64.encode(`${userRoleId}`);
   
         const userRef = await userService.getUserData({ id: user.get("id") });
-  
         const apiUserDetails = await UserWrapper(userRef.get());
   
         let permissions = {
@@ -154,41 +149,30 @@ class UserRoleController extends Controller {
   
         const dataToSend = {
           accessToken,
-          ...(await apiUserDetails.getReferenceData()),
+          notificationToken,
+          feedId,
+          users: {
+            [apiUserDetails.getId()]: {
+              ...apiUserDetails.getBasicInfo()
+            }
+          },
           auth_user: apiUserDetails.getId(),
           auth_user_role: userRoleId,
-          notificationToken: notificationToken,
-          feedId,
           auth_category: apiUserDetails.getCategory(),
           hasConsent: apiUserDetails.getConsent(),
+          ...permissions
         };
-  
-  
-        res.cookie("accessToken", accessToken, {
-          expires: new Date(
-            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
-          ),
-          httpOnly: true
-        });
-  
   
         return raiseSuccess(
           res,
           200,
           { ...dataToSend },
-          "User data for RoleId retrieved successfully"
+          "Account switched successfully."
         );
         
     
     } catch (error) {
       Log.debug("switchRoleId data 500 error ----> ", error);
-  
-      // notification
-  
-  
-      const crashJob = await AdhocJob.execute("crash", {apiName: "switchRoleId"});
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
-  
       return raiseServerError(res);
     }
     };  
