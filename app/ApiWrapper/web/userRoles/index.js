@@ -23,26 +23,23 @@ class UserRoleWrapper extends BaseUserRole {
 
 
     getBasicInfo = () => {
-
         const { _data } = this;
         const {
             id,
             user_identity,
-            category_id,
-            category_type,
+            linked_id,
+            linked_with,
             createdAt:created_at,
             updatedAt:updated_at,
             deletedAt:deleted_at
         } = _data || {};
-
-
         
         return {
             basic_info: {
                 id,
                 user_identity,
-                category_id,
-                category_type
+                linked_id,
+                linked_with
             },
             updated_at,
             deleted_at,

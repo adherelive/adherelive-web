@@ -24,14 +24,14 @@ export const db = database => {
           key: "id"
         }
       },
-      category_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+      linked_with: {
+        type: DataTypes.ENUM,
+        values: [USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN],
+        allowNull: true,
       },
-      category_type: {
-            type: DataTypes.ENUM,
-            values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN],
-            allowNull: false,
+      linked_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       }
     },
     {
@@ -42,8 +42,8 @@ export const db = database => {
           return {
             id: this.id,
             user_identity: this.user_identity,
-            category_id: this.category_id,
-            category_type: this.category_type
+            linked_with: this.linked_with,
+            linked_id: this.linked_id
           };
         }
       }
