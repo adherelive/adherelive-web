@@ -69,7 +69,7 @@ class UserController extends Controller {
         return this.raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
       }
 
-      const newUser = await createNewUser(email, password);
+      const newUser = await createNewUser(email, password, null);
 
       return raiseSuccess(
           res,

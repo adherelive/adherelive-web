@@ -15,6 +15,17 @@ import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 
 
 class CarePlanService {
+
+  async getAll() {
+    try {
+      const careplans = await Database.getModel(TABLE_NAME).findAll();
+      return careplans;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
   getCarePlanByData = async data => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
