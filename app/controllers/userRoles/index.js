@@ -11,126 +11,106 @@ import userService from "../../../app/services/user/user.service";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import UserWrapper from "../../ApiWrapper/web/user";
 
-import { USER_CATEGORY} from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 import AppNotification from "../../NotificationSdk/inApp";
-
-
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
 
 class UserRoleController extends Controller {
-    constructor() {
-      super();
-    }
+  constructor() {
+    super();
+  }
 
-    getUserRoles = async (req, res) => {
-        const { raiseSuccess, raiseClientError, raiseServerError } = this;
-        try {
-            const {
-                userDetails: {
-                  userId = null
-                } = {},
-                body = {}
-              } = req;
-
-  
-                const userRoles = await userRoleService.getAllByData({user_identity: userId});
-                let userRoleApiData = {};
-                let userData = {};
-                let user_role_ids = [];
-                let doctors = {};
-                let patients = {};
-                let providers = {};
-                let admins = {};
-  
-                for(let i=0;i<userRoles.length;i++){
-  
-                  const each = userRoles[i];
-                  const userRoleWrapper = await UserRoleWrapper(each);
-                  const userRoleAllInfo = await userRoleWrapper.getAllInfo();
-                  const userRoleId = await userRoleWrapper.getId();
-                  userRoleApiData[userRoleId] = await userRoleWrapper.getBasicInfo();
-                  user_role_ids.push(userRoleId);
-  
-                  const {
-                      doctors : userRoleDoctors = {} ,
-                      providers : userRoleProviders ={} , 
-                      admins :userRoleAdmins = {} , 
-                      patients : userRolePatients = {}
-                    } = userRoleAllInfo || {};
-  
-                  doctors = { ...doctors, ...userRoleDoctors };
-                  providers = { ...providers , ...userRoleProviders };
-                  admins = {...admins , ...userRoleAdmins };
-                  patients = { ...patients , ...userRolePatients };
-  
-                }
-  
-  
-  
-                if(userRoles.length){
-                  const firstUserRole = userRoles[0];
-                  const userRoleWrapper = await UserRoleWrapper(firstUserRole);
-                  const userId = await userRoleWrapper.getUserId();
-                  const user = await userService.getUserById(userId);
-                  const userDataWrapper = await UserWrapper(user);
-                  userData = await userDataWrapper.getBasicInfo();
-  
-                }
-  
-  
-                
-                  return raiseSuccess(
-                  res,
-                  200,
-                  {
-                    user_roles:{...userRoleApiData},
-                    users:{ [userId] : {...userData} },
-                    user_role_ids,
-                    doctors,
-                    providers,
-                    patients,
-                    admins
-                  },
-                  "User role data fetched successfully"
-                  );
-              
-         
-        } catch (error) {
-          Log.debug("get UserRole Data 500 error", error);
-          return raiseServerError(res);
-        }
-  };
-
-  switchRoleId = async(req, res) => {
+  getUserRoles = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    try{
-      const {
-        userDetails: {userId} = {},
-        body : {userRoleId = null} = {}
-      } = req;
+    try {
+      const { userDetails: { userId = null } = {} } = req;
 
-
-      const {count, rows} = await userRoleService.findAndCountAll({
-        where: {
-          user_identity: userId
-        },
-        attributes: ["id"]
-      }) || [];
-
-      const allRoleIds = rows.map(row => row.id);
-
-      if(!allRoleIds.indexOf(userRoleId) === -1) {
+      if(!userId) {
         return raiseClientError(res, 422, {}, "UNAUTHORIZED");
       }
 
-      const userRoleWrapper  = await UserRoleWrapper(null,userRoleId);
+      const userRoles =
+        (await userRoleService.getAllByData({ user_identity: userId })) || [];
+      // let userRoleApiData = {};
+      let user_role_ids = [];
+      let doctors = {};
+      let patients = {};
+      let providers = {};
+      let admins = {};
+      let user_roles = {};
 
-      const newUserId = await userRoleWrapper.getUserId();
+      for (let i = 0; i < userRoles.length; i++) {
+        const userRole = userRoles[i];
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const userRoleAllInfo = await userRoleWrapper.getAllInfo();
+        const userRoleId = userRoleWrapper.getId();
+        user_role_ids.push(userRoleId);
+
+        const {
+          doctors: userRoleDoctors = {},
+          providers: userRoleProviders = {},
+          admins: userRoleAdmins = {},
+          patients: userRolePatients = {},
+          user_roles: userRoleData = {},
+        } = userRoleAllInfo || {};
+
+        doctors = { ...doctors, ...userRoleDoctors };
+        providers = { ...providers, ...userRoleProviders };
+        admins = { ...admins, ...userRoleAdmins };
+        patients = { ...patients, ...userRolePatients };
+        user_roles = {...user_roles, ...userRoleData};
+      }
+
+        const user = await userService.getUserById(userId);
+        const userDataWrapper = await UserWrapper(user);
+        const userData = userDataWrapper.getBasicInfo();
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          users: { [userId]: userData },
+          user_roles,
+          user_role_ids,
+          doctors,
+          providers,
+          patients,
+          admins,
+        },
+        "User role data fetched successfully"
+      );
+    } catch (error) {
+      Log.debug("get UserRole Data 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  switchRoleId = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        userDetails: { userId } = {},
+        body: { userRoleId = null } = {},
+      } = req;
+
+      const { count, rows } =
+        (await userRoleService.findAndCountAll({
+          where: {
+            user_identity: userId,
+          },
+          attributes: ["id"],
+        })) || [];
+
+      const allRoleIds = rows.map((row) => row.id);
+
+      if (allRoleIds.indexOf(parseInt(userRoleId)) === -1) {
+        return raiseClientError(res, 422, {}, "UNAUTHORIZED");
+      }
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
-      const user = await userService.getUserById(newUserId);
+      const user = await userService.getUserById(userId);
 
       if (!user) {
         return raiseClientError(res, 422, {}, "User doesn't exists");
@@ -139,19 +119,17 @@ class UserRoleController extends Controller {
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
         {
-          userRoleId
+          userRoleId,
         },
         secret,
         {
-          expiresIn
+          expiresIn,
         }
       );
 
       const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(
-        `${userRoleId}`
-      );
+      const notificationToken = appNotification.getUserToken(`${userRoleId}`);
       const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: user.get("id") });
@@ -159,7 +137,7 @@ class UserRoleController extends Controller {
       const apiUserDetails = await UserWrapper(userRef.get());
 
       let permissions = {
-        permissions: []
+        permissions: [],
       };
 
       if (apiUserDetails.isActivated()) {
@@ -178,14 +156,12 @@ class UserRoleController extends Controller {
 
       res.clearCookie("accessToken");
 
-
       res.cookie("accessToken", accessToken, {
         expires: new Date(
           Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
         ),
-        httpOnly: true
+        httpOnly: true,
       });
-
 
       return raiseSuccess(
         res,
@@ -193,22 +169,18 @@ class UserRoleController extends Controller {
         { ...dataToSend },
         "User data for RoleId retrieved successfully"
       );
-     
-  
-  } catch (error) {
-    Log.debug("switchRoleId data 500 error ----> ", error);
+    } catch (error) {
+      Log.debug("switchRoleId data 500 error ----> ", error);
 
-    // notification
+      // notification
+      // const crashJob = await AdhocJob.execute("crash", {
+      //   apiName: "switchRoleId",
+      // });
+      // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
 
-
-    const crashJob = await AdhocJob.execute("crash", {apiName: "switchRoleId"});
-    Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
-
-    return raiseServerError(res);
-  }
+      return raiseServerError(res);
+    }
   };
-    
-
 }
 
-export default new UserRoleController();    
+export default new UserRoleController();

@@ -2,6 +2,10 @@ import Database from "../../../libs/mysql";
 
 // TABLES
 import { TABLE_NAME } from "../../models/userRoles";
+import { TABLE_NAME as userTableName } from "../../models/users";
+import { TABLE_NAME as doctorTableName } from "../../models/doctors";
+import { TABLE_NAME as patientTableName } from "../../models/patients";
+import { TABLE_NAME as providerTableName } from "../../models/providers";
 
 const DEFAULT_ORDER = [["created_at","DESC"]];
 
@@ -51,7 +55,19 @@ class UserRolesService {
   getAllByData = async data => {
     try {
       const userRoles = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
+        include: [
+          {
+            model: Database.getModel(userTableName),
+            include: [
+              Database.getModel(doctorTableName),
+              Database.getModel(patientTableName),
+              Database.getModel(providerTableName),
+            ],
+          }
+        ],
+        // raw: true,
+        // nest: true,
       });
       return userRoles;
     } catch (error) {

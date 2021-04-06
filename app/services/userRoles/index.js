@@ -19,6 +19,8 @@ export default class UserRoles {
         return this._data.linked_with;
     }
 
+    getUser = () => this._data.user;
+
     // getCategoryId = () => {
     //     return this._data.category_id
     // }
