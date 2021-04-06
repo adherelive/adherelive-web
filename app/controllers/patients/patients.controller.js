@@ -1360,7 +1360,8 @@ class PatientController extends Controller {
         symptoms = ""
       } = req.body;
 
-      const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+      const { params: { patient_id } = {}, userDetails: { userRoleId = null ,  userId } = {} } = req;
+
 
       let userData = null;
       let patientData = null;
@@ -1407,6 +1408,7 @@ class PatientController extends Controller {
 
       const carePlan = await carePlanService.addCarePlan({
         patient_id,
+        user_role_id:userRoleId,
         doctor_id: doctor.get("id"),
         care_plan_template_id,
         details,
