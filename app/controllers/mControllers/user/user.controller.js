@@ -44,6 +44,7 @@ import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
 import UserWrapper from "../../../ApiWrapper/web/user";
 import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
+import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
@@ -403,6 +404,8 @@ class MobileUserController extends Controller {
         );
       }
 
+      let userRoleId = null;
+
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
 
@@ -422,28 +425,26 @@ class MobileUserController extends Controller {
       }
 
 
-      // const doctor = await doctorService.getDoctorByData({
-      //   user_id: user.get("id")
-      // });
+      const doctor = await doctorService.getDoctorByUserId(user.get("id"));
+      if(doctor) {
+        const doctorData = await DoctorWrapper(doctor);
+        const userRole = await userRolesService.create({
+          user_identity: user.get("id"),
+          category_type: USER_CATEGORY.DOCTOR,
+          category_id: doctorData.getDoctorId()
+        })
 
-      // // todo: this will be  
-      // const doctorData = await DoctorWrapper(doctor);
-      // const userRole = await userRolesService.create({
-      //   user_identity: user.get("id"),
-      //   category_type: USER_CATEGORY.DOCTOR,
-      //   category_id: doctorData.getDoctorId()
-      // });
-
-      // const userRoleWrapper = await UserRolesWrapper(userRole);
-      // const userRoleId = userRoleWrapper.getId();
-
+        if(userRole) {
+          const userRoleWrapper = await UserRolesWrapper(userRole);
+          userRoleId = userRoleWrapper.getId();
+        }
+      }
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
         {
-          userId: user.get("id")
+          userRoleId
         },
         secret,
         {
@@ -454,10 +455,9 @@ class MobileUserController extends Controller {
       const appNotification = new AppNotification();
 
       const notificationToken = appNotification.getUserToken(
-        `${user.get("id")}`
+        `${userRoleId}`
       );
-      const feedId = base64.encode(`${user.get("id")}`);
-
+      const feedId = base64.encode(`${userRoleId}`);
       const apiUserDetails = await MUserWrapper(user.get());
 
       return raiseSuccess(
@@ -473,6 +473,7 @@ class MobileUserController extends Controller {
             }
           },
           auth_user: apiUserDetails.getId(),
+          auth_user_role: userRoleId,
           auth_category: apiUserDetails.getCategory()
         },
         "Sign up successful"
@@ -1113,7 +1114,7 @@ class MobileUserController extends Controller {
   giveConsent = async (req,res) => {
     const {raiseClientError} = this;
     try{
-      const {userDetails: {userId} = {}, body: {agreeConsent} = {}} = req;
+      const {userDetails: {userId, userRoleId} = {}, body: {agreeConsent} = {}} = req;
 
       Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
 
@@ -1135,7 +1136,7 @@ class MobileUserController extends Controller {
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
           {
-            userId
+            userRoleId
           },
           secret,
           {
@@ -1146,9 +1147,9 @@ class MobileUserController extends Controller {
       const appNotification = new AppNotification();
 
       const notificationToken = appNotification.getUserToken(
-          `${userId}`
+          `${userRoleId}`
       );
-      // const feedId = base64.encode(`${userId}`);
+      const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
 
@@ -1165,8 +1166,9 @@ class MobileUserController extends Controller {
       const dataToSend = {
         ...(await apiUserDetails.getReferenceInfo()),
         auth_user: apiUserDetails.getId(),
+        auth_user_role: userRoleId,
         notificationToken: notificationToken,
-        feedId: `${userId}`,
+        feedId,
         hasConsent: apiUserDetails.getConsent(),
         auth_category: apiUserDetails.getCategory()
       };

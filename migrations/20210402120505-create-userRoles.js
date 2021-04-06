@@ -23,27 +23,27 @@ module.exports = {
                 key: "id"
             }
         },
-        category_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
+        linked_with: {
+          type: Sequelize.ENUM,
+          values: [USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN],
+          allowNull: true,
         },
-        category_type: {
-            type: Sequelize.ENUM,
-            values: [USER_CATEGORY.DOCTOR, USER_CATEGORY.PATIENT, USER_CATEGORY.PROVIDER, USER_CATEGORY.ADMIN],
-            allowNull: false,
+        linked_id: {
+          type: Sequelize.INTEGER,
+          allowNull: true,
         },
-      created_at: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      deleted_at: {
-        allowNull: true,
-        type: Sequelize.DATE
-      }
+        created_at: {
+          allowNull: false,
+          type: Sequelize.DATE
+        },
+        updated_at: {
+          allowNull: false,
+          type: Sequelize.DATE
+        },
+        deleted_at: {
+          allowNull: true,
+          type: Sequelize.DATE
+        }
     });
   },
   down: (queryInterface, Sequelize) => {

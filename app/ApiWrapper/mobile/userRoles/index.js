@@ -25,8 +25,8 @@ class MUserRoleWrapper extends BaseUserRole {
         const {
             id,
             user_identity,
-            category_id,
-            category_type,
+            linked_id,
+            linked_with,
             created_at,
             deleted_at,
             updated_at
@@ -36,8 +36,8 @@ class MUserRoleWrapper extends BaseUserRole {
             basic_info: {
                 id,
                 user_identity,
-                category_id,
-                category_type
+                linked_id,
+                linked_with
             },
             updated_at,
             deleted_at,

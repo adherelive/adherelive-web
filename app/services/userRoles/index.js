@@ -11,13 +11,21 @@ export default class UserRoles {
         return this._data.user_identity;
     }
 
-    getCategoryId = () => {
-        return this._data.category_id
+    getLinkedId = () => {
+        return this._data.linked_id;
     }
 
-    getCategoryType = () => {
-        return this._data.category_type
+    getLinkedWith = () => {
+        return this._data.linked_with;
     }
+
+    // getCategoryId = () => {
+    //     return this._data.category_id
+    // }
+
+    // getCategoryType = () => {
+    //     return this._data.category_type
+    // }
 
 }
 

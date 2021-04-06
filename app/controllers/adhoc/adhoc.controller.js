@@ -6,7 +6,7 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 // wrappers
 import UserWrapper from "../../ApiWrapper/web/user";
 
-import { getCategoryDetails } from "./adhoc.helper";
+import { getLinkDetails } from "./adhoc.helper";
 import Controller from "../";
 import Logger from "../../../libs/log";
 
@@ -25,15 +25,15 @@ class AdhocController extends Controller {
                     const user = await UserWrapper(users[i]);
                     const userId = user.getId();
                     const category = user.getCategory();
-                    const categoryData = await getCategoryDetails(category, userId);
 
-                    const { category_id = null} = categoryData || {};
+                    const linkData = await getLinkDetails(category, userId);
 
+                    const { linked_id = null, linked_with = null} = linkData || {};
                     const userRole = await userRolesService.create({
                         id: userId,
                         user_identity: userId,
-                        category_id,
-                        category_type: category
+                        linked_id,
+                        linked_with
                     });
                 }
             }
