@@ -33,14 +33,13 @@ class GraphController extends Controller {
                 }
             }) || null;
 
-            if(userPreference) {
-                Logger.debug("9182391283 userPreferenceData ---> ", userPreference);
+            let chartData = {};
 
+            if(userPreference) {
                 const userPreferenceWrapper = await UserPreferenceWrapper(userPreference);
                 const charts = userPreferenceWrapper.getChartDetails() || [];
 
                 charts.forEach(chart => {
-                    Logger.debug("9182391283 chart details constant",CHART_DETAILS[chart]);
                    chartData[chart] = {...CHART_DETAILS[chart]};
                 });
 

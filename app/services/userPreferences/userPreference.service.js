@@ -1,6 +1,8 @@
 import Database from "../../../libs/mysql";
 import {TABLE_NAME} from "../../models/userPreferences";
 
+const DEFAULT_ORDER = [["created_at","DESC"]];
+
 class UserPreferenceService {
     constructor() {
     }
@@ -51,6 +53,29 @@ class UserPreferenceService {
             throw error;
         }
     };
+
+    getAll = async () => {
+        try {
+          return await Database.getModel(TABLE_NAME).findAll();
+        } catch (error) {
+          throw error;
+        }
+      };
+
+      bulkUpdate = async ({data}) => {
+          const transaction = await Database.initTransaction();
+          try {
+            const userPreferences = await Database.getModel(TABLE_NAME).bulkCreate(data, {
+                updateOnDuplicate: ["user_role_id"],
+                transaction
+            });
+            transaction.commit();
+            return userPreferences;
+          } catch(error) {
+              transaction.rollback();
+              throw error;
+          }
+      };
 }
 
 export default new UserPreferenceService();
