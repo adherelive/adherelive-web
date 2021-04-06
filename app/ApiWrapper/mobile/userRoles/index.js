@@ -47,8 +47,8 @@ class MUserRoleWrapper extends BaseUserRole {
 
     getAllInfo = async () => { 
         const {_data, getBasicInfo,getUserId} = this;
-        const getUserRoleUserCategoryId = await this.getCategoryId();
-        const getUserRoleUserCategoryType = await this.getCategoryType();
+        const getUserRoleUserCategoryId = await this.getLinkedId();
+        const getUserRoleUserCategoryType = await this.getLinkedWith();
 
         let user_category_data = {};
         let category ='';
