@@ -29,9 +29,6 @@ class UserRoleWrapper extends BaseUserRole {
             user_identity,
             linked_id,
             linked_with,
-            createdAt:created_at,
-            updatedAt:updated_at,
-            deletedAt:deleted_at
         } = _data || {};
         
         return {
@@ -41,9 +38,6 @@ class UserRoleWrapper extends BaseUserRole {
                 linked_id,
                 linked_with
             },
-            updated_at,
-            deleted_at,
-            created_at
         };
     };
 
