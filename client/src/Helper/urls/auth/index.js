@@ -41,4 +41,8 @@ export const getVerifyUserUrl = (link) => {
 
 export const giveUserConsentUrl = () => {
   return `/auth/consent`;
-}
+};
+
+export const uploadDocument = () => {
+  return `/auth/upload`;
+};

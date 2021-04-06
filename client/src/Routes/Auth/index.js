@@ -1,6 +1,7 @@
 import React, { lazy, Component, Fragment } from "react";
 import { USER_CATEGORY } from "../../constant";
 
+
 const Doctors = lazy(() =>
   import(/* webpackChunkName: "DoctorsRouter" */ "../Doctors")
 );
@@ -39,7 +40,6 @@ export default class Authenticated extends Component {
               <Fragment>
                 {/* video chat T&C */}
 
-                {/* Sidebar */}
                 {authenticated_category === USER_CATEGORY.DOCTOR && (
                     <Doctors {...this.props} />
                 )}

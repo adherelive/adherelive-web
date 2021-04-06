@@ -1,3 +1,4 @@
+import { completePath } from "../../../helper/filePath";
 import BaseProvider from "../../../services/provider";
 import providerService from "../../../services/provider/provider.service";
 
@@ -8,8 +9,10 @@ class ProviderWrapper extends BaseProvider {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, name, address, city, state, user_id, activated_on } =
+    const { id, name, address, city, state, user_id, activated_on, details } =
       _data || {};
+
+      const {icon} = details || {};
 
     return {
       basic_info: {
@@ -19,6 +22,10 @@ class ProviderWrapper extends BaseProvider {
         address,
         city,
         state
+      },
+      details: {
+        ...details,
+        icon: completePath(icon),
       },
       activated_on
     };

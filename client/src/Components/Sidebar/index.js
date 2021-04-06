@@ -30,6 +30,8 @@ const TEMPLATES="templates";
 const MEDICINES = "medicines";
 const ACCOUNT = "account";
 
+const ADD_ACCOUNT = "add_account";
+
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
 class SideMenu extends Component {
@@ -113,6 +115,9 @@ class SideMenu extends Component {
           history.push(PATH.PROFILE);
         }
         break;
+        case ADD_ACCOUNT:
+          history.push(PATH.SIGN_IN);
+          break;
       case SETTINGS:
         if(onboarded){
           history.push(PATH.SETTINGS);
@@ -178,6 +183,9 @@ class SideMenu extends Component {
               history.push(PATH.PROFILE);
             }
             break;
+            case ADD_ACCOUNT:
+              history.push(PATH.SIGN_IN);
+              break;
           case SETTINGS:
             if(onboarded){
               history.push(PATH.SETTINGS);
@@ -344,7 +352,12 @@ class SideMenu extends Component {
         .join("");
     }
 
-    const {doctor_provider_id =null } = this.props ; 
+    const {doctor_provider_id =null , providers = {} } = this.props ; 
+    const {details : {icon : provider_icon = '' } ={} , basic_info : { name = '' } ={} } = providers[doctor_provider_id] || {};
+
+    const providerInitials =  `${name ? name[0].toUpperCase() : ""}`;
+
+    // console.log("327485235476325423645236",{doctor_provider_id,providers,providerInitials,name});
 
     return (
       <Menu
@@ -475,7 +488,22 @@ class SideMenu extends Component {
               </Tooltip>
             </MenuItem>)
             :
-            null}
+            null
+          }
+          {
+            doctor_provider_id
+            &&
+            <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            // key={DASHBOARD}
+            >
+              <Tooltip placement="right" title={this.formatMessage(messages.providerIcon)}>
+                <img  alt={"Provider Icon"} src={provider_icon}
+                 className="w35 h35"
+                  />
+              </Tooltip>
+            </MenuItem>
+          }
 
       </Menu>
     );

@@ -52,10 +52,10 @@ class SignIn extends Component {
   };
 
   render() {
-    const { signIn, signUp, getInitialData, getUserRoles } = this.props;
+    const { signIn, signUp, getInitialData, getUserRoles, auth: {authenticated_user} = {} } = this.props;
     const { login } = this.state;
     return (
-      <div className="wp100 landing-background flex direction-column justify-center align-center">
+      <div className={`wp100 landing-background flex direction-column justify-center align-center ${authenticated_user ? "hp100" : ""}`} style={{overflowY: "hidden"}}>
         <div className="hp100 wp75">
           <div className="mt40 wp100 mt24 flex justify-space-between align-center direction-row ">
             <div className="flex direction-row align-center">

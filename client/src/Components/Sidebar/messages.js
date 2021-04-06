@@ -61,4 +61,9 @@ export default defineMessages({
         description:"",
         defaultMessage:"Manage Account"
     },
+    providerIcon: {
+        id:"app.dashboard.sidebar.menu.provider.icon",
+        description:"",
+        defaultMessage:"Linked Provider Icon"
+    },
 });
