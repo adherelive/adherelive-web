@@ -379,7 +379,7 @@ class MobileUserController extends Controller {
 
       const userRole = await userRolesService.getFirstUserRole(user.get("id"));
       if(!userRole) {
-        return this.raiseClientError(res, 422, user, "User doesn't exists");
+        return this.raiseClientError(res, 422, {}, "User doesn't exists");
       }
       const userRoleWrapper = await UserRolesWrapper(userRole);
       const userRoleId = userRoleWrapper.getId();
