@@ -34,7 +34,7 @@ class UserRoleController extends Controller {
               } = req;
 
   
-                const userRoles = await userRoleService.getUserRolesByUserId(userId) || [];
+                const userRoles = await userRoleService.getAllByData({user_identity: userId});
                 let userRoleApiData = {};
                 let userData = {};
                 let user_role_ids = [];
