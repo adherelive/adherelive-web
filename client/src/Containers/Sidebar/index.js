@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import SideBar from "../../Components/Sidebar";
+import { switchUserRole } from "../../modules/userRoles";
 
 const mapStateToProps = (state) => {
   const { auth, users, doctors, user_roles, pages: {user_role_ids = []} = {}, providers } = state;
@@ -26,7 +27,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    switchUserRole: (data) => dispatch(switchUserRole(data))
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideBar);

@@ -156,7 +156,7 @@ class SideMenu extends Component {
     this.setState({ selectedKeys: key });
   };
 
-  handleItemSelect = ({ key }) => {
+  handleItemSelect = async ({ key }) => {
     const {
       users,
       history,
@@ -164,6 +164,7 @@ class SideMenu extends Component {
       authenticated_user,
       authPermissions = [],
       openAppointmentDrawer,
+      switchUserRole,
     } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
@@ -171,6 +172,11 @@ class SideMenu extends Component {
 
     const url = window.location.href.split("/");
     let doctor_id = url.length > 4 ? url[url.length - 1] : "";
+
+    if (key.includes(ACCOUNT)) {
+      await switchUserRole({ userRoleId: key.split(".")[1] });
+      window.location.reload();
+    }
 
     if (
       doctor_id &&
@@ -278,39 +284,53 @@ class SideMenu extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { history } = this.props;
+    // const { history } = this.props;
 
     // history.push();
   };
 
   getUserRoles = () => {
-    const { user_roles, user_role_ids, users, doctors, providers } = this.props;
+    const {
+      user_roles,
+      user_role_ids,
+      users,
+      doctors,
+      providers,
+      authenticated_user,
+    } = this.props;
     const { getOnboardedByDetails, handleManageAccount, formatMessage } = this;
 
     return user_role_ids.map((id) => {
-      const { basic_info: { user_identity, category_id } = {} } =
+      const { basic_info: { user_identity, linked_id } = {} } =
         user_roles[id] || {};
 
       const { basic_info: { email } = {} } = users[user_identity] || {};
 
-      const { provider_id = null } = doctors[category_id] || {};
+      // const { provider_id = null } = doctors[category_id] || {};
 
       let providerLogo = null;
-      if (provider_id) {
-        const { details: { icon } = {} } = providers[provider_id] || {};
+      if (linked_id) {
+        const { details: { icon } = {} } = providers[linked_id] || {};
         providerLogo = icon;
       }
 
+      const isAuth = authenticated_user === user_identity;
+
       return (
-        <Menu.Item className="p10 w300" key={`${ACCOUNT}.${id}`}>
+        <Menu.Item
+          className={`p10 w300 ${isAuth ? "bg-light-grey" : null}`}
+          key={`${ACCOUNT}.${id}`}
+        >
           <div className={"flex align-center justify-space-between mb20"}>
             <div className={"fs20 fw700"}>{email}</div>
             {getOnboardedByDetails(providerLogo)}
           </div>
 
-          <div className={"flex justify-end"} onClick={handleManageAccount}>
-            {formatMessage(messages.manageAccount)}
-          </div>
+          {isAuth && (
+            <div className={"flex justify-end"} onClick={handleManageAccount}>
+              {formatMessage(messages.manageAccount)}
+            </div>
+          )}
         </Menu.Item>
       );
     });
@@ -320,12 +340,13 @@ class SideMenu extends Component {
     const { getUserRoles } = this;
     return (
       <Menu
-        className="l70 b10 fixed" // b20
+        className="l70 b20 fixed" // b20
         key={"sub"}
         onClick={this.handleItemSelect}
       >
         {getUserRoles()}
-        <Menu.Divider />
+
+        {/* <Menu.Divider /> */}
         <Menu.Item className="p10" key={PRIVACY_POLICY}>
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacy_policy_text)}
@@ -424,20 +445,19 @@ class SideMenu extends Component {
           </Tooltip>
         </MenuItem>
         {authenticated_category == USER_CATEGORY.DOCTOR ? (
-          <div className={"flex direction-column align-center"}>
-            {provider_icon && (
-              <img
-                alt={"Provider Icon"}
-                src={provider_icon}
-                className="w35 h35 mb20"
-              />
-            )}
-            <MenuItem
-              key={SUB_MENU}
-              className="flex direction-column justify-center align-center p0"
-            >
+          <MenuItem
+            key={SUB_MENU}
+            className="flex direction-column align-center justify-space-between p0"
+          >
+              {provider_icon && (
+                <img
+                  alt={"Provider Icon"}
+                  src={provider_icon}
+                  className="w35 h35"
+                />
+              )}
               <Dropdown overlay={this.menu} overlayClassName="relative">
-                <div className="flex direction-column justify-center align-center wp250 hp100">
+                <div className="flex direction-column align-center justify-end wp250 hp100">
                   {initials ? (
                     <Avatar src={dp}>{initials}</Avatar>
                   ) : (
@@ -445,8 +465,8 @@ class SideMenu extends Component {
                   )}
                 </div>
               </Dropdown>
-            </MenuItem>
-          </div>
+            {/* </div> */}
+          </MenuItem>
         ) : (
           <MenuItem
             className="flex direction-column justify-center align-center p0"

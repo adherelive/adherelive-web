@@ -3,6 +3,8 @@ import Database from "../../../libs/mysql";
 // TABLES
 import { TABLE_NAME } from "../../models/userRoles";
 
+const DEFAULT_ORDER = [["created_at","DESC"]];
+
 class UserRolesService {
   constructor() {}
 
@@ -91,6 +93,19 @@ class UserRolesService {
         where: data
       });
       return userRoles;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findAndCountAll({
+        where,
+        order,
+        attributes,
+        raw: true
+      });
     } catch (error) {
       throw error;
     }

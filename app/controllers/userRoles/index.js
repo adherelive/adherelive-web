@@ -106,22 +106,34 @@ class UserRoleController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try{
       const {
-        userDetails  =  {},
+        userDetails: {userId} = {},
         body : {userRoleId = null} = {}
       } = req;
 
 
+      const {count, rows} = await userRoleService.findAndCountAll({
+        where: {
+          user_identity: userId
+        },
+        attributes: ["id"]
+      }) || [];
+
+      const allRoleIds = rows.map(row => row.id);
+
+      if(!allRoleIds.indexOf(userRoleId) === -1) {
+        return raiseClientError(res, 422, {}, "UNAUTHORIZED");
+      }
 
       const userRoleWrapper  = await UserRoleWrapper(null,userRoleId);
 
-      const userId = await userRoleWrapper.getUserId();
+      const newUserId = await userRoleWrapper.getUserId();
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
-      const user = await userService.getUserById(userId);
+      const user = await userService.getUserById(newUserId);
 
       if (!user) {
-        return raiseClientError(res, 422, user, "User doesn't exists");
+        return raiseClientError(res, 422, {}, "User doesn't exists");
       }
 
       const secret = process.config.TOKEN_SECRET_KEY;
@@ -152,7 +164,6 @@ class UserRoleController extends Controller {
 
       if (apiUserDetails.isActivated()) {
         permissions = await apiUserDetails.getPermissions();
-        Log.debug("675546767890876678", apiUserDetails.getBasicInfo());
       }
 
       const dataToSend = {
@@ -164,6 +175,8 @@ class UserRoleController extends Controller {
         auth_category: apiUserDetails.getCategory(),
         hasConsent: apiUserDetails.getConsent(),
       };
+
+      res.clearCookie("accessToken");
 
 
       res.cookie("accessToken", accessToken, {
