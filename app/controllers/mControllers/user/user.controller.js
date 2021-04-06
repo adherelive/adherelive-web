@@ -393,53 +393,72 @@ class MobileUserController extends Controller {
         return raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
       }
 
+      // Email check part
       const userExits = await userService.getUserByEmail({ email });
-
       if (userExits !== null) {
-        return raiseClientError(
-          res,
-          422,
-          errMessage.EMAIL_ALREADY_EXISTS,
-          errMessage.EMAIL_ALREADY_EXISTS.message
-        );
-      }
+        let canRegister = false;
+        const existingUserCategory = userExits.get("category");
+        if(existingUserCategory === USER_CATEGORY.DOCTOR) {
+          const existingUserRole = await userRolesService.getAllByData({user_identity: userExits.get("id")});
 
-      let userRoleId = null;
-
-      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(password, salt);
-
-      const user = await userService.addUser({
-        email,
-        password: hash,
-        sign_in_type: "basic",
-        category: USER_CATEGORY.DOCTOR,
-        onboarded: true,
-        verified: true
-      });
-
-      if (user) {
-        await doctorService.addDoctor({
-          user_id: user.get("id")
-        });
-      }
-
-
-      const doctor = await doctorService.getDoctorByUserId(user.get("id"));
-      if(doctor) {
-        const doctorData = await DoctorWrapper(doctor);
-        const userRole = await userRolesService.create({
-          user_identity: user.get("id"),
-          category_type: USER_CATEGORY.DOCTOR,
-          category_id: doctorData.getDoctorId()
-        })
-
-        if(userRole) {
-          const userRoleWrapper = await UserRolesWrapper(userRole);
-          userRoleId = userRoleWrapper.getId();
+          if(existingUserRole && existingUserRole.length) {
+            for(let i=0; i< existingUserRole.length; i++) {
+              const existingRoleWrapper = await UserRolesWrapper(existingUserRole[i]);
+              if(!existingRoleWrapper.getLinkedId()) {
+                canRegister = false;
+                break;
+              } else {
+                canRegister = true;
+              }
+            }
+          }
+        }
+        if(!canRegister) {
+          return raiseClientError(
+            res,
+            422,
+            errMessage.EMAIL_ALREADY_EXISTS,
+            errMessage.EMAIL_ALREADY_EXISTS.message
+          );
         }
       }
 
+      let userRoleId = null, userId;
+      if(!userExits) {
+        // add user and doctor only in the case when there is
+        // not any existing account.
+        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+        const hash = await bcrypt.hash(password, salt);
+        const user = await userService.addUser({
+          email,
+          password: hash,
+          sign_in_type: "basic",
+          category: USER_CATEGORY.DOCTOR,
+          onboarded: true,
+          verified: true
+        });
+
+        userId = user.get("id");
+        if (user) {
+          await doctorService.addDoctor({
+            user_id: userId
+          });
+        }
+      } else {
+        userId = userExits.get("id")
+      }
+      
+      const userRole = await userRolesService.create({
+        user_identity: userId,
+        linked_id: null,
+        linked_with: null
+      })
+
+      if(userRole) {
+        const userRoleWrapper = await UserRolesWrapper(userRole);
+        userRoleId = userRoleWrapper.getId();
+      }
+      
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
@@ -453,12 +472,11 @@ class MobileUserController extends Controller {
       );
 
       const appNotification = new AppNotification();
-
       const notificationToken = appNotification.getUserToken(
         `${userRoleId}`
       );
       const feedId = base64.encode(`${userRoleId}`);
-      const apiUserDetails = await MUserWrapper(user.get());
+      const apiUserDetails = await MUserWrapper(null, userId);
 
       return raiseSuccess(
         res,
