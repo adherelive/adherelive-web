@@ -1768,7 +1768,7 @@ class PatientController extends Controller {
     try {
       const {query, userDetails} = req;
 
-      const {userId, userData: {category} = {}, userCategoryId} = userDetails || {};
+      const {userId, userRoleId, userData: {category} = {}, userCategoryId} = userDetails || {};
 
        /*
       

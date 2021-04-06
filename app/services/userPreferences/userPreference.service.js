@@ -41,6 +41,16 @@ class UserPreferenceService {
             throw error;
         }
     };
+
+    findOne = async ({where}) => {
+        try {
+            return await Database.getModel(TABLE_NAME).findOne({
+                where
+            });
+        } catch(error) {
+            throw error;
+        }
+    };
 }
 
 export default new UserPreferenceService();
