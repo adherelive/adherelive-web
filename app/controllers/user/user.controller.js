@@ -185,9 +185,6 @@ class UserController extends Controller {
         email
       });
 
-      Logger.debug("983675754629384652479238094862387",{user});
-
-      
       if (!user) {
         return this.raiseClientError(res, 422, user, "Email doesn't exists");
       }
@@ -535,8 +532,7 @@ class UserController extends Controller {
     }
   }
 
-  onAppStart = async (req, res, next) => {
-    let response;
+  onAppStart = async (req, res) => {
     try {
       if (req.userDetails.exists) {
         const {
@@ -833,11 +829,14 @@ class UserController extends Controller {
   uploadImage = async (req, res) => {
     const { userDetails, body } = req;
     const { userId = "3" } = userDetails || {};
-    console.log("BODYYYYYYYYYYYYYYYY", req.file);
     const file = req.file;
+
+    const {type} = body || {};
+
+    Logger.debug("file", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
-      let files = await uploadImageS3(userId, file);
+      let files = await uploadImageS3(userId, file, type);
       return this.raiseSuccess(
         res,
         200,

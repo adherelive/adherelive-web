@@ -2,19 +2,15 @@ import Database from "../../../libs/mysql";
 
 // TABLES
 import { TABLE_NAME } from "../../models/userRoles";
+import { TABLE_NAME as userTableName } from "../../models/users";
+import { TABLE_NAME as doctorTableName } from "../../models/doctors";
+import { TABLE_NAME as patientTableName } from "../../models/patients";
+import { TABLE_NAME as providerTableName } from "../../models/providers";
+
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 class UserRolesService {
   constructor() {}
-
-  async getAll() {
-    try {
-      const userRoles = await Database.getModel(TABLE_NAME).findAll();
-      return userRoles;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  }
 
   async create(data) {
     const transaction = await Database.initTransaction();
@@ -30,26 +26,12 @@ class UserRolesService {
     }
   }
 
-  getAllUserRolesByData = async data => {
+  getSingleUserRoleByData = async data => {
     try {
-      const userRoles = await Database.getModel(TABLE_NAME).findAll({
+      const userRoles = await Database.getModel(TABLE_NAME).findOne({
         where: data
       });
       return userRoles;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  getUserRoleById = async id => {
-    try {
-      const userRole = await Database.getModel(TABLE_NAME).findOne({
-        where: {
-          id
-        },
-      });
-      return userRole;
-
     } catch (error) {
       throw error;
     }
@@ -70,13 +52,22 @@ class UserRolesService {
     }
   };
 
-  
-  getUserRolesByUserId = async user_id => {
+  getAllByData = async data => {
     try {
       const userRoles = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-            user_identity:user_id
-          },
+        where: data,
+        include: [
+          {
+            model: Database.getModel(userTableName),
+            include: [
+              Database.getModel(doctorTableName),
+              Database.getModel(patientTableName),
+              Database.getModel(providerTableName),
+            ],
+          }
+        ],
+        // raw: true,
+        // nest: true,
       });
       return userRoles;
     } catch (error) {
@@ -84,13 +75,14 @@ class UserRolesService {
     }
   };
 
-
-  getAllByData = async data => {
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
     try {
-      const userRoles = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+      return await Database.getModel(TABLE_NAME).findAndCountAll({
+        where,
+        order,
+        attributes,
+        raw: true
       });
-      return userRoles;
     } catch (error) {
       throw error;
     }
