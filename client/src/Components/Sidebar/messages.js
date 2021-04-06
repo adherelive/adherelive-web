@@ -50,5 +50,15 @@ export default defineMessages({
         id:"app.dashboard.sidebar.menu.medicine.text",
         description:"",
         defaultMessage:"All Medicines"
-    }
+    },
+    selfAccount: {
+        id:"app.dashboard.sidebar.menu.self.account.text",
+        description:"",
+        defaultMessage:"self"
+    },
+    manageAccount: {
+        id:"app.dashboard.sidebar.menu.manage.account.text",
+        description:"",
+        defaultMessage:"Manage Account"
+    },
 });

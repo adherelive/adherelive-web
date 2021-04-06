@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import SideBar from "../../Components/Sidebar";
 
 const mapStateToProps = (state) => {
-  const { auth, users, doctors } = state;
+  const { auth, users, doctors, user_roles, pages: {user_role_ids = []} = {}, providers } = state;
   const {
     authenticated,
     authenticated_user,
@@ -19,6 +19,9 @@ const mapStateToProps = (state) => {
     users,
     doctors,
     doctor_provider_id,
+    user_roles,
+    user_role_ids,
+    providers,
   };
 };
 

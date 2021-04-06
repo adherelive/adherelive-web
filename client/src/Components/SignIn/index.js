@@ -52,7 +52,7 @@ class SignIn extends Component {
   };
 
   render() {
-    const { signIn, signUp, getInitialData } = this.props;
+    const { signIn, signUp, getInitialData, getUserRoles } = this.props;
     const { login } = this.state;
     return (
       <div className="wp100 landing-background flex direction-column justify-center align-center">
@@ -174,6 +174,7 @@ class SignIn extends Component {
                     <SignInForm
                       signIn={signIn}
                       getInitialData={getInitialData}
+                      getUserRoles={getUserRoles}
                       redirectToForgotPassword={this.redirectToForgotPassword}
                     />
                     <div className="flex direction-column justify-space-between align-center">

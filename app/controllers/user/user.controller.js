@@ -554,8 +554,7 @@ class UserController extends Controller {
     }
   }
 
-  onAppStart = async (req, res, next) => {
-    let response;
+  onAppStart = async (req, res) => {
     try {
       if (req.userDetails.exists) {
         const {

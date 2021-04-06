@@ -517,8 +517,6 @@ export const getInitialData = () => {
           payload: { error },
         });
       } else if (status === true) {
-        // const {lastUrl = false} = data;
-        // const {  users } = response.payload.data;
 
         let { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '', feedId = '' , 
         doctor_provider_id } = data;

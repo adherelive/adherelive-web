@@ -23,6 +23,11 @@ export default class Authenticated extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    const {getUserRoles} = this.props;
+    getUserRoles();
+  }
+
   render() {
     const {
       authenticated_category,

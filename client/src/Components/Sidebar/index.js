@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Menu, Tooltip, message, Avatar, Icon, Dropdown } from "antd";
 import { PATH, USER_CATEGORY, PERMISSIONS } from "../../constant";
@@ -28,6 +28,7 @@ const ALL_PROVIDERS = "providers";
 const TRANSACTION_DETAILS = "transaction_details";
 const TEMPLATES="templates";
 const MEDICINES = "medicines";
+const ACCOUNT = "account";
 
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
@@ -230,15 +231,64 @@ class SideMenu extends Component {
     }
   };
 
+  getOnboardedByDetails = (providerLogo) => {
+    const {formatMessage} = this;
+
+    return (
+      <Fragment>
+        {providerLogo ? (
+          <img src={providerLogo} alt={"hospital logo"} className={"br50 w50 h50"}/>
+        ) : (
+          <div>{formatMessage(messages.selfAccount)}</div>
+        )}
+      </Fragment>
+    );
+  };
+
+  getUserRoles = () => {
+    const {user_roles, user_role_ids, users, doctors, providers} = this.props;
+    const {getOnboardedByDetails, formatMessage} = this;
+
+    return user_role_ids.map(id => {
+      const {
+        basic_info: {user_identity, category_id} = {}
+      } = user_roles[id] || {};
+
+      const {basic_info: {email} = {}} = users[user_identity] || {};
+
+      const {provider_id = null} = doctors[category_id] || {};
+
+      let providerLogo = null;
+      if(provider_id) {
+        const {details: {icon} = {}} = providers[provider_id] || {};
+        providerLogo = icon;
+      }
+
+      return (
+        <Menu.Item className="p10 w300" key={`${ACCOUNT}.${id}`}>
+          <div className={"flex align-center justify-space-between mb20"}>
+            <div className={"fs20 fw700"}>{email}</div>
+            {getOnboardedByDetails(providerLogo)}
+          </div>
+          
+          <div className={"flex justify-end"}>{formatMessage(messages.manageAccount)}</div>
+        </Menu.Item>
+      );     
+    });
+  };
+
   menu = () => {
+    const {getUserRoles} = this;
     return (
       <Menu className="l70 b20 fixed" key={"sub"} onClick={this.handleItemSelect}>
-        <Menu.Item className="pl24 pr80" key={PRIVACY_POLICY}>
+        {getUserRoles()}
+        <Menu.Divider />
+        <Menu.Item className="p10" key={PRIVACY_POLICY}>
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacy_policy_text)}
           </a>
         </Menu.Item>
-        <Menu.Divider />
+        {/* <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
         <Menu.Divider />
@@ -247,9 +297,9 @@ class SideMenu extends Component {
         <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={TEMPLATES}>
           {this.formatMessage(messages.templates)}
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Divider />
-        <Menu.Item className="pl24 pr80" key={LOG_OUT}>Logout
+        <Menu.Item className="p10" key={LOG_OUT}>Logout
         </Menu.Item>
       </Menu>
     );
@@ -324,7 +374,7 @@ class SideMenu extends Component {
             key={SUB_MENU}
             className="flex direction-column justify-center align-center p0"
           >
-            <Dropdown overlay={this.menu} overlayClassName="relative">
+            <Dropdown overlay={this.menu} overlayClassName="relative" visible={true}>
               <div className="flex direction-column justify-center align-center wp250 hp100">
                 {initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
               </div>

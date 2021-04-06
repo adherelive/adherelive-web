@@ -49,6 +49,7 @@ import payment_products from "./paymentProducts";
 import date_wise_appointments from "./dateWiseAppointments";
 import favourites_data from "./favouritesData";
 import agora from "./agora";
+import user_roles from "./userRoles";
 
 const rootReducer = combineReducers({
   auth,
@@ -100,6 +101,7 @@ const rootReducer = combineReducers({
   date_wise_appointments,
   favourites_data,
   agora,
+  user_roles,
 });
 
 export default (state, action) => {

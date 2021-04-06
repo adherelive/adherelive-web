@@ -15,7 +15,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     openAppointmentDrawer: (payload) => dispatch(open({ type: DRAWER.NOTIFICATIONS, payload })),
-    getInitialData: () => dispatch(getInitialData())
+    getInitialData: () => dispatch(getInitialData()),
   };
 };
 
