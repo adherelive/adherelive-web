@@ -108,12 +108,11 @@ export const doctorQualificationData = async userId => {
 
 export const uploadImageS3 = async (userId, file, folder = "other") => {
   try {
-    console.log("198318239 file", file);
     const fileExt = file.originalname.replace(/\s+/g, "");
     await minioService.createBucket();
     // const fileStream = fs.createReadStream(req.file);
 
-    const imageName = md5(`${userId}-qualification-pics`);
+    const imageName = md5(`${file.originalname}-${userId}`);
     // const fileExt = "";
 
     let hash = md5.create();
@@ -124,13 +123,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     hash = String(hash);
 
     // const file_name = hash.substring(4) + "_Education_"+fileExt;
-    const file_name = `${folder}/${hash.substring(4)}/${imageName}/${fileExt}`;
-
-    console.log(
-      "----------------------------------------- imageName, fileExt ---> ",
-      imageName,
-      fileExt
-    );
+    const file_name = `${folder}/${userId}/${hash.substring(4)}/${imageName}/${fileExt}`;
 
     //   const metaData = {
     //     "Content-Type":
@@ -147,7 +140,6 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     //   fileUrl;
     let files = [completePath(fileUrl)];
 
-    console.log("((((((((((((__________________________", files, fileUrl);
     return files;
   } catch (error) {
     console.log(" UPLOAD  CATCH ERROR ", error);

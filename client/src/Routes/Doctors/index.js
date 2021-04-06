@@ -6,7 +6,7 @@ import {
   Redirect,
   withRouter
 } from "react-router-dom";
-import SideMenu from "../../Components/Sidebar";
+import SideMenu from "../../Containers/Sidebar";
 import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
 
@@ -106,8 +106,8 @@ const SideMenuComp = props => {
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
       pathname.includes("privacy-policy") ||
-      pathname.includes("video")
-
+      pathname.includes("video") ||
+      pathname.includes("sign-in")
     )
   ) {
     return <SideMenu {...props} />;
@@ -139,7 +139,8 @@ class Doctors extends Component {
     let isNotChatComponent = !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy")
+      pathname.includes("privacy-policy") ||
+      pathname.includes("sign-in")
     );
     const { authRedirection } = this.props;
     return (
@@ -173,11 +174,11 @@ class Doctors extends Component {
                   path={PATH.PATIENT_CONSULTING}
                   component={ChatFullScreen}
                 />
-                <Route
+                {/* <Route
                   exact
                   path={PATH.PATIENT_CONSULTING}
                   component={ChatFullScreen}
-                />
+                /> */}
                 <Route
                   exact
                   path={PATH.TEST_PATIENT_CONSULTING_VIDEO}
