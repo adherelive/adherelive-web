@@ -207,7 +207,7 @@ class MobileDoctorController extends Controller {
         symptoms = "",
         address = ""
       } = req.body;
-      const { userDetails: { userId, userData: { category } = {} } = {} } = req;
+      const { userDetails: { userRoleId = null ,  userId, userData: { category } = {} } = {} } = req;
 
       const userExists = await userService.getPatientByMobile(mobile_number);
 
@@ -373,6 +373,7 @@ class MobileDoctorController extends Controller {
         doctor_id: doctor.get("id"),
         care_plan_template_id,
         details,
+        user_role_id:userRoleId,
         created_at: moment()
       });
 
