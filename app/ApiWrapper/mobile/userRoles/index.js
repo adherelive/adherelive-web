@@ -136,6 +136,6 @@ export default async (data = null, id = null) => {
     if(data) {
         return new MUserRoleWrapper(data);
     }
-    const profile = await userRolesService.getUserRoleById(id);
+    const profile = await userRolesService.getSingleUserRoleByData({id});
     return new MUserRoleWrapper(profile);
 }

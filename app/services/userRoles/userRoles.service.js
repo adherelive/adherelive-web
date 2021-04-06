@@ -6,16 +6,6 @@ import { TABLE_NAME } from "../../models/userRoles";
 class UserRolesService {
   constructor() {}
 
-  async getAll() {
-    try {
-      const userRoles = await Database.getModel(TABLE_NAME).findAll();
-      return userRoles;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  }
-
   async create(data) {
     const transaction = await Database.initTransaction();
     try {
@@ -30,26 +20,12 @@ class UserRolesService {
     }
   }
 
-  getAllUserRolesByData = async data => {
+  getSingleUserRoleByData = async data => {
     try {
-      const userRoles = await Database.getModel(TABLE_NAME).findAll({
+      const userRoles = await Database.getModel(TABLE_NAME).findOne({
         where: data
       });
       return userRoles;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  getUserRoleById = async id => {
-    try {
-      const userRole = await Database.getModel(TABLE_NAME).findOne({
-        where: {
-          id
-        },
-      });
-      return userRole;
-
     } catch (error) {
       throw error;
     }
@@ -69,21 +45,6 @@ class UserRolesService {
       throw error;
     }
   };
-
-  
-  getUserRolesByUserId = async user_id => {
-    try {
-      const userRoles = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-            user_identity:user_id
-          },
-      });
-      return userRoles;
-    } catch (error) {
-      throw error;
-    }
-  };
-
 
   getAllByData = async data => {
     try {

@@ -146,6 +146,6 @@ export default async (data = null, id = null) => {
     if (data) {
         return new UserRoleWrapper(data);
     }
-    const userRole = await userRoleService.getUserRoleById( id );
+    const userRole = await userRoleService.getSingleUserRoleByData( {id} );
     return new UserRoleWrapper(userRole);
 }
