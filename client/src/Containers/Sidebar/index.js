@@ -10,6 +10,7 @@ const mapStateToProps = (state) => {
     authRedirection,
     authPermissions = [],
     doctor_provider_id = null,
+    auth_role = null
   } = auth;
 
   return {
@@ -23,6 +24,7 @@ const mapStateToProps = (state) => {
     user_roles,
     user_role_ids,
     providers,
+    auth_role,
   };
 };
 

@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 import base64 from "js-base64";
 
 // SERVICES --------------------------------
-import userRoleService from "../../../app/services/userRoles/userRoles.service";
-import userService from "../../../app/services/user/user.service";
+import userRoleService from "../../services/userRoles/userRoles.service";
+import userService from "../../services/user/user.service";
 
 //WRAPPERS
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
