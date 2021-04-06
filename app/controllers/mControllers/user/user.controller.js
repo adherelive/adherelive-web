@@ -537,15 +537,13 @@ class MobileUserController extends Controller {
       if (req.userDetails.exists) {
         const {
           userId,
+          userRoleId,
           userData,
           userData: { category, has_consent } = {}
         } = req.userDetails;
-        // const user = await userService.getUserById(userId);
 
         const userApiWrapper = await MUserWrapper(userData);
 
-        // const userDetails = user[0];
-        // Logger.debug("category", userData);
         let userCategoryData = {};
         let userApiData = {};
         let userCatApiData = {};
@@ -557,7 +555,6 @@ class MobileUserController extends Controller {
         let doctorIds = [];
         let patientIds = [];
         let userIds = [userId];
-
         let treatmentIds = [];
         let conditionIds = [];
 
@@ -578,11 +575,9 @@ class MobileUserController extends Controller {
                 patient_id: userCategoryId
               });
 
-              // Logger.debug("careplan mobile patient", careplanData);
-
               await careplanData.forEach(async carePlan => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
-                doctorIds.push(carePlanApiWrapper.getDoctorId());
+                doctorIds.push(carePlanApiWrapper.getDoctorId()); // todo--: Here change will come once careplan table gets changed.
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
@@ -652,6 +647,7 @@ class MobileUserController extends Controller {
             }
             break;
           default:
+            // todo--: why this as default
             userCategoryData = await patientService.getPatientByData({
               user_id: userId
             });
@@ -1149,25 +1145,25 @@ class MobileUserController extends Controller {
       );
 
 
-      const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+      // const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
-      const secret = process.config.TOKEN_SECRET_KEY;
-      const accessToken = await jwt.sign(
-          {
-            userRoleId
-          },
-          secret,
-          {
-            expiresIn
-          }
-      );
+      // const secret = process.config.TOKEN_SECRET_KEY;
+      // const accessToken = await jwt.sign(
+      //     {
+      //       userRoleId
+      //     },
+      //     secret,
+      //     {
+      //       expiresIn
+      //     }
+      // );
 
-      const appNotification = new AppNotification();
+      // const appNotification = new AppNotification();
 
-      const notificationToken = appNotification.getUserToken(
-          `${userRoleId}`
-      );
-      const feedId = base64.encode(`${userRoleId}`);
+      // const notificationToken = appNotification.getUserToken(
+      //     `${userRoleId}`
+      // );
+      // const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
 
@@ -1185,18 +1181,18 @@ class MobileUserController extends Controller {
         ...(await apiUserDetails.getReferenceInfo()),
         auth_user: apiUserDetails.getId(),
         auth_user_role: userRoleId,
-        notificationToken: notificationToken,
-        feedId,
+        // notificationToken: notificationToken,
+        // feedId,
         hasConsent: apiUserDetails.getConsent(),
         auth_category: apiUserDetails.getCategory()
       };
 
-      res.cookie("accessToken", accessToken, {
-        expires: new Date(
-            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
-        ),
-        httpOnly: true
-      });
+      // res.cookie("accessToken", accessToken, {
+      //   expires: new Date(
+      //       Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+      //   ),
+      //   httpOnly: true
+      // });
 
       return this.raiseSuccess(
           res,

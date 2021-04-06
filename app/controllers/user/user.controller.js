@@ -336,7 +336,7 @@ class UserController extends Controller {
   giveConsent = async (req,res) => {
     const {raiseClientError} = this;
     try{
-      const {userDetails: {userId} = {}, body: {agreeConsent} = {}} = req;
+      const {userDetails: {userId, userRoleId} = {}, body: {agreeConsent} = {}} = req;
 
       Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
 
@@ -358,7 +358,7 @@ class UserController extends Controller {
       const secret = process.config.TOKEN_SECRET_KEY;
       const accessToken = await jwt.sign(
           {
-            userId
+            userRoleId
           },
           secret,
           {
@@ -369,9 +369,9 @@ class UserController extends Controller {
       const appNotification = new AppNotification();
 
       const notificationToken = appNotification.getUserToken(
-          `${userId}`
+          `${userRoleId}`
       );
-      // const feedId = base64.encode(`${userId}`);
+      const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
 
@@ -388,8 +388,9 @@ class UserController extends Controller {
       const dataToSend = {
         ...(await apiUserDetails.getReferenceInfo()),
         auth_user: apiUserDetails.getId(),
+        auth_user_role: userRoleId,
         notificationToken: notificationToken,
-        feedId: `${userId}`,
+        feedId,
         hasConsent: apiUserDetails.getConsent(),
         auth_category: apiUserDetails.getCategory()
       };
