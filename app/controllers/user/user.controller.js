@@ -539,7 +539,6 @@ class UserController extends Controller {
           userRoleId= null ,
           userId,
           userData,
-          userRoleId,
           userData: { category } = {},
           userCategoryData: uC = {}
         } = req.userDetails;
