@@ -446,7 +446,7 @@ class EventController extends Controller {
     try {
       const {
         params: { patient_id } = {},
-        userDetails: { userData: { category }, userCategoryId } = {}
+        userDetails: { userRoleId, userData: { category }, userCategoryId } = {}
       } = req;
       Log.info(`params : patient_id = ${patient_id}`);
 
@@ -454,7 +454,8 @@ class EventController extends Controller {
       const carePlans =
         (await CarePlanService.getMultipleCarePlanByData({
           patient_id,
-          doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : ""
+          doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "",
+          // user_role_id: userRoleId
         })) || [];
 
       const EventService = new eventService();
