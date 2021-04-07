@@ -309,13 +309,13 @@ class CarePlanService {
 
   
 
-  getPaginatedPatients = async ({doctor_id, order, filter,offset,limit,watchlist,watchlistPatientIds}) => {
+  getPaginatedPatients = async ({doctor_id, order, filter,offset,limit,watchlist,user_role_id}) => {
 
     // const patientWatchlistedIds = watchlistPatientIds.length ? watchlistPatientIds.toString() : null ;
 
     // console.log("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
 
-    let  finalFilter = filter ? filter :  `carePlan.doctor_id = ${doctor_id}`;
+    let  finalFilter = filter ? filter :  `carePlan.user_role_id = ${user_role_id}`;
    
 
 
@@ -326,7 +326,7 @@ class CarePlanService {
     SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
       carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
-        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE doctor_id=${doctor_id} GROUP BY patient_id)
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE user_role_id=${user_role_id} GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
       JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
         WHERE ${finalFilter} ${watchlist}
@@ -339,7 +339,7 @@ class CarePlanService {
     SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
       carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
-        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE doctor_id=${doctor_id} GROUP BY patient_id)
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE user_role_id=${user_role_id} GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
       JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
         WHERE ${finalFilter} ${watchlist}
