@@ -72,6 +72,10 @@ export const RESET_PASSWORD_LINK_COMPLETED = "RESET_PASSWORD_LINK_COMPLETED";
 
 export const GOOGLE_SIGNOUT = "GOOGLE_SIGNOUT";
 
+export const COMMON_UPLOAD_DOCUMENT = "COMMON_UPLOAD_DOCUMENT";
+export const COMMON_UPLOAD_DOCUMENT_FAILED = "COMMON_UPLOAD_DOCUMENT_FAILED";
+export const COMMON_UPLOAD_DOCUMENT_COMPLETED = "COMMON_UPLOAD_DOCUMENT_COMPLETED";
+
 export const AUTH_INITIAL_STATE = {
   authenticated: false,
 };
@@ -188,6 +192,40 @@ export const signIn = (payload) => {
       throw err;
     }
 
+    return response;
+  };
+};
+
+export const uploadDocument = (payload) => {
+  console.log("912739172 payload", payload);
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: COMMON_UPLOAD_DOCUMENT });
+
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: Auth.uploadDocument(),
+        data: payload
+      });
+
+      const { status, payload: { error = "" } = {} } =
+        response || {};
+
+      if (status === false) {
+        dispatch({
+          type: COMMON_UPLOAD_DOCUMENT_FAILED,
+          payload: { error },
+        });
+      } else if (status === true) {
+        dispatch({
+          type: COMMON_UPLOAD_DOCUMENT_COMPLETED,
+          payload: {}
+        });
+      }
+    } catch(error) {
+      console.log("auth uploadDocument error", error);
+    }
     return response;
   };
 };
@@ -517,11 +555,9 @@ export const getInitialData = () => {
           payload: { error },
         });
       } else if (status === true) {
-        // const {lastUrl = false} = data;
-        // const {  users } = response.payload.data;
 
         let { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '', feedId = '' , 
-        doctor_provider_id } = data;
+        doctor_provider_id, auth_role } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user], true);
@@ -532,6 +568,7 @@ export const getInitialData = () => {
           payload: {
             users,
             authenticatedUser: auth_user,
+            auth_role,
             authRedirection,
             authCategory: auth_category,
             authPermissions: permissions,
@@ -617,6 +654,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated: true,
         authenticated_category: payload.authCategory,
         authenticated_user: payload.authenticatedUser,
+        auth_role: payload.auth_role,
         authRedirection: payload.authRedirection,
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,

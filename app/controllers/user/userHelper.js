@@ -5,6 +5,9 @@ import documentService from "../../services/uploadDocuments/uploadDocuments.serv
 import userService from "../../services/user/user.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
+import userRolesService from "../../services/userRoles/userRoles.service";
+
+import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 
 // import  EVENTS from "../../proxySdk/proxyEvents";
 import minioService from "../../../app/services/minio/minio.service";
@@ -105,12 +108,11 @@ export const doctorQualificationData = async userId => {
 
 export const uploadImageS3 = async (userId, file, folder = "other") => {
   try {
-    console.log("198318239 file", file);
     const fileExt = file.originalname.replace(/\s+/g, "");
     await minioService.createBucket();
     // const fileStream = fs.createReadStream(req.file);
 
-    const imageName = md5(`${userId}-qualification-pics`);
+    const imageName = md5(`${file.originalname}-${userId}`);
     // const fileExt = "";
 
     let hash = md5.create();
@@ -121,13 +123,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     hash = String(hash);
 
     // const file_name = hash.substring(4) + "_Education_"+fileExt;
-    const file_name = `${folder}/${hash.substring(4)}/${imageName}/${fileExt}`;
-
-    console.log(
-      "----------------------------------------- imageName, fileExt ---> ",
-      imageName,
-      fileExt
-    );
+    const file_name = `${folder}/${userId}/${hash.substring(4)}/${imageName}/${fileExt}`;
 
     //   const metaData = {
     //     "Content-Type":
@@ -144,48 +140,97 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     //   fileUrl;
     let files = [completePath(fileUrl)];
 
-    console.log("((((((((((((__________________________", files, fileUrl);
     return files;
   } catch (error) {
     console.log(" UPLOAD  CATCH ERROR ", error);
   }
 };
 
-export const createNewUser = async (email, password = null) => {
+export const checkUserCanRegister = async(email, creatorId = null) => {
+  // creator id will come when doctor is being added by provider. In this provider id will come in that case.
+  try{
+    const userExits = await userService.getUserByEmail({ email });
+
+    if(!userExits) {
+      return true;
+    }
+
+    let canRegister = false;
+    const existingUserCategory = userExits.get("category");
+    if(existingUserCategory === USER_CATEGORY.DOCTOR) {
+      const existingUserRole = await userRolesService.getAllByData({user_identity: userExits.get("id")});
+
+      if(existingUserRole && existingUserRole.length) {
+        for(let i=0; i< existingUserRole.length; i++) {
+          const existingRoleWrapper = await UserRolesWrapper(existingUserRole[i]);
+          if((creatorId && creatorId === existingRoleWrapper.getLinkedId())|| (!creatorId && !existingRoleWrapper.getLinkedId())) {
+            // If provider is adding then there should not be same email registered with same doctor.
+            // else if there is self registration then there should not be another self account with same email.
+            canRegister = false;
+            break;
+          } else {
+            canRegister = true;
+          }
+        }
+      }
+    }
+    return canRegister;
+  } catch(err) {
+    return false;
+  }
+}
+
+export const createNewUser = async (email, password = null, creatorId= null) => {
   try {
     const userExits = await userService.getUserByEmail({ email });
-    if (userExits !== null) {
+    const canRegister = await checkUserCanRegister(email, creatorId);
+
+    if(!canRegister) {
       const userExitsError = new Error();
       userExitsError.code = 11000;
       throw userExitsError;
     }
-
-    let hash = null;
-
+    
     const link = uuidv4();
 
-    if (password) {
-      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      hash = await bcrypt.hash(password, salt);
-    }
-
-    const user = await userService.addUser({
-      email,
-      password: hash,
-      sign_in_type: "basic",
-      category: "doctor",
-      onboarded: false
-      // system_generated_password
-    });
-
-    await userPreferenceService.addUserPreference({
-      user_id: user.get("id"),
-      details: {
-        charts: ["1", "2", "3"]
+    if(!userExits) {
+      let hash = null;
+      if (password) {
+        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+        hash = await bcrypt.hash(password, salt);
       }
-    });
+  
+      const user = await userService.addUser({
+        email,
+        password: hash,
+        sign_in_type: "basic",
+        category: "doctor",
+        onboarded: false
+        // system_generated_password
+      });
+  
+      await userPreferenceService.addUserPreference({
+        user_id: user.get("id"),
+        details: {
+          charts: ["1", "2", "3"]
+        }
+      });
+    }
+    
 
     const userInfo = await userService.getUserByEmail({ email });
+    let userRoleId = null;
+
+    const userRole = await userRolesService.create({
+      user_identity:  userInfo.get("id"),
+      linked_id: creatorId? creatorId: null,
+      linked_with: creatorId? USER_CATEGORY.PROVIDER: null
+    })
+
+    if(userRole) {
+      const userRoleWrapper = await UserRolesWrapper(userRole);
+      userRoleId = userRoleWrapper.getId();
+    }
 
     await UserVerificationServices.addRequest({
       user_id: userInfo.get("id"),
@@ -212,7 +257,6 @@ export const createNewUser = async (email, password = null) => {
     };
 
     Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-
     return uId;
   } catch (error) {
     throw error;

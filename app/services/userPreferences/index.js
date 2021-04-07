@@ -7,6 +7,8 @@ export default class UserPreference {
         return this._data.get("id");
     };
 
+    getUserId = () => this._data.get("user_id");
+
     getAllDetails = () => {
         return this._data.get("details");
     };
