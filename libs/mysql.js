@@ -79,6 +79,7 @@ import * as UserPreferences from "../app/models/userPreferences";
 import * as Users from "../app/models/users";
 import * as UserFavourites from "../app/models/userFavourites";
 import * as UserVerifications from "../app/models/userVerifications";
+import * as UserRoles from "../app/models/userRoles";
 
 import * as Vitals from "../app/models/vitals";
 import * as VitalTemplates from "../app/models/vitalTemplates";
@@ -167,6 +168,7 @@ const models = [
   Users,
   UserFavourites,
   UserVerifications,
+  UserRoles,
 
   Vitals,
   VitalTemplates,

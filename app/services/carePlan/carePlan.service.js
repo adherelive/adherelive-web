@@ -15,6 +15,17 @@ import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 
 
 class CarePlanService {
+
+  async getAll() {
+    try {
+      const careplans = await Database.getModel(TABLE_NAME).findAll();
+      return careplans;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
   getCarePlanByData = async data => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
@@ -167,11 +178,12 @@ class CarePlanService {
     }
   }
 
-  getDistinctPatientCounts = async(doctorId) => {
+  getDistinctPatientCounts = async(doctorId, userRoleId) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).count({
         where: {
-          doctor_id: doctorId
+          // doctor_id: doctorId,
+          user_role_id: userRoleId,
         },
         distinct: true,
         col: 'patient_id'
@@ -182,12 +194,13 @@ class CarePlanService {
     }
   }
 
-  getWatchlistedDistinctPatientCounts = async(doctorId, watchlistPatientIds) => {
+  getWatchlistedDistinctPatientCounts = async(doctorId, watchlistPatientIds, userRoleId) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).count({
         where: {
-          doctor_id: doctorId,
-          patient_id: watchlistPatientIds
+          // doctor_id: doctorId,
+          patient_id: watchlistPatientIds,
+          user_role_id: userRoleId,
         },
         distinct: true,
         col: 'patient_id'
@@ -199,7 +212,7 @@ class CarePlanService {
   }
 
   getPaginatedDataOfPatients = async(data) => {
-    const {offset, limit, doctorId, watchlistPatientIds, watchlist, sortByName,createdAtOrder,nameOrder} = data;
+    const {offset, limit, doctorId, userRoleId, watchlistPatientIds, watchlist, sortByName,createdAtOrder,nameOrder} = data;
     const sortBy = sortByName? `t3.first_name ${nameOrder ? "asc" : "desc" }`: `t3.created_at ${createdAtOrder ? "desc" : "asc" }`;
     // sortByName = 1 --> a-z , created_at = 1 --> latest top
     try {
@@ -209,12 +222,12 @@ class CarePlanService {
         t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
         t3.* from ${TABLE_NAME} as t1 join 
         (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME}
-        where patient_id in (${watchlistPatientIds}) and doctor_id=${doctorId} 
+        where patient_id in (${watchlistPatientIds}) and user_role_id=${userRoleId} 
          group by patient_id) as t2
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
-         where t1.doctor_id = ${doctorId} and
+         where t1.user_role_id = ${userRoleId} and
          t1.patient_id in (${watchlistPatientIds})
          order by ${sortBy}
          limit ${limit}
@@ -223,11 +236,11 @@ class CarePlanService {
         query = `select t1.id as care_plan_id, t1.details as care_plan_details, 
         t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
         t3.* from ${TABLE_NAME} as t1 join 
-        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} where doctor_id=${doctorId} group by patient_id) as t2
+        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} where user_role_id=${userRoleId} group by patient_id) as t2
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
-         where t1.doctor_id = ${doctorId}
+         where t1.user_role_id=${userRoleId}
          order by ${sortBy}
          limit ${limit}
          offset ${offset};`
@@ -298,13 +311,13 @@ class CarePlanService {
 
   
 
-  getPaginatedPatients = async ({doctor_id, order, filter,offset,limit,watchlist,watchlistPatientIds}) => {
+  getPaginatedPatients = async ({doctor_id, order, filter,offset,limit,watchlist,user_role_id}) => {
 
     // const patientWatchlistedIds = watchlistPatientIds.length ? watchlistPatientIds.toString() : null ;
 
     // console.log("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
 
-    let  finalFilter = filter ? filter :  `carePlan.doctor_id = ${doctor_id}`;
+    let  finalFilter = filter ? filter :  `carePlan.user_role_id = ${user_role_id}`;
    
 
 
@@ -315,7 +328,7 @@ class CarePlanService {
     SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
       carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
-        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE doctor_id=${doctor_id} GROUP BY patient_id)
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE user_role_id=${user_role_id} GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
       JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
         WHERE ${finalFilter} ${watchlist}
@@ -328,7 +341,7 @@ class CarePlanService {
     SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
       carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
-        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE doctor_id=${doctor_id} GROUP BY patient_id)
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE user_role_id=${user_role_id} GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
       JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
         WHERE ${finalFilter} ${watchlist}

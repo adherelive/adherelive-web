@@ -10,4 +10,8 @@ export default class Provider {
     getUserId = () => {
         return this._data.get("user_id");
     };
+
+    getDetails = () => {
+        return this._data.get("details");
+    };
 }

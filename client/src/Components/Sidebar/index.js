@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Menu, Tooltip, message, Avatar, Icon, Dropdown } from "antd";
 import { PATH, USER_CATEGORY, PERMISSIONS } from "../../constant";
@@ -7,12 +7,16 @@ import confirm from "antd/es/modal/confirm";
 import Logo from "../../Assets/images/logo3x.png";
 import dashboardIcon from "../../Assets/images/dashboard.svg";
 import { withRouter } from "react-router-dom";
-import {CalendarTwoTone, FileOutlined,ProfileOutlined , AccountBookOutlined} from "@ant-design/icons";
+import {
+  CalendarTwoTone,
+  FileOutlined,
+  ProfileOutlined,
+  AccountBookOutlined,
+} from "@ant-design/icons";
 import messages from "./messages";
 import config from "../../config";
 
 const { Item: MenuItem } = Menu || {};
-
 
 const LOGO = "logo";
 const DASHBOARD = "dashboard";
@@ -26,8 +30,11 @@ const TOS_PP_EDITOR = "tos-pp-editor";
 const PRIVACY_POLICY = "privacy_policy";
 const ALL_PROVIDERS = "providers";
 const TRANSACTION_DETAILS = "transaction_details";
-const TEMPLATES="templates";
+const TEMPLATES = "templates";
 const MEDICINES = "medicines";
+const ACCOUNT = "account";
+
+const ADD_ACCOUNT = "add_account";
 
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
@@ -35,11 +42,11 @@ class SideMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedKeys: ""
+      selectedKeys: "",
     };
   }
 
-  formatMessage = message => this.props.intl.formatMessage(message);
+  formatMessage = (message) => this.props.intl.formatMessage(message);
 
   handleLogout = async () => {
     const { logOut } = this.props;
@@ -65,31 +72,30 @@ class SideMenu extends Component {
     );
   };
 
-   handleRedirect =({key}) => {
-
-   try{
-       confirm({
+  handleRedirect = ({ key }) => {
+    try {
+      confirm({
         title: `Are you sure you want to leave?`,
-        content: (
-          <div>
-            {this.warnNote()}
-          </div>
-        ),
+        content: <div>{this.warnNote()}</div>,
         onOk: async () => {
-          this.handleItemSelectForRedirect({key})
+          this.handleItemSelectForRedirect({ key });
         },
-        onCancel() {
-          
-        }
+        onCancel() {},
       });
-    }catch(error){
-      console.log("err --->",error);
+    } catch (error) {
+      console.log("err --->", error);
     }
-  }
+  };
 
-  handleItemSelectForRedirect = ({key}) => {
-
-    const { users, history, authenticated_category, authenticated_user, authPermissions = [], openAppointmentDrawer } = this.props;
+  handleItemSelectForRedirect = ({ key }) => {
+    const {
+      users,
+      history,
+      authenticated_category,
+      authenticated_user,
+      authPermissions = [],
+      openAppointmentDrawer,
+    } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
     const { onboarded } = current_user;
@@ -102,36 +108,42 @@ class SideMenu extends Component {
             history.push(PATH.ADMIN.DOCTORS.ROOT);
           }
         } else {
-          if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) || onboarded) {
+          if (
+            authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) ||
+            onboarded
+          ) {
             history.push(PATH.LANDING_PAGE);
           }
         }
         break;
       case PROFILE:
-        if(onboarded){
+        if (onboarded) {
           history.push(PATH.PROFILE);
         }
         break;
+      case ADD_ACCOUNT:
+        history.push(PATH.SIGN_IN);
+        break;
       case SETTINGS:
-        if(onboarded){
+        if (onboarded) {
           history.push(PATH.SETTINGS);
         }
-        break;  
+        break;
       case NOTIFICATIONS:
         if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
           openAppointmentDrawer({ doctorUserId: authenticated_user });
         }
         break;
-      case CALENDER :
-        if(authPermissions.includes(PERMISSIONS.ADD_DOCTOR)){
-          history.push(PATH.PROVIDER.CALENDER)
+      case CALENDER:
+        if (authPermissions.includes(PERMISSIONS.ADD_DOCTOR)) {
+          history.push(PATH.PROVIDER.CALENDER);
         }
         break;
-      case TRANSACTION_DETAILS :
+      case TRANSACTION_DETAILS:
         if (authenticated_category === USER_CATEGORY.PROVIDER) {
-            history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
+          history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
         }
-        break;   
+        break;
       case LOG_OUT:
         handleLogout();
         break;
@@ -142,103 +154,204 @@ class SideMenu extends Component {
         break;
     }
     this.setState({ selectedKeys: key });
-  }
+  };
 
-  
-  handleItemSelect = ({ key }) => {
-    
-    const { users, history, authenticated_category, authenticated_user, authPermissions = [], openAppointmentDrawer } = this.props;
+  handleItemSelect = async ({ key }) => {
+    const {
+      users,
+      history,
+      authenticated_category,
+      authenticated_user,
+      authPermissions = [],
+      openAppointmentDrawer,
+      switchUserRole,
+    } = this.props;
     const { handleLogout } = this;
     const current_user = users[authenticated_user];
     const { onboarded } = current_user;
 
     const url = window.location.href.split("/");
-    let doctor_id=url.length > 4 ? url[url.length - 1] : "";
-    
-   
-    if(doctor_id && authenticated_category===USER_CATEGORY.PROVIDER && !window.location.href.includes(PATH.ADMIN.DOCTORS.ROOT)){
-      this.handleRedirect({key});
-    }else{
-        switch (key) {
-          case LOGO:
-          case DASHBOARD:
-            if (authenticated_category === USER_CATEGORY.ADMIN) {
-              if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
-                history.push(PATH.ADMIN.DOCTORS.ROOT);
-              }
-            } else {
-              if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) || onboarded) {
-                history.push(PATH.LANDING_PAGE);
-              }
+    let doctor_id = url.length > 4 ? url[url.length - 1] : "";
+
+    if (key.includes(ACCOUNT)) {
+      await switchUserRole({ userRoleId: key.split(".")[1] });
+      window.location.reload();
+    }
+
+    if (
+      doctor_id &&
+      authenticated_category === USER_CATEGORY.PROVIDER &&
+      !window.location.href.includes(PATH.ADMIN.DOCTORS.ROOT)
+    ) {
+      this.handleRedirect({ key });
+    } else {
+      switch (key) {
+        case LOGO:
+        case DASHBOARD:
+          if (authenticated_category === USER_CATEGORY.ADMIN) {
+            if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+              history.push(PATH.ADMIN.DOCTORS.ROOT);
             }
-            break;
-          case PROFILE:
-            if(onboarded){
-              history.push(PATH.PROFILE);
+          } else {
+            if (
+              authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT) ||
+              onboarded
+            ) {
+              history.push(PATH.LANDING_PAGE);
             }
-            break;
-          case SETTINGS:
-            if(onboarded){
-              history.push(PATH.SETTINGS);
-            }
-            break;  
-          case NOTIFICATIONS:
-              if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
-                openAppointmentDrawer({doctorUserId: authenticated_user});
-              }
-            break;
-          case CALENDER :
-            if(authPermissions.includes(PERMISSIONS.ADD_DOCTOR)){
-              history.push(PATH.PROVIDER.CALENDER)
-            }
-            break;
-          case TOS_PP_EDITOR:
-            history.push(PATH.ADMIN.TOS_PP_EDITOR)
-              break;
-          case ALL_PROVIDERS:
-            if (authenticated_category === USER_CATEGORY.ADMIN) {
-                history.push(PATH.ADMIN.ALL_PROVIDERS);
-            }
-            break;
-          case TRANSACTION_DETAILS:
-            if (authenticated_category === USER_CATEGORY.PROVIDER) {
-                history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
-            } else if (authenticated_category === USER_CATEGORY.DOCTOR) {
-              history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
-            }
-            break;
-          case MEDICINES:
-            if(authenticated_category === USER_CATEGORY.ADMIN) {
-              history.push(PATH.ADMIN.ALL_MEDICINES);
-            }
-            break;
-          case TEMPLATES:
-            if(authenticated_category === USER_CATEGORY.DOCTOR){
-              history.push(PATH.TEMPLATES);
-            }  
-            break;
-          case LOG_OUT:
-            handleLogout();
-            break;
-          case SUB_MENU:
-            break;
-          default:
-            history.push(PATH.LANDING_PAGE);
-            break;
-        }
-        this.setState({ selectedKeys: key });
+          }
+          break;
+        case PROFILE:
+          if (onboarded) {
+            history.push(PATH.PROFILE);
+          }
+          break;
+        case ADD_ACCOUNT:
+          history.push(PATH.SIGN_IN);
+          break;
+        case SETTINGS:
+          if (onboarded) {
+            history.push(PATH.SETTINGS);
+          }
+          break;
+        case NOTIFICATIONS:
+          if (authPermissions.includes(PERMISSIONS.VERIFIED_ACCOUNT)) {
+            openAppointmentDrawer({ doctorUserId: authenticated_user });
+          }
+          break;
+        case CALENDER:
+          if (authPermissions.includes(PERMISSIONS.ADD_DOCTOR)) {
+            history.push(PATH.PROVIDER.CALENDER);
+          }
+          break;
+        case TOS_PP_EDITOR:
+          history.push(PATH.ADMIN.TOS_PP_EDITOR);
+          break;
+        case ALL_PROVIDERS:
+          if (authenticated_category === USER_CATEGORY.ADMIN) {
+            history.push(PATH.ADMIN.ALL_PROVIDERS);
+          }
+          break;
+        case TRANSACTION_DETAILS:
+          if (authenticated_category === USER_CATEGORY.PROVIDER) {
+            history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
+          } else if (authenticated_category === USER_CATEGORY.DOCTOR) {
+            history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
+          }
+          break;
+        case MEDICINES:
+          if (authenticated_category === USER_CATEGORY.ADMIN) {
+            history.push(PATH.ADMIN.ALL_MEDICINES);
+          }
+          break;
+        case TEMPLATES:
+          if (authenticated_category === USER_CATEGORY.DOCTOR) {
+            history.push(PATH.TEMPLATES);
+          }
+          break;
+        case LOG_OUT:
+          handleLogout();
+          break;
+        case SUB_MENU:
+          break;
+        default:
+          history.push(PATH.LANDING_PAGE);
+          break;
+      }
+      this.setState({ selectedKeys: key });
     }
   };
 
+  getOnboardedByDetails = (provider_id) => {
+    const { providers } = this.props;
+    const { formatMessage } = this;
+
+    const { details: { icon } = {}, basic_info: {name} = {} } = providers[provider_id] || {};
+
+    if (provider_id) {
+      if (icon) {
+        return (
+          <img
+            src={icon}
+            alt={"hospital logo"}
+            className={"br50 w30 h30"}
+          />
+        );
+      } else {
+        return <div>{name}</div>;
+      }
+    } else {
+      return <div>{formatMessage(messages.selfAccount)}</div>;
+    }
+  };
+
+  handleManageAccount = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // const { history } = this.props;
+
+    // history.push();
+  };
+
+  getUserRoles = () => {
+    const {
+      user_roles,
+      user_role_ids,
+      users,
+      doctors,
+      providers,
+      authenticated_user,
+    } = this.props;
+    const { getOnboardedByDetails, handleManageAccount, formatMessage } = this;
+
+    return user_role_ids.map((id) => {
+      const { basic_info: { user_identity, linked_id } = {} } =
+        user_roles[id] || {};
+
+      const { basic_info: { email } = {} } = users[user_identity] || {};
+
+      // const { provider_id = null } = doctors[category_id] || {};
+
+      const isAuth = authenticated_user === user_identity;
+
+      return (
+        <Menu.Item
+          className={`p10 w300 ${isAuth ? "bg-light-grey" : null}`}
+          key={`${ACCOUNT}.${id}`}
+        >
+          <div className={"flex align-center justify-space-between mb20"}>
+            <div className={"fs20 fw700"}>{email}</div>
+            {getOnboardedByDetails(linked_id)}
+          </div>
+
+          {isAuth && (
+            <div className={"flex justify-end"} onClick={handleManageAccount}>
+              {formatMessage(messages.manageAccount)}
+            </div>
+          )}
+        </Menu.Item>
+      );
+    });
+  };
+
   menu = () => {
+    const { getUserRoles } = this;
     return (
-      <Menu className="l70 b20 fixed" key={"sub"} onClick={this.handleItemSelect}>
-        <Menu.Item className="pl24 pr80" key={PRIVACY_POLICY}>
+      <Menu
+        className="l70 b20 fixed" // b20
+        key={"sub"}
+        onClick={this.handleItemSelect}
+      >
+        {getUserRoles()}
+
+        {/* <Menu.Divider /> */}
+        <Menu.Item className="p10" key={PRIVACY_POLICY}>
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacy_policy_text)}
           </a>
         </Menu.Item>
-        <Menu.Divider />
+        {/* <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
         <Menu.Divider />
@@ -247,29 +360,50 @@ class SideMenu extends Component {
         <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={TEMPLATES}>
           {this.formatMessage(messages.templates)}
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Divider />
-        <Menu.Item className="pl24 pr80" key={LOG_OUT}>Logout
+        <Menu.Item className="p10" key={LOG_OUT}>
+          Logout
         </Menu.Item>
       </Menu>
     );
   };
 
+  getProviderIcon = () => {
+    const {auth_role, user_roles, providers} = this.props;
+    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+
+    if(linked_with === USER_CATEGORY.PROVIDER && linked_id) {
+      const {basic_info: {name} = {}, details: {icon} = {}} = providers[linked_id] || {}
+
+      if(icon) {
+        return (
+              <img
+                alt={"Provider Icon"}
+                src={icon}
+                className="w35 h35"
+              />
+        );
+      } else {
+        return (
+          <div>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
+        );
+      }
+;    }
+  };
 
   render() {
-    const { selectedKeys } = this.state;
-    const { handleItemSelect } = this;
-
     const {
       authenticated_user = 0,
       users = {},
       doctors = {},
       authenticated_category,
-        intl: {formatMessage} = {}
+      intl: { formatMessage } = {},
     } = this.props;
+    const { handleItemSelect, getProviderIcon } = this;
+
     let dp = "";
     let initials = "";
-
 
     for (let doctor of Object.values(doctors)) {
       let {
@@ -277,13 +411,15 @@ class SideMenu extends Component {
           user_id = 0,
           profile_pic = "",
           first_name = " ",
-          last_name = " "
-        } = {}
+          last_name = " ",
+        } = {},
       } = doctor;
 
       if (user_id === authenticated_user) {
         dp = profile_pic;
-        initials = `${first_name ? first_name[0] : ""}${last_name ? last_name[0] : ""}`;
+        initials = `${first_name ? first_name[0] : ""}${
+          last_name ? last_name[0] : ""
+        }`;
       }
     }
     let { basic_info: { user_name = "" } = {} } =
@@ -291,11 +427,19 @@ class SideMenu extends Component {
     if (user_name) {
       initials = user_name
         .split(" ")
-        .map(n => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
+        .map((n) => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
         .join("");
     }
 
-    const {doctor_provider_id =null } = this.props ; 
+    const { doctor_provider_id = null, providers = {} } = this.props;
+    const {
+      details: { icon: provider_icon = "" } = {},
+      basic_info: { name = "" } = {},
+    } = providers[doctor_provider_id] || {};
+
+    const providerInitials = `${name ? name[0].toUpperCase() : ""}`;
+
+    // console.log("327485235476325423645236",{doctor_provider_id,providers,providerInitials,name});
 
     return (
       <Menu
@@ -315,28 +459,46 @@ class SideMenu extends Component {
           className="flex direction-column justify-center align-center p0"
           key={DASHBOARD}
         >
-          <Tooltip placement="right" title={this.formatMessage(messages.dashboard)}>
+          <Tooltip
+            placement="right"
+            title={this.formatMessage(messages.dashboard)}
+          >
             <img alt={"Dashboard Icon"} src={dashboardIcon} />
           </Tooltip>
         </MenuItem>
         {authenticated_category == USER_CATEGORY.DOCTOR ? (
-
           <MenuItem
             key={SUB_MENU}
-            className="flex direction-column justify-center align-center p0"
+            className="flex direction-column align-center justify-space-between p0"
           >
+            {/* {provider_icon && (
+              <img
+                alt={"Provider Icon"}
+                src={provider_icon}
+                className="w35 h35"
+              />
+            )} */}
+            {getProviderIcon()}
             <Dropdown overlay={this.menu} overlayClassName="relative">
-              <div className="flex direction-column justify-center align-center wp250 hp100">
-                {initials ? <Avatar src={dp}>{initials}</Avatar> : <Avatar icon="user" />}
+              <div className="flex direction-column align-center justify-end wp250 hp100">
+                {initials ? (
+                  <Avatar src={dp}>{initials}</Avatar>
+                ) : (
+                  <Avatar icon="user" />
+                )}
               </div>
             </Dropdown>
+            {/* </div> */}
           </MenuItem>
         ) : (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={LOG_OUT}
           >
-            <Tooltip placement="right" title={this.formatMessage(messages.logOut)}>
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.logOut)}
+            >
               {initials ? (
                 <Avatar src={dp}>{initials}</Avatar>
               ) : (
@@ -345,89 +507,111 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>
         )}
-        {authenticated_category !== USER_CATEGORY.ADMIN &&
-        <MenuItem
+        {authenticated_category !== USER_CATEGORY.ADMIN && (
+          <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={NOTIFICATIONS}
-        >
-          <Tooltip placement="right" title={this.formatMessage(messages.notifications)}>
-            <Icon type="bell" theme="twoTone" twoToneColor='white'/>
-          </Tooltip>
-        </MenuItem>}
+          >
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.notifications)}
+            >
+              <Icon type="bell" theme="twoTone" twoToneColor="white" />
+            </Tooltip>
+          </MenuItem>
+        )}
 
-        {authenticated_category === USER_CATEGORY.PROVIDER
-        ?
-          (<MenuItem
+        {authenticated_category === USER_CATEGORY.PROVIDER ? (
+          <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={CALENDER}
           >
-            <Tooltip placement="right" title={this.formatMessage(messages.calender)}>
-              <CalendarTwoTone   theme="twoTone" twoToneColor='white' />
-            </Tooltip>
-          </MenuItem>)
-       :
-          null}
-
-        {authenticated_category === USER_CATEGORY.ADMIN
-            ?
-            (
-                <MenuItem
-                  className="flex direction-column justify-center align-center p0"
-                  key={TOS_PP_EDITOR}
-                >
-                  <Tooltip placement="right" title={formatMessage(messages.tos_pp_editor)}>
-                    <FileOutlined style={{color: "#fff"}}/>
-                  </Tooltip>
-                </MenuItem>
-                
-            )
-            :
-            null}
-
-        {authenticated_category === USER_CATEGORY.ADMIN
-            ?
-            (
-              <MenuItem
-              className="flex direction-column justify-center align-center p0"
-              key={ALL_PROVIDERS}
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.calender)}
             >
-              <Tooltip placement="right" title={formatMessage(messages.all_providers)}>
-                <ProfileOutlined style={{color: "#fff"}}/>
-              </Tooltip>
-          </MenuItem> 
-                
-            )
-            :
-            null}    
+              <CalendarTwoTone theme="twoTone" twoToneColor="white" />
+            </Tooltip>
+          </MenuItem>
+        ) : null}
 
-          {authenticated_category === USER_CATEGORY.PROVIDER ||  ( authenticated_category === USER_CATEGORY.DOCTOR && ( doctor_provider_id === null  &&  Object.keys(doctors).length > 0 ))
-          ?
-          (<MenuItem
+        {authenticated_category === USER_CATEGORY.ADMIN ? (
+          <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={TOS_PP_EDITOR}
+          >
+            <Tooltip
+              placement="right"
+              title={formatMessage(messages.tos_pp_editor)}
+            >
+              <FileOutlined style={{ color: "#fff" }} />
+            </Tooltip>
+          </MenuItem>
+        ) : null}
+
+        {authenticated_category === USER_CATEGORY.ADMIN ? (
+          <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={ALL_PROVIDERS}
+          >
+            <Tooltip
+              placement="right"
+              title={formatMessage(messages.all_providers)}
+            >
+              <ProfileOutlined style={{ color: "#fff" }} />
+            </Tooltip>
+          </MenuItem>
+        ) : null}
+
+        {authenticated_category === USER_CATEGORY.PROVIDER ||
+        (authenticated_category === USER_CATEGORY.DOCTOR &&
+          doctor_provider_id === null &&
+          Object.keys(doctors).length > 0) ? (
+          <MenuItem
             className="flex direction-column justify-center align-center p0"
             key={TRANSACTION_DETAILS}
           >
-            <Tooltip placement="right" title={this.formatMessage(messages.transactionDetails)}>
-              {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
-              <Icon style={{color: "#fff"}} type="swap" />
-            </Tooltip>
-          </MenuItem>)
-         :
-          null}
-
-        {authenticated_category === USER_CATEGORY.ADMIN
-            ?
-            (<MenuItem
-                className="flex direction-column justify-center align-center p0"
-                key={MEDICINES}
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.transactionDetails)}
             >
-              <Tooltip placement="right" title={this.formatMessage(messages.medicineText)}>
-                {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
-                <Icon style={{color: "#fff"}} type="medicine-box" />
-              </Tooltip>
-            </MenuItem>)
-            :
-            null}
+              {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
+              <Icon style={{ color: "#fff" }} type="swap" />
+            </Tooltip>
+          </MenuItem>
+        ) : null}
 
+        {authenticated_category === USER_CATEGORY.ADMIN ? (
+          <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            key={MEDICINES}
+          >
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.medicineText)}
+            >
+              {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
+              <Icon style={{ color: "#fff" }} type="medicine-box" />
+            </Tooltip>
+          </MenuItem>
+        ) : null}
+        {/* {doctor_provider_id && (
+          <MenuItem
+            className="flex direction-column justify-center align-center p0"
+            // key={DASHBOARD}
+          >
+            <Tooltip
+              placement="right"
+              title={this.formatMessage(messages.providerIcon)}
+            >
+              <img
+                alt={"Provider Icon"}
+                src={provider_icon}
+                className="w35 h35"
+              />
+            </Tooltip>
+          </MenuItem>
+        )} */}
       </Menu>
     );
   }
