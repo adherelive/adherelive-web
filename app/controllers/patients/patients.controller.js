@@ -718,7 +718,7 @@ class PatientController extends Controller {
 
       const carePlanData = await carePlanService.getSingleCarePlanByData({
         patient_id,
-        [category === USER_CATEGORY.DOCTOR && 'user_role_id'] : catgory === USER_CATEGORY.DOCTOR && userRoleId
+        [category === USER_CATEGORY.DOCTOR && 'user_role_id'] : category === USER_CATEGORY.DOCTOR && userRoleId
       });
       const carePlan = await CarePlanWrapper(carePlanData);
 
@@ -793,7 +793,7 @@ class PatientController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("getPatientSymptoms 500 error", error);
+      Logger.debug("76235274523754328648273947293 getPatientSymptoms 500 error", error);
       return raiseServerError(res);
     }
   };
