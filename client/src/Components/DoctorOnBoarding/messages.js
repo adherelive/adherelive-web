@@ -91,6 +91,11 @@ const messages = defineMessages({
     description: "",
     defaultMessage: 'Search City'
   },
+  createDoctorProfile: {
+    id: "app.doctorOnBoarding.createDoctorProfile",
+    description: "",
+    defaultMessage: 'Create Doctor Profile'
+  },
   createProfile: {
     id: "app.doctorOnBoarding.createProfile",
     description: "",
@@ -240,7 +245,7 @@ const messages = defineMessages({
   add1PhotoRegError: {
     id: "app.doctorOnBoarding.add1PhotoRegError",
     description: "",
-    defaultMessage: 'Please add at least 1 registraion document photo.'
+    defaultMessage: 'Please add at least 1 registration document to proceed.'
   },
   profile: {
     id: "app.doctorOnBoarding.profile",
@@ -382,6 +387,25 @@ const messages = defineMessages({
     description: "",
     defaultMessage: 'Clinic Timings'
   },
+  clinicAddSuccess: {
+    id: "app.doctorOnBoarding.clinicAddSuccess",
+    description: "",
+    defaultMessage: 'Clinical Details Added Successfully'
+  },
+  doctorAddSuccess: {
+    id: "app.doctorOnBoarding.doctorAddSuccess",
+    description: "",
+    defaultMessage: 'Doctor Profile Details Added Successfully'
+  },qualificationAddSuccess: {
+    id: "app.doctorOnBoarding.qualificationAddSuccess",
+    description: "",
+    defaultMessage: 'Qualification Details Added Successfully'
+  },
+  timingSameForTheDay: {
+    id: "app.doctorOnBoarding.timingSameForTheDay",
+    description: "",
+    defaultMessage: 'Cannot have same start time or end time for the day'
+  }
 
 
 

@@ -40,4 +40,8 @@ export default class ScheduleEvent {
     getCriticalValue = () => {
         return this._data.get("critical");
     }
+
+    updatedAt = () => {
+        return this._data.get("updated_at");
+    };
 }

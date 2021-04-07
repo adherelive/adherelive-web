@@ -3,6 +3,9 @@ import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
 import Modal from "antd/es/modal";
+import confirm from "antd/es/modal/confirm";
+import Switch from "antd/es/switch";
+
 import {
   CheckCircleTwoTone,
   ExclamationCircleTwoTone,
@@ -15,10 +18,14 @@ import { Input } from "antd";
 
 import moment from "moment";
 import messages from "./messages";
-import { TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM } from "../../../constant";
+import {TABLE_DEFAULT_BLANK_FIELD, DAYS_TEXT_NUM, ACCOUNT_STATUS} from "../../../constant";
 import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 import Tooltip from "antd/es/tooltip";
+
+import Menu from "antd/es/menu";
+import Dropdown from "antd/es/dropdown";
+import Tag from "antd/es/tag";
 
 class AdminDoctorDetails extends Component {
   constructor(props) {
@@ -28,33 +35,52 @@ class AdminDoctorDetails extends Component {
       razorpayModalVisible: false,
       razorpayId: "",
       razorpayAccountName: "",
-      account_details: {}
+      account_details: {},
+      active:true,
+      user_id:null
     };
   }
 
   componentDidMount() {
-    const { doctors, id } = this.props;
+    const { doctors, id ,users} = this.props;
     const { getInitialData } = this;
 
     const { doctor_qualification_ids } = doctors[id] || {};
-    if (!doctor_qualification_ids) {
-      getInitialData();
-    }
+    // if (!doctor_qualification_ids) {
+    getInitialData();
+    // }
+    
   }
+
+  
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
   getInitialData = async () => {
     try {
       this.setState({ loading: true });
-      const { getDoctorDetails, getDoctorAccountDetails } = this.props;
+      const { getDoctorDetails, getDoctorAccountDetails , id } = this.props;
       const response = await getDoctorDetails();
       const {
         status,
-        payload: { message: { message: responseMessage } = {} } = {}
+        payload: {data :{ doctors = {} , users= {} } = {},  message: { message: responseMessage } = {} } = {}
       } = response || {};
 
+
       if (status === true) {
+        const {basic_info : {user_id=''} = {}}  = doctors[id] || {};
+        const {deleted_at = ''} = users[user_id] || {};
+
+        this.setState({
+          user_id
+        });
+
+        if(deleted_at){
+          this.setState({
+            active:false
+          })
+        }
+
         const response = await getDoctorAccountDetails();
         const {
           status,
@@ -92,17 +118,24 @@ class AdminDoctorDetails extends Component {
     history.goBack();
   };
 
+  
+
   getDoctorDetailsHeader = () => {
-    // const { id, doctors, users } = this.props;
-    const { formatMessage, handleBack } = this;
+    const { formatMessage, handleBack, getFooter } = this;
 
     return (
-      <div className="wp100 mb20 fs28 fw700 flex justify-start align-center">
-        <ArrowLeftOutlined onClick={handleBack} className="mr10" />
-        <div>{formatMessage(messages.doctor_details_header_text)}</div>
+      <div className="wp100 mb20 fs28 fw700 flex justify-space-between align-center">
+        <div className="flex flex-start align-center">
+          <ArrowLeftOutlined onClick={handleBack} className="mr10" />
+          <div>{formatMessage(messages.doctor_details_header_text)}</div>
+        </div>
+
+        {getFooter()}
       </div>
     );
   };
+
+
 
   openAddRazorpayIdModal = e => {
     e.preventDefault();
@@ -128,6 +161,51 @@ class AdminDoctorDetails extends Component {
     const { value } = e.target;
     this.setState({ razorpayAccountName: value });
   };
+
+  warnNote = () => {
+    return (
+      <div className="pt16">
+        <p className="red">
+          <span className="fw600">{"Note"}</span>
+          {` :${this.formatMessage(messages.warnNote)}`}
+        </p>
+      </div>
+    );
+  };
+
+
+  handleCloseWarning = () => {
+    const { warnNote  } = this;
+
+    confirm({
+      title: `${this.formatMessage(messages.confirmMessage)}`,
+      content: (
+        <div>
+          {warnNote()}
+        </div>
+      ),
+      onOk: async () => {
+    
+        const { deactivateDoctor, id } = this.props;
+        try {
+          const response = await deactivateDoctor(id);
+          const { status, payload: { message: respMessage = "" } = {} } =
+            response || {};
+          if (status === true) {
+            message.success(respMessage);
+            this.setState({active:false})
+          } else {
+            message.warn(respMessage);
+          }
+        } catch (error) {
+          console.log("doctorDeactivate UI error --> ", error);
+        }
+      },
+      onCancel() { }
+    });
+  };
+ 
+
 
   async handleRazorpayIdSubmit() {
     try {
@@ -216,7 +294,7 @@ class AdminDoctorDetails extends Component {
 
   getDoctorBasicDetails = () => {
     const { id, doctors, users, specialities } = this.props;
-    const { formatMessage, handleProfilePicModalOpen } = this;
+    const { formatMessage, handleProfilePicModalOpen , handleCloseWarning } = this;
 
     const {
       basic_info: {
@@ -228,13 +306,14 @@ class AdminDoctorDetails extends Component {
         gender,
         city,
         speciality_id
-      } = {}
+      } = {},
     } = doctors[id] || {};
     const {
       basic_info: { email, mobile_number, prefix } = {},
       onboarded,
       onboarding_status,
-      activated_on
+      activated_on,
+      deleted_at = null
     } = users[user_id] || {};
 
     const { basic_info: { name: specialityName } = {} } =
@@ -243,8 +322,10 @@ class AdminDoctorDetails extends Component {
     return (
       <div className="mt20 mb20 wp100 flex direction-column">
         {/*<div className="fs20 fw700 mb14 flex direction-row align-center justify-space-between">*/}
-        <div className="fs20 fw700 mb14">
-          {formatMessage(messages.basic_details_text)}
+        <div className="fs20 fw700 mb14 ">
+                
+              {formatMessage(messages.basic_details_text)}
+        
         </div>
 
         {/*<div>*/}
@@ -377,6 +458,16 @@ class AdminDoctorDetails extends Component {
                 )}
               </div>
             </div>
+
+            {/*account status*/}
+            <div className="wp20 hp20 mt16 mb16 mr16">
+              <div className="fs16 fw700">
+                {formatMessage(messages.account_status_text)}
+              </div>
+              <div className="fs14 fw500">
+                {deleted_at ? <Tag color={"red"}>{ACCOUNT_STATUS.INACTIVE}</Tag> : <Tag color={"green"}>{ACCOUNT_STATUS.ACTIVE}</Tag>}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -473,8 +564,13 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType =
-                    document.substring(document.length - 3) || null;
+                  // const documentType =
+                  //   document.substring(document.length - 3) || null;
+                  const arr = document.split("?")[0];
+                  let documentType;
+                  if(arr.length){
+                    documentType = arr.substr(arr.length - 3);
+                  }
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -542,7 +638,6 @@ class AdminDoctorDetails extends Component {
       const { basic_info: { name: collegeName } = {} } =
         colleges[college_id] || {};
 
-      
       const { basic_info: { name: degreeName } = {} } =
         degrees[degree_id] || {};
 
@@ -599,8 +694,13 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType =
-                    document.substring(document.length - 3) || null;
+                  // const documentType =
+                  //   document.substring(document.length - 3) || null;
+                  const arr = document.split("?")[0];
+                  let documentType;
+                  if(arr.length){
+                    documentType = arr.substr(arr.length - 3);
+                  }
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -741,6 +841,25 @@ class AdminDoctorDetails extends Component {
     });
   };
 
+  handleActivate =  async (e) => {
+    e.preventDefault();
+    const { activateDoctor, id } = this.props;
+    const {user_id = null}=this.state; 
+    try {
+      const response = await activateDoctor(user_id);
+      const { status, payload: { message: respMessage = "" } = {} } =
+        response || {};
+      if (status === true) {
+        message.success(respMessage);
+        this.setState({active:true})
+      } else {
+        message.warn(respMessage);
+      }
+    } catch (error) {
+      console.log("doctorActivate UI error --> ", error);
+    }
+  }
+
   getFooter = () => {
     const {
       id,
@@ -749,10 +868,10 @@ class AdminDoctorDetails extends Component {
       doctor_qualifications,
       doctor_registrations
     } = this.props;
-    const { formatMessage, handleVerify } = this;
+    const { formatMessage, handleVerify , handleCloseWarning ,handleActivate} = this;
+    const {active = true}=this.state;
 
     const {
-      doctor_clinic_ids = [],
       doctor_qualification_ids = [],
       doctor_registration_ids = [],
       basic_info: { user_id } = {}
@@ -760,7 +879,7 @@ class AdminDoctorDetails extends Component {
 
     const { activated_on } = users[user_id] || {};
     const disabled =
-      doctor_clinic_ids.length === 0 ||
+      // doctor_clinic_ids.length === 0 ||
       doctor_qualification_ids.length === 0 ||
       doctor_registration_ids.length === 0 ||
       activated_on !== null;
@@ -787,18 +906,42 @@ class AdminDoctorDetails extends Component {
       }
     }
     return (
-      <div className="mt20 wi flex justify-end">
-        <Button
-          disabled={disabled}
-          type="primary"
-          data-q={no_qualification_docs}
-          data-r={no_registration_docs}
-          className="mb10 mr10"
-          onClick={handleVerify}
-        >
-          {formatMessage(messages.submit_button_text)}
-        </Button>
-      </div>
+     <div>
+        <div className="flex justify-end align-center">
+          <div className="flex align-center justify=space-between" >
+
+          <Button
+            disabled={disabled}
+            type="primary"
+            data-q={no_qualification_docs}
+            data-r={no_registration_docs}
+            className="mb10 mr10"
+            onClick={handleVerify}
+          >
+            {formatMessage(messages.submit_button_text)}
+          </Button>
+        </div>
+        <div className="flex column align-center justify-center" >
+
+          {active
+          ?
+          <Button 
+            type="default"
+            className="mb10 mr10 h42"
+            onClick={handleCloseWarning}>{formatMessage(messages.deactivateText)}
+          </Button>
+          :
+          <Button 
+            type="default"
+            className="mb10 mr10 h42"
+            onClick={handleActivate}>{formatMessage(messages.activateText)}
+          </Button>
+          }
+          </div>
+
+
+        </div>
+     </div>
     );
   };
 
@@ -828,6 +971,7 @@ class AdminDoctorDetails extends Component {
     }
   };
 
+  
   handlePictureModalClose = e => {
     e.preventDefault();
     this.setState({ modalVisible: false });
@@ -1007,6 +1151,7 @@ class AdminDoctorDetails extends Component {
   };
 
   render() {
+    console.log("274354213749129837832674 ====>",this.props);
     const { id, doctors } = this.props;
     const { loading, account_details = {} } = this.state;
     const {
@@ -1049,15 +1194,17 @@ class AdminDoctorDetails extends Component {
               <div className="fs20 fw700">
                 {formatMessage(messages.account_details_text)}
               </div>
-              {Object.keys(account_details).length > 0 && <Tooltip
+              {Object.keys(account_details).length > 0 && (
+                <Tooltip
                   placement={"right"}
                   title={formatMessage(messages.add_razorpay_details_text)}
-              >
-                <EditOutlined
+                >
+                  <EditOutlined
                     className="dark-sky-blue fs18 ml10 pointer"
                     onClick={openAddRazorpayIdModal}
-                />
-              </Tooltip>}
+                  />
+                </Tooltip>
+              )}
             </div>
             {Object.keys(account_details).length > 0 ? (
               <div className="border-box">{getDoctorAccountDetails()}</div>
@@ -1099,7 +1246,7 @@ class AdminDoctorDetails extends Component {
           </div>
 
           {/*clinics*/}
-          <div className="mt20 mb20 wp100 flex direction-column">
+          <div className="mt20 mb36 wp100 flex direction-column">
             <div className="fs20 fw700 mb14">
               {formatMessage(messages.clinic_details_text)}
             </div>
@@ -1113,7 +1260,7 @@ class AdminDoctorDetails extends Component {
           </div>
 
           {/*footer*/}
-          {getFooter()}
+          {/*{getFooter()}*/}
         </div>
 
         {getModalDetails()}

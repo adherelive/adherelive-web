@@ -32,6 +32,12 @@ import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
 import accountsRouter from "./accounts";
+import providersRouter from "./providers";
+import featuresRouter from "./features";
+import reportRouter from "./reports";
+import transactionRouter from "./transactions";
+import userFavourites from "./userFavourites";
+import agoraRouter from "./agora";
 
 router.use(async function(req, res, next) {
   try {
@@ -78,7 +84,7 @@ router.use(async function(req, res, next) {
     }
     next();
   } catch (err) {
-    console.log("API INDEX CATCH ERROR ", err);
+    Log.debug("API INDEX CATCH ERROR ", err);
     req.userDetails = {
       exists: false
     };
@@ -111,5 +117,11 @@ router.use("/notifications", notificationRouter);
 router.use("/symptoms", symptomRouter);
 router.use("/vitals", vitalRouter);
 router.use("/accounts", accountsRouter);
+router.use("/providers", providersRouter);
+router.use("/features", featuresRouter);
+router.use("/reports", reportRouter);
+router.use("/transactions", transactionRouter);
+router.use("/favourites",userFavourites);
+router.use("/agora", agoraRouter)
 
 module.exports = router;

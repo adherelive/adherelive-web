@@ -75,17 +75,31 @@ class EndDate extends Component {
   };
 
   getInitialValue = () => {
-    const { purpose, event = {}, events = {} } = this.props;
+    const { purpose, event = {}, events = {}, medications, medicationData = {}, payload: { id: medication_id } = {} } = this.props;
+
+    const { basic_info: { end_date } = {} } = medications[medication_id] || {};
+    const { schedule_data: { end_date:endDate = '', duration } = {} , templatePage=false } = medicationData || {} ;
 
     let initialValue = this.getNewEndDate();
     if (purpose) {
       const { eventId } = event;
       const { endDate } = events[eventId] || {};
       const actualEndDate = new moment(endDate);
-      initialValue =
-        actualEndDate < initialValue ? initialValue : actualEndDate;
+      return actualEndDate < initialValue ? initialValue : actualEndDate;
     }
-    return initialValue;
+
+    let finalEndDate = moment(end_date).clone();
+
+    
+    if (Object.keys(medicationData).length) {
+      finalEndDate = endDate ? endDate : moment().add(7, 'days');
+
+      if(duration) {
+        finalEndDate = moment().add((parseInt(duration)),'days');
+      }
+    }
+
+    return finalEndDate;
   };
 
   calendarComp = () => {
@@ -98,28 +112,49 @@ class EndDate extends Component {
 
   render() {
     const {
-      form: { getFieldDecorator, getFieldError },
+      form: { getFieldDecorator, getFieldError, getFieldValue },
       disabledEndDate,
-      medications,
-      medicationData = {},
-      payload: { id: medication_id } = {}
+      // medications,
+      // medicationData = {},
+      // payload: { id: medication_id } = {}
     } = this.props;
     const { formatMessage, openCalendar, getInitialValue, calendarComp } = this;
 
-    let { basic_info: { end_date } = {} } = medications[medication_id] || {};
-    let { schedule_data: { end_date:endDate = '' } = {} } = medicationData;
-    if (Object.keys(medicationData).length) {
-      end_date = endDate ? endDate : moment().add(5, 'days');
-    }
+    // const { basic_info: { end_date } = {} } = medications[medication_id] || {};
+    // const { schedule_data: { end_date:endDate = '', duration } = {} , templatePage=false } = medicationData || {} ;
 
-   
+    // let finalEndDate = moment(end_date).clone();
+
+    
+    // if (Object.keys(medicationData).length) {
+    //   finalEndDate = endDate ? endDate : moment().add(7, 'days');
+
+    //   if(duration) {
+    //     finalEndDate = moment().add((parseInt(duration)) - 1,'days');
+    //   }
+    // }
+
+    // if(medicationData && templatePage){
+    //   if(duration){
+    //     finalEndDate = moment().add((parseInt(duration)),'days');
+    //   }else if(duration === null){
+    //     finalEndDate = null;
+    //   }
+     
+    // }
+
+    console.log("918371723 getFieldValue", {value: getFieldValue(FIELD_NAME)});
+
     return (
       <div className="flex flex-grow-1 row align-items-center">
         <div className="pl8 wp100">
-          <span className="form-label">To</span>
+          <div className='flex  row mb-4' >
+            <span className="form-label">To</span>
+          </div>
+          
           <FormItem className="wp100">
             {getFieldDecorator(FIELD_NAME, {
-              initialValue: end_date ? moment(end_date) : getInitialValue()
+              initialValue: getInitialValue()
             })(
               <DatePicker
                 className={`full-width ${FIELD_NAME} ant-date-custom-med wp100`}

@@ -8,13 +8,15 @@ class MedicineWrapper extends BaseMedicine {
 
     getBasicInfo = () => {
         const {_data} = this;
-        const {id, name, type, description} = _data || {};
+        const {id, name, type, description, creator_id, public_medicine} = _data || {};
         return {
             basic_info: {
                 id,
                 name,
                 type,
-                description
+                description,
+                creator_id,
+                public_medicine
             }
         };
     };
@@ -26,13 +28,15 @@ class MedicineWrapper extends BaseMedicine {
         _arrData.forEach(data => {
             setCurrentData(data);
             const medicineData = getExistingData();
-            const {id, name, type, description} = medicineData || {};
+            const {id, name, type, description, creator_id, public_medicine} = medicineData || {};
             cumulativeData[id] = {
                 basic_info: {
                     id,
                     name,
                     type,
-                    description
+                    description,
+                    creator_id,
+                    public_medicine
                 }
             };
         });
@@ -43,12 +47,32 @@ class MedicineWrapper extends BaseMedicine {
             }
         }
     };
+
+    getAllInfo = () => {
+        const { _data } = this;
+        const { id, name, type, description, creator_id, 
+          details, public_medicine, updatedAt, createdAt } = _data || {};
+
+        return {
+          basic_info: {
+            id,
+            name,
+            type,
+            description,
+            creator_id,
+            public_medicine
+          },
+          details,
+          updated_at: updatedAt,
+          created_at: createdAt
+        };
+      };
 }
 
 export default async (data = null, id = null) => {
     if(data) {
         return new MedicineWrapper(data);
     }
-    const medicine = await medicineService.getMedicineByData({id});
+    const medicine = await medicineService.getMedicineById(id);
     return new MedicineWrapper(medicine);
 }

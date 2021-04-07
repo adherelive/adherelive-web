@@ -7,6 +7,20 @@ class FeatureDetailsWrapper extends BaseFeatureDetails {
         super(data);
     }
 
+    getBasicInfo = () => {
+      const {_data} = this;
+      const {
+          feature_type,
+          details,
+      } = _data || {};
+
+      return {
+          [feature_type]: {
+              ...details,
+          }
+      };
+    };
+
     getAppointmentType = () => {
       const {getFeatureType, getFeatureDetails} = this;
       if(getFeatureType() === FEATURE_TYPE.APPOINTMENT) {

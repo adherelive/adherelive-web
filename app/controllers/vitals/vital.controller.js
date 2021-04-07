@@ -20,11 +20,13 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 
 
-import {DAYS, EVENT_TYPE,EVENT_STATUS, FEATURE_TYPE, USER_CATEGORY} from "../../../constant";
+import {DAYS, EVENT_TYPE, EVENT_STATUS, FEATURE_TYPE, USER_CATEGORY, NOTIFICATION_STAGES} from "../../../constant";
 import moment from "moment";
 
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+import JobSdk from "../../JobSdk";
+import NotificationSdk from "../../NotificationSdk";
 
 const Log = new Logger("WEB > VITALS > CONTROLLER");
 
@@ -92,9 +94,15 @@ class VitalController extends Controller {
                     vital_templates: vitalTemplates.getBasicInfo()
                 };
 
-                const sqsResponse = await QueueService.sendMessage("test_queue", eventScheduleData);
+                const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-                Log.debug("sqsResponse ---> ", sqsResponse);
+                const vitalJob = JobSdk.execute({
+                    eventType: EVENT_TYPE.VITALS,
+                    eventStage: NOTIFICATION_STAGES.CREATE,
+                    event: eventScheduleData
+                });
+
+                NotificationSdk.execute(vitalJob);
 
                 // RRule
                 // await EventSchedule.create(eventScheduleData);
@@ -132,6 +140,7 @@ class VitalController extends Controller {
                 params: {id} = {}
             } = req;
             const EventService = new eventService();
+            const QueueService = new queueService();
 
 
             const doesVitalExists = await VitalService.getByData({id});
@@ -175,13 +184,23 @@ class VitalController extends Controller {
                 Log.debug("eventScheduleData", eventScheduleData);
 
                 // Delete previously scheduled events
-                const deletedEvents = await EventService.deleteBatch(vitals.getVitalId());
+                const deletedEvents = await EventService.deleteBatch({
+                    event_id: vitals.getVitalId(),
+                    event_type: EVENT_TYPE.VITALS
+                });
 
                 Log.debug("deletedEvents", deletedEvents);
 
-                // RRule
+                const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-                // todo notification
+                const vitalJob = JobSdk.execute({
+                    eventType: EVENT_TYPE.VITALS,
+                    eventStage: NOTIFICATION_STAGES.UPDATE,
+                    event: eventScheduleData
+                });
+
+                NotificationSdk.execute(vitalJob);
+
 
                 return raiseSuccess(
                     res,

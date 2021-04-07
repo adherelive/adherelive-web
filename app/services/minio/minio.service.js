@@ -1,28 +1,45 @@
-const Minio = require("minio");
+import AWS from "aws-sdk";
+import * as https from "https";
+
+// const Minio = require("minio");
 const fs = require("fs");
 
 const Log = require("../../../libs/log")("minioService");
 
 class MinioService {
   constructor() {
-    this.minioClient = new Minio.Client({
-      endPoint: process.config.minio.MINIO_ENDPOINT,
-      port: 9000,
-      useSSL: false,
-      accessKey: process.config.minio.MINIO_ACCESS_KEY,
-      secretKey: process.config.minio.MINIO_SECRET_KEY
-      // endPoint: "s3.amazonaws.com",
-      // accessKey: process.config.aws.access_key,
-      // secretKey: process.config.minio.MINIO_SECRET_KEY
+    // this.minioClient = new Minio.Client({
+    //   endPoint: process.config.minio.MINIO_ENDPOINT,
+    //   port: 9000,
+    //   useSSL: false,
+    //   accessKey: process.config.minio.MINIO_ACCESS_KEY,
+    //   secretKey: process.config.minio.MINIO_SECRET_KEY
+    // });
+    AWS.config.update({
+      accessKeyId: process.config.aws.access_key_id,
+      secretAccessKey: process.config.aws.access_key,
+      region: process.config.aws.region
     });
+    this.s3Client = new AWS.S3();
+    this.bucket = process.config.minio.MINIO_BUCKET_NAME;
   }
+
+  callback = (error, data) => {
+    if(error) {
+      // throw error;
+      console.log("0983128930218 error", error);
+    } else {
+      console.log("093818932 response data", data);
+    }
+  };
 
   async createBucket() {
     try {
       let result;
-      let doesBucketExists = await this.minioClient.bucketExists(
-        process.config.minio.MINIO_BUCKET_NAME
-      );
+      // let doesBucketExists = await this.s3Client.bucketExists(
+      //   process.config.minio.MINIO_BUCKET_NAME
+      // );
+      let doesBucketExists = true;
       Log.debug("doesBucketExists", doesBucketExists);
       const bucket_name = process.config.minio.MINIO_BUCKET_NAME;
       if (!doesBucketExists) {
@@ -41,26 +58,45 @@ class MinioService {
           ]
         };
 
-        result = await this.minioClient.makeBucket(
+        result = await this.s3Client.makeBucket(
           process.config.minio.MINIO_BUCKET_NAME,
           process.config.minio.MINIO_REGION
         );
 
-        await this.minioClient.setBucketPolicy(
+        await this.s3Client.setBucketPolicy(
           process.config.minio.MINIO_BUCKET_NAME,
           JSON.stringify(policy)
         );
 
-        fs.readFile(`${__dirname}/../../../logo.png`, (err, data) => {
-          if (!err) {
+        // Adhere logo for email
+        // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/logo.png
+        fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
+               if (!err) {
+            const emailLogo = this.saveBufferObject(data, "logo.png");
+            Log.debug("emailLogo", emailLogo);
+          } else {
+            Log.debug("err", err);
+          }
+     if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
             Log.debug("emailLogo", emailLogo);
           } else {
             Log.debug("err", err);
           }
         });
+
+        // Push Notification audio for android
+        // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/push_notification_sound.wav
+        fs.readFile(`${__dirname}/../../../other/push_notification_sound.wav`, (err, data) => {
+          if (!err) {
+            const audioObject = this.saveAudioObject(data, "push_notification_sound.wav");
+            Log.debug("audioObject", audioObject);
+          } else {
+            Log.debug("err", err);
+          }
+        });
+
       }
-      this.bucket = process.config.minio.MINIO_BUCKET_NAME;
       return result;
     } catch (err) {
       // console.log("u19281011 err --> ", err);
@@ -68,12 +104,20 @@ class MinioService {
     }
   }
 
+  getSignedUrl = (path) => {
+    return this.s3Client.getSignedUrl("getObject", {
+      Bucket: this.bucket,
+      Key: path.substring(1, path.length),
+      Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME)
+    });
+  }
+
   async saveFileObject(filepath, file, metaData) {
     try {
       if (metaData == null || metaData == undefined) {
         metaData = { "Content-Type": "application/octet-stream" };
       }
-      let result = await this.minioClient.fPutObject(
+      let result = await this.s3Client.fPutObject(
         this.bucket,
         file,
         filepath,
@@ -90,12 +134,23 @@ class MinioService {
       if (metaData == null || metaData == undefined) {
         metaData = { "Content-Type": "application/octet-stream" };
       }
-      let result = await this.minioClient.putObject(
-        this.bucket,
-        file,
-        buffer,
-        metaData
+
+      console.log("091381293 buffer", file);
+      let result = await this.s3Client.putObject({
+        Bucket: this.bucket,
+        Key: file,
+        Body: buffer,
+        ContentType: metaData["Content-Type"]
+        }, this.callback
       );
+
+      // let url = this.s3Client.getSignedUrl("getObject", {
+      //   Bucket: this.bucket,
+      //   Key: file,
+      //   Expires: 60
+      // });
+      //
+      // console.log("81238712 url", url);
 
       return result;
     } catch (err) {
@@ -106,12 +161,19 @@ class MinioService {
 
   async downloadFileObject(objectName, filePath) {
     try {
-      const result = await this.minioClient.fGetObject(
-        this.bucket,
-        objectName,
-        filePath
-      );
-      return result;
+      const file = fs.createWriteStream(filePath);
+
+      const test = await this.getSignedUrl(objectName);
+
+      return new Promise((resolve, reject) => {
+        https.get(test, response => {
+          const stream = response.pipe(file);
+          stream.on("finish", (res) => {
+            resolve(true);
+          })
+        });
+      });
+
     } catch (err) {
       console.log("Error got in the download file object: ", err);
       throw err;
@@ -120,7 +182,7 @@ class MinioService {
 
   async removeObject(file) {
     try {
-      let result = await this.minioClient.removeObject(this.bucket, file);
+      let result = await this.s3Client.removeObject(this.bucket, file);
       return result;
     } catch (err) {
       throw err;
@@ -132,12 +194,22 @@ class MinioService {
       if (metaData === null || metaData === undefined) {
         metaData = { "Content-Type": "audio/mpeg" };
       }
-      let result = await this.minioClient.putObject(
-        this.bucket,
-        file,
-        buffer,
-        metaData
+
+      console.log("091381293 audio buffer", file);
+      let result = await this.s3Client.putObject({
+            Bucket: this.bucket,
+            Key: file,
+            Body: buffer,
+            ContentType: metaData["Content-Type"]
+          }, this.callback
       );
+
+      // let result = await this.s3Client.putObject(
+      //   this.bucket,
+      //   file,
+      //   buffer,
+      //   metaData
+      // );
 
       return result;
     } catch (err) {
@@ -151,12 +223,22 @@ class MinioService {
       if (metaData === null || metaData === undefined) {
         metaData = { "Content-Type": "video/mp4" };
       }
-      let result = await this.minioClient.putObject(
-        this.bucket,
-        file,
-        buffer,
-        metaData
+
+      console.log("091381293 video buffer", file);
+      let result = await this.s3Client.putObject({
+            Bucket: this.bucket,
+            Key: file,
+            Body: buffer,
+            ContentType: metaData["Content-Type"]
+          }, this.callback
       );
+
+      // let result = await this.s3Client.putObject(
+      //   this.bucket,
+      //   file,
+      //   buffer,
+      //   metaData
+      // );
 
       return result;
     } catch (err) {

@@ -9,7 +9,11 @@ import {TABLE_NAME as carePlanMedicationTableName} from "../../models/carePlanMe
 class VitalService {
   addVital = async data => {
     try {
-      const vitals = await Database.getModel(TABLE_NAME).create(data);
+      const vitals = await Database.getModel(TABLE_NAME).create(data, {
+        include: [
+            Database.getModel(vitalTemplatesTableName)
+        ]
+      });
       return vitals;
     } catch (error) {
       throw error;

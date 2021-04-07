@@ -11,6 +11,7 @@ const upload = multer({ dest: "../../../app/public/", storage: storage });
 import mDoctorController from "../../../app/controllers/mControllers/doctors/doctor.controller";
 import { isDoctor } from "../middlewares/doctor";
 import PaymentController from "../../../app/controllers/mControllers/payments/payment.controller";
+import CarePlanTemplate from "../../../app/controllers/carePlanTemplate/carePlanTemplate.controller";
 
 router.post(
   "/",
@@ -26,6 +27,12 @@ router.post(
   // validator.validateDoctorQualificationData,
   // todo :: wip
   mDoctorController.updateDoctorQualificationRegistration
+);
+
+router.get(
+  "/patients",
+  Authenticate,
+  mDoctorController.getPaginatedDataForPatients
 );
 
 router.post(
@@ -85,7 +92,11 @@ router.post(
   mDoctorController.addPatient
 );
 
-router.post("/watchlist/:patient_id", mDoctorController.addPatientToWatchlist);
+router.post(
+  "/watchlist/:patient_id",
+  Authenticate,
+  mDoctorController.addPatientToWatchlist
+);
 
 router.post(
   "/consultations",
@@ -141,6 +152,12 @@ router.post(
   Authenticate,
   validator.validateAddPatientData,
   mDoctorController.updatePatientAndCareplan
-)
+);
+
+router.get(
+    "/treatment/templates",
+    Authenticate,
+    CarePlanTemplate.getAllForDoctor
+);
 
 module.exports = router;

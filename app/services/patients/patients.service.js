@@ -1,9 +1,11 @@
+import Sequelize from "sequelize";
 import Database from "../../../libs/mysql";
 import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/patients";
 import { TABLE_NAME as userTableName } from "../../models/users";
+import {TABLE_NAME as careplanTableName} from "../../models/carePlan";
 import Log from "../../../libs/log";
-import Lookups from "twilio/lib/rest/Lookups";
+import {TABLE_NAME as doctorTableName} from "../../models/doctors";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
@@ -67,7 +69,8 @@ class PatientsService {
   getPatientByData = async data => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findAll({
-        where: data
+        where: data,
+        include: [Database.getModel(userTableName)]
       });
       return patient;
     } catch (error) {
@@ -78,7 +81,12 @@ class PatientsService {
   getPatientById = async data => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findOne({
-        where: data
+        where: data,
+        include: [
+          {
+            model: Database.getModel(userTableName)
+          }
+        ]
       });
       return patient;
     } catch (error) {
@@ -207,6 +215,36 @@ class PatientsService {
       return user;
     } catch (err) {
       throw err;
+    }
+  };
+
+  getPaginatedPatients = async ({doctor_id, order}) => {
+
+    const query = `
+    SELECT cp.doctor_id, cp.patient_id FROM ${careplanTableName} AS cp
+    
+    `;
+    try {
+      return await Database.getModel(TABLE_NAME).findAll({
+        attributes: [
+          "each",
+          []
+        ],
+        include: [
+          {
+            model: Database.getModel(careplanTableName),
+            where: {
+              '$care_plan.doctor_id$': doctor_id,
+            },
+          },
+        ],
+        having:Sequelize.literal(``),
+        order: [["first_name", "ASC"]],
+        raw: true,
+      });
+
+    } catch(error) {
+      throw error;
     }
   };
 }

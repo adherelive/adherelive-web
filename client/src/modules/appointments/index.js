@@ -7,7 +7,6 @@ import {
   updateAppointmentUrl,
   deleteAppointmentUrl,
   getAppointmentsDetailsUrl,
-  getMissedAppointmentsForDoctorUrl
 } from "../../Helper/urls/appointments";
 
 
@@ -39,9 +38,6 @@ export const DELETE_APPOINTMENTS_START = "DELETE_APPOINTMENTS_START";
 export const DELETE_APPOINTMENTS_COMPLETE = "DELETE_APPOINTMENTS_COMPLETE";
 export const DELETE_APPOINTMENTS_FAILED = "DELETE_APPOINTMENTS_FAILED";
 
-export const GET_MISSED_APPOINTMENTS = "GET_MISSED_APPOINTMENTS";
-export const GET_MISSED_APPOINTMENTS_COMPLETE = "GET_MISSED_APPOINTMENTS_COMPLETE";
-export const GET_MISSED_APPOINTMENTS_FAILED = "GET_MISSED_APPOINTMENTS_FAILED";
 
 export const addAppointment = (payload) => {
   let response = {};
@@ -230,34 +226,6 @@ export const deleteAppointment = (id) => {
   };
 };
 
-export const getMissedAppointmentsForDoc = (id) => {
-  let response = {};
-  return async (dispatch) => {
-    try {
-      dispatch({ type: GET_MISSED_APPOINTMENTS });
-      response = await doRequest({
-        method: REQUEST_TYPE.GET,
-        url: getMissedAppointmentsForDoctorUrl(id),
-      });
-
-      const { status, payload: { data, error } = {} } = response || {};
-      if (status === true) {
-        dispatch({
-          type: GET_MISSED_APPOINTMENTS_COMPLETE,
-          data,
-        });
-      } else {
-        dispatch({
-          type: GET_MISSED_APPOINTMENTS_FAILED,
-          error,
-        });
-      }
-    } catch (error) {
-      console.log("GET_MISSED_APPOINTMENTS FOR PATIENT ERROR", error);
-    }
-    return response;
-  };
-}
 
 
 

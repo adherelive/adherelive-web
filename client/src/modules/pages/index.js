@@ -9,6 +9,16 @@ import provider_ids from "./providers";
 import user_ids from "./users";
 import vital_ids from "./vitals";
 import ui_features from "./features";
+import dashboard from "./dashboard";
+import report_ids from "./reports";
+import transaction_ids from "./transactions";
+import care_plan_template_ids from "./careplanTemplates";
+import admin_medicines from "./adminMedicines";
+import admin_search_medicines from "./adminSearchMedicines";
+import favourite_medicine_ids from "./favouriteMedicineIds";
+import favourite_medical_test_ids  from "./favourteMedicalTestIds";
+import paginated_patient_data from "./paginatedPatientsData";
+import search_patient_table from "./searchPatientTable"; 
 
 const rootReducer = combineReducers({
   patient_ids,
@@ -21,6 +31,16 @@ const rootReducer = combineReducers({
   user_ids,
   vital_ids,
   ui_features,
+  dashboard,
+  report_ids,
+  transaction_ids,
+  care_plan_template_ids,
+  admin_medicines,
+  admin_search_medicines,
+  favourite_medicine_ids,
+  favourite_medical_test_ids,
+  paginated_patient_data,
+  search_patient_table
 });
 
 export default (state, action) => {

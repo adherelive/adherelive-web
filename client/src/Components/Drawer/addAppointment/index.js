@@ -10,6 +10,7 @@ import message from "antd/es/message";
 import messages from "./message";
 import AddAppointmentForm from "./form";
 import Footer from "../footer";
+import { RADIOLOGY } from "../../../constant";
 
 class AddAppointment extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class AddAppointment extends Component {
     this.state = {
       visible: true,
       disabledSubmit: true,
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -62,7 +64,14 @@ class AddAppointment extends Component {
           end_time,
           description = "",
           treatment = "",
+          radiology_type=""
         } = values;
+
+
+        // if(type === RADIOLOGY){
+        //   type_description = radiology_type;
+        // }
+
         let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
 
         let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
@@ -114,15 +123,20 @@ class AddAppointment extends Component {
             treatment_id: treatment,
           };
 
+          if(type === RADIOLOGY){
+            data["radiology_type"] = radiology_type;
+          }
+
         if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
-          message.error('Please fill all mandatory details.')
-        } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
-          message.error('Cannot create appointment for past time.')
+          message.error(this.formatMessage(messages.fillMandatory))
+        } else if (moment(date).isSame(moment(), 'day') && moment(start_time).diff(moment(), "minutes") < 0) {
+          message.error(this.formatMessage(messages.pastTimeError))
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
-          message.error('Please select valid timings for appointment.')
+          message.error(this.formatMessage(messages.validTimingError))
         } else {
           try {
+            this.setState({submitting:true});
             const response = await addCarePlanAppointment(data, carePlanId);
             const {
               status,
@@ -142,13 +156,15 @@ class AddAppointment extends Component {
               // getAppointments(patient_id);
             } else {
               if (code === 500) {
-                message.warn('Something went wrong, please try again.');
+                message.warn(formatMessage(messages.somethingWentWrong));
               } else {
                 message.warn(errorMessage);
               }
             }
+            this.setState({submitting:false});
 
           } catch (error) {
+            this.setState({submitting:false});
           }
         }
       }
@@ -182,7 +198,7 @@ class AddAppointment extends Component {
       hideAppointment,
       appointmentVisible,
       editAppointment } = this.props;
-    const { disabledSubmit } = this.state;
+    const { disabledSubmit , submitting=false } = this.state;
 
 
     const {
@@ -238,6 +254,7 @@ class AddAppointment extends Component {
             submitText={formatMessage(messages.submit_text)}
             submitButtonProps={submitButtonProps}
             cancelComponent={null}
+            submitting={submitting}
           />
         </Drawer>
       </Fragment>

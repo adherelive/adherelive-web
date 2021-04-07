@@ -366,6 +366,11 @@ export default defineMessages({
     description: "",
     defaultMessage: "TDS",
   },
+  sos: {
+    id: "medication_reminder.drawer.sos",
+    description: "",
+    defaultMessage: "SOS",
+  },
   oneWeek: {
     id: "medication_reminder.drawer.oneWeek",
     description: "",
@@ -401,5 +406,56 @@ export default defineMessages({
     description: "",
     defaultMessage: "Alternate",
   },
+  medicineText: {
+    id: "medication_reminder.drawer.medicine.text",
+    description: "",
+    defaultMessage: "Medicine",
+  },
+  addMedicine:{
+    id: "medication_reminder.drawer.add.med",
+    description: "",
+    defaultMessage: "Add Medicine",
+  },
+  name:{
+    id: "medication_reminder.drawer.name",
+    description: "",
+    defaultMessage: "Name",
+  },
+  unMark: {
+    id: "medication_reminder.add.drawer.unMark",
+    description: "",
+    defaultMessage: "Un-check",
+  },
+  mark: {
+    id: "medication_reminder.add.drawer.mark",
+    description: "",
+    defaultMessage: "Mark favourite",
+  },
+  beforeMeals: {
+    id: "medication_reminder.add.drawer.before.meals",
+    description: "",
+    defaultMessage: "Before Meals",
+  },
+  afterMeals: {
+    id: "medication_reminder.add.drawer.after.meals",
+    description: "",
+    defaultMessage: "After Meals",
+  },
+  sosMessage: {
+    id: "medication_reminder.add.drawer.sos.message",
+    description: "",
+    defaultMessage: "Take Whenever Required",
+  },
+  medicineLabel: {
+    id: "medication_reminder.add.drawer.medicine.label",
+    description: "",
+    defaultMessage: "Medicine",
+  },
 
+  // error
+  whenToTakeError: {
+    id: "medication_reminder.add.drawer.when.to.take.error",
+    description: "",
+    defaultMessage: "Please select correct time",
+  }
 });

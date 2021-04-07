@@ -6,6 +6,7 @@ import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 import doctorsService from "../../services/doctors/doctors.service";
 import patientsService from "../../services/patients/patients.service";
+import treatmentService from "../../services/treatment/treatment.service";
 
 import patientService from "../../../app/services/patients/patients.service";
 
@@ -23,6 +24,10 @@ import degreeService from "../../services/degree/degree.service";
 import collegeService from "../../services/college/college.service";
 import councilService from "../../services/council/council.service";
 import AccountDetailsService from "../../services/accountDetails/accountDetails.service";
+import providerService from "../../services/provider/provider.service";
+import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
+import featuresService from "../../services/features/features.service";
+import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 
 // import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
@@ -41,6 +46,16 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
+// import ProviderWrapper from "../../ApiWrapper/web/provider";
+import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
+import TreatmentWrapper from "../../ApiWrapper/web/treatments";
+
+import AuthJob from "../../JobSdk/Auth/observer";
+import NotificationSdk from "../../NotificationSdk";
+// import { createNewUser } from "../user/userHelper";
+// import { generatePassword } from "../helper/passwordGenerator";
+
+import { addProviderDoctor } from "./providerHelper";
 
 import {
   ALLOWED_DOC_TYPE_DOCTORS,
@@ -51,20 +66,21 @@ import {
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
   VERIFICATION_TYPE,
-  PATIENT_MEAL_TIMINGS
+  PATIENT_MEAL_TIMINGS,
+  FEATURES, NOTIFICATION_VERB
 } from "../../../constant";
-import { getFilePath } from "../../helper/filePath";
+import { getFilePath , completePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
 import getAge from "../../helper/getAge";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
-import { uploadImageS3 } from "../mControllers/user/userHelper";
+import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
-import doctor from "../../ApiWrapper/web/doctor";
-import college from "../../ApiWrapper/web/college";
+// import doctor from "../../ApiWrapper/web/doctor";
+// import college from "../../ApiWrapper/web/college";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 
@@ -91,7 +107,7 @@ class DoctorController extends Controller {
 
         doctorApiDetails[
           doctorWrapper.getDoctorId()
-        ] = doctorWrapper.getBasicInfo();
+        ] = await doctorWrapper.getAllInfo();
         const { specialities } = await doctorWrapper.getReferenceInfo();
         specialityDetails = { ...specialityDetails, ...specialities };
         doctorIds.push(doctorWrapper.getDoctorId());
@@ -135,7 +151,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { id } = {} } = req;
-      const doctors = await doctorService.getDoctorByData({ id });
+      const doctors = await doctorService.getDoctorByData({ id }, false);
 
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
@@ -289,6 +305,7 @@ class DoctorController extends Controller {
           users: {
             [userWrapper.getId()]: userWrapper.getBasicInfo()
           },
+          ...(await doctorWrapper.getReferenceInfo()),
           doctors: {
             [doctorWrapper.getDoctorId()]: {
               ...doctorWrapper.getBasicInfo(),
@@ -297,7 +314,6 @@ class DoctorController extends Controller {
               doctor_registration_ids
             }
           },
-          ...(await doctorWrapper.getReferenceInfo()),
           doctor_qualifications: {
             ...doctorQualificationApiDetails
           },
@@ -342,9 +358,9 @@ class DoctorController extends Controller {
       const doctorRegistrations = await registrationService.getRegistrationByDoctorId(
         doctorWrapper.getDoctorId()
       );
-      const doctorClinics = await clinicService.getClinicForDoctor(
-        doctorWrapper.getDoctorId()
-      );
+      // const doctorClinics = await clinicService.getClinicForDoctor(
+      //   doctorWrapper.getDoctorId()
+      // );
 
       if (doctorQualifications.length === 0) {
         return this.raiseClientError(
@@ -360,21 +376,23 @@ class DoctorController extends Controller {
           {},
           "Doctor has not updated any registration details yet. Cannot be verified"
         );
-      } else if (doctorClinics.length === 0) {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "Doctor has not updated any clinic details yet. Cannot be verified"
-        );
       }
+      // else if (doctorClinics.length === 0) {
+      //   return this.raiseClientError(
+      //     res,
+      //     422,
+      //     {},
+      //     "Doctor has not updated any clinic details yet. Cannot be verified"
+      //   );
+      // }
 
       const {
         basic_info: { first_name, middle_name, last_name } = {}
       } = doctorWrapper.getBasicInfo();
 
       let verifyData = {
-        activated_on: moment()
+        activated_on: moment(),
+        verified: true
       };
 
       const userDetails = await userService.updateUser(
@@ -398,10 +416,10 @@ class DoctorController extends Controller {
           inviteCard: "",
           mainBodyText: `Greetings from Adhere! We are really happy to inform you that your account has been verified.`,
           subBodyText:
-            "To enable Add Patient option on your Dashboard, please click on verify",
-          buttonText: "Verify",
+            "To enable Add Patient option on your Dashboard, please click on verify and login via email and password for the account",
+          buttonText: "Welcome",
           host: process.config.WEB_URL,
-          contactTo: "patientEngagement@adhere.com"
+          contactTo: "info@adhere.live"
         }
       };
       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
@@ -422,10 +440,158 @@ class DoctorController extends Controller {
     }
   };
 
+  deactivateDoctor = async(req,res) => {
+    const {raiseSuccess,raiseServerError} =this;
+    try{
+      const {  userDetails: { userId = null, userData: { category } = {} } = {} ,
+      params:{doctor_id}={}} = req;
+
+      if (category !== USER_CATEGORY.ADMIN && category !== USER_CATEGORY.PROVIDER) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to deactivate Doctor.`
+        );
+      }
+
+      const doctorDetails = await doctorService.getDoctorByData({ id : doctor_id });
+
+      const doctorWrapper = await DoctorWrapper(doctorDetails);
+
+      const userDetails = await userService.deleteUser(
+        {id:doctorWrapper.getUserId()}
+      );
+
+      // get all patients for the doctor to notify
+      const allPatients = await carePlanService.getAllPatients({doctor_id: doctorWrapper.getDoctorId()}) || [];
+
+      Logger.debug("allPatients", allPatients);
+
+      let patientUserIds = [];
+
+      if(allPatients.length > 0) {
+        for(let index = 0; index < allPatients.length; index++) {
+          const {patient_id} = allPatients[index] || {};
+          const patient = await PatientWrapper(null, patient_id);
+          patientUserIds.push(patient.getUserId());
+        }
+      }
+
+      // notify
+      const deactivateJob = AuthJob.execute(
+        NOTIFICATION_VERB.DEACTIVATE_DOCTOR,
+          {
+            actor: {
+              id: doctorWrapper.getUserId(),
+              details: {
+                name: doctorWrapper.getFullName()
+              }
+            },
+            participants: patientUserIds
+          }
+      );
+
+      await NotificationSdk.execute(deactivateJob);
+
+      const updatedUser = await UserWrapper(null, doctorWrapper.getUserId());
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...await updatedUser.getReferenceInfo()
+        },
+        "Doctor deactivated successfully"
+      );
+
+    }catch(error){
+      Logger.debug("DELETE DOCTOR 500 error", error);
+      return raiseServerError(res);
+    }
+
+  }
+
+  activateDoctor = async(req,res) => {
+    const {raiseSuccess,raiseServerError} =this;
+    try{
+      const { userDetails: { userId = null, userData: { category } = {} } = {} ,
+      params:{user_id}={}} = req;
+
+      if (category !== USER_CATEGORY.ADMIN && category !== USER_CATEGORY.PROVIDER ) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          `User is not authorized to activate Doctor.`
+        );
+      }
+
+
+      const userDetails = await userService.activateUser(
+        {id:user_id}
+      );
+
+      const updatedUser = await UserWrapper(null, user_id);
+
+      const {doctor_id, ...rest} = await updatedUser.getReferenceInfo();
+
+      const {doctors: {[doctor_id]: {basic_info: {full_name} = {}} = {}} = {}} = rest || {};
+
+      // get all patients for the doctor to notify
+      const allPatients = await carePlanService.getAllPatients({doctor_id}) || [];
+
+      Logger.debug("allPatients", allPatients);
+
+      let patientUserIds = [];
+
+      if(allPatients.length > 0) {
+        for(let index = 0; index < allPatients.length; index++) {
+          const {patient_id} = allPatients[index] || {};
+          const patient = await PatientWrapper(null, patient_id);
+          patientUserIds.push(patient.getUserId());
+        }
+      }
+
+      // notify
+      const deactivateJob = AuthJob.execute(
+          NOTIFICATION_VERB.ACTIVATE_DOCTOR,
+          {
+            actor: {
+              id: user_id,
+              details: {
+                name: full_name
+              }
+            },
+            participants: patientUserIds
+          }
+      );
+
+      await NotificationSdk.execute(deactivateJob);
+
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...rest,
+          doctor_id
+        },
+        "Doctor activated successfully"
+      );
+
+    }catch(error){
+      Logger.debug("ACTIVATE DOCTOR 500 error", error);
+      return raiseServerError(res);
+    }
+
+  }
+
   addDoctor = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
+
       const {
         name,
         city,
@@ -433,8 +599,21 @@ class DoctorController extends Controller {
         mobile_number,
         prefix,
         profile_pic,
-        signature_pic
+        signature_pic,
+        is_provider,
+        email
       } = req.body;
+
+      if (is_provider) {
+        const resp = await addProviderDoctor(
+          req,
+          res,
+          raiseSuccess,
+          raiseClientError
+        );
+        return resp;
+      }
+
       const doctorName = name.split(" ");
       const user_data_to_update = {
         category,
@@ -443,9 +622,30 @@ class DoctorController extends Controller {
         onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
       };
 
+      const mobileNumberExist =
+        (await userService.getUserByData({
+          mobile_number
+        })) || [];
+      if (mobileNumberExist && mobileNumberExist.length) {
+        const prevUser = await UserWrapper(mobileNumberExist[0].get());
+        const prevUserId = prevUser.getId();
+        if (prevUserId !== userId) {
+          return this.raiseClientError(
+            res,
+            422,
+            {},
+            "This mobile number is already registered."
+          );
+        }
+      }
+
+      let doctorUserId = userId;
+
+      Logger.debug("Doctor user id is: ", doctorUserId);
+
       let doctor = {};
       let doctorExist = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: doctorUserId
       });
       let first_name = doctorName[0];
       let middle_name = doctorName.length === 3 ? doctorName[1] : "";
@@ -459,11 +659,9 @@ class DoctorController extends Controller {
       if (doctorExist) {
         let doctor_data = {
           city,
-          profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
-            : null,
+          profile_pic: profile_pic ? getFilePath(profile_pic) : null,
           signature_pic: signature_pic
-            ? signature_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -473,7 +671,7 @@ class DoctorController extends Controller {
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
       } else {
         let doctor_data = {
-          user_id: userId,
+          user_id: doctorUserId,
           city,
           profile_pic: getFilePath(profile_pic),
           signature_pic: getFilePath(signature_pic),
@@ -485,17 +683,18 @@ class DoctorController extends Controller {
       }
       const userUpdate = await userService.updateUser(
         user_data_to_update,
-        userId
+        doctorUserId
       );
 
-      const updatedUser = await userService.getUserById(userId);
+      const updatedUser = await userService.getUserById(doctorUserId);
 
       const userData = await UserWrapper(updatedUser.get());
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: doctorUserId
       });
       const doctorData = await DoctorWrapper(updatedDoctor);
+
       return raiseSuccess(
         res,
         200,
@@ -515,11 +714,16 @@ class DoctorController extends Controller {
     }
   };
 
-  updateDoctorDetails = async (req, res) => {       //todoJ
+  updateDoctorDetails = async (req, res) => {
+    //todoJ
     // console.log("add patient controller ---> ");
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { id = 0 } = req.params;
+      const {
+        userDetails: { userData: { category: userCategory } = {} } = {}
+      } = req;
+
       const {
         name = null,
         city = null,
@@ -528,11 +732,24 @@ class DoctorController extends Controller {
         speciality_id = null,
         qualification_details = null,
         registration_details = null,
-        clinic_details = null
+        clinic_details = null,
+        doctor_id = null
       } = req.body;
       Logger.debug("ererer", req.body);
+
+      let doctorUserId = id;
+
+      if (doctor_id) {
+        if (userCategory !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
+
       let doctorExist = await doctorService.getDoctorByData({
-        user_id: id
+        user_id: doctorUserId
       });
       let doctor_data = {};
       if (name) {
@@ -551,9 +768,7 @@ class DoctorController extends Controller {
         doctor_data["last_name"] = last_name;
       }
       if (profile_pic) {
-        doctor_data["profile_pic"] = profile_pic.split(
-          process.config.minio.MINIO_BUCKET_NAME
-        )[1];
+        doctor_data["profile_pic"] = getFilePath(profile_pic);
       }
       if (gender) {
         doctor_data["gender"] = gender;
@@ -571,7 +786,7 @@ class DoctorController extends Controller {
         doctor = await doctorService.updateDoctor(doctor_data, doctor_id);
 
         const updatedDoctor = await doctorService.getDoctorByData({
-          user_id: id
+          user_id: doctorUserId
         });
 
         // basic information
@@ -589,38 +804,34 @@ class DoctorController extends Controller {
             const {
               degree_id = null,
               year = null,
-              college_name = '',
-              college_id = '' ,
+              college_name = "",
+              college_id = "",
               photos = [],
               id = 0,
               doctor_id = 0
             } = item;
 
-
             let collegeId = college_id;
-            if(college_name !== '' ){
-
+            if (college_name !== "") {
               const college = await collegeService.create({
-                name:college_name,
-                user_created:true
-              })
+                name: college_name,
+                user_created: true
+              });
 
               const collegeWrapper = await CollegeWrapper(college);
               collegeId = collegeWrapper.getCollegeId();
             }
-
-          
 
             if (id && id !== "0") {
               let qualification_data = {};
               if (degree_id) {
                 qualification_data["degree_id"] = degree_id;
               }
-             
-              if(collegeId){
+
+              if (collegeId) {
                 qualification_data["college_id"] = collegeId;
               }
-             
+
               if (year) {
                 qualification_data["year"] = year;
               }
@@ -715,7 +926,6 @@ class DoctorController extends Controller {
         }
 
         if (clinic_details) {
-          Logger.debug("inside");
           for (const clinic of clinic_details) {
             let clinicDetails = {};
             const {
@@ -759,6 +969,7 @@ class DoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor Not Found.");
       }
     } catch (error) {
+      Logger.debug("932647583246723908478783246",{error});
       Logger.debug("update doctor 500 error", error);
       return raiseServerError(res);
     }
@@ -766,7 +977,6 @@ class DoctorController extends Controller {
 
   addPatient = async (req, res) => {
     try {
-      Logger.debug("342525265342635");
       const {
         mobile_number = "",
         name = "",
@@ -787,15 +997,15 @@ class DoctorController extends Controller {
         address = ""
       } = req.body;
 
-      Logger.debug("1213132314231", req.body);
       const { userDetails: { userId, userData: { category } = {} } = {} } = req;
 
-      const userExists = await userService.getPatientByMobile(mobile_number);
+      const userExists = await userService.getPatientByMobile(mobile_number) || [];
 
       let userData = null;
       let patientData = null;
       let patientOtherDetails = {};
       let carePlanOtherDetails = {};
+      let patientFeatureIds = [];
 
       if (comorbidities) {
         patientOtherDetails["comorbidities"] = comorbidities;
@@ -810,18 +1020,53 @@ class DoctorController extends Controller {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
 
+      Logger.debug("1789173127 userExists.length ---> ", userExists.length);
+
+      const doctor = await doctorService.getDoctorByData({ user_id: userId });
+
+      let patientName='';
+      if(name){
+        patientName = name.trim().split(" ");
+      }
+
+      let first_name = patientName[0] || null;
+      let middle_name = patientName.length === 3 ? patientName[1] : null;
+      let last_name =
+          patientName.length === 3
+              ? patientName[2]
+              : patientName.length === 2
+              ? patientName[1]
+              : null;
+
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
         userData = await UserWrapper(userExists[0].get());
+
+        // if(userData.getCategory() !== USER_CATEGORY.PATIENT) {
+        //   return this.raiseClientError(res, 422, {}, "Number already registered with other user")
+        // }
         const { patient_id } = await userData.getReferenceInfo();
         patientData = await PatientWrapper(null, patient_id);
 
         const previousDetails = patientData.getDetails();
-        const updateResponse = await patientsService.update({ height, weight, address, details: {...previousDetails, ...patientOtherDetails} }, patient_id);
+        const updateResponse = await patientsService.update(
+          {
+            height,
+            weight,
+            address,
+            first_name,
+            middle_name,
+            last_name,
+            gender,
+            dob: date_of_birth,
+            age: getAge(moment(date_of_birth)),
+            details: { ...previousDetails, ...patientOtherDetails }
+          },
+          patient_id
+        );
         Logger.debug("Patient updateResponse ", updateResponse);
 
         patientData = await PatientWrapper(null, patient_id);
-
       } else {
         const password = process.config.DEFAULT_PASSWORD;
         const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -847,16 +1092,6 @@ class DoctorController extends Controller {
         }
 
         let newUserId = userData.getId();
-
-        let patientName = name.trim().split(" ");
-        let first_name = patientName[0];
-        let middle_name = patientName.length == 3 ? patientName[1] : "";
-        let last_name =
-          patientName.length == 3
-            ? patientName[2]
-            : patientName.length == 2
-            ? patientName[1]
-            : "";
 
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
@@ -889,9 +1124,24 @@ class DoctorController extends Controller {
 
         await patientsService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
+
+        const features = await featuresService.getAllFeatures();
+
+        for (const feature of features) {
+          const { id: featureId } = feature;
+          const featureMappingData = await doctorPatientFeatureMappingService.create(
+            {
+              feature_id: featureId,
+              patient_id: patientData.getPatientId(),
+              doctor_id: doctor.get("id")
+            }
+          );
+          if (featureMappingData) {
+            patientFeatureIds.push(featureId);
+          }
+        }
       }
 
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData(
         {
           treatment_id,
@@ -1042,6 +1292,9 @@ class DoctorController extends Controller {
           },
           medicines: {
             ...medicineApiData
+          },
+          features_mappings: {
+            [patientData.getPatientId()]: patientFeatureIds
           }
         },
         "Patient added successfully"
@@ -1053,22 +1306,40 @@ class DoctorController extends Controller {
   };
 
   updateDoctorQualificationRegistration = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
       const {
         speciality_id = "",
         gender = "",
         qualification_details = [],
-        registration_details = []
+        registration_details = [],
+        doctor_id = null
       } = req.body;
 
-      const { userDetails: { userId: user_id } = {} } = req;
+      const {
+        userDetails: {
+          userId: user_id,
+          userData: { category = null } = {}
+        } = {}
+      } = req;
 
-      // let user_data_to_update = {
-      //   onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED
-      // };
-      const doctor = await doctorService.getDoctorByData({ user_id });
-      const doctorData = await DoctorWrapper(doctor);
+      let doctorUserId = user_id;
+      let doctorData = null;
+
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      } else {
+        const doctor = await doctorService.getDoctorByData({
+          user_id: doctorUserId
+        });
+        doctorData = await DoctorWrapper(doctor);
+      }
+
       // let doctor_id = doctor.get("id");
 
       const doctorUpdate = await doctorService.updateDoctor(
@@ -1093,54 +1364,58 @@ class DoctorController extends Controller {
           id = 0
         } = item;
 
-
         if (id && id !== "0") {
-
           let collegeId = college_id;
-            if(college_name !== '' ){
+          if (college_name !== "") {
+            const existingCollege = await collegeService.getByData({
+              name: college_name
+            });
 
+            // Logger.debug("876546789653456789876789",existingCollege);
+
+            if (!existingCollege) {
               const college = await collegeService.create({
-                name:college_name,
-                user_created:true
-              })
+                name: college_name,
+                user_created: true
+              });
 
               const collegeWrapper = await CollegeWrapper(college);
               collegeId = collegeWrapper.getCollegeId();
+            } else {
+              const existingCollegeWrapper = await CollegeWrapper(
+                existingCollege
+              );
+              collegeId = existingCollegeWrapper.getCollegeId();
             }
+          }
 
-
-        
           const qualification = await qualificationService.updateQualification(
             {
               doctor_id: doctorData.getDoctorId(),
               degree_id,
               year,
-              college_id:collegeId
+              college_id: collegeId
             },
             id
           );
           newQualifications.push(parseInt(id));
         } else {
-
           let collegeId = college_id;
-            if(college_name !== '' ){
+          if (college_name !== "") {
+            const college = await collegeService.create({
+              name: college_name,
+              user_created: true
+            });
 
-              const college = await collegeService.create({
-                name:college_name,
-                user_created:true
-              })
-
-              const collegeWrapper = await CollegeWrapper(college);
-              collegeId = collegeWrapper.getCollegeId();
-            }
-
-
+            const collegeWrapper = await CollegeWrapper(college);
+            collegeId = collegeWrapper.getCollegeId();
+          }
 
           const qualification = await qualificationService.addQualification({
             doctor_id: doctorData.getDoctorId(),
             degree_id,
             year,
-            college_id:collegeId
+            college_id: collegeId
           });
         }
       }
@@ -1214,13 +1489,15 @@ class DoctorController extends Controller {
         {
           onboarding_status: ONBOARDING_STATUS.QUALIFICATION_REGISTERED
         },
-        user_id
+        doctorUserId
       );
 
-      const updatedUser = await userService.getUserById(user_id);
+      const updatedUser = await userService.getUserById(doctorUserId);
       const updatedUserData = await UserWrapper(updatedUser.get());
 
-      const updatedDoctor = await doctorService.getDoctorByData({ user_id });
+      const updatedDoctor = await doctorService.getDoctorByData({
+        user_id: doctorUserId
+      });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
       let uploadDocumentsData = {};
@@ -1323,10 +1600,23 @@ class DoctorController extends Controller {
   };
 
   updateQualificationDocs = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {},
+        body: { doctor_id = null } = {}
+      } = req;
       const file = req.file;
+
+      let doctorUserId = userId;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
@@ -1340,7 +1630,7 @@ class DoctorController extends Controller {
         );
       }
 
-      let files = await uploadImageS3(userId, file);
+      let files = await uploadImageS3(doctorUserId, file, "qualification");
       let qualification_id = 0;
       // let doctor = await doctorService.getDoctorByUserId(userId);
 
@@ -1359,14 +1649,39 @@ class DoctorController extends Controller {
   };
 
   updateRegistrationDocs = async (req, res) => {
-    const { raiseServerError } = this;
+    const { raiseServerError, raiseClientError } = this;
     try {
       const file = req.file;
-      const { userDetails: { userId } = {} } = req;
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {},
+        body: { doctor_id = null } = {}
+      } = req;
 
       Logger.debug("updateRegistrationDocs file", file);
 
-      let files = await uploadImageS3(userId, file);
+      let doctorUserId = userId;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
+
+      const { mimetype } = file || {};
+      const fileType = mimetype.split("/");
+      Logger.debug("456786754676798675645546789 mimetype ------> ", mimetype);
+      if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "Only images and pdf documents are allowed"
+        );
+      }
+
+      let files = await uploadImageS3(doctorUserId, file);
 
       Logger.debug("files --->", files);
 
@@ -1384,13 +1699,34 @@ class DoctorController extends Controller {
   };
 
   updateQualificationStep = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { gender = "", speciality_id = "", qualification = {} } = req.body;
-      const { userDetails: { userId } = {} } = req;
+      const {
+        gender = "",
+        speciality_id = "",
+        qualification = {},
+        doctor_id = null
+      } = req.body;
 
-      let doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const doctorData = await DoctorWrapper(doctor);
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {}
+      } = req;
+
+      let doctorUserId = userId;
+      let doctorData = null;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      } else {
+        let doctor = await doctorService.getDoctorByData({
+          user_id: doctorUserId
+        });
+        doctorData = await DoctorWrapper(doctor);
+      }
 
       if (gender && speciality_id) {
         const updatedDoctor = await doctorService.updateDoctor(
@@ -1401,8 +1737,14 @@ class DoctorController extends Controller {
           doctorData.getDoctorId()
         );
       }
-      const { degree_id = "", year = "", college_name = "",college_id = "", id, photos = [] } =
-        qualification || {};
+      const {
+        degree_id = "",
+        year = "",
+        college_name = "",
+        college_id = "",
+        id,
+        photos = []
+      } = qualification || {};
 
       let docQualification = {};
 
@@ -1416,26 +1758,22 @@ class DoctorController extends Controller {
       }
 
       if (id === "0") {
-
         let collegeId = college_id;
-        if(college_name !== '' ){
-
+        if (college_name !== "") {
           const college = await collegeService.create({
-            name:college_name,
-            user_created:true
-          })
+            name: college_name,
+            user_created: true
+          });
 
           const collegeWrapper = await CollegeWrapper(college);
           collegeId = collegeWrapper.getCollegeId();
         }
 
-
-
         docQualification = await qualificationService.addQualification({
           doctor_id: doctorData.getDoctorId(),
           degree_id,
           year,
-          college_id:collegeId
+          college_id: collegeId
         });
 
         for (const photo of photos) {
@@ -1458,28 +1796,23 @@ class DoctorController extends Controller {
           }
         }
       } else {
-
         let collegeId = college_id;
-        if(college_name !== '' ){
-
+        if (college_name !== "") {
           const college = await collegeService.create({
-            name:college_name,
-            user_created:true
-          })
+            name: college_name,
+            user_created: true
+          });
 
           const collegeWrapper = await CollegeWrapper(college);
           collegeId = collegeWrapper.getCollegeId();
         }
-
-
-
 
         const docQualificationUpdate = await qualificationService.updateQualification(
           {
             doctor_id: doctorData.getDoctorId(),
             degree_id,
             year,
-            college_id:collegeId
+            college_id: collegeId
           },
           id
         );
@@ -1508,7 +1841,7 @@ class DoctorController extends Controller {
       );
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: doctorUserId
       });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
@@ -1583,16 +1916,38 @@ class DoctorController extends Controller {
   updateRegistrationStep = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
-      const { body, userDetails: { userId } = {} } = req;
+      const {
+        body,
+        userDetails: { userId, userData: { category = null } = {} } = {}
+      } = req;
+
+      let doctorUserId = userId;
+
       const {
         gender = "",
         speciality_id = "",
         qualification_details: qualifications = [],
-        registration = {}
+        registration = {},
+        doctor_id = null
       } = body || {};
 
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const doctorData = await DoctorWrapper(doctor);
+      Logger.debug("3456754321345643", doctor_id);
+
+      let doctorData = null;
+
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      } else {
+        const doctor = await doctorService.getDoctorByData({
+          user_id: doctorUserId
+        });
+        doctorData = await DoctorWrapper(doctor);
+      }
 
       if (gender && speciality_id) {
         const updatedDoctor = await doctorService.updateDoctor(
@@ -1606,7 +1961,7 @@ class DoctorController extends Controller {
           const {
             degree_id = "",
             year = "",
-            college_id="",
+            college_id = "",
             college_name = "",
             id,
             photos = []
@@ -1621,27 +1976,23 @@ class DoctorController extends Controller {
             );
           }
           if (id === "0") {
-
             let collegeId = college_id;
-            if(college_name !== '' ){
-
+            if (college_name !== "") {
               const college = await collegeService.create({
-                name:college_name,
-                user_created:true
-              })
+                name: college_name,
+                user_created: true
+              });
 
               const collegeWrapper = await CollegeWrapper(college);
               collegeId = collegeWrapper.getCollegeId();
             }
 
-
-            
             const docQualification = await qualificationService.addQualification(
               {
                 doctor_id: doctorData.getDoctorId(),
                 degree_id,
                 year,
-                college_id:collegeId
+                college_id: collegeId
               }
             );
 
@@ -1763,7 +2114,7 @@ class DoctorController extends Controller {
       }
 
       const updatedDoctor = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: doctorUserId
       });
       const updatedDoctorData = await DoctorWrapper(updatedDoctor);
 
@@ -1854,7 +2205,7 @@ class DoctorController extends Controller {
           },
           upload_documents: {
             ...uploadDocumentsData
-          },
+          }
         },
         "registration details updated successfully"
       );
@@ -1864,133 +2215,17 @@ class DoctorController extends Controller {
     }
   };
 
-  updateDoctorClinics = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
-    try {
-      const { clinics = [] } = req.body;
-      const { userDetails: { userId } = {} } = req;
-
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const doctorData = await DoctorWrapper(doctor);
-
-      let clinicDetails = {};
-      let doctor_clinic_ids = [];
-
-      for (const clinic of clinics) {
-        const { name = "", location = "", time_slots = [] } = clinic;
-
-        const details = {
-          time_slots
-        };
-
-        const newClinic = await clinicService.addClinic({
-          doctor_id: doctorData.getDoctorId(),
-          name,
-          location,
-          details
-        });
-
-        const clinicData = await ClinicWrapper(newClinic);
-        clinicDetails[
-          clinicData.getDoctorClinicId()
-        ] = clinicData.getBasicInfo();
-        doctor_clinic_ids.push(clinicData.getDoctorClinicId());
-      }
-
-      const userUpdate = await userService.updateUser(
-        {
-          onboarded: true,
-          onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED
-        },
-        userId
-      );
-      const updateUser = await userService.getUserById(userId);
-
-      const userData = await UserWrapper(updateUser.get());
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          users: {
-            [userData.getId()]: userData.getBasicInfo()
-          },
-          doctor_clinics: {
-            ...clinicDetails
-          },
-          doctor_clinic_ids
-        },
-        "doctor clinics added successfully"
-      );
-    } catch (error) {
-      Logger.debug("updateDoctorClinics 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-
-  deleteQualificationDocument = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-
-    try {
-      const { id = 0 } = req.params;
-      const { document = "" } = req.body;
-      const documentToCheck = getFilePath(document);
-      let documentToDelete = await documentService.getDocumentByData(
-        DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
-        id,
-        documentToCheck
-      );
-
-      await documentToDelete.destroy();
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        "doctor qualification document deleted successfully"
-      );
-    } catch (error) {
-      Logger.debug(
-        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---->",
-        error
-      );
-      return raiseServerError(res);
-    }
-  };
-
-  deleteRegistrationDocument = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-
-    try {
-      const { id = 0 } = req.params;
-      const { document = "" } = req.body;
-      const documentToCheck = getFilePath(document);
-      let documentToDelete = await documentService.getDocumentByData(
-        DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
-        id,
-        documentToCheck
-      );
-
-      await documentToDelete.destroy();
-      return raiseSuccess(
-        res,
-        200,
-        {},
-        "doctor registration document deleted successfully"
-      );
-    } catch (error) {
-      Logger.debug(
-        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
-        error
-      );
-      return raiseServerError(res);
-    }
-  };
-
   getAllDoctorDetails = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const {
+        userDetails: { userId } = {},
+        params: { doctor_id = null } = {}
+      } = req;
+
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
+
+      Logger.debug("76578937476238497923847238492342", userId);
 
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
@@ -2001,17 +2236,18 @@ class DoctorController extends Controller {
       let doctor_clinic_ids = [];
       let upload_document_ids = [];
 
-      const doctorWrapper = await DoctorWrapper(doctors);
+      let doctorWrapper = null;
 
-      Logger.debug("doctors ---> ", doctors);
+      if (parseInt(doctor_id) > 0) {
+        doctorWrapper = await DoctorWrapper(null, doctor_id);
+      } else {
+        Logger.debug("76578937476238497923847238492342 ----> doctors", doctors);
 
-      if (!doctors) {
-        return this.raiseServerError(
-          res,
-          422,
-          {},
-          "Doctor details not updated"
-        );
+        if (!doctors) {
+          return raiseClientError(res, 422, {}, "Doctor details not updated");
+        }
+
+        doctorWrapper = await DoctorWrapper(doctors);
       }
 
       const doctorQualifications = await qualificationService.getQualificationsByDoctorId(
@@ -2138,22 +2374,24 @@ class DoctorController extends Controller {
         ] = councilWrapper.getBasicInfo();
       }
 
+
+      const refInfo = await doctorWrapper.getReferenceInfo();
+      const {doctors  : docss= {} , users :userss = {} } = refInfo;
+      Logger.debug("2864235427654723867432648327",{refInfo,doctors:docss,users:userss});
+
       return raiseSuccess(
         res,
         200,
         {
-          users: {
-            [userWrapper.getId()]: userWrapper.getBasicInfo()
-          },
+          ...(await doctorWrapper.getReferenceInfo()),
           doctors: {
             [doctorWrapper.getDoctorId()]: {
-              ...doctorWrapper.getBasicInfo(),
+              ...(await doctorWrapper.getAllInfo()),
               doctor_qualification_ids,
               doctor_clinic_ids,
               doctor_registration_ids
             }
           },
-          ...(await doctorWrapper.getReferenceInfo()),
           doctor_qualifications: {
             ...doctorQualificationApiDetails
           },
@@ -2174,7 +2412,10 @@ class DoctorController extends Controller {
           },
           registration_councils: {
             ...councilData
-          }
+          },
+          users: {
+            [userWrapper.getId()]: userWrapper.getBasicInfo()
+          },
         },
         "Doctor details fetched successfully"
       );
@@ -2185,36 +2426,82 @@ class DoctorController extends Controller {
   };
 
   updateDoctorClinics = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      const { clinics = [] } = req.body;
-      const { userDetails: { userId } = {} } = req;
+      const { clinics = [], doctor_id = null } = req.body;
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {}
+      } = req;
 
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
-      const doctorData = await DoctorWrapper(doctor);
+      let doctorUserId = userId;
+      let doctorData = null;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      } else {
+        const doctor = await doctorService.getDoctorByData({
+          user_id: doctorUserId
+        });
+        doctorData = await DoctorWrapper(doctor);
+      }
 
       let clinicDetails = {};
       let doctor_clinic_ids = [];
 
       for (const clinic of clinics) {
-        const { name = "", location = "", time_slots = {} } = clinic;
+        const {
+          name = "",
+          location = "",
+          time_slots = {},
+          clinic_id = ""
+        } = clinic;
 
         const details = {
           time_slots
         };
 
-        const newClinic = await clinicService.addClinic({
-          doctor_id: doctorData.getDoctorId(),
-          name,
-          location,
-          details
-        });
+        let newClinic = "";
 
-        const clinicData = await ClinicWrapper(newClinic);
-        clinicDetails[
-          clinicData.getDoctorClinicId()
-        ] = clinicData.getBasicInfo();
-        doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+        if (clinic_id) {
+          Logger.debug("76578976546786546789", clinic_id);
+          if (name) {
+            clinicDetails["name"] = name;
+          }
+          if (location) {
+            clinicDetails["location"] = location;
+          }
+          if (time_slots) {
+            clinicDetails["details"] = { time_slots: time_slots };
+          }
+
+          let id = clinic_id;
+          let clinic = await clinicService.updateClinic(clinicDetails, id);
+
+          newClinic = await clinicService.getClinicById(clinic_id);
+
+          Logger.debug("76578976546786546789 --->", newClinic);
+        } else {
+          if (name && location) {
+            newClinic = await clinicService.addClinic({
+              doctor_id: doctorData.getDoctorId(),
+              name,
+              location,
+              details
+            });
+          }
+        }
+
+        if (newClinic) {
+          const clinicData = await ClinicWrapper(newClinic);
+          clinicDetails[
+            clinicData.getDoctorClinicId()
+          ] = clinicData.getBasicInfo();
+          doctor_clinic_ids.push(clinicData.getDoctorClinicId());
+        }
       }
 
       const userUpdate = await userService.updateUser(
@@ -2222,9 +2509,9 @@ class DoctorController extends Controller {
           onboarded: true,
           onboarding_status: ONBOARDING_STATUS.CLINIC_REGISTERED
         },
-        userId
+        doctorUserId
       );
-      const updateUser = await userService.getUserById(userId);
+      const updateUser = await userService.getUserById(doctorUserId);
 
       const userData = await UserWrapper(updateUser.get());
 
@@ -2308,11 +2595,25 @@ class DoctorController extends Controller {
 
   uploadImage = async (req, res) => {
     const { userDetails, body } = req;
-    const { userId = "3" } = userDetails || {};
+    const { userId = "3", userData: { category = null } = {} } =
+      userDetails || {};
+
+    const { doctor_id = null } = body;
+
     const file = req.file;
     Logger.debug("file ----> ", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
+      let doctorUserId = userId;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return this.raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
+
       //   await minioService.createBucket();
 
       //   const imageName = md5(`${userId}-education-pics`);
@@ -2339,7 +2640,7 @@ class DoctorController extends Controller {
       // console.log("Uplaoded File Url ---------------------->  ", file_link);
       // console.log("User Controllers =------------------->   ", files);
       //const resume_link = process.config.BASE_DOC_URL + files[0]
-      let files = await uploadImageS3(userId, file);
+      let files = await uploadImageS3(doctorUserId, file);
       return this.raiseSuccess(
         res,
         200,
@@ -2503,107 +2804,463 @@ class DoctorController extends Controller {
     }
   };
 
-  updatePatientAndCareplan = async (req,res) => {
-    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+  updatePatientAndCareplan = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      
-      const {  mobile_number = "",
-      name = "",
-      gender = "",
-      date_of_birth = "",
-      prefix = "",
-      comorbidities = "",
-      allergies = "",
-      clinical_notes = "",
-      diagnosis_type = "1",
-      diagnosis_description = "",
-      treatment_id,
-      severity_id,
-      condition_id,
-      height = "",
-      weight = "",
-      symptoms = "",
-      address = ""} = req.body;
+      const {
+        // mobile_number = "",
+        name = "",
+        gender = "",
+        date_of_birth = "",
+        // prefix = "",
+        comorbidities = "",
+        allergies = "",
+        clinical_notes = "",
+        diagnosis_type = "1",
+        diagnosis_description = "",
+        treatment_id,
+        severity_id,
+        condition_id,
+        height = "",
+        weight = "",
+        symptoms = "",
+        address = ""
+      } = req.body;
 
-      
-  
-        const {params: {careplan_id} = {}, userDetails: {userId} = {}} = req;
-        const  carePlanData = await CarePlanWrapper(null, careplan_id);
-        const patient_id = await carePlanData.getPatientId();
-        const initialPatientData = await PatientWrapper(null,patient_id);
-        
-        const previousDetails = (await initialPatientData.getDetails()) || {};
-        const { basic_info: prevBasicInfo } =
-          initialPatientData.getBasicInfo() || {};
-  
-        const patientUpdateData = {
-          ...prevBasicInfo,
-          details: {
-            ...previousDetails,
-            allergies ,
-            comorbidities 
-          },
-          height,
-          weight,
-          address
-        };
-  
-        const updatedPatient = await patientService.update(
-          patientUpdateData,patient_id
-          );
+      const {
+        params: { careplan_id } = {},
+        userDetails: { userId } = {}
+      } = req;
+      const carePlanData = await CarePlanWrapper(null, careplan_id);
+      const patient_id = await carePlanData.getPatientId();
+      const initialPatientData = await PatientWrapper(null, patient_id);
 
-         const updatedpatientDetails =  await PatientWrapper(null,patient_id);
+      const previousDetails = (await initialPatientData.getDetails()) || {};
+      const { basic_info: prevBasicInfo } =
+        initialPatientData.getBasicInfo() || {};
 
-         const  initialCarePlanData = await CarePlanWrapper(null, careplan_id);
-         const previousCareplanDetails = (await initialCarePlanData.getCarePlanDetails()) || {};
-        const { basic_info: prevCareplanBasicInfo } =
-          initialCarePlanData.getBasicInfo() || {};
-  
-        const carePlanUpdateData = {
-          ...prevCareplanBasicInfo,
-          details: {
-            ...previousCareplanDetails,
-            clinical_notes,
-            treatment_id,
-            severity_id,
-            condition_id,
-            symptoms,
-             diagnosis:
-             {type: diagnosis_type,
-              description: diagnosis_description}
-            
-          }
-        };
-
-
-        const updatedCareplanId = await carePlanService.updateCarePlan(
-          carePlanUpdateData,careplan_id
-            );
-
-        const updatedCareplanDetails = await CarePlanWrapper(null,careplan_id);
-        
-
-  return this.raiseSuccess(
-      res,
-      200,
-      {
-        care_plan_ids: [initialCarePlanData.getCarePlanId()],
-        care_plans: {
-          [initialCarePlanData.getCarePlanId()]: updatedCareplanDetails.getBasicInfo()
-        },
-        patients: {
-          [initialPatientData.getPatientId()]: updatedpatientDetails.getBasicInfo()
-        },
-
-      },
-      "Careplan added successfully"
-  );
-
-      } catch (error) {
-        Logger.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
-        return raiseServerError(res);
+      // split names of patient
+      let patientName='';
+      if(name){
+        patientName = name.trim().split(" ");
       }
-}
+      let first_name = patientName[0] || null;
+      let middle_name = patientName.length === 3 ? patientName[1] : null;
+      let last_name =
+          patientName.length === 3
+              ? patientName[2]
+              : patientName.length === 2
+              ? patientName[1]
+              : null;
+
+      const patientUpdateData = {
+        ...prevBasicInfo,
+        details: {
+          ...previousDetails,
+          allergies,
+          comorbidities
+        },
+        first_name,
+        middle_name,
+        last_name,
+        gender,
+        height,
+        weight,
+        address,
+        dob: date_of_birth,
+        age: getAge(moment(date_of_birth)),
+      };
+
+      const updatedPatient = await patientService.update(
+        patientUpdateData,
+        patient_id
+      );
+
+      const updatedpatientDetails = await PatientWrapper(null, patient_id);
+
+      const initialCarePlanData = await CarePlanWrapper(null, careplan_id);
+      const previousCareplanDetails =
+        (await initialCarePlanData.getCarePlanDetails()) || {};
+      const { basic_info: prevCareplanBasicInfo } =
+        initialCarePlanData.getBasicInfo() || {};
+
+      const carePlanUpdateData = {
+        ...prevCareplanBasicInfo,
+        details: {
+          ...previousCareplanDetails,
+          clinical_notes,
+          treatment_id,
+          severity_id,
+          condition_id,
+          symptoms,
+          diagnosis: {
+            type: diagnosis_type,
+            description: diagnosis_description
+          }
+        }
+      };
+
+      const updatedCareplanId = await carePlanService.updateCarePlan(
+        carePlanUpdateData,
+        careplan_id
+      );
+
+      const updatedCareplanDetails = await CarePlanWrapper(null, careplan_id);
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          care_plan_ids: [initialCarePlanData.getCarePlanId()],
+          care_plans: {
+            [initialCarePlanData.getCarePlanId()]: await updatedCareplanDetails.getAllInfo()
+          },
+          patients: {
+            [initialPatientData.getPatientId()]: updatedpatientDetails.getBasicInfo()
+          }
+        },
+        "Careplan added successfully"
+      );
+    } catch (error) {
+      Logger.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+  toggleChatMessagePermission = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        params: { patient_id = null } = {},
+        userDetails: { userId } = {},
+        body = {}
+      } = req;
+
+      const { mute = false } = body;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      const featureData = await featuresService.getFeatureByName(FEATURES.CHAT);
+
+      if (featureData) {
+        const feature_id = featureData.get("id");
+
+        if (mute) {
+          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id,
+              feature_id
+            }
+          );
+        } else {
+          const patientFeature = await doctorPatientFeatureMappingService.create(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id: patient.getPatientId(),
+              feature_id
+            }
+          );
+        }
+      }
+
+      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+        {
+          patient_id,
+          doctor_id: doctor.get("id")
+        }
+      );
+
+      let patientFeatureIds = [];
+
+      for (const feature of patientFeatures) {
+        const featureWrapper = await FeatureMappingWrapper(feature);
+        const feature_id = featureWrapper.getFeatureId();
+        patientFeatureIds.push(feature_id);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          feature_mappings: {
+            [patient_id]: patientFeatureIds
+          }
+        },
+        "Chat permission updated successfully."
+      );
+    } catch (error) {
+      Logger.debug("toggleChatMessagePermission 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+  toggleVideoCallPermission = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        params: { patient_id = null } = {},
+        userDetails: { userId } = {},
+        body = {}
+      } = req;
+
+      const { block = false } = body;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      const featureData = await featuresService.getFeatureByName(
+        FEATURES.VIDEO_CALL
+      );
+
+      if (featureData) {
+        const feature_id = featureData.get("id");
+
+        if (block) {
+          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id,
+              feature_id
+            }
+          );
+        } else {
+          const patientFeature = await doctorPatientFeatureMappingService.create(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id: patient.getPatientId(),
+              feature_id
+            }
+          );
+        }
+      }
+
+      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+        {
+          patient_id,
+          doctor_id: doctor.get("id")
+        }
+      );
+
+      let patientFeatureIds = [];
+
+      for (const feature of patientFeatures) {
+        const featureWrapper = await FeatureMappingWrapper(feature);
+        const feature_id = featureWrapper.getFeatureId();
+        patientFeatureIds.push(feature_id);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          feature_mappings: {
+            [patient_id]: patientFeatureIds
+          }
+        },
+        "Video call permission updated successfully."
+      );
+    } catch (error) {
+      Logger.debug("toggleVideoCallPermission 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+
+  getPaginatedDataForPatients = async(req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try { 
+      const {
+        userDetails: { userId } = {},
+        query = {}
+      } = req;
+
+      const { 
+            offset=0, 
+            watchlist = 0,
+            sort_by_name = 1,
+            name_order = 1,
+            created_at_order = 1,
+            searchTreatmentText='',
+            searchDisagnosisType='',
+            seachDiagnosisText=''
+           } = query || {};
+     
+
+      Logger.debug("783425462354725436211",{query});
+
+      const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+
+      const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
+      const endLimit = parseInt(limit, 10);
+
+      const doctor = await doctorService.getDoctorByData({
+        user_id: userId
+      });
+
+      const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
+      const sortByName = parseInt(sort_by_name, 10) === 0? 0: 1;
+      const createdAtOrder = parseInt(created_at_order, 10) === 0? 0: 1;
+      const nameOrder = parseInt(name_order, 10) === 0? 0: 1;
+
+      let doctorId = null, patients = {}, paginatedPatientData = {}, watchlistPatientIds = [], count = 0, patientIds = [];
+
+      if(doctor) {
+        const doctorData = await DoctorWrapper(doctor);
+        doctorId = doctorData.getDoctorId();
+
+        
+        const doctorAllInfo = await doctorData.getAllInfo();
+        const { watchlist_patient_ids = []} = doctorAllInfo || {};
+        watchlistPatientIds = watchlist_patient_ids;
+      }
+
+      if(getWatchListPatients) {
+        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+      } else {
+        count = await carePlanService.getDistinctPatientCounts(doctorId);
+      }
+
+      if(count > 0) {
+        const data = {
+          offset: offsetLimit,
+          limit: endLimit,
+          doctorId,
+          watchlistPatientIds,
+          watchlist: getWatchListPatients,
+          sortByName,
+          createdAtOrder,
+          nameOrder
+        }
+
+        
+        let matchingTreatmentIds = [];
+        let treatmentIds = '';
+        if(searchTreatmentText){
+          const treatments = await treatmentService.searchByName(searchTreatmentText);
+          for(let each in treatments){
+            const treatment = treatments[each];
+            const treatmentData = await TreatmentWrapper(treatment);
+            let treatmentId = treatmentData.getTreatmentId();
+            matchingTreatmentIds.push(treatmentId);
+  
+          }
+          treatmentIds = matchingTreatmentIds.toString();
+  
+        }
+
+        let careplansForDiagnosisType={};
+        let careplansForDiagnosisDesc={};
+        let careplansForTreatmentType={};
+        let crIdsForMatchingDiagnosisType =[];
+        let crIdsForMatchingDiagnosisDesc =[];
+        let crIdsForMatchingTreatmentType =[];
+
+        if(searchDisagnosisType){
+          careplansForDiagnosisType = await carePlanService.searchDiagnosisType(searchDisagnosisType);
+        }
+
+        if(seachDiagnosisText){
+          careplansForDiagnosisDesc = await carePlanService.searchDiagnosisDescription(seachDiagnosisText);
+        }
+
+        if(treatmentIds.length>0){
+          careplansForTreatmentType = await carePlanService.searchtreatmentIds(treatmentIds);
+        }
+
+        
+        for(const each in careplansForDiagnosisType){
+          const formattedCareplanData = careplansForDiagnosisType[each];
+          const {careplan_id} = formattedCareplanData;
+          crIdsForMatchingDiagnosisType.push(careplan_id);
+
+        }
+
+        for(const each in careplansForDiagnosisDesc){
+          const formattedCareplanData = careplansForDiagnosisDesc[each];
+          const {careplan_id} = formattedCareplanData;
+          crIdsForMatchingDiagnosisDesc.push(careplan_id);
+
+        }
+
+        for(const each in careplansForTreatmentType){
+          const formattedCareplanData = careplansForTreatmentType[each];
+          const {careplan_id} = formattedCareplanData;
+          crIdsForMatchingTreatmentType.push(careplan_id);
+
+        }
+
+        const allPatients = await carePlanService.getPaginatedDataOfPatients(data);
+
+        console.log("35732432542730078783246722223 ======>>>>> ",{allPatients,crIdsForMatchingTreatmentType})
+
+
+        for(const patient of allPatients) {
+          const formattedPatientData = patient;
+  
+          const { id, details = {},care_plan_id } = formattedPatientData;
+
+          if(crIdsForMatchingDiagnosisType.length && crIdsForMatchingDiagnosisType.length>0 
+            ||
+            crIdsForMatchingDiagnosisDesc.length && crIdsForMatchingDiagnosisDesc.length>0
+            ||
+            crIdsForMatchingTreatmentType.length && crIdsForMatchingTreatmentType.length>0
+          ){
+              
+              if(crIdsForMatchingDiagnosisType.length && crIdsForMatchingDiagnosisType.length>0){
+                if(!crIdsForMatchingDiagnosisType.includes(care_plan_id)){
+                  continue;
+                }
+              }else if(crIdsForMatchingDiagnosisDesc.length && crIdsForMatchingDiagnosisDesc.length>0){
+                if(!crIdsForMatchingDiagnosisDesc.includes(care_plan_id)){
+                  continue;
+                }
+              }else if(crIdsForMatchingTreatmentType.length && crIdsForMatchingTreatmentType.length>0){
+                if(!crIdsForMatchingTreatmentType.includes(care_plan_id)){
+                  continue;
+                }
+              }
+          }
+          patientIds.push(id);
+          let watchlist = false;
+  
+          const { profile_pic } = details;
+          const updatedDetails =  {
+            ...details,
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
+          };
+  
+          if(watchlistPatientIds.indexOf(id) !== -1) {
+            watchlist = true;
+          }
+  
+          paginatedPatientData[id] = {...formattedPatientData, watchlist, details: updatedDetails};
+          const patientWrapper = await PatientWrapper(null, id);
+          patients[id] = await patientWrapper.getAllInfo();
+        }
+      }
+
+      
+      
+      return raiseSuccess(
+        res,
+        200,
+        {
+          total: count,
+          page_size: limit,
+          patient_ids: patientIds,
+          paginated_patients_data: paginatedPatientData,
+          patients,
+        },
+        "Patients data fetched successfully."
+      );
+      
+    } catch (error) {
+      Logger.debug("getPaginatedDataForPatients 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
 
 
 }

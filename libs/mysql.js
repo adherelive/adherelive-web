@@ -28,9 +28,11 @@ import * as DoctorClinics from "../app/models/doctorClinics";
 import * as DoctorQualifications from "../app/models/doctorQualifications";
 import * as DoctorRegistrations from "../app/models/doctorRegistrations";
 import * as Doctors from "../app/models/doctors";
+import * as DoctorPatientFeaturesMapping from "../app/models/doctorPatientFeatureMapping";
 
 import * as EmailLogger from "../app/models/emailLogger";
 import * as Exercise from "../app/models/exercise";
+import * as EventHistory from "../app/models/eventHistory";
 
 import * as FeatureDetails from "../app/models/featureDetails";
 import * as Features from "../app/models/features";
@@ -55,6 +57,7 @@ import * as RegionProviders from "../app/models/regionProviders";
 import * as Regions from "../app/models/regions";
 import * as RegistrationCouncils from "../app/models/registrationCouncil";
 import * as Reminders from "../app/models/reminders";
+import * as Reports from "../app/models/reports";
 
 import * as ScheduleEvents from "../app/models/scheduleEvents";
 import * as Severity from "../app/models/severity";
@@ -64,6 +67,7 @@ import * as Symptoms from "../app/models/symptoms";
 
 import * as TemplateAppointments from "../app/models/templateAppointments";
 import * as TemplateMedications from "../app/models/templateMedications";
+import * as TemplateVitals from "../app/models/templateVitals";
 import * as TreatmentConditionMapping from "../app/models/treatmentConditionMapping";
 import * as Treatments from "../app/models/treatments";
 import * as Transactions from "../app/models/transactions";
@@ -73,6 +77,7 @@ import * as UserCategoryPermissions from "../app/models/userCategoryPermissions"
 import * as UserDevices from "../app/models/userDevices";
 import * as UserPreferences from "../app/models/userPreferences";
 import * as Users from "../app/models/users";
+import * as UserFavourites from "../app/models/userFavourites";
 import * as UserVerifications from "../app/models/userVerifications";
 
 import * as Vitals from "../app/models/vitals";
@@ -80,6 +85,8 @@ import * as VitalTemplates from "../app/models/vitalTemplates";
 import * as Watchlist from "../app/models/doctor_patient_watchlist";
 
 import * as AccountDetails from "../app/models/accountDetails";
+import * as DoctorProviderMapping from "../app/models/doctorProviderMapping";
+
 
 // Models List...
 const models = [
@@ -107,9 +114,12 @@ const models = [
   DoctorQualifications,
   DoctorRegistrations,
   Doctors,
+  DoctorProviderMapping,
+  DoctorPatientFeaturesMapping,
 
   EmailLogger,
   Exercise,
+  EventHistory,
 
   FeatureDetails,
   Features,
@@ -136,6 +146,7 @@ const models = [
   Regions,
   RegistrationCouncils,
   Reminders,
+  Reports,
 
   Severity,
   Speciality,
@@ -144,6 +155,7 @@ const models = [
 
   TemplateAppointments,
   TemplateMedications,
+  TemplateVitals,
   TreatmentConditionMapping,
   Treatments,
   Transactions,
@@ -153,6 +165,7 @@ const models = [
   UserDevices,
   UserPreferences,
   Users,
+  UserFavourites,
   UserVerifications,
 
   Vitals,
@@ -194,6 +207,12 @@ class Database {
   static getModel = dbName => Database.connection.models[dbName];
 
   static initTransaction = () => Database.connection.transaction();
+
+
+  static performRawQuery = async(query, options = {}) => {
+    const database = await Database.getDatabase();
+    return await database.queryInterface.sequelize.query(query, options);
+  };
 
   static init = async () => {
     try {

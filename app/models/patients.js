@@ -2,6 +2,8 @@
 import { DataTypes } from "sequelize";
 import { GENDER } from "../../constant";
 import { TABLE_NAME as userTableName } from "./users";
+import { TABLE_NAME as reportTableName } from "./reports";
+import { TABLE_NAME as careplanTableName } from "./carePlan";
 
 export const TABLE_NAME = "patients";
 
@@ -34,27 +36,42 @@ export const db = database => {
         type: DataTypes.STRING(100),
         allowNull: true,
         set(value) {
-            if(value) {
-                this.setDataValue('first_name',  value.charAt(0).toUpperCase()+value.slice(1));
-            }
+          if (value) {
+            this.setDataValue(
+              "first_name",
+              value.charAt(0).toUpperCase() + value.slice(1)
+            );
+          } else {
+            this.setDataValue("first_name", null);
+          }
         }
       },
       middle_name: {
         type: DataTypes.STRING(100),
         allowNull: true,
         set(value) {
-            if(value) {
-                this.setDataValue('middle_name',  value.charAt(0).toUpperCase()+value.slice(1));
-            }
+          if (value) {
+            this.setDataValue(
+              "middle_name",
+              value.charAt(0).toUpperCase() + value.slice(1)
+            );
+          } else {
+            this.setDataValue("middle_name", null);
+          }
         }
       },
       last_name: {
         type: DataTypes.STRING(100),
         allowNull: true,
         set(value) {
-            if(value) {
-                this.setDataValue('last_name',  value.charAt(0).toUpperCase()+value.slice(1));
-            }
+          if (value) {
+            this.setDataValue(
+              "last_name",
+              value.charAt(0).toUpperCase() + value.slice(1)
+            );
+          } else {
+            this.setDataValue("last_name", null);
+          }
         }
       },
       age: {
@@ -68,12 +85,12 @@ export const db = database => {
         type: DataTypes.STRING,
         allowNull: true
       },
-      height :{
-        type: DataTypes.STRING,
+      height: {
+        type: DataTypes.INTEGER,
         allowNull: true
       },
-      weight:{
-        type: DataTypes.STRING,
+      weight: {
+        type: DataTypes.INTEGER,
         allowNull: true
       },
       activated_on: {
@@ -84,6 +101,14 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
+      },
+      full_name: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return !this.first_name? null: `${this.first_name}${
+            this.middle_name ? ` ${this.middle_name}` : ""
+          }${this.last_name ? ` ${this.last_name}` : ""}`;
+        }
       }
     },
     {
@@ -101,8 +126,8 @@ export const db = database => {
             address: this.address,
             activated_on: this.activated_on,
             details: this.details,
-            height:this.height,
-            weight:this.weight
+            height: this.height,
+            weight: this.weight
           };
         },
         getId() {
@@ -114,9 +139,17 @@ export const db = database => {
 };
 
 export const associate = database => {
+  database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
+    foreignKey: "user_id",
+    targetKey: "id"
+  });
 
-    database.models[TABLE_NAME].belongsTo(database.models[userTableName], {
-        foreignKey:"user_id",
-        targetKey:"id"
-    });
+  database.models[TABLE_NAME].hasMany(database.models[reportTableName], {
+    foreignKey: "patient_id"
+  });
+
+  database.models[TABLE_NAME].belongsTo(database.models[careplanTableName], {
+    foreignKey: "id",
+    targetKey:"patient_id"
+  });
 };

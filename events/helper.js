@@ -121,14 +121,14 @@ export const handleMedications = async data => {
       event_id,
       start_date,
       end_date,
+      participants = [],
+      actor = {},
       details,
       details: {
         medicine_id,
         when_to_take,
         repeat_days = [],
-        critical = false,
-        participants = [],
-        actors = {}
+        critical = false
       } = {}
     } = data || {};
 
@@ -182,10 +182,10 @@ export const handleMedications = async data => {
           details: {
             ...details,
             participants,
-            actors,
+            actor,
             medicines: medicine.getBasicInfo(),
             when_to_take_data: MEDICATION_TIMING[timing], // TODO: to be changed(included in) to patient preference data
-            medications: medication.getExistingData()
+            medications: medication.getBasicInfo()
           }
         });
       }
@@ -506,10 +506,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
       }
     };
 
-    const sqsResponse = await QueueService.sendMessage(
-      "test_queue",
-      eventScheduleData
-    );
+    const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
     Log.debug("sqsResponse ---> ", sqsResponse);
     return true;
@@ -521,6 +518,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
 export const handleCarePlans = async data => {
   try {
     const {
+      medication_ids,
       patient_id,
       critical,
       event_id,
@@ -542,6 +540,7 @@ export const handleCarePlans = async data => {
       event_type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
       details: {
         medications: details,
+        medication_ids,
         actor,
         participants
       }

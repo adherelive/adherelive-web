@@ -17,6 +17,8 @@ import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import MUploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import MDoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
+import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+import ProvidersWrapper from "../../../ApiWrapper/web/provider";
 
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
@@ -30,8 +32,9 @@ import registrationService from "../../../services/doctorRegistration/doctorRegi
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
-import { doctorQualificationData, uploadImageS3 } from "./userHelper";
+import { doctorQualificationData, uploadImageS3, getServerSpecificConstants } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
   EMAIL_TEMPLATE_NAME,
@@ -52,6 +55,8 @@ import UserWrapper from "../../../ApiWrapper/web/user";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
+import {completePath, getFilePath} from "../../../helper/filePath";
+import AdhocJob from "../../../JobSdk/Adhoc/observer";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -107,27 +112,61 @@ class MobileUserController extends Controller {
         otp
       });
 
-      const emailPayload = {
-        title: "OTP Verification for patient",
-        toAddress: process.config.app.developer_email,
-        templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-        templateData: {
-          title: "Patient",
-          mainBodyText: "OTP for adhere patient login is",
-          subBodyText: otp,
-          host: process.config.WEB_URL,
-          contactTo: process.config.app.support_email
-        }
-      };
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      if(process.config.app.env === "development") {
+        const emailPayload = {
+          title: "OTP Verification for patient",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+          templateData: {
+            title: "Patient",
+            mainBodyText: "OTP for adhere patient login is",
+            subBodyText: otp,
+            host: process.config.WEB_URL,
+            contactTo: process.config.app.support_email
+          }
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        Logger.info(`OTP :::: ${otp}`);
+      } else {
 
-      // const smsPayload = {
-      //   // countryCode: prefix,
-      //   phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
-      //   message: `Hello from Adhere! Your OTP for login is ${otp}`
+        if(apiUserDetails.getEmail()) {
+          const emailPayload = {
+            title: "OTP Verification for patient",
+            toAddress: apiUserDetails.getEmail(),
+            templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+            templateData: {
+              title: "Patient",
+              mainBodyText: "OTP for adhere patient login is",
+              subBodyText: otp,
+              host: process.config.WEB_URL,
+              contactTo: process.config.app.support_email
+            }
+          };
+          Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        }
+
+        const smsPayload = {
+          // countryCode: prefix,
+          phoneNumber: `+${apiUserDetails.getPrefix()}${mobile_number}`, // mobile_number
+          message: `Hello from Adhere! Your OTP for login is ${otp}`
+        };
+
+        Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      }
+
+      // const emailPayload = {
+      //   title: "OTP Verification for patient",
+      //   toAddress: process.config.app.developer_email,
+      //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+      //   templateData: {
+      //     title: "Patient",
+      //     mainBodyText: "OTP for adhere patient login is",
+      //     subBodyText: otp,
+      //     host: process.config.WEB_URL,
+      //     contactTo: process.config.app.support_email
+      //   }
       // };
-      //
-      // Proxy_Sdk.execute(EVENTS.SEND_SMS, smsPayload);
+      // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
       // let permissions = {
       //   permissions: []
@@ -152,6 +191,11 @@ class MobileUserController extends Controller {
       // }
     } catch (error) {
       console.log("error sign in  --> ", error);
+
+       // notification
+       const crashJob = await AdhocJob.execute("crash", {apiName: "signIn(patient)"});
+       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
       return this.raiseServerError(res);
     }
   };
@@ -174,7 +218,7 @@ class MobileUserController extends Controller {
           otpDetails[0].get("user_id")
         );
 
-        const userData = await UserWrapper(userDetails.get());
+        const userData = await MUserWrapper(userDetails.get());
         let permissions = {
           permissions: []
         };
@@ -216,6 +260,7 @@ class MobileUserController extends Controller {
             },
             auth_user: userData.getId(),
             auth_category: userData.getCategory(),
+            hasConsent: userData.getConsent(),
             ...permissions
           },
           "Signed in successfully"
@@ -234,87 +279,88 @@ class MobileUserController extends Controller {
     }
   };
 
-  verifyOtp = async (req, res) => {
-    const { raiseServerError, raiseSuccess } = this;
-    try {
-      const { otp, user_id } = req.body;
-
-      const otpDetails = await otpVerificationService.getOtpByData({
-        otp,
-        user_id
-      });
-
-      Logger.debug("otpDetails --> ", otpDetails);
-
-      if (otpDetails.length > 0) {
-        const destroyOtp = await otpVerificationService.delete({ user_id });
-        const userDetails = await userService.getUserById(
-          otpDetails[0].get("user_id")
-        );
-
-        const userData = await UserWrapper(userDetails.get());
-        let permissions = {
-          permissions: []
-        };
-
-        if (userData.isActivated()) {
-          permissions = await userData.getPermissions();
-        }
-
-        const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
-        const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userId: userData.getId()
-          },
-          secret,
-          {
-            expiresIn
-          }
-        );
-
-        const appNotification = new AppNotification();
-
-        const notificationToken = appNotification.getUserToken(`${user_id}`);
-        const feedId = base64.encode(`${user_id}`);
-
-        Logger.debug("userData ----> ", userData.isActivated());
-        return raiseSuccess(
-          res,
-          200,
-          {
-            accessToken,
-            notificationToken,
-            feedId,
-            users: {
-              [userData.getId()]: {
-                ...userData.getBasicInfo()
-              }
-            },
-            auth_user: userData.getId(),
-            auth_category: userData.getCategory(),
-            ...permissions
-          },
-          "Signed in successfully"
-        );
-      } else {
-        return this.raiseClientError(
-          res,
-          422,
-          {},
-          "OTP not correct. Please try again"
-        );
-      }
-    } catch (error) {
-      Logger.debug("verifyOtp 500 error", error);
-      raiseServerError(res);
-    }
-  };
+  // verifyOtp = async (req, res) => {
+  //   const { raiseServerError, raiseSuccess } = this;
+  //   try {
+  //     const { otp, user_id } = req.body;
+  //
+  //     const otpDetails = await otpVerificationService.getOtpByData({
+  //       otp,
+  //       user_id
+  //     });
+  //
+  //     Logger.debug("otpDetails --> ", otpDetails);
+  //
+  //     if (otpDetails.length > 0) {
+  //       const destroyOtp = await otpVerificationService.delete({ user_id });
+  //       const userDetails = await userService.getUserById(
+  //         otpDetails[0].get("user_id")
+  //       );
+  //
+  //       const userData = await UserWrapper(userDetails.get());
+  //       let permissions = {
+  //         permissions: []
+  //       };
+  //
+  //       if (userData.isActivated()) {
+  //         permissions = await userData.getPermissions();
+  //       }
+  //
+  //       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+  //
+  //       const secret = process.config.TOKEN_SECRET_KEY;
+  //       const accessToken = await jwt.sign(
+  //         {
+  //           userId: userData.getId()
+  //         },
+  //         secret,
+  //         {
+  //           expiresIn
+  //         }
+  //       );
+  //
+  //       const appNotification = new AppNotification();
+  //
+  //       const notificationToken = appNotification.getUserToken(`${user_id}`);
+  //       const feedId = base64.encode(`${user_id}`);
+  //
+  //       Logger.debug("userData ----> ", userData.isActivated());
+  //       return raiseSuccess(
+  //         res,
+  //         200,
+  //         {
+  //           accessToken,
+  //           notificationToken,
+  //           feedId,
+  //           users: {
+  //             [userData.getId()]: {
+  //               ...userData.getBasicInfo()
+  //             }
+  //           },
+  //           auth_user: userData.getId(),
+  //           auth_category: userData.getCategory(),
+  //           ...permissions
+  //         },
+  //         "Signed in successfully"
+  //       );
+  //     } else {
+  //       return this.raiseClientError(
+  //         res,
+  //         422,
+  //         {},
+  //         "OTP not correct. Please try again"
+  //       );
+  //     }
+  //   } catch (error) {
+  //     Logger.debug("verifyOtp 500 error", error);
+  //     raiseServerError(res);
+  //   }
+  // };
 
   doctorSignIn = async (req, res) => {
     try {
       const { email, password } = req.body;
+
       const user = await userService.getUserByEmail({ email });
 
       // const userDetails = user[0];
@@ -323,12 +369,36 @@ class MobileUserController extends Controller {
         return this.raiseClientError(res, 422, {}, "Email doesn't exists");
       }
 
+      if(user.get("category") !== USER_CATEGORY.DOCTOR) {
+        return this.raiseClientError(res, 422, {}, "Unauthorized");
+      }
+
       // TODO: UNCOMMENT below code after signup done for password check or seeder
-      const passwordMatch = await bcrypt.compare(
-        password,
-        user.get("password")
-      );
-      if (passwordMatch) {
+
+      let passwordMatch = false;
+
+      const providerDoctorFirstLogin =
+        !user.get("password") && user.get("verified") ? true : false;
+
+      if (user.get("password")) {
+        passwordMatch = await bcrypt.compare(password, user.get("password"));
+      }
+
+      const doLogin = passwordMatch || providerDoctorFirstLogin ? true : false;
+
+      if (doLogin) {
+        if (providerDoctorFirstLogin) {
+          const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+          const hash = await bcrypt.hash(password, salt);
+
+          const updateUser = await userService.updateUser(
+            {
+              password: hash
+            },
+            user.get("id")
+          );
+        }
+
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
@@ -373,6 +443,7 @@ class MobileUserController extends Controller {
             },
             auth_user: apiUserDetails.getId(),
             auth_category: apiUserDetails.getCategory(),
+            hasConsent: apiUserDetails.getConsent(),
             ...permissions
           },
           "Signed in successfully"
@@ -382,20 +453,30 @@ class MobileUserController extends Controller {
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.message);
+
+      // notification
+      const crashJob = await AdhocJob.execute("crash", {apiName: "signIn(doctor)"});
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
+      return this.raiseServerError(res);
     }
   };
 
   signUp = async (req, res) => {
-    const {raiseClientError, raiseSuccess, raiseServerError} = this;
+    const { raiseClientError, raiseSuccess, raiseServerError } = this;
     try {
-      const { password, email } = req.body;
+      const { password, email, readTermsOfService = false } = req.body;
+
+      if(!readTermsOfService) {
+        return raiseClientError(res, 422, {}, "Please read our Terms of Service before signing up");
+      }
+
       const userExits = await userService.getUserByEmail({ email });
 
       if (userExits !== null) {
         return raiseClientError(
           res,
-          11000,
+          422,
           errMessage.EMAIL_ALREADY_EXISTS,
           errMessage.EMAIL_ALREADY_EXISTS.message
         );
@@ -413,7 +494,7 @@ class MobileUserController extends Controller {
         verified: true
       });
 
-      if(user) {
+      if (user) {
         await doctorService.addDoctor({
           user_id: user.get("id")
         });
@@ -494,17 +575,13 @@ class MobileUserController extends Controller {
   }
 
   onAppStart = async (req, res, next) => {
-    console.log(
-      "--------------------CHALK-------------------",
-      req.userDetails
-    );
     let response;
     try {
       if (req.userDetails.exists) {
         const {
           userId,
           userData,
-          userData: { category } = {}
+          userData: { category, has_consent } = {}
         } = req.userDetails;
         // const user = await userService.getUserById(userId);
 
@@ -516,6 +593,7 @@ class MobileUserController extends Controller {
         let userApiData = {};
         let userCatApiData = {};
         let carePlanApiData = {};
+        let providerApiData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
         let careplanData = [];
@@ -525,6 +603,8 @@ class MobileUserController extends Controller {
 
         let treatmentIds = [];
         let conditionIds = [];
+
+        const serverConstants = getServerSpecificConstants()
 
         switch (category) {
           case USER_CATEGORY.PATIENT:
@@ -571,6 +651,25 @@ class MobileUserController extends Controller {
               userCatApiData[
                 userCategoryApiData.getDoctorId()
               ] = await userCategoryApiData.getAllInfo();
+
+              const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+                userCategoryId
+              );
+
+              if (doctorProvider) {
+                const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+                  doctorProvider
+                );
+
+                const providerId = doctorProviderWrapper.getProviderId();
+                const providerWrapper = await ProvidersWrapper(
+                  null,
+                  providerId
+                );
+                providerApiData[
+                  providerId
+                ] = await providerWrapper.getAllInfo();
+              }
 
               careplanData = await carePlanService.getCarePlanByData({
                 doctor_id: userCategoryId
@@ -723,6 +822,9 @@ class MobileUserController extends Controller {
           care_plans: {
             ...carePlanApiData
           },
+          providers: {
+            ...providerApiData
+          },
           severity: {
             ...severityApiDetails
           },
@@ -739,7 +841,9 @@ class MobileUserController extends Controller {
           condition_ids: conditionIds,
           treatment_ids: treatmentIds,
           auth_user: userId,
-          auth_category: category
+          auth_category: category,
+          hasConsent: has_consent,
+          server_constants: serverConstants
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
@@ -815,9 +919,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          files: [
-            `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${files[0]}`
-          ]
+          files
         },
         "files uploaded successfully"
       );
@@ -860,7 +962,7 @@ class MobileUserController extends Controller {
         let doctor_data = {
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -875,7 +977,7 @@ class MobileUserController extends Controller {
           user_id,
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -957,7 +1059,7 @@ class MobileUserController extends Controller {
 
         city = docCity;
         profile_pic = docPic
-          ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}`
+          ? completePath(docPic)
           : docPic;
       }
 
@@ -1256,13 +1358,12 @@ class MobileUserController extends Controller {
     const { qualificationId = 1 } = req.params;
     let { document = "" } = req.body;
     try {
-      console.log("DOCUMNENTTTTTTTTTT", req.body, document);
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = qualificationId;
       const documentToCheck = document.includes(
         process.config.minio.MINIO_BUCKET_NAME
       )
-        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        ? getFilePath(document)
         : document;
       let documentToDelete = await documentService.getDocumentByData(
         parent_type,
@@ -1270,12 +1371,6 @@ class MobileUserController extends Controller {
         documentToCheck
       );
 
-      console.log(
-        "DOCUMNENTTTTTTTTTT1111111",
-        req.body,
-        document,
-        documentToDelete
-      );
       await documentToDelete.destroy();
       return this.raiseSuccess(
         res,
@@ -1293,8 +1388,6 @@ class MobileUserController extends Controller {
     let { gender = "", speciality = "", qualification = {} } = req.body;
     const { userId = 1 } = req.params;
     try {
-      console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
-
       let user = userService.getUserById(userId);
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
@@ -1336,7 +1429,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1362,7 +1455,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1620,7 +1713,7 @@ class MobileUserController extends Controller {
                   document: photo.includes(
                     process.config.minio.MINIO_BUCKET_NAME
                   )
-                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    ? getFilePath(photo)
                     : photo
                 });
               }
@@ -1648,7 +1741,7 @@ class MobileUserController extends Controller {
                   document: photo.includes(
                     process.config.minio.MINIO_BUCKET_NAME
                   )
-                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    ? getFilePath(photo)
                     : photo
                 });
               }
@@ -1695,7 +1788,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1726,7 +1819,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: registration_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1756,7 +1849,7 @@ class MobileUserController extends Controller {
       const documentToCheck = document.includes(
         process.config.minio.MINIO_BUCKET_NAME
       )
-        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        ? getFilePath(document)
         : document;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       let documentToDelete = await documentService.getDocumentByData(
@@ -1989,6 +2082,10 @@ class MobileUserController extends Controller {
         body: { new_password, confirm_password } = {}
       } = req;
 
+      if (new_password !== confirm_password) {
+        return raiseClientError(res, 422, {}, "Password does not match");
+      }
+
       const user = await userService.getUserById(userId);
       Logger.debug("user -------------->", user);
       const userData = await UserWrapper(user.get());
@@ -1999,6 +2096,7 @@ class MobileUserController extends Controller {
       const updateUser = await userService.updateUser(
         {
           password: hash
+          // system_generated_password: false
         },
         userId
       );
@@ -2082,18 +2180,21 @@ class MobileUserController extends Controller {
   updatePassword = async (req, res) => {
     try {
       const {
-        body: { password, confirm_password } = {},
+        body: { new_password, confirm_password } = {},
         userDetails: { userId, userData: { category } = {} } = {}
       } = req;
 
-      if (password !== confirm_password) {
+      if (new_password !== confirm_password) {
         return this.raiseClientError(res, 422, {}, "Password does not match");
       }
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-      const hash = await bcrypt.hash(password, salt);
+      const hash = await bcrypt.hash(new_password, salt);
 
       const updateUser = await userService.updateUser(
-        { password: hash },
+        {
+          password: hash
+          // system_generated_password: false
+        },
         userId
       );
 
@@ -2133,6 +2234,88 @@ class MobileUserController extends Controller {
       return this.raiseServerError(res);
     }
   };
+
+  giveConsent = async (req,res) => {
+    const {raiseClientError} = this;
+    try{
+      const {userDetails: {userId} = {}, body: {agreeConsent} = {}} = req;
+
+      Logger.info(`1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`);
+
+      if(!agreeConsent) {
+        return raiseClientError(res, 422, {}, "Cannot proceed without accepting Terms of Service");
+      }
+
+      //update
+      await userService.updateUser(
+          {
+            has_consent: agreeConsent
+          },
+          userId
+      );
+
+
+      const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
+
+      const secret = process.config.TOKEN_SECRET_KEY;
+      const accessToken = await jwt.sign(
+          {
+            userId
+          },
+          secret,
+          {
+            expiresIn
+          }
+      );
+
+      const appNotification = new AppNotification();
+
+      const notificationToken = appNotification.getUserToken(
+          `${userId}`
+      );
+      // const feedId = base64.encode(`${userId}`);
+
+      const userRef = await userService.getUserData({ id: userId });
+
+      const apiUserDetails = await MUserWrapper(userRef.get());
+
+      // let permissions = {
+      //   permissions: []
+      // };
+
+      // if (apiUserDetails.isActivated()) {
+      //   permissions = await apiUserDetails.getPermissions();
+      // }
+
+      const dataToSend = {
+        ...(await apiUserDetails.getReferenceInfo()),
+        auth_user: apiUserDetails.getId(),
+        notificationToken: notificationToken,
+        feedId: `${userId}`,
+        hasConsent: apiUserDetails.getConsent(),
+        auth_category: apiUserDetails.getCategory()
+      };
+
+      res.cookie("accessToken", accessToken, {
+        expires: new Date(
+            Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
+        ),
+        httpOnly: true
+      });
+
+      return this.raiseSuccess(
+          res,
+          200,
+          { ...dataToSend },
+          "Initial data retrieved successfully"
+      );
+
+
+    }catch(error){
+      Logger.debug("giveConsent 500 error ----> ", error);
+      return this.raiseServerError(res);
+    }
+  }
 }
 
 export default new MobileUserController();

@@ -11,4 +11,6 @@ export default class UploadDocument {
     getParentType = () => {
         return this._data.get("parent_type");
     };
+
+    getDocument = () => this._data.get("document");
 }

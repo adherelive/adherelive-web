@@ -18,12 +18,10 @@ class EmailManger {
     //   apiVersion: "2010-12-01"
     // });
 
-    Log.info(`api_user: ${process.config.email.USER} | api_key: ${process.config.email.USER}`);
-
     this.smtpTransporter = nodemailer.createTransport(
       smtpTransport({
         auth: {
-          api_user:process.config.email.USER,
+          // api_user:process.config.email.USER,
           api_key:process.config.email.KEY,
           // api_user: 'adhere-tripock',
           // api_key: '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'
@@ -119,6 +117,13 @@ class EmailManger {
         case "otpVerification":
           templateString = await this.genrateEmailTemplateString(
               "otpVerification",
+              payload.templateData,
+              {}
+          );
+          break;
+          case "serverCrash":
+          templateString = await this.genrateEmailTemplateString(
+              "serverCrash",
               payload.templateData,
               {}
           );
@@ -272,7 +277,8 @@ class EmailManger {
         .createEmailTitle()
         .createEmailBodyTemplate(templateString)
         .createSourceAddress(process.config.email.FROM)
-        .createReplyToAddress(process.config.REPLY_TO_ADDRESS)
+          .createSourceName(process.config.email.FROM_NAME)
+        .createReplyToAddress(process.config.email.FROM)
         .build();
       console.log("Transformer Returning ====================>    ", content);
       return content;

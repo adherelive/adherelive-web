@@ -8,18 +8,23 @@ import {
   getAppointments,
   getAppointmentsDetails
 } from "../../modules/appointments";
-import {
-  requestConsent,
-    consentVerify
-} from "../../modules/patients";
+import { requestConsent, consentVerify } from "../../modules/patients";
 import { searchMedicine } from "../../modules/medicines";
 import { getPatientCarePlanDetails } from "../../modules/carePlans";
 import { addCarePlanMedicationsAndAppointments } from "../../modules/carePlans";
 import { DRAWER } from "../../constant";
 import { openPopUp, closePopUp } from "../../modules/chat";
 import { fetchChatAccessToken } from "../../modules/twilio";
-import { getLastVisitAlerts, markAppointmentComplete } from "../../modules/scheduleEvents/index";
-import {addCareplanForPatient} from "../../modules/patients";
+import {
+  getLastVisitAlerts,
+  markAppointmentComplete
+} from "../../modules/scheduleEvents/index";
+import { addCareplanForPatient } from "../../modules/patients";
+import { storeAppointmentDocuments } from "../../modules/uploadDocuments";
+import { getSymptomTimeLine } from "../../modules/symptoms";
+import {fetchReports} from "../../modules/reports";
+import { getVitalOccurence } from "../../modules/vital_occurence";
+import { searchVital } from "../../modules/vital_templates";
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -35,16 +40,24 @@ const mapStateToProps = (state, ownProps) => {
     conditions = {},
     template_medications = {},
     template_appointments = {},
+    template_vitals = {},
     care_plan_templates = {},
     severity = {},
     show_template_drawer = {},
-    auth: { authPermissions = [], authenticated_user = 1 } = {},
+    auth: { authPermissions = [], authenticated_user = 1,authenticated_category } = {},
     chats,
     drawer,
-    care_plan_template_ids = [],
+    pages: { care_plan_template_ids = [] } = {},
     twilio = {},
-    symptoms = {}
+    symptoms = {},
+    schedule_events = {},
+    features = {},
+    features_mappings = {},
+    reports={},
+    repeat_intervals={},
+    vital_templates={}
   } = state;
+
   // const { id } = ownprops;
   const user_details = users["3"] || {};
   const {
@@ -70,6 +83,7 @@ const mapStateToProps = (state, ownProps) => {
     care_plan_templates,
     template_appointments,
     template_medications,
+    template_vitals,
     show_template_drawer,
     currentCarePlanId,
     authPermissions,
@@ -78,7 +92,14 @@ const mapStateToProps = (state, ownProps) => {
     drawer,
     symptoms,
     care_plan_template_ids,
-    authenticated_user
+    authenticated_user,
+    schedule_events,
+    features,
+    features_mappings,
+    authenticated_category,
+    reports,
+    repeat_intervals,
+    vital_templates
   };
 };
 
@@ -111,15 +132,22 @@ const mapDispatchToProps = dispatch => {
     openPopUp: () => dispatch(openPopUp()),
     closePopUp: () => dispatch(closePopUp()),
     fetchChatAccessToken: userId => dispatch(fetchChatAccessToken(userId)),
-    requestConsent: (patientId) => dispatch(requestConsent(patientId)),
-    consentVerify: (data) => dispatch(consentVerify(data)),
-    markAppointmentComplete: (id) => dispatch(markAppointmentComplete(id)),
+    requestConsent: patientId => dispatch(requestConsent(patientId)),
+    consentVerify: data => dispatch(consentVerify(data)),
+    markAppointmentComplete: id => dispatch(markAppointmentComplete(id)),
     openAddCareplanDrawer: payload =>
       dispatch(open({ type: DRAWER.ADD_CAREPLAN, payload })),
-    addCareplanForPatient : (patient_id,data) => dispatch(addCareplanForPatient(patient_id,data)),
-    openEditPatientDrawer: (payload) => dispatch(open({ type: DRAWER.EDIT_PATIENT, payload }))
+    addCareplanForPatient: (patient_id, data) =>
+      dispatch(addCareplanForPatient(patient_id, data)),
+    openEditPatientDrawer: payload =>
+      dispatch(open({ type: DRAWER.EDIT_PATIENT, payload })),
+    storeAppointmentDocuments: data => dispatch(storeAppointmentDocuments(data)),
+    openAddReportsDrawer : (payload) =>  dispatch(open({ type: DRAWER.ADD_REPORT,payload })),
+    getSymptomTimeLine: (patientId) => dispatch(getSymptomTimeLine(patientId)),
+    fetchPatientReports: (id)  => dispatch(fetchReports(id)),
+    getVitalOccurence: () => dispatch(getVitalOccurence()),
+    searchVital: data => dispatch(searchVital(data)),
 
- 
   };
 };
 

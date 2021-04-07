@@ -1,3 +1,5 @@
+import doctors from "../../../modules/doctors";
+
 export const getdoctorProfileRegisterUrl = () => {
   return `/doctors/`;
 };
@@ -14,8 +16,8 @@ export const getdoctorProfileRegisterDataUrl = userId => {
   return `/auth/doctor-profile-registration/${userId}`;
 };
 
-export const getdoctorQualificationRegisterDataUrl = () => {
-  return `/doctors/`;
+export const getdoctorQualificationRegisterDataUrl = (id) => {
+  return `/doctors/${id}`;
 };
 export const getRegisterQualificationUrl = () => {
   return `/doctors/qualifications`;
@@ -57,8 +59,8 @@ export const getDoctorAccountDetailsUrl = id => {
   return `/admin/doctors/${id}/account`;
 };
 
-export const getDoctorProfileDetailsUrl = () => {
-  return `/doctors`;
+export const getDoctorProfileDetailsUrl = (id) => {
+  return `/doctors/${id}`;
 };
 
 export const getVerifyDoctorUrl = id => {
@@ -99,3 +101,15 @@ export const addDoctorPaymentPoductUrl = () => {
 export const updatePatientAndCareplanUrl = (careplan_id) => {
   return `/doctors/updatePatient_careplan/${careplan_id}`;
 };
+export const deactivateDoctorURL = doctor_id => {
+  return `/doctors/${doctor_id}`;
+};
+
+export const activateDoctorURL = user_id => {
+  return `/doctors/activate/${user_id}`;
+}
+
+
+export const getPatientsPaginatedUrl = ({offset,watchlist,sort_by_name,created_at_order,name_order}) => {
+  return `/doctors/patients?offset=${offset}&watchlist=${watchlist}&sort_by_name=${sort_by_name}&created_at_order=${created_at_order}&name_order=${name_order}`;
+}

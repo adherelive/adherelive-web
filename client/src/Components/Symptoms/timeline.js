@@ -283,6 +283,7 @@ class TimelineTab extends Component {
     renderTimelineBody = (data) => {
         const { upload_documents = {} } = this.props;
         let dataTorender = [];
+        console.log("1298317382 data --> ", data);
         for (let rowData of data) {
             const {
                 date = "",
@@ -314,83 +315,84 @@ class TimelineTab extends Component {
                         </div>
                     </Timeline.Item>
                 );
-            }
-            dataTorender.push(
-                <Timeline.Item dot={<div className={'timelineDot'} />}>
-                    <div
-                        style={{
-                            flex: 1,
-                            backgroundColor: "#ffffff",
-                            marginBottom: 20,
-                            marginRight: 14,
-                            paddingLeft: imageUrl && imageUrl.length ? 0 : 10,
-                            paddingRight: imageUrl && imageUrl.length ? 0 : 10,
-                            paddingBottom: 5,
-                            paddingTop: imageUrl && imageUrl.length ? 0 : 5,
-                            borderRadius: 2,
-                            marginTop: -12,
-                            width: 300
-                        }}
-                    >
-                        {text && text.length ? (
-                            <div className={'fs16 medium'}>
-                                {text}
-                            </div>
-                        ) : null}
-                        {imageUrl && imageUrl.length ? (
-                            <div
-                                className='pointer'
-                                onClick={this.openModal(imageUrl)}
-                            >
-                                <img
-                                    src={imageUrl}
-                                    style={{ width: 300, height: 200, borderRadius: 2 }}
-                                />
-                            </div>
-                        ) : null}
-
-                        {audioUrl && audioUrl.length ? (
-                            <div
-                                className='pointer'
-                                style={{ height: 40, width: 250, marginTop: 5 }}
-                                onClick={this.onClickDownloader(audioUrl, audioName)}
-                            >
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flex: 1,
-                                        backgroundColor: "#ededed",
-                                        borderRadius: 4,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                        height: 40,
-                                        marginRight: 10,
-                                        paddingLeft: 10,
-                                        paddingRight: 10
-                                    }}
-                                >
-                                    <div className={'fs16'}>
-                                        {audioName.length <= 12
-                                            ? audioName
-                                            : `${audioName.substring(0, 13)}...`}
-                                    </div>
-                                    <img src={audio} style={{ height: 20, width: 20 }} />
-                                </div>
-                            </div>
-                        ) : null}
+            } else {
+                dataTorender.push(
+                    <Timeline.Item dot={<div className={'timelineDot'} />}>
                         <div
-                            style={{ display: 'flex', flexDirection: 'row', marginTop: (text || imageUrl || audioUrl) ? 10 : 0, marginLeft: 10, alignItems: 'center' }}
+                            style={{
+                                flex: 1,
+                                backgroundColor: "#ffffff",
+                                marginBottom: 20,
+                                marginRight: 14,
+                                paddingLeft: imageUrl && imageUrl.length ? 0 : 10,
+                                paddingRight: imageUrl && imageUrl.length ? 0 : 10,
+                                paddingBottom: 5,
+                                paddingTop: imageUrl && imageUrl.length ? 0 : 5,
+                                borderRadius: 2,
+                                marginTop: -12,
+                                width: 300
+                            }}
                         >
-                            <div>{moment(createdAt).format("h a")}</div>
+                            {text && text.length ? (
+                                <div className={'fs16 medium'}>
+                                    {text}
+                                </div>
+                            ) : null}
+                            {imageUrl && imageUrl.length ? (
+                                <div
+                                    className='pointer'
+                                    onClick={this.openModal(imageUrl)}
+                                >
+                                    <img
+                                        src={imageUrl}
+                                        style={{ width: 300, height: 200, borderRadius: 2 }}
+                                    />
+                                </div>
+                            ) : null}
+
+                            {audioUrl && audioUrl.length ? (
+                                <div
+                                    className='pointer'
+                                    style={{ height: 40, width: 250, marginTop: 5 }}
+                                    onClick={this.onClickDownloader(audioUrl, audioName)}
+                                >
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flex: 1,
+                                            backgroundColor: "#ededed",
+                                            borderRadius: 4,
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            height: 40,
+                                            marginRight: 10,
+                                            paddingLeft: 10,
+                                            paddingRight: 10
+                                        }}
+                                    >
+                                        <div className={'fs16'}>
+                                            {audioName.length <= 12
+                                                ? audioName
+                                                : `${audioName.substring(0, 13)}...`}
+                                        </div>
+                                        <img src={audio} style={{ height: 20, width: 20 }} />
+                                    </div>
+                                </div>
+                            ) : null}
                             <div
-                                className={'seperator'}
-                            />
-                            <div>{this.getBodyPartName(parts[0])}</div>
+                                style={{ display: 'flex', flexDirection: 'row', marginTop: (text || imageUrl || audioUrl) ? 10 : 0, marginLeft: 10, alignItems: 'center' }}
+                            >
+                                <div>{moment(createdAt).format("h a")}</div>
+                                <div
+                                    className={'seperator'}
+                                />
+                                <div>{this.getBodyPartName(parts[0])}</div>
+                            </div>
                         </div>
-                    </div>
-                </Timeline.Item>
-            );
+                    </Timeline.Item>
+                );
+            }
         }
         return dataTorender;
     }

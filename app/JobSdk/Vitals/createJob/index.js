@@ -1,7 +1,7 @@
 import VitalJob from "../";
 import moment from "moment";
 import { getFullName } from "../../../helper/common";
-import { EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import { EVENT_TYPE } from "../../../../constant";
 
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
@@ -49,6 +49,7 @@ class CreateJob extends VitalJob {
     }
 
     templateData.push({
+      small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `Vital Added` },
       contents: {
@@ -61,6 +62,7 @@ class CreateJob extends VitalJob {
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
       priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
       data: { url: "/vitals", params: getData() }
     });
 

@@ -14,6 +14,8 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorQualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import featuresService from "../../../services/features/features.service";
+import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 
 // m-api wrappers
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
@@ -25,6 +27,7 @@ import ClinicWrapper from "../../../ApiWrapper/mobile/doctorClinic";
 import QualificationWrapper from "../../../ApiWrapper/mobile/doctorQualification";
 import RegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
+import FeatureMappingWrapper from "../../../ApiWrapper/mobile/doctorPatientFeatureMapping";
 
 import Log from "../../../../libs/log";
 import {
@@ -35,10 +38,11 @@ import {
   PATIENT_MEAL_TIMINGS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
-  VERIFICATION_TYPE
+  VERIFICATION_TYPE,
+  FEATURES
 } from "../../../../constant";
 
-import { getFilePath } from "../../../helper/filePath";
+import { getFilePath, completePath } from "../../../helper/filePath";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
@@ -100,28 +104,36 @@ class MobileDoctorController extends Controller {
         onboarding_status: ONBOARDING_STATUS.PROFILE_REGISTERED
       };
 
+      const mobileNumberExist = await userService.getUserByData({
+        mobile_number
+      });
+      if (mobileNumberExist && mobileNumberExist.length) {
+        const prevUser = await UserWrapper(mobileNumberExist[0].get());
+        const prevUserId = prevUser.getId();
+        if (prevUserId !== userId) {
+          return this.raiseClientError(
+            res,
+            422,
+            {},
+            "This mobile number is already registered."
+          );
+        }
+      }
+
       let doctor = {};
       let doctorExist = await doctorService.getDoctorByData({
         user_id: userId
       });
       const { first_name, middle_name, last_name } = getSeparateName(name);
-      // let first_name = doctorName[0];
-      // let middle_name = doctorName.length === 3 ? doctorName[1] : "";
-      // let last_name =
-      //   doctorName.length === 3
-      //     ? doctorName[2]
-      //     : doctorName.length === 2
-      //     ? doctorName[1]
-      //     : "";
 
       if (doctorExist) {
         let doctor_data = {
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           signature_pic: signature_pic
-            ? signature_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(signature_pic)
             : null,
           first_name,
           middle_name,
@@ -203,6 +215,7 @@ class MobileDoctorController extends Controller {
       let patientData = null;
       let patientOtherDetails = {};
       let carePlanOtherDetails = {};
+      let patientFeatureIds = [];
 
       if (comorbidities) {
         patientOtherDetails["comorbidities"] = comorbidities;
@@ -218,6 +231,19 @@ class MobileDoctorController extends Controller {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
 
+      const doctor = await doctorService.getDoctorByData({ user_id: userId });
+
+      // name split
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0] || null;
+      let middle_name = patientName.length == 3 ? patientName[1] : null;
+      let last_name =
+          patientName.length == 3
+              ? patientName[2]
+              : patientName.length == 2
+              ? patientName[1]
+              : null;
+
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
         userData = await UserWrapper(userExists[0].get());
@@ -230,6 +256,12 @@ class MobileDoctorController extends Controller {
             height,
             weight,
             address,
+            first_name,
+            middle_name,
+            last_name,
+            gender,
+            dob: date_of_birth,
+            age: getAge(moment(date_of_birth)),
             details: { ...previousDetails, ...patientOtherDetails }
           },
           patient_id
@@ -264,16 +296,6 @@ class MobileDoctorController extends Controller {
 
         let newUserId = userData.getId();
 
-        let patientName = name.trim().split(" ");
-        let first_name = patientName[0];
-        let middle_name = patientName.length == 3 ? patientName[1] : "";
-        let last_name =
-          patientName.length == 3
-            ? patientName[2]
-            : patientName.length == 2
-            ? patientName[1]
-            : "";
-
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
         const age = getAge(date_of_birth);
@@ -305,9 +327,24 @@ class MobileDoctorController extends Controller {
 
         await patientsService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
+
+        const features = await featuresService.getAllFeatures();
+
+        for (const feature of features) {
+          const { id: featureId } = feature;
+          const featureMappingData = await doctorPatientFeatureMappingService.create(
+            {
+              feature_id: featureId,
+              patient_id: patientData.getPatientId(),
+              doctor_id: doctor.get("id")
+            }
+          );
+          if (featureMappingData) {
+            patientFeatureIds.push(featureId);
+          }
+        }
       }
 
-      const doctor = await doctorService.getDoctorByData({ user_id: userId });
       const carePlanTemplate = await carePlanTemplateService.getCarePlanTemplateData(
         {
           treatment_id,
@@ -457,6 +494,9 @@ class MobileDoctorController extends Controller {
           },
           medicines: {
             ...medicineApiData
+          },
+          features_mappings: {
+            [patientData.getPatientId()]: patientFeatureIds
           }
         },
         "Patient added successfully"
@@ -871,9 +911,9 @@ class MobileDoctorController extends Controller {
             user_created: true
           });
 
-              const collegeWrapper = await CollegeWrapper(college);
-              collegeId = collegeWrapper.getCollegeId();
-            }
+          const collegeWrapper = await CollegeWrapper(college);
+          collegeId = collegeWrapper.getCollegeId();
+        }
 
         const docQualificationUpdate = await qualificationService.updateQualification(
           {
@@ -1750,8 +1790,20 @@ class MobileDoctorController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
+      let patientName = name.trim().split(" ");
+      let first_name = patientName[0];
+      let middle_name = patientName.length == 3 ? patientName[1] : "";
+      let last_name =
+        patientName.length == 3
+          ? patientName[2]
+          : patientName.length == 2
+          ? patientName[1]
+          : "";
+
+      const birth_date = moment(date_of_birth);
+      const age = getAge(date_of_birth);
+
       const patientUpdateData = {
-        ...prevBasicInfo,
         details: {
           ...previousDetails,
           allergies,
@@ -1759,7 +1811,14 @@ class MobileDoctorController extends Controller {
         },
         height,
         weight,
-        address
+        address,
+        gender,
+        birth_date,
+        age,
+        dob: date_of_birth,
+        first_name,
+        middle_name,
+        last_name
       };
 
       const updatedPatient = await patientService.update(
@@ -1804,7 +1863,7 @@ class MobileDoctorController extends Controller {
         {
           care_plan_ids: [initialCarePlanData.getCarePlanId()],
           care_plans: {
-            [initialCarePlanData.getCarePlanId()]: updatedCareplanDetails.getBasicInfo()
+            [initialCarePlanData.getCarePlanId()]: await updatedCareplanDetails.getAllInfo()
           },
           patients: {
             [initialPatientData.getPatientId()]: updatedpatientDetails.getBasicInfo()
@@ -1817,6 +1876,237 @@ class MobileDoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  toggleChatMessagePermission = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        params: { patient_id = null } = {},
+        userDetails: { userId } = {},
+        body = {}
+      } = req;
+
+      const { mute = false } = body;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      const featureData = await featuresService.getFeatureByName(FEATURES.CHAT);
+
+      if (featureData) {
+        const feature_id = featureData.get("id");
+
+        if (mute) {
+          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id,
+              feature_id
+            }
+          );
+        } else {
+          const patientFeature = await doctorPatientFeatureMappingService.create(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id: patient.getPatientId(),
+              feature_id
+            }
+          );
+        }
+      }
+
+      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+        {
+          patient_id,
+          doctor_id: doctor.get("id")
+        }
+      );
+
+      let patientFeatureIds = [];
+
+      for (const feature of patientFeatures) {
+        const featureWrapper = await FeatureMappingWrapper(feature);
+        const feature_id = featureWrapper.getFeatureId();
+        patientFeatureIds.push(feature_id);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          feature_mappings: {
+            [patient_id]: patientFeatureIds
+          }
+        },
+        "Chat permission updated successfully."
+      );
+    } catch (error) {
+      Logger.debug("toggleChatMessagePermission 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+  toggleVideoCallPermission = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        params: { patient_id = null } = {},
+        userDetails: { userId } = {},
+        body = {}
+      } = req;
+
+      const { block = false } = body;
+
+      const patient = await PatientWrapper(null, patient_id);
+      const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
+
+      const featureData = await featuresService.getFeatureByName(
+        FEATURES.VIDEO_CALL
+      );
+
+      if (featureData) {
+        const feature_id = featureData.get("id");
+
+        if (block) {
+          const deleteFeatureMapping = await doctorPatientFeatureMappingService.deleteMapping(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id,
+              feature_id
+            }
+          );
+        } else {
+          const patientFeature = await doctorPatientFeatureMappingService.create(
+            {
+              doctor_id: doctor.get("id"),
+              patient_id: patient.getPatientId(),
+              feature_id
+            }
+          );
+        }
+      }
+
+      const patientFeatures = await doctorPatientFeatureMappingService.getByData(
+        {
+          patient_id,
+          doctor_id: doctor.get("id")
+        }
+      );
+
+      let patientFeatureIds = [];
+
+      for (const feature of patientFeatures) {
+        const featureWrapper = await FeatureMappingWrapper(feature);
+        const feature_id = featureWrapper.getFeatureId();
+        patientFeatureIds.push(feature_id);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          feature_mappings: {
+            [patient_id]: patientFeatureIds
+          }
+        },
+        "Video call permission updated successfully."
+      );
+    } catch (error) {
+      Logger.debug("toggleVideoCallPermission 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  };
+
+
+  getPaginatedDataForPatients = async(req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try { 
+      const {
+        userDetails: { userId } = {},
+        query = {}
+      } = req;
+
+      const { offset=0, watchlist = 0, sort_by_name = 1 } = query || {};
+
+      const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+
+      const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
+      const endLimit = parseInt(limit, 10);
+
+      const doctor = await doctorService.getDoctorByData({
+        user_id: userId
+      });
+
+      const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
+      const sortByName = parseInt(sort_by_name, 10) === 0? 0: 1;
+
+      let doctorId = null, patients = {}, watchlistPatientIds = [], count = 0, patientIds = [];
+
+      if(doctor) {
+        const doctorData = await DoctorWrapper(doctor);
+        doctorId = doctorData.getDoctorId();
+
+        
+        const doctorAllInfo = await doctorData.getAllInfo();
+        const { watchlist_patient_ids = []} = doctorAllInfo || {};
+        watchlistPatientIds = watchlist_patient_ids;
+      }
+
+      if(getWatchListPatients) {
+        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+      } else {
+        count = await carePlanService.getDistinctPatientCounts(doctorId);
+      }
+
+      if(count > 0) {
+        const data = {
+          offset: offsetLimit,
+          limit: endLimit,
+          doctorId,
+          watchlistPatientIds,
+          watchlist: getWatchListPatients,
+          sortByName
+        }
+        const allPatients = await carePlanService.getPaginatedDataOfPatients(data);
+
+        for(const patient of allPatients) {
+          const formattedPatientData = patient
+  
+          const { id, details = {} } = formattedPatientData;
+          patientIds.push(id);
+          let watchlist = false;
+  
+          const { profile_pic } = details;
+          const updatedDetails =  {
+            ...details,
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
+        };
+  
+          if(watchlistPatientIds.indexOf(id) !== -1) {
+            watchlist = true;
+          }
+  
+          patients[id] = {...formattedPatientData, watchlist, details: updatedDetails};
+        }
+      }
+      
+      return raiseSuccess(
+        res,
+        200,
+        {
+          total: count,
+          page_size: limit,
+          patient_ids: patientIds,
+          patients
+        },
+        "Patients data fetched successfully."
+      );
+      
+    } catch (error) {
+      Logger.debug("getPaginatedDataForPatients 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
 }
 
 export default new MobileDoctorController();

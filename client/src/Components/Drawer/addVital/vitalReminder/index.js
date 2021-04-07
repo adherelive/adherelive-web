@@ -21,7 +21,8 @@ class AddVitals extends Component {
     this.state = {
       disabledOk: true,
       fieldChanged: false,
-      members: []
+      members: [],
+      submitting:false
     };
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(AddVitalsForm);
   }
@@ -135,6 +136,7 @@ class AddVitals extends Component {
           message.error('Please select valid dates for vital')
         } else {
           try {
+            this.setState({submitting:true});
             const response = await addVital(data_to_submit);
             const { status, payload: { message: msg } = {} } = response;
             if (status === true) {
@@ -143,8 +145,10 @@ class AddVitals extends Component {
             } else {
               message.error(msg);
             }
+            this.setState({submitting:false});
           } catch (error) {
             console.log("add vital ui error -----> ", error);
+            this.setState({submitting:false});
           }
         }
       } else {
@@ -160,7 +164,7 @@ class AddVitals extends Component {
       intl: { formatMessage }
     } = this.props;
     const { onClose, setFormRef, FormWrapper, handleSubmit } = this;
-    const { disabledSubmit } = this.state;
+    const { disabledSubmit , submitting = false } = this.state;
     // const submitButtonProps = {
     //   disabled: disabledSubmit,
     //   loading: loading
@@ -200,6 +204,7 @@ class AddVitals extends Component {
           submitText={formatMessage(messages.add_button_text)}
           submitButtonProps={{}}
           cancelComponent={null}
+          submitting={submitting}
         />
       </Drawer>
       </Fragment>

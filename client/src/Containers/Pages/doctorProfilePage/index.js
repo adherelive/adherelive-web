@@ -1,7 +1,8 @@
 import { connect } from "react-redux";
 import DoctorProfilePage from "../../../Components/Pages/doctorProfilePage";
 import { withRouter } from "react-router-dom";
-import { updateDoctor, getDoctorProfileDetails } from "../../../modules/doctors";
+import { updateDoctor, getDoctorProfileDetails ,verifyDoctor,
+  deactivateDoctor,activateDoctor} from "../../../modules/doctors";
 import {searchSpecialties} from "../../../modules/specialities";
 import { searchCouncil}  from "../../../modules/councils";
 import {
@@ -54,7 +55,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getDoctorDetails: id => () => dispatch(getDoctorProfileDetails()),
+    getDoctorDetails: id => () => dispatch(getDoctorProfileDetails(id)),
+    verifyDoctor: id => dispatch(verifyDoctor(id)),
     searchSpecialities: (data) => dispatch(searchSpecialties(data)),
     updateDoctorBasicInfo: (user_id,data) => dispatch(updateDoctor(user_id,data)),
     searchDegree: data => dispatch(searchDegree(data)),
@@ -63,7 +65,9 @@ const mapDispatchToProps = dispatch => {
     deleteDoctorQualificationImage: (qualificationId, document) =>
     dispatch(deleteDoctorQualificationImage(qualificationId, document)),
     deleteDoctorRegistrationImage: (registrationId, document) =>
-    dispatch(deleteDoctorRegistrationImage(registrationId, document))
+    dispatch(deleteDoctorRegistrationImage(registrationId, document)),
+    deactivateDoctor : (doctor_id) => dispatch(deactivateDoctor(doctor_id)) ,
+    activateDoctor : (user_id) => dispatch(activateDoctor(user_id)) 
   };
 };
 
@@ -76,8 +80,12 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
         searchCollege,
         deleteDoctorQualificationImage,
         deleteDoctorRegistrationImage,
-        searchCouncil 
+        searchCouncil ,
+        verifyDoctor,
+        deactivateDoctor,
+        activateDoctor
     } = dispatchProps;
+
     const {
       auth,
       users,
@@ -94,12 +102,18 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
       councils,
       specialities
     } = stateProps;
+
+    const {
+        id
+    } = ownProps;
     
   
-    const getDoctorAllDetails = getDoctorDetails();
+    const getDoctorAllDetails = getDoctorDetails(id);
+
 
   
     return {
+        id,
       auth,
       users,
       doctors,
@@ -114,6 +128,7 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
       colleges,
       councils,
       specialities,
+      verifyDoctor,
       getDoctorDetails: getDoctorAllDetails,
       searchSpecialities: searchSpecialities,
       updateDoctorBasicInfo: updateDoctorBasicInfo,
@@ -121,8 +136,9 @@ const mergePropsToState = (stateProps, dispatchProps, ownProps) => {
       searchCollege: searchCollege,
       deleteDoctorQualificationImage: deleteDoctorQualificationImage,
       deleteDoctorRegistrationImage: deleteDoctorRegistrationImage,
-      searchCouncil: searchCouncil
-
+      searchCouncil: searchCouncil,
+      deactivateDoctor,
+      activateDoctor
     };
   };
 

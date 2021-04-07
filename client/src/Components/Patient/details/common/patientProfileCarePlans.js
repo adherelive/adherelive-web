@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 import Button from "antd/es/button";
 
 import { getAuthCategory, getFullName } from "../../../../Helper/common";
+import careplanBg from "../../../../Assets/images/careplan-access-bg.png";
 import {
   DIAGNOSIS_TYPE,
   FINAL,
@@ -92,53 +93,86 @@ class PatientCarePlans extends Component {
     });
   };
 
+  // getHiddenCarePlans = () => {
+  //   const {
+  //     care_plans,
+  //     doctors,
+  //     authenticated_user,
+  //     patientCarePlanIds,
+  //     intl: { formatMessage } = {}
+  //   } = this.props;
+  //   const { getCarePlanStatus } = this;
+
+  //   const authDoctor = getAuthCategory({ doctors, authenticated_user });
+
+  //   const { care_plan_ids = [] } = authDoctor || {};
+
+  //   let hiddenCarePlans = [];
+
+  //   patientCarePlanIds.forEach((id, index) => {
+  //     if (!care_plan_ids.includes(id)) {
+  //       const { expired_on } = care_plans[id] || {};
+  //       hiddenCarePlans.push(
+  //         <div
+  //           key={`cp-no-consent-${id}`}
+  //           className={`flex justify-space-between align-center p10 br5`}
+  //         >
+  //           <div className="fs18 fw700">{`${formatMessage(
+  //             messages.careplan_text
+  //           )} ${index + 1}`}</div>
+  //           <div className="">{getCarePlanStatus(expired_on)}</div>
+  //         </div>
+  //       );
+  //     }
+  //   });
+
+  //   return hiddenCarePlans;
+  // };
+
+
   getHiddenCarePlans = () => {
-    const {
-      care_plans,
-      doctors,
-      authenticated_user,
-      patientCarePlanIds,
-      intl: { formatMessage } = {}
-    } = this.props;
-    const { getCarePlanStatus } = this;
+    const {renderFooter} = this;
+    return (
+      <div className="wp100 h180 relative " >
+        <img alt="careplan-bg-img" 
+         src={careplanBg} 
+         style={{height:"100%",width:"100%"}} ></img>
+          {renderFooter()}
+      </div>
+    )
+  }
 
-    const authDoctor = getAuthCategory({ doctors, authenticated_user });
+  // renderFooter = () => {
+  //   const { intl: { formatMessage } = {}, handleRequestConsent } = this.props;
 
-    const { care_plan_ids = [] } = authDoctor || {};
+  //   return (
+  //     <div onClick={handleRequestConsent}>
+  //       <Button type={"primary"} block={true}>
+  //         {formatMessage(messages.request_access_text)}
+  //       </Button>
+  //     </div>
+  //   );
+  // };
 
-    let hiddenCarePlans = [];
-
-    patientCarePlanIds.forEach((id, index) => {
-      if (!care_plan_ids.includes(id)) {
-        const { expired_on } = care_plans[id] || {};
-        hiddenCarePlans.push(
-          <div
-            key={`cp-no-consent-${id}`}
-            className={`flex justify-space-between align-center p10 br5`}
-          >
-            <div className="fs18 fw700">{`${formatMessage(
-              messages.careplan_text
-            )} ${index + 1}`}</div>
-            <div className="">{getCarePlanStatus(expired_on)}</div>
-          </div>
-        );
-      }
-    });
-
-    return hiddenCarePlans;
-  };
 
   renderFooter = () => {
     const { intl: { formatMessage } = {}, handleRequestConsent } = this.props;
 
     return (
-      <div onClick={handleRequestConsent}>
-        <Button type={"primary"} block={true}>
-          {formatMessage(messages.request_consent_text)}
-        </Button>
+      <div 
+      className="absolute l0 t0 wp100 hp100  flex direction-column align-center justify-center" >
+          <span className="fw700 fs18" >
+            {formatMessage(messages.patientOtherTreatmentPlans)}
+          </span>
+        <span
+         onClick={handleRequestConsent} 
+         className="tab-color pointer fw700 fs19" >
+        {formatMessage(messages.request_access_text)}
+        </span>
       </div>
     );
   };
+
 
   hideFooter = () => {
     const { doctors, authenticated_user, patientCarePlanIds } = this.props;
@@ -168,9 +202,8 @@ class PatientCarePlans extends Component {
         <div className="fs18 fw700">{formatMessage(messages.treatment_plans_text)}</div>
           <div className="br5 bw-faint-grey">
             {getVisibleCarePlans()}
-            {getHiddenCarePlans()}
           </div>
-        {!hideFooter() && renderFooter()}
+        {!hideFooter() && getHiddenCarePlans()}
       </div>
     );
   }

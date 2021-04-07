@@ -13,8 +13,14 @@ import {
   addDoctorPaymentPoductUrl,
   addRazorpayIdUrl,
   patientWatchlistUrl,
-  updatePatientAndCareplanUrl
+  updatePatientAndCareplanUrl,
+  deactivateDoctorURL,
+  activateDoctorURL
 } from "../../Helper/urls/doctor";
+
+
+import { getAllDoctorsForProviderUrl } from "../../Helper/urls/provider";
+
 import { accountDetailsUrl } from "../../Helper/urls/accounts";
 
 export const GET_DOCTOR_DETAILS_START = "GET_DOCTOR_DETAILS_START";
@@ -77,13 +83,29 @@ export const DELETE_DOCTOR_PAYMENT_PRODUCT_FAILED =
 // export const GET_ACCOUNT_DETAILS_COMPLETE = "GET_ACCOUNT_DETAILS_COMPLETE";
 // export const GET_ACCOUNT_DETAILS_FAILED = "GET_ACCOUNT_DETAILS_FAILED";
 
-export const UPDATE_PATIENT_AND_CAREPLAN ="UPDATE_PATIENT_AND_CAREPLAN";
-export const UPDATE_PATIENT_AND_CAREPLAN_COMPLETE = "UPDATE_PATIENT_AND_CAREPLAN_COMPLETE";
-export const UPDATE_PATIENT_AND_CAREPLAN_FAILED = "UPDATE_PATIENT_AND_CAREPLAN_FAILED";
+export const GET_ALL_DOCTORS_FOR_PROVIDER = "GET_ALL_DOCTORS_FOR_PROVIDER";
+export const GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE =
+  "GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE";
+export const GET_ALL_DOCTORS_FOR_PROVIDER_FAILED =
+  "GET_ALL_DOCTORS_FOR_PROVIDER_FAILED";
+
+export const UPDATE_PATIENT_AND_CAREPLAN = "UPDATE_PATIENT_AND_CAREPLAN";
+export const UPDATE_PATIENT_AND_CAREPLAN_COMPLETE =
+  "UPDATE_PATIENT_AND_CAREPLAN_COMPLETE";
+export const UPDATE_PATIENT_AND_CAREPLAN_FAILED =
+  "UPDATE_PATIENT_AND_CAREPLAN_FAILED";
 
 export const ADD_RAZORPAY_ID = "ADD_RAZORPAY_ID";
 export const ADD_RAZORPAY_ID_COMPLETE = "ADD_RAZORPAY_ID_COMPLETE";
 export const ADD_RAZORPAY_ID_FAILED = "ADD_RAZORPAY_ID_FAILED";
+
+export const DEACTIVATE_DOCTOR_START = "DEACTIVATE_DOCTOR_START";
+export const DEACTIVATE_DOCTOR_COMPLETE = "DEACTIVATE_DOCTOR_COMPLETE";
+export const DEACTIVATE_DOCTOR_FAILED = "DEACTIVATE_DOCTOR_FAILED";
+
+export const ACTIVATE_DOCTOR_START = "ACTIVATE_DOCTOR_START";
+export const ACTIVATE_DOCTOR_COMPLETE = "ACTIVATE_DOCTOR_COMPLETE";
+export const ACTIVATE_DOCTOR_FAILED = "ACTIVATE_DOCTOR_FAILED";
 
 export const updateDoctor = (user_id, updateData) => {
   let response = {};
@@ -116,8 +138,7 @@ export const updateDoctor = (user_id, updateData) => {
   };
 };
 
-
-export const updatePatientAndCareplan = (careplan_id,payload) => {
+export const updatePatientAndCareplan = (careplan_id, payload) => {
   let response = {};
   return async dispatch => {
     try {
@@ -147,7 +168,6 @@ export const updatePatientAndCareplan = (careplan_id,payload) => {
     return response;
   };
 };
-
 
 export const getAdminPaymentProduct = () => {
   let response = {};
@@ -179,15 +199,53 @@ export const getAdminPaymentProduct = () => {
   };
 };
 
-export const getDoctorPaymentProduct = () => {
+export const getAllDoctorsForProvider = () => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: GET_ALL_DOCTORS_FOR_PROVIDER });
+      response = await doRequest({
+        method: REQUEST_TYPE.GET,
+        url: getAllDoctorsForProviderUrl()
+      });
+
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: GET_ALL_DOCTORS_FOR_PROVIDER_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: GET_ALL_DOCTORS_FOR_PROVIDER_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("GET_ALL_DOCTORS_FOR_PROVIDER ERROR --> ", error);
+    }
+    return response;
+  };
+};
+
+export const getDoctorPaymentProduct = (params = null) => {
   let response = {};
   return async dispatch => {
     try {
       dispatch({ type: GET_DOCTOR_PAYMENT_PRODUCT });
-      response = await doRequest({
-        method: REQUEST_TYPE.GET,
-        url: getDoctorPaymentProductUrl()
-      });
+      if (params) {
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: getDoctorPaymentProductUrl(),
+          params
+        });
+      } else {
+        response = await doRequest({
+          method: REQUEST_TYPE.GET,
+          url: getDoctorPaymentProductUrl()
+        });
+      }
 
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
@@ -252,7 +310,11 @@ export const deleteDoctorPaymentProduct = payload => {
       });
 
       const { status, payload: { data, error } = {} } = response || {};
+      const {id = null} = payload;
       if (status === true) {
+        if(id){
+          data["id"] = id;
+        }
         dispatch({
           type: DELETE_DOCTOR_PAYMENT_PRODUCT_COMPLETE,
           data: data,
@@ -428,14 +490,14 @@ export const getDoctorDetails = id => {
   };
 };
 
-export const getDoctorProfileDetails = () => {
+export const getDoctorProfileDetails = (id=null) => {
   let response = {};
   return async dispatch => {
     try {
       dispatch({ type: GET_DOCTOR_DETAILS_START });
       response = await doRequest({
         method: REQUEST_TYPE.GET,
-        url: getDoctorProfileDetailsUrl()
+        url: getDoctorProfileDetailsUrl(id)
       });
       const { status, payload: { data, error } = {} } = response || {};
       if (status === true) {
@@ -467,7 +529,7 @@ export const getDoctorProfileDetails = () => {
 //           url: accountDetailsUrl(),
 //           data: payload
 //         });
-  
+
 //         const { status, payload: { data, error } = {} } = response || {};
 //         if (status === true) {
 //           dispatch({
@@ -486,10 +548,10 @@ export const getDoctorProfileDetails = () => {
 //       }
 //       return response;
 //     }
-  
+
 // }
 
-export const addRazorpayId = (id,payload) => {
+export const addRazorpayId = (id, payload) => {
   let response = {};
   return async dispatch => {
     try {
@@ -518,6 +580,66 @@ export const addRazorpayId = (id,payload) => {
     return response;
   };
 };
+
+export const deactivateDoctor = (doctor_id) => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: DEACTIVATE_DOCTOR_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.DELETE,
+        url: deactivateDoctorURL(doctor_id)
+      });
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: DEACTIVATE_DOCTOR_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: DEACTIVATE_DOCTOR_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("DEACTIVATE_DOCTOR ERROR --> ", error);
+    }
+    return response;
+  };
+};
+
+
+export const activateDoctor = (user_id) => {
+  let response = {};
+  return async dispatch => {
+    try {
+      dispatch({ type: ACTIVATE_DOCTOR_START });
+      response = await doRequest({
+        method: REQUEST_TYPE.POST,
+        url: activateDoctorURL(user_id)
+      });
+      const { status, payload: { data, error } = {} } = response || {};
+      if (status === true) {
+        dispatch({
+          type: ACTIVATE_DOCTOR_COMPLETE,
+          data: data,
+          payload: data
+        });
+      } else {
+        dispatch({
+          type: ACTIVATE_DOCTOR_FAILED,
+          error
+        });
+      }
+    } catch (error) {
+      console.log("ACTIVATE_DOCTOR ERROR --> ", error);
+    }
+    return response;
+  };
+};
+
 
 
 // export const getAccountDetails = () => {

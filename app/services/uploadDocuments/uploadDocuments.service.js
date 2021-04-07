@@ -35,7 +35,7 @@ class UploadDocumentService {
                 where: {
                     parent_type,
                     parent_id,
-                    deleted_at:null
+                    // deleted_at:null
                 }
             });
             return documents;
@@ -95,6 +95,37 @@ class UploadDocumentService {
         } catch(error) {
             throw error;
         }
+    };
+
+    deleteDocumentsOfAppointment = async (id) => {
+        try {
+            const documents = await Database.getModel(TABLE_NAME).destroy({
+                where: {
+                    id
+                }
+            });
+            return documents;
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    deleteDocumentByData = async (data) => {
+        try {
+            return await Database.getModel(TABLE_NAME).destroy({
+                where: data
+            });
+        } catch(error) {
+            throw error;
+        }
+    };
+
+    getAll = async () => {
+      try {
+          return await Database.getModel(TABLE_NAME).findAll();
+      } catch(error) {
+          throw error;
+      }
     };
    
 }

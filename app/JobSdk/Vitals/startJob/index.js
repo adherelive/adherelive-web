@@ -50,14 +50,16 @@ class StartJob extends VitalJob {
     }
 
     templateData.push({
+      small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
       headings: { en: `${vitalName} Reminder` },
       contents: {
-        en: `Tap here to update ${vitalName} vital`
+        en: `Tap here to update your ${vitalName}`
       },
       // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
       include_player_ids: [...playerIds],
       priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
       data: {
         url: "/vitals",
         vital: latestVital[_data.getEventId()],

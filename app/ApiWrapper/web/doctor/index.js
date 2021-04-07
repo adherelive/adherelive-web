@@ -2,10 +2,13 @@ import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import ConsentService from "../../../services/consents/consent.service";
+import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import { completePath } from "../../../helper/filePath";
 import SpecialityWrapper from "../../web/speciality";
 import CarePlanWrapper from "../../web/carePlan";
 import ConsentWrapper from "../../web/consent";
+import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
+import UserWrapper from "../../web/user";
 
 class DoctorWrapper extends BaseDoctor {
   constructor(data) {
@@ -13,25 +16,33 @@ class DoctorWrapper extends BaseDoctor {
   }
 
   getReferenceInfo = async () => {
-    const { _data } = this;
-    const { speciality } = _data || {};
+    const { _data, getAllInfo, getDoctorId } = this;
+    const { speciality, user } = _data || {};
+
+    let specialityData = {};
+    let userData = {};
 
     if (speciality) {
       const specialityDetails = await SpecialityWrapper(speciality);
+      specialityData[specialityDetails.getSpecialityId()] = specialityDetails.getBasicInfo();
+    }
 
-      console.log("speciality ----> ", _data);
+    if(user) {
+      const users = await UserWrapper(user.get());
+      userData[users.getId()] = users.getBasicInfo();
+    }
 
       return {
-        // doctors: {
-        //   [getDoctorId()] : getBasicInfo()
-        // },
+        doctors: {
+          [getDoctorId()] : await getAllInfo()
+        },
         specialities: {
-          [specialityDetails.getSpecialityId()]: specialityDetails.getBasicInfo()
+          ...specialityData,
+        },
+        users: {
+          ...userData,
         }
       };
-    } else {
-      return {};
-    }
   };
 
   getBasicInfo = () => {
@@ -48,7 +59,8 @@ class DoctorWrapper extends BaseDoctor {
       qualifications,
       activated_on,
       profile_pic,
-      signature_pic
+      signature_pic,
+        full_name,
     } = _data || {};
     return {
       basic_info: {
@@ -58,13 +70,14 @@ class DoctorWrapper extends BaseDoctor {
         first_name,
         middle_name,
         last_name,
+        full_name,
         city,
         speciality_id,
         profile_pic: completePath(profile_pic),
         signature_pic: completePath(signature_pic)
       },
       qualifications,
-      activated_on
+      activated_on,
     };
   };
 
@@ -77,6 +90,7 @@ class DoctorWrapper extends BaseDoctor {
       first_name,
       middle_name,
       last_name,
+      full_name,
       qualifications,
       activated_on,
       profile_pic,
@@ -140,6 +154,18 @@ class DoctorWrapper extends BaseDoctor {
       }
     }
 
+    const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+      getDoctorId()
+    );
+
+    let providerId = null;
+    if (doctorProvider) {
+      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+        doctorProvider
+      );
+      providerId = doctorProviderWrapper.getProviderId();
+    }
+
     return {
       basic_info: {
         id,
@@ -148,6 +174,7 @@ class DoctorWrapper extends BaseDoctor {
         first_name,
         middle_name,
         last_name,
+        full_name,
         speciality_id,
         profile_pic: completePath(profile_pic),
         signature_pic: completePath(signature_pic)
@@ -157,7 +184,8 @@ class DoctorWrapper extends BaseDoctor {
       activated_on,
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
-      razorpay_account_id
+      razorpay_account_id,
+      provider_id: providerId
     };
   };
 }

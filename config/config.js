@@ -13,6 +13,16 @@ module.exports = () => {
       support_email: process.env.SUPPORT_EMAIL,
       appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
       default_currency: process.env.DEFAULT_CURRENCY,
+      medicine_data: process.env.MEDICINE_INSTANCE,
+      careplan_activation_reschedule_hours: process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
+      icon_android: process.env.ANDROID_ICON_NAME
+    },
+    algolia: {
+      app_id: process.env.ALGOLIA_APP_ID,
+      app_key: process.env.ALGOLIA_APP_KEY,
+      backend_key: process.env.ALGOLIA_BACKEND_KEY,
+      medicine_index: process.env.ALGOLIA_MEDICINE_INDEX,
+      object_id_prefix: process.env.ALGOLIA_OBJECT_ID_PREFIX
     },
     razorpay: {
       key: process.env.RAZORPAY_KEY,
@@ -23,8 +33,9 @@ module.exports = () => {
     },
     email: {
       USER: process.env.SENDGRID_USER,
-      KEY: process.env.SENDGRID_PASSWORD,
-      FROM: process.env.SENDGRID_FROM_ADDRESS
+      KEY: process.env.SENDGRID_API_KEY,
+      FROM: process.env.SENDGRID_FROM_ADDRESS,
+      FROM_NAME: process.env.SENDGRID_FROM_NAME
     },
     sqs: {
       domain_url: process.env.SQS_DOMAIN_URL,
@@ -43,7 +54,8 @@ module.exports = () => {
     },
     getstream: {
       key: process.env.GETSTREAM_API_KEY,
-      secretKey: process.env.GETSTREAM_API_SECRET
+      secretKey: process.env.GETSTREAM_API_SECRET,
+      appId: process.env.GETSTREAM_APP_ID,
     },
     aws: {
       access_key: process.env.AWS_ACCESS_KEY,
@@ -74,6 +86,9 @@ module.exports = () => {
       MINIO_BUCKET_NAME: process.env.MINIO_BUCKET_NAME,
       MINIO_S3_HOST: process.env.S3_HOST
     },
+    s3: {
+      EXPIRY_TIME: process.env.EXPIRY_TIME
+    },
     GOOGLE_KEYS: {
       CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
@@ -96,6 +111,11 @@ module.exports = () => {
     one_signal: {
       app_id: process.env.ONE_SIGNAL_APP_ID,
       key: process.env.ONE_SIGNAL_KEY,
+      urgent_channel_id: process.env.URGENT_CHANNEL_ID
+    },
+    agora: {
+      app_id: process.env.AGORA_APP_ID,
+      app_certificate: process.env.AGORA_APP_CERTIFICATE,
     },
     cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,
@@ -114,7 +134,9 @@ module.exports = () => {
     INVITE_EXPIRE_TIME: process.env.INVITE_EXPIRE_TIME,
     MSG91_AUTH_KEY: process.env.MSG91_AUTH_KEY,
     MSG91_SMS_URL: process.env.MSG91_SMS_URL,
-    MSG91_SENDER: process.env.MSG91_SENDER
+    MSG91_SENDER: process.env.MSG91_SENDER,
+    ADMIN_MEDICINE_ONE_PAGE_LIMIT: process.env.ADMIN_MEDICINE_ONE_PAGE_LIMIT,
+    PATIENT_LIST_SIZE_LIMIT: process.env.PATIENT_LIST_SIZE_LIMIT
   };
 };
 

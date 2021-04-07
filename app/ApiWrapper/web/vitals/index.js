@@ -24,7 +24,6 @@ class VitalWrapper extends BaseVital {
 
   getBasicInfo = () => {
     const { _data } = this;
-    Log.debug("4563452342134566564532423",_data);
     const {
       id,
       vital_template_id,
@@ -68,8 +67,6 @@ class VitalWrapper extends BaseVital {
     let remaining = 0;
     let latestPendingEventId;
 
-    Log.debug("7761283 scheduleEvents --> ", scheduleEvents);
-
     const vitalData = await FeatureDetailService.getDetailsByData({
       feature_type: FEATURE_TYPE.VITAL
     });
@@ -85,7 +82,7 @@ class VitalWrapper extends BaseVital {
             if(scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
               scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
-              if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
+              if(scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
                 if(!latestPendingEventId) {
                   latestPendingEventId = scheduleEvent.getScheduleEventId();
                 }
@@ -106,21 +103,36 @@ class VitalWrapper extends BaseVital {
   };
 
   getReferenceInfo = async () => {
-    const { _data } = this;
+    const { _data, getAllInfo, getVitalTemplateId } = this;
     const { vital_template, care_plan } = _data || {};
 
     const vitalTemplateData = {};
     const carePlanData = {};
 
-    const vitalTemplates = await VitalTemplateWrapper({ data: vital_template });
-    vitalTemplateData[
-      vitalTemplates.getVitalTemplateId()
-    ] = vitalTemplates.getBasicInfo();
+    let wrapperQuery = {};
+    if(vital_template) {
+      wrapperQuery = {
+        data: vital_template
+      };
 
-    const carePlans = await CarePlanWrapper(care_plan);
-    carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
+    } else {
+     wrapperQuery = {
+       id: getVitalTemplateId()
+     };
+    }
+
+    const vitalTemplates = await VitalTemplateWrapper(wrapperQuery);
+    vitalTemplateData[
+        vitalTemplates.getVitalTemplateId()
+        ] = vitalTemplates.getBasicInfo();
+
+    if(care_plan) {
+      const carePlans = await CarePlanWrapper(care_plan);
+      carePlanData[carePlans.getCarePlanId()] = await carePlans.getAllInfo();
+    }
 
     return {
+      ...await getAllInfo(),
       vital_templates: {
         ...vitalTemplateData
       },

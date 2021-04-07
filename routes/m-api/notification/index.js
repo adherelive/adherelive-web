@@ -10,4 +10,10 @@ router.post(
     NotificationController.getNotifications
 );
 
+router.post(
+    "/chat-notfication",
+    Authenticate,
+    NotificationController.raiseChatNotification
+);
+
 module.exports = router;

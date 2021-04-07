@@ -3,21 +3,16 @@ import React from "react";
 import { TABLE_COLUMN } from "../helper";
 import messages from "../messages";
 import PID from "../datacolumn/pid";
-// import Condition from "../datacolumn/condition";
 import Diagnosis from "../datacolumn/diagnosis";
 import Treatment from "../datacolumn/treatment";
 import Severity from "../datacolumn/severity";
-import EditPatientColumn from "../datacolumn/editColumn";
-import Age from "../datacolumn/age";
 import StartDate from "../datacolumn/startDate";
-import Doctor from "../datacolumn/doctor";
-import Provider from "../datacolumn/provider";
-import NewSymptoms from "../datacolumn/newSymptoms";
-import Watchlist from "../datacolumn/watchlist";
+import CreatedAt from "../datacolumn/createdAt";
+import moment from "moment";
 
 
 export default props => {
-  const { formatMessage } = props || {};
+  const { formatMessage , getColumnSearchProps } = props || {};
 
 
   return [
@@ -32,17 +27,22 @@ export default props => {
     {
       title: formatMessage(messages.diagnosis),
       ...TABLE_COLUMN.DIAGNOSIS,
-      render: patientData => <Diagnosis {...patientData} />
+      render: patientData => <Diagnosis {...patientData} />,
+      ...getColumnSearchProps(TABLE_COLUMN.DIAGNOSIS.dataIndex),
+
     },
     {
       title: formatMessage(messages.treatment),
       ...TABLE_COLUMN.TREATMENT,
       render: data => {
         const { patientData, treatmentData, carePlanData } = data;
+        // console.log("82346234236492347 ========>",{treatmentData,carePlanData})
         return (
           <Treatment patientData={patientData} treatmentData={treatmentData} carePlanData={carePlanData} />
         );
-      }
+      },
+      ...getColumnSearchProps(TABLE_COLUMN.TREATMENT.dataIndex),
+
     },
     {
       title: formatMessage(messages.severity),
@@ -52,36 +52,39 @@ export default props => {
     {
       title: formatMessage(messages.start_date),
       ...TABLE_COLUMN.START_DATE,
-      render: carePlanData => <StartDate {...carePlanData} />
+      render: carePlanData => <StartDate {...carePlanData} />,
+      sorter: (a, b) => {
+        // console.log("38712397182 a, b", {a, b});
+        
+        const {carePlanData : {activated_on : aActivatedOn} = {}} = a[TABLE_COLUMN.START_DATE.dataIndex] || {};
+        const {carePlanData : {activated_on : bActivatedOn} = {}} = b[TABLE_COLUMN.START_DATE.dataIndex] || {};
+        
+        if(moment(aActivatedOn).isBefore(moment(bActivatedOn))) {
+          return 1;
+        } else {
+          return -1;
+        }
+  
+      },
     },
     {
-      title: formatMessage(messages.provider),
-      ...TABLE_COLUMN.PROVIDER,
-      render: data => {
-        const { patientData, providerData } = data;
-        return (
-          <Provider patientData={patientData} providerData={providerData} />
-        );
-      }
-    },
-    {
-      title: formatMessage(messages.new_symptoms),
-      ...TABLE_COLUMN.NEW_SYMPTOMS,
-      render: patientData => <NewSymptoms {...patientData} />
-    },
-    {
-      title:"",
-      ...TABLE_COLUMN.EDIT,
-      render : data => {
-        const {  patientData,
-          carePlanData,
-          openEditPatientDrawer} = data;
-          return (
-            <EditPatientColumn patientData={patientData} carePlanData={carePlanData}  openEditPatientDrawer={openEditPatientDrawer} />
-          )
-
-       
-      }
+      title: formatMessage(messages.createdAt),
+      ...TABLE_COLUMN.CREATED_AT,
+      render: patientData => <CreatedAt {...patientData} />,
+      sorter: (a, b) => {
+        // console.log("38712397182 a, b", {a, b});
+        
+        const {patientData : {created_at : aCreatedAt} = {}} = a[TABLE_COLUMN.CREATED_AT.dataIndex] || {};
+        const {patientData : {created_at : bCreatedAt} = {}} = b[TABLE_COLUMN.CREATED_AT.dataIndex] || {};
+        
+        if(moment(aCreatedAt).isBefore(moment(bCreatedAt))) {
+          return 1;
+        } else {
+          return -1;
+        }
+  
+      },
     }
+
   ];
 };

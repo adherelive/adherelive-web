@@ -2,6 +2,11 @@ import Controller from "../";
 import Logger from "../../../libs/log";
 import { getDataForNotification } from "./notification.controller.helper";
 
+import ChatJob from "../../JobSdk/Chat/observer";
+import NotificationSdk from "../../NotificationSdk";
+
+import { MESSAGE_TYPES } from "../../../constant"
+
 const Log = new Logger("WEB > NOTIFICATION > CONTROLLER");
 
 class NotificationController extends Controller {
@@ -10,10 +15,9 @@ class NotificationController extends Controller {
   }
 
   getNotifications = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       const { body: { activities } = {}, userDetails: { userId } = {} } = req;
-      console.log("43756464865745348=========>>", activities);
       const notificationIds = [];
 
       let notificationData = {};
@@ -28,7 +32,6 @@ class NotificationController extends Controller {
       for (let key in activities) {
         const { activity: activityData, is_read, group_id } = activities[key];
 
-        Log.debug("activityData", activityData[0]);
         const { id, verb } = activityData[0] || {};
         notificationIds.push(id);
 
@@ -38,8 +41,6 @@ class NotificationController extends Controller {
           is_read: is_read,
           group_id
         });
-
-        Log.debug("details", details);
 
         const {
           notifications = {},
@@ -94,6 +95,52 @@ class NotificationController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  raiseChatNotification = async(req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try{
+      const { body: { message = "", receiver_id = "" } = {}, userDetails  = {} } = req || {};
+
+      const {
+        userId,
+        userData: { category } = {},
+        userCategoryData: { basic_info: { full_name = "" } = {} } = {}
+      } = userDetails || {};
+
+
+      const eventData = {
+        participants: [userId, receiver_id],
+        actor: {
+          id: userId,
+          details: {
+            name: full_name,
+            category
+          }
+        },
+        details: {
+          message
+        }
+      };
+
+      const chatJob = ChatJob.execute(
+        MESSAGE_TYPES.USER_MESSAGE,
+        eventData
+      );
+      await NotificationSdk.execute(chatJob);
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+        },
+        "Notification sent successfully."
+      );
+
+    } catch(err) {
+      Log.debug("raiseChatNotification 500 error", error);
+      return raiseServerError(res);
+    }
+  }
 }
 
 export default new NotificationController();

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import { Tabs, Button, Steps, Col, Select, Input, InputNumber, Upload, Modal, TimePicker, Icon, message } from "antd";
 import SideMenu from "./sidebar";
-import { REQUEST_TYPE, PATH } from '../../constant';
+import { REQUEST_TYPE, PATH,USER_CATEGORY } from '../../constant';
 import UploadSteps from './steps';
 import { getUploadURL } from '../../Helper/urls/user';
 import { doRequest } from '../../Helper/network';
@@ -53,31 +53,110 @@ class Profileregister extends Component {
     }
 
     componentDidMount = async () => {
-
         this.fetchData();
     }
 
     fetchData = async () => {
-        const { authenticated_user = '', users, getDoctorQualificationRegisterData } = this.props;
+        const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
 
         const { basic_info: { id = 1 } = {} } = authenticated_user;
-        await getDoctorQualificationRegisterData();
+
+        const url = window.location.href.split("/");
+
+        let doctor_id=url.length > 4 ? url[url.length - 1] : "";
+
+      
         const { doctors } = this.props;
+
+        const doctor_user_category = USER_CATEGORY.DOCTOR; 
 
         const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[authenticated_user] || {};
 
-        this.setState({ email, mobile_number, category, prefix: newPrefix ? newPrefix : '91' });
-        for (let doctor of Object.values(doctors)) {
-            const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '' } } = doctor;
-            if (parseInt(user_id) === parseInt(authenticated_user)) {
-                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
-                this.setState({ name, city: address, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
-            }
+        await getDoctorQualificationRegisterData();
 
+        this.setState({category : doctor_user_category});
+        if(authenticated_category === USER_CATEGORY.DOCTOR){
+            this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+            for (let doctor of Object.values(doctors)) {
+                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='', address = '', city=''} ,city : city_temp = '' } = doctor || {};
+                if (parseInt(user_id) === parseInt(authenticated_user)) {
+                    let final_city = '';
+
+                    if(city === ''){
+                        final_city = city_temp
+                    }else{
+                        final_city = city
+                    }
+
+                    let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
+                    this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+                    
+                }
+    
+            }
+        }else if(authenticated_category === USER_CATEGORY.PROVIDER && doctor_id !== '' ){
+            this.getDoctorInitialData(doctor_id);            
         }
-        // const { profileData: { name = "", email = "", mobile_number = '', category = '', city = '', prefix = '', profile_pic = '' } = {} } = onBoarding || {};
+        
 
     }
+
+    async getDoctorInitialData(doctor_id=null){
+        try{
+            const {getDoctorDetails} = this.props;
+            const response = await getDoctorDetails(doctor_id);
+            const doctor_user_category = USER_CATEGORY.DOCTOR; 
+
+            const { status, payload: { data, message } = {} } = response;
+            if(status){
+
+                const {doctors ={} , users ={}} = data || {};
+                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='',city='' } = {} ,city : city_temp = '' } = doctors[doctor_id] || {};
+                const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[user_id] || {};
+                let final_city = '';
+    
+                if(city === ''){
+                    final_city = city_temp
+                }else{
+                    final_city = city
+                }
+    
+                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91', doctor_id });
+       
+               
+                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
+                this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+          
+               
+            }else{
+                
+                const {doctors={},users={}}=this.props;
+                const { basic_info: { user_id = 0, first_name = '', middle_name = '', last_name = '', profile_pic = '',signature_pic='',city='' } = {} ,city : city_temp = '' } = doctors[doctor_id] || {};
+
+                const { basic_info: { email = '', mobile_number = '', prefix: newPrefix = '' } = {}, category = '' } = users[user_id] || {};
+                let final_city = '';
+
+                if(city === ''){
+                    final_city = city_temp
+                }else{
+                    final_city = city
+                }
+
+                this.setState({ email, mobile_number, category : doctor_user_category, prefix: newPrefix ? newPrefix : '91' });
+    
+            
+                let name = first_name ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${last_name ? `${last_name} ` : ""}` : '';
+                this.setState({ name, city:final_city, profile_pic_url_saved: profile_pic, profile_pic, signature_pic_url_saved : signature_pic , signature_pic});
+                
+          
+            }
+
+           
+        }catch(error){
+            console.log("err --->",error);
+            message.warn("Something went wrong. Please try again later");
+        }
+    } 
 
     setName = e => {
         // this.setState({ name: e.target.value });
@@ -198,10 +277,12 @@ class Profileregister extends Component {
         //   let {file={}}=info;
 
         this.getBase64(info.file.originFileObj, profile_pic =>
+            {
+            // console.log("5645452413256547345224121",profile_pic)
             this.setState({
                 profile_pic,
                 loading: false,
-            })
+            })}
         );
     };
 
@@ -252,28 +333,61 @@ class Profileregister extends Component {
     }
 
     onNextClick = () => {
-        const { history, authenticated_user = 1, users } = this.props;
+        const { history, authenticated_user = 1 } = this.props;
         // const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
         const validate = this.validateData();
         if (validate) {
-            const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' , signature_pic_url ='',signature_pic_url_saved ='' } = this.state;
+            const { doctorProfileRegister ,authenticated_category = '',} = this.props;
+            const { name = '', email = '', mobile_number = '', category = '', city = '', prefix = '', profile_pic_url = '', profile_pic_url_saved = '' , signature_pic_url ='',signature_pic_url_saved ='', doctor_id = null } = this.state;
             const data = { name, email, mobile_number, category, city, prefix, profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved , signature_pic :  signature_pic_url ? signature_pic_url : signature_pic_url_saved };
-            const { doctorProfileRegister } = this.props;
+            if (authenticated_category === USER_CATEGORY.PROVIDER ){
+                data["is_provider"] = true;
+                data["doctor_id"] = doctor_id;
+
+            } 
             doctorProfileRegister(data).then(response => {
-                const { status } = response;
+                console.log(" 32453454RESPONSE FOR DOC PROFILE REGISTER ===>",response);
+                const { status, statusCode, payload: {  message : res_message ='',data: { doctors : response_doctors = {} } = {} } = {} } = response;
                 if (status) {
-                    history.replace(PATH.REGISTER_QUALIFICATIONS);
+                    message.success(this.formatMessage(messages.doctorAddSuccess));
+
+                    const {basic_info : {id : doctor_id = null} = {}} = Object.values(response_doctors)[0] || {};
+                    if(authenticated_category === USER_CATEGORY.PROVIDER){
+                        this.handleSendPasswordMail(doctor_id);
+                        history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
+                    }
+                    else{
+                        history.replace(PATH.REGISTER_QUALIFICATIONS);
+                    }
                 } else {
-                    message.error(this.formatMessage(messages.somethingWentWrong));
+                    message.error(res_message);
                 }
             });
         }
     }
 
+    async handleSendPasswordMail(doctor_id){
+        try {
+            // if (data) {     
+            const {sendPasswordMail }  = this.props;
+            const response = await sendPasswordMail({doctor_id});
+            const { status } = response;
+            
+          } catch (err) {
+            console.log("err", err);
+            message.warn("Something wen't wrong. Please try again later");
+            this.setState({ fetchingSpeciality: false });
+          }
+        
+    }
+
     getBase64 = (img, callback) => {
         const reader = new FileReader();
-        reader.addEventListener('load', () => callback(reader.result));
-        reader.readAsDataURL(img);
+        // console.log("5645452413256547345224121 img-->",img);
+        if(img){
+            reader.addEventListener('load', () => callback(reader.result));
+            reader.readAsDataURL(img);
+        }
     }
 
     handleChangeCity = address => {
@@ -308,7 +422,9 @@ class Profileregister extends Component {
     };
 
     renderProfileForm = () => {
-        let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' , signature_pic_url_saved ='' } = this.state;
+        let { name = '', email = '', mobile_number = '', category = '', prefix = '', profile_pic_url_saved = '' , signature_pic_url_saved ='',city='' } = this.state;
+        const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
+        
         const prefixSelector = (
 
             <Select className="flex align-center h50 w80"
@@ -404,14 +520,14 @@ class Profileregister extends Component {
                 <Input
                     placeholder={this.formatMessage(messages.email)}
                     value={email}
-                    disabled={true}
+                    disabled={authenticated_category === USER_CATEGORY.DOCTOR ?  true : false}
                     className={"form-inputs"}
                     onChange={this.setEmail}
                 />
 
                 <div className='form-headings'>{this.formatMessage(messages.city)}</div>
                 <PlacesAutocomplete
-                    value={this.state.city}
+                    value={city}
                     onChange={this.handleChangeCity}
                     onSelect={this.handleSelect}
                 >
@@ -448,11 +564,19 @@ class Profileregister extends Component {
     }
 
     render() {
+        const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
+        
         return (
             <Fragment>
                 {/* <SideMenu {...this.props} /> */}
                 <div className='registration-container'>
-                    <div className='header'>{this.formatMessage(messages.createProfile)}</div>
+                    {
+                        authenticated_category === USER_CATEGORY.PROVIDER ? 
+                        <div className='header'>{this.formatMessage(messages.createDoctorProfile)}</div>
+                        :
+                        <div className='header'>{this.formatMessage(messages.createProfile)}</div>
+
+                    }
                     <div className='registration-body'>
                         <div className='flex mt36'>
                             <UploadSteps current={0} />

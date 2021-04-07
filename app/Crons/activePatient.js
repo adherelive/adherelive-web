@@ -1,0 +1,136 @@
+import Logger from "../../libs/log";
+import moment from "moment";
+
+// services
+import ProviderService from "../services/provider/provider.service";
+import DoctorProviderMappingService from "../services/doctorProviderMapping/doctorProviderMapping.service";
+// import DoctorService from "../services/doctor/doctor.service";
+import CarePlanService from "../services/carePlan/carePlan.service";
+import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
+
+// wrappers
+import ProviderWrapper from "../ApiWrapper/web/provider";
+import CarePlanWrapper from "../ApiWrapper/web/carePlan";
+import {EVENT_STATUS, EVENT_TYPE} from "../../constant";
+
+const Log = new Logger("CRON - ACTIVE_PATIENT");
+
+class ActivePatient {
+    getAllProviders = async () => {
+        try {
+            // const providerService = new ProviderService();
+            const providers = await ProviderService.getAll() || [];
+            Log.debug("providers", providers);
+            return providers;
+        } catch(error) {
+            Log.debug("getAllProviders catch error", error);
+            throw error;
+        }
+    };
+
+    getAllDoctors = async () => {
+        try {
+            const providers = await this.getAllProviders();
+            let doctorIds = [];
+            for(let i = 0; i < providers.length; i++) {
+                const provider = await ProviderWrapper(providers[i]);
+
+                const doctors = await DoctorProviderMappingService.getAllDoctorIds(provider.getProviderId()) || [];
+                doctors.forEach(doctor => {
+                    const {doctor_id} = doctor || {};
+                    doctorIds = [...doctorIds, doctor_id];
+                });
+
+            }
+            Log.debug("doctor IDS", doctorIds);
+
+            return doctorIds;
+        } catch(error) {
+            Log.debug("getAllDoctors catch error", error);
+            throw error;
+        }
+    };
+
+    getAllCareplans = async () => {
+        try {
+            const doctorIds = await this.getAllDoctors();
+            const careplans = await CarePlanService.getMultipleCarePlanByData({doctor_id: doctorIds}) || [];
+
+            let carePlanData = {};
+            let carePlanIds = [];
+            for(let i = 0; i < careplans.length; i++) {
+                const carePlan = await CarePlanWrapper(careplans[i]);
+                carePlanData[carePlan.getCarePlanId()] = await carePlan.getAllInfo();
+                carePlanIds.push(carePlan.getCarePlanId());
+            }
+            Log.debug("careplan IDS", carePlanIds);
+            return {carePlanData, carePlanIds};
+        } catch(error) {
+            Log.debug("getAllCareplans catch error", error);
+            throw error;
+        }
+    };
+
+    getEvents = async () => {
+      try {
+            const {carePlanData, carePlanIds} = await this.getAllCareplans();
+
+          const eventService = new ScheduleEventService();
+
+          for(let id of carePlanIds) {
+              const {appointment_ids, medication_ids, vital_ids} = carePlanData[id] || {};
+
+              const events = await eventService.getAllEventStatusByData({
+                  appointment: {
+                      event_id: appointment_ids,
+                      event_type: EVENT_TYPE.APPOINTMENT
+                  },
+                  medication: {
+                      event_id: medication_ids,
+                      event_type: EVENT_TYPE.MEDICATION_REMINDER
+                  },
+                  vital: {
+                      event_id: vital_ids,
+                      event_type: EVENT_TYPE.VITALS
+                  }
+              }) || [];
+              Log.info(`Total events :: ${events.length} :: for careplan id :: ${id}`);
+              Log.debug("events", events);
+
+              let passedEventCount = 0;
+
+              events.forEach(event => {
+                  const {status} = event || {};
+                  /*
+                  *
+                  * checking if any event is either completed or expired to count as passed.
+                  * in future, might have to include cancelled status
+                  *
+                  * */
+                  if(status === EVENT_STATUS.COMPLETED || status === EVENT_STATUS.EXPIRED) {
+                      passedEventCount++;
+                  }
+              });
+
+              // if all events are done, then marking the existing careplan as expired or inactive patient
+              if(events.length === passedEventCount) {
+                  await CarePlanService.updateCarePlan({expired_on: moment().utc().toISOString()}, id);
+              }
+          }
+      } catch(error) {
+          Log.debug("getEvents catch error", error);
+          throw error;
+      }
+    };
+
+    runObserver = async () => {
+        try {
+            await this.getEvents();
+        } catch(error) {
+            Log.debug("runObserver catch error", error);
+            throw error;
+        }
+    };
+}
+
+export default new ActivePatient();

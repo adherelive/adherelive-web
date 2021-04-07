@@ -1,13 +1,19 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
-import { PERMISSIONS, TABLE_DEFAULT_BLANK_FIELD } from "../../constant";
-import plus_white from "../../Assets/images/plus_white.png";
+import {
+  PERMISSIONS,
+  TABLE_DEFAULT_BLANK_FIELD,
+  FEATURES,
+  MISSED_MEDICATION,
+  MISSED_APPOINTMENTS,
+  MISSED_ACTIONS
+} from "../../constant";
 import Tabs from "antd/es/tabs";
-import Patients from "../../Containers/Patient/table";
-import Watchlist from "../../Containers/Patient/watchlist";
+// import Patients from "../../Containers/Patient/paginatedTable";
+import Patients from "../../Containers/Patient/paginatedTable";
+import Watchlist from "../../Containers/Patient/paginatedWatchlist";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
-import EditPatientDrawer from "../../Containers/Drawer/editPatientDrawer";
 
 import ChatPopup from "../../Containers/ChatPopup";
 import AddPatientDrawer from "../Drawer/addPatient";
@@ -20,32 +26,46 @@ import { getPatientConsultingVideoUrl } from "../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../Helper/url/patients";
 import config from "../../config";
 import {
-  Drawer,
-  Icon,
-  Select,
-  Input,
   message,
   Button,
   Spin,
-  Radio,
-  DatePicker,
   Menu,
   Dropdown,
   Modal
 } from "antd";
 import SearchPatient from "../../Containers/SearchPatient";
-import MissedAppointmentsDrawer from "../Drawer/missedAppointmentsDrawer";
-import MissedVitalsDrawer from "../Drawer/missedVitalsDrawer";
-import MissedMedicationsDrawer from "../Drawer/missedMedicationsDrawer";
+import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment";
+import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
+import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
+
+import BlankState from "../Common/BlankState";
 
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
-const { Option } = Select;
+
 const { TabPane } = Tabs;
 
 const CHART_MISSED_MEDICATION = "Missed Medication";
 const CHART_MISSED_APPOINTMENT = "Missed Appointment";
 const CHART_MISSED_ACTION = "Missed Action";
+
+export const CURRENT_TAB = {
+  ALL_PATIENTS:"1",
+  WATCHLIST:"2"
+};
+
+export const SORTING_TYPE={
+  SORT_BY_DATE:"0",
+  SORT_BY_NAME:"1"   
+}
+
+export const SORT_CREATEDAT="sort_createdAt";
+export const SORT_NAME="sort_name";
+export const FILTER_DIAGNOSIS="filter_diagnosis";
+export const FILTER_TREATMENT="filter_treatment";
+export const OFFSET="offset";
+
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -56,29 +76,119 @@ class Dashboard extends Component {
       graphsToShow: [],
       doctorUserId: 1,
       patient_ids: [],
-      appointmentDrawerVisible: false,
-      vitalDrawerVisisble: false,
-      medicationDrawerVisible: false,
-      showModal: false
+      showModal: false,
+      loading:false,
+      submitting:false,
+      currentTab:CURRENT_TAB.ALL_PATIENTS,
+      allPatientsTab:{
+        sort_createdAt:1,
+        sort_name:null,
+        filter_diagnosis:'',
+        filter_treatment:'',
+        offset:0
+      },
+      watchlistTab:{
+        sort_createdAt:1,
+        sort_name:null,
+        filter_diagnosis:'',
+        filter_treatment:'',
+        offset:0
+      }
     };
   }
 
+
+  changeTabState = ({currentTab,type,value}) => {
+
+    console.log("362575427356423648236427",{currentTab,type,value});
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState[type]=value;
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+
+  }
+
+  sortByName = ({currentTab}) => {
+
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState["sort_createdAt"]=null;
+    newState["sort_name"]=1;
+
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+
+  }
+
+  sortByCreatedAt = ({currentTab}) => {
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState["sort_createdAt"]=1;
+    newState["sort_name"]=null;
+
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+  }
+  
+
   componentDidMount() {
-    const { addToWatchlist, authPermissions = [] } = this.props;
+    const {  authPermissions = [] } = this.props;
     const {
       searchMedicine,
       getGraphs,
       doctors = {},
       authenticated_user,
       closePopUp,
-      fetchChatAccessToken
+      fetchChatAccessToken,
+      getAllFeatures,
+      getAllMissedScheduleEvents
     } = this.props;
+
+    this.setState({loading:true});
+
+
+
     closePopUp();
     let doctorUserId = ""; //user_id of doctor
     for (let doc of Object.values(doctors)) {
-      let {
-        basic_info: { user_id, id = 1 } = {}
-      } = doc;
+      let { basic_info: { user_id, id = 1 } = {} } = doc;
       if (parseInt(user_id) === parseInt(authenticated_user)) {
         doctorUserId = user_id;
       }
@@ -90,7 +200,9 @@ class Dashboard extends Component {
         payload: { data: { user_preferences: { charts = [] } = {} } = {} } = {}
       } = response;
       if (status) {
-        this.setState({ graphsToShow: [...charts], graphLoading: false });
+        this.setState({ graphsToShow: [...charts], graphLoading: false ,loading:false });
+      }else{
+        this.setState({loading:false});
       }
     });
 
@@ -99,6 +211,8 @@ class Dashboard extends Component {
     }
     fetchChatAccessToken(authenticated_user);
     searchMedicine("");
+    getAllFeatures();
+    getAllMissedScheduleEvents();
   }
 
   getMenu = () => {
@@ -123,41 +237,32 @@ class Dashboard extends Component {
 
   chartClicked = name => {
     if (name === CHART_MISSED_APPOINTMENT) {
-      this.setState({
-        appointmentDrawerVisible: true
-      });
+      const {openMissedAppointmentDrawer} = this.props;
+      openMissedAppointmentDrawer();
     } else if (name === CHART_MISSED_ACTION) {
-      this.setState({
-        vitalDrawerVisisble: true
-      });
+      const {openMissedVitalDrawer} = this.props;
+      openMissedVitalDrawer();
     } else if (name === CHART_MISSED_MEDICATION) {
-      console.log("MEDI CLICKED");
-      this.setState({
-        medicationDrawerVisible: true
-      });
+      const {openMissedMedicationDrawer} = this.props;
+      openMissedMedicationDrawer();
     }
   };
 
-  closeAppointmentDrawer = () => {
-    this.setState({
-      appointmentDrawerVisible: false
-    });
-  };
-
-  closeVitalDrawer = () => {
-    this.setState({
-      vitalDrawerVisisble: false
-    });
-  };
-
-  closeMedicationDrawer = () => {
-    this.setState({
-      medicationDrawerVisible: false
-    });
-  };
 
   renderChartTabs = () => {
-    const { graphs } = this.props;
+    const { graphs,dashboard={} } = this.props;
+    const {
+      medication_ids={},
+      appointment_ids={},
+      vital_ids={}}=dashboard;
+    const {critical:medication_critical=[],non_critical:medication_non_critical=[]}=medication_ids;
+    const {critical:vital_critical=[],non_critical:vital_non_critical=[]}=vital_ids;
+    const {critical:appointment_critical=[],non_critical:appointment_non_critical=[]}=appointment_ids;
+    const medication_total = medication_critical.length+medication_non_critical.length;
+    const vital_total = vital_critical.length+vital_non_critical.length;
+    const appointment_total = appointment_critical.length+appointment_non_critical.length;
+
+
 
     const { graphsToShow, graphLoading } = this.state;
 
@@ -171,9 +276,28 @@ class Dashboard extends Component {
     }
 
     const chartBlocks = graphsToShow.map(id => {
-      const { total, critical, name } = graphs[id] || {};
+      const { 
+         name ,type=''} = graphs[id] || {};
+      let total=0;
+      let critical = 0;
+
+
+    
+
+      if(type === MISSED_MEDICATION){
+        total = medication_total;
+        critical = medication_critical.length;
+     } else if(type === MISSED_APPOINTMENTS){
+        total = appointment_total;
+        critical = appointment_critical.length;
+
+     } else if(type === MISSED_ACTIONS){
+        total = vital_total;
+        critical = vital_critical.length;
+     }
+
       return (
-        <div onClick={() => this.chartClicked(name)}>
+        <div key={`donut-div-${id}`} onClick={() => this.chartClicked(name)}>
           <Donut
             key={id}
             id={id}
@@ -205,9 +329,10 @@ class Dashboard extends Component {
   };
 
   addPatient = data => {
-    const { addPatient, authenticated_user, getInitialData } = this.props;
+    const { addPatient, authenticated_user } = this.props;
 
     const { basic_info: { id = 1 } = {} } = authenticated_user || {};
+    this.setState({submitting:true});
     addPatient(data).then(response => {
       let {
         status = false,
@@ -225,7 +350,6 @@ class Dashboard extends Component {
       let currentCarePlanId = care_plan_ids[0];
       let patient_id = patient_ids ? patient_ids[0] : 0;
       if (status) {
-        // getInitialData().then(() => {
 
         this.props.history.push({
           pathname: `/patients/${patient_id}`,
@@ -233,12 +357,15 @@ class Dashboard extends Component {
         });
 
         // })
+        this.setState({submitting:false});
       } else {
         if (statusCode === 422) {
           message.error(this.formatMessage(messages.patientExistError));
         } else {
           message.error(this.formatMessage(messages.somethingWentWrongError));
         }
+
+        this.setState({submitting:false});
       }
     });
   };
@@ -265,7 +392,15 @@ class Dashboard extends Component {
     this.setState({ visibleModal: false });
   };
 
-  openVideoChatTab = () => {
+  openVideoChatTab = async () => {
+    await this.props.getAllFeatures();
+
+    const videoCallBlocked = this.checkVideoCallIsBlocked();
+
+    if (videoCallBlocked) {
+      message.error(this.formatMessage(messages.videoCallBlocked));
+      return;
+    }
     const {
       patients,
       twilio: { patientId: chatPatientId = 1 }
@@ -277,9 +412,47 @@ class Dashboard extends Component {
     const roomId = getRoomId(doctorUserId, patientUserId);
 
     window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
+  };
+
+  checkVideoCallIsBlocked = () => {
+    const { features_mappings = {} } = this.props;
+    let videoCallBlocked = false;
+    const videoCallFeatureId = this.getFeatureId(FEATURES.VIDEO_CALL);
+    const otherUserCategoryId = this.getOtherUserCategoryId();
+    const { [otherUserCategoryId]: mappingsData = [] } = features_mappings;
+
+    if (mappingsData.indexOf(videoCallFeatureId) >= 0) {
+      videoCallBlocked = false;
+    } else {
+      videoCallBlocked = true;
+    }
+
+    return videoCallBlocked;
+  };
+
+  getFeatureId = featureName => {
+    const { features = {} } = this.props;
+    const featuresIds = Object.keys(features);
+
+    for (const id of featuresIds) {
+      const { [id]: { name = null } = ({} = {}) } = features;
+
+      if (name === featureName) {
+        return parseInt(id, 10);
+      }
+    }
+
+    return null;
+  };
+
+  getOtherUserCategoryId = () => {
+    const {
+      twilio: { patientId = 1 }
+    } = this.props;
+    return patientId;
   };
 
   maximizeChat = () => {
@@ -295,13 +468,11 @@ class Dashboard extends Component {
 
   getVerifyModal = () => {
     const { showVerifyModal = false } = this.props;
-    const { showModal } = this.state;
     return (
       <div className="wp100 flex justify-center align-center">
         <Modal
           className="mt62"
-          visible={showVerifyModal} //showModal
-          // title={' '}
+          visible={showVerifyModal} 
           closable
           mask
           maskClosable
@@ -326,6 +497,12 @@ class Dashboard extends Component {
     showVerifyModal(false);
   };
 
+  changeTab = (tab) => {
+    this.setState({currentTab: tab});
+  };
+
+
+
   render() {
     const { doctors = {}, authenticated_user } = this.props;
     let doctorID = null;
@@ -339,16 +516,15 @@ class Dashboard extends Component {
     });
     const {
       basic_info: {
-        first_name: doc_first_name,
-        middle_name: doc_middle_name,
-        last_name: doc_last_name
+          full_name
       } = {}
     } = doctors[doctorID] || {};
-    docName = doc_first_name
-      ? `Dr. ${doc_first_name} ${
-          doc_middle_name ? `${doc_middle_name} ` : ""
-        }${doc_last_name}`
+    docName = full_name
+      ? `Dr. ${full_name}`
       : TABLE_DEFAULT_BLANK_FIELD;
+
+    // console.log("198237837128 getCookie", this.getCookie("accessToken"));
+
 
     const {
       graphs,
@@ -363,7 +539,7 @@ class Dashboard extends Component {
       twilio: { patientId: chatPatientId = 1 }
     } = this.props;
 
-    const { formatMessage, renderChartTabs, getVerifyModal } = this;
+    const { formatMessage, renderChartTabs, getVerifyModal , changeTab } = this;
 
     let {
       basic_info: {
@@ -380,27 +556,30 @@ class Dashboard extends Component {
       graphsToShow,
       visibleModal,
       doctorUserId,
-      showModal
+      loading=false,
+      submitting=false,
+      currentTab=CURRENT_TAB.ALL_PATIENTS,
+      allPatientsTab,
+      watchlistTab
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
-    console.log("198381239 roomId", roomId);
-    if (Object.keys(graphs).length === 0) {
-      return <Loading className={"wp100 mt20"} />;
+    
+    if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
+      return (
+      <div className="hvh100 flex direction-column align-center justify-center" >
+        <Loading className={"wp100"} />
+      </div>);
     }
+
 
     return (
       <Fragment>
         <div className=" dashboard p20">
-          {/*<div*/}
-          {/*  className={`flex direction-row justify-space-between align-center ${*/}
-          {/*    authPermissions.length === 0 ? "mt20" : ``*/}
-          {/*  } `}*/}
-          {/*>*/}
-              <div
-                  className={`flex direction-row justify-space-between align-center`}
-              >
-            {/* <div className="fs28 fw700">{formatMessage(messages.dashboard)}</div> */}
+          
+          <div
+            className={`flex direction-row justify-space-between align-center`}
+          >
             {docName !== "" ? (
               <div className="fs28 fw700">
                 {formatMessage(messages.welcome)}, {docName}
@@ -421,17 +600,18 @@ class Dashboard extends Component {
                   trigger={["click"]}
                   placement="bottomRight"
                 >
-                     <Button type="primary" className="ml10 add-button " icon={"plus"}>
-                      <span className="fs16">Add</span>
-                    </Button>
-
-                    
+                  <Button
+                    type="primary"
+                    className="ml10 add-button "
+                    icon={"plus"}
+                  >
+                    <span className="fs16">Add</span>
+                  </Button>
                 </Dropdown>
               </div>
             )}
           </div>
 
-          {/* <div className="mt10 flex align-center"> */}
           <section className="horizontal-scroll-wrapper pr10 mt10">
             {renderChartTabs()}
           </section>
@@ -440,16 +620,33 @@ class Dashboard extends Component {
             {formatMessage(messages.patients)}
           </div>
 
-          <Tabs tabPosition="top">
+          <Tabs tabPosition="top"
+          defaultActiveKey={CURRENT_TAB.ALL_PATIENTS} activeKey={currentTab} onTabClick={changeTab}
+          >
             <TabPane
               tab={
                 <span className="fs16 fw600">
                   {formatMessage(messages.summary)}
                 </span>
               }
-              key="1"
+              key={CURRENT_TAB.ALL_PATIENTS}
+              
             >
-              <Patients />
+              {
+                currentTab === CURRENT_TAB.ALL_PATIENTS
+                &&
+                (
+                  <Patients
+                currentTab={currentTab} 
+                tabState={allPatientsTab}
+                changeTabState={this.changeTabState}
+                sortByName={this.sortByName}
+                sortByCreatedAt={this.sortByCreatedAt}
+
+              />
+
+                )
+              }
             </TabPane>
 
             <TabPane
@@ -458,11 +655,21 @@ class Dashboard extends Component {
                   {formatMessage(messages.watchList)}
                 </span>
               }
-              key="2"
+              key={CURRENT_TAB.WATCHLIST}
             >
-              {/* <Patients /> */}
-              <Watchlist />
-              {/*add watchlist table here*/}
+
+              {
+                currentTab === CURRENT_TAB.WATCHLIST
+                &&
+                <Watchlist 
+                currentTab={currentTab} 
+                tabState={watchlistTab}
+                changeTabState={this.changeTabState}
+                sortByName={this.sortByName}
+                sortByCreatedAt={this.sortByCreatedAt}
+              
+              />
+              }
             </TabPane>
           </Tabs>
         </div>
@@ -491,6 +698,7 @@ class Dashboard extends Component {
               }
               maximizeChat={this.maximizeChat}
               patientDp={patientDp}
+              patientId={chatPatientId}
             />
           </div>
         )}
@@ -507,6 +715,7 @@ class Dashboard extends Component {
           visible={visible}
           submit={this.addPatient}
           patients={patients}
+          submitting={submitting}
         />
 
         {visibleModal && (
@@ -519,36 +728,34 @@ class Dashboard extends Component {
         )}
         <NotificationDrawer visible={visible} />
 
-        <MissedAppointmentsDrawer
-          close={this.closeAppointmentDrawer}
-          visible={this.state.appointmentDrawerVisible}
-          {...this.props}
-        />
+        <MissedAppointmentsDrawer/>
 
-        <MissedVitalsDrawer
-          close={this.closeVitalDrawer}
-          visible={this.state.vitalDrawerVisisble}
-          {...this.props}
-        />
+        <MissedVitalsDrawer/>
 
-        <MissedMedicationsDrawer
-          close={this.closeMedicationDrawer}
-          visible={this.state.medicationDrawerVisible}
-          {...this.props}
-        />
+        <MissedMedicationsDrawer />
 
-        <EditPatientDrawer />
 
-        {/*{showVerifyModal && getVerifyModal()}*/}
-        {/*{showModal && getVerifyModal()}*/}
-          {authPermissions.length === 0 ? (
-              <div className="fixed b0 p20 bg-light-grey wp100">
-                  <div className="fs18 fw700">{this.formatMessage(messages.important_note_text).toUpperCase()}</div>
-                  <div className="wp100 ht20 fs16 text-left">
-                      {this.formatMessage(messages.pending_verify_content_text)}
-                  </div>
-              </div>
-          ) : null}
+        {authPermissions.length === 0 ? (
+          <div className="fixed b0 p20 bg-light-grey wp100">
+            <div className="fs18 fw700">
+              {this.formatMessage(messages.important_note_text).toUpperCase()}
+            </div>
+            <div className="wp100 ht20 fs16 text-left">
+              {this.formatMessage(messages.pending_verify_content_text)}
+            </div>
+            <span className="wp100 ht20 fs16 text-left">
+              {this.formatMessage(messages.pending_verify_content_other_text)}
+            </span>{" "}
+            <a
+              href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.VERIFICATION_PENDING_MESSAGE}`}
+              target={"_blank"}
+            >
+              <span className="wp100 ht20 fs16 text-left">
+                {this.formatMessage(messages.adhere_support_text)}
+              </span>
+            </a>
+          </div>
+        ) : null}
       </Fragment>
     );
   }

@@ -74,7 +74,7 @@ const messages = defineMessages({
   verified_text: {
     id: "app.admin.doctors.details.verified.text",
     description: "",
-    defaultMessage: "Account Status"
+    defaultMessage: "Verified Status"
   },
   qualification_details_text: {
     id: "app.admin.doctors.qualification.details.text",
@@ -275,6 +275,41 @@ const messages = defineMessages({
     id: "app.admin.doctors.add.razorpay.details.text",
     description: "",
     defaultMessage: "Add Razorpay Details"
+  },
+  add_payment_product: {
+    id: "app.admin.doctors.add_payment_product",
+    description: "",
+    defaultMessage: "Add Payment Product"
+  },
+  add: {
+    id: "app.admin.doctors.add",
+    description: "",
+    defaultMessage: "Add"
+  },
+  activateText: {
+    id: "app.admin.doctors.activateText",
+    description: "",
+    defaultMessage: "Activate"
+  },
+  deactivateText: {
+    id: "app.admin.doctors.deactivateText",
+    description: "",
+    defaultMessage: "Deactivate"
+  },
+  warnNote: {
+    id: "app.admin.doctors.warnNote",
+    description: "",
+    defaultMessage: "The doctor will not be able to login after being deactivated."
+  },
+  confirmMessage: {
+    id: "app.admin.doctors.confirmMessage",
+    description: "",
+    defaultMessage: "Are you sure you want to deactivate this doctor ?"
+  },
+  account_status_text: {
+    id: "app.admin.doctors.account.status.text",
+    description: "",
+    defaultMessage: "Account Status"
   }
 });
 

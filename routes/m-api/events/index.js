@@ -29,12 +29,31 @@ router.post(
   MobileMedicationReminder.createCarePlanMedication
 );
 
+router.get(
+  "/missed",
+  Authenticate,
+    EventController.getAllMissedEvents
+);
+
+router.get(
+    "/missed/:patient_id",
+    Authenticate,
+    EventController.getPatientMissedEvents
+);
+
 // VITALS
 
 router.get("/vitals/:id", Authenticate, EventController.getVitalEvent);
 
 // --------------- GET ALL RECENT EVENTS PATIENT DASHBOARD
 router.get("/", Authenticate, EventController.getAllEvents);
+
+// for alerts from last visit
+router.get(
+    "/:patient_id/last-visit",
+    Authenticate,
+    EventController.getLastVisitEvents
+);
 
 router.post(
   "/medication-status/:eventId",
@@ -46,6 +65,24 @@ router.post(
     "/:id/complete",
     Authenticate,
     EventController.markEventComplete
+);
+
+router.post(
+    "/:id/cancel",
+    Authenticate,
+    EventController.markEventCancelled
+);
+
+router.delete(
+    "/:id/vitals/response",
+    Authenticate,
+    EventController.deleteVitalResponse
+);
+
+router.post(
+    "/:id/vitals/response",
+    Authenticate,
+    EventController.updateVitalResponse
 );
 
 module.exports = router;

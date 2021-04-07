@@ -7,6 +7,7 @@ import startDate from "./startDate";
 import endDate from "./endDate";
 import moment from "moment";
 import { Radio } from "antd";
+import whenToTake, {WHEN_TO_TAKE_BUTTONS} from "../../addMedicationReminder/common/whenTotakeMedicaine";
 
 const { Item: FormItem } = Form;
 const { CheckableTag } = Tag;
@@ -135,11 +136,19 @@ class SelectedDays extends Component {
       selectedDaysRadio = null;
     }
     let diff = end ? moment(end).diff(moment(start), 'days') : 1;
-    let selectedRadio = end ? null : 3;
-    if( diff == 7 ){
-      selectedRadio = 1;
-    } else if( diff == 14 ){
-      selectedRadio = 2;
+    // let selectedRadio = end ? null : 3;
+    // if( diff == 7 ){
+    //   selectedRadio = 1;
+    // } else if( diff == 14 ){
+    //   selectedRadio = 2;
+    // }
+
+    const isSos = getFieldValue(whenToTake.field_name_abbr) === WHEN_TO_TAKE_BUTTONS.SOS.id;
+
+    console.log("817218291 isSos", {isSos});
+
+    if(isSos) {
+      return null;
     }
 
     return (

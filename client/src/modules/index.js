@@ -23,6 +23,7 @@ import doctor_qualifications from "./doctorQualifications";
 import doctor_registrations from "./doctorRegistrations";
 import template_appointments from "./templateAppointments";
 import template_medications from "./templateMedications";
+import template_vitals from "./templateVitals"
 import care_plan_templates from "./carePlanTemplates";
 import upload_documents from "./uploadDocuments";
 import show_template_drawer from "./showDrawer";
@@ -33,13 +34,21 @@ import specialities from "./specialities";
 import twilio from "./twilio";
 import symptoms from "./symptoms";
 import chatMessages from "./chatMessages";
-import care_plan_template_ids from "./carePlanTemplateIds";
+// import care_plan_template_ids from "./carePlanTemplateIds";
 import notifications from "./notifications";
 import vital_templates from "./vital_templates";
 import repeat_intervals from "./vital_occurence";
 import vitals from "./vitals";
 import schedule_events from "./scheduleEvents";
 import account_details from "./accountDetails";
+import features from "./features";
+import features_mappings from "./featuresMappings";
+import reports from "./reports";
+import transactions from "./transactions";
+import payment_products from "./paymentProducts"; 
+import date_wise_appointments from "./dateWiseAppointments";
+import favourites_data from "./favouritesData";
+import agora from "./agora";
 
 const rootReducer = combineReducers({
   auth,
@@ -66,6 +75,7 @@ const rootReducer = combineReducers({
   upload_documents,
   template_appointments,
   template_medications,
+  template_vitals,
   care_plan_templates,
   show_template_drawer,
   colleges,
@@ -75,14 +85,21 @@ const rootReducer = combineReducers({
   specialities,
   twilio,
   chatMessages,
-  care_plan_template_ids,
   notifications,
   symptoms,
   vital_templates,
   vitals,
   repeat_intervals,
   schedule_events,
-  account_details
+  account_details,
+  features,
+  features_mappings,
+  reports,
+  transactions,
+  payment_products,
+  date_wise_appointments,
+  favourites_data,
+  agora,
 });
 
 export default (state, action) => {

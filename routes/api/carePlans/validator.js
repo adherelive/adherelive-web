@@ -4,6 +4,7 @@ import Joi from "@hapi/joi";
 const templateCreateCarePlanForm = Joi.object().keys({
     medicationsData: Joi.array(),
     appointmentsData: Joi.array(),
+    vitalData: Joi.array(),
     treatment_id: Joi.number().required().label("Incorrect Treatment value selected"),
     severity_id: Joi.number().optional().allow("", null).label("Incorrect Severity value selected"),
     condition_id: Joi.number().optional().allow("", null).label("Incorrect Condition value selected"),
@@ -20,7 +21,6 @@ const templateCreateCarePlanForm = Joi.object().keys({
 export const validateCreateCarePlanFromTemplate = (req, res, next) => {
     const { body: data = {} } = req;
     const isValid = templateCreateCarePlanForm.validate(data);
-    console.log("8931791 isValid ---> ", isValid);
     if (isValid && isValid.error != null) {
         return validationError(res, isValid);
     }

@@ -24,7 +24,9 @@ class MUserWrapper extends BaseUser {
       activated_on,
       verified,
       onboarded,
-      onboarding_status
+      onboarding_status,
+        has_consent
+      // system_generated_password
     } = _data || {};
     return {
       basic_info: {
@@ -37,9 +39,11 @@ class MUserWrapper extends BaseUser {
       verified,
       onboarded,
       onboarding_status,
+      // system_generated_password,
       sign_in_type,
       category,
-      activated_on
+      activated_on,
+      has_consent
     };
   };
 
@@ -101,9 +105,9 @@ class MUserWrapper extends BaseUser {
 
   getReferenceInfo = async () => {
     try {
-      const {getId, getBasicInfo, _data} = this;
+      const { getId, getBasicInfo, _data } = this;
 
-      const {doctor, patient} = _data;
+      const { doctor, patient } = _data;
 
       console.log("19031298 doctor, patient ----------->", doctor, patient);
 
@@ -115,13 +119,13 @@ class MUserWrapper extends BaseUser {
 
       const patientData = await PatientWrapper(patient);
 
-      if(!isEmpty(doctor)) {
+      if (!isEmpty(doctor)) {
         const doctorData = await DoctorWrapper(doctor);
         doctors[doctorData.getDoctorId()] = doctorData.getBasicInfo();
         doctor_id = doctorData.getDoctorId();
       }
 
-      if(!isEmpty(patient)) {
+      if (!isEmpty(patient)) {
         const patientData = await PatientWrapper(patient);
         patients[patientData.getPatientId()] = patientData.getBasicInfo();
         patient_id = patientData.getPatientId();
@@ -134,10 +138,9 @@ class MUserWrapper extends BaseUser {
         doctors,
         patients,
         patient_id,
-        doctor_id,
-      }
-
-    } catch(error) {
+        doctor_id
+      };
+    } catch (error) {
       throw error;
     }
   };

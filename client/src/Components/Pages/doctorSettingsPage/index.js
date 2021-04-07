@@ -2,14 +2,10 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import message from "antd/es/message";
 import Button from "antd/es/button";
-import Modal from "antd/es/modal";
-import uuid from "react-uuid";
-import { Avatar, Upload, Input, Select, Spin, DatePicker, Icon } from "antd";
-import throttle from "lodash-es/throttle";
-import { doRequest } from "../../../Helper/network";
+import { Select } from "antd";
 import plus from "../../../Assets/images/plus.png";
 import edit_image from "../../../Assets/images/edit.svg";
-import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
+import { DeleteTwoTone } from "@ant-design/icons";
 import confirm from "antd/es/modal/confirm";
 
 // todo: import any component from antd using this format
@@ -21,7 +17,8 @@ import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultation
 import AddAccountDetailsDrawer from "../../../Containers/Drawer/addAccountDetailsDrawer";
 import EditAccountDetailsDrawer from "../../../Containers/Drawer/editAccountDetailsDrawer";
 
-import ConsultationFeeTable from "./consultationFeeTable/index";
+import DoctorConsultationFeeTable from "../../../Containers/DoctorConsultationFee";
+import DoctorAccountDetails from "../../../Containers/DoctorAccountDetails";
 
 import {
   BarChartOutlined,
@@ -29,10 +26,8 @@ import {
   WalletOutlined
 } from "@ant-design/icons";
 
-import moment from "moment";
 import messages from "./messages";
 import { PATH, CONSULTATION_FEE_TYPE_TEXT } from "../../../constant";
-import { PageLoading } from "../../../Helper/loading/pageLoading";
 import { withRouter } from "react-router-dom";
 
 const { Option } = Select;
@@ -94,6 +89,8 @@ class DoctorSettingsPage extends Component {
         payload: { data: { payment_products = {} } = {} } = {},
         statusCode
       } = response || {};
+
+      console.log("RESPONSEEEEEEEEEEEEEEEE ====>",response);
       if (status && statusCode === 200) {
         this.setState({
           fetchingDoctorPayments: false,
@@ -143,12 +140,21 @@ class DoctorSettingsPage extends Component {
     openConsultationFeeDrawer();
   };
 
+  displayEditDoctorPaymentProduct = id => () => {
+    const { openConsultationFeeDrawer } = this.props;
+    const { doctorPaymentProducts } = this.state;
+    const { [id]: paymentData } = doctorPaymentProducts;
+    console.log("8723562837462375468327453287",{id,paymentData});
+    openConsultationFeeDrawer(paymentData);
+  };
+
   displayRazorpayAccountDetails = () => {
     const { openRazorpayAccountDetailsDrawer } = this.props;
     openRazorpayAccountDetailsDrawer();
   };
 
-  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => () => {
+  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => (e) => {
+    e.preventDefault();
     const { openEditRazorpayAccountDetailsDrawer } = this.props;
     this.setState({ editDetailsSelectedID: fetchedAccountDetails_id });
     openEditRazorpayAccountDetailsDrawer();
@@ -389,37 +395,22 @@ class DoctorSettingsPage extends Component {
       doctorPaymentProducts
     } = this.state;
 
+    const {displayEditDoctorPaymentProduct} = this;
+
     return (
-      <div className="wp70 flex direction-column justify-space-between">
+      <div className="wp100 flex direction-column justify-space-between">
         <div>
           {noDoctorPaymentProducts ? (
-            <div>{this.noConsultationFeeDisplay()}</div>
+            
+            <div className="flex align-center justify-center " >{this.noConsultationFeeDisplay()}</div>
+
+          
           ) : (
             <div className="flex direction-column align-center justify-center">
               {/* {this.displayDoctorPaymentProducts()} */}
-
-              <ConsultationFeeTable
-                doctorPaymentProducts={doctorPaymentProducts}
-                deleteDoctorProduct={this.deleteDoctorProduct}
-              />
-
-              <div className=" mt20 mr300 wp100 flex  justify-end">
-                <Button
-                  type="ghost"
-                  className=" p10 w200 hauto flex  align-center justify-center"
-                  onClick={this.displayAddDoctorPaymentProduct}
-                >
-                  <div className="flex direction-column align-center justify-center hp100">
-                    <img src={plus} className={"w22 h22 mr10 "} />
-                  </div>
-                  <div className="flex direction-column align-center justify-center hp100">
-                    <span className="fs22 fw700">
-                      {" "}
-                      {this.formatMessage(messages.addMore)}
-                    </span>
-                  </div>
-                </Button>
-              </div>
+              
+              <DoctorConsultationFeeTable/>
+              
             </div>
           )}
         </div>
@@ -644,30 +635,17 @@ class DoctorSettingsPage extends Component {
           {this.getAddAccountDetailsDisplay()}
         </div>
         <div className="wp100 flex flex-wrap">
-          {this.getAddedAccountDetails()}
+          {/* {this.getAddedAccountDetails()} */}
+          <DoctorAccountDetails/>
         </div>
       </Fragment>
     );
   };
 
-  render() {
-    const {
-      noDoctorPaymentProducts,
-      selectedKey,
-      doctorPaymentProducts
-    } = this.state;
-    const { getPaymentDetails } = this;
 
+  sidebar = () => {
     return (
-      <Fragment>
-        {/************************* HEADER *************************/}
-        <div className="wp100 ml20 mt20 fs28 fw700 flex justify-start align-center">
-          {this.formatMessage(messages.doctor_settings_header_text)}
-        </div>
-
-        {/************************* SIDEBAR *************************/}
-        <div className="wp100 p20 flex ">
-          <div className="br5 bg-grey h250 p20 wp30 flex direction-column ">
+      <div className="br5 bg-grey h250 p20 wp100 flex direction-column mw270 ">
             <div
               className="fs20 fw700 mb14 h-cursor-p"
               onClick={this.handleItemSelect(CONSULTATION_FEE)}
@@ -687,24 +665,93 @@ class DoctorSettingsPage extends Component {
               {this.getPaymentDetailsHeader()}
             </div>
           </div>
+    )
+  }
+
+  sidebarRelatedContent = () => {
+    const {
+      selectedKey,
+    } = this.state;
+    const { getPaymentDetails ,sidebar} = this;
+    const { noDoctorPaymentProducts } = this.state;
+    const {doctors = {} } = this.props;
+    const {provider_id} = Object.values(doctors)[0];
+
+    return (
+
+    <div className="wp100" >
+        {selectedKey === CONSULTATION_FEE && this.consultationFeeDisplay()}
+
+
+        {selectedKey === BILLING && (
+          <div className="wp100 flex direction-column justify-space-between">
+            <div className="flex direction-column align-center justify-center fs20 fw600">
+            {this.formatMessage(messages.billingDisplay)}
+            </div>
+          </div>
+        )}
+
+        {selectedKey === PAYMENT_DETAILS && (
+          <div className="wp100 ml10 mr10 flex direction-column justify-space-between mw635">
+            {/* {getPaymentDetails()} */}
+            <DoctorAccountDetails/>
+          </div>
+        )}
+    </div>
+    )
+    
+  }
+
+  render() {
+    const {
+      selectedKey,
+    } = this.state;
+    const { getPaymentDetails ,sidebar} = this;
+    const { noDoctorPaymentProducts } = this.state;
+    const {doctors = {} } = this.props;
+    const {provider_id} = Object.values(doctors)[0];
+
+    // console.log("56456786546789",provider_id);
+    
+
+    return (
+      <Fragment>
+        {/************************* HEADER *************************/}
+        {/* <div className="wp100 ml20 mt20 fs28 fw700 flex justify-start align-center">
+          {this.formatMessage(messages.doctor_settings_header_text)}
+        </div> */}
+      
+      
+        <div className="wp100 pt20  mb20 fs28 fw700 flex justify-space-between align-center">
+          
+        <div className="ml20 flex flex-start align-center">
+        {this.formatMessage(messages.doctor_settings_header_text)}
+        </div>
+
+        {!noDoctorPaymentProducts && selectedKey === CONSULTATION_FEE &&  !provider_id  &&(
+          <div className="flex flex-end align-center">
+            <Button
+              type="primary"
+              className="ml10 mr20 add-button "
+              icon={"plus"}
+              onClick={this.displayAddDoctorPaymentProduct}
+            >
+              <span className="fs16">
+                {this.formatMessage(messages.addMore)}
+              </span>
+            </Button>
+          </div>
+        )}
+      </div>
+
+        <div className="wp100 p20 flex flex-wrap">
+          {/************************* SIDEBAR *************************/}
+
+          <div className="wp30" >{this.sidebar()}</div>
 
           {/************************* SIDEBAR RELATED CONTENTS *************************/}
-          {selectedKey === CONSULTATION_FEE && this.consultationFeeDisplay()}
-
-
-          {selectedKey === BILLING && (
-            <div className="wp70 flex direction-column justify-space-between">
-              <div className="flex direction-column align-center justify-center">
-              {this.formatMessage(messages.billingDisplay)}
-              </div>
-            </div>
-          )}
-
-          {selectedKey === PAYMENT_DETAILS && (
-            <div className="wp70 ml10 mr10 flex direction-column justify-space-between">
-              {getPaymentDetails()}
-            </div>
-          )}
+          <div className="wp70" >{this.sidebarRelatedContent()}</div>
+        
         </div>
 
         <AddConsultationFeeDrawer

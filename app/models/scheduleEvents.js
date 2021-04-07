@@ -1,8 +1,13 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { EVENT_TYPE, EVENT_STATUS } from "../../constant";
+import Logger from "../../libs/log";
+
+import {TABLE_NAME as eventHistoryTableName} from "./eventHistory";
 
 export const TABLE_NAME = "schedule_events";
+
+const Log = new Logger("SCHEDULE_EVENTS > MODEL");
 
 export const db = database => {
   database.define(
@@ -62,7 +67,23 @@ export const db = database => {
     },
     {
       underscored: true,
-      paranoid: true
+      paranoid: true,
+        hooks: {
+          beforeUpdate: (instance, options) => {
+              const {_previousDataValues : previousValues} = instance || {};
+              const {id, event_type, details, critical, event_id} = previousValues || {};
+              Log.info(`BEFORE_UPDATE : for event : ${event_type}`);
+
+              // will accept update changes from all event types
+
+              // if(event_type === EVENT_TYPE.VITALS) {
+                return database.models[eventHistoryTableName].create({
+                    schedule_event_id:id,
+                   data: previousValues
+                });
+              // }
+          }
+        }
     }
   );
 };

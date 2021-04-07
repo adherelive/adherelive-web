@@ -1,4 +1,8 @@
-
+import {
+    REQUEST_TYPE
+  } from "../../constant";
+  import { doRequest } from "../../Helper/network";
+  import { fetchRaiseChatNotificationUrl } from "../../Helper/urls/notifications";
 
 const ADD_MESSAGE_FOR_CHAT_COMPLETED =
     "ADD_MESSAGE_FOR_CHAT_COMPLETED";
@@ -37,6 +41,26 @@ const addMessagesForChat = (state, data) => {
     // console.log('3628947832974892348932  last', messagesOfRoom, messageIds, state);
     return { ...state };
 };
+
+export const raiseChatNotification = (payload) => {
+    let response = {};
+    return async (dispatch) => {
+      try {
+        response = await doRequest({
+          method: REQUEST_TYPE.POST,
+          url: fetchRaiseChatNotificationUrl(),
+          data: payload,
+        });
+  
+        const { status, payload: { error = "", data = {} } = {} } =
+          response || {};
+          
+      } catch (err) {
+        return {status: false};
+      }
+      return response;
+    };
+  };
 
 
 export const addMessageOfChat = (room_id, messages) => {

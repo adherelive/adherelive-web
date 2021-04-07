@@ -4,7 +4,7 @@ const messages = defineMessages({
     loginSuccessfull: {
         id: "app.signIn.loginSuccessfull",
         description: "Edit button in Patient Card",
-        defaultMessage: "LoggedIn successfully"
+        defaultMessage: "Logged in successfully"
     },
     enterPassword: {
         id: "app.signIn.enterPassword",
@@ -69,7 +69,7 @@ const messages = defineMessages({
     agreeText: {
         id: "app.signIn.agreeText",
         description: "Edit button in Patient Card",
-        defaultMessage: "By signing up you agree to our privacy policy and terms of use."
+        defaultMessage: "By signing up you agree to our"
     },
     createPassword: {
         id: "app.signIn.createPassword",
@@ -121,10 +121,15 @@ const messages = defineMessages({
         description: "Edit button in Patient Card",
         defaultMessage: 'Why choose Adhere.live?'
     },
+    contactUsStart: {
+        id: "app.signIn.contactUsStart",
+        description: "Edit button in Patient Card",
+        defaultMessage: 'For any help or assistance, feel free to'
+    },
     contactUs: {
         id: "app.signIn.contactUs",
-        description: "Edit button in Patient Card",
-        defaultMessage: 'For any help or assistance, feel free to Contact Us'
+        description: "",
+        defaultMessage: 'Contact Us'
     },
     loginToDashboard: {
         id: "app.signIn.loginToDashboard",
@@ -156,7 +161,26 @@ const messages = defineMessages({
         description: "Edit button in Patient Card",
         defaultMessage: 'Create a password to continue'
     },
-
+    termsOfService: {
+        id: "app.signUp.termsOfService",
+        description: "",
+        defaultMessage: 'Terms Of Service'
+    },
+    andText: {
+        id: "app.signUp.andText",
+        description: "",
+        defaultMessage: 'and'
+    },
+    privacyPolicy: {
+        id: "app.signUp.privacyPolicy",
+        description: "",
+        defaultMessage: 'Privacy Policy'
+    },
+    adhereAssociation: {
+        id: "app.signUp.adhereAssociation",
+        description: "",
+        defaultMessage: 'Adhere in association with'
+    }
 });
 
 export default messages;

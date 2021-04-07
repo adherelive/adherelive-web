@@ -1,8 +1,11 @@
 import { PRESCRIPTION_PDF_FOLDER } from "../../../constant";
+// import {MEDICINE_UNITS} from "../../../client/src/constant";
+import moment from "moment";
+import PDFDocument from "pdfkit";
 
-const PDFDocument = require("pdfkit");
+// const PDFDocument = require("pdfkit");
 const fs = require("fs");
-const moment = require("moment");
+// const moment = require("moment");
 
 const DOC_MARGIN = 30;
 const NORMAL_FONT_SIZE = 12;
@@ -30,16 +33,18 @@ export default async (pdfData, signatureImage) => {
         creationDate = "",
         medications = {},
         medicines = {},
-        nextAppointmentDuration = null
+        nextAppointmentDuration = null,
+        currentTime = ""
       } = pdfData;
       const doc = new PDFDocument({ margin: DOC_MARGIN, bufferPages: true });
 
-      const { name: patientName, allergies, comorbidities } = formatPatientData(
+
+      const { allergies, comorbidities } = formatPatientData(
         patients,
         users
       );
-      const now = new Date();
-      const fileName = `${patientName}-${now.getTime()}`;
+
+      const fileName = getPdfName(pdfData)
 
       const stream = doc.pipe(
         fs.createWriteStream(`${PRESCRIPTION_PDF_FOLDER}/${fileName}.pdf`)
@@ -87,7 +92,7 @@ export default async (pdfData, signatureImage) => {
         doc.y
       );
 
-      printFooter(doc, signatureImage, nextAppointmentDuration);
+      printFooter(doc, signatureImage, nextAppointmentDuration, currentTime);
       doc.end();
     } catch (err) {
       console.log("Error got in the generation of pdf is: ", err);
@@ -96,6 +101,26 @@ export default async (pdfData, signatureImage) => {
   });
 };
 
+function getPdfName (pdfData) {
+  const {
+    doctors = {}, users ={}, degrees = {}, registrations ={}, 
+    care_plans = {}, conditions = {}
+  } = pdfData
+
+  const {
+    name: doctorName = "",
+  } = formatDoctorsData(doctors, users, degrees, registrations);
+
+  const { diagnosis, carePlanId } = formatCarePlanData(
+    care_plans,
+    conditions
+  );
+
+  const now = new Date();
+  const fileName = `${carePlanId}-${diagnosis}-${doctorName}-${now.getTime()}`;
+  return fileName
+}
+
 function printDoctorBlockData(doc, doctors, users, degrees, registrations) {
   const {
     name: doctorName = "",
@@ -103,21 +128,23 @@ function printDoctorBlockData(doc, doctors, users, degrees, registrations) {
     degree = "",
     registrationNumber = "",
     email: doctorEmail = "",
-    mobile_number: doctorMobileNumber = ""
+    mobile_number: doctorMobileNumber = "",
+    prefix = ""
   } = formatDoctorsData(doctors, users, degrees, registrations);
 
   doc
     .fillColor("black")
     .fontSize(BOLD_FONT_SIZE)
-    .text(`${doctorName}`, DOC_MARGIN);
+    .text(`Dr. ${doctorName}`, DOC_MARGIN);
   // .text("\n");
-
+  const fullDegree = degree ? `${degree}, MBBS` : "MBBS";
   doc
     .fontSize(NORMAL_FONT_SIZE)
-    .text(`${degree}`)
+    .text(`${fullDegree}`)
     .text(`${registrationNumber}`)
     .text(`${city}`)
-    .text(`${doctorEmail} ${doctorMobileNumber}`);
+    .text(`${doctorEmail}`)
+    .text(`${prefix}-${doctorMobileNumber}`);
 
   doc
     .rect(0, 0, 700, doc.y)
@@ -136,9 +163,10 @@ function printPatientBlockData(doc, patients, users, creationDate) {
     address = "",
     age = "",
     gender = "",
-    height = "",
-    weight = "",
-    mobile_number = ""
+    height = null,
+    weight = null,
+    mobile_number = "",
+    prefix = ""
   } = formatPatientData(patients, users);
 
   doc
@@ -168,13 +196,13 @@ function printPatientBlockData(doc, patients, users, creationDate) {
     .text("Age", 390, dateOfConsultationEnds + 4)
     .text(`${age}`, doc.x + 35, dateOfConsultationEnds + 4)
     .text("Gender", doc.x + 55, dateOfConsultationEnds + 4)
-    .text(`${gender}`, doc.x + 60, dateOfConsultationEnds + 4);
+    .text(`${gender ? gender : ""}`, doc.x + 60, dateOfConsultationEnds + 4);
 
   doc
     .fillColor("black")
     .fontSize(NORMAL_FONT_SIZE)
     .text("\n Mobile Number", DOC_MARGIN, patientNameEnds - NORMAL_FONT_SIZE)
-    .text(`${mobile_number}`, 190, patientNameEnds)
+    .text(`${prefix}-${mobile_number}`, 190, patientNameEnds)
     .text("\n Address", DOC_MARGIN, doc.y)
     .text(`${address ? address : ""}`, 190, doc.y - NORMAL_FONT_SIZE, {
       width: MAX_WIDTH
@@ -184,9 +212,9 @@ function printPatientBlockData(doc, patients, users, creationDate) {
 
   doc
     .text("Height", 390, patientNameEnds)
-    .text(`${height}`, 440, patientNameEnds)
+    .text(`${height === null ? "--" : height} cm`, 440, patientNameEnds)
     .text("Weight", 390, patientNameEnds + DISTANCE_BETWEEN_ROWS)
-    .text(`${weight}`, 440, patientNameEnds + DISTANCE_BETWEEN_ROWS);
+    .text(`${weight === null ? "--" : weight} kg`, 440, patientNameEnds + DISTANCE_BETWEEN_ROWS);
 
   return addressEndRowLevel;
 }
@@ -225,7 +253,7 @@ function printCarePlanData(
 
   doc
     .text(
-      "EXAMINATION / LAB FINDINGS",
+      "DIAGNOSIS",
       DOC_MARGIN,
       relevantPointsEndLevel + DISTANCE_BETWEEN_ROWS
     )
@@ -253,7 +281,8 @@ function printCarePlanData(
       strength,
       frequency,
       startDate,
-      endDate
+      // endDate,
+      duration
     } = medicationData;
 
     const medicineData = `${medicineName} (${medicineType})`;
@@ -267,13 +296,13 @@ function printCarePlanData(
       .text(`${medicineData}`, doc.x + 15, doc.y - SHORT_FONT_SIZE + 1)
       .fontSize(NORMAL_FONT_SIZE - 1)
       .text(
-        `Strength: ${strength}, Frequency: ${
+        `${strength}, ${
           frequency ? frequency : ""
-        }, Duration: ${startDate}-${endDate}`,
+        }, For ${duration} day(s) starting ${startDate}`,
         suggestedInvestigationXLevelEnd + 250,
         doc.y
       )
-      .text(`${description}`, suggestedInvestigationXLevelEnd + 250, doc.y);
+      .text(`Note: ${description ? description : ""}`, suggestedInvestigationXLevelEnd + 250, doc.y+10);
 
     docYLevel = doc.y + NORMAL_FONT_SIZE;
   }
@@ -281,7 +310,7 @@ function printCarePlanData(
   return suggestedInvestigationXLevelEnd;
 }
 
-function printFooter(doc, imageUrl, nextAppointmentDuration) {
+function printFooter(doc, imageUrl, nextAppointmentDuration, currentTime) {
   doc
     .fontSize(NORMAL_FONT_SIZE)
     .text("Review After: ", DOC_MARGIN, doc.y + DISTANCE_BETWEEN_ROWS)
@@ -296,12 +325,14 @@ function printFooter(doc, imageUrl, nextAppointmentDuration) {
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 50, { width: 120, height: 40 });
   } catch (err) {
-    console.log("ERROR in signature pic");
+    console.log("ERROR in signature pic", err);
   }
 
   doc
+    .fontSize(SMALLEST_FONT_SIZE - 2)
+    .text(`${currentTime}`, 400, doc.y + 100)
     .fontSize(SMALLEST_FONT_SIZE)
-    .text("RMPs Signature & Stamp", 400, doc.y + 100);
+    .text("RMPs Signature & Stamp", 400, doc.y + 10);
 
   generateHr(doc, doc.y + NORMAL_FONT_SIZE);
 
@@ -316,7 +347,8 @@ function formatCarePlanData(carePlans, conditions) {
   let condition = "",
     diagnosis = "",
     symptoms = "",
-    clinicalNotes = "";
+    clinicalNotes = "",
+    carePlanId = null;
   const conditionIds = Object.keys(conditions);
   if (conditionIds && conditionIds.length) {
     const conditionId = conditionIds[0];
@@ -328,7 +360,7 @@ function formatCarePlanData(carePlans, conditions) {
 
   const carePlanIds = Object.keys(carePlans);
   if (carePlanIds && carePlanIds.length) {
-    const carePlanId = carePlanIds[0];
+    carePlanId = carePlanIds[0];
     const {
       [carePlanId]: {
         details: {
@@ -343,7 +375,7 @@ function formatCarePlanData(carePlans, conditions) {
     clinicalNotes = clinical_notes;
   }
 
-  return { condition, diagnosis, symptoms, clinicalNotes };
+  return { condition, diagnosis, symptoms, clinicalNotes, carePlanId };
 }
 
 function formatDoctorsData(doctors, users, degrees, registrations) {
@@ -366,7 +398,9 @@ function formatDoctorsData(doctors, users, degrees, registrations) {
     } = {}
   } = doctors;
   const {
-    [user_id]: { basic_info: { mobile_number = "", email = "" } = {} } = {}
+    [user_id]: {
+      basic_info: { mobile_number = "", email = "", prefix = "" } = {}
+    } = {}
   } = users;
   let name = first_name;
   name = middle_name ? `${name} ${middle_name}` : name;
@@ -388,7 +422,7 @@ function formatDoctorsData(doctors, users, degrees, registrations) {
         council: { basic_info: { name: council_name = "" } = {} } = {}
       } = {}
     } = registrations;
-    registrationNumber = registrationNumber + `${council_name}:${number}, `;
+    registrationNumber = registrationNumber + `Registration Number:${number}, `;
   }
 
   if (degree) {
@@ -409,7 +443,8 @@ function formatDoctorsData(doctors, users, degrees, registrations) {
     city,
     degree,
     registrationNumber,
-    signature_image
+    signature_image,
+    prefix
   };
 }
 
@@ -429,7 +464,8 @@ function formatPatientData(patients, users) {
         address = "",
         height = "",
         weight = "",
-        user_id = null
+        user_id = null,
+          full_name = "",
       } = {},
       details: { allergies = "", comorbidities = "" } = {}
     } = {}
@@ -439,7 +475,9 @@ function formatPatientData(patients, users) {
   name = middle_name ? `${name} ${middle_name}` : name;
   name = last_name ? `${name} ${last_name}` : name;
 
-  const { [user_id]: { basic_info: { mobile_number = "" } = {} } = {} } = users;
+  const {
+    [user_id]: { basic_info: { mobile_number = "", prefix = "" } = {} } = {}
+  } = users;
 
   return {
     name,
@@ -450,27 +488,41 @@ function formatPatientData(patients, users) {
     weight,
     allergies,
     comorbidities,
-    mobile_number
+    mobile_number,
+    prefix
   };
 }
 
 function formatMedicationsData(medications, medicines) {
   // have to send the list of objects containing instruction medicine name, medicine type, strength, frequency, duration,
   let medicationsList = [];
+
   const medicationIds = Object.keys(medications);
   for (const medicationId of medicationIds) {
     let medicationDataObj = {};
     const {
       [medicationId]: {
-        basic_info: { start_date = "", end_date = "", description = "" } = {},
-        details: {
-          medicine_id = null,
-          when_to_take = [],
-          medicine_type = "",
-          strength = ""
-        } = {}
+        basic_info: { start_date = "", end_date = "", description = "", details = null } = {},
+          details: mobileDetails = null
       }
     } = medications;
+
+    let mainDetails = {};
+
+    if(mobileDetails) {
+      mainDetails = {...mobileDetails};
+    } else {
+      mainDetails = {...details};
+    }
+
+    const {
+      medicine_id = null,
+      when_to_take = [],
+      medicine_type = "",
+      strength = "",
+        unit = "",
+        quantity = null
+    } = mainDetails || {};
 
     const {
       [medicine_id]: { basic_info: { name = "", type = "" } = {} } = {}
@@ -480,9 +532,7 @@ function formatMedicationsData(medications, medicines) {
 
     // const duration = endDateObj.diff(startDateObj, "days");
 
-    const startDate = `${startDateObj.get("year")}/${startDateObj.get(
-      "month"
-    )}/${startDateObj.get("date")}`;
+    const startDate = `${startDateObj.format("LL")}`;
     let endDate = "";
 
     if (end_date) {
@@ -496,10 +546,12 @@ function formatMedicationsData(medications, medicines) {
       description,
       medicineName: name ? name.toUpperCase() : name,
       medicineType: type,
-      strength,
-      frequency: when_to_take.length,
+      // strength,
+      strength: `${quantity ? `${quantity} Tab(s)` : `${strength} ${unit.toUpperCase()}`}`,
+      frequency: getWhenToTakeText(when_to_take.length),
       startDate,
-      endDate
+      endDate,
+      duration: end_date ? moment(end_date).diff(moment(start_date), "days") : "Long term" // todo: change text here after discussion
     };
 
     medicationsList.push(medicationDataObj);
@@ -507,6 +559,19 @@ function formatMedicationsData(medications, medicines) {
 
   return medicationsList;
 }
+
+const getWhenToTakeText = (number) => {
+  switch(number) {
+    case 1:
+      return `Once a day`;
+    case 2:
+      return `Twice a day`;
+    case 3:
+      return `Thrice a day`;
+    default:
+      return "";
+  }
+};
 
 function generateHr(doc, y) {
   doc

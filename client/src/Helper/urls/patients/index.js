@@ -26,3 +26,28 @@ export const searchPatientForDoctorUrl = (value) => {
 export const addCareplanForPatientUrl = (id) => {
   return `/patients/addCareplanForPatient/${id}`;
 }
+
+export const generatePrescriptionUrl = (careplian_id) => {
+  return `/api/patients/generate_prescription/${careplian_id}`
+}
+
+
+export const getPatientsPaginatedUrl = (data) => {
+  const {sort_createdAt,sort_name,offset,watchlist} = data || {};
+  if(sort_name === null){
+    return  `/patients/pagination?sort_createdAt=${sort_createdAt}&offset=${offset}&watchlist=${watchlist}`;
+  }else {
+    return  `/patients/pagination?sort_name=${sort_name}&offset=${offset}&watchlist=${watchlist}`;
+  }
+  
+}
+
+export const getSearchTreatmentPaginatedPatientsUrl = (data) => {
+  const {filter_treatment,offset,watchlist} = data || {};
+  return `/patients/pagination?filter_treatment=${filter_treatment}&offset=${offset}&watchlist=${watchlist}`;
+}
+
+export const getSearchDiagnosisPaginatedPatientsUrl = (data) => {
+  const {filter_diagnosis,offset,watchlist} = data || {};
+  return `/patients/pagination?filter_diagnosis=${filter_diagnosis}&offset=${offset}&watchlist=${watchlist}`;
+}

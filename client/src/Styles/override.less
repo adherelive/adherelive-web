@@ -8,6 +8,17 @@
     table-layout: fixed;
   }
 
+  .provider-doctor-table {
+    position: relative;
+    .ant-table-title {
+    }
+    .ant-pagination {
+      position: absolute;
+      z-index: 999;
+      right: @10px;
+    }
+  }
+
   .ant-collapse {
     border: none;
     background: none;
@@ -33,7 +44,6 @@
   .add-button,
   .ant-btn-primary {
     height: 42px;
-    //width: 92px;
     background-color: @primary-button-blue;
     border-radius: 3px;
     color: white;
@@ -48,6 +58,10 @@
     color: white;
     font-size: 16px;
     font-weight: 500;
+  }
+
+  .ant-btn-secondary {
+    height: 42px;
   }
 
   h1,
@@ -82,3 +96,71 @@
 //   }
 
 // }
+
+.tos-pp-markdown-editor {
+  .mde-text {
+    height: 600px !important;
+  }
+}
+
+// admin details page
+.details-header {
+  .ant-radio-group {
+    ant-radio-button-wrapper {
+      background:none;
+    }
+  }
+}
+
+.search-highlight {
+  font-style: normal;
+  background: @faint-orange;
+}
+
+.medicine-selected {
+  .search-highlight {
+    font-style: normal;
+    background: none;
+  }
+}
+
+.provider-number{
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+}
+
+.report-datepicker{
+  .ant-calendar-picker-input{
+    width: 100%;
+    max-width: 100%;
+    border-color: black;
+  }
+}
+
+// for gyde
+.fixed_button {
+    bottom: 30px !important;
+    left: 100px !important;
+}
+
+
+.patient-search{
+  .ant-select-selection {
+    &.ant-select-selection--single {
+      height: 43.5px;
+      .ant-select-selection__rendered{
+        line-height: 43.5px;
+      }
+    }
+  }
+}
+
+  .patient-search-icon .ant-select-open .ant-select-arrow-icon svg,
+  .ant-select-open .ant-select-arrow-icon svg path {
+    transform: none !important;
+    transition: none !important;
+  }
+  

@@ -91,7 +91,6 @@ class ChooseMedication extends Component {
     const{medicine_id=''}=medicationData||{};
     const { getMedicationOption, getInitialValue } = this;
 
-    console.log("INITIIAL VALUE IN RENDERRRR===========>>",getInitialValue);
     return (
       <Fragment>
         <FormItem

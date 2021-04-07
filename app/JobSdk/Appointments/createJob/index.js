@@ -1,8 +1,9 @@
 import AppointmentJob from "../";
 import moment from "moment";
-import { EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import {EVENT_TYPE, USER_CATEGORY} from "../../../../constant";
 
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
+import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
 
 class CreateJob extends AppointmentJob {
   constructor(data) {
@@ -32,23 +33,41 @@ class CreateJob extends AppointmentJob {
     } = getAppointmentData() || {};
 
     const templateData = [];
+    const playerIds = [];
+    const userIds = [];
 
-    for (const participant of participants) {
-      // if (participant !== actorId) { // todo: add actor after testing (deployment)
+    participants.forEach(participant => {
+      if (participant !== actorId) {
+        userIds.push(participant);
+      }
+    });
 
-      templateData.push({
-        app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
-        headings: { en: `Appointment Created` },
-        contents: {
-          en: `${name}(${actorCategory}) has created an appointment with you`
-        },
-        // buttons: [{ id: "yes", text: "Yes" }, { id: "no", text: "No" }],
-        include_player_ids: [...participants],
-        priority: 10,
-        data: { url: "/appointments", params: getAppointmentData() }
-      });
-      // }
+    const userDevices = await UserDeviceService.getAllDeviceByData({
+      user_id: userIds
+    });
+
+    if (userDevices.length > 0) {
+      for (const device of userDevices) {
+        const userDevice = await UserDeviceWrapper({ data: device });
+        playerIds.push(userDevice.getOneSignalDeviceId());
+      }
     }
+
+    // if (participant !== actorId) { // todo: add actor after testing (deployment)
+
+    templateData.push({
+      small_icon: process.config.app.icon_android,
+      app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
+      headings: { en: `Appointment Created` },
+      contents: {
+        en: `${actorCategory === USER_CATEGORY.DOCTOR ? "Dr." : ""}${name} created an appointment with you. Tap here to know more!`
+      },
+      include_player_ids: [...playerIds],
+      priority: 10,
+      android_channel_id: process.config.one_signal.urgent_channel_id,
+      data: { url: "/appointments", params: getAppointmentData() }
+    });
+    // }
 
     return templateData;
   };

@@ -2,10 +2,15 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import messages from "./message";
 import edit_image from "../../../Assets/images/edit.svg";
-import plus_white from "../../../Assets/images/plus_white.png";
-import chat_image from "../../../Assets/images/chat.svg";
+import { getUploadAppointmentDocumentUrl } from "../../../Helper/urls/appointments";
+import { doRequest } from "../../../Helper/network";
+import { generatePrescriptionUrl } from "../../../Helper/urls/patients";
+import ShareIcon from "../../../Assets/images/redirect3x.png";
+
+import config from "../../../config";
 
 import {
+  REQUEST_TYPE,
   GENDER,
   PERMISSIONS,
   TABLET,
@@ -13,43 +18,55 @@ import {
   PARTS,
   PART_LIST_CODES,
   DIAGNOSIS_TYPE,
-  TABLE_DEFAULT_BLANK_FIELD
+  TABLE_DEFAULT_BLANK_FIELD,
+  FEATURES,
+  USER_CATEGORY,
+  HOST,
+  PATH
 } from "../../../constant";
-import { Tabs, Table, Menu, Dropdown, Spin, message, Button } from "antd";
+import { Tabs, Table, Dropdown, Spin, message, Button } from "antd";
 import Modal from "antd/es/modal";
-import Collapse from "antd/es/collapse";
+import Menu from "antd/es/menu";
 
 import OtpInput from "react-otp-input";
 
 // DRAWERS
 import VitalTimelineDrawer from "../../../Containers/Drawer/vitalTimeline";
+import MedicationTimelineDrawer from "../../../Containers/Drawer/medicationTimeline";
+import AddCareplanDrawer from "../../../Containers/Drawer/addCareplan";
+import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
+import AddVitals from "../../../Containers/Drawer/addVitals";
+import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
+import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
+import EditVitals from "../../../Containers/Drawer/editVitals";
+import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
+import SymptomsDrawer from "../../../Containers/Drawer/symptomsDrawer";
+import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
+import AddReportDrawer from "../../../Containers/Drawer/addReport";
+import EditReportDrawer from "../../../Containers/Drawer/editReport";
 
 // TABLES
 import VitalTable from "../../../Containers/Vitals/table";
+import MedicationTable from "../../../Containers/Medications/table";
+import ReportTable from "../../../Containers/Reports/table";
 
 import PatientAlerts from "../../../Containers/Patient/common/patientAlerts";
 
 import PatientCarePlans from "./common/patientProfileCarePlans";
 
 import {
-  MailOutlined,
   PhoneOutlined,
   MessageOutlined,
   VideoCameraOutlined,
   CaretDownOutlined
 } from "@ant-design/icons";
 import moment from "moment";
-import EditPatientDrawer from "../../../Containers/Drawer/editPatientDrawer";
 
-import AddMedicationReminder from "../../../Containers/Drawer/addMedicationReminder";
-import AddVitals from "../../../Containers/Drawer/addVitals";
-import AddAppointmentDrawer from "../../../Containers/Drawer/addAppointment";
-import EditAppointmentDrawer from "../../../Containers/Drawer/editAppointment";
-import EditMedicationReminder from "../../../Containers/Drawer/editMedicationReminder";
+// appointment upload modal
+import AppointmentUpload from "../../../Containers/Modal/appointmentUpload";
 import userDp from "../../../Assets/images/ico-placeholder-userdp.svg";
 import noMedication from "../../../Assets/images/no_medication@3x.png";
 import TemplateDrawer from "../../Drawer/medicationTemplateDrawer";
-import SymptomsDrawer from "../../../Containers/Drawer/symptomsDrawer";
 import ChatPopup from "../../../Containers/ChatPopup";
 import TabletIcon from "../../../Assets/images/tabletIcon3x.png";
 import InjectionIcon from "../../../Assets/images/injectionIcon3x.png";
@@ -57,10 +74,6 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import { getPatientConsultingVideoUrl } from "../../../Helper/url/patients";
 import { getPatientConsultingUrl } from "../../../Helper/url/patients";
 import SymptomTabs from "../../../Containers/Symptoms";
-import AddCareplanDrawer from "../../../Containers/Drawer/addCareplan";
-// import messages from "../../Dashboard/message";
-import config from "../../../config";
-import EditVitals from "../../../Containers/Drawer/editVitals";
 import { getRoomId } from "../../../Helper/twilio";
 import { getFullName } from "../../../Helper/common";
 import Tooltip from "antd/es/tooltip";
@@ -70,12 +83,15 @@ const { TabPane } = Tabs;
 const APPOINTMENT = "appointment";
 
 const { confirm } = Modal;
-const { Panel } = Collapse;
 
 const PATIENT_TABS = {
   ACTIONS: {
     name: "Actions",
     key: "4"
+  },
+  REPORTS: {
+    name: "Reports",
+    key: "5"
   }
 };
 
@@ -188,20 +204,47 @@ const columns_appointments = [
     title: "",
     dataIndex: "markComplete",
     key: "markComplete",
-    width: "30%",
-    render: ({ active_event_id, markAppointmentComplete, formatMessage }) => {
-      if (active_event_id) {
-        return (
-          <div className="wp100 flex align-center justify-center pointer">
-            <Button
-              type={"primary"}
-              onClick={markAppointmentComplete(active_event_id)}
-            >
-              {formatMessage(messages.complete_text)}
-            </Button>
-          </div>
-        );
-      }
+    width: "40%",
+    render: ({
+      id: appointment_id,
+      end_time,
+      active_event_id,
+      markAppointmentComplete,
+      formatMessage,
+      uploadAppointmentDocs,
+      schedule_events
+    }) => {
+      // const timeDifference = moment().diff(moment(end_time), "seconds");
+
+      const appointmentEvent =
+        Object.keys(schedule_events).filter(id => {
+          const { event_id = {} } = schedule_events[id] || {};
+
+          return event_id === appointment_id;
+        }) || [];
+
+      return (
+        <div className="flex justify-space-between">
+          {active_event_id && (
+            <div className="wp100 flex align-center justify-center pointer">
+              <Button
+                type={"primary"}
+                onClick={markAppointmentComplete(active_event_id)}
+              >
+                {formatMessage(messages.complete_text)}
+              </Button>
+            </div>
+          )}
+          {/*<div className="wp100 flex align-center justify-center pointer">*/}
+          {/*  <Button*/}
+          {/*    type={"secondary"}*/}
+          {/*    onClick={uploadAppointmentDocs(appointment_id)}*/}
+          {/*  >*/}
+          {/*    {formatMessage(messages.upload_reports)}*/}
+          {/*  </Button>*/}
+          {/*</div>*/}
+        </div>
+      );
     }
   }
 ];
@@ -212,7 +255,6 @@ const columns_appointments_non_editable = [
     dataIndex: "organizer",
     key: "organizer",
     width: "20%",
-
     ellipsis: true
   },
   {
@@ -244,38 +286,6 @@ const columns_appointments_non_editable = [
   }
 ];
 
-// const data_symptoms = [
-//   {
-//     key: "1",
-//     medicine: "Amoxil 2mg",
-//     in_take: "Twice, Daily",
-//     duration: "Till 3rd March",
-//   },
-//   {
-//     key: "2",
-//     medicine: "Insulin",
-//     in_take: "Mon at 10am, Wed at 2pm",
-//     duration: "till 2nd March",
-//   },
-// ];
-
-// const data_medication = [
-//   {
-//     key: "1",
-//     medicine: "Amoxil 2mg",
-//     in_take: "Twice, Daily",
-//     duration: "Till 3rd March",
-//     edit: { edit_image },
-//   },
-//   {
-//     key: "2",
-//     medicine: "Insulin",
-//     in_take: "Mon at 10am, Wed at 2pm",
-//     duration: "till 2nd March",
-//     edit: { edit_image },
-//   },
-// ];
-
 const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
   return (
     <div className="flex pt20 pr24 pb10 pl24">
@@ -303,42 +313,56 @@ const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
 
 const PatientCard = ({
   patient_display_picture = userDp,
-  patient_first_name = "Patient one",
-  patient_middle_name,
-  patient_last_name,
+  // patient_first_name = "Patient one",
+  // patient_middle_name,
+  // patient_last_name,
+  patientFullName,
   gender = "m",
   patient_age = "--",
   uid = "123456",
   patient_phone_number,
-  patient_email_id,
+  // patient_email_id,
   formatMessage,
   openChat,
   patients,
   patient_id,
-  editPatientOption
+  editPatient,
+  // editPatientOption,
+  openVideoScreen
 }) => {
   const { details: { comorbidities, allergies } = {} } =
     patients[patient_id] || {};
+
+  const menu = (
+    <Menu>
+      <Menu.Item onClick={editPatient}>
+        <div>{formatMessage(messages.edit_patient)}</div>
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <div className="flex direction-column tac br10 bg-faint-grey">
       {/* <div className="flex justify-end pt20 pl20 pr20 pb6">
         <CaretDownOutlined className="pointer" />
       </div> */}
 
-      <div>
-        <Collapse
-          ghost={true}
-          expandIconPosition={"right"}
-          bordered={false}
-          expandIcon={() => <CaretDownOutlined className="pointer" />}
-        >
-          <Panel key={"1"} style={{ border: "none" }} className="br10">
-            <div className="flex   align-center tac">
-              {editPatientOption()}
-            </div>
-          </Panel>
-        </Collapse>
+      <div className="wp100 flex justify-end p10">
+        <Dropdown overlay={menu} placement={"bottomLeft"}>
+          <CaretDownOutlined className="pointer" />
+        </Dropdown>
       </div>
+      {/*<div>*/}
+      {/*  <Collapse*/}
+      {/*    ghost={true}*/}
+      {/*    expandIconPosition={"right"}*/}
+      {/*    bordered={false}*/}
+      {/*    expandIcon={() => <CaretDownOutlined className="pointer" />}*/}
+      {/*  >*/}
+      {/*    <Panel key={"1"} style={{ border: "none" }} className="br10">*/}
+      {/*      <div className="flex   align-center tac">{editPatientOption()}</div>*/}
+      {/*    </Panel>*/}
+      {/*  </Collapse>*/}
+      {/*</div>*/}
 
       <div className="flex">
         <div className="flex align-start">
@@ -350,10 +374,16 @@ const PatientCard = ({
         </div>
 
         <div className="flex direction-column align-start">
-          <div className="patient-name">
-            {patient_first_name} {patient_middle_name} {patient_last_name} (
-            {gender ? `${GENDER[gender].view} ` : ""}
-            {patient_age})
+          <div className="patient-name flex flex-wrap">
+            <div className="word-wrap">
+              {patientFullName && patientFullName.length > 20
+                ? `${patientFullName.substring(0, 21)}..`
+                : patientFullName}
+            </div>
+            <div className="align-self-start">
+              ({gender ? `${GENDER[gender].view} ` : ""}
+              {patient_age})
+            </div>
           </div>
           <div className="patient-id mt6 mr0 mb0 ml0 warm-grey">PID: {uid}</div>
 
@@ -375,7 +405,10 @@ const PatientCard = ({
               </Tooltip>
             </div>
 
-            <div className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer">
+            <div
+              className="br50 bg-darker-blue p10 mr10 w30 h30 flex justify-center align-center pointer"
+              onClick={openVideoScreen}
+            >
               <Tooltip
                 placement={"bottom"}
                 title={formatMessage(messages.video_icon_text)}
@@ -466,11 +499,42 @@ const PatientTreatmentCard = ({
   treatment_diagnosis_description,
   treatment_diagnosis_type,
   treatment_clinical_notes,
-  treatment_symptoms
+  treatment_symptoms,
+  selectedCarePlanId
 }) => {
+  const time = moment().format("Do MMMM YYYY, hh:mm a");
+
+  console.log("1897312 config", { config });
   return (
     <div className="treatment mt20 tal bg-faint-grey">
-      <h3>{formatMessage(messages.treatment_details)}</h3>
+      <div className="header-div flex align-center justify-space-between">
+        <h3>{formatMessage(messages.treatment_details)}</h3>
+        {selectedCarePlanId ? (
+          <a
+            href={`${config.WEB_URL}${generatePrescriptionUrl(
+              selectedCarePlanId
+            )}`}
+            target={"_blank"}
+            className="presc-link"
+          >
+            <Button
+              type="ghost"
+              className="flex align-center justify-space-evenly"
+            >
+              <span className="fs14">
+                {" "}
+                {formatMessage(messages.prescription)}
+              </span>
+              <img
+                title={"Generate Prescription"}
+                src={ShareIcon}
+                alt="prescription icon"
+                className="pointer w15 ml14"
+              ></img>
+            </Button>
+          </a>
+        ) : null}
+      </div>
 
       <div className="treatment-details pl16 pr16 ">
         <div className="flex direction-column mb14 mt20">
@@ -505,8 +569,7 @@ const PatientTreatmentCard = ({
         <div className="flex direction-column mb14">
           <div className="fs14">{formatMessage(messages.diagnosis_text)}</div>
           <div>
-            <span className="fs16 fw700">{`${treatment_diagnosis_description}`}</span>
-            {" "}
+            <span className="fs16 fw700">{`${treatment_diagnosis_description}`}</span>{" "}
             <span className="fs12 fw600">{`(${treatment_diagnosis_type})`}</span>
           </div>
         </div>
@@ -582,7 +645,12 @@ class PatientDetails extends Component {
       ],
       consentLoading: false,
       selectedCarePlanId: null,
-      isOtherCarePlan: true
+      isOtherCarePlan: true,
+      uploadDocsModalVisible: false,
+      uploadDocsAppointmentId: null,
+      allAppointmentDocs: {},
+      symptom_dates: [],
+      report_ids: []
     };
   }
 
@@ -599,6 +667,7 @@ class PatientDetails extends Component {
       fetchChatAccessToken,
       currentCarePlanId,
       getLastVisitAlerts,
+      searchMedicine,
       show_template_drawer = {}
     } = this.props;
 
@@ -609,6 +678,9 @@ class PatientDetails extends Component {
     }
 
     fetchChatAccessToken(authenticated_user);
+    this.fetchSymptomsData();
+    this.fetchReportData();
+    this.fetchVitalDetails();
 
     // if (showTd) {
     getPatientCarePlanDetails(patient_id).then(response => {
@@ -648,7 +720,7 @@ class PatientDetails extends Component {
     getAppointments(patient_id);
 
     // }
-    // searchMedicine("");
+    searchMedicine("");
     let carePlanTemplateId = 0;
     for (let carePlan of Object.values(care_plans)) {
       let {
@@ -662,6 +734,49 @@ class PatientDetails extends Component {
     }
     this.setState({ carePlanTemplateId });
   }
+
+  fetchSymptomsData = async () => {
+    try {
+      const { getSymptomTimeLine, patient_id } = this.props;
+      const res = await getSymptomTimeLine(patient_id);
+      const { status = false, payload: { data: { symptom_dates } = {} } = {} } =
+        res || {};
+      // console.log("43243234728323492",res);
+      if (status) {
+        this.setState({ symptom_dates });
+      }
+    } catch (error) {
+      console.log("errrrrr--->", error);
+      message.warn(error);
+    }
+  };
+
+  fetchVitalDetails = () => {
+    const { getVitalOccurence, searchVital } = this.props;
+    getVitalOccurence().then(res => {
+      const { status = false } = res;
+    });
+
+    searchVital("").then(res => {
+      const { status = false } = res;
+    });
+  };
+
+  fetchReportData = async () => {
+    try {
+      const { fetchPatientReports, patient_id } = this.props;
+      const { loading } = this.state;
+      const response = await fetchPatientReports(patient_id);
+      const { status, payload: { data: { report_ids = [] } = {} } = {} } =
+        response || {};
+      // console.log("43243234728323492 REPORTS ------>", response);
+      if (status === true) {
+        this.setState({ report_ids, loading: false });
+      }
+    } catch (error) {
+      this.setState({ loading: false });
+    }
+  };
 
   markAppointmentComplete = id => async e => {
     e.stopPropagation();
@@ -678,6 +793,14 @@ class PatientDetails extends Component {
     }
   };
 
+  uploadAppointmentDocs = id => async e => {
+    e.stopPropagation();
+    this.setState({
+      uploadDocsModalVisible: true,
+      uploadDocsAppointmentId: id
+    });
+  };
+
   getAppointmentsData = (carePlan = {}, docName = "--") => {
     const {
       appointments,
@@ -687,7 +810,11 @@ class PatientDetails extends Component {
       schedule_events = {}
     } = this.props;
 
-    const { markAppointmentComplete, formatMessage } = this;
+    const {
+      markAppointmentComplete,
+      formatMessage,
+      uploadAppointmentDocs
+    } = this;
 
     let { appointment_ids = [] } = carePlan;
     let formattedAppointments = appointment_ids.map(id => {
@@ -709,14 +836,22 @@ class PatientDetails extends Component {
         key: id,
         organizer: user_name ? user_name : docName,
         date: `${moment(start_date).format("LL")}`,
-        time: `${start_time ? moment(start_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD} - ${end_time ? moment(end_time).format(
-          "LT"
-        ) : TABLE_DEFAULT_BLANK_FIELD}`,
+        time: `${
+          start_time
+            ? moment(start_time).format("LT")
+            : TABLE_DEFAULT_BLANK_FIELD
+        } - ${
+          end_time ? moment(end_time).format("LT") : TABLE_DEFAULT_BLANK_FIELD
+        }`,
         description: description ? description : "--",
         markComplete: {
+          id,
+          end_time,
           active_event_id,
+          schedule_events,
           markAppointmentComplete,
-          formatMessage
+          formatMessage,
+          uploadAppointmentDocs
         }
       };
     });
@@ -826,9 +961,10 @@ class PatientDetails extends Component {
       handleMedicationReminder,
       handleSymptoms,
       handleVitals,
-      handleAddCareplan
+      handleAddCareplan,
+      handleAddReports
     } = this;
-    const { authPermissions = [] } = this.props;
+    const { authPermissions = [], authenticated_category } = this.props;
     return (
       <Menu>
         {authPermissions.includes(PERMISSIONS.ADD_MEDICATION) && (
@@ -859,6 +995,12 @@ class PatientDetails extends Component {
             <div>{this.formatMessage(messages.newTreatmentPlan)}</div>
           </Menu.Item>
         )}
+        {(authenticated_category === USER_CATEGORY.DOCTOR ||
+          authenticated_category === USER_CATEGORY.PATIENT) && (
+          <Menu.Item onClick={handleAddReports}>
+            <div>{this.formatMessage(messages.reports)}</div>
+          </Menu.Item>
+        )}
       </Menu>
     );
   };
@@ -885,6 +1027,15 @@ class PatientDetails extends Component {
       //   last_name: "patient"
       // },
       // patient_id
+    });
+  };
+
+  handleAddReports = e => {
+    const { openAddReportsDrawer } = this.props;
+    const { patient_id } = this.props;
+
+    openAddReportsDrawer({
+      patient_id
     });
   };
 
@@ -1143,10 +1294,52 @@ class PatientDetails extends Component {
   //   });
   // };
   openVideoChatTab = roomId => () => {
+    const videoCallBlocked = this.checkVideoCallIsBlocked();
+
+    if (videoCallBlocked) {
+      message.error(this.formatMessage(messages.videoCallBlocked));
+      return;
+    }
     window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
+  };
+
+  checkVideoCallIsBlocked = () => {
+    const { features_mappings = {} } = this.props;
+    let videoCallBlocked = false;
+    const videoCallFeatureId = this.getFeatureId(FEATURES.VIDEO_CALL);
+    const otherUserCategoryId = this.getOtherUserCategoryId();
+    const { [otherUserCategoryId]: mappingsData = [] } = features_mappings;
+
+    if (mappingsData.indexOf(videoCallFeatureId) >= 0) {
+      videoCallBlocked = false;
+    } else {
+      videoCallBlocked = true;
+    }
+
+    return videoCallBlocked;
+  };
+
+  getFeatureId = featureName => {
+    const { features = {} } = this.props;
+    const featuresIds = Object.keys(features);
+
+    for (const id of featuresIds) {
+      const { [id]: { name = null } = ({} = {}) } = features;
+
+      if (name === featureName) {
+        return parseInt(id, 10);
+      }
+    }
+
+    return null;
+  };
+
+  getOtherUserCategoryId = () => {
+    const { patient_id } = this.props;
+    return patient_id;
   };
 
   maximizeChat = () => {
@@ -1237,12 +1430,6 @@ class PatientDetails extends Component {
         }
       }
     });
-  };
-  openVideoChatTab = roomId => () => {
-    window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
-      "_blank"
-    );
   };
 
   maximizeChat = () => {
@@ -1382,6 +1569,15 @@ class PatientDetails extends Component {
     this.handleOtpModal(false);
   };
 
+  closeAppointmentDocsModal = e => {
+    e.preventDefault();
+    // const {allAppointmentDocs[key]} = this.state.allAppointmentDocs;
+    this.setState({
+      uploadDocsModalVisible: false,
+      uploadDocsAppointmentId: null
+    });
+  };
+
   handleCarePlanChange = id => e => {
     e.preventDefault();
     const { doctors, care_plans, authenticated_user } = this.props;
@@ -1427,12 +1623,10 @@ class PatientDetails extends Component {
   editPatientOption = () => {
     return (
       <div
-       onClick={this.handleEditPatientDrawer}
-       className="flex  align-center justify-center  wp100 ">
-        <div
-         
-          className="pointer h30 flex   "
-        >
+        onClick={this.handleEditPatientDrawer}
+        className="flex  align-center justify-center  wp100 "
+      >
+        <div className="pointer h30 flex   ">
           <div className="flex direction-column align-center justify-center  hp100   ">
             <span className="fw700 fs19 mr20">
               {this.formatMessage(messages.edit_patient)}
@@ -1446,8 +1640,8 @@ class PatientDetails extends Component {
     );
   };
 
-  handleEditPatientDrawer = e => {
-    e.preventDefault();
+  handleEditPatientDrawer = () => {
+    // e.preventDefault();
     let {
       patient_id: id,
       patients,
@@ -1479,42 +1673,41 @@ class PatientDetails extends Component {
     let severity = "";
 
     let carePlanData = {};
-    for (let carePlan of Object.values(care_plans)) {
-      let { basic_info = {} } = carePlan || {};
-      let {
-        doctor_id: doctorId = 1,
-        patient_id,
-        id: carePlanId = 1
-      } = basic_info;
-      if (`${doctorId}` === doctor_id) {
-        if (`${patient_id}` === id) {
-          let {
-            details: {
-              treatment_id: cTreatment = "",
-              condition_id: cCondition = "",
-              severity_id: cSeverity = ""
-            } = {}
-          } = carePlan || {};
-          let { basic_info: { name: treatmentName = "" } = {} } =
-            treatments[cTreatment] || {};
-          let { basic_info: { name: severityName = "" } = {} } =
-            severities[cSeverity] || {};
-          let { basic_info: { name: conditionName = "" } = {} } =
-            conditions[cCondition] || {};
+    const { selectedCarePlanId = null } = this.state;
+    const carePlan = care_plans[selectedCarePlanId] || {};
 
-          treatment = treatmentName;
-          condition = conditionName;
-          severity = severityName;
+    let { basic_info = {} } = carePlan || {};
+    let {
+      doctor_id: doctorId = 1,
+      patient_id,
+      id: carePlanId = 1
+    } = basic_info;
 
-          carePlanData = {
-            ...care_plans[carePlanId],
-            treatment,
-            condition,
-            severity
-          };
-        }
-      }
-    }
+    let {
+      details: {
+        treatment_id: cTreatment = "",
+        condition_id: cCondition = "",
+        severity_id: cSeverity = ""
+      } = {}
+    } = carePlan || {};
+
+    let { basic_info: { name: treatmentName = "" } = {} } =
+      treatments[cTreatment] || {};
+    let { basic_info: { name: severityName = "" } = {} } =
+      severities[cSeverity] || {};
+    let { basic_info: { name: conditionName = "" } = {} } =
+      conditions[cCondition] || {};
+
+    treatment = treatmentName;
+    condition = conditionName;
+    severity = severityName;
+
+    carePlanData = {
+      ...care_plans[carePlanId],
+      treatment,
+      condition,
+      severity
+    };
 
     patientData = {
       ...patients[id],
@@ -1525,6 +1718,222 @@ class PatientDetails extends Component {
     };
 
     openEditPatientDrawer({ patientData, carePlanData });
+  };
+
+  handleBeforeUploadRegistration = key => file => {
+    const { allAppointmentDocs = {} } = this.state;
+
+    console.log("6756467897865678777", this.state);
+    // if(allAppointmentDocs[key]){
+    //   const {upload_documents = {}} = allAppointmentDocs[key];
+    //   console.log("783423452374672348",upload_documents);
+    //   for (let doc of upload_documents) {
+    //     console.log("DOCCCCCCCCCCCCCCCCCCCCC",doc);
+    //     let fileName = file.name;
+    //     let newFileName = fileName.replace(/\s/g, '');
+    //     if (doc.includes(newFileName)) {
+    //       console.log("DUPLICATE");
+    //       message.error(this.formatMessage(messages.duplicateError));
+    //       return false;
+    //     }
+    //   }
+    //   console.log("handleBeforeUploadRegistration Called YYYYYYYYYYYYYYYYYYy");
+    //   return true
+    // }
+    console.log("handleBeforeUploadRegistration Called");
+    return true;
+  };
+
+  // handleAddAppointmentDocuments = (appointment_id)  => info => {
+
+  //   const fileList = info.fileList;
+  //   let key = appointment_id;
+  //   let {  allAppointmentDocs={} } = this.state;
+  //   console.log("4334543535345345",info);
+
+  // }
+
+  // handleChangeList = key => info => {
+
+  //   console.log("234532432423423",info);
+  //   // const fileList = info.fileList;
+  //   // let { education = {} } = this.state;
+  //   // let newEducation = education;
+  //   // let { photos = [], photo = [] } = newEducation[key];
+  //   // for (let item of fileList) {
+
+  //   //   let uid = item.uid;
+  //   //   let push = true;
+
+  //   //   if (typeof (item) == 'object') {
+  //   //     for (let photo of photos) {
+
+  //   //       let { name = '' } = item;
+  //   //       let fileName = name;
+  //   //       let newFileName = fileName.replace(/\s/g, '');
+  //   //       if (photo.includes(newFileName)) {
+  //   //         push = false;
+  //   //       }
+  //   //     }
+  //   //   }
+  //   //   if (newEducation[key].photo && newEducation[key].photo.length) {
+  //   //     for (let pic of newEducation[key].photo) {
+  //   //       if (pic.uid === uid) {
+  //   //         push = false;
+  //   //       }
+  //   //     }
+  //   //   }
+  //   //   if (push) {
+  //   //     newEducation[key].photo.push(item);
+  //   //   }
+  //   // };
+
+  //   // this.setState({ education: newEducation });
+  // };
+
+  onUploadCompleteRegistration = async (data = {}, key) => {
+    // const {allAppointmentDocs ={} } =this.state;
+    const { upload_documents: latest_docs = {} } = data;
+    // console.log("7865789089767567890",data);
+
+    // const {storeAppointmentDocuments} = this.props;
+    // let appointmentDocs = allAppointmentDocs[key];
+    // allAppointmentDocs[key] = {...appointmentDocs,upload_documents};
+    // let newAppointmentDocs = allAppointmentDocs[key];
+    // this.setState({allAppointmentDocs:{...allAppointmentDocs}});
+
+    // storeAppointmentDocuments(data)
+
+    const { allAppointmentDocs = {} } = this.state;
+    let newappointmentDocs = allAppointmentDocs;
+
+    if (newappointmentDocs[key]) {
+      let newDocs = newappointmentDocs[key].upload_documents;
+      newappointmentDocs[key].upload_documents = latest_docs;
+      this.setState({
+        allAppointmentDocs: newappointmentDocs
+      });
+    } else {
+      newappointmentDocs[key] = {};
+      newappointmentDocs[key].upload_documents = latest_docs;
+      this.setState({
+        allAppointmentDocs: newappointmentDocs
+      });
+    }
+  };
+
+  customRequestUploadDocuments = key => async ({
+    file,
+    filename,
+    onError,
+    onProgress,
+    onSuccess
+  }) => {
+    let { allAppointmentDocs = {} } = this.state;
+    const { storeAppointmentDocuments } = this.props;
+
+    let newAppointmentDocs = allAppointmentDocs[key];
+
+    let data = new FormData();
+    data.append("files", file);
+
+    let uploadResponse = await doRequest({
+      method: REQUEST_TYPE.POST,
+      data: data,
+      url: getUploadAppointmentDocumentUrl(key)
+    });
+
+    const {
+      status = false,
+      statusCode,
+      payload: { data: responseData = {}, message: respMessage = "" } = {}
+    } = uploadResponse;
+
+    console.log("1398109830912 uploadResponse --> ", { uploadResponse });
+
+    if (status) {
+      message.success(respMessage);
+    } else {
+      message.warn(respMessage);
+    }
+  };
+
+  handleChangeList = info => {
+    const fileList = info.fileList;
+    let { photos = [], photo = [] } = this.state;
+    for (let item of fileList) {
+      let uid = item.uid;
+      let push = true;
+
+      if (typeof item == "object") {
+        for (let photo of photos) {
+          let { name = "" } = item;
+          let fileName = name;
+          let newFileName = fileName.replace(/\s/g, "");
+          if (photo.includes(newFileName)) {
+            push = false;
+          }
+        }
+      }
+      if (push) {
+        photo.push(item);
+      }
+    }
+
+    this.setState({ photos: [...photos, ...photo] });
+  };
+
+  getUseTemplateComponent = (
+    isOtherCarePlan,
+    noMedication,
+    firstTemplateName
+  ) => {
+    const { formatMessage } = this;
+    return (
+      <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
+        <img src={noMedication} className="w200 h200" />
+        <div className="fs20 fw700">
+          {formatMessage(messages.nothing_to_show)}
+        </div>
+        {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
+        {!isOtherCarePlan && (
+          <div
+            className="use-template-button"
+            onClick={this.showTemplateDrawer}
+          >
+            <div>
+              {firstTemplateName === BLANK_TEMPLATE
+                ? formatMessage(messages.create_template)
+                : formatMessage(messages.use_template)}
+            </div>
+          </div>
+        )}
+        {/* ) :
+                  showUseTemplate ? (
+                    <div className='use-template-button' onClick={this.handleMedicationReminder}>
+                      <div>{formatMessage(messages.add_medication)}</div>
+                    </div>) : <div />} */}
+      </div>
+    );
+  };
+
+  openVideoScreen = () => {
+    const { care_plans, doctors, patients } = this.props;
+    const { selectedCarePlanId } = this.state;
+
+    const { basic_info: { doctor_id, patient_id } = {} } =
+      care_plans[selectedCarePlanId] || {};
+    const { basic_info: { user_id: doctorUserId } = {} } =
+      doctors[doctor_id] || {};
+    const { basic_info: { user_id: patientUserID } = {} } =
+      patients[patient_id] || {};
+
+    const roomId = getRoomId(doctorUserId, patientUserID);
+
+    window.open(
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
+      "_blank"
+    );
   };
 
   render() {
@@ -1546,39 +1955,49 @@ class PatientDetails extends Component {
       drawer: { visible: drawerVisible = false } = {},
       care_plan_template_ids = {},
       symptoms = {},
-      authenticated_user = null
+      authenticated_user = null,
+      reports = {}
     } = this.props;
+
     const {
       loading,
       templateDrawerVisible = false,
       carePlanTemplateId = 0,
-      carePlanTemplateExists = false,
+      // carePlanTemplateExists = false,
       carePlanTemplateIds = [],
       patientCarePlanIds = [],
       showOtpModal,
       selectedCarePlanId,
-      current_careplan_id,
-      isOtherCarePlan
+      // current_careplan_id,
+      isOtherCarePlan,
+      symptom_dates = [],
+      report_ids = []
     } = this.state;
 
     const {
       formatMessage,
       getMenu,
       getAppointmentsData,
-      getMedicationData,
+      // getMedicationData,
       onCloseTemplate,
       onRowAppointment,
-      onRowMedication,
-      onRowSymptoms,
+      // onRowMedication,
+      // onRowSymptoms,
       handleRequestConsent,
       getConsentDetails,
-      handleOtpVerify,
+      // handleOtpVerify,
       handleOtpCancel,
       handleCarePlanChange,
-      getOtpModalFooter
+      getOtpModalFooter,
+      getUseTemplateComponent,
+      openVideoScreen
     } = this;
 
-    if (loading) {
+    // const AppointmentLocale = {
+    //   emptyText: this.formatMessage(messages.emptyAppointmentTable)
+    // };
+
+    if (loading || !selectedCarePlanId) {
       return (
         <div className="page-loader hp100 wp100 flex align-center justify-center ">
           <Spin size="large"></Spin>
@@ -1593,6 +2012,14 @@ class PatientDetails extends Component {
 
       if (user_id === authenticated_user) {
         doctorId = id;
+      }
+    });
+
+    let reportsExist = false;
+    Object.keys(reports).forEach(id => {
+      const { basic_info: { patient_id: p_id } = {} } = reports[id] || {};
+      if (parseInt(patient_id) === parseInt(p_id)) {
+        reportsExist = true;
       }
     });
 
@@ -1693,20 +2120,27 @@ class PatientDetails extends Component {
     }
 
     let showTabs =
-      cPAppointmentIds.length || cPMedicationIds.length || vitalIds.length
+      cPAppointmentIds.length ||
+      cPMedicationIds.length ||
+      vitalIds.length ||
+      symptom_dates.length ||
+      report_ids.length ||
+      reportsExist
         ? true
         : false;
+
     const {
       basic_info: {
         first_name,
         middle_name,
         last_name,
+        full_name: patientFullName = "",
         user_id,
         age,
         gender,
-        uid = "123456",
+        uid = "",
         user_id: patientUserId = ""
-      }
+      } = {}
     } = patients[patient_id] || {};
 
     const roomId = getRoomId(doctorUserId, patientUserId);
@@ -1737,6 +2171,13 @@ class PatientDetails extends Component {
         }${doctor_last_name}`
       : "--";
 
+    const {
+      uploadDocsModalVisible = false,
+      uploadDocsAppointmentId = null
+    } = this.state;
+
+    console.log("289371283 patient_id detailsPage ", { patient_id });
+
     return (
       <Fragment>
         <div className="pt10 pr10 pb10 pl10">
@@ -1753,6 +2194,7 @@ class PatientDetails extends Component {
                 patient_first_name={first_name}
                 patient_middle_name={middle_name}
                 patient_last_name={last_name}
+                patientFullName={patientFullName}
                 uid={uid}
                 gender={gender}
                 patient_age={age}
@@ -1764,7 +2206,9 @@ class PatientDetails extends Component {
                 openChat={openPopUp}
                 patients={patients}
                 patient_id={patient_id}
+                editPatient={this.handleEditPatientDrawer}
                 editPatientOption={this.editPatientOption}
+                openVideoScreen={openVideoScreen}
               />
 
               {/* {this.editPatientOption()} */}
@@ -1783,6 +2227,7 @@ class PatientDetails extends Component {
               />
 
               <PatientTreatmentCard
+                selectedCarePlanId={selectedCarePlanId}
                 formatMessage={formatMessage}
                 treatment_name={treatment ? treatment : "--"}
                 treatment_condition={condition ? condition : "--"}
@@ -1833,80 +2278,65 @@ class PatientDetails extends Component {
               {/*       */}
               {/*</div>*/}
 
-              {!showTabs && (
-                <div className="flex flex-grow-1 direction-column justify-center hp100 align-center">
-                  <img src={noMedication} className="w200 h200" />
-                  <div className="fs20 fw700">
-                    {formatMessage(messages.nothing_to_show)}
-                  </div>
-                  {/* {showUseTemplate && (carePlanTemplateId || carePlanTemplateExists) ? ( */}
-                  {!isOtherCarePlan && (
-                    <div
-                      className="use-template-button"
-                      onClick={this.showTemplateDrawer}
-                    >
-                      <div>
-                        {firstTemplateName === BLANK_TEMPLATE
-                          ? formatMessage(messages.create_template)
-                          : formatMessage(messages.use_template)}
-                      </div>
-                    </div>
-                  )}
-                  {/* ) :
-                  showUseTemplate ? (
-                    <div className='use-template-button' onClick={this.handleMedicationReminder}>
-                      <div>{formatMessage(messages.add_medication)}</div>
-                    </div>) : <div />} */}
-                </div>
-              )}
+              {!showTabs &&
+                getUseTemplateComponent(
+                  isOtherCarePlan,
+                  noMedication,
+                  firstTemplateName
+                )}
               {showTabs && (
                 <div className="flex-grow-1 direction-column align-center">
                   <div className="patient-tab mt20">
                     <Tabs defaultActiveKey="1">
                       <TabPane tab="Medication" key="1">
-                        <Table
-                          columns={
-                            !isOtherCarePlan &&
-                            authPermissions.includes(
-                              PERMISSIONS.EDIT_MEDICATION
-                            )
-                              ? columns_medication
-                              : columns_medication_non_editable
-                          }
-                          dataSource={getMedicationData(carePlan)}
-                          onRow={
-                            !isOtherCarePlan &&
-                            authPermissions.includes(
-                              PERMISSIONS.EDIT_MEDICATION
-                            )
-                              ? onRowMedication
-                              : null
-                          }
-                        />
+                        {cPMedicationIds.length > 0 ||
+                        cPAppointmentIds.length > 0 ? (
+                          <MedicationTable
+                            patientId={patient_id}
+                            carePlanId={carePlanId}
+                            isOtherCarePlan={isOtherCarePlan}
+                          />
+                        ) : (
+                          <div className="mt20">
+                            {getUseTemplateComponent(
+                              isOtherCarePlan,
+                              noMedication,
+                              firstTemplateName
+                            )}
+                          </div>
+                        )}
                       </TabPane>
                       <TabPane tab="Appointments" key="2">
-                        <Table
-                          columns={
-                            !isOtherCarePlan &&
-                            authPermissions.includes(
-                              PERMISSIONS.EDIT_APPOINTMENT
-                            )
-                              ? columns_appointments
-                              : columns_appointments_non_editable
-                          }
-                          dataSource={getAppointmentsData(carePlan, docName)}
-                          onRow={
-                            !isOtherCarePlan &&
-                            authPermissions.includes(
-                              PERMISSIONS.EDIT_APPOINTMENT
-                            )
-                              ? onRowAppointment
-                              : null
-                          }
-                        />
-                        {/*<div className="wp100">*/}
-                        {/*  /!* <AppointmentTable /> *!/*/}
-                        {/*</div>*/}
+                        {cPMedicationIds.length > 0 ||
+                        cPAppointmentIds.length > 0 ? (
+                          <Table
+                            columns={
+                              !isOtherCarePlan &&
+                              authPermissions.includes(
+                                PERMISSIONS.EDIT_APPOINTMENT
+                              )
+                                ? columns_appointments
+                                : columns_appointments_non_editable
+                            }
+                            dataSource={getAppointmentsData(carePlan, docName)}
+                            onRow={
+                              !isOtherCarePlan &&
+                              authPermissions.includes(
+                                PERMISSIONS.EDIT_APPOINTMENT
+                              )
+                                ? onRowAppointment
+                                : null
+                            }
+                          />
+                        ) : (
+                          <div className="mt20">
+                            {getUseTemplateComponent(
+                              isOtherCarePlan,
+                              noMedication,
+                              firstTemplateName
+                            )}
+                          </div>
+                        )}
                       </TabPane>
 
                       <TabPane tab="Symptoms" key="3">
@@ -1922,6 +2352,12 @@ class PatientDetails extends Component {
                           isOtherCarePlan={isOtherCarePlan}
                         />
                       </TabPane>
+                      <TabPane
+                        tab={PATIENT_TABS.REPORTS["name"]}
+                        key={PATIENT_TABS.REPORTS["key"]}
+                      >
+                        <ReportTable patientId={patient_id} />
+                      </TabPane>
                     </Tabs>
                   </div>
                 </div>
@@ -1934,10 +2370,19 @@ class PatientDetails extends Component {
                 patientId={patient_id}
                 carePlanId={carePlanId}
               />
+              <EditMedicationReminder
+                patientId={patient_id}
+                carePlanId={carePlanId}
+              />
+
+              <EditReportDrawer patient_id={patient_id} />
+
               <AddVitals carePlanId={carePlanId} />
               <EditVitals />
               <AddAppointmentDrawer carePlanId={carePlanId} />
               <AddCareplanDrawer patientId={patient_id} />
+              <AddReportDrawer />
+
               {templateDrawerVisible && (
                 <TemplateDrawer
                   visible={templateDrawerVisible}
@@ -1952,10 +2397,6 @@ class PatientDetails extends Component {
               )}
               <EditAppointmentDrawer
                 carePlan={carePlan}
-                carePlanId={carePlanId}
-              />
-              <EditMedicationReminder
-                patientId={patient_id}
                 carePlanId={carePlanId}
               />
             </Fragment>
@@ -1983,11 +2424,13 @@ class PatientDetails extends Component {
                     : ""
                 }
                 maximizeChat={this.maximizeChat}
+                patientId={patient_id}
               />
             </div>
           )}
           <SymptomsDrawer />
           <VitalTimelineDrawer />
+          <MedicationTimelineDrawer />
           <EditPatientDrawer />
         </div>
         <Modal
@@ -2000,6 +2443,14 @@ class PatientDetails extends Component {
         >
           {getConsentDetails()}
         </Modal>
+
+        {uploadDocsModalVisible && (
+          <AppointmentUpload
+            visible={uploadDocsModalVisible}
+            appointmentId={uploadDocsAppointmentId}
+            onCancel={this.closeAppointmentDocsModal}
+          />
+        )}
       </Fragment>
     );
   }
