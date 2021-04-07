@@ -710,12 +710,14 @@ class CarePlanController extends Controller {
   getPatientCarePlanDetails = async (req, res) => {
     const { patientId: patient_id = 1 } = req.params;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId , userRoleId = null ,userData: { category } = {} } = {} } = req;
 
       let show = false;
 
       let carePlan = await carePlanService.getSingleCarePlanByData({
-        patient_id
+        patient_id,
+        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
+
       });
 
       let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};

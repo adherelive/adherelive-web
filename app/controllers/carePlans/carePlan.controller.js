@@ -408,12 +408,13 @@ class CarePlanController extends Controller {
     try {
       const { userDetails, body, file } = req;
       const { pid, profile_pic, name, email } = body || {};
-      const { userId = "3" } = userDetails || {};
+      const { userId = "3"  , userRoleId = null  ,userData: { category } = {} } = userDetails || {};
 
       let show = false;
 
       let carePlan = await carePlanService.getSingleCarePlanByData({
-        patient_id
+        patient_id,
+        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
       });
 
       let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};

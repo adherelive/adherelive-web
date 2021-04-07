@@ -8,11 +8,14 @@ import CarePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import patientService from "../../services/patients/patients.service";
-
+import userRoleService from "../../services/userRoles/userRoles.service";
+import doctorService from "../../services/doctor/doctor.service";
 // wrappers
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 export const doctorChart = async req => {
     try {
@@ -51,9 +54,17 @@ const getAllDataForDoctors = async (doctor_id, category = USER_CATEGORY.PROVIDER
         Log.debug("doctor_id", doctor_id);
         const eventService = new EventService();
         // get all careplans(treatments) attached to doctor
+        const doctor = DoctorWrapper(null , doctor_id);
+        let userRoleId = null ;
+        const docorUserId = (await doctor).getUserId();
+        const UserRoleDataForUserId = await userRoleService.getFirstUserRole(docorUserId);
+        if(UserRoleDataForUserId){
+            const userRoleWrapper = await UserRoleWrapper(UserRoleDataForUserId);
+            userRoleId = userRoleWrapper.getId();
+        }
         const carePlans =
             (await CarePlanService.getCarePlanByData({
-                doctor_id
+                user_role_id:userRoleId
             })) || [];
 
         // Log.debug("ALL CARE_PLANS", carePlans);

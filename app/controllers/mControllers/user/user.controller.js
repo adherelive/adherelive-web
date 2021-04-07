@@ -536,6 +536,7 @@ class MobileUserController extends Controller {
     try {
       if (req.userDetails.exists) {
         const {
+          userRoleId = null ,
           userId,
           userData,
           userData: { category, has_consent } = {}
@@ -629,7 +630,7 @@ class MobileUserController extends Controller {
               }
 
               careplanData = await carePlanService.getCarePlanByData({
-                doctor_id: userCategoryId
+                user_role_id : userRoleId
               });
 
               // Logger.debug("careplan mobile doctor", careplanData);

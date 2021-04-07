@@ -27,12 +27,12 @@ class EventController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-      const { params: { patient_id } = {}, userDetails: {userData: {category}, userCategoryId} = {} } = req;
+      const { params: { patient_id } = {}, userDetails: { userRoleId =null , userData: {category}, userCategoryId} = {} } = req;
       const EventService = new eventService();
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
-        doctor_id: userCategoryId
+        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
       });
       const carePlan = await CarePlanWrapper(carePlanData);
       const { vital_ids = [], appointment_ids = [], medication_ids = [] } =

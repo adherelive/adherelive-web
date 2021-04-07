@@ -997,7 +997,9 @@ class DoctorController extends Controller {
         address = ""
       } = req.body;
 
-      const { userDetails: { userId, userData: { category } = {} } = {} } = req;
+      const { userDetails: { userRoleId = null , userId, userData: { category } = {} } = {} } = req;
+
+      console.log("98234682348763842946239842",{userRoleId});
 
       const userExists = await userService.getPatientByMobile(mobile_number) || [];
 
@@ -1170,6 +1172,7 @@ class DoctorController extends Controller {
         doctor_id: doctor.get("id"),
         care_plan_template_id,
         details,
+        user_role_id:userRoleId,
         created_at: moment()
       });
 
