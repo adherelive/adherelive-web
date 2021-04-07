@@ -802,17 +802,24 @@ class PatientController extends Controller {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       Logger.debug("3455432134532476567897", req.params);
-      const { params: { careplan_id } = {} ,userDetails = { userData: { category } = {}  } } = req;
+      const {userDetails = {}} = req;
+      const { params: { careplan_id } = {} ,userDetails : { userData: { category } = {}  } } = req;
       const {userRoleId = null } = userDetails  ; 
 
-      const carePlan = await carePlanService.getSingleCarePlanByData({
+      let carePlan =null;
+      let allVitals = [];
+      carePlan = await carePlanService.getSingleCarePlanByData({
         id: careplan_id,
         [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
       });
 
-      const allVitals = await VitalService.getAllByData({
-        care_plan_id: carePlan.get("id")
-      });
+      if(carePlan){
+        
+        allVitals = await VitalService.getAllByData({
+          care_plan_id: carePlan.get("id")
+        });
+        
+      }
 
       let vitalDetails = {};
       let vitalTemplateDetails = {};

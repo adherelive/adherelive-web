@@ -593,7 +593,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-      const { params: { patient_id } = {} ,userDetails = { userData: { category } = {}  }} = req;
+      const { params: { patient_id } = {} ,userDetails : { userData: { category } = {}  } = {} } = req;
       const EventService = new eventService();
       const { userRoleId = null }  = userDetails ;
 
