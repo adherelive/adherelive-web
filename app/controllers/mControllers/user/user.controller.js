@@ -424,11 +424,11 @@ class MobileUserController extends Controller {
       }
 
       let userRoleId = null, userId;
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      const hash = await bcrypt.hash(password, salt);
       if(!userExits) {
         // add user and doctor only in the case when there is
         // not any existing account.
-        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-        const hash = await bcrypt.hash(password, salt);
         const user = await userService.addUser({
           email,
           password: hash,
@@ -446,6 +446,11 @@ class MobileUserController extends Controller {
         }
       } else {
         userId = userExits.get("id")
+        if(!userExits.get("password")) {
+          const updatedUser = await userService.updateUser({
+            password: hash
+          }, userId);
+        }
       }
       
       const userRole = await userRolesService.create({
