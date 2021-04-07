@@ -714,10 +714,11 @@ class PatientController extends Controller {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       Logger.debug("req.params ----->", req.params);
-      const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
+      const { params: { patient_id } = {}, userDetails: { userId ,userRoleId = null ,userData: { category } = {} } = {} } = req;
 
       const carePlanData = await carePlanService.getSingleCarePlanByData({
-        patient_id
+        patient_id,
+        [category === USER_CATEGORY.DOCTOR && 'user_role_id'] : catgory === USER_CATEGORY.DOCTOR && userRoleId
       });
       const carePlan = await CarePlanWrapper(carePlanData);
 
@@ -801,11 +802,14 @@ class PatientController extends Controller {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
       Logger.debug("3455432134532476567897", req.params);
-      const { params: { careplan_id } = {} } = req;
+      const { params: { careplan_id } = {} ,userDetails = { userData: { category } = {}  } } = req;
+      const {userRoleId = null } = userDetails  ; 
 
       const carePlan = await carePlanService.getSingleCarePlanByData({
-        id: careplan_id
+        id: careplan_id,
+        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
       });
+
       const allVitals = await VitalService.getAllByData({
         care_plan_id: carePlan.get("id")
       });
@@ -1249,7 +1253,7 @@ class PatientController extends Controller {
     try {
       const {
         body: { otp, user_id } = {},
-        userDetails: { userId, userData: { category } = {} } = {}
+        userDetails: { userRoleId = null , userId, userData: { category } = {} } = {}
       } = req;
 
       // service instance
@@ -1420,7 +1424,10 @@ class PatientController extends Controller {
       let doctorData = {};
       const doctorIds = [];
 
-      const carePlans = await carePlanService.getCarePlanByData({ patient_id });
+      const carePlans = await carePlanService.getCarePlanByData({ 
+        patient_id,
+        user_role_id:userRoleId
+       });
 
       if (carePlans.length > 0) {
         for (let i = 0; i < carePlans.length; i++) {

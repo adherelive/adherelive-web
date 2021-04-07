@@ -353,7 +353,7 @@ class VitalController extends Controller {
     
           const { body, userDetails } = req;
     
-          const { userId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
+          const { userRoleId = null , userId, userData: { category  } = {} ,userCategoryData : { basic_info: { id :doctorId } ={} } = {} } = userDetails || {};
     
     
           let docAllCareplanData = [];
@@ -365,7 +365,7 @@ class VitalController extends Controller {
     
           
           docAllCareplanData = await carePlanService.getCarePlanByData({
-            doctor_id: doctorId
+            user_role_id : userRoleId
           });
     
           // Logger.debug("786756465789",docAllCareplanData);

@@ -536,6 +536,7 @@ class UserController extends Controller {
     try {
       if (req.userDetails.exists) {
         const {
+          userRoleId= null ,
           userId,
           userData,
           userData: { category } = {},
@@ -600,8 +601,10 @@ class UserController extends Controller {
               }
 
               careplanData = await carePlanService.getCarePlanByData({
-                doctor_id: userCategoryId
+                user_role_id:userRoleId
               });
+
+              console.log("98327427634723647862348723",{careplanData});
 
               for (const carePlan of careplanData) {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);
