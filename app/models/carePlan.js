@@ -93,9 +93,11 @@ export const db = (database) => {
 
 export const associate = (database) => {
     // associations here (if any) ...
-    database.models[TABLE_NAME].hasOne(database.models[patientTableName], {
-        foreignKey: "id",
-        sourceKey: "patient_id"
+    database.models[TABLE_NAME].belongsTo(database.models[patientTableName], {
+        foreignKey: "patient_id",
+        targetKey: "id",
+        // foreignKey: "user_id",
+        // targetKey: "id"
     });
 
     database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {

@@ -25,7 +25,12 @@ const messages = defineMessages({
         id: "app.allTemplatesTable.edit.text",
         description: "",
         defaultMessage: "Edit"
-    }
+    },
+    emptyTemplateTable: {
+        id: "app.patient.table.emptyTemplateTable",
+        description: "",
+        defaultMessage: "No Template added yet"
+      }
 });
 
 export default messages;

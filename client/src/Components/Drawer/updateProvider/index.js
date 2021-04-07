@@ -14,6 +14,7 @@ class updateProviderDrawer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -81,6 +82,7 @@ class updateProviderDrawer extends Component {
        
           try {
             const {updateProvider}=this.props;
+            this.setState({submitting:true});
             const response = await updateProvider(provider_id,data);
         
             const { status, payload: { message: msg } = {} } = response;
@@ -90,8 +92,12 @@ class updateProviderDrawer extends Component {
             } else {
                 message.warn(msg);
             }
+
+            this.setState({submitting:false});
+
           } catch (err) {
             console.log("err", err);
+            this.setState({submitting:false});
             message.warn(this.formatMessage(messages.somethingWentWrong));
           }
         
@@ -123,6 +129,7 @@ class updateProviderDrawer extends Component {
   render() {
     const {payload = {},providers={},users={},visible} = this.props;
     const {provider_id=null} = payload;
+    const {submitting = false } =this.state;
 
     const {
       onClose,
@@ -161,6 +168,7 @@ class updateProviderDrawer extends Component {
             submitText={this.formatMessage(messages.submit)}
             submitButtonProps={null}
             cancelComponent={null}
+            submitting={submitting}
           />
         </Drawer>
       </Fragment>

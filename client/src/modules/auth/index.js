@@ -97,7 +97,7 @@ function setAuthRedirect(user, isInitial = false) {
     }
   } else if (category === USER_CATEGORY.PROVIDER) {
     if (!isInitial) {
-      authRedirect = PATH.PROVIDER;
+      authRedirect = PATH.LANDING_PAGE;
     }
   } else if (category === USER_CATEGORY.ADMIN || category === USER_CATEGORY.PROVIDER) {
     if (!isInitial) {
@@ -130,7 +130,7 @@ function setAuthRedirectSignIn(user, isInitial = false) {
     }
   }  else if (category === USER_CATEGORY.PROVIDER) {
     if (!isInitial) {
-      authRedirect = PATH.PROVIDER;
+      authRedirect = PATH.LANDING_PAGE;
     }
   }  else if (category === USER_CATEGORY.ADMIN ) {
     if (!isInitial) {
@@ -520,7 +520,8 @@ export const getInitialData = () => {
         // const {lastUrl = false} = data;
         // const {  users } = response.payload.data;
 
-        let { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '', feedId = '' } = data;
+        let { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '', feedId = '' , 
+        doctor_provider_id } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user], true);
@@ -536,7 +537,9 @@ export const getInitialData = () => {
             authPermissions: permissions,
             notificationToken,
             feedId,
-            hasConsent:has_consent
+            hasConsent:has_consent,
+            [doctor_provider_id ? "doctor_provider_id" :'']:
+            doctor_provider_id ? doctor_provider_id : null
           },
           data,
         });
@@ -608,6 +611,8 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
   const { type, payload } = action;
   switch (type) {
     case GETTING_INITIAL_DATA_COMPLETED:
+      console.log("893648752647923784662364723084978 ################################### :::::::",{payload,IDDDDDDDDDDDDD: payload.doctor_provider_id});
+
       return {
         authenticated: true,
         authenticated_category: payload.authCategory,
@@ -616,7 +621,8 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,
         feedId: payload.feedId,
-        hasConsent:payload.hasConsent
+        hasConsent:payload.hasConsent,
+        "doctor_provider_id": payload.doctor_provider_id ? payload.doctor_provider_id : null
       };
 
     case VALIDATING_LINK_COMPLETED:

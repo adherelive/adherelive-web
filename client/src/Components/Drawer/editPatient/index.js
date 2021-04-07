@@ -23,6 +23,7 @@ import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
 import TextArea from "antd/lib/input/TextArea";
 import {FINAL, PROBABLE, DIAGNOSIS_TYPE, PATIENT_CONSTANTS} from "../../../constant";
+import Footer from "../footer";
 
 const { Option } = Select;
 const RadioButton = Radio.Button;
@@ -56,7 +57,8 @@ class EditPatientDrawer extends Component {
             address : '',
             treatment:null ,
             severity:null,
-            careplan_id : null
+            careplan_id : null,
+            submitting:false
         };
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
         this.handleTreatmentSearch = throttle(this.handleTreatmentSearch.bind(this), 2000);
@@ -884,6 +886,7 @@ class EditPatientDrawer extends Component {
         try {
             const {updatePatientAndCareplan} = this.props;
             const {careplan_id = null} = this.state;
+            this.setState({submitting:true});
             const response = await updatePatientAndCareplan(careplan_id,{ mobile_number, name, gender, date_of_birth, treatment_id: treatment, severity_id: severity, condition_id: condition, prefix ,allergies,diagnosis_description,diagnosis_type,comorbidities,clinical_notes,height,weight, symptoms,address: address.trim()});
             const { status, payload: { message : msg } = {} } = response;
 
@@ -891,9 +894,12 @@ class EditPatientDrawer extends Component {
                 message.success(this.formatMessage(messages.editSuccess));
                 this.onClose();
             }
+
+            this.setState({submitting:false});
             
           } catch (err) {
             console.log("err", err);
+            this.setState({submitting:false});
             message.warn(this.formatMessage(messages.somethingWentWrong));
           }
     }
@@ -933,6 +939,7 @@ class EditPatientDrawer extends Component {
     render() {
         const { visible } = this.props;
         const { onClose, renderEditPatient } = this;
+        const {submitting=false} = this.state;
 
         if (visible !== true) {
             return null;
@@ -953,14 +960,25 @@ class EditPatientDrawer extends Component {
                     width={'30%'}
                 >
                     {renderEditPatient()}
-                    <div className='add-patient-footer'>
+
+                    <Footer
+                        onSubmit={this.onSubmit}
+                        onClose={this.onClose}
+                        submitText={this.formatMessage(messages.submit)}
+                        submitButtonProps={{}}
+                        cancelComponent={null}
+                        submitting={submitting}
+                    />
+
+                    {/* <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                             {this.formatMessage(messages.cancel)}
                         </Button>
                         <Button onClick={this.onSubmit} type="primary">
                             {this.formatMessage(messages.submit)}
                         </Button>
-                    </div>
+                    </div> */}
+                    
                 </Drawer>
 
             </Fragment>

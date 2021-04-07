@@ -27,6 +27,7 @@ const PRIVACY_POLICY = "privacy_policy";
 const ALL_PROVIDERS = "providers";
 const TRANSACTION_DETAILS = "transaction_details";
 const TEMPLATES="templates";
+const MEDICINES = "medicines";
 
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 
@@ -198,12 +199,19 @@ class SideMenu extends Component {
             if (authenticated_category === USER_CATEGORY.ADMIN) {
                 history.push(PATH.ADMIN.ALL_PROVIDERS);
             }
-            break;    
+            break;
           case TRANSACTION_DETAILS:
             if (authenticated_category === USER_CATEGORY.PROVIDER) {
                 history.push(PATH.PROVIDER.TRANSACTION_DETAILS);
+            } else if (authenticated_category === USER_CATEGORY.DOCTOR) {
+              history.push(PATH.DOCTOR.TRANSACTION_DETAILS);
             }
-            break;   
+            break;
+          case MEDICINES:
+            if(authenticated_category === USER_CATEGORY.ADMIN) {
+              history.push(PATH.ADMIN.ALL_MEDICINES);
+            }
+            break;
           case TEMPLATES:
             if(authenticated_category === USER_CATEGORY.DOCTOR){
               history.push(PATH.TEMPLATES);
@@ -224,7 +232,7 @@ class SideMenu extends Component {
 
   menu = () => {
     return (
-      <Menu className="l70 b10 position fixed" key={"sub"} onClick={this.handleItemSelect}>
+      <Menu className="l70 b20 fixed" key={"sub"} onClick={this.handleItemSelect}>
         <Menu.Item className="pl24 pr80" key={PRIVACY_POLICY}>
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacy_policy_text)}
@@ -261,6 +269,8 @@ class SideMenu extends Component {
     } = this.props;
     let dp = "";
     let initials = "";
+
+
     for (let doctor of Object.values(doctors)) {
       let {
         basic_info: {
@@ -284,6 +294,8 @@ class SideMenu extends Component {
         .map(n => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
         .join("");
     }
+
+    const {doctor_provider_id =null } = this.props ; 
 
     return (
       <Menu
@@ -311,7 +323,7 @@ class SideMenu extends Component {
 
           <MenuItem
             key={SUB_MENU}
-            className="flex direction-column justify-center align-center p0 logout_button"
+            className="flex direction-column justify-center align-center p0"
           >
             <Dropdown overlay={this.menu} overlayClassName="relative">
               <div className="flex direction-column justify-center align-center wp250 hp100">
@@ -388,7 +400,7 @@ class SideMenu extends Component {
             :
             null}    
 
-          {authenticated_category === USER_CATEGORY.PROVIDER
+          {authenticated_category === USER_CATEGORY.PROVIDER ||  ( authenticated_category === USER_CATEGORY.DOCTOR && ( doctor_provider_id === null  &&  Object.keys(doctors).length > 0 ))
           ?
           (<MenuItem
             className="flex direction-column justify-center align-center p0"
@@ -400,7 +412,21 @@ class SideMenu extends Component {
             </Tooltip>
           </MenuItem>)
          :
-          null}    
+          null}
+
+        {authenticated_category === USER_CATEGORY.ADMIN
+            ?
+            (<MenuItem
+                className="flex direction-column justify-center align-center p0"
+                key={MEDICINES}
+            >
+              <Tooltip placement="right" title={this.formatMessage(messages.medicineText)}>
+                {/* <AccountBookOutlined style={{color: "#fff"}} /> */}
+                <Icon style={{color: "#fff"}} type="medicine-box" />
+              </Tooltip>
+            </MenuItem>)
+            :
+            null}
 
       </Menu>
     );

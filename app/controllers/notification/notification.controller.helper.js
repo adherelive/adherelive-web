@@ -4,7 +4,8 @@ import {
   EVENT_TYPE,
   NOTIFICATION_STAGES,
   EVENT_STATUS,
-  MESSAGE_TYPES
+  MESSAGE_TYPES,
+  AGORA_CALL_NOTIFICATION_TYPES
 } from "../../../constant";
 
 // lodash
@@ -12,7 +13,7 @@ import isEmpty from "lodash/isEmpty";
 
 // SERVICES -------->
 import AppointmentService from "../../services/appointment/appointment.service";
-// import MedicationService from "../../services/medicationReminder/mReminder.service";
+import MedicationService from "../../services/medicationReminder/mReminder.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import VitalService from "../../services/vitals/vital.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
@@ -78,7 +79,16 @@ const medicationNotification = async data => {
     let eventId = null;
     let responseTaken = false;
 
-    const verbString = verb.split(":")[0];
+    const verbString = verb.split(":")[0].toUpperCase() || null;
+
+    // CREATE
+    if(verbString === MEDICATION_CREATE) {
+
+    } else {
+
+    }
+
+    // START
 
     if (verbString.toUpperCase() === MEDICATION_CREATE) {
       eventId = parseInt(foreign_id, 10);
@@ -100,12 +110,16 @@ const medicationNotification = async data => {
       verbString.toUpperCase() === MEDICATION_CREATE ||
       verbString.toUpperCase() === MEDICATION_REMINDER_START
     ) {
-      const event = await MedicationWrapper(null, eventId);
-      const { medications, medicines } = await event.getReferenceInfo();
 
-      eventData = { ...eventData, ...medications };
-      medicineData = { ...medicineData, medicines };
-      participants = event.getParticipants();
+      const medication = await MedicationService.getMedication({id: eventId});
+      if(medication) {
+        const event = await MedicationWrapper(medication);
+        const { medications, medicines } = await event.getReferenceInfo();
+  
+        eventData = { ...eventData, ...medications };
+        medicineData = { ...medicineData, medicines };
+        participants = event.getParticipants();
+      }
     }
 
     if (eventData && eventData === null) {
@@ -453,8 +467,7 @@ const carePlanNotification = async data => {
       const { event_id = null, status = null } = scheduleEventData;
       if (
         status === EVENT_STATUS.COMPLETED ||
-        status === EVENT_STATUS.CANCELLED ||
-        status === EVENT_STATUS.PENDING
+        status === EVENT_STATUS.CANCELLED 
       ) {
         responseTaken = true;
       }
@@ -552,6 +565,52 @@ const chatMessageNotification = async data => {
   }
 };
 
+
+const missedCallNotification = async data => {
+  try {
+    Log.debug("missedCallNotification data", data);
+    const {
+      data: {
+        actor,
+        foreign_id,
+        id,
+        message,
+        time,
+        verb,
+        start_time: notification_start_time,
+        create_time: notification_create_time
+      } = {},
+      loggedInUser,
+      is_read,
+      group_id
+    } = data;
+
+    let notification_data = {
+        [`${id}`]: {
+          is_read,
+          group_id,
+          foreign_id,
+          time,
+          event_id: null,
+          notification_id: id,
+          type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
+          actor,
+          verb,
+          message,
+          start_time: notification_start_time,
+          create_time: notification_create_time
+        }
+      };
+
+      return {
+        notifications: notification_data
+      };
+  } catch (error) {
+    Log.debug("missedCallNotification 500 error", error);
+    return {};
+  }
+};
+
 export const getDataForNotification = async data => {
   try {
     const { data: { event } = {} } = data;
@@ -569,6 +628,8 @@ export const getDataForNotification = async data => {
         return await carePlanNotification(data);
       case USER_MESSAGE:
         return await chatMessageNotification(data);
+      case AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL:
+        return await missedCallNotification(data)
     }
   } catch (error) {
     Log.debug("getDataForNotification 500 error", error);

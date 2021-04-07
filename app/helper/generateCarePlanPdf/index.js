@@ -38,12 +38,13 @@ export default async (pdfData, signatureImage) => {
       } = pdfData;
       const doc = new PDFDocument({ margin: DOC_MARGIN, bufferPages: true });
 
-      const { name: patientName, allergies, comorbidities } = formatPatientData(
+
+      const { allergies, comorbidities } = formatPatientData(
         patients,
         users
       );
-      const now = new Date();
-      const fileName = `${patientName}-${now.getTime()}`;
+
+      const fileName = getPdfName(pdfData)
 
       const stream = doc.pipe(
         fs.createWriteStream(`${PRESCRIPTION_PDF_FOLDER}/${fileName}.pdf`)
@@ -99,6 +100,26 @@ export default async (pdfData, signatureImage) => {
     }
   });
 };
+
+function getPdfName (pdfData) {
+  const {
+    doctors = {}, users ={}, degrees = {}, registrations ={}, 
+    care_plans = {}, conditions = {}
+  } = pdfData
+
+  const {
+    name: doctorName = "",
+  } = formatDoctorsData(doctors, users, degrees, registrations);
+
+  const { diagnosis, carePlanId } = formatCarePlanData(
+    care_plans,
+    conditions
+  );
+
+  const now = new Date();
+  const fileName = `${carePlanId}-${diagnosis}-${doctorName}-${now.getTime()}`;
+  return fileName
+}
 
 function printDoctorBlockData(doc, doctors, users, degrees, registrations) {
   const {
@@ -281,7 +302,7 @@ function printCarePlanData(
         suggestedInvestigationXLevelEnd + 250,
         doc.y
       )
-      .text(`${description ? description : ""}`, suggestedInvestigationXLevelEnd + 250, doc.y);
+      .text(`Note: ${description ? description : ""}`, suggestedInvestigationXLevelEnd + 250, doc.y+10);
 
     docYLevel = doc.y + NORMAL_FONT_SIZE;
   }
@@ -304,7 +325,7 @@ function printFooter(doc, imageUrl, nextAppointmentDuration, currentTime) {
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 50, { width: 120, height: 40 });
   } catch (err) {
-    console.log("ERROR in signature pic");
+    console.log("ERROR in signature pic", err);
   }
 
   doc
@@ -326,7 +347,8 @@ function formatCarePlanData(carePlans, conditions) {
   let condition = "",
     diagnosis = "",
     symptoms = "",
-    clinicalNotes = "";
+    clinicalNotes = "",
+    carePlanId = null;
   const conditionIds = Object.keys(conditions);
   if (conditionIds && conditionIds.length) {
     const conditionId = conditionIds[0];
@@ -338,7 +360,7 @@ function formatCarePlanData(carePlans, conditions) {
 
   const carePlanIds = Object.keys(carePlans);
   if (carePlanIds && carePlanIds.length) {
-    const carePlanId = carePlanIds[0];
+    carePlanId = carePlanIds[0];
     const {
       [carePlanId]: {
         details: {
@@ -353,7 +375,7 @@ function formatCarePlanData(carePlans, conditions) {
     clinicalNotes = clinical_notes;
   }
 
-  return { condition, diagnosis, symptoms, clinicalNotes };
+  return { condition, diagnosis, symptoms, clinicalNotes, carePlanId };
 }
 
 function formatDoctorsData(doctors, users, degrees, registrations) {
@@ -456,8 +478,6 @@ function formatPatientData(patients, users) {
   const {
     [user_id]: { basic_info: { mobile_number = "", prefix = "" } = {} } = {}
   } = users;
-
-  console.log("189273812 full_name --> ", full_name);
 
   return {
     name,

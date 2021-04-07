@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 import { Table, Icon } from "antd";
 import generateRow from "./dataRow";
 import getColumn from "./header";
+import messages from "./messages";
 
 class TemplateTable extends Component {
   constructor(props) {
@@ -92,6 +93,10 @@ class TemplateTable extends Component {
 
     console.log("12837919827 loading", { loading });
 
+    const templateLocale = {
+      emptyText:formatMessage(messages.emptyTemplateTable)
+    }
+
     return (
       <Fragment>
         <Table
@@ -108,6 +113,7 @@ class TemplateTable extends Component {
             position: "top",
             pageSize: 10
           }}
+          locale={templateLocale}
         />
       </Fragment>
     );

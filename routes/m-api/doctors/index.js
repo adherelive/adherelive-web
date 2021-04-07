@@ -29,6 +29,12 @@ router.post(
   mDoctorController.updateDoctorQualificationRegistration
 );
 
+router.get(
+  "/patients",
+  Authenticate,
+  mDoctorController.getPaginatedDataForPatients
+);
+
 router.post(
   "/upload",
   Authenticate,

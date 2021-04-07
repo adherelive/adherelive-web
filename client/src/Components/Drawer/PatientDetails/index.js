@@ -215,7 +215,8 @@ class PatientDetailsDrawer extends Component {
   };
 
   getPatientDetailContent = () => {
-    const { auth = {}, treatments = {}, doctors = {}, conditions = {}, severity: severities = {}, providers, patients, payload, care_plans, users = {}} = this.props;
+    const { auth = {}, treatments = {}, doctors = {}, conditions = {},
+     severity: severities = {}, providers, patients, payload, care_plans, users = {}} = this.props;
 
     const {
       formatMessage,
@@ -242,12 +243,14 @@ class PatientDetailsDrawer extends Component {
     if (id) {
 
       let carePlanId = 1;
+
       for (let carePlan of Object.values(care_plans)) {
 
         let { basic_info: { id: cpId = 1, doctor_id = null, patient_id = null }, carePlanAppointmentIds = [], carePlanMedicationIds = [] } = carePlan;
 
-        if (doctorId === `${doctor_id}`) {
-          if(`${patient_id}` === id) {
+
+        if (`${doctorId}` === `${doctor_id}`) {
+          if(`${patient_id}` === `${id}`) {
             carePlanId = cpId;
           }
         }
@@ -260,7 +263,10 @@ class PatientDetailsDrawer extends Component {
       const { basic_info: { name: condition = '' } = {} } = conditions[condition_id] || {};
       const { basic_info: { name: severity = '' } = {} } = severities[severity_id] || {};
       const {
-        basic_info: { user_id = null, first_name, middle_name, last_name, age = "--", gender, uid = '123456' } = {},
+        basic_info: { 
+          user_id = null, first_name, middle_name, last_name, age = "--", gender, uid = '123456'
+         } = {}
+         ,
         reports = [],
         provider_id,
       } = patients[id] || {};
@@ -461,7 +467,7 @@ class PatientDetailsDrawer extends Component {
     return (
       <Fragment>
         <Drawer
-          mask={false}
+          mask={true}
           title="   "
           placement="right"
           // closable={false}

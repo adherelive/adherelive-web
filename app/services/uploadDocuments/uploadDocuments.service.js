@@ -35,7 +35,7 @@ class UploadDocumentService {
                 where: {
                     parent_type,
                     parent_id,
-                    deleted_at:null
+                    // deleted_at:null
                 }
             });
             return documents;
@@ -118,6 +118,14 @@ class UploadDocumentService {
         } catch(error) {
             throw error;
         }
+    };
+
+    getAll = async () => {
+      try {
+          return await Database.getModel(TABLE_NAME).findAll();
+      } catch(error) {
+          throw error;
+      }
     };
    
 }

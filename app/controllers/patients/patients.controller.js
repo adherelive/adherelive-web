@@ -6,10 +6,10 @@ import patientService from "../../../app/services/patients/patients.service";
 import doctorService from "../../../app/services/doctor/doctor.service";
 import minioService from "../../../app/services/minio/minio.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+// import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
+// import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import SymptomService from "../../services/symptom/symptom.service";
 import VitalService from "../../services/vitals/vital.service";
@@ -22,6 +22,7 @@ import ReportService from "../../services/reports/report.service";
 import conditionService from "../../services/condition/condition.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
+import treatmentService from "../../services/treatment/treatment.service";
 
 // WRAPPERS --------------------------------
 import VitalWrapper from "../../ApiWrapper/web/vitals";
@@ -30,8 +31,8 @@ import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import MReminderWrapper from "../../ApiWrapper/web/medicationReminder";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
-import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
-import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
+// import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
+// import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../ApiWrapper/mobile/medicine";
 import SymptomWrapper from "../../ApiWrapper/web/symptoms";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -39,6 +40,11 @@ import ConsentWrapper from "../../ApiWrapper/web/consent";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import ReportWrapper from "../../ApiWrapper/web/reports";
 import ConditionWrapper from "../../ApiWrapper/web/conditions";
+import QualificationWrapper from "../../ApiWrapper/web/doctorQualification";
+import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
+import DegreeWrapper from "../../ApiWrapper/web/degree";
+import CouncilWrapper from "../../ApiWrapper/web/council";
+import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 
 import Log from "../../../libs/log";
 import moment from "moment";
@@ -48,7 +54,7 @@ import {
   EMAIL_TEMPLATE_NAME,
   USER_CATEGORY,
   S3_DOWNLOAD_FOLDER,
-  PRESCRIPTION_PDF_FOLDER
+  PRESCRIPTION_PDF_FOLDER, DIAGNOSIS_TYPE
 } from "../../../constant";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
@@ -803,7 +809,6 @@ class PatientController extends Controller {
       const allVitals = await VitalService.getAllByData({
         care_plan_id: carePlan.get("id")
       });
-      Logger.debug("786768767876757687", allVitals);
 
       let vitalDetails = {};
       let vitalTemplateDetails = {};
@@ -1754,6 +1759,176 @@ class PatientController extends Controller {
         "3467238468327462387463287 Error got in the generate prescription: ",
         err
       );
+      return raiseServerError(res);
+    }
+  };
+
+  getAllPatientsPagination = async (req, res) => {
+    const {raiseSuccess, raiseClientError, raiseServerError} = this;
+    try {
+      const {query, userDetails} = req;
+
+      const {userId, userData: {category} = {}, userCategoryId} = userDetails || {};
+
+       /*
+      
+      userId (auth) [DOCTOR]
+
+      SORT
+      created_at [asc, desc]
+      name [asc, desc]
+
+      FILTER
+      diagnosis [description, type]
+      treatment
+
+      doctors -> careplans -> patients
+      
+      */
+
+      
+
+       const {
+        offset=0, 
+        sort_name = null,
+        sort_createdAt = null,
+         filter_treatment = null,
+         filter_diagnosis = null,
+         watchlist = 0,
+      } = query || {};
+
+
+      const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+      const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
+      const endLimit = parseInt(limit, 10);
+      const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
+
+
+
+
+      
+
+       let patientsForDoctor = [];
+
+       let rowData = [];
+
+       let count = null;
+       let treatments = {};
+
+      if(category === USER_CATEGORY.DOCTOR) {
+        let watchlistQuery = "";
+        const doctor = await doctorService.getDoctorByData({
+          user_id: userId
+        });
+
+        if(doctor && getWatchListPatients)
+        {
+          const doctorData = await DoctorWrapper(doctor);
+
+
+          const doctorAllInfo = await doctorData.getAllInfo();
+          let { watchlist_patient_ids = []} = doctorAllInfo || {};
+          watchlist_patient_ids = watchlist_patient_ids.length ? watchlist_patient_ids : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
+          watchlistQuery = `AND carePlan.doctor_id = ${userCategoryId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
+        }
+
+        if(sort_name) {
+          const order = sort_name === "0" ? "ASC" : "DESC";
+          [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
+            doctor_id: userCategoryId,
+            order: `patient.first_name ${order}`,
+            offset: offsetLimit,
+            limit: endLimit,
+            watchlist: watchlistQuery
+            // watchlistPatientIds,
+            // watchlist: getWatchListPatients
+          }) || [];
+
+        } else if(sort_createdAt) {
+          const order = sort_createdAt === "0" ? "ASC" : "DESC";
+          [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
+            doctor_id: userCategoryId,
+            order: `patient.created_at ${order}`,
+            offset: offsetLimit,
+            limit: endLimit,
+            watchlist: watchlistQuery
+          }) || [];
+        } else if(filter_treatment) {
+          const allTreatments = await treatmentService.searchByName(filter_treatment) || [];
+
+          // get all treatment
+          if(allTreatments.length > 0) {
+            for(let index = 0; index < allTreatments.length; index++) {
+              const treatment = await TreatmentWrapper(allTreatments[index]);
+              treatments = {...treatments, [treatment.getTreatmentId()]: treatment.getBasicInfo()};
+            }
+
+            const treatmentIds = allTreatments.map(treatment => treatment.id) || [];
+            [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
+              doctor_id: userCategoryId,
+              filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds})`,
+              offset: offsetLimit,
+              limit: endLimit,
+              watchlist: watchlistQuery
+            }) || [];
+          }
+        } else if(filter_diagnosis) {
+
+          let diagnosis_type = null;
+
+          if(DIAGNOSIS_TYPE.FINAL.text.includes(filter_diagnosis)) {
+            diagnosis_type = DIAGNOSIS_TYPE.FINAL.id;
+          }else if(DIAGNOSIS_TYPE.PROBABLE.text.includes(filter_diagnosis)) {
+            diagnosis_type = DIAGNOSIS_TYPE.PROBABLE.id;
+          }  else {
+            diagnosis_type =null;
+          }
+          [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
+            doctor_id: userCategoryId,
+            filter:
+                `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
+                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
+
+            offset: offsetLimit,
+            limit: endLimit,
+            watchlist: watchlistQuery
+          }) || [];
+        }
+
+        Logger.debug("patientsForDoctor", patientsForDoctor);
+
+        if(patientsForDoctor.length > 0) {
+          for(let index = 0; index < patientsForDoctor.length; index++) {
+            const {care_plan_id, care_plan_details, care_plan_created_at, care_plan_expired_on,care_plan_activated_on, ...patient} = patientsForDoctor[index] || {};
+            patient["care_plan_id"]=care_plan_id;
+
+            // Logger.debug("7394246723647263472364239741",{patient:{...patient}});
+
+            rowData.push({
+              care_plans: {
+                id: care_plan_id,
+                details: care_plan_details,
+                created_at: care_plan_created_at,
+                expired_on: care_plan_expired_on,
+                activated_on:care_plan_activated_on
+              },
+              patients: {
+                ...patient
+                
+              },
+            });
+          }
+        }
+      }
+
+      return raiseSuccess(res, 200, {
+        rowData,
+        treatments,
+        total:count
+      }, "success");
+
+    } catch(error) {
+      Logger.debug("getAllPatientsPagination 500", error);
       return raiseServerError(res);
     }
   };

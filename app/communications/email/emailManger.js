@@ -121,6 +121,13 @@ class EmailManger {
               {}
           );
           break;
+          case "serverCrash":
+          templateString = await this.genrateEmailTemplateString(
+              "serverCrash",
+              payload.templateData,
+              {}
+          );
+          break;
         case "BookingStatusSubmittedUser":
           templateString = await this.genrateEmailTemplateString(
             "general",

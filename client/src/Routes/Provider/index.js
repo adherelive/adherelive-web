@@ -7,7 +7,7 @@ import {
   useLocation,
   withRouter
 } from "react-router-dom";
-// import BlankState from "../../Containers/BlankState";
+import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
 import SideMenu from "../../Components/Sidebar";
 
@@ -50,7 +50,7 @@ const ProviderDoctorPaymentPage = lazy(() =>
 
 const DoctorCalenderPage = lazy(() =>
   import(
-    /* webpackChunkName: "DoctorCalenderPage" */ "../../Containers/Pages/doctorCalender"
+    /* webpackChunkName: "DoctorCalenderPage" */ "../../Containers/Pages/providerDoctorCalender"
   )
 );
 
@@ -181,7 +181,8 @@ class ProviderDoctor extends Component {
                 />
 
 
-                <Route exact path={""} component={ProviderDoctorPage} />
+                <Route path={PATH.LANDING_PAGE} component={ProviderDoctorPage} />
+                {/* <Route path={""} component={BlankState} /> */}
               </Switch>
             </div>
           </div>

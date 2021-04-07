@@ -109,7 +109,8 @@ export const getCalenderDataForDay = (date,type) => {
             if (status === true) {
                 dispatch({
                     type: GET_CALENDER_DATA_FOR_DAY_COMPLETED,
-                    payload: data
+                    payload: data,
+                    data
                 });
             } else {
                 dispatch({

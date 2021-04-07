@@ -22,6 +22,7 @@ import {
   ONBOARDING_STATUS,
   VERIFICATION_TYPE
 } from "../../../constant";
+import {completePath} from "../../helper/filePath";
 
 export const doctorQualificationData = async userId => {
   try {
@@ -78,9 +79,7 @@ export const doctorQualificationData = async userId => {
 
         for (let document of documents) {
           photos.push(
-            `${process.config.minio.MINIO_S3_HOST}/${
-              process.config.minio.MINIO_BUCKET_NAME
-            }${document.get("document")}`
+              completePath(document.get("document"))
           );
         }
 
@@ -104,8 +103,9 @@ export const doctorQualificationData = async userId => {
   }
 };
 
-export const uploadImageS3 = async (userId, file) => {
+export const uploadImageS3 = async (userId, file, folder = "other") => {
   try {
+    console.log("198318239 file", file);
     const fileExt = file.originalname.replace(/\s+/g, "");
     await minioService.createBucket();
     // const fileStream = fs.createReadStream(req.file);
@@ -121,7 +121,7 @@ export const uploadImageS3 = async (userId, file) => {
     hash = String(hash);
 
     // const file_name = hash.substring(4) + "_Education_"+fileExt;
-    const file_name = hash.substring(4) + "/" + imageName + "/" + fileExt;
+    const file_name = `${folder}/${hash.substring(4)}/${imageName}/${fileExt}`;
 
     console.log(
       "----------------------------------------- imageName, fileExt ---> ",
@@ -134,17 +134,17 @@ export const uploadImageS3 = async (userId, file) => {
     //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     // };
     const fileUrl = "/" + file_name;
-    await minioService.saveBufferObject(file.buffer, file_name);
+    await minioService.saveBufferObject(file.buffer, file_name, {"Content-Type": file.mimetype});
 
     // console.log("file urlll: ", process.config.minio.MINI);
-    const file_link =
-      process.config.minio.MINIO_S3_HOST +
-      "/" +
-      process.config.minio.MINIO_BUCKET_NAME +
-      fileUrl;
-    let files = [file_link];
+    // const file_link =
+    //   process.config.minio.MINIO_S3_HOST +
+    //   "/" +
+    //   process.config.minio.MINIO_BUCKET_NAME +
+    //   fileUrl;
+    let files = [completePath(fileUrl)];
 
-    console.log("((((((((((((__________________________", file_link, fileUrl);
+    console.log("((((((((((((__________________________", files, fileUrl);
     return files;
   } catch (error) {
     console.log(" UPLOAD  CATCH ERROR ", error);

@@ -5,14 +5,15 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   REPEAT_TYPE,
-  DAYS_MOBILE,
+  // DAYS_MOBILE,
   MEDICATION_TIMING,
   DOSE_AMOUNT,
   DOSE_UNIT,
   CUSTOM_REPEAT_OPTIONS,
-  MEDICINE_FORM_TYPE,
+  // MEDICINE_FORM_TYPE,
   USER_CATEGORY,
-  NOTIFICATION_STAGES, DAYS
+  NOTIFICATION_STAGES, DAYS, MEDICINE_FORMULATION,
+  WHEN_TO_TAKE_ABBREVATIONS
 } from "../../../../constant";
 import Log from "../../../../libs/log";
 // import { Proxy_Sdk } from "../../proxySdk";
@@ -240,6 +241,7 @@ class MobileMReminderController extends Controller {
         start_time,
         critical = false,
         care_plan_id = 0,
+        when_to_take_abbr= null
       } = body;
       const {
         userId,
@@ -273,6 +275,7 @@ class MobileMReminderController extends Controller {
           strength,
           unit,
           when_to_take,
+          when_to_take_abbr,
           medication_stage,
           critical
         }
@@ -338,27 +341,29 @@ class MobileMReminderController extends Controller {
       let details = mReminderDetails.getBasicInfo.details;
       details = { ...details, ...eventData };
 
-      const eventScheduleData = {
-        patient_id: patient.getUserId(),
-        type: EVENT_TYPE.MEDICATION_REMINDER,
-        event_id: mReminderDetails.getId,
-        details,
-        status: EVENT_STATUS.SCHEDULED,
-        start_date,
-        end_date,
-        when_to_take,
-        participants: [userId, patient.getUserId()],
-        actor: {
-          id: userId,
-          details: { name: full_name, category }
-        },
-        participant_one: patient.getUserId(),
-        participant_two: userId
-      };
-
-      const QueueService = new queueService();
-
-      const sqsResponse = await QueueService.sendMessage(eventScheduleData);
+      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
+      if(when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
+        const eventScheduleData = {
+          patient_id: patient.getUserId(),
+          type: EVENT_TYPE.MEDICATION_REMINDER,
+          event_id: mReminderDetails.getId,
+          details,
+          status: EVENT_STATUS.SCHEDULED,
+          start_date,
+          end_date,
+          when_to_take,
+          participants: [userId, patient.getUserId()],
+          actor: {
+            id: userId,
+            details: { name: full_name, category }
+          },
+          participant_one: patient.getUserId(),
+          participant_two: userId
+        };
+  
+        const QueueService = new queueService();
+        const sqsResponse = await QueueService.sendMessage(eventScheduleData);
+      }
 
       const medicationJob = MedicationJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -445,7 +450,7 @@ class MobileMReminderController extends Controller {
         [KEY_DOSE]: DOSE_AMOUNT,
         [KEY_UNIT]: DOSE_UNIT,
         [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
-        [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
+        [KEY_MEDICINE_TYPE]: MEDICINE_FORMULATION
       };
       return raiseSuccess(
         res,
@@ -543,6 +548,7 @@ class MobileMReminderController extends Controller {
         strength,
         unit,
         when_to_take,
+        when_to_take_abbr,
         medication_stage = "",
         description,
         start_time,
@@ -575,6 +581,7 @@ class MobileMReminderController extends Controller {
           strength,
           unit,
           when_to_take,
+          when_to_take_abbr,
           medication_stage,
           critical
         }
@@ -621,9 +628,12 @@ class MobileMReminderController extends Controller {
         participant_two: userId
       };
 
-      const QueueService = new queueService();
+      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
+      if(when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
+        const QueueService = new queueService();
+        await QueueService.sendMessage(eventScheduleData);
+      }
 
-      await QueueService.sendMessage(eventScheduleData);
 
       const medicationJob = MedicationJob.execute(
         NOTIFICATION_STAGES.UPDATE,

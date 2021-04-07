@@ -4,7 +4,7 @@ import generateRow from "./dataRow";
 import {PERMISSIONS} from "../../../constant";
 import getColumn from "./header";
 import Table from "antd/es/table";
-
+import messages from "./messages";
 
 class VitalTable extends Component {
     constructor(props) {
@@ -91,11 +91,17 @@ class VitalTable extends Component {
         }
     };
 
+    formatMessage = data => this.props.intl.formatMessage(data);
+
     render() {
         const {
             intl: { formatMessage } = {},
         } = this.props;
         const { getLoadingComponent, getDataSource } = this;
+
+        const vitalLocale = {
+            emptyText:this.formatMessage(messages.emptyVitalTable)
+        }
 
         return (
             <Table
@@ -110,6 +116,7 @@ class VitalTable extends Component {
                 pagination={{
                     position: "bottom",
                 }}
+                locale={vitalLocale}
             />
         );
     }

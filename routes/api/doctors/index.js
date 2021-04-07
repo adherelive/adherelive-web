@@ -134,6 +134,12 @@ router.delete(
 );
 
 router.get(
+  "/patients",
+  Authenticate,
+  DoctorController.getPaginatedDataForPatients
+);
+
+router.get(
   "/consultations",
   Authenticate,
   isDoctorOrProvider,

@@ -7,7 +7,9 @@ import {
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
   S3_DOWNLOAD_FOLDER,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES,
+  RADIOLOGY,
+  FAVOURITE_TYPE
 } from "../../../../constant";
 import moment from "moment";
 
@@ -42,6 +44,9 @@ import documentService from "../../../services/uploadDocuments/uploadDocuments.s
 import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
 import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 
+
+import * as AppointmentHelper from "./helper";
+
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 
 class MobileAppointmentController extends Controller {
@@ -68,7 +73,8 @@ class MobileAppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
-        critical = false
+        critical = false,
+        radiology_type = ""
       } = body;
       const {
         userId,
@@ -124,7 +130,8 @@ class MobileAppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical
+          critical,
+          radiology_type
         }
       };
 
@@ -275,7 +282,8 @@ class MobileAppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
-        critical = false
+        critical = false,
+        radiology_type = ""
       } = body;
       const {
         userId,
@@ -356,7 +364,8 @@ class MobileAppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical
+          critical,
+          radiology_type
         }
       };
 
@@ -477,18 +486,46 @@ class MobileAppointmentController extends Controller {
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const appointmentDetails = await featureDetailService.getDetailsByData({
-        feature_type: FEATURE_TYPE.APPOINTMENT
-      });
 
-      const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+      const {userDetails: {userData: {category}, userCategoryId} = {}, 
+             headers: {version = null} = {}, headers = {}} = req;
+
+      let featureDetails = {}
+
+      if(version) {
+        const appointmentDetails = await featureDetailService.getDetailsByData({
+          feature_type: FEATURE_TYPE.APPOINTMENT
+        });
+  
+        const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
+        featureDetails = appointmentData.getFeatureDetails();
+        const {type_description, radiology_type_data} =  featureDetails || {};
+  
+        const userTypeData = {
+          id: userCategoryId,
+          category,
+        };
+  
+        const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
+        featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
+        const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
+        featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
+   
+      } else {
+        const prevVersionsAppointmentDetails = await featureDetailService.getDetailsByData({
+          feature_type: FEATURE_TYPE.PREV_VERSION_APPOINTMENT
+        });
+  
+        const prevVersionsAppointmentData = await FeatureDetailsWrapper(prevVersionsAppointmentDetails);
+        featureDetails = prevVersionsAppointmentData.getFeatureDetails();
+      }
 
       return raiseSuccess(
         res,
         200,
         {
           static_templates: {
-            appointments: { ...appointmentData.getFeatureDetails() }
+            appointments: { ...featureDetails }
           }
         },
         "Appointment details fetched successfully"

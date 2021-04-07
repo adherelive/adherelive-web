@@ -135,6 +135,71 @@ const messages = defineMessages({
     description: "",
     defaultMessage: "---"
   },
+  waitingForPatient: {
+    id: "app.chatFullScreen.waitingForPatient",
+    description: "",
+    defaultMessage: "Waiting for {name} to connect"
+  },
+  startCall: {
+    id: "app.chatFullScreen.startCall",
+    description: "",
+    defaultMessage: "Start Call"
+  },
+  endCall: {
+    id: "app.chatFullScreen.endCall",
+    description: "",
+    defaultMessage: "End Call"
+  },
+  muteAudio: {
+    id: "app.chatFullScreen.muteAudio",
+    description: "",
+    defaultMessage: "Mute"
+  },
+  unMuteAudio: {
+    id: "app.chatFullScreen.unMuteAudio",
+    description: "",
+    defaultMessage: "Un-Mute"
+  },
+  disableVideo: {
+    id: "app.chatFullScreen.disableVideo",
+    description: "",
+    defaultMessage: "Disable Video"
+  },
+  enableVideo: {
+    id: "app.chatFullScreen.enableVideo",
+    description: "",
+    defaultMessage: "Enable Video"
+  },
+  readyToCall:{
+    id: "app.chatFullScreen.readyToCall",
+    description: "",
+    defaultMessage: "Ready to call"
+  },
+  audioCheck:{
+    id: "app.chatFullScreen.audioCheck",
+    description: "",
+    defaultMessage: "Audio Check"
+  },
+  checkAudioVideo:{
+    id: "app.chatFullScreen.checkAudioVideo",
+    description: "",
+    defaultMessage: "Check your audio and video"
+  },
+  audioOff:{
+    id: "app.chatFullScreen.audioOff",
+    description: "",
+    defaultMessage: "Audio is Off"
+  },
+  videoOff:{
+    id: "app.chatFullScreen.videoOff",
+    description: "",
+    defaultMessage: "Video is Off"
+  },
+  adhereLive:{
+    id: "app.chatFullScreen.adhereLive",
+    description: "",
+    defaultMessage: "Adhere.Live"
+  },
 });
 
 export default messages;

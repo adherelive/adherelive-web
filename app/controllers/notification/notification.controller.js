@@ -15,10 +15,9 @@ class NotificationController extends Controller {
   }
 
   getNotifications = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const { raiseSuccess, raiseServerError } = this;
     try {
       const { body: { activities } = {}, userDetails: { userId } = {} } = req;
-      console.log("43756464865745348=========>>", activities);
       const notificationIds = [];
 
       let notificationData = {};
@@ -33,7 +32,6 @@ class NotificationController extends Controller {
       for (let key in activities) {
         const { activity: activityData, is_read, group_id } = activities[key];
 
-        Log.debug("activityData", activityData[0]);
         const { id, verb } = activityData[0] || {};
         notificationIds.push(id);
 
@@ -43,8 +41,6 @@ class NotificationController extends Controller {
           is_read: is_read,
           group_id
         });
-
-        Log.debug("details", details);
 
         const {
           notifications = {},
@@ -101,7 +97,7 @@ class NotificationController extends Controller {
   };
 
   raiseChatNotification = async(req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const { raiseSuccess, raiseServerError } = this;
     try{
       const { body: { message = "", receiver_id = "" } = {}, userDetails  = {} } = req || {};
 
@@ -132,7 +128,7 @@ class NotificationController extends Controller {
       );
       await NotificationSdk.execute(chatJob);
 
-      return this.raiseSuccess(
+      return raiseSuccess(
         res,
         200,
         {

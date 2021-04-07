@@ -17,7 +17,8 @@ import AddConsultationFeeDrawer from "../../../Containers/Drawer/addConsultation
 import AddAccountDetailsDrawer from "../../../Containers/Drawer/addAccountDetailsDrawer";
 import EditAccountDetailsDrawer from "../../../Containers/Drawer/editAccountDetailsDrawer";
 
-import ConsultationFeeTable from "../../../Containers/ConsultationFees";
+import DoctorConsultationFeeTable from "../../../Containers/DoctorConsultationFee";
+import DoctorAccountDetails from "../../../Containers/DoctorAccountDetails";
 
 import {
   BarChartOutlined,
@@ -143,6 +144,7 @@ class DoctorSettingsPage extends Component {
     const { openConsultationFeeDrawer } = this.props;
     const { doctorPaymentProducts } = this.state;
     const { [id]: paymentData } = doctorPaymentProducts;
+    console.log("8723562837462375468327453287",{id,paymentData});
     openConsultationFeeDrawer(paymentData);
   };
 
@@ -151,7 +153,8 @@ class DoctorSettingsPage extends Component {
     openRazorpayAccountDetailsDrawer();
   };
 
-  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => () => {
+  displayEditRazorpayAccountDetails = fetchedAccountDetails_id => (e) => {
+    e.preventDefault();
     const { openEditRazorpayAccountDetailsDrawer } = this.props;
     this.setState({ editDetailsSelectedID: fetchedAccountDetails_id });
     openEditRazorpayAccountDetailsDrawer();
@@ -395,22 +398,19 @@ class DoctorSettingsPage extends Component {
     const {displayEditDoctorPaymentProduct} = this;
 
     return (
-      <div className="wp70 flex direction-column justify-space-between">
+      <div className="wp100 flex direction-column justify-space-between">
         <div>
           {noDoctorPaymentProducts ? (
-            <div>{this.noConsultationFeeDisplay()}</div>
+            
+            <div className="flex align-center justify-center " >{this.noConsultationFeeDisplay()}</div>
+
+          
           ) : (
             <div className="flex direction-column align-center justify-center">
               {/* {this.displayDoctorPaymentProducts()} */}
-
-              <ConsultationFeeTable
-                doctorPaymentProducts={doctorPaymentProducts}
-                deleteDoctorProduct={this.deleteDoctorProduct}
-                editDoctorProduct={this.displayEditDoctorPaymentProduct}
-              />
-
-
-             
+              
+              <DoctorConsultationFeeTable/>
+              
             </div>
           )}
         </div>
@@ -635,55 +635,17 @@ class DoctorSettingsPage extends Component {
           {this.getAddAccountDetailsDisplay()}
         </div>
         <div className="wp100 flex flex-wrap">
-          {this.getAddedAccountDetails()}
+          {/* {this.getAddedAccountDetails()} */}
+          <DoctorAccountDetails/>
         </div>
       </Fragment>
     );
   };
 
-  render() {
-    const {
-      selectedKey,
-    } = this.state;
-    const { getPaymentDetails } = this;
-    const { noDoctorPaymentProducts } = this.state;
-    const {doctors = {} } = this.props;
-    const {provider_id} = Object.values(doctors)[0];
 
-    // console.log("56456786546789",provider_id);
-    
-
+  sidebar = () => {
     return (
-      <Fragment>
-        {/************************* HEADER *************************/}
-        {/* <div className="wp100 ml20 mt20 fs28 fw700 flex justify-start align-center">
-          {this.formatMessage(messages.doctor_settings_header_text)}
-        </div> */}
-      
-      
-        <div className="wp100 pt20  mb20 fs28 fw700 flex justify-space-between align-center">
-        <div className="ml20 flex flex-start align-center">
-        {this.formatMessage(messages.doctor_settings_header_text)}
-        </div>
-
-        {!noDoctorPaymentProducts && selectedKey === CONSULTATION_FEE &&  !provider_id  &&(
-          <div className="flex flex-end align-center">
-            <Button
-              type="primary"
-              className="ml10 mr20 add-button "
-              icon={"plus"}
-              onClick={this.displayAddDoctorPaymentProduct}
-            >
-              <span className="fs16">
-                {this.formatMessage(messages.addMore)}
-              </span>
-            </Button>
-          </div>
-        )}
-      </div>
-        {/************************* SIDEBAR *************************/}
-        <div className="wp100 p20 flex ">
-          <div className="br5 bg-grey h250 p20 wp30 flex direction-column ">
+      <div className="br5 bg-grey h250 p20 wp100 flex direction-column mw270 ">
             <div
               className="fs20 fw700 mb14 h-cursor-p"
               onClick={this.handleItemSelect(CONSULTATION_FEE)}
@@ -703,24 +665,93 @@ class DoctorSettingsPage extends Component {
               {this.getPaymentDetailsHeader()}
             </div>
           </div>
+    )
+  }
+
+  sidebarRelatedContent = () => {
+    const {
+      selectedKey,
+    } = this.state;
+    const { getPaymentDetails ,sidebar} = this;
+    const { noDoctorPaymentProducts } = this.state;
+    const {doctors = {} } = this.props;
+    const {provider_id} = Object.values(doctors)[0];
+
+    return (
+
+    <div className="wp100" >
+        {selectedKey === CONSULTATION_FEE && this.consultationFeeDisplay()}
+
+
+        {selectedKey === BILLING && (
+          <div className="wp100 flex direction-column justify-space-between">
+            <div className="flex direction-column align-center justify-center fs20 fw600">
+            {this.formatMessage(messages.billingDisplay)}
+            </div>
+          </div>
+        )}
+
+        {selectedKey === PAYMENT_DETAILS && (
+          <div className="wp100 ml10 mr10 flex direction-column justify-space-between mw635">
+            {/* {getPaymentDetails()} */}
+            <DoctorAccountDetails/>
+          </div>
+        )}
+    </div>
+    )
+    
+  }
+
+  render() {
+    const {
+      selectedKey,
+    } = this.state;
+    const { getPaymentDetails ,sidebar} = this;
+    const { noDoctorPaymentProducts } = this.state;
+    const {doctors = {} } = this.props;
+    const {provider_id} = Object.values(doctors)[0];
+
+    // console.log("56456786546789",provider_id);
+    
+
+    return (
+      <Fragment>
+        {/************************* HEADER *************************/}
+        {/* <div className="wp100 ml20 mt20 fs28 fw700 flex justify-start align-center">
+          {this.formatMessage(messages.doctor_settings_header_text)}
+        </div> */}
+      
+      
+        <div className="wp100 pt20  mb20 fs28 fw700 flex justify-space-between align-center">
+          
+        <div className="ml20 flex flex-start align-center">
+        {this.formatMessage(messages.doctor_settings_header_text)}
+        </div>
+
+        {!noDoctorPaymentProducts && selectedKey === CONSULTATION_FEE &&  !provider_id  &&(
+          <div className="flex flex-end align-center">
+            <Button
+              type="primary"
+              className="ml10 mr20 add-button "
+              icon={"plus"}
+              onClick={this.displayAddDoctorPaymentProduct}
+            >
+              <span className="fs16">
+                {this.formatMessage(messages.addMore)}
+              </span>
+            </Button>
+          </div>
+        )}
+      </div>
+
+        <div className="wp100 p20 flex flex-wrap">
+          {/************************* SIDEBAR *************************/}
+
+          <div className="wp30" >{this.sidebar()}</div>
 
           {/************************* SIDEBAR RELATED CONTENTS *************************/}
-          {selectedKey === CONSULTATION_FEE && this.consultationFeeDisplay()}
-
-
-          {selectedKey === BILLING && (
-            <div className="wp70 flex direction-column justify-space-between">
-              <div className="flex direction-column align-center justify-center fs20 fw600">
-              {this.formatMessage(messages.billingDisplay)}
-              </div>
-            </div>
-          )}
-
-          {selectedKey === PAYMENT_DETAILS && (
-            <div className="wp70 ml10 mr10 flex direction-column justify-space-between">
-              {getPaymentDetails()}
-            </div>
-          )}
+          <div className="wp70" >{this.sidebarRelatedContent()}</div>
+        
         </div>
 
         <AddConsultationFeeDrawer

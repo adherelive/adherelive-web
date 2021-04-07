@@ -511,6 +511,17 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Prescription"
     },
+    emptyAppointmentTable: {
+        id: "app.appointment.table.emptyAppointmentTable",
+        description: "",
+        defaultMessage: "No Appointment Data added yet"
+      },
+    videoCallBlocked: {
+        id: "app.appointment.table.videoCallBlocked",
+        description: "",
+        defaultMessage:
+            "You can not call this user as call feature is blocked for this user."
+    },  
 
 });
 

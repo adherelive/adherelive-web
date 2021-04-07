@@ -19,8 +19,8 @@ export const db = database => {
         allowNull: false
       },
       type: {
-        type: DataTypes.ENUM,
-        values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
+        type: DataTypes.STRING,
+        // values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION, MEDICINE_TYPE.SYRUP],
         defaultValue: MEDICINE_TYPE.TABLET
       },
       description: {
@@ -28,7 +28,15 @@ export const db = database => {
       },
       details: {
         type: DataTypes.JSON
-      }
+      },
+      creator_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      public_medicine: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
     },
     {
       underscored: true,

@@ -4,7 +4,7 @@ import { Table, Icon } from "antd";
 import generateRow from "./dataRow";
 import getColumn from "./header";
 // import { getAppointmentsForPatientUrl } from "../../../Helper/url/appointments";
-
+import messages from "./messages";
 class PatientTable extends Component {
   constructor(props) {
     super(props);
@@ -44,6 +44,8 @@ class PatientTable extends Component {
     });
   };
 
+  formatMessage = data => this.intl.formatMessage(data);
+
   render() {
     const { onRow, onSelectChange, getLoadingComponent, getDataSource } = this;
 
@@ -56,12 +58,18 @@ class PatientTable extends Component {
       intl: { formatMessage } = {}
     } = this.props;
 
+    const locale = {
+      emptyText: this.formatMessage(messages.emptyAppointmentTable)
+    };
+
+
     return (
       <Table
         // onRow={onRow}
         className="wp100"
         rowClassName={() => "pointer"}
         loading={loading === true ? getLoadingComponent() : false}
+        locale={locale}
         columns={getColumn({
           formatMessage,
           className: "pointer"

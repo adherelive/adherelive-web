@@ -92,6 +92,25 @@ class TwilioController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  getAllChats = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const allChannels = await twilioService.getAllMessages();
+
+      Log.debug("all Channels", allChannels);
+
+      return raiseSuccess(
+          res,
+          200,
+          { },
+          "GET ALL CHAT MESSAGES"
+      );
+    } catch (error) {
+      Log.debug("deleteChat 500 error", error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new TwilioController();

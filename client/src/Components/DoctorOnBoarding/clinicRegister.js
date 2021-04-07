@@ -514,7 +514,7 @@ class ClinicRegister extends Component {
             ) {
               history.push(`/doctors/${doctor_id}`);
             } else {
-              history.replace(PATH.DASHBOARD);
+              history.replace(PATH.LANDING_PAGE);
             }
           } else if (
             authenticated_category === USER_CATEGORY.DOCTOR &&
@@ -523,7 +523,7 @@ class ClinicRegister extends Component {
             history.replace(PATH.PROFILE);
             return;
           } else {
-            history.replace(PATH.DASHBOARD);
+            history.replace(PATH.LANDING_PAGE);
           }
         } else {
           message.error(errorMessage);

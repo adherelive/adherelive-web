@@ -42,7 +42,7 @@ import {
   FEATURES
 } from "../../../../constant";
 
-import { getFilePath } from "../../../helper/filePath";
+import { getFilePath, completePath } from "../../../helper/filePath";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
@@ -130,10 +130,10 @@ class MobileDoctorController extends Controller {
         let doctor_data = {
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           signature_pic: signature_pic
-            ? signature_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(signature_pic)
             : null,
           first_name,
           middle_name,
@@ -2016,6 +2016,97 @@ class MobileDoctorController extends Controller {
       return raiseServerError(res);
     }
   };
+
+
+  getPaginatedDataForPatients = async(req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try { 
+      const {
+        userDetails: { userId } = {},
+        query = {}
+      } = req;
+
+      const { offset=0, watchlist = 0, sort_by_name = 1 } = query || {};
+
+      const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+
+      const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
+      const endLimit = parseInt(limit, 10);
+
+      const doctor = await doctorService.getDoctorByData({
+        user_id: userId
+      });
+
+      const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
+      const sortByName = parseInt(sort_by_name, 10) === 0? 0: 1;
+
+      let doctorId = null, patients = {}, watchlistPatientIds = [], count = 0, patientIds = [];
+
+      if(doctor) {
+        const doctorData = await DoctorWrapper(doctor);
+        doctorId = doctorData.getDoctorId();
+
+        
+        const doctorAllInfo = await doctorData.getAllInfo();
+        const { watchlist_patient_ids = []} = doctorAllInfo || {};
+        watchlistPatientIds = watchlist_patient_ids;
+      }
+
+      if(getWatchListPatients) {
+        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+      } else {
+        count = await carePlanService.getDistinctPatientCounts(doctorId);
+      }
+
+      if(count > 0) {
+        const data = {
+          offset: offsetLimit,
+          limit: endLimit,
+          doctorId,
+          watchlistPatientIds,
+          watchlist: getWatchListPatients,
+          sortByName
+        }
+        const allPatients = await carePlanService.getPaginatedDataOfPatients(data);
+
+        for(const patient of allPatients) {
+          const formattedPatientData = patient
+  
+          const { id, details = {} } = formattedPatientData;
+          patientIds.push(id);
+          let watchlist = false;
+  
+          const { profile_pic } = details;
+          const updatedDetails =  {
+            ...details,
+            profile_pic: profile_pic ? completePath(profile_pic) : null,
+        };
+  
+          if(watchlistPatientIds.indexOf(id) !== -1) {
+            watchlist = true;
+          }
+  
+          patients[id] = {...formattedPatientData, watchlist, details: updatedDetails};
+        }
+      }
+      
+      return raiseSuccess(
+        res,
+        200,
+        {
+          total: count,
+          page_size: limit,
+          patient_ids: patientIds,
+          patients
+        },
+        "Patients data fetched successfully."
+      );
+      
+    } catch (error) {
+      Logger.debug("getPaginatedDataForPatients 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
 }
 
 export default new MobileDoctorController();

@@ -111,15 +111,12 @@ class PaymentController extends Controller {
     try {
       const { body, userDetails: { userCategoryId } = {} } = req;
 
-      const { id, name, type, amount } = req.body;
+      const {id} = req.body;
 
       const paymentProductService = new PaymentProductService();
       const deletedDoctorProduct = await paymentProductService.deleteDoctorProduct(
         {
-          id: id,
-          name: name,
-          type: type,
-          amount: amount
+          id: id
         }
       );
 

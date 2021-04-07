@@ -47,6 +47,7 @@ export default class DeactivateDoctorJob extends AuthJob {
         }
 
         templateData.push({
+            small_icon: process.config.app.icon_android,
             app_id: process.config.one_signal.app_id,
             headings: { en: "Doctor Association" },
             contents: {

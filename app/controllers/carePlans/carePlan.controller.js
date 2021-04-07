@@ -97,6 +97,7 @@ class CarePlanController extends Controller {
               organizer = {},
               type = "",
               type_description = "",
+              radiology_type = "",
               treatment_id = "",
               participant_two = {},
               date = ""
@@ -148,6 +149,7 @@ class CarePlanController extends Controller {
               reason,
               type,
               type_description,
+              radiology_type,
               critical
             }
           };
@@ -178,6 +180,7 @@ class CarePlanController extends Controller {
               date,
               description,
               type_description,
+              radiology_type,
               critical,
               appointment_type: type
             }

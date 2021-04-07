@@ -66,6 +66,11 @@ const messages = defineMessages({
         description: "",
         defaultMessage: "Submit"
     },
+    submitting: {
+        id: "app.addPatient.submitting",
+        description: "",
+        defaultMessage: "Submitting"
+    },
     somethingWentWrong: {
         id: "app.addPatient.somethingWentWrong",
         description: "",

@@ -47,7 +47,7 @@ class TimingModal extends Component {
         [FULL_DAYS.THU]: false,
         [FULL_DAYS.FRI]: false,
         [FULL_DAYS.SAT]: false,
-        [FULL_DAYS.SUN]: false
+        [FULL_DAYS.SUN]: false,
       },
       dayTimings: {
         [FULL_DAYS.MON]: {},
@@ -56,18 +56,15 @@ class TimingModal extends Component {
         [FULL_DAYS.THU]: {},
         [FULL_DAYS.FRI]: {},
         [FULL_DAYS.SAT]: {},
-        [FULL_DAYS.SUN]: {}
-      }
+        [FULL_DAYS.SUN]: {},
+      },
+      oneDaySelected: false,
     };
-
-    console.log("981273189732 constructor being called", this.state);
   }
 
   componentDidMount() {
-    const { timings = {}, daySelected: activeDays = {} } = this.props;
+    const { timings = {}, daySelected , oneDaySelected } = this.props;
     let newTimings = {};
-
-    console.log("981273189732 componentDidMount being called", {daySelected: activeDays, timings});
 
     for (let day in timings) {
       let dayTiming = {};
@@ -77,25 +74,44 @@ class TimingModal extends Component {
         dayTimingKeys.push(key);
         dayTiming[key] = {
           startTime: timing.startTime ? timing.startTime : "",
-          endTime: timing.endTime ? timing.endTime : ""
+          endTime: timing.endTime ? timing.endTime : "",
         };
       }
       newTimings[day] = {};
       newTimings[day].timings = dayTiming;
       newTimings[day].timingsKeys = dayTimingKeys;
     }
-    this.setState({ dayTimings: newTimings, daySelected: activeDays });
+    this.setState({ dayTimings: newTimings, daySelected });
+    if (this.checkAnyDaySelected(daySelected) > 0 && !oneDaySelected) {
+      this.setState({ oneDaySelected: true });
+    }
   }
 
+  componentDidUpdate() {
+    const { daySelected, oneDaySelected } = this.state;
+    if (this.checkAnyDaySelected(daySelected) === 1 && !oneDaySelected) {
+      this.setState({ oneDaySelected: true });
+    }
+  }
+
+  isOneDaySelected = () => {
+    const { daySelected = {} } = this.state;
+
+    return (
+      Object.values(daySelected).filter((day) => day === true).length === 1
+    );
+  };
+
   componentWillUnmount() {
-    console.log("981273189732 componentWillUnmount being called", this.state);
     this.setState({});
   }
 
-  formatMessage = data => this.props.intl.formatMessage(data);
+  formatMessage = (data) => this.props.intl.formatMessage(data);
 
-  toggleDaySelected = day => () => {
-    let { daySelected, dayTimings = {} } = this.state;
+  toggleDaySelected = (day) => () => {
+    let { daySelected, dayTimings = {}, oneDaySelected } = this.state;
+
+    const newDayTimings = { ...dayTimings };
     let newDaySelected = daySelected;
     let isDaySelected = newDaySelected[day];
     // if (isDaySelected) {
@@ -109,18 +125,73 @@ class TimingModal extends Component {
     // } else {
     //   newDaySelected[day] = !isDaySelected;
     // }
+
+    let initialDayTiming = {};
+    let initalDayTimingKeys = [];
+
+    if (oneDaySelected) {
+      const otherSelectedDay =
+        Object.keys(daySelected).filter(
+          (id) => daySelected[id] === true && id !== day
+        )[0] || null;
+
+      if (otherSelectedDay !== null) {
+        const { timings, timingsKeys } = dayTimings[otherSelectedDay] || {};
+
+        for (let index = 0; index < timingsKeys.length; index++) {
+          const key = timingsKeys[index];
+          const { startTime, endTime } = timings[key];
+
+          const newKey = uuid();
+          initialDayTiming[newKey] = { startTime, endTime };
+          initalDayTimingKeys.push(newKey);
+        }
+      }
+    } else {
+      const newKey = uuid();
+      initialDayTiming[newKey] = { startTime: "", endTime: "" };
+      initalDayTimingKeys.push(newKey);
+    }
+
+    newDayTimings[day].timings = initialDayTiming;
+    newDayTimings[day].timingsKeys = initalDayTimingKeys;
+
     newDaySelected[day] = !isDaySelected;
-    let key = uuid();
-    let dayTiming = {};
-    dayTiming[key] = { startTime: "", endTime: "" };
-    let dayTimingKeys = [key];
-    dayTimings[day].timings = dayTiming;
-    dayTimings[day].timingsKeys = dayTimingKeys;
-    console.log("1987371823 toggleDaySelected", {daySelected: newDaySelected, dayTimings});
-    this.setState({ daySelected: newDaySelected, dayTimings });
+    const flag = newDaySelected[day];
+    if(!flag){
+      let removedDayTiming={};
+      let removedDayTimingKeys = [];
+      const newKey = uuid();
+      removedDayTiming[newKey] = { startTime: "", endTime: "" };
+      removedDayTimingKeys.push(newKey);
+      newDayTimings[day].timings = removedDayTiming;
+      newDayTimings[day].timingsKeys = removedDayTimingKeys;
+    }
+
+    
+    
+    // let key = uuid();
+    // let dayTiming = {};
+    // dayTiming[key] = { startTime: "", endTime: "" };
+    // let dayTimingKeys = [key];
+    // dayTimings[day].timings = dayTiming;
+    // dayTimings[day].timingsKeys = dayTimingKeys;
+    // console.log("1987371823 toggleDaySelected", {
+    //   daySelected: newDaySelected,
+    //   dayTimings,
+    // });
+    if(this.checkAnyDaySelected(newDaySelected) === 0) {
+      this.setState({oneDaySelected: false});
+    }
+
+    this.setState({ daySelected: newDaySelected, dayTimings: newDayTimings });
   };
 
-  addDayTimings = day => () => {
+  checkAnyDaySelected = (days) => {
+    return Object.values(days).filter(day => day === true).length
+  };
+
+  addDayTimings = (day) => () => {
     let key1 = uuid();
     let { dayTimings = {} } = this.state;
     let newDayTimings = dayTimings;
@@ -128,10 +199,19 @@ class TimingModal extends Component {
     let newTimings = newDayTimings[day].timings;
     newDayTimings[day].timingsKeys.push(key1);
 
-    if(newDayTimings[day].timingsKeys.length > 2) {
-      newTimings[key1] = { startTime: moment().add(newDayTimings[day].timingsKeys.length - 1, "hours"), endTime: moment().add(newDayTimings[day].timingsKeys.length, "hours") };
+    if (newDayTimings[day].timingsKeys.length > 2) {
+      newTimings[key1] = {
+        startTime: moment().add(
+          newDayTimings[day].timingsKeys.length - 1,
+          "hours"
+        ),
+        endTime: moment().add(newDayTimings[day].timingsKeys.length, "hours"),
+      };
     } else {
-      newTimings[key1] = { startTime: moment().add(1, "hours"), endTime: moment().add(2, "hours") };
+      newTimings[key1] = {
+        startTime: moment().add(1, "hours"),
+        endTime: moment().add(2, "hours"),
+      };
     }
     newDayTimings[day].timings = newTimings;
     this.setState({ dayTimings: newDayTimings });
@@ -150,7 +230,7 @@ class TimingModal extends Component {
     this.setState({ dayTimings: newDayTimings });
   };
 
-  handleTimeSelect = ({ day, key, type }) => time => {
+  handleTimeSelect = ({ day, key, type }) => (time) => {
     const { dayTimings = {} } = this.state;
     let specificDayTiming = { ...dayTimings } || {};
     const { timings = {} } = dayTimings[day] || {};
@@ -167,23 +247,26 @@ class TimingModal extends Component {
         .minute(minute)
         .add(30, "minutes");
     } else {
-      if(startTime) {
-
-        const timeDifference = moment(startTime).diff(moment().hour(hour24).minute(minute), 'minute');
-        if(timeDifference > 0) {
-            message.warn("End time cannot be before start time of the clinic");
-            endTime = null;
-            // endTime = moment(startTime).add(30,"minutes");
+      if (startTime) {
+        const timeDifference = moment(startTime).diff(
+          moment()
+            .hour(hour24)
+            .minute(minute),
+          "minute"
+        );
+        if (timeDifference > 0) {
+          message.warn("End time cannot be before start time of the clinic");
+          endTime = null;
+          // endTime = moment(startTime).add(30,"minutes");
         } else {
           endTime = moment()
-              .hour(hour24)
-              .minute(minute);
-        }
-
-      } else {
-        endTime = moment()
             .hour(hour24)
             .minute(minute);
+        }
+      } else {
+        endTime = moment()
+          .hour(hour24)
+          .minute(minute);
       }
     }
 
@@ -191,8 +274,8 @@ class TimingModal extends Component {
       ...timings,
       [key]: {
         startTime,
-        endTime
-      }
+        endTime,
+      },
     };
     specificDayTiming[day].timings = updatedTimings;
     this.setState({ dayTimings: specificDayTiming });
@@ -217,7 +300,7 @@ class TimingModal extends Component {
         }
         switchToMinuteOnHourSelect={true}
         closeOnMinuteSelect={true}
-        onChange={handleTimeSelect({day, key, type})}
+        onChange={handleTimeSelect({ day, key, type })}
         // onDoneClick={doneBtn}
         doneButton={null}
         coarseMinutes={15}
@@ -231,15 +314,20 @@ class TimingModal extends Component {
 
     const { startTime = null } = timings[key] || {};
 
-    if(!startTime){
+    if (!startTime) {
       let { dayTimings = {} } = this.state;
       let newDayTimings = dayTimings;
       let newTimings = newDayTimings[day].timings;
-      newTimings[key] = { startTime: moment(), endTime: moment().add(1, "hour") };
+      newTimings[key] = {
+        startTime: moment(),
+        endTime: moment().add(1, "hour"),
+      };
       newDayTimings[day].timings = newTimings;
       this.setState({ dayTimings: newDayTimings });
     }
-    return startTime ? moment(startTime).format("hh:mm A") : moment().format("hh:mm A");
+    return startTime
+      ? moment(startTime).format("hh:mm A")
+      : moment().format("hh:mm A");
   };
 
   getEndTime = ({ day, key }) => {
@@ -255,12 +343,13 @@ class TimingModal extends Component {
   renderTiming = () => {
     let { daySelected = {}, dayTimings = {} } = this.state;
     const { getTimePicker, getStartTime, getEndTime } = this;
+
+    console.log("12873891273 daySelected", { daySelected });
     return (
       <div className="flex direction-column wp100">
-        {Object.keys(daySelected).map(day => {
+        {Object.keys(daySelected).map((day) => {
           const { timingsKeys = [], timings = {} } = dayTimings[day];
 
-          console.log("1987371823 daySelected[day], timingsKeys", {daySelected: daySelected[day], timingsKeys});
           return (
             <div className="flex direction-column wp100 pt8 pb8">
               <div className="flex justify-space-between wp100 mb8 mt4">
@@ -284,6 +373,7 @@ class TimingModal extends Component {
                 <div className="flex direction-column wp100">
                   {timingsKeys.map((tKey, index) => {
                     // let minutesToAdd = 30 - (moment().minutes()) % 30;
+
                     return (
                       <div key={tKey} className="flex mb10">
                         <div className="flex direction-column flex-grow-1 mr24">
@@ -294,7 +384,7 @@ class TimingModal extends Component {
                             overlay={getTimePicker({
                               day,
                               key: tKey,
-                              type: START_TIME
+                              type: START_TIME,
                             })}
                           >
                             <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
@@ -319,7 +409,7 @@ class TimingModal extends Component {
                               overlay={getTimePicker({
                                 day,
                                 key: tKey,
-                                type: END_TIME
+                                type: END_TIME,
                               })}
                             >
                               <div className="p10 br-brown-grey br5 wp100 h50 flex align-center justify-space-between pointer">
@@ -341,7 +431,7 @@ class TimingModal extends Component {
     );
   };
 
-  setDayStartTime = (day, key) => time => {
+  setDayStartTime = (day, key) => (time) => {
     let { dayTimings = {} } = this.state;
     let newDayTimings = dayTimings;
     let { timings = {} } = newDayTimings[day];
@@ -388,7 +478,7 @@ class TimingModal extends Component {
     }
   };
 
-  setDayEndTime = (day, key) => time => {
+  setDayEndTime = (day, key) => (time) => {
     let { dayTimings = {} } = this.state;
     let newDayTimings = dayTimings;
     let { timings = {} } = newDayTimings[day];
@@ -447,7 +537,7 @@ class TimingModal extends Component {
     // this.setState({ ...Initial_State });
   };
 
-  handleChange = address => {
+  handleChange = (address) => {
     this.setState({ address });
   };
 
@@ -458,17 +548,16 @@ class TimingModal extends Component {
     // this.setState({ ...Initial_State });
   };
 
-  handleChangeAddress = address => {
+  handleChangeAddress = (address) => {
     this.setState({ address });
   };
 
-  handleSelect = address => {
+  handleSelect = (address) => {
     this.setState({ address });
   };
 
   render() {
     const { visible } = this.props;
-    console.log("981273189732 in timingModal", this.state);
     return (
       <Modal
         visible={visible}
@@ -482,7 +571,7 @@ class TimingModal extends Component {
           </Button>,
           <Button key="submit" type="primary" onClick={this.handleSave}>
             {this.formatMessage(messages.submit)}
-          </Button>
+          </Button>,
         ]}
       >
         <div className="location-container">{this.renderTiming()}</div>

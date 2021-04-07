@@ -1,7 +1,17 @@
 import { Drawer } from "antd";
 import React,{Component , Fragment} from "react";
 import {injectIntl} from "react-intl";
-import { DELETE_TEMPLATE_RELATED_TYPE,MEDICATION_TIMING,DAYS_TEXT_NUM_SHORT, EVENT_TYPE, MEDICATION_TIMING_HOURS, MEDICATION_TIMING_MINUTES, TABLET, SYRUP } from "../../../constant";
+import {
+    DELETE_TEMPLATE_RELATED_TYPE,
+    MEDICATION_TIMING,
+    DAYS_TEXT_NUM_SHORT,
+    EVENT_TYPE,
+    MEDICATION_TIMING_HOURS,
+    MEDICATION_TIMING_MINUTES,
+    TABLET,
+    SYRUP,
+    MEDICINE_UNITS
+} from "../../../constant";
 import moment from "moment";
 import message from "antd/es/message";
 import Icon from "antd/es/icon";
@@ -16,6 +26,7 @@ import SyrupIcon from "../../../Assets/images/pharmacy.png";
 import uuid from 'react-uuid';
 import messages from "./message";
 import Input from "antd/es/input";
+import {PoweroffOutlined}  from "@ant-design/icons";
 
 class TemplatePageCreateDrawer extends Component{
     constructor(props){
@@ -42,7 +53,8 @@ class TemplatePageCreateDrawer extends Component{
             deleteMedicationKeys:[],
             deleteAppointmentKeys:[],
             deleteVitalKeys:[],
-            templateEdited:false
+            templateEdited:false,
+            submitting:false
 
         };
     }
@@ -107,7 +119,8 @@ class TemplatePageCreateDrawer extends Component{
                         critical,
                         description='',
                         appointment_type='',
-                        type_description=''
+                        type_description='',
+                        radiology_type='',
                     }={},
                     provider_id='',
                     provider_name=''
@@ -129,7 +142,8 @@ class TemplatePageCreateDrawer extends Component{
                         critical,
                         description,
                         appointment_type,
-                        type_description
+                        type_description,
+                        radiology_type
                     },
                     provider_id,
                     provider_name
@@ -156,7 +170,8 @@ class TemplatePageCreateDrawer extends Component{
                         description='',
                         repeat_days=[],
                         when_to_take=[],
-                        medicine_type=''
+                        medicine_type='',
+                        when_to_take_abbr=''
                     } = {},
                    
                 } = template_medications[mId] || {};
@@ -174,7 +189,8 @@ class TemplatePageCreateDrawer extends Component{
                         repeat_days,
                         when_to_take,
                         medicine_type,
-                        description
+                        description,
+                        when_to_take_abbr
                     }
         
                 }
@@ -434,6 +450,7 @@ class TemplatePageCreateDrawer extends Component{
     validateData = (medicationsData, appointmentsData, vitalsData,name) => {
 
         if(!name){
+            message.error(this.formatMessage(messages.giveName));
             return false;
         }
 
@@ -449,14 +466,31 @@ class TemplatePageCreateDrawer extends Component{
                         strength ='',
                         repeat_days =[],
                         when_to_take = [],
+                        when_to_take_abbr='',
                         medicine_type ='',
                         description=''
                     } = {}
             } = medication || {};
+
+            // console.log("198623861283 check", {
+            //     condition: !medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  !repeat_days.length ||
+            //         !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length,
+            //     otherCondition: unit !== MEDICINE_UNITS.ML && !quantity,
+            //     medicine_id,
+            //     unit,
+            //     repeat,
+            //     quantity,
+            //     repeat_days,
+            //     medicine_type,
+            //     strength,
+            //     duration,
+            //     when_to_take
+            // });
            
-            if (!medicine_id || !unit || !repeat || (unit !== 'ml' && !quantity) ||  !repeat_days.length ||
-                !medicine_type || (!duration && duration !== null) || !strength  || !when_to_take.length) {
-               
+            if (!medicine_id || !unit || !repeat || (unit !== MEDICINE_UNITS.ML && !quantity) ||  (when_to_take.length > 0 && !repeat_days.length) ||
+                !medicine_type || (!duration && duration !== null) || !strength) {
+                    // console.log("8932648723648723462387",{flag1:!medicine_type,flag2:(!duration && duration !== null),flag3:!strength,duration});
+
                 message.error("Medication Error");
                 return false;
             }
@@ -468,29 +502,30 @@ class TemplatePageCreateDrawer extends Component{
                 time_gap =null,
                 details: {
                     date ='',
-                    critical ='',
-                    description ='',
+                    // critical ='',
+                    // description ='',
                     appointment_type='',
-                    type_description=''
+                    type_description='',
+                    radiology_type
                 } = {},
                 provider_id ='',
-                provider_name =''
+                // provider_name =''
             } = appointment || {};
 
             if (!reason || (!time_gap && time_gap!==null) || !date || !appointment_type
                 || !type_description || !provider_id  ) {
               
-                 console.log("386428376483724632874",{
-                        reason:!reason,
-                        time_gap:(!time_gap && time_gap!==null),
-                        date:!date,
-                        appointment_type:!appointment_type,
-                        type_description:!type_description,
-                        provider_id:!provider_id,
-                        appointment:appointment,
-                        dateIsssss:date,
-                        appointmentsData
-                    });
+                 // console.log("386428376483724632874",{
+                 //        reason:!reason,
+                 //        time_gap:(!time_gap && time_gap!==null),
+                 //        date:!date,
+                 //        appointment_type:!appointment_type,
+                 //        type_description:!type_description,
+                 //        provider_id:!provider_id,
+                 //        appointment:appointment,
+                 //        dateIsssss:date,
+                 //        appointmentsData
+                 //    });
 
                     
                 message.error(this.formatMessage(messages.appointmentError));
@@ -545,7 +580,7 @@ class TemplatePageCreateDrawer extends Component{
                 const deleteMedArr=deleteMedicationKeys;
                 const deleteAppArr = deleteAppointmentKeys;
                 const deleteVitalArr = deleteVitalKeys;
-            
+                this.setState({submitting:true});
                 const response  = await updateCareplanTemplate(carePlanTemplateId,{medicationsData, appointmentsData,vitalsData, name });
 
                 const {payload : {data = {} , message : res_msg = ''} , status, statusCode } = response || {};
@@ -591,9 +626,11 @@ class TemplatePageCreateDrawer extends Component{
                 }else{
                     message.error(res_msg);
                 }
+                this.setState({submitting:false});
 
             }catch(error){
                 console.log("error -->",error);
+                this.setState({submitting:false});
                 message.warn(error);
             }
             
@@ -745,7 +782,8 @@ class TemplatePageCreateDrawer extends Component{
                             strength ='',
                             repeat_days =[],
                             when_to_take =[],
-                            medicine_type=''
+                            medicine_type='',
+                            when_to_take_abbr=''
                         } = {}
         
                     } = medications[key];
@@ -775,28 +813,38 @@ class TemplatePageCreateDrawer extends Component{
                     }
 
                     if (moment(start_date).isSame(moment(), 'D')) {
-                        for (let wtt of when_to_take) {
-                            let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
-                            minDiff = minDiff === 0 && newMinDiff > 0 ? newMinDiff : newMinDiff > 0 && newMinDiff < minDiff ? newMinDiff : minDiff;
-                            closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
+                        if(when_to_take.length > 0) {
+                            for (let wtt of when_to_take) {
+                                let newMinDiff = moment().set({ hour: MEDICATION_TIMING_HOURS[wtt], minute: MEDICATION_TIMING_MINUTES[wtt] }).diff(moment());
+                                minDiff = minDiff === 0 && newMinDiff > 0 ? newMinDiff : newMinDiff > 0 && newMinDiff < minDiff ? newMinDiff : minDiff;
+                                closestWhenToTake = minDiff === newMinDiff ? wtt : closestWhenToTake;
+                            }
                         }
                     }
                     let medTimingsToShow = '';
-                    for (let wtt in when_to_take) {
-                        let timing_temp = MEDICATION_TIMING[when_to_take[wtt]];
-                        let txt='';
-                        let time_temp = '';
-                        if (timing_temp){
-                            txt=MEDICATION_TIMING[when_to_take[wtt]].text;
-                            time_temp = MEDICATION_TIMING[when_to_take[wtt]].time;
+
+                    if(when_to_take.length > 0) {
+                        for (let wtt in when_to_take) {
+                            let timing_temp = MEDICATION_TIMING[when_to_take[wtt]];
+                            let txt='';
+                            let time_temp = '';
+                            if (timing_temp){
+                                txt=MEDICATION_TIMING[when_to_take[wtt]].text;
+                                time_temp = MEDICATION_TIMING[when_to_take[wtt]].time;
+                            }
+                            medTimingsToShow += `${txt} `;
+                            medTimingsToShow += `(${time_temp})${wtt < when_to_take.length - 1 ? ', ' : ''}`
                         }
-                        medTimingsToShow += `${txt} `;
-                        medTimingsToShow += `(${time_temp})${wtt < when_to_take.length - 1 ? ', ' : ''}`
                     }
                     nextDueTime = MEDICATION_TIMING[closestWhenToTake ? closestWhenToTake : '4'].time;
-                    
-                    let whenTotakeTime = when_to_take.length>0 ? MEDICATION_TIMING[when_to_take[0]].time : '';
-                    let nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${whenTotakeTime}`;
+
+                    let nextDue = null;
+                    if(when_to_take.length > 0) {
+                        const whenTotakeTime = when_to_take.length>0 ? MEDICATION_TIMING[when_to_take[0]].time : '';
+                        nextDue = moment(start_date).isSame(moment(), 'D') ? `Today at ${nextDueTime}` : `${moment(start_date).format('D MMM')} at ${whenTotakeTime}`;
+                    } else {
+                        nextDue = this.formatMessage(messages.sosMessage);
+                    }
 
                     return (
                         <div className='flex wp100 flex-grow-1 align-center' key={key}>
@@ -905,9 +953,14 @@ class TemplatePageCreateDrawer extends Component{
 
     }
 
+    getDuration = (startDate, endDate) => {
+        return moment(endDate).startOf("day").diff(moment(startDate).startOf("day"), "days");
+    };
+
     editMedication = (data) => {
         let { medications = {}, innerFormKey = '' , medicationIds={}} = this.state;
         let { medicines } = this.props;
+        const {getDuration} = this;
         let newMedication = medications[innerFormKey];
         const { end_date = "",
             medicine_id = "",
@@ -920,11 +973,12 @@ class TemplatePageCreateDrawer extends Component{
             unit = "",
             description = '',
             medicine_type = "",
-            when_to_take = ["3"] } = data;
+            when_to_take = ["3"],
+            when_to_take_abbr='' } = data;
 
         const { basic_info: { name = '', type = '' } = {} } = medicines[medicine_id];
 
-        let duration = moment(end_date).diff(moment(start_date),'days');
+        let duration = getDuration(start_date, end_date);
         if(!end_date){
             duration=null;
         }
@@ -940,7 +994,8 @@ class TemplatePageCreateDrawer extends Component{
                 repeat_days,
                 when_to_take,
                 medicine_type,
-                description
+                description,
+                when_to_take_abbr
             }
 
         }
@@ -1033,6 +1088,7 @@ class TemplatePageCreateDrawer extends Component{
             critical,
             type = '',
             type_description = '',
+            radiology_type='',
             provider_id = 0,
             provider_name = '',
             participant_two = {},
@@ -1061,7 +1117,8 @@ class TemplatePageCreateDrawer extends Component{
                 critical,
                 description,
                 appointment_type:type,
-                type_description
+                type_description,
+                radiology_type
             },
             provider_id,
             provider_name
@@ -1092,7 +1149,8 @@ class TemplatePageCreateDrawer extends Component{
             strength = '',
             unit = "", 
             description = '',
-            when_to_take = ["3"] 
+            when_to_take = ["3"] ,
+            when_to_take_abbr=''
         } = data;
 
             
@@ -1118,7 +1176,8 @@ class TemplatePageCreateDrawer extends Component{
                 repeat_days,
                 when_to_take,
                 medicine_type,
-                description
+                description,
+                when_to_take_abbr
             }
 
         }
@@ -1208,6 +1267,7 @@ class TemplatePageCreateDrawer extends Component{
             critical,
             type = '',
             type_description = '',
+            radiology_type='',
             provider_id = 0,
             provider_name = '',
             start_time = {},
@@ -1235,7 +1295,8 @@ class TemplatePageCreateDrawer extends Component{
                 critical,
                 description,
                 appointment_type:type,
-                type_description
+                type_description,
+                radiology_type
             },
             provider_id,
             provider_name
@@ -1328,7 +1389,8 @@ class TemplatePageCreateDrawer extends Component{
 
     render() {
         let { showInner, innerFormType, innerFormKey, medications, showAddMedicationInner,
-            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name ,templateEdited=false } = this.state;
+            appointments, vitals ,showAddAppointmentInner  , showAddVitalInner ,name ,templateEdited=false,
+            submitting=false } = this.state;
         const { onClose, renderTemplateDetails } = this;
         let medicationData = innerFormKey && innerFormType == EVENT_TYPE.MEDICATION_REMINDER ? medications[innerFormKey] : {};
    
@@ -1344,6 +1406,7 @@ class TemplatePageCreateDrawer extends Component{
         if (visible !== true) {
             return null;
         }
+
        
         return (
             <Fragment>
@@ -1422,8 +1485,12 @@ class TemplatePageCreateDrawer extends Component{
                         </Button>
                         <Button onClick={this.onSubmit} type="primary"
                         disabled={!name || !templateEdited}
-                        >
-                            {this.formatMessage(messages.submit)}
+                        icon={submitting ? <PoweroffOutlined /> : null }
+                        loading={submitting}
+                    >
+                        {
+                          this.formatMessage(messages.submit)
+                        }
                         </Button>
                     </div>
                 </Drawer>

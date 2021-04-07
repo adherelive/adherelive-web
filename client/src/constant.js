@@ -18,7 +18,8 @@ export const PATH = {
   REGISTER_CLINICS: "/register-clinics",
   PROVIDER_REGISTER_CLINICS: "/register-clinics/:doctor_id",
   PATIENT_CONSULTING: "/patient-consulting/:patient_id",
-  PATIENT_CONSULTING_VIDEO: "/patient-consulting-video/:room_id",
+  TEST_PATIENT_CONSULTING_VIDEO: "/test/patient/consulting/video/:room_id",
+  PATIENT_CONSULTING_VIDEO: "/patient/consulting/video/:room_id",
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE: "/register-from-profile",
   REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",
@@ -32,7 +33,8 @@ export const PATH = {
       DETAILS: "/doctors/:id"
     },
     TOS_PP_EDITOR: "/details",
-    ALL_PROVIDERS : "/providers"
+    ALL_PROVIDERS : "/providers",
+    ALL_MEDICINES: "/medicines"
   },
   PROVIDER: {
     ROOT: "/provider",
@@ -41,6 +43,9 @@ export const PATH = {
       PAYMENT_PRODUCTS: "/doctors/:id/payment_products"
     },
     CALENDER: "/calender",
+    TRANSACTION_DETAILS:"/transaction_details"
+  },
+  DOCTOR:{
     TRANSACTION_DETAILS:"/transaction_details"
   },
   TERMS_OF_SERVICE: "/terms-of-service",
@@ -252,7 +257,8 @@ export const DRAWER = {
   MISSED_APPOINTMENT:"MISSED_APPOINTMENT",
   MISSED_VITAL:"MISSED_VITAL",
   CREATE_CAREPLAN_TEMPLATE:"CREATE_CAREPLAN_TEMPLATE",
-  EDIT_CAREPLAN_TEMPLATE:"EDIT_CAREPLAN_TEMPLATE"
+  EDIT_CAREPLAN_TEMPLATE:"EDIT_CAREPLAN_TEMPLATE",
+  ADD_MEDICINES:"ADD_MEDICINES"
 };
 
 export const USER_CATEGORY = {
@@ -540,8 +546,8 @@ export const MEDICINE_TYPE = {
 };
 
 export const MEDICINE_UNITS = {
-  MG: "mg",
-  ML: "ml"
+  MG: "1",
+  ML: "2"
 };
 
 export const FULL_DAYS = {
@@ -1734,9 +1740,9 @@ export const ACCOUNT_TYPES = {
   [CURRENT]: "Current"
 };
 
-const MEDICAL_TEST = "1";
-const CONSULTATION = "2";
-const RADIOLOGY = "3";
+export const MEDICAL_TEST = "1";
+export const CONSULTATION = "2";
+export const RADIOLOGY = "3";
 
 export const APPOINTMENT_TYPE_TITLE = {
   [MEDICAL_TEST]: {
@@ -1788,3 +1794,32 @@ export const DELETE_TEMPLATE_RELATED_TYPE={
   APPOINTMENT:"appointment",
   VITAL:"vital"
 }
+
+
+export const FAVOURITE_TYPE = {
+  MEDICINE: "medicine",
+  MEDICAL_TESTS: "medical_tests",
+  RADIOLOGY: "radiology"
+};
+
+export const USER_FAV_ALL_TYPES=[
+  FAVOURITE_TYPE.MEDICINE,
+  FAVOURITE_TYPE.MEDICAL_TESTS,
+  FAVOURITE_TYPE.RADIOLOGY
+]
+
+export const WHEN_TO_TAKE_ABBR_TYPES={
+  OD:"1",
+  BD:"2",
+  TD:"3",
+  SOS:"4"
+}
+
+
+export const LOCAL_STORAGE = {
+  LOCAL_IS_AUDIO_ON:"localIsAudioOn",
+  LOCAL_IS_VIDEO_ON:"localIsVideoOn"
+}
+
+export const ASCEND = "ascend";
+export const DESCEND = "descend";

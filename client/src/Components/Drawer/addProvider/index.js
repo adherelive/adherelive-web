@@ -14,6 +14,7 @@ class addProviderDrawer extends Component {
     super(props);
     this.state = {
       disabledOk: false,
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -113,9 +114,11 @@ class addProviderDrawer extends Component {
           razorpay_account_name 
           };
 
-       
           try {
             const {addProvider}=this.props;
+
+            this.setState({submitting:true});
+
             const response = await addProvider(data);
             const { status, payload: { message: msg } = {} } = response;
             if (status) {
@@ -125,8 +128,11 @@ class addProviderDrawer extends Component {
                 message.warn(msg);
             }
 
+            this.setState({submitting:false});
+
           } catch (err) {
             console.log("err", err);
+            this.setState({submitting:false});
             message.warn(formatMessage(messages.somethingWentWrong));
           }
         
@@ -157,7 +163,7 @@ class addProviderDrawer extends Component {
 
   render() {
     const { visible, loading } = this.props;
-    const {disabledOk} = this.state;
+    const {disabledOk , submitting=false} = this.state;
     const {
       onClose,
       formatMessage,
@@ -202,6 +208,7 @@ class addProviderDrawer extends Component {
             submitText={this.formatMessage(messages.submit)}
             submitButtonProps={submitButtonProps}
             cancelComponent={null}
+            submitting={submitting}
           />
         </Drawer>
       </Fragment>

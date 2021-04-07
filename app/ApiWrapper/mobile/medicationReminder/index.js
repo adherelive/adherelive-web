@@ -6,6 +6,7 @@ import eventService from "../../../services/scheduleEvents/scheduleEvent.service
 import moment from "moment";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../../constant";
 import EventWrapper from "../../common/scheduleEvents";
+import MedicineWrapper from "../../mobile/medicine";
 
 class MobileMReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
@@ -77,7 +78,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       const scheduleEvent = await EventWrapper(events);
         scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
-        if(scheduleEvent.getStatus() === EVENT_STATUS.PENDING || scheduleEvent.getStatus() === EVENT_STATUS.SCHEDULED) {
+        if(scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
           if(!latestPendingEventId) {
             latestPendingEventId = scheduleEvent.getScheduleEventId();
           }
@@ -100,8 +101,18 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
   };
 
   getReferenceInfo = async () => {
-    const {getAllInfo, getMReminderId} = this;
+    const {getAllInfo, getMReminderId, getMedicineId, _data} = this;
+    const {medicine} = _data || {};
     const EventService = new eventService();
+
+    let medicineData = {};
+
+    // medicine
+    if(medicine) {
+      medicineData = await MedicineWrapper(medicine);
+    } else {
+      medicineData = await MedicineWrapper(null, getMedicineId())
+    }
 
     const scheduleEvents = await EventService.getAllPreviousByData({
       event_id: getMReminderId(),
@@ -121,6 +132,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
     const {medications} = await getAllInfo();
     const medicationData = medications[getMReminderId()] || {};
 
+
     return {
       medications: {
         [getMReminderId()]: {
@@ -130,6 +142,9 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       },
       schedule_events: {
         ...scheduleEventData
+      },
+      medicines: {
+        [medicineData.getMedicineId()]: medicineData.getBasicInfo()
       }
     }
   };
