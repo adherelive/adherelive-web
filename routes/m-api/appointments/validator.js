@@ -30,6 +30,7 @@ const appointmentFormSchema = Joi.object().keys({
   critical: Joi.boolean().optional().allow(""),
   treatment_id: Joi.number().optional().allow(""),
   care_plan_id: Joi.number().optional().allow(""),
+  radiology_type:Joi.string().optional().allow(""),
   // TODO: rr_rule?
 });
 

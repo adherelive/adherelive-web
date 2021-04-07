@@ -5,6 +5,7 @@ import message from "antd/es/message";
 import { getFullName } from "../../../../Helper/common";
 import { Icon } from "antd";
 import messages from "../messages";
+import { Tooltip } from "antd";
 
 class Watchlist extends Component {
   constructor(props) {
@@ -119,6 +120,9 @@ class Watchlist extends Component {
 
   render() {
     const { isAdded } = this.state;
+
+    const {formatMessage}=this;
+
     const {
       patientData: {
         basic_info: { first_name, middle_name, last_name, id } = {}
@@ -140,9 +144,9 @@ class Watchlist extends Component {
             {`${getName(first_name)}  ${getName(middle_name)} ${getName(last_name)}`}
           </div>
           <div className="flex direction-row  align-left">
-            <div>{age ? `${age} ,  ` : "-- , "}</div>
+            <div>{age ? `${age}` : "--"}</div>
 
-            <div>{gender ? gender.toUpperCase() : "--"}</div>
+            <div>{gender ? `, ${gender.toUpperCase()}` : ", --"}</div>
           </div>
         </div>
         {unread === "0" ? (
@@ -158,20 +162,25 @@ class Watchlist extends Component {
           onClick={this.stopEventBubbling}
         >
           {isAdded ? (
-            <Icon
-              type="eye"
-              className="fs24"
-              value={isAdded}
-              onClick={this.removeFromWatchlist}
-            />
+            <Tooltip title={formatMessage(messages.removeFromWatchlist)} >
+              <Icon
+                type="eye"
+                className="fs20"
+                value={isAdded}
+                onClick={this.removeFromWatchlist}
+              />
+            </Tooltip>
           ) : (
-            <Icon
+            <Tooltip title={formatMessage(messages.addToWatchlist)} >
+              <Icon
               type="eye-invisible"
               theme="filled"
-              className="fs24"
+              className="fs20"
               value={isAdded}
               onClick={this.addThisToWatchlist}
             />
+            </Tooltip>
+            
           )}
         </div>
       </div>

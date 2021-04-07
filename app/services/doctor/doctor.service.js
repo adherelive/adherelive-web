@@ -3,6 +3,7 @@ import { TABLE_NAME } from "../../models/doctors";
 import { TABLE_NAME as watchlistTableName } from "../../models/doctor_patient_watchlist";
 import { TABLE_NAME as specialityTableName } from "../../models/specialities";
 import { TABLE_NAME as userTableName } from "../../models/users";
+import { Op } from "sequelize";
 
 class DoctorService {
   getDoctorByData = async (data, paranoid = true) => {
@@ -146,6 +147,87 @@ class DoctorService {
       return doctors;
     } catch (err) {
       throw err;
+    }
+  };
+
+  // search = async data => {
+  //   try {
+  //     const doctor = await Database.getModel(TABLE_NAME).findAll({
+  //       where: {
+  //         [Op.or]: [
+  //           {
+  //             first_name: {
+  //               [Op.like]: `%${data}%`
+  //             }
+  //           },
+  //           {
+  //             last_name: {
+  //               [Op.like]: `%${data}%`
+  //             }
+  //           },
+  //           {
+  //             middle_name: {
+  //               [Op.like]: `%${data}%`
+  //             }
+  //           }
+  //         ]
+          
+  //       }
+  //     });
+  //     return doctor;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
+
+  search = async value => {
+    try {
+      let firstName = value;
+      let middleName = value;
+      let lastName = value;
+      const name = value.split(" ");
+
+      if (name.length > 1) {
+        if (name.length === 2) {
+          firstName = name[0];
+          middleName = name[1];
+        } else {
+          firstName = name[0];
+          middleName = name[1];
+          lastName = name[2];
+        }
+      }
+
+      const doctor = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.or]: [
+            {
+              first_name: {
+                [Op.like]: `%${firstName}%`
+              }
+            },
+            {
+              middle_name: {
+                [Op.or]:[
+                  {[Op.like]: `%${middleName}%`},
+                  {[Op.like]: `%${firstName}%`}
+                ]
+              }
+            },  
+            {
+              last_name: {
+                [Op.like]: `%${lastName}%`
+              }
+            }
+          ]
+          
+        }
+      });
+      console.log("329847562389462364872384122 ===============>",{doctor,value});
+
+      return doctor;
+    } catch (error) {
+      throw error;
     }
   };
 }

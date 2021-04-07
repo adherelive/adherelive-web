@@ -32,6 +32,8 @@ import transactionRouter from "./transactions";
 import accountsRouter from "./accounts";
 import featuresRouter from "./features";
 import reportRouter from "./reports";
+import userFavourites from "./userFavourites";
+import agoraRouter from "./agora";
 
 router.use(async (req, res, next) => {
   try {
@@ -89,6 +91,7 @@ router.use("/care-plans", mCarePlanRouter);
 router.use("/medicines", mMedicineRouter);
 router.use("/charts", chartRouter);
 router.use("/twilio", twilioRouter);
+router.use("/agora", agoraRouter);
 
 router.use("/colleges", collegeRouter);
 router.use("/degrees", degreeRouter);
@@ -106,5 +109,6 @@ router.use("/transactions", transactionRouter);
 router.use("/accounts", accountsRouter);
 router.use("/features", featuresRouter);
 router.use("/reports", reportRouter);
+router.use("/favourites",userFavourites);
 
 module.exports = router;

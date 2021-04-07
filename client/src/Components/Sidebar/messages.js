@@ -46,4 +46,9 @@ export default defineMessages({
         description:"",
         defaultMessage:"Treatment plan Templates"
     },
+    medicineText: {
+        id:"app.dashboard.sidebar.menu.medicine.text",
+        description:"",
+        defaultMessage:"All Medicines"
+    }
 });

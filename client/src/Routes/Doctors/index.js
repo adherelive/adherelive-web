@@ -7,7 +7,7 @@ import {
   withRouter
 } from "react-router-dom";
 import SideMenu from "../../Components/Sidebar";
-// import BlankState from "../../Containers/BlankState";
+import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
 
 const PatientDetails = lazy(() =>
@@ -46,7 +46,13 @@ const ChatFullScreen = lazy(() =>
 
 const TwilioVideo = lazy(() =>
   import(
-    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/twilioVideo"
+    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/agoraVideo"
+  )
+);
+
+const TestTwilioVideo = lazy(() =>
+  import(
+    /* webpackChunkName: "TwilioVideo" */ "../../Containers/ChatFullScreen/testAgoraVideo"
   )
 );
 
@@ -80,6 +86,13 @@ const TemplatePage = lazy(() =>
     )
 );
 
+const DoctorTransactionPage = lazy(() => 
+    import(
+      /* webpackChunkName: "DoctorTransactionPage" */ "../../Containers/Pages/doctorTransactionPage"
+
+    )
+);
+
 const PatientDetailsComp = props => {
   const { match: { params: { patient_id } = {} } = {} } = props;
   return <PatientDetails patient_id={patient_id} />;
@@ -92,7 +105,9 @@ const SideMenuComp = props => {
     !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy")
+      pathname.includes("privacy-policy") ||
+      pathname.includes("video")
+
     )
   ) {
     return <SideMenu {...props} />;
@@ -127,7 +142,6 @@ class Doctors extends Component {
       pathname.includes("privacy-policy")
     );
     const { authRedirection } = this.props;
-    console.log("192837172893 PrivacyPolicy in auth dashboard-->", typeof Dashboard);
     return (
       <Fragment>
         <Router>
@@ -135,7 +149,7 @@ class Doctors extends Component {
             <SideMenuComp {...this.props} />
             <div
               className={
-                isNotChatComponent ? `container` : "container-chat-page "
+                isNotChatComponent ? pathname.includes("video") ? "video-page" : `container` : "container-chat-page"
               }
             >
               <Switch>
@@ -163,6 +177,11 @@ class Doctors extends Component {
                   exact
                   path={PATH.PATIENT_CONSULTING}
                   component={ChatFullScreen}
+                />
+                <Route
+                  exact
+                  path={PATH.TEST_PATIENT_CONSULTING_VIDEO}
+                  component={TestTwilioVideo}
                 />
                 <Route
                   exact
@@ -239,6 +258,14 @@ class Doctors extends Component {
                     path={PATH.TEMPLATES}
                     component={TemplatePage}
                 />
+
+
+                <Route
+                 exact
+                 path={PATH.DOCTOR.TRANSACTION_DETAILS}
+                 component={DoctorTransactionPage}
+                />
+
                 
                 {/* <Route
                   exact
@@ -246,7 +273,7 @@ class Doctors extends Component {
                   component={Dashboard}
                 /> */}
                 <Route exact path="/" component={Dashboard} />
-                <Route path="" component={Dashboard} />
+                <Route path="" component={BlankState} />
               </Switch>
             </div>
           </div>

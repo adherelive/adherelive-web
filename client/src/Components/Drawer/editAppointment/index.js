@@ -13,12 +13,15 @@ import messages from "./message";
 import EditAppointmentForm from "./form";
 import Footer from "../footer";
 
+import { RADIOLOGY } from "../../../constant";
+
 class EditAppointment extends Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: true,
       disabledSubmit: true,
+      submitting:false
     };
 
     this.FormWrapper = Form.create({ onFieldsChange: this.onFormFieldChanges })(
@@ -81,7 +84,10 @@ class EditAppointment extends Component {
           end_time,
           description = "",
           treatment = "",
+          radiology_type=""
         } = values;
+
+
         let provider_name = typeof (provider_id) === 'string' ? provider_id : '';
 
         let newProvider_id = typeof (provider_id) === 'string' ? null : provider_id;
@@ -134,13 +140,17 @@ class EditAppointment extends Component {
             treatment_id: treatment,
           };
 
+          if(type === RADIOLOGY){
+            data["radiology_type"] = radiology_type;
+          }
+
         if (!date || !start_time || !end_time || !type || !type_description || !reason || (!provider_id && !provider_name)) {
-          message.error('Please fill all mandatory details.')
+          message.error(formatMessage(messages.fillMandatory))
         } else if (moment(date).isSame(moment(), 'day') && moment(start_time).isBefore(moment())) {
-          message.error('Cannot create appointment for past time.')
+          message.error(formatMessage(messages.pastTimeError))
         }
         else if (moment(end_time).isBefore(moment(start_time))) {
-          message.error('Please select valid timings for appointment.')
+          message.error(formatMessage(messages.validTimingError))
         } else if (editAppointment) {
 
           // this.setState({ disabledSubmit: true });
@@ -152,7 +162,7 @@ class EditAppointment extends Component {
           addAppointment(data);
         } else {
           try {
-
+            this.setState({submitting:true});
             const response = await updateAppointment(data);
             const {
               status,
@@ -175,10 +185,13 @@ class EditAppointment extends Component {
               message.success(formatMessage(messages.edit_appointment_success));
               getAppointments(pId);
             } else {
-              message.warn('Something went wrong, Please try again!');
+              message.warn(formatMessage(messages.somethingWentWrong));
             }
 
+            this.setState({submitting:false});
+
           } catch (error) {
+            this.setState({submitting:false});
             console.log("ADD APPOINTMENT UI ERROR ---> ", error);
           }
         }
@@ -271,7 +284,7 @@ class EditAppointment extends Component {
       addAppointment,
       appointmentVisible = false,
       hideAppointment } = this.props;
-    const { disabledSubmit } = this.state;
+    const { disabledSubmit , submitting=false } = this.state;
     const {
       onClose,
       formatMessage,
@@ -326,6 +339,7 @@ class EditAppointment extends Component {
             submitText={formatMessage(messages.submit_text)}
             submitButtonProps={submitButtonProps}
             cancelComponent={getDeleteButton()}
+            submitting={submitting}
           />
         </Drawer>
       </Fragment>

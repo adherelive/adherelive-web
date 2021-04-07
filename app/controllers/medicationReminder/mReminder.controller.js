@@ -40,7 +40,8 @@ import {
   LUNCH,
   EVENING,
   DINNER,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES, MEDICINE_FORMULATION,
+  WHEN_TO_TAKE_ABBREVATIONS
 } from "../../../constant";
 import Log from "../../../libs/log";
 import {
@@ -221,6 +222,7 @@ class MReminderController extends Controller {
         strength,
         unit,
         when_to_take,
+        when_to_take_abbr,
         medication_stage = "",
         description,
         start_time,
@@ -287,6 +289,7 @@ class MReminderController extends Controller {
           strength,
           unit,
           when_to_take,
+          when_to_take_abbr,
           medication_stage,
           critical
         }
@@ -328,6 +331,8 @@ class MReminderController extends Controller {
 
       const patient = await PatientWrapper(null, patient_id);
 
+      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
+
       const eventScheduleData = {
         patient_id: patient.getUserId(),
         type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -346,8 +351,11 @@ class MReminderController extends Controller {
         participant_two: userId
       };
 
-      const QueueService = new queueService();
-      await QueueService.sendMessage(eventScheduleData);
+      if(when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
+  
+        const QueueService = new queueService();
+        await QueueService.sendMessage(eventScheduleData);
+      }
 
       const medicationJob = MedicationJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -391,6 +399,7 @@ class MReminderController extends Controller {
         strength,
         unit,
         when_to_take,
+        when_to_take_abbr = null,
         medication_stage = "",
         description,
         start_time,
@@ -429,6 +438,7 @@ class MReminderController extends Controller {
           strength,
           unit,
           when_to_take,
+          when_to_take_abbr,
           medication_stage,
           critical
         }
@@ -474,9 +484,12 @@ class MReminderController extends Controller {
         participant_one: patient.getUserId(),
         participant_two: userId
       };
-
-      const QueueService = new queueService();
-      await QueueService.sendMessage(eventScheduleData);
+      
+      const when_to_take_abbr_int = when_to_take_abbr? parseInt(when_to_take_abbr, 10): when_to_take_abbr;
+      if(when_to_take_abbr_int !== WHEN_TO_TAKE_ABBREVATIONS.SOS) {
+        const QueueService = new queueService();
+        await QueueService.sendMessage(eventScheduleData);
+      }
 
       const medicationJob = MedicationJob.execute(
         NOTIFICATION_STAGES.UPDATE,
@@ -560,7 +573,7 @@ class MReminderController extends Controller {
         [KEY_DOSE]: DOSE_AMOUNT,
         [KEY_UNIT]: DOSE_UNIT,
         [KEY_CUSTOM_REPEAT_OPTIONS]: CUSTOM_REPEAT_OPTIONS,
-        [KEY_MEDICINE_TYPE]: MEDICINE_FORM_TYPE
+        [KEY_MEDICINE_TYPE]: MEDICINE_FORMULATION
       };
 
       Logger.debug("8943748297387489999 Patient id ====>",{patient_id,medicationReminderDetails});

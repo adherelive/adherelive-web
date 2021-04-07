@@ -48,6 +48,7 @@ class MedicationStage extends Component {
   componentDidUpdate(prevProps, prevState) {
     console.log("PREV PROPS =====>", prevProps);
     console.log("Prosssssssssss ----->", this.props);
+
   }
 
   Hits = ({ hits }) => {
@@ -302,7 +303,7 @@ class MedicationStage extends Component {
             <div className="form-headings">Search Medicine</div>
 
             <InstantSearch
-              indexName={"adhere_medicine"}
+              indexName={config.algolia.medicine_index}
               searchClient={this.algoliaClient()}
               onChange={this.onSearch}
             >

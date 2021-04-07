@@ -80,7 +80,6 @@ class ReportController extends Controller {
     try {
       const { file = null, params: { patient_id = "NA" } = {} } = req;
       Log.info(`patient_id : ${patient_id}`);
-      Log.debug("9876567899786566678374234238742398", req);
 
       if (!file) {
         return raiseClientError(res, 422, {}, "Please select file to upload");
@@ -123,7 +122,6 @@ class ReportController extends Controller {
           documents = [],
       } = {} } = req;
       Log.info(`Report : id = ${id}`);
-      Log.debug("876567898765456789",{id,documents});
 
       if (!id) {
         return raiseClientError(

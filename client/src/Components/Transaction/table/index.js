@@ -8,6 +8,7 @@ import generateRow from "./dataRow";
 import getColumn from "./header";
 
 import { PageLoading } from "../../../Helper/loading/pageLoading";
+import messages from "./messages";
 
 
 class TransactionTable extends Component {
@@ -57,7 +58,8 @@ class TransactionTable extends Component {
                 payment_products,
                 patients,
                 doctors,
-                users
+                users,
+                authenticated_category
               } = this.props;
 
 
@@ -69,14 +71,15 @@ class TransactionTable extends Component {
                 payment_products,
                 patients,
                 doctors,
-                users
+                users,
+                authenticated_category
             });
         });
     };
 
     getParentNode = t => t.parentNode;
 
-
+    formatMessage = data => this.props.intl.formatMessage(data);
 
     render() {
         const {loading} = this.state;
@@ -86,6 +89,11 @@ class TransactionTable extends Component {
              formatMessage ,
              getParentNode} = this;
 
+        const transactionLocale ={
+            emptyText:this.formatMessage(messages.emptyTransactionTable)
+        }     
+        const {authenticated_category}=this.props;     
+
         return (
             <Table
                     // onRow={onRow}
@@ -94,7 +102,8 @@ class TransactionTable extends Component {
                     loading={loading === true ? getLoadingComponent() : false}
                     columns={getColumn({
                         formatMessage,
-                        className: "pointer"
+                        className: "pointer",
+                        authenticated_category
                     })}
                     getPopupContainer={getParentNode}
                     dataSource={getDataSource()}
@@ -103,6 +112,7 @@ class TransactionTable extends Component {
                         position: "top",
                         pageSize: 10
                     }}
+                    locale={transactionLocale}
                 />
         );
     }

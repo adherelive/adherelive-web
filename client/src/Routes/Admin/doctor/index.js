@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { PATH } from "../../../constant";
 import SideMenu from "../../../Components/Sidebar";
+import BlankState from "../../../Components/Common/BlankState";
 
 const AdminDoctorPage = lazy(() =>
   import(
@@ -27,30 +28,39 @@ const AdminDoctorDetailsPage = lazy(() =>
 );
 
 const TosPpEditorPage = lazy(() =>
-    import(
-        /* webpackChunkName: "TosPpEditorPage" */ "../../../Containers/Pages/TosPPEditorPage"
-        )
+  import(
+    /* webpackChunkName: "TosPpEditorPage" */ "../../../Containers/Pages/TosPPEditorPage"
+  )
 );
 
 const TermsOfService = lazy(() =>
-    import(
-        /* webpackChunkName: "TermsOfServicePage" */ "../../../Containers/Pages/TermsOfService"
-        )
+  import(
+    /* webpackChunkName: "TermsOfServicePage" */ "../../../Containers/Pages/TermsOfService"
+  )
 );
 
 const PrivacyPolicy = lazy(() =>
-    import(
-        /* webpackChunkName: "PrivacyPolicyPage" */ "../../../Containers/Pages/PrivacyPolicy"
-        )
+  import(
+    /* webpackChunkName: "PrivacyPolicyPage" */ "../../../Containers/Pages/PrivacyPolicy"
+  )
 );
 
-
-
+const AdminMedicines = lazy(() =>
+  import(
+    /* webpackChunkName: "AdminMedicinesPage" */ "../../../Containers/Pages/adminMedicines"
+  )
+);
 
 const SideMenuComp = props => {
-  const { location: { pathname = '' } = {} } = props;
-  if(!(pathname.includes('patient-consulting') || pathname.includes('terms-of-service') || pathname.includes('privacy-policy'))) {
-    return <SideMenu {...props} />
+  const { location: { pathname = "" } = {} } = props;
+  if (
+    !(
+      pathname.includes("patient-consulting") ||
+      pathname.includes("terms-of-service") ||
+      pathname.includes("privacy-policy")
+    )
+  ) {
+    return <SideMenu {...props} />;
   } else {
     return null;
   }
@@ -70,8 +80,12 @@ class AdminDoctor extends Component {
   }
 
   render() {
-    const { location: { pathname = '' } = {} } = this.props;
-    const isSideMenuVisible = !(pathname.includes('patient-consulting') || pathname.includes('terms-of-service') || pathname.includes('privacy-policy'));
+    const { location: { pathname = "" } = {} } = this.props;
+    const isSideMenuVisible = !(
+      pathname.includes("patient-consulting") ||
+      pathname.includes("terms-of-service") ||
+      pathname.includes("privacy-policy")
+    );
     return (
       <Fragment>
         <Router>
@@ -79,8 +93,16 @@ class AdminDoctor extends Component {
             <SideMenuComp {...this.props} />
             <div className={isSideMenuVisible ? "container" : ""}>
               <Switch>
-                <Route exact path={PATH.TERMS_OF_SERVICE} component={TermsOfService} />
-                <Route exact path={PATH.PRIVACY_POLICY} component={PrivacyPolicy} />
+                <Route
+                  exact
+                  path={PATH.TERMS_OF_SERVICE}
+                  component={TermsOfService}
+                />
+                <Route
+                  exact
+                  path={PATH.PRIVACY_POLICY}
+                  component={PrivacyPolicy}
+                />
                 <Route
                   exact
                   path={PATH.ADMIN.DOCTORS.DETAILS}
@@ -91,10 +113,28 @@ class AdminDoctor extends Component {
                   path={PATH.ADMIN.DOCTORS.ROOT}
                   component={AdminDoctorPage}
                 />
-                <Route exact path={PATH.ADMIN.TOS_PP_EDITOR} component={TosPpEditorPage} />
-                <Route exact path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
-                <Route exact path={PATH.ADMIN.ALL_PROVIDERS} component={AdminProviderPage} />
-                <Route exact path={""} component={AdminDoctorPage} />
+                <Route
+                  exact
+                  path={PATH.ADMIN.TOS_PP_EDITOR}
+                  component={TosPpEditorPage}
+                />
+                <Route
+                  exact
+                  path={PATH.LANDING_PAGE}
+                  component={AdminDoctorPage}
+                />
+                <Route
+                  exact
+                  path={PATH.ADMIN.ALL_PROVIDERS}
+                  component={AdminProviderPage}
+                />
+                <Route
+                  exact
+                  path={PATH.ADMIN.ALL_MEDICINES}
+                  component={AdminMedicines}
+                />
+                <Route  path={PATH.LANDING_PAGE} component={AdminDoctorPage} />
+                {/* <Route path={""} component={BlankState} /> */}
               </Switch>
             </div>
           </div>

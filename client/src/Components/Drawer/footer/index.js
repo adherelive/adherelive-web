@@ -1,7 +1,10 @@
 import React from "react";
 import { Button } from "antd";
+import {PoweroffOutlined} from "@ant-design/icons";
+import { injectIntl } from "react-intl";
+import messages from "./message";
 
-export default props => {
+export default injectIntl(props => {
     const {
         onSubmit,
         onClose,
@@ -11,8 +14,10 @@ export default props => {
         cancelText,
         submitText,
         cancelButtonProps = {},
-        submitButtonProps = {}
+        submitButtonProps = {},
+        submitting=false
     } = props;
+
 
     const CancelButton = (
         <Button onClick={onClose} className="mr10" {...cancelButtonProps}>
@@ -20,14 +25,20 @@ export default props => {
         </Button>
     );
 
+    const formatMessage = data => props.intl.formatMessage(data);
+
     const SubmitButton = (
         <Button
             onClick={onSubmit}
             className="mr10"
             type="primary"
             {...submitButtonProps}
+            icon={submitting ? <PoweroffOutlined /> : null }
+            loading={submitting}
         >
-            {submitText}
+            {
+              submitText
+            }
         </Button>
     );
 
@@ -42,4 +53,4 @@ export default props => {
             {submitComponent !== undefined ? submitComponent : SubmitButton}
         </div>
     );
-};
+});

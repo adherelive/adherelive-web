@@ -11,6 +11,7 @@ import Admin from "../../../app/controllers/admin/admin.controller";
 import Provider from "../../../app/controllers/providers/providers.controller";
 import Algolia from "../../../app/controllers/algolia/algolia.controller";
 import AccountsController from "../../../app/controllers/accounts/accounts.controller";
+import Medicine from "../../../app/controllers/medicines/medicine.controller";
 import Graphs from "../../../app/controllers/graphs/graph.controller";
 import * as validator from "./validator";
 
@@ -37,6 +38,8 @@ router.use(async (req, res, next) => {
   next();
 });
 
+// ---------------------------- GET ----------------------------
+
 router.get("/doctors", Authenticate, Doctor.getAll);
 
 router.get("/doctors/:id", Authenticate, Doctor.getAllAdminDoctorDetails);
@@ -48,6 +51,12 @@ router.get(
     Authenticate,
     AccountsController.getDoctorAccountDetails
 );
+
+router.get("/medicines", Authenticate, Medicine.getMedicinesForAdmin);
+
+router.get("/chats", Authenticate, twilioController.getAllChats);
+
+// ---------------------------- POST ----------------------------
 
 router.post("/providers", Authenticate, validator.validateAddProviderData, Provider.addProvider);
 
@@ -63,11 +72,17 @@ router.post("/doctors/:id/account", Authenticate, Doctor.updateRazorpayAccount);
 router.post("/details", Authenticate, Admin.updateTermsAndPolicy);
 router.post("/algolia/medicine", Authenticate, Algolia.updateMedicine);
 
-router.delete("/chats/delete", Authenticate, twilioController.deleteChat);
+router.post("/medicines", Authenticate, validator.validateAddMedicineData, Medicine.addMedicineByAdmin);
 
-// AD HOC APIS........
+router.post("/medicines/:id/public", Authenticate, Medicine.makeMedicinePublic);
 
 // to enable previous patients features
 router.post("/enable-all-features", Authenticate, Admin.enableAllFeatures);
+
+// ---------------------------- DELETE ----------------------------
+
+router.delete("/medicines/:id", Authenticate, Medicine.deleteMedicine)
+
+router.delete("/chats/delete", Authenticate, twilioController.deleteChat);
 
 module.exports = router;

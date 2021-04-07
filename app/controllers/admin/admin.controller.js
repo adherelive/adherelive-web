@@ -7,10 +7,13 @@ import doctorService from "../../services/doctor/doctor.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import featureService from "../../services/features/features.service";
 import featuresMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+import documentService from "../../services/uploadDocuments/uploadDocuments.service";
+import minioService from "../../services/minio/minio.service";
 
 import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import DocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 
 const Log = new Logger("ADMIN > CONTROLLER");
 

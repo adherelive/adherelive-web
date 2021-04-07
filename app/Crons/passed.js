@@ -115,9 +115,20 @@ class PassedCron {
         .utc()
         .toDate();
 
+      console.log("937123873289 ", {
+        condition: moment(currentTime).diff(event.updatedAt(), "minutes") ===
+            this.RESCHEDULE_INTERVAL,
+        currentTime,
+        eventTime: event.updatedAt(),
+        diff: moment(currentTime).diff(event.updatedAt(), "minutes"),
+        type_diff: typeof moment(currentTime).diff(event.updatedAt(), "minutes"),
+        type_INTERVAL: typeof this.RESCHEDULE_INTERVAL
+      });
+
+      const diff = moment(currentTime).diff(event.updatedAt(), "minutes");
+
       if (
-        moment(currentTime).diff(event.updatedAt(), "minutes") >=
-        this.RESCHEDULE_INTERVAL
+        diff === this.RESCHEDULE_INTERVAL
       ) {
         const updateEventStatus = await scheduleEventService.update(
           {
@@ -125,8 +136,16 @@ class PassedCron {
           },
           event.getScheduleEventId()
         );
-      } else if (
-        moment(currentTime).diff(event.getStartTime(), "minutes") >=
+      }
+
+      console.log("12738123 expired diff", {
+        count: moment(currentTime).diff(event.getStartTime(), "minutes"),
+        condition: moment(currentTime).diff(event.getStartTime(), "minutes") >
+            this.RESCHEDULE_DURATION
+      });
+
+      if (
+        moment(currentTime).diff(event.getStartTime(), "minutes") >
         this.RESCHEDULE_DURATION
       ) {
         const updateEventStatus = await scheduleEventService.update(
@@ -174,7 +193,11 @@ class PassedCron {
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
 
-      if (moment(currentTime).diff(event.getStartTime(), "hours") >= 2) {
+      // console.log("8712368126316283 ", {currentTime, eventStart: event.getStartTime(), num: moment(currentTime).diff(event.getStartTime(), "hours"), condition: moment(currentTime).diff(event.getStartTime(), "hours") >= process.config.app.careplan_activation_reschedule_hours, diff: process.config.app.careplan_activation_reschedule_hours});
+      if (
+        moment(currentTime).diff(event.getStartTime(), "hours") >=
+        process.config.app.careplan_activation_reschedule_hours
+      ) {
         const updateEventStatus = await scheduleEventService.update(
           {
             status: EVENT_STATUS.PENDING,

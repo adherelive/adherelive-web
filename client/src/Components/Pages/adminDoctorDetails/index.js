@@ -564,8 +564,13 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType =
-                    document.substring(document.length - 3) || null;
+                  // const documentType =
+                  //   document.substring(document.length - 3) || null;
+                  const arr = document.split("?")[0];
+                  let documentType;
+                  if(arr.length){
+                    documentType = arr.substr(arr.length - 3);
+                  }
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (
@@ -689,8 +694,13 @@ class AdminDoctorDetails extends Component {
                   const { basic_info: { document } = {} } =
                     upload_documents[id] || {};
 
-                  const documentType =
-                    document.substring(document.length - 3) || null;
+                  // const documentType =
+                  //   document.substring(document.length - 3) || null;
+                  const arr = document.split("?")[0];
+                  let documentType;
+                  if(arr.length){
+                    documentType = arr.substr(arr.length - 3);
+                  }
                   if (documentType) {
                     if (documentType !== "jpg" && documentType !== "png") {
                       return (

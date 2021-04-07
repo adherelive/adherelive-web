@@ -64,6 +64,7 @@ class BotMessageJob extends ChatJob {
         const now = new Date()
 
         templateData.push({
+            small_icon: process.config.app.icon_android,
             app_id: process.config.one_signal.app_id,
             headings: { en: `New Message` },
             contents: {

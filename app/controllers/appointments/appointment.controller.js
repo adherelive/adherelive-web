@@ -12,7 +12,10 @@ import {
   USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
   S3_DOWNLOAD_FOLDER,
-  NOTIFICATION_STAGES
+  NOTIFICATION_STAGES,
+  RADIOLOGY,
+  FAVOURITE_TYPE,
+  MEDICAL_TEST
 } from "../../../constant";
 import moment from "moment";
 
@@ -52,6 +55,8 @@ import { checkAndCreateDirectory } from "../../helper/common";
 
 import { downloadFileFromS3 } from "../mControllers/user/userHelper";
 
+// HELPERS...
+import * as AppointmentHelper from "./helper";
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
 const Logger = new Log(FILE_NAME);
@@ -77,6 +82,7 @@ class AppointmentController extends Controller {
         reason = "",
         type = null,
         type_description = null,
+        radiology_type = "",
         provider_id = null,
         provider_name = null,
         critical = false
@@ -164,6 +170,7 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
+          radiology_type,
           critical
         },
         provider_id,
@@ -247,7 +254,8 @@ class AppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
-        critical = false
+        critical = false,
+        radiology_type="",
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
@@ -306,6 +314,9 @@ class AppointmentController extends Controller {
         );
       }
 
+
+      Logger.debug("827354523879472634237238473 TYPE",{type,TYPETYPE:typeof(type)});
+
       const appointment_data = {
         participant_one_type: category,
         participant_one_id: userCategoryId,
@@ -326,7 +337,8 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
-          critical
+          critical,
+          [type === RADIOLOGY && "radiology_type" ]:type === RADIOLOGY && radiology_type 
         }
       };
 
@@ -437,9 +449,10 @@ class AppointmentController extends Controller {
         type_description = null,
         provider_id = null,
         provider_name = null,
-        critical = false
+        critical = false,
         // participant_one_type = "",
         // participant_one_id = "",
+        radiology_type="",
       } = body;
 
       const {
@@ -520,6 +533,7 @@ class AppointmentController extends Controller {
           reason,
           type,
           type_description,
+          radiology_type,
           critical
         }
       };
@@ -611,7 +625,6 @@ class AppointmentController extends Controller {
     try {
       const { params: { id } = {}, userDetails: { userId } = {} } = req;
 
-      console.log("PATIENT IDDD OF GET APPOINTMENT", id);
       const appointmentList = await appointmentService.getAppointmentForPatient(
         id
       );
@@ -635,7 +648,6 @@ class AppointmentController extends Controller {
           schedule_events,
           upload_documents
         } = await appointmentWrapper.getAllInfo();
-        Logger.debug("1982378128 ", schedule_events, upload_documents);
         appointmentApiData = { ...appointmentApiData, ...appointments };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
         uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
@@ -698,18 +710,37 @@ class AppointmentController extends Controller {
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
+      const {userDetails: {userData: {category}, userCategoryId} = {}} = req;
       const appointmentDetails = await featureDetailService.getDetailsByData({
         feature_type: FEATURE_TYPE.APPOINTMENT
       });
 
       const appointmentData = await FeatureDetailsWrapper(appointmentDetails);
 
+      let featureDetails = appointmentData.getFeatureDetails();
+
+      const {type_description, radiology_type_data} =  featureDetails || {};
+
+      const userTypeData = {
+        id: userCategoryId,
+        category,
+      };
+
+      const updatedTypeDescriptionWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, type_description, FAVOURITE_TYPE.MEDICAL_TESTS);
+
+      featureDetails = {...featureDetails, ...{type_description: updatedTypeDescriptionWithFavourites}}
+
+      const updatedRadiologyDataWithFavourites = await AppointmentHelper.getFavoriteInDetails(userTypeData, radiology_type_data, FAVOURITE_TYPE.RADIOLOGY);
+
+      featureDetails = {...featureDetails, ...{radiology_type_data: updatedRadiologyDataWithFavourites}}
+
+
       return raiseSuccess(
         res,
         200,
         {
           static_templates: {
-            appointments: { ...appointmentData.getFeatureDetails() }
+            appointments: { ...featureDetails }
           }
         },
         "Appointment details fetched successfully"

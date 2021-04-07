@@ -69,6 +69,8 @@ class ChatFullScreen extends Component {
   };
 
   openVideoChatTab = async () => {
+    const { roomId = "" } = this.state;
+    
     await this.props.getAllFeatures();
 
     const videoCallBlocked = this.checkVideoCallIsBlocked();
@@ -78,9 +80,8 @@ class ChatFullScreen extends Component {
       return;
     }
 
-    const { roomId = "" } = this.state;
     window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
   };
@@ -167,7 +168,7 @@ class ChatFullScreen extends Component {
     let { patients = {}, getDoctorConsultations } = this.props;
 
     const {
-      basic_info: { first_name = "", middle_name = "", last_name = "" } = {},
+      basic_info: { first_name = "", middle_name = "", last_name = "", full_name = "" } = {},
       details: { profile_pic: patientDp = "" } = {}
     } = patients[patientId] || {};
     return (
@@ -193,13 +194,7 @@ class ChatFullScreen extends Component {
               updateReplyMessageId={this.updateReplyMessageId}
               roomId={roomId}
               placeVideoCall={this.openVideoChatTab}
-              patientName={
-                first_name
-                  ? `${first_name} ${middle_name ? `${middle_name} ` : ""}${
-                      last_name ? `${last_name}` : ""
-                    }`
-                  : ""
-              }
+              patientName={full_name}
               patientDp={patientDp}
               patientId={patientId}
             />

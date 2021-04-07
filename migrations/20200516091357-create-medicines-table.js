@@ -17,8 +17,8 @@ module.exports = {
         allowNull: false
       },
       type: {
-        type: Sequelize.ENUM,
-        values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
+        type: Sequelize.STRING,
+        // values: [MEDICINE_TYPE.TABLET, MEDICINE_TYPE.INJECTION],
         defaultValue: MEDICINE_TYPE.TABLET
       },
       description: {

@@ -1,10 +1,15 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
-import { InputNumber, Form } from "antd";
+
+// antd models
+import InputNumber from "antd/es/input-number";
+import Form from "antd/es/form";
 
 const { Item: FormItem } = Form;
 
 const FIELD_NAME = "strength";
+const MAXIMUM_LENGTH = 10000;
+
 class MedicationStrength extends Component {
   componentDidMount() {
     const {
@@ -64,7 +69,8 @@ class MedicationStrength extends Component {
               },
               {
                 type: "number",
-                message: "Medicine Strength should be a number"
+                max: MAXIMUM_LENGTH,
+                message: "Please enter valid strength"
               }
             ],
             initialValue: strength ? strength : null
@@ -80,5 +86,6 @@ const Field = injectIntl(MedicationStrength);
 
 export default {
   field_name: FIELD_NAME,
+  maximum_length: MAXIMUM_LENGTH,
   render: props => <Field {...props} />
 };

@@ -48,7 +48,7 @@ class Formulation extends Component {
                     {getFieldDecorator(FIELD_NAME, {})(
                         <TextArea
                             autoFocus
-                            className='mt4'
+                            className='mt8'
                             maxLength={1000}
                             placeholder={this.formatMessage(messages.enterInstruction)}
                             rows={4}

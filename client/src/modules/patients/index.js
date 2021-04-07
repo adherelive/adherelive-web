@@ -42,6 +42,7 @@ export const GENERATE_PRESCRIPTION_START = "GENERATE_PRESCRIPTION_START";
 export const GENERATE_PRESCRIPTION_COMPLETED = "GENERATE_PRESCRIPTION_COMPLETED";
 export const GENERATE_PRESCRIPTION_FAILED = "GENERATE_PRESCRIPTION_FAILED";
 
+
  export const requestConsent = (id) => {
    let response = {};
    return async (dispatch) => {
@@ -284,6 +285,7 @@ export const getPatientMissedEvents = (patient_id) =>{
     return response;
   };
 }
+
 
 function patientReducer(state, data) {
   const {patients} = data || {};

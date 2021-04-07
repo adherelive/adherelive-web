@@ -14,7 +14,9 @@ class PatientWrapper extends BasePatient {
         console.log("PATIENT WRAPPER DATA",data);
     }
 
+
     getBasicInfo = () => {
+
         const { _data } = this;
         const {
             id,
@@ -32,7 +34,9 @@ class PatientWrapper extends BasePatient {
             details,
             dob,
             uid,
+            createdAt:created_at
         } = _data || {};
+        // console.log("346236542783642534623548723648",{created_at,_data});
         const {profile_pic = ""} = details || {};
 
         const updatedDetails =  {
@@ -53,11 +57,11 @@ class PatientWrapper extends BasePatient {
                 full_name,
                 address,
                 uid,
-                
             },
             activated_on,
             details: updatedDetails,
             dob,
+            created_at
         };
     };
 

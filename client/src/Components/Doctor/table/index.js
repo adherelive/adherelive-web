@@ -94,6 +94,10 @@ class DoctorTable extends Component {
             intl: { formatMessage } = {}
         } = this.props;
 
+        const doctorLocale = {
+            emptyText:formatMessage(messages.emptyDoctorTable)
+        }
+
         return (
             <Table
                 onRow={onRow}
@@ -110,6 +114,7 @@ class DoctorTable extends Component {
                 pagination={{
                     position: "top"
                 }}
+                locale={doctorLocale}
             />
         );
     }

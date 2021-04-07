@@ -10,8 +10,9 @@ import {
   MISSED_ACTIONS
 } from "../../constant";
 import Tabs from "antd/es/tabs";
-import Patients from "../../Containers/Patient/table";
-import Watchlist from "../../Containers/Patient/watchlist";
+// import Patients from "../../Containers/Patient/paginatedTable";
+import Patients from "../../Containers/Patient/paginatedTable";
+import Watchlist from "../../Containers/Patient/paginatedWatchlist";
 import PatientDetailsDrawer from "../../Containers/Drawer/patientDetails";
 
 import ChatPopup from "../../Containers/ChatPopup";
@@ -37,6 +38,8 @@ import MissedAppointmentsDrawer from "../../Containers/Drawer/missedAppointment"
 import MissedVitalsDrawer from "../../Containers/Drawer/missedVital";
 import MissedMedicationsDrawer from "../../Containers/Drawer/missedMedication";
 
+import BlankState from "../Common/BlankState";
+
 // helpers...
 import { getRoomId } from "../../Helper/twilio";
 
@@ -45,6 +48,24 @@ const { TabPane } = Tabs;
 const CHART_MISSED_MEDICATION = "Missed Medication";
 const CHART_MISSED_APPOINTMENT = "Missed Appointment";
 const CHART_MISSED_ACTION = "Missed Action";
+
+export const CURRENT_TAB = {
+  ALL_PATIENTS:"1",
+  WATCHLIST:"2"
+};
+
+export const SORTING_TYPE={
+  SORT_BY_DATE:"0",
+  SORT_BY_NAME:"1"   
+}
+
+export const SORT_CREATEDAT="sort_createdAt";
+export const SORT_NAME="sort_name";
+export const FILTER_DIAGNOSIS="filter_diagnosis";
+export const FILTER_TREATMENT="filter_treatment";
+export const OFFSET="offset";
+
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -56,9 +77,96 @@ class Dashboard extends Component {
       doctorUserId: 1,
       patient_ids: [],
       showModal: false,
-      loading:false
+      loading:false,
+      submitting:false,
+      currentTab:CURRENT_TAB.ALL_PATIENTS,
+      allPatientsTab:{
+        sort_createdAt:1,
+        sort_name:null,
+        filter_diagnosis:'',
+        filter_treatment:'',
+        offset:0
+      },
+      watchlistTab:{
+        sort_createdAt:1,
+        sort_name:null,
+        filter_diagnosis:'',
+        filter_treatment:'',
+        offset:0
+      }
     };
   }
+
+
+  changeTabState = ({currentTab,type,value}) => {
+
+    console.log("362575427356423648236427",{currentTab,type,value});
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState[type]=value;
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+
+  }
+
+  sortByName = ({currentTab}) => {
+
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState["sort_createdAt"]=null;
+    newState["sort_name"]=1;
+
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+
+  }
+
+  sortByCreatedAt = ({currentTab}) => {
+    let prevState = '';
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      const { allPatientsTab= {}}=this.state;
+      prevState = allPatientsTab;
+    }else{
+      const { watchlistTab= {}}=this.state;
+      prevState = watchlistTab;
+    }
+
+    let newState = prevState;
+    newState["sort_createdAt"]=1;
+    newState["sort_name"]=null;
+
+
+    if(currentTab === CURRENT_TAB.ALL_PATIENTS){
+      this.setState({allPatientsTab:newState});
+    }else{
+      this.setState({watchwatchlistTab:newState});
+    }
+  }
+  
 
   componentDidMount() {
     const {  authPermissions = [] } = this.props;
@@ -224,6 +332,7 @@ class Dashboard extends Component {
     const { addPatient, authenticated_user } = this.props;
 
     const { basic_info: { id = 1 } = {} } = authenticated_user || {};
+    this.setState({submitting:true});
     addPatient(data).then(response => {
       let {
         status = false,
@@ -248,12 +357,15 @@ class Dashboard extends Component {
         });
 
         // })
+        this.setState({submitting:false});
       } else {
         if (statusCode === 422) {
           message.error(this.formatMessage(messages.patientExistError));
         } else {
           message.error(this.formatMessage(messages.somethingWentWrongError));
         }
+
+        this.setState({submitting:false});
       }
     });
   };
@@ -300,7 +412,7 @@ class Dashboard extends Component {
     const roomId = getRoomId(doctorUserId, patientUserId);
 
     window.open(
-      `${config.WEB_URL}${getPatientConsultingVideoUrl(roomId)}`,
+      `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
       "_blank"
     );
   };
@@ -385,6 +497,12 @@ class Dashboard extends Component {
     showVerifyModal(false);
   };
 
+  changeTab = (tab) => {
+    this.setState({currentTab: tab});
+  };
+
+
+
   render() {
     const { doctors = {}, authenticated_user } = this.props;
     let doctorID = null;
@@ -398,16 +516,15 @@ class Dashboard extends Component {
     });
     const {
       basic_info: {
-        first_name: doc_first_name,
-        middle_name: doc_middle_name,
-        last_name: doc_last_name
+          full_name
       } = {}
     } = doctors[doctorID] || {};
-    docName = doc_first_name
-      ? `Dr. ${doc_first_name} ${
-          doc_middle_name ? `${doc_middle_name} ` : ""
-        }${doc_last_name}`
+    docName = full_name
+      ? `Dr. ${full_name}`
       : TABLE_DEFAULT_BLANK_FIELD;
+
+    // console.log("198237837128 getCookie", this.getCookie("accessToken"));
+
 
     const {
       graphs,
@@ -422,7 +539,7 @@ class Dashboard extends Component {
       twilio: { patientId: chatPatientId = 1 }
     } = this.props;
 
-    const { formatMessage, renderChartTabs, getVerifyModal } = this;
+    const { formatMessage, renderChartTabs, getVerifyModal , changeTab } = this;
 
     let {
       basic_info: {
@@ -439,11 +556,14 @@ class Dashboard extends Component {
       graphsToShow,
       visibleModal,
       doctorUserId,
-      loading=false
+      loading=false,
+      submitting=false,
+      currentTab=CURRENT_TAB.ALL_PATIENTS,
+      allPatientsTab,
+      watchlistTab
     } = this.state;
 
     const roomId = getRoomId(doctorUserId, patientUserId);
-    console.log("198381239 roomId", roomId);
     
     if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
       return (
@@ -451,6 +571,7 @@ class Dashboard extends Component {
         <Loading className={"wp100"} />
       </div>);
     }
+
 
     return (
       <Fragment>
@@ -499,16 +620,33 @@ class Dashboard extends Component {
             {formatMessage(messages.patients)}
           </div>
 
-          <Tabs tabPosition="top">
+          <Tabs tabPosition="top"
+          defaultActiveKey={CURRENT_TAB.ALL_PATIENTS} activeKey={currentTab} onTabClick={changeTab}
+          >
             <TabPane
               tab={
                 <span className="fs16 fw600">
                   {formatMessage(messages.summary)}
                 </span>
               }
-              key="1"
+              key={CURRENT_TAB.ALL_PATIENTS}
+              
             >
-              <Patients />
+              {
+                currentTab === CURRENT_TAB.ALL_PATIENTS
+                &&
+                (
+                  <Patients
+                currentTab={currentTab} 
+                tabState={allPatientsTab}
+                changeTabState={this.changeTabState}
+                sortByName={this.sortByName}
+                sortByCreatedAt={this.sortByCreatedAt}
+
+              />
+
+                )
+              }
             </TabPane>
 
             <TabPane
@@ -517,9 +655,21 @@ class Dashboard extends Component {
                   {formatMessage(messages.watchList)}
                 </span>
               }
-              key="2"
+              key={CURRENT_TAB.WATCHLIST}
             >
-              <Watchlist />
+
+              {
+                currentTab === CURRENT_TAB.WATCHLIST
+                &&
+                <Watchlist 
+                currentTab={currentTab} 
+                tabState={watchlistTab}
+                changeTabState={this.changeTabState}
+                sortByName={this.sortByName}
+                sortByCreatedAt={this.sortByCreatedAt}
+              
+              />
+              }
             </TabPane>
           </Tabs>
         </div>
@@ -565,6 +715,7 @@ class Dashboard extends Component {
           visible={visible}
           submit={this.addPatient}
           patients={patients}
+          submitting={submitting}
         />
 
         {visibleModal && (

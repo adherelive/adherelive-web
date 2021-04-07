@@ -22,6 +22,7 @@ import france from '../../../Assets/images/france.png';
 import TextArea from "antd/lib/input/TextArea";
 
 import messages from "./message";
+import Footer from "../footer";
 
 const { Option } = Select;
 
@@ -41,7 +42,8 @@ class editAccountDetailsDrawer extends Component {
             account_type:'',
             use_as_main : true,
             upi_id:null,
-            account_details:{}
+            account_details:{},
+            submitting:false
         }
        
     }
@@ -62,7 +64,8 @@ class editAccountDetailsDrawer extends Component {
 
     async handleGetAccountDetails(){
         try {
-            const { getAccountDetails ,editDetailsSelectedID = null} = this.props;
+            const { payload : { account_detail_id : editDetailsSelectedID = null} ={} }=this.props;
+            const { getAccountDetails} = this.props;
             const response = await getAccountDetails();
             const { status, payload: {  data :{users = {},account_details  = {} } = {}  } = {} ,statusCode} =
             response || {};
@@ -386,6 +389,7 @@ class editAccountDetailsDrawer extends Component {
         try {
             const {updateAccountDetails,updateAccountDetailsAdded} = this.props;
             const {accountDetailsId} = this.state;
+            this.setState({submitting:true});
             const response = await updateAccountDetails(accountDetailsId,{ customer_name, account_mobile_number,prefix,account_number,ifsc_code,account_type,use_as_main,upi_id});
             const { status, payload: { message : msg } = {} } = response;
             if(status){
@@ -393,9 +397,10 @@ class editAccountDetailsDrawer extends Component {
                 updateAccountDetailsAdded();
                 this.onClose();
             }
-            
+            this.setState({submitting:false});
           } catch (err) {
             console.log("err", err);
+            this.setState({submitting:false});
             message.warn(this.formatMessage(messages.somethingWentWrong));
           }
         
@@ -458,10 +463,13 @@ class editAccountDetailsDrawer extends Component {
         const { onClose,
             //  renderAddNewConsultationFee
          } = this;
+
+         const {submitting=false} = this.state;
  
         if (visible !== true) {
             return null;
         }
+        
         return (
             <Fragment>
                 <Drawer
@@ -479,7 +487,24 @@ class editAccountDetailsDrawer extends Component {
                     width={`30%`}
                 >
                     {renderAddAccountDetailsForm()}
-                    <div className='add-patient-footer'>
+
+                    <Footer
+                        onSubmit={this.onSubmit}
+                        onClose={this.onClose}
+                        submitText={this.formatMessage(messages.submit)}
+                        submitButtonProps={{}}
+
+                        cancelComponent={
+                        <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+                            {this.formatMessage(messages.cancel)}
+                        </Button>
+                        }
+
+                        submitting={submitting}
+
+                    /> 
+
+                    {/* <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                             {this.formatMessage(messages.cancel)}
                         </Button>
@@ -488,7 +513,7 @@ class editAccountDetailsDrawer extends Component {
                          type="primary">
                             {this.formatMessage(messages.submit)}
                         </Button>
-                    </div>
+                    </div> */}
 
                 </Drawer>
 

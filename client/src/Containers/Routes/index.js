@@ -6,8 +6,10 @@ import { DRAWER } from "../../constant";
 
 const mapStateToProps = state => {
   const { auth, users, doctors } = state;
-  const { authenticated, authenticated_user, authRedirection, authPermissions = [] } = auth;
-  return { authenticated, authPermissions, authRedirection, authenticated_user, users, doctors };
+  const { authenticated, authenticated_user, authRedirection, authPermissions = [] , doctor_provider_id  = null } = auth;
+  
+    return { authenticated, authPermissions, authRedirection, authenticated_user, users, doctors , doctor_provider_id  };
+  
 };
 
 const mapDispatchToProps = dispatch => {

@@ -4,32 +4,32 @@ import {
   Input,
   Button,
   Spin,
-  Avatar,
+  // Avatar,
   Upload,
-  Modal,
+  // Modal,
   message
 } from "antd";
-import moment from "moment";
+// import moment from "moment";
 import Chat from "twilio-chat";
-import DoubleTick from "../../Assets/images/double-tick-indicator.png";
+// import DoubleTick from "../../Assets/images/double-tick-indicator.png";
 import Send from "../../Assets/images/send.png";
-import SingleTick from "../../Assets/images/check-symbol.png";
+// import SingleTick from "../../Assets/images/check-symbol.png";
 import PaperClip from "../../Assets/images/attachPop.png";
-import ImagePlaceHolder from "../../Assets/images/image_placeholder.png";
+// import ImagePlaceHolder from "../../Assets/images/image_placeholder.png";
 import Close from "../../Assets/images/close.png";
 import Maximize from "../../Assets/images/maximize.png";
-import Download from "../../Assets/images/down-arrow.png";
-import File from "../../Assets/images/file.png";
+// import Download from "../../Assets/images/down-arrow.png";
+// import File from "../../Assets/images/file.png";
 import messages from "./messages";
 import { injectIntl } from "react-intl";
-import bodyImage from "../../../src/Assets/images/body.jpg";
+// import bodyImage from "../../../src/Assets/images/body.jpg";
 // import CloseChatIcon from "../../Assets/images/ico-vc-message-close.png";
 import CallIcon from "../../Assets/images/telephone.png";
 import CallDisabledIcon from "../../Assets/images/call-disabled.png";
 
 import {
-  USER_ADHERE_BOT,
-  CHAT_MESSAGE_TYPE,
+  // USER_ADHERE_BOT,
+  // CHAT_MESSAGE_TYPE,
   FEATURES,
   USER_CATEGORY
 } from "../../constant";
@@ -65,7 +65,7 @@ const Header = ({
             className="doctor-name-chat-header-popup pointer"
             onClick={onHeaderClick}
           >
-            {patientName}
+            {patientName.length > 10 ? `${patientName.substring(0, 11)}..` : patientName}
           </div>
           <div className="doctor-name-chat-header-online-popup ml10">
             {otherTyping

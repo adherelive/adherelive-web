@@ -5,6 +5,7 @@ import { EVENT_STATUS, EVENT_TYPE, NOTIFICATION_STAGES } from "../../constant";
 
 // SERVICES ---------------
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
+import medicationService from "../services/medicationReminder/mReminder.service";
 
 // WRAPPERS ---------------
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
@@ -63,7 +64,6 @@ class StartCron {
       Log.info(`START count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
       Log.debug("scheduleEvents 500 error ---->", error);
-      // Log.errLog(500, "getPriorEvents", error.getMessage());
     }
   };
 
@@ -128,23 +128,36 @@ class StartCron {
       const eventId = event.getEventId();
       const scheduleEventId = event.getScheduleEventId();
       const scheduleEventService = new ScheduleEventService();
-      const updateEventStatus = await scheduleEventService.update(
-        {
-          status: EVENT_STATUS.SCHEDULED
-        },
-        scheduleEventId
-      );
 
-      const eventScheduleData = await scheduleEventService.getEventByData({
-        id: scheduleEventId
-      });
+      const medication = await medicationService.getMedication({id: eventId});
 
-      const medicationJob = MedicationJob.execute(
-        EVENT_STATUS.STARTED,
-        eventScheduleData
-      );
+      if(medication){
+        const updateEventStatus = await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.SCHEDULED
+          },
+          scheduleEventId
+        );
 
-      await NotificationSdk.execute(medicationJob);
+        const eventScheduleData = await scheduleEventService.getEventByData({
+          id: scheduleEventId
+        });
+
+        const medicationJob = MedicationJob.execute(
+          EVENT_STATUS.STARTED,
+          eventScheduleData
+        );
+
+        await NotificationSdk.execute(medicationJob);
+      } else {
+        const cancelledEvent = await scheduleEventService.update(
+          {
+            status: EVENT_STATUS.CANCELLED
+          },
+          scheduleEventId
+        );
+      }
+      
 
       // const job = JobSdk.execute({
       //     eventType: EVENT_TYPE.MEDICATION_REMINDER,

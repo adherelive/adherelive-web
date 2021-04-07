@@ -10,6 +10,8 @@ import messages from './message';
 import "react-datepicker/dist/react-datepicker.css";
 import TextArea from "antd/lib/input/TextArea";
 import { FINAL,PROBABLE,DIAGNOSIS_TYPE } from "../../../constant";
+import Footer from "../footer";
+
 
 const { Option } = Select;
 
@@ -28,7 +30,8 @@ class AddCareplanDrawer extends Component {
             clinical_notes:'',
             diagnosis_description:'',
             diagnosis_type:'2',
-            symptoms:''
+            symptoms:'',
+            submitting:false
         };
         this.handleConditionSearch = throttle(this.handleConditionSearch.bind(this), 2000);
         this.handleTreatmentSearch = throttle(this.handleTreatmentSearch.bind(this), 2000);
@@ -414,6 +417,7 @@ class AddCareplanDrawer extends Component {
     async handleDataSubmit(patient_id,data)  {
         const { addCareplanForPatient} = this.props;
         const { close } = this.props;
+        this.setState({submitting:true});
         const response = await addCareplanForPatient(patient_id,data);
         const {
             status,
@@ -432,6 +436,9 @@ class AddCareplanDrawer extends Component {
               message.warn(errorMessage);
             }
           }
+
+          this.setState({submitting:false});
+
     }
 
     onSubmit = () => {
@@ -453,6 +460,7 @@ class AddCareplanDrawer extends Component {
        
 
           } catch (error) {
+            this.setState({submitting:false});
             console.log("error", error);
             message.warn(this.formatMessage(messages.somethingWentWrong));
           }
@@ -483,6 +491,7 @@ class AddCareplanDrawer extends Component {
     render() {
         const { visible } = this.props;
         const { onClose, renderAddCareplan } = this;
+        const {submitting = false} = this.state;
 
         if (visible !== true) {
             return null;
@@ -503,14 +512,33 @@ class AddCareplanDrawer extends Component {
                     width={'35%'}
                 >
                     {renderAddCareplan()}
-                    <div className='add-patient-footer'>
+
+                    <Footer
+                        onSubmit={this.onSubmit}
+                        onClose={this.onClose}
+                        submitText={this.formatMessage(messages.submit)}
+                        submitButtonProps={{}}
+
+                        cancelComponent={
+                        <Button onClick={this.onClose} style={{ marginRight: 8 }}>
+                            {this.formatMessage(messages.cancel)}
+                        </Button>
+                        }
+
+                        submitting={submitting}
+
+                    /> 
+
+                    {/* <div className='add-patient-footer'>
                         <Button onClick={this.onClose} style={{ marginRight: 8 }}>
                             {this.formatMessage(messages.cancel)}
                         </Button>
                         <Button onClick={this.onSubmit} type="primary">
                             {this.formatMessage(messages.submit)}
                         </Button>
-                    </div>
+                    </div> */}
+
+
                 </Drawer>
 
             </Fragment>

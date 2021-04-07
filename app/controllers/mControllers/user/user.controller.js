@@ -34,7 +34,7 @@ import otpVerificationService from "../../../services/otpVerification/otpVerific
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
-import { doctorQualificationData, uploadImageS3 } from "./userHelper";
+import { doctorQualificationData, uploadImageS3, getServerSpecificConstants } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
   EMAIL_TEMPLATE_NAME,
@@ -55,6 +55,8 @@ import UserWrapper from "../../../ApiWrapper/web/user";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
+import {completePath, getFilePath} from "../../../helper/filePath";
+import AdhocJob from "../../../JobSdk/Adhoc/observer";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -111,19 +113,19 @@ class MobileUserController extends Controller {
       });
 
       if(process.config.app.env === "development") {
-        // const emailPayload = {
-        //   title: "OTP Verification for patient",
-        //   toAddress: process.config.app.developer_email,
-        //   templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
-        //   templateData: {
-        //     title: "Patient",
-        //     mainBodyText: "OTP for adhere patient login is",
-        //     subBodyText: otp,
-        //     host: process.config.WEB_URL,
-        //     contactTo: process.config.app.support_email
-        //   }
-        // };
-        // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+        const emailPayload = {
+          title: "OTP Verification for patient",
+          toAddress: process.config.app.developer_email,
+          templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
+          templateData: {
+            title: "Patient",
+            mainBodyText: "OTP for adhere patient login is",
+            subBodyText: otp,
+            host: process.config.WEB_URL,
+            contactTo: process.config.app.support_email
+          }
+        };
+        Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
         Logger.info(`OTP :::: ${otp}`);
       } else {
 
@@ -189,6 +191,11 @@ class MobileUserController extends Controller {
       // }
     } catch (error) {
       console.log("error sign in  --> ", error);
+
+       // notification
+       const crashJob = await AdhocJob.execute("crash", {apiName: "signIn(patient)"});
+       Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
       return this.raiseServerError(res);
     }
   };
@@ -446,7 +453,12 @@ class MobileUserController extends Controller {
       }
     } catch (error) {
       console.log("error sign in  --> ", error);
-      return this.raiseServerError(res, 500, error, error.message);
+
+      // notification
+      const crashJob = await AdhocJob.execute("crash", {apiName: "signIn(doctor)"});
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, crashJob.getEmailTemplate());
+
+      return this.raiseServerError(res);
     }
   };
 
@@ -591,6 +603,8 @@ class MobileUserController extends Controller {
 
         let treatmentIds = [];
         let conditionIds = [];
+
+        const serverConstants = getServerSpecificConstants()
 
         switch (category) {
           case USER_CATEGORY.PATIENT:
@@ -829,6 +843,7 @@ class MobileUserController extends Controller {
           auth_user: userId,
           auth_category: category,
           hasConsent: has_consent,
+          server_constants: serverConstants
         };
 
         return this.raiseSuccess(res, 200, { ...dataToSend }, "basic info");
@@ -904,9 +919,7 @@ class MobileUserController extends Controller {
         res,
         200,
         {
-          files: [
-            `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${files[0]}`
-          ]
+          files
         },
         "files uploaded successfully"
       );
@@ -949,7 +962,7 @@ class MobileUserController extends Controller {
         let doctor_data = {
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -964,7 +977,7 @@ class MobileUserController extends Controller {
           user_id,
           city,
           profile_pic: profile_pic
-            ? profile_pic.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+            ? getFilePath(profile_pic)
             : null,
           first_name,
           middle_name,
@@ -1046,7 +1059,7 @@ class MobileUserController extends Controller {
 
         city = docCity;
         profile_pic = docPic
-          ? `${process.config.minio.MINIO_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${docPic}`
+          ? completePath(docPic)
           : docPic;
       }
 
@@ -1345,13 +1358,12 @@ class MobileUserController extends Controller {
     const { qualificationId = 1 } = req.params;
     let { document = "" } = req.body;
     try {
-      console.log("DOCUMNENTTTTTTTTTT", req.body, document);
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = qualificationId;
       const documentToCheck = document.includes(
         process.config.minio.MINIO_BUCKET_NAME
       )
-        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        ? getFilePath(document)
         : document;
       let documentToDelete = await documentService.getDocumentByData(
         parent_type,
@@ -1359,12 +1371,6 @@ class MobileUserController extends Controller {
         documentToCheck
       );
 
-      console.log(
-        "DOCUMNENTTTTTTTTTT1111111",
-        req.body,
-        document,
-        documentToDelete
-      );
       await documentToDelete.destroy();
       return this.raiseSuccess(
         res,
@@ -1382,8 +1388,6 @@ class MobileUserController extends Controller {
     let { gender = "", speciality = "", qualification = {} } = req.body;
     const { userId = 1 } = req.params;
     try {
-      console.log("REGISTER QUALIFICATIONNNNNNNNN", qualification);
-
       let user = userService.getUserById(userId);
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
@@ -1425,7 +1429,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1451,7 +1455,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1709,7 +1713,7 @@ class MobileUserController extends Controller {
                   document: photo.includes(
                     process.config.minio.MINIO_BUCKET_NAME
                   )
-                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    ? getFilePath(photo)
                     : photo
                 });
               }
@@ -1737,7 +1741,7 @@ class MobileUserController extends Controller {
                   document: photo.includes(
                     process.config.minio.MINIO_BUCKET_NAME
                   )
-                    ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                    ? getFilePath(photo)
                     : photo
                 });
               }
@@ -1784,7 +1788,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1815,7 +1819,7 @@ class MobileUserController extends Controller {
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: registration_id,
               document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
-                ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+                ? getFilePath(photo)
                 : photo
             });
           }
@@ -1845,7 +1849,7 @@ class MobileUserController extends Controller {
       const documentToCheck = document.includes(
         process.config.minio.MINIO_BUCKET_NAME
       )
-        ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+        ? getFilePath(document)
         : document;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       let documentToDelete = await documentService.getDocumentByData(

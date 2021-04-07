@@ -28,6 +28,21 @@ class TreatmentService {
         }
     };
 
+    searchByName = async (data) => {
+        try {
+            const treatment = await Database.getModel(TABLE_NAME).findAll({
+                where: {
+                    name: {
+                        [Op.like]: `%${data}%`,
+                    },
+                },
+            });
+            return treatment;
+        } catch (error) {
+            throw error;
+        }
+    };
+
     getByData = async data => {
         try {
             const treatment = await Database.getModel(TABLE_NAME).findOne({

@@ -30,4 +30,8 @@ export default class Medicine {
   getDetails = () => {
     return this._data.get("details");
   };
+
+  getCreatorId = () => {
+    return this._data.get("creator_id");
+  };
 }

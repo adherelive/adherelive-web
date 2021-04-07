@@ -97,6 +97,9 @@ class UpdateProviderForm extends Component {
 
     if(account_type_val){
       this.setState({account_type_exists:true});
+    }else{
+      this.setState({account_type_exists:false});
+
     }
   }
 

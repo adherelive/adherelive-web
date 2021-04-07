@@ -8,6 +8,7 @@ import {TABLE_NAME as vitalTemplateTableName} from "../../models/templateVitals"
 import {TABLE_NAME as conditionTableName} from "../../models/conditions";
 import {TABLE_NAME as severityTableName} from "../../models/severity";
 import {TABLE_NAME as treatmentTableName} from "../../models/treatments";
+import {TABLE_NAME as medicineTableName} from "../../models/medicines";
 
 class CarePlanTemplateService {
   getCarePlanTemplateById = async id => {
@@ -21,8 +22,14 @@ class CarePlanTemplateService {
           Database.getModel(severityTableName),
           Database.getModel(treatmentTableName),
           Database.getModel(appointmentTemplateTableName),
-          Database.getModel(medicationTemplateTableName),
-            Database.getModel(vitalTemplateTableName)
+          {
+            model: Database.getModel(medicationTemplateTableName),
+            include: {
+              model: Database.getModel(medicineTableName),
+              required: true
+            }
+          },
+          Database.getModel(vitalTemplateTableName)
         ]
       });
       return carePlanTemplate;
@@ -37,7 +44,7 @@ class CarePlanTemplateService {
         include: [
           Database.getModel(appointmentTemplateTableName),
           Database.getModel(medicationTemplateTableName),
-            Database.getModel(vitalTemplateTableName),
+          Database.getModel(vitalTemplateTableName),
         ]
       });
       return carePlanTemplate;
@@ -84,7 +91,13 @@ class CarePlanTemplateService {
           Database.getModel(severityTableName),
           Database.getModel(treatmentTableName),
           Database.getModel(appointmentTemplateTableName),
-          Database.getModel(medicationTemplateTableName),
+          {
+            model: Database.getModel(medicationTemplateTableName),
+            include: {
+              model: Database.getModel(medicineTableName),
+              required: true
+            }
+          },
           Database.getModel(vitalTemplateTableName),
         ]
       });
@@ -102,6 +115,7 @@ class CarePlanTemplateService {
           [Op.or]: [
             {
               treatment_id: { [Op.eq]: treatment_id },
+              user_id: {[Op.eq]: null}
             },
             {
               user_id: { [Op.eq]: user_id }
@@ -114,7 +128,13 @@ class CarePlanTemplateService {
           Database.getModel(severityTableName),
           Database.getModel(treatmentTableName),
           Database.getModel(appointmentTemplateTableName),
-          Database.getModel(medicationTemplateTableName),
+          {
+            model: Database.getModel(medicationTemplateTableName),
+            include: {
+              model: Database.getModel(medicineTableName),
+              required: true
+            }
+          },
             Database.getModel(vitalTemplateTableName)
         ],
         order: [["updated_at", "DESC"]]
@@ -175,7 +195,13 @@ class CarePlanTemplateService {
           Database.getModel(severityTableName),
           Database.getModel(treatmentTableName),
           Database.getModel(appointmentTemplateTableName),
-          Database.getModel(medicationTemplateTableName),
+          {
+            model: Database.getModel(medicationTemplateTableName),
+            include: {
+              model: Database.getModel(medicineTableName),
+              required: true
+            }
+          },
           Database.getModel(vitalTemplateTableName)
         ],
         order: [["updated_at", "DESC"]]

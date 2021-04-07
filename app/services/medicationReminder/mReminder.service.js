@@ -29,7 +29,12 @@ class MReminderService {
     try {
       const medication = await Database.getModel(TABLE_NAME).findOne({
         where: data,
-        include: [Database.getModel(medicineTableName)]
+        include: [
+          {
+            model: Database.getModel(medicineTableName),
+            required: true
+          }
+        ]
       });
       return medication;
     } catch (err) {
@@ -41,6 +46,12 @@ class MReminderService {
     try {
       const medications = await Database.getModel(TABLE_NAME).findAll({
         where: data,
+        include: [
+          {
+            model: Database.getModel(medicineTableName),
+            required: true
+          }
+        ]
       });
       return medications;
     } catch (error) {
@@ -66,7 +77,10 @@ class MReminderService {
       return await Database.getModel(TABLE_NAME).findAll({
         where: data,
         include: [
-            Database.getModel(medicineTableName)
+          {
+            model: Database.getModel(medicineTableName),
+            required: true
+          }
         ]
       });
     } catch(error) {
