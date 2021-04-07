@@ -27,45 +27,45 @@ class AdhocController extends Controller {
 
     migrateAllUsersToUserRoles = async (req, res) => {
         try {
-            // const users = await userService.getAll();
-            // if(users && users.length) {
-            //     for(let i=0; i< users.length; i++) {
-            //         const user = await UserWrapper(users[i]);
-            //         const userId = user.getId();
-            //         const category = user.getCategory();
+            const users = await userService.getAll();
+            if(users && users.length) {
+                for(let i=0; i< users.length; i++) {
+                    const user = await UserWrapper(users[i]);
+                    const userId = user.getId();
+                    const category = user.getCategory();
 
-            //         const linkData = await getLinkDetails(category, userId);
+                    const linkData = await getLinkDetails(category, userId);
 
-            //         const { linked_id = null, linked_with = null} = linkData || {};
-            //         const userRole = await userRolesService.create({
-            //             id: userId,
-            //             user_identity: userId,
-            //             linked_id,
-            //             linked_with
-            //         });
-            //     }
-            // }
+                    const { linked_id = null, linked_with = null} = linkData || {};
+                    const userRole = await userRolesService.create({
+                        id: userId,
+                        user_identity: userId,
+                        linked_id,
+                        linked_with
+                    });
+                }
+            }
 
             // -------- update careplans for user_role_id
 
-            // const careplans = await carePanService.getAll();
-            // if(careplans && careplans.length){
-            //     for(let i=0; i< careplans.length; i++) {
-            //         const careplan = await CarePlanWrapper(careplans[i]);
-            //         const carePlanId = await careplan.getCarePlanId();
-            //         const doctorId = careplan.getDoctorId();
-            //         const doctor = await DoctorWrapper( null , doctorId );
-            //         const userId = await doctor.getUserId();
-            //         const userRole = await userRolesService.getFirstUserRole(userId);
-            //         if(userRole){
-            //             const userRoleWrapper = await UserRoleWrapper(userRole);
-            //             const userRoleId = userRoleWrapper.getId();
-            //             let carePlanData = { ...careplan , user_role_id: userRoleId };
-            //             const careplan = await carePlanService.updateCarePlan(carePlanData,carePlanId);
-            //         }
-            //     }
+            const careplans = await carePanService.getAll();
+            if(careplans && careplans.length){
+                for(let i=0; i< careplans.length; i++) {
+                    const careplan = await CarePlanWrapper(careplans[i]);
+                    const carePlanId = await careplan.getCarePlanId();
+                    const doctorId = careplan.getDoctorId();
+                    const doctor = await DoctorWrapper( null , doctorId );
+                    const userId = await doctor.getUserId();
+                    const userRole = await userRolesService.getFirstUserRole(userId);
+                    if(userRole){
+                        const userRoleWrapper = await UserRoleWrapper(userRole);
+                        const userRoleId = userRoleWrapper.getId();
+                        let carePlanData = { ...careplan , user_role_id: userRoleId };
+                        const careplan = await carePlanService.updateCarePlan(carePlanData,carePlanId);
+                    }
+                }
 
-            // }
+            }
 
             // user preferences
 
