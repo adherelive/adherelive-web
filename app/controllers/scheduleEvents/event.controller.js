@@ -312,14 +312,14 @@ class EventController extends Controller {
   getPatientMissedEvents = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { params: { patient_id } = {}, userDetails: {userData: {category}, userCategoryId} = {} } = req;
+      const { params: { patient_id } = {}, userDetails: { userRoleId = null ,  userData: {category}, userCategoryId} = {} } = req;
       Log.info(`params : patient_id = ${patient_id}`);
 
       // considering api to be only accessible for doctors
       const carePlans =
         (await CarePlanService.getMultipleCarePlanByData({
           patient_id,
-          doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "",
+          user_role_id: category === USER_CATEGORY.DOCTOR ? userRoleId : "",
         })) || [];
 
       const EventService = new eventService();

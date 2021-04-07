@@ -9,6 +9,9 @@ import CarePlanWrapper from "../../web/carePlan";
 import ConsentWrapper from "../../web/consent";
 import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 import UserWrapper from "../../web/user";
+import userRoleService from "../../../services/userRoles/userRoles.service";
+import UserRoleWrapper from "../../web/userRoles";
+
 
 class DoctorWrapper extends BaseDoctor {
   constructor(data) {
@@ -125,9 +128,17 @@ class DoctorWrapper extends BaseDoctor {
       }
     }
 
+    const doctorUserId = this.getUserId();
+    const UserRole = await userRoleService.getFirstUserRole(doctorUserId);
+    let userRoleId = null ;
+    if(UserRole){
+      const userRoleWrapper = await UserRoleWrapper(UserRole);
+      userRoleId = await userRoleWrapper.getId();
+    }
+    
     const carePlansDoctor =
       (await carePlanService.getMultipleCarePlanByData({
-        doctor_id: getDoctorId()
+        user_role_id:userRoleId
       })) || [];
     const carePlansPatient =
       (await carePlanService.getMultipleCarePlanByData({

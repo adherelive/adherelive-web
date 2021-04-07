@@ -3,11 +3,13 @@ import doctorService from "../../../services/doctor/doctor.service";
 import ConsentService from "../../../services/consents/consent.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+import userRoleService from "../../../services/userRoles/userRoles.service";
 
 import SpecialityWrapper from "../speciality";
 import ConsentWrapper from "../../mobile/consent";
 import CarePlanWrapper from "../../mobile/carePlan";
 import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
+import UserRoleWrapper from "../../mobile/userRoles";
 
 import { completePath } from "../../../helper/filePath";
 
@@ -112,8 +114,16 @@ class MDoctorWrapper extends BaseDoctor {
       }
     }
 
+    const doctorUserId = this.getUserId();
+    const UserRole = await userRoleService.getFirstUserRole(doctorUserId);
+    let userRoleId = null ;
+    if(UserRole){
+      const userRoleWrapper = await UserRoleWrapper(UserRole);
+      userRoleId = await userRoleWrapper.getId();
+    }
+
     const carePlansDoctor =
-      (await carePlanService.getMultipleCarePlanByData({ doctor_id: id })) ||
+      (await carePlanService.getMultipleCarePlanByData({ user_role_id:userRoleId })) ||
       [];
     const carePlansPatient =
       (await carePlanService.getMultipleCarePlanByData({
