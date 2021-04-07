@@ -88,6 +88,19 @@ class UserRolesService {
     }
   };
 
+  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findOne({
+        where,
+        order,
+        attributes,
+        raw: true
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+
 }
 
 export default new UserRolesService();

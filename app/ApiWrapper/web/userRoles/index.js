@@ -45,7 +45,7 @@ class UserRoleWrapper extends BaseUserRole {
     let providers = {};
     let patients = {};
 
-    if (doctor.id) {
+    if (doctor && doctor.id) {
       const doctorWrapper = await DoctorWrapper(doctor);
       doctors = { ...doctors, [doctor.id]: await doctorWrapper.getAllInfo() };
 
@@ -55,7 +55,7 @@ class UserRoleWrapper extends BaseUserRole {
         const providerData = await ProviderWrapper(null, linked_id);
         providers = { [linked_id]: await providerData.getAllInfo() };
       }
-    } else if(provider.id) {
+    } else if(provider && provider.id) {
 
     }
 

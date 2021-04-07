@@ -262,22 +262,27 @@ class SideMenu extends Component {
     }
   };
 
-  getOnboardedByDetails = (providerLogo) => {
+  getOnboardedByDetails = (provider_id) => {
+    const { providers } = this.props;
     const { formatMessage } = this;
 
-    return (
-      <Fragment>
-        {providerLogo ? (
+    const { details: { icon } = {}, basic_info: {name} = {} } = providers[provider_id] || {};
+
+    if (provider_id) {
+      if (icon) {
+        return (
           <img
-            src={providerLogo}
+            src={icon}
             alt={"hospital logo"}
             className={"br50 w30 h30"}
           />
-        ) : (
-          <div>{formatMessage(messages.selfAccount)}</div>
-        )}
-      </Fragment>
-    );
+        );
+      } else {
+        return <div>{name}</div>;
+      }
+    } else {
+      return <div>{formatMessage(messages.selfAccount)}</div>;
+    }
   };
 
   handleManageAccount = (e) => {
@@ -308,12 +313,6 @@ class SideMenu extends Component {
 
       // const { provider_id = null } = doctors[category_id] || {};
 
-      let providerLogo = null;
-      if (linked_id) {
-        const { details: { icon } = {} } = providers[linked_id] || {};
-        providerLogo = icon;
-      }
-
       const isAuth = authenticated_user === user_identity;
 
       return (
@@ -323,7 +322,7 @@ class SideMenu extends Component {
         >
           <div className={"flex align-center justify-space-between mb20"}>
             <div className={"fs20 fw700"}>{email}</div>
-            {getOnboardedByDetails(providerLogo)}
+            {getOnboardedByDetails(linked_id)}
           </div>
 
           {isAuth && (
@@ -370,6 +369,29 @@ class SideMenu extends Component {
     );
   };
 
+  getProviderIcon = () => {
+    const {auth_role, user_roles, providers} = this.props;
+    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+
+    if(linked_with === USER_CATEGORY.PROVIDER && linked_id) {
+      const {basic_info: {name} = {}, details: {icon} = {}} = providers[linked_id] || {}
+
+      if(icon) {
+        return (
+              <img
+                alt={"Provider Icon"}
+                src={icon}
+                className="w35 h35"
+              />
+        );
+      } else {
+        return (
+          <div>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
+        );
+      }
+;    }
+  };
+
   render() {
     const {
       authenticated_user = 0,
@@ -378,7 +400,7 @@ class SideMenu extends Component {
       authenticated_category,
       intl: { formatMessage } = {},
     } = this.props;
-    const { handleItemSelect } = this;
+    const { handleItemSelect, getProviderIcon } = this;
 
     let dp = "";
     let initials = "";
@@ -449,22 +471,23 @@ class SideMenu extends Component {
             key={SUB_MENU}
             className="flex direction-column align-center justify-space-between p0"
           >
-              {provider_icon && (
-                <img
-                  alt={"Provider Icon"}
-                  src={provider_icon}
-                  className="w35 h35"
-                />
-              )}
-              <Dropdown overlay={this.menu} overlayClassName="relative">
-                <div className="flex direction-column align-center justify-end wp250 hp100">
-                  {initials ? (
-                    <Avatar src={dp}>{initials}</Avatar>
-                  ) : (
-                    <Avatar icon="user" />
-                  )}
-                </div>
-              </Dropdown>
+            {/* {provider_icon && (
+              <img
+                alt={"Provider Icon"}
+                src={provider_icon}
+                className="w35 h35"
+              />
+            )} */}
+            {getProviderIcon()}
+            <Dropdown overlay={this.menu} overlayClassName="relative">
+              <div className="flex direction-column align-center justify-end wp250 hp100">
+                {initials ? (
+                  <Avatar src={dp}>{initials}</Avatar>
+                ) : (
+                  <Avatar icon="user" />
+                )}
+              </div>
+            </Dropdown>
             {/* </div> */}
           </MenuItem>
         ) : (
