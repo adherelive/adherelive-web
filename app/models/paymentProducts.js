@@ -42,10 +42,10 @@ export const db = database => {
         values: PAYMENT_PRODUCT_TYPES,
         allowNull: false
       },
-        amount: {
-            type: DataTypes.INTEGER,
-        },
-      creator_id: {
+      amount: {
+          type: DataTypes.INTEGER,
+      },
+      creator_role_id: {
         type: DataTypes.INTEGER
         // allowNull: false
       },
@@ -54,18 +54,18 @@ export const db = database => {
         values: USER_CATEGORY_ARRAY,
         allowNull: false
       },
-        for_user_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        for_user_type: {
-            type: DataTypes.ENUM,
-            values: USER_CATEGORY_ARRAY,
-        },
-        product_user_type: {
-            type: DataTypes.ENUM,
-            values: PRODUCT_USER_TYPES,
-        },
+      for_user_role_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false
+      },
+      for_user_type: {
+          type: DataTypes.ENUM,
+          values: USER_CATEGORY_ARRAY,
+      },
+      product_user_type: {
+          type: DataTypes.ENUM,
+          values: PRODUCT_USER_TYPES,
+      },
       details: {
         type: DataTypes.JSON
       }

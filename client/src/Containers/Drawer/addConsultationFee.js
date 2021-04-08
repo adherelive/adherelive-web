@@ -10,6 +10,8 @@ import {authDoctorSelector} from "../../modules/doctors/selectors";
 const mapStateToProps = state => {
     
   const {
+    auth: {auth_role = null} = {},
+    user_roles= {},
     drawer: { visible, loading, data: { type, payload = {} } = {} },
       doctors,
   } = state;
@@ -17,6 +19,8 @@ const mapStateToProps = state => {
   const auth_doctor_id = authDoctorSelector(state);
 
   return {
+    auth_role,
+    user_roles,
     visible: visible && type === DRAWER.ADD_CONSULTATION_FEE,
     loading,
     payload,
