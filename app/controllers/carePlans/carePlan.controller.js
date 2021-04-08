@@ -14,7 +14,7 @@ import {
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails
 } from "./carePlanHelper";
-import {EVENT_LONG_TERM_VALUE, EVENT_STATUS, EVENT_TYPE, USER_CATEGORY} from "../../../constant";
+import {EVENT_LONG_TERM_VALUE, EVENT_TYPE, USER_CATEGORY} from "../../../constant";
 import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";

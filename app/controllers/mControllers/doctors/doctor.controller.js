@@ -16,6 +16,7 @@ import doctorRegistrationService from "../../../services/doctorRegistration/doct
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import featuresService from "../../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+import userRolesService from "../../../services/userRoles/userRoles.service";
 
 // m-api wrappers
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
@@ -317,11 +318,18 @@ class MobileDoctorController extends Controller {
           address
         });
 
+        const patientWrapper = await PatientWrapper(patient);
+        const patientUserId = await patientWrapper.getUserId();
+        const userRole = await userRolesService.create({user_identity:patientUserId});
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
+
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
             timings: PATIENT_MEAL_TIMINGS
-          }
+          },
+          user_role_id:newUserRoleId
         });
 
         const uid = getReferenceId(patient.get("id"));

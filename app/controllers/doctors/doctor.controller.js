@@ -1021,8 +1021,6 @@ class DoctorController extends Controller {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
 
-      Logger.debug("1789173127 userExists.length ---> ", userExists.length);
-
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
       let patientName='';
@@ -1065,7 +1063,6 @@ class DoctorController extends Controller {
           },
           patient_id
         );
-        Logger.debug("Patient updateResponse ", updateResponse);
 
         patientData = await PatientWrapper(null, patient_id);
       } else {
@@ -1183,7 +1180,7 @@ class DoctorController extends Controller {
       });
 
       const carePlanData = await CarePlanWrapper(carePlan);
-      const care_plan_id = await carePlanData.getCarePlanId();
+      // const care_plan_id = await carePlanData.getCarePlanId();
 
       let templateMedicationData = {};
       let templateAppointmentData = {};
@@ -1581,7 +1578,6 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          // doctor
           users: {
             [updatedUserData.getId()]: updatedUserData.getBasicInfo()
           },

@@ -576,9 +576,6 @@ class MReminderController extends Controller {
         [KEY_MEDICINE_TYPE]: MEDICINE_FORMULATION
       };
 
-      Logger.debug("8943748297387489999 Patient id ====>",{patient_id,medicationReminderDetails});
-
-
       return raiseSuccess(
         res,
         200,
@@ -588,7 +585,6 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      console.log("8943748297387489999 Get m-reminder details error ----> ", error);
       return raiseServerError(res, 500, error.message, "something went wrong");
     }
   };
