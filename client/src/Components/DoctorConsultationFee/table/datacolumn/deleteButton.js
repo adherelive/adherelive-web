@@ -35,10 +35,10 @@ export default props => {
     }
   }
 
-  const {data : {doctors: {provider_id} = {} } ={}} =props;
+  const {data: {editable} = {}} =props;
   // console.log("5464564564645654",provider_id);
 
-  if(provider_id){
+  if(!editable){
     return null;
   }
 

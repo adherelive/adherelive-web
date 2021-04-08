@@ -5,6 +5,7 @@ import TransactionService from "../../services/transactions/transaction.service"
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
 
 // wrappers
 import TransactionWrapper from "../../ApiWrapper/web/transactions";
@@ -43,7 +44,18 @@ export const getProviderTransactions = async req => {
 
         // get for_user data
         if(paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR) {
-          doctorIds.push(paymentProduct.getForUserId());
+          const roleId = paymentProduct.getForUserRoleId();
+          const userRole = await userRolesService.findOne({where: {
+            id: roleId
+           },
+           attributes: ["user_identity"]
+          }) || null;
+
+          const {user_identity: doctor_user_id = null} = userRole || {};
+          const doctor = await doctorService.findOne({where: {user_id: doctor_user_id}, attributes: ["id"]}) || null;
+          const {id: doctorId = null} = doctor || {};
+        
+          doctorIds.push(doctorId);
         }
       }
     }
@@ -163,7 +175,18 @@ export const getDoctorTransactions = async req => {
 
         // get for_user data
         if(paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR) {
-          doctorIds.push(paymentProduct.getForUserId());
+          const roleId = paymentProduct.getForUserRoleId();
+          const userRole = await userRolesService.findOne({where: {
+            id: roleId
+           },
+           attributes: ["user_identity"]
+          }) || null;
+
+          const {user_identity: doctor_user_id = null} = userRole || {};
+          const doctor = await doctorService.findOne({where: {user_id: doctor_user_id}, attributes: ["id"]}) || null;
+          const {id: doctorId = null} = doctor || {};
+        
+          doctorIds.push(doctorId);
         }
       }
     }

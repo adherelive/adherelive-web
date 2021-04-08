@@ -675,7 +675,6 @@ class DoctorSettingsPage extends Component {
     const { getPaymentDetails ,sidebar} = this;
     const { noDoctorPaymentProducts } = this.state;
     const {doctors = {} } = this.props;
-    const {provider_id} = Object.values(doctors)[0];
 
     return (
 
@@ -702,6 +701,16 @@ class DoctorSettingsPage extends Component {
     
   }
 
+  isDoctorRoleAssociatedWithProvider = () => {
+    const {auth: {auth_role} = {}, user_roles = {}} = this.props;
+    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+
+    if(linked_id) {
+      return linked_id;
+    }
+    return false;
+  }
+
   render() {
     const {
       selectedKey,
@@ -709,7 +718,7 @@ class DoctorSettingsPage extends Component {
     const { getPaymentDetails ,sidebar} = this;
     const { noDoctorPaymentProducts } = this.state;
     const {doctors = {} } = this.props;
-    const {provider_id} = Object.values(doctors)[0];
+    const provider_id = this.isDoctorRoleAssociatedWithProvider();
 
     // console.log("56456786546789",provider_id);
     
