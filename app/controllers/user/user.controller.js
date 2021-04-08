@@ -539,7 +539,6 @@ class UserController extends Controller {
         const {
           userId,
           userData,
-          userRoleId,
           userData: { category } = {},
           userCategoryData: uC = {}
         } = req.userDetails;
