@@ -1,3 +1,5 @@
+import {Op} from "sequelize";
+
 import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
@@ -135,35 +137,72 @@ class DoctorWrapper extends BaseDoctor {
       const userRoleWrapper = await UserRoleWrapper(UserRole);
       userRoleId = await userRoleWrapper.getId();
     }
-    
-    const carePlansDoctor =
-      (await carePlanService.getMultipleCarePlanByData({
-        user_role_id:userRoleId
-      })) || [];
-    const carePlansPatient =
-      (await carePlanService.getMultipleCarePlanByData({
-        patient_id: patientIds
-      })) || [];
 
-    const carePlanIds = [];
+    // get all user roles
+    const {rows: userRoles} = await userRoleService.findAndCountAll({
+      where: {
+        user_identity: this.getUserId()
+      },
+      attributes: ["id"]
+    }) || [];
 
-    let carePlans = [...carePlansDoctor, ...carePlansPatient];
+    const userRoleIds = userRoles.map(userRole => userRole.id);
 
-    if (carePlans.length > 0) {
-      carePlans.sort((carePlanA, carePlanB) => {
-        if (carePlanA.get("expired_on")) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
+    let carePlanIds = {};
 
-      for (const carePlanData of carePlans) {
-        const carePlan = await CarePlanWrapper(carePlanData);
-        if (!carePlanIds.includes(carePlan.getCarePlanId()))
-          carePlanIds.push(carePlan.getCarePlanId());
-      }
+    for(let index = 0; index < userRoleIds.length; index++) {
+      const {rows: doctorCarePlans} = await carePlanService.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {user_role_id: userRoleIds[index]},
+            {patient_id: patientIds}
+          ]
+        },
+        order: [["expired_on","ASC"]],
+        attributes: ["id"]
+      }) || [];
+
+      carePlanIds[userRoleIds[index]] = [...new Set(doctorCarePlans.map(carePlan => carePlan.id))];
     }
+
+    // const carePlansDoctor =
+    //   (await carePlanService.getMultipleCarePlanByData({
+    //     user_role_id:userRoleId
+    //   })) || [];
+    // const carePlansPatient =
+    // await carePlanService.findAndCountAll({
+    //   where: {
+    //     patient_id: patientIds,
+    //   },
+    //   attributes: ["id"]
+    // }) || [];
+
+    // careplanPatientIds = carePlansPatient.map(careplan => careplan.id);
+
+    // const carePlanIds = [];
+
+    // Object.keys(carePlanIds).forEach(roleId => {
+    //   const temp = carePlanIds[roleId] || [];
+    //   carePlanIds[roleId] = [...new Set([...temp, ...careplanPatientIds])];
+    // });
+
+    // let carePlans = [...carePlansDoctor, ...carePlansPatient];
+
+    // if (carePlans.length > 0) {
+    //   carePlans.sort((carePlanA, carePlanB) => {
+    //     if (carePlanA.get("expired_on")) {
+    //       return -1;
+    //     } else {
+    //       return 1;
+    //     }
+    //   });
+
+    //   for (const carePlanData of carePlans) {
+    //     const carePlan = await CarePlanWrapper(carePlanData);
+    //     if (!carePlanIds.includes(carePlan.getCarePlanId()))
+    //       carePlanIds.push(carePlan.getCarePlanId());
+    //   }
+    // }
 
     const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
       getDoctorId()

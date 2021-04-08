@@ -13,7 +13,7 @@ import { TABLE_NAME as medicationTableName } from "../../models/medicationRemind
 import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 import {TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 
-
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 
 class CarePlanService {
@@ -381,7 +381,40 @@ class CarePlanService {
     }
   };
 
-
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findAndCountAll({
+        where,
+        include: [
+          Database.getModel(patientTableName),
+          Database.getModel(doctorTableName),
+          Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(userRolesTableName),
+          {
+            model: Database.getModel(carePlanMedicationTableName),
+            include: {
+              model: Database.getModel(medicationTableName),
+              include: {
+                model: Database.getModel(medicineTableName),
+                required: true
+              },
+              // required: true
+            }
+           }
+          // {
+          //   model: Database.getModel(carePlanVitalTableName),
+          //   raw: true,
+          //   attributes: ["vital_id"]
+          // }
+        ],
+        order,
+        attributes,
+        raw: true
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
 
 }
 
