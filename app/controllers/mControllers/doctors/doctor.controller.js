@@ -28,6 +28,7 @@ import QualificationWrapper from "../../../ApiWrapper/mobile/doctorQualification
 import RegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
 import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
 import FeatureMappingWrapper from "../../../ApiWrapper/mobile/doctorPatientFeatureMapping";
+import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
 
 import Log from "../../../../libs/log";
 import {
@@ -2023,7 +2024,7 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try { 
       const {
-        userDetails: { userId } = {},
+        userDetails: { userId , userRoleId = null  } = {},
         query = {}
       } = req;
 
@@ -2034,8 +2035,11 @@ class MobileDoctorController extends Controller {
       const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
       const endLimit = parseInt(limit, 10);
 
+      const userRoleWrapper = await UserRoleWrapper(null,userRoleId);
+      const userIdentity = await userRoleWrapper.getUserId();
+
       const doctor = await doctorService.getDoctorByData({
-        user_id: userId
+        user_id: userIdentity
       });
 
       const getWatchListPatients = parseInt(watchlist, 10) === 0? 0: 1;
@@ -2054,9 +2058,9 @@ class MobileDoctorController extends Controller {
       }
 
       if(getWatchListPatients) {
-        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+        count = await carePlanService.getWatchlistedDistinctPatientCounts( watchlistPatientIds,userRoleId);
       } else {
-        count = await carePlanService.getDistinctPatientCounts(doctorId);
+        count = await carePlanService.getDistinctPatientCounts(userRoleId);
       }
 
       if(count > 0) {
@@ -2066,7 +2070,8 @@ class MobileDoctorController extends Controller {
           doctorId,
           watchlistPatientIds,
           watchlist: getWatchListPatients,
-          sortByName
+          sortByName,
+          userRoleId
         }
         const allPatients = await carePlanService.getPaginatedDataOfPatients(data);
 

@@ -1837,6 +1837,8 @@ class PatientController extends Controller {
           user_id: userId
         });
 
+        const { userRoleId = null  } = userDetails || {};
+
         if(doctor && getWatchListPatients)
         {
           const doctorData = await DoctorWrapper(doctor);
@@ -1855,7 +1857,8 @@ class PatientController extends Controller {
             order: `patient.first_name ${order}`,
             offset: offsetLimit,
             limit: endLimit,
-            watchlist: watchlistQuery
+            watchlist: watchlistQuery,
+            userRoleId
             // watchlistPatientIds,
             // watchlist: getWatchListPatients
           }) || [];
@@ -1867,7 +1870,8 @@ class PatientController extends Controller {
             order: `patient.created_at ${order}`,
             offset: offsetLimit,
             limit: endLimit,
-            watchlist: watchlistQuery
+            watchlist: watchlistQuery,
+            userRoleId
           }) || [];
         } else if(filter_treatment) {
           const allTreatments = await treatmentService.searchByName(filter_treatment) || [];
@@ -1882,10 +1886,11 @@ class PatientController extends Controller {
             const treatmentIds = allTreatments.map(treatment => treatment.id) || [];
             [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
               doctor_id: userCategoryId,
-              filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds})`,
+              filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds}) AND carePlan.user_role_id = ${userRoleId}`,
               offset: offsetLimit,
               limit: endLimit,
-              watchlist: watchlistQuery
+              watchlist: watchlistQuery,
+              userRoleId
             }) || [];
           }
         } else if(filter_diagnosis) {
@@ -1903,15 +1908,16 @@ class PatientController extends Controller {
             doctor_id: userCategoryId,
             filter:
                 `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
-                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
+                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type}) AND carePlan.user_role_id = ${userRoleId} `,
 
             offset: offsetLimit,
             limit: endLimit,
-            watchlist: watchlistQuery
+            watchlist: watchlistQuery,
+            userRoleId
           }) || [];
         }
 
-        Logger.debug("patientsForDoctor", patientsForDoctor);
+        Logger.debug("28346235423648762384762387462836487", {patientsForDoctor,count});
 
         if(patientsForDoctor.length > 0) {
           for(let index = 0; index < patientsForDoctor.length; index++) {

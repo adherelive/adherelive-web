@@ -49,7 +49,7 @@ import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
 // import ProviderWrapper from "../../ApiWrapper/web/provider";
 import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
-
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import AuthJob from "../../JobSdk/Auth/observer";
 import NotificationSdk from "../../NotificationSdk";
 // import { createNewUser } from "../user/userHelper";
@@ -79,6 +79,7 @@ import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -1115,11 +1116,18 @@ class DoctorController extends Controller {
           address
         });
 
+        const patientWrapper = await PatientWrapper(patient);
+        const patientUserId = await patientWrapper.getUserId();
+        const userRole = await userRolesService.create({user_identity:patientUserId});
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
+
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
             timings: PATIENT_MEAL_TIMINGS
-          }
+          },
+          user_role_id:newUserRoleId
         });
 
         const uid = getReferenceId(patient.get("id"));
