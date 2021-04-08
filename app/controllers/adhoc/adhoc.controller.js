@@ -27,7 +27,7 @@ class AdhocController extends Controller {
 
     migrateAllUsersToUserRoles = async (req, res) => {
         try {
-            const users = await userService.getAll();
+            // const users = await userService.getAll();
             if(users && users.length) {
                 for(let i=0; i< users.length; i++) {
                     const user = await UserWrapper(users[i]);

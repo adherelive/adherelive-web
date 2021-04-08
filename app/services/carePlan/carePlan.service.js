@@ -226,7 +226,7 @@ class CarePlanService {
         t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
         t3.* from ${TABLE_NAME} as t1 join 
         (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME}
-        where patient_id in (${watchlistPatientIds}) and doctor_id=${doctorId} 
+        where patient_id in (${watchlistPatientIds}) and user_role_id=${userRoleId} 
          group by patient_id) as t2
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
@@ -241,7 +241,7 @@ class CarePlanService {
         query = `select t1.id as care_plan_id, t1.details as care_plan_details, 
         t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
         t3.* from ${TABLE_NAME} as t1 join 
-        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} where doctor_id=${doctorId} group by patient_id) as t2
+        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} where user_role_id=${userRoleId} group by patient_id) as t2
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
@@ -333,7 +333,7 @@ class CarePlanService {
     SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
       carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, carePlan.user_role_id AS care_plan_user_role_id ,   patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
-        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE doctor_id=${doctor_id} GROUP BY patient_id)
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE user_role_id=${user_role_id} GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
       JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
         WHERE ${finalFilter} ${watchlist}
@@ -346,7 +346,7 @@ class CarePlanService {
     SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
       carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
-        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE doctor_id=${doctor_id} GROUP BY patient_id)
+        (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE user_role_id=${user_role_id} GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
       JOIN ${patientTableName} as patient ON carePlan.patient_id = patient.id
         WHERE ${finalFilter} ${watchlist}

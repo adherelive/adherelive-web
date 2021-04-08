@@ -67,7 +67,7 @@ const getAllDataForDoctors = async (doctor_id, category = USER_CATEGORY.PROVIDER
                 user_role_id:userRoleId
             })) || [];
 
-        Log.debug("ALL CARE_PLANS", carePlans);
+        // Log.debug("ALL CARE_PLANS", carePlans);
 
         let appointmentIds = [];
         let medicationIds = [];

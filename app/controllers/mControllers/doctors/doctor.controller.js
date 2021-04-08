@@ -2068,6 +2068,7 @@ class MobileDoctorController extends Controller {
           offset: offsetLimit,
           limit: endLimit,
           doctorId,
+          userRoleId,
           watchlistPatientIds,
           watchlist: getWatchListPatients,
           sortByName,
