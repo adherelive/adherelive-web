@@ -1837,8 +1837,6 @@ class PatientController extends Controller {
           user_id: userId
         });
 
-        const { userRoleId = null  } = userDetails || {};
-
         if(doctor && getWatchListPatients)
         {
           const doctorData = await DoctorWrapper(doctor);
@@ -1859,7 +1857,6 @@ class PatientController extends Controller {
             offset: offsetLimit,
             limit: endLimit,
             watchlist: watchlistQuery,
-            userRoleId
             // watchlistPatientIds,
             // watchlist: getWatchListPatients
           }) || [];
@@ -1873,7 +1870,6 @@ class PatientController extends Controller {
             offset: offsetLimit,
             limit: endLimit,
             watchlist: watchlistQuery,
-            userRoleId
           }) || [];
         } else if(filter_treatment) {
           const allTreatments = await treatmentService.searchByName(filter_treatment) || [];
@@ -1892,7 +1888,6 @@ class PatientController extends Controller {
               offset: offsetLimit,
               limit: endLimit,
               watchlist: watchlistQuery,
-              userRoleId
             }) || [];
           }
         } else if(filter_diagnosis) {
@@ -1916,7 +1911,6 @@ class PatientController extends Controller {
             offset: offsetLimit,
             limit: endLimit,
             watchlist: watchlistQuery,
-            userRoleId
           }) || [];
         }
 

@@ -316,7 +316,7 @@ class CarePlanService {
 
   
 
-  getPaginatedPatients = async ({doctor_id, order, filter,offset,limit,watchlist,watchlistPatientIds,userRoleId}) => {
+  getPaginatedPatients = async ({doctor_id, order, filter,offset,limit,watchlist,user_role_id}) => {
 
     // const patientWatchlistedIds = watchlistPatientIds.length ? watchlistPatientIds.toString() : null ;
 
