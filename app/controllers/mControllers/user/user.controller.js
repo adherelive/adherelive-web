@@ -543,7 +543,6 @@ class MobileUserController extends Controller {
         const {
           userRoleId = null ,
           userId,
-          userRoleId,
           userData,
           userData: { category, has_consent } = {}
         } = req.userDetails;
