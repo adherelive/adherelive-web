@@ -552,20 +552,14 @@ export const CHART_DETAILS = {
   [NO_MEDICATION]: {
     type: "no_medication",
     name: "Missed Medication",
-    critical: 25,
-    total: 80
   },
   [NO_APPOINTMENT]: {
     type: "no_appointment",
     name: "Missed Appointment",
-    critical: 5,
-    total: 40
   },
   [NO_ACTION]: {
     type: "no_action",
     name: "Missed Action",
-    critical: 30,
-    total: 120
   }
   // [TEST_ONE]: {
   //   type: "test_one",

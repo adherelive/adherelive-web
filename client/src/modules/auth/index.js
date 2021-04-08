@@ -557,7 +557,7 @@ export const getInitialData = () => {
       } else if (status === true) {
 
         let { users = {}, auth_user = "", auth_category = "", permissions = [], notificationToken = '', feedId = '' , 
-        doctor_provider_id } = data;
+        doctor_provider_id, auth_role } = data;
         // let authUser = Object.values(users).length ? Object.values(users)[0] : {};
 
         let authRedirection = setAuthRedirect(users[auth_user], true);
@@ -568,6 +568,7 @@ export const getInitialData = () => {
           payload: {
             users,
             authenticatedUser: auth_user,
+            auth_role,
             authRedirection,
             authCategory: auth_category,
             authPermissions: permissions,
@@ -653,6 +654,7 @@ export default (state = AUTH_INITIAL_STATE, action = {}) => {
         authenticated: true,
         authenticated_category: payload.authCategory,
         authenticated_user: payload.authenticatedUser,
+        auth_role: payload.auth_role,
         authRedirection: payload.authRedirection,
         authPermissions: payload.authPermissions,
         notificationToken: payload.notificationToken,

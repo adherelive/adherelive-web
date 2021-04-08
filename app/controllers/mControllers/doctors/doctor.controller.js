@@ -2022,7 +2022,7 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try { 
       const {
-        userDetails: { userId } = {},
+        userDetails: { userId, userRoleId } = {},
         query = {}
       } = req;
 
@@ -2053,9 +2053,9 @@ class MobileDoctorController extends Controller {
       }
 
       if(getWatchListPatients) {
-        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds);
+        count = await carePlanService.getWatchlistedDistinctPatientCounts(doctorId, watchlistPatientIds, userRoleId);
       } else {
-        count = await carePlanService.getDistinctPatientCounts(doctorId);
+        count = await carePlanService.getDistinctPatientCounts(doctorId, userRoleId);
       }
 
       if(count > 0) {
@@ -2063,6 +2063,7 @@ class MobileDoctorController extends Controller {
           offset: offsetLimit,
           limit: endLimit,
           doctorId,
+          userRoleId,
           watchlistPatientIds,
           watchlist: getWatchListPatients,
           sortByName

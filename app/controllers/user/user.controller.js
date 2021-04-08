@@ -539,6 +539,7 @@ class UserController extends Controller {
         const {
           userId,
           userData,
+          userRoleId,
           userData: { category } = {},
           userCategoryData: uC = {}
         } = req.userDetails;
@@ -788,6 +789,7 @@ class UserController extends Controller {
           condition_ids: conditionIds,
           auth_user: userId,
           auth_category: category,
+          auth_role: userRoleId,
           [category === USER_CATEGORY.DOCTOR  ? "doctor_provider_id" : ""]:
             category === USER_CATEGORY.DOCTOR
             ? doctorProviderId

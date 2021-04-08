@@ -1768,7 +1768,7 @@ class PatientController extends Controller {
     try {
       const {query, userDetails} = req;
 
-      const {userId, userData: {category} = {}, userCategoryId} = userDetails || {};
+      const {userId, userRoleId, userData: {category} = {}, userCategoryId} = userDetails || {};
 
        /*
       
@@ -1836,6 +1836,7 @@ class PatientController extends Controller {
           const order = sort_name === "0" ? "ASC" : "DESC";
           [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
             doctor_id: userCategoryId,
+            user_role_id: userRoleId,
             order: `patient.first_name ${order}`,
             offset: offsetLimit,
             limit: endLimit,
@@ -1848,6 +1849,7 @@ class PatientController extends Controller {
           const order = sort_createdAt === "0" ? "ASC" : "DESC";
           [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
             doctor_id: userCategoryId,
+            user_role_id: userRoleId,
             order: `patient.created_at ${order}`,
             offset: offsetLimit,
             limit: endLimit,
@@ -1866,6 +1868,7 @@ class PatientController extends Controller {
             const treatmentIds = allTreatments.map(treatment => treatment.id) || [];
             [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
               doctor_id: userCategoryId,
+              user_role_id: userRoleId,
               filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds})`,
               offset: offsetLimit,
               limit: endLimit,
@@ -1885,6 +1888,7 @@ class PatientController extends Controller {
           }
           [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
             doctor_id: userCategoryId,
+            user_role_id: userRoleId,
             filter:
                 `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
                 JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
