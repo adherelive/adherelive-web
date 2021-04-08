@@ -322,7 +322,7 @@ class CarePlanService {
 
     // console.log("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
 
-    let  finalFilter = filter ? filter :  `carePlan.doctor_id = ${doctor_id} AND carePlan.user_role_id = ${userRoleId}`;
+    let  finalFilter = filter ? `${filter} AND carePlan.user_role_id = ${user_role_id}` :  `carePlan.user_role_id = ${user_role_id}`;
    
 
 

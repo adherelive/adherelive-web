@@ -1847,7 +1847,7 @@ class PatientController extends Controller {
           const doctorAllInfo = await doctorData.getAllInfo();
           let { watchlist_patient_ids = []} = doctorAllInfo || {};
           watchlist_patient_ids = watchlist_patient_ids.length ? watchlist_patient_ids : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
-          watchlistQuery = `AND carePlan.doctor_id = ${userCategoryId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
+          watchlistQuery = `AND carePlan.user_role_id = ${userRoleId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
         }
 
         if(sort_name) {

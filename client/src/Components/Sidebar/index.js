@@ -266,16 +266,13 @@ class SideMenu extends Component {
     const { providers } = this.props;
     const { formatMessage } = this;
 
-    const { details: { icon } = {}, basic_info: {name} = {} } = providers[provider_id] || {};
+    const { details: { icon } = {}, basic_info: { name } = {} } =
+      providers[provider_id] || {};
 
     if (provider_id) {
       if (icon) {
         return (
-          <img
-            src={icon}
-            alt={"hospital logo"}
-            className={"br50 w30 h30"}
-          />
+          <img src={icon} alt={"hospital logo"} className={"br50 w30 h30"} />
         );
       } else {
         return <div>{name}</div>;
@@ -370,26 +367,30 @@ class SideMenu extends Component {
   };
 
   getProviderIcon = () => {
-    const {auth_role, user_roles, providers} = this.props;
-    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+    const { auth_role, user_roles, providers } = this.props;
+    const { basic_info: { linked_with, linked_id } = {} } =
+      user_roles[auth_role] || {};
 
-    if(linked_with === USER_CATEGORY.PROVIDER && linked_id) {
-      const {basic_info: {name} = {}, details: {icon} = {}} = providers[linked_id] || {}
+    if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
+      const { basic_info: { name } = {}, details: { icon } = {} } =
+        providers[linked_id] || {};
 
-      if(icon) {
-        return (
-              <img
-                alt={"Provider Icon"}
-                src={icon}
-                className="w35 h35"
-              />
-        );
+      if (icon) {
+        return <img alt={"Provider Icon"} src={icon} className="w35 h35" />;
       } else {
         return (
-          <div>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
+          <div className={"hp100"}>
+            <Avatar>
+              {name
+                .split(" ")
+                .map((word) => word.charAt(0).toUpperCase())
+                .join(" ")}
+            </Avatar>
+          </div>
+          // <div className={"bg-grey br50 w30 h30"}>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
         );
       }
-;    }
+    }
   };
 
   render() {

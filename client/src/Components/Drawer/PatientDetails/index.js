@@ -66,7 +66,7 @@ class PatientDetailsDrawer extends Component {
 
   componentDidUpdate(prevProps) {
    
-    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments, appointments={} ,getPatientMissedEvents} = this.props;
+    const { payload: { patient_id } = {}, getMedications, care_plans = {} ,getAppointments} = this.props;
     const { payload: { patient_id: prev_patient_id } = {} } = prevProps;
     let carePlanId = 1;
     let carePlanMedicationIds = [];
@@ -82,8 +82,7 @@ class PatientDetailsDrawer extends Component {
       }
     }
     
-    
-    if (patient_id !== prev_patient_id) {
+    if (patient_id && patient_id !== prev_patient_id) {
       this.handleGetMissedEvents(patient_id);
       getMedications(patient_id);
       getAppointments(patient_id);

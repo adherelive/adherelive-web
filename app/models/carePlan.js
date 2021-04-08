@@ -6,7 +6,6 @@ import {TABLE_NAME as carePlanTemplateTableName} from "./careplanTemplate";
 import {TABLE_NAME as carePlanAppointmentTableName} from "./carePlanAppointments";
 import {TABLE_NAME as carePlanMedicationTableName} from "./carePlanMedications";
 import {TABLE_NAME as userRolesTableName } from "./userRoles";
-import {TABLE_NAME as userRoleTableName } from "./userRoles";
 
 export const TABLE_NAME = "care_plans";
 
@@ -112,7 +111,7 @@ export const associate = (database) => {
         // targetKey: "id"
     });
 
-    database.models[TABLE_NAME].belongsTo(database.models[userRoleTableName], {
+    database.models[TABLE_NAME].belongsTo(database.models[userRolesTableName], {
         foreignKey: "user_role_id",
         targetKey: "id",
     });

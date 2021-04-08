@@ -537,7 +537,6 @@ class UserController extends Controller {
     try {
       if (req.userDetails.exists) {
         const {
-          userRoleId= null ,
           userId,
           userData,
           userRoleId,

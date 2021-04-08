@@ -49,6 +49,8 @@ class Medicine extends Component {
         medicine_name: name,
         medicine_id: medicineId,
       });
+
+      setFieldsValue({ [FIELD_NAME]: medicineId });
     }
   }
 
