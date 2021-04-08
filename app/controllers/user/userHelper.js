@@ -190,16 +190,14 @@ export const createNewUser = async (email, password = null, creatorId= null) => 
       userExitsError.code = 11000;
       throw userExitsError;
     }
-    
-    const link = uuidv4();
 
+    let hash = null;
+    if (password) {
+      const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+      hash = await bcrypt.hash(password, salt);
+    }
+    const link = uuidv4();
     if(!userExits) {
-      let hash = null;
-      if (password) {
-        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-        hash = await bcrypt.hash(password, salt);
-      }
-  
       const user = await userService.addUser({
         email,
         password: hash,
@@ -215,6 +213,10 @@ export const createNewUser = async (email, password = null, creatorId= null) => 
           charts: ["1", "2", "3"]
         }
       });
+    } else if(!userExits.get("password") && password){
+      const updatedUser = await userService.updateUser({
+        password: hash
+      }, userExits.get("id"));
     }
     
 

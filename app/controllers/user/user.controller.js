@@ -371,7 +371,7 @@ class UserController extends Controller {
       const notificationToken = appNotification.getUserToken(
           `${userRoleId}`
       );
-      // const feedId = base64.encode(`${userId}`);
+      const feedId = base64.encode(`${userRoleId}`);
 
       const userRef = await userService.getUserData({ id: userId });
 
@@ -388,8 +388,9 @@ class UserController extends Controller {
       const dataToSend = {
         ...(await apiUserDetails.getReferenceInfo()),
         auth_user: apiUserDetails.getId(),
+        auth_user_role: userRoleId,
         notificationToken: notificationToken,
-        feedId: `${userId}`,
+        feedId,
         hasConsent: apiUserDetails.getConsent(),
         auth_category: apiUserDetails.getCategory()
       };
