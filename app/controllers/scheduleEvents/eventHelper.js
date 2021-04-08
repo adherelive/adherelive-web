@@ -19,11 +19,11 @@ import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 export const doctorChart = async req => {
     try {
-        const {userDetails: {userCategoryId: doctor_id} = {}} = req;
+        const {userDetails: {userRoleId, userCategoryId: doctor_id} = {}} = req;
         Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
 
 
-        return await getAllDataForDoctors(doctor_id);
+        return await getAllDataForDoctors({doctor_id, user_role_id: userRoleId});
 
     } catch (error) {
         Log.debug("doctorChart catch error", error);
@@ -33,7 +33,7 @@ export const doctorChart = async req => {
 
 export const providerChart = async (req) => {
     try {
-        const {userDetails: {userCategoryId: provider_id} = {}} = req;
+        const {userDetails: {userRoleId, userCategoryId: provider_id} = {}} = req;
         Log.info(`PROVIDER ID (provider_id) : ${provider_id}`);
 
         // get all doctors attached to provider
@@ -42,29 +42,30 @@ export const providerChart = async (req) => {
         Log.debug("doctorData", doctorData);
         const doctorIds = doctorData.map(data => data.doctor_id);
         Log.debug("doctorIds", doctorData);
-        return await getAllDataForDoctors(doctorIds, USER_CATEGORY.PROVIDER);
+        return await getAllDataForDoctors({doctor_id, doctorIds, user_role_id: userRoleId, category: USER_CATEGORY.PROVIDER});
     } catch (error) {
         throw error;
     }
 };
 
 // HELPERS
-const getAllDataForDoctors = async (doctor_id, category = USER_CATEGORY.PROVIDER) => {
+const getAllDataForDoctors = async ({doctor_id, category = USER_CATEGORY.PROVIDER, user_role_id}) => {
     try {
-        Log.debug("doctor_id", doctor_id);
+        // Log.debug("doctor_id", doctor_id);
+        Log.debug("user_role_id", user_role_id);
         const eventService = new EventService();
         // get all careplans(treatments) attached to doctor
-        const doctor = DoctorWrapper(null , doctor_id);
-        let userRoleId = null ;
-        const docorUserId = (await doctor).getUserId();
-        const UserRoleDataForUserId = await userRoleService.getFirstUserRole(docorUserId);
-        if(UserRoleDataForUserId){
-            const userRoleWrapper = await UserRoleWrapper(UserRoleDataForUserId);
-            userRoleId = userRoleWrapper.getId();
-        }
+        // const doctor = DoctorWrapper(null , doctor_id);
+        // let userRoleId = null ;
+        // const docorUserId = (await doctor).getUserId();
+        // const UserRoleDataForUserId = await userRoleService.getFirstUserRole(docorUserId);
+        // if(UserRoleDataForUserId){
+        //     const userRoleWrapper = await UserRoleWrapper(UserRoleDataForUserId);
+        //     userRoleId = userRoleWrapper.getId();
+        // }
         const carePlans =
             (await CarePlanService.getCarePlanByData({
-                user_role_id:userRoleId
+                user_role_id
             })) || [];
 
         // Log.debug("ALL CARE_PLANS", carePlans);
