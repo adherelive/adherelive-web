@@ -49,7 +49,7 @@ import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
 // import ProviderWrapper from "../../ApiWrapper/web/provider";
 import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
-
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import AuthJob from "../../JobSdk/Auth/observer";
 import NotificationSdk from "../../NotificationSdk";
 // import { createNewUser } from "../user/userHelper";
@@ -79,6 +79,7 @@ import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -999,8 +1000,6 @@ class DoctorController extends Controller {
 
       const { userDetails: { userRoleId = null , userId, userData: { category } = {} } = {} } = req;
 
-      console.log("98234682348763842946239842",{userRoleId});
-
       const userExists = await userService.getPatientByMobile(mobile_number) || [];
 
       let userData = null;
@@ -1021,8 +1020,6 @@ class DoctorController extends Controller {
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
-
-      Logger.debug("1789173127 userExists.length ---> ", userExists.length);
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
@@ -1066,7 +1063,6 @@ class DoctorController extends Controller {
           },
           patient_id
         );
-        Logger.debug("Patient updateResponse ", updateResponse);
 
         patientData = await PatientWrapper(null, patient_id);
       } else {
@@ -1115,11 +1111,18 @@ class DoctorController extends Controller {
           address
         });
 
+        const patientWrapper = await PatientWrapper(patient);
+        const patientUserId = await patientWrapper.getUserId();
+        const userRole = await userRolesService.create({user_identity:patientUserId});
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
+
         await UserPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
             timings: PATIENT_MEAL_TIMINGS
-          }
+          },
+          user_role_id:newUserRoleId
         });
 
         const uid = getReferenceId(patient.get("id"));
@@ -1177,7 +1180,7 @@ class DoctorController extends Controller {
       });
 
       const carePlanData = await CarePlanWrapper(carePlan);
-      const care_plan_id = await carePlanData.getCarePlanId();
+      // const care_plan_id = await carePlanData.getCarePlanId();
 
       let templateMedicationData = {};
       let templateAppointmentData = {};
@@ -1575,7 +1578,6 @@ class DoctorController extends Controller {
         res,
         200,
         {
-          // doctor
           users: {
             [updatedUserData.getId()]: updatedUserData.getBasicInfo()
           },

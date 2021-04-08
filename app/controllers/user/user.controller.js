@@ -538,8 +538,8 @@ class UserController extends Controller {
       if (req.userDetails.exists) {
         const {
           userId,
-          userData,
           userRoleId,
+          userData,
           userData: { category } = {},
           userCategoryData: uC = {}
         } = req.userDetails;
@@ -605,7 +605,7 @@ class UserController extends Controller {
                 user_role_id:userRoleId
               });
 
-              console.log("98327427634723647862348723",{careplanData});
+              console.log("3284688234682348723648723",{careplanData,L:careplanData.length});
 
               for (const carePlan of careplanData) {
                 const carePlanApiWrapper = await CarePlanWrapper(carePlan);

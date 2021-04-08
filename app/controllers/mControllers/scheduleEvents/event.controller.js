@@ -597,14 +597,23 @@ class EventController extends Controller {
       const { params: { patient_id } = {} ,userDetails : { userData: { category } = {}  } = {} } = req;
       const EventService = new eventService();
       const { userRoleId = null }  = userDetails ;
+      let carePlan = null , vital_ids = [],appointment_ids =[], medication_ids = [] ;
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
         [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
       });
-      const carePlan = await CarePlanWrapper(carePlanData);
-      const { vital_ids = [], appointment_ids = [], medication_ids = [] } =
-        (await carePlan.getAllInfo()) || {};
+
+      if(carePlanData){
+        carePlan = await CarePlanWrapper(carePlanData);
+        const { vital_ids:cPvital_ids = [], appointment_ids:cPappointment_ids = [], medication_ids :cPmedication_ids= [] } =
+          (await carePlan.getAllInfo()) || {};
+          
+          vital_ids = cPvital_ids;
+          appointment_ids = cPappointment_ids ;
+          medication_ids = cPmedication_ids;
+      }
+     
 
       let symptomData = {};
       let documentData = {};

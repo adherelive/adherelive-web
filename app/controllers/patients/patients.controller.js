@@ -718,7 +718,7 @@ class PatientController extends Controller {
 
       const carePlanData = await carePlanService.getSingleCarePlanByData({
         patient_id,
-        [category === USER_CATEGORY.DOCTOR && 'user_role_id'] : catgory === USER_CATEGORY.DOCTOR && userRoleId
+        [category === USER_CATEGORY.DOCTOR && 'user_role_id'] : category === USER_CATEGORY.DOCTOR && userRoleId
       });
       const carePlan = await CarePlanWrapper(carePlanData);
 
@@ -793,7 +793,7 @@ class PatientController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("getPatientSymptoms 500 error", error);
+      Logger.debug("76235274523754328648273947293 getPatientSymptoms 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1178,7 +1178,7 @@ class PatientController extends Controller {
     try {
       const {
         params: { id: patient_id } = {},
-        userDetails: { userId } = {}
+        userDetails: { userId, userRoleId } = {}
       } = req;
 
       const patient = await PatientWrapper(null, patient_id);
@@ -1293,7 +1293,8 @@ class PatientController extends Controller {
         const consentData = await consentService.create({
           type: CONSENT_TYPE.CARE_PLAN,
           doctor_id: authDoctor.get("id"),
-          patient_id
+          patient_id,
+          user_role_id: userRoleId
         });
         const consents = await ConsentWrapper({ data: consentData });
 
@@ -1856,7 +1857,7 @@ class PatientController extends Controller {
             order: `patient.first_name ${order}`,
             offset: offsetLimit,
             limit: endLimit,
-            watchlist: watchlistQuery
+            watchlist: watchlistQuery,
             // watchlistPatientIds,
             // watchlist: getWatchListPatients
           }) || [];
@@ -1869,7 +1870,7 @@ class PatientController extends Controller {
             order: `patient.created_at ${order}`,
             offset: offsetLimit,
             limit: endLimit,
-            watchlist: watchlistQuery
+            watchlist: watchlistQuery,
           }) || [];
         } else if(filter_treatment) {
           const allTreatments = await treatmentService.searchByName(filter_treatment) || [];
@@ -1884,11 +1885,10 @@ class PatientController extends Controller {
             const treatmentIds = allTreatments.map(treatment => treatment.id) || [];
             [count, patientsForDoctor] = await carePlanService.getPaginatedPatients({
               doctor_id: userCategoryId,
-              user_role_id: userRoleId,
-              filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds})`,
+              filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds}) AND carePlan.user_role_id = ${userRoleId}`,
               offset: offsetLimit,
               limit: endLimit,
-              watchlist: watchlistQuery
+              watchlist: watchlistQuery,
             }) || [];
           }
         } else if(filter_diagnosis) {
@@ -1907,15 +1907,15 @@ class PatientController extends Controller {
             user_role_id: userRoleId,
             filter:
                 `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
-                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
+                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type}) AND carePlan.user_role_id = ${userRoleId} `,
 
             offset: offsetLimit,
             limit: endLimit,
-            watchlist: watchlistQuery
+            watchlist: watchlistQuery,
           }) || [];
         }
 
-        Logger.debug("patientsForDoctor", patientsForDoctor);
+        Logger.debug("28346235423648762384762387462836487", {patientsForDoctor,count});
 
         if(patientsForDoctor.length > 0) {
           for(let index = 0; index < patientsForDoctor.length; index++) {

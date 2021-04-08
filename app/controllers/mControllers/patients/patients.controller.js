@@ -1217,7 +1217,7 @@ class MPatientController extends Controller {
     try {
       const {
         body: { otp, user_id } = {},
-        userDetails: { userId, userData: { category } = {} } = {}
+        userDetails: { userRoleId, userId, userData: { category } = {} } = {}
       } = req;
 
       // service instance
@@ -1250,7 +1250,8 @@ class MPatientController extends Controller {
         const consentData = await consentService.create({
           type: CONSENT_TYPE.CARE_PLAN,
           doctor_id: authDoctor.get("id"),
-          patient_id
+          patient_id,
+          user_role_id: userRoleId
         });
         const consents = await ConsentWrapper({ data: consentData });
 

@@ -44,7 +44,7 @@ const mapStateToProps = (state, ownProps) => {
     care_plan_templates = {},
     severity = {},
     show_template_drawer = {},
-    auth: { authPermissions = [], authenticated_user = 1,authenticated_category } = {},
+    auth: { authPermissions = [], authenticated_user = 1,authenticated_category, auth_role } = {},
     chats,
     drawer,
     pages: { care_plan_template_ids = [] } = {},
@@ -69,6 +69,7 @@ const mapStateToProps = (state, ownProps) => {
     } = {}
   } = ownProps;
   return {
+    auth_role,
     user_details,
     appointments,
     users,

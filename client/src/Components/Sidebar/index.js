@@ -175,6 +175,7 @@ class SideMenu extends Component {
 
     if (key.includes(ACCOUNT)) {
       await switchUserRole({ userRoleId: key.split(".")[1] });
+      history.replace(PATH.LANDING_PAGE);
       window.location.reload();
     }
 

@@ -13,7 +13,7 @@ import { TABLE_NAME as medicationTableName } from "../../models/medicationRemind
 import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 import {TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 
-
+const DEFAULT_ORDER = [["created_at","DESC"]];
 
 
 class CarePlanService {
@@ -184,12 +184,11 @@ class CarePlanService {
     }
   }
 
-  getDistinctPatientCounts = async(doctorId, userRoleId) => {
+  getDistinctPatientCounts = async(userRoleId) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).count({
         where: {
-          // doctor_id: doctorId,
-          user_role_id: userRoleId,
+          user_role_id:userRoleId
         },
         distinct: true,
         col: 'patient_id'
@@ -200,13 +199,12 @@ class CarePlanService {
     }
   }
 
-  getWatchlistedDistinctPatientCounts = async(doctorId, watchlistPatientIds, userRoleId) => {
+  getWatchlistedDistinctPatientCounts = async( watchlistPatientIds,userRoleId) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).count({
         where: {
-          // doctor_id: doctorId,
           patient_id: watchlistPatientIds,
-          user_role_id: userRoleId,
+          user_role_id:userRoleId
         },
         distinct: true,
         col: 'patient_id'
@@ -218,8 +216,8 @@ class CarePlanService {
   }
 
   getPaginatedDataOfPatients = async(data) => {
-    const {offset, limit, doctorId, userRoleId, watchlistPatientIds, watchlist, sortByName,createdAtOrder,nameOrder} = data;
-    const sortBy = sortByName? `t3.first_name ${nameOrder ? "asc" : "desc" }`: `t3.created_at ${createdAtOrder ? "desc" : "asc" }`;
+    const {offset, limit, doctorId, watchlistPatientIds, watchlist, sortByName,createdAtOrder,nameOrder , userRoleId } = data;
+    const sortBy = sortByName? `t3.first_name ${nameOrder ? "desc" : "asc" }`: `t3.created_at ${createdAtOrder ? "desc" : "asc" }`;
     // sortByName = 1 --> a-z , created_at = 1 --> latest top
     try {
       let query = "";
@@ -233,8 +231,9 @@ class CarePlanService {
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
-         where t1.user_role_id = ${userRoleId} and
-         t1.patient_id in (${watchlistPatientIds})
+         where t1.doctor_id = ${doctorId} and
+         t1.patient_id in (${watchlistPatientIds}) and
+         t1.user_role_id = ${userRoleId}
          order by ${sortBy}
          limit ${limit}
          offset ${offset};`
@@ -246,7 +245,7 @@ class CarePlanService {
          on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
          join ${patientTableName} as t3
          on t1.patient_id = t3.id
-         where t1.user_role_id=${userRoleId}
+         where t1.doctor_id = ${doctorId} and  t1.user_role_id = ${userRoleId}
          order by ${sortBy}
          limit ${limit}
          offset ${offset};`
@@ -332,7 +331,7 @@ class CarePlanService {
 
       query = `
     SELECT carePlan.id AS care_plan_id, carePlan.details AS care_plan_details, carePlan.created_at AS care_plan_created_at,
-      carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, patient.* FROM ${TABLE_NAME} AS carePlan
+      carePlan.expired_on AS care_plan_expired_on, carePlan.activated_on AS care_plan_activated_on, carePlan.user_role_id AS care_plan_user_role_id ,   patient.* FROM ${TABLE_NAME} AS carePlan
       JOIN 
         (SELECT MAX(created_at) AS created_at, patient_id from ${TABLE_NAME} WHERE user_role_id=${user_role_id} GROUP BY patient_id)
       AS carePlan2 ON carePlan.patient_id = carePlan2.patient_id AND carePlan.created_at = carePlan2.created_at
@@ -382,7 +381,40 @@ class CarePlanService {
     }
   };
 
-
+  findAndCountAll = async ({where, order = DEFAULT_ORDER, attributes}) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findAndCountAll({
+        where,
+        include: [
+          Database.getModel(patientTableName),
+          Database.getModel(doctorTableName),
+          Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(userRolesTableName),
+          {
+            model: Database.getModel(carePlanMedicationTableName),
+            include: {
+              model: Database.getModel(medicationTableName),
+              include: {
+                model: Database.getModel(medicineTableName),
+                required: true
+              },
+              // required: true
+            }
+           }
+          // {
+          //   model: Database.getModel(carePlanVitalTableName),
+          //   raw: true,
+          //   attributes: ["vital_id"]
+          // }
+        ],
+        order,
+        attributes,
+        raw: true
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
 
 }
 
