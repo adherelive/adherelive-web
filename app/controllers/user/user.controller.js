@@ -538,6 +538,7 @@ class UserController extends Controller {
       if (req.userDetails.exists) {
         const {
           userId,
+          userRoleId,
           userData,
           userData: { category } = {},
           userCategoryData: uC = {}
