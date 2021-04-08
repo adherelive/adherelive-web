@@ -55,7 +55,9 @@ const mapStateToProps = (state, ownProps) => {
     features_mappings = {},
     reports={},
     repeat_intervals={},
-    vital_templates={}
+    vital_templates={},
+    user_roles = {},
+    providers = {}
   } = state;
 
   // const { id } = ownprops;
@@ -100,7 +102,9 @@ const mapStateToProps = (state, ownProps) => {
     authenticated_category,
     reports,
     repeat_intervals,
-    vital_templates
+    vital_templates,
+    user_roles,
+    providers
   };
 };
 
