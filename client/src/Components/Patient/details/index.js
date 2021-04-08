@@ -1479,7 +1479,7 @@ class PatientDetails extends Component {
     const { requestConsent, patient_id, patients } = this.props;
     const { handleOtpModal } = this;
 
-    const { basic_info: { first_name, middle_name, last_name } = {} } =
+    const { basic_info: { full_name } = {} } =
       patients[patient_id] || {};
 
     this.setState({ consentLoading: true });
@@ -1492,11 +1492,7 @@ class PatientDetails extends Component {
     if (status === true) {
       this.setState({ otpUserId });
       message.success(
-        `OTP sent successfully to ${getFullName({
-          first_name,
-          middle_name,
-          last_name
-        })}. Please consult with patient for the same`
+        `OTP sent successfully to ${full_name}. Please consult with patient for the same`
       );
     } else {
       message.warn(errMessage);

@@ -1000,8 +1000,6 @@ class DoctorController extends Controller {
 
       const { userDetails: { userRoleId = null , userId, userData: { category } = {} } = {} } = req;
 
-      console.log("98234682348763842946239842",{userRoleId});
-
       const userExists = await userService.getPatientByMobile(mobile_number) || [];
 
       let userData = null;

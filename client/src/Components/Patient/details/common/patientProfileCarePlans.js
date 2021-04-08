@@ -32,14 +32,15 @@ class PatientCarePlans extends Component {
       handleCarePlanChange,
       selectedCarePlanId,
         patient_id,
-        intl: {formatMessage} = {}
+        intl: {formatMessage} = {},
+        auth_role,
     } = this.props;
     const { getCarePlanStatus } = this;
     const authDoctor = getAuthCategory({ doctors, authenticated_user });
 
-    const { care_plan_ids = [], basic_info: {id : doctorId} = {} } = authDoctor || {};
+    const { care_plan_ids = {}, basic_info: {id : doctorId} = {} } = authDoctor || {};
 
-    const patientCarePlans = care_plan_ids.filter(id => {
+    const patientCarePlans = care_plan_ids[auth_role].filter(id => {
       const {
         basic_info: { patient_id: carePlanPatientId = "0" } = {},
       } = care_plans[id] || {};
@@ -175,14 +176,14 @@ class PatientCarePlans extends Component {
 
 
   hideFooter = () => {
-    const { doctors, authenticated_user, patientCarePlanIds } = this.props;
+    const { doctors, authenticated_user, patientCarePlanIds, auth_role } = this.props;
 
     const authDoctor = getAuthCategory({ doctors, authenticated_user });
 
     const { care_plan_ids = [] } = authDoctor || {};
 
     const hiddenCarePlanIds = patientCarePlanIds.filter(id => {
-      return !care_plan_ids.includes(id);
+      return !care_plan_ids[auth_role].includes(id);
     });
 
     return hiddenCarePlanIds.length > 0 ? false : true;

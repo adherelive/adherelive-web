@@ -542,6 +542,7 @@ class MobileUserController extends Controller {
       if (req.userDetails.exists) {
         const {
           userId,
+          userRoleId,
           userData,
           userData: { category, has_consent } = {}
         } = req.userDetails;
@@ -799,6 +800,7 @@ class MobileUserController extends Controller {
           treatment_ids: treatmentIds,
           auth_user: userId,
           auth_category: category,
+          auth_user_role: userRoleId,
           hasConsent: has_consent,
           server_constants: serverConstants
         };
