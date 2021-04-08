@@ -446,7 +446,7 @@ class EventController extends Controller {
     try {
       const {
         params: { patient_id } = {},
-        userDetails: { userData: { category }, userCategoryId } = {}
+        userDetails: { userRoleId, userData: { category }, userCategoryId } = {}
       } = req;
       Log.info(`params : patient_id = ${patient_id}`);
 
@@ -454,7 +454,8 @@ class EventController extends Controller {
       const carePlans =
         (await CarePlanService.getMultipleCarePlanByData({
           patient_id,
-          doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : ""
+          // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "",
+          user_role_id: category === USER_CATEGORY.DOCTOR ? userRoleId : null,
         })) || [];
 
       const EventService = new eventService();
@@ -593,11 +594,13 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-      const { params: { patient_id } = {} } = req;
+      const { params: { patient_id } = {} ,userDetails : { userData: { category } = {}  } = {} } = req;
       const EventService = new eventService();
+      const { userRoleId = null }  = userDetails ;
 
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
-        patient_id
+        patient_id,
+        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
       });
       const carePlan = await CarePlanWrapper(carePlanData);
       const { vital_ids = [], appointment_ids = [], medication_ids = [] } =

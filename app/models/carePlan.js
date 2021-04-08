@@ -111,6 +111,11 @@ export const associate = (database) => {
         // targetKey: "id"
     });
 
+    database.models[TABLE_NAME].belongsTo(database.models[userRolesTableName], {
+        foreignKey: "user_role_id",
+        targetKey: "id",
+    });
+
     database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
         foreignKey: "id",
         sourceKey: "doctor_id"

@@ -757,6 +757,7 @@ class AppointmentController extends Controller {
       const { body, userDetails } = req;
 
       const {
+        userRoleId=null,
         userId,
         userData: { category } = {},
         userCategoryData: { basic_info: { id: doctorId } = {} } = {}
@@ -770,7 +771,7 @@ class AppointmentController extends Controller {
       const scheduleEventService = new ScheduleEventService();
 
       docAllCareplanData = await carePlanService.getCarePlanByData({
-        doctor_id: doctorId
+        user_role_id:userRoleId
       });
 
       // Logger.debug("786756465789",docAllCareplanData);

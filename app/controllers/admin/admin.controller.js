@@ -9,11 +9,13 @@ import featureService from "../../services/features/features.service";
 import featuresMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 import minioService from "../../services/minio/minio.service";
+import userRoleService from "../../services/userRoles/userRoles.service";
 
 import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
 import DocumentWrapper from "../../ApiWrapper/web/uploadDocument";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 const Log = new Logger("ADMIN > CONTROLLER");
 
@@ -98,9 +100,16 @@ class AdminController extends Controller {
         for (const doctor of doctors) {
           const doctorWrapper = await DoctorWrapper(doctor);
           const doctorId = doctorWrapper.getDoctorId();
+          const userId = doctorWrapper.getUserId();
+          let userRoleId = null ;
+          const userRoleDataForUserId =await  userRoleService.getFirstUserRole(userId);
+          if(userRoleDataForUserId){
+            const userRoleWrapper = UserRoleWrapper(userRoleDataForUserId);
+            userRoleId =  (await userRoleWrapper).getId() || null;
+          }
 
           const careplanData = await carePlanService.getCarePlanByData({
-            doctor_id: doctorId
+            user_role_id:userRoleId
           });
 
           for (const carePlan of careplanData) {

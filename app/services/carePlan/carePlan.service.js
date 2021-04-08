@@ -6,10 +6,12 @@ import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePlanAppointments";
 import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlanMedications";
+import { TABLE_NAME as userRoleTableName } from "../../models/userRoles";
 // import {TABLE_NAME as carePlanVitalTableName} from "../../models/carePlanVitals";
 
 import { TABLE_NAME as medicationTableName } from "../../models/medicationReminders";
 import { TABLE_NAME as medicineTableName } from "../../models/medicines";
+import {TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 
 
 
@@ -34,6 +36,7 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(userRolesTableName),
           {
             model: Database.getModel(carePlanMedicationTableName),
             include: {
@@ -61,6 +64,7 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(userRolesTableName),
           {
            model: Database.getModel(carePlanMedicationTableName),
            include: {
@@ -88,6 +92,7 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(userRoleTableName),
           {
             model: Database.getModel(carePlanMedicationTableName),
             include: {
@@ -115,6 +120,7 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
+          Database.getModel(userRolesTableName),
           {
             model: Database.getModel(carePlanMedicationTableName),
             include: {
@@ -317,7 +323,7 @@ class CarePlanService {
 
     // console.log("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
 
-    let  finalFilter = filter ? filter :  `carePlan.user_role_id = ${user_role_id}`;
+    let  finalFilter = filter ? `${filter} AND carePlan.user_role_id = ${user_role_id}` :  `carePlan.user_role_id = ${user_role_id}`;
    
 
 

@@ -80,7 +80,7 @@ router.get(
 );
 
 router.post(
-    "/addCareplanForPatient/:patient_id",
+    "/add-careplan-for-patient/:patient_id",
     Authenticated,
     PatientController.createNewCareplanforPatient
 )

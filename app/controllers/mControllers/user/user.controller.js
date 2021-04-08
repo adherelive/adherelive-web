@@ -629,7 +629,7 @@ class MobileUserController extends Controller {
               }
 
               careplanData = await carePlanService.getCarePlanByData({
-                doctor_id: userCategoryId
+                user_role_id : userRoleId
               });
 
               // Logger.debug("careplan mobile doctor", careplanData);
