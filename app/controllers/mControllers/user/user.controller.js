@@ -541,7 +541,6 @@ class MobileUserController extends Controller {
     try {
       if (req.userDetails.exists) {
         const {
-          userRoleId = null ,
           userId,
           userRoleId,
           userData,
