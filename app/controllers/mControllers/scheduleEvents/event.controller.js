@@ -75,7 +75,7 @@ class EventController extends Controller {
     try {
       const {
         query: { type = EVENT_TYPE.ALL, key = null } = {},
-        userDetails: { userData: { category }, userCategoryId } = {}
+        userDetails: { userRoleId = null , userData: { category }, userCategoryId } = {}
       } = req;
       Log.info(`query : key = ${key} | type = ${type}`);
 
@@ -92,7 +92,8 @@ class EventController extends Controller {
 
       const allCarePlanData =
         (await CarePlanService.getMultipleCarePlanByData({
-          patient_id: userCategoryId
+          patient_id: userCategoryId,
+          [category === USER_CATEGORY.DOCTOR && 'user_role_id']:category === USER_CATEGORY.DOCTOR && userRoleId
         })) || [];
 
       let scheduleEvents = [];
