@@ -13,6 +13,7 @@ class ConsentWrapper extends BaseConsent {
             type,
             doctor_id,
             patient_id,
+            user_role_id,
             activated_on,
             expire_on
         } = _data || {};
@@ -23,6 +24,7 @@ class ConsentWrapper extends BaseConsent {
                 type,
                 doctor_id,
                 patient_id,
+                user_role_id,
             },
             activated_on,
             expire_on
