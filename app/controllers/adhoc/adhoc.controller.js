@@ -14,7 +14,7 @@ import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
 import PaymentProductsWrapper from "../../ApiWrapper/web/paymentProducts";
 
-import { getLinkDetails } from "./adhoc.helper";
+import { getLinkDetails, getUserDetails } from "./adhoc.helper";
 import Controller from "../";
 import Logger from "../../../libs/log";
 import carePlanService from "../../services/carePlan/carePlan.service";
@@ -103,18 +103,22 @@ class AdhocController extends Controller {
 
             for(let index = 0; index < paymentProducts.length; index++) {
                 const paymentProduct = await PaymentProductsWrapper(paymentProducts[index]);
+                // categoryid --> user_id --> roleid
 
-                // get role id
+                const{ user_id: forUserId }= await getUserDetails(paymentProduct.getForUserRoleId()) || {};
                 const forUserRoleId = await userRoleService.findOne({
                     where: {
-                        user_identity: paymentProduct.getForUserRoleId()
+                        user_identity: forUserId
                     },
                     attributes: ["id"]
                 }) || null;
 
+                const{ user_id: creatorUserId }= await getUserDetails(paymentProduct.getCreatorRoleId()) || {};
+                
+
                 const creatorRoleId = await userRoleService.findOne({
                     where: {
-                        user_identity: paymentProduct.getCreatorRoleId()
+                        user_identity: creatorUserId
                     },
                     attributes: ["id"]
                 }) || null;
