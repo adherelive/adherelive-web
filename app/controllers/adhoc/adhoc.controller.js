@@ -105,7 +105,7 @@ class AdhocController extends Controller {
                 const paymentProduct = await PaymentProductsWrapper(paymentProducts[index]);
                 // categoryid --> user_id --> roleid
 
-                const{ user_id: forUserId }= await getUserDetails(paymentProduct.getForUserRoleId()) || {};
+                const{ user_id: forUserId }= await getUserDetails(paymentProduct.getForUserType(), paymentProduct.getForUserRoleId()) || {};
                 const forUserRoleId = await userRoleService.findOne({
                     where: {
                         user_identity: forUserId
@@ -113,7 +113,7 @@ class AdhocController extends Controller {
                     attributes: ["id"]
                 }) || null;
 
-                const{ user_id: creatorUserId }= await getUserDetails(paymentProduct.getCreatorRoleId()) || {};
+                const{ user_id: creatorUserId }= await getUserDetails(paymentProduct.getCreatorType(), paymentProduct.getCreatorRoleId()) || {};
                 
 
                 const creatorRoleId = await userRoleService.findOne({

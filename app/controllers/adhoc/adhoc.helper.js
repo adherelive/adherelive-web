@@ -52,7 +52,7 @@ export const getUserDetails = async (category, categoryId) => {
                 const doctor = await doctorService.findOne({where: {id: categoryId}, 
                     attributes: ["user_id"]}) || null;
                 
-                const { user_id: doctorUserId = null} = doctor || {};
+                const { user_id: doctorUserId } = doctor || {};
                 response =  { user_id: doctorUserId };
                 break;
             case USER_CATEGORY.PATIENT:
