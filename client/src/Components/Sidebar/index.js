@@ -386,7 +386,10 @@ class SideMenu extends Component {
         );
       } else {
         return (
-          <div>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
+          <div className={"hp100"}>
+          <Avatar>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</Avatar>
+          </div>
+          // <div className={"bg-grey br50 w30 h30"}>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
         );
       }
 ;    }
