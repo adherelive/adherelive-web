@@ -27,6 +27,9 @@ import otpVerificationService from "../../../services/otpVerification/otpVerific
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from '../../../services/userRoles/userRoles.service';
 
+import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
+import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
 import { getServerSpecificConstants } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -602,12 +605,30 @@ class MobileUserController extends Controller {
 
             // Logger.debug("----DOCTOR-----", userCategoryData);
             if (userCategoryData) {
+
               userCategoryApiData = await MDoctorWrapper(userCategoryData);
               userCategoryId = userCategoryApiData.getDoctorId();
 
+
+              let watchlist_patient_ids = [];
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+              if(watchlistRecords && watchlistRecords.length){
+                for(let i = 0 ; i<watchlistRecords.length ; i++){
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+                  const patientId = await watchlistWrapper.getPatientId();
+                  watchlist_patient_ids.push(patientId);
+                }
+              }
+
+              let allInfo = {};
+              allInfo = await userCategoryApiData.getAllInfo();
+              delete allInfo.watchlist_patient_ids;
+              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
+              
+
               userCatApiData[
                 userCategoryApiData.getDoctorId()
-              ] = await userCategoryApiData.getAllInfo();
+              ] = allInfo;
 
               const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
                 userCategoryId

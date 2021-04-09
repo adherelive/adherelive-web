@@ -1060,7 +1060,7 @@ class PatientController extends Controller {
   searchPatientForDoctor = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userRoleId = null , userId } = {} } = req;
       const { query: { value = "" } = {} } = req;
 
       const isNumber = !isNaN(value);
@@ -1072,7 +1072,10 @@ class PatientController extends Controller {
       doctorData[
         doctorDetails.getDoctorId()
       ] = await doctorDetails.getAllInfo();
-      const { care_plan_ids = [] } = doctorData[doctorDetails.getDoctorId()];
+      const { care_plan_ids : all_care_plan_ids = [] } = doctorData[doctorDetails.getDoctorId()];
+      const care_plan_ids = all_care_plan_ids[userRoleId.toString()] || [];
+
+      // console.log("32894723648723648726348762387462837462873462783",{care_plan_ids});
 
       for (const each_id of care_plan_ids) {
         let thisCarePlanData = await userService.getCarePlanData(each_id);
