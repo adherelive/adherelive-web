@@ -24,7 +24,7 @@ import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");
 
-export const getCareplanData = async ({carePlans = [], userCategory, doctorId}) => {
+export const getCareplanData = async ({carePlans = [], userCategory, doctorId , userRoleId}) => {
     try {
         let carePlanData = {};
         let carePlanIds = [];
@@ -52,12 +52,14 @@ export const getCareplanData = async ({carePlans = [], userCategory, doctorId}) 
 
             doctorData = {...doctorData, ...doctors};
 
-            const {medication_ids, appointment_ids} = care_plans[careplan.getCarePlanId()] || {};
+            const {medication_ids, appointment_ids , basic_info : {user_role_id = null } = {} } = care_plans[careplan.getCarePlanId()] || {};
             appointmentIds = [...appointmentIds, ...appointment_ids];
             medicationIds = [...medicationIds, ...medication_ids];
 
+            console.log("327423546325475234723",{user_role_id,userRoleId})
+
             // get latest careplan id
-            if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
+            if(userCategory === USER_CATEGORY.DOCTOR && user_role_id.toString() === userRoleId.toString() ) {
                 if (
                     moment(careplan.getCreatedAt()).diff(
                         moment(currentCareplanTime),
@@ -72,6 +74,8 @@ export const getCareplanData = async ({carePlans = [], userCategory, doctorId}) 
                     currentCareplanTime = careplan.getCreatedAt();
                     currentCareplanId = careplan.getCarePlanId();
                 }
+
+                console.log("3486587364873658746385763847",{currentCareplanId});
             }
         }
 

@@ -112,13 +112,14 @@ class DoctorService {
   deleteWatchlistRecord = async watchlist_data => {
     const transaction = await Database.initTransaction();
     try {
-      const { patient_id, doctor_id } = watchlist_data;
+      const { patient_id, doctor_id,user_role_id } = watchlist_data;
       const deletedWatchlistDetails = await Database.getModel(
         watchlistTableName
       ).destroy({
         where: {
           patient_id,
-          doctor_id
+          doctor_id,
+          user_role_id
         }
       });
       await transaction.commit();

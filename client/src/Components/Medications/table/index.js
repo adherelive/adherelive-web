@@ -78,11 +78,12 @@ class MedicationTable extends Component {
 
     openEditDrawer = (id) => (e) => {
         e.preventDefault();
-        const {editMedicationDrawer, isOtherCarePlan, patientId} = this.props;
-        console.log("1237182 patientId --> ", {patientId});
-        if(!isOtherCarePlan) {
+        const {editMedicationDrawer, isOtherCarePlan, patientId , auth_role =null ,care_plans = {}} = this.props;
+        // console.log("82634782364726347263487264783",{props:this.props});
+        const {basic_info : { user_role_id = null } = {} } = care_plans || {};
+        if(!isOtherCarePlan && user_role_id.toString() === auth_role.toString()) {
             editMedicationDrawer({id, patient_id: patientId, loading: true});
-        }   //TODOj
+        }   
     };
 
     formatMessage = data => this.props.intl.formatMessage(data);

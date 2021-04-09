@@ -23,6 +23,8 @@ import conditionService from "../../services/condition/condition.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import treatmentService from "../../services/treatment/treatment.service";
+import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
 
 // WRAPPERS --------------------------------
 import VitalWrapper from "../../ApiWrapper/web/vitals";
@@ -45,6 +47,8 @@ import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
 import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
+import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+
 
 import Log from "../../../libs/log";
 import moment from "moment";
@@ -265,6 +269,7 @@ class PatientController extends Controller {
       Logger.info(`params: patient_id = ${patient_id}`);
       const {
         userDetails: {
+          userRoleId = null ,
           userId,
           userCategoryId,
           userData: { category } = {}
@@ -325,7 +330,8 @@ class PatientController extends Controller {
         } = await carePlanHelper.getCareplanData({
           carePlans,
           userCategory: category,
-          doctorId: userCategoryId
+          doctorId: userCategoryId,
+          userRoleId
         });
 
 
@@ -1844,7 +1850,16 @@ class PatientController extends Controller {
 
 
           const doctorAllInfo = await doctorData.getAllInfo();
-          let { watchlist_patient_ids = []} = doctorAllInfo || {};
+          // let { watchlist_patient_ids = []} = doctorAllInfo || {};
+          let watchlist_patient_ids = [];
+          const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+          if(watchlistRecords && watchlistRecords.length){
+            for(let i = 0 ; i<watchlistRecords.length ; i++){
+              const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+              const patientId = await watchlistWrapper.getPatientId();
+              watchlist_patient_ids.push(patientId);
+            }
+          }
           watchlist_patient_ids = watchlist_patient_ids.length ? watchlist_patient_ids : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
           watchlistQuery = `AND carePlan.user_role_id = ${userRoleId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
         }

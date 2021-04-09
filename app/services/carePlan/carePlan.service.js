@@ -6,7 +6,7 @@ import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePlanAppointments";
 import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlanMedications";
-import { TABLE_NAME as userRoleTableName } from "../../models/userRoles";
+// import { TABLE_NAME as userRoleTableName } from "../../models/userRoles";
 // import {TABLE_NAME as carePlanVitalTableName} from "../../models/carePlanVitals";
 
 import { TABLE_NAME as medicationTableName } from "../../models/medicationReminders";
@@ -92,7 +92,7 @@ class CarePlanService {
           Database.getModel(patientTableName),
           Database.getModel(doctorTableName),
           Database.getModel(carePlanAppointmentTableName),
-          Database.getModel(userRoleTableName),
+          Database.getModel(userRolesTableName),
           {
             model: Database.getModel(carePlanMedicationTableName),
             include: {

@@ -6,12 +6,15 @@ import ConsentService from "../../../services/consents/consent.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRoleService from "../../../services/userRoles/userRoles.service";
+import DoctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
 
 import SpecialityWrapper from "../speciality";
 import ConsentWrapper from "../../mobile/consent";
 import CarePlanWrapper from "../../mobile/carePlan";
 import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 import UserRoleWrapper from "../../mobile/userRoles";
+import DoctorPatientWatchlistWrapper from "../../mobile/doctorPatientWatchlist";
 
 import { completePath } from "../../../helper/filePath";
 
@@ -135,6 +138,8 @@ class MDoctorWrapper extends BaseDoctor {
     const userRoleIds = userRoles.map(userRole => userRole.id);
 
     let carePlanIds = {};
+    let watchlistPatientIds = {};
+
 
     for(let index = 0; index < userRoleIds.length; index++) {
       const consents = await consentService.getAllByData({ user_role_id: userRoleIds[index] });
@@ -147,6 +152,22 @@ class MDoctorWrapper extends BaseDoctor {
           patientIds.push(consent.getPatientId());
         }
       }
+
+      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData({user_role_id:userRoleIds[index]});
+      const userRoleId = userRoleIds[index];
+      let curreRoleIdPatientIds = [];
+      if(watchlistRecords && watchlistRecords.length){
+
+        for(let i = 0; i <watchlistRecords.length ; i++ ){
+          const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+          const patient_id = await watchlistWrapper.getPatientId();
+          curreRoleIdPatientIds.push(patient_id);
+        }
+
+        watchlistPatientIds[userRoleId] = [...curreRoleIdPatientIds];
+      }
+
+
 
       const {rows: doctorCarePlans} = await carePlanService.findAndCountAll({
         where: {
@@ -220,7 +241,9 @@ class MDoctorWrapper extends BaseDoctor {
       activated_on,
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
-      provider_id: providerId
+      provider_id: providerId,
+      watchlist_ids:watchlistPatientIds
+
     };
   };
 }
