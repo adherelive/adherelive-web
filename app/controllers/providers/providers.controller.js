@@ -18,6 +18,8 @@ import councilService from "../../services/council/council.service";
 import appointmentService from "../../services/appointment/appointment.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
+import UserRoleService from "../../services/userRoles/userRoles.service";
+import DoctorService from "../../services/doctor/doctor.service";
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -34,6 +36,7 @@ import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 
 // import * as PaymentHelper from "../payments/helper";
 
@@ -77,7 +80,7 @@ class ProvidersController extends Controller {
   getAll = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId , userRoleId = null } = {} } = req;
 
       const providerData = await providerService.getProviderByData({
         user_id: userId
@@ -86,15 +89,35 @@ class ProvidersController extends Controller {
       const providerId = provider.getProviderId();
 
       let doctorIds = [];
-      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
-        { provider_id: providerId }
-      );
+      // const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
+      //   { provider_id: providerId }
+      // );
 
-      for (const mappingData of doctorProviderMapping) {
-        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
-        const doctorId = mappingWrapper.getDoctorId();
-        doctorIds.push(doctorId);
+      const UserRoles =
+       await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
+
+      if(UserRoles && UserRoles.length){
+        for(let i = 0 ; i < UserRoles.length ; i++){
+          const UserRole = UserRoles[i];
+          const userRoleWrapper = await UserRoleWrapper(UserRole);
+          const DoctorUserId = await userRoleWrapper.getUserId();
+          const doctor = await DoctorService.getDoctorByData({user_id:DoctorUserId});
+          if(doctor){
+            const doctorWrapper = await DoctorWrapper(doctor);
+            const doctorId = await doctorWrapper.getDoctorId();
+            doctorIds.push(doctorId);
+          }
+        }
       }
+
+      // console.log("938479287498237948723984738472 ==================>>>>>>>",{doctorIds});
+
+
+      // for (const mappingData of doctorProviderMapping) {
+      //   const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
+      //   const doctorId = mappingWrapper.getDoctorId();
+      //   doctorIds.push(doctorId);
+      // }
 
       console.log("doctor ids got are: ", doctorIds);
 
