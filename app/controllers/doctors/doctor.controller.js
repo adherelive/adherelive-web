@@ -54,6 +54,7 @@ import AuthJob from "../../JobSdk/Auth/observer";
 import NotificationSdk from "../../NotificationSdk";
 // import { createNewUser } from "../user/userHelper";
 // import { generatePassword } from "../helper/passwordGenerator";
+import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
 import { addProviderDoctor } from "./providerHelper";
 
@@ -80,6 +81,7 @@ import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
+import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -2664,7 +2666,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { patient_id = 0 } = req.params;
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userRoleId = null ,  userId } = {} } = req;
 
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
@@ -2673,7 +2675,8 @@ class DoctorController extends Controller {
         const newWatchlistRecord = await doctorService.createNewWatchlistRecord(
           {
             patient_id: parseInt(patient_id),
-            doctor_id: doctor.get("id")
+            doctor_id: doctor.get("id"),
+            user_role_id:userRoleId
           }
         );
 
@@ -2709,7 +2712,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { patient_id = 0 } = req.params;
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId , userRoleId = null } = {} } = req;
 
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
@@ -2717,7 +2720,8 @@ class DoctorController extends Controller {
         const deletedWatchlistRecord = await doctorService.deleteWatchlistRecord(
           {
             patient_id: parseInt(patient_id),
-            doctor_id: doctor.get("id")
+            doctor_id: doctor.get("id"),
+            user_role_id:userRoleId
           }
         );
 
@@ -3077,7 +3081,7 @@ class DoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try { 
       const {
-        userDetails: { userId } = {},
+        userDetails: { userId , userRoleId = null  } = {},
         query = {}
       } = req;
 
@@ -3111,14 +3115,22 @@ class DoctorController extends Controller {
 
       let doctorId = null, patients = {}, paginatedPatientData = {}, watchlistPatientIds = [], count = 0, patientIds = [];
 
+
       if(doctor) {
         const doctorData = await DoctorWrapper(doctor);
         doctorId = doctorData.getDoctorId();
 
         
         const doctorAllInfo = await doctorData.getAllInfo();
-        const { watchlist_patient_ids = []} = doctorAllInfo || {};
-        watchlistPatientIds = watchlist_patient_ids;
+        const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+        if(watchlistRecords && watchlistRecords.length){
+          for(let i = 0 ; i<watchlistRecords.length ; i++){
+            const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+            const patientId = await watchlistWrapper.getPatientId();
+            watchlistPatientIds.push(patientId);
+          }
+        }
+    
       }
 
       if(getWatchListPatients) {

@@ -63,6 +63,9 @@ import collegeService from "../../../services/college/college.service";
 import CollegeWrapper from "../../../ApiWrapper/mobile/college";
 import councilService from "../../../services/council/council.service";
 import CouncilWrapper from "../../../ApiWrapper/mobile/council";
+import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
+
+
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
@@ -76,6 +79,8 @@ import { getSeparateName } from "../../../helper/common";
 import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
 import doctorsService from "../../../services/doctors/doctors.service";
+import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 
@@ -2061,8 +2066,14 @@ class MobileDoctorController extends Controller {
 
         
         const doctorAllInfo = await doctorData.getAllInfo();
-        const { watchlist_patient_ids = []} = doctorAllInfo || {};
-        watchlistPatientIds = watchlist_patient_ids;
+        const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+        if(watchlistRecords && watchlistRecords.length){
+          for(let i = 0 ; i<watchlistRecords.length ; i++){
+            const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+            const patientId = await watchlistWrapper.getPatientId();
+            watchlistPatientIds.push(patientId);
+          }
+        }
       }
 
       if(getWatchListPatients) {

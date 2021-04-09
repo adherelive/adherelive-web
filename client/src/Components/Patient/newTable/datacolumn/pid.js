@@ -99,12 +99,15 @@ class Watchlist extends Component {
           first_name, middle_name, last_name, id 
       } = {},
       onRowClick,
-      doctorData: { watchlist_patient_ids = [] } = {}
+      doctorData: { watchlist_ids = []} = {}
     } = this.props || {};
 
     const { patientData: 
-         { age, gender = "" } = {} }
+         { age, gender = "" } = {},
+         auth_role }
            = this.props || {};
+
+    const  watchlist_patient_ids =  watchlist_ids[auth_role.toString()] || [];      
 
     const isAdded = watchlist_patient_ids.includes(id);
 

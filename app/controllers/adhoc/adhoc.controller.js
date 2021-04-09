@@ -5,6 +5,7 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import carePanService from "../../services/carePlan/carePlan.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
+import watchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 // wrappers
 import UserWrapper from "../../ApiWrapper/web/user";
@@ -13,12 +14,14 @@ import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
 import PaymentProductsWrapper from "../../ApiWrapper/web/paymentProducts";
+import WatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
 
 import { getLinkDetails, getUserDetails } from "./adhoc.helper";
 import Controller from "../";
 import Logger from "../../../libs/log";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
+import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 const Log = new Logger("WEB > ADHOC > CONTROLLER");
 
@@ -132,9 +135,30 @@ class AdhocController extends Controller {
                 }, paymentProduct.getId());
             }
 
+            // -- doctor patient watchlist
+
+            const allWatchlistRecords = await watchlistService.getAll();
+            if(allWatchlistRecords && allWatchlistRecords.length){
+                for(let i=0; i< allWatchlistRecords.length; i++) {
+                    const watchlistWrapper = await WatchlistWrapper(allWatchlistRecords[i]);
+                    const recordId = await watchlistWrapper.getId();
+                    const doctor_id = await watchlistWrapper.getDoctorId();
+                    const doctorWrapper = await DoctorWrapper(null,doctor_id);
+                    const doctorUserId = await doctorWrapper.getUserId();
+                    const userRole = await userRoleService.getFirstUserRole(doctorUserId);
+                    if(userRole){
+                        const userRoleWrapper = await UserRoleWrapper(userRole);
+                        const userRoleId = userRoleWrapper.getId();
+                        let recordData = { ...watchlistWrapper , user_role_id: userRoleId };
+                        const updatedRecord = await doctorPatientWatchlistService.updateRecord(recordData,recordId);
+                    }
+                }
+
+            }
+
             return this.raiseSuccess(res, 200, {}, "All users migrated successfully to user roles.");
         } catch (error) {
-            Log.debug("migrateAllUsersToUserRoles 50 error", error);
+            Log.debug("823746823764872634872364872 migrateAllUsersToUserRoles 50 error", error);
             return this.raiseServerError(res, 500, {}, "Error in migrating users data to user roles.");
         }
     }

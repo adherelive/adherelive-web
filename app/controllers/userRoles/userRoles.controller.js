@@ -55,6 +55,14 @@ class UserRoleController extends Controller {
           user_roles: userRoleData = {},
         } = userRoleAllInfo || {};
 
+
+        if(userRoleDoctors && Object.keys(userRoleDoctors).length){
+          for(let i in userRoleDoctors){
+            const each = userRoleDoctors[i] || {};
+            const {watchlist_ids = []} = each ; 
+          }
+        }
+
         doctors = { ...doctors, ...userRoleDoctors };
         providers = { ...providers, ...userRoleProviders };
         admins = { ...admins, ...userRoleAdmins };

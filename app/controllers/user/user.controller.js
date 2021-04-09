@@ -18,6 +18,8 @@ import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from '../../services/userRoles/userRoles.service';
+import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+
 
 import UserWrapper from "../../ApiWrapper/web/user";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
@@ -29,6 +31,8 @@ import ConditionWrapper from "../../ApiWrapper/web/conditions";
 import ProvidersWrapper from "../../ApiWrapper/web/provider";
 import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
 import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
+import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+
 
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
@@ -577,10 +581,32 @@ class UserController extends Controller {
             if (userCategoryData) {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
+              let watchlist_patient_ids = [];
+              const watchlistRecords = await doctorPatientWatchlistService.getAllByData({user_role_id:userRoleId});
+              if(watchlistRecords && watchlistRecords.length){
+                for(let i = 0 ; i<watchlistRecords.length ; i++){
+                  const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+                  const patientId = await watchlistWrapper.getPatientId();
+                  watchlist_patient_ids.push(patientId);
+                }
+              }
+
+              let allInfo = {};
+              allInfo = await userCategoryApiWrapper.getAllInfo();
+              delete allInfo.watchlist_patient_ids;
+              allInfo['watchlist_patient_ids']=watchlist_patient_ids;
+
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[
                 userCategoryApiWrapper.getDoctorId()
-              ] = await userCategoryApiWrapper.getAllInfo();
+              ] = allInfo;
+
+              
+
+
+
+
+
 
               const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
                 userCategoryId

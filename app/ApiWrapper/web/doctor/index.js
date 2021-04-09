@@ -13,7 +13,8 @@ import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 import UserWrapper from "../../web/user";
 import userRoleService from "../../../services/userRoles/userRoles.service";
 import UserRoleWrapper from "../../web/userRoles";
-
+import DoctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+import DoctorPatientWatchlistWrapper from "../../web/doctorPatientWatchlist";
 
 class DoctorWrapper extends BaseDoctor {
   constructor(data) {
@@ -149,6 +150,7 @@ class DoctorWrapper extends BaseDoctor {
     const userRoleIds = userRoles.map(userRole => userRole.id);
 
     let carePlanIds = {};
+    let watchlistPatientIds = {};
 
     for(let index = 0; index < userRoleIds.length; index++) {
 
@@ -163,6 +165,20 @@ class DoctorWrapper extends BaseDoctor {
           const consent = await ConsentWrapper({ data: consentData });
           patientIds.push(consent.getPatientId());
         }
+      }
+
+      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData({user_role_id:userRoleIds[index]});
+      const userRoleId = userRoleIds[index];
+      let curreRoleIdPatientIds = [];
+      if(watchlistRecords && watchlistRecords.length){
+
+        for(let i = 0; i <watchlistRecords.length ; i++ ){
+          const watchlistWrapper = await DoctorPatientWatchlistWrapper(watchlistRecords[i]);
+          const patient_id = await watchlistWrapper.getPatientId();
+          curreRoleIdPatientIds.push(patient_id);
+        }
+
+        watchlistPatientIds[userRoleId] = [...curreRoleIdPatientIds];
       }
 
 
@@ -250,6 +266,7 @@ class DoctorWrapper extends BaseDoctor {
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
       razorpay_account_id,
+      watchlist_ids:watchlistPatientIds
       // provider_id: providerId
     };
   };
