@@ -1334,7 +1334,7 @@ class MPatientController extends Controller {
         doctorDetails.getDoctorId()
       ] = await doctorDetails.getAllInfo();
       const { care_plan_ids : all_care_plan_ids = [] } = doctorData[doctorDetails.getDoctorId()];
-      const care_plan_ids = all_care_plan_ids[userRoleId.toString()];
+      const care_plan_ids = all_care_plan_ids[userRoleId.toString()] || [];
 
       for (const each_id of care_plan_ids) {
         let thisCarePlanData = await userService.getCarePlanData(each_id);

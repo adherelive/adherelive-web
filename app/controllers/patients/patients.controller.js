@@ -1073,7 +1073,7 @@ class PatientController extends Controller {
         doctorDetails.getDoctorId()
       ] = await doctorDetails.getAllInfo();
       const { care_plan_ids : all_care_plan_ids = [] } = doctorData[doctorDetails.getDoctorId()];
-      const care_plan_ids = all_care_plan_ids[userRoleId.toString()];
+      const care_plan_ids = all_care_plan_ids[userRoleId.toString()] || [];
 
       // console.log("32894723648723648726348762387462837462873462783",{care_plan_ids});
 
