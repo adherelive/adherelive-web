@@ -218,8 +218,9 @@ class patientTable extends Component{
           search_treatments_patients,
           search_diagnosis_patients,
           tabState,
-          auth_role 
+          auth_role
         } = this.props;
+
 
 
         const {
@@ -239,9 +240,13 @@ class patientTable extends Component{
           }
         });
 
+        let watchlist_patient_ids = [];
 
         const {watchlist_ids = []} = doctors[doctor_id] || {};
-        const watchlist_patient_ids = watchlist_ids[auth_role.toString()] || [];
+        
+        if(auth_role){
+            watchlist_patient_ids = watchlist_ids[auth_role.toString()] || [];
+        }
 
 
 
