@@ -7,6 +7,7 @@ import DoctorWrapper from "../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../ApiWrapper/mobile/patient";
 import {USER_CATEGORY} from "../../constant";
 
+
 import Logger from "../../libs/log";
 
 const Log = new Logger("CRON > RENEW > SUBSCRIPTION");
@@ -24,20 +25,18 @@ class RenewSubscription {
                 for(let i = 0; i < subscriptions.length; i++) {
                     const subscription = await SubscriptionWrapper({data: subscriptions[i]});
 
-                    let patientUserId = null;
+                    let patientUserRoleId = null;
                     if(subscription.getSubscriberType() === USER_CATEGORY.PATIENT) {
-                        const patient = await PatientWrapper(null, subscription.getSubscriberId());
-                        patientUserId = patient.getUserId();
+                        patientUserRoleId =  subscription.getSubscriberId();
                     }
 
                     const {payment_products, payment_product_id} = await subscription.getReferenceInfo();
 
                     const {basic_info: {amount, name, type, creator_id, creator_type} = {}} = payment_products[payment_product_id] || {};
 
-                    let doctorUserId = null;
+                    let doctorUserRoleId = null;
                     if(creator_type === USER_CATEGORY.DOCTOR) {
-                        const doctor = await DoctorWrapper(null, creator_id);
-                        doctorUserId = doctor.getUserId();
+                        doctorUserRoleId = creator_id;
                     }
 
                     const message = JSON.stringify({
@@ -49,10 +48,10 @@ class RenewSubscription {
                         }
                     });
 
-                    if(patientUserId && doctorUserId) {
-                        const twilioMessage = await TwilioService.addUserMessage(doctorUserId, patientUserId, message);
+                    if(patientUserRoleId && doctorUserRoleId) {
+                        const twilioMessage = await TwilioService.addUserMessage(doctorUserRoleId, patientUserRoleId, message);
                     } else {
-                        Log.info(`patientUserId : ${patientUserId} | doctorUserId : ${doctorUserId}`);
+                        Log.info(`patientUserId : ${patientUserRoleId} | doctorUserId : ${doctorUserRoleId}`);
                     }
                 }
             } else {
