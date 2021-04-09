@@ -804,27 +804,110 @@ class PatientController extends Controller {
     }
   };
 
+  // getPatientVitals = async (req, res) => {
+  //   const { raiseSuccess, raiseServerError, raiseClientError } = this;
+  //   try {
+  //     Logger.debug("3455432134532476567897", req.params);
+  //     const {userDetails = {}} = req;
+  //     const { params: { careplan_id } = {} ,userDetails : { userData: { category } = {}  } } = req;
+  //     const {userRoleId = null } = userDetails  ; 
+
+  //     let carePlan =null;
+  //     let allVitals = [];
+  //     carePlan = await carePlanService.getSingleCarePlanByData({
+  //       id: careplan_id,
+  //       [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
+  //     });
+
+  //     if(carePlan){
+        
+  //       allVitals = await VitalService.getAllByData({
+  //         care_plan_id: carePlan.get("id")
+  //       });
+        
+  //     }
+
+  //     let vitalDetails = {};
+  //     let vitalTemplateDetails = {};
+  //     let carePlanTemplateDetails = {};
+
+  //     if (allVitals.length > 0) {
+  //       for (const vitalData of allVitals) {
+  //         const vital = await VitalWrapper(vitalData);
+  //         const { vitals } = await vital.getAllInfo();
+  //         const {
+  //           vital_templates,
+  //           care_plans
+  //         } = await vital.getReferenceInfo();
+
+  //         vitalDetails = { ...vitalDetails, ...vitals };
+
+  //         vitalTemplateDetails = {
+  //           ...vitalTemplateDetails,
+  //           ...vital_templates
+  //         };
+  //         carePlanTemplateDetails = {
+  //           ...carePlanTemplateDetails,
+  //           ...care_plans
+  //         };
+  //       }
+
+  //       return raiseSuccess(
+  //         res,
+  //         200,
+  //         {
+  //           vitals: {
+  //             ...vitalDetails
+  //           },
+  //           vital_templates: {
+  //             ...vitalTemplateDetails
+  //           },
+  //           care_plans: {
+  //             ...carePlanTemplateDetails
+  //           },
+  //           vital_ids: Object.keys(vitalDetails)
+  //         },
+  //         "Vitals fetched successfully for the patient"
+  //       );
+  //     } else {
+  //       return raiseSuccess(
+  //         res,
+  //         200,
+  //         {},
+  //         "There are no added vitals for the patient"
+  //       );
+  //     }
+  //   } catch (error) {
+  //     Logger.debug("getPatientVitals 500 error", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
+
   getPatientVitals = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("3455432134532476567897", req.params);
-      const {userDetails = {}} = req;
-      const { params: { careplan_id } = {} ,userDetails : { userData: { category } = {}  } } = req;
-      const {userRoleId = null } = userDetails  ; 
+      Logger.debug("34554321345324", req.params);
+      const { params: { careplan_id } = {} } = req;
+      let patient_id = null ;
+      
 
-      let carePlan =null;
-      let allVitals = [];
-      carePlan = await carePlanService.getSingleCarePlanByData({
-        id: careplan_id,
-        [category === USER_CATEGORY.DOCTOR && 'user_role_id' ] : category === USER_CATEGORY.DOCTOR && userRoleId 
+      const careplanWrapper = await CarePlanWrapper(null,careplan_id); 
+      if(careplanWrapper){
+        patient_id = await careplanWrapper.getPatientId();
+      }
+      
+      const carePlans = await carePlanService.getMultipleCarePlanByData({
+        patient_id
       });
 
-      if(carePlan){
-        
-        allVitals = await VitalService.getAllByData({
+      let allVitals = [];
+
+      for (const carePlan of carePlans) {
+        const vitals = await VitalService.getAllByData({
           care_plan_id: carePlan.get("id")
         });
-        
+
+        allVitals = [...allVitals, ...vitals];
       }
 
       let vitalDetails = {};
