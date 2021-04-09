@@ -2091,7 +2091,8 @@ class MobileDoctorController extends Controller {
           watchlistPatientIds,
           watchlist: getWatchListPatients,
           sortByName,
-          userRoleId
+          userRoleId,
+          createdAtOrder: sortByName? false: true
         }
         const allPatients = await carePlanService.getPaginatedDataOfPatients(data);
 
