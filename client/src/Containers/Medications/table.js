@@ -8,13 +8,15 @@ import {DRAWER} from "../../constant";
 
 const mapStateToProps = state => {
   const {medications = {},
+  auth : { auth_role = null } = {},
    pages: {medication_ids = []} = {}, care_plans = {},medicines={}} = state;
 
   return {
       medications,
       medication_ids,
       care_plans,
-      medicines
+      medicines,
+      auth_role
   };
 };
 
@@ -33,7 +35,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         medications,
         // medication_ids,
         care_plans,
-        medicines
+        medicines,
+        auth_role
     } = stateProps;
 
     const {
@@ -53,7 +56,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         getPatientMedications: getPatientMedications(patientId),
         editMedicationDrawer,
         medicationResponseDrawer,
-        medicines
+        medicines,
+        auth_role
     };
 };
 
