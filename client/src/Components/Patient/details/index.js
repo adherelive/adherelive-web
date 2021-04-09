@@ -286,7 +286,8 @@ const columns_appointments_non_editable = [
   }
 ];
 
-const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
+const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton , selectedCarePlanId , auth_role , user_role_id }) => {
+  console.log("3287642547652342",{selectedCarePlanId});
   return (
     <div className="flex pt20 pr24 pb10 pl24">
       <div className="patient-profile-header flex-grow-0">
@@ -295,7 +296,7 @@ const PatientProfileHeader = ({ formatMessage, getMenu, showAddButton }) => {
         </div>
       </div>
       <div className="flex-grow-1 tar">
-        {showAddButton && (
+        {showAddButton  && user_role_id.toString() === auth_role.toString() && (
           <Dropdown
             overlay={getMenu()}
             trigger={["click"]}
@@ -1952,7 +1953,8 @@ class PatientDetails extends Component {
       care_plan_template_ids = {},
       symptoms = {},
       authenticated_user = null,
-      reports = {}
+      reports = {},
+      auth_role = null
     } = this.props;
 
     const {
@@ -2154,6 +2156,8 @@ class PatientDetails extends Component {
       treatment_details: { treatment_provider } = {}
     } = this.props.user_details;
 
+    console.log("2347632645327453287648273648723",{props:this.props});
+
     let showAddButton =
       (authPermissions.includes(PERMISSIONS.ADD_APPOINTMENT) ||
         authPermissions.includes(PERMISSIONS.ADD_MEDICATION) ||
@@ -2169,10 +2173,11 @@ class PatientDetails extends Component {
 
     const {
       uploadDocsModalVisible = false,
-      uploadDocsAppointmentId = null
+      uploadDocsAppointmentId = null,
     } = this.state;
 
-    console.log("289371283 patient_id detailsPage ", { patient_id });
+
+    const {basic_info : {user_role_id = null } = {} } = care_plans[selectedCarePlanId];
 
     return (
       <Fragment>
@@ -2181,6 +2186,9 @@ class PatientDetails extends Component {
             formatMessage={formatMessage}
             getMenu={getMenu}
             showAddButton={showAddButton}
+            selectedCarePlanId={selectedCarePlanId}
+            auth_role={auth_role}
+            user_role_id = {user_role_id}
           />
 
           <div className="flex wp100">

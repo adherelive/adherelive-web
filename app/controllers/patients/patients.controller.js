@@ -265,6 +265,7 @@ class PatientController extends Controller {
       Logger.info(`params: patient_id = ${patient_id}`);
       const {
         userDetails: {
+          userRoleId = null ,
           userId,
           userCategoryId,
           userData: { category } = {}
@@ -325,7 +326,8 @@ class PatientController extends Controller {
         } = await carePlanHelper.getCareplanData({
           carePlans,
           userCategory: category,
-          doctorId: userCategoryId
+          doctorId: userCategoryId,
+          userRoleId
         });
 
 

@@ -367,6 +367,7 @@ class MPatientController extends Controller {
       const { id: patient_id = 1 } = req.params;
       const {
         userDetails: {
+          userRoleId = null ,
           userId,
           userCategoryId,
           userData: { category } = {}
@@ -438,7 +439,8 @@ class MPatientController extends Controller {
         } = await carePlanHelper.getCareplanData({
           carePlans,
           userCategory: category,
-          doctorId: userCategoryId
+          doctorId: userCategoryId,
+          userRoleId
         });
 
         // care plans

@@ -24,7 +24,7 @@ import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");
 
-export const getCareplanData = async ({carePlans = [], userCategory, doctorId}) => {
+export const getCareplanData = async ({carePlans = [], userCategory, doctorId , userRoleId }) => {
     try {
         let carePlanData = {};
         let carePlanIds = [];
@@ -59,7 +59,7 @@ export const getCareplanData = async ({carePlans = [], userCategory, doctorId}) 
             // get latest careplan id
             Log.debug("7123731 careplan --> ", careplan.getCreatedAt());
             Log.debug("71237312 careplan --> ", moment(currentCareplanTime));
-            if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
+            if(userCategory === USER_CATEGORY.DOCTOR && user_role_id.toString() === userRoleId.toString() ) {
                 if (
                     moment(careplan.getCreatedAt()).diff(
                         moment(currentCareplanTime),
