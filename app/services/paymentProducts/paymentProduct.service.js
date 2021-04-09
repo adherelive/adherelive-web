@@ -87,4 +87,13 @@ export default class PaymentProductService {
       throw error;
     }
   };
+
+
+  getAll = async () => {
+    try {
+      return await Database.getModel(TABLE_NAME).findAll();
+    } catch (error) {
+      throw error;
+    }
+  };
 }

@@ -1180,7 +1180,7 @@ class PatientController extends Controller {
     try {
       const {
         params: { id: patient_id } = {},
-        userDetails: { userId } = {}
+        userDetails: { userId, userRoleId } = {}
       } = req;
 
       const patient = await PatientWrapper(null, patient_id);
@@ -1295,7 +1295,8 @@ class PatientController extends Controller {
         const consentData = await consentService.create({
           type: CONSENT_TYPE.CARE_PLAN,
           doctor_id: authDoctor.get("id"),
-          patient_id
+          patient_id,
+          user_role_id: userRoleId
         });
         const consents = await ConsentWrapper({ data: consentData });
 

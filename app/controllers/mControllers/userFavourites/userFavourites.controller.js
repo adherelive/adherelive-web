@@ -101,8 +101,6 @@ class UserFavouritesController extends Controller {
            marked_favourite_type:type
          }
 
-         Log.debug("283745237842354236984723",{userDetails:req.userDetails,data,type,req});
-
         const favourites = await UserFavouritesService.getAllFavourites(data);
 
         let favourites_data = {};

@@ -64,15 +64,16 @@ class ConsultationFeeTable extends Component {
     let options = [];
 
     for (let each in payment_products) {
-      const {creator_id = null} = payment_products[each] || {};
-      if(creator_id !== null){
+      const {creator_role_id = null, for_user_role_id = null} = payment_products[each] || {};
+      if(creator_role_id !== null){
         options.push(
           generateRow({
             ...payment_products[each],
             deleteDoctorProduct:deleteDoctorPaymentProduct,
             openConsultationFeeDrawer,
             formatMessage,
-            doctors
+            doctors,
+            editable: creator_role_id === for_user_role_id? true: false
           })
         );
       }

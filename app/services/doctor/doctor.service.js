@@ -5,6 +5,8 @@ import { TABLE_NAME as specialityTableName } from "../../models/specialities";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import { Op } from "sequelize";
 
+const DEFAULT_ORDER = [["created_at","DESC"]];
+
 class DoctorService {
   getDoctorByData = async (data, paranoid = true) => {
     try {
@@ -226,6 +228,19 @@ class DoctorService {
       console.log("329847562389462364872384122 ===============>",{doctor,value});
 
       return doctor;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  findOne = async ({where, order = DEFAULT_ORDER, attributes}) => {
+    try {
+      return await Database.getModel(TABLE_NAME).findOne({
+        where,
+        order,
+        attributes,
+        raw: true
+      });
     } catch (error) {
       throw error;
     }

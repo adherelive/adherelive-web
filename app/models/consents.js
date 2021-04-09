@@ -2,6 +2,7 @@
 import {DataTypes} from "sequelize";
 import {TABLE_NAME as patientTableName} from "./patients";
 import {TABLE_NAME as doctorTableName} from "./doctors";
+import {TABLE_NAME as userRoleTableName} from "./userRoles";
 
 export const TABLE_NAME = "consents";
 
@@ -34,6 +35,16 @@ export const db = (database) => {
                 references: {
                     model: {
                         tableName: patientTableName,
+                    },
+                    key: 'id'
+                }
+            },
+            user_role_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: {
+                        tableName: userRoleTableName,
                     },
                     key: 'id'
                 }
@@ -75,5 +86,10 @@ export const associate = (database) => {
     database.models[TABLE_NAME].hasOne(database.models[doctorTableName], {
         foreignKey: "id",
         sourceKey: "doctor_id"
+    });
+
+    database.models[TABLE_NAME].hasOne(database.models[userRoleTableName], {
+        foreignKey: "id",
+        sourceKey: "user_role_id"
     });
 };

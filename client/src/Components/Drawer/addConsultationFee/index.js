@@ -184,8 +184,18 @@ class addNewConsultationDrawer extends Component {
     }
   };
 
+  isDoctorRoleAssociatedWithProvider = () => {
+    const {auth_role, user_roles} = this.props;
+    const {basic_info: {linked_with, linked_id} = {}} = user_roles[auth_role] || {};
+
+    if(linked_id) {
+      return linked_id;
+    }
+    return false;
+  }
+
   renderAddNewConsultationFee = () => {
-    const {doctors: {provider_id} = {}} = this.props;
+    const provider_id = this.isDoctorRoleAssociatedWithProvider();
     const {
       newConsultationName = "",
       newConsultationType = "",

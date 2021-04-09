@@ -106,9 +106,9 @@ class DoctorWrapper extends BaseDoctor {
     } = _data || {};
 
     const consentService = new ConsentService();
-    const consents = await consentService.getAllByData({
-      doctor_id: getDoctorId()
-    });
+    // const consents = await consentService.getAllByData({
+    //   doctor_id: getDoctorId()
+    // });
 
     const watchlistPatients = await doctorService.getAllWatchlist({
       doctor_id: getDoctorId()
@@ -122,13 +122,13 @@ class DoctorWrapper extends BaseDoctor {
       }
     }
 
-    const patientIds = [];
-    if (consents.length > 0) {
-      for (const consentData of consents) {
-        const consent = await ConsentWrapper({ data: consentData });
-        patientIds.push(consent.getPatientId());
-      }
-    }
+    // const patientIds = [];
+    // if (consents.length > 0) {
+    //   for (const consentData of consents) {
+    //     const consent = await ConsentWrapper({ data: consentData });
+    //     patientIds.push(consent.getPatientId());
+    //   }
+    // }
 
     const doctorUserId = this.getUserId();
     const UserRole = await userRoleService.getFirstUserRole(doctorUserId);
@@ -151,6 +151,21 @@ class DoctorWrapper extends BaseDoctor {
     let carePlanIds = {};
 
     for(let index = 0; index < userRoleIds.length; index++) {
+
+      let patientIds = [];
+
+      const consents = await consentService.getAllByData({
+        user_role_id: userRoleIds[index]
+      });
+
+      if (consents.length > 0) {
+        for (const consentData of consents) {
+          const consent = await ConsentWrapper({ data: consentData });
+          patientIds.push(consent.getPatientId());
+        }
+      }
+
+
       const {rows: doctorCarePlans} = await carePlanService.findAndCountAll({
         where: {
           [Op.or]: [
@@ -204,17 +219,17 @@ class DoctorWrapper extends BaseDoctor {
     //   }
     // }
 
-    const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-      getDoctorId()
-    );
+    // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+    //   getDoctorId()
+    // );
 
-    let providerId = null;
-    if (doctorProvider) {
-      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-        doctorProvider
-      );
-      providerId = doctorProviderWrapper.getProviderId();
-    }
+    // let providerId = null;
+    // if (doctorProvider) {
+    //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+    //     doctorProvider
+    //   );
+    //   providerId = doctorProviderWrapper.getProviderId();
+    // }
 
     return {
       basic_info: {
@@ -235,7 +250,7 @@ class DoctorWrapper extends BaseDoctor {
       care_plan_ids: carePlanIds,
       watchlist_patient_ids,
       razorpay_account_id,
-      provider_id: providerId
+      // provider_id: providerId
     };
   };
 }

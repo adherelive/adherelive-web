@@ -206,19 +206,11 @@ export const createNewUser = async (email, password = null, creatorId= null) => 
         onboarded: false
         // system_generated_password
       });
-  
-      await userPreferenceService.addUserPreference({
-        user_id: user.get("id"),
-        details: {
-          charts: ["1", "2", "3"]
-        }
-      });
     } else if(!userExits.get("password") && password){
       const updatedUser = await userService.updateUser({
         password: hash
       }, userExits.get("id"));
     }
-    
 
     const userInfo = await userService.getUserByEmail({ email });
     let userRoleId = null;
@@ -232,6 +224,13 @@ export const createNewUser = async (email, password = null, creatorId= null) => 
     if(userRole) {
       const userRoleWrapper = await UserRolesWrapper(userRole);
       userRoleId = userRoleWrapper.getId();
+      await userPreferenceService.addUserPreference({
+        user_id: userInfo.get("id"),
+        details: {
+          charts: ["1", "2", "3"]
+        },
+        user_role_id: userRoleId
+      });
     }
 
     await UserVerificationServices.addRequest({

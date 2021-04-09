@@ -95,7 +95,7 @@ class MDoctorWrapper extends BaseDoctor {
     } = _data || {};
 
     const consentService = new ConsentService();
-    const consents = await consentService.getAllByData({ doctor_id: id });
+    // const consents = await consentService.getAllByData({ doctor_id: id });
     const watchlistPatients = await doctorService.getAllWatchlist({
       doctor_id: id
     });
@@ -108,13 +108,13 @@ class MDoctorWrapper extends BaseDoctor {
       }
     }
 
-    const patientIds = [];
-    if (consents.length > 0) {
-      for (const consentData of consents) {
-        const consent = await ConsentWrapper({ data: consentData });
-        patientIds.push(consent.getPatientId());
-      }
-    }
+    // const patientIds = [];
+    // if (consents.length > 0) {
+    //   for (const consentData of consents) {
+    //     const consent = await ConsentWrapper({ data: consentData });
+    //     patientIds.push(consent.getPatientId());
+    //   }
+    // }
 
     const doctorUserId = this.getUserId();
     const UserRole = await userRoleService.getFirstUserRole(doctorUserId);
@@ -137,6 +137,17 @@ class MDoctorWrapper extends BaseDoctor {
     let carePlanIds = {};
 
     for(let index = 0; index < userRoleIds.length; index++) {
+      const consents = await consentService.getAllByData({ user_role_id: userRoleIds[index] });
+
+      let patientIds = [];
+
+      if (consents.length > 0) {
+        for (const consentData of consents) {
+          const consent = await ConsentWrapper({ data: consentData });
+          patientIds.push(consent.getPatientId());
+        }
+      }
+
       const {rows: doctorCarePlans} = await carePlanService.findAndCountAll({
         where: {
           [Op.or]: [

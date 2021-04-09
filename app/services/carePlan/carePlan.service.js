@@ -217,7 +217,7 @@ class CarePlanService {
 
   getPaginatedDataOfPatients = async(data) => {
     const {offset, limit, doctorId, watchlistPatientIds, watchlist, sortByName,createdAtOrder,nameOrder , userRoleId } = data;
-    const sortBy = sortByName? `t3.first_name ${nameOrder ? "asc" : "desc" }`: `t3.created_at ${createdAtOrder ? "desc" : "asc" }`;
+    const sortBy = sortByName? `t3.first_name ${nameOrder ? "desc" : "asc" }`: `t3.created_at ${createdAtOrder ? "desc" : "asc" }`;
     // sortByName = 1 --> a-z , created_at = 1 --> latest top
     try {
       let query = "";
