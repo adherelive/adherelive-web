@@ -292,6 +292,18 @@ class SideMenu extends Component {
     // history.push();
   };
 
+  getDoctorDetails = () => {
+    const {formatMessage} = this;
+    return (
+      <div>
+        <span>Doctor</span>
+         <a href={PRIVACY_PAGE_URL} target={"_blank"}>
+            {formatMessage(messages.privacy_policy_text)}
+          </a>
+      </div>
+    );
+  };
+
   getUserRoles = () => {
     const {
       user_roles,
@@ -334,7 +346,7 @@ class SideMenu extends Component {
   };
 
   menu = () => {
-    const { getUserRoles } = this;
+    const { getUserRoles, getDoctorDetails } = this;
     return (
       <Menu
         className="l70 b10 fixed" // b20
@@ -343,14 +355,16 @@ class SideMenu extends Component {
         key={"sub"}
         onClick={this.handleItemSelect}
       >
+        {getDoctorDetails()}
+        <Menu.Divider />
         {getUserRoles()}
 
         {/* <Menu.Divider /> */}
-        <Menu.Item className="p10" key={PRIVACY_POLICY}>
+        {/* <Menu.Item className="p10" key={PRIVACY_POLICY}>
           <a href={PRIVACY_PAGE_URL} target={"_blank"}>
             {this.formatMessage(messages.privacy_policy_text)}
           </a>
-        </Menu.Item>
+        </Menu.Item> */}
         {/* <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
@@ -358,10 +372,10 @@ class SideMenu extends Component {
         <Menu.Item className="pl24 pr80" key={SETTINGS}>Settings
         </Menu.Item>
         <Menu.Divider />*/}
-        <Menu.Item className="pl24 pr80" key={TEMPLATES}>
+        {/* <Menu.Item className="pl24 pr80" key={TEMPLATES}>
           {this.formatMessage(messages.templates)}
-        </Menu.Item>
-        <Menu.Divider />
+        </Menu.Item> */}
+        {/* <Menu.Divider /> */}
         <Menu.Item className="p10" key={LOG_OUT}>
           Logout
         </Menu.Item>
