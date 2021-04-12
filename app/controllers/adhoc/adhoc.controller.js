@@ -99,6 +99,25 @@ class AdhocController extends Controller {
 
             Log.debug("0283193 userPreferences", updateResponse);
 
+
+            //-- add test-provider record to user-pref table
+
+            const user_identity="5";
+            const existing = await userPreferenceService.findOne({
+                where:{user_id:user_identity}
+            });
+
+            if(!existing){
+                const userRole = await userRoleService.getFirstUserRole(user_identity);
+
+                if(userRole){
+                    const userRoleData = await UserRoleWrapper(userRole); 
+                    const userRoleId = userRoleData.getId();
+
+                    const newRecord = await userPreferenceService.addPreferenceRawQuery(user_identity,userRoleId);
+                }
+            }
+
             // --- payment products migration
 
             const paymentProductService = new PaymentProductService();

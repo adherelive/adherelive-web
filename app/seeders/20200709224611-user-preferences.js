@@ -159,7 +159,16 @@ module.exports = {
         }),
         created_at: new Date(),
         updated_at: new Date(),
-      }
+      },
+      {
+        user_id:"5",
+        details: JSON.stringify({
+          charts: ["1","2","3"]
+
+        }),
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 
