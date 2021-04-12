@@ -28,7 +28,7 @@ export const getProviderTransactions = async req => {
 
     // get all payment product created by provider
     const allPaymentProducts = await paymentProductService.getAllCreatorTypeProducts({
-      creator_id: userRoleId,
+      creator_role_id: userRoleId,
       creator_type: USER_CATEGORY.PROVIDER
     }) || [];
 
@@ -167,8 +167,9 @@ export const getDoctorTransactions = async req => {
     const transactionService = new TransactionService();
 
     // get all payment product created by provider
+
     const allPaymentProducts = await paymentProductService.getAllCreatorTypeProducts({
-      creator_id: userRoleId,
+      creator_role_id: userRoleId,
       creator_type: USER_CATEGORY.DOCTOR
     }) || [];
 
@@ -200,10 +201,9 @@ export const getDoctorTransactions = async req => {
       }
     }
 
-    const allTransactions =
-      (await transactionService.getAllByData({
-        payment_product_id: paymentProductIds
-      })) || [];
+      const allTransactions = await transactionService.getAllByData({
+          payment_product_id: paymentProductIds
+        }) || [];
 
     let transactionData = {};
     let transactionIds = [];
@@ -212,7 +212,7 @@ export const getDoctorTransactions = async req => {
     let doctorData = {};
     let patientData = {};
 
-    let patientIds = [], allPatients = [];
+    let patientIds = [];
 
     if (allTransactions.length > 0) {
       for (let index = 0; index < allTransactions.length; index++) {
@@ -238,7 +238,8 @@ export const getDoctorTransactions = async req => {
 
           const {user_identity: patient_user_id = null} = payeeUserRole || {};
           const patient = await patientService.getPatientByUserId(patient_user_id);
-          allPatients.push(patient);
+          const patientWrapper = await PatientWrapper(patient);
+          patientIds.push(patientWrapper.getPatientId());
         }
       }
     }
@@ -259,9 +260,9 @@ export const getDoctorTransactions = async req => {
 
 
     // get all patients
-    // const allPatients = await patientService.getPatientByData({
-    //   id: patientIds
-    // }) || [];
+    const allPatients = await patientService.getPatientByData({
+      id: patientIds
+    }) || [];
 
 
     if(allPatients.length > 0) {
