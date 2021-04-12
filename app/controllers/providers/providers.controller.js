@@ -563,15 +563,6 @@ class ProvidersController extends Controller {
       let dateWiseAppointmentDetails = {};
 
       let doctorIds = [];
-      // const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
-      //   { provider_id: providerId }
-      // );
-
-      // for (const mappingData of doctorProviderMapping) {
-      //   const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
-      //   const doctorId = mappingWrapper.getDoctorId();
-      //   doctorIds.push(doctorId);
-      // }
 
       const UserRoles =
       await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
