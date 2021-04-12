@@ -114,7 +114,15 @@ class AdhocController extends Controller {
                     const userRoleData = await UserRoleWrapper(userRole); 
                     const userRoleId = userRoleData.getId();
 
-                    const newRecord = await userPreferenceService.addPreferenceRawQuery(user_identity,userRoleId);
+                    const newRecord = await userPreferenceService.addUserPreference(
+                        {
+                        user_id:"5",
+                        details: {
+                          charts: ["1","2","3"]
+                
+                        },
+                        user_role_id:userRoleId
+                      });
                 }
             }
 

@@ -16,20 +16,7 @@ class UserPreferenceService {
         }
     };
 
-    addPreferenceRawQuery   = async(user_identity,user_role_id) => {
-        try {
-            const query =
-             `INSERT adhere.user_preferences(user_id,details,created_at,updated_at,user_role_id) values(${user_identity},'{"charts": ["1", "2", "3"]}',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,${user_role_id});`
-     
-    
-          const record = await Database.performRawQuery(query);
-    
-          
-          return record;
-        } catch (err) {
-          throw err;
-        }
-      }
+   
 
     getPreferenceByData = async data => {
         try {
