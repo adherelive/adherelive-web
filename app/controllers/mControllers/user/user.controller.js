@@ -222,12 +222,17 @@ class MobileUserController extends Controller {
           permissions = await userData.getPermissions();
         }
 
+        const userRole = await userRolesService.getFirstUserRole(userData.getId());
+        if(!userRole) {
+          return this.raiseClientError(res, 422, {}, "User doesn't exists");
+        }
+        const userRoleWrapper = await UserRolesWrapper(userRole);
+        const userRoleId = userRoleWrapper.getId();
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
-
         const secret = process.config.TOKEN_SECRET_KEY;
         const accessToken = await jwt.sign(
           {
-            userId: userData.getId()
+            userRoleId
           },
           secret,
           {
@@ -236,9 +241,8 @@ class MobileUserController extends Controller {
         );
 
         const appNotification = new AppNotification();
-
-        const notificationToken = appNotification.getUserToken(`${user_id}`);
-        const feedId = base64.encode(`${user_id}`);
+        const notificationToken = appNotification.getUserToken(`${userRoleId}`);
+        const feedId = base64.encode(`${userRoleId}`);
 
         Logger.debug("userData ----> ", userData.isActivated());
         return raiseSuccess(
@@ -254,6 +258,7 @@ class MobileUserController extends Controller {
               }
             },
             auth_user: userData.getId(),
+            auth_user_role: userRoleId,
             auth_category: userData.getCategory(),
             hasConsent: userData.getConsent(),
             ...permissions
