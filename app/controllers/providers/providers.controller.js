@@ -818,12 +818,18 @@ class ProvidersController extends Controller {
 
       const userData = await UserWrapper(user.get());
 
+      const providerUserId = await userData.getId();
+      const userRole = await UserRoleService.create({user_identity:providerUserId});
+      const userRoleWrapper = await UserRoleWrapper(userRole);
+      const newUserRoleId = await userRoleWrapper.getId();
+
       // add user preference
       await userPreferenceService.addUserPreference({
           user_id: userData.getId(),
           details: {
             charts: ["1", "2", "3"]
-          }
+          },
+          user_role_id:newUserRoleId
       });
 
 

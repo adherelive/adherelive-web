@@ -352,10 +352,10 @@ class SideMenu extends Component {
         {/* <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
-        <Menu.Divider />
+        <Menu.Divider />*/}
         <Menu.Item className="pl24 pr80" key={SETTINGS}>Settings
         </Menu.Item>
-        <Menu.Divider />*/}
+        <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={TEMPLATES}>
           {this.formatMessage(messages.templates)}
         </Menu.Item> 
