@@ -434,22 +434,24 @@ class ProvidersController extends Controller {
 
       let patientIds = [];
       let doctorIds = [];
-      const doctorProviderMapping = await doctorProviderMappingService.getDoctorProviderMappingByData(
-        { provider_id: providerId }
-      );
 
-      for (const mappingData of doctorProviderMapping) {
-        const mappingWrapper = await DoctorProviderMappingWrapper(mappingData);
-        const doctorId = mappingWrapper.getDoctorId();
-        const doctorDetails = await DoctorWrapper(null, doctorId);
+      const UserRoles =
+      await UserRoleService.getAllByData({linked_id:providerId , linked_with:USER_CATEGORY.PROVIDER});
 
-        const doctorUserId = doctorDetails.getUserId();
-        const doctorUserData = await UserWrapper(null, doctorUserId);
+     if(UserRoles && UserRoles.length){
+       for(let i = 0 ; i < UserRoles.length ; i++){
+         const UserRole = UserRoles[i];
+         const userRoleWrapper = await UserRoleWrapper(UserRole);
+         const DoctorUserId = await userRoleWrapper.getUserId();
+         const doctor = await DoctorService.getDoctorByData({user_id:DoctorUserId});
+         if(doctor){
+           const doctorWrapper = await DoctorWrapper(doctor);
+           const doctorId = await doctorWrapper.getDoctorId();
+           doctorIds.push(doctorId);
+         }
+       }
+     }
 
-        userApiDetails[doctorUserId] = doctorUserData.getBasicInfo();
-        doctorApiDetails[doctorId] = doctorDetails.getBasicInfo();
-        doctorIds.push(doctorId);
-      }
 
       for (const doctorId of doctorIds) {
         let appointmentList = [];
