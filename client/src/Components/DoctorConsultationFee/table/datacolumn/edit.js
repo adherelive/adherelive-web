@@ -3,6 +3,7 @@ import { EditOutlined } from "@ant-design/icons";
 import Tooltip from "antd/es/tooltip";
 
 import messages from "../messages";
+import { USER_CATEGORY } from "../../../../constant";
 
 export default props => {
   const {
@@ -13,7 +14,9 @@ export default props => {
     } = {}
   } = props || {};
 
-  const {data : {basic_info={},doctors: {provider_id} = {} } ={}} =props;
+  const {data : {creator_type='' , basic_info={},doctors: {provider_id} = {} } ={}} =props;
+
+  
 
   const handleEdit = (id) => (e) =>{
     e.preventDefault();
@@ -25,9 +28,7 @@ export default props => {
     openConsultationFeeDrawer(paymentData);
   }
 
-  // console.log("5464564564645654",provider_id);
-
-  if(provider_id){
+  if(provider_id || creator_type === USER_CATEGORY.PROVIDER){
     return null;
   }
 

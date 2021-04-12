@@ -34,7 +34,9 @@ class SelectedDays extends Component {
 
   componentDidMount() {
     const {
-      form: { validateFields }
+      form: { validateFields },
+      payload:{id =null} = {},
+      vitals = {}
     } = this.props;
     validateFields();
 
@@ -47,6 +49,11 @@ class SelectedDays extends Component {
       const {details : {repeat_days : vital_repeat_days_new = []} ={}} = vitalData || {};
       existing_repeat_days = vital_repeat_days_new;
       this.setState({selectedDays:existing_repeat_days})
+    }
+    
+    const {details : {repeat_days = [] } = {} } = vitals[id] || {};
+    if(repeat_days && repeat_days.length){
+      this.setState({selectedDays:repeat_days});
     }
 
   }

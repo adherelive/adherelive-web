@@ -49,12 +49,14 @@ class MedicationTable extends Component {
             medicines,
             isOtherCarePlan,
             intl: {formatMessage} = {},
+            care_plans
         } = this.props;
 
-        const {medication_ids} = this.state;
+        const {medication_ids = [] } =care_plans || {};
+
+        // const {medication_ids} = this.state;
 
         const {openResponseDrawer, openEditDrawer} = this;
-
 
         return medication_ids.map((id) => {
             return generateRow({
@@ -89,6 +91,7 @@ class MedicationTable extends Component {
     formatMessage = data => this.props.intl.formatMessage(data);
 
     render() {
+        console.log("238423749823794729847293",{props:this.props});
         const locale = {
             emptyText: this.formatMessage(messages.emptyMedicationTable)
           };

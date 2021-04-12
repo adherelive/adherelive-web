@@ -52,7 +52,7 @@ export const getCareplanData = async ({carePlans = [], userCategory, doctorId , 
 
             doctorData = {...doctorData, ...doctors};
 
-            const {medication_ids, appointment_ids} = care_plans[careplan.getCarePlanId()] || {};
+            const {medication_ids, appointment_ids , basic_info : {user_role_id = null } = {}} = care_plans[careplan.getCarePlanId()] || {};
             appointmentIds = [...appointmentIds, ...appointment_ids];
             medicationIds = [...medicationIds, ...medication_ids];
 

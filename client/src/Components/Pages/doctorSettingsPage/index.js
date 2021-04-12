@@ -199,6 +199,9 @@ class DoctorSettingsPage extends Component {
   };
 
   noConsultationFeeDisplay = () => {
+    const provider_id = this.isDoctorRoleAssociatedWithProvider() || null;
+
+    
     return (
       <div className="w700 mb20 flex direction-column align-center justify-center">
         <div className="br-lightgrey h200 w200 br4"></div>
@@ -209,6 +212,9 @@ class DoctorSettingsPage extends Component {
           {this.formatMessage(messages.notAddedFeesYet)}
         </div>
 
+      {
+        provider_id === null
+        ?
         <div className=" mt20">
           <Button type="primary" onClick={this.displayAddDoctorPaymentProduct}>
             <span className="w200 fs20">
@@ -217,6 +223,10 @@ class DoctorSettingsPage extends Component {
             {/* Add */}
           </Button>
         </div>
+        :
+        null
+      }
+        
       </div>
     );
   };
