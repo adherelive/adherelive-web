@@ -56,11 +56,15 @@ class VitalTable extends Component {
     getDataSource = () => {
         const {
             vitals,
+            care_plans,
             vital_templates,
             intl: {formatMessage} = {},
             isOtherCarePlan
         } = this.props;
-        const {vital_ids} = this.state;
+        // const {vital_ids} = this.state;
+
+        console.log("23943278648726348723",{props:this.props});
+        const {vital_ids = [] } =care_plans || {};
         const {openResponseDrawer, openEditDrawer} = this;
 
 

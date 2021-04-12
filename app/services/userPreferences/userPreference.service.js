@@ -16,6 +16,8 @@ class UserPreferenceService {
         }
     };
 
+   
+
     getPreferenceByData = async data => {
         try {
             const userPreference = await Database.getModel(TABLE_NAME).findOne({
