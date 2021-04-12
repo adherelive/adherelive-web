@@ -337,7 +337,9 @@ class SideMenu extends Component {
     const { getUserRoles } = this;
     return (
       <Menu
-        className="l70 b20 fixed" // b20
+        className="l70 b10 fixed" // b20
+        // style={{bottom: 50}}
+        // getPopupContainer={() => this.menuRef}
         key={"sub"}
         onClick={this.handleItemSelect}
       >
@@ -358,7 +360,7 @@ class SideMenu extends Component {
         <Menu.Divider />
         <Menu.Item className="pl24 pr80" key={TEMPLATES}>
           {this.formatMessage(messages.templates)}
-        </Menu.Item> 
+        </Menu.Item>
         <Menu.Divider />
         <Menu.Item className="p10" key={LOG_OUT}>
           Logout
@@ -380,13 +382,20 @@ class SideMenu extends Component {
         return <img alt={"Provider Icon"} src={icon} className="w35 h35" />;
       } else {
         return (
-          <div className={"hp100"}>
-            <Avatar>
-              {name
-                .split(" ")
-                .map((word) => word.charAt(0).toUpperCase())
-                .join(" ")}
-            </Avatar>
+          // <div className={"h50"}>
+          //   <Avatar>
+          //     {name
+          //       .split(" ")
+          //       .map((word) => word.charAt(0).toUpperCase())
+          //       .join(" ")}
+          //   </Avatar>
+          // </div>
+
+          <div className="w35 h35 br5 bg-grey flex justify-center align-center">
+            {name
+              .split(" ")
+              .map((word) => word.charAt(0).toUpperCase())
+              .join(" ")}
           </div>
           // <div className={"bg-grey br50 w30 h30"}>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
         );
@@ -471,7 +480,7 @@ class SideMenu extends Component {
         {authenticated_category == USER_CATEGORY.DOCTOR ? (
           <MenuItem
             key={SUB_MENU}
-            className="flex direction-column align-center justify-space-between p0"
+            className="flex direction-column align-center justify-space-between h200"
           >
             {/* {provider_icon && (
               <img
@@ -480,16 +489,21 @@ class SideMenu extends Component {
                 className="w35 h35"
               />
             )} */}
-            {getProviderIcon()}
-            <Dropdown overlay={this.menu} overlayClassName="relative">
-              <div className="flex direction-column align-center justify-end wp250 hp100">
-                {initials ? (
-                  <Avatar src={dp}>{initials}</Avatar>
-                ) : (
-                  <Avatar icon="user" />
-                )}
-              </div>
-            </Dropdown>
+            <div
+              className="flex direction-column justify-space-between align-center hp100 p10 br5 bw-cool-grey"
+            >
+              {getProviderIcon()}
+
+              <Dropdown overlay={this.menu} overlayClassName="relative">
+                <div className="flex direction-column align-center justify-end wp250">
+                  {initials ? (
+                    <Avatar src={dp}>{initials}</Avatar>
+                  ) : (
+                    <Avatar icon="user" />
+                  )}
+                </div>
+              </Dropdown>
+            </div>
             {/* </div> */}
           </MenuItem>
         ) : (

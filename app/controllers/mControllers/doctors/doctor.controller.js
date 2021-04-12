@@ -1685,7 +1685,7 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { patient_id = 0 } = req.params;
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId, userRoleId } = {} } = req;
 
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
@@ -1694,7 +1694,8 @@ class MobileDoctorController extends Controller {
         const newWatchlistRecord = await doctorService.createNewWatchlistRecord(
           {
             patient_id: parseInt(patient_id),
-            doctor_id: doctor.get("id")
+            doctor_id: doctor.get("id"),
+            user_role_id: userRoleId
           }
         );
 
@@ -1730,7 +1731,7 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { patient_id = 0 } = req.params;
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId, userRoleId } = {} } = req;
 
       const patient = await PatientWrapper(null, patient_id);
       const doctor = await doctorsService.getDoctorByUserId(parseInt(userId));
@@ -1738,7 +1739,8 @@ class MobileDoctorController extends Controller {
         const deletedWatchlistRecord = await doctorService.deleteWatchlistRecord(
           {
             patient_id: parseInt(patient_id),
-            doctor_id: doctor.get("id")
+            doctor_id: doctor.get("id"),
+            user_role_id: userRoleId
           }
         );
 
