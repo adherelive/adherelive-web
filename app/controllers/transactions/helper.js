@@ -98,7 +98,8 @@ export const getProviderTransactions = async req => {
 
           const {user_identity: patient_user_id = null} = payeeUserRole || {};
           const patient = await patientService.getPatientByUserId(patient_user_id);
-          allPatients.push(patient);
+          const patientWrapper = await PatientWrapper(patient);
+          patientIds.push(patientWrapper.getPatientId());
         }
       }
     }
@@ -122,6 +123,11 @@ export const getProviderTransactions = async req => {
     // const allPatients = await patientService.getPatientByData({
     //   id: patientIds
     // }) || [];
+
+    // get all patients
+    allPatients = await patientService.getPatientByData({
+      id: patientIds
+    }) || [];
 
 
     if(allPatients.length > 0) {
