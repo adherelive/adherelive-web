@@ -279,7 +279,6 @@ class UserService {
 
   searchMail = async (value) => {
     try {
-      console.log("324652375427354732",{value});
       const matchingUsers = await Database.getModel(TABLE_NAME).findAll(
         {
           where: {
