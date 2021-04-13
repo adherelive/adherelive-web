@@ -59,7 +59,8 @@ class TransactionTable extends Component {
                 patients,
                 doctors,
                 users,
-                authenticated_category
+                authenticated_category,
+                user_roles
               } = this.props;
 
 
@@ -72,7 +73,8 @@ class TransactionTable extends Component {
                 patients,
                 doctors,
                 users,
-                authenticated_category
+                authenticated_category,
+                user_roles
             });
         });
     };

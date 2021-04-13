@@ -11,7 +11,8 @@ const mapStateToProps = state => {
         payment_products={},
         pages: { transaction_ids = []} = {},
         users={},
-        auth={}
+        auth={},
+        user_roles = {}
     } = state;
 
     const { authenticated_user, authenticated_category } = auth;
@@ -24,7 +25,8 @@ const mapStateToProps = state => {
         payment_products,
         authenticated_user,
         authenticated_category,
-        users
+        users,
+        user_roles
     };
 }
 
