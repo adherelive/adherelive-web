@@ -12,6 +12,7 @@ import TransactionWrapper from "../../ApiWrapper/web/transactions";
 import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
 import DoctorWrapper from "../../ApiWrapper/web/doctor";
 import PatientWrapper from "../../ApiWrapper/web/patient";
+import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
 
 // helpers
 import {USER_CATEGORY} from "../../../constant";
@@ -32,7 +33,7 @@ export const getProviderTransactions = async req => {
       creator_type: USER_CATEGORY.PROVIDER
     }) || [];
 
-    let paymentProductIds = [];
+    let paymentProductIds = [], userRoleData = {};
     // let paymentProductData = {};
 
     let doctorIds = [];
@@ -45,13 +46,21 @@ export const getProviderTransactions = async req => {
         // get for_user data
         if(paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR) {
           const roleId = paymentProduct.getForUserRoleId();
-          const userRole = await userRolesService.findOne({where: {
-            id: roleId
-           },
-           attributes: ["user_identity"]
-          }) || null;
+          const creatorRoleId = paymentProduct.getCreatorRoleId();
+          
+          const creatorRole = await userRolesService.getSingleUserRoleByData({id: creatorRoleId});
+          if(creatorRole) {
+            const creatorRoleData = await UserRolesWrapper(creatorRole);
+            userRoleData = {...userRoleData, ...{[creatorRoleId]: creatorRoleData.getBasicInfo()}}
+          }
 
-          const {user_identity: doctor_user_id = null} = userRole || {};
+          let doctor_user_id = null
+          const forUserRole = await userRolesService.getSingleUserRoleByData({id: roleId});
+          if(forUserRole) {
+            const forUserRoleData = await UserRolesWrapper(forUserRole);
+            doctor_user_id = forUserRoleData.getUserId();
+            userRoleData = {...userRoleData, ...{[roleId]: forUserRoleData.getBasicInfo()}}
+          }
           const doctor = await doctorService.findOne({where: {user_id: doctor_user_id}, attributes: ["id"]}) || null;
           const {id: doctorId = null} = doctor || {};
         
@@ -72,7 +81,7 @@ export const getProviderTransactions = async req => {
     let doctorData = {};
     let patientData = {};
 
-    let patientIds = [], allPatients = [];
+    let patientIds = [];
 
     if (allTransactions.length > 0) {
       for (let index = 0; index < allTransactions.length; index++) {
@@ -90,13 +99,20 @@ export const getProviderTransactions = async req => {
 
         if(transaction.getPayeeType() === USER_CATEGORY.PATIENT) {
           const payeeRoleId = transaction.getPayeeId();
-          const payeeUserRole = await userRolesService.findOne({where: {
-            id: payeeRoleId
-           },
-           attributes: ["user_identity"]
-          }) || null;
+          let patient_user_id = null;
+          const payeeRole = await userRolesService.getSingleUserRoleByData({id: payeeRoleId});
+          if(payeeRole) {
+            const payeeRoleData = await UserRolesWrapper(payeeRole);
+            patient_user_id = payeeRoleData.getUserId();
+            userRoleData = {...userRoleData, ...{[payeeRoleData.getId()]: payeeRoleData.getBasicInfo()}}
+          }
 
-          const {user_identity: patient_user_id = null} = payeeUserRole || {};
+          const requestorRole = await userRolesService.getSingleUserRoleByData({id: transaction.getRequestorId()});
+          if(requestorRole) {
+            const requestorRoleData = await UserRolesWrapper(requestorRole);
+            userRoleData = {...userRoleData, ...{[requestorRoleData.getId()]: requestorRoleData.getBasicInfo()}}
+          }
+
           const patient = await patientService.getPatientByUserId(patient_user_id);
           const patientWrapper = await PatientWrapper(patient);
           patientIds.push(patientWrapper.getPatientId());
@@ -120,9 +136,9 @@ export const getProviderTransactions = async req => {
 
 
     // get all patients
-    // const allPatients = await patientService.getPatientByData({
-    //   id: patientIds
-    // }) || [];
+    const allPatients = await patientService.getPatientByData({
+      id: patientIds
+    }) || [];
 
     // get all patients
     allPatients = await patientService.getPatientByData({
@@ -179,9 +195,8 @@ export const getDoctorTransactions = async req => {
       creator_type: USER_CATEGORY.DOCTOR
     }) || [];
 
+    let userRoleData = {};
     let paymentProductIds = [];
-    // let paymentProductData = {};
-
     let doctorIds = [];
 
     if(allPaymentProducts.length > 0) {
@@ -192,13 +207,22 @@ export const getDoctorTransactions = async req => {
         // get for_user data
         if(paymentProduct.getForUserType() === USER_CATEGORY.DOCTOR) {
           const roleId = paymentProduct.getForUserRoleId();
-          const userRole = await userRolesService.findOne({where: {
-            id: roleId
-           },
-           attributes: ["user_identity"]
-          }) || null;
+          const creatorRoleId = paymentProduct.getCreatorRoleId();
+          
+          const creatorRole = await userRolesService.getSingleUserRoleByData({id: creatorRoleId});
+          if(creatorRole) {
+            const creatorRoleData = await UserRolesWrapper(creatorRole);
+            userRoleData = {...userRoleData, ...{[creatorRoleId]: creatorRoleData.getBasicInfo()}}
+          }
 
-          const {user_identity: doctor_user_id = null} = userRole || {};
+          let doctor_user_id = null
+          const forUserRole = await userRolesService.getSingleUserRoleByData({id: roleId});
+          if(forUserRole) {
+            const forUserRoleData = await UserRolesWrapper(forUserRole);
+            doctor_user_id = forUserRoleData.getUserId();
+            userRoleData = {...userRoleData, ...{[roleId]: forUserRoleData.getBasicInfo()}}
+          }
+
           const doctor = await doctorService.findOne({where: {user_id: doctor_user_id}, attributes: ["id"]}) || null;
           const {id: doctorId = null} = doctor || {};
         
@@ -236,13 +260,20 @@ export const getDoctorTransactions = async req => {
 
         if(transaction.getPayeeType() === USER_CATEGORY.PATIENT) {
           const payeeRoleId = transaction.getPayeeId();
-          const payeeUserRole = await userRolesService.findOne({where: {
-            id: payeeRoleId
-           },
-           attributes: ["user_identity"]
-          }) || null;
+          let patient_user_id = null;
+          const payeeRole = await userRolesService.getSingleUserRoleByData({id: payeeRoleId});
+          if(payeeRole) {
+            const payeeRoleData = await UserRolesWrapper(payeeRole);
+            patient_user_id = payeeRoleData.getUserId();
+            userRoleData = {...userRoleData, ...{[payeeRoleData.getId()]: payeeRoleData.getBasicInfo()}}
+          }
 
-          const {user_identity: patient_user_id = null} = payeeUserRole || {};
+          const requestorRole = await userRolesService.getSingleUserRoleByData({id: transaction.getRequestorId()});
+          if(requestorRole) {
+            const requestorRoleData = await UserRolesWrapper(requestorRole);
+            userRoleData = {...userRoleData, ...{[requestorRoleData.getId()]: requestorRoleData.getBasicInfo()}}
+          }
+
           const patient = await patientService.getPatientByUserId(patient_user_id);
           const patientWrapper = await PatientWrapper(patient);
           patientIds.push(patientWrapper.getPatientId());
@@ -295,6 +326,9 @@ export const getDoctorTransactions = async req => {
       },
       users: {
         ...userData,
+      },
+      user_roles: {
+        ...userRoleData
       },
       transaction_ids: transactionIds,
     };
