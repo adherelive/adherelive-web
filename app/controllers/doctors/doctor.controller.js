@@ -3280,6 +3280,63 @@ class DoctorController extends Controller {
   }
 
 
+  searchDoctor = async(req,res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        query: { email = null } = {},
+        userDetails: { userId , userRoleId } = {},
+        body = {}
+      } = req;
+
+      const matchingUsers = await userService.searchMail(email);
+      let users = {}, doctors = {} , user_roles = {} ;
+      if(matchingUsers && matchingUsers.length){
+        for(let i = 0 ; i  < matchingUsers.length ; i++ ){
+          const each = matchingUsers[i];
+          const userData = await UserWrapper(each);
+          const userId = await userData.getId();
+          const matchingDoctor =   await doctorService.findOne({where: {user_id: userId}, 
+            attributes: ["id"]}) || null;
+
+          if(matchingDoctor){
+            const { id :docId } = matchingDoctor || {};
+            const doctorData = await DoctorWrapper(null,docId);
+            users[userId] = await userData.getBasicInfo();
+            const doctorId = await doctorData.getDoctorId();
+            doctors[doctorId] = await doctorData.getAllInfo();
+            const userRole = await userRolesService.getFirstUserRole(userId);
+            const userRoleData = await UserRoleWrapper(userRole);
+            user_roles[userRoleData.getId()] = await userRoleData.getBasicInfo();
+          }
+        }
+
+        return raiseSuccess(
+          res,
+          200,
+          {
+            users,
+            doctors,
+            user_roles
+          },
+          "Matching Users found  successfully."
+        );
+
+      }else{
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "No Matching Doctors found."
+        );
+      }
+
+    } catch (error) {
+      Logger.debug("searchEmail 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
+
 }
 
 export default new DoctorController();
