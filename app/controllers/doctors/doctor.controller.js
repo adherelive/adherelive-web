@@ -3290,7 +3290,9 @@ class DoctorController extends Controller {
       } = req;
 
       const matchingUsers = await userService.searchMail(email);
-      let users = {}, doctors = {} , user_roles = {} ;
+      let users = {}, doctors = {} , user_roles = {},emails = {} ;
+
+
       if(matchingUsers && matchingUsers.length){
         for(let i = 0 ; i  < matchingUsers.length ; i++ ){
           const each = matchingUsers[i];
@@ -3308,6 +3310,7 @@ class DoctorController extends Controller {
             const userRole = await userRolesService.getFirstUserRole(userId);
             const userRoleData = await UserRoleWrapper(userRole);
             user_roles[userRoleData.getId()] = await userRoleData.getBasicInfo();
+            emails[doctorId]=await userData.getEmail();
           }
         }
 
@@ -3317,7 +3320,8 @@ class DoctorController extends Controller {
           {
             users,
             doctors,
-            user_roles
+            user_roles,
+            emails
           },
           "Matching Users found  successfully."
         );
