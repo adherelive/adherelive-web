@@ -15,6 +15,7 @@ class CreateJob extends MedicationJob {
       participants = [],
       actor: {
         id: actorId,
+        user_role_id,
         details: { name, category: actorCategory } = {}
       } = {},
       event_id = null
@@ -64,6 +65,7 @@ class CreateJob extends MedicationJob {
       participants = [],
       actor: {
         id: actorId,
+        user_role_id,
         details: { name, category: actorCategory } = {}
       } = {},
       event_id
@@ -77,6 +79,7 @@ class CreateJob extends MedicationJob {
       // if (participant !== actorId) {
       templateData.push({
         actor: actorId,
+        actorRoleId: user_role_id,
         object: `${participant}`,
         foreign_id: `${event_id}`,
         verb: `medication_create:${currentTimeStamp}`,

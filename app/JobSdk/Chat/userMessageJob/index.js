@@ -86,6 +86,7 @@ class UserMessageJob extends ChatJob {
         const {
             actor: {
                 id: actorId,
+                user_role_id,
                 details: { name, category: actorCategory } = {}
             } = {},
             participants = [],
@@ -104,6 +105,8 @@ class UserMessageJob extends ChatJob {
             if (participant !== actorId) {
                 templateData.push({
                     actor: actorId,
+
+                actorRoleId: user_role_id,
                     object: `${participant}`,
                     foreign_id: ``,
                     verb: `user_message:${currentTimeStamp}`,

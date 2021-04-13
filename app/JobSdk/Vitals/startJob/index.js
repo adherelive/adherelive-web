@@ -75,7 +75,7 @@ class StartJob extends VitalJob {
     const { getData } = this;
     const data = getData();
     const {
-      details: { participants = [], actor: { id: actorId } = {} },
+      details: { participants = [], actor: { id: actorId, user_role_id } = {} },
       id = null,
       start_time = null,
       event_id = null
@@ -88,6 +88,7 @@ class StartJob extends VitalJob {
       // if (participant !== actorId) {
       templateData.push({
         actor: actorId,
+        actorRoleId: user_role_id,
         object: `${participant}`,
         foreign_id: `${event_id}`,
         verb: `vital_start:${currentTimeStamp}`,

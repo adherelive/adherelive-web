@@ -245,6 +245,7 @@ class MobileMReminderController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
@@ -330,6 +331,7 @@ class MobileMReminderController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: {
             name: categoryData.getName(),
             category
@@ -355,6 +357,7 @@ class MobileMReminderController extends Controller {
           participants: [userId, patient.getUserId()],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
             details: { name: full_name, category }
           },
           participant_one: patient.getUserId(),
@@ -557,6 +560,7 @@ class MobileMReminderController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name } = {} } = {}
       } = userDetails || {};
@@ -622,6 +626,7 @@ class MobileMReminderController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
         participant_one: patient.getUserId(),
@@ -662,6 +667,7 @@ class MobileMReminderController extends Controller {
         params: { id } = {},
         userDetails: {
           userId,
+          userRoleId,
           userData: { category } = {},
           userCategoryData: { basic_info: { full_name } = {} } = {}
         } = {}
@@ -690,6 +696,7 @@ class MobileMReminderController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
       };

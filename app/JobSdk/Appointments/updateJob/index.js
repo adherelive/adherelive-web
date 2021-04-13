@@ -70,6 +70,7 @@ class UpdateJob extends AppointmentJob {
             participants = [],
             actor: {
                 id: actorId,
+                user_role_id,
                 details: { name, category: actorCategory } = {}
             } = {},
             // appointmentId,
@@ -84,6 +85,7 @@ class UpdateJob extends AppointmentJob {
             // if (participant !== actorId) {
             templateData.push({
                 actor: actorId,
+                actorRoleId: user_role_id,
                 object: `${participant}`,
                 foreign_id: `${event_id}`,
                 verb: `appointment_update:${currentTimeStamp}`,

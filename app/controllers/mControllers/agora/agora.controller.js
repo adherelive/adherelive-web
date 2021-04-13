@@ -44,6 +44,7 @@ class AgoraController extends Controller {
     missedCall = async(req, res) => {
         try {
             const {params: {id = null} = {}, userDetails: {userId,
+                 userRoleId,
                  userData: { category } = {},
                  userCategoryData: { basic_info: { full_name } = {} } = {}} = {}} = req;
 
@@ -67,6 +68,7 @@ class AgoraController extends Controller {
                 participants: [userId, participantTwoId],
                 actor: {
                     id: userId,
+                    user_role_id: userRoleId,
                     details: { name: full_name, category }
                 }
             };
@@ -90,6 +92,7 @@ class AgoraController extends Controller {
             body: { roomId } = {},
             userDetails: {
               userId,
+              userRoleId,
               userData: { category } = {},
               userCategoryData: { basic_info: { full_name } = {} } = {}
             } = {}
@@ -99,6 +102,7 @@ class AgoraController extends Controller {
             roomId,
             actor: {
               id: userId,
+              user_role_id: userRoleId,
               details: { name: full_name, category }
             }
           });
