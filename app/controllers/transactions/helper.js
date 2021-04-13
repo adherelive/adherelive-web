@@ -171,6 +171,9 @@ export const getProviderTransactions = async req => {
       users: {
         ...userData,
       },
+      user_roles: {
+        ...userRoleData
+      },
       transaction_ids: transactionIds,
     };
   } catch (error) {
