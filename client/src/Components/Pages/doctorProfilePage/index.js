@@ -351,6 +351,7 @@ class DoctorProfilePage extends Component {
       this.setState({
         loading: false
       });
+      console.log("72833257423646238748236482634823",{error});
       message.warn("Something went wrong, please try again later");
     }
   };

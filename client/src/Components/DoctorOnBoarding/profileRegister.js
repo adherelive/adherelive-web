@@ -49,7 +49,8 @@ class Profileregister extends Component {
             signature_pic_url_saved : '',
             loading: '',
             searchingMail:false,
-            existingDoctor:false
+            existingDoctor:false,
+            existingDoctorId:null
         };
     }
 
@@ -334,7 +335,8 @@ class Profileregister extends Component {
 
     onNextClick = () => {
         const { history, authenticated_user = 1 } = this.props;
-        const {existingDoctor = false} = this.state;
+        const {existingDoctor = false , existingDoctorId = null  } = this.state;
+
         // const { basic_info: { id = "" } = {} } = users[authenticated_user] || {};
         const validate = this.validateData();
         if (validate) {
@@ -343,23 +345,33 @@ class Profileregister extends Component {
             const data = { name, email, mobile_number, category, city, prefix, profile_pic: profile_pic_url ? profile_pic_url : profile_pic_url_saved , signature_pic :  signature_pic_url ? signature_pic_url : signature_pic_url_saved };
             if (authenticated_category === USER_CATEGORY.PROVIDER ){
 
-                if(existingDoctor){
-                    history.replace(PATH.LANDING_PAGE);
-                    return;
-                }
+                // if(existingDoctor){
+                //     history.replace(PATH.LANDING_PAGE);
+                //     return;
+                // }
                 
                 data["is_provider"] = true;
                 data["doctor_id"] = doctor_id;
+                data["existing"]=existingDoctor;
+                data["existingDoctorId"]=existingDoctorId;
 
             } 
             doctorProfileRegister(data).then(response => {
                 console.log(" 32453454RESPONSE FOR DOC PROFILE REGISTER ===>",response);
                 const { status, statusCode, payload: {  message : res_message ='',data: { doctors : response_doctors = {} } = {} } = {} } = response;
+
+                // console.log("98326472647623742634732",{response});
                 if (status) {
                     message.success(this.formatMessage(messages.doctorAddSuccess));
 
                     const {basic_info : {id : doctor_id = null} = {}} = Object.values(response_doctors)[0] || {};
                     if(authenticated_category === USER_CATEGORY.PROVIDER){
+                        console.log("98326472647623742634732 =>>>",{existingDoctor});
+                        if(existingDoctor){
+                            history.replace(PATH.LANDING_PAGE);
+                            return;
+                        }
+
                         this.handleSendPasswordMail(doctor_id);
                         history.replace(`${PATH.REGISTER_QUALIFICATIONS}/${doctor_id}`);
                     }
@@ -453,6 +465,10 @@ class Profileregister extends Component {
 
         }
 
+        setEmailMatchingDoctor = (id) => () => {
+            this.setState({existingDoctorId:id});
+        }
+
 
         getEmailOptions = () => {
             const { emails = {} } = this.props;
@@ -461,7 +477,7 @@ class Profileregister extends Component {
                 const email = emails[id];
             return (
                 <Option key={id} value={email} 
-                // onClick={this.setEmailMatchingDoctor(id)}
+                onClick={this.setEmailMatchingDoctor(id)}
                  >
                 {email}
                 </Option>
@@ -475,7 +491,7 @@ class Profileregister extends Component {
                 const {searchDoctorEmail } = this.props;
                 const {email : mailId = ''  }=this.state;
                 const typed_email=mailId.trim(); 
-                let flag=false;
+                let flag=false , selectedId = null ;
                 if(typed_email.length){
                     const response = await searchDoctorEmail(typed_email);
                     const {payload : {data : {emails = {} } = {} } = {} } = response || {};
@@ -486,6 +502,7 @@ class Profileregister extends Component {
 
                             if(typed_email === each){
                                 message.info(this.formatMessage(messages.mailInUse))
+                                selectedId = i ;
                                 flag=true;
                                 break;
                             }
@@ -495,9 +512,10 @@ class Profileregister extends Component {
                 }
 
                 if(flag){
-                    this.setState({existingDoctor:true});
+                    this.setState({existingDoctor:true , existingDoctorId: selectedId });
                 }else{
-                    this.setState({existingDoctor:false});
+                    
+                    this.setState({existingDoctor:false , existingDoctorId:typed_email });
                 }
 
 
@@ -675,7 +693,9 @@ class Profileregister extends Component {
 
     render() {
         const { authenticated_user = '',authenticated_category = '', users, getDoctorQualificationRegisterData } = this.props;
-        const {existingDoctor = false}=this.state;
+        const {existingDoctor = false , existingDoctorId = null }=this.state;
+
+        console.log("92386487234687234623742",{existingDoctorId,state:this.state});
         
         return (
             <Fragment>

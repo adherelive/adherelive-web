@@ -41,7 +41,13 @@ const addDoctorForm = Joi.object().keys({
   doctor_id: Joi.number()
     .optional()
     .allow("", null)
-    .label("Incorrect doctor selected")
+    .label("Incorrect doctor selected"),
+  existing: Joi.boolean()
+    .optional()
+    .allow("", null),  
+  existingDoctorId : Joi.string()
+    .optional()
+    .allow("", null),  
 });
 
 const addPatientForm = Joi.object().keys({
