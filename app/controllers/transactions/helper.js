@@ -140,11 +140,6 @@ export const getProviderTransactions = async req => {
       id: patientIds
     }) || [];
 
-    // get all patients
-    allPatients = await patientService.getPatientByData({
-      id: patientIds
-    }) || [];
-
 
     if(allPatients.length > 0) {
       for(let index = 0; index < allPatients.length; index++) {
