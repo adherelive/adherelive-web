@@ -30,3 +30,7 @@ export const isJSON = obj => {
 
   return typeof obj === "object" && obj !== null;
 };
+
+export const getAbbreviation = (str = "") => {
+  return str.split(" ").map(word => word.charAt(0)).join(" ");
+};

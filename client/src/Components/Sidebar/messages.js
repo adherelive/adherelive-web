@@ -11,6 +11,21 @@ export default defineMessages({
         description: "",
         defaultMessage: "Privacy Policy"
     },
+    settings_text: {
+        id: "app.dashboard.sidebar.menu.settings",
+        description: "",
+        defaultMessage: "Settings"
+    },
+    accounts_text: {
+        id: "app.dashboard.sidebar.menu.accounts.text",
+        description: "",
+        defaultMessage: "Accounts"
+    },
+    self_text: {
+        id: "app.dashboard.sidebar.menu.self.text",
+        description: "",
+        defaultMessage: "Self"
+    },
     all_providers: {
         id: "app.dashboard.sidebar.menu.all.providers",
         description: "",

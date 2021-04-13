@@ -15,6 +15,7 @@ import {
 } from "@ant-design/icons";
 import messages from "./messages";
 import config from "../../config";
+import { getAbbreviation } from "../../Helper/common";
 
 const { Item: MenuItem } = Menu || {};
 
@@ -37,6 +38,13 @@ const ACCOUNT = "account";
 const ADD_ACCOUNT = "add_account";
 
 const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
+
+const SIDEBAR_NAVIGATION = {
+  SUB_MENU: {
+    SETTINGS: "SETTINGS",
+    PRIVACY_POLICY: "PRIVACY_POLICY",
+  },
+};
 
 class SideMenu extends Component {
   constructor(props) {
@@ -292,14 +300,60 @@ class SideMenu extends Component {
     // history.push();
   };
 
+  handleNavigate = (path) => (e) => {
+    e.preventDefault();
+    const { history } = this.props;
+    switch (path) {
+      case SIDEBAR_NAVIGATION.SUB_MENU.SETTINGS:
+        history.push(PATH.SETTINGS);
+        break;
+      case SIDEBAR_NAVIGATION.SUB_MENU.PRIVACY_POLICY:
+        window.open(PRIVACY_PAGE_URL, "_blank").focus();
+        break;
+      default:
+        break;
+    }
+  };
+
   getDoctorDetails = () => {
-    const {formatMessage} = this;
+    const { auth_role, user_roles, doctors } = this.props;
+    const { handleNavigate, formatMessage } = this;
+
+    const { basic_info: { user_identity } = {} } = user_roles[auth_role] || {};
+
+    let doctorId = null;
+
+    Object.keys(doctors).forEach((id) => {
+      const { basic_info: { user_id } = {} } = doctors[id] || {};
+      if(user_id === user_identity) {
+        doctorId = id;
+      }
+    });
+
+    const { basic_info: { full_name } = {}, profile_pic = null } =
+      doctors[doctorId] || {};
+
     return (
-      <div>
-        <span>Doctor</span>
-         <a href={PRIVACY_PAGE_URL} target={"_blank"}>
-            {formatMessage(messages.privacy_policy_text)}
-          </a>
+      <div className="p10 flex align-center justify-start wp100">
+        <Avatar size={64} src={profile_pic} className="wp30">
+          {getAbbreviation(full_name)}
+        </Avatar>
+        <div className="ml10 flex direction-column justify-start wp70">
+          <span className="fs22 fw700">{`Dr. ${full_name}`}</span>
+          <div className="wp90 flex align-center justify-space-between dark-sky-blue fw700 fs14">
+            <div onClick={handleNavigate(SIDEBAR_NAVIGATION.SUB_MENU.SETTINGS)}>
+              {formatMessage(messages.settings_text)}
+            </div>
+            <div className="w5 h5 bg-dark-grey br50" />
+            <div
+              onClick={handleNavigate(
+                SIDEBAR_NAVIGATION.SUB_MENU.PRIVACY_POLICY
+              )}
+            >
+              {formatMessage(messages.privacy_policy_text)}
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
@@ -312,46 +366,74 @@ class SideMenu extends Component {
       doctors,
       providers,
       authenticated_user,
+      authDoctor,
     } = this.props;
-    const { getOnboardedByDetails, handleManageAccount, formatMessage } = this;
+    const {
+      getOnboardedByDetails,
+      handleManageAccount,
+      getProviderIcon,
+      formatMessage,
+    } = this;
 
-    return user_role_ids.map((id) => {
+    const userRoleTiles = user_role_ids.map((id) => {
       const { basic_info: { user_identity, linked_id } = {} } =
         user_roles[id] || {};
 
       const { basic_info: { email } = {} } = users[user_identity] || {};
 
-      // const { provider_id = null } = doctors[category_id] || {};
+      const { details: { icon } = {}, basic_info: { name } = {} } =
+        providers[linked_id] || {};
 
-      const isAuth = authenticated_user === user_identity;
+      let selfDoctorName = null;
+      if (!linked_id) {
+        const { basic_info: { full_name } = {} } = authDoctor || {};
+        selfDoctorName = full_name;
+      }
+
+      const addedVia = linked_id ? name : formatMessage(messages.self_text);
 
       return (
-        <Menu.Item
-          className={`p10 w300 ${isAuth ? "bg-light-grey" : null}`}
-          key={`${ACCOUNT}.${id}`}
-        >
-          <div className={"flex align-center justify-space-between mb20"}>
-            <div className={"fs20 fw700"}>{email}</div>
-            {getOnboardedByDetails(linked_id)}
-          </div>
-
-          {isAuth && (
-            <div className={"flex justify-end"} onClick={handleManageAccount}>
-              {formatMessage(messages.manageAccount)}
+        <Fragment>
+          <Menu.Item key={`${ACCOUNT}.${id}`}>
+            <div className={"flex align-center mb20"}>
+              {linked_id ? (
+                getProviderIcon("w50 h50", id)
+              ) : (
+                <div className="w50 h50 br5 bg-grey flex justify-center align-center">
+                  {getAbbreviation(selfDoctorName)}
+                </div>
+              )}
+              <div className="flex direction-column align-start ml10">
+                <div className={"fs20 fw700"}>{addedVia}</div>
+                <div className="fs14 fw500">{email}</div>
+              </div>
             </div>
-          )}
-        </Menu.Item>
+          </Menu.Item>
+          <Menu.Divider />
+        </Fragment>
       );
     });
+
+    return (
+      <div className="p10">
+        <span>{formatMessage(messages.accounts_text)}</span>
+        {userRoleTiles}
+      </div>
+    );
   };
 
   menu = () => {
     const { getUserRoles, getDoctorDetails } = this;
     return (
       <Menu
-        className="l70 b10 fixed" // b20
-        // style={{bottom: 50}}
+        // className="fixed l70 b20" // b20
         // getPopupContainer={() => this.menuRef}
+        style={{
+          position: "absolute",
+          bottom: 10,
+          left: 50,
+          minWidth: 300,
+        }}
         key={"sub"}
         onClick={this.handleItemSelect}
       >
@@ -369,8 +451,9 @@ class SideMenu extends Component {
         <Menu.Item className="pl24 pr80" key={PROFILE}>Profile
         </Menu.Item>
         <Menu.Divider />*/}
-        <Menu.Item className="pl24 pr80" key={SETTINGS}>Settings
-        </Menu.Item>
+        {/* <Menu.Item className="pl24 pr80" key={SETTINGS}>
+          Settings
+        </Menu.Item> */}
         <Menu.Divider />
         {/* <Menu.Item className="pl24 pr80" key={TEMPLATES}>
           {this.formatMessage(messages.templates)}
@@ -383,17 +466,23 @@ class SideMenu extends Component {
     );
   };
 
-  getProviderIcon = () => {
-    const { auth_role, user_roles, providers } = this.props;
+  getProviderIcon = (className = "w35 h35", userRoleId = null) => {
+    const { auth_role, user_roles, providers, doctors } = this.props;
+
+    let currentUserRoleId = auth_role;
+    if (userRoleId) {
+      currentUserRoleId = userRoleId;
+    }
+
     const { basic_info: { linked_with, linked_id } = {} } =
-      user_roles[auth_role] || {};
+      user_roles[currentUserRoleId] || {};
 
     if (linked_with === USER_CATEGORY.PROVIDER && linked_id) {
       const { basic_info: { name } = {}, details: { icon } = {} } =
         providers[linked_id] || {};
 
       if (icon) {
-        return <img alt={"Provider Icon"} src={icon} className="w35 h35" />;
+        return <img alt={"Provider Icon"} src={icon} className={className} />;
       } else {
         return (
           // <div className={"h50"}>
@@ -405,7 +494,9 @@ class SideMenu extends Component {
           //   </Avatar>
           // </div>
 
-          <div className="w35 h35 br5 bg-grey flex justify-center align-center">
+          <div
+            className={`${className} br5 bg-grey flex justify-center align-center`}
+          >
             {name
               .split(" ")
               .map((word) => word.charAt(0).toUpperCase())
@@ -414,6 +505,8 @@ class SideMenu extends Component {
           // <div className={"bg-grey br50 w30 h30"}>{name.split(" ").map(word => word.charAt(0).toUpperCase()).join(" ")}</div>
         );
       }
+    } else {
+      return getAbbreviation();
     }
   };
 
@@ -456,13 +549,7 @@ class SideMenu extends Component {
         .join("");
     }
 
-    const { doctor_provider_id = null, providers = {} } = this.props;
-    const {
-      details: { icon: provider_icon = "" } = {},
-      basic_info: { name = "" } = {},
-    } = providers[doctor_provider_id] || {};
-
-    const providerInitials = `${name ? name[0].toUpperCase() : ""}`;
+    const { doctor_provider_id = null } = this.props;
 
     // console.log("327485235476325423645236",{doctor_provider_id,providers,providerInitials,name});
 
@@ -494,7 +581,7 @@ class SideMenu extends Component {
         {authenticated_category == USER_CATEGORY.DOCTOR ? (
           <MenuItem
             key={SUB_MENU}
-            className="flex direction-column align-center justify-space-between h200"
+            // className="flex direction-column align-center justify-space-between h200"
           >
             {/* {provider_icon && (
               <img
@@ -503,12 +590,13 @@ class SideMenu extends Component {
                 className="w35 h35"
               />
             )} */}
-            <div
-              className="flex direction-column justify-space-between align-center hp100 p10 br5 bw-cool-grey"
-            >
+            <div className="flex direction-column justify-space-between align-center hp100 p10 br5 bw-cool-grey">
               {getProviderIcon()}
-
-              <Dropdown overlay={this.menu} overlayClassName="relative">
+              <Dropdown
+                overlay={this.menu}
+                overlayClassName={"fixed"}
+                // visible={true}
+              >
                 <div className="flex direction-column align-center justify-end wp250">
                   {initials ? (
                     <Avatar src={dp}>{initials}</Avatar>
