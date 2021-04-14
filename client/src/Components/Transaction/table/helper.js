@@ -66,7 +66,7 @@ export const formatTransactionTableData = data => {
   } = transactions[id] || {};
   let doctorId = null;
 
-  let patientId = null;
+  let patientId = null, doctorData={} ,patientData={};
   const { id: requestor_id = null, category: requestor_cat = "" } = requestor;
   const { id: payee_id = null, category: payee_cat = "" } = payee;
 
@@ -78,9 +78,29 @@ export const formatTransactionTableData = data => {
     patientId = requestor_id;
   }
 
-  const patientData = patients[patientId] || {};
-  const doctorData = doctors[doctorId] || {};
+  const {user_roles = {} } =data;
+  const {basic_info : {user_identity : request_user_id = null} = {} } = user_roles[requestor_id];
+  const {basic_info : { user_identity : payee_user_id = null } = {} } = user_roles[payee_id];
+
+
+  for(let each in doctors){
+    const {basic_info : {user_id} = {}} = doctors[each];
+    if( user_id.toString() === request_user_id.toString() ){
+      doctorData = doctors[each];
+      break;
+    } 
+  }
+
+  for(let each in patients){
+    const {basic_info : {user_id} = {}} = patients[each];
+    if( user_id.toString() === payee_user_id.toString() ){
+      patientData = patients[each];
+      break;
+    } 
+  }
+
   const paymentProductData = payment_products[payment_product_id] || {};
+
 
   return {
     transactionData,

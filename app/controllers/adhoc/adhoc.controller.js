@@ -102,27 +102,34 @@ class AdhocController extends Controller {
 
             //-- add test-provider record to user-pref table
 
-            const user_identity="5";
-            const existing = await userPreferenceService.findOne({
-                where:{user_id:user_identity}
-            });
+            const user = await userService.getUserData({email:"test-provider@mail.com"});
 
-            if(!existing){
-                const userRole = await userRoleService.getFirstUserRole(user_identity);
+            if(user){
 
-                if(userRole){
-                    const userRoleData = await UserRoleWrapper(userRole); 
-                    const userRoleId = userRoleData.getId();
-
-                    const newRecord = await userPreferenceService.addUserPreference(
-                        {
-                        user_id:"5",
-                        details: {
-                          charts: ["1","2","3"]
-                
-                        },
-                        user_role_id:userRoleId
-                      });
+                const userWrapper = await UserWrapper(user);
+                const user_identity = await userWrapper.getId();
+            
+                const existing = await userPreferenceService.findOne({
+                    where:{user_id:user_identity}
+                });
+    
+                if(!existing){
+                    const userRole = await userRoleService.getFirstUserRole(user_identity);
+    
+                    if(userRole){
+                        const userRoleData = await UserRoleWrapper(userRole); 
+                        const userRoleId = userRoleData.getId();
+    
+                        const newRecord = await userPreferenceService.addUserPreference(
+                            {
+                            user_id:"5",
+                            details: {
+                              charts: ["1","2","3"]
+                    
+                            },
+                            user_role_id:userRoleId
+                          });
+                    }
                 }
             }
 

@@ -531,6 +531,7 @@ class SideMenu extends Component {
       authenticated_category,
       intl: { formatMessage } = {},
     } = this.props;
+
     const { handleItemSelect, getProviderIcon } = this;
 
     const {basic_info: {linked_id} = {}} = user_roles[auth_role] || {};
