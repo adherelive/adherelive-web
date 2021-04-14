@@ -15,7 +15,7 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import {
   uploadAudio,
   uploadImage,
-  uploadVideo
+  uploadVideo,
 } from "./symptom.controller.helper";
 import Logger from "../../../../libs/log";
 import {
