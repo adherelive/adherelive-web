@@ -3354,7 +3354,7 @@ class DoctorController extends Controller {
     try {
       const {
         query: { email = null } = {},
-        userDetails: { userId , userRoleId } = {},
+        userDetails: { userId : user_id , userRoleId } = {},
         body = {}
       } = req;
 

@@ -2057,11 +2057,11 @@ class DoctorProfilePage extends Component {
       let { profile_pic = "", profile_pic_url = "" } = this.state;
       let p_pic = profile_pic !== "" ? profile_pic : profile_pic_url;
 
-      if (profile_pic === "") {
+      if (profile_pic === "" && p_pic.length) {
         this.setState({ profile_pic: p_pic });
       }
 
-      if (profile_pic_url === "") {
+      if (profile_pic_url === "" && p_pic.length ) {
         this.setState({ profile_pic_url: p_pic });
       }
 
