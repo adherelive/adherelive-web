@@ -526,13 +526,15 @@ class SideMenu extends Component {
       authenticated_user = 0,
       users = {},
       doctors = {},
+      auth_role,
+      user_roles,
       authenticated_category,
       intl: { formatMessage } = {},
-      auth_role=null,
-      user_roles = {}
     } = this.props;
 
     const { handleItemSelect, getProviderIcon } = this;
+
+    const {basic_info: {linked_id} = {}} = user_roles[auth_role] || {};
 
     let dp = "";
     let initials = "";
@@ -562,23 +564,6 @@ class SideMenu extends Component {
         .map((n) => (n && n.length > 0 && n[0] ? n[0].toUpperCase() : ""))
         .join("");
     }
-
-    let { doctor_provider_id = null, providers = {} } = this.props;
-
-    const { basic_info : { linked_with = '' , linked_id = null } = {} } = user_roles[auth_role] || {};
-
-    if(linked_with === USER_CATEGORY.PROVIDER){
-      doctor_provider_id = linked_id;
-    }
-
-    const {
-      details: { icon: provider_icon = "" } = {},
-      basic_info: { name = "" } = {},
-    } = providers[doctor_provider_id] || {};
-
-    const providerInitials = `${name ? name[0].toUpperCase() : ""}`;
-
-    // console.log("327485235476325423645236",{doctor_provider_id,providers,providerInitials,name});
 
     return (
       <Menu
@@ -710,7 +695,7 @@ class SideMenu extends Component {
 
         {authenticated_category === USER_CATEGORY.PROVIDER ||
         (authenticated_category === USER_CATEGORY.DOCTOR &&
-          doctor_provider_id === null &&
+          linked_id === null &&
           Object.keys(doctors).length > 0) ? (
           <MenuItem
             className="flex direction-column justify-center align-center p0"
