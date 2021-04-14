@@ -46,7 +46,7 @@ import DegreeWrapper from "../../ApiWrapper/web/degree";
 import CollegeWrapper from "../../ApiWrapper/web/college";
 import CouncilWrapper from "../../ApiWrapper/web/council";
 import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
-// import ProviderWrapper from "../../ApiWrapper/web/provider";
+import ProviderWrapper from "../../ApiWrapper/web/provider";
 import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
 import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
@@ -593,7 +593,7 @@ class DoctorController extends Controller {
   addDoctor = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { userDetails: { userId } = {} } = req;
+      const { userDetails: { userId , userRoleId } = {} } = req;
 
       const {
         name,
@@ -604,8 +604,75 @@ class DoctorController extends Controller {
         profile_pic,
         signature_pic,
         is_provider,
-        email
+        email,
+        existing=false,
+        existingDoctorId=null
       } = req.body;
+
+
+      if(is_provider && existing){
+
+        const user = await userService.getUserByEmail({email});
+
+        if(user){
+          const userData = await UserWrapper(user);
+          const docUserId = await userData.getId();
+
+          const provider = await providerService.getProviderByData({user_id:userId});
+          console.log("8743652347235472888 ======>>>>>>>>>",{provider,docUserId});
+
+          if(provider){
+            const providerData = await ProviderWrapper(provider);
+            const provider_id = await providerData.getProviderId() || null;
+            const userRole = await userRolesService.getSingleUserRoleByData({
+              user_identity:docUserId,
+              linked_id:provider_id,
+              linked_with:USER_CATEGORY.PROVIDER
+            });
+
+            if(userRole){
+              return this.raiseClientError(
+                res,
+                422,
+                {},
+                "This email id is already linked with this provider."
+              );
+            }else{
+
+              const newUserRole = await userRolesService.create({
+                user_identity:docUserId,
+                linked_id:provider_id,
+                linked_with:USER_CATEGORY.PROVIDER
+              });
+
+              const roleData = await UserRoleWrapper(newUserRole);
+              let user_roles = {};
+              user_roles[roleData.getId()]=await roleData.getAllInfo();
+              const doctor = await doctorService.getDoctorByUserId(docUserId);
+              const doctorData = await DoctorWrapper(doctor);
+
+              return raiseSuccess(
+                res,
+                200,
+                {
+                  user_roles,
+                  users: {
+                    [userData.getId()]: userData.getBasicInfo()
+                  },
+                  doctors: {
+                    [doctorData.getDoctorId()]: doctorData.getBasicInfo()
+                  }
+                },
+                "Doctor liked with provider successfully."
+              );
+
+            }
+          }
+          
+        }
+        
+      }
+
 
       if (is_provider) {
         const resp = await addProviderDoctor(
@@ -616,6 +683,8 @@ class DoctorController extends Controller {
         );
         return resp;
       }
+
+      console.log("78234554273468234632458327");
 
       const doctorName = name.split(" ");
       const user_data_to_update = {
@@ -3279,6 +3348,67 @@ class DoctorController extends Controller {
     }
   }
 
+
+  searchDoctor = async(req,res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const {
+        query: { email = null } = {},
+        userDetails: { userId : user_id , userRoleId } = {},
+        body = {}
+      } = req;
+
+      const matchingUsers = await userService.searchMail(email);
+      let users = {}, doctors = {} , user_roles = {},emails = {} ;
+
+
+      if(matchingUsers && matchingUsers.length){
+        for(let i = 0 ; i  < matchingUsers.length ; i++ ){
+          const each = matchingUsers[i];
+          const userData = await UserWrapper(each);
+          const userId = await userData.getId();
+          const matchingDoctor =   await doctorService.findOne({where: {user_id: userId}, 
+            attributes: ["id"]}) || null;
+
+          if(matchingDoctor){
+            const { id :docId } = matchingDoctor || {};
+            const doctorData = await DoctorWrapper(null,docId);
+            users[userId] = await userData.getBasicInfo();
+            const doctorId = await doctorData.getDoctorId();
+            doctors[doctorId] = await doctorData.getAllInfo();
+            const userRole = await userRolesService.getFirstUserRole(userId);
+            const userRoleData = await UserRoleWrapper(userRole);
+            user_roles[userRoleData.getId()] = await userRoleData.getBasicInfo();
+            emails[doctorId]=await userData.getEmail();
+          }
+        }
+
+        return raiseSuccess(
+          res,
+          200,
+          {
+            users,
+            doctors,
+            user_roles,
+            emails
+          },
+          "Matching Users found  successfully."
+        );
+
+      }else{
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "No Matching Doctors found."
+        );
+      }
+
+    } catch (error) {
+      Logger.debug("searchEmail 500 ERROR", error);
+      return raiseServerError(res);
+    }
+  }
 
 }
 

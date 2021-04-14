@@ -20,6 +20,12 @@ router.post(
   DoctorController.addDoctor
 );
 
+router.get(
+  "/search-mail",
+  Authenticate,
+  DoctorController.searchDoctor);
+
+
 router.post(
   "/upload",
   Authenticate,
@@ -163,6 +169,7 @@ router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
 router.delete("/:doctor_id",Authenticate,DoctorController.deactivateDoctor);
 
 router.post("/activate/:user_id",Authenticate,DoctorController.activateDoctor);
+
 
 
 module.exports = router;

@@ -405,7 +405,12 @@ const messages = defineMessages({
     id: "app.doctorOnBoarding.timingSameForTheDay",
     description: "",
     defaultMessage: 'Cannot have same start time or end time for the day'
-  }
+  },
+  mailInUse: {
+    id: "app.doctorOnBoarding.mailInUse",
+    description: "",
+    defaultMessage: 'This email is used by an existing doctor. Using it will link the doctor to your account.'
+  },
 
 
 
