@@ -410,7 +410,10 @@ class SideMenu extends Component {
       doctors = {},
       authenticated_category,
       intl: { formatMessage } = {},
+      auth_role=null,
+      user_roles = {}
     } = this.props;
+
     const { handleItemSelect, getProviderIcon } = this;
 
     let dp = "";
@@ -442,7 +445,14 @@ class SideMenu extends Component {
         .join("");
     }
 
-    const { doctor_provider_id = null, providers = {} } = this.props;
+    let { doctor_provider_id = null, providers = {} } = this.props;
+
+    const { basic_info : { linked_with = '' , linked_id = null } = {} } = user_roles[auth_role] || {};
+
+    if(linked_with === USER_CATEGORY.PROVIDER){
+      doctor_provider_id = linked_id;
+    }
+
     const {
       details: { icon: provider_icon = "" } = {},
       basic_info: { name = "" } = {},
