@@ -2269,7 +2269,7 @@ class PatientDetails extends Component {
             </div>
 
             <div className="wp80 direction-column align-center pt10 pr24 pb20 pl24 ola123">
-              {!isOtherCarePlan && <PatientAlerts patientId={patient_id} />}
+              {!isOtherCarePlan && user_role_id.toString() === auth_role.toString() && <PatientAlerts patientId={patient_id} />}
 
               {/* <div className="last-visit-alerts" >*/}
               {/*   <div className="last-visit-h-container" >*/}
