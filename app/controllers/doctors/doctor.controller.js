@@ -82,6 +82,7 @@ import UserVerificationServices from "../../services/userVerifications/userVerif
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -650,6 +651,12 @@ class DoctorController extends Controller {
               user_roles[roleData.getId()]=await roleData.getAllInfo();
               const doctor = await doctorService.getDoctorByUserId(docUserId);
               const doctorData = await DoctorWrapper(doctor);
+
+              const userPreference = await userPreferenceService.addUserPreference({
+                user_id:docUserId,
+                details:{"charts": ["1", "2", "3"]},
+                user_role_id:roleData.getId()
+              });
 
               return raiseSuccess(
                 res,

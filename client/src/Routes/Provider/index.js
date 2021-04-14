@@ -9,7 +9,8 @@ import {
 } from "react-router-dom";
 import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
-import SideMenu from "../../Components/Sidebar";
+// import SideMenu from "../../Components/Sidebar";
+import SideMenu from "../../Containers/Sidebar";
 
 // FOR DOCTOR TODO: can be in separate doctors folder for easy management
 const ProviderDoctorPage = lazy(() =>
