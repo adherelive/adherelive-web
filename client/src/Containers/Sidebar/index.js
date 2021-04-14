@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import SideBar from "../../Components/Sidebar";
 import { switchUserRole } from "../../modules/userRoles";
-
+import {authCategorySelector} from "../../modules/doctors/selectors";
 const mapStateToProps = (state) => {
   const { auth, users, doctors, user_roles, pages: {user_role_ids = []} = {}, providers } = state;
   const {
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => {
     authRedirection,
     authPermissions = [],
     doctor_provider_id = null,
-    auth_role = null
+    auth_role = null,
   } = auth;
 
   return {
@@ -25,6 +25,7 @@ const mapStateToProps = (state) => {
     user_role_ids,
     providers,
     auth_role,
+    authDoctor: authCategorySelector(state)
   };
 };
 
