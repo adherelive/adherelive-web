@@ -26,6 +26,11 @@ export default defineMessages({
         description: "",
         defaultMessage: "Self"
     },
+    sign_out_text: {
+        id: "app.dashboard.sidebar.menu.sign.out.text",
+        description: "",
+        defaultMessage: "Sign Out"
+    },
     all_providers: {
         id: "app.dashboard.sidebar.menu.all.providers",
         description: "",

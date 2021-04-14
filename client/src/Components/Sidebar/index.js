@@ -375,7 +375,7 @@ class SideMenu extends Component {
       formatMessage,
     } = this;
 
-    const userRoleTiles = user_role_ids.map((id) => {
+   return user_role_ids.map((id) => {
       const { basic_info: { user_identity, linked_id } = {} } =
         user_roles[id] || {};
 
@@ -393,9 +393,9 @@ class SideMenu extends Component {
       const addedVia = linked_id ? name : formatMessage(messages.self_text);
 
       return (
-        <Fragment>
-          <Menu.Item key={`${ACCOUNT}.${id}`}>
-            <div className={"flex align-center mb20"}>
+        // <Fragment>
+          <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer">
+            <div className={"flex align-center mt10 mb10"}>
               {linked_id ? (
                 getProviderIcon("w50 h50", id)
               ) : (
@@ -409,21 +409,21 @@ class SideMenu extends Component {
               </div>
             </div>
           </Menu.Item>
-          <Menu.Divider />
-        </Fragment>
+          // <Menu.Divider />
+        // </Fragment>
       );
     });
 
-    return (
-      <div className="p10">
-        <span>{formatMessage(messages.accounts_text)}</span>
-        {userRoleTiles}
-      </div>
-    );
+    // return (
+    //   <Fragment>
+    //     <span className="p10">{formatMessage(messages.accounts_text)}</span>
+    //     {userRoleTiles}
+    //   </Fragment>
+    // );
   };
 
   menu = () => {
-    const { getUserRoles, getDoctorDetails } = this;
+    const { getUserRoles, getDoctorDetails, formatMessage } = this;
     return (
       <Menu
         // className="fixed l70 b20" // b20
@@ -439,7 +439,12 @@ class SideMenu extends Component {
       >
         {getDoctorDetails()}
         <Menu.Divider />
-        {getUserRoles()}
+
+        {/* <span className="p10">{formatMessage(messages.accounts_text)}</span> */}
+        <Menu.ItemGroup key="ACCOUNT" title={formatMessage(messages.accounts_text)}>
+          {getUserRoles()}
+        </Menu.ItemGroup>
+        <Menu.Divider />
 
         {/* <Menu.Divider /> */}
         {/* <Menu.Item className="p10" key={PRIVACY_POLICY}>
@@ -454,20 +459,24 @@ class SideMenu extends Component {
         {/* <Menu.Item className="pl24 pr80" key={SETTINGS}>
           Settings
         </Menu.Item> */}
-        <Menu.Divider />
         {/* <Menu.Item className="pl24 pr80" key={TEMPLATES}>
           {this.formatMessage(messages.templates)}
         </Menu.Item> */}
         {/* <Menu.Divider /> */}
+
         <Menu.Item className="p10" key={LOG_OUT}>
-          Logout
+          <div className="wp100 flex justify-center align-center">
+            <span className="pt6 pb6 pl10 pr10 bw-faint-grey br5 wp50 tac">
+            {formatMessage(messages.sign_out_text)}
+            </span>
+          </div>
         </Menu.Item>
       </Menu>
     );
   };
 
   getProviderIcon = (className = "w35 h35", userRoleId = null) => {
-    const { auth_role, user_roles, providers, doctors } = this.props;
+    const { auth_role, user_roles, providers } = this.props;
 
     let currentUserRoleId = auth_role;
     if (userRoleId) {
@@ -506,7 +515,9 @@ class SideMenu extends Component {
         );
       }
     } else {
-      return getAbbreviation();
+      return (
+        <div className={`${className} br5 bg-grey flex justify-center align-center`}>{getAbbreviation()}</div>
+      );
     }
   };
 

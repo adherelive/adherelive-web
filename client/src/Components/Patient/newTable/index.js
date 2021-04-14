@@ -376,7 +376,7 @@ class patientTable extends Component{
               <Button
                 type="primary"
                 onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
+                icon={"search"}
                 size="small"
                 style={{ width: 90, marginRight: 8 }}
               >
