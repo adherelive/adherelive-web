@@ -215,6 +215,7 @@ class CarePlanController extends Controller {
           appointmentEventData.push({
             type: EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT,
             event_id: appointmentData.getAppointmentId(),
+            user_role_id: userRoleId,
             start_time,
             end_time
           });
@@ -495,7 +496,8 @@ class CarePlanController extends Controller {
         details: {
           medications = {},
             medication_ids = [],
-          actor: { id: organizer_id = null, category } = {}
+          actor: { id: organizer_id = null, category } = {},
+          actor = {}
         } = {}
       } = eventData;
       const medicationsData = JSON.parse(medications);
@@ -560,7 +562,8 @@ class CarePlanController extends Controller {
               end_date: medication.getEndDate(),
               when_to_take,
               participant_one: patient.getUserId(),
-              participant_two: organizer_id
+              participant_two: organizer_id,
+              actor
             });
           }
         }

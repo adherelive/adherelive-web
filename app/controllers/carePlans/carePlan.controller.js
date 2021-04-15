@@ -189,6 +189,7 @@ class CarePlanController extends Controller {
           eventScheduleData.push({
             type: EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT,
             event_id: appointmentData.getAppointmentId(),
+            user_role_id: userRoleId,
             start_time,
             end_time
           });
@@ -199,7 +200,7 @@ class CarePlanController extends Controller {
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
       const patient = await PatientWrapper(null, patient_id);
 
-      const carePlanScheduleData = {
+      let carePlanScheduleData = {
         type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
         event_id: care_plan_id,
         critical: false,
@@ -315,10 +316,15 @@ class CarePlanController extends Controller {
         }
       }
 
-      eventScheduleData.push({
+      // eventScheduleData.push({
+      //   ...carePlanScheduleData,
+      //   medication_ids
+      // });
+
+      carePlanScheduleData = {
         ...carePlanScheduleData,
         medication_ids
-      });
+      };
 
       // vitals ----------------------------------------
       const {
@@ -364,8 +370,9 @@ class CarePlanController extends Controller {
 
       // sending batch message of appointments and vitals
       const sqsResponse = await QueueService.sendBatchMessage([
-        eventScheduleData,
-        ...vitalEventsData
+        ...eventScheduleData,
+        ...vitalEventsData,
+        carePlanScheduleData
       ]);
 
       return this.raiseSuccess(
