@@ -560,6 +560,7 @@ class MobileUserController extends Controller {
         let userCategoryData = {};
         let userApiData = {};
         let userCatApiData = {};
+        let userRolesData = {};
         let carePlanApiData = {};
         let providerApiData = {};
         let userCategoryApiData = null;
@@ -590,7 +591,7 @@ class MobileUserController extends Controller {
 
               await careplanData.forEach(async carePlan => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
-                doctorIds.push(carePlanApiWrapper.getDoctorId()); // todo--: Here change will come once careplan table gets changed.
+                doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[
                   carePlanApiWrapper.getCarePlanId()
                 ] = carePlanApiWrapper.getBasicInfo();
@@ -634,25 +635,6 @@ class MobileUserController extends Controller {
               userCatApiData[
                 userCategoryApiData.getDoctorId()
               ] = allInfo;
-
-              const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-                userCategoryId
-              );
-
-              if (doctorProvider) {
-                const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-                  doctorProvider
-                );
-
-                const providerId = doctorProviderWrapper.getProviderId();
-                const providerWrapper = await ProvidersWrapper(
-                  null,
-                  providerId
-                );
-                providerApiData[
-                  providerId
-                ] = await providerWrapper.getAllInfo();
-              }
 
               careplanData = await carePlanService.getCarePlanByData({
                 user_role_id : userRoleId
@@ -721,6 +703,8 @@ class MobileUserController extends Controller {
         }
 
         let apiUserDetails = {};
+        let apiUserRoleDetails = {};
+        let providerWrapper = {};
 
         if (userIds.length > 1) {
           const allUserData = await userService.getUserByData({ id: userIds });
@@ -728,10 +712,34 @@ class MobileUserController extends Controller {
             apiUserDetails = await MUserWrapper(user.get());
             userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
           });
+
+          const allUserRolesData = await userRolesService.getByData({user_identity: userIds});
+          await allUserRolesData.forEach(async role => {
+            apiUserRoleDetails = await UserRolesWrapper(role);
+            userRolesData[apiUserRoleDetails.getId()] = apiUserRoleDetails.getBasicInfo();
+
+            providerWrapper = await ProvidersWrapper(
+                null,
+                apiUserRoleDetails.getLinkedId()
+            );
+            providerApiData[
+              providerWrapper.getProviderId()
+            ] = await providerWrapper.getAllInfo();
+          });
         } else {
           apiUserDetails = await MUserWrapper(null, userId);
           userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
 
+          apiUserRoleDetails = await UserRolesWrapper(null, userRoleId);
+          userRolesData[apiUserRoleDetails.getId()] = apiUserRoleDetails.getBasicInfo();
+
+          providerWrapper = await ProvidersWrapper(
+            null,
+            apiUserRoleDetails.getLinkedId()
+          );
+          providerApiData[
+            providerWrapper.getProviderId()
+          ] = await providerWrapper.getAllInfo();
           // Logger.debug("userApiData --> ", apiUserDetails.isActivated());
         }
 
@@ -795,6 +803,9 @@ class MobileUserController extends Controller {
         const dataToSend = {
           users: {
             ...userApiData
+          },
+          user_roles: {
+            ...userRolesData
           },
           [`${category}s`]: {
             ...userCatApiData
