@@ -59,6 +59,7 @@ class VitalController extends Controller {
         } = {},
         userDetails: {
           userId,
+          userRoleId,
           userData: { category } = {},
           userCategoryData = {}
         } = {}
@@ -105,6 +106,7 @@ class VitalController extends Controller {
           participants: [doctor.getUserId(), patient.getUserId()],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
             category,
             userCategoryData
           },
@@ -160,6 +162,7 @@ class VitalController extends Controller {
       const {
         userDetails: {
           userId,
+          userRoleId,
           userData: { category } = {},
           userCategoryData = {}
         } = {},
@@ -204,6 +207,7 @@ class VitalController extends Controller {
           participants: [doctor.getUserId(), patient.getUserId()],
           actor: {
             id: userId,
+            user_role_id: userRoleId,
             category,
             userCategoryData
           },
@@ -318,7 +322,7 @@ class VitalController extends Controller {
       Log.debug("req.params --->", req.params);
       const {
         params: { id } = {},
-        userDetails: { userData: { category } = {} } = {},
+        userDetails: { userRoleId, userData: { category } = {} } = {},
         body: { response } = {}
       } = req;
       const EventService = new eventService();
@@ -376,6 +380,7 @@ class VitalController extends Controller {
       }
 
       const carePlan = await CarePlanWrapper(null, vital.getCarePlanId());
+      const doctorRoleId = carePlan.getUserRoleId();
 
       const doctorData = await DoctorWrapper(null, carePlan.getDoctorId());
       const patientData = await PatientWrapper(null, carePlan.getPatientId());
@@ -393,15 +398,17 @@ class VitalController extends Controller {
       });
 
       const twilioMsg = await twilioService.addSymptomMessage(
-        doctorData.getUserId(),
-        patientData.getUserId(),
+        doctorRoleId,
+        userRoleId,
         chatJSON
       );
 
       const eventData = {
         participants: [doctorData.getUserId(), patientData.getUserId()],
+        participant_role_ids: [doctorRoleId, userRoleId],
         actor: {
           id: patientData.getUserId(),
+          user_role_id: userRoleId,
           details: {
             name: patientData.getFullName(),
             category: USER_CATEGORY.PATIENT

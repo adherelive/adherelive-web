@@ -19,6 +19,7 @@ class CreateJob extends CarePlanJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           details: { name, category: actorCategory } = {}
         } = {}
       },
@@ -88,6 +89,7 @@ class CreateJob extends CarePlanJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           details: { name, category: actorCategory } = {}
         } = {}
       },
@@ -102,6 +104,7 @@ class CreateJob extends CarePlanJob {
       if (participant !== actorId) {
         templateData.push({
           actor: actorId,
+          actorRoleId: user_role_id,
           object: `${participant}`,
           foreign_id: `${id}`,
           verb: `careplan_create:${currentTimeStamp}`,

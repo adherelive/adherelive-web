@@ -92,8 +92,7 @@ class EventController extends Controller {
 
       const allCarePlanData =
         (await CarePlanService.getMultipleCarePlanByData({
-          patient_id: userCategoryId,
-          [category === USER_CATEGORY.DOCTOR && 'user_role_id']:category === USER_CATEGORY.DOCTOR && userRoleId
+          patient_id: userCategoryId
         })) || [];
 
       let scheduleEvents = [];

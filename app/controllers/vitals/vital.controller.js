@@ -40,7 +40,7 @@ class VitalController extends Controller {
         Log.debug("req.body --->", req.body);
         try {
             const {
-                userDetails: {userId, userData: {category} = {}, userCategoryData = {}} = {},
+                userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData = {}} = {},
                 body : {
                     care_plan_id,
                 vital_template_id,
@@ -88,6 +88,7 @@ class VitalController extends Controller {
                     participants: [doctor.getUserId(), patient.getUserId()],
                     actor: {
                         id: userId,
+                        user_role_id: userRoleId,
                         category,
                         userCategoryData
                     },
@@ -134,7 +135,7 @@ class VitalController extends Controller {
         Log.debug("req.params --->", req.params);
         try {
             const {
-                userDetails: {userId, userData: {category} = {}, userCategoryData = {}} = {},
+                userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData = {}} = {},
                 body,
                 body: {start_date, end_date} = {},
                 params: {id} = {}
@@ -175,6 +176,7 @@ class VitalController extends Controller {
                     participants: [doctor.getUserId(), patient.getUserId()],
                     actor: {
                         id: userId,
+                        user_role_id: userRoleId,
                         category,
                         userCategoryData
                     },

@@ -92,6 +92,7 @@ class MReminderController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
@@ -162,6 +163,7 @@ class MReminderController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
         participant_one: patient.getUserId(),
@@ -265,6 +267,7 @@ class MReminderController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
@@ -345,6 +348,7 @@ class MReminderController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
         participant_one: patient.getUserId(),
@@ -408,6 +412,7 @@ class MReminderController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name } = {} } = {}
       } = userDetails || {};
@@ -479,6 +484,7 @@ class MReminderController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
         participant_one: patient.getUserId(),
@@ -629,7 +635,7 @@ class MReminderController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { params: { id } = {}, userDetails: {userId, userData: {category} = {}, userCategoryData: {basic_info: {full_name} = {}} = {}} = {}} = req;
+      const { params: { id } = {}, userDetails: {userId, userRoleId, userData: {category} = {}, userCategoryData: {basic_info: {full_name} = {}} = {}} = {}} = req;
 
       const medication = await MedicationWrapper(null, id);
       const carePlanMedicationDetails = await carePlanMedicationService.deleteCarePlanMedicationByMedicationId(
@@ -656,6 +662,7 @@ class MReminderController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         },
       };

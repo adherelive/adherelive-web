@@ -62,6 +62,7 @@ class DeleteJob extends MedicationJob {
             participants = [],
             actor: {
                 id: actorId,
+                user_role_id,
             } = {},
             event_id
         } = getMedicationData() || {};
@@ -74,6 +75,7 @@ class DeleteJob extends MedicationJob {
             // if (participant !== actorId) {
             templateData.push({
                 actor: actorId,
+                actorRoleId: user_role_id,
                 object: `${participant}`,
                 foreign_id: `${event_id}`,
                 verb: `medication_delete:${currentTimeStamp}`,

@@ -18,6 +18,7 @@ class StartJob extends MedicationJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           details: { name, category: actorCategory } = {}
         } = {},
         medicines: { basic_info: { name: medicineName } = {} } = {},
@@ -83,6 +84,7 @@ class StartJob extends MedicationJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           details: { name, category: actorCategory } = {}
         } = {}
       },
@@ -102,6 +104,7 @@ class StartJob extends MedicationJob {
     for (const participant of participants) {
       templateData.push({
         actor: actorId,
+        actorRoleId: user_role_id,
         object: `${participant}`,
         foreign_id: `${id}`,
         verb: `${MEDICATION_REMINDER_START}:${currentTimeStamp}`,

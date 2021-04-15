@@ -53,7 +53,7 @@ class CarePlanController extends Controller {
       } = req.body;
 
       const { userDetails } = req;
-      const { userId, userData: { category } = {}, userCategoryData } =
+      const { userId, userRoleId, userData: { category } = {}, userCategoryData } =
         userDetails || {};
       const QueueService = new queueService();
 
@@ -215,6 +215,7 @@ class CarePlanController extends Controller {
           appointmentEventData.push({
             type: EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT,
             event_id: appointmentData.getAppointmentId(),
+            user_role_id: userRoleId,
             start_time,
             end_time
           });
@@ -243,6 +244,7 @@ class CarePlanController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           category
         }
       };
@@ -362,7 +364,7 @@ class CarePlanController extends Controller {
       } = await carePlanHelper.createVitals({
         data: vitalData,
         carePlanId: care_plan_id,
-        authUser: { category, userId, userCategoryData },
+        authUser: { category, userId, userCategoryData, userRoleId },
         patientId: carePlanData.getPatientId()
       });
 
@@ -494,7 +496,8 @@ class CarePlanController extends Controller {
         details: {
           medications = {},
             medication_ids = [],
-          actor: { id: organizer_id = null, category } = {}
+          actor: { id: organizer_id = null, category } = {},
+          actor = {}
         } = {}
       } = eventData;
       const medicationsData = JSON.parse(medications);
@@ -559,7 +562,8 @@ class CarePlanController extends Controller {
               end_date: medication.getEndDate(),
               when_to_take,
               participant_one: patient.getUserId(),
-              participant_two: organizer_id
+              participant_two: organizer_id,
+              actor
             });
           }
         }
