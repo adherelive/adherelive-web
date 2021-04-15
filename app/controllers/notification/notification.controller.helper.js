@@ -17,6 +17,7 @@ import MedicationService from "../../services/medicationReminder/mReminder.servi
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import VitalService from "../../services/vitals/vital.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
 
 // API WRAPPERS -------->
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
@@ -25,6 +26,7 @@ import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 import UserWrapper from "../../ApiWrapper/web/user";
 import VitalWrapper from "../../ApiWrapper/web/vitals";
 import CarePlanWrapper from "../../ApiWrapper/mobile/carePlan";
+import UserRoleWrapper from "../../ApiWrapper/mobile/userRoles";
 
 const {
   APPOINTMENT_CREATE,
@@ -73,6 +75,7 @@ const medicationNotification = async data => {
     let eventData = {};
     let medicineData = {};
     let userData = {};
+    let userRoleData = {};
     let doctorData = {};
     let patientData = {};
     let participants = [];
@@ -164,6 +167,14 @@ const medicationNotification = async data => {
         userData = { ...userData, ...users };
         doctorData = { ...doctorData, ...doctors };
         patientData = { ...patientData, ...patients };
+
+        const userRole = await userRolesService.getByData({user_identity: participants[id]});
+          if(userRole && userRole.length) {
+            for(let i =0; i< userRole.length; i++) {
+              const userRoleWrapper = await UserRoleWrapper(userRole[i]);
+              userRoleData = {...userRoleData, ...{[userRoleWrapper.getId()]: userRoleWrapper.getBasicInfo()}}
+            }
+        }
       }
 
       return {
@@ -172,7 +183,8 @@ const medicationNotification = async data => {
         medicines: medicineData,
         users: userData,
         doctors: doctorData,
-        patients: patientData
+        patients: patientData,
+        user_roles: userRoleData
       };
     }
   } catch (error) {
@@ -208,6 +220,7 @@ const appointmentNotification = async data => {
     let userData = {};
     let doctorData = {};
     let patientData = {};
+    let userRoleData = {};
     let participants = [];
     let eventId = null;
 
@@ -285,6 +298,14 @@ const appointmentNotification = async data => {
           userData = { ...userData, ...users };
           doctorData = { ...doctorData, ...doctors };
           patientData = { ...patientData, ...patients };
+
+          const userRole = await userRolesService.getByData({user_identity: participants[id]});
+          if(userRole && userRole.length) {
+            for(let i =0; i< userRole.length; i++) {
+              const userRoleWrapper = await UserRoleWrapper(userRole[i]);
+              userRoleData = {...userRoleData, ...{[userRoleWrapper.getId()]: userRoleWrapper.getBasicInfo()}}
+            }
+          }
         }
       }
 
@@ -294,7 +315,8 @@ const appointmentNotification = async data => {
         appointments: { [eventId]: eventData },
         users: userData,
         doctors: doctorData,
-        patients: patientData
+        patients: patientData,
+        user_roles: userRoleData
       };
     }
   } catch (error) {

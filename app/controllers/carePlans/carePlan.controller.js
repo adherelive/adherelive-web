@@ -51,7 +51,7 @@ class CarePlanController extends Controller {
       } = req.body;
 
       const { userDetails } = req;
-      const { userId, userData: { category } = {}, userCategoryData } = userDetails || {};
+      const { userId, userRoleId, userData: { category } = {}, userCategoryData } = userDetails || {};
 
       const QueueService = new queueService();
 
@@ -209,6 +209,7 @@ class CarePlanController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           category
         }
       };
@@ -329,7 +330,7 @@ class CarePlanController extends Controller {
       } = await carePlanHelper.createVitals({
         data: vitalData,
         carePlanId: care_plan_id,
-        authUser: { category, userId, userCategoryData },
+        authUser: { category, userId, userCategoryData, userRoleId },
         patientId: carePlanData.getPatientId()
       });
 

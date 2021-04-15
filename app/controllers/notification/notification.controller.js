@@ -17,11 +17,12 @@ class NotificationController extends Controller {
   getNotifications = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { body: { activities } = {}, userDetails: { userId } = {} } = req;
+      const { body: { activities } = {}, userDetails: { userId, userRoleId } = {} } = req;
       const notificationIds = [];
 
       let notificationData = {};
       let userData = {};
+      let userRoleData = {};
       let doctorData = {};
       let patientData = {};
       let appointmentData = {};
@@ -38,6 +39,7 @@ class NotificationController extends Controller {
         const details = await getDataForNotification({
           data: activityData[0] || {},
           loggedInUser: userId,
+          loggedInUserRole: userRoleId,
           is_read: is_read,
           group_id
         });
@@ -51,10 +53,12 @@ class NotificationController extends Controller {
           medications = {},
           medicines = {},
           vitals = {},
-          care_plans = {}
+          care_plans = {},
+          user_roles = {}
         } = details || {};
         notificationData = { ...notificationData, ...notifications };
         userData = { ...userData, ...users };
+        userRoleData = {...userRoleData, ...user_roles}
         doctorData = { ...doctorData, ...doctors };
         patientData = { ...patientData, ...patients };
         appointmentData = { ...appointmentData, ...appointments };
@@ -69,6 +73,7 @@ class NotificationController extends Controller {
         200,
         {
           users: userData,
+          user_roles: userRoleData,
           doctors: doctorData,
           patients: patientData,
           notifications: notificationData,
@@ -83,6 +88,7 @@ class NotificationController extends Controller {
           patient_ids: Object.keys(patientData),
           appointment_ids: Object.keys(appointmentData),
           user_ids: Object.keys(userData),
+          user_role_ids: Object.keys(userRoleData),
           medicine_ids: Object.keys(medicineData),
           medication_ids: Object.keys(medicationData),
           vitals_ids: Object.keys(vitalsData),
@@ -103,6 +109,7 @@ class NotificationController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryData: { basic_info: { full_name = "" } = {} } = {}
       } = userDetails || {};
@@ -112,6 +119,7 @@ class NotificationController extends Controller {
         participants: [userId, receiver_id],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: {
             name: full_name,
             category

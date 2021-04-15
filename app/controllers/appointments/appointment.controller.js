@@ -89,7 +89,7 @@ class AppointmentController extends Controller {
         // participant_one_type = "",
         // participant_one_id = "",
       } = body;
-      const { userId, userData: { category } = {} } = userDetails || {};
+      const { userId, userRoleId, userData: { category } = {} } = userDetails || {};
       const { id: participant_two_id, category: participant_two_type } =
         participant_two || {};
 
@@ -197,6 +197,7 @@ class AppointmentController extends Controller {
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           category
         }
       };
@@ -261,6 +262,7 @@ class AppointmentController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -387,6 +389,7 @@ class AppointmentController extends Controller {
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           // todo add actor name
           details: { name: full_name, category }
         }
@@ -457,6 +460,7 @@ class AppointmentController extends Controller {
 
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -593,6 +597,7 @@ class AppointmentController extends Controller {
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         }
       };
