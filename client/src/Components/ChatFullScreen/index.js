@@ -33,18 +33,21 @@ class ChatFullScreen extends Component {
     } = this.props;
 
     let doctorUserId = ""; //user_id of doctor
-    let { basic_info: { user_id: patientUserId = "" } = {} } =
+    let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id  : patientRoleId= null  } =
       patients[patient_id] || {};
-    for (let doc of Object.values(doctors)) {
-      let {
-        basic_info: { user_id, id = 1 }
-      } = doc;
-      if (parseInt(user_id) === parseInt(authenticated_user)) {
-        doctorUserId = user_id;
-      }
-    }
+    // for (let doc of Object.values(doctors)) {
+    //   let {
+    //     basic_info: { user_id, id = 1 }
+    //   } = doc;
+    //   if (parseInt(user_id) === parseInt(authenticated_user)) {
+    //     doctorUserId = user_id;
+    //   }
+    // }
 
-    const roomId = getRoomId(doctorUserId, patientUserId);
+    const {auth_role : doctorRoleId = null  } = this.props ;
+    // const roomId = getRoomId(doctorUserId, patientUserId);
+
+    const roomId = getRoomId(doctorRoleId, patientRoleId);
 
     this.setState({
       doctorUserId,
@@ -130,11 +133,13 @@ class ChatFullScreen extends Component {
 
   setPatientId = patient_id => () => {
     const { doctorUserId } = this.state;
-    const { patients = {} } = this.props;
-    const { basic_info: { user_id: patientUserId = "" } = {} } = patients[
+    
+    const { patients = {} , auth_role : doctorRoleId = null  } = this.props;
+    const { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null } = patients[
       patient_id
     ];
-    const roomId = getRoomId(doctorUserId, patientUserId);
+
+    const roomId = getRoomId(doctorRoleId, patientRoleId);
     this.setState({
       patientUserId: patientUserId,
       patientId: patient_id,
@@ -165,7 +170,7 @@ class ChatFullScreen extends Component {
   render() {
     let { roomId, patientId, doctorUserId, replyMessadeId } = this.state;
 
-    let { patients = {}, getDoctorConsultations } = this.props;
+    let { patients = {}, getDoctorConsultations  } = this.props;
 
     const {
       basic_info: { first_name = "", middle_name = "", last_name = "", full_name = "" } = {},

@@ -5,7 +5,7 @@ import { getAllFeatures } from "../../modules/featuresMappings";
 
 const mapStateToProps = state => {
   const {
-    auth: { authPermissions = [], authenticated_user = 1 } = {},
+    auth: { authPermissions = [], authenticated_user = 1 , auth_role = null } = {},
     users = {},
     patients = {},
     doctors = {},
@@ -19,7 +19,8 @@ const mapStateToProps = state => {
     authPermissions,
     authenticated_user,
     features,
-    features_mappings
+    features_mappings,
+    auth_role
   };
 };
 

@@ -3,6 +3,11 @@ import patientService from "../../../services/patients/patients.service";
 import {completePath} from "../../../helper/filePath";
 
 import UserWrapper from "../user";
+import userRoleWrapper from "../userRoles";
+
+import carePlanService from "../../../services/carePlan/carePlan.service";
+import userRolesService from "../../../services/userRoles/userRoles.service";
+
 
 class MPatientWrapper extends BasePatient {
     constructor(data) {
@@ -58,7 +63,31 @@ class MPatientWrapper extends BasePatient {
         };
     };
 
-    getAllInfo = async () => {};
+    getAllInfo = async () => {
+        const {_data, getBasicInfo, getPatientId} = this;
+
+        const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
+
+        let carePlanId = null;
+
+        for(const carePlan of carePlans) {
+            carePlanId = carePlan.get("id");
+        }
+
+        const { user_id =null } = _data || {};
+        let user_role_id = null ;
+        const userRole = await userRolesService.getFirstUserRole(user_id);
+        if(userRole){
+            const userRoleData = await userRoleWrapper(userRole);
+            user_role_id = userRoleData.getId();
+        }
+        
+        return {
+            ...getBasicInfo(),
+            care_plan_id: carePlanId,
+            user_role_id
+        }
+    };
 
     getReferenceInfo = async () => {
         const {_data, getBasicInfo, getPatientId} = this;

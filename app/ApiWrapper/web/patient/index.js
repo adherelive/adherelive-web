@@ -1,11 +1,13 @@
 import BasePatient from "../../../services/patients";
-
 import patientService from "../../../services/patients/patients.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import symptomService from "../../../services/symptom/symptom.service";
+import userRolesService from "../../../services/userRoles/userRoles.service";
+
+import UserWrapper from "../../web/user";
+import userRoleWrapper from "../../web/userRoles";
 
 import {completePath} from "../../../helper/filePath";
-import UserWrapper from "../../web/user";
 
 
 class PatientWrapper extends BasePatient {
@@ -80,9 +82,18 @@ class PatientWrapper extends BasePatient {
             carePlanId = carePlan.get("id");
         }
 
+        const { user_id =null } = _data || {};
+        let user_role_id = null ;
+        const userRole = await userRolesService.getFirstUserRole(user_id);
+        if(userRole){
+            const userRoleData = await userRoleWrapper(userRole);
+            user_role_id = userRoleData.getId();
+        }
+        
         return {
             ...getBasicInfo(),
-            care_plan_id: carePlanId
+            care_plan_id: carePlanId,
+            user_role_id
         }
     };
 

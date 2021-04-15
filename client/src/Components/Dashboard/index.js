@@ -403,13 +403,15 @@ class Dashboard extends Component {
     }
     const {
       patients,
-      twilio: { patientId: chatPatientId = 1 }
+      twilio: { patientId: chatPatientId = 1 } = {},
+      auth_role : doctorRoleId = null 
     } = this.props;
     const { doctorUserId } = this.state;
-    let { basic_info: { user_id: patientUserId = "" } = {} } = patients[
+    let { basic_info: { user_id: patientUserId = "" } = {} , user_role_id : patientRoleId = null  } = patients[
       chatPatientId
     ];
-    const roomId = getRoomId(doctorUserId, patientUserId);
+
+    const roomId = getRoomId(doctorRoleId, patientRoleId);
 
     window.open(
       `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
@@ -536,7 +538,8 @@ class Dashboard extends Component {
       chats: { minimized = false, visible: popUpVisible = false },
       drawer: { visible: drawerVisible = false } = {},
       ui_features: { showVerifyModal = false } = {},
-      twilio: { patientId: chatPatientId = 1 }
+      twilio: { patientId: chatPatientId = 1 },
+      auth_role : doctorRoleId = null
     } = this.props;
 
     const { formatMessage, renderChartTabs, getVerifyModal , changeTab } = this;
@@ -548,6 +551,7 @@ class Dashboard extends Component {
         middle_name = "",
         last_name = ""
       } = {},
+      user_role_id :  patientRoleId = null,
       details: { profile_pic: patientDp = "" } = {}
     } = patients[chatPatientId] || {};
 
@@ -563,7 +567,7 @@ class Dashboard extends Component {
       watchlistTab
     } = this.state;
 
-    const roomId = getRoomId(doctorUserId, patientUserId);
+    const roomId = getRoomId(doctorRoleId, patientRoleId);
     
     if (Object.keys(graphs).length === 0 || loading || docName === TABLE_DEFAULT_BLANK_FIELD) {
       return (
@@ -571,7 +575,6 @@ class Dashboard extends Component {
         <Loading className={"wp100"} />
       </div>);
     }
-
 
     return (
       <Fragment>

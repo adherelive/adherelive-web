@@ -1915,17 +1915,17 @@ class PatientDetails extends Component {
   };
 
   openVideoScreen = () => {
-    const { care_plans, doctors, patients } = this.props;
+    const { care_plans, doctors, patients , auth_role : doctorRoleId = null  } = this.props;
     const { selectedCarePlanId } = this.state;
 
     const { basic_info: { doctor_id, patient_id } = {} } =
       care_plans[selectedCarePlanId] || {};
     const { basic_info: { user_id: doctorUserId } = {} } =
       doctors[doctor_id] || {};
-    const { basic_info: { user_id: patientUserID } = {} } =
+    const { basic_info: { user_id: patientUserID } = {} , user_role_id : patientRoleId = null } =
       patients[patient_id] || {};
 
-    const roomId = getRoomId(doctorUserId, patientUserID);
+    const roomId = getRoomId(doctorRoleId, patientRoleId);
 
     window.open(
       `${config.WEB_URL}/test${getPatientConsultingVideoUrl(roomId)}`,
@@ -2138,10 +2138,15 @@ class PatientDetails extends Component {
         gender,
         uid = "",
         user_id: patientUserId = ""
-      } = {}
+      } = {},
+      user_role_id :patientRoleId = null
     } = patients[patient_id] || {};
 
-    const roomId = getRoomId(doctorUserId, patientUserId);
+
+    const doctorRoleId = auth_role;
+
+    // const roomId = getRoomId(doctorUserId, patientUserId);
+    const roomId = getRoomId(doctorRoleId,patientRoleId);
 
     const { basic_info: { mobile_number = "", email, prefix = "" } = {} } =
       users[user_id] || {};

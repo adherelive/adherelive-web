@@ -278,7 +278,9 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
 
         for(let index = 0; index < allPatients.length; index++) {
             const patient = await PatientWrapper(allPatients[index]);
-            patientData[patient.getPatientId()] = patient.getBasicInfo();
+            const {user_role_id = null,care_plan_id = null } = await  patient.getAllInfo();
+            patientData[patient.getPatientId()] = {...patient.getBasicInfo() ,user_role_id ,care_plan_id }
+            
         }
     }
 

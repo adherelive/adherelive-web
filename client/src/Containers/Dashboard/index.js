@@ -25,7 +25,7 @@ import {getAllMissedScheduleEvents} from "../../modules/scheduleEvents";
 const mapStateToProps = state => {
   const {
     graphs,
-    auth: { authPermissions = [], authenticated_user = 1 } = {},
+    auth: { authPermissions = [], authenticated_user = 1 , auth_role = null  } = {},
     treatments = {},
     conditions = {},
     pages: { ui_features = {} ,dashboard ={}} = {},
@@ -53,7 +53,8 @@ const mapStateToProps = state => {
     ui_features,
     features,
     features_mappings,
-    dashboard
+    dashboard,
+    auth_role
   };
 };
 
