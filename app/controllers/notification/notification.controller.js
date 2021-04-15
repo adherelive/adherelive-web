@@ -105,7 +105,7 @@ class NotificationController extends Controller {
   raiseChatNotification = async(req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try{
-      const { body: { message = "", receiver_id = "" } = {}, userDetails  = {} } = req || {};
+      const { body: { message = "", receiver_id = "", receiver_role_id = "" } = {}, userDetails  = {} } = req || {};
 
       const {
         userId,
@@ -117,6 +117,7 @@ class NotificationController extends Controller {
 
       const eventData = {
         participants: [userId, receiver_id],
+        participant_role_ids: [userRoleId, receiver_role_id],
         actor: {
           id: userId,
           user_role_id: userRoleId,

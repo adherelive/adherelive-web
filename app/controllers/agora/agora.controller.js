@@ -21,18 +21,21 @@ class AgoraController extends Controller {
 
     generateVideoAccessToken = async (req, res) => {
         try {
-            const {params: {id = null} = {}, userDetails: {userId, userData: { category } = {}} = {}} = req;
-            let doctorUserId = null, patientUserId = null;
-            if(category === USER_CATEGORY.DOCTOR) {
-                doctorUserId = userId;
-                patientUserId = id;
-            } else if (category === USER_CATEGORY.PATIENT) {
-                doctorUserId = id;
-                patientUserId = userId;
-            }
-            const channelName = agoraService.getRoomId(doctorUserId, patientUserId);
+            const {params: {id = null} = {}, userDetails: {
+               userRoleId,
+               userData: { category } = {}} = {}} = req;
 
-            const token = await agoraService.videoTokenGenerator(userId, channelName);
+            let doctorRoleId = null, patientRoleId = null;
+            if(category === USER_CATEGORY.DOCTOR) {
+                doctorRoleId = userRoleId;
+                patientRoleId = id;
+            } else if (category === USER_CATEGORY.PATIENT) {
+                doctorRoleId = id;
+                patientRoleId = userRoleId;
+            }
+            const channelName = agoraService.getRoomId(doctorRoleId, patientRoleId);
+
+            const token = await agoraService.videoTokenGenerator(userRoleId, channelName);
 
             return this.raiseSuccess(res, 200, { token: token}, "Created new video token with userId");
         } catch (error) {

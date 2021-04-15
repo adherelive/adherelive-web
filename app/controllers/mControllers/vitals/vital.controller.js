@@ -380,6 +380,7 @@ class VitalController extends Controller {
       }
 
       const carePlan = await CarePlanWrapper(null, vital.getCarePlanId());
+      const doctorRoleId = carePlan.getUserRoleId();
 
       const doctorData = await DoctorWrapper(null, carePlan.getDoctorId());
       const patientData = await PatientWrapper(null, carePlan.getPatientId());
@@ -397,13 +398,14 @@ class VitalController extends Controller {
       });
 
       const twilioMsg = await twilioService.addSymptomMessage(
-        doctorData.getUserId(),
-        patientData.getUserId(),
+        doctorRoleId,
+        userRoleId,
         chatJSON
       );
 
       const eventData = {
         participants: [doctorData.getUserId(), patientData.getUserId()],
+        participant_role_ids: [doctorRoleId, userRoleId],
         actor: {
           id: patientData.getUserId(),
           user_role_id: userRoleId,

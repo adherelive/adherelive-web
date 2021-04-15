@@ -48,7 +48,7 @@ class SymptomController extends Controller {
       const {
         body,
         params: { patient_id } = {},
-        userDetails: { userId } = {}
+        userDetails: { userId, userRoleId } = {}
       } = req;
       const {
         care_plan_id,
@@ -148,6 +148,7 @@ class SymptomController extends Controller {
       for (const carePlanData of carePlans) {
         const carePlan = await CarePlanWrapper(carePlanData);
         const doctorId = carePlan.getDoctorId();
+        const doctorRoleId = carePlan.getUserRoleId();
         const doctorData = await DoctorWrapper(null, doctorId);
         const patientData = await PatientWrapper(null, patient_id);
 
@@ -161,15 +162,17 @@ class SymptomController extends Controller {
         });
 
         const twilioMsg = await twilioService.addSymptomMessage(
-          doctorData.getUserId(),
-          patientData.getUserId(),
+          doctorRoleId,
+          userRoleId,
           chatJSON
         );
 
         const eventData = {
           participants: [doctorData.getUserId(), patientData.getUserId()],
+          participant_role_ids: [doctorRoleId, userRoleId],
           actor: {
             id: patientData.getUserId(),
+            user_role_id: userRoleId,
             details: {
               name: patientData.getFullName(),
               category: USER_CATEGORY.PATIENT
