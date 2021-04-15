@@ -57,6 +57,7 @@ const medicationNotification = async data => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         object,
@@ -154,6 +155,7 @@ const medicationNotification = async data => {
           type: MEDICATION_REMINDER,
           stage: NOTIFICATION_STAGES.CREATE,
           actor: requiredActor,
+          actor_role_id: actorRoleId,
           verb,
           response_taken: responseTaken,
           start_time: notification_start_time,
@@ -200,6 +202,7 @@ const appointmentNotification = async data => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         object,
@@ -284,6 +287,7 @@ const appointmentNotification = async data => {
           type: APPOINTMENT,
           stage: NOTIFICATION_STAGES.CREATE,
           actor: requiredActor,
+          actor_role_id: actorRoleId,
           verb,
           start_time: notification_start_time,
           create_time: notification_create_time
@@ -332,6 +336,7 @@ const vitalsNotification = async data => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         object,
@@ -413,6 +418,7 @@ const vitalsNotification = async data => {
           type: VITALS,
           stage: NOTIFICATION_STAGES.CREATE,
           actor: requiredActor,
+          actor_role_id:actorRoleId,
           verb,
           start_time: notification_start_time,
           create_time: notification_create_time
@@ -456,6 +462,7 @@ const carePlanNotification = async data => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         object,
@@ -520,6 +527,7 @@ const carePlanNotification = async data => {
           type: CARE_PLAN_ACTIVATION,
           stage: NOTIFICATION_STAGES.CREATE,
           actor: requiredActor,
+          actor_role_id: actorRoleId,
           verb,
           start_time: notification_start_time,
           create_time: notification_create_time,
@@ -548,6 +556,7 @@ const chatMessageNotification = async data => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         message,
@@ -571,6 +580,7 @@ const chatMessageNotification = async data => {
           notification_id: id,
           type: USER_MESSAGE,
           actor,
+          actor_role_id: actorRoleId,
           verb,
           message,
           start_time: notification_start_time,
@@ -594,6 +604,7 @@ const missedCallNotification = async data => {
     const {
       data: {
         actor,
+        actorRoleId,
         foreign_id,
         id,
         message,
@@ -617,6 +628,7 @@ const missedCallNotification = async data => {
           notification_id: id,
           type: AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL,
           actor,
+          actor_role_id: actorRoleId,
           verb,
           message,
           start_time: notification_start_time,
