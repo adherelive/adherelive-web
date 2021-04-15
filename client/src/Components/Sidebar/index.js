@@ -340,7 +340,7 @@ class SideMenu extends Component {
         </Avatar>
         <div className="ml10 flex direction-column justify-start wp70">
           <span className="fs22 fw700">{`Dr. ${full_name}`}</span>
-          <div className="wp90 flex align-center justify-space-between dark-sky-blue fw700 fs14">
+          <div className="wp80 flex align-center justify-space-between dark-sky-blue fw700 fs14">
             <div onClick={handleNavigate(SIDEBAR_NAVIGATION.SUB_MENU.SETTINGS)}>
               {formatMessage(messages.settings_text)}
             </div>
@@ -396,13 +396,7 @@ class SideMenu extends Component {
         // <Fragment>
           <Menu.Item key={`${ACCOUNT}.${id}`} className="pointer">
             <div className={"flex align-center mt10 mb10"}>
-              {linked_id ? (
-                getProviderIcon("w50 h50", id)
-              ) : (
-                <div className="w50 h50 br5 bg-grey flex justify-center align-center">
-                  {getAbbreviation(selfDoctorName)}
-                </div>
-              )}
+              {getProviderIcon("w50 h50", id)}
               <div className="flex direction-column align-start ml10">
                 <div className={"fs20 fw700"}>{addedVia}</div>
                 <div className="fs14 fw500">{email}</div>
@@ -466,7 +460,7 @@ class SideMenu extends Component {
 
         <Menu.Item className="p10" key={LOG_OUT}>
           <div className="wp100 flex justify-center align-center">
-            <span className="pt6 pb6 pl10 pr10 bw-faint-grey br5 wp50 tac">
+            <span className="pt6 pb6 pl10 pr10 bw-cool-grey br5 wp50 tac">
             {formatMessage(messages.sign_out_text)}
             </span>
           </div>
@@ -476,7 +470,7 @@ class SideMenu extends Component {
   };
 
   getProviderIcon = (className = "w35 h35", userRoleId = null) => {
-    const { auth_role, user_roles, providers } = this.props;
+    const { auth_role, user_roles, providers, authDoctor } = this.props;
 
     let currentUserRoleId = auth_role;
     if (userRoleId) {
@@ -515,8 +509,9 @@ class SideMenu extends Component {
         );
       }
     } else {
+      const {basic_info: {full_name} = {}} = authDoctor || {};
       return (
-        <div className={`${className} br5 bg-grey flex justify-center align-center`}>{getAbbreviation()}</div>
+        <div className={`${className} br5 bg-grey flex justify-center align-center`}>{getAbbreviation(full_name)}</div>
       );
     }
   };
