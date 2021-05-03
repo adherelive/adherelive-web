@@ -66,6 +66,11 @@ export const db = database => {
             type: DataTypes.ENUM,
             values: PRODUCT_USER_TYPES,
         },
+        razorpay_link: {
+          type: DataTypes.STRING,
+          allowNull: true,
+          defaultValue: null
+        },
       details: {
         type: DataTypes.JSON
       }

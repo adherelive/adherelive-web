@@ -4,6 +4,8 @@ import { Button, Input, Form, message } from "antd";
 import messages from "./message";
 import { withRouter } from "react-router-dom";
 import {PATH} from "../../constant";
+import config from "../../config";
+
 const { Item: FormItem } = Form;
 const { Password } = Input;
 
@@ -12,6 +14,8 @@ const PASSWORD = "password";
 
 const FIELDS = [EMAIL, PASSWORD];
 
+const TOS_PAGE_URL = `${config.WEB_URL}${PATH.TERMS_OF_SERVICE}`;
+const PRIVACY_PAGE_URL = `${config.WEB_URL}${PATH.PRIVACY_POLICY}`;
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -67,6 +71,20 @@ class SignIn extends Component {
 
   formatMessage = data => this.props.intl.formatMessage(data);
 
+  tosComponent = () => {
+    return (
+      <div className="flex mb20">
+
+        <div className="slate-grey mt-10 fs12 p10 medium">
+          <span>{this.formatMessage(messages.agreeSigninPPText)}</span>{" "}
+          <a href={PRIVACY_PAGE_URL} target={"_blank"}>
+            {this.formatMessage(messages.privacyPolicy)}
+          </a>
+        </div>
+      </div>
+    );
+  };
+
   render() {
     const {
       form: { getFieldDecorator, isFieldTouched, getFieldError },
@@ -77,7 +95,7 @@ class SignIn extends Component {
       const error = isFieldTouched(value) && getFieldError(value);
       fieldsError = { ...fieldsError, [value]: error };
     });
-    const { handleSignIn } = this;
+    const { handleSignIn ,tosComponent } = this;
     return (
 
                 <Form onSubmit={handleSignIn} className="login-form">
@@ -118,6 +136,7 @@ class SignIn extends Component {
             ]
           })(<Password placeholder="Password" className="h40" />)}
         </FormItem>
+        {tosComponent()}
         <div className="flex wp100 justify-end mt-20 mb16">
           <div
             className="Forgot-Password medium pointer "

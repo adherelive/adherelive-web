@@ -59,7 +59,8 @@ class updateProviderDrawer extends Component {
           ifsc_code='',
           upi_id='',
           razorpay_account_id='',
-          razorpay_account_name='' 
+          razorpay_account_name='',
+          icon = ""
         } = values;
 
 
@@ -77,7 +78,8 @@ class updateProviderDrawer extends Component {
           ifsc_code,
           upi_id,
           razorpay_account_id,
-          razorpay_account_name 
+          razorpay_account_name ,
+          icon
           }
        
           try {

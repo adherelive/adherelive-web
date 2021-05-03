@@ -9,3 +9,7 @@ export const getTermsAndPolicyUrl = (type) => {
 export const updateTermsAndPolicyUrl = () => {
     return `/admin/details`;
 };
+
+export const getTACUrl = (id) => {
+    return `/admin/terms_and_conditions/${id}`;
+}

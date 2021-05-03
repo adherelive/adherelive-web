@@ -41,6 +41,9 @@ export const db = database => {
       },
       activated_on: {
         type: DataTypes.DATE
+      },
+      details: {
+        type: DataTypes.JSON
       }
     },
     {

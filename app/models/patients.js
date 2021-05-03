@@ -102,6 +102,10 @@ export const db = database => {
       details: {
         type: DataTypes.JSON
       },
+      payment_terms_accepted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {

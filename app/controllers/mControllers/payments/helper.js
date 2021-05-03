@@ -5,7 +5,7 @@ export const getFormattedData = (data = {}) => {
 
     let updatedPaymentProducts = [];
     payment_products.forEach(product => {
-        const {name, type, amount, id} = product || {};
+        const {name, type, amount, id , razorpay_link='' } = product || {};
 
         let details = {};
 
@@ -24,6 +24,8 @@ export const getFormattedData = (data = {}) => {
         if(!isEmpty(amount)) {
             details.amount = amount;
         }
+
+        details.razorpay_link=razorpay_link;
 
         updatedPaymentProducts.push(details);
     });

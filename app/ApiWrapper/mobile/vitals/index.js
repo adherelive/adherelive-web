@@ -72,7 +72,8 @@ class VitalWrapper extends BaseVital {
       scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
       if (
-        scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED
+        scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED && 
+        scheduleEvent.getStatus() !== EVENT_STATUS.EXPIRED
       ) {
         if (!latestPendingEventId) {
           latestPendingEventId = scheduleEvent.getScheduleEventId();

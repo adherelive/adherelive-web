@@ -13,14 +13,14 @@ export default props => {
     } = {}
   } = props || {};
 
-  const {data : {basic_info={},doctors: {provider_id} = {} } ={}} =props;
+  const {data : {razorpay_link = '',basic_info={},doctors: {provider_id} = {} } ={}} =props;
 
   const handleEdit = (id) => (e) =>{
     e.preventDefault();
     const {data ={}}=props;
-    const {openConsultationFeeDrawer}=data || {}; 
+    const {openConsultationFeeDrawer}=data || {};
     let paymentData = {};
-    paymentData["basic_info"] = {...basic_info};
+    paymentData["basic_info"] = {...basic_info, razorpay_link };
     console.log("9687w678687678",{paymentData});
     openConsultationFeeDrawer(paymentData);
   }

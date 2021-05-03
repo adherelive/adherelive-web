@@ -15,7 +15,8 @@ module.exports = () => {
       default_currency: process.env.DEFAULT_CURRENCY,
       medicine_data: process.env.MEDICINE_INSTANCE,
       careplan_activation_reschedule_hours: process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
-      icon_android: process.env.ANDROID_ICON_NAME
+      icon_android: process.env.ANDROID_ICON_NAME,
+      otp_live_minutes: process.env.OTP_LIVE_MINUTES,
     },
     algolia: {
       app_id: process.env.ALGOLIA_APP_ID,

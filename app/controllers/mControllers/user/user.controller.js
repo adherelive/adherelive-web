@@ -1949,11 +1949,13 @@ class MobileUserController extends Controller {
     try {
       const { raiseClientError, raiseSuccess } = this;
       const { email } = req.body;
-      const userExists = await userService.getUserByEmail({
-        email
+      const allUsersWithEmail = await userService.getUserByData({
+        email,
+        category: USER_CATEGORY.DOCTOR
       });
 
-      if (userExists) {
+      if (allUsersWithEmail && allUsersWithEmail.length) {
+        const userExists = allUsersWithEmail[0];
         const userWrapper = await MUserWrapper(userExists.get());
         const link = uuidv4();
         const status = "verified"; //make it pending completing flow with verify permission
@@ -2000,7 +2002,7 @@ class MobileUserController extends Controller {
           res,
           422,
           {},
-          "User does not exists for the email"
+          "There is no doctor registered with this email."
         );
       }
 
@@ -2273,7 +2275,7 @@ class MobileUserController extends Controller {
       const notificationToken = appNotification.getUserToken(
           `${userId}`
       );
-      // const feedId = base64.encode(`${userId}`);
+      const feedId = base64.encode(`${userId}`);
 
       const userRef = await userService.getUserData({ id: userId });
 
@@ -2291,7 +2293,7 @@ class MobileUserController extends Controller {
         ...(await apiUserDetails.getReferenceInfo()),
         auth_user: apiUserDetails.getId(),
         notificationToken: notificationToken,
-        feedId: `${userId}`,
+        feedId,
         hasConsent: apiUserDetails.getConsent(),
         auth_category: apiUserDetails.getCategory()
       };

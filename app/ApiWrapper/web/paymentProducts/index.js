@@ -7,7 +7,10 @@ class PaymentProductWrapper extends BasePaymentProduct {
     }
 
     getBasicInfo = () => {
-        const {id, creator_id, creator_type, name, type, details, amount, product_user_type, for_user_id, for_user_type} = this._data;
+        const {id, creator_id, creator_type, name,
+             type, details, amount,
+             product_user_type, for_user_id, for_user_type,
+            razorpay_link} = this._data;
 
         return {
             basic_info: {
@@ -21,7 +24,8 @@ class PaymentProductWrapper extends BasePaymentProduct {
             for_user_id,
             for_user_type,
             product_user_type,
-            details
+            details,
+            razorpay_link
         };
     };
 
