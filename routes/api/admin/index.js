@@ -14,8 +14,11 @@ import AccountsController from "../../../app/controllers/accounts/accounts.contr
 import Medicine from "../../../app/controllers/medicines/medicine.controller";
 import Graphs from "../../../app/controllers/graphs/graph.controller";
 import * as validator from "./validator";
+import adminController from "../../../app/controllers/admin/admin.controller";
 
 router.get("/details/:type", Admin.getTermsAndPolicy);
+router.get("/terms_and_conditions/:id",Admin.getTermsAndConditions);
+
 
 router.use(async (req, res, next) => {
   try {
@@ -84,5 +87,8 @@ router.post("/enable-all-features", Authenticate, Admin.enableAllFeatures);
 router.delete("/medicines/:id", Authenticate, Medicine.deleteMedicine)
 
 router.delete("/chats/delete", Authenticate, twilioController.deleteChat);
+
+
+router.post("/update/provider-terms", Authenticate, adminController.updateProviderTermsMappingForExistingUsers);
 
 module.exports = router;

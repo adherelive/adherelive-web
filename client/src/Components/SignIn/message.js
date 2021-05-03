@@ -180,7 +180,17 @@ const messages = defineMessages({
         id: "app.signUp.adhereAssociation",
         description: "",
         defaultMessage: 'Adhere in association with'
-    }
+    },
+    agreeSignupPPText:{
+        id: "app.signIn.agree.signup.PPText",
+        description: "",
+        defaultMessage: "By signing up you agree to our"
+    },
+    agreeSigninPPText:{
+        id: "app.signIn.agree.signin.PPText",
+        description: "",
+        defaultMessage: "By signing in you agree to our"
+    },
 });
 
 export default messages;

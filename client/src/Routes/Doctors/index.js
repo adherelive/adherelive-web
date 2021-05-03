@@ -74,6 +74,12 @@ const TermsOfService = lazy(() =>
   )
 );
 
+const TermsOfPayment = lazy(() =>
+  import(
+    /* webpackChunkName: "TermsOfPayment" */ "../../Containers/Pages/termsOfPayment"
+  )
+);
+
 const PrivacyPolicy = lazy(() =>
   import(
     /* webpackChunkName: "PrivacyPolicyAuthPage" */ "../../Containers/Pages/PrivacyPolicy"
@@ -106,7 +112,8 @@ const SideMenuComp = props => {
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
       pathname.includes("privacy-policy") ||
-      pathname.includes("video")
+      pathname.includes("video") || 
+      pathname.includes("terms-of-payment")
 
     )
   ) {
@@ -139,7 +146,8 @@ class Doctors extends Component {
     let isNotChatComponent = !(
       pathname.includes("patient-consulting") ||
       pathname.includes("terms-of-service") ||
-      pathname.includes("privacy-policy")
+      pathname.includes("privacy-policy") ||
+      pathname.includes("terms-of-payment")
     );
     const { authRedirection } = this.props;
     return (
@@ -246,6 +254,12 @@ class Doctors extends Component {
                     exact
                     path={PATH.TERMS_OF_SERVICE}
                     component={TermsOfService}
+                />
+                
+                <Route
+                  exact
+                  path={PATH.TERMS_OF_PAYMENT}
+                  component={TermsOfPayment}
                 />
                 <Route
                     exact

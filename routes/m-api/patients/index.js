@@ -6,6 +6,13 @@ import PatientController from "../../../app/controllers/mControllers/patients/pa
 
 router.post("/", isPatient, Authenticated, PatientController.mUpdatePatient);
 
+
+router.post(
+  "/consents/payments",
+  Authenticated,
+  PatientController.acceptPaymentsTerms
+);
+
 router.post(
   "/:id/consents/request",
   Authenticated,
@@ -16,6 +23,12 @@ router.post(
   "/consents/verify",
   Authenticated,
   PatientController.patientConsentVerification
+);
+
+router.get(
+  "/payment-links",
+  Authenticated,
+  PatientController.getAllRelatedDoctorPaymentLinks
 );
 
 router.get("/", Authenticated, PatientController.searchPatient);

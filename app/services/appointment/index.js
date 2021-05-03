@@ -37,4 +37,6 @@ export default class Appointment {
       .toISOString();
     return date;
   };
+
+  getDetails = () => this._data.get("details") || {};
 }

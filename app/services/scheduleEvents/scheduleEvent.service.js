@@ -142,6 +142,38 @@ class ScheduleEventService {
     }
   };
 
+  getAllPassedAndCompletedEventsData = async (data = {}) => {
+    try {
+      const { event_id, event_type = "", date, sort = "ASC" } = data;
+      const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          event_id,
+          event_type,
+          [Op.or]: [
+            {start_time: {
+              [Op.between]: [
+                moment(date).startOf("day"),
+                moment()
+                  .utc()
+                  .toISOString()
+              ]
+            }},
+            {
+              status: EVENT_STATUS.COMPLETED
+            }
+          ],
+          status: {
+            [Op.or]: [EVENT_STATUS.COMPLETED, EVENT_STATUS.EXPIRED, EVENT_STATUS.CANCELLED, EVENT_STATUS.STARTED]
+          }
+        },
+        order: [["start_time", sort]]
+      });
+      return scheduleEvent;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getPriorEventByData = async time => {
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({

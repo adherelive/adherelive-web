@@ -445,7 +445,7 @@ class VitalController extends Controller {
 
       const vital = await VitalWrapper({ id });
 
-      const completeEvents = await EventService.getAllPassedByData({
+      const completeEvents = await EventService.getAllPassedAndCompletedEventsData({
         event_id: id,
         event_type: EVENT_TYPE.VITALS,
         date: vital.getStartDate(),

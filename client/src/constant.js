@@ -23,6 +23,7 @@ export const PATH = {
   RESET_PASSWORD: "/reset-password/:link",
   REGISTER_FROM_PROFILE: "/register-from-profile",
   REGISTER_FROM_MY_PROFILE: "/register-from-my-profile",
+  TERMS_OF_PAYMENT:"/terms-of-payment/:id",
   PATIENT: {
     PA: "/patients",
     DETAILS: "/patients/:patient_id"
