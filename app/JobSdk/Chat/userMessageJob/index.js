@@ -21,28 +21,30 @@ class UserMessageJob extends ChatJob {
         const {
             actor: {
                 id: actorId,
+                user_role_id: actorRoleId,
                 details: { name, category: actorCategory } = {}
             } = {},
             participants = [],
+            participant_role_ids = [],
             details: {
                 message = ""
             }
         } = getData() || {};
 
-        let doctorUserId = actorCategory === USER_CATEGORY.DOCTOR? actorId: null;
-        let patientUserId = actorCategory === USER_CATEGORY.PATIENT? actorId: null;
+        let doctorRoleId = actorCategory === USER_CATEGORY.DOCTOR? actorRoleId: null;
+        let patientRoleId = actorCategory === USER_CATEGORY.PATIENT? actorRoleId: null;
 
         const templateData = [];
         const playerIds = [];
         const userIds = [];
 
         // non actor participants are added for notification
-        participants.forEach(participant => {
+        participant_role_ids.forEach(participant => {
             if (participant !== actorId) {
-                if(!doctorUserId) {
-                    doctorUserId = participant
-                } else if(!patientUserId) {
-                    patientUserId = participant
+                if(!doctorRoleId) {
+                    doctorRoleId = participant
+                } else if(!patientRoleId) {
+                    patientRoleId = participant
                 }
                 userIds.push(participant);
             }
@@ -59,7 +61,7 @@ class UserMessageJob extends ChatJob {
             }
         }
 
-        const roomId = getRoomId(doctorUserId, patientUserId)
+        const roomId = getRoomId(doctorRoleId, patientRoleId)
         const now = new Date()
 
         templateData.push({
@@ -74,7 +76,7 @@ class UserMessageJob extends ChatJob {
             android_group:`adhere.live`,
             // android_group_message: {en: "You have $[notif_count] new messages"},
             android_channel_id: process.config.one_signal.urgent_channel_id,
-            data: { url: `/chat-message`, params: {...getData(), doctorUserId, patientUserId, roomId }}
+            data: { url: `/chat-message`, params: {...getData(), doctorUserId: doctorRoleId, patientUserId: patientRoleId, roomId }}
         });
         // }
 
@@ -86,6 +88,7 @@ class UserMessageJob extends ChatJob {
         const {
             actor: {
                 id: actorId,
+                user_role_id,
                 details: { name, category: actorCategory } = {}
             } = {},
             participants = [],
@@ -104,6 +107,8 @@ class UserMessageJob extends ChatJob {
             if (participant !== actorId) {
                 templateData.push({
                     actor: actorId,
+
+                actorRoleId: user_role_id,
                     object: `${participant}`,
                     foreign_id: ``,
                     verb: `user_message:${currentTimeStamp}`,

@@ -101,6 +101,18 @@ class UserRolesService {
     }
   };
 
+  getByData = async data => {
+    try {
+      const userRoles = await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+        raw: true,
+      });
+      return userRoles;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 }
 
 export default new UserRolesService();

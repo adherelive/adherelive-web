@@ -378,7 +378,7 @@ export const handleVitals = async vital => {
 export const handleAppointmentsTimeAssignment = async appointment => {
   try {
     const QueueService = new queueService();
-    const { event_id, start_time, end_time } = appointment;
+    const { event_id, start_time, end_time, user_role_id } = appointment;
 
     const appointmentData = await AppointmentWrapper(null, event_id);
 
@@ -502,6 +502,7 @@ export const handleAppointmentsTimeAssignment = async appointment => {
       participants: [participant_one_id, participant_two_id],
       actor: {
         id: participant_one_id,
+        user_role_id,
         category: participant_one_type
       }
     };

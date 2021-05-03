@@ -78,6 +78,7 @@ class MobileAppointmentController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -172,6 +173,7 @@ class MobileAppointmentController extends Controller {
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         }
       };
@@ -287,6 +289,7 @@ class MobileAppointmentController extends Controller {
       } = body;
       const {
         userId,
+        userRoleId,
         userData: { category } = {},
         userCategoryId,
         userCategoryData: { basic_info: { full_name } = {} } = {}
@@ -422,6 +425,7 @@ class MobileAppointmentController extends Controller {
         participants: [userId, participantTwoId],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           details: { name: full_name, category }
         }
       };

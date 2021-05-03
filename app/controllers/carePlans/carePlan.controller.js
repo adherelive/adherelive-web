@@ -51,7 +51,7 @@ class CarePlanController extends Controller {
       } = req.body;
 
       const { userDetails } = req;
-      const { userId, userData: { category } = {}, userCategoryData } = userDetails || {};
+      const { userId, userRoleId, userData: { category } = {}, userCategoryData } = userDetails || {};
 
       const QueueService = new queueService();
 
@@ -189,6 +189,7 @@ class CarePlanController extends Controller {
           eventScheduleData.push({
             type: EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT,
             event_id: appointmentData.getAppointmentId(),
+            user_role_id: userRoleId,
             start_time,
             end_time
           });
@@ -199,7 +200,7 @@ class CarePlanController extends Controller {
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
       const patient = await PatientWrapper(null, patient_id);
 
-      const carePlanScheduleData = {
+      let carePlanScheduleData = {
         type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
         event_id: care_plan_id,
         critical: false,
@@ -209,6 +210,7 @@ class CarePlanController extends Controller {
         participants: [userId, patient.getUserId()],
         actor: {
           id: userId,
+          user_role_id: userRoleId,
           category
         }
       };
@@ -314,10 +316,15 @@ class CarePlanController extends Controller {
         }
       }
 
-      eventScheduleData.push({
+      // eventScheduleData.push({
+      //   ...carePlanScheduleData,
+      //   medication_ids
+      // });
+
+      carePlanScheduleData = {
         ...carePlanScheduleData,
         medication_ids
-      });
+      };
 
       // vitals ----------------------------------------
       const {
@@ -329,7 +336,7 @@ class CarePlanController extends Controller {
       } = await carePlanHelper.createVitals({
         data: vitalData,
         carePlanId: care_plan_id,
-        authUser: { category, userId, userCategoryData },
+        authUser: { category, userId, userCategoryData, userRoleId },
         patientId: carePlanData.getPatientId()
       });
 
@@ -363,8 +370,9 @@ class CarePlanController extends Controller {
 
       // sending batch message of appointments and vitals
       const sqsResponse = await QueueService.sendBatchMessage([
-        eventScheduleData,
-        ...vitalEventsData
+        ...eventScheduleData,
+        ...vitalEventsData,
+        carePlanScheduleData
       ]);
 
       return this.raiseSuccess(

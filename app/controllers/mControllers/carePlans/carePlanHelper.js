@@ -151,7 +151,8 @@ export const createVitals = async ({data = [], carePlanId, authUser, patientId})
         // for sqs events
         let vitalEventsData = [];
 
-        const {userId: authUserId, category: authCategory, userCategoryData: authUserCategoryData} = authUser || {};
+        const {userId: authUserId, category: authCategory, userCategoryData: authUserCategoryData, 
+            userRoleId: authUserRoleId} = authUser || {};
 
         // patient
         const patient = await PatientWrapper(null, patientId);
@@ -213,6 +214,7 @@ export const createVitals = async ({data = [], carePlanId, authUser, patientId})
                     participants: [authUserId, patient.getUserId()],
                     actor: {
                         id: authUserId,
+                        user_role_id: authUserRoleId,
                         category: authCategory,
                         userCategoryData: authUserCategoryData
                     },

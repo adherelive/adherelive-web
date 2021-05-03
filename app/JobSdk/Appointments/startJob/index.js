@@ -83,6 +83,7 @@ class StartJob extends AppointmentJob {
         participants = [],
         actor: {
           id: actorId,
+          user_role_id,
           details: { name, category: actorCategory } = {}
         } = {}
       },
@@ -96,6 +97,7 @@ class StartJob extends AppointmentJob {
     for (const participant of participants) {
       templateData.push({
         actor: actorId,
+        actorRoleId: user_role_id,
         object: `${participant}`,
         foreign_id: `${id}`,
         verb: `appointment_start:${currentTimeStamp}`,
