@@ -777,7 +777,12 @@ class WhenToTakeMedication extends Component {
 
     if(!existingWhenToTake) {
       if(!whenToTake) {
-        whenToTake = WHEN_TO_TAKE_ABBR_TYPES.OD;  
+        const keys = this.getKeys() || [];
+        if(keys.length) {
+          whenToTake = `${keys.length}`;
+        } else {
+          whenToTake = WHEN_TO_TAKE_ABBR_TYPES.SOS
+        }
       }
     } else {
       whenToTake = existingWhenToTake;

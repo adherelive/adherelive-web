@@ -74,18 +74,18 @@ class CreateJob extends MedicationJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      // if (participant !== actorId) {
-      templateData.push({
-        actor: actorId,
-        object: `${participant}`,
-        foreign_id: `${event_id}`,
-        verb: `medication_create:${currentTimeStamp}`,
-        event: EVENT_TYPE.MEDICATION_REMINDER,
-        // message: `${name}(${actorCategory}) has created a medication reminder`,
-        time: currentTime,
-        create_time: `${currentTime}`
-      });
-      // }
+      if (participant !== actorId) {
+        templateData.push({
+          actor: actorId,
+          object: `${participant}`,
+          foreign_id: `${event_id}`,
+          verb: `medication_create:${currentTimeStamp}`,
+          event: EVENT_TYPE.MEDICATION_REMINDER,
+          // message: `${name}(${actorCategory}) has created a medication reminder`,
+          time: currentTime,
+          create_time: `${currentTime}`
+        });
+      }
     }
 
     return templateData;

@@ -5,42 +5,51 @@ import {
   NOTIFICATION_STAGES,
   EVENT_STATUS,
   MESSAGE_TYPES,
-  AGORA_CALL_NOTIFICATION_TYPES
+  AGORA_CALL_NOTIFICATION_TYPES,
+  USER_CATEGORY
 } from "../../../constant";
 
 // lodash
 import isEmpty from "lodash/isEmpty";
 
 // SERVICES -------->
+import userService from "../../services/user/user.service";
 import AppointmentService from "../../services/appointment/appointment.service";
 import MedicationService from "../../services/medicationReminder/mReminder.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import VitalService from "../../services/vitals/vital.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
+import SymptomService from "../../services/symptom/symptom.service"
 
 // API WRAPPERS -------->
 import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-// import ScheduleEventWrapper from "../../ApiWrapper/web/scheduleEvents";
+import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import UserWrapper from "../../ApiWrapper/web/user";
 import VitalWrapper from "../../ApiWrapper/web/vitals";
+import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
 import CarePlanWrapper from "../../ApiWrapper/mobile/carePlan";
+import SymptomWrapper from "../../ApiWrapper/mobile/symptoms";
+import { getRoomUsers } from "../../helper/common";
 
 const {
   APPOINTMENT_CREATE,
   APPOINTMENT_START,
+  APPOINTMENT_PRIOR,
   MEDICATION_CREATE,
   MEDICATION_REMINDER_START,
   VITAL_CREATE,
   VITAL_START,
-  CARE_PLAN_CREATE
+  CARE_PLAN_CREATE,
+  VITAL_RESPONSE
 } = NOTIFICATION_VERB;
 
 const {
   APPOINTMENT,
   MEDICATION_REMINDER,
   VITALS,
-  CARE_PLAN_ACTIVATION
+  CARE_PLAN_ACTIVATION,
+  SYMPTOMS
 } = EVENT_TYPE;
 
 const {
@@ -81,15 +90,6 @@ const medicationNotification = async data => {
 
     const verbString = verb.split(":")[0].toUpperCase() || null;
 
-    // CREATE
-    if(verbString === MEDICATION_CREATE) {
-
-    } else {
-
-    }
-
-    // START
-
     if (verbString.toUpperCase() === MEDICATION_CREATE) {
       eventId = parseInt(foreign_id, 10);
     } else if (verbString.toUpperCase() === MEDICATION_REMINDER_START) {
@@ -117,7 +117,7 @@ const medicationNotification = async data => {
         const { medications, medicines } = await event.getReferenceInfo();
   
         eventData = { ...eventData, ...medications };
-        medicineData = { ...medicineData, medicines };
+        medicineData = { ...medicineData, ...medicines };
         participants = event.getParticipants();
       }
     }
@@ -149,7 +149,11 @@ const medicationNotification = async data => {
           time,
           notification_id: id,
           type: MEDICATION_REMINDER,
-          stage: NOTIFICATION_STAGES.CREATE,
+          // stage: NOTIFICATION_STAGES.CREATE,
+          stage:
+          verbString.toUpperCase() === MEDICATION_CREATE ? NOTIFICATION_STAGES.CREATE
+          : 
+          NOTIFICATION_STAGES.START ,
           actor: requiredActor,
           verb,
           response_taken: responseTaken,
@@ -181,7 +185,7 @@ const medicationNotification = async data => {
   }
 };
 
-const appointmentNotification = async data => {
+const appointmentNotification = async (data, category) => {
   try {
     Log.debug("appointmentNotification data", data);
     const scheduleEventService = new ScheduleEventService();
@@ -209,29 +213,36 @@ const appointmentNotification = async data => {
     let doctorData = {};
     let patientData = {};
     let participants = [];
+    let scheduleEventData = {};
     let eventId = null;
 
     const verbString = verb.split(":")[0];
 
+    if(category === USER_CATEGORY.DOCTOR && verbString.toUpperCase() === APPOINTMENT_CREATE) {
+      return {};
+    }
+
     if (verbString.toUpperCase() === APPOINTMENT_CREATE) {
       eventId = parseInt(foreign_id, 10);
-    } else if (verbString.toUpperCase() === APPOINTMENT_START) {
-      const scheduleEventData = await scheduleEventService.getEventByData({
+    } else if (verbString.toUpperCase() === APPOINTMENT_START || verbString.toUpperCase() === APPOINTMENT_PRIOR) {
+      const scheduleEvent = await scheduleEventService.getEventByData({
         id: parseInt(foreign_id, 10)
       });
-      const { event_id = null } = scheduleEventData;
-      eventId = event_id;
+
+      const scheduleEventWrapper = await EventWrapper(scheduleEvent);
+      scheduleEventData = {[scheduleEventWrapper.getScheduleEventId()] : scheduleEventWrapper.getAllInfo()};
+      eventId = scheduleEventWrapper.getEventId();
     }
 
     if (
       verbString.toUpperCase() === APPOINTMENT_CREATE ||
-      verbString.toUpperCase() === APPOINTMENT_START
+      verbString.toUpperCase() === APPOINTMENT_START ||
+      verbString.toUpperCase() === APPOINTMENT_PRIOR
     ) {
       const events = await AppointmentService.getAppointmentById(eventId);
       const event = await AppointmentWrapper(events);
       eventData = event.getBasicInfo();
       participants = event.getParticipants();
-      Log.debug("participants --> ", participants);
       // } else {
       //     const events = await scheduleEventService.getEventByData({id: foreign_id});
       //     const event = await ScheduleEventWrapper(events);
@@ -259,7 +270,8 @@ const appointmentNotification = async data => {
     let notification_data = {};
     if (
       verbString.toUpperCase() === APPOINTMENT_CREATE ||
-      verbString.toUpperCase() === APPOINTMENT_START
+      verbString.toUpperCase() === APPOINTMENT_START ||
+      verbString.toUpperCase() === APPOINTMENT_PRIOR
     ) {
       notification_data = {
         [`${id}`]: {
@@ -269,7 +281,13 @@ const appointmentNotification = async data => {
           time,
           notification_id: id,
           type: APPOINTMENT,
-          stage: NOTIFICATION_STAGES.CREATE,
+          // stage: NOTIFICATION_STAGES.CREATE,
+          stage:
+          verbString.toUpperCase() === APPOINTMENT_CREATE ? NOTIFICATION_STAGES.CREATE
+          :
+          verbString.toUpperCase() === APPOINTMENT_PRIOR ? NOTIFICATION_STAGES.PRIOR
+          : 
+          NOTIFICATION_STAGES.START ,
           actor: requiredActor,
           verb,
           start_time: notification_start_time,
@@ -288,13 +306,13 @@ const appointmentNotification = async data => {
         }
       }
 
-      Log.debug("userData", { ...userData });
       return {
         notifications: notification_data,
         appointments: { [eventId]: eventData },
         users: userData,
         doctors: doctorData,
-        patients: patientData
+        patients: patientData,
+        schedule_events: scheduleEventData
       };
     }
   } catch (error) {
@@ -303,7 +321,7 @@ const appointmentNotification = async data => {
   }
 };
 
-const vitalsNotification = async data => {
+const vitalsNotification = async (data, category) => {
   try {
     Log.debug("vitalsNotification data", data);
     const scheduleEventService = new ScheduleEventService();
@@ -325,40 +343,54 @@ const vitalsNotification = async data => {
       group_id
     } = data;
 
+
+
+
     let eventData = {};
 
-    let userData = {};
-    let doctorData = {};
-    let patientData = {};
-    let participants = [];
+    // let userData = {};
+    // let doctorData = {};
+    // let patientData = {};
+    // let participants = [];
+    let scheduleEventsData = {};
     let eventId = null;
+    let vitalTemplateData = {};
 
     const verbString = verb.split(":")[0];
+    if(category === USER_CATEGORY.DOCTOR && verbString !== VITAL_RESPONSE) {
+      return {};
+    }
 
     if (
       verbString.toUpperCase() === VITAL_CREATE ||
       verbString.toUpperCase() === VITAL_START
     ) {
       eventId = parseInt(foreign_id, 10);
+    } else if (verbString === VITAL_RESPONSE) {
+      const scheduleEventData = await scheduleEventService.getEventByData({
+        id: parseInt(foreign_id, 10)
+      });
+      const { event_id = null } = scheduleEventData || {};
+
+      const scheduleEventWrapper = await EventWrapper(scheduleEventData);
+      scheduleEventsData[scheduleEventWrapper.getScheduleEventId()] = scheduleEventWrapper.getAllInfo();
+      eventId = event_id;
     }
-    //  else if (verbString.toUpperCase() === VITAL_START) {
-    //   const scheduleEventData = await scheduleEventService.getEventByData({
-    //     id: parseInt(foreign_id, 10)
-    //   });
-    //   const { event_id = null } = scheduleEventData;
-    //   eventId = event_id;
-    // }
 
     if (
       verbString.toUpperCase() === VITAL_CREATE ||
-      verbString.toUpperCase() === VITAL_START
+      verbString.toUpperCase() === VITAL_START ||
+      verbString === VITAL_RESPONSE
     ) {
       const events = await VitalService.getByData({ id: eventId });
       const event = await VitalWrapper(events);
       eventData = event.getBasicInfo();
-      // participants = event.getParticipants();
 
-      // Log.debug("participants --> ", participants);
+      const vitalTemplate = await VitalTemplateWrapper({
+        id: event.getVitalTemplateId()
+      });
+
+      vitalTemplateData[vitalTemplate.getVitalTemplateId()] = vitalTemplate.getBasicInfo();
     }
 
     if (eventData && eventData === null) {
@@ -379,7 +411,8 @@ const vitalsNotification = async data => {
     let notification_data = {};
     if (
       verbString.toUpperCase() === VITAL_CREATE ||
-      verbString.toUpperCase() === VITAL_START
+      verbString.toUpperCase() === VITAL_START ||
+      verbString === VITAL_RESPONSE
     ) {
       notification_data = {
         [`${id}`]: {
@@ -409,13 +442,12 @@ const vitalsNotification = async data => {
       // }
 
       // Log.debug(" vitals userData", {...userData});
-      console.log(
-        "%%%%%%%%%% going to return vitals notification data: ",
-        eventData
-      );
+
       return {
         notifications: notification_data,
-        vitals: { [eventId]: eventData }
+        vitals: { [eventId]: eventData },
+        schedule_events: scheduleEventsData,
+        vital_templates: vitalTemplateData
         // users: userData,
         // doctors: doctorData,
         // patients: patientData
@@ -504,11 +536,6 @@ const carePlanNotification = async data => {
           response_taken: responseTaken
         }
       };
-
-      console.log(
-        "%%%%%%%%%% going to return carePlanNotification data: ",
-        eventData
-      );
       return {
         notifications: notification_data,
         care_plans: { [eventId]: eventData }
@@ -566,9 +593,9 @@ const chatMessageNotification = async data => {
 };
 
 
-const missedCallNotification = async data => {
+const callNotification = async data => {
   try {
-    Log.debug("missedCallNotification data", data);
+    Log.debug("callNotification data", data);
     const {
       data: {
         actor,
@@ -585,6 +612,21 @@ const missedCallNotification = async data => {
       group_id
     } = data;
 
+    const userIds = getRoomUsers(foreign_id) || [];
+
+    let participantData = {};
+    if(userIds.length > 0) {
+      for(let index = 0; index < userIds.length; index++) {
+        const user = await userService.getUser(userIds[index]) || null;
+        const userWrapper = await UserWrapper(user.get());
+        const {doctor_id, patient_id} = await userWrapper.getReferenceInfo();        
+        participantData[`${userIds[index]}`] = {
+          doctor_id,
+          patient_id
+        };
+      }
+    }
+
     let notification_data = {
         [`${id}`]: {
           is_read,
@@ -598,7 +640,8 @@ const missedCallNotification = async data => {
           verb,
           message,
           start_time: notification_start_time,
-          create_time: notification_create_time
+          create_time: notification_create_time,
+          participantData
         }
       };
 
@@ -606,30 +649,123 @@ const missedCallNotification = async data => {
         notifications: notification_data
       };
   } catch (error) {
-    Log.debug("missedCallNotification 500 error", error);
+    Log.debug("callNotification 500 error", error);
+    return {};
+  }
+};
+
+const symptomsNotification = async data => {
+  try {
+    Log.debug("symptomsNotification data", data);
+    const {
+      data: {
+        actor,
+        foreign_id,
+        id,
+        object,
+        time,
+        verb,
+        prev: { startDate: prevStartDate, endDate: prevEndDate } = {},
+        current: { startDate: currentStartDate, endDate: currentEndDate } = {},
+        start_time: notification_start_time,
+        create_time: notification_create_time
+      } = {},
+      loggedInUser,
+      is_read,
+      group_id
+    } = data;
+
+    let userData = {};
+    let doctorData = {};
+    let patientData = {};
+    let participants = [object, actor];
+    let eventId = parseInt(foreign_id, 10);
+    let symptomsData = {};
+
+    const symptomExists = await SymptomService.getByData({ id: eventId });
+    if (symptomExists) {
+      const symptom = await SymptomWrapper({ data: symptomExists });
+      symptomsData = {[symptom.getSymptomId()]: symptom.getBasicInfo()}
+    }
+
+    let notification_data = {};
+
+    notification_data = {
+      [`${id}`]: {
+        is_read,
+        group_id,
+        foreign_id,
+        time,
+        notification_id: id,
+        type: SYMPTOMS,
+        stage: NOTIFICATION_STAGES.CREATE,
+        actor,
+        verb,
+        start_time: notification_start_time,
+        create_time: notification_create_time
+      }
+    };
+
+    for (const id of Object.keys(participants)) {
+      if (participants[id]) {
+        const user = await UserWrapper(null, participants[id]);
+        const { users, doctors, patients } = await user.getReferenceInfo();
+        userData = { ...userData, ...users };
+        doctorData = { ...doctorData, ...doctors };
+        patientData = { ...patientData, ...patients };
+      }
+    }
+    return {
+      notifications: notification_data,
+      symptoms: symptomsData,
+      users: userData,
+      doctors: doctorData,
+      patients: patientData
+    };
+  } catch (error) {
+    Log.debug("symptomsNotification 500 error", error);
     return {};
   }
 };
 
 export const getDataForNotification = async data => {
   try {
-    const { data: { event } = {} } = data;
+    const { category, data: { event } = {} } = data;
 
     Log.debug("event", event);
 
-    switch (event) {
-      case APPOINTMENT:
-        return await appointmentNotification(data);
-      case MEDICATION_REMINDER:
-        return await medicationNotification(data);
-      case VITALS:
-        return await vitalsNotification(data);
-      case CARE_PLAN_ACTIVATION:
-        return await carePlanNotification(data);
-      case USER_MESSAGE:
-        return await chatMessageNotification(data);
-      case AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL:
-        return await missedCallNotification(data)
+    if(category === USER_CATEGORY.DOCTOR) {
+      switch (event) {
+        case APPOINTMENT:
+          return await appointmentNotification(data, category);
+        case USER_MESSAGE:
+          return await chatMessageNotification(data);
+        case AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL:
+          return await callNotification(data)
+        case AGORA_CALL_NOTIFICATION_TYPES.START_CALL:
+          return await callNotification(data)
+        case SYMPTOMS:
+          return await symptomsNotification(data);
+        case VITALS:
+          return await vitalsNotification(data, category);
+      }
+    } else if(category === USER_CATEGORY.PATIENT) {
+      switch (event) {
+        case APPOINTMENT:
+          return await appointmentNotification(data, category);
+        case MEDICATION_REMINDER:
+          return await medicationNotification(data);
+        case VITALS:
+          return await vitalsNotification(data, category);
+        case CARE_PLAN_ACTIVATION:
+          return await carePlanNotification(data);
+        case USER_MESSAGE:
+          return await chatMessageNotification(data);
+        case AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL:
+          return await callNotification(data)
+        case AGORA_CALL_NOTIFICATION_TYPES.START_CALL:
+          return await callNotification(data)
+    }
     }
   } catch (error) {
     Log.debug("getDataForNotification 500 error", error);

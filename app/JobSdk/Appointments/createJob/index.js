@@ -53,8 +53,7 @@ class CreateJob extends AppointmentJob {
       }
     }
 
-    // if (participant !== actorId) { // todo: add actor after testing (deployment)
-
+    
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id, // TODO: add the same in pushNotification handler in notificationSdk
@@ -67,7 +66,6 @@ class CreateJob extends AppointmentJob {
       android_channel_id: process.config.one_signal.urgent_channel_id,
       data: { url: "/appointments", params: getAppointmentData() }
     });
-    // }
 
     return templateData;
   };
@@ -89,18 +87,18 @@ class CreateJob extends AppointmentJob {
     const now = moment();
     const currentTimeStamp = now.unix();
     for (const participant of participants) {
-      // if (participant !== actorId) {
-      templateData.push({
-        actor: actorId,
-        object: `${participant}`,
-        foreign_id: `${event_id}`,
-        verb: `appointment_create:${currentTimeStamp}`,
-        // message: `${name}(${actorCategory}) has created an appointment with you`,
-        event: EVENT_TYPE.APPOINTMENT,
-        time: `${currentTime}`,
-        create_time: `${currentTime}`
-      });
-      // }
+      if (participant !== actorId) {
+        templateData.push({
+          actor: actorId,
+          object: `${participant}`,
+          foreign_id: `${event_id}`,
+          verb: `appointment_create:${currentTimeStamp}`,
+          // message: `${name}(${actorCategory}) has created an appointment with you`,
+          event: EVENT_TYPE.APPOINTMENT,
+          time: `${currentTime}`,
+          create_time: `${currentTime}`
+        });
+      }
     }
     return templateData;
   };

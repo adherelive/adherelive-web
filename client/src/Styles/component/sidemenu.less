@@ -6,9 +6,15 @@
   z-index: 3;
   border-right: 1px solid @grey-light;
   :nth-child(3) {
+    .ant-menu-item {
+      height: @100px;
+    }
     position: absolute;
     bottom: 0px;
     width: 100%;
+  }
+  :nth-child(3).ant-menu-item {
+    height: @120px;
   }
   .ant-menu-item {
     height: @86px;
@@ -24,4 +30,31 @@
       text-align: center;
     }
   }
+}
+
+.noti-icon::after{
+  content:"";
+  position: absolute;
+  background: #f2637b;
+  height: @10px;
+  top: 30px;
+  right: 30px;
+  width: @10px;
+  // text-align: center;
+  // line-height: 2rem;;
+  // font-size: 1rem;
+  border-radius: 50%;
+  // color:white;
+  // border:1px solid blue;
+}
+
+.notification-count {
+  position: absolute;
+  background: #f2637b;
+  top: 30px;
+  right: 30px;
+  width: @15px;
+  height: @15px;
+  border-radius: 50%;
+  font-weight: bolder;
 }

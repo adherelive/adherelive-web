@@ -1,6 +1,6 @@
 import {Op} from "sequelize";
 import {TABLE_NAME} from "../../models/scheduleEvents";
-import {TABLE_NAME as eventHistoryTableName} from "../../models/eventHistory";
+// import {TABLE_NAME as eventHistoryTableName} from "../../models/eventHistory";
 import {EVENT_STATUS, EVENT_TYPE} from "../../../constant";
 import Database from "../../../libs/mysql";
 import moment from "moment";
@@ -131,7 +131,7 @@ class ScheduleEventService {
             ]
           },
           status: {
-            [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED]
+            [Op.not]: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR, EVENT_STATUS.SCHEDULED]
           }
         },
         order: [["start_time", sort]]
@@ -179,7 +179,7 @@ class ScheduleEventService {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           start_time: {
-            [Op.lte]: time
+            [Op.between]: [moment().utc().toDate(), time]
           },
           status: EVENT_STATUS.PENDING
         }
@@ -197,7 +197,7 @@ class ScheduleEventService {
           start_time: {
             [Op.between]: [moment(time).startOf("day"), time]
           },
-          status: EVENT_STATUS.PENDING
+          status: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR]
         }
       });
       return scheduleEvent;
@@ -213,7 +213,7 @@ class ScheduleEventService {
           start_time: {
             [Op.between]: [moment(time).subtract(1, "year"), time]
           },
-          status: [EVENT_STATUS.SCHEDULED, EVENT_STATUS.PENDING]
+          status: [EVENT_STATUS.SCHEDULED, EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR]
         }
       });
       return scheduleEvent;
@@ -235,13 +235,7 @@ class ScheduleEventService {
 
   getAllPastData = async data => {
     try {
-      const { event_id, startDate, date, sort = "ASC" } = data;
-      console.log(
-        "2897172391289 diff ",
-        moment(startDate)
-          .startOf("day")
-          .diff(date)
-      );
+      const { event_id, startDate, date } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id,
@@ -355,7 +349,7 @@ class ScheduleEventService {
                 .toISOString()
             ]
           },
-          status: [EVENT_STATUS.PENDING, EVENT_STATUS.SCHEDULED],
+          status: [EVENT_STATUS.PENDING, EVENT_STATUS.PRIOR,  EVENT_STATUS.SCHEDULED],
             [Op.or]: [
                 {
                     ...appointments,

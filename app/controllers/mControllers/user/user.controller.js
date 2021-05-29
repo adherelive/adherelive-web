@@ -57,6 +57,7 @@ import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../NotificationSdk/inApp";
 import {completePath, getFilePath} from "../../../helper/filePath";
 import AdhocJob from "../../../JobSdk/Adhoc/observer";
+import { getSeparateName } from "../../../helper/common";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 
@@ -1552,15 +1553,17 @@ class MobileUserController extends Controller {
 
       let newUId = user.get("id");
 
-      let patientName = name.split(" ");
-      let first_name = patientName[0];
-      let middle_name = patientName.length == 3 ? patientName[1] : "";
-      let last_name =
-        patientName.length == 3
-          ? patientName[2]
-          : patientName.length == 2
-          ? patientName[1]
-          : "";
+       const {first_name, middle_name, last_name} = getSeparateName(name);
+
+      // let patientName = name.split(" ");
+      // let first_name = patientName[0];
+      // let middle_name = patientName.length == 3 ? patientName[1] : "";
+      // let last_name =
+      //   patientName.length == 3
+      //     ? patientName[2]
+      //     : patientName.length == 2
+      //     ? patientName[1]
+      //     : "";
 
       let uid = uuidv4();
       let birth_date = moment(date_of_birth);

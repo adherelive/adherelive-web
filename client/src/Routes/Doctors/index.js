@@ -6,7 +6,7 @@ import {
   Redirect,
   withRouter
 } from "react-router-dom";
-import SideMenu from "../../Components/Sidebar";
+import SideMenu from "../../Containers/Sidebar";
 import BlankState from "../../Components/Common/BlankState";
 import { PATH } from "../../constant";
 

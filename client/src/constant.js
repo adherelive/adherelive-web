@@ -55,6 +55,23 @@ export const PATH = {
   CONSENT:"/consent"
 };
 
+export const AGORA_CALL_NOTIFICATION_TYPES = {
+  START_CALL: "START_CALL",
+  MISSED_CALL: "MISSED_CALL"
+}
+
+export const NOTIFICATION_STAGES = {
+  CREATE: "Create",
+  START: "Start",
+  RESCHEDULED: "Rescheduled",
+  UPDATE: "Update",
+  PRIOR: "Prior",
+  DELETE: "Delete",
+  SHARE: "Share",
+  EDIT_NOTES: "Edit_Notes",
+  APPROVED: "Approve"
+};
+
 export const HTTP_CODE_SERVER_ERROR = 500;
 
 export const CHAT_MESSAGE_DETAILS = {
@@ -1824,3 +1841,8 @@ export const LOCAL_STORAGE = {
 
 export const ASCEND = "ascend";
 export const DESCEND = "descend";
+
+export const TYPE_SYMPTOMS="Symptoms";
+export const TYPE_APPOINTMENTS="Appointments";
+export const TYPE_VITALS = "vitals";
+export const TYPE_USER_MESSAGE = "UserMessage";

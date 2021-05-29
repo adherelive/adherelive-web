@@ -20,6 +20,7 @@ class TimelineTab extends Component {
         this.state = {
             currentTab: TABS.TIMELINE,
             timelineSymptoms: {},
+            symptom_dates: [],
             loading: false,
             imageModalVisible: false
         };
@@ -32,8 +33,8 @@ class TimelineTab extends Component {
         getSymptomTimeLine(patientId).then(res => {
             const { status = false, payload: { data = {} } = {} } = res || {};
             if (status) {
-                const { timeline_symptoms = {} } = data || {};
-                this.setState({ timelineSymptoms: timeline_symptoms });
+                const { timeline_symptoms = {}, symptom_dates = [] } = data || {};
+                this.setState({ timelineSymptoms: timeline_symptoms, symptom_dates });
             }
 
             this.setState({ loading: false });
@@ -230,10 +231,10 @@ class TimelineTab extends Component {
     formatDataForTimeLine = () => {
         let { upload_documents = {} } = this.props;
 
-        const { timelineSymptoms = {} } = this.state;
+        const { timelineSymptoms = {}, symptom_dates = [] } = this.state;
         let data = [];
         // createdAtDates.forEach(date => {
-        for (let date of Object.keys(timelineSymptoms)) {
+        for (let date of symptom_dates) {
             data.push({
                 date: `${date}`
             });
@@ -383,7 +384,7 @@ class TimelineTab extends Component {
                             <div
                                 style={{ display: 'flex', flexDirection: 'row', marginTop: (text || imageUrl || audioUrl) ? 10 : 0, marginLeft: 10, alignItems: 'center' }}
                             >
-                                <div>{moment(createdAt).format("h a")}</div>
+                                <div>{moment(createdAt).format("hh:mm a")}</div>
                                 <div
                                     className={'seperator'}
                                 />

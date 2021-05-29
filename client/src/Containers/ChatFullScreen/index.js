@@ -10,7 +10,8 @@ const mapStateToProps = state => {
     patients = {},
     doctors = {},
     features = {},
-    features_mappings = {}
+    features_mappings = {},
+    notification_redirect = {}
   } = state;
   return {
     users,
@@ -19,7 +20,8 @@ const mapStateToProps = state => {
     authPermissions,
     authenticated_user,
     features,
-    features_mappings
+    features_mappings,
+    notification_redirect
   };
 };
 

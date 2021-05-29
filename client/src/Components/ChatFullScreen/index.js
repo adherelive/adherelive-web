@@ -8,6 +8,8 @@ import { getRoomId } from "../../Helper/twilio";
 import { FEATURES } from "../../constant";
 import { message } from "antd";
 import messages from "./messages";
+import NotificationDrawer from "../../Containers/Drawer/notificationDrawer";
+
 
 class ChatFullScreen extends Component {
   constructor(props) {
@@ -52,6 +54,37 @@ class ChatFullScreen extends Component {
       patientUserId: patientUserId,
       patientId: patient_id
     });
+
+
+  }
+
+  componentDidUpdate(prevProps,prevState){
+    const {notification_redirect : {patient_id = null} = {} ,patients = {} , authenticated_user = 1 , doctors = {} } =this.props;
+    const {notification_redirect : { patient_id : prev_patient_id = null } = {} } = prevProps ; 
+    if(patient_id !== prev_patient_id){
+
+      let doctorUserId = null;
+
+      const { basic_info : { user_id : patientUserId= null  } ={} } = patients[patient_id] || {};
+
+      for (let doc of Object.values(doctors)) {
+        let {
+          basic_info: { user_id, id = 1 }
+        } = doc;
+        if (parseInt(user_id) === parseInt(authenticated_user)) {
+          doctorUserId = user_id;
+        }
+      }
+
+      const roomId = getRoomId(doctorUserId, patientUserId);
+
+      this.setState({
+          doctorUserId,
+          roomId,
+          patientUserId: patientUserId,
+          patientId: patient_id
+    });
+    }
   }
 
   updateReplyMessageId = (newId = null) => {
@@ -199,6 +232,8 @@ class ChatFullScreen extends Component {
               patientId={patientId}
             />
           </div>
+          <NotificationDrawer  />
+
         </Fragment>
       </div>
     );

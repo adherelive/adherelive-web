@@ -15,12 +15,122 @@ const messages = defineMessages({
         id: "app.notifications.medicationHeading",
         description: "",
         defaultMessage: "Medication"
-    }
+    },
+    newChatMessage: {
+        id: "app.notifications.newChatMessage",
+        description: "",
+        defaultMessage: "You got a new message!"
+    },
+    symptomText: {
+        id: "app.notifications.symptomText",
+        description: "",
+        defaultMessage: "Symptom"
+    },
+    byText: {
+        id: "app.notifications.byText",
+        description: "",
+        defaultMessage: "by"
+    },
+    withText: {
+        id: "app.notifications.withText",
+        description: "",
+        defaultMessage: "with"
+    },
+    missedCallHeading: {
+        id: "app.notifications.missedCallHeading",
+        description: "",
+        defaultMessage: "Missed Call"
+    },
+    missedCallMessage: {
+        id: "app.notifications.missedCallMessage",
+        description: "",
+        defaultMessage: "You missed a call from"
+    },
+    reminderText: {
+        id: "app.notifications.reminderText",
+        description: "",
+        defaultMessage: "Reminder"
+    },
     // notifications: {
     //     id: "app.notifications.notifications",
     //     description: "",
     //     defaultMessage: "Notifications"
-    // }
+    // },
+    updated: {
+        id: "app.notifications.updated",
+        description: "",
+        defaultMessage: "Updated"
+    },
+    deleted: {
+        id: "app.notifications.deleted",
+        description: "",
+        defaultMessage: "Deleted"
+    },
+    shared: {
+        id: "app.notifications.shared",
+        description: "",
+        defaultMessage: "Shared"
+    },
+    added: {
+        id: "app.notifications.added",
+        description: "",
+        defaultMessage: "Added"
+    },
+    started: {
+        id: "app.notifications.started",
+        description: "",
+        defaultMessage: "Started"
+    },
+    todayText: {
+        id: "app.notifications.todayText",
+        description: "",
+        defaultMessage: "Today"
+    },
+    category: {
+        id: "app.notifications.category",
+        description: "",
+        defaultMessage: "Category"
+    },
+    month: {
+        id: "app.notifications.month",
+        description: "",
+        defaultMessage: "Month"
+    },
+    startTimeText: {
+        id: "app.notifications.startTimeText",
+        description: "",
+        defaultMessage: "Start Time"
+    },
+    somethingWentWrong: {
+        id: "app.notifications.somethingWentWrong",
+        description: "",
+        defaultMessage: "Something went wrong"
+    },
+    upcomingAppointment: {
+        id: "app.notifications.upcomingAppointment",
+        description: "",
+        defaultMessage: "Upcoming Appointment"
+    },
+    aboutToStart: {
+        id: "app.notifications.aboutToStart",
+        description: "",
+        defaultMessage: "Appointment is about to start"
+    },
+    vitalResponseTitle: {
+        id: "app.notifications.vitalResponseTitle",
+        description: "",
+        defaultMessage: "{vitalName} Vital Response"
+    },
+    patientVitalResponse: {
+        id: "app.notifications.patientVitalName",
+        description: "",
+        defaultMessage: "{patientName} added a reading for {vitalName} vital"
+    },
+    noMoreNotificationsDisplay: {
+        id: "app.notifications.noMoreNotificationsDisplay",
+        description: "",
+        defaultMessage: "No More Notifications to display"
+    }
 });
 
 export default messages;

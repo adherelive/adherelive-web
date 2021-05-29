@@ -80,6 +80,7 @@ import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
+import { getSeparateName } from "../../helper/common";
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -1129,14 +1130,11 @@ class DoctorController extends Controller {
         patientName = name.trim().split(" ");
       }
 
-      let first_name = patientName[0] || null;
-      let middle_name = patientName.length === 3 ? patientName[1] : null;
-      let last_name =
-          patientName.length === 3
-              ? patientName[2]
-              : patientName.length === 2
-              ? patientName[1]
-              : null;
+      const {first_name, middle_name, last_name} = getSeparateName(name);
+
+      // let first_name = patientName[0] || null;
+      // let middle_name = patientName.length > 1 ? patientName[1] : null;
+      // let last_name = patientName.length > 2 ? patientName.slice(2, patientName.length - 1).join(" ") : null;
 
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
@@ -3225,14 +3223,16 @@ class DoctorController extends Controller {
       if(name){
         patientName = name.trim().split(" ");
       }
-      let first_name = patientName[0] || null;
-      let middle_name = patientName.length === 3 ? patientName[1] : null;
-      let last_name =
-          patientName.length === 3
-              ? patientName[2]
-              : patientName.length === 2
-              ? patientName[1]
-              : null;
+
+      const {first_name, middle_name, last_name} = getSeparateName(name);
+      // let first_name = patientName[0] || null;
+      // let middle_name = patientName.length === 3 ? patientName[1] : null;
+      // let last_name =
+      //     patientName.length === 3
+      //         ? patientName[2]
+      //         : patientName.length === 2
+      //         ? patientName[1]
+      //         : null;
 
       const patientUpdateData = {
         ...prevBasicInfo,

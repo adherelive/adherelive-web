@@ -17,6 +17,7 @@ module.exports = () => {
       careplan_activation_reschedule_hours: process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
       icon_android: process.env.ANDROID_ICON_NAME,
       otp_live_minutes: process.env.OTP_LIVE_MINUTES,
+      appointment_prior_time: process.env.APPOINTMENT_PRIOR_NOTIFY_MINUTES
     },
     algolia: {
       app_id: process.env.ALGOLIA_APP_ID,

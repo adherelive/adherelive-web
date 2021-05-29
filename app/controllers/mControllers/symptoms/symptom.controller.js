@@ -23,12 +23,14 @@ import {
   USER_CATEGORY,
   ALLOWED_VIDEO_EXTENSIONS,
   EVENT_TYPE,
+  EVENT_STATUS,
   MESSAGE_TYPES,
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
 import ChatJob from "../../../JobSdk/Chat/observer";
+import SymptomsJob from "../../../JobSdk/Symptoms/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
@@ -47,7 +49,7 @@ class SymptomController extends Controller {
       const {
         body,
         params: { patient_id } = {},
-        userDetails: { userId } = {},
+        userDetails: { userId,  userData: { category } = {},} = {},
       } = req;
       const {
         care_plan_id,
@@ -59,6 +61,9 @@ class SymptomController extends Controller {
         photos = [],
         videos = [],
       } = body || {};
+
+
+      const patientData = await PatientWrapper(null, patient_id);
 
       const symptomData = await SymptomService.create({
         patient_id,
@@ -145,12 +150,13 @@ class SymptomController extends Controller {
       });
 
       let allUniqueDoctorsToNotifyData = {};
+      let doctorLatestCareplanData = {};
 
       for (const carePlanData of carePlans) {
         const carePlan = await CarePlanWrapper(carePlanData);
         const doctorId = carePlan.getDoctorId();
         const doctorData = await DoctorWrapper(null, doctorId);
-        const patientData = await PatientWrapper(null, patient_id);
+        
 
         const chatJSON = JSON.stringify({
           ...(await symptom.getAllInfo()),
@@ -206,6 +212,8 @@ class SymptomController extends Controller {
               content: chatJSON,
             },
           };
+
+          doctorLatestCareplanData[doctorData.getUserId()] = carePlan.getCarePlanId();
         }
 
         // const chatJob = ChatJob.execute(
@@ -216,12 +224,34 @@ class SymptomController extends Controller {
       }
 
       if (Object.keys(allUniqueDoctorsToNotifyData).length > 0) {
+
+        const allDoctorIds = Object.keys(allUniqueDoctorsToNotifyData).map((id) => {
+          return(parseInt(id, 10))
+        })
+
+        const symptomNotificationData = {
+          participants : [userId, ...allDoctorIds],
+          actor: {
+            id: userId,
+            details: { name: patientData.getFullName(), category }
+          },
+          patient_id,
+          care_plan_id_data: doctorLatestCareplanData,
+          event_id: symptom.getSymptomId()
+        }
+
+        const symptomJob = SymptomsJob.execute(
+          EVENT_STATUS.SCHEDULED,
+          symptomNotificationData
+        );
+        await NotificationSdk.execute(symptomJob);
+
         for (const doctorId in allUniqueDoctorsToNotifyData) {
-          const chatJob = ChatJob.execute(
-            MESSAGE_TYPES.USER_MESSAGE,
-            allUniqueDoctorsToNotifyData[doctorId].eventData
-          );
-          await NotificationSdk.execute(chatJob);
+          // const chatJob = ChatJob.execute(
+          //   MESSAGE_TYPES.USER_MESSAGE,
+          //   allUniqueDoctorsToNotifyData[doctorId].eventData
+          // );
+          // await NotificationSdk.execute(chatJob);
 
           // twilio
           const { doctor, patient, content } =

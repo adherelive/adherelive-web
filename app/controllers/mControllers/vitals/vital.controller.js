@@ -195,6 +195,7 @@ class VitalController extends Controller {
         const eventScheduleData = {
           type: EVENT_TYPE.VITALS,
           patient_id: patient.getUserId(),
+          patientUserId: patient.getUserId(),
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
           critical: false,
@@ -398,7 +399,35 @@ class VitalController extends Controller {
         chatJSON
       );
 
-      const eventData = {
+      // const eventData = {
+      //   participants: [doctorData.getUserId(), patientData.getUserId()],
+      //   actor: {
+      //     id: patientData.getUserId(),
+      //     details: {
+      //       name: patientData.getFullName(),
+      //       category: USER_CATEGORY.PATIENT
+      //     }
+      //   },
+      //   details: {
+      //     message: `Recorded a reading for ${vitalTemplate.getName()}.`
+      //   }
+      // };
+
+
+      // const chatJob = ChatJob.execute(
+      //   MESSAGE_TYPES.USER_MESSAGE,
+      //   eventData
+      // );
+      // await NotificationSdk.execute(chatJob);
+
+      const eventScheduleData = {
+        type: EVENT_TYPE.VITALS,
+        patient_id: patientData.getPatientId(),
+        doctor_id: doctorData.getDoctorId(),
+        id: event_id,
+        event_id: vital.getVitalId(),
+        event_type: EVENT_TYPE.VITALS,
+        vital: vital.getBasicInfo(),
         participants: [doctorData.getUserId(), patientData.getUserId()],
         actor: {
           id: patientData.getUserId(),
@@ -407,16 +436,16 @@ class VitalController extends Controller {
             category: USER_CATEGORY.PATIENT
           }
         },
-        details: {
-          message: `Recorded a reading for ${vitalTemplate.getName()}.`
-        }
+        vital_templates: vitalTemplate.getBasicInfo()
       };
 
-      const chatJob = ChatJob.execute(
-        MESSAGE_TYPES.USER_MESSAGE,
-        eventData
-      );
-      await NotificationSdk.execute(chatJob);
+      const vitalJob = JobSdk.execute({
+        eventType: EVENT_TYPE.VITALS,
+        eventStage: NOTIFICATION_STAGES.RESPONSE_ADDED,
+        event: eventScheduleData
+      });
+
+      await NotificationSdk.execute(vitalJob);
 
       return raiseSuccess(
         res,

@@ -13,7 +13,6 @@ class NotificationSdk {
     // todo actor don't send notification : manage in job
     PushApp.notify(await job.getPushAppTemplate());
     InApp.notify(job.getInAppTemplate());
-
   };
 }
 

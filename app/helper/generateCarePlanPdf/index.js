@@ -149,9 +149,8 @@ function getPdfName(pdfData) {
 
   const { diagnosis, carePlanId } = formatCarePlanData(care_plans, conditions);
 
-  const now = new Date();
-  const fileName = `${carePlanId}-${diagnosis}-${doctorName}-${now.getTime()}`;
-  return fileName;
+  // const now = new Date();
+  return `${carePlanId}-${diagnosis}-${doctorName}-${moment().format("DD-MM-YY-hh-mm-ss")}`;
 }
 
 function printDoctorBlockData(

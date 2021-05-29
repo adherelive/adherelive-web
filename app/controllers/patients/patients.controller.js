@@ -748,7 +748,9 @@ class PatientController extends Controller {
           }
           const { upload_documents } = await symptom.getReferenceInfo();
           uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
-          symptomDates.push(symptom.getCreatedDate());
+          if(symptomDates.indexOf(symptom.getCreatedDate()) === -1) {
+            symptomDates.push(symptom.getCreatedDate());
+          }
         }
 
         symptomDates.sort((a, b) => {
@@ -1957,19 +1959,10 @@ class PatientController extends Controller {
             })) || [];
         }
 
-        Logger.debug("patientsForDoctor", patientsForDoctor);
-
-        if (patientsForDoctor.length > 0) {
-          for (let index = 0; index < patientsForDoctor.length; index++) {
-            const {
-              care_plan_id,
-              care_plan_details,
-              care_plan_created_at,
-              care_plan_expired_on,
-              care_plan_activated_on,
-              ...patient
-            } = patientsForDoctor[index] || {};
-            patient["care_plan_id"] = care_plan_id;
+        if(patientsForDoctor.length > 0) {
+          for(let index = 0; index < patientsForDoctor.length; index++) {
+            const {care_plan_id, care_plan_details, care_plan_created_at, care_plan_expired_on,care_plan_activated_on, ...patient} = patientsForDoctor[index] || {};
+            patient["care_plan_id"]=care_plan_id;
 
             // Logger.debug("7394246723647263472364239741",{patient:{...patient}});
 

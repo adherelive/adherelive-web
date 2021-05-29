@@ -652,26 +652,26 @@ class ChatMessageDetails extends Component {
 
   render() {
     const {
-      authenticated_user,
-      users,
+      // authenticated_user,
+      // users,
       roomId,
       chatMessages,
-      patientDp,
-      symptoms,
-      upload_documents,
-      otherUserLastConsumedMessageIndex,
-      getVitalOccurence
+      // patientDp,
+      // symptoms,
+      // upload_documents,
+      // otherUserLastConsumedMessageIndex,
+      // getVitalOccurence
     } = this.props;
 
     const { getBlankStateComp, getMessageComp } = this;
 
-    const { messageIds = [] } = chatMessages[roomId] || {};
-    const {
-      loadSymptoms,
-      loadingMessageDetails,
-      message_numbers,
-      vital_repeat_intervals
-    } = this.state;
+    // const { messageIds = [] } = chatMessages[roomId] || {};
+    // const {
+    //   loadSymptoms,
+    //   loadingMessageDetails,
+    //   message_numbers,
+    //   vital_repeat_intervals
+    // } = this.state;
     // if (
     //   chatMessages[roomId] !== undefined &&
     //   (loadSymptoms || message_numbers != messageIds.length) &&
@@ -682,274 +682,269 @@ class ChatMessageDetails extends Component {
 
     const { messages: messagesArray = [] } = chatMessages[roomId] || {};
 
-    console.log("18219032 messagesArray ---> ", {
-      messagesArray,
-      roomId: this.props.roomId
-    });
-
     if (messagesArray.length === 0) {
       return getBlankStateComp();
     }
 
     if (messagesArray.length > 0) {
-      const messagesToRender = [];
+      // const messagesToRender = [];
 
       return (
         <div className="wp100 bg-chat-color">
           {getMessageComp(messagesArray)}
         </div>
       );
-      for (let i = 0; i < messagesArray.length; ++i) {
-        const message = messagesArray[i];
-        const prevMessage = i > 1 ? messagesArray[i - 1] : 1;
-        let sameDate =
-          message && prevMessage && message.state && prevMessage.state
-            ? moment(message.state.timestamp).isSame(
-                moment(prevMessage.state.timestamp),
-                "date"
-              )
-            : false;
+      // for (let i = 0; i < messagesArray.length; ++i) {
+      //   const message = messagesArray[i];
+      //   const prevMessage = i > 1 ? messagesArray[i - 1] : 1;
+      //   let sameDate =
+      //     message && prevMessage && message.state && prevMessage.state
+      //       ? moment(message.state.timestamp).isSame(
+      //           moment(prevMessage.state.timestamp),
+      //           "date"
+      //         )
+      //       : false;
 
-        if (!sameDate) {
-          messagesToRender.push(
-            <div className="mt16 mb16 flex wp100 text-grey justify-center fs12">
-              {moment(message.state.timestamp).isSame(moment(), "date")
-                ? this.formatMessage(messages.today)
-                : moment(message.state.timestamp).format("ll")}
-            </div>
-          );
-        }
-        const { state: { index = 1 } = {} } = message;
-        const user = users[message.state.author]
-          ? users[message.state.author]
-          : {};
-        let mess = "";
-        const body = message.state.body;
+      //   if (!sameDate) {
+      //     messagesToRender.push(
+      //       <div className="mt16 mb16 flex wp100 text-grey justify-center fs12">
+      //         {moment(message.state.timestamp).isSame(moment(), "date")
+      //           ? this.formatMessage(messages.today)
+      //           : moment(message.state.timestamp).format("ll")}
+      //       </div>
+      //     );
+      //   }
+      //   const { state: { index = 1 } = {} } = message;
+      //   const user = users[message.state.author]
+      //     ? users[message.state.author]
+      //     : {};
+      //   let mess = "";
+      //   const body = message.state.body;
 
-        if (message.state.author == USER_ADHERE_BOT) {
-          mess = (
-            <BotMessage
-              body={body}
-              message={message}
-              patientDp={patientDp}
-              vital_repeat_intervals={vital_repeat_intervals}
-              {...this.props}
-            />
-          );
-        } else {
-          mess = (
-            <Fragment key={message.state.sid}>
-              {parseInt(message.state.author) !==
-              parseInt(authenticated_user) ? null : (
-                // Human wrapper code ------>>>>>>>
+      //   if (message.state.author == USER_ADHERE_BOT) {
+      //     mess = (
+      //       <BotMessage
+      //         body={body}
+      //         message={message}
+      //         patientDp={patientDp}
+      //         vital_repeat_intervals={vital_repeat_intervals}
+      //         {...this.props}
+      //       />
+      //     );
+      //   } else {
+      //     mess = (
+      //       <Fragment key={message.state.sid}>
+      //         {parseInt(message.state.author) !==
+      //         parseInt(authenticated_user) ? null : (
+      //           // Human wrapper code ------>>>>>>>
 
-                // mess = (
-                // <Fragment key={message.state.sid}>
-                // <div className="chat-messages">
-                // <div className="chat-avatar">
-                // <span className="twilio-avatar">
-                // <Avatar src={patientDp} />
-                // </span>
-                // <>
-                // <div className="chat-text" style={{ display: "inline-block" }}>
-                // { (side && parts[0]) ?
-                // (<div className='humanBodyWrapper'>
-                // <img
-                // src={side === '1' ? humanBody : humanBodyBack}
-                // className={'wp100 hp100'}
-                // />
-                // {side === '1' ? (PART_LIST_FRONT.map(part => {
-                // const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
-                // const { top: bpTop = 0,
-                // left: bpLeft = 0,
-                // height: bpHeight = 0,
-                // width: bpWidth = 0 } = areaStyle || {};
-                // const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
-                // // console.log('isSAMEEEEEEEE============>', body_part, key, body_part === key);
-                // return (
-                // <div
-                // key={key}
-                // style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
-                // >
-                // <div
-                // style={{
-                // top: `${dotTop}px`,
-                // left: `${dotLeft}px`,
-                // position: "absolute",
-                // height: parts[0] === key ? 12 : 0,
-                // width: parts[0] === key ? 12 : 0,
-                // backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
-                // borderRadius: '50%',
+      //           // mess = (
+      //           // <Fragment key={message.state.sid}>
+      //           // <div className="chat-messages">
+      //           // <div className="chat-avatar">
+      //           // <span className="twilio-avatar">
+      //           // <Avatar src={patientDp} />
+      //           // </span>
+      //           // <>
+      //           // <div className="chat-text" style={{ display: "inline-block" }}>
+      //           // { (side && parts[0]) ?
+      //           // (<div className='humanBodyWrapper'>
+      //           // <img
+      //           // src={side === '1' ? humanBody : humanBodyBack}
+      //           // className={'wp100 hp100'}
+      //           // />
+      //           // {side === '1' ? (PART_LIST_FRONT.map(part => {
+      //           // const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
+      //           // const { top: bpTop = 0,
+      //           // left: bpLeft = 0,
+      //           // height: bpHeight = 0,
+      //           // width: bpWidth = 0 } = areaStyle || {};
+      //           // const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+      //           // // console.log('isSAMEEEEEEEE============>', body_part, key, body_part === key);
+      //           // return (
+      //           // <div
+      //           // key={key}
+      //           // style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
+      //           // >
+      //           // <div
+      //           // style={{
+      //           // top: `${dotTop}px`,
+      //           // left: `${dotLeft}px`,
+      //           // position: "absolute",
+      //           // height: parts[0] === key ? 12 : 0,
+      //           // width: parts[0] === key ? 12 : 0,
+      //           // backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
+      //           // borderRadius: '50%',
 
-                // // height: 12,
-                // // width: 12 ,
-                // // backgroundColor: "red",
-                // // borderRadius: '50%'
-                // }
-                // }
-                // />
-                // </div>
-                // );
-                // })) :
-                // (PART_LIST_BACK.map(part => {
-                // const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
-                // const { top: bpTop = 0,
-                // left: bpLeft = 0,
-                // height: bpHeight = 0,
-                // width: bpWidth = 0 } = areaStyle || {};
-                // const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
-                // return (
-                // <div
-                // key={key}
-                // style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
-                // >
-                // <div
-                // style={{
-                // top: `${dotTop}px`,
-                // left: `${dotLeft}px`,
-                // position: "absolute",
-                // height: parts[0] === key ? 12 : 0,
-                // width: parts[0] === key ? 12 : 0,
-                // backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
-                // borderRadius: '50%',
+      //           // // height: 12,
+      //           // // width: 12 ,
+      //           // // backgroundColor: "red",
+      //           // // borderRadius: '50%'
+      //           // }
+      //           // }
+      //           // />
+      //           // </div>
+      //           // );
+      //           // })) :
+      //           // (PART_LIST_BACK.map(part => {
+      //           // const { key, areaStyle = {}, dotStyle = {} } = BODY[part];
+      //           // const { top: bpTop = 0,
+      //           // left: bpLeft = 0,
+      //           // height: bpHeight = 0,
+      //           // width: bpWidth = 0 } = areaStyle || {};
+      //           // const { top: dotTop = 0, left: dotLeft = 0 } = dotStyle || {};
+      //           // return (
+      //           // <div
+      //           // key={key}
+      //           // style={{ position: 'absolute', top: `${bpTop}px`, left: `${bpLeft}px`, height: `${bpHeight}px`, width: `${bpWidth}px` }}
+      //           // >
+      //           // <div
+      //           // style={{
+      //           // top: `${dotTop}px`,
+      //           // left: `${dotLeft}px`,
+      //           // position: "absolute",
+      //           // height: parts[0] === key ? 12 : 0,
+      //           // width: parts[0] === key ? 12 : 0,
+      //           // backgroundColor: parts[0] === key ? "rgba(236,88,0,0.8)" : 'rgba(0,0,0,0)',
+      //           // borderRadius: '50%',
 
-                // // height: 12,
-                // // width: 12 ,
-                // // backgroundColor: "red",
-                // // borderRadius: '50%'
-                // }
-                // }
-                // />
-                // </div>
-                // );
-                // }))}
-                // {/* <img src={bodyImage} height={260} width={200}></img> */}
+      //           // // height: 12,
+      //           // // width: 12 ,
+      //           // // backgroundColor: "red",
+      //           // // borderRadius: '50%'
+      //           // }
+      //           // }
+      //           // />
+      //           // </div>
+      //           // );
+      //           // }))}
+      //           // {/* <img src={bodyImage} height={260} width={200}></img> */}
 
-                // </div>) : null}
-                // {text.length ? (
-                // <Fragment>
-                // <div className='mt5 mb5'>Description :</div>
-                // <div>{text}</div>
-                // </Fragment>) : null}
-                // {/* <div>{`Duration: `+duration}</div> */}
-                // {audio_document_ids.length ? <div>Description :</div> : null}
-                // {audio_document_ids.length ? (
-                // Object.values(audio_document_ids).map(id => {
-                // if (upload_documents[id] != undefined) {
-                // const { basic_info: { name = '', document = '' } } = upload_documents[id];
-                // let mediaData = {
-                // media: {
-                // contentType: '',
-                // filename: name,
-                // document: document
-                // }
-                // }
-                // return (
-                // <div className="clickable white chat-media-message-text">
-                // <MediaComponent message={mediaData}></MediaComponent>
-                // </div>);
-                // } else {
-                // return null;
-                // }
-                // })
-                // ) : (
-                // null
-                // )}
-                // {image_document_ids.length ? <div>Description :</div> : null}
-                // {image_document_ids.length ? (
-                // Object.values(image_document_ids).map(id => {
-                // if (upload_documents[id] != undefined) {
-                // const { basic_info: { name = '', document = '' } } = upload_documents[id];
-                // let mediaData = {
-                // media: {
-                // contentType: 'image',
-                // filename: name,
-                // document: document
-                // }
-                // }
-                // return (
-                // <div className="clickable white chat-media-message-text">
-                // <MediaComponent message={mediaData}></MediaComponent>
-                // </div>);
-                // } else {
-                // return null;
-                // }
-                // })
-                // ) : (
-                // null
-                // )}
-                // </div>
-                // {/* <div className="chat-text">
-                // </div> */}
-                // </>
-                // </div>
-                // <div className="chat-time start">
-                // {moment(message.state.timestamp).format("H:mm")}
-                // </div>
-                // {/* </div> */}
-                // </div>
-                // </Fragment >
-                // );
-                // <<<<<<< ---------------------<<<<<
+      //           // </div>) : null}
+      //           // {text.length ? (
+      //           // <Fragment>
+      //           // <div className='mt5 mb5'>Description :</div>
+      //           // <div>{text}</div>
+      //           // </Fragment>) : null}
+      //           // {/* <div>{`Duration: `+duration}</div> */}
+      //           // {audio_document_ids.length ? <div>Description :</div> : null}
+      //           // {audio_document_ids.length ? (
+      //           // Object.values(audio_document_ids).map(id => {
+      //           // if (upload_documents[id] != undefined) {
+      //           // const { basic_info: { name = '', document = '' } } = upload_documents[id];
+      //           // let mediaData = {
+      //           // media: {
+      //           // contentType: '',
+      //           // filename: name,
+      //           // document: document
+      //           // }
+      //           // }
+      //           // return (
+      //           // <div className="clickable white chat-media-message-text">
+      //           // <MediaComponent message={mediaData}></MediaComponent>
+      //           // </div>);
+      //           // } else {
+      //           // return null;
+      //           // }
+      //           // })
+      //           // ) : (
+      //           // null
+      //           // )}
+      //           // {image_document_ids.length ? <div>Description :</div> : null}
+      //           // {image_document_ids.length ? (
+      //           // Object.values(image_document_ids).map(id => {
+      //           // if (upload_documents[id] != undefined) {
+      //           // const { basic_info: { name = '', document = '' } } = upload_documents[id];
+      //           // let mediaData = {
+      //           // media: {
+      //           // contentType: 'image',
+      //           // filename: name,
+      //           // document: document
+      //           // }
+      //           // }
+      //           // return (
+      //           // <div className="clickable white chat-media-message-text">
+      //           // <MediaComponent message={mediaData}></MediaComponent>
+      //           // </div>);
+      //           // } else {
+      //           // return null;
+      //           // }
+      //           // })
+      //           // ) : (
+      //           // null
+      //           // )}
+      //           // </div>
+      //           // {/* <div className="chat-text">
+      //           // </div> */}
+      //           // </>
+      //           // </div>
+      //           // <div className="chat-time start">
+      //           // {moment(message.state.timestamp).format("H:mm")}
+      //           // </div>
+      //           // {/* </div> */}
+      //           // </div>
+      //           // </Fragment >
+      //           // );
+      //           // <<<<<<< ---------------------<<<<<
 
-                // <div className="chat-messages">
+      //           // <div className="chat-messages">
 
-                //     <div className="chat-avatar">
-                //         <span className="twilio-avatar">
-                //             <Avatar src={patientDp} />
-                //         </span>
-                //         {message.type === "media" ? (
-                //             <div className="chat-text">
-                //                 <div className="clickable white chat-media-message-text">
-                //                     <MediaComponent message={message}></MediaComponent>
-                //                 </div>
-                //             </div>
-                //         ) : (
-                //                 <div className="chat-text">{message.state.body}</div>
-                //             )}
-                //     </div>
-                //     <div className="chat-time start">
-                //         {moment(message.state.timestamp).format("H:mm")}
-                //     </div>
-                //     {/* </div> */}
-                // </div>
+      //           //     <div className="chat-avatar">
+      //           //         <span className="twilio-avatar">
+      //           //             <Avatar src={patientDp} />
+      //           //         </span>
+      //           //         {message.type === "media" ? (
+      //           //             <div className="chat-text">
+      //           //                 <div className="clickable white chat-media-message-text">
+      //           //                     <MediaComponent message={message}></MediaComponent>
+      //           //                 </div>
+      //           //             </div>
+      //           //         ) : (
+      //           //                 <div className="chat-text">{message.state.body}</div>
+      //           //             )}
+      //           //     </div>
+      //           //     <div className="chat-time start">
+      //           //         {moment(message.state.timestamp).format("H:mm")}
+      //           //     </div>
+      //           //     {/* </div> */}
+      //           // </div>
 
-                <div className="chat-messages end">
-                  {message.type === "media" ? (
-                    <div className="chat-text end">
-                      <div className="clickable white chat-media-message-text">
-                        <MediaComponent message={message}></MediaComponent>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="chat-text end">{message.state.body}</div>
-                  )}
-                  {/* <div className="chat-text end">{message.state.body}</div> */}
-                  <div className="flex justify-end">
-                    <div className="chat-time mr-4">
-                      {moment(message.state.timestamp).format("H:mm")}
-                    </div>
-                    <img
-                      className={
-                        index < otherUserLastConsumedMessageIndex
-                          ? `h14 mt4`
-                          : `h12 mt4`
-                      }
-                      src={
-                        index <= otherUserLastConsumedMessageIndex
-                          ? DoubleTick
-                          : SingleTick
-                      }
-                    />
-                  </div>
-                </div>
-              )}
-            </Fragment>
-          );
-        }
-        messagesToRender.push(mess);
-      }
-      return messagesToRender;
+      //           <div className="chat-messages end">
+      //             {message.type === "media" ? (
+      //               <div className="chat-text end">
+      //                 <div className="clickable white chat-media-message-text">
+      //                   <MediaComponent message={message}></MediaComponent>
+      //                 </div>
+      //               </div>
+      //             ) : (
+      //               <div className="chat-text end">{message.state.body}</div>
+      //             )}
+      //             {/* <div className="chat-text end">{message.state.body}</div> */}
+      //             <div className="flex justify-end">
+      //               <div className="chat-time mr-4">
+      //                 {moment(message.state.timestamp).format("H:mm")}
+      //               </div>
+      //               <img
+      //                 className={
+      //                   index < otherUserLastConsumedMessageIndex
+      //                     ? `h14 mt4`
+      //                     : `h12 mt4`
+      //                 }
+      //                 src={
+      //                   index <= otherUserLastConsumedMessageIndex
+      //                     ? DoubleTick
+      //                     : SingleTick
+      //                 }
+      //               />
+      //             </div>
+      //           </div>
+      //         )}
+      //       </Fragment>
+      //     );
+      //   }
+      //   messagesToRender.push(mess);
+      // }
+      // return messagesToRender;
     } else {
       return "";
     }

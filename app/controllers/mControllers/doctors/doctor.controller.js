@@ -240,15 +240,16 @@ class MobileDoctorController extends Controller {
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
 
       // name split
-      let patientName = name.trim().split(" ");
-      let first_name = patientName[0] || null;
-      let middle_name = patientName.length == 3 ? patientName[1] : null;
-      let last_name =
-          patientName.length == 3
-              ? patientName[2]
-              : patientName.length == 2
-              ? patientName[1]
-              : null;
+      const {first_name, middle_name, last_name} = getSeparateName(name);
+      // let patientName = name.trim().split(" ");
+      // let first_name = patientName[0] || null;
+      // let middle_name = patientName.length == 3 ? patientName[1] : null;
+      // let last_name =
+      //     patientName.length == 3
+      //         ? patientName[2]
+      //         : patientName.length == 2
+      //         ? patientName[1]
+      //         : null;
 
       if (userExists.length > 0) {
         // todo: find alternative to userExists[0]
@@ -2081,15 +2082,16 @@ class MobileDoctorController extends Controller {
       const { basic_info: prevBasicInfo } =
         initialPatientData.getBasicInfo() || {};
 
-      let patientName = name.trim().split(" ");
-      let first_name = patientName[0];
-      let middle_name = patientName.length == 3 ? patientName[1] : "";
-      let last_name =
-        patientName.length == 3
-          ? patientName[2]
-          : patientName.length == 2
-          ? patientName[1]
-          : "";
+        const {first_name, middle_name, last_name} = getSeparateName(name);
+      // let patientName = name.trim().split(" ");
+      // let first_name = patientName[0];
+      // let middle_name = patientName.length == 3 ? patientName[1] : "";
+      // let last_name =
+      //   patientName.length == 3
+      //     ? patientName[2]
+      //     : patientName.length == 2
+      //     ? patientName[1]
+      //     : "";
 
       const birth_date = moment(date_of_birth);
       const age = getAge(date_of_birth);

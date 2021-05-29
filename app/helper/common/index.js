@@ -3,29 +3,38 @@ const fs = require("fs");
 export const getSeparateName = name => {
   const nameArr = name.split(" ");
   const [first = null, middle = null, ...rest] = nameArr || [];
-  console.log("first middle last ---------------->>>> ", first, middle, rest);
-  switch (nameArr.length) {
-    case 1:
-      return { first_name: nameArr[0], middle_name: null, last_name: null };
-    case 2:
+
+  let first_name = first || null;
+      let middle_name = middle || null;
+      let last_name = rest.length > 1 ? rest.join(" ") : null;
+
+
       return {
-        first_name: nameArr[0],
-        middle_name: nameArr[1],
-        last_name: null
+        first_name, middle_name, last_name
       };
-    case 3:
-      return {
-        first_name: nameArr[0],
-        middle_name: nameArr[1],
-        last_name: nameArr[2]
-      };
-    default:
-      return {
-        first_name: nameArr[0],
-        middle_name: nameArr[2],
-        last_name: nameArr.slice(2, nameArr.length)
-      };
-  }
+  // console.log("first middle last ---------------->>>> ", first, middle, rest);
+  // switch (nameArr.length) {
+  //   case 1:
+  //     return { first_name: nameArr[0], middle_name: null, last_name: null };
+  //   case 2:
+  //     return {
+  //       first_name: nameArr[0],
+  //       middle_name: nameArr[1],
+  //       last_name: null
+  //     };
+  //   case 3:
+  //     return {
+  //       first_name: nameArr[0],
+  //       middle_name: nameArr[1],
+  //       last_name: nameArr[2]
+  //     };
+  //   default:
+  //     return {
+  //       first_name: nameArr[0],
+  //       middle_name: nameArr[2],
+  //       last_name: nameArr.slice(2, nameArr.length)
+  //     };
+  // }
 };
 
 export const getFullName = ({ first_name, middle_name, last_name }) => {
@@ -46,3 +55,5 @@ export const getRoomId = (doctor, patient) => {
   // console.log("21380138012 config", config, process.env);
   return`${doctor}-${process.config.twilio.CHANNEL_SERVER}-${patient}`;
 };
+
+export const getRoomUsers = (room = "") => room.split(`-${process.config.twilio.CHANNEL_SERVER}-`);

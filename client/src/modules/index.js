@@ -50,6 +50,7 @@ import date_wise_appointments from "./dateWiseAppointments";
 import favourites_data from "./favouritesData";
 import agora from "./agora";
 import terms_and_conditions from "./termsAndConditions";
+import notification_redirect from "./notificationRedirect";
 
 
 const rootReducer = combineReducers({
@@ -102,7 +103,8 @@ const rootReducer = combineReducers({
   date_wise_appointments,
   favourites_data,
   agora,
-  terms_and_conditions
+  terms_and_conditions,
+  notification_redirect
 });
 
 export default (state, action) => {

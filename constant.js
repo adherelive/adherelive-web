@@ -245,6 +245,7 @@ export const NOTIFICATION_VERB = {
   MRL_GENERATION: "MRL_GENERATION",
   VITAL_CREATE: "VITAL_CREATE",
   VITAL_START: "VITAL_START",
+  VITAL_RESPONSE: "vital_response",
   CARE_PLAN_CREATE: "CAREPLAN_CREATE",
   DEACTIVATE_DOCTOR: "DEACTIVATE_DOCTOR",
   ACTIVATE_DOCTOR:"ACTIVATE_DOCTOR"
@@ -259,7 +260,8 @@ export const NOTIFICATION_STAGES = {
   DELETE: "Delete",
   SHARE: "Share",
   EDIT_NOTES: "Edit_Notes",
-  APPROVED: "Approve"
+  APPROVED: "Approve",
+  RESPONSE_ADDED: "Response_added"
 };
 
 export const NOTIFICATION_URLS = {
@@ -402,7 +404,8 @@ export const EVENT_STATUS = {
   COMPLETED: "completed",
   EXPIRED: "expired",
   CANCELLED: "cancelled",
-  STARTED: "started"
+  STARTED: "started",
+  PRIOR: "prior"
 };
 
 export const EMAIL_TEMPLATE_NAME = {

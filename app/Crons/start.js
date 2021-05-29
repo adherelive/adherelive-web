@@ -119,7 +119,7 @@ class StartCron {
       // });
       // NotificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleVitalStart 500 error ---->", error);
+      Log.debug("handleAppointmentStart 500 error ---->", error);
     }
   };
 
