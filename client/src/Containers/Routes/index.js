@@ -5,10 +5,10 @@ import { open } from "../../modules/drawer";
 import { DRAWER } from "../../constant";
 
 const mapStateToProps = state => {
-  const { auth, users, doctors } = state;
+  const { auth, users, doctors , pages : { notification_count = {} } = {} } = state;
   const { authenticated, authenticated_user, authRedirection, authPermissions = [] , doctor_provider_id  = null } = auth;
   
-    return { authenticated, authPermissions, authRedirection, authenticated_user, users, doctors , doctor_provider_id  };
+    return { authenticated, authPermissions, authRedirection, authenticated_user, users, doctors , doctor_provider_id ,notification_count  };
   
 };
 

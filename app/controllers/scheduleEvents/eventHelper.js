@@ -85,8 +85,6 @@ const getAllDataForDoctors = async (doctor_id, category = USER_CATEGORY.PROVIDER
                 vital_ids: vitalIds
             })) || [];
 
-        Log.debug("ALL SCHEDULE_EVENTS", scheduleEvents);
-
         return [
             {...(await getFormattedData(scheduleEvents, category))},
             "Missed events fetched successfully"
@@ -254,8 +252,6 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
 
         }
     }
-
-    Log.debug("patientIds ---> ", patientIds);
 
     let patientData = {};
 

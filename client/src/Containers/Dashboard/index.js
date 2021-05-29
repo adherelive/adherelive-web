@@ -19,13 +19,13 @@ import { showVerifyModal } from "../../modules/pages/features";
 import { getAllFeatures } from "../../modules/featuresMappings";
 import { DRAWER } from "../../constant";
 import { open } from "../../modules/drawer";
-import {getAllMissedScheduleEvents} from "../../modules/scheduleEvents";
-
+import { getAllMissedScheduleEvents } from "../../modules/scheduleEvents";
+import { setUnseenNotificationCount }  from "../../modules/pages/NotificationCount";
 
 const mapStateToProps = state => {
   const {
     graphs,
-    auth: { authPermissions = [], authenticated_user = 1 } = {},
+    auth: { authPermissions = [], authenticated_user = 1 , notificationToken = '' , feedId = '' } = {},
     treatments = {},
     conditions = {},
     pages: { ui_features = {} ,dashboard ={}} = {},
@@ -39,6 +39,8 @@ const mapStateToProps = state => {
     features_mappings = {}
   } = state;
   return {
+    notificationToken,
+    feedId,
     graphs,
     treatments,
     conditions,
@@ -83,6 +85,7 @@ const mapDispatchToProps = dispatch => {
     openMissedVitalDrawer: () =>
     dispatch(open({ type: DRAWER.MISSED_VITAL})),
     getAllMissedScheduleEvents: () => dispatch(getAllMissedScheduleEvents()),
+    setUnseenNotificationCount : (count) => dispatch(setUnseenNotificationCount(count))
   };
 };
 

@@ -7,7 +7,6 @@ import SignUpForm from "./signUp";
 import rightArrow from "../../Assets/images/next.png";
 import CompanyIcon from "../../Assets/images/logo3x.png";
 import { PATH } from "../../constant";
-import loginLogo from "../../Assets/images/login-subharti-logo.png";
 
 import config from "../../config";
 import { injectIntl } from "react-intl";
@@ -82,7 +81,6 @@ class SignIn extends Component {
             </div>
           </div>
           <div className="center-container">
-
             <div className="form-background-box">
               {login ? (
                 <Spring
@@ -92,69 +90,55 @@ class SignIn extends Component {
                 >
                   {props => (
                     <div
-                      className=" flex direction-column flex1 wp100 hp100"
+                      className="flex direction-column flex1 wp100 hp100 "
                       style={props}
                     >
-                      <div className=" login-description ml22 relative">
-                        <div className="flex direction-column align-center justify-center hp100">
-                          
-                         <div className=" h100 wp60 relative minw150" > 
-                            <div className="absolute t-50 h50 wp100 tac lighter-gray fs14 " >{this.formatMessage(messages.adhereAssociation)}</div>
-                            <div>
-                              <img src={loginLogo} style={{width:'100%',height:"100%"}} alt="subharti-logo" ></img>
+                      <div className="container-signin hp17" >
+                        <div className="login-description ml10">
+                          <div className="now-available mb10">
+                            <div className="fs14 medium text-white">
+                              {this.formatMessage(messages.nowAvailable)}
                             </div>
                           </div>
-                         
-                            <div className="login-small-div" >
-                              <div className="login-line"></div>
-                              <div className="tac mt14 light-brown-gray fs14" >
-                                {this.formatMessage(messages.contactUsStart)}{` `}<a href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.LOGIN_CONTACT_MESSAGE}`} target={"_blank"}  className="light-brown-gray"  >{this.formatMessage(messages.contactUs)}</a>
-                              </div>
-                            </div>
-                          
+                          <div className="fs18 medium text-white ml10">
+                            {this.formatMessage(messages.customDashboard)}
+                          </div>
+
+                          <div className="fs12 text-white mt4 ml10">
+                            {this.formatMessage(messages.metrics)}
+                          </div>
                         </div>
                       </div>
-                     
-                      
+                      <div className="login-text">
+                        <div className="fs16 medium">
+                          {" "}
+                          Fusce vehicula dolor arcu, sit amet blandit dolor
+                          mollis nec. Donec viverra eleifend lacus, vitae
+                          ullamcorper metus.{" "}
+                        </div>
+                      </div>
+                      <div className="learn-more-text ml10">
+                        <div className="dark-sky-blue fs18 medium mr4">
+                          {this.formatMessage(messages.learnMore)}
+                        </div>
+                        <img src={rightArrow} height={14} width={14} />
+                      </div>
                     </div>
                   )}
                 </Spring>
-              ) : (
-                <Spring
-                  from={{ opacity: 0 }}
-                  to={{ opacity: 1 }}
-                  config={{ delay: 2000, duration: 1000 }}
-                >
-                  {props => (
-                       <div
-                       className=" flex align-end direction-column flex1 wp100 hp100"
-                       style={props}
-                     >
-                       <div className=" login-description mr22 relative">
-                         <div className="flex direction-column align-center justify-center hp100">
-                           
-                          <div className=" h100 wp60 relative  minw150" > 
-                          <div className="absolute t-50 h50 wp100 tac lighter-gray fs14 " >{this.formatMessage(messages.adhereAssociation)}</div>
-                            <div>
-                              <img src={loginLogo} style={{width:'100%',height:"100%"}} alt="subharti-logo" ></img>
-                            </div>
-                           </div>
-                          
-                             <div className="login-small-div" >
-                               <div className="login-line"></div>
-                               <div className="tac mt14 light-brown-gray fs14" >
-                                {this.formatMessage(messages.contactUsStart)}{` `}<a href={`mailto:${config.ADHERE_LIVE_CONTACT_LINK}?subject=${config.mail.LOGIN_CONTACT_MESSAGE}`} target={"_blank"}  className="light-brown-gray"  >{this.formatMessage(messages.contactUs)}</a>
-                              </div>
-                             </div>
-                           
-                         </div>
-                       </div>
-                      
-                       
-                     </div>
-                  )}
-                </Spring>
-              )}
+              ) : (<Spring
+                from={{ opacity: 0 }}
+                to={{ opacity: 1 }}
+                config={{ delay: 2000, duration: 1000 }}
+            >
+                {props => (
+                    <div className='flex direction-column justify-space-between mt32 pl20 flex1 wp100 hp100' style={props}>
+                        <div className='wp100 flex justify-end'> <div className='wp60 tac fs16 fw600 slate-grey'>{this.formatMessage(messages.whyChoose)}</div></div>
+                        <div className='wp100 flex mb40 justify-end'> <div className='wp60 tac fs14 fw600 brown-grey'>{this.formatMessage(messages.contactUs)}</div></div>
+                    </div>
+                )
+                }
+            </Spring>)}
             </div>
             {login ? (
               <Spring
@@ -225,3 +209,4 @@ class SignIn extends Component {
 }
 
 export default injectIntl(SignIn);
+

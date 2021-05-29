@@ -256,7 +256,7 @@ class MPatientController extends Controller {
   getPatientAppointments = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
-      const { params: { id } = {}, userDetails: { userId } = {} } = req;
+      const { params: { id } = {} } = req;
 
       const appointmentList = await appointmentService.getAppointmentForPatient(
         id
@@ -265,7 +265,7 @@ class MPatientController extends Controller {
       let appointmentApiData = {};
       let scheduleEventData = {};
       let appointmentDocuments = {};
-      let appointment_ids = [];
+      let appointmentIds = [];
 
       for (const appointment of appointmentList) {
         const appointmentWrapper = await AppointmentWrapper(appointment);
@@ -273,8 +273,10 @@ class MPatientController extends Controller {
         const {
           appointments,
           schedule_events,
-          appointment_docs
+          appointment_docs,
+          appointment_id
         } = await appointmentWrapper.getReferenceInfo();
+        appointmentIds.push(appointment_id);
         appointmentApiData = { ...appointmentApiData, ...appointments };
         scheduleEventData = { ...scheduleEventData, ...schedule_events };
         appointmentDocuments = { ...appointmentDocuments, ...appointment_docs };
@@ -293,9 +295,9 @@ class MPatientController extends Controller {
           appointment_docs: {
             ...appointmentDocuments
           },
-          appointment_ids: Object.keys(appointmentApiData)
+          appointment_ids: appointmentIds
         },
-        `appointment data for patient: ${id} fetched successfully`
+        `Appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
       Logger.debug("getPatientAppointments 500 error", error);
@@ -833,7 +835,10 @@ class MPatientController extends Controller {
           // DATA FORMATTED FOR DATE ORDER
           const symptomDetails = await symptom.getDateWiseInfo();
           const { upload_documents } = await symptom.getReferenceInfo();
-          symptomDates.push(symptom.getCreatedDate());
+
+          if(symptomDates.indexOf(symptom.getCreatedDate()) === -1) {
+            symptomDates.push(symptom.getCreatedDate());
+          }
           uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
           if (dateWiseSymptoms.hasOwnProperty(symptom.getCreatedDate())) {
             dateWiseSymptoms[symptom.getCreatedDate()].push(symptomDetails);

@@ -40,7 +40,7 @@ function notificationReducer(state, data) {
     if (notifications) {
         return {
             ...state,
-            ...notifications
+            ...notifications,
         };
     } else {
         return state;

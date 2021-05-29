@@ -70,11 +70,10 @@ class MAppointmentWrapper extends BaseAppointment {
   };
 
   getAllInfo = async () => {
-    const { getBasicInfo, getAppointmentId, _data } = this;
-
+    const { getBasicInfo, _data } = this;
     const { id } = _data;
 
-    // get careplan attached to medication
+    // get careplan attached to appointment
     const appointmentCareplan = await carePlanAppointmentService.getCareplanByAppointment({appointment_id: id}) || null;
     const {care_plan_id = null} = appointmentCareplan || {};
 
@@ -129,7 +128,8 @@ class MAppointmentWrapper extends BaseAppointment {
       },
       appointment_docs: {
         ...uploadDocumentsData
-      }
+      },
+      appointment_id: id
     };
   };
 

@@ -163,7 +163,8 @@ class MobileMReminderController extends Controller {
             category
           }
         },
-        medicationId: mReminderApiWrapper.getMReminderId()
+        medicationId: mReminderApiWrapper.getMReminderId(),
+        event_id: mReminderApiWrapper.getMReminderId()
       };
 
       let details = mReminderDetails.getBasicInfo.details;
@@ -335,7 +336,8 @@ class MobileMReminderController extends Controller {
             category
           }
         },
-        medicationId: mReminderDetails.get("id")
+        medicationId: mReminderDetails.get("id"),
+        event_id: mReminderDetails.get("id"),
       };
 
       let details = mReminderDetails.getBasicInfo.details;

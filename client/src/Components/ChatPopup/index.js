@@ -171,14 +171,20 @@ class ChatForm extends Component {
     if (event) {
       event.preventDefault();
     }
+    const {raiseChatNotificationFunc}=this.props;
     let trimmedMessage = this.state.newMessage.trim();
     if (this.state.newMessage.length > 0 && trimmedMessage.length > 0) {
       const message = this.state.newMessage;
       this.setState({ newMessage: "" });
-      const resp = await this.props.channel.sendMessage(message);
+      
+      const {channel = null } = this.props;
+
+      if(channel){
+        const resp = await channel.sendMessage(message);
+      }
 
       if(message){
-        this.props.raiseChatNotification(message)
+        raiseChatNotificationFunc(message)
       }
     }
     if (this.state.fileList.length > 0) {
@@ -187,7 +193,7 @@ class ChatForm extends Component {
         formData.append("file", this.state.fileList[i]);
         const respo = await this.props.channel.sendMessage(formData);
 
-        this.props.raiseChatNotification(this.props.formatMessage(messages.newDocumentUploadedNotify))
+        raiseChatNotificationFunc(this.props.formatMessage(messages.newDocumentUploadedNotify))
       }
       this.setState({ fileList: [] });
     }
@@ -702,10 +708,10 @@ class ChatPopUp extends Component {
     const menuList = this.getMenuList();
     return (
       <Menu>
-        {menuList.map(item => {
+        {menuList.map((item, index) => {
           const { label, pressHandler } = item;
           return (
-            <Menu.Item onClick={pressHandler}>
+            <Menu.Item onClick={pressHandler} key={`chat-popup-menu-${index}`}>
               <div className="tac">{label}</div>
             </Menu.Item>
           );
@@ -811,10 +817,11 @@ class ChatPopUp extends Component {
     }
   };
 
-  raiseChatNotification = (message) => {
+  raiseChatNotificationFunc = (message) => {
     const {
       patientId = null,
-      patients = {}
+      patients = {},
+      raiseChatNotification
     } = this.props;
 
     const {
@@ -823,7 +830,7 @@ class ChatPopUp extends Component {
 
     const data = { message, receiver_id: patientUserId}
 
-    const resp = this.props.raiseChatNotification(data)
+    const resp = raiseChatNotification(data)
   }
 
   render() {
@@ -877,7 +884,7 @@ class ChatPopUp extends Component {
             <div className="twilio-chat-body">
               {messagesLoading ? (
                 <div className="wp100 hp100 flex justify-center align-center">
-                  <Spin size="medium" />
+                  <Spin size="default" />
                 </div>
               ) : (
                 <ChatMessageDetails
@@ -905,7 +912,7 @@ class ChatPopUp extends Component {
                   messages={this.messages}
                   channel={this.channel}
                   formatMessage={this.formatMessage}
-                  raiseChatNotification={this.raiseChatNotification}
+                  raiseChatNotificationFunc={this.raiseChatNotificationFunc}
                 />
               </div>
             </div>

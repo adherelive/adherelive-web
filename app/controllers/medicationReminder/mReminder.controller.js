@@ -468,7 +468,7 @@ class MReminderController extends Controller {
 
       // 2. send sqs message to create new
       const eventScheduleData = {
-        patient_id: participant_id,
+        patient_id: patient.getUserId(),
         type: EVENT_TYPE.MEDICATION_REMINDER,
         event_id: medicationApiDetails.getMReminderId(),
         details: medicationApiDetails.getDetails(),
@@ -576,9 +576,6 @@ class MReminderController extends Controller {
         [KEY_MEDICINE_TYPE]: MEDICINE_FORMULATION
       };
 
-      Logger.debug("8943748297387489999 Patient id ====>",{patient_id,medicationReminderDetails});
-
-
       return raiseSuccess(
         res,
         200,
@@ -588,8 +585,8 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      console.log("8943748297387489999 Get m-reminder details error ----> ", error);
-      return raiseServerError(res, 500, error.message, "something went wrong");
+      Logger.debug("Get m-reminder details error ----> ", error);
+      return raiseServerError(res);
     }
   };
 

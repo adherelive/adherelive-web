@@ -57,8 +57,6 @@ export const getCareplanData = async ({carePlans = [], userCategory, doctorId}) 
             medicationIds = [...medicationIds, ...medication_ids];
 
             // get latest careplan id
-            Log.debug("7123731 careplan --> ", careplan.getCreatedAt());
-            Log.debug("71237312 careplan --> ", moment(currentCareplanTime));
             if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
                 if (
                     moment(careplan.getCreatedAt()).diff(
